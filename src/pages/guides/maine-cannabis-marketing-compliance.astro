@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
 <Layout 
   title="Maine Cannabis Marketing Compliance | Maine Dispensary Guide" 
-  description="Expert guide to cannabis marketing compliance for dispensary entrepreneurs in Maine."
-  heroImage="https://images.unsplash.com/photo-1533491414534-19253f53874c?q=80&w=2070&auto=format&fit=crop"
+  description="Expert guide to cannabis marketing compliance for dispensary entrepreneurs in Maine. Advertising rules and regulations."
+  heroImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
 >
   <article>
     <div class="article-header">
@@ -13,16 +14,75 @@ import Layout from '../../layouts/Layout.astro';
       <p class="subtitle">Navigating advertising and marketing regulations in Maine</p>
     </div>
 
-    <!-- OPENCODE BOT: PLEASE FILL IN THE CONTENT BASED ON THE APPROPRIATE TEMPLATE IN CONTENT_PROMPTS.MD -->
     <section>
-      <p>[Introduction - Waiting for OpenCode Content]</p>
+      <h2>Overview</h2>
+      <p>Marketing a cannabis business requires creativity within boundaries. Maine has specific rules designed to prevent marketing to minors while still allowing you to build your brand and reach adult customers. Understanding these rules isn't about restriction—it's about building a sustainable, compliant business that earns trust. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    </section>
+
+    <Callout title="Excellence in Compliance" type="success">
+      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
+    </Callout>
+
+
+    <section>
+      <h2>Key Marketing Restrictions</h2>
+      <p>Under <a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine OCP regulations</a>, cannabis marketing must:</p>
+      <ul>
+        <li><strong>Target only adults 21+</strong> — No marketing that appeals to minors</li>
+        <li><strong>Avoid certain platforms</strong> — Federal law restricts cannabis advertising on some platforms</li>
+        <li><strong>Include required warnings</strong> — Health warnings must appear in advertisements</li>
+        <li><strong>Be truthful</strong> — No false or misleading claims</li>
+        <li><strong>Follow signage rules</strong> — Local ordinances often restrict signage</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Prohibited Marketing</h2>
+      <ul>
+        <li>Advertising on billboards, transit, or public spaces (check local rules)</li>
+        <li>Marketing that targets anyone under 21</li>
+        <li>Claims that cannabis can cure or treat medical conditions</li>
+        <li>Use of cartoon characters or child-friendly imagery</li>
+        <li>Advertising within 500 feet of schools (federal restriction)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Allowed Marketing Channels</h2>
+      <ul>
+        <li><strong>Website & SEO</strong> — Build your online presence</li>
+        <li><strong>Social Media</strong> — With age-gating and platform compliance</li>
+        <li><strong>Email Marketing</strong> — With proper age verification</li>
+        <li><strong>Local Print</strong> — In age-restricted publications</li>
+        <li><strong>Events</strong> — At licensed adult-use venues</li>
+        <li><strong>Loyalty Programs</strong> — Build repeat customers</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Best Practices</h2>
+      <ul>
+        <li>Age-verify all marketing recipients</li>
+        <li>Include required disclaimers</li>
+        <li>Train staff on compliance</li>
+        <li>Document all marketing efforts</li>
+        <li>Review ads before publication</li>
+        <li>Stay updated on regulation changes</li>
+      </ul>
     </section>
 
     <section class="external-resources">
       <h2>Further Reading & Resources</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
       </ul>
+    </section>
+
+    
+    <section class="further-reading">
+      <h2>Stay Ahead of the Curve</h2>
+      <p>The cannabis landscape in Maine is constantly evolving. To ensure your business stays compliant and competitive, regularly consult the official resources provided by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>. Their guidelines are the bedrock of a successful, long-term operation.</p>
     </section>
 
     <section class="disclaimer">
@@ -36,7 +96,18 @@ import Layout from '../../layouts/Layout.astro';
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
   .external-resources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+  .further-reading { margin-top: 2rem; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .further-reading p { margin-bottom: 0; }
+
   .external-resources ul { list-style: none; padding-left: 0; }
   .external-resources li { margin-bottom: 0.75rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }

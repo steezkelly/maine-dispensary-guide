@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
 <Layout 
   title="Maine Cannabis Business Insurance | Maine Dispensary Guide" 
-  description="Expert guide to cannabis business insurance for dispensary entrepreneurs in Maine."
-  heroImage="https://images.unsplash.com/photo-1533491414534-19253f53874c?q=80&w=2070&auto=format&fit=crop"
+  description="Expert guide to cannabis business insurance for dispensary entrepreneurs in Maine. Required coverage and risk management."
+  heroImage="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop"
 >
   <article>
     <div class="article-header">
@@ -13,16 +14,89 @@ import Layout from '../../layouts/Layout.astro';
       <p class="subtitle">Protecting your investment in the Maine cannabis industry</p>
     </div>
 
-    <!-- OPENCODE BOT: PLEASE FILL IN THE CONTENT BASED ON THE APPROPRIATE TEMPLATE IN CONTENT_PROMPTS.MD -->
     <section>
-      <p>[Introduction - Waiting for OpenCode Content]</p>
+      <h2>Overview</h2>
+      <p>Insurance isn't just a cost—it's your safety net for building a sustainable business. The cannabis industry faces unique risks, and proper coverage protects everything you've worked to build. While insurance requirements can feel complex, finding the right coverage gives you peace of mind to focus on what matters: serving your customers and growing your business. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    </section>
+
+    <Callout title="Excellence in Compliance" type="success">
+      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
+    </Callout>
+
+
+    <section>
+      <h2>Required Insurance</h2>
+      <p>Maine OCP requires proof of insurance as part of licensing. Under <a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine OCP regulations</a>, you'll need:</p>
+      <ul>
+        <li><strong>General Liability</strong> — Protects against customer injuries and property damage</li>
+        <li><strong>Product Liability</strong> — Essential for protecting against claims related to products sold</li>
+        <li><strong>Property Insurance</strong> — Covers your physical location and equipment</li>
+        <li><strong>Workers Compensation</strong> — Required for employees in most cases</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Cannabis-Specific Coverage</h2>
+      <ul>
+        <li><strong>Crop Insurance</strong> — For cultivators, protects growing inventory</li>
+        <li><strong>Product Recall Insurance</strong> — Covers costs if products need to be recalled</li>
+        <li><strong>Cyber Liability</strong> — Protects customer data and POS systems</li>
+        <li><strong>Directors & Officers</strong> — For corporate governance protection</li>
+        <li><strong>Transit Insurance</strong> — Protects products during transport</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Finding Coverage</h2>
+      <p>Cannabis insurance requires specialized providers. Here's how to find the right coverage:</p>
+      <ul>
+        <li>Work with cannabis-experienced insurance brokers</li>
+        <li>Compare quotes from multiple carriers</li>
+        <li>Ensure policies meet Maine OCP requirements</li>
+        <li>Review coverage limits and deductibles</li>
+        <li>Ask about bundle discounts</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Cost Estimates</h2>
+      <table>
+        <thead>
+          <tr><th>Coverage Type</th><th>Estimated Annual Premium</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>General Liability</td><td>$5,000-15,000</td></tr>
+          <tr><td>Product Liability</td><td>$10,000-30,000</td></tr>
+          <tr><td>Property Insurance</td><td>$5,000-20,000</td></tr>
+          <tr><td>Workers Comp</td><td>$3,000-10,000</td></tr>
+          <tr><td><strong>Total Estimated</strong></td><td><strong>$23,000-75,000/year</strong></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Best Practices</h2>
+      <ul>
+        <li>Maintain comprehensive coverage from day one</li>
+        <li>Review policies annually</li>
+        <li>Document all incidents immediately</li>
+        <li>Keep records organized for claims</li>
+        <li>Build relationships with specialized brokers</li>
+      </ul>
     </section>
 
     <section class="external-resources">
       <h2>Further Reading & Resources</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
       </ul>
+    </section>
+
+    
+    <section class="further-reading">
+      <h2>Stay Ahead of the Curve</h2>
+      <p>The cannabis landscape in Maine is constantly evolving. To ensure your business stays compliant and competitive, regularly consult the official resources provided by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>. Their guidelines are the bedrock of a successful, long-term operation.</p>
     </section>
 
     <section class="disclaimer">
@@ -36,7 +110,18 @@ import Layout from '../../layouts/Layout.astro';
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
   .external-resources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+  .further-reading { margin-top: 2rem; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .further-reading p { margin-bottom: 0; }
+
   .external-resources ul { list-style: none; padding-left: 0; }
   .external-resources li { margin-bottom: 0.75rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }

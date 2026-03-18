@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
 <Layout 
   title="Maine Cannabis Inventory Management | Maine Dispensary Guide" 
-  description="Expert guide to cannabis inventory management for dispensary entrepreneurs in Maine."
-  heroImage="https://images.unsplash.com/photo-1533491414534-19253f53874c?q=80&w=2070&auto=format&fit=crop"
+  description="Expert guide to cannabis inventory management for dispensary entrepreneurs in Maine. METRC integration, compliance, and best practices."
+  heroImage="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop"
 >
   <article>
     <div class="article-header">
@@ -13,16 +14,90 @@ import Layout from '../../layouts/Layout.astro';
       <p class="subtitle">Ensuring compliance and efficiency in your Maine dispensary</p>
     </div>
 
-    <!-- OPENCODE BOT: PLEASE FILL IN THE CONTENT BASED ON THE APPROPRIATE TEMPLATE IN CONTENT_PROMPTS.MD -->
     <section>
-      <p>[Introduction - Waiting for OpenCode Content]</p>
+      <h2>Overview</h2>
+      <p>Effective inventory management is the backbone of a successful cannabis operation. It's not just about knowing what you have on shelves—it's about compliance, customer service, and profitability. Master this, and you'll run a smoother operation, satisfy more customers, and sleep better at night knowing your business is fully compliant. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    </section>
+
+    <Callout title="Excellence in Compliance" type="success">
+      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
+    </Callout>
+
+
+    <section>
+      <h2>METRC Integration</h2>
+      <p>Maine requires use of the METRC (Marijuana Enforcement Tracking Reporting Compliance) system for all licensed operators. Under <a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine OCP regulations</a>, you'll use METRC to:</p>
+      <ul>
+        <li><strong>Track all products</strong> — From seed to sale, every item is logged</li>
+        <li><strong>Manage packages</strong> — Tag and track each unit through the supply chain</li>
+        <li><strong>Record transfers</strong> — Document movement between facilities</li>
+        <li><strong>Generate reports</strong> — Produce compliance reports for regulators</li>
+        <li><strong>Monitor sales</strong> — Track daily transactions and inventory levels</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Inventory Processes</h2>
+      <ul>
+        <li><strong>Receiving</strong> — Inspect and log all incoming products with proper METRC entries</li>
+        <li><strong>Storage</strong> — Maintain organized, secure, and compliant storage areas</li>
+        <li><strong>Stocking</strong> — Rotate inventory (FIFO) to minimize waste</li>
+        <li><strong>Counts</strong> — Conduct regular inventory counts and reconcile with METRC</li>
+        <li><strong>Reporting</strong> — Generate required reports for OCP inspections</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Best Practices</h2>
+      <ul>
+        <li>Conduct weekly physical inventory counts</li>
+        <li>Reconcile METRC data with actual inventory daily</li>
+        <li>Train all staff on METRC procedures</li>
+        <li>Maintain backup records offline</li>
+        <li>Set par levels for popular products</li>
+        <li>Track slow-moving inventory for promotions</li>
+        <li>Build relationships with reliable suppliers</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Common Challenges</h2>
+      <ul>
+        <li><strong>Packaging changes</strong> — Update METRC when suppliers change packaging</li>
+        <li><strong>Returns and transfers</strong> — Document every movement properly</li>
+        <li><strong>Discrepancies</strong> — Investigate and resolve immediately</li>
+        <li><strong>System downtime</strong> — Have backup procedures in place</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Investment</h2>
+      <table>
+        <thead>
+          <tr><th>Category</th><th>Estimated Cost</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>METRC Fees</td><td>$50-200/month</td></tr>
+          <tr><td>Inventory Software</td><td>$200-1,000/month</td></tr>
+          <tr><td>Scanner/Hardware</td><td>$500-2,000</td></tr>
+          <tr><td>Training</td><td>$500-2,000</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section class="external-resources">
       <h2>Further Reading & Resources</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
+        <li><a href="https://www.metrc.com/" target="_blank" rel="noopener">METRC Official Site</a></li>
       </ul>
+    </section>
+
+    
+    <section class="further-reading">
+      <h2>Stay Ahead of the Curve</h2>
+      <p>The cannabis landscape in Maine is constantly evolving. To ensure your business stays compliant and competitive, regularly consult the official resources provided by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>. Their guidelines are the bedrock of a successful, long-term operation.</p>
     </section>
 
     <section class="disclaimer">
@@ -36,7 +111,18 @@ import Layout from '../../layouts/Layout.astro';
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
   .external-resources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+  .further-reading { margin-top: 2rem; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .further-reading p { margin-bottom: 0; }
+
   .external-resources ul { list-style: none; padding-left: 0; }
   .external-resources li { margin-bottom: 0.75rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }
