@@ -1,0 +1,237 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const businessGuides = [
+  {
+    title: "Maine Dispensary License Requirements",
+    description: "Complete guide to obtaining a dispensary license in Maine, including application process, fees, and eligibility.",
+    href: "/guides/maine-dispensary-license/"
+  },
+  {
+    title: "Dispensary Business Plan",
+    description: "Template and guide for creating a comprehensive business plan for your Maine dispensary.",
+    href: "/guides/maine-dispensary-business-plan/"
+  },
+  {
+    title: "Startup Costs & Investment",
+    description: "Detailed breakdown of costs involved in opening a dispensary in Maine.",
+    href: "/guides/maine-dispensary-costs/"
+  },
+  {
+    title: "Maine Cannabis Market Analysis",
+    description: "Market size, growth trends, and opportunities in Maine's cannabis industry.",
+    href: "/guides/maine-cannabis-market/"
+  },
+  {
+    title: "Hiring & Staffing",
+    description: "Building your dispensary team - roles, requirements, and compensation.",
+    href: "/guides/maine-dispensary-hiring/"
+  },
+  {
+    title: "Vendor Directory",
+    description: "Maine-based professionals for legal, accounting, and security services.",
+    href: "/guides/maine-cannabis-vendor-directory/"
+  }
+];
+
+const operationsGuides = [
+  {
+    title: "Cannabis Regulations in Maine",
+    description: "Overview of state and local regulations governing cannabis businesses in Maine.",
+    href: "/guides/maine-cannabis-regulations/"
+  },
+  {
+    title: "Security Requirements",
+    description: "Security systems, surveillance, and inventory protection requirements.",
+    href: "/guides/maine-dispensary-security/"
+  },
+  {
+    title: "POS Systems for Dispensaries",
+    description: "Compare the best point-of-sale systems for Maine cannabis businesses.",
+    href: "/guides/maine-dispensary-pos/"
+  },
+  {
+    title: "Packaging & Labeling",
+    description: "Maine cannabis packaging and labeling compliance requirements.",
+    href: "/guides/maine-dispensary-packaging/"
+  },
+  {
+    title: "Inventory & Metrc Management",
+    description: "Tracking compliance and inventory management using Metrc.",
+    href: "/guides/maine-cannabis-inventory-management/"
+  }
+];
+
+const legalFinancialGuides = [
+  {
+    title: "280E & State Taxes",
+    description: "Understanding tax obligations for Maine cannabis dispensaries.",
+    href: "/guides/maine-cannabis-taxation-280e/"
+  },
+  {
+    title: "Cannabis Banking Solutions",
+    description: "Financial institutions and banking options for the Maine industry.",
+    href: "/guides/maine-cannabis-banking-solutions/"
+  },
+  {
+    title: "Staff Licensing (IIC/AIC)",
+    description: "How to license your employees for work in the Maine cannabis market.",
+    href: "/guides/maine-cannabis-staffing-licensing/"
+  },
+  {
+    title: "Marketing & Advertising Rules",
+    description: "Compliance rules for advertising cannabis businesses in Maine.",
+    href: "/guides/maine-cannabis-marketing-compliance/"
+  }
+];
+
+const cityGuides = [
+  {
+    title: "Portland Dispensary Guide",
+    description: "How to open and operate a dispensary in Portland, Maine.",
+    href: "/guides/portland-dispensary-guide/"
+  },
+  {
+    title: "Augusta Dispensary Guide",
+    description: "Opening a dispensary in Maine's capital city.",
+    href: "/guides/augusta-dispensary-guide/"
+  },
+  {
+    title: "South Portland Guide",
+    description: "A guide for the South Portland cannabis market.",
+    href: "/guides/south-portland-dispensary-guide/"
+  },
+  {
+    title: "Lewiston Dispensary Guide",
+    description: "Local rules and opportunities in Lewiston, Maine.",
+    href: "/guides/lewiston-dispensary-guide/"
+  },
+  {
+    title: "Bangor Dispensary Guide",
+    description: "Zoning and licensing in Bangor, Maine.",
+    href: "/guides/bangor-dispensary-guide/"
+  },
+  {
+    title: "Biddeford Dispensary Guide",
+    description: "Operating a cannabis business in Biddeford, Maine.",
+    href: "/guides/biddeford-dispensary-guide/"
+  },
+  {
+    title: "Auburn Dispensary Guide",
+    description: "Requirements for Auburn, Maine dispensary businesses.",
+    href: "/guides/auburn-dispensary-guide/"
+  }
+];
+---
+
+<Layout title="Dispensary Guides | Maine Dispensary Guide" description="Comprehensive guides for opening and operating a cannabis dispensary in Maine.">
+  <section class="page-header">
+    <h1>Dispensary Guides</h1>
+    <p>Everything you need to know about opening and operating a cannabis dispensary in Maine.</p>
+  </section>
+
+  <section class="category-section">
+    <h2>Business Essentials</h2>
+    <div class="guides-grid">
+      {businessGuides.map((guide) => (
+        <a href={guide.href} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="category-section">
+    <h2>Compliance & Legal</h2>
+    <div class="guides-grid">
+      {legalFinancialGuides.map((guide) => (
+        <a href={guide.href} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="category-section">
+    <h2>Operations & Technology</h2>
+    <div class="guides-grid">
+      {operationsGuides.map((guide) => (
+        <a href={guide.href} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="category-section">
+    <h2>City & Regional Guides</h2>
+    <div class="guides-grid">
+      {cityGuides.map((guide) => (
+        <a href={guide.href} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  
+  .page-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+  }
+
+  .category-section {
+    margin-bottom: 4rem;
+  }
+
+  .category-section h2 {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+    padding-bottom: 0.25rem;
+  }
+  
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .guide-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  
+  .guide-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  
+  .guide-card h3 {
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+  }
+  
+  .guide-card p {
+    color: var(--color-text-light);
+    margin-bottom: 0;
+    font-size: 0.9375rem;
+  }
+</style>
