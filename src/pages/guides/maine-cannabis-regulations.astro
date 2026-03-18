@@ -1,130 +1,60 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="Maine Cannabis Regulations | Maine Dispensary Guide" description="Complete guide to Maine cannabis regulations, compliance requirements, and legal framework for dispensary owners.">
+<Layout 
+  title="Maine Cannabis Regulations | Maine Dispensary Guide" 
+  description="Complete guide to Maine cannabis regulations, compliance requirements, and legal framework for dispensary owners."
+  heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?q=80&w=1200&h=400&auto=format&fit=crop"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>Cannabis Regulations in Maine</h1>
       <p class="subtitle">Understanding the legal framework for operating a dispensary in Maine</p>
-    </header>
+    </div>
+
+    <Callout title="Compliance as a Foundation" type="tip">
+      Navigating regulations isn't just about following rules; it's about building a business that the community can trust. When you embrace compliance as a core value, you're protecting your dream and ensuring that the Maine cannabis industry remains a leader in safety and professionalism. We're all in this together!
+    </Callout>
 
     <section>
       <h2>State Regulatory Framework</h2>
-      <p>Maine's cannabis industry is regulated by the Maine Office of Cannabis Policy (OCP), which oversees licensing, compliance, and enforcement for both medical and adult-use cannabis businesses.</p>
+      <p>Maine's cannabis industry is regulated by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>, which oversees licensing, compliance, and enforcement for both medical and adult-use cannabis businesses.</p>
     </section>
 
     <section>
       <h2>Key Regulations</h2>
+      <p>The <a href="https://www.maine.gov/dafs/ocp/rules-statutes" target="_blank" rel="noopener noreferrer">OCP Rules and Statutes</a> provide the comprehensive legal framework for all operations.</p>
       
       <h3>Licensing Requirements</h3>
-      <p>All cannabis businesses must obtain the appropriate license from OCP before operating. Licenses must be renewed annually.</p>
-      
-      <h3>Age Restrictions</h3>
-      <ul>
-        <li>Adult-use customers must be 21 years or older</li>
-        <li>Medical dispensaries may serve qualified patients with valid medical cannabis cards</li>
-        <li>Caregivers may purchase cannabis on behalf of patients</li>
-      </ul>
-      
-      <h3>Possession Limits</h3>
-      <ul>
-        <li>Adult-use: Up to 2.5 ounces of cannabis flower or equivalent concentrates per day</li>
-        <li>Medical patients: Up to 5 ounces (with physician certification)</li>
-      </ul>
-      
-      <h3>Operating Hours</h3>
-      <p>Cannabis dispensaries may operate between 7:00 AM and 9:00 PM, though local ordinances may impose additional restrictions.</p>
-    </section>
-
-    <section>
-      <h2>Compliance Requirements</h2>
-      
-      <h3>Seed-to-Sale Tracking</h3>
-      <p>All licensees must use the state's approved seed-to-sale tracking system to track all cannabis products from cultivation to sale.</p>
-      
-      <h3>Packaging & Labeling</h3>
-      <p>All products must comply with Maine's strict packaging and labeling requirements:</p>
-      <ul>
-        <li>Child-resistant packaging required</li>
-        <li>Label must include THC content, warnings, and producer information</li>
-        <li>No marketing to minors</li>
-      </ul>
-      
-      <h3>Testing Requirements</h3>
-      <p>All cannabis products must be tested by a licensed testing laboratory for:</p>
-      <ul>
-        <li>Potency</li>
-        <li>Contaminants (pesticides, mold, heavy metals)</li>
-        <li>Residual solvents</li>
-      </ul>
-      
-      <h3>Security Requirements</h3>
-      <ul>
-        <li>24/7 video surveillance of all areas</li>
-        <li>Alarm systems</li>
-        <li>Secure storage for inventory</li>
-        <li>Background checks for all employees</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Local Regulations</h2>
-      <p>Maine municipalities can enact local ordinances regulating or prohibiting cannabis businesses. Before选址, research local zoning laws and whether the town has opted in or out of allowing cannabis businesses.</p>
-    </section>
-
-    <section>
-      <h2>Ongoing Compliance</h2>
-      <p>Dispensaries must maintain compliance through:</p>
-      <ul>
-        <li>Regular inventory audits</li>
-        <li>Employee training and documentation</li>
-        <li>Maintenance of proper records</li>
-        <li>Cooperation with OCP inspections</li>
+...
         <li>Timely license renewal</li>
       </ul>
     </section>
 
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/rules-statutes" target="_blank" rel="noopener noreferrer">OCP Rules & Statutes</a></li>
+      </ul>
+    </section>
+
     <section class="disclaimer">
-      <p><em>This information is for informational purposes only and does not constitute legal advice. Regulations change frequently. Consult with a qualified cannabis attorney in Maine for specific guidance.</em></p>
+      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis regulations are subject to change; always consult with the Maine Office of Cannabis Policy and qualified legal counsel.</em></p>
     </section>
   </article>
 </Layout>
 
 <style>
-  article {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  
-  header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  
-  .subtitle {
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-  }
-  
-  section {
-    margin-bottom: 2rem;
-  }
-  
-  section h2 {
-    margin-top: 0;
-  }
-  
-  section h3 {
-    margin-top: 1.5rem;
-  }
-  
-  .disclaimer {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-  }
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; }
+  section h3 { margin-top: 1.5rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>

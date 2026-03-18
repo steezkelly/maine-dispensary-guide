@@ -1,0 +1,79 @@
+---
+const { url } = Astro;
+const pathSegments = url.pathname.split('/').filter(segment => segment !== '');
+
+const breadcrumbs = pathSegments.map((segment, index) => {
+  const href = '/' + pathSegments.slice(0, index + 1).join('/') + '/';
+  const label = segment
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, char => char.toUpperCase());
+  return { href, label };
+});
+
+const isHome = url.pathname === '/';
+---
+
+{!isHome && (
+  <nav aria-label="Breadcrumb" class="breadcrumbs">
+    <ol>
+      <li>
+        <a href="/">Home</a>
+      </li>
+      {breadcrumbs.map((crumb, index) => (
+        <li key={index}>
+          <span class="separator">/</span>
+          {index === breadcrumbs.length - 1 ? (
+            <span class="current" aria-current="page">{crumb.label}</span>
+          ) : (
+            <a href={crumb.href}>{crumb.label}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .breadcrumbs {
+    max-width: var(--max-width);
+    margin: 0 auto 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .breadcrumbs ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+  }
+
+  .separator {
+    margin: 0 0.5rem;
+    color: #ccc;
+    user-select: none;
+  }
+
+  .current {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+</style>

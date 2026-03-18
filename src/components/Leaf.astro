@@ -1,0 +1,26 @@
+---
+interface Props {
+  size?: number;
+  color?: string;
+  className?: string;
+}
+
+const { size = 24, color = "currentColor", className = "" } = Astro.props;
+---
+
+<svg 
+  width={size} 
+  height={size} 
+  viewBox="0 0 24 24" 
+  fill="none" 
+  stroke={color} 
+  stroke-width="1.5" 
+  stroke-linecap="round" 
+  stroke-linejoin="round" 
+  class={className}
+>
+  <path d="M12 22V17" />
+  <path d="M12 17C12 17 17 14 17 10C17 6 12 2 12 2C12 2 7 6 7 10C7 14 12 17 12 17Z" fill={color} fill-opacity="0.1" />
+  <path d="M12 17C12 17 7 16 4 13C1 10 2 5 2 5C2 5 7 6 10 9C13 12 12 17 12 17Z" fill={color} fill-opacity="0.1" />
+  <path d="M12 17C12 17 17 16 20 13C23 10 22 5 22 5C22 5 17 6 14 9C11 12 12 17 12 17Z" fill={color} fill-opacity="0.1" />
+</svg>

@@ -1,18 +1,27 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="Maine Dispensary Startup Costs | Maine Dispensary Guide" description="Detailed breakdown of startup costs for opening a cannabis dispensary in Maine. Includes investment requirements, operating costs, and ROI estimates.">
+<Layout 
+  title="Maine Dispensary Startup Costs | Maine Dispensary Guide" 
+  description="Detailed breakdown of startup costs for opening a cannabis dispensary in Maine. Includes investment requirements, operating costs, and ROI estimates."
+  heroImage="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>Startup Costs & Investment</h1>
       <p class="subtitle">Understanding the financial requirements for opening a dispensary in Maine</p>
-    </header>
+    </div>
 
     <section>
       <h2>Overview</h2>
       <p>Opening a cannabis dispensary in Maine requires significant capital investment. Understanding these costs upfront will help you plan properly and secure adequate funding. This guide breaks down all the expenses you can expect.</p>
     </section>
+
+    <Callout title="Invest in Your Future" type="success">
+      While the numbers might look big, remember that you're investing in a historic opportunity. Every dollar you put into your build-out, security, and team is a brick in the foundation of your legacy. Seeing your vision take shape in a physical space is one of the most rewarding parts of the entire journey.
+    </Callout>
 
     <section>
       <h2>Pre-Licensing Costs</h2>
@@ -156,6 +165,14 @@ import Layout from '../../layouts/Layout.astro';
       </ul>
     </section>
 
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/licensing-fees" target="_blank" rel="noopener noreferrer">Maine OCP Licensing Fees</a></li>
+      </ul>
+    </section>
+
     <section class="disclaimer">
       <p><em>Costs are estimates and vary based on location, size, and specific requirements. Consult with professionals for accurate projections.</em></p>
     </section>
@@ -164,7 +181,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
-  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
   section h2 { margin-top: 0; }
@@ -174,4 +191,6 @@ import Layout from '../../layouts/Layout.astro';
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>

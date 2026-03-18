@@ -1,19 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="Dispensary Business Plan | Maine Dispensary Guide" description="Complete guide to creating a business plan for your Maine cannabis dispensary. Includes template, financial projections, and essential sections.">
+<Layout 
+  title="Dispensary Business Plan | Maine Dispensary Guide" 
+  description="Complete guide to creating a business plan for your Maine cannabis dispensary. Includes template, financial projections, and essential sections."
+  heroImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>Dispensary Business Plan</h1>
       <p class="subtitle">Your complete guide to creating a comprehensive business plan for a Maine cannabis dispensary</p>
-    </header>
+    </div>
 
     <section>
       <h2>Why You Need a Business Plan</h2>
       <p>A well-crafted business plan is essential for any Maine dispensary. It serves multiple purposes: securing funding, guiding operations, and demonstrating to regulators that you have a viable, professional approach to your business.</p>
       <p>Whether you're seeking investment, applying for a loan, or simply organizing your thoughts, a business plan is your roadmap to success in Maine's cannabis market.</p>
     </section>
+
+    <Callout title="Designing Your Success" type="passion">
+      Your business plan is more than just a document—it's the first tangible version of your dream. Writing it down makes your vision real and gives you the confidence to lead. It's the moment you stop "thinking" about a dispensary and start "building" one.
+    </Callout>
 
     <section>
       <h2>Essential Sections</h2>
@@ -135,6 +144,14 @@ import Layout from '../../layouts/Layout.astro';
       </ul>
     </section>
 
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.sba.gov/business-guide/plan-your-business/write-your-business-plan" target="_blank" rel="noopener noreferrer">SBA Guide: Write your business plan</a></li>
+      </ul>
+    </section>
+
     <section class="disclaimer">
       <p><em>This information is for informational purposes only and does not constitute legal or financial advice. Consult with qualified professionals in Maine for specific guidance.</em></p>
     </section>
@@ -143,7 +160,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
-  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
   section h2 { margin-top: 0; }
@@ -154,4 +171,6 @@ import Layout from '../../layouts/Layout.astro';
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
   th { background: var(--color-background); }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>

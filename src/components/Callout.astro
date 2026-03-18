@@ -1,0 +1,67 @@
+---
+interface Props {
+  title: string;
+  type?: 'passion' | 'tip' | 'success';
+}
+
+const { title, type = 'passion' } = Astro.props;
+
+const icons = {
+  passion: '✨',
+  tip: '💡',
+  success: '🌱'
+};
+
+const bgColor = {
+  passion: 'rgba(88, 129, 87, 0.1)',
+  tip: 'rgba(163, 177, 138, 0.15)',
+  success: 'rgba(13, 78, 80, 0.05)'
+};
+---
+
+<div class="callout" style={`background-color: ${bgColor[type]}`}>
+  <div class="callout-header">
+    <span class="callout-icon">{icons[type]}</span>
+    <h4>{title}</h4>
+  </div>
+  <div class="callout-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .callout {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin: 2rem 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .callout-icon {
+    font-size: 1.5rem;
+  }
+
+  .callout-header h4 {
+    margin: 0;
+    font-family: var(--font-serif);
+    color: var(--color-primary);
+    font-size: 1.125rem;
+  }
+
+  .callout-content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .callout-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

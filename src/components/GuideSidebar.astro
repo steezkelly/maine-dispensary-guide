@@ -1,0 +1,130 @@
+---
+const { category = "Business Essentials" } = Astro.props;
+
+const businessGuides = [
+  { title: "License Requirements", href: "/guides/maine-dispensary-license/" },
+  { title: "Business Plan", href: "/guides/maine-dispensary-business-plan/" },
+  { title: "Startup Costs", href: "/guides/maine-dispensary-costs/" },
+  { title: "Market Analysis", href: "/guides/maine-cannabis-market/" }
+];
+
+const cityGuides = [
+  { title: "Portland Guide", href: "/guides/portland-dispensary-guide/" },
+  { title: "Augusta Guide", href: "/guides/augusta-dispensary-guide/" },
+  { title: "South Portland", href: "/guides/south-portland-dispensary-guide/" },
+  { title: "Bangor Guide", href: "/guides/bangor-dispensary-guide/" }
+];
+
+const complianceGuides = [
+  { title: "280E Tax Guide", href: "/guides/maine-cannabis-taxation-280e/" },
+  { title: "Security Rules", href: "/guides/maine-dispensary-security/" },
+  { title: "POS Systems", href: "/guides/maine-dispensary-pos/" }
+];
+---
+
+<aside class="guide-sidebar">
+  <div class="sidebar-section">
+    <h4>Business Essentials</h4>
+    <ul>
+      {businessGuides.map(guide => (
+        <li><a href={guide.href}>{guide.title}</a></li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <h4>City Guides</h4>
+    <ul>
+      {cityGuides.map(guide => (
+        <li><a href={guide.href}>{guide.title}</a></li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <h4>Compliance</h4>
+    <ul>
+      {complianceGuides.map(guide => (
+        <li><a href={guide.href}>{guide.title}</a></li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="sidebar-cta">
+    <p>Need professional help?</p>
+    <a href="/resources/" class="btn-sidebar">View Vendor Directory</a>
+  </div>
+</aside>
+
+<style>
+  .guide-sidebar {
+    width: 100%;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    position: sticky;
+    top: 120px;
+  }
+
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-section h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.25rem;
+  }
+
+  .sidebar-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-section li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .sidebar-section a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .sidebar-section a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .sidebar-cta {
+    background: var(--color-primary);
+    color: white;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+
+  .sidebar-cta p {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .btn-sidebar {
+    display: block;
+    background: white;
+    color: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+</style>

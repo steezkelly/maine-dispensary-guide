@@ -1,18 +1,27 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="Hiring & Staffing a Dispensary in Maine | Maine Dispensary Guide" description="Guide to hiring and staffing your Maine cannabis dispensary. Roles, responsibilities, compensation, and compliance requirements.">
+<Layout 
+  title="Hiring & Staffing a Dispensary in Maine | Maine Dispensary Guide" 
+  description="Guide to hiring and staffing your Maine cannabis dispensary. Roles, responsibilities, compensation, and compliance requirements."
+  heroImage="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>Hiring & Staffing</h1>
       <p class="subtitle">Building your dispensary team in Maine</p>
-    </header>
+    </div>
 
     <section>
       <h2>Overview</h2>
       <p>Your team is critical to success. Maine requires background checks and specific training for all employees. Building a knowledgeable, compliant team starts with understanding roles and requirements.</p>
     </section>
+
+    <Callout title="Cultivating Your Culture" type="passion">
+      The people you hire are the face of your brand and the heartbeat of your community. When you find a team that shares your enthusiasm for the craft and your commitment to service, work doesn't feel like work anymore. It feels like a movement.
+    </Callout>
 
     <section>
       <h2>Key Positions</h2>
@@ -124,6 +133,14 @@ import Layout from '../../layouts/Layout.astro';
       </ul>
     </section>
 
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/licensing-fees" target="_blank" rel="noopener noreferrer">OCP Employee Licensing Info</a></li>
+      </ul>
+    </section>
+
     <section class="disclaimer">
       <p><em>Compensation ranges are estimates and vary by location and experience.</em></p>
     </section>
@@ -132,7 +149,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
-  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
   section h2, section h3 { margin-top: 1.5rem; }
@@ -144,4 +161,6 @@ import Layout from '../../layouts/Layout.astro';
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>

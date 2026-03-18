@@ -1,18 +1,26 @@
 ---
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PineTree from '../components/PineTree.astro';
+import Leaf from '../components/Leaf.astro';
+import GuideSidebar from '../components/GuideSidebar.astro';
+
 interface Props {
   title: string;
   description?: string;
   stateName?: string;
   isHub?: boolean;
+  heroImage?: string;
 }
 
 const { 
   title, 
   description = "Your complete guide to opening and operating a cannabis dispensary.",
   stateName = "Maine",
-  isHub = false
+  isHub = false,
+  heroImage
 } = Astro.props;
 
+const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides/';
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const fullTitle = `${title} | ${siteName}`;
 ---
@@ -27,6 +35,10 @@ const fullTitle = `${title} | ${siteName}`;
     <meta name="description" content={description} />
     <title>{fullTitle}</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="canonical" href={Astro.url} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     
@@ -39,10 +51,16 @@ const fullTitle = `${title} | ${siteName}`;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body>
-    <header>
-      <nav>
-        <a href="/" class="logo">{siteName}</a>
+  <body class="bg-maine">
+    <header id="site-header">
+      <nav id="site-nav">
+        <a href="/" class="logo">
+          <div class="logo-icons">
+            <PineTree size={24} color="var(--color-primary)" className="logo-pine" />
+            <Leaf size={20} color="var(--color-accent)" className="logo-leaf" />
+          </div>
+          <span>{siteName}</span>
+        </a>
         <div class="nav-links">
           <a href="/guides/">Guides</a>
           <a href="/resources/">Resources</a>
@@ -52,11 +70,33 @@ const fullTitle = `${title} | ${siteName}`;
     </header>
     
     <main>
-      <slot />
+      <Breadcrumbs />
+      
+      {isGuide ? (
+        <div class="guide-layout">
+          <div class="guide-content">
+            {heroImage && (
+              <div class="guide-hero">
+                <img src={heroImage} alt={title} loading="lazy" />
+              </div>
+            )}
+            <slot />
+          </div>
+          <div class="guide-sidebar-container">
+            <GuideSidebar />
+          </div>
+        </div>
+      ) : (
+        <slot />
+      )}
     </main>
     
     <footer>
       <div class="footer-content">
+        <div class="footer-icons">
+          <PineTree size={32} color="var(--color-border)" />
+          <Leaf size={28} color="var(--color-border)" />
+        </div>
         <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
         <p class="disclaimer">This site is for informational purposes and does not constitute legal, financial, or business advice. Consult with qualified professionals before making business decisions.</p>
         {!isHub && (
@@ -71,16 +111,20 @@ const fullTitle = `${title} | ${siteName}`;
 
 <style is:global>
   :root {
-    --color-primary: #2d5a27;
-    --color-primary-dark: #1e3d1a;
-    --color-secondary: #4a7c43;
-    --color-background: #fafafa;
+    --color-primary: #0D4E50; /* Deep Spruce */
+    --color-primary-dark: #083638;
+    --color-secondary: #334A36; /* Pine Needle */
+    --color-accent: #588157;    /* Leaf Green */
+    --color-soft-green: #A3B18A; /* Sage */
+    --color-background: #F2F2E2; /* Warm Bone/Paper */
     --color-surface: #ffffff;
-    --color-text: #333333;
-    --color-text-light: #666666;
-    --color-border: #e0e0e0;
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    --max-width: 900px;
+    --color-text: #1a1a1a;
+    --color-text-light: #555555;
+    --color-border: #d1d1c1;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Libre Baskerville', serif;
+    --max-width: 1100px;
+    --radius: 1rem;
   }
   
   * {
@@ -94,24 +138,29 @@ const fullTitle = `${title} | ${siteName}`;
     background-color: var(--color-background);
     color: var(--color-text);
     line-height: 1.6;
+    scroll-padding-top: 100px;
   }
   
   body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: radial-gradient(#d1d1c1 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
   }
   
-  header {
-    background-color: var(--color-surface);
+  #site-header {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--color-border);
     padding: 1rem 0;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   }
   
-  nav {
+  #site-nav {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 1.5rem;
@@ -121,10 +170,25 @@ const fullTitle = `${title} | ${siteName}`;
   }
   
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-serif);
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
+  }
+
+  .logo-icons {
+    display: flex;
+    align-items: center;
+    gap: -0.5rem;
+  }
+
+  .logo-leaf {
+    margin-left: -10px;
+    margin-bottom: -8px;
   }
   
   .nav-links {
@@ -135,12 +199,15 @@ const fullTitle = `${title} | ${siteName}`;
   .nav-links a {
     color: var(--color-text);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: 600;
+    transition: all 0.2s;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
   }
   
   .nav-links a:hover {
-    color: var(--color-primary);
+    background: var(--color-soft-green);
+    color: white;
   }
   
   main {
@@ -148,16 +215,24 @@ const fullTitle = `${title} | ${siteName}`;
     max-width: var(--max-width);
     width: 100%;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem;
   }
   
   footer {
     background-color: var(--color-surface);
     border-top: 1px solid var(--color-border);
-    padding: 3rem 1.5rem;
+    padding: 5rem 1.5rem;
     text-align: center;
     color: var(--color-text-light);
     font-size: 0.875rem;
+  }
+
+  .footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    opacity: 0.4;
   }
 
   .footer-content {
@@ -167,78 +242,123 @@ const fullTitle = `${title} | ${siteName}`;
 
   .disclaimer {
     font-size: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.8;
   }
 
   .state-link {
-    margin-top: 1.5rem;
-    font-weight: 500;
+    margin-top: 2rem;
+    font-weight: 600;
   }
   
   h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: var(--color-text);
-    line-height: 1.2;
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    line-height: 1.1;
   }
   
   h2 {
-    font-size: 1.75rem;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+  }
+  
+  h3 {
+    font-weight: 700;
+    font-size: 1.35rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
     color: var(--color-text);
   }
   
-  h3 {
-    font-size: 1.25rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--color-text);
-  }
-  
   p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.0625rem;
   }
   
   a {
-    color: var(--color-primary);
+    color: var(--color-accent);
     text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
   }
   
   a:hover {
+    color: var(--color-primary);
     text-decoration: underline;
   }
   
   ul, ol {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     padding-left: 1.5rem;
   }
   
   li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
   
   code {
-    background-color: #f0f0f0;
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
+    background-color: rgba(163, 177, 138, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
     font-size: 0.875em;
+    color: var(--color-primary-dark);
   }
   
   pre {
-    background-color: #1e1e1e;
+    background-color: #1e2a2a;
     color: #d4d4d4;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 2rem;
+    border-radius: var(--radius);
     overflow-x: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    border: 1px solid #2d3d3d;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
   
   pre code {
     background: none;
     padding: 0;
+  }
+
+  /* Guide Layout Specifics */
+  .guide-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .guide-hero {
+    width: 100%;
+    height: 400px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 4rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+
+  .guide-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1000px) {
+    .guide-layout {
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+    .guide-sidebar-container {
+      order: 2;
+    }
   }
 </style>

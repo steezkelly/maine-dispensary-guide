@@ -1,13 +1,22 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="South Portland Dispensary Guide | Maine Dispensary Guide" description="Complete guide to opening a cannabis dispensary in South Portland, Maine. Portland metro market with lower costs.">
+<Layout 
+  title="South Portland Dispensary Guide | Maine Dispensary Guide" 
+  description="Complete guide to opening a cannabis dispensary in South Portland, Maine. Portland metro market with lower costs."
+  heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?q=80&w=2070&auto=format&fit=crop"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>South Portland Dispensary Guide</h1>
       <p class="subtitle">How to open a cannabis dispensary in South Portland, Maine</p>
-    </header>
+    </div>
+
+    <Callout title="Casco Bay Opportunities" type="success">
+      South Portland offers the perfect balance of metropolitan access and community feel. By setting up shop here, you're positioning yourself at a strategic gateway to the Casco Bay region. It's a fantastic place to build lasting relationships with both locals and visitors!
+    </Callout>
 
     <section>
       <h2>Overview</h2>
@@ -75,15 +84,23 @@ import Layout from '../../layouts/Layout.astro';
       </ul>
     </section>
 
+    <section class="external-resources">
+      <h2>Further Reading & Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.southportland.org/" target="_blank" rel="noopener noreferrer">City of South Portland Official Website</a></li>
+      </ul>
+    </section>
+
     <section class="disclaimer">
-      <p><em>This is for informational purposes only.</em></p>
+      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis regulations are subject to change; always consult with the Maine Office of Cannabis Policy and qualified legal counsel.</em></p>
     </section>
   </article>
 </Layout>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
-  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
   section h2 { margin-top: 0; }
@@ -92,5 +109,8 @@ import Layout from '../../layouts/Layout.astro';
   th { background: var(--color-background); }
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
+  .external-resources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+  .external-resources ul { list-style: none; padding-left: 0; }
+  .external-resources li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }
 </style>

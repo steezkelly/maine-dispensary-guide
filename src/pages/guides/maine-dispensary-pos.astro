@@ -1,120 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
 ---
 
-<Layout title="POS Systems for Maine Dispensaries | Maine Dispensary Guide" description="Compare the best point-of-sale systems for Maine cannabis dispensaries. Features, pricing, compliance, and seed-to-sale integration.">
+<Layout 
+  title="POS Systems for Maine Dispensaries | Maine Dispensary Guide" 
+  description="Compare the best point-of-sale systems for Maine cannabis dispensaries. Features, pricing, compliance, and seed-to-sale integration."
+  heroImage="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>POS Systems for Dispensaries</h1>
       <p class="subtitle">Choosing the right point-of-sale system for your Maine cannabis dispensary</p>
-    </header>
+    </div>
 
     <section>
       <h2>Why Cannabis-Specific POS Matters</h2>
       <p>General retail POS systems won't work for cannabis dispensaries. You need specialized software that handles seed-to-sale tracking, compliance reporting, and cannabis-specific regulations.</p>
     </section>
 
+    <Callout title="The Engine of Your Shop" type="tip">
+      Your POS system is the central nervous system of your dispensary. Choosing a system that feels intuitive and exciting to use will empower your team to provide the best possible experience for your customers. It's where your community's needs meet your business's efficiency.
+    </Callout>
+
     <section>
       <h2>Key Features Required</h2>
-      <ul>
-        <li><strong>Seed-to-Sale Tracking</strong> - Integration with state tracking system</li>
-        <li><strong>Age Verification</strong> - Built-in ID scanning</li>
-        <li><strong>Inventory Management</strong> - Real-time stock tracking</li>
-        <li><strong>Compliance Reporting</strong> - Automatic regulatory reports</li>
-        <li><strong>Tax Calculation</strong> - Maine cannabis taxes</li>
-        <li><strong>Employee Management</strong> - Permissions and tracking</li>
-        <li><strong>Customer Loyalty</strong> - CRM features</li>
-        <li><strong>Reporting & Analytics</strong> - Sales insights</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Top POS Providers</h2>
-      
-      <h3>BioTrackTHC</h3>
-      <p>Industry leader with comprehensive features. Used by many Maine operators.</p>
-      <ul>
-        <li>Strengths: Robust compliance, widely adopted</li>
-        <li>Price: Moderate to premium</li>
-      </ul>
-
-      <h3>MJ Freeway / Akerna</h3>
-      <p>Established player with strong inventory management.</p>
-      <ul>
-        <li>Strengths: Comprehensive reporting</li>
-        <li>Price: Premium</li>
-      </ul>
-
-      <h3>Leaf Logix</h3>
-      <p>Modern, user-friendly interface with good customer support.</p>
-      <ul>
-        <li>Strengths: Ease of use, good support</li>
-        <li>Price: Competitive</li>
-      </ul>
-
-      <h3>Clover</h3>
-      <p>Consumer-friendly with good integration options.</p>
-      <ul>
-        <li>Strengths: Intuitive interface</li>
-        <li>Price: Moderate</li>
-      </ul>
-
-      <h3>Square for Retail</h3>
-      <p>Simple option, may require additional compliance integration.</p>
-      <ul>
-        <li>Strengths: Low cost, easy setup</li>
-        <li>Caveat: May need add-ons for full compliance</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Maine Compliance Requirements</h2>
-      <p>Your POS must integrate with Maine's seed-to-sale tracking system. Ensure your chosen system:</p>
-      <ul>
-        <li>Integrates with Maine OCP reporting requirements</li>
-        <li>Tracks all products from seed to sale</li>
-        <li>Generates required compliance reports</li>
-        <li>Handles Maine-specific tax calculations</li>
-        <li>Maintains accurate inventory records</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Pricing Comparison</h2>
-      <table>
-        <thead>
-          <tr><th>Provider</th><th>Setup Fee</th><th>Monthly</th><th>Per Transaction</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>BioTrackTHC</td><td>$5,000+</td><td>$400-800</td><td>1-3%</td></tr>
-          <tr><td>MJ Freeway</td><td>$3,000+</td><td>$300-600</td><td>1-2%</td></tr>
-          <tr><td>Leaf Logix</td><td>$1,500+</td><td>$200-400</td><td>1-2%</td></tr>
-          <tr><td>Clover</td><td>$0-500</td><td>$100-250</td><td>1.5-2.5%</td></tr>
-          <tr><td>Square</td><td>$0</td><td>$0-60</td><td>1.5%</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>Implementation Tips</h2>
-      <ul>
-        <li>Start the selection process early (before build-out)</li>
-        <li>Request demos from multiple vendors</li>
-        <li>Check references from other Maine operators</li>
-        <li>Ensure 24/7 support availability</li>
-        <li>Plan for training time</li>
-        <li>Test thoroughly before going live</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Key Takeaways</h2>
-      <ul>
-        <li>Cannabis-specific POS is required in Maine</li>
-        <li>Seed-to-sale integration is mandatory</li>
-        <li>Prices range from $5K setup + $100/mo to premium options</li>
-        <li>Consider ease of use alongside features</li>
+...
         <li>Ensure Maine compliance before choosing</li>
+      </ul>
+    </section>
+
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/tracking" target="_blank" rel="noopener noreferrer">Maine Seed-to-Sale Tracking Info</a></li>
       </ul>
     </section>
 
@@ -126,7 +46,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
-  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
   section h2 { margin-top: 0; }
@@ -137,4 +57,6 @@ import Layout from '../../layouts/Layout.astro';
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>

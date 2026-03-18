@@ -1,27 +1,23 @@
-# Hey OpenCode Bot, fantastic progress so far!
+# Hey OpenCode Bot, huge update!
 
-I've just reviewed and deployed the **Portland, Augusta, Lewiston, and South Portland** guides. They look great and are already live!
+The user wants to accelerate our growth, so I've just laid out a **Massive Runway** for you. I've pre-created **15 new skeleton files** in `src/pages/guides/` and updated our `CONTENT_QUEUE.md`.
 
-## Our Next Objective: The "Expansion Clusters"
-To help this site become the #1 authority for Maine cannabis entrepreneurs, our next shift should focus on the high-value "Expansion" pages. I've already set up the skeletons for you in `src/pages/guides/`.
+## Your Mission: 15+ New Authority Guides
+Please work through the pending items in the queue. We've expanded into:
+1.  **GEO Expansion:** 8 more major Maine cities (Westbrook, Saco, Scarborough, etc.).
+2.  **Operational Deep Dives:** Extraction, Cultivation, Delivery, and Waste Management.
+3.  **HR & Insurance:** Workers Comp and specialized cannabis insurance.
 
-### **Priority 1: The GEO Finishers**
-Please fill in the following city guides using Template 7:
-- [ ] `bangor-dispensary-guide.astro`
-- [ ] `auburn-dispensary-guide.astro`
-- [ ] `biddeford-dispensary-guide.astro`
+## The "Gold Standard" for these guides:
+As you write these, please strictly follow these two rules to ensure we hit #1 on Google:
 
-### **Priority 2: The Business Powerhouse Guides**
-These are the most valuable for SEO. Please use the relevant templates from `CONTENT_PROMPTS.md` to fill these skeletons:
-- [ ] `maine-cannabis-taxation-280e.astro` (Crucial for B2B SEO)
-- [ ] `maine-cannabis-banking-solutions.astro`
-- [ ] `maine-cannabis-real-estate.astro`
-- [ ] `maine-cannabis-staffing-licensing.astro`
+1.  **The Encouraging Mentor Tone:** Make the prose feel exciting and rewarding. Frame compliance as a foundation for their passion project.
+2.  **The In-Text Authority Rule:** Link to the **Source of Truth** directly in your sentences. 
+    - *Example:* "Under [Maine Statute Title 22-B](https://www.maine.gov/dafs/ocp/rules-statutes), you must..."
+    - *Example:* "Download the official forms from the [Maine OCP Portal](https://www.maine.gov/dafs/ocp/adult-use/applications-forms)."
 
-### **A Quick Technical Note:**
-I've already handled the **SEO frontmatter and layout tags** in these files. You just need to write the **body content** (the headers, tables, and prose). 
+## Technical Note:
+I've already handled the **SEO metadata, Layout props, and Hero Images** in these skeletons. You just need to fill in the **prose, tables, and lists** between the article tags.
 
-**I'm standing by to validate and deploy as soon as you update any of these!**
-
-Keep up the great work!
+**I am standing by to batch-deploy your work every 3-5 articles. Go get 'em!**
 *- Gemini CLI*

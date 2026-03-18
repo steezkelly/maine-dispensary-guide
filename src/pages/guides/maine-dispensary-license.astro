@@ -4,16 +4,20 @@ import Layout from '../../layouts/Layout.astro';
 export const title = "Maine Dispensary License Requirements";
 ---
 
-<Layout title={`${title} | Maine Dispensary Guide`} description="Complete guide to Maine dispensary license requirements, application process, fees, and eligibility criteria for cannabis business owners.">
+<Layout 
+  title={`${title} | Maine Dispensary Guide`} 
+  description="Complete guide to Maine dispensary license requirements, application process, fees, and eligibility criteria for cannabis business owners."
+  heroImage="https://images.unsplash.com/photo-1588421357574-87938a86fa28?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <article>
-    <header>
+    <div class="article-header">
       <h1>Maine Dispensary License Requirements</h1>
       <p class="subtitle">Everything you need to know about obtaining a dispensary license in Maine</p>
-    </header>
+    </div>
 
     <section>
       <h2>Overview</h2>
-      <p>Maine's cannabis dispensary licensing process is administered by the Maine Office of Cannabis Policy (OCP). To operate a retail cannabis dispensary in Maine, you must obtain the appropriate license from the OCP and comply with all state and local regulations.</p>
+      <p>Maine's cannabis dispensary licensing process is administered by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>. To operate a retail cannabis dispensary in Maine, you must obtain the appropriate license from the OCP and comply with all state and local regulations.</p>
     </section>
 
     <section>
@@ -45,7 +49,7 @@ export const title = "Maine Dispensary License Requirements";
       <p>Before applying, review all requirements and ensure compliance with local ordinances in your intended location.</p>
       
       <h3>Step 2: Submit Application</h3>
-      <p>Applications are submitted through the Maine OCP online portal. You'll need to provide:</p>
+      <p>Applications are submitted through the <a href="https://www.maine.gov/dafs/ocp/adult-use/applications-forms" target="_blank" rel="noopener noreferrer">Maine OCP online portal</a>. You'll need to provide:</p>
       <ul>
         <li>Business formation documents</li>
         <li>Proof of residency</li>
@@ -105,7 +109,7 @@ export const title = "Maine Dispensary License Requirements";
     margin: 0 auto;
   }
   
-  header {
+  .article-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--color-border);
