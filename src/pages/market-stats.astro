@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const stats = [
+  { metric: "Total Annual Sales (2025)", value: "$246.4 Million", detail: "A record high for Maine's adult-use market." },
+  { metric: "Individual Transactions", value: "4.83 Million", detail: "Reflects consistent and growing consumer demand." },
+  { metric: "Active Retail Stores", value: "179 Stores", detail: "56% located in rural counties for statewide coverage." },
+  { metric: "Avg. Price Per Gram (Flower)", value: "$6.62", detail: "Stabilized pricing signaling a mature market." },
+  { metric: "Regional Concentration", value: "60%", detail: "York and Cumberland counties drive majority revenue." }
+];
+---
+
+<Layout 
+  title="Maine Cannabis Market Stats 2026 | Industry Data" 
+  description="The latest official data on Maine's adult-use cannabis market. Sales figures, transaction counts, and retail trends for 2025-2026."
+  heroImage="https://images.unsplash.com/photo-1551288049-bbbda51658f7?auto=format&fit=crop&q=80&w=1200&h=400"
+>
+  <article class="stats-article">
+    <div class="article-header">
+      <h1>Maine Cannabis Market Stats</h1>
+      <p class="subtitle">The latest official data and trends for 2025-2026</p>
+    </div>
+
+    <Callout title="Data-Driven Decisions" type="success">
+      Understanding the numbers is what separates a "hobby" from a "business." With over $246 million in annual sales, Maine has proven itself as a robust, mature market. Use this data to benchmark your own financial projections and find your niche.
+    </Callout>
+
+    <section class="stats-grid">
+      {stats.map(stat => (
+        <div class="stat-card">
+          <p class="stat-metric">{stat.metric}</p>
+          <p class="stat-value">{stat.value}</p>
+          <p class="stat-detail">{stat.detail}</p>
+        </div>
+      ))}
+    </section>
+
+    <section class="data-deep-dive">
+      <h2>Industry Trends for 2026</h2>
+      <p>As the market reaches a record high in sales, we are seeing a shift from "explosive growth" to "strategic optimization." Competition is increasing in southern hubs, while rural counties remain underserved and ripe for boutique, craft-focused dispensaries.</p>
+      
+      <h3>Key Takeaways:</h3>
+      <ul>
+        <li><strong>Consumer Pricing:</strong> The drop to $6.62/gram means efficiency is now the #1 survival trait for new shops.</li>
+        <li><strong>Regional Strategy:</strong> While 60% of revenue is in the south, the "North Maine" opportunity is growing as tourism expands inland.</li>
+        <li><strong>Stability:</strong> 4.8 million transactions show that cannabis has become a stable part of the Maine economy.</li>
+      </ul>
+    </section>
+
+    <section class="further-reading">
+      <h2>Source & Verification</h2>
+      <p>All data is sourced from the <a href="https://www.maine.gov/dafs/ocp/data/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> Open Data portal. Data is updated as official reports are released.</p>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .stats-article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    text-align: center;
+  }
+
+  .stat-metric {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+    font-weight: 600;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .stat-value {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .stat-detail {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    line-height: 1.4;
+    margin-bottom: 0 !important;
+  }
+
+  .data-deep-dive {
+    margin-top: 4rem;
+  }
+
+  .data-deep-dive h2 {
+    margin-top: 0;
+  }
+</style>

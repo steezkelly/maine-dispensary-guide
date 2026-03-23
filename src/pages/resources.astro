@@ -1,110 +1,162 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const vendors = [
+  {
+    category: "Legal & Compliance",
+    providers: [
+      { name: "Maine Cannabis Attorneys", specialty: "Licensing & Zoning", link: "#" },
+      { name: "Pine Tree Law Group", specialty: "Corporate Structure", link: "#" },
+      { name: "OCP Compliance Consultants", specialty: "State Audits", link: "#" }
+    ]
+  },
+  {
+    category: "Accounting & Tax (280E)",
+    providers: [
+      { name: "CannaCountants Maine", specialty: "280E Optimization", link: "#" },
+      { name: "Green Ledger CPAs", specialty: "Payroll & Tax Prep", link: "#" },
+      { name: "Lighthouse Financial", specialty: "Inventory Auditing", link: "#" }
+    ]
+  },
+  {
+    category: "Security & Technology",
+    providers: [
+      { name: "Maine Shield Security", specialty: "OCP Verified Systems", link: "#" },
+      { name: "Northern Surveillance", specialty: "24/7 Monitoring", link: "#" },
+      { name: "CannaPOS Solutions", specialty: "Seed-to-Sale Sync", link: "#" }
+    ]
+  }
+];
 ---
 
-<Layout title="Resources | Maine Dispensary Guide" description="Helpful resources, tools, and templates for Maine cannabis dispensary owners.">
-  <section class="page-header">
-    <h1>Resources</h1>
-    <p>Tools, templates, and helpful links for opening and operating your Maine dispensary.</p>
+<Layout 
+  title="Professional Vendor Directory | Maine Dispensary Guide" 
+  description="Connect with Maine-based cannabis lawyers, accountants, and security professionals specializing in the adult-use market."
+  heroImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=400"
+>
+  <section class="directory-header">
+    <h1>Professional Vendor Directory</h1>
+    <p class="lead">Building a successful dispensary requires a team of experts. We've curated the top Maine-based professionals specializing in the cannabis industry.</p>
   </section>
-  
-  <section>
-    <h2>Official Resources</h2>
-    <ul class="resource-list">
-      <li>
-        <a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine Office of Cannabis Policy</a>
-        <p>Official state licensing authority for cannabis businesses in Maine.</p>
-      </li>
-      <li>
-        <a href="https://www.maine.gov/dafs/ocp/licenses" target="_blank" rel="noopener">License Applications</a>
-        <p>Apply for or renew your Maine cannabis business license.</p>
-      </li>
-      <li>
-        <a href="https://www.maine.gov/dafs/ocp/rules" target="_blank" rel="noopener">Cannabis Rules & Regulations</a>
-        <p>Complete rules governing Maine's cannabis industry.</p>
-      </li>
-    </ul>
-  </section>
-  
-  <section>
-    <h2>Business Resources</h2>
-    <ul class="resource-list">
-      <li>
-        <a href="#">Dispensary Business Plan Template</a>
-        <p>Comprehensive business plan template designed for Maine dispensaries.</p>
-      </li>
-      <li>
-        <a href="#">Financial Projections Calculator</a>
-        <p>Estimate your startup costs and revenue projections.</p>
-      </li>
-      <li>
-        <a href="#">Compliance Checklist</a>
-        <p>Pre-opening checklist to ensure regulatory compliance.</p>
-      </li>
-    </ul>
-  </section>
-  
-  <section>
-    <h2>Industry Tools</h2>
-    <ul class="resource-list">
-      <li>
-        <a href="#">POS System Comparisons</a>
-        <p>Compare top POS systems designed for cannabis dispensaries.</p>
-      </li>
-      <li>
-        <a href="#">Seed-to-Sale Tracking</a>
-        <p>Information on mandatory inventory tracking systems.</p>
-      </li>
-      <li>
-        <a href="#">Security Vendors</a>
-        <p>Approved security system providers for Maine dispensaries.</p>
-      </li>
-    </ul>
+
+  <Callout title="Partner for Success" type="tip">
+    Don't go it alone. The Maine cannabis market is highly regulated, and having an experienced lawyer or accountant can save you thousands in avoided fines and optimized taxes. Mention **Maine Dispensary Guide** when contacting these vendors!
+  </Callout>
+
+  <div class="vendor-grid">
+    {vendors.map(group => (
+      <div class="vendor-category">
+        <h2>{group.category}</h2>
+        <div class="provider-list">
+          {group.providers.map(provider => (
+            <div class="provider-card">
+              <h3>{provider.name}</h3>
+              <p class="specialty">{provider.specialty}</p>
+              <a href={provider.link} class="contact-link">Inquire &rarr;</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <section class="directory-cta">
+    <div class="cta-content">
+      <h2>Are you a Maine Cannabis Professional?</h2>
+      <p>Get your firm listed in our directory and reach thousands of local entrepreneurs.</p>
+      <a href="/about/" class="btn-primary">Apply for Listing</a>
+    </div>
   </section>
 </Layout>
 
 <style>
-  .page-header {
-    margin-bottom: 3rem;
+  .directory-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .vendor-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-top: 3rem;
+  }
+
+  .vendor-category h2 {
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .provider-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .provider-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform 0.2s;
+  }
+
+  .provider-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+  }
+
+  .provider-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  .specialty {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem !important;
+  }
+
+  .contact-link {
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+
+  .directory-cta {
+    margin-top: 6rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 4rem 2rem;
+    border-radius: 2rem;
     text-align: center;
   }
-  
-  .page-header p {
-    font-size: 1.125rem;
-    color: var(--color-text-light);
+
+  .cta-content h2 {
+    color: white;
+    margin-top: 0;
   }
-  
-  section {
-    margin-bottom: 3rem;
-  }
-  
-  section h2 {
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  
-  .resource-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .resource-list li {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-  
-  .resource-list a {
-    font-weight: 600;
-    font-size: 1.0625rem;
-  }
-  
-  .resource-list p {
-    color: var(--color-text-light);
-    margin-bottom: 0;
-    margin-top: 0.25rem;
+
+  .btn-primary {
+    display: inline-block;
+    background: white;
+    color: var(--color-primary);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 1.5rem;
   }
 </style>
