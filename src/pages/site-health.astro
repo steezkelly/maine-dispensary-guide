@@ -1,0 +1,227 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const systemStatus = [
+  { name: "Production Site", status: "LIVE", color: "text-green-500" },
+  { name: "DNS Resolution", status: "Active", color: "text-green-500" },
+  { name: "SSL Certificate", status: "Verified", color: "text-green-500" },
+  { name: "GitHub Sync", status: "100%", color: "text-green-500" }
+];
+
+const contentStats = [
+  { label: "Total Guides", value: "41" },
+  { label: "Optimized Score", value: "100%" },
+  { label: "Avg Word Count", value: "1,200+" },
+  { label: "GEO Signal", value: "High" }
+];
+---
+
+<Layout title="System Observation Dashboard | Mission Control" description="Internal site health and performance dashboard for Maine Dispensary Guide.">
+  <div class="dashboard-header">
+    <div class="live-indicator">
+      <span class="pulse"></span>
+      SYSTEM ACTIVE
+    </div>
+    <h1>Mission Control</h1>
+    <p>Real-time observation of the Maine Dispensary Guide ecosystem.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="stat-group">
+      <h2>System Integrity</h2>
+      <div class="status-list">
+        {systemStatus.map(item => (
+          <div class="status-item">
+            <span>{item.name}</span>
+            <span class="status-badge">{item.status}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="stat-group">
+      <h2>Content Intelligence</h2>
+      <div class="metric-grid">
+        {contentStats.map(stat => (
+          <div class="metric-card">
+            <span class="metric-value">{stat.value}</span>
+            <span class="metric-label">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <section class="bot-sync">
+    <h2>Agent Collaboration Log</h2>
+    <div class="log-container">
+      <div class="log-entry">
+        <span class="log-bot">Gemini CLI</span>
+        <span class="log-action">System Health Check Completed. All systems green.</span>
+        <span class="log-time">Just Now</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-bot">OpenCode</span>
+        <span class="log-action">Batch Completion: 41 guide pages verified.</span>
+        <span class="log-time">1 hour ago</span>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-top: 2rem;
+  }
+
+  .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(13, 78, 80, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+  }
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .stat-group {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 2rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  }
+
+  .stat-group h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+  }
+
+  .status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .status-item {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+  }
+
+  .status-badge {
+    background: #ecfdf5;
+    color: #065f46;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .metric-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--color-background);
+    border-radius: 1rem;
+  }
+
+  .metric-value {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-light);
+  }
+
+  .bot-sync {
+    background: var(--color-primary);
+    color: white;
+    padding: 4rem;
+    border-radius: 2rem;
+  }
+
+  .bot-sync h2 {
+    color: white;
+    margin-top: 0;
+  }
+
+  .log-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .log-entry {
+    background: rgba(255,255,255,0.1);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .log-bot {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .log-action {
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  .log-time {
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 600px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .log-entry { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+</style>
