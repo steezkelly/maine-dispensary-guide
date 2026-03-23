@@ -7,9 +7,9 @@
 - **Status:** Vercel Production Live.
 
 ## Deployment
-- **Platform:** Vercel (Deployed)
-- **URL:** [https://project-1-eosin-five.vercel.app](https://project-1-eosin-five.vercel.app)
-- **Adapter:** `@astrojs/vercel` (Server Mode)
+- **Platform:** Vercel (Production)
+- **Primary Domain:** [https://mainedispensaryguide.com](https://mainedispensaryguide.com)
+- **Status:** LIVE
 
 ## Site Structure
 - **Homepage:** `/` - Optimized for SEO clusters.
@@ -35,5 +35,11 @@
 - `vercel deploy --prod` - Deploy to production.
 - `npm run dev` - Local development.
 
+## Future Roadmap
+- **Design Refinement:** Improve the "Modern Maine" aesthetic with more high-fidelity visual components and custom UI elements.
+- **Lead Generation:** Build out contact forms and "Lead Magnets" (e.g., printable checklists) to capture visitor info.
+- **Vendor Directory:** Launch the "Money Pages" for Maine-based cannabis professional services.
+- **Scaling:** Create the "Universal Template" for national hub expansion.
+
 ---
-*Last Updated: March 18, 2026*
+*Last Updated: March 24, 2026*

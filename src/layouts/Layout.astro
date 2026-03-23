@@ -35,7 +35,11 @@ const fullTitle = `${title} | ${siteName}`;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    
+    <!-- Search Engine Verifications -->
     <meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY" />
+    <meta name="msvalidate.01" content="ADD_BING_CODE_HERE" />
+    
     <title>{fullTitle}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,7 +77,8 @@ const fullTitle = `${title} | ${siteName}`;
           "@type": "ImageObject",
           "url": "https://mainedispensaryguide.com/favicon.svg"
         }
-      }
+      },
+      "dateModified": new Date().toISOString()
     })} />
   </head>
   <body class="bg-maine">
@@ -102,7 +107,14 @@ const fullTitle = `${title} | ${siteName}`;
           <div class="guide-content">
             {heroImage && (
               <div class="guide-hero">
-                <img src={heroImage} alt={title} loading="lazy" />
+                <img 
+                  src={heroImage} 
+                  alt={title} 
+                  width={1200} 
+                  height={400}
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
             )}
             <slot />
