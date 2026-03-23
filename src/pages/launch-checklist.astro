@@ -1,0 +1,183 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const checklistItems = [
+  { category: "Phase 1: Foundation", items: [
+    "Form your Legal Entity (LLC/Corp)",
+    "Secure initial startup capital ($300k+ recommended)",
+    "Draft your comprehensive 3-year Business Plan",
+    "Establish your accounting system (280E ready)"
+  ]},
+  { category: "Phase 2: The Search", items: [
+    "Identify OCP-compliant municipalities",
+    "Confirm local zoning 'Opt-In' status",
+    "Secure a lease with a 'Cannabis Clause'",
+    "Finalize your physical floor plan"
+  ]},
+  { category: "Phase 3: State Submission", items: [
+    "Submit Maine OCP Individual Identification Card (IIC) apps",
+    "Complete the Adult-Use conditional license application",
+    "Pay state application fees",
+    "Receive Conditional Approval"
+  ]},
+  { category: "Phase 4: Build & Launch", items: [
+    "Install OCP-compliant security and surveillance",
+    "Implement your Seed-to-Sale tracking (Metrc)",
+    "Complete local 'Active' license inspections",
+    "Conduct initial team training"
+  ]}
+];
+---
+
+<Layout title="Dispensary Launch Checklist | 2026 Maine Roadmap" description="The definitive step-by-step checklist for opening a cannabis dispensary in Maine. From entity formation to final OCP inspection.">
+  <section class="checklist-header">
+    <h1>Maine Dispensary Launch Checklist</h1>
+    <p class="lead">Use this interactive roadmap to track your progress from your first idea to your first customer.</p>
+  </section>
+
+  <Callout title="A Vision in Motion" type="passion">
+    Every checkmark on this list is a victory. Don't look at it as a list of chores; look at it as the blueprint for your legacy. You are building something historic—take it one step at a time!
+  </Callout>
+
+  <div class="checklist-container">
+    {checklistItems.map(section => (
+      <div class="checklist-section">
+        <h2>{section.category}</h2>
+        <div class="item-list">
+          {section.items.map(item => (
+            <label class="check-item">
+              <input type="checkbox" />
+              <span class="item-text">{item}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <section class="checklist-print-cta">
+    <div class="print-box">
+      <h3>Want a PDF Version?</h3>
+      <p>Enter your email to receive a printable version of this checklist plus our 2026 Maine Market Report.</p>
+      <div class="mock-form">
+        <input type="email" placeholder="Enter your email" disabled />
+        <button disabled>Send Me the PDF</button>
+      </div>
+      <p class="small-note">(Form will be active once lead capture is fully integrated)</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .checklist-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .checklist-container {
+    max-width: 800px;
+    margin: 0 auto 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .checklist-section h2 {
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .check-item:hover {
+    border-color: var(--color-primary);
+    transform: translateX(5px);
+  }
+
+  input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .item-text {
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--color-text);
+  }
+
+  input:checked + .item-text {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  .checklist-print-cta {
+    background: var(--color-primary);
+    color: white;
+    padding: 4rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+  }
+
+  .print-box h3 {
+    color: white;
+    margin-top: 0;
+    font-size: 2rem;
+  }
+
+  .mock-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0 1rem;
+  }
+
+  .mock-form input {
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    border: none;
+    width: 300px;
+  }
+
+  .mock-form button {
+    background: white;
+    color: var(--color-primary);
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    cursor: not-allowed;
+  }
+
+  .small-note {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+</style>

@@ -1,0 +1,207 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PineTree from '../components/PineTree.astro';
+
+const states = [
+  { 
+    name: "Maine", 
+    slug: "me", 
+    path: "/guides/", 
+    status: "Active", 
+    count: "41 Guides",
+    description: "The complete blueprint for Maine's adult-use and medical market."
+  },
+  { 
+    name: "New Jersey", 
+    slug: "nj", 
+    path: "/nj/", 
+    status: "Coming Soon", 
+    count: "In Progress",
+    description: "Navigating the Garden State's rapidly expanding retail landscape."
+  },
+  { 
+    name: "Florida", 
+    slug: "fl", 
+    path: "/fl/", 
+    status: "Coming Soon", 
+    count: "In Progress",
+    description: "Compliance and licensing maps for the Sunshine State."
+  }
+];
+---
+
+<Layout title="State Guides Hub | National Cannabis Business Resource">
+  <section class="hub-header">
+    <div class="hero-badge">National Expansion</div>
+    <h1>Select Your State</h1>
+    <p class="lead">Select a state to view local licensing maps, zoning requirements, and market data.</p>
+  </section>
+
+  <div class="state-grid">
+    {states.map(state => (
+      <div class={`state-card ${state.status === 'Coming Soon' ? 'is-pending' : ''}`}>
+        <div class="state-status">{state.status}</div>
+        <h2>{state.name}</h2>
+        <p class="state-count">{state.count}</p>
+        <p class="state-desc">{state.description}</p>
+        {state.status === 'Active' ? (
+          <a href={state.path} class="btn-state">Enter Hub &rarr;</a>
+        ) : (
+          <span class="btn-wait">Stay Updated</span>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <section class="expansion-cta">
+    <div class="cta-box">
+      <h3>Don't see your state?</h3>
+      <p>We are rolling out 10 new state hubs in 2026. Join our mailing list to be the first to know when we launch in your market.</p>
+      <div class="mock-form">
+        <input type="email" placeholder="Enter your email" disabled />
+        <button disabled>Notify Me</button>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hub-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    padding-top: 3rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--color-soft-green);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 8rem;
+  }
+
+  .state-card {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    border: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .state-card:hover:not(.is-pending) {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    border-color: var(--color-primary);
+  }
+
+  .state-status {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .is-pending {
+    background: var(--color-background);
+    opacity: 0.8;
+  }
+
+  .is-pending .state-status {
+    color: var(--color-text-light);
+  }
+
+  .state-card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+  }
+
+  .state-count {
+    font-weight: 700;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .state-desc {
+    font-size: 1rem;
+    color: var(--color-text-light);
+    margin-bottom: 2.5rem !important;
+  }
+
+  .btn-state {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .btn-wait {
+    display: inline-block;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-light);
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+  }
+
+  .expansion-cta {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 4rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+  }
+
+  .mock-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .mock-form input {
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    width: 300px;
+  }
+
+  .mock-form button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+</style>
