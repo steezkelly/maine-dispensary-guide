@@ -3,42 +3,80 @@ import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 
 const checklistItems = [
-  { category: "Phase 1: Foundation", items: [
-    "Form your Legal Entity (LLC/Corp)",
-    "Secure initial startup capital ($300k+ recommended)",
-    "Draft your comprehensive 3-year Business Plan",
-    "Establish your accounting system (280E ready)"
-  ]},
-  { category: "Phase 2: The Search", items: [
-    "Identify OCP-compliant municipalities",
-    "Confirm local zoning 'Opt-In' status",
-    "Secure a lease with a 'Cannabis Clause'",
-    "Finalize your physical floor plan"
-  ]},
-  { category: "Phase 3: State Submission", items: [
-    "Submit Maine OCP Individual Identification Card (IIC) apps",
-    "Complete the Adult-Use conditional license application",
-    "Pay state application fees",
-    "Receive Conditional Approval"
-  ]},
-  { category: "Phase 4: Build & Launch", items: [
-    "Install OCP-compliant security and surveillance",
-    "Implement your Seed-to-Sale tracking (Metrc)",
-    "Complete local 'Active' license inspections",
-    "Conduct initial team training"
-  ]}
+  { 
+    category: "Phase 1: Foundation", 
+    items: [
+      {
+        title: "Form your Legal Entity (LLC/Corp)",
+        description: "Register your business with the <a href='https://www.maine.gov/sos/cec/corp/' target='_blank'>Maine Secretary of State</a>. Choosing an LLC or Corporation is vital for protecting your personal assets and is a prerequisite for state licensing.",
+        link: "/guides/maine-dispensary-business-plan/"
+      },
+      {
+        title: "Secure initial startup capital",
+        description: "Maine dispensaries typically require $300k-$850k. Ensure your funds are documented and held in a <a href='/guides/maine-cannabis-banking-solutions/'>cannabis-friendly bank account</a> to pass the OCP's financial integrity checks.",
+        link: "/guides/maine-dispensary-costs/"
+      },
+      {
+        title: "Draft your 3-year Business Plan",
+        description: "A professional <a href='/guides/maine-dispensary-business-plan/'>business plan</a> is required for investors and local municipal applications. It must include detailed security and operations protocols.",
+        link: "/guides/maine-dispensary-business-plan/"
+      }
+    ]
+  },
+  { 
+    category: "Phase 2: The Search", 
+    items: [
+      {
+        title: "Identify OCP-compliant municipalities",
+        description: "You can only open a store in a town that has formally 'Opted-In.' Consult the <a href='https://www.maine.gov/dafs/ocp/adult-use/municipal-opt-in' target='_blank'>Official OCP Opt-In List</a> to verify your target location.",
+        link: "/guides/maine-dispensary-locations/"
+      },
+      {
+        title: "Secure a lease with a 'Cannabis Clause'",
+        description: "Your lease must explicitly permit cannabis activities. Ensure you have a 'contingency clause' allowing you to terminate if <a href='/guides/maine-cannabis-real-estate/'>zoning</a> or licensing is denied.",
+        link: "/guides/maine-cannabis-real-estate/"
+      }
+    ]
+  },
+  { 
+    category: "Phase 3: State Submission", 
+    items: [
+      {
+        title: "Submit Maine OCP IIC applications",
+        description: "Every owner and employee must hold an <a href='/glossary/#iic-(individual-identification-card)'>Individual Identification Card (IIC)</a>. This requires a $52 fee, fingerprinting, and a background check.",
+        link: "/guides/maine-cannabis-staffing-licensing/"
+      },
+      {
+        title: "Complete the Conditional License app",
+        description: "The <a href='/guides/maine-dispensary-license/'>Conditional License</a> is your first state-level 'Green Light.' It proves you are eligible to operate before you invest in local build-outs.",
+        link: "/guides/maine-dispensary-license/"
+      }
+    ]
+  },
+  { 
+    category: "Phase 4: Build & Launch", 
+    items: [
+      {
+        title: "Install OCP-compliant security",
+        description: "Your surveillance and alarm systems must meet <a href='/guides/maine-dispensary-security/'>OCP Security Standards</a>, including 24/7 recording and restricted access monitoring.",
+        link: "/guides/maine-dispensary-security/"
+      },
+      {
+        title: "Implement Metrc Tracking",
+        description: "<a href='/glossary/#metrc'>Metrc</a> is Maine's mandatory track-and-trace system. You must complete state training and tag all inventory before your first sale.",
+        link: "/guides/maine-cannabis-inventory-management/"
+      }
+    ]
+  }
 ];
 ---
 
-<Layout title="Dispensary Launch Checklist | 2026 Maine Roadmap" description="The definitive step-by-step checklist for opening a cannabis dispensary in Maine. From entity formation to final OCP inspection.">
+<Layout title="Interactive Dispensary Roadmap | Maine Launch Checklist" description="The definitive step-by-step roadmap for opening a cannabis dispensary in Maine. Interactive steps with technical and legal requirements.">
   <section class="checklist-header">
+    <div class="hero-badge">2026 Interactive Roadmap</div>
     <h1>Maine Dispensary Launch Checklist</h1>
-    <p class="lead">Use this interactive roadmap to track your progress from your first idea to your first customer.</p>
+    <p class="lead">Each checkmark is a milestone. Click any step to reveal the detailed regulatory requirements and 'Source of Truth' links.</p>
   </section>
-
-  <Callout title="A Vision in Motion" type="passion">
-    Every checkmark on this list is a victory. Don't look at it as a list of chores; look at it as the blueprint for your legacy. You are building something historic—take it one step at a time!
-  </Callout>
 
   <div class="checklist-container">
     {checklistItems.map(section => (
@@ -46,10 +84,21 @@ const checklistItems = [
         <h2>{section.category}</h2>
         <div class="item-list">
           {section.items.map(item => (
-            <label class="check-item">
-              <input type="checkbox" />
-              <span class="item-text">{item}</span>
-            </label>
+            <details class="check-card">
+              <summary>
+                <div class="summary-content">
+                  <div class="check-ui"></div>
+                  <span class="item-title">{item.title}</span>
+                </div>
+                <span class="expand-icon">+</span>
+              </summary>
+              <div class="details-content">
+                <p set:html={item.description}></p>
+                <div class="details-actions">
+                  <a href={item.link} class="btn-detail">Read Full Guide &rarr;</a>
+                </div>
+              </div>
+            </details>
           ))}
         </div>
       </div>
@@ -58,13 +107,9 @@ const checklistItems = [
 
   <section class="checklist-print-cta">
     <div class="print-box">
-      <h3>Want a PDF Version?</h3>
-      <p>Enter your email to receive a printable version of this checklist plus our 2026 Maine Market Report.</p>
-      <div class="mock-form">
-        <input type="email" placeholder="Enter your email" disabled />
-        <button disabled>Send Me the PDF</button>
-      </div>
-      <p class="small-note">(Form will be active once lead capture is fully integrated)</p>
+      <h3>Ready to Go Offline?</h3>
+      <p>Download the high-resolution, printable PDF version of this roadmap including OCP form numbers and fee schedules.</p>
+      <a href="/download-checklist/" class="btn-main">Get the PDF Version &rarr;</a>
     </div>
   </section>
 </Layout>
@@ -73,6 +118,19 @@ const checklistItems = [
   .checklist-header {
     text-align: center;
     margin-bottom: 4rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--color-soft-green);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
   }
 
   .lead {
@@ -84,17 +142,17 @@ const checklistItems = [
 
   .checklist-container {
     max-width: 800px;
-    margin: 0 auto 6rem;
+    margin: 0 auto 8rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 4rem;
   }
 
   .checklist-section h2 {
-    border-bottom: 2px solid var(--color-primary);
-    display: inline-block;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    font-family: var(--font-serif);
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
   }
 
   .item-list {
@@ -103,81 +161,129 @@ const checklistItems = [
     gap: 1rem;
   }
 
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  .check-card {
     background: white;
-    padding: 1.25rem 1.5rem;
-    border-radius: 1rem;
     border: 1px solid var(--color-border);
-    cursor: pointer;
+    border-radius: 1.5rem;
+    overflow: hidden;
     transition: all 0.2s;
   }
 
-  .check-item:hover {
+  .check-card:hover {
     border-color: var(--color-primary);
-    transform: translateX(5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
   }
 
-  input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    accent-color: var(--color-primary);
+  summary {
+    list-style: none;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     cursor: pointer;
+    user-select: none;
   }
 
-  .item-text {
-    font-weight: 600;
-    font-size: 1.0625rem;
+  summary::-webkit-details-marker { display: none; }
+
+  .summary-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .check-ui {
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .check-card[open] .check-ui {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    position: relative;
+  }
+
+  .check-card[open] .check-ui::after {
+    content: '✓';
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .item-title {
+    font-weight: 700;
+    font-size: 1.125rem;
     color: var(--color-text);
   }
 
-  input:checked + .item-text {
-    text-decoration: line-through;
-    opacity: 0.5;
+  .expand-icon {
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    transition: transform 0.3s;
+  }
+
+  .check-card[open] .expand-icon {
+    transform: rotate(45deg);
+  }
+
+  .details-content {
+    padding: 0 2rem 2rem 5.25rem;
+    border-top: 1px solid transparent;
+  }
+
+  .details-content p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .details-content :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+
+  .btn-detail {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
   }
 
   .checklist-print-cta {
     background: var(--color-primary);
     color: white;
-    padding: 4rem 2rem;
-    border-radius: 2rem;
+    padding: 5rem 2rem;
+    border-radius: 3rem;
     text-align: center;
   }
 
-  .print-box h3 {
-    color: white;
-    margin-top: 0;
-    font-size: 2rem;
-  }
+  .print-box h3 { color: white; margin-top: 0; font-family: var(--font-serif); font-size: 2rem; }
 
-  .mock-form {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin: 2rem 0 1rem;
-  }
-
-  .mock-form input {
-    padding: 0.75rem 1.5rem;
-    border-radius: 1rem;
-    border: none;
-    width: 300px;
-  }
-
-  .mock-form button {
+  .btn-main {
+    display: inline-block;
     background: white;
     color: var(--color-primary);
-    border: none;
-    padding: 0.75rem 2rem;
+    padding: 1rem 2.5rem;
     border-radius: 1rem;
     font-weight: 700;
-    cursor: not-allowed;
+    text-decoration: none;
+    margin-top: 2rem;
   }
 
-  .small-note {
-    font-size: 0.75rem;
-    opacity: 0.7;
+  @media (max-width: 600px) {
+    summary { padding: 1.25rem; }
+    .details-content { padding: 0 1.25rem 1.5rem 4rem; }
+    .item-title { font-size: 1rem; }
   }
 </style>
