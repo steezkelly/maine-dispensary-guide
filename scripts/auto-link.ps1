@@ -20,7 +20,7 @@ $glossaryMap = @{
     "THC" = "/glossary/#thc-(tetrahydrocannabinol)"
 }
 
-Write-Host "🔗 Starting Global Glossary Injection (Body Only)..." -ForegroundColor Cyan
+Write-Host "Starting Global Glossary Injection (Body Only)..." -ForegroundColor Cyan
 
 # Filter out index.astro to prevent breaking Astro array objects
 $files = Get-ChildItem -Path $pagesPath -Filter "*.astro" | Where-Object { $_.Name -ne "index.astro" }
@@ -41,10 +41,7 @@ foreach ($file in $files) {
     foreach ($term in $glossaryMap.Keys) {
         $link = $glossaryMap[$term]
         
-        # Regex explanation:
-        # (?<![/\">]) - Don't match if preceded by " or > (already in a tag)
-        # \b($term)\b - Match the full word only
-        # (?![^<]*>) - Don't match if we are inside an HTML tag
+        # Safer Regex
         $pattern = "(?<![/\">])\b($term)\b(?![^<]*>)"
         
         $linkMarker = "href=""$link"""
@@ -60,8 +57,8 @@ foreach ($file in $files) {
     if ($modified) {
         $newContent = $head + $body
         [System.IO.File]::WriteAllText($file.FullName, $newContent)
-        Write-Host "✅ Synced: $($file.Name)" -ForegroundColor Green
+        Write-Host "Synced: $($file.Name)" -ForegroundColor Green
     }
 }
 
-Write-Host "🚀 Link Architect Sync Complete." -ForegroundColor Cyan
+Write-Host "Link Architect Sync Complete." -ForegroundColor Cyan
