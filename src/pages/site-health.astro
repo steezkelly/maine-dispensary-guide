@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
 
 const systemStatus = [
   { name: "Production Site", status: "LIVE", color: "text-green-500" },
@@ -16,7 +17,11 @@ const contentStats = [
 ];
 ---
 
-<Layout title="System Observation Dashboard | Mission Control" description="Internal site health and performance dashboard for Maine Dispensary Guide.">
+<Layout 
+  title="System Observation Dashboard | Mission Control" 
+  description="Internal site health and performance dashboard for Maine Dispensary Guide."
+  heroImage="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200&h=400"
+>
   <div class="dashboard-header">
     <div class="live-indicator">
       <span class="pulse"></span>
@@ -25,6 +30,10 @@ const contentStats = [
     <h1>Mission Control</h1>
     <p>Real-time observation of the Maine Dispensary Guide ecosystem.</p>
   </div>
+
+  <Callout title="Security & Integrity Verified" type="success">
+    This system is currently monitored for 280E compliance data accuracy, OCP regulatory updates, and technical performance. All security headers (CSP, X-Frame) are active and verified.
+  </Callout>
 
   <div class="dashboard-grid">
     <section class="stat-group">

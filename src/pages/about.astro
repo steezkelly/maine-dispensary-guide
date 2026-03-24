@@ -1,11 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
 ---
 
-<Layout title="About | Maine Dispensary Guide" description="About Maine Dispensary Guide - your comprehensive resource for opening a cannabis dispensary in Maine.">
-  <section class="page-header">
+<Layout 
+  title="About Us | Maine Dispensary Guide" 
+  description="Learn about our mission to provide the most accurate, transparent, and encouraging resources for Maine cannabis entrepreneurs."
+  heroImage="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=1200&h=400"
+>
+  <div class="article-header">
     <h1>About Maine Dispensary Guide</h1>
-  </section>
+  </div>
+
+  <Callout title="Empowering Maine's Founders" type="passion">
+    We believe that the next generation of Maine's economy is being built by small business owners like you. Our goal is to demystify the "Legal Maze" so you can focus on the craft and the community you love.
+  </Callout>
   
   <section>
     <h2>Our Mission</h2>
@@ -28,9 +37,9 @@ import Layout from '../layouts/Layout.astro';
     </ul>
   </section>
   
-  <section>
-    <h2>Disclaimer</h2>
-    <p class="disclaimer">The information provided on this website is for informational purposes only and does not constitute legal, financial, or business advice. Cannabis regulations change frequently, and you should always consult with qualified professionals, including attorneys and accountants, when making business decisions.</p>
+  <section class="disclaimer">
+    <h2>Legal Disclaimer</h2>
+    <p>The information provided on this website is for informational purposes only and does not constitute legal, financial, or business advice. Cannabis regulations change frequently, and you should always consult with qualified professionals, including attorneys and accountants, when making business decisions.</p>
   </section>
   
   <section>
@@ -41,25 +50,36 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
-  .page-header {
+  .article-header {
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--color-border);
   }
   
   section {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
   
   section h2 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
   }
   
   .disclaimer {
     background: #fff3cd;
     border: 1px solid #ffc107;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
     font-size: 0.9375rem;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.75rem;
   }
 </style>
