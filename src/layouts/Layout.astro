@@ -340,7 +340,7 @@ const fullTitle = `${title} | ${siteName}`;
 
   .nav-links {
     display: flex;
-    gap: 1rem;
+    gap: clamp(0.5rem, 1.5vw, 1.5rem);
     align-items: center;
   }
   
@@ -349,9 +349,10 @@ const fullTitle = `${title} | ${siteName}`;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s;
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--radius);
     font-size: 0.875rem;
+    white-space: nowrap;
   }
   
   .nav-links a:hover {
