@@ -4,6 +4,11 @@
 ## 🏛️ Project Vision
 The Maine Dispensary Guide is more than a directory; it is a high-authority digital ecosystem designed to dominate the 2026 search and AI landscape (SEO/GEO). The site is built to scale from a state-level resource into a national "Dispensary Guide" empire.
 
+## 🛰️ Production Status
+- **Deployment Pipeline:** [Vercel](https://vercel.com/) (Connected to GitHub)
+- **Primary Domain:** [mainedispensaryguide.com](https://mainedispensaryguide.com)
+- **Deployment Strategy:** CI/CD (Pushes to `main` trigger automated production builds).
+
 ## 🚀 Technical Stack
 - **Framework:** [Astro 6.0](https://astro.build/) (Server-Side Rendering for Dynamic Pricing/ROI).
 - **Deployment:** [Vercel](https://vercel.com/) (Production-grade global edge network).
