@@ -1,0 +1,185 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const terms = [
+  { 
+    term: "280E (Internal Revenue Code)", 
+    definition: "A federal tax code that prohibits businesses involved in the trafficking of Schedule I or II substances (including cannabis) from deducting ordinary business expenses, often leading to effective tax rates of 70% or higher."
+  },
+  { 
+    term: "Adult Use Cannabis", 
+    definition: "Cannabis cultivated, manufactured, distributed, or sold by a cannabis establishment for recreational use by adults aged 21 and older, as regulated by Title 28-B."
+  },
+  { 
+    term: "AIC (Authorized Individual Card)", 
+    definition: "A card issued by the Maine OCP to individuals who are authorized to be owners, officers, or managers of a cannabis establishment."
+  },
+  { 
+    term: "Caregiver", 
+    definition: "A person or entity registered under the Maine Medical Use of Cannabis Act to cultivate and provide cannabis to qualifying medical patients."
+  },
+  { 
+    term: "COGS (Cost of Goods Sold)", 
+    definition: "The direct costs associated with producing products. Under 280E, cannabis businesses are generally only allowed to deduct COGS from their gross income."
+  },
+  { 
+    term: "Conditional License", 
+    definition: "The first stage of Maine's licensing process. A conditional license allows an applicant to seek local authorization but does not permit the operation of a cannabis business."
+  },
+  { 
+    term: "Culpability", 
+    definition: "The level of responsibility or liability a licensee has for violations occurring on their premises or by their employees."
+  },
+  { 
+    term: "IIC (Individual Identification Card)", 
+    definition: "A mandatory identification card issued by the OCP for all employees and contractors working within a licensed Maine cannabis establishment."
+  },
+  { 
+    term: "Licensed Premises", 
+    definition: "The specific physical location and building(s) identified in a license where cannabis activity is authorized to take place."
+  },
+  { 
+    term: "Limited Access Area", 
+    definition: "Specific zones within a licensed premises where cannabis or cannabis products are stored, weighed, or processed, restricted to IIC holders only."
+  },
+  { 
+    term: "Manufacturing", 
+    definition: "The production, blending, infusing, or preparation of cannabis products, including extraction and edible production."
+  },
+  { 
+    term: "Metrc", 
+    definition: "The official 'Seed-to-Sale' tracking system used by the State of Maine to monitor the movement of cannabis plants and products through the supply chain."
+  },
+  { 
+    term: "Municipal Opt-In", 
+    definition: "The requirement that a Maine city or town must formally vote to allow adult-use cannabis businesses before any state licenses can be activated in that jurisdiction."
+  },
+  { 
+    term: "OCP (Office of Cannabis Policy)", 
+    definition: "The division within the Maine Department of Administrative and Financial Services responsible for regulating and overseeing the state's cannabis programs."
+  },
+  { 
+    term: "Qualifying Patient", 
+    definition: "A person who has been diagnosed by a medical professional as having a debilitating medical condition and is authorized to use medical cannabis."
+  },
+  { 
+    term: "Seed-to-Sale", 
+    definition: "A regulatory system that tracks cannabis from the initial seed/clone stage through cultivation, harvesting, processing, and final retail sale."
+  },
+  { 
+    term: "Track and Trace", 
+    definition: "The real-time monitoring process used by regulators to prevent diversion and ensure product safety within the legal market."
+  },
+  { 
+    term: "THC (Tetrahydrocannabinol)", 
+    definition: "The primary psychoactive cannabinoid found in cannabis. Maine regulations set strict limits on THC concentration per serving in edibles."
+  },
+  { 
+    term: "Tier 1-4 Cultivation", 
+    definition: "Maine's tiered licensing system for cultivation facilities based on canopy size, ranging from Tier 1 (up to 500 sq ft) to Tier 4 (up to 20,000 sq ft)."
+  },
+  { 
+    term: "Universal Symbol", 
+    definition: "The mandatory red 'NOT SAFE FOR KIDS' image required on all cannabis packaging in Maine to identify products containing THC."
+  }
+];
+---
+
+<Layout title="Maine Cannabis Glossary | Technical Terms & Definitions" description="A comprehensive guide to the technical, legal, and regulatory terms used in the Maine cannabis industry.">
+  <section class="glossary-header">
+    <h1>Maine Cannabis Glossary</h1>
+    <p class="lead">Understanding the specific language of the Maine market is essential for compliance and success. Use this resource to master the technical terms used by regulators and professionals.</p>
+  </section>
+
+  <Callout title="Knowledge is Power" type="tip">
+    Whether you're talking to a lawyer or a state inspector, using the correct terminology shows that you are a serious, professional operator. Bookmark this page as your quick-reference guide!
+  </Callout>
+
+  <div class="glossary-container">
+    {terms.map(item => (
+      <div class="glossary-item" id={item.term.toLowerCase().replace(/\s+/g, '-')}>
+        <h3>{item.term}</h3>
+        <p>{item.definition}</p>
+      </div>
+    ))}
+  </div>
+
+  <section class="glossary-cta">
+    <div class="cta-content">
+      <h2>Need more detail?</h2>
+      <p>Our deep-dive guides expand on many of these terms with step-by-step instructions.</p>
+      <a href="/all-guides/" class="btn-main">Browse Full Guides</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .glossary-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .glossary-container {
+    max-width: 800px;
+    margin: 0 auto 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .glossary-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    transition: transform 0.2s;
+  }
+
+  .glossary-item:hover {
+    transform: translateX(10px);
+    border-color: var(--color-primary);
+  }
+
+  .glossary-item h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+  }
+
+  .glossary-item p {
+    margin-bottom: 0;
+    line-height: 1.7;
+    color: var(--color-text-light);
+  }
+
+  .glossary-cta {
+    background: var(--color-primary);
+    color: white;
+    padding: 4rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+  }
+
+  .cta-content h2 { color: white; margin-top: 0; }
+
+  .btn-main {
+    display: inline-block;
+    background: white;
+    color: var(--color-primary);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 1.5rem;
+  }
+</style>

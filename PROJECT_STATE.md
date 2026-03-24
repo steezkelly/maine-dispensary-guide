@@ -36,8 +36,9 @@
 - `npm run dev` - Local development.
 
 ## Future Roadmap
-- **Design Refinement:** Improve the "Modern Maine" aesthetic with more high-fidelity visual components and custom UI elements.
-- **Lead Generation:** Build out contact forms and "Lead Magnets" (e.g., printable checklists) to capture visitor info.
+- **Checklist PDF Creation:** Generate the actual high-value PDF content to fulfill the /download-checklist/ promise.
+- **CTA Optimization:** Refine the lead capture boxes to be more enticing (visual previews, social proof).
+- **Design Refinement:** Improve the "Modern Maine" aesthetic with more high-fidelity visual components.
 - **Vendor Directory:** Launch the "Money Pages" for Maine-based cannabis professional services.
 - **Scaling:** Create the "Universal Template" for national hub expansion.
 
