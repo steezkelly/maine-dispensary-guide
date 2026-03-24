@@ -120,6 +120,12 @@ const fullTitle = `${title} | ${siteName}`;
               </div>
             )}
             <slot />
+
+            <div class="lead-capture-box">
+              <h3>Get the 2026 Maine Launch Checklist</h3>
+              <p>Download our step-by-step roadmap for Maine cannabis entrepreneurs. 100% Free.</p>
+              <a href="/download-checklist/" class="btn-cta">Download PDF Checklist &rarr;</a>
+            </div>
           </div>
           <div class="guide-sidebar-container">
             <GuideSidebar />
@@ -403,4 +409,45 @@ const fullTitle = `${title} | ${siteName}`;
       order: 2;
     }
   }
+
+  /* Lead Capture Styling */
+  .lead-capture-box {
+    margin-top: 5rem;
+    padding: 3rem;
+    background: white;
+    border: 2px solid var(--color-primary);
+    border-radius: 2rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(13, 78, 80, 0.05);
+  }
+
+  .lead-capture-box h3 {
+    margin-top: 0;
+    font-size: 1.75rem;
+    color: var(--color-primary);
+  }
+
+  .lead-capture-box p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+  }
+
+  .btn-cta {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white !important;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.1s;
+  }
+
+  .btn-cta:hover {
+    background: var(--color-primary-dark);
+    text-decoration: none !important;
+  }
+
+  .btn-cta:active { transform: scale(0.98); }
 </style>
