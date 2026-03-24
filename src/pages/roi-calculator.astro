@@ -3,89 +3,99 @@ import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 ---
 
-<Layout title="Maine Dispensary ROI Calculator | Financial Planning Tool" description="Estimate your startup costs, revenue, and time to profitability for a Maine cannabis dispensary based on your starting capital.">
+<Layout title="Maine Dispensary Profitability Guide | Interactive ROI Tool" description="A beginner-friendly tool to help you understand the finances of a Maine cannabis dispensary. Learn about margins, taxes, and overhead while planning your business.">
   <section class="calculator-header">
-    <h1>Dispensary Profitability Calculator</h1>
-    <p class="lead">A data-driven "Reality Check" for Maine cannabis entrepreneurs.</p>
+    <div class="hero-badge">Founder's Financial Roadmap</div>
+    <h1>Maine Dispensary Success Calculator</h1>
+    <p class="lead">We've simplified the complex world of cannabis finance into a "Business Flight Simulator." Let's map out your path to profitability.</p>
   </section>
 
   <div class="calc-container">
     <div class="calc-inputs">
       <div class="input-section">
-        <h2>1. Initial Investment</h2>
+        <h2>1. Your Launch Fund</h2>
         <div class="input-group">
-          <label for="capital">Total Startup Capital:</label>
+          <label for="capital">How much money are you starting with?</label>
           <div class="currency-input">
             <span>$</span>
-            <input type="number" id="capital" value="300000" step="5000" />
+            <input type="number" id="capital" value="100000" step="5000" />
           </div>
-          <p class="input-hint">License, build-out, and initial inventory.</p>
+          <p class="input-hint">Includes your license, store design, and first batch of product.</p>
         </div>
       </div>
 
       <div class="input-section">
-        <h2>2. Monthly Revenue</h2>
+        <h2>2. Daily Sales Goals</h2>
         <div class="input-group">
-          <label for="customers">Monthly Customers:</label>
-          <input type="range" id="customers" min="100" max="5000" value="1000" class="slider" />
-          <div class="slider-value"><span id="customer-count">1000</span> customers</div>
+          <label for="customers">Estimated Customers per Month:</label>
+          <input type="range" id="customers" min="100" max="5000" value="800" class="slider" />
+          <div class="slider-value"><span id="customer-count">800</span> shoppers</div>
         </div>
         <div class="input-group">
-          <label for="avg-sale">Average Sale ($):</label>
+          <label for="avg-sale">Average Customer Spend:</label>
           <div class="currency-input small">
             <span>$</span>
             <input type="number" id="avg-sale" value="85" step="5" />
           </div>
+          <p class="input-hint">Maine's average is around $80-$95 per visit.</p>
         </div>
       </div>
 
       <div class="input-section">
-        <h2>3. Monthly Overhead</h2>
+        <h2>3. Keeping the Lights On</h2>
         <div class="input-group">
-          <label for="expenses">Operating Expenses (OPEX):</label>
+          <label for="expenses">Monthly Bills (Rent, Payroll, Power):</label>
           <div class="currency-input small">
             <span>$</span>
-            <input type="number" id="expenses" value="25000" step="1000" />
+            <input type="number" id="expenses" value="20000" step="1000" />
           </div>
-          <p class="input-hint">Rent, Payroll, & Utilities.</p>
+          <p class="input-hint">We call this <strong>OPEX</strong> (Operating Expenses).</p>
         </div>
       </div>
     </div>
 
     <div class="calc-results">
-      <div class="result-card primary">
-        <span class="result-label">Net Monthly Profit</span>
+      <div class="result-card primary" id="profit-card">
+        <span class="result-label">Your Monthly Take-Home</span>
         <span class="result-value" id="monthly-profit">Calculating...</span>
-        <p id="profit-note">Net income after COGS, 280E, and OPEX.</p>
+        <p id="profit-status">Your projected monthly profit after all costs.</p>
       </div>
 
       <div class="result-grid">
         <div class="result-card">
-          <span class="result-label">Annual Revenue</span>
+          <span class="result-label">Yearly Revenue</span>
           <span class="result-value small" id="annual-revenue">...</span>
         </div>
         <div class="result-card">
-          <span class="result-label">Break-Even (Months)</span>
+          <span class="result-label">Time to Pay Yourself Back</span>
           <span class="result-value small" id="breakeven">...</span>
         </div>
       </div>
 
-      <div class="result-footer">
-        <div class="mini-stat">
-          <span>COGS:</span>
-          <strong>65%</strong>
-        </div>
-        <div class="mini-stat">
-          <span>280E Tax Est:</span>
-          <strong>21%</strong>
-        </div>
+      <div id="optimization-advice" class="optimization-box hidden">
+        <h4>💡 Mentor's Advice for Growth:</h4>
+        <p id="advice-text"></p>
       </div>
     </div>
   </div>
 
-  <Callout title="Understanding the Math" type="success">
-    This model uses Maine market averages: 65% for Cost of Goods Sold (COGS) and a 21% effective federal tax rate on Gross Profit (280E). Net profit is what remains after paying your staff, rent, and the IRS.
-  </Callout>
+  <section class="financial-glossary">
+    <h2>Financial Terms Simplified</h2>
+    <div class="glossary-grid">
+      <div class="glossary-box">
+        <h3>COGS (Cost of Product)</h3>
+        <p>This is simply what you pay the grower for the flower on your shelf. In Maine, we expect to spend about **65%** of our revenue on the product itself.</p>
+      </div>
+      <div class="glossary-box">
+        <h3>280E (The "Cannabis Tax")</h3>
+        <p>This is a federal rule. It means you can't deduct standard business costs from your taxes. We've built a **21%** estimate into this calculator to keep you safe!</p>
+      </div>
+      <div class="glossary-box">
+        <h3>OPEX (Monthly Bills)</h3>
+        <p>Short for "Operating Expenses." This is the total cost of your rent, your team's payroll, and your power bill.</p>
+      </div>
+    </div>
+  </section>
 
   <script>
     function calculate() {
@@ -96,53 +106,52 @@ import Callout from '../components/Callout.astro';
       
       document.getElementById('customer-count').innerText = customers;
 
-      // 1. Gross Revenue
       const monthlyGrossRev = customers * avgSale;
       const annualRev = monthlyGrossRev * 12;
-
-      // 2. Gross Profit (After 65% COGS)
       const cogs = monthlyGrossRev * 0.65;
       const grossProfit = monthlyGrossRev - cogs;
-
-      // 3. 280E Federal Tax (21% of Gross Profit - conservative estimate)
       const tax280e = grossProfit * 0.21;
-
-      // 4. Net Monthly Profit
       const netMonthlyProfit = grossProfit - tax280e - opex;
-
-      // 5. Break Even
       const monthsToBreakeven = netMonthlyProfit > 0 ? Math.ceil(capital / netMonthlyProfit) : -1;
 
-      // UI Update
       const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
       
       document.getElementById('monthly-profit').innerText = formatter.format(netMonthlyProfit);
       document.getElementById('annual-revenue').innerText = formatter.format(annualRev);
       
       const breakevenEl = document.getElementById('breakeven');
+      const adviceBox = document.getElementById('optimization-advice');
+      const adviceText = document.getElementById('advice-text');
+      const profitCard = document.getElementById('profit-card');
+
+      adviceBox.classList.remove('hidden');
+
       if (netMonthlyProfit <= 0) {
-        breakevenEl.innerText = "N/A";
-        document.getElementById('monthly-profit').style.color = "#ff6b6b";
+        breakevenEl.innerText = "Check Advice Below";
+        profitCard.style.background = "#8B0000";
+        adviceText.innerHTML = "<strong>Don't get discouraged!</strong> To turn this into a profit, try <strong>increasing your average sale by $10</strong> by offering high-margin accessories (papers, lighters) or <strong>reducing your monthly bills</strong> by just $2,000.";
       } else {
-        document.getElementById('monthly-profit').style.color = "white";
-        breakevenEl.innerText = monthsToBreakeven > 60 ? "5+ Years" : monthsToBreakeven;
+        profitCard.style.background = "var(--color-primary)";
+        breakevenEl.innerText = monthsToBreakeven > 60 ? "5+ Years" : monthsToBreakeven + " Months";
+        adviceText.innerHTML = "<strong>You're on the right track!</strong> To reach your goals even faster, focus on building a <strong>Loyalty Program</strong> to increase your monthly customer count by 10%.";
       }
     }
 
-    // Attach listeners and initial call
     document.addEventListener('DOMContentLoaded', () => {
       const inputs = ['capital', 'customers', 'avg-sale', 'expenses'];
-      inputs.forEach(id => document.getElementById(id).addEventListener('input', calculate));
+      inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', calculate);
+      });
       calculate();
     });
-    
-    // Backup call for Astro hydration
     calculate();
   </script>
 </Layout>
 
 <style>
   .calculator-header { text-align: center; margin-bottom: 4rem; }
+  .hero-badge { display: inline-block; background: var(--color-primary); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 1.5rem; }
   .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; }
 
   .calc-container {
@@ -157,66 +166,37 @@ import Callout from '../components/Callout.astro';
     box-shadow: 0 20px 50px rgba(0,0,0,0.03);
   }
 
-  .input-section {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--color-background);
-  }
-
+  .input-section { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-background); }
+  .input-section h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 1.5rem; }
   .input-group label { display: block; font-weight: 700; margin-bottom: 0.75rem; font-size: 0.95rem; }
 
-  .currency-input {
-    display: flex;
-    align-items: center;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-primary);
-  }
-
+  .currency-input { display: flex; align-items: center; font-size: 2rem; font-weight: 700; color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
   .currency-input.small { font-size: 1.5rem; }
-
-  .currency-input input {
-    border: none;
-    padding: 0.5rem;
-    width: 100%;
-    font-weight: 700;
-    color: var(--color-primary);
-    background: transparent;
-  }
-
+  .currency-input input { border: none; padding: 0.5rem; width: 100%; font-weight: 700; color: var(--color-primary); background: transparent; }
   .currency-input input:focus { outline: none; }
 
-  .input-hint { font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.5rem; }
-
   .slider { width: 100%; height: 6px; background: var(--color-background); border-radius: 3px; appearance: none; outline: none; }
-  .slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
-
+  .slider::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
   .slider-value { margin-top: 0.75rem; font-weight: 700; color: var(--color-primary); font-size: 0.9rem; }
 
   .calc-results { display: flex; flex-direction: column; gap: 1.5rem; }
-
-  .result-card { background: var(--color-background); padding: 2.5rem; border-radius: 1.5rem; text-align: center; }
+  .result-card { background: var(--color-background); padding: 2.5rem; border-radius: 1.5rem; text-align: center; transition: background 0.3s; }
   .result-card.primary { background: var(--color-primary); color: white; }
-
   .result-label { display: block; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 0.75rem; opacity: 0.8; }
   .result-value { display: block; font-family: var(--font-serif); font-size: 3.5rem; font-weight: 700; line-height: 1; }
   .result-value.small { font-size: 2.25rem; }
-
   .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
-  .result-footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 1.5rem;
-    background: rgba(13, 78, 80, 0.05);
-    border-radius: 1rem;
-    font-size: 0.8rem;
-  }
+  .optimization-box { background: rgba(88, 129, 87, 0.1); padding: 2rem; border-radius: 1.5rem; border: 1px solid var(--color-accent); margin-top: 1rem; }
+  .optimization-box h4 { margin-top: 0; color: var(--color-primary); margin-bottom: 0.5rem; }
+  .optimization-box p { margin-bottom: 0; font-size: 0.95rem; line-height: 1.6; }
+  .hidden { display: none; }
 
-  .mini-stat span { color: var(--color-text-light); margin-right: 0.5rem; }
+  .financial-glossary { margin-bottom: 6rem; }
+  .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+  .glossary-box { background: white; padding: 2rem; border-radius: 1.5rem; border: 1px solid var(--color-border); }
+  .glossary-box h3 { margin-top: 0; color: var(--color-primary); font-size: 1.15rem; margin-bottom: 0.75rem; }
+  .glossary-box p { font-size: 0.9rem; color: var(--color-text-light); line-height: 1.6; margin-bottom: 0; }
 
-  @media (max-width: 1000px) {
-    .calc-container { grid-template-columns: 1fr; padding: 2rem; }
-  }
+  @media (max-width: 1000px) { .calc-container { grid-template-columns: 1fr; padding: 2rem; } }
 </style>
