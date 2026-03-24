@@ -51,6 +51,7 @@ const vendorCategories = [
 
     <aside class="referral-sidebar">
       <div id="referral-form-box" class="referral-box">
+        <button id="close-theater" class="btn-close-theater">&times;</button>
         <h3>Need a Referral?</h3>
         <p>Tell us about your project, and we will connect you with the right professional for your specific needs.</p>
         <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
@@ -67,31 +68,6 @@ const vendorCategories = [
           <textarea name="message" id="message-box" placeholder="Briefly describe your goals..."></textarea>
           <button type="submit" class="btn-main">Request Introduction</button>
         </form>
-
-...
-
-  <script>
-    // Lead Logic: When a user clicks a specific vendor, focus the form and set the context
-    const referralButtons = document.querySelectorAll('.btn-referral');
-    const vendorInput = document.getElementById('target-vendor');
-    const messageBox = document.getElementById('message-box');
-    const formBox = document.getElementById('referral-form-box');
-
-    referralButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const vendorName = btn.getAttribute('data-vendor');
-        if (vendorInput) vendorInput.value = vendorName;
-        if (messageBox) messageBox.placeholder = `I would like an introduction to ${vendorName}...`;
-        
-        // Scroll to form and highlight it
-        formBox.scrollIntoView({ behavior: 'smooth' });
-        formBox.style.borderColor = 'var(--color-accent)';
-        setTimeout(() => {
-          formBox.style.borderColor = 'var(--color-primary)';
-        }, 2000);
-      });
-    });
-  </script>
         <p class="form-disclaimer">By submitting, you agree to share your info with our vetted partners.</p>
       </div>
     </aside>
@@ -100,6 +76,33 @@ const vendorCategories = [
   <Callout title="Are you a Maine Professional?" type="passion">
     Want to be featured in our directory? We are looking for high-authority lawyers, accountants, and security firms. <a href="mailto:admin@mainedispensaryguide.com">Contact our partnership team</a>.
   </Callout>
+
+  <script>
+    const referralButtons = document.querySelectorAll('.btn-referral');
+    const closeButton = document.getElementById('close-theater');
+    const vendorInput = document.getElementById('target-vendor');
+    const messageBox = document.getElementById('message-box');
+    const overlay = document.getElementById('theater-overlay');
+
+    const openTheater = (vendorName) => {
+      if (vendorInput) vendorInput.value = vendorName;
+      if (messageBox) messageBox.placeholder = `I would like an introduction to ${vendorName}...`;
+      document.body.classList.add('theater-active');
+    };
+
+    const closeTheater = () => {
+      document.body.classList.remove('theater-active');
+    };
+
+    referralButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        openTheater(btn.getAttribute('data-vendor'));
+      });
+    });
+
+    if (closeButton) closeButton.addEventListener('click', closeTheater);
+    if (overlay) overlay.addEventListener('click', closeTheater);
+  </script>
 </Layout>
 
 <style>
@@ -136,14 +139,49 @@ const vendorCategories = [
 
   .btn-referral:hover { background: var(--color-primary); color: white; }
 
+  .btn-close-theater {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-background);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 2001;
+  }
+
   .referral-box {
-    background: var(--color-surface);
+    background: white;
     padding: 2.5rem;
     border-radius: 2rem;
     border: 2px solid var(--color-primary);
     position: sticky;
     top: 120px;
+    z-index: 100;
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
   }
+
+  /* Theater Active State */
+  :global(body.theater-active) .referral-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.05);
+    z-index: 2000;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+  }
+
+  :global(body.theater-active) .btn-close-theater { display: flex; }
 
   .referral-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
   .referral-form input, .referral-form select, .referral-form textarea {

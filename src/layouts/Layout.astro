@@ -208,7 +208,29 @@ const fullTitle = `${title} | ${siteName}`;
     <Analytics />
     <SpeedInsights />
     
+    <div id="theater-overlay" class="theater-overlay"></div>
+
     <footer>
+...
+  /* Theater Focus Overlay */
+  .theater-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 26, 27, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 1500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  body.theater-active .theater-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
       <div class="footer-content">
         <div class="footer-icons">
           <PineTree size={32} color="var(--color-border)" />
