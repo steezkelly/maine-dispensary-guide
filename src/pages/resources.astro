@@ -24,97 +24,122 @@ const vendorCategories = [
 
 <Layout title="Professional Vendor Directory | Maine Dispensary Guide" description="Connect with verified Maine cannabis lawyers, accountants, and consultants. Request a professional introduction to start your project.">
   
-  <!-- THEATER OVERLAY -->
-  <div id="theater-focus-overlay" class="theater-overlay" onclick="document.body.classList.remove('theater-active')"></div>
+  <div id="page-theatre-wrapper">
+    <!-- THEATER OVERLAY -->
+    <div id="theatre-dimmer" class="theatre-overlay"></div>
 
-  <section class="resources-header">
-    <div class="hero-badge">Verified Expert Network</div>
-    <h1>Professional Vendor Directory</h1>
-    <p class="lead">Building a dispensary requires an elite team. We've vetted the leading professionals in the Maine market.</p>
-  </section>
+    <section class="resources-header">
+      <div class="hero-badge">Verified Expert Network</div>
+      <h1>Professional Vendor Directory</h1>
+      <p class="lead">Building a dispensary requires an elite team. We've vetted the leading professionals in the Maine market.</p>
+    </section>
 
-  <div class="directory-container">
-    <div class="vendor-list">
-      {vendorCategories.map(category => (
-        <div class="category-block">
-          <h2>{category.name}</h2>
-          <p class="cat-desc">{category.description}</p>
-          <div class="vendor-grid">
-            {category.vendors.map(vendor => (
-              <div class="vendor-card">
-                <h3>{vendor.name}</h3>
-                <p><strong>Specialty:</strong> {vendor.specialty}</p>
-                <p><strong>Location:</strong> {vendor.location}</p>
-                <button 
-                  type="button" 
-                  class="btn-referral-trigger" 
-                  onclick={`window.openLeadTheater('${vendor.name}')`}
-                >
-                  Request Intro &rarr;
-                </button>
-              </div>
-            ))}
+    <div class="directory-container">
+      <div class="vendor-list">
+        {vendorCategories.map(category => (
+          <div class="category-block">
+            <h2>{category.name}</h2>
+            <p class="cat-desc">{category.description}</p>
+            <div class="vendor-grid">
+              {category.vendors.map(vendor => (
+                <div class="vendor-card">
+                  <h3>{vendor.name}</h3>
+                  <p><strong>Specialty:</strong> {vendor.specialty}</p>
+                  <p><strong>Location:</strong> {vendor.location}</p>
+                  <button 
+                    type="button" 
+                    class="btn-theatre-trigger" 
+                    data-vendor={vendor.name}
+                  >
+                    Request Intro &rarr;
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
+        ))}
+      </div>
+
+      <aside class="referral-sidebar">
+        <div id="referral-form-box" class="referral-box">
+          <button type="button" id="close-theatre-btn" class="btn-close-theatre">&times;</button>
+          <h3>Need a Referral?</h3>
+          <p>Tell us about your project, and we will connect you with the right professional.</p>
+          <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required />
+            <input type="email" name="email" placeholder="Business Email" required />
+            <input type="hidden" id="target-vendor-input" name="requested_professional" value="General Referral" />
+            <select name="service" required>
+              <option value="">Select Service Needed...</option>
+              <option value="legal">Legal & Licensing</option>
+              <option value="accounting">Tax & 280E</option>
+              <option value="security">Security & Hardware</option>
+              <option value="real-estate">Real Estate / Zoning</option>
+            </select>
+            <textarea id="message-text-area" name="message" placeholder="Briefly describe your goals..."></textarea>
+            <button type="submit" class="btn-main">Request Introduction</button>
+          </form>
         </div>
-      ))}
+      </aside>
     </div>
 
-    <aside class="referral-sidebar">
-      <div id="referral-form-box" class="referral-box">
-        <button type="button" class="btn-close-theater" onclick="document.body.classList.remove('theater-active')">&times;</button>
-        <h3>Need a Referral?</h3>
-        <p>Tell us about your project, and we will connect you with the right professional.</p>
-        <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
-          <input type="text" name="name" placeholder="Full Name" required />
-          <input type="email" name="email" placeholder="Business Email" required />
-          <input type="hidden" id="target-vendor-input" name="requested_professional" value="General Referral" />
-          <select name="service" required>
-            <option value="">Select Service Needed...</option>
-            <option value="legal">Legal & Licensing</option>
-            <option value="accounting">Tax & 280E</option>
-            <option value="security">Security & Hardware</option>
-            <option value="real-estate">Real Estate / Zoning</option>
-          </select>
-          <textarea id="message-text-area" name="message" placeholder="Briefly describe your goals..."></textarea>
-          <button type="submit" class="btn-main">Request Introduction</button>
-        </form>
-      </div>
-    </aside>
+    <Callout title="Are you a Maine Professional?" type="passion">
+      Want to be featured in our directory? We are looking for high-authority lawyers, accountants, and security firms. <a href="mailto:admin@mainedispensaryguide.com">Contact our partnership team</a>.
+    </Callout>
   </div>
 
   <script is:inline>
-    // Global function to ensure it's available before DOM triggers
-    window.openLeadTheater = function(vendorName) {
-      console.log("Opening Theater for:", vendorName);
-      const input = document.getElementById('target-vendor-input');
-      const area = document.getElementById('message-text-area');
-      if (input) input.value = vendorName;
-      if (area) area.placeholder = "I would like an introduction to " + vendorName + "...";
-      document.body.classList.add('theater-active');
-    };
+    (function() {
+      const wrapper = document.getElementById('page-theatre-wrapper');
+      const dimmer = document.getElementById('theatre-dimmer');
+      const closeBtn = document.getElementById('close-theatre-btn');
+      const vendorInput = document.getElementById('target-vendor-input');
+      const messageArea = document.getElementById('message-text-area');
+      const triggers = document.querySelectorAll('.btn-theatre-trigger');
+
+      function openTheatre(name) {
+        if (vendorInput) vendorInput.value = name;
+        if (messageArea) messageArea.placeholder = "I would like an introduction to " + name + "...";
+        wrapper.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeTheatre() {
+        wrapper.classList.remove('is-active');
+        document.body.style.overflow = '';
+      }
+
+      triggers.forEach(btn => {
+        btn.onclick = () => openTheatre(btn.getAttribute('data-vendor'));
+      });
+
+      if (dimmer) dimmer.onclick = closeTheatre;
+      if (closeBtn) closeBtn.onclick = closeTheatre;
+    })();
   </script>
 
-  <style>
-    /* FORCE GLOBAL SCOPE FOR BODY CLASS */
-    :global(body.theater-active) {
-      overflow: hidden;
+  <style is:global>
+    /* THEATRE MODE - GLOBAL OVERRIDES */
+    #page-theatre-wrapper {
+      position: relative;
+      width: 100%;
     }
 
-    .theater-overlay {
+    .theatre-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px);
-      z-index: 9000;
+      z-index: 8000;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
     }
 
-    :global(body.theater-active) .theater-overlay {
+    #page-theatre-wrapper.is-active .theatre-overlay {
       opacity: 1;
       pointer-events: auto;
     }
@@ -130,18 +155,18 @@ const vendorCategories = [
       transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    :global(body.theater-active) .referral-box {
+    #page-theatre-wrapper.is-active .referral-box {
       position: fixed !important;
       top: 50% !important;
       left: 50% !important;
-      transform: translate(-50%, -50%) scale(1) !important;
-      z-index: 9001 !important;
+      transform: translate(-50%, -50%) scale(1.1) !important;
+      z-index: 9000 !important;
       width: 90% !important;
       max-width: 500px !important;
-      box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+      box-shadow: 0 50px 100px rgba(0,0,0,0.6) !important;
     }
 
-    .btn-referral-trigger {
+    .btn-theatre-trigger {
       margin-top: 1.5rem;
       background: var(--color-background);
       color: var(--color-primary);
@@ -154,9 +179,9 @@ const vendorCategories = [
       transition: all 0.2s;
     }
 
-    .btn-referral-trigger:hover { background: var(--color-primary); color: white; }
+    .btn-theatre-trigger:hover { background: var(--color-primary); color: white; }
 
-    .btn-close-theater {
+    .btn-close-theatre {
       position: absolute;
       top: 1rem;
       right: 1.5rem;
@@ -165,10 +190,11 @@ const vendorCategories = [
       font-size: 2.5rem;
       cursor: pointer;
       display: none;
-      color: var(--color-text-light);
+      color: #666;
+      line-height: 1;
     }
 
-    :global(body.theater-active) .btn-close-theater { display: block; }
+    #page-theatre-wrapper.is-active .btn-close-theatre { display: block; }
 
     /* Layout Spacing */
     .directory-container { display: grid; grid-template-columns: 1fr 350px; gap: 4rem; margin-bottom: 6rem; }
