@@ -2,58 +2,93 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import PineTree from '../components/PineTree.astro';
+
+const roadmapFeatures = [
+  { 
+    title: "The 4-Phase State Map", 
+    desc: "A detailed timeline from entity formation to final OCP inspection.",
+    icon: "🗺️"
+  },
+  { 
+    title: "Financial Integrity Prep", 
+    desc: "Exactly what Maine banks and credit unions look for in a founder.",
+    icon: "💰"
+  },
+  { 
+    title: "Security Master List", 
+    desc: "Standard OCP-compliant hardware and surveillance protocols.",
+    icon: "🛡️"
+  },
+  { 
+    title: "280E Tax Strategy", 
+    desc: "How to maximize COGS deductions and manage high tax burdens.",
+    icon: "⚖️"
+  }
+];
 ---
 
-<Layout title="Download: 2026 Maine Dispensary Checklist | Founders Resource">
-  <section class="squeeze-hero">
+<Layout title="Download the 2026 Maine Dispensary Roadmap | Founders Edition">
+  <section class="download-hero">
     <div class="hero-container">
       <div class="hero-text">
-        <div class="hero-badge">Free Founder Resource</div>
-        <h1>Get the Definitive 2026 Maine Dispensary Launch Checklist</h1>
-        <p class="lead">Don't miss a single OCP requirement. Download the step-by-step roadmap used by Maine's most successful cannabis entrepreneurs.</p>
+        <div class="hero-badge">Verified Founder Asset</div>
+        <h1>Your Professional Roadmap to the Maine Market</h1>
+        <p class="lead">Stop guessing at regulations. Download the definitive, 40-page founder's guide to launching and scaling a Maine cannabis dispensary.</p>
         
-        <div class="benefit-list">
-          <div class="benefit-item">✅ Complete Phase-by-Phase Licensing Map</div>
-          <div class="benefit-item">✅ 280E Tax Prep Checklist for Accountants</div>
-          <div class="benefit-item">✅ OCP-Compliant Security Vendor List</div>
-          <div class="benefit-item">✅ Real Estate Zoning 'Opt-In' Quick Reference</div>
-        </div>
-
-        <form class="lead-form">
-          <input type="email" placeholder="Enter your business email" required />
-          <button type="submit" class="btn-main">Get the PDF Checklist &rarr;</button>
-          <p class="form-note">Join 500+ Maine cannabis founders. No spam, just high-value updates.</p>
+        <form class="lead-capture-form">
+          <div class="input-stack">
+            <input type="email" placeholder="Business Email Address" required />
+            <button type="submit" class="btn-primary">Send Me the Roadmap &rarr;</button>
+          </div>
+          <p class="form-disclaimer">Join 500+ Maine entrepreneurs. 100% Privacy. Zero Spam.</p>
         </form>
       </div>
+      
       <div class="hero-visual">
-        <div class="checklist-preview">
-          <div class="doc-header">
-            <PineTree size={32} color="var(--color-primary)" />
-            <span>2026 ROADMAP</span>
+        <div class="document-preview">
+          <div class="preview-badge">PDF</div>
+          <div class="preview-content">
+            <div class="preview-logo">
+              <PineTree size={40} color="var(--color-primary)" />
+            </div>
+            <div class="preview-title">2026 ROADMAP</div>
+            <div class="preview-lines">
+              <div class="line"></div>
+              <div class="line short"></div>
+              <div class="line"></div>
+            </div>
           </div>
-          <div class="doc-line"></div>
-          <div class="doc-line short"></div>
-          <div class="doc-line"></div>
-          <div class="doc-check"></div>
-          <div class="doc-check"></div>
-          <div class="doc-check pending"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="trust-section">
-    <p>Trusted by professionals across the state of Maine.</p>
+  <section class="feature-overview">
+    <h2>What's inside the guide?</h2>
+    <div class="feature-grid">
+      {roadmapFeatures.map(feature => (
+        <div class="feature-card">
+          <span class="feature-icon">{feature.icon}</span>
+          <h3>{feature.title}</h3>
+          <p>{feature.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="trust-footer">
+    <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
   </section>
 </Layout>
 
 <style>
-  .squeeze-hero {
+  .download-hero {
     background: white;
-    padding: 6rem 0 8rem;
+    padding: 6rem 0;
     border-radius: 3rem;
     border: 1px solid var(--color-border);
     margin-top: 2rem;
+    margin-bottom: 6rem;
   }
 
   .hero-container {
@@ -68,7 +103,7 @@ import PineTree from '../components/PineTree.astro';
 
   .hero-badge {
     display: inline-block;
-    background: var(--color-soft-green);
+    background: var(--color-primary);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
@@ -80,61 +115,57 @@ import PineTree from '../components/PineTree.astro';
   }
 
   .hero-text h1 {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
     line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
   }
 
-  .benefit-list {
-    margin: 2.5rem 0;
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+  }
+
+  .input-stack {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
-  }
-
-  .benefit-item {
-    font-weight: 600;
-    color: var(--color-text);
-    font-size: 1.125rem;
-  }
-
-  .lead-form {
     background: var(--color-background);
-    padding: 2.5rem;
-    border-radius: 2rem;
+    padding: 0.75rem;
+    border-radius: 1.5rem;
     border: 1px solid var(--color-border);
-    margin-top: 3rem;
   }
 
-  .lead-form input {
-    width: 100%;
-    padding: 1rem 1.5rem;
-    border-radius: 1rem;
-    border: 1px solid var(--color-border);
+  .input-stack input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1rem;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    font-weight: 600;
   }
 
-  .btn-main {
-    width: 100%;
+  .input-stack input:focus { outline: none; }
+
+  .btn-primary {
     background: var(--color-primary);
     color: white;
-    padding: 1rem;
+    border: none;
+    padding: 0.75rem 1.5rem;
     border-radius: 1rem;
     font-weight: 700;
-    border: none;
     cursor: pointer;
-    font-size: 1.125rem;
     transition: transform 0.1s;
   }
 
-  .btn-main:active { transform: scale(0.98); }
+  .btn-primary:active { transform: scale(0.98); }
 
-  .form-note {
+  .form-disclaimer {
     font-size: 0.75rem;
     color: var(--color-text-light);
     margin-top: 1rem;
-    text-align: center;
+    padding-left: 1rem;
   }
 
   .hero-visual {
@@ -142,73 +173,96 @@ import PineTree from '../components/PineTree.astro';
     justify-content: center;
   }
 
-  .checklist-preview {
-    width: 300px;
-    height: 400px;
+  .document-preview {
+    width: 320px;
+    height: 440px;
     background: white;
     border-radius: 1rem;
     border: 1px solid var(--color-border);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-    padding: 2rem;
-    transform: rotate(3deg);
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+    padding: 3rem;
+    transform: rotate(2deg);
   }
 
-  .doc-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-    font-weight: 800;
-    font-size: 0.75rem;
-    color: var(--color-primary);
-  }
-
-  .doc-line {
-    height: 8px;
-    background: #f0f0f0;
+  .preview-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 900;
+    padding: 0.25rem 0.5rem;
     border-radius: 4px;
+  }
+
+  .preview-logo { margin-bottom: 2rem; }
+  .preview-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .preview-lines .line {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
     margin-bottom: 1rem;
   }
+  .preview-lines .line.short { width: 60%; }
 
-  .doc-line.short { width: 60%; }
-
-  .doc-check {
-    width: 20px;
-    height: 20px;
-    background: var(--color-soft-green);
-    border-radius: 4px;
-    margin-top: 1.5rem;
-    position: relative;
-  }
-
-  .doc-check::after {
-    content: 'L';
-    color: white;
-    font-size: 12px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg) scaleX(-1);
-  }
-
-  .doc-check.pending {
-    background: #f0f0f0;
-  }
-
-  .doc-check.pending::after { display: none; }
-
-  .trust-section {
+  .feature-overview {
+    margin-bottom: 8rem;
     text-align: center;
-    margin-top: 4rem;
+  }
+
+  .feature-overview h2 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background: var(--color-surface);
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    border: 1px solid var(--color-border);
+    transition: all 0.3s;
+  }
+
+  .feature-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-5px);
+  }
+
+  .feature-icon { font-size: 2.5rem; display: block; margin-bottom: 1.5rem; }
+  .feature-card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary); }
+  .feature-card p { font-size: 0.9375rem; color: var(--color-text-light); line-height: 1.6; }
+
+  .trust-footer {
+    text-align: center;
+    border-top: 1px solid var(--color-border);
+    padding-top: 4rem;
+    color: var(--color-text-light);
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-text-light);
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
 
-  @media (max-width: 850px) {
-    .hero-container { grid-template-columns: 1fr; }
+  @media (max-width: 900px) {
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
     .hero-visual { display: none; }
+    .input-stack { flex-direction: column; padding: 1.5rem; gap: 1.5rem; border-radius: 2rem; }
+    .input-stack input { text-align: center; }
   }
 </style>
