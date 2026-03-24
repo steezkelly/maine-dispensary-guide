@@ -195,10 +195,14 @@ const fullTitle = `${title} | ${siteName}`;
         <slot />
       )}
     </main>
-    
     <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
       &uarr;
     </button>
+
+    <Analytics />
+    <SpeedInsights />
+
+    <footer>
 
     <Analytics />
     <SpeedInsights />

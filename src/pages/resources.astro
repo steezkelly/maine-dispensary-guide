@@ -2,111 +2,161 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 
-const vendors = [
+const vendorCategories = [
   {
-    category: "Legal & Compliance",
-    providers: [
-      { id: "legal-1", name: "Tammie Snow, Esq.", specialty: "Maine Cannabis Law & Licensing", link: "https://mainemarijuanaattorney.com/" },
-      { id: "legal-2", name: "Bernstein Shur", specialty: "Regulatory Policy & Business Law", link: "https://www.bernsteinshur.com/service/cannabis/" },
-      { id: "legal-3", name: "Caseiro Burke LLC", specialty: "IP & Cannabis IP Protection", link: "https://www.caseiroburke.com/" }
+    name: "Legal & Licensing",
+    description: "Expert cannabis attorneys to guide your state and local applications.",
+    vendors: [
+      { name: "Tammie Snow, Esq.", specialty: "Licensing & Regulatory", location: "Portland" },
+      { name: "Bernstein Shur", specialty: "Corporate & Zoning", location: "Portland/Augusta" }
     ]
   },
   {
-    category: "Accounting & Tax (280E)",
-    providers: [
-      { id: "tax-1", name: "BerryDunn", specialty: "Cannabis Industry Consulting & Tax", link: "https://www.berrydunn.com/" },
-      { id: "tax-2", name: "Macpage LLC", specialty: "Specialized Cannabis Audit & Assurance", link: "https://www.macpage.com/" }
+    name: "Accounting & 280E Tax",
+    description: "CPAs specializing in IRC 280E compliance and dispensary bookkeeping.",
+    vendors: [
+      { name: "BerryDunn", specialty: "Tax & Audit", location: "Portland" },
+      { name: "Macpage", specialty: "Financial Strategy", location: "South Portland" }
     ]
   }
 ];
 ---
 
-<Layout 
-  title="Professional Vendor Directory | Maine Dispensary Guide" 
-  description="Connect with verified Maine cannabis lawyers, accountants, and security professionals. Request direct introductions to industry experts."
-  heroImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=400"
->
-  <section class="directory-header">
+<Layout title="Professional Vendor Directory | Maine Dispensary Guide" description="Connect with verified Maine cannabis lawyers, accountants, and consultants. Request a professional introduction to start your project.">
+  <section class="resources-header">
     <div class="hero-badge">Verified Expert Network</div>
     <h1>Professional Vendor Directory</h1>
-    <p class="lead">We've curated the leading Maine-based professionals who specialize in the cannabis industry. Use the form below to request a direct introduction.</p>
+    <p class="lead">Building a dispensary requires an elite team. We've vetted the leading professionals in the Maine market to help you launch with confidence.</p>
   </section>
 
-  <div class="vendor-grid">
-    {vendors.map(group => (
-      <div class="vendor-category">
-        <h2>{group.category}</h2>
-        <div class="provider-list">
-          {group.providers.map(provider => (
-            <div class="provider-card">
-              <div class="card-body">
-                <h3>{provider.name}</h3>
-                <p class="specialty">{provider.specialty}</p>
-                <div class="card-actions">
-                  <a href={provider.link} target="_blank" class="btn-outline-small">View Site</a>
-                  <button class="btn-intro" data-vendor={provider.name}>Request Intro</button>
-                </div>
+  <div class="directory-container">
+    <div class="vendor-list">
+      {vendorCategories.map(category => (
+        <div class="category-block">
+          <h2>{category.name}</h2>
+          <p class="cat-desc">{category.description}</p>
+          <div class="vendor-grid">
+            {category.vendors.map(vendor => (
+              <div class="vendor-card">
+                <h3>{vendor.name}</h3>
+                <p><strong>Specialty:</strong> {vendor.specialty}</p>
+                <p><strong>Location:</strong> {vendor.location}</p>
+                <button class="btn-referral" data-vendor={vendor.name}>Request Intro &rarr;</button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+      ))}
+    </div>
+
+    <aside class="referral-sidebar">
+      <div id="referral-form-box" class="referral-box">
+        <h3>Need a Referral?</h3>
+        <p>Tell us about your project, and we will connect you with the right professional for your specific needs.</p>
+        <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+          <input type="text" name="name" placeholder="Full Name" required />
+          <input type="email" name="email" placeholder="Business Email" required />
+          <input type="hidden" id="target-vendor" name="requested_professional" value="General Referral" />
+          <select name="service" id="service-select" required>
+            <option value="">Select Service Needed...</option>
+            <option value="legal">Legal & Licensing</option>
+            <option value="accounting">Tax & 280E</option>
+            <option value="security">Security & Hardware</option>
+            <option value="real-estate">Real Estate / Zoning</option>
+          </select>
+          <textarea name="message" id="message-box" placeholder="Briefly describe your goals..."></textarea>
+          <button type="submit" class="btn-main">Request Introduction</button>
+        </form>
+
+...
+
+  <script>
+    // Lead Logic: When a user clicks a specific vendor, focus the form and set the context
+    const referralButtons = document.querySelectorAll('.btn-referral');
+    const vendorInput = document.getElementById('target-vendor');
+    const messageBox = document.getElementById('message-box');
+    const formBox = document.getElementById('referral-form-box');
+
+    referralButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const vendorName = btn.getAttribute('data-vendor');
+        if (vendorInput) vendorInput.value = vendorName;
+        if (messageBox) messageBox.placeholder = `I would like an introduction to ${vendorName}...`;
+        
+        // Scroll to form and highlight it
+        formBox.scrollIntoView({ behavior: 'smooth' });
+        formBox.style.borderColor = 'var(--color-accent)';
+        setTimeout(() => {
+          formBox.style.borderColor = 'var(--color-primary)';
+        }, 2000);
+      });
+    });
+  </script>
+        <p class="form-disclaimer">By submitting, you agree to share your info with our vetted partners.</p>
       </div>
-    ))}
+    </aside>
   </div>
 
-  <section id="intro-form" class="intro-form-section">
-    <div class="form-container">
-      <h2>Request a Professional Introduction</h2>
-      <p>Tell us which service you need, and we will connect you with our preferred partners.</p>
-      
-      <form class="lead-form">
-        <div class="form-row">
-          <input type="text" placeholder="Full Name" required />
-          <input type="email" placeholder="Business Email" required />
-        </div>
-        <select required>
-          <option value="">Select Service Needed...</option>
-          <option value="legal">Legal & Licensing</option>
-          <option value="tax">Tax & 280E Accounting</option>
-          <option value="security">Security & Surveillance</option>
-          <option value="real-estate">Real Estate / Zoning</option>
-        </select>
-        <textarea placeholder="Briefly describe your project goals..."></textarea>
-        <button type="submit" class="btn-main">Submit Request &rarr;</button>
-      </form>
-    </div>
-  </section>
+  <Callout title="Are you a Maine Professional?" type="passion">
+    Want to be featured in our directory? We are looking for high-authority lawyers, accountants, and security firms. <a href="mailto:admin@mainedispensaryguide.com">Contact our partnership team</a>.
+  </Callout>
 </Layout>
 
 <style>
-  .directory-header { text-align: center; margin-bottom: 4rem; }
-  .hero-badge { display: inline-block; background: var(--color-primary); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 1.5rem; }
-  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 800px; margin: 0 auto; }
+  .resources-header { text-align: center; margin-bottom: 4rem; }
+  .lead { max-width: 800px; margin: 0 auto; font-size: 1.25rem; color: var(--color-text-light); }
 
-  .vendor-grid { display: flex; flex-direction: column; gap: 4rem; margin-bottom: 6rem; }
-  .vendor-category h2 { border-bottom: 2px solid var(--color-primary); display: inline-block; padding-bottom: 0.5rem; margin-bottom: 2rem; font-family: var(--font-serif); }
+  .directory-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 4rem;
+    margin-bottom: 6rem;
+  }
 
-  .provider-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-  .provider-card { background: white; border-radius: 1.5rem; border: 1px solid var(--color-border); overflow: hidden; transition: all 0.3s; }
-  .provider-card:hover { transform: translateY(-5px); border-color: var(--color-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+  .category-block { margin-bottom: 4rem; }
+  .category-block h2 { border-bottom: 2px solid var(--color-primary); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+  .cat-desc { margin-bottom: 2rem; color: var(--color-text-light); }
+
+  .vendor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .vendor-card { background: white; padding: 2rem; border-radius: 1.5rem; border: 1px solid var(--color-border); }
+  .vendor-card h3 { margin-top: 0; color: var(--color-primary); }
   
-  .card-body { padding: 2rem; }
-  .provider-card h3 { margin: 0 0 0.5rem; color: var(--color-primary); font-family: var(--font-serif); }
-  .specialty { font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 2rem !important; min-height: 3rem; }
+  .btn-referral {
+    margin-top: 1.5rem;
+    background: var(--color-background);
+    color: var(--color-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+  }
 
-  .card-actions { display: flex; gap: 1rem; }
-  .btn-outline-small { flex: 1; text-align: center; border: 1px solid var(--color-border); padding: 0.5rem; border-radius: 0.75rem; font-size: 0.8rem; font-weight: 700; text-decoration: none; color: var(--color-text); }
-  .btn-intro { flex: 1; background: var(--color-background); border: none; padding: 0.5rem; border-radius: 0.75rem; font-size: 0.8rem; font-weight: 700; color: var(--color-primary); cursor: pointer; }
+  .btn-referral:hover { background: var(--color-primary); color: white; }
 
-  .intro-form-section { background: var(--color-primary); color: white; padding: 6rem 2rem; border-radius: 3rem; }
-  .form-container { max-width: 700px; margin: 0 auto; text-align: center; }
-  .form-container h2 { color: white; margin-top: 0; font-family: var(--font-serif); font-size: 2.5rem; }
-  
-  .lead-form { margin-top: 3rem; display: flex; flex-direction: column; gap: 1rem; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  input, select, textarea { padding: 1rem 1.5rem; border-radius: 1rem; border: none; font-size: 1rem; }
-  textarea { height: 120px; resize: none; }
-  .btn-main { background: white; color: var(--color-primary); padding: 1.25rem; border-radius: 1rem; font-weight: 800; border: none; cursor: pointer; margin-top: 1rem; }
+  .referral-box {
+    background: var(--color-surface);
+    padding: 2.5rem;
+    border-radius: 2rem;
+    border: 2px solid var(--color-primary);
+    position: sticky;
+    top: 120px;
+  }
 
-  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+  .referral-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+  .referral-form input, .referral-form select, .referral-form textarea {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+    font-family: inherit;
+  }
+  .referral-form textarea { height: 100px; resize: none; }
+  .form-disclaimer { font-size: 0.7rem; color: var(--color-text-light); margin-top: 1rem; text-align: center; }
+
+  @media (max-width: 1000px) {
+    .directory-container { grid-template-columns: 1fr; }
+    .referral-sidebar { order: -1; }
+  }
 </style>
