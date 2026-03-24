@@ -24,9 +24,28 @@ const vendorCategories = [
 
 <Layout title="Professional Vendor Directory | Maine Dispensary Guide" description="Connect with verified Maine cannabis lawyers, accountants, and consultants. Request a professional introduction to start your project.">
   
+  <script is:inline>
+    // DEFINE GLOBAL HANDLERS IN HEAD
+    window.openTheatre = function(name) {
+      const wrapper = document.getElementById('page-theatre-wrapper');
+      const input = document.getElementById('target-vendor-input');
+      const area = document.getElementById('message-text-area');
+      
+      if (input) input.value = name;
+      if (area) area.placeholder = "I would like an introduction to " + name + "...";
+      if (wrapper) wrapper.classList.add('is-active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeTheatre = function() {
+      const wrapper = document.getElementById('page-theatre-wrapper');
+      if (wrapper) wrapper.classList.remove('is-active');
+      document.body.style.overflow = '';
+    };
+  </script>
+
   <div id="page-theatre-wrapper">
-    <!-- THEATER OVERLAY -->
-    <div id="theatre-dimmer" class="theatre-overlay"></div>
+    <div id="theatre-dimmer" class="theatre-overlay" onclick="window.closeTheatre()"></div>
 
     <section class="resources-header">
       <div class="hero-badge">Verified Expert Network</div>
@@ -49,7 +68,7 @@ const vendorCategories = [
                   <button 
                     type="button" 
                     class="btn-theatre-trigger" 
-                    data-vendor={vendor.name}
+                    onclick={`window.openTheatre('${vendor.name}')`}
                   >
                     Request Intro &rarr;
                   </button>
@@ -62,7 +81,7 @@ const vendorCategories = [
 
       <aside class="referral-sidebar">
         <div id="referral-form-box" class="referral-box">
-          <button type="button" id="close-theatre-btn" class="btn-close-theatre">&times;</button>
+          <button type="button" class="btn-close-theatre" onclick="window.closeTheatre()">&times;</button>
           <h3>Need a Referral?</h3>
           <p>Tell us about your project, and we will connect you with the right professional.</p>
           <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
@@ -88,42 +107,8 @@ const vendorCategories = [
     </Callout>
   </div>
 
-  <script is:inline>
-    (function() {
-      const wrapper = document.getElementById('page-theatre-wrapper');
-      const dimmer = document.getElementById('theatre-dimmer');
-      const closeBtn = document.getElementById('close-theatre-btn');
-      const vendorInput = document.getElementById('target-vendor-input');
-      const messageArea = document.getElementById('message-text-area');
-      const triggers = document.querySelectorAll('.btn-theatre-trigger');
-
-      function openTheatre(name) {
-        if (vendorInput) vendorInput.value = name;
-        if (messageArea) messageArea.placeholder = "I would like an introduction to " + name + "...";
-        wrapper.classList.add('is-active');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeTheatre() {
-        wrapper.classList.remove('is-active');
-        document.body.style.overflow = '';
-      }
-
-      triggers.forEach(btn => {
-        btn.onclick = () => openTheatre(btn.getAttribute('data-vendor'));
-      });
-
-      if (dimmer) dimmer.onclick = closeTheatre;
-      if (closeBtn) closeBtn.onclick = closeTheatre;
-    })();
-  </script>
-
   <style is:global>
-    /* THEATRE MODE - GLOBAL OVERRIDES */
-    #page-theatre-wrapper {
-      position: relative;
-      width: 100%;
-    }
+    #page-theatre-wrapper { position: relative; width: 100%; }
 
     .theatre-overlay {
       position: fixed;
@@ -196,7 +181,6 @@ const vendorCategories = [
 
     #page-theatre-wrapper.is-active .btn-close-theatre { display: block; }
 
-    /* Layout Spacing */
     .directory-container { display: grid; grid-template-columns: 1fr 350px; gap: 4rem; margin-bottom: 6rem; }
     .category-block { margin-bottom: 4rem; }
     .vendor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
