@@ -15,6 +15,20 @@ interface Props {
   heroImage?: string;
 }
 
+/**
+ * Layout.astro
+ * The structural "DNA" of the Maine Dispensary Guide.
+ * 
+ * DESIGN PRINCIPLE: "Modern Maine / Refined Rustic"
+ * - Deep Spruce (#0D4E50) for authority.
+ * - Warm Bone (#F2F2E2) for readability.
+ * 
+ * FEATURES:
+ * - SEO/GEO Optimized JSON-LD metadata.
+ * - Glassmorphism Navigation with Dropdowns.
+ * - Conditional Sidebar rendering for Guides.
+ */
+
 const { 
   title, 
   description = "Your complete guide to opening and operating a cannabis dispensary.",
@@ -23,6 +37,7 @@ const {
   heroImage
 } = Astro.props;
 
+// Logic to identify if current page is a technical guide (triggers sidebar/hero)
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides/';
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const fullTitle = `${title} | ${siteName}`;
