@@ -42,14 +42,14 @@ import Callout from '../components/Callout.astro';
       </div>
 
       <div class="input-section">
-        <h2>3. Keeping the Lights On</h2>
+        <h2>3. Keeping the Lights On (OPEX)</h2>
         <div class="input-group">
           <label for="expenses">Monthly Bills (Rent, Payroll, Power):</label>
           <div class="currency-input small">
             <span>$</span>
             <input type="number" id="expenses" value="20000" step="1000" />
           </div>
-          <p class="input-hint">We call this <strong>OPEX</strong> (Operating Expenses).</p>
+          <p class="input-hint">Total monthly operating expenses (OPEX).</p>
         </div>
       </div>
     </div>
@@ -79,20 +79,59 @@ import Callout from '../components/Callout.astro';
     </div>
   </div>
 
+  <section class="how-it-works">
+    <h2>How the Success Calculator Works</h2>
+    <p>To give you a realistic picture, our calculator follows the actual path of a dollar in a Maine dispensary. Here is the step-by-step breakdown of the math:</p>
+    
+    <div class="math-steps">
+      <div class="step-box">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h3>Total Revenue</h3>
+          <p>We start by multiplying your <strong>Customers</strong> by your <strong>Average Sale</strong>. This is the total money that enters your register.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h3>Subtract COGS</h3>
+          <p>Next, we subtract the <strong>COGS (Cost of Goods Sold)</strong>. In Maine, this is roughly <strong>65%</strong> of your revenue—the money you pay to cultivators and manufacturers for the products on your shelf.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h3>Subtract 280E Taxes</h3>
+          <p>We then account for <strong>280E</strong>. This is a federal tax rule that prevents cannabis shops from taking standard deductions. We set aside roughly <strong>21%</strong> of your Gross Profit for the IRS to keep you compliant.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <h3>Subtract OPEX</h3>
+          <p>Finally, we subtract your <strong>OPEX (Operating Expenses)</strong>. These are your "Monthly Bills" like rent, payroll, and utilities. What's left over is your <strong>Net Monthly Profit</strong>—your real take-home pay!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="financial-glossary">
     <h2>Financial Terms Simplified</h2>
     <div class="glossary-grid">
       <div class="glossary-box">
         <h3>COGS (Cost of Product)</h3>
-        <p>This is simply what you pay the grower for the flower on your shelf. In Maine, we expect to spend about **65%** of our revenue on the product itself.</p>
+        <p>The money you spend to buy inventory. If you sell an eighth for $40 and you bought it from a grower for $20, your COGS is $20.</p>
       </div>
       <div class="glossary-box">
-        <h3>280E (The "Cannabis Tax")</h3>
-        <p>This is a federal rule. It means you can't deduct standard business costs from your taxes. We've built a **21%** estimate into this calculator to keep you safe!</p>
+        <h3>280E (The "Federal Burden")</h3>
+        <p>A federal tax code that treats cannabis revenue differently. It makes your effective tax rate much higher than a normal "Main Street" business.</p>
       </div>
       <div class="glossary-box">
-        <h3>OPEX (Monthly Bills)</h3>
-        <p>Short for "Operating Expenses." This is the total cost of your rent, your team's payroll, and your power bill.</p>
+        <h3>OPEX (Operating Expenses)</h3>
+        <p>Your "Monthly Burn Rate." This includes everything it takes to run the shop: rent, payroll, insurance, and electricity.</p>
       </div>
     </div>
   </section>
@@ -129,11 +168,11 @@ import Callout from '../components/Callout.astro';
       if (netMonthlyProfit <= 0) {
         breakevenEl.innerText = "Check Advice Below";
         profitCard.style.background = "#8B0000";
-        adviceText.innerHTML = "<strong>Don't get discouraged!</strong> To turn this into a profit, try <strong>increasing your average sale by $10</strong> by offering high-margin accessories (papers, lighters) or <strong>reducing your monthly bills</strong> by just $2,000.";
+        adviceText.innerHTML = "<strong>Don't get discouraged!</strong> This scenario shows a net loss. To turn this into a profit, try <strong>increasing your average customer spend by $10</strong> or finding a more affordable location to <strong>reduce your OPEX (Monthly Bills)</strong>.";
       } else {
         profitCard.style.background = "var(--color-primary)";
         breakevenEl.innerText = monthsToBreakeven > 60 ? "5+ Years" : monthsToBreakeven + " Months";
-        adviceText.innerHTML = "<strong>You're on the right track!</strong> To reach your goals even faster, focus on building a <strong>Loyalty Program</strong> to increase your monthly customer count by 10%.";
+        adviceText.innerHTML = "<strong>You're on the right track!</strong> You are covering your <strong>OPEX</strong> and <strong>280E</strong> taxes. To reach your goals even faster, focus on building a <strong>Loyalty Program</strong> to increase your customer return rate.";
       }
     }
 
@@ -176,7 +215,7 @@ import Callout from '../components/Callout.astro';
   .currency-input input:focus { outline: none; }
 
   .slider { width: 100%; height: 6px; background: var(--color-background); border-radius: 3px; appearance: none; outline: none; }
-  .slider::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
+  .slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
   .slider-value { margin-top: 0.75rem; font-weight: 700; color: var(--color-primary); font-size: 0.9rem; }
 
   .calc-results { display: flex; flex-direction: column; gap: 1.5rem; }
@@ -191,6 +230,13 @@ import Callout from '../components/Callout.astro';
   .optimization-box h4 { margin-top: 0; color: var(--color-primary); margin-bottom: 0.5rem; }
   .optimization-box p { margin-bottom: 0; font-size: 0.95rem; line-height: 1.6; }
   .hidden { display: none; }
+
+  .how-it-works { margin-bottom: 6rem; }
+  .math-steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2.5rem; }
+  .step-box { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem; background: white; border-radius: 1.5rem; border: 1px solid var(--color-border); }
+  .step-num { width: 40px; height: 40px; background: var(--color-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; }
+  .step-text h3 { margin-top: 0; margin-bottom: 0.5rem; color: var(--color-primary); font-size: 1.25rem; }
+  .step-text p { margin-bottom: 0; font-size: 0.95rem; color: var(--color-text-light); }
 
   .financial-glossary { margin-bottom: 6rem; }
   .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
