@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import NextStep from '../../components/NextStep.astro';
+
+export const title = "Success Story: The Coastal Craft Boutique";
+---
+
+<Layout 
+  title="Success Story: Opening a Coastal Maine Dispensary" 
+  description="How one founder built a high-end cannabis boutique in a Maine coastal town. A story of community, craft, and compliance."
+  heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?q=80&w=1200&h=400&auto=format&fit=crop"
+>
+  <article>
+    <div class="article-header">
+      <h1>The Coastal Craft Boutique</h1>
+      <p class="subtitle">Building a legacy in Maine's seaside communities</p>
+    </div>
+
+    <Callout title="Founder Perspective" type="passion">
+      "The Maine coast isn't just a location; it's a character in our story. We didn't want to build a corporate shop; we wanted to build a place that felt like the salty air and the rugged pines." — Sarah, Founder.
+    </Callout>
+
+    <section>
+      <h2>The Vision</h2>
+      <p>Sarah's journey began in a small coastal town with a strong sense of community. Her goal was to create a space where both locals and summer visitors felt welcome, emphasizing the craft quality that Maine is known for. She focused on sourcing from Tier 1 cultivators, ensuring every product had a story.</p>
+    </section>
+
+    <section>
+      <h2>Overcoming the Municipal Maze</h2>
+      <p>The biggest hurdle was the <strong>Municipal Opt-In</strong>. Sarah spent months attending town council meetings, not as an "outsider," but as a neighbor. She presented a proactive <a href="/guides/maine-cannabis-real-estate/">zoning and security plan</a> that addressed the town's concerns about traffic and safety before they even asked.</p>
+    </section>
+
+    <Callout title="Success Tip" type="tip">
+      Be a neighbor first, a business owner second. In Maine's small towns, trust is the currency that wins you a local authorization.
+    </Callout>
+
+    <section>
+      <h2>The Reward</h2>
+      <p>Today, the boutique is a pillar of the town. By prioritizing <strong>Expertise over Hype</strong>, Sarah has built a loyal customer base that values her team's knowledge of terpene profiles and local strains. Her business is a testament to the power of the Maine independent spirit.</p>
+    </section>
+
+    <NextStep currentPath="/founders/maine-cannabis-founder-coastal-shop/" />
+  </article>
+</Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }
+</style>

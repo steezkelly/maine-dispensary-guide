@@ -1,0 +1,53 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import NextStep from '../../components/NextStep.astro';
+
+export const title = "Success Story: The Portland Flagship";
+---
+
+<Layout 
+  title="Success Story: Launching a High-Volume Portland Dispensary" 
+  description="A deep-dive into the launch of a premier cannabis flagship in Portland, Maine. A story of investment, branding, and strategic operations."
+  heroImage="https://images.unsplash.com/photo-1533491414534-19253f53874c?q=80&w=1200&h=400&auto=format&fit=crop"
+>
+  <article>
+    <div class="article-header">
+      <h1>The Portland Flagship</h1>
+      <p class="subtitle">Scaling a premier brand in Maine's most competitive market</p>
+    </div>
+
+    <Callout title="Founder Perspective" type="passion">
+      "Portland is the big leagues. We knew that to stand out, we had to offer more than just products; we had to offer an experience that rivaled the best boutiques in the country." — James, Founder.
+    </Callout>
+
+    <section>
+      <h2>The Ambition</h2>
+      <p>James entered the market with a **Premium Flagship** strategy. He secured a prime location in the Old Port and invested heavily in architectural design and branding. His goal was to create a destination shop that captured both the discerning local customer and the high-volume summer tourist traffic.</p>
+    </section>
+
+    <section>
+      <h2>Navigating the OCP Gauntlet</h2>
+      <p>With a large-scale operation, compliance was his #1 priority. He hired a full-time compliance director to manage the <strong>Active Licensure</strong> process and ensure that their <a href="/guides/maine-dispensary-security/">security hardware</a> and <a href="/guides/maine-dispensary-packaging/">packaging protocols</a> were flawless before opening day.</p>
+    </section>
+
+    <Callout title="Success Tip" type="success">
+      Invest in your team early. In a high-volume market, your staff's ability to handle complex transactions and compliance reporting is what keeps your doors open.
+    </Callout>
+
+    <section>
+      <h2>The Reward</h2>
+      <p>The flagship is now one of the highest-revenue dispensaries in the state. By combining **Professionalism with Passion**, James has proven that there is a massive opportunity for high-fidelity retail brands in the Maine market.</p>
+    </section>
+
+    <NextStep currentPath="/founders/maine-cannabis-founder-portland-flagship/" />
+  </article>
+</Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; }
+</style>

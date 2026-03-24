@@ -36,6 +36,25 @@ import Callout from '../components/Callout.astro';
       <li><strong>Industry Insights</strong> - Market analysis and opportunities in Maine's cannabis sector</li>
     </ul>
   </section>
+
+  <section class="success-stories">
+    <h2>Founder Success Stories</h2>
+    <p>Read about the entrepreneurs who are building the Maine cannabis legacy.</p>
+    <div class="story-grid">
+      <a href="/founders/maine-cannabis-founder-coastal-shop/" class="story-card">
+        <h3>The Coastal Boutique</h3>
+        <p>How community trust built a seaside brand.</p>
+      </a>
+      <a href="/founders/maine-cannabis-founder-rural-cultivator/" class="story-card">
+        <h3>The Rural Leap</h3>
+        <p>From Tier 1 craft grower to retail storefront.</p>
+      </a>
+      <a href="/founders/maine-cannabis-founder-portland-flagship/" class="story-card">
+        <h3>The Portland Flagship</h3>
+        <p>Scaling a premier brand in the big leagues.</p>
+      </a>
+    </div>
+  </section>
   
   <section class="disclaimer">
     <h2>Legal Disclaimer</h2>
@@ -81,5 +100,44 @@ import Callout from '../components/Callout.astro';
 
   li {
     margin-bottom: 0.75rem;
+  }
+
+  .success-stories {
+    margin-bottom: 4rem;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .story-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .story-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  .story-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+  }
+
+  .story-card p {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
   }
 </style>
