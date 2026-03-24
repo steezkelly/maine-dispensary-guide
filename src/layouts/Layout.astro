@@ -23,6 +23,7 @@ const {
   heroImage
 } = Astro.props;
 
+// Layout Heartbeat: 2026-03-23 02:35 PM EDT
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides/';
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const fullTitle = `${title} | ${siteName}`;
