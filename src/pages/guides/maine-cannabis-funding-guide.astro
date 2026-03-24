@@ -1,0 +1,90 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import NextStep from '../../components/NextStep.astro';
+
+export const title = "Funding Your Maine Dispensary: A Founder's Guide";
+---
+
+<Layout 
+  title="Funding Your Maine Dispensary | Startup Capital & Credit" 
+  description="Expert guide to funding your Maine cannabis business. Learn about bootstrapping with $5k-$10k, using business lines of credit, and asset protection."
+  heroImage="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=1200&h=400"
+>
+  <article>
+    <div class="article-header">
+      <h1>Funding Your Maine Dispensary</h1>
+      <p class="subtitle">Strategies for capital, credit, and asset protection</p>
+    </div>
+
+    <Callout title="The Fuel for Your Passion" type="passion">
+      Funding is the engine that turns your vision into a reality. Whether you're starting small with personal savings or building a professional credit line, understanding how to structure your finances is the first step toward long-term independence.
+    </Callout>
+
+    <section>
+      <h2>Starting Small: The $5,000 Bootstrap</h2>
+      <p>Can you start a cannabis business with $5,000? In Maine, the answer is <strong>yes</strong>, but scale is key. While a full adult-use storefront has high entry costs, $5,000 is an excellent starting point for:</p>
+      <ul>
+        <li><strong>Registered Caregiver Operations:</strong> Lower fees and simpler zoning.</li>
+        <li><strong>Boutique Cultivation:</strong> Starting a small-scale Tier 1 canopy.</li>
+        <li><strong>Ancillary Services:</strong> Consulting or delivery support (where permitted).</li>
+      </ul>
+      <p>Starting small allows you to build "Sweat Equity" and a proven track record before seeking larger investment.</p>
+    </section>
+
+    <section>
+      <h2>Using a Business Line of Credit</h2>
+      <p>Many founders have personal savings (e.g., $10,000) but prefer to use a <strong>Business Line of Credit</strong> to protect themselves. This is a smart, professional move.</p>
+      
+      <h3>The Process for Cannabis Credit:</h3>
+      <ol>
+        <li><strong>Establish a Legal Entity:</strong> Form an LLC or Corporation to separate yourself from the business.</li>
+        <li><strong>Open a Cannabis-Friendly Bank Account:</strong> Work with local Maine credit unions that specialize in the industry.</li>
+        <li><strong>Build Business Credit:</strong> Apply for a line of credit using your business EIN. Be prepared to provide a solid <a href="/guides/maine-dispensary-business-plan/">business plan</a>.</li>
+        <li><strong>Personal Guarantee:</strong> Be aware that for a new business, banks may still require a personal guarantee, but the line of credit remains a business liability.</li>
+      </ol>
+    </section>
+
+    <Callout title="Asset Protection Tip" type="tip">
+      Always keep your business and personal finances 100% separate. Use different accounts, cards, and tax filings. This "Corporate Veil" is your best defense for protecting your personal home and savings.
+    </Callout>
+
+    <section>
+      <h2>Maine Banking Partners</h2>
+      <p>Because cannabis is federally illegal, traditional big banks won't help. Look toward:</p>
+      <ul>
+        <li>Local Maine Credit Unions</li>
+        <li>Specialized Cannabis Lending Firms</li>
+        <li>Private Equity/Angel Investors in the Maine market</li>
+      </ul>
+    </section>
+
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Startup Cost Breakdown</a></li>
+      </ul>
+    </section>
+
+    <section class="disclaimer">
+      <p><em>This is for informational purposes only and does not constitute financial or legal advice. Consult with a qualified Maine cannabis CPA or attorney.</em></p>
+    </section>
+
+    <NextStep currentPath="/guides/maine-cannabis-funding-guide/" />
+  </article>
+</Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
