@@ -465,21 +465,29 @@ const fullTitle = `${title} | ${siteName}`;
       z-index: 999;
     }
     .nav-links a, .dropbtn { 
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       width: auto;
       text-align: center;
       font-family: var(--font-serif);
+      padding: 0.75rem 1rem;
     }
-    .nav-dropdown { width: 100%; text-align: center; }
+    .nav-dropdown { width: 100%; text-align: center; margin-bottom: 0.5rem; }
     .dropdown-content {
       display: block;
       position: static;
       box-shadow: none;
       border: none;
-      background: transparent;
-      padding: 0;
+      background: rgba(13, 78, 80, 0.03);
+      padding: 0.5rem;
+      border-radius: 1rem;
+      margin-top: 0.25rem;
     }
-    .dropdown-content a { font-size: 1.25rem; font-family: var(--font-family); opacity: 0.7; }
+    .dropdown-content a { 
+      font-size: 1rem; 
+      font-family: var(--font-family); 
+      opacity: 0.8;
+      padding: 0.5rem !important;
+    }
     .nav-toggle:checked ~ .nav-links {
       transform: translateX(0);
       opacity: 1;
