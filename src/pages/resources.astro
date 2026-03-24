@@ -81,7 +81,8 @@ const vendorCategories = [
     Want to be featured in our directory? We are looking for high-authority lawyers, accountants, and security firms. <a href="mailto:admin@mainedispensaryguide.com">Contact our partnership team</a>.
   </Callout>
 
-  <script>
+  <script is:inline>
+    console.log("Theater Mode Logic Initialized");
     const referralButtons = document.querySelectorAll('.btn-referral');
     const closeButton = document.getElementById('close-theater');
     const overlay = document.getElementById('local-theater-overlay');
