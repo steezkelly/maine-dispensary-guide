@@ -3,6 +3,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PineTree from '../components/PineTree.astro';
 import Leaf from '../components/Leaf.astro';
 import GuideSidebar from '../components/GuideSidebar.astro';
+import Search from '../components/Search.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
@@ -94,6 +95,10 @@ const fullTitle = `${title} | ${siteName}`;
           </div>
           <span>{siteName}</span>
         </a>
+
+        <div class="nav-search-desktop">
+          <Search />
+        </div>
         
         <!-- Mobile Menu Toggle -->
         <input type="checkbox" id="nav-toggle" class="nav-toggle" />
@@ -102,6 +107,9 @@ const fullTitle = `${title} | ${siteName}`;
         </label>
 
         <div class="nav-links">
+          <div class="nav-search-mobile">
+            <Search />
+          </div>
           <a href="/all-guides/">All Guides</a>
           <a href="/launch-checklist/">Launch Checklist</a>
           <a href="/roi-calculator/">ROI Calculator</a>
@@ -177,20 +185,26 @@ const fullTitle = `${title} | ${siteName}`;
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
-        document.getElementById("progress-bar").style.width = scrolled + "%";
+        const progressBar = document.getElementById("progress-bar");
+        if (progressBar) progressBar.style.width = scrolled + "%";
 
         // Back to Top Visibility
         const backToTop = document.getElementById('back-to-top');
-        if (winScroll > 500) {
-          backToTop.style.display = "block";
-        } else {
-          backToTop.style.display = "none";
+        if (backToTop) {
+          if (winScroll > 500) {
+            backToTop.style.display = "block";
+          } else {
+            backToTop.style.display = "none";
+          }
         }
       };
 
-      document.getElementById('back-to-top').onclick = function() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-      };
+      const btt = document.getElementById('back-to-top');
+      if (btt) {
+        btt.onclick = function() {
+          window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+      }
     </script>
   </body>
 </html>
@@ -269,6 +283,7 @@ const fullTitle = `${title} | ${siteName}`;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 2rem;
   }
   
   .logo {
@@ -281,6 +296,7 @@ const fullTitle = `${title} | ${siteName}`;
     color: var(--color-primary);
     text-decoration: none;
     z-index: 1001;
+    white-space: nowrap;
   }
 
   .logo-icons {
@@ -320,7 +336,8 @@ const fullTitle = `${title} | ${siteName}`;
 
   .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
+    align-items: center;
   }
   
   .nav-links a {
@@ -328,8 +345,9 @@ const fullTitle = `${title} | ${siteName}`;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--radius);
+    font-size: 0.9375rem;
   }
   
   .nav-links a:hover {
@@ -337,8 +355,12 @@ const fullTitle = `${title} | ${siteName}`;
     color: white;
   }
 
+  .nav-search-mobile { display: none; }
+
   @media (max-width: 950px) {
     .nav-toggle-label { display: block; }
+    .nav-search-desktop { display: none; }
+    .nav-search-mobile { display: block; width: 100%; margin-bottom: 2rem; }
     .nav-links {
       position: fixed;
       top: 0;
@@ -351,14 +373,14 @@ const fullTitle = `${title} | ${siteName}`;
       justify-content: center;
       align-items: center;
       padding: 2rem;
-      gap: 2rem;
+      gap: 1rem;
       transform: translateX(100%);
       transition: transform 0.4s cubic-bezier(0.77,0.2,0.05,1.0);
       opacity: 0;
       z-index: 999;
     }
     .nav-links a { 
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       width: auto;
       text-align: center;
       font-family: var(--font-serif);

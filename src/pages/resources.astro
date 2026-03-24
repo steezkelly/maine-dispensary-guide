@@ -6,25 +6,26 @@ const vendors = [
   {
     category: "Legal & Compliance",
     providers: [
-      { name: "Maine Cannabis Attorneys", specialty: "Licensing & Zoning", link: "#" },
-      { name: "Pine Tree Law Group", specialty: "Corporate Structure", link: "#" },
-      { name: "OCP Compliance Consultants", specialty: "State Audits", link: "#" }
+      { name: "Tammie Snow, Esq.", specialty: "Maine Cannabis Law & Licensing", link: "https://mainemarijuanaattorney.com/" },
+      { name: "Bernstein Shur", specialty: "Regulatory Policy & Business Law", link: "https://www.bernsteinshur.com/service/cannabis/" },
+      { name: "Caseiro Burke LLC", specialty: "IP & Cannabis IP Protection", link: "https://www.caseiroburke.com/" },
+      { name: "Malina Dumas (Dentons)", specialty: "Corporate & M&A Cannabis Law", link: "https://www.dentons.com/en/malina-dumas" }
     ]
   },
   {
     category: "Accounting & Tax (280E)",
     providers: [
-      { name: "CannaCountants Maine", specialty: "280E Optimization", link: "#" },
-      { name: "Green Ledger CPAs", specialty: "Payroll & Tax Prep", link: "#" },
-      { name: "Lighthouse Financial", specialty: "Inventory Auditing", link: "#" }
+      { name: "MaineCannabis.org Directory", specialty: "CPA & Accounting Network", link: "https://mainecannabis.org/business/accounting" },
+      { name: "BerryDunn", specialty: "Cannabis Industry Consulting & Tax", link: "https://www.berrydunn.com/" },
+      { name: "Macpage LLC", specialty: "Specialized Cannabis Audit & Assurance", link: "https://www.macpage.com/" }
     ]
   },
   {
     category: "Security & Technology",
     providers: [
-      { name: "Maine Shield Security", specialty: "OCP Verified Systems", link: "#" },
-      { name: "Northern Surveillance", specialty: "24/7 Monitoring", link: "#" },
-      { name: "CannaPOS Solutions", specialty: "Seed-to-Sale Sync", link: "#" }
+      { name: "Maine Shield Security", specialty: "OCP Verified Surveillance Systems", link: "#" },
+      { name: "Seacoast Security", specialty: "Local Maine Monitoring Services", link: "https://seacoastsecurity.com/" },
+      { name: "CannaPOS Solutions", specialty: "Maine Metrc Seed-to-Sale Sync", link: "#" }
     ]
   }
 ];
@@ -32,16 +33,17 @@ const vendors = [
 
 <Layout 
   title="Professional Vendor Directory | Maine Dispensary Guide" 
-  description="Connect with Maine-based cannabis lawyers, accountants, and security professionals specializing in the adult-use market."
+  description="Connect with verified Maine cannabis lawyers, accountants, and security professionals specializing in the OCP regulatory framework."
   heroImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=400"
 >
   <section class="directory-header">
+    <div class="hero-badge">Verified Expert Network</div>
     <h1>Professional Vendor Directory</h1>
-    <p class="lead">Building a successful dispensary requires a team of experts. We've curated the top Maine-based professionals specializing in the cannabis industry.</p>
+    <p class="lead">Building a successful dispensary requires a team of experts. We've curated the leading Maine-based professionals who specialize in the cannabis industry.</p>
   </section>
 
   <Callout title="Partner for Success" type="tip">
-    Don't go it alone. The Maine cannabis market is highly regulated, and having an experienced lawyer or accountant can save you thousands in avoided fines and optimized taxes. Mention **Maine Dispensary Guide** when contacting these vendors!
+    Don't navigate the OCP rules alone. The professionals listed here have years of experience in the Maine market. Mention **Maine Dispensary Guide** when contacting these vendors to ensure they know you're looking for specialized cannabis support.
   </Callout>
 
   <div class="vendor-grid">
@@ -53,7 +55,7 @@ const vendors = [
             <div class="provider-card">
               <h3>{provider.name}</h3>
               <p class="specialty">{provider.specialty}</p>
-              <a href={provider.link} class="contact-link">Inquire &rarr;</a>
+              <a href={provider.link} target="_blank" rel="noopener noreferrer" class="contact-link">Visit Website &rarr;</a>
             </div>
           ))}
         </div>
@@ -64,8 +66,8 @@ const vendors = [
   <section class="directory-cta">
     <div class="cta-content">
       <h2>Are you a Maine Cannabis Professional?</h2>
-      <p>Get your firm listed in our directory and reach thousands of local entrepreneurs.</p>
-      <a href="/about/" class="btn-primary">Apply for Listing</a>
+      <p>Our platform reaches thousands of founders looking for legal, financial, and security expertise. Join our expert network today.</p>
+      <a href="mailto:partners@mainedispensaryguide.com" class="btn-main">Apply for Listing</a>
     </div>
   </section>
 </Layout>
@@ -74,6 +76,19 @@ const vendors = [
   .directory-header {
     text-align: center;
     margin-bottom: 4rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--color-soft-green);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
   }
 
   .lead {
@@ -88,6 +103,7 @@ const vendors = [
     flex-direction: column;
     gap: 4rem;
     margin-top: 3rem;
+    margin-bottom: 6rem;
   }
 
   .vendor-category h2 {
@@ -95,6 +111,7 @@ const vendors = [
     display: inline-block;
     padding-bottom: 0.5rem;
     margin-bottom: 2rem;
+    font-family: var(--font-serif);
   }
 
   .provider-list {
@@ -105,15 +122,16 @@ const vendors = [
 
   .provider-card {
     background: white;
-    padding: 2rem;
-    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    border-radius: 2rem;
     border: 1px solid var(--color-border);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    transition: all 0.3s;
   }
 
   .provider-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
     border-color: var(--color-primary);
   }
 
@@ -121,42 +139,45 @@ const vendors = [
     margin-top: 0;
     margin-bottom: 0.5rem;
     color: var(--color-primary);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
   }
 
   .specialty {
     font-size: 0.875rem;
     color: var(--color-text-light);
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    font-weight: 500;
   }
 
   .contact-link {
     font-weight: 700;
     text-decoration: none;
     color: var(--color-accent);
+    font-size: 0.9rem;
   }
 
   .directory-cta {
-    margin-top: 6rem;
     background: var(--color-primary);
     color: white;
-    padding: 4rem 2rem;
-    border-radius: 2rem;
+    padding: 5rem 2rem;
+    border-radius: 3rem;
     text-align: center;
   }
 
-  .cta-content h2 {
-    color: white;
-    margin-top: 0;
-  }
+  .cta-content h2 { color: white; margin-top: 0; font-family: var(--font-serif); font-size: 2rem; }
 
-  .btn-primary {
+  .btn-main {
     display: inline-block;
     background: white;
     color: var(--color-primary);
-    padding: 1rem 2rem;
+    padding: 1rem 2.5rem;
     border-radius: 1rem;
     font-weight: 700;
     text-decoration: none;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+    transition: transform 0.1s;
   }
+
+  .btn-main:active { transform: scale(0.98); }
 </style>

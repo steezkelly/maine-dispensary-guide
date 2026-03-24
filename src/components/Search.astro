@@ -1,0 +1,156 @@
+---
+const guidesPath = "/src/pages/guides/";
+// Static list of our top 41 guides for instant client-side search
+const searchIndex = [
+  { title: "Maine Dispensary License", href: "/guides/maine-dispensary-license/" },
+  { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/" },
+  { title: "Augusta Dispensary Guide", href: "/guides/augusta-dispensary-guide/" },
+  { title: "Cannabis Zoning & Real Estate", href: "/guides/maine-cannabis-real-estate/" },
+  { title: "280E & State Taxation", href: "/guides/maine-cannabis-taxation-280e/" },
+  { title: "Metrc & Inventory Management", href: "/guides/maine-cannabis-inventory-management/" },
+  { title: "Bangor Dispensary Guide", href: "/guides/bangor-dispensary-guide/" },
+  { title: "Startup Costs & Investment", href: "/guides/maine-dispensary-costs/" },
+  { title: "Business Plan Guide", href: "/guides/maine-dispensary-business-plan/" },
+  { title: "Security Requirements", href: "/guides/maine-dispensary-security/" }
+];
+---
+
+<div class="search-container" id="search-root">
+  <div class="search-input-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search 41+ guides..." autocomplete="off" />
+  </div>
+  <div id="search-results" class="search-results-dropdown"></div>
+</div>
+
+<script define:vars={{ searchIndex }}>
+  const input = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results');
+
+  input.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    if (query.length < 2) {
+      resultsContainer.innerHTML = '';
+      resultsContainer.classList.remove('active');
+      return;
+    }
+
+    const filtered = searchIndex.filter(item => 
+      item.title.toLowerCase().includes(query)
+    ).slice(0, 5);
+
+    if (filtered.length > 0) {
+      resultsContainer.innerHTML = filtered.map(item => `
+        <a href="${item.href}" class="search-result-item">
+          <span>${item.title}</span>
+          <span class="result-arrow">&rarr;</span>
+        </a>
+      `).join('');
+      resultsContainer.classList.add('active');
+    } else {
+      resultsContainer.innerHTML = '<div class="search-no-results">No guides found.</div>';
+      resultsContainer.classList.add('active');
+    }
+  });
+
+  // Close search when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('search-root').contains(e.target)) {
+      resultsContainer.classList.remove('active');
+    }
+  });
+</script>
+
+<style>
+  .search-container {
+    position: relative;
+    width: 280px;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0,0,0,0.05);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+  }
+
+  .search-container:focus-within .search-input-wrapper {
+    background: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(13, 78, 80, 0.1);
+  }
+
+  .search-icon {
+    font-size: 0.9rem;
+    margin-right: 0.75rem;
+    opacity: 0.5;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    width: 100%;
+    color: var(--color-text);
+  }
+
+  input:focus { outline: none; }
+
+  .search-results-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    display: none;
+    overflow: hidden;
+    z-index: 2000;
+  }
+
+  .search-results-dropdown.active {
+    display: block;
+  }
+
+  .search-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-background);
+    transition: background 0.2s;
+  }
+
+  .search-result-item:last-child { border-bottom: none; }
+
+  .search-result-item:hover {
+    background: var(--color-background);
+    color: var(--color-primary);
+  }
+
+  .result-arrow {
+    opacity: 0.3;
+    font-size: 1rem;
+  }
+
+  .search-no-results {
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-align: center;
+  }
+
+  @media (max-width: 950px) {
+    .search-container { width: 100%; margin-bottom: 1rem; }
+  }
+</style>
