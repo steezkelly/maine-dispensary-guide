@@ -104,6 +104,13 @@ const stats = [
 </Layout>
 
 <style>
+  <body class="bg-maine">
+    <!-- BOTANICAL BACKGROUND ORNAMENTS -->
+    <div class="bg-ornament top-right"><PineTree size={400} color="rgba(13, 78, 80, 0.03)" /></div>
+    <div class="bg-ornament bottom-left"><Leaf size={300} color="rgba(88, 129, 87, 0.03)" /></div>
+
+    <section class="premium-hero">
+...
   .premium-hero {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: white;
@@ -113,7 +120,21 @@ const stats = [
     overflow: hidden;
     position: relative;
     max-width: 100%;
+    z-index: 10;
   }
+
+  /* Botanical Ornaments */
+  .bg-ornament {
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .top-right { top: -100px; right: -100px; transform: rotate(15deg); }
+  .bottom-left { bottom: 10%; left: -50px; transform: rotate(-10deg); }
+
+  [data-theme="dark"] .bg-ornament { opacity: 0.5; }
 
   [data-theme="dark"] .premium-hero {
     background: linear-gradient(135deg, #051A1B 0%, #0D2628 100%);
