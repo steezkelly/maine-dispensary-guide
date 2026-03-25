@@ -2,29 +2,30 @@
 const { category = "Business Essentials" } = Astro.props;
 
 const businessGuides = [
-  { title: "License Requirements", href: "/guides/maine-dispensary-license/" },
-  { title: "Business Plan", href: "/guides/maine-dispensary-business-plan/" },
-  { title: "Startup Costs", href: "/guides/maine-dispensary-costs/" },
-  { title: "Market Analysis", href: "/guides/maine-cannabis-market/" }
+  { title: "License Requirements", href: "/guides/maine-dispensary-license" },
+  { title: "Business Plan", href: "/guides/maine-dispensary-business-plan" },
+  { title: "Startup Costs", href: "/guides/maine-dispensary-costs" },
+  { title: "Market Analysis", href: "/guides/maine-cannabis-market" }
 ];
 
 const cityGuides = [
-  { title: "Portland Guide", href: "/guides/portland-dispensary-guide/" },
-  { title: "Augusta Guide", href: "/guides/augusta-dispensary-guide/" },
-  { title: "South Portland", href: "/guides/south-portland-dispensary-guide/" },
-  { title: "Bangor Guide", href: "/guides/bangor-dispensary-guide/" }
+  { title: "Portland Guide", href: "/guides/portland-dispensary-guide" },
+  { title: "Augusta Guide", href: "/guides/augusta-dispensary-guide" },
+  { title: "South Portland", href: "/guides/south-portland-dispensary-guide" },
+  { title: "Bangor Guide", href: "/guides/bangor-dispensary-guide" }
 ];
 
 const complianceGuides = [
-  { title: "280E Tax Guide", href: "/guides/maine-cannabis-taxation-280e/" },
-  { title: "Security Rules", href: "/guides/maine-dispensary-security/" },
-  { title: "POS Systems", href: "/guides/maine-dispensary-pos/" }
+  { title: "280E Tax Guide", href: "/guides/maine-cannabis-taxation-280e" },
+  { title: "Security Rules", href: "/guides/maine-dispensary-security" },
+  { title: "POS Systems", href: "/guides/maine-dispensary-pos" }
 ];
----
+...
+  <div class="sidebar-cta">
+    <p>Need professional help?</p>
+    <a href="/resources" class="btn-sidebar">View Vendor Directory</a>
+  </div>
 
-<aside class="guide-sidebar">
-  <div class="author-badge">
-    <div class="author-icon">✓</div>
     <div>
       <span class="author-title">Expert Verified Guide</span>
       <span class="author-date">Updated: March 2026</span>

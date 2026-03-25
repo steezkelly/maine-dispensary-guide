@@ -23,9 +23,9 @@ const {
   heroImage
 } = Astro.props;
 
-// Layout Heartbeat: 2026-03-23 02:35 PM EDT
-const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides/';
+// Site Metadata
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
+const siteUrl = "https://mainedispensaryguide.com";
 const fullTitle = `${title} | ${siteName}`;
 ---
 
@@ -44,6 +44,8 @@ const fullTitle = `${title} | ${siteName}`;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    {heroImage && <link rel="preload" as="image" href={heroImage} />}
+    
     <link rel="canonical" href={Astro.url} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     
@@ -53,15 +55,21 @@ const fullTitle = `${title} | ${siteName}`;
     <meta property="og:url" content={Astro.url} />
     <meta name="twitter:card" content="summary_large_image" />
     
+    <!-- STRUCTURED DATA: WEB SITE & ARTICLE -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": isGuide ? "Article" : "WebSite",
-      "headline": title,
+      "@type": "WebSite",
+      "name": siteName,
+      "url": siteUrl,
       "description": description,
-      "image": heroImage || "https://mainedispensaryguide.com/og-image.jpg",
-      "author": { "@type": "Organization", "name": "Maine Dispensary Guide" },
-      "datePublished": "2026-03-23",
-      "dateModified": "2026-03-23"
+      "publisher": {
+        "@type": "Organization",
+        "name": "Maine Dispensary Guide",
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${siteUrl}/favicon.svg`
+        }
+      }
     })} />
 
     <script is:inline>
@@ -80,7 +88,9 @@ const fullTitle = `${title} | ${siteName}`;
       };
     </script>
   </head>
-  <body class="bg-maine">
+  <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
+    
     <div class="grain-overlay"></div>
     
     <!-- GLOBAL BOTANICAL ORNAMENTS (Dense Forest Floor Pattern) -->
@@ -97,10 +107,10 @@ const fullTitle = `${title} | ${siteName}`;
     <div class="bg-ornament p11"><PineTree size={35} color="var(--color-primary)" /></div>
     <div class="bg-ornament p12"><Leaf size={45} color="var(--color-accent)" /></div>
 
-    <header id="site-header">
+    <header id="site-header" role="banner">
       <div id="progress-container"><div id="progress-bar"></div></div>
-      <nav id="site-nav">
-        <a href="/" class="logo">
+      <nav id="site-nav" aria-label="Main Navigation">
+        <a href="/" class="logo" aria-label="Maine Dispensary Guide Home">
           <div class="logo-icons">
             <PineTree size={24} color="var(--color-primary)" class="logo-pine" />
             <Leaf size={20} color="var(--color-accent)" class="logo-leaf" />
@@ -114,19 +124,19 @@ const fullTitle = `${title} | ${siteName}`;
           <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()">
             <div class="toggle-track">
               <div class="toggle-thumb">
-                <span class="sun">☀️</span>
-                <span class="moon">🌙</span>
+                <span class="sun" aria-hidden="true">☀️</span>
+                <span class="moon" aria-hidden="true">🌙</span>
               </div>
             </div>
           </button>
-          <input type="checkbox" id="nav-toggle" class="nav-toggle" />
-          <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true" />
+          <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle mobile menu"><span></span></label>
         </div>
 
         <div class="nav-links">
           <div class="nav-search-mobile"><Search /></div>
           <div class="nav-dropdown">
-            <button class="dropbtn">Guides ▾</button>
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Guides ▾</button>
             <div class="dropdown-content">
               <a href="/all-guides">All State Guides</a>
               <a href="/launch-checklist">Launch Checklist</a>
@@ -134,7 +144,7 @@ const fullTitle = `${title} | ${siteName}`;
             </div>
           </div>
           <div class="nav-dropdown">
-            <button class="dropbtn">Business Tools ▾</button>
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Business Tools ▾</button>
             <div class="dropdown-content">
               <a href="/roi-calculator">ROI Calculator</a>
               <a href="/market-stats">Market Stats</a>
@@ -147,7 +157,7 @@ const fullTitle = `${title} | ${siteName}`;
       </nav>
     </header>
     
-    <main>
+    <main id="main-content" role="main">
       <Breadcrumbs />
       {isGuide ? (
         <div class="guide-layout">
@@ -157,33 +167,33 @@ const fullTitle = `${title} | ${siteName}`;
             <div class="lead-capture-box">
               <h3>Get the 2026 Maine Launch Checklist</h3>
               <p>Download our step-by-step roadmap. 100% Free.</p>
-              <a href="/download-checklist/" class="btn-cta">Download PDF Checklist &rarr;</a>
+              <a href="/download-checklist" class="btn-cta">Download PDF Checklist &rarr;</a>
             </div>
           </div>
-          <div class="guide-sidebar-container"><GuideSidebar /></div>
+          <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar /></aside>
         </div>
       ) : <slot />}
     </main>
     
-    <button id="back-to-top" class="back-to-top">&uarr;</button>
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">&uarr;</button>
 
     <Analytics />
     <SpeedInsights />
     
-    <div id="theater-overlay" class="theater-overlay"></div>
+    <div id="theater-overlay" class="theater-overlay" aria-hidden="true"></div>
 
-    <footer>
+    <footer role="contentinfo">
       <div class="footer-content">
         <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
-        <div class="footer-links">
+        <nav class="footer-links" aria-label="Footer Navigation">
           <a href="/privacy">Privacy Policy</a>
           <a href="/contact">Contact Us</a>
           <a href="/about">About</a>
-        </div>
+        </nav>
         <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
         {!isHub && (
           <p class="state-link">
-            Looking for other states? <a href="/all-guides/">Visit our National Hub</a>
+            Looking for other states? <a href="/all-guides">Visit our National Hub</a>
           </p>
         )}
       </div>
@@ -244,6 +254,19 @@ const fullTitle = `${title} | ${siteName}`;
   html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
   body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; width: 100%; }
   
+  /* Skip Navigation */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--color-primary);
+    color: white;
+    padding: 1rem;
+    z-index: 9999;
+    transition: top 0.3s;
+  }
+  .skip-link:focus { top: 0; }
+
   .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); opacity: 0.3; pointer-events: none; z-index: 9999; }
 
   /* Botanical Atmosphere (Dense & Tiny) */
@@ -282,7 +305,7 @@ const fullTitle = `${title} | ${siteName}`;
   .nav-search-desktop { flex: 1; max-width: 280px; min-width: 150px; display: block; }
 
   .nav-actions { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-  .nav-toggle { display: none; } /* Hide checkbox globally */
+  .nav-toggle { display: none; }
   .theme-toggle { background: transparent; border: none; cursor: pointer; }
   .toggle-track { width: 52px; height: 26px; background: var(--color-border); border-radius: 13px; position: relative; }
   .toggle-thumb { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
@@ -304,7 +327,11 @@ const fullTitle = `${title} | ${siteName}`;
   .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
 
   .nav-search-mobile { display: none; }
-  .nav-toggle-label { display: none; }
+  .nav-toggle-label { display: none; width: 30px; height: 30px; position: relative; cursor: pointer; }
+  .nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after { display: block; background: var(--color-primary); height: 2px; width: 100%; position: absolute; left: 0; transition: transform 0.3s; }
+  .nav-toggle-label span { top: 50%; transform: translateY(-50%); }
+  .nav-toggle-label span::before { content: ''; top: -8px; }
+  .nav-toggle-label span::after { content: ''; top: 8px; }
 
   .theater-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 8000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
   :global(body.theater-active) .theater-overlay { opacity: 1; pointer-events: auto; }
@@ -325,9 +352,12 @@ const fullTitle = `${title} | ${siteName}`;
   .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; }
   .footer-links a { color: var(--color-text-light); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
   .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
+  
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
   h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
   table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); min-width: 120px; }
+  
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
 </style>
