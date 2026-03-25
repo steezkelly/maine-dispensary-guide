@@ -170,16 +170,17 @@ const stats = [
   }
 
   .hero-content h1 {
-    color: white;
+    color: var(--color-background); /* Using Warm Bone instead of pure white */
     font-size: 2.75rem;
     margin-bottom: 1rem;
     line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-weight: 800;
   }
 
   .hero-content p {
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: rgba(242, 242, 226, 0.9);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
   }
 
   @media (max-width: 600px) {
