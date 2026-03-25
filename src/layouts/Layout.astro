@@ -199,16 +199,16 @@ const fullTitle = `${title} | ${siteName}`;
    * The structural "DNA" of the Maine Dispensary Guide.
    */
   :root {
-    --color-primary: #0D4E50;
+    --color-primary: #0D4E50; /* Deep Spruce */
     --color-primary-dark: #083638;
-    --color-secondary: #2D3D2D; /* Darker Pine */
-    --color-accent: #4A6B4A;    /* Muted Forest */
-    --color-soft-green: #8A9A5B; /* Moss */
-    --color-background: #F0F0E0; /* Deeper tint for paper */
+    --color-secondary: #101820; /* Deepest Navy/Charcoal */
+    --color-accent: #588157;    /* Leaf Green */
+    --color-soft-green: #A3B18A; /* Sage */
+    --color-background: #F2F2E2; /* Warm Bone */
     --color-surface: #ffffff;
-    --color-text: #121212;      /* Near Black for readability */
-    --color-text-light: #444444; /* Darker grey */
-    --color-border: #C8C8B8;    /* More visible borders */
+    --color-text: #101820;      /* Maximum Contrast Text */
+    --color-text-light: #4A5568; 
+    --color-border: #D1D1C1;
     --font-family: 'Plus Jakarta Sans', sans-serif;
     --font-serif: 'Fraunces', serif;
     --max-width: 1200px;
@@ -216,14 +216,15 @@ const fullTitle = `${title} | ${siteName}`;
   }
 
   [data-theme="dark"] {
-    --color-primary: #A3B18A;
-    --color-primary-dark: #DAD7CD;
-    --color-background: #051A1B;
-    --color-surface: #0D2628;
-    --color-text: #F2F2E2;
+    --color-primary: #A3B18A;   /* Sage for UI elements in dark mode */
+    --color-primary-dark: #F2F2E2;
+    --color-background: #0D4E50; /* Deep Spruce as the base */
+    --color-surface: #083638;
+    --color-text: #F2F2E2;      /* Warm Bone text on dark background */
     --color-text-light: #A3B18A;
     --color-border: #1D3D3D;
   }
+
 
   [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
   [data-theme="dark"] .nav-links a, [data-theme="dark"] .dropbtn { color: var(--color-text); }

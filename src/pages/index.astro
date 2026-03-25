@@ -24,12 +24,13 @@ const stats = [
       </div>
       <div class="hero-visual reveal" style="animation-delay: 0.3s;">
         <div class="visual-card">
-          <PineTree size={120} color="rgba(255,255,255,0.2)" />
-          <Leaf size={80} color="rgba(255,255,255,0.1)" />
+          <div class="floating-icons">
+            <PineTree size={120} color="var(--color-background)" class="logo-pine" />
+            <Leaf size={80} color="var(--color-soft-green)" class="logo-leaf" />
+          </div>
         </div>
       </div>
     </div>
-
   </section>
 
   <section class="market-bar">
@@ -104,18 +105,11 @@ const stats = [
 </Layout>
 
 <style>
-  <body class="bg-maine">
-    <!-- BOTANICAL BACKGROUND ORNAMENTS -->
-    <div class="bg-ornament top-right"><PineTree size={400} color="rgba(13, 78, 80, 0.03)" /></div>
-    <div class="bg-ornament bottom-left"><Leaf size={300} color="rgba(88, 129, 87, 0.03)" /></div>
-
-    <section class="premium-hero">
-...
   .premium-hero {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-background);
     padding: 4rem 0;
-    border-radius: 2rem;
+    border-radius: 2.5rem;
     margin-bottom: 0;
     overflow: hidden;
     position: relative;
@@ -123,27 +117,9 @@ const stats = [
     z-index: 10;
   }
 
-  /* Botanical Ornaments */
-  .bg-ornament {
-    position: absolute;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-  }
-
-  .top-right { top: -100px; right: -100px; transform: rotate(15deg); }
-  .bottom-left { bottom: 10%; left: -50px; transform: rotate(-10deg); }
-
-  [data-theme="dark"] .bg-ornament { opacity: 0.5; }
-
   [data-theme="dark"] .premium-hero {
-    background: linear-gradient(135deg, #051A1B 0%, #0D2628 100%);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-  }
-
-  [data-theme="dark"] .btn-main {
-    background: var(--color-primary);
-    color: var(--color-background);
   }
 
   .hero-container {
@@ -167,33 +143,21 @@ const stats = [
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 1rem;
+    color: var(--color-background);
   }
 
   .hero-content h1 {
-    color: var(--color-background); /* Using Warm Bone instead of pure white */
+    color: var(--color-background);
     font-size: 2.75rem;
     margin-bottom: 1rem;
     line-height: 1.1;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     font-weight: 800;
   }
 
   .hero-content p {
-    color: rgba(242, 242, 226, 0.9);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-
-  @media (max-width: 600px) {
-    .hero-content h1 { font-size: 2.25rem; }
-    .premium-hero { padding: 4rem 0; }
-    .core-hubs { margin-bottom: 4rem; }
-    .hub-grid { gap: 1rem; }
-    .hub-card { padding: 1.5rem; }
-  }
-
-  .hero-content p {
+    color: var(--color-background);
     font-size: 1.25rem;
-    opacity: 0.9;
+    opacity: 0.95;
     margin-bottom: 2.5rem;
   }
 
@@ -203,7 +167,7 @@ const stats = [
   }
 
   .btn-main {
-    background: white;
+    background: var(--color-background);
     color: var(--color-primary);
     padding: 1rem 2rem;
     border-radius: 1rem;
@@ -212,9 +176,9 @@ const stats = [
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
 
-  .btn-outline {
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
+  .btn-secondary {
+    border: 1px solid var(--color-background);
+    color: var(--color-background);
     padding: 1rem 2rem;
     border-radius: 1rem;
     font-weight: 700;
@@ -229,27 +193,23 @@ const stats = [
     justify-content: center;
   }
 
+  .visual-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4rem;
+    border-radius: 3.5rem;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+  }
+
   @keyframes float {
     0% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-20px) rotate(2deg); }
     100% { transform: translateY(0px) rotate(0deg); }
   }
 
-  .logo-pine {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .logo-leaf {
-    animation: float 8s ease-in-out infinite reverse;
-    margin-left: -30px;
-    margin-top: 50px;
-  }
-
-  .hero-leaf {
-    position: absolute;
-    bottom: 20%;
-    right: 20%;
-  }
+  .logo-pine { animation: float 6s ease-in-out infinite; }
+  .logo-leaf { animation: float 8s ease-in-out infinite reverse; margin-left: -30px; margin-top: 50px; }
 
   .market-bar {
     background: var(--color-surface);
@@ -267,132 +227,53 @@ const stats = [
     align-items: center;
   }
 
-  .bar-item {
-    font-size: 0.9375rem;
+  .bar-item { font-size: 0.9375rem; }
+  .bar-label { color: var(--color-text-light); font-weight: 600; margin-right: 0.5rem; }
+  .bar-value { color: var(--color-primary); font-weight: 700; }
+  .bar-link { font-size: 0.8125rem; font-weight: 700; color: var(--color-accent); text-decoration: none; }
+
+  .mission-statement { text-align: center; margin-bottom: 6rem; }
+  .mission-content h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--color-primary); }
+  .mission-content p { font-size: 1.25rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; }
+
+  .core-hubs { margin-bottom: 8rem; }
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
   }
 
-  .bar-label {
-    color: var(--color-text-light);
-    font-weight: 600;
-    margin-right: 0.5rem;
-  }
-
-  .bar-value {
-    color: var(--color-primary);
-    font-weight: 700;
-  }
-
-  .bar-link {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--color-accent);
+  .hub-card {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--color-border);
     text-decoration: none;
-  }
-
-  .mission-statement {
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
     text-align: center;
-    margin-bottom: 6rem;
+    position: relative;
+    overflow: hidden;
   }
 
-  .mission-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+  .hub-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 30px 60px rgba(13, 78, 80, 0.1);
+    border-color: var(--color-primary);
   }
 
-  .mission-content p {
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-    max-width: 700px;
-    margin: 0 auto;
+  .hub-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .core-hubs {
-    margin-bottom: 8rem;
-  }
-.hub-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
+  .hub-card:hover .hub-icon { transform: scale(1.2) rotate(8deg); }
+  .hub-card h3 { margin: 0 0 0.75rem; color: var(--color-primary); font-family: var(--font-serif); font-size: 1.5rem; }
+  .hub-card p { margin: 0; font-size: 0.95rem; color: var(--color-text-light); line-height: 1.6; }
 
-.hub-card {
-  background: white;
-  padding: 3rem 2rem;
-  border-radius: 2.5rem;
-  border: 1px solid var(--color-border);
-  text-decoration: none;
-  transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hub-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 30px 60px rgba(13, 78, 80, 0.1);
-  border-color: var(--color-primary);
-}
-
-.hub-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
-  transition: 0.6s;
-}
-
-.hub-card:hover::after {
-  left: 100%;
-}
-
-.hub-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
-  display: block;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.hub-card:hover .hub-icon {
-  transform: scale(1.2) rotate(8deg);
-}
-
-.hub-card h3 {
-  margin: 0 0 0.75rem;
-  color: var(--color-primary);
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-}
-
-.hub-card p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--color-text-light);
-  line-height: 1.6;
-}
-
-.visual-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4rem;
-  border-radius: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-}
-
-
+  .geo-explorer { text-align: center; margin-bottom: 8rem; }
   .city-chips {
     display: flex;
     flex-wrap: wrap;
@@ -402,13 +283,14 @@ const stats = [
   }
 
   .city-chips a {
-    background: var(--color-background);
+    background: var(--color-surface);
     color: var(--color-primary);
     padding: 0.75rem 1.5rem;
     border-radius: 2rem;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s;
+    border: 1px solid var(--color-border);
   }
 
   .city-chips a:hover {
@@ -417,19 +299,9 @@ const stats = [
   }
 
   @media (max-width: 850px) {
-    .hero-container {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-    .hero-btns {
-      justify-content: center;
-    }
-    .hero-visual {
-      display: none;
-    }
-    .bar-container {
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
+    .hero-btns { justify-content: center; }
+    .hero-visual { display: none; }
+    .bar-container { flex-wrap: wrap; gap: 1rem; }
   }
 </style>
