@@ -81,21 +81,31 @@ const vendorCategories = [
 
       <aside class="referral-sidebar">
         <div id="referral-form-box" class="referral-box">
-          <button type="button" class="btn-close-theatre" onclick="window.closeTheatre()">&times;</button>
+          <button type="button" class="btn-close-theatre" onclick="window.closeTheatre()" aria-label="Close form">&times;</button>
           <h3>Need a Referral?</h3>
           <p>Tell us about your project, and we will connect you with the right professional.</p>
-          <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST">
-            <input type="text" name="name" placeholder="Full Name" required />
-            <input type="email" name="email" placeholder="Business Email" required />
+          
+          <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST" aria-labelledby="referral-form-box">
+            <label for="lead-name" class="sr-only">Full Name</label>
+            <input type="text" id="lead-name" name="name" placeholder="Full Name" required aria-required="true" />
+            
+            <label for="lead-email" class="sr-only">Business Email</label>
+            <input type="email" id="lead-email" name="email" placeholder="Business Email" required aria-required="true" />
+            
             <input type="hidden" id="target-vendor-input" name="requested_professional" value="General Referral" />
-            <select name="service" required>
+            
+            <label for="service-select" class="sr-only">Select Service Needed</label>
+            <select name="service" id="service-select" required aria-required="true">
               <option value="">Select Service Needed...</option>
               <option value="legal">Legal & Licensing</option>
               <option value="accounting">Tax & 280E</option>
               <option value="security">Security & Hardware</option>
               <option value="real-estate">Real Estate / Zoning</option>
             </select>
+            
+            <label for="message-text-area" class="sr-only">Describe your goals</label>
             <textarea id="message-text-area" name="message" placeholder="Briefly describe your goals..."></textarea>
+            
             <button type="submit" class="btn-main">Request Introduction</button>
           </form>
         </div>
@@ -109,6 +119,18 @@ const vendorCategories = [
 
   <style is:global>
     #page-theatre-wrapper { position: relative; width: 100%; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
 
     .theatre-overlay {
       position: fixed;

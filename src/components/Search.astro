@@ -15,49 +15,57 @@ const searchIndex = [
 ];
 ---
 
-<div class="search-container" id="search-root">
+<div class="search-container">
   <div class="search-input-wrapper">
     <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" placeholder="Search 41+ guides..." autocomplete="off" />
+    <input type="text" class="search-input" placeholder="Search 41+ guides..." autocomplete="off" aria-label="Search technical guides" />
   </div>
-  <div id="search-results" class="search-results-dropdown"></div>
+  <div class="search-results-dropdown"></div>
 </div>
 
 <script define:vars={{ searchIndex }}>
-  const input = document.getElementById('search-input');
-  const resultsContainer = document.getElementById('search-results');
+  // Use scoped query selectors to find elements relative to their containers
+  const containers = document.querySelectorAll('.search-container');
+  
+  containers.forEach(container => {
+    const input = container.querySelector('.search-input');
+    const resultsContainer = container.querySelector('.search-results-dropdown');
 
-  input.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase();
-    if (query.length < 2) {
-      resultsContainer.innerHTML = '';
-      resultsContainer.classList.remove('active');
-      return;
-    }
+    input.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      if (query.length < 2) {
+        resultsContainer.innerHTML = '';
+        resultsContainer.classList.remove('active');
+        return;
+      }
 
-    const filtered = searchIndex.filter(item => 
-      item.title.toLowerCase().includes(query)
-    ).slice(0, 5);
+      const filtered = searchIndex.filter(item => 
+        item.title.toLowerCase().includes(query)
+      ).slice(0, 5);
 
-    if (filtered.length > 0) {
-      resultsContainer.innerHTML = filtered.map(item => `
-        <a href="${item.href}" class="search-result-item">
-          <span>${item.title}</span>
-          <span class="result-arrow">&rarr;</span>
-        </a>
-      `).join('');
-      resultsContainer.classList.add('active');
-    } else {
-      resultsContainer.innerHTML = '<div class="search-no-results">No guides found.</div>';
-      resultsContainer.classList.add('active');
-    }
+      if (filtered.length > 0) {
+        resultsContainer.innerHTML = filtered.map(item => `
+          <a href="${item.href}" class="search-result-item">
+            <span>${item.title}</span>
+            <span class="result-arrow">&rarr;</span>
+          </a>
+        `).join('');
+        resultsContainer.classList.add('active');
+      } else {
+        resultsContainer.innerHTML = '<div class="search-no-results">No guides found.</div>';
+        resultsContainer.classList.add('active');
+      }
+    });
   });
 
   // Close search when clicking outside
   document.addEventListener('click', (e) => {
-    if (!document.getElementById('search-root').contains(e.target)) {
-      resultsContainer.classList.remove('active');
-    }
+    containers.forEach(container => {
+      const resultsContainer = container.querySelector('.search-results-dropdown');
+      if (!container.contains(e.target)) {
+        resultsContainer.classList.remove('active');
+      }
+    });
   });
 </script>
 

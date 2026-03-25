@@ -58,8 +58,10 @@ const fullTitle = `${title} | ${siteName}`;
       "@type": isGuide ? "Article" : "WebSite",
       "headline": title,
       "description": description,
-      "image": heroImage || "https://mainedispensaryguide.com/favicon.svg",
-      "author": { "@type": "Organization", "name": "Maine Dispensary Guide" }
+      "image": heroImage || "https://mainedispensaryguide.com/og-image.jpg",
+      "author": { "@type": "Organization", "name": "Maine Dispensary Guide" },
+      "datePublished": "2026-03-23",
+      "dateModified": "2026-03-23"
     })} />
 
     <script is:inline>
@@ -126,21 +128,21 @@ const fullTitle = `${title} | ${siteName}`;
           <div class="nav-dropdown">
             <button class="dropbtn">Guides ▾</button>
             <div class="dropdown-content">
-              <a href="/all-guides/">All State Guides</a>
-              <a href="/launch-checklist/">Launch Checklist</a>
-              <a href="/find-a-dispensary/">Find a Store</a>
+              <a href="/all-guides">All State Guides</a>
+              <a href="/launch-checklist">Launch Checklist</a>
+              <a href="/find-a-dispensary">Find a Store</a>
             </div>
           </div>
           <div class="nav-dropdown">
             <button class="dropbtn">Business Tools ▾</button>
             <div class="dropdown-content">
-              <a href="/roi-calculator/">ROI Calculator</a>
-              <a href="/market-stats/">Market Stats</a>
-              <a href="/glossary/">Technical Glossary</a>
+              <a href="/roi-calculator">ROI Calculator</a>
+              <a href="/market-stats">Market Stats</a>
+              <a href="/glossary">Technical Glossary</a>
             </div>
           </div>
-          <a href="/resources/">Vendor Directory</a>
-          <a href="/about/">About</a>
+          <a href="/resources">Vendor Directory</a>
+          <a href="/about">About</a>
         </div>
       </nav>
     </header>
@@ -173,7 +175,17 @@ const fullTitle = `${title} | ${siteName}`;
     <footer>
       <div class="footer-content">
         <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/contact">Contact Us</a>
+          <a href="/about">About</a>
+        </div>
         <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
+        {!isHub && (
+          <p class="state-link">
+            Looking for other states? <a href="/all-guides/">Visit our National Hub</a>
+          </p>
+        )}
       </div>
     </footer>
 
@@ -309,6 +321,9 @@ const fullTitle = `${title} | ${siteName}`;
 
   main { flex: 1; max-width: var(--max-width); width: 100%; margin: 0 auto; padding: 3rem 1.5rem; }
   footer { background: var(--color-surface); padding: 5rem 1.5rem; text-align: center; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; }
+  .footer-links a { color: var(--color-text-light); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+  .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
   h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }

@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Contact Us | Maine Dispensary Guide" description="Get in touch with the team behind the Maine Dispensary Guide. We are here to help Maine cannabis entrepreneurs succeed.">
+  <article class="contact-page">
+    <div class="header-center">
+      <h1>Connect with Our Team</h1>
+      <p class="lead">Whether you're a founder with a technical question or a professional looking to join our network, we want to hear from you.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-method">
+        <div class="icon">✉️</div>
+        <h3>Technical Support</h3>
+        <p>For general inquiries and technical questions about our guides.</p>
+        <a href="mailto:admin@mainedispensaryguide.com" class="contact-link">admin@mainedispensaryguide.com</a>
+      </div>
+
+      <div class="contact-method">
+        <div class="icon">🤝</div>
+        <h3>Partnerships</h3>
+        <p>For Maine-based lawyers, CPAs, and consultants interested in joining our vendor network.</p>
+        <a href="mailto:partners@mainedispensaryguide.com" class="contact-link">partners@mainedispensaryguide.com</a>
+      </div>
+    </div>
+
+    <div class="faq-teaser">
+      <h3>Looking for quick answers?</h3>
+      <p>Check out our <a href="/glossary/">Technical Glossary</a> or our <a href="/guides/maine-dispensary-license/">Licensing Guide</a> for immediate technical data.</p>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .contact-page { max-width: 900px; margin: 0 auto; padding: 4rem 0; }
+  .header-center { text-align: center; margin-bottom: 5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
+  
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 6rem; }
+  .contact-method { background: white; padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); text-align: center; }
+  .contact-method .icon { font-size: 3rem; margin-bottom: 1.5rem; }
+  .contact-method h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .contact-method p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 2rem; }
+  .contact-link { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; text-decoration: none; }
+  .contact-link:hover { text-decoration: underline; }
+
+  .faq-teaser { text-align: center; background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); }
+  .faq-teaser h3 { margin-top: 0; font-family: var(--font-serif); color: var(--color-primary); }
+
+  @media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>
