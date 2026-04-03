@@ -1,0 +1,68 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Cannabis Founder Case Studies | Maine Dispensary Success Stories" 
+  description="Explore the real-world journeys of Maine cannabis entrepreneurs. From coastal boutiques to rural cultivators, learn how local founders built their empire."
+>
+  <article class="coming-soon">
+    <div class="header-center">
+      <div class="hero-badge">Founder Perspectives</div>
+      <h1>The Founders Hub</h1>
+      <p class="lead">Real stories from the front lines of the Maine cannabis industry.</p>
+    </div>
+
+    <section class="details">
+      <h2>Learn from the Architects of the Pine Tree State</h2>
+      <p>The "Founders" section is dedicated to high-authority case studies of successful dispensary operators and cultivators in Maine. We analyze their strategies for municipal opt-in, 280E tax management, and brand building to provide you with a blueprint for your own passion project.</p>
+      
+      <div class="roadmap-grid">
+        <div class="roadmap-item">
+          <a href="/founders/maine-cannabis-founder-coastal-shop" style="text-decoration: none; color: inherit;">
+            <h3>🌊 The Coastal Boutique</h3>
+            <p>How Sarah navigated a small-town council to build a high-end seaside dispensary. <span style="color: var(--color-accent);">Read Story &rarr;</span></p>
+          </a>
+        </div>
+        <div class="roadmap-item">
+          <a href="/founders/maine-cannabis-founder-portland-flagship" style="text-decoration: none; color: inherit;">
+            <h3>🏙️ The Portland Flagship</h3>
+            <p>Scaling operations in Maine's most competitive urban market. <span style="color: var(--color-accent);">Read Story &rarr;</span></p>
+          </a>
+        </div>
+        <div class="roadmap-item">
+          <a href="/founders/maine-cannabis-founder-rural-cultivator" style="text-decoration: none; color: inherit;">
+            <h3>🌲 The Rural Cultivator</h3>
+            <p>Building a vertically integrated brand in Maine's agricultural heartland. <span style="color: var(--color-accent);">Read Story &rarr;</span></p>
+          </a>
+        </div>
+      </div>
+
+      <p class="cta-text">Are you a Maine dispensary founder with a story to share? We are always looking for new verified case studies. <a href="/contact">Get in touch</a> to join our network.</p>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .coming-soon { max-width: 900px; margin: 0 auto; padding: 4rem 0; }
+  .header-center { text-align: center; margin-bottom: 5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
+  
+  .details { background: var(--color-surface); padding: 4rem; border-radius: 2.5rem; border: 1px solid var(--color-border); }
+  .details h2 { font-size: 2rem; color: var(--color-primary); margin-bottom: 1.5rem; font-family: var(--font-serif); text-align: center; }
+  .details p { font-size: 1.1rem; color: var(--color-text-light); line-height: 1.8; margin-bottom: 2rem; }
+
+  .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+  .roadmap-item { background: white; padding: 2rem; border-radius: 1.5rem; border: 1px solid var(--color-border); transition: transform 0.2s; }
+  .roadmap-item:hover { transform: translateY(-5px); border-color: var(--color-accent); }
+  .roadmap-item h3 { font-size: 1.25rem; color: var(--color-primary); margin-bottom: 0.75rem; }
+  .roadmap-item p { font-size: 0.95rem; margin-bottom: 0; }
+
+  .cta-text { text-align: center; font-weight: 600; margin-top: 3rem; }
+  .cta-text a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .cta-text a:hover { border-color: var(--color-accent); }
+
+  @media (max-width: 768px) {
+    .details { padding: 2rem; }
+  }
+</style>

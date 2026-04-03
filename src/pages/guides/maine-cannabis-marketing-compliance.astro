@@ -1,12 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-21", modifiedDate: "2026-03-22", section: "Compliance & Legal" };
 ---
 
 <Layout 
   title="Maine Cannabis Marketing Compliance | Maine Dispensary Guide" 
   description="Expert guide to cannabis marketing compliance for Maine dispensary owners. Learn about advertising rules, digital marketing restrictions, and branding best practices."
   heroImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
+  article={article}
 >
   <article>
     <div class="article-header">

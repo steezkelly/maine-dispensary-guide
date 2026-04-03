@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-03-23", section: "Operations & Technology" };
 export const title = "Cannabis Waste Management";
 ---
 
@@ -9,6 +10,7 @@ export const title = "Cannabis Waste Management";
   title="Cannabis Waste Management | Maine Dispensary Guide" 
   description="Expert technical guide to Cannabis Waste Management in Maine. Detailed 2026 regulatory compliance data, licensing requirements, and operational best practices for cannabis founders."
   heroImage="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070&auto=format&fit=crop"
+  article={article}
 >
   <article>
     <div class="article-header">

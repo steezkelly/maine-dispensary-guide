@@ -1,12 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-10", modifiedDate: "2026-03-15", section: "Compliance & Legal" };
 ---
 
 <Layout 
   title="Maine Cannabis Regulations | Maine Dispensary Guide" 
   description="Complete guide to Maine cannabis regulations and legal framework. Stay compliant with OCP rules, local ordinances, and state laws governing adult-use dispensaries."
   heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?q=80&w=1200&h=400&auto=format&fit=crop"
+  article={article}
 >
   <article>
     <div class="article-header">

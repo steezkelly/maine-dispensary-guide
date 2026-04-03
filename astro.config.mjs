@@ -5,12 +5,8 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://mainedispensaryguide.com',
-  output: 'server',
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-  }),
+  output: 'static',
+  adapter: vercel(),
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {

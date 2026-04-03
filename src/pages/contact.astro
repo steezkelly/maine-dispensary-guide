@@ -1,5 +1,33 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const faqs = [
+  {
+    q: "How long does it take to get a Maine dispensary license?",
+    a: "The Maine OCP adult-use retail license process typically takes 90-120 days from application submission to approval, assuming all municipal requirements are met. Municipal local licenses add an additional 30-60 days. Use our <a href=\"/launch-checklist/\">Launch Checklist</a> for the full timeline."
+  },
+  {
+    q: "What is the total estimated investment for opening a dispensary in Maine?",
+    a: "Total startup costs for a Maine dispensary typically range from $400,000 to $750,000, depending on location, buildout, and inventory. This includes licensing fees ($1,000 state + up to $5,000 local), real estate (first year rent + security deposit), buildout ($150K-400K), and initial inventory ($50K-100K). Our <a href=\"/roi-calculator/\">ROI Calculator</a> models these costs against Maine's $246M market."
+  },
+  {
+    q: "Can I use my existing business bank account for a cannabis dispensary?",
+    a: "No. Due to federal illegality of cannabis, most major banks refuse cannabis business accounts. However, Maine has several credit unions and state-chartered banks that specialize in cannabis. Our <a href=\"/guides/maine-cannabis-banking-solutions/\">Banking Solutions Guide</a> lists Maine-based institutions that work with dispensary clients."
+  },
+  {
+    q: "Does my dispensary need a separate license for delivery?",
+    a: "Yes. Maine's adult-use delivery rules require a separate OCP Delivery Endorsement. You cannot use your retail license to deliver directly to consumers without this endorsement. Learn more in our <a href=\"/guides/maine-cannabis-delivery-rules/\">Delivery Rules Guide</a>."
+  },
+  {
+    q: "How does IRS Section 280E affect Maine dispensary profitability?",
+    a: "280E prohibits cannabis businesses from deducting ordinary business expenses, resulting in an effective tax rate of up to 70% on gross profit rather than net income. This makes COGS optimization and cost-of-goods deduction strategies critical. Our <a href=\"/guides/maine-cannabis-taxation-280e/\">280E Taxation Guide</a> covers mitigation strategies specific to Maine operators."
+  },
+  {
+    q: "I want to be listed in your vendor directory. How do I apply?",
+    a: "We vet all professionals before listing. Vendors must demonstrate cannabis industry experience and Maine market presence. Email <a href=\"mailto:partners@mainedispensaryguide.com\">partners@mainedispensaryguide.com</a> with your practice areas, client references, and years of cannabis-specific experience."
+  }
+];
 ---
 
 <Layout title="Contact Us | Maine Dispensary Guide" description="Get in touch with the team behind the Maine Dispensary Guide. We are here to help Maine cannabis entrepreneurs succeed.">
@@ -12,23 +40,69 @@ import Layout from '../layouts/Layout.astro';
     <div class="contact-grid">
       <div class="contact-method">
         <div class="icon">✉️</div>
-        <h3>Technical Support</h3>
-        <p>For general inquiries and technical questions about our guides.</p>
+        <h3>Founder Support</h3>
+        <p>For questions about licensing, compliance, or technical guide content. We respond within 2 business days.</p>
         <a href="mailto:admin@mainedispensaryguide.com" class="contact-link">admin@mainedispensaryguide.com</a>
       </div>
 
       <div class="contact-method">
         <div class="icon">🤝</div>
-        <h3>Partnerships</h3>
-        <p>For Maine-based lawyers, CPAs, and consultants interested in joining our vendor network.</p>
+        <h3>Vendor Partnerships</h3>
+        <p>For Maine-based lawyers, CPAs, security firms, and consultants interested in our verified vendor network.</p>
         <a href="mailto:partners@mainedispensaryguide.com" class="contact-link">partners@mainedispensaryguide.com</a>
       </div>
     </div>
 
-    <div class="faq-teaser">
-      <h3>Looking for quick answers?</h3>
-      <p>Check out our <a href="/glossary/">Technical Glossary</a> or our <a href="/guides/maine-dispensary-license/">Licensing Guide</a> for immediate technical data.</p>
-    </div>
+    <section class="mission-statement">
+      <h2>About the Maine Dispensary Guide</h2>
+      <p>The Maine Dispensary Guide was built to fill a critical gap in the Maine cannabis market: the absence of a comprehensive, technically accurate resource for entrepreneurs navigating licensing, compliance, and operations. Unlike directories that simply list dispensary locations, we provide the regulatory maps, financial benchmarks, and municipal guides that founders need before spending a dollar.</p>
+      <p>Our editorial team works directly with Maine OCP-licensed attorneys, cannabis-focused CPAs, and experienced operators to verify every data point in our guides. We update content as Maine statutes and municipal codes change — which happens frequently. If you spot an error or have data to contribute, contact us at the address above.</p>
+    </section>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      {faqs.map(faq => (
+        <div class="faq-item">
+          <h3>{faq.q}</h3>
+          <p set:html={faq.a} />
+        </div>
+      ))}
+    </section>
+
+    <section class="quick-links-section">
+      <h2>Find Answers Faster</h2>
+      <p>Before reaching out, explore our most-visited technical resources:</p>
+      <div class="quick-links-grid">
+        <a href="/guides/maine-dispensary-license/" class="quick-link-card">
+          <span class="ql-icon">📜</span>
+          <span class="ql-label">License Requirements</span>
+        </a>
+        <a href="/guides/maine-cannabis-taxation-280e/" class="quick-link-card">
+          <span class="ql-icon">⚖️</span>
+          <span class="ql-label">280E Tax Strategy</span>
+        </a>
+        <a href="/roi-calculator/" class="quick-link-card">
+          <span class="ql-icon">📊</span>
+          <span class="ql-label">ROI Calculator</span>
+        </a>
+        <a href="/glossary/" class="quick-link-card">
+          <span class="ql-icon">📖</span>
+          <span class="ql-label">Technical Glossary</span>
+        </a>
+        <a href="/resources/" class="quick-link-card">
+          <span class="ql-icon">🤝</span>
+          <span class="ql-label">Vendor Directory</span>
+        </a>
+        <a href="/launch-checklist/" class="quick-link-card">
+          <span class="ql-icon">🗺️</span>
+          <span class="ql-label">2026 Launch Checklist</span>
+        </a>
+      </div>
+    </section>
+
+    <Callout title="Disclaimer" type="info">
+      The Maine Dispensary Guide provides informational resources only. Nothing on this site constitutes legal or financial advice. Always consult a licensed Maine cannabis attorney and CPA before making business decisions.
+    </Callout>
   </article>
 </Layout>
 
@@ -41,12 +115,32 @@ import Layout from '../layouts/Layout.astro';
   .contact-method { background: white; padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); text-align: center; }
   .contact-method .icon { font-size: 3rem; margin-bottom: 1.5rem; }
   .contact-method h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
-  .contact-method p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 2rem; }
+  .contact-method p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6; }
   .contact-link { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; text-decoration: none; }
   .contact-link:hover { text-decoration: underline; }
 
-  .faq-teaser { text-align: center; background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); }
-  .faq-teaser h3 { margin-top: 0; font-family: var(--font-serif); color: var(--color-primary); }
+  .mission-statement { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
+  .mission-statement h2 { margin-top: 0; margin-bottom: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  .mission-statement p { color: var(--color-text-light); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+  .mission-statement p:last-child { margin-bottom: 0; }
+
+  .faq-section { background: var(--color-surface); padding: 4rem; border-radius: 2.5rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
+  .faq-section h2 { text-align: center; font-size: 2.25rem; color: var(--color-primary); margin-bottom: 3rem; font-family: var(--font-serif); }
+  .faq-item { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--color-border); }
+  .faq-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .faq-item h3 { font-size: 1.15rem; color: var(--color-primary); margin-bottom: 0.75rem; font-family: var(--font-serif); }
+  .faq-item p { font-size: 1.0rem; color: var(--color-text-light); line-height: 1.7; }
+  .faq-item a { color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .faq-item a:hover { border-color: var(--color-accent); }
+
+  .quick-links-section { text-align: center; margin-bottom: 5rem; }
+  .quick-links-section h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 1rem; }
+  .quick-links-section > p { color: var(--color-text-light); margin-bottom: 3rem; }
+  .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+  .quick-link-card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem 1rem; background: white; border: 1px solid var(--color-border); border-radius: 1.5rem; text-decoration: none; transition: all 0.2s; }
+  .quick-link-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 78, 80, 0.08); }
+  .ql-icon { font-size: 2rem; }
+  .ql-label { font-size: 0.875rem; font-weight: 700; color: var(--color-primary); text-align: center; }
 
   @media (max-width: 768px) {
     .contact-grid { grid-template-columns: 1fr; }

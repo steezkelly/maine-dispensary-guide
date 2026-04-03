@@ -1,12 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-15", modifiedDate: "2026-03-28", section: "City Guides" };
 ---
 
 <Layout 
   title="Bangor Dispensary Guide | Maine Dispensary Guide" 
   description="Complete guide to opening a cannabis dispensary in Bangor, Maine. Detailed analysis of Northern Maine market opportunities, local regulations, and licensing requirements."
   heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?auto=format&fit=crop&q=80&w=1200&h=400"
+  article={article}
 >
   <article>
     <div class="article-header">

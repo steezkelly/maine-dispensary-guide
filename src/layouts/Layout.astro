@@ -7,12 +7,20 @@ import Search from '../components/Search.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
+interface ArticleData {
+  author?: string;
+  publishDate?: string;
+  modifiedDate?: string;
+  section?: string;
+}
+
 interface Props {
   title: string;
   description?: string;
   stateName?: string;
   isHub?: boolean;
   heroImage?: string;
+  article?: ArticleData;
 }
 
 const { 
@@ -20,13 +28,15 @@ const {
   description = "Your complete guide to opening and operating a cannabis dispensary.",
   stateName = "Maine",
   isHub = false,
-  heroImage
+  heroImage,
+  article
 } = Astro.props;
 
-// Site Metadata
+// Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const siteUrl = "https://mainedispensaryguide.com";
 const fullTitle = `${title} | ${siteName}`;
+const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 ---
 
 <!doctype html>
@@ -74,6 +84,35 @@ const fullTitle = `${title} | ${siteName}`;
       }
     </script>
 
+    {isGuide && article && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": title,
+        "description": description,
+        "image": heroImage,
+        "author": {
+          "@type": "Organization",
+          "name": article.author || "Maine Dispensary Guide"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Maine Dispensary Guide",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://mainedispensaryguide.com/favicon.svg"
+          }
+        },
+        "datePublished": article.publishDate,
+        "dateModified": article.modifiedDate || article.publishDate,
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": Astro.url.href
+        },
+        "articleSection": article.section
+      })} />
+    )}
+
     <script is:inline>
       const theme = (() => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) return localStorage.getItem('theme');
@@ -94,7 +133,7 @@ const fullTitle = `${title} | ${siteName}`;
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
     <div class="grain-overlay"></div>
     
-    <!-- BOTANICAL BACKGROUND ORNAMENTS -->
+    <!-- GLOBAL BOTANICAL ORNAMENTS -->
     <div class="bg-ornament p1"><PineTree size={40} color="var(--color-primary)" /></div>
     <div class="bg-ornament p2"><Leaf size={30} color="var(--color-accent)" /></div>
     <div class="bg-ornament p3"><PineTree size={50} color="var(--color-primary)" /></div>
@@ -137,7 +176,7 @@ const fullTitle = `${title} | ${siteName}`;
         <div class="nav-links" id="navigation-menu" role="navigation">
           <div class="nav-search-mobile"><Search /></div>
           <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="State Guides Submenu">Guides ▾</button>
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Guides ▾ Submenu">Guides ▾</button>
             <div class="dropdown-content">
               <a href="/all-guides">All State Guides</a>
               <a href="/launch-checklist">Launch Checklist</a>
@@ -145,7 +184,7 @@ const fullTitle = `${title} | ${siteName}`;
             </div>
           </div>
           <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools Submenu">Business Tools ▾</button>
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾ Submenu">Business Tools ▾</button>
             <div class="dropdown-content">
               <a href="/roi-calculator">ROI Calculator</a>
               <a href="/market-stats">Market Stats</a>
@@ -176,7 +215,7 @@ const fullTitle = `${title} | ${siteName}`;
       ) : <slot />}
     </main>
     
-    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">&uarr;</button>
+    <button id="back-to-top" class="back-to-top" aria-label="↑ Back to Top">&uarr;</button>
 
     <Analytics />
     <SpeedInsights />
@@ -185,7 +224,7 @@ const fullTitle = `${title} | ${siteName}`;
 
     <footer role="contentinfo">
       <div class="footer-content">
-        <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved. v1.0.4</p>
+        <p>&copy; {new Date().getFullYear()} {siteName}. v1.0.4 All rights reserved.</p>
         <nav class="footer-links" aria-label="Legal and Contact Links">
           <a href="/privacy">Privacy Policy</a>
           <a href="/contact">Contact Us</a>
