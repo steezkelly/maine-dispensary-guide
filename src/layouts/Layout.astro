@@ -63,6 +63,8 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
+    {heroImage && <meta property="og:image" content={heroImage} />}
+    {heroImage && <meta name="twitter:image" content={heroImage} />}
     <meta name="twitter:card" content="summary_large_image" />
     
     <!-- HARD-CODED STRUCTURED DATA FOR ACCURACY -->
