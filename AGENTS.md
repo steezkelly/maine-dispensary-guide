@@ -24,19 +24,27 @@ compounding consequences. Think before acting.
 
 ## Current Project Status
 
-> This section must be kept current. Last updated by: Gemini CLI (v1.0.4) — March 25, 2026 (EDT)
+> This section must be kept current. Last updated by: OpenCode (MiniMax M2.7) — April 4, 2026 (EDT)
 
 - **Pages live:** 61 total routes (41+ city guides, technical hubs, ROI tool, vendor directory)
 - **Deployment:** Active on Vercel — Configured for **output: 'static'** for 100% stability
 - **Sitemap:** Auto-generated at `/sitemap-index.xml`
 - **Traffic status:** Early stage — SEO/GEO optimization for AI-discovery is the primary goal
+- **Content Intelligence:** 
+    - ✅ BreadcrumbList JSON-LD schema (Breadcrumbs.astro)
+    - ✅ FAQ structured data component (Faq.astro)
+    - ✅ Content Quality Analyzer (`scripts/content-quality.cjs`)
+    - ✅ Content Humanizer (`scripts/humanize-content.cjs`)
+    - ✅ Content Expander (`scripts/content-expander.cjs`)
+    - ✅ Content Audit (`scripts/content-audit.cjs`)
+    - ✅ OpenCodeInsights plugin installed
 - **Known gaps:** 
     - **Accessibility (A11y):** SquirrelScan score is 84/100. Remaining pedantic warnings: matching "guides ▾" text to aria-labels and adding `tabindex="-1"` to hidden mobile toggles.
-    - **Content Density:** Landing pages (Home, Resources, Contact) are flagged as "Thin Content" (< 300 words). Contact page enriched April 3, 2026.
+    - **Content Density:** Some city guides flagged as "Thin Content" (< 800 words). Humanization + expansion in progress.
     - **PDF Magnet:** The "Ultimate Founders Bible" (lead magnet) exists as MD but needs styling/conversion to PDF.
-    - **Structured Data:** ✅ Layout.astro supports Article JSON-LD via `article` prop. All 44 guide pages now have article metadata (April 3, 2026).
 - **Active work:**
-    - **Grade A Recovery:** Finalizing the technical climb from score 59 to 80+.
+    - **Content Humanization:** Removing AI patterns from pages, improving natural voice
+    - **Content Expansion:** Adding depth to thin pages for SEO/GEO improvement
     - **Link Architecture:** Ongoing body-only sync via `scripts/link-architect.cjs`.
 
 ---
@@ -85,8 +93,18 @@ different environments. You are one of them. Read this carefully.
 npm run dev          # Start local development server
 npm run build        # Production build (Static)
 node scripts/link-architect.cjs # Run Link Architect (glossary syncer)
-& "C:\Users\Steve\AppData\Local\squirrel\bin\squirrel.exe" audit https://mainedispensaryguide.com --format llm # Performance/SEO Audit
+node scripts/content-quality.cjs "./src/**/*.astro" # Analyze content quality
+node scripts/content-expander.cjs --guide <file> # Get expansion template
+node scripts/content-audit.cjs "./src/pages/guides/*.astro" # Full site audit
+node scripts/humanize-content.cjs "./src/**/*.astro" --dry-run # Preview humanization
 ```
+
+### OpenCode Custom Commands
+- `/humanizer [url]` — Fetch URL and humanize content (removes AI patterns)
+- `/expand [topic]` — Research and expand on a topic with depth
+- `/audit [pattern]` — Run content quality audit on matching files
+- `/expand-all [pattern]` — Batch expand content across multiple pages
+- `/insights` — Generate OpenCode usage insights report
 
 ---
 
@@ -104,13 +122,19 @@ node scripts/link-architect.cjs # Run Link Architect (glossary syncer)
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout with "Heritage" CSS & JSON-LD
-│   ├── components/               # Reusable components (Search, Sidebar, etc)
-│   ├── pages/                   # Routes (index, guides/, nj/, resources)
-│   └── scripts/                 # Link Architect engine
+│   ├── components/               # Reusable components (Search, Sidebar, Faq, etc)
+│   ├── pages/                   # Routes (index, guides/, resources)
+│   └── scripts/                 # Content intelligence scripts
+├── scripts/
+│   ├── link-architect.cjs      # Glossary term linker
+│   ├── content-quality.cjs      # Readability & tone analyzer
+│   ├── content-expander.cjs     # Thin content detector & expansion guide
+│   ├── content-audit.cjs        # Full site SEO/content audit
+│   └── humanize-content.cjs     # AI pattern remover
 ├── public/                      # Favicons and OG Images
 ├── astro.config.mjs             # Astro configuration
-├── squirrel.toml                # Audit configuration
-└── BOT_COLLABORATION_HUB.md     # Multi-agent communication log
+├── squirrel.toml               # Audit configuration
+└── BOT_COLLABORATION_HUB.md    # Multi-agent communication log
 ```
 
 ---
@@ -225,4 +249,4 @@ After completing work, evaluate:
 
 ---
 
-*Last Updated: 2026-04-05 02:15 AM EDT*
+*Last Updated: 2026-04-04 07:30 AM EDT*

@@ -12,7 +12,32 @@ const breadcrumbs = pathSegments.map((segment, index) => {
 }).filter(Boolean);
 
 const isHome = url.pathname === '/';
+
+const siteUrl = "https://mainedispensaryguide.com";
+
+const breadcrumbListSchema = !isHome ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": siteUrl
+    },
+    ...breadcrumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      "position": index + 2,
+      "name": crumb.label,
+      "item": siteUrl + crumb.href
+    }))
+  ]
+} : null;
 ---
+
+{!isHome && breadcrumbListSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbListSchema)} />
+)}
 
 {!isHome && (
   <nav aria-label="Breadcrumb" class="breadcrumbs">

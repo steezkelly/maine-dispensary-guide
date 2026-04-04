@@ -5,9 +5,9 @@ import Callout from '../components/Callout.astro';
 
 <Layout title="Maine Dispensary ROI Calculator" description="Beginner-friendly tool for understanding Maine cannabis dispensary finances. Learn about margins, taxes, overhead, and COGS." heroImage="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=1200&h=400">
   <section class="calculator-header">
-    <div class="hero-badge">Founder's Financial Roadmap</div>
-    <h1>Maine Dispensary Success Calculator</h1>
-    <p class="lead">We've simplified the complex world of cannabis finance into a "Business Flight Simulator." Let's map out your path to profitability.</p>
+    <div class="hero-badge">Maine Cannabis Finances</div>
+    <h1>Dispensary ROI Calculator</h1>
+    <p class="lead">A quick way to see if your dispensary numbers actually work. Adjust the inputs, see what comes out.</p>
   </section>
 
   <div class="calc-container">
@@ -56,7 +56,7 @@ import Callout from '../components/Callout.astro';
 
     <div class="calc-results">
       <div class="result-card primary" id="profit-card">
-        <span class="result-label">Your Monthly Take-Home</span>
+        <span class="result-label">Monthly Net Profit</span>
         <span class="result-value" id="monthly-profit">Calculating...</span>
         
         <!-- Profitability Gauge -->
@@ -69,7 +69,7 @@ import Callout from '../components/Callout.astro';
           </div>
         </div>
 
-        <p id="profit-status">Your projected monthly profit after all costs.</p>
+        <p id="profit-status">What's left after COGS, 280E, and operating expenses.</p>
       </div>
 
       <div class="result-grid">
@@ -84,22 +84,22 @@ import Callout from '../components/Callout.astro';
       </div>
 
       <div id="optimization-advice" class="optimization-box hidden">
-        <h3>💡 Mentor's Advice for Growth:</h3>
+        <h3>What to Work On:</h3>
         <p id="advice-text"></p>
       </div>
     </div>
   </div>
 
   <section class="how-it-works">
-    <h2>How the Success Calculator Works</h2>
-    <p>To give you a realistic picture, our calculator follows the actual path of a dollar in a Maine dispensary. Here is the step-by-step breakdown of the math:</p>
+    <h2>How This Calculator Works</h2>
+    <p>The math behind a Maine dispensary dollar, step by step:</p>
     
     <div class="math-steps">
       <div class="step-box">
         <div class="step-num">1</div>
         <div class="step-text">
-          <h3>Total Revenue</h3>
-          <p>We start by multiplying your <strong>Customers</strong> by your <strong>Average Sale</strong>. This is the total money that enters your register.</p>
+          <h3>Revenue</h3>
+          <p>Customers × Average Sale = your total monthly sales.</p>
         </div>
       </div>
 
@@ -107,15 +107,15 @@ import Callout from '../components/Callout.astro';
         <div class="step-num">2</div>
         <div class="step-text">
           <h3>Subtract COGS</h3>
-          <p>Next, we subtract the <strong><a href="/guides/maine-dispensary-costs/">COGS (Cost of Goods Sold)</a></strong>. In Maine, this is roughly <strong>65%</strong> of your revenue—the money you pay to cultivators and manufacturers for the products on your shelf.</p>
+          <p>You keep about <strong>35%</strong> of revenue as gross profit. The other 65% goes to cultivators and product manufacturers. <a href="/guides/maine-dispensary-costs/">More on COGS.</a></p>
         </div>
       </div>
 
       <div class="step-box">
         <div class="step-num">3</div>
         <div class="step-text">
-          <h3>Subtract 280E Taxes</h3>
-          <p>We then account for <strong><a href="/guides/maine-cannabis-taxation-280e/">280E</a></strong>. This is a federal tax rule that prevents cannabis shops from taking standard deductions. We set aside roughly <strong>21%</strong> of your Gross Profit for the IRS to keep you compliant.</p>
+          <h3>Subtract 280E</h3>
+          <p>The federal tax burden. We estimate roughly <strong>21%</strong> of your gross profit goes to the IRS because normal deductions don't apply. <a href="/guides/maine-cannabis-taxation-280e/">More on 280E.</a></p>
         </div>
       </div>
 
@@ -123,26 +123,26 @@ import Callout from '../components/Callout.astro';
         <div class="step-num">4</div>
         <div class="step-text">
           <h3>Subtract OPEX</h3>
-          <p>Finally, we subtract your <strong><a href="/guides/maine-dispensary-costs/">OPEX (Operating Expenses)</a></strong>. These are your "Monthly Bills" like rent, payroll, and utilities. What's left over is your <strong>Net Monthly Profit</strong>—your real take-home pay!</p>
+          <p>Rent, payroll, utilities, insurance — your monthly operating costs. Whatever's left is actual profit. <a href="/guides/maine-dispensary-costs/">More on OPEX.</a></p>
         </div>
       </div>
     </div>
   </section>
 
   <section class="financial-glossary">
-    <h2>Financial Terms Simplified</h2>
+    <h2>The Abbreviations</h2>
     <div class="glossary-grid">
       <div class="glossary-box">
-        <h3>COGS (Cost of Product)</h3>
-        <p>The money you spend to buy inventory. If you sell an eighth for $40 and you bought it from a grower for $20, your COGS is $20.</p>
+        <h3>COGS</h3>
+        <p>Cost of Goods Sold — what you paid for your product. Buy flower for $20, sell it for $40, your COGS is $20.</p>
       </div>
       <div class="glossary-box">
-        <h3>280E (The "Federal Burden")</h3>
-        <p>A federal tax code that treats cannabis revenue differently. It makes your effective tax rate much higher than a normal "Main Street" business.</p>
+        <h3>280E</h3>
+        <p>The federal tax problem. Because cannabis is illegal at the federal level, you can't take normal business deductions. Your tax rate ends up higher than expected.</p>
       </div>
       <div class="glossary-box">
-        <h3>OPEX (Operating Expenses)</h3>
-        <p>Your "Monthly Burn Rate." This includes everything it takes to run the shop: rent, payroll, insurance, and electricity.</p>
+        <h3>OPEX</h3>
+        <p>Operating Expenses — your monthly burn rate. Rent, payroll, utilities, insurance. The cost of keeping the lights on.</p>
       </div>
     </div>
   </section>
@@ -187,7 +187,7 @@ import Callout from '../components/Callout.astro';
           gaugeBar.style.width = "15%";
           gaugeBar.style.background = "#ff6b6b";
         }
-        if (adviceText) adviceText.innerHTML = "<strong>Don't get discouraged!</strong> This scenario shows a net loss. To turn this into a profit, try <strong>increasing your average customer spend by $10</strong> or finding a more affordable location to <strong>reduce your OPEX (Monthly Bills)</strong>.";
+        if (adviceText) adviceText.innerHTML = "Net loss at these numbers. To fix it: <strong>raise your average sale by $10-15</strong>, or <strong>find cheaper rent</strong> to lower OPEX. Or both.";
       } else {
         if (profitCard) profitCard.style.background = "var(--color-primary)";
         if (gaugeBar) {
@@ -195,7 +195,7 @@ import Callout from '../components/Callout.astro';
           gaugeBar.style.background = "#A3B18A";
         }
         if (breakevenEl) breakevenEl.innerText = monthsToBreakeven > 60 ? "5+ Years" : monthsToBreakeven + " Months";
-        if (adviceText) adviceText.innerHTML = "<strong>You're on the right track!</strong> You are covering your <strong>OPEX</strong> and <strong>280E</strong> taxes. To reach your goals even faster, focus on building a <strong>Loyalty Program</strong> to increase your customer return rate.";
+        if (adviceText) adviceText.innerHTML = "Numbers look workable. To accelerate payback: focus on <strong>repeat customers</strong> and <strong>increasing average spend per visit</strong>.";
       }
     }
 

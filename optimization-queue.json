@@ -1,0 +1,152 @@
+{
+  "project": "Maine Dispensary Guide",
+  "queue_generated": "2026-04-04",
+  " methodology": "seo-geo-content skill + insights data",
+  "high_priority": [
+    {
+      "url": "/guides/bangor-dispensary-guide/",
+      "status": "well_structured",
+      "seo_score": 85,
+      "actions": [
+        {
+          "priority": "low",
+          "action": "Add M.R.S. Title 28-B citation",
+          "reason": "Legal authority - Maine cannabis law reference missing",
+          "impact": "E-E-A-T improvement"
+        },
+        {
+          "priority": "low", 
+          "action": "Cross-link to 280E guide",
+          "reason": "Tax implications mentioned but not linked",
+          "impact": "Internal link equity"
+        }
+      ],
+      "gaps": [
+        "No M.R.S. Title 28-B legal citations",
+        "Could add competitor data (if available)"
+      ]
+    },
+    {
+      "url": "/guides/maine-cannabis-taxation-280e/",
+      "status": "needs_fact_box",
+      "seo_score": 75,
+      "actions": [
+        {
+          "priority": "high",
+          "action": "Add SEO Fact Box at top of page",
+          "reason": "Missing the GEO pattern - fact box should lead every guide per seo-geo-content skill",
+          "template": "fact-box-template.astro",
+          "impact": "AI-discovery optimization"
+        },
+        {
+          "priority": "high",
+          "action": "Add Local X-Factor section",
+          "reason": "No unique Maine-specific data point that competitors lack",
+          "impact": "Information Gain score"
+        },
+        {
+          "priority": "medium",
+          "action": "Cite M.R.S. Title 28-B §301 specifically",
+          "reason": "General 280E reference but Maine state tax law needs specific citation",
+          "impact": "E-E-A-T + local authority"
+        },
+        {
+          "priority": "medium",
+          "action": "Add 2026 tax rate table",
+          "reason": "Content shows 2024 rates - verify and update to 2026",
+          "impact": "Freshness signal"
+        }
+      ],
+      "gaps": [
+        "No Fact Box",
+        "No Local X-Factor",
+        "Missing Maine-specific legal citations",
+        "Content may be stale (2024 rates)"
+      ]
+    },
+    {
+      "url": "/roi-calculator/",
+      "status": "tool_page",
+      "seo_score": 70,
+      "actions": [
+        {
+          "priority": "high",
+          "action": "Add FAQ section with 280E impact",
+          "reason": "Calculator mentions 280E but doesn't explain how it dramatically affects ROI",
+          "impact": "Content depth + keyword coverage"
+        },
+        {
+          "priority": "medium",
+          "action": "Add Maine-specific financial assumptions",
+          "reason": "Default values generic - Maine has specific tax/cost structure",
+          "impact": "Local relevance + dwell time"
+        },
+        {
+          "priority": "medium",
+          "action": "Add 'What if 280E is removed?' scenario",
+          "reason": "Schedule III discussion is timely - operators want to know impact",
+          "impact": "Information Gain + topical authority"
+        }
+      ],
+      "gaps": [
+        "No explanatory content (just tool)",
+        "280E impact not quantified",
+        "No Maine-specific financial context"
+      ]
+    }
+  ],
+  "medium_priority": [
+    {
+      "url": "/guides/",
+      "status": "thin_content",
+      "seo_score": 60,
+      "actions": [
+        {
+          "priority": "high",
+          "action": "Add content - currently flagged as 'Thin Content' (<300 words)",
+          "reason": "Hub page needs substance beyond just listing guides",
+          "impact": "Core Web Vitals + SEO"
+        }
+      ],
+      "gaps": ["Thin content", "No value-add beyond navigation"]
+    }
+  ],
+  "seo_geo_recommendations": {
+    "information_gain": [
+      "Add unique Maine market data competitors don't have (dispensary density per capita, regional draw distances)",
+      "Include 2026-specific updates: new licenses, rule changes, market shifts",
+      "Add Local X-Factor to 280E page: Maine's state tax deduction advantage over federal"
+    ],
+    "geo_citations": [
+      "Fact Box pattern should be on ALL guides (currently missing on 280E)",
+      "Lead with the answer in first 200 words (280E page buries the 'what it means' in paragraph 3)"
+    ],
+    "link_architecture": [
+      "Run link-architect.cjs to verify glossary terms are linked",
+      "Add reciprocal links between related guides (280E ↔ business plan, 280E ↔ costs)"
+    ]
+  },
+  "quick_wins": [
+    {
+      "action": "Add Fact Box to 280E page",
+      "effort": "15 min",
+      "impact": "High - AI-discovery + user engagement"
+    },
+    {
+      "action": "Add 'Maine X-Factor' to 280E page about state tax deduction advantage",
+      "effort": "20 min", 
+      "impact": "Medium - Information Gain"
+    },
+    {
+      "action": "Update 280E page with 2026 tax rates if changed",
+      "effort": "10 min",
+      "impact": "Medium - Freshness"
+    }
+  ],
+  "next_steps": [
+    "Humanize existing content (apply humanizer skill to high-priority pages)",
+    "Run link-architect.cjs for glossary sync",
+    "Audit remaining city guides for Fact Box pattern",
+    "Batch humanize all 3 high-priority pages in single session"
+  ]
+}
