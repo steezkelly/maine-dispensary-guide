@@ -99,7 +99,7 @@ const terms = [
   <div class="glossary-container">
     {terms.map(item => (
       <div class="glossary-item" id={item.term.toLowerCase().replace(/\s+/g, '-')}>
-        <h3>{item.term}</h3>
+        <h2>{item.term}</h2>
         <p>{item.definition}</p>
       </div>
     ))}
@@ -149,11 +149,12 @@ const terms = [
     border-color: var(--color-primary);
   }
 
-  .glossary-item h3 {
+  .glossary-item h2 {
     margin-top: 0;
     margin-bottom: 0.75rem;
     color: var(--color-primary);
     font-family: var(--font-serif);
+    font-size: 1.25rem;
   }
 
   .glossary-item p {
