@@ -37,6 +37,7 @@ const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const siteUrl = "https://mainedispensaryguide.com";
 const fullTitle = `${title} | ${siteName}`;
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
+const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 ---
 
 <!doctype html>
@@ -86,7 +87,7 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
       }
     </script>
 
-    {isGuide && article && (
+    {isContent && article && (
       <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",
@@ -206,7 +207,7 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
           <div class="guide-content">
             {heroImage && <div class="guide-hero"><img src={heroImage} alt={title} width={1200} height={400} loading="eager" /></div>}
             <slot />
-            {isGuide && article && (
+            {article && (
               <div class="article-meta">
                 <span class="article-byline">By {article.author || "Maine Dispensary Guide Editorial Team"}</span>
                 {article.publishDate && (
