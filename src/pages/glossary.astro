@@ -92,10 +92,6 @@ const terms = [
     <p class="lead">Understanding the specific language of the Maine market is essential for compliance and success. Use this resource to master the technical terms used by regulators and professionals.</p>
   </section>
 
-  <Callout title="Knowledge is Power" type="tip">
-    Whether you're talking to a lawyer or a state inspector, using the correct terminology shows that you are a serious, professional operator. Bookmark this page as your quick-reference guide!
-  </Callout>
-
   <div class="glossary-container">
     {terms.map(item => (
       <div class="glossary-item" id={item.term.toLowerCase().replace(/\s+/g, '-')}>
@@ -104,6 +100,10 @@ const terms = [
       </div>
     ))}
   </div>
+
+  <Callout title="Knowledge is Power" type="tip">
+    Whether you're talking to a lawyer or a state inspector, using the correct terminology shows that you are a serious, professional operator. Bookmark this page as your quick-reference guide!
+  </Callout>
 
   <section class="glossary-cta">
     <div class="cta-content">
