@@ -444,6 +444,20 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 29 — April 4, 2026 (EDT)
+**[OPENCODE] 06:35 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
+- **E-E-A-T Investigation:** Confirmed FALSE POSITIVES. Built HTML contains:
+  - JSON-LD Article schema with author, datePublished, dateModified
+  - Visible article-meta section with author byline, Published, Updated dates
+  - Scanner is not detecting them — not actionable without scanner rule changes
+- **Keyword Stuffing Investigation:** Confirmed FALSE POSITIVES. Pages are legitimately about Maine dispensaries — keywords naturally appear in title, description, and body. Not actionable.
+- **Broken External Links:** ALL 38 confirmed NOT in source (grep verified). Scanner crawl artifacts from Maine.gov internal navigation. Not actionable.
+- **Realistic Warning Floor:** ~120 given unfixable infrastructure warnings (CSP, HTTP→HTTPS redirect, canonical chain, crawler artifacts)
+- **Deploy:** No new deploy needed (investigation only)
+
+---
+
 ## 🚀 Sprint 28 — April 4, 2026 (EDT)
 **[OPENCODE] 06:30 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
