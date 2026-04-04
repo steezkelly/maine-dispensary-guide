@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-10", modifiedDate: "2026-03-15", section: "Compliance & Legal" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-10", modifiedDate: "2026-04-04", section: "Compliance & Legal" };
 const topics = ["compliance"];
 ---
 
@@ -16,28 +16,108 @@ const topics = ["compliance"];
   <article>
     <div class="article-header">
       <h1>Cannabis Regulations in Maine</h1>
-      <p class="subtitle">Understanding the legal framework for operating a dispensary in Maine</p>
+      <p class="subtitle">What you need to know about Maine's cannabis laws</p>
     </div>
 
-    <section>
-      <h2>State Regulatory Framework</h2>
-      <Callout title="Compliance as a Foundation" type="tip">
-        Navigating regulations isn't just about following rules; it's about building a business that the community can trust. When you embrace compliance as a core value, you're protecting your dream and ensuring that the Maine cannabis industry remains a leader in safety and professionalism. We're all in this together!
-      </Callout>
-      <p>Maine's cannabis industry is regulated by the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a>, which oversees licensing, compliance, and enforcement for both medical and <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">adult-use</a> cannabis businesses.</p>
+    <section class="fact-box">
+      <h2>Key Regulations</h2>
+      <table aria-label="Maine cannabis regulatory summary">
+        <tbody>
+          <tr><td><strong>Governing Body</strong></td><td>Maine Office of Cannabis Policy (OCP)</td></tr>
+          <tr><td><strong>Legal Basis</strong></td><td>M.R.S. Title 28-B</td></tr>
+          <tr><td><strong>School Buffer</strong></td><td>500 feet minimum</td></tr>
+          <tr><td><strong>Tracking System</strong></td><td>Metrc seed-to-sale required</td></tr>
+          <tr><td><strong>Local Approval</strong></td><td>Municipal opt-in required</td></tr>
+          <tr><td><strong>Age Restriction</strong></td><td>21+ for adult-use</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
-      <h2>Key Regulations</h2>
-      <p>The <a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener noreferrer">OCP Rules and Statutes</a> provide the comprehensive legal framework for all operations.</p>
+      <h2>The Regulatory Bodies</h2>
+      <p>Three agencies oversee Maine cannabis. The OCP handles licensing and compliance for all cannabis businesses. The MBB prevents money laundering in the industry. Local municipalities control whether retail happens within their borders.</p>
+      <p>The OCP is your primary contact. Everything from your initial application to your annual renewal goes through them. Their <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">website</a> has application forms, guidance documents, and rule updates.</p>
+    </section>
+
+    <Callout title="Compliance Protects Your Business" type="tip">
+      Every rule exists for a reason. Skipping compliance to save money usually backfires. OCP inspections happen. Violations carry penalties. A shut-down store costs more than a compliant one.
+    </Callout>
+
+    <section>
+      <h2>State License Requirements</h2>
+      <p>You need a state license before you open. The OCP issues Adult-Use Retail Licenses under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec201.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 201</a>.</p>
       
-      <h3>Licensing Requirements</h3>
+      <h3>The Application Process</h3>
+      <p>Submit your application to the OCP. Include your municipal approval letter. Pay the application fee. The OCP reviews everything. They may ask for more information. The process takes 60-120 days.</p>
+      
+      <h3>What You Must Have</h3>
       <ul>
-        <li>Completed Maine OCP adult-use retail license application</li>
-        <li>Local municipal approval and zoning compliance</li>
-        <li>Secure retail location meeting 500ft school buffer</li>
-        <li>Metrc seed-to-sale tracking system setup</li>
-        <li>Timely license renewal</li>
+        <li>Completed OCP application form</li>
+        <li>Municipal authorization letter</li>
+        <li>Site that passes the 500ft school buffer</li>
+        <li>Metrc account set up</li>
+        <li>Security plan</li>
+        <li>Background checks for all owners</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>The Municipal Opt-In Requirement</h2>
+      <p>Maine gives towns the right to decide if cannabis retail happens locally. Some towns voted yes. Some voted no. Some never voted.</p>
+      <p>Check the OCP opt-in list. Your proposed location must be in an approved municipality. Without municipal approval, the OCP will not issue your license. This is separate from state requirements. You need both.</p>
+    </section>
+
+    <section>
+      <h2>Operational Rules</h2>
+      <p>Once licensed, you must follow OCP operational rules. These cover everything from security to inventory.</p>
+      
+      <h3>Security Requirements</h3>
+      <p>Your store must have 24-hour video surveillance. Cameras cover all entrances, exits, and product areas. Footage must be retained for 90 days. Access to the surveillance system is restricted to authorized personnel only.</p>
+      
+      <h3>Inventory Tracking</h3>
+      <p>Every product enters through Metrc. When you receive a shipment, you log it in Metrc. When you sell to a customer, that sale gets logged. Metrc and your POS must stay in sync. Discrepancies trigger OCP review.</p>
+      
+      <h3>Age Verification</h3>
+      <p>Verify every customer's age before sale. Anyone under 21 cannot purchase adult-use cannabis. This is not optional. Your staff must check ID. The OCP expects written age verification procedures.</p>
+    </section>
+
+    <section>
+      <h2>Advertising Rules</h2>
+      <p>Maine restricts how you can market cannabis. You cannot advertise within 500 feet of schools or playgrounds. You cannot use marketing that appeals to minors. billboards must meet placement requirements.</p>
+      <p>Your website must include age-gating. Social media advertising faces limits. The OCP has specific rules about what constitutes compliant marketing. Read them before you launch any campaigns.</p>
+    </section>
+
+    <section>
+      <h2>Compliance Reporting</h2>
+      <p>You must submit monthly reports to the OCP. These cover sales, inventory, and customer counts. The OCP uses this data to track the legal market and combat illicit sales.</p>
+      <p>Annual license renewals happen every year. The renewal fee must be paid. Your municipal authorization must remain current. If your municipality opts out while you hold a license, you may lose your state license too.</p>
+    </section>
+
+    <section>
+      <h2>Penalties for Violations</h2>
+      <p>The OCP can penalize licensees for violations. Minor issues get written warnings. Serious violations get fines. Severe violations get license suspension or revocation.</p>
+      <p>Common violations include failing to maintain Metrc records, selling to minors, and operating outside municipal authorization. Know the rules. Train your staff on them. Compliance is everyone's job.</p>
+    </section>
+
+    <section>
+      <h2>Key Citations</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec201.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 201</a> — License requirements</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec301.html" target="_blank" rel="noopener noreferrer">Section 301</a> — Location and buffer requirements</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec401.html" target="_blank" rel="noopener noreferrer">Section 401</a> — Security requirements</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec504.html" target="_blank" rel="noopener noreferrer">Section 504</a> — Store operations</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>The OCP governs all cannabis licensing and compliance</li>
+        <li>Municipal opt-in is required before state licensing</li>
+        <li>500ft school buffer applies to all locations</li>
+        <li>Metrc tracking is mandatory for all products</li>
+        <li>Monthly reporting to the OCP is required</li>
+        <li>Violations carry serious penalties</li>
       </ul>
     </section>
 
@@ -45,14 +125,14 @@ const topics = ["compliance"];
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener noreferrer">OCP Rules & Statutes</a></li>
-        <li><a href="/guides/maine-cannabis-waste-management/">Cannabis Waste Disposal Guide</a></li>
-        <li><a href="/guides/maine-cannabis-workers-comp-insurance/">Workers Compensation Guide</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP Adult-Use Program</a></li>
+        <li><a href="/guides/maine-dispensary-license/">License Application Guide</a></li>
+        <li><a href="/guides/maine-dispensary-security/">Security Requirements</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis regulations are subject to change; always consult with the Maine Office of Cannabis Policy and qualified legal counsel.</em></p>
+      <p><em>This guide is for informational purposes only. It does not constitute legal advice. Cannabis regulations change. Consult the Maine OCP and qualified legal counsel for compliance questions.</em></p>
     </section>
   </article>
 </Layout>
@@ -62,9 +142,18 @@ const topics = ["compliance"];
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2 { margin-top: 0; }
-  section h3 { margin-top: 1.5rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>

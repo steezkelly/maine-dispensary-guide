@@ -102,7 +102,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       }
     </script>
 
-    {isContent && article && (
+    {isContent && article && !noindex && (
       <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",

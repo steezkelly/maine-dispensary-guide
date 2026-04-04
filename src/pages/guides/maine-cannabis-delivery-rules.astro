@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-22", modifiedDate: "2026-03-24", section: "Compliance & Legal" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-22", modifiedDate: "2026-04-04", section: "Compliance & Legal" };
 const topics = ["operations"];
 export const title = "Cannabis Delivery Rules";
 ---
@@ -16,90 +16,116 @@ export const title = "Cannabis Delivery Rules";
 >
   <article>
     <div class="article-header">
-      <h1>Cannabis Delivery Rules</h1>
-      <p class="subtitle">Understanding Maine's cannabis delivery regulations</p>
+      <h1>Cannabis Delivery Rules in Maine</h1>
+      <p class="subtitle">What Maine dispensaries need to know about delivery</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <p>Cannabis delivery services expand your customer reach beyond the dispensary walls. Maine allows licensed delivery services, giving entrepreneurs an opportunity to serve customers who may not be able to visit a physical <a href="/guides/maine-dispensary-locations/">location</a>. Understanding the rules is essential for a successful delivery operation. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    <section class="fact-box">
+      <h2>Delivery at a Glance</h2>
+      <table aria-label="Maine cannabis delivery requirements">
+        <tbody>
+          <tr><td><strong>Delivery License</strong></td><td>Separate courier license required</td></tr>
+          <tr><td><strong>Delivery Area</strong></td><td>Within Maine only</td></tr>
+          <tr><td><strong>Age Verification</strong></td><td>Required at delivery address</td></tr>
+          <tr><td><strong>Driver Authorization</strong></td><td>OCP-issued employee badge</td></tr>
+          <tr><td><strong>Vehicle Tracking</strong></td><td>GPS required</td></tr>
+          <tr><td><strong>Vehicle Cost</strong></td><td>$25,000-50,000</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="Excellence in Compliance" type="success">
-      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
-    </Callout>
+    <section>
+      <h2>Can Maine Dispensaries Deliver?</h2>
+      <p>Yes. Maine allows licensed dispensaries to deliver cannabis products directly to customers. You need a courier license from the OCP. This is separate from your retail license.</p>
+      <p>Delivery expands your market. You reach customers who cannot visit your store. This includes people with mobility issues, those in areas with limited dispensary access, and those who prefer doorstep convenience.</p>
+    </section>
 
+    <Callout title="Delivery Costs Money" type="tip">
+      Before you add delivery, calculate the costs. Vehicles, insurance, security, and staffing add up. Make sure your margins support it. Some operators find delivery unprofitable in their market.
+    </Callout>
 
     <section>
       <h2>License Requirements</h2>
-      <p>Under <a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine OCP regulations</a>, delivery requires:</p>
-      <ul>
-        <li><strong>Courier License</strong> - Separate license for delivery operations</li>
-        <li><strong>Dispensary License</strong> - If delivering from your own store</li>
-        <li><strong>Employee Authorization</strong> - All drivers must be authorized</li>
-      </ul>
+      <p>The OCP issues courier licenses under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec204.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 204</a>. Your delivery operation must hold this license. Each driver also needs an employee authorization badge from the OCP.</p>
+      <p>The application requires your delivery vehicle details, security plan, and operational procedures. The OCP reviews everything before issuing the courier license.</p>
     </section>
 
     <section>
-      <h2>Delivery Rules</h2>
-      <ul>
-        <li>Deliver only to verified addresses within Maine</li>
-        <li>Age verification required at delivery</li>
-        <li>No delivery to public places</li>
-        <li>Real-time tracking recommended</li>
-        <li>Secure transport required</li>
-        <li>Limit on delivery quantities</li>
-      </ul>
+      <h2>Customer Restrictions</h2>
+      <p>You can only deliver to addresses within Maine. Deliveries must go to the customer named on the order. No drops to third parties.</p>
+      <p>Each customer must be 21 or older. Your driver verifies ID at the delivery address. This cannot be skipped. The customer must be present and show valid ID.</p>
+      <p>You cannot deliver to public spaces. No hotel lobbies. No workplace common areas. The delivery must go to a private residence or another address you have verified.</p>
     </section>
 
     <section>
-      <h2>Operational Requirements</h2>
-      <ul>
-        <li>GPS tracking on delivery vehicles</li>
-        <li>Secure product storage during transport</li>
-        <li>Two-person deliveries recommended</li>
-        <li>ID verification technology</li>
-        <li>Detailed delivery logs</li>
-        <li>Cash handling procedures</li>
-      </ul>
+      <h2>What You Can Deliver</h2>
+      <p>Your delivery inventory comes from your licensed dispensary. Products must be tracked in Metrc. When you pull products for delivery, you log them as a delivery sale in the system.</p>
+      <p>Delivery quantities have limits. Maine law caps how much a single delivery can include. Check current OCP rules for exact limits. These change as regulations evolve.</p>
     </section>
 
     <section>
-      <h2>Compliance</h2>
-      <ul>
-        <li>Maintain delivery records</li>
-        <li>Follow all transportation regulations</li>
-        <li>Ensure product integrity during transport</li>
-        <li>Driver background checks</li>
-        <li>Vehicle requirements</li>
-      </ul>
+      <h2>Vehicle Requirements</h2>
+      <p>Your delivery vehicle must be properly insured. It needs secure product storage. The OCP requires locked containers that keep products out of sight.</p>
+      <p>GPS tracking is required. The OCP wants to know where deliveries go. Some operators add extra security cameras in delivery vehicles. This is not required but recommended.</p>
+      <p>Two-person deliveries are a good practice. One driver, one person who stays with the product. This reduces theft risk and provides witness coverage for ID verification.</p>
     </section>
 
     <section>
-      <h2>Investment</h2>
-      <table>
+      <h2>Delivery Logs</h2>
+      <p>You must document every delivery. Logs include the customer name, delivery address, time, driver, and products delivered. These records must be available for OCP inspection.</p>
+      <p>Metrc captures delivery data automatically if your POS integrates with it. If not, maintain manual logs. Incomplete records create compliance risk.</p>
+    </section>
+
+    <section>
+      <h2>Delivery Costs</h2>
+      <table aria-label="Maine cannabis delivery startup costs" caption="Estimated startup costs for a Maine cannabis delivery operation">
         <thead>
-          <tr><th>Category</th><th>Estimated Cost</th></tr>
+          <tr><th>Item</th><th>Cost</th></tr>
         </thead>
         <tbody>
-          <tr><td>Vehicle</td><td>$25,000-50,000</td></tr>
-          <tr><td>Security Equipment</td><td>$5,000-15,000</td></tr>
-          <tr><td>Tracking Systems</td><td>$2,000-5,000</td></tr>
-          <tr><td>Licensing</td><td>$3,000-10,000</td></tr>
+          <tr><td>Delivery vehicle</td><td>$25,000-50,000</td></tr>
+          <tr><td>Security equipment</td><td>$5,000-15,000</td></tr>
+          <tr><td>GPS and tracking</td><td>$2,000-5,000</td></tr>
+          <tr><td>Courier license</td><td>$1,000-3,000</td></tr>
+          <tr><td>Insurance (annual)</td><td>$5,000-10,000</td></tr>
         </tbody>
       </table>
+      <p>Monthly operating costs include fuel, vehicle maintenance, driver wages, and insurance. Budget realistically before launching delivery service.</p>
+    </section>
+
+    <section>
+      <h2>Common Mistakes</h2>
+      <ul>
+        <li><strong>Skipping ID verification.</strong> Drivers sometimes skip this under time pressure. Do not. OCP undercover operations test this.</li>
+        <li><strong>Poor delivery logs.</strong> If Metrc does not capture delivery data, maintain manual records. Missing logs are a violation.</li>
+        <li><strong>Unsecured vehicles.</strong> Products left visible in an unlocked vehicle create liability. Secure containers and locked vehicles always.</li>
+        <li><strong>Delivering to wrong addresses.</strong> Verify every address before dispatch. Deliveries to unverified locations risk your license.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Courier license required from OCP</li>
+        <li>Deliver only to verified Maine addresses</li>
+        <li>Verify customer age at every delivery</li>
+        <li>Log every delivery in Metrc or manual records</li>
+        <li>Secure vehicles with locked product storage</li>
+        <li>Two-person deliveries recommended</li>
+      </ul>
     </section>
 
     <section class="further-reading">
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
+        <li><a href="/guides/maine-dispensary-license/">License Application Guide</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Cost Breakdown</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This is for informational purposes only and does not constitute legal or financial advice. Consult with qualified professionals.</em></p>
+      <p><em>Delivery regulations change. Verify current rules with the Maine OCP before starting delivery operations.</em></p>
     </section>
   </article>
 </Layout>
@@ -109,14 +135,18 @@ export const title = "Cannabis Delivery Rules";
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
   th { background: var(--color-background); }
-  ul { padding-left: 1.5rem; }
+  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>
