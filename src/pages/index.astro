@@ -58,6 +58,12 @@ const stats = [
       </div>
       <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
         <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" class="newsletter-input" />
+        <select name="stage" aria-label="Your stage" class="newsletter-select">
+          <option value="" disabled selected>Your stage</option>
+          <option value="startup">Starting a dispensary</option>
+          <option value="operating">Already operating</option>
+          <option value="researching">Just researching</option>
+        </select>
         <input type="hidden" name="_subject" value="Newsletter Signup - Maine Dispensary Guide" />
         <button type="submit" class="newsletter-btn">Subscribe</button>
       </form>
@@ -67,15 +73,18 @@ const stats = [
   <section class="mission-statement">
     <div class="mission-content">
       <h2>Build Your Passion Project</h2>
-      <p>Opening a dispensary in Maine is a real business with real regulations. But if you've got a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance.</p>
+      <p>Opening a dispensary in Maine is a real business with real regulations. But if you have got a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance. We built this resource for entrepreneurs who are serious about doing this correctly: the ones who want to understand the M.R.S. citations, negotiate their own commercial lease, and file their 280E deductions properly rather than relying on luck.</p>
+      <p>This is not a generic business guide. Everything here is specific to Maine — the towns that have opted in, the fee structures that OCP publishes, the real estate patterns that only emerge when you know the market. If you are considering Maine cannabis, you need this specificity. The margins are real and the competition is real. Preparation is the only unfair advantage.</p>
     </div>
   </section>
 
   <section class="market-overview reveal" style="animation-delay: 0.2s;">
     <div class="overview-content">
       <h2>Why Choose the Maine Cannabis Market?</h2>
-      <p>Maine has a medical program that's been around since 1999 and an adult-use market that's been growing since 2020. That means established patterns, more data, and a clearer picture of what works than newer markets. The state is overseen by the <a href="/glossary/" title="View Technical Glossary">Office of Cannabis Policy (OCP)</a>, and towns have to opt-in before you can open a store — which means do your homework on location before you sign anything.</p>
-      <p>Whether you're an experienced operator or starting from scratch, Maine rewards preparation. You need to know local ordinances, how to find compliant real estate, and how to handle IRS 280E. Our <a href="/guides/" title="Explore all dispensary guides">municipal guides</a> and <a href="/about/" title="Read about our methodology">resources</a> cover the specifics you need to actually open your doors.</p>
+      <p>Maine has a medical program that has been operating since 1999 and an adult-use market that has been open since 2020. That combination means established patterns, more data, and a clearer picture of what works than newer state markets. The Office of Cannabis Policy (OCP) oversees the industry with regulations that are mature enough to be predictable — you can read the actual rules, follow the actual processes, and know where the actual pitfalls are.</p>
+      <p>Towns must opt-in before a dispensary can operate within their borders. This creates a scattered landscape where some communities welcome cannabis businesses and others have explicitly prohibited them. For entrepreneurs, this means location research is not optional — it is the first and most important strategic decision you will make. A store in a town with a moratorium is zero, regardless of how good your business plan looks.</p>
+      <p>The Maine market generated approximately $246 million in adult-use cannabis sales in 2025. With 179 active stores across the state, the market is growing but not saturated. Certain towns — Portland, Lewiston, Bangor — have higher dispensary density. Others — particularly in rural Aroostook County and along the New Hampshire border — have almost no access at all. The opportunity is in understanding which towns have been left behind.</p>
+      <p>Whether you are an experienced operator or starting from scratch, Maine rewards preparation. You need to understand local ordinances, find compliant real estate, and navigate IRS 280E, which treats cannabis businesses differently from most industries. Our <a href="/guides/" title="Explore all dispensary guides">municipal guides</a> and <a href="/about/" title="Read about our methodology">resources</a> cover the specifics you need to actually open your doors.</p>
     </div>
     <div class="overview-decoration" aria-hidden="true">
       <div class="deco-ring"></div>
@@ -87,8 +96,10 @@ const stats = [
   <section class="operational-excellence reveal" style="animation-delay: 0.3s;">
     <div class="excellence-content">
       <h2>What It Takes to Run One</h2>
-      <p>Getting a license is just the start. Running a dispensary well means managing inventory, staying compliant with security rules, and actually knowing what you're selling. Maine customers — especially in Portland and surrounding areas — care about craft and transparency. That means the shops that do the work on staff training tend to build real loyalty.</p>
-      <p>We cover the operational stuff: <a href="/guides/maine-dispensary-pos/">POS systems</a>, <a href="/glossary/#metrc">Metrc tracking</a>, security requirements. Our <a href="/launch-checklist/">Launch Checklist</a> walks through what you need before opening day. Compliance isn't optional here — it's how you stay open.</p>
+      <p>Getting a license is just the start. The actual work of running a dispensary — managing inventory, staying compliant with OCP security rules, training staff who can actually explain the difference between a sativa and an indica — is where most operators discover whether they chose the right business.</p>
+      <p>Maine customers, especially in the Portland metro area and mid-coast college towns, care about craft and transparency. They ask questions about cultivation methods. They read menu listings before they visit. They have preferences about terpenes and price-to-quality ratios that are more sophisticated than operators from simpler markets expect. The shops that do the work on staff training — that treat budtenders as product experts rather than cashiers — tend to build real loyalty.</p>
+      <p>We cover the operational pieces that show up in every successful Maine dispensary: <a href="/guides/maine-dispensary-pos/">point-of-sale systems</a> designed for cannabis inventory tracking, <a href="/glossary/#metrc">Metrc compliance</a> for the state tracking system, security requirements that meet OCP standards, and the 280E tax strategy that keeps more of your revenue. Our <a href="/launch-checklist/">Launch Checklist</a> walks through what you need before opening day — compliance is not optional here, it is the foundation of staying open.</p>
+      <p>The operators who survive past year two tend to share certain habits: meticulous record-keeping, proactive communication with OCP, and a genuine interest in what their customers want. The ones who do not make it tend to have ignored one or more of those three. There is no luck involved — just discipline.</p>
     </div>
     <div class="excellence-decoration" aria-hidden="true">
       <svg class="deco-leaf" viewBox="0 0 100 100" fill="currentColor">
@@ -134,7 +145,7 @@ const stats = [
   <section class="geo-explorer reveal" style="animation-delay: 0.5s;">
     <div class="explorer-content">
       <h2>Explore Municipal Guides</h2>
-      <p>Local zoning and competitive analysis for Maine's "Opt-In" communities.</p>
+      <p>Maine has 41+ cities and towns that have opted in to allow cannabis retail. Each has its own zoning rules, local fees, competitive landscape, and demographic profile. These guides cover the ones that matter most for entrepreneurs evaluating where to enter the market.</p>
       <div class="city-chips">
         <a href="/guides/portland-dispensary-guide/">Portland</a>
         <a href="/guides/augusta-dispensary-guide/">Augusta</a>
@@ -182,6 +193,9 @@ const stats = [
   </section>
 
   <section class="social-proof reveal" style="animation-delay: 0.7s;">
+    <div class="proof-stats-intro">
+      <p>This resource has been built for Maine cannabis entrepreneurs who want the real information — not the marketing version.</p>
+    </div>
     <div class="proof-stats">
       <div class="stat-item">
         <span class="stat-value">2,847</span>
@@ -208,13 +222,13 @@ const stats = [
   <section class="start-here reveal" style="animation-delay: 0.8s;">
     <div class="start-here-content">
       <h2>New to Maine Cannabis?</h2>
-      <p>Start your journey here. This curated path walks you through the essentials.</p>
+      <p>Start your journey here. This curated path walks you through the essentials — from understanding Maine's regulatory framework to signing your commercial lease.</p>
       <div class="journey-steps">
         <a href="/launch-checklist/" class="journey-step">
           <div class="step-number">1</div>
           <div class="step-info">
             <h3>Get the Launch Checklist</h3>
-            <p>The complete roadmap from concept to opening day.</p>
+            <p>The complete roadmap from concept to opening day — every step in one place.</p>
           </div>
           <span class="step-arrow">→</span>
         </a>
@@ -222,7 +236,7 @@ const stats = [
           <div class="step-number">2</div>
           <div class="step-info">
             <h3>Understand Licensing</h3>
-            <p>OCP requirements, municipal opt-in, and application timeline.</p>
+            <p>OCP Adult-Use Retail License, municipal opt-in requirements, and realistic application timelines.</p>
           </div>
           <span class="step-arrow">→</span>
         </a>
@@ -230,7 +244,7 @@ const stats = [
           <div class="step-number">3</div>
           <div class="step-info">
             <h3>Run the Numbers</h3>
-            <p>Model your startup costs against Maine's $246M market.</p>
+            <p>Model your startup costs against Maine's $246M market and find your break-even point.</p>
           </div>
           <span class="step-arrow">→</span>
         </a>
@@ -238,7 +252,7 @@ const stats = [
           <div class="step-number">4</div>
           <div class="step-info">
             <h3>Find Your Location</h3>
-            <p>Zoning rules, commercial leases, and municipal requirements.</p>
+            <p>Zoning rules, school buffer requirements, commercial lease negotiation, and municipal approval.</p>
           </div>
           <span class="step-arrow">→</span>
         </a>
@@ -410,9 +424,10 @@ const stats = [
     display: flex;
     gap: 0.75rem;
     flex-shrink: 0;
+    flex-wrap: wrap;
   }
 
-  .newsletter-input {
+  .newsletter-input, .newsletter-select {
     padding: 0.875rem 1.25rem;
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
@@ -422,7 +437,7 @@ const stats = [
     transition: border-color 0.2s, box-shadow 0.2s;
   }
 
-  .newsletter-input:focus {
+  .newsletter-input:focus, .newsletter-select:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(13, 78, 80, 0.1);
@@ -695,6 +710,22 @@ const stats = [
 
   /* Social Proof Section */
   .social-proof {
+    margin-bottom: 8rem;
+  }
+
+  .proof-stats-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .proof-stats-intro p {
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .proof-stats {
     margin-bottom: 8rem;
   }
 

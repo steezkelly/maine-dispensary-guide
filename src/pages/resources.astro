@@ -103,6 +103,14 @@ const vendorCategories = [
             <label for="lead-email" class="sr-only">Business Email</label>
             <input type="email" id="lead-email" name="email" placeholder="Business Email" required aria-required="true" />
             
+            <label for="stage-select" class="sr-only">Your Stage</label>
+            <select name="stage" id="stage-select" required aria-required="true">
+              <option value="" disabled selected>Your stage...</option>
+              <option value="startup">Starting a dispensary</option>
+              <option value="operating">Already operating</option>
+              <option value="researching">Just researching</option>
+            </select>
+            
             <input type="hidden" id="target-vendor-input" name="requested_professional" value="General Referral" />
             
             <label for="service-select" class="sr-only">Select Service Needed</label>

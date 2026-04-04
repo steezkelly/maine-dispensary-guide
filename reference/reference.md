@@ -105,9 +105,8 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 | `scripts/searxng-search.cjs` | Meta-search (backup) |
 | `scripts/playwright-mcp-search.md` | Playwright MCP usage guide |
 | `scripts/link-architect.cjs` | Glossary term cross-linking |
-| `scripts/content-quality.cjs` | Content analysis |
+| `scripts/content-quality.cjs` | Content analysis (source files) |
 | `scripts/content-expander.cjs` | Thin content expansion |
-| `scripts/content-audit.cjs` | Full site audit |
 | `scripts/humanize-content.cjs` | AI pattern removal |
 | `scripts/self-improving-maintenance.ps1` | Memory health check |
 
@@ -122,8 +121,11 @@ node scripts/brave-search.cjs "query"
 # Research (secondary)  
 node scripts/wikipedia-search.cjs "query"
 
-# Content audit
-node scripts/content-audit.cjs "./src/pages/guides/*.astro"
+# Content quality (source files)
+node scripts/content-quality.cjs "./src/**/*.astro"
+
+# SEO audit (rendered site - uses squirrel skill)
+squirrel audit https://mainnedispensaryguide.com --format llm
 
 # Build
 npm run build

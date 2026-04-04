@@ -40,7 +40,6 @@ compounding consequences. Think before acting.
     - ✅ Content Quality Analyzer (`scripts/content-quality.cjs`)
     - ✅ Content Humanizer (`scripts/humanize-content.cjs`)
     - ✅ Content Expander (`scripts/content-expander.cjs`)
-    - ✅ Content Audit (`scripts/content-audit.cjs`)
     - ✅ OpenCodeInsights plugin installed
 - **Known gaps:** 
     - **Accessibility (A11y):** SquirrelScan score is 84/100. Remaining pedantic warnings: matching "guides ▾" text to aria-labels and adding `tabindex="-1"` to hidden mobile toggles.
@@ -100,7 +99,7 @@ npm run build        # Production build (Static)
 node scripts/link-architect.cjs # Run Link Architect (glossary syncer)
 node scripts/content-quality.cjs "./src/**/*.astro" # Analyze content quality
 node scripts/content-expander.cjs --guide <file> # Get expansion template
-node scripts/content-audit.cjs "./src/pages/guides/*.astro" # Full site audit
+node scripts/content-quality.cjs "./src/pages/guides/*.astro" # Analyze content quality (source files)
 node scripts/humanize-content.cjs "./src/**/*.astro" --dry-run # Preview humanization
 node scripts/searxng-search.cjs "query" # Privacy-respecting meta-search
 node scripts/wikipedia-search.cjs "query" # Wikipedia research (free, no API key)
@@ -154,7 +153,6 @@ project-1/
 │   ├── link-architect.cjs      # Glossary term linker
 │   ├── content-quality.cjs      # Readability & tone analyzer
 │   ├── content-expander.cjs     # Thin content detector & expansion guide
-│   ├── content-audit.cjs        # Full site SEO/content audit
 │   └── humanize-content.cjs     # AI pattern remover
 ├── public/                      # Favicons and OG Images
 ├── astro.config.mjs             # Astro configuration
