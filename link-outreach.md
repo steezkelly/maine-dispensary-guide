@@ -239,6 +239,21 @@ Best,
 
 ---
 
+## Resources Pages Built (April 2026)
+
+### `/resources/maine-cannabis-official-resources` ✅ LIVE
+- All official Maine cannabis links organized by category
+- Categories: State Agencies, Municipal Opt-In, Business Formation, Taxation, Lab Testing, Security, Legal, Employment, Industry Media
+- Links OUT to authoritative sources (builds goodwill + natural link potential)
+- Foundational page for journalists, attorneys, service providers
+
+### `/resources/maine-cannabis-education` ✅ LIVE
+- Education & training resources for Maine cannabis entrepreneurs
+- Categories: Metrc/Seed-to-Sale, Budtender Training, Business Development, Compliance, Cultivation
+- Links to DECD, SCORE, industry publications
+
+---
+
 ## Linkable Assets to Build First
 
 Before outreach, ensure these are complete so we have shareable content:
