@@ -249,6 +249,23 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 🟢 COMPLETED: E-E-A-T Author Bylines Sprint
+**[April 5, 2026 - 12:35 AM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **Objective:** Render visible author bylines and dates on all guide pages (E-E-A-T signal)
+
+**Completed:**
+- `src/layouts/Layout.astro` — Added visible author byline, publish date, and updated date after article content on all guide pages. Uses article.author, article.publishDate, article.modifiedDate. Styled with border-top/border-bottom and secondary text color.
+- All 44 guide pages now display "By Maine Dispensary Guide Editorial Team | Published [date] | Updated [date]" below article content
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `b76f991` ("Add E-E-A-T author bylines and dates to all guide pages via Layout.astro")
+
+---
+
 ## 📜 COLLABORATION LOG (Times in EDT)
 
 ### 2026-03-23 01:50 PM
