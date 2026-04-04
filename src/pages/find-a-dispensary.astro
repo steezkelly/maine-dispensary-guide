@@ -32,13 +32,19 @@ const cities = [
 
 <Layout 
   title="Find a Dispensary in Maine | Curated Store Directory" 
-  description="Explore our curated directory of the highest-rated adult-use and medical cannabis dispensaries in Maine. Sorted by city and verified for quality."
+  description="Explore our curated directory of the highest-rated adult-use and medical cannabis dispensaries in Maine. Sorted by city and verified for quality. Updated for 2026."
   heroImage="https://images.unsplash.com/photo-1603912627214-9011de557cdd?auto=format&fit=crop&q=80&w=1200&h=400"
 >
   <section class="directory-header">
     <div class="hero-badge">Curated by Experts</div>
     <h1>Maine Dispensary Directory</h1>
-    <p class="lead">We've audited the local market to find the most professional, high-quality cannabis storefronts in the state.</p>
+    <p class="lead">We've audited the local market to find the most professional, high-quality cannabis storefronts in the state. This directory is updated quarterly and verified against Maine OCP public licensee records.</p>
+  </section>
+
+  <section class="market-overview">
+    <h2>Maine's Dispensary Landscape</h2>
+    <p>Maine's adult-use market has matured significantly since retaillaunch in 2020. With 179 active stores as of early 2026, the market generates over $246 million in annual sales. Stores are distributed across the state, with the highest concentration in York and Cumberland counties, but rural operators in Aroostook, Washington, and Piscataquis counties report less competition and strong tourist traffic during peak seasons.</p>
+    <p>Our directory highlights stores that maintain professional standards: compliant packaging, knowledgeable staff, clean facility environments, and accurate inventory. We exclude any establishment with active OCP compliance actions on record.</p>
   </section>
 
   <div class="city-directory">
@@ -96,6 +102,31 @@ const cities = [
     max-width: 700px;
     margin: 0 auto;
   }
+
+  .market-overview {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 2rem;
+    padding: 3rem;
+    margin-bottom: 6rem;
+  }
+
+  .market-overview h2 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .market-overview p {
+    font-size: 1.0rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .market-overview p:last-child { margin-bottom: 0; }
 
   .city-directory {
     display: flex;

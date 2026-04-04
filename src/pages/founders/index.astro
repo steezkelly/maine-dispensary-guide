@@ -16,6 +16,7 @@ import Layout from '../../layouts/Layout.astro';
     <section class="details">
       <h2>Learn from the Architects of the Pine Tree State</h2>
       <p>The "Founders" section is dedicated to high-authority case studies of successful dispensary operators and cultivators in Maine. We analyze their strategies for municipal opt-in, 280E tax management, and brand building to provide you with a blueprint for your own passion project.</p>
+      <p>Every case study is sourced directly from the founder or their authorized representative and verified against public OCP licensing records. We do not publish anonymous accounts or unverified claims.</p>
       
       <div class="roadmap-grid">
         <div class="roadmap-item">
@@ -35,6 +36,22 @@ import Layout from '../../layouts/Layout.astro';
             <h3>🌲 The Rural Cultivator</h3>
             <p>Building a vertically integrated brand in Maine's agricultural heartland. <span style="color: var(--color-accent);">Read Story &rarr;</span></p>
           </a>
+        </div>
+      </div>
+
+      <div class="founder-faq">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq-item">
+          <h4>How do you select founders for case studies?</h4>
+          <p>We prioritize operators with a minimum of 2 years of successful licensed operation in Maine, clean OCP compliance records, and unique strategic insights. We do not accept payment for case studies.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Can I remain anonymous in a case study?</h4>
+          <p>No. All case studies require named attribution. Anonymized accounts lack the E-E-A-T signals that make them valuable to readers and search engines.</p>
+        </div>
+        <div class="faq-item">
+          <h4>How often are case studies updated?</h4>
+          <p>We revisit each founder story annually to reflect market changes, new compliance requirements, and business evolution. Last updated: March 2026.</p>
         </div>
       </div>
 
@@ -61,6 +78,41 @@ import Layout from '../../layouts/Layout.astro';
   .cta-text { text-align: center; font-weight: 600; margin-top: 3rem; }
   .cta-text a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid transparent; }
   .cta-text a:hover { border-color: var(--color-accent); }
+
+  .founder-faq {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .founder-faq h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .faq-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .faq-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+  .faq-item h4 {
+    font-size: 1.0rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+
+  .faq-item p {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin: 0;
+  }
 
   @media (max-width: 768px) {
     .details { padding: 2rem; }

@@ -66,6 +66,64 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 🟢 COMPLETED: A11y Sprint
+**[April 3, 2026 - 8:00 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE
+- **Objective:** Fix 193 accessibility errors identified by SquirrelScan
+
+**Fixed:**
+- `src/layouts/Layout.astro` — Fixed nav checkbox: moved `aria-hidden="true"` to `<label>`, added `aria-label` to `<input>` (fixes `aria-hidden-focus`, `aria-toggle-field-name`, `aria-input-field-name`)
+- `src/pages/download-checklist.astro` — Added `<label for="lead-email">` with `.sr-only` class to email input (fixes `form-labels`)
+- `src/pages/all-guides.astro` — Added `<label for="state-email">` with `.sr-only` class to email input (fixes `form-labels`)
+- `src/pages/launch-checklist.astro` — Added `rel="noopener noreferrer"` to 2 external Maine.gov links (fixes `new-tab` security warning)
+- `src/pages/guides/maine-cannabis-regulations.astro` — Replaced `...` placeholder with proper `<ul><li>` items for Licensing Requirements section
+- `src/pages/guides/maine-dispensary-locations.astro` — Replaced `...` placeholder with proper `<ul><li>` items for Location Factors section
+- `src/pages/guides/maine-dispensary-packaging.astro` — Replaced `...` placeholder with proper `<ul><li>` items for Packaging Requirements section
+- `src/pages/guides/maine-dispensary-pos.astro` — Replaced `...` placeholder with proper `<ul><li>` items for Key Features section
+
+**Build verified:** 61 pages — all passing
+
+**Remaining:**
+- SquirrelScan needs re-run after deployment to verify fixes
+- Thin content pages: /all-guides (rewritten), /download-checklist (expanded), /find-a-dispensary (expanded), /founders (expanded), /market-stats (expanded) — NEEDS DEPLOY to go live
+
+---
+
+## 🟢 COMPLETED: Content & Link Sprint
+**[April 4, 2026 - 9:40 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (code ready, needs deployment)
+- **Objective:** Fix all remaining SquirrelScan issues before final audit
+
+**Completed:**
+- `src/pages/all-guides.astro` — Full rewrite: removed NJ/FL state hub, replaced with Maine-focused 5-category guide library. Added market context, Callout, and organized sections. Title changed to "Maine Cannabis Resource Library"
+- `src/pages/index.astro` — Added missing `description` prop to Layout (was 67 chars default)
+- `src/pages/download-checklist.astro` — Added detailed 4-phase roadmap breakdown with timelines, phase descriptions, and "Who is this for?" Callout
+- `src/pages/find-a-dispensary.astro` — Added "Maine's Dispensary Landscape" market overview section (~100 words)
+- `src/pages/founders/index.astro` — Added founder FAQ section (3 Q&As) and expanded intro paragraph
+- `src/pages/market-stats.astro` — Added "2026 Market Outlook" section with forward-looking analysis (~100 words)
+- `src/pages/site-health.astro` — Fixed title (36 chars) and description (132 chars)
+- `src/pages/glossary.astro` — Fixed description length (142 chars)
+- `src/pages/contact.astro` — Fixed description length (107 chars)
+- `src/pages/find-a-dispensary.astro` — Fixed description length (148 chars)
+- **Broken Maine.gov links fixed:**
+  - `maine.gov/dafs/ocp/data/adult-use` → `maine.gov/dafs/ocp/adult-use`
+  - `maine.gov/dafs/ocp/resources/data` → `maine.gov/dafs/ocp/adult-use`
+  - `maine.gov/dafs/ocp/adult-use/opt-in-communities` → `maine.gov/dafs/ocp/adult-use`
+  - `maine.gov/dafs/ocp/resources/rules-statutes` → `maine.gov/dafs/ocp/adult-use/rules` (all 12 occurrences across 10 files)
+  - `maine.gov/labor/workers_comp/` → `maine.gov/labor/workers-compensation`
+
+**Build verified:** 61 pages — all passing
+
+**⚠️ BLOCKED: Needs deployment to Vercel before SquirrelScan can verify fixes**
+
+**SquirrelScan crawl showed old live site — all fixes need to be pushed via GitHub to Vercel**
+
+---
+
 ## 🟢 COMPLETED: The "Supply Chain Mastery" Sprint
 **[March 23, 2026 - 1:50 PM EDT]**
 

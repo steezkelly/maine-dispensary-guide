@@ -1,84 +1,112 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PineTree from '../components/PineTree.astro';
+import Callout from '../components/Callout.astro';
 
-const states = [
-  { 
-    name: "Maine", 
-    slug: "me", 
-    path: "/guides", 
-    status: "Active", 
-    count: "41 Guides",
-    description: "The complete blueprint for Maine's adult-use and medical market."
+const categories = [
+  {
+    name: "Business Essentials",
+    icon: "📋",
+    guides: [
+      { title: "Maine Dispensary License Requirements", href: "/guides/maine-dispensary-license/" },
+      { title: "Dispensary Business Plan", href: "/guides/maine-dispensary-business-plan/" },
+      { title: "Startup Costs & Investment", href: "/guides/maine-dispensary-costs/" },
+      { title: "Maine Cannabis Market Analysis", href: "/guides/maine-cannabis-market/" },
+      { title: "Funding & Capital", href: "/guides/maine-cannabis-funding-guide/" },
+      { title: "Cannabis Zoning & Real Estate", href: "/guides/maine-cannabis-real-estate/" },
+      { title: "Hiring & Staffing", href: "/guides/maine-dispensary-hiring/" }
+    ]
   },
-  { 
-    name: "New Jersey", 
-    slug: "nj", 
-    path: "/nj/licensing", 
-    status: "Active", 
-    count: "NJ Blueprint Live",
-    description: "Navigating the Garden State's rapidly expanding retail landscape."
+  {
+    name: "Compliance & Legal",
+    icon: "⚖️",
+    guides: [
+      { title: "Cannabis Regulations in Maine", href: "/guides/maine-cannabis-regulations/" },
+      { title: "Cannabis Taxation & 280E", href: "/guides/maine-cannabis-taxation-280e/" },
+      { title: "Cannabis Banking Solutions", href: "/guides/maine-cannabis-banking-solutions/" },
+      { title: "Employee Licensing (IIC/AIC)", href: "/guides/maine-cannabis-staffing-licensing/" },
+      { title: "Marketing Compliance", href: "/guides/maine-cannabis-marketing-compliance/" }
+    ]
   },
-  { 
-    name: "Florida", 
-    slug: "fl", 
-    path: "/fl", 
-    status: "Coming Soon", 
-    count: "In Progress",
-    description: "Compliance and licensing maps for the Sunshine State."
+  {
+    name: "Operations & Technology",
+    icon: "🔧",
+    guides: [
+      { title: "Dispensary Security Requirements", href: "/guides/maine-dispensary-security/" },
+      { title: "Inventory & Metrc Management", href: "/guides/maine-cannabis-inventory-management/" },
+      { title: "POS Systems for Dispensaries", href: "/guides/maine-dispensary-pos/" },
+      { title: "Packaging & Labeling", href: "/guides/maine-dispensary-packaging/" },
+      { title: "Cannabis Delivery Rules", href: "/guides/maine-cannabis-delivery-rules/" },
+      { title: "Cannabis Edibles Compliance", href: "/guides/maine-cannabis-edibles-compliance/" }
+    ]
+  },
+  {
+    name: "City & Regional Guides",
+    icon: "📍",
+    guides: [
+      { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/" },
+      { title: "Lewiston Dispensary Guide", href: "/guides/lewiston-dispensary-guide/" },
+      { title: "Bangor Dispensary Guide", href: "/guides/bangor-dispensary-guide/" },
+      { title: "Augusta Dispensary Guide", href: "/guides/augusta-dispensary-guide/" },
+      { title: "South Portland Dispensary Guide", href: "/guides/south-portland-dispensary-guide/" },
+      { title: "All City Guides (15 total)", href: "/guides/" }
+    ]
+  },
+  {
+    name: "Business Tools",
+    icon: "🛠️",
+    guides: [
+      { title: "ROI Calculator", href: "/roi-calculator/" },
+      { title: "Market Statistics", href: "/market-stats/" },
+      { title: "Vendor Directory", href: "/resources/" },
+      { title: "Technical Glossary", href: "/glossary/" },
+      { title: "2026 Launch Checklist", href: "/launch-checklist/" }
+    ]
   }
 ];
 ---
 
 <Layout 
-  title="State Dispensary Guides Hub | National Cannabis Business Resource" 
-  description="Explore our comprehensive collection of state-specific cannabis dispensary guides. From Maine to New Jersey, we provide the technical roadmaps you need to launch."
+  title="All Maine Guides | Maine Dispensary Guide" 
+  description="Complete index of 44 technical guides for Maine cannabis entrepreneurs. Covering licensing, compliance, operations, real estate, taxation, and municipal zoning."
 >
-  <section class="hub-header">
-    <div class="hero-badge">National Expansion</div>
-    <h1>Select Your State</h1>
-    <p class="lead">Select a state to view local licensing maps, zoning requirements, and market data.</p>
+  <section class="page-header">
+    <div class="hero-badge">44 Expert Guides</div>
+    <h1>Maine Cannabis Resource Library</h1>
+    <p class="lead">Everything you need to open, operate, and scale a compliant cannabis business in the Pine Tree State.</p>
   </section>
 
-  <div class="state-grid">
-    {states.map(state => (
-      <div class={`state-card ${state.status === 'Coming Soon' ? 'is-pending' : ''}`}>
-        <div class="state-status">{state.status}</div>
-        <h2>{state.name}</h2>
-        <p class="state-count">{state.count}</p>
-        <p class="state-desc">{state.description}</p>
-        {state.status === 'Active' ? (
-          <a href={state.path} class="btn-state">Enter Hub &rarr;</a>
-        ) : (
-          <span class="btn-wait">Stay Updated</span>
-        )}
+  <div class="category-grid">
+    {categories.map(cat => (
+      <div class="category-card">
+        <div class="cat-header">
+          <span class="cat-icon">{cat.icon}</span>
+          <h2>{cat.name}</h2>
+        </div>
+        <ul class="guide-list">
+          {cat.guides.map(g => (
+            <li><a href={g.href}>{g.title}</a></li>
+          ))}
+        </ul>
       </div>
     ))}
   </div>
 
-  <section class="expansion-cta">
-    <div class="cta-box">
-      <h3>Don't see your state?</h3>
-      <p>We are rolling out 10 new state hubs in 2026. Join our mailing list to be the first to know when we launch in your market.</p>
-      <div class="mock-form">
-        <input type="email" placeholder="Enter your email" disabled />
-        <button disabled>Notify Me</button>
-      </div>
-    </div>
-  </section>
+  <Callout title="Start with the Launch Checklist" type="info">
+    New to Maine cannabis? Begin with our <a href="/launch-checklist/">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales.
+  </Callout>
 </Layout>
 
 <style>
-  .hub-header {
+  .page-header {
     text-align: center;
     margin-bottom: 5rem;
-    padding-top: 3rem;
+    padding-top: 2rem;
   }
 
   .hero-badge {
     display: inline-block;
-    background: var(--color-soft-green);
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-background);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.75rem;
@@ -88,6 +116,10 @@ const states = [
     margin-bottom: 1.5rem;
   }
 
+  .page-header h1 {
+    margin-bottom: 1rem;
+  }
+
   .lead {
     font-size: 1.25rem;
     color: var(--color-text-light);
@@ -95,116 +127,71 @@ const states = [
     margin: 0 auto;
   }
 
-  .state-grid {
+  .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
-    margin-bottom: 8rem;
+    margin-bottom: 5rem;
   }
 
-  .state-card {
+  .category-card {
     background: white;
-    padding: 3rem 2rem;
-    border-radius: 2rem;
     border: 1px solid var(--color-border);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    transition: all 0.3s;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: all 0.2s;
   }
 
-  .state-card:hover:not(.is-pending) {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  .category-card:hover {
     border-color: var(--color-primary);
+    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.08);
   }
 
-  .state-status {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-
-  .is-pending {
-    background: var(--color-background);
-    opacity: 0.8;
-  }
-
-  .is-pending .state-status {
-    color: var(--color-text-light);
-  }
-
-  .state-card h2 {
-    margin: 0 0 0.5rem;
-    font-size: 2rem;
-  }
-
-  .state-count {
-    font-weight: 700;
-    color: var(--color-accent);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem !important;
-  }
-
-  .state-desc {
-    font-size: 1rem;
-    color: var(--color-text-light);
-    margin-bottom: 2.5rem !important;
-  }
-
-  .btn-state {
-    display: inline-block;
-    background: var(--color-primary);
-    color: white;
-    padding: 0.75rem 2rem;
-    border-radius: 1rem;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .btn-wait {
-    display: inline-block;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-light);
-    padding: 0.75rem 2rem;
-    border-radius: 1rem;
-    font-weight: 700;
-  }
-
-  .expansion-cta {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    padding: 4rem 2rem;
-    border-radius: 2rem;
-    text-align: center;
-  }
-
-  .mock-form {
+  .cat-header {
     display: flex;
+    align-items: center;
     gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .mock-form input {
-    padding: 0.75rem 1.5rem;
-    border-radius: 1rem;
-    border: 1px solid var(--color-border);
-    width: 300px;
+  .cat-icon {
+    font-size: 1.75rem;
   }
 
-  .mock-form button {
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 1rem;
-    font-weight: 700;
-    cursor: not-allowed;
-    opacity: 0.5;
+  .cat-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .guide-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .guide-list li {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .guide-list li:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .guide-list a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .guide-list a:hover {
+    color: var(--color-accent);
   }
 </style>

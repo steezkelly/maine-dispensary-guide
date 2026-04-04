@@ -169,8 +169,8 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
               </div>
             </div>
           </button>
-          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true" />
-          <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle mobile menu" id="mobile-menu-trigger"><span></span></label>
+          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle mobile menu" />
+          <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true" id="mobile-menu-trigger"><span></span></label>
         </div>
 
         <div class="nav-links" id="navigation-menu" role="navigation">
@@ -178,7 +178,7 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
           <div class="nav-dropdown">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Guides ▾ Submenu">Guides ▾</button>
             <div class="dropdown-content">
-              <a href="/all-guides">All State Guides</a>
+              <a href="/all-guides">All Guides</a>
               <a href="/launch-checklist">Launch Checklist</a>
               <a href="/find-a-dispensary">Find a Store</a>
             </div>
@@ -231,11 +231,6 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
           <a href="/about">About</a>
         </nav>
         <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
-        {!isHub && (
-          <p class="state-link">
-            Looking for other states? <a href="/all-guides">Visit our National Hub</a>
-          </p>
-        )}
       </div>
     </footer>
 

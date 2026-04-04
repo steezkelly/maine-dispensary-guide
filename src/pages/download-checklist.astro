@@ -27,7 +27,7 @@ const roadmapFeatures = [
 ];
 ---
 
-<Layout title="Download the 2026 Maine Dispensary Roadmap | Founders Edition">
+<Layout title="2026 Maine Dispensary Roadmap | Free Download" description="Download the free 40-page Founders Roadmap for opening a Maine cannabis dispensary. Includes licensing timeline, 280E strategy, security requirements, and financial benchmarks.">
   <section class="download-hero">
     <div class="hero-container">
       <div class="hero-text">
@@ -37,7 +37,8 @@ const roadmapFeatures = [
         
         <form class="lead-capture-form" action="https://formspree.io/f/xvgzlowz" method="POST">
           <div class="input-stack">
-            <input type="email" placeholder="Business Email Address" required />
+            <label for="lead-email" class="sr-only">Business Email Address</label>
+            <input type="email" id="lead-email" name="email" placeholder="Business Email Address" required />
             <button type="submit" class="btn-primary">Send Me the Roadmap &rarr;</button>
           </div>
           <p class="form-disclaimer">Join 500+ Maine entrepreneurs. 100% Privacy. Zero Spam.</p>
@@ -75,6 +76,33 @@ const roadmapFeatures = [
       ))}
     </div>
   </section>
+
+  <section class="roadmap-deep-dive">
+    <h2>Detailed Timeline: From Concept to Opening Day</h2>
+    <p>The guide walks founders through four phases, each with actionable checklists, estimated timelines, and Common Pitfall warnings from real operators who have navigated this process before.</p>
+    <div class="phase-list">
+      <div class="phase-item">
+        <h3>Phase 1: Entity Formation (Months 1-2)</h3>
+        <p>Form your Maine LLC or corporation, obtain an EIN, open a cannabis-friendly bank account, and begin your OCP Individual Identification Card (IIC) application. The guide includes a bank comparison chart of Maine's seven cannabis-friendly financial institutions.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 2: Location & Zoning (Months 2-5)</h3>
+        <p>Identify municipalities that have Opted-In to adult-use retail. Execute a lease with a cannabis clause. Complete municipal zoning approval and site plan review. The guide provides a contact list for planning offices in all 15 Opted-In communities.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 3: State Licensing (Months 4-8)</h3>
+        <p>Submit your Conditional License application to the Maine OCP. Prepare for the 60-day public comment period. Complete buildout to OCP specifications. Pass final inspection. The guide includes a $12,000 contingency budget for unexpected licensing delays.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 4: Opening & Compliance (Month 9+)</h3>
+        <p>Launch with a compliant inventory, trained staff, and Metrc seed-to-sale integration. Navigate IRS Section 280E tax obligations from day one. The guide includes a 90-day post-launch checklist for maintaining compliance.</p>
+      </div>
+    </div>
+  </section>
+
+  <Callout title="Who is this roadmap for?" type="info">
+    This guide is best suited for first-time cannabis entrepreneurs, investors evaluating Maine market entry, and existing medical marijuana operators transitioning to the adult-use market. It is not a substitute for legal counsel or a licensed Maine cannabis attorney.
+  </Callout>
 
   <section class="trust-footer">
     <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
@@ -257,6 +285,59 @@ const roadmapFeatures = [
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+  }
+
+  .roadmap-deep-dive {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 2.5rem;
+    padding: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .roadmap-deep-dive h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .roadmap-deep-dive > p {
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+
+  .phase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .phase-item {
+    padding: 2rem;
+    background: var(--color-background);
+    border-radius: 1.5rem;
+    border-left: 4px solid var(--color-primary);
+  }
+
+  .phase-item h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+  }
+
+  .phase-item p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
   }
 
   @media (max-width: 900px) {

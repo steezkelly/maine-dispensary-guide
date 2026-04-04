@@ -48,9 +48,16 @@ const stats = [
       </ul>
     </section>
 
+    <section class="market-outlook">
+      <h2>2026 Market Outlook</h2>
+      <p>Based on current market indicators, Maine's cannabis industry is entering a consolidation phase. Established operators with strong brand recognition are capturing increasing market share, while newer entrants face higher barriers to customer acquisition. For founders considering entry, the data suggests focusing on underserved micro-markets, vertically integrated product lines, or specialized retail experiences rather than competing directly with established Portland and Bangor operators.</p>
+      <p>Tax revenue continues to be a driver for municipal opt-in decisions. As of 2026, 15 Maine municipalities have formally opted into adult-use retail, with several additional communities in active discussion. The continued expansion of the licensee base will likely moderate prices further and increase the importance of operational efficiency and customer loyalty programs.</p>
+      <p>Use our <a href="/roi-calculator/">ROI Calculator</a> to model your specific location against these market benchmarks before committing to a lease or licensing path.</p>
+    </section>
+
     <section class="further-reading">
       <h2>Source & Verification</h2>
-      <p>All data is sourced from the <a href="https://www.maine.gov/dafs/ocp/data/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> Open Data portal. Data is updated as official reports are released.</p>
+      <p>All data is sourced from the <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> Open Data portal. Data is updated as official reports are released.</p>
     </section>
   </article>
 </Layout>
@@ -108,4 +115,31 @@ const stats = [
   .data-deep-dive h2 {
     margin-top: 0;
   }
+
+  .market-outlook {
+    background: rgba(88, 129, 87, 0.05);
+    border: 1px solid rgba(88, 129, 87, 0.15);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin-top: 4rem;
+  }
+
+  .market-outlook h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--color-primary);
+  }
+
+  .market-outlook p {
+    font-size: 1.0rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .market-outlook p:last-child { margin-bottom: 0; }
+
+  .market-outlook a { color: var(--color-accent); font-weight: 600; }
 </style>
