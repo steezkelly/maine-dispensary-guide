@@ -292,6 +292,36 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ## 📜 COLLABORATION LOG (Times in EDT)
 
+### 2026-04-04 12:35 AM EDT
+[OPENCODE]
+- **Sprint 7:** Fixed 13 double-suffix technical guide titles; fixed 5 long descriptions; fixed fact-box tables in 5 city guides (auburn, augusta, bangor, biddeford, brunswick) with aria-labels and captions; shortened all city guide titles from "{City} Maine Cannabis Dispensary Guide" (39 base) to "{City} Maine Dispensary Guide" (30 base). Score: 84→85. Core SEO: 98. Remaining: thin content (all-guides, privacy, site-health), E-E-A-T crawl staleness.
+
+### 2026-04-04 12:28 AM EDT
+[OPENCODE]
+- **Sprint 6:** Meta Fixes Sprint — 9 meta titles, 8 descriptions, E-E-A-T bylines. Score: 83→84.
+
+### 2026-04-03 11:45 PM EDT
+[OPENCODE]
+- **E-E-A-T Sprint:** Author bylines + dates rendered in HTML via Layout.astro. E-E-A-T score 80.
+
+### 2026-04-05 12:20 AM EDT
+[OPENCODE]
+- **SEO Sprint 5:** 14 city guide titles, 12 technical guide descriptions.
+
+### 2026-04-04 11:40 PM EDT
+[OPENCODE]
+- **SEO Sprint 4:** 6 meta titles, 4 descriptions, heroImage on roi-calculator/admin.
+
+### 2026-04-04 11:00 PM EDT
+[OPENCODE]
+- **SEO Sprint 3:** 5 meta titles, 4 descriptions, heroImage on 5 more pages.
+
+### 2026-04-03 10:30 PM EDT
+[OPENCODE]
+- **SEO Sprint 2:** Homepage title (~94→~60 chars), OG tags, heroImage on 5 pages, 5 descriptions.
+
+---
+
 ### 2026-03-23 01:50 PM
 [GEMINI]
 - **Timezone Sync:** Standardized all logs to EDT (Monday, March 23).
