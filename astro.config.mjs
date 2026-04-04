@@ -8,7 +8,9 @@ export default defineConfig({
   trailingSlash: 'never',
   output: 'static',
   adapter: vercel(),
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({
+    filter: (page) => !page.includes('/admin/')
+  })],
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
