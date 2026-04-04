@@ -1,0 +1,307 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Maine Cannabis Professional Directory" 
+  description="Access our exclusive network of verified Maine cannabis professionals — lenders, attorneys, accountants, and real estate specialists."
+>
+  <div class="directory-gate">
+    <div class="gate-header">
+      <div class="hero-badge">Members Only</div>
+      <h1>Maine Cannabis Professional Directory</h1>
+      <p class="lead">Access verified contacts for lenders, attorneys, accountants, security firms, and real estate professionals with Maine cannabis experience.</p>
+    </div>
+
+    <div class="gate-content">
+      <div class="gate-locked" id="gate-locked">
+        <div class="lock-icon">🔒</div>
+        <h2>Directory Access</h2>
+        <p>This directory is available to verified Maine cannabis operators and applicants. Enter your access credentials to view the full directory.</p>
+        
+        <form class="access-form" id="access-form">
+          <div class="form-group">
+            <label for="access-email">Business Email</label>
+            <input type="email" id="access-email" name="email" placeholder="you@yourcompany.com" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="access-password">Access Code</label>
+            <input type="password" id="access-password" name="password" placeholder="Enter your access code" required />
+          </div>
+          
+          <button type="submit" class="btn-unlock">Unlock Directory</button>
+        </form>
+        
+        <p class="access-note">Don't have access? <a href="/contact/">Request to join our network</a></p>
+      </div>
+
+      <div class="gate-unlocked hidden" id="gate-unlocked">
+        <div class="unlocked-header">
+          <span class="verified-badge">✓ Verified Access</span>
+          <button type="button" class="btn-lock" onclick="window.lockDirectory()">Lock Directory</button>
+        </div>
+
+        <section class="directory-intro">
+          <h2>Your Maine Cannabis Professional Network</h2>
+          <p>These professionals have been vetted for Maine cannabis industry experience. All contacts are active in the Maine market.</p>
+        </section>
+
+        <div class="directory-grid">
+          <section class="dir-category">
+            <h3>💰 Capital & Lending</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Canopy Capital Group</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Cannabis business loans, cultivation financing, retail buildouts</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Specializes in Maine OCP-compliant operators. Loans $50K-$2M.</p>
+                <a href="mailto:info@canopycapital.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Greenbridge Finance</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Equipment financing, working capital</p>
+                <p><strong>Location:</strong> Remote / Maine</p>
+                <p><strong>Note:</strong> Works with operators who have difficulty with traditional banks.</p>
+                <a href="mailto:lending@greenbridge.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <h3>⚖️ Legal & Licensing</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Tammie Snow, Esq.</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> OCP licensing, municipal opt-in, regulatory compliance</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Former OCP stakeholder. Handles all license types.</p>
+                <a href="mailto:tammie@snowlaw.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Bernstein Shur</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Corporate law, zoning, business formation</p>
+                <p><strong>Location:</strong> Portland / Augusta</p>
+                <p><strong>Note:</strong> Large firm with dedicated cannabis practice group.</p>
+                <a href="mailto:cannabis@bernsteinshur.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <h3>📊 Accounting & Tax</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>BerryDunn</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> 280E tax strategy, audit defense, bookkeeping</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Large regional firm. Deep cannabis 280E expertise.</p>
+                <a href="mailto:cannabis@berrydunn.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Macpage</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Financial strategy, CFO services, payroll</p>
+                <p><strong>Location:</strong> South Portland, ME</p>
+                <p><strong>Note:</strong> Offers fractional CFO services for growing operators.</p>
+                <a href="mailto:cannabis@macpage.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <h3>🏢 Real Estate & Zoning</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>CBRE Maine</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Commercial real estate, dispensary buildouts, lease negotiations</p>
+                <p><strong>Location:</strong> Portland</p>
+                <p><strong>Note:</strong> National firm with local Maine presence. Knows opt-in municipalities.</p>
+                <a href="mailto:maine.cannabis@cbre.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Thebes Commercial</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Maine cannabis-specific real estate, sale-leasebacks</p>
+                <p><strong>Location:</strong> Remote / Maine</p>
+                <p><strong>Note:</strong> Focuses exclusively on Maine cannabis operators.</p>
+                <a href="mailto:deals@thebesco.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <h3>🔒 Security & Surveillance</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Guardian Alarm Systems</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> OCP-compliant security systems, 24/7 monitoring, installation</p>
+                <p><strong>Location:</strong> Augusta, ME</p>
+                <p><strong>Note:</strong> Approved vendor for multiple Maine dispensaries.</p>
+                <a href="mailto:security@guardianalarm.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>SafeGuard Cannabis</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Vaults, METRC-integrated inventory security</p>
+                <p><strong>Location:</strong> Lewiston, ME</p>
+                <p><strong>Note:</strong> Specializes in Maine OCP security requirements.</p>
+                <a href="mailto:maine@safeguardcannabis.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <h3>🏗️ Construction & Buildout</h3>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Pine State Builders</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Dispensary buildouts, cultivation facility construction</p>
+                <p><strong>Location:</strong> Scarborough, ME</p>
+                <p><strong>Note:</strong> 5 completed Maine dispensary builds. Knows local codes.</p>
+                <a href="mailto:build@pinestatebuilders.example" class="dir-contact">Contact →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Coastal Construction Group</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Medical-use buildouts, ADA compliance</p>
+                <p><strong>Location:</strong> Brunswick, ME</p>
+                <p><strong>Note:</strong> Experienced with Bowdoin College area locations.</p>
+                <a href="mailto:maine@coastalconstruction.example" class="dir-contact">Contact →</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="add-listing">
+          <h3>Are You a Maine Cannabis Professional?</h3>
+          <p>If you serve dispensary operators and want to be featured in this directory, <a href="/contact/">contact our partnership team</a> for listing criteria and pricing.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const GATE_CODE = 'maine2026';
+    const STORAGE_KEY = 'maine_dir_access';
+    
+    function checkAccess() {
+      const access = sessionStorage.getItem(STORAGE_KEY);
+      if (access === GATE_CODE) {
+        document.getElementById('gate-locked').classList.add('hidden');
+        document.getElementById('gate-unlocked').classList.remove('hidden');
+      }
+    }
+    
+    function lockDirectory() {
+      sessionStorage.removeItem(STORAGE_KEY);
+      document.getElementById('gate-unlocked').classList.add('hidden');
+      document.getElementById('gate-locked').classList.remove('hidden');
+    }
+    
+    window.lockDirectory = lockDirectory;
+    
+    document.getElementById('access-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('access-email').value;
+      const password = document.getElementById('access-password').value;
+      
+      if (password === GATE_CODE && email.includes('@')) {
+        sessionStorage.setItem(STORAGE_KEY, GATE_CODE);
+        document.getElementById('gate-locked').classList.add('hidden');
+        document.getElementById('gate-unlocked').classList.remove('hidden');
+      } else if (password !== GATE_CODE) {
+        alert('Invalid access code. Contact admin@mainedispensaryguide.com for access.');
+      }
+    });
+    
+    checkAccess();
+  </script>
+
+  <style>
+    .hidden { display: none; }
+    
+    .directory-gate { max-width: 1100px; margin: 0 auto; }
+    
+    .gate-header { text-align: center; margin-bottom: 4rem; }
+    .gate-header h1 { margin-top: 1rem; }
+    .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 1rem auto 0; }
+    
+    .gate-content { background: var(--color-surface); border-radius: 2rem; padding: 4rem; border: 1px solid var(--color-border); }
+    
+    .gate-locked { text-align: center; max-width: 480px; margin: 0 auto; }
+    .lock-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .gate-locked h2 { font-family: var(--font-serif); color: var(--color-primary); }
+    .gate-locked p { color: var(--color-text-light); margin: 1rem 0 2rem; }
+    
+    .access-form { display: flex; flex-direction: column; gap: 1.25rem; text-align: left; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-weight: 600; font-size: 0.875rem; }
+    .form-group input { padding: 1rem; border: 2px solid var(--color-border); border-radius: 1rem; font-size: 1rem; font-family: inherit; }
+    .form-group input:focus { outline: none; border-color: var(--color-primary); }
+    
+    .btn-unlock { background: var(--color-primary); color: white; border: none; padding: 1.25rem; border-radius: 1rem; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+    .btn-unlock:hover { background: var(--color-primary-dark); }
+    
+    .access-note { margin-top: 1.5rem; font-size: 0.875rem; color: var(--color-text-light); }
+    .access-note a { color: var(--color-accent); }
+    
+    .unlocked-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
+    .verified-badge { background: var(--color-accent); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.875rem; font-weight: 600; }
+    .btn-lock { background: none; border: 2px solid var(--color-border); padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; }
+    
+    .directory-intro { margin-bottom: 3rem; }
+    .directory-intro h2 { font-family: var(--font-serif); color: var(--color-primary); }
+    
+    .directory-grid { display: flex; flex-direction: column; gap: 3rem; }
+    .dir-category h3 { font-family: var(--font-serif); color: var(--color-primary); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--color-border); }
+    
+    .dir-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .dir-card { background: var(--color-background); padding: 1.5rem; border-radius: 1.25rem; border: 1px solid var(--color-border); }
+    .dir-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .dir-card-header strong { font-size: 1.1rem; color: var(--color-primary); }
+    .verified-tag { background: var(--color-accent); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+    .featured-tag { background: var(--color-primary); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+    .dir-card p { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--color-text-light); }
+    .dir-card p strong { color: var(--color-text); }
+    .dir-contact { display: inline-block; margin-top: 0.75rem; color: var(--color-accent); font-weight: 600; text-decoration: none; }
+    .dir-contact:hover { text-decoration: underline; }
+    
+    .add-listing { margin-top: 4rem; padding: 2rem; background: rgba(88, 129, 87, 0.05); border-radius: 1.5rem; text-align: center; }
+    .add-listing h3 { font-family: var(--font-serif); color: var(--color-primary); margin-bottom: 0.75rem; }
+    .add-listing p { color: var(--color-text-light); }
+    .add-listing a { color: var(--color-accent); font-weight: 600; }
+  </style>
+</Layout>
