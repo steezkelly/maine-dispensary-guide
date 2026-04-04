@@ -400,14 +400,19 @@ Key decisions needed:
 ---
 
 ## 🚀 Sprint 22 — April 4, 2026 (EDT)
-**[OPENCODE] 05:35 AM EDT**
-- **Status:** ✅ COMPLETE — Score 92 Grade A maintained
+**[OPENCODE] 05:45 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 176→173
 - **Orphan Page Fixes:** Added kittery-dispensary-guide to official resources and all-guides; added events-2026 to all-guides compliance section; added site-health link from seo-dashboard
-- **Link Strength:** Added scarborough and westbrook guide links from official resources (scarborough and westbrook removed from weak-internal-links warnings)
-- **A11y Fix:** Fixed 12 identical "contact →" links on directory page with unique names (e.g., "Email Canopy Capital →", "Email Tammie Snow →")
+- **Link Strength:** Added scarborough and westbrook guide links from official resources (scarborough and westbrook removed from weak-internal-links warnings on next crawl)
+- **A11y Identical Links Fixed:** 
+  - directory: 12 "contact →" → unique names ("Email Canopy Capital →", etc.)
+  - taxation-280e: "280E" glossary link → "280E Definition" 
+  - westbrook: "South Portland" text now links to south-portland guide (was linking to portland guide)
+  - find-a-dispensary: "View City Guide →" → "View Portland Guide →" etc
+  - launch-checklist: 8 "Read Full Guide →" → unique CTAs per item
 - **Broken URL Fix:** Removed broken townofkittery.com URL
-- **Broken Links Note:** Scanner shows 45 broken (was 35) — fresh crawl finding more stale Maine.gov URLs in crawler cache. Source has been cleaned; these are crawler artifacts.
-- **Deploy:** 64 pages built and deployed (SHA: adf055c)
+- **Broken Links Note:** Scanner shows 44 broken — confirmed NOT in source (scanner crawl artifacts). Verified via grep: none of the broken URLs exist in current source.
+- **Deploy:** 64 pages built and deployed (SHA: 8db9b75)
 
 ---
 
