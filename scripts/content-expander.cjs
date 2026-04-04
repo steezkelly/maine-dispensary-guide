@@ -3,6 +3,16 @@
  * Content Expander
  * Identifies thin content and suggests expansion areas
  * Provides templates and prompts for deepening content
+ * 
+ * WRITING RULES (content-quality.cjs scoring):
+ * - Score = 100 - (issues×5) - (wordCount<500?20:0) - (readability<60?10:0)
+ * - Avg words/sentence: target 9-12 (max 15). Long sentences kill readability.
+ * - Avoid: exceptional, first-mover, cutting-edge, leverage (verb), utilize,
+ *          optimize, enhance, empower, game-changer, pivotal, synergy
+ * - Avoid AI phrases: plays a pivotal role, it is important to note, 
+ *          additionally, furthermore, moreover, in conclusion
+ * - Avoid filler: due to the fact that, in order to, for the purpose of
+ * - Rule of thumb: If a sentence runs longer than your thumb, break it.
  */
 
 const fs = require('fs');
@@ -57,7 +67,6 @@ function analyzeContentDensity(filePath) {
   const headings = extractHeadings(html);
   const sections = headings.filter(h => h.level === 2);
   
-  // Estimate words per section
   const avgWordsPerSection = sections.length > 0 ? Math.round(wordCount / sections.length) : wordCount;
   
   return {
@@ -105,7 +114,6 @@ function suggestExpansions(analysis) {
     });
   }
   
-  // Check for missing common sections
   const headingTexts = analysis.headings.map(h => h.text.toLowerCase());
   
   const commonSections = [
@@ -150,7 +158,40 @@ function generateExpansionTemplate(analysis) {
 
 ### Suggested Expansions
 
-${suggestExpansions(analysis).map((s, i) => `${i + 1}. [${s.type}] ${s.issue}\n   → ${s.action}`).join('\n\n')}
+${suggestExpansions(analysis).map((s, i) => `${i + 1}. [${s.type}] ${s.issue}
+   → ${s.action}`).join('\n\n')}
+
+### Natural Voice Writing Rules (for content-quality.cjs scoring)
+
+When writing or expanding content, FOLLOW THESE RULES:
+
+#### ❌ AVOID - These cost 5 points each:
+- **Promotional words:** exceptional, first-mover, cutting-edge, leverage (verb), 
+  utilize, optimize, enhance, empower, game-changer, pivotal, synergy, 
+  paradigm, transformative, holistic, revolutionary, groundbreaking
+- **AI phrases:** plays a pivotal role, it is important to note, in conclusion,
+  additionally, furthermore, moreover, on the other hand, as previously mentioned,
+  it is worth noting, taking this into consideration, in today's landscape
+- **Filler:** due to the fact that, in order to, for the purpose of,
+  in light of the fact that, at this point in time, in the event that
+
+#### ✅ DO - These improve readability:
+- **Break long sentences.** Target 9-12 words/sentence. If it runs longer than
+  your thumb, split it in two.
+- **Use simple words.** "use" not "utilize", "help" not "leverage", 
+  "improve" not "optimize", "boost" not "enhance"
+- **Write like you talk.** Read aloud. If it sounds robotic, rewrite.
+- **Lead with the point.** Front-load keywords.
+
+#### Example Transformations:
+❌ "The dispensary offers exceptional products at competitive prices."
+✅ "The dispensary stocks good products at fair prices."
+
+❌ "This represents a first-mover advantage in the emerging market."
+✅ "Opening here first gives you an edge over later competitors."
+
+❌ "Additionally, the market data shows significant growth potential."
+✅ "The market data also shows strong growth." (or just cut it)
 
 ### Expansion Prompts
 
@@ -160,26 +201,29 @@ Use these prompts to expand content:
 \`\`\`
 Research [topic] in detail for Maine cannabis dispensary context.
 What specific numbers, regulations, and local insights should be included?
-Provide 2-3 paragraphs of expert-level content.
+Write 2-3 paragraphs. Keep sentences short (9-12 words avg).
+Avoid: exceptional, first-mover, leverage (verb), utilize, optimize.
 \`\`\`
 
 #### Prompt 2: Reader Questions
 \`\`\`
 What questions would a first-time dispensary founder ask after reading this?
 Answer 3-4 common questions with Maine-specific details.
+Use short sentences. Sound like a person, not a robot.
 \`\`\`
 
 #### Prompt 3: Examples and Case Studies
 \`\`\`
 Find a real example or case study relevant to this content.
 Include specific operator names, locations, and outcomes if available.
+Write in natural voice with short sentences.
 \`\`\`
 
 #### Prompt 4: Expand Existing Section
 \`\`\`
 Take the "[Section Name]" section and expand it by 200+ words.
 Add: why it matters, common mistakes, Maine-specific context.
-Maintain natural human voice throughout.
+Keep sentences short. Avoid AI-sounding phrases.
 \`\`\`
 `;
 }
@@ -196,7 +240,6 @@ function analyzeSite(pattern) {
   
   const analyses = files.map(f => analyzeContentDensity(f));
   
-  // Sort by word count (ascending = thinnest first)
   const sorted = [...analyses].sort((a, b) => a.wordCount - b.wordCount);
   
   console.log('═'.repeat(70));
@@ -214,7 +257,6 @@ function analyzeSite(pattern) {
     console.log(`   Words: ${a.wordCount} | Sections: ${a.sectionCount} | Read: ${a.readingTime}min`);
   });
   
-  // Summary stats
   const totalWords = analyses.reduce((sum, a) => sum + (a.error ? 0 : a.wordCount), 0);
   const avgWords = Math.round(totalWords / analyses.length);
   const thinFiles = analyses.filter(a => !a.error && a.isThin).length;
@@ -231,7 +273,6 @@ function analyzeSite(pattern) {
   console.log(`  ⚠️  Medium:      ${mediumFiles}`);
   console.log(`  ✅ Dense (1200+): ${goodFiles}`);
   
-  // Priority files to expand
   if (thinFiles > 0) {
     console.log('\n' + '═'.repeat(70));
     console.log('🎯 PRIORITY EXPANSION TARGETS');
@@ -259,7 +300,6 @@ function showExpansionGuide(filePath) {
   console.log(generateExpansionTemplate(analysis));
 }
 
-// CLI
 const args = process.argv.slice(2);
 
 if (args.length === 0) {

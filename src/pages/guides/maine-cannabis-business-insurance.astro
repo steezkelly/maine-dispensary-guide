@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-18", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const topics = ["finance"];
 ---
 
 <Layout 
@@ -10,6 +11,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis business insurance guide. Coverage types, OCP requirements, liability limits, and cost benchmarks for 2026."
   heroImage="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

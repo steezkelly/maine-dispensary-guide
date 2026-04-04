@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-19", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const topics = ["finance"];
 export const title = "Workers Compensation & HR";
 ---
 
@@ -11,6 +12,7 @@ export const title = "Workers Compensation & HR";
   description="Maine cannabis workers comp guide covering WC insurance requirements, employee authorization, and HR best practices for dispensary owners."
   heroImage="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

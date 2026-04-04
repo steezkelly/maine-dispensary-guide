@@ -2,7 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-03-23", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-04-04", section: "Operations & Technology" };
+const topics = ["compliance"];
 export const title = "Cannabis Lab Testing Guide";
 ---
 
@@ -11,130 +12,162 @@ export const title = "Cannabis Lab Testing Guide";
   description="Maine cannabis product testing guide. OCP-required lab protocols, potency limits, pesticide screening, and certificate of analysis requirements."
   heroImage="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">
-      <h1>Cannabis Lab Testing Guide</h1>
-      <p class="subtitle">Mandatory testing panels and passing/failing protocol</p>
+      <h1>Cannabis Lab Testing in Maine</h1>
+      <p class="subtitle">What every Maine dispensary operator needs to know about product testing</p>
     </div>
 
     <section class="fact-box">
-      <h2>📋 Testing Checklist</h2>
-      <table aria-label="Maine cannabis product testing requirements and mandatory panels" caption="Product testing requirements, mandatory laboratory panels, and cost benchmarks for Maine cannabis products">
-        <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <h2>Maine Testing Requirements</h2>
+      <table aria-label="Maine cannabis testing requirements summary">
         <tbody>
-          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. §503, OCP Rule Chapter 5</td></tr>
-          <tr><td><strong>All Products</strong></td><td>Must test before sale</td></tr>
-          <tr><td><strong>Mandatory Panels</strong></td><td>Potency, microbials, pesticides, heavy metals</td></tr>
-          <tr><td><strong>Concentrates</strong></td><td>Add: residual solvents</td></tr>
-          <tr><td><strong>Cost/Sample</strong></td><td>$50-300</td></tr>
+          <tr><td><strong>Legal Basis</strong></td><td>M.R.S. Title 28-B §503, OCP Chapter 5</td></tr>
+          <tr><td><strong>All Products</strong></td><td>Must test before sale. No exceptions.</td></tr>
+          <tr><td><strong>Flower Tests</strong></td><td>Potency, microbials, pesticides, heavy metals</td></tr>
+          <tr><td><strong>Concentrates</strong></td><td>All above plus residual solvents</td></tr>
+          <tr><td><strong>Edibles</strong></td><td>Potency, microbials, pesticides, heavy metals</td></tr>
+          <tr><td><strong>Cost per Sample</strong></td><td>$50-300</td></tr>
+          <tr><td><strong>Monthly Budget</strong></td><td>$2,000-10,000 for most shops</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Why Testing is Non-Negotiable</h2>
-      <p>Maine requires ALL cannabis products to be tested by a licensed lab BEFORE sale. This isn't optional—it's your license to operate.</p>
+      <h2>Why Testing Matters</h2>
+      <p>Maine law requires every cannabis product to pass lab testing before it reaches customers. This is not optional. It is how the state keeps unsafe products off shelves.</p>
+      <p>Testing also protects your business. A failed test means destroying that batch. That costs money. But a product that harms someone costs more. Both in lawsuits and in trust.</p>
     </section>
 
-    <Callout title="Testing as Competitive Advantage" type="passion">
-      Operators who embrace testing as quality verification build brand trust that competitors cannot match. Your test results are your marketing.
+    <Callout title="Test Results Are Your Marketing" type="passion">
+      Customers in Maine ask to see test results. They want to know what is in their products. Shops that share results freely build trust. That trust brings repeat customers.
     </Callout>
 
     <section>
-      <h2>Mandatory Test Panels: 28-B M.R.S. §503</h2>
-      <table aria-label="Maine cannabis mandatory test panels by product type" caption="Required laboratory testing panels for different cannabis product types sold in Maine">
+      <h2>What Gets Tested</h2>
+      <p>Every product type has its own testing panel. Maine's Office of Cannabis Policy sets these requirements under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec503.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 503</a>.</p>
+      
+      <h3>Flower</h3>
+      <p>Flower gets tested for four things. Potency shows THC and CBD levels. Microbials check for bacteria and mold. Pesticides look for harmful chemicals used in cultivation. Heavy metals check for lead, arsenic, and other toxins absorbed from soil.</p>
+      
+      <h3>Concentrates</h3>
+      <p>Concentrates need everything flower tests for. Plus residual solvents. Butane, propane, and other solvents used in extraction can leave traces. The limit is 5,000 parts per million. Anything higher gets destroyed or re-processed.</p>
+      
+      <h3>Edibles</h3>
+      <p>Edibles follow the same panel as flower. The difference is dosing accuracy. Edibles must prove the amount of THC on the label matches what is in the package. The state allows a 10% variance. Outside that range, you must relabel or destroy.</p>
+      
+      <h3>Topicals</h3>
+      <p>Topicals applied to skin get microbial testing. Those consumed internally follow the edible rules. Check your specific product type with the OCP guidance documents.</p>
+    </section>
+
+    <section>
+      <h2>The Testing Process</h2>
+      <p>Testing starts before you harvest. A lab tech visits your facility. They take samples from your batch. Each sample must represent the whole lot. The lab then runs the required panels.</p>
+      <p>Results come back in 5 to 10 days. Faster service costs more. Most operators plan for the standard turnaround. Rush testing is available but runs 2-3x the normal price.</p>
+      <p>If results pass, you get a Certificate of Analysis (COA). This document proves your product is clean. You attach it to your inventory in Metrc. Then you can sell.</p>
+    </section>
+
+    <section>
+      <h2>What Happens When Tests Fail</h2>
+      <p>Failed tests happen. It is part of the business. Here is what each failure type means for your Maine operation.</p>
+      
+      <h3>Potency Failures</h3>
+      <p>If the THC level does not match your label, you have options. You can relabel to match the actual potency. Or you can destroy the batch. Relabeling is cheaper. But the new label must be accurate.</p>
+      
+      <h3>Microbial Failures</h3>
+      <p>Too many microbes means the product is unsafe. Destroy the batch. Do not try to rework it. The OCP does not allow remediated flower to enter the adult-use market.</p>
+      
+      <h3>Pesticide Failures</h3>
+      <p>Pesticide contamination also means destruction. Maine tests for a long list of pesticides. Know what your cultivator uses. Ask them for their testing history before you buy.</p>
+      
+      <h3>Heavy Metal Failures</h3>
+      <p>Heavy metals come from the growing environment. Poor soil or contaminated nutrients cause these failures. The only fix is starting fresh with clean inputs.</p>
+    </section>
+
+    <section>
+      <h2>Choosing a Maine Lab</h2>
+      <p>Four labs operate in Maine. All are certified by the OCP. Some operators also use labs in nearby states. All testing must meet Maine standards regardless of lab location.</p>
+      
+      <table aria-label="Maine cannabis testing lab comparison" caption="Factors to consider when selecting a cannabis testing laboratory in Maine">
         <thead>
-          <tr><th>Product Type</th><th>Required Tests</th></tr>
+          <tr><th>Factor</th><th>What to Check</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Flower</strong></td><td>Potency, microbials, pesticides, heavy metals</td></tr>
-          <tr><td><strong>Concentrates</strong></td><td>All above + residual solvents</td></tr>
-          <tr><td><strong>Edibles</strong></td><td>Potency, microbials, pesticides, heavy metals</td></tr>
-          <tr><td><strong>Topicals</strong></td><td>Potency, microbials (if consumed)</td></tr>
+          <tr><td><strong>OCP License</strong></td><td>Must be licensed in Maine</td></tr>
+          <tr><td><strong>ISO 17025</strong></td><td>Accreditation shows quality standards</td></tr>
+          <tr><td><strong>Turnaround</strong></td><td>5-10 days standard, faster costs more</td></tr>
+          <tr><td><strong>Sample Size</strong></td><td>Typically 5-10 units per batch</td></tr>
+          <tr><td><strong>Cost</strong></td><td>$50-300 per sample depending on panel</td></tr>
+          <tr><td><strong>Communication</strong></td><td>Fast results delivery matters in this business</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Passing Thresholds</h2>
-      <table aria-label="Maine cannabis testing passing thresholds and failure consequences" caption="Contaminant limits, passing thresholds, and consequences for failed tests under Maine OCP Chapter 5">
+      <h2>Testing Costs</h2>
+      <p>Budget for testing like any other operational cost. Here is what Maine operators typically pay.</p>
+      
+      <table aria-label="Maine cannabis testing costs breakdown" caption="Typical costs for cannabis product testing panels in Maine">
         <thead>
-          <tr><th>Contaminant</th><th>Limit</th><th>Consequence of Failure</th></tr>
+          <tr><th>Test Type</th><th>Cost</th><th>Notes</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>THC potency</strong></td><td>±10% of label</td><td>Relabel or destroy</td></tr>
-          <tr><td><strong>Microbial</strong></td><td>As per OCP Chapter 5</td><td>Destroy batch</td></tr>
-          <tr><td><strong>Pesticides</strong></td><td>Various limits</td><td>Destroy batch</td></tr>
-          <tr><td><strong>Heavy Metals</strong></td><td>As per OCP Chapter 5</td><td>Destroy batch</td></tr>
-          <tr><td><strong>Residual Solvents</strong></td><td>5,000 ppm max</td><td>Destroy or re-process</td></tr>
+          <tr><td><strong>Flower full panel</strong></td><td>$150-250</td><td>Per batch sampled</td></tr>
+          <tr><td><strong>Concentrate panel</strong></td><td>$200-300</td><td>Includes residual solvents</td></tr>
+          <tr><td><strong>Edible panel</strong></td><td>$150-250</td><td>Per batch sampled</td></tr>
+          <tr><td><strong>Rush testing</strong></td><td>2-3x standard</td><td>Available at premium price</td></tr>
+          <tr><td><strong>Monthly budget</strong></td><td>$2,000-10,000</td><td>Based on sales volume</td></tr>
         </tbody>
       </table>
+      
+      <p>Volume discounts exist. Labs negotiate on batches of 20 or more per month. Build a relationship with your lab. The savings add up.</p>
     </section>
 
     <section>
-      <h2>Pro-Hack: The Testing Strategy</h2>
-      <p><strong>Optimize your testing workflow:</strong></p>
+      <h2>The M.R.S. Title 28-B Citations</h2>
+      <p>Several sections of Maine law govern testing. Know these key citations.</p>
       <ul>
-        <li><strong>Batch testing:</strong> Test representative sample, apply to whole batch</li>
-        <li><strong>Lab relationships:</strong> Negotiate volume discounts (10-20% off)</li>
-        <li><strong>Turnaround time:</strong> Standard is 5-10 days; faster = premium price</li>
-        <li><strong>Multi-lab:</strong> Use 2-3 labs to compare results and avoid delays</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec503.html" target="_blank" rel="noopener noreferrer">Section 503</a> — Testing requirements for all products</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec504.html" target="_blank" rel="noopener noreferrer">Section 504</a> — Cannabis store operational rules</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec701.html" target="_blank" rel="noopener noreferrer">Section 701</a> — Labeling requirements tied to test results</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Section 703</a> — Health and safety restrictions</li>
       </ul>
     </section>
 
     <section>
-      <h2>Working with Maine Labs</h2>
-      <table aria-label="Considerations when selecting Maine cannabis testing laboratories" caption="Key factors to verify when choosing a licensed Maine cannabis testing laboratory">
-        <thead>
-          <tr><th>Consideration</th><th>What to Verify</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>OCP License</td><td>Must be licensed in Maine</td></tr>
-          <tr><td>ISO 17025</td><td>Accreditation preferred</td></tr>
-          <tr><td>Turnaround</td><td>5-10 days standard</td></tr>
-          <tr><td>Sample size</td><td>Typically 5-10 units</td></tr>
-          <tr><td>Cost</td><td>$50-300 per sample</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>Cost Breakdown</h2>
-      <table aria-label="Maine cannabis product testing cost breakdown" caption="Typical costs for different types of cannabis product testing panels and monthly budget planning">
-        <thead>
-          <tr><th>Test Type</th><th>Cost</th><th>Frequency</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Flower full panel</td><td>$150-250</td><td>Per batch</td></tr>
-          <tr><td>Concentrate panel</td><td>$200-300</td><td>Per batch</td></tr>
-          <tr><td>Edible panel</td><td>$150-250</td><td>Per batch</td></tr>
-          <tr><td>Monthly budget</td><td>$2,000-10,000</td><td>Depends on volume</td></tr>
-        </tbody>
-      </table>
+      <h2>Working with Cultivators</h2>
+      <p>Most dispensaries buy products from cultivators, not grows their own. Your supplier's testing habits affect your business.</p>
+      <p>Ask your cultivators about their testing process. Ask for recent COAs before you buy. This protects you from inheriting their failures.</p>
+      <p>Build relationships with cultivators who test thoroughly. They tend to have cleaner products. Their reliability saves you money over time.</p>
     </section>
 
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li><strong>✅ Mandatory:</strong> All products must test before sale</li>
-        <li><strong>⚠️ Failure = Destroy:</strong> Failed tests mean product loss</li>
-        <li><strong>💡 Pro-Hack:</strong> Build lab relationships for discounts</li>
-        <li><strong>📊 Budget:</strong> Plan $2K-10K/month for testing</li>
+        <li>All Maine cannabis products must test before sale</li>
+        <li>Different products need different panels</li>
+        <li>Failed tests mean destroyed product</li>
+        <li>Labs must be OCP-licensed</li>
+        <li>Budget $2,000-10,000 monthly for testing</li>
+        <li>Share test results with customers to build trust</li>
       </ul>
     </section>
 
     <section class="further-reading">
       <h2>Resources</h2>
       <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources/guidance-documents/mandatory-testing" target="_blank" rel="noopener noreferrer">OCP Mandatory Testing Requirements</a></li>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">OCP Rules Chapter 5</a></li>
-        <li><a href="/guides/maine-cannabis-extraction-licensing/">Extraction Guide</a></li>
+        <li><a href="https://www.metrc.com/partner/maine/" target="_blank" rel="noopener noreferrer">Metrc Maine</a></li>
+        <li><a href="/guides/maine-cannabis-extraction-licensing/">Extraction Licensing Guide</a></li>
+        <li><a href="/roi-calculator/">ROI Calculator</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This is for informational purposes only. Consult qualified professionals.</em></p>
+      <p><em>This guide is for informational purposes only. It does not constitute legal advice. Consult the Maine OCP and qualified legal counsel for compliance questions.</em></p>
     </section>
   </article>
 </Layout>
@@ -144,7 +177,7 @@ export const title = "Cannabis Lab Testing Guide";
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   section h2:first-child { margin-top: 0; }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
@@ -154,7 +187,8 @@ export const title = "Cannabis Lab Testing Guide";
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>

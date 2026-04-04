@@ -1,0 +1,249 @@
+---
+import topicsData from '../data/topics.json';
+
+interface RelatedGuide {
+  title: string;
+  href: string;
+  topics: string[];
+  section: string;
+}
+
+interface Props {
+  currentPath: string;
+  currentTopics: string[];
+  section?: string;
+}
+
+const { currentPath, currentTopics = [], section = 'Technical Guides' } = Astro.props;
+
+const allGuides: RelatedGuide[] = [
+  { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Bangor Dispensary Guide", href: "/guides/bangor-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Lewiston Dispensary Guide", href: "/guides/lewiston-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "South Portland Dispensary Guide", href: "/guides/south-portland-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Augusta Dispensary Guide", href: "/guides/augusta-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Biddeford Dispensary Guide", href: "/guides/biddeford-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Auburn Dispensary Guide", href: "/guides/auburn-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Brunswick Dispensary Guide", href: "/guides/brunswick-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Saco Dispensary Guide", href: "/guides/saco-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Sanford Dispensary Guide", href: "/guides/sanford-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Scarborough Dispensary Guide", href: "/guides/scarborough-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Waterville Dispensary Guide", href: "/guides/waterville-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Westbrook Dispensary Guide", href: "/guides/westbrook-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Old Orchard Beach Guide", href: "/guides/old-orchard-beach-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Kittery Dispensary Guide", href: "/guides/kittery-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },
+  { title: "Maine Dispensary License Guide", href: "/guides/maine-dispensary-license/", topics: ["licensing"], section: "Licensing" },
+  { title: "Dispensary Business Plan", href: "/guides/maine-dispensary-business-plan/", topics: ["business"], section: "Business" },
+  { title: "Startup Costs & Investment", href: "/guides/maine-dispensary-costs/", topics: ["finance"], section: "Finance" },
+  { title: "Maine Cannabis Market Analysis", href: "/guides/maine-cannabis-market/", topics: ["market"], section: "Market" },
+  { title: "Cannabis Zoning & Real Estate", href: "/guides/maine-cannabis-real-estate/", topics: ["real-estate"], section: "Real Estate" },
+  { title: "280E & State Taxation", href: "/guides/maine-cannabis-taxation-280e/", topics: ["finance"], section: "Taxation" },
+  { title: "Dispensary Security Requirements", href: "/guides/maine-dispensary-security/", topics: ["real-estate"], section: "Operations" },
+  { title: "Inventory & Metrc Management", href: "/guides/maine-cannabis-inventory-management/", topics: ["operations"], section: "Operations" },
+  { title: "Dispensary POS Systems", href: "/guides/maine-dispensary-pos/", topics: ["operations"], section: "Operations" },
+  { title: "Dispensary Packaging & Labeling", href: "/guides/maine-dispensary-packaging/", topics: ["operations"], section: "Operations" },
+  { title: "Cannabis Delivery Rules", href: "/guides/maine-cannabis-delivery-rules/", topics: ["operations"], section: "Operations" },
+  { title: "Hiring & Staffing", href: "/guides/maine-dispensary-hiring/", topics: ["operations"], section: "Operations" },
+  { title: "Banking Solutions", href: "/guides/maine-cannabis-banking-solutions/", topics: ["finance"], section: "Finance" },
+  { title: "Cannabis Regulations", href: "/guides/maine-cannabis-regulations/", topics: ["compliance"], section: "Compliance" },
+  { title: "Cannabis Edibles Compliance", href: "/guides/maine-cannabis-edibles-compliance/", topics: ["compliance"], section: "Compliance" },
+  { title: "Product Testing Guide", href: "/guides/maine-cannabis-product-testing-guide/", topics: ["compliance"], section: "Compliance" },
+  { title: "Cultivation Guide", href: "/guides/maine-cannabis-cultivation-guide/", topics: ["compliance"], section: "Compliance" },
+  { title: "Extraction Licensing", href: "/guides/maine-cannabis-extraction-licensing/", topics: ["compliance"], section: "Compliance" },
+  { title: "Staff Licensing (IIC/AIC)", href: "/guides/maine-cannabis-staffing-licensing/", topics: ["licensing"], section: "Licensing" },
+  { title: "Marketing Compliance", href: "/guides/maine-cannabis-marketing-compliance/", topics: ["marketing"], section: "Marketing" },
+  { title: "2026 Maine Events", href: "/guides/maine-cannabis-events-2026/", topics: ["compliance"], section: "Compliance" },
+  { title: "Workers Comp Insurance", href: "/guides/maine-cannabis-workers-comp-insurance/", topics: ["finance"], section: "Finance" },
+  { title: "Vendor Directory", href: "/guides/maine-cannabis-vendor-directory/", topics: ["business"], section: "Business" },
+  { title: "Funding Guide", href: "/guides/maine-cannabis-funding-guide/", topics: ["finance"], section: "Finance" },
+  { title: "Dispensary Locations", href: "/guides/maine-dispensary-locations/", topics: ["real-estate"], section: "Real Estate" },
+  { title: "Waste Management", href: "/guides/maine-cannabis-waste-management/", topics: ["compliance"], section: "Compliance" },
+  { title: "Business Insurance", href: "/guides/maine-cannabis-business-insurance/", topics: ["finance"], section: "Finance" },
+];
+
+const foundationalGuides = [
+  { title: "2026 Launch Checklist", href: "/launch-checklist/", section: "Essential" },
+  { title: "ROI Calculator", href: "/roi-calculator/", section: "Essential" },
+  { title: "Vendor Directory", href: "/resources/", section: "Essential" },
+];
+
+function calculateScore(guideTopics: string[], currentTopics: string[]): number {
+  let score = 0;
+  for (const topic of guideTopics) {
+    if (currentTopics.includes(topic)) {
+      score += 2;
+    }
+    const relatedTopics = topicsData.topics[topic]?.related || [];
+    for (const related of relatedTopics) {
+      if (guideTopics.includes(related)) {
+        score += 1;
+      }
+    }
+  }
+  return score;
+}
+
+const related = allGuides
+  .filter(g => g.href !== currentPath)
+  .map(g => ({ ...g, score: calculateScore(g.topics, currentTopics) }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 3);
+
+const essentials = foundationalGuides.filter(g => g.href !== currentPath);
+---
+
+<aside class="related-articles">
+  <h2>Continue Reading</h2>
+  
+  {related.length > 0 && (
+    <div class="related-section">
+      <h3>Related by Topic</h3>
+      <ul class="related-list">
+        {related.map(guide => (
+          <li>
+            <a href={guide.href}>
+              <span class="related-title">{guide.title}</span>
+              <span class="related-category">{guide.section}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {essentials.length > 0 && (
+    <div class="essential-section">
+      <h3>Essential Resources</h3>
+      <ul class="essential-list">
+        {essentials.map(guide => (
+          <li>
+            <a href={guide.href}>
+              <span class="essential-arrow">→</span>
+              <span>{guide.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</aside>
+
+<style>
+  .related-articles {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--color-border);
+  }
+
+  .related-articles h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+  }
+
+  .related-section,
+  .essential-section {
+    margin-bottom: 2rem;
+  }
+
+  .related-section h3,
+  .essential-section h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .related-list li {
+    margin: 0;
+  }
+
+  .related-list a {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .related-list a:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 78, 80, 0.08);
+  }
+
+  .related-title {
+    font-weight: 700;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .related-category {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+  }
+
+  .essential-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .essential-list li {
+    margin: 0;
+  }
+
+  .essential-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(88, 129, 87, 0.06);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .essential-list a:hover {
+    background: rgba(88, 129, 87, 0.12);
+    color: var(--color-primary);
+  }
+
+  .essential-arrow {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+  }
+
+  .essential-list a:hover .essential-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 600px) {
+    .related-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

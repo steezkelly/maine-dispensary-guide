@@ -2,7 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-03-21", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-04-04", section: "Operations & Technology" };
+const topics = ["operations"];
 ---
 
 <Layout 
@@ -10,48 +11,173 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis dispensary POS system guide. Metrc integration, inventory tracking, compliant transactions, and POS selection for 2026."
   heroImage="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">
-      <h1>POS Systems for Dispensaries</h1>
-      <p class="subtitle">Choosing the right point-of-sale system for your Maine cannabis dispensary</p>
+      <h1>POS Systems for Maine Dispensaries</h1>
+      <p class="subtitle">What you need to know about point-of-sale systems in Maine's cannabis market</p>
     </div>
 
-    <section>
-      <h2>Why Cannabis-Specific POS Matters</h2>
-      <p>General retail POS systems won't work for cannabis dispensaries. You need specialized software that handles <a href="/glossary/#seed-to-sale">seed-to-sale</a> tracking, compliance reporting, and cannabis-specific regulations.</p>
+    <section class="fact-box">
+      <h2>Maine POS Requirements at a Glance</h2>
+      <table aria-label="Maine cannabis POS requirements">
+        <tbody>
+          <tr><td><strong>Required System</strong></td><td>Metrc seed-to-sale tracking</td></tr>
+          <tr><td><strong>Who Must Use It</strong></td><td>All adult-use and medical dispensaries</td></tr>
+          <tr><td><strong>POS Integration</strong></td><td>Must connect to Metrc API</td></tr>
+          <tr><td><strong>Metrc Cost</strong></td><td>$0-$50/month (varies by license type)</td></tr>
+          <tr><td><strong>POS Software Cost</strong></td><td>$99-$300/month</td></tr>
+          <tr><td><strong>Key Requirement</strong></td><td>Real-time inventory sync with Metrc</td></tr>
+          <tr><td><strong>Payment Limitation</strong></td><td>Cash-only due to federal banking restrictions</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="The Engine of Your Shop" type="tip">
-      Your POS system runs everything — sales, inventory, compliance tracking, Metrc reporting. Get this wrong and you're fighting your own tools. Get it right and the operational side becomes much more manageable.
+    <section>
+      <h2>What Is a Dispensary POS?</h2>
+      <p>A point-of-sale system runs your entire dispensary operation. It rings up sales. It tracks inventory. It talks to Metrc. It generates compliance reports.</p>
+      <p>Your POS is also your tax calculator, age verifier, and customer database. In Maine, it must do all of this while staying linked to the state's seed-to-sale tracking system.</p>
+    </section>
+
+    <Callout title="The Right POS Saves You Daily" type="tip">
+      Your POS links directly to Metrc. Every gram you sell gets logged automatically. If the connection breaks, you have 24 hours to fix it before you are out of compliance. Choose carefully.
     </Callout>
 
     <section>
-      <h2>Key Features Required</h2>
-      <ul>
-        <li>Metrc seed-to-sale integration for Maine OCP compliance</li>
-        <li>Real-time inventory tracking across all product categories</li>
-        <li>Age verification (21+) at point of purchase</li>
-        <li>Tax calculation including Maine's cannabis excise rates</li>
-        <li>Ensure Maine compliance before choosing</li>
-      </ul>
+      <h2>Metrc: The State Tracking System</h2>
+      <p>Metrc is Maine's required cannabis tracking platform. It logs every plant from seed to sale. All adult-use dispensaries must use Metrc under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec504.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 504</a>.</p>
+      <p>You cannot avoid Metrc. It is not optional. The state uses it to track all cannabis products moving through the supply chain.</p>
+      <p>Your POS must push transaction data to Metrc in real time. This means your POS provider needs a working Metrc API integration. Not all cannabis POS systems support Maine's specific Metrc setup.</p>
+      <h3>Metrc Costs</h3>
+      <p>Metrc charges by license type. Cultivators, manufacturers, and retailers each have different rates. Most dispensaries pay $25-50 per month for Metrc access. Some integrated POS bundles include Metrc at no extra cost.</p>
     </section>
 
     <section>
-      <h2>Top POS Providers</h2>
-      <p>Leading cannabis-specific POS systems used in Maine include BioTrac, Meadow, and Greenline. These platforms offer Metrc integration, age verification, and compliance reporting. When evaluating providers, prioritize those with established Maine customer bases and responsive local support teams.</p>
+      <h2>What Maine Dispensaries Need from a POS</h2>
+      
+      <h3>1. Metrc Integration</h3>
+      <p>This is non-negotiable. Your POS must talk to Metrc. Every sale reduces your tracked inventory. If your POS and Metrc fall out of sync, you face penalties from the Maine Office of Cannabis Policy (OCP).</p>
+      
+      <h3>2. Maine Compliance Features</h3>
+      <p>You need automatic age verification. Maine law requires dispensaries to verify customers are 21 or older for adult-use purchases. Your POS should handle this at the point of sale, not manually.</p>
+      <p>Tax calculation is another must. Maine charges a 10% cannabis excise tax on adult-use sales. Your POS should calculate this automatically and report it to Metrc.</p>
+      
+      <h3>3. Inventory Management</h3>
+      <p>You must track every product by lot number. If you receive a shipment, it enters Metrc first. Then it appears in your POS. When you sell it, the inventory adjusts automatically.</p>
+      <p>Products that leave your inventory without a corresponding Metrc sale create discrepancies. Too many discrepancies trigger an OCP audit.</p>
+      
+      <h3>4. Cash Handling</h3>
+      <p>Cannabis remains illegal at the federal level. This means most banks will not work with dispensaries. You will handle cash. Your POS should make cash management easier with drawer counts, safe drops, and cash reporting.</p>
+      
+      <h3>5. Customer Tracking</h3>
+      <p>Maine's medical program requires patient records. Adult-use sales require no customer database. But building one helps with loyalty and marketing. Some POS systems build this automatically. Others require manual entry.</p>
+    </section>
+
+    <section>
+      <h2>POS Providers in Maine</h2>
+      <p>Several cannabis-specific POS systems operate in Maine. Each has different pricing, features, and support models.</p>
+      
+      <table aria-label="Maine cannabis POS provider comparison" caption="Popular POS systems used by Maine dispensaries with key features and pricing">
+        <thead>
+          <tr><th>Provider</th><th>Metrc Integration</th><th>Monthly Cost</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Flowhub</strong></td><td>Native</td><td>$99-200/mo</td><td>Growing operators</td></tr>
+          <tr><td><strong>Cova</strong></td><td>Native</td><td>$150-300/mo</td><td>Compliance-focused</td></tr>
+          <tr><td><strong>IndicaOnline</strong></td><td>Native</td><td>$99-250/mo</td><td>Multi-location</td></tr>
+          <tr><td><strong>Dutchie</strong></td><td>Native</td><td>$79-200/mo</td><td>Independent shops</td></tr>
+          <tr><td><strong>Greenline</strong></td><td>Available</td><td>$99-175/mo</td><td>Established operators</td></tr>
+        </tbody>
+      </table>
+      
+      <p>These prices are estimates. Contact providers for current Maine-specific quotes. Many offer free trials. Take advantage of them before committing.</p>
+    </section>
+
+    <section>
+      <h2>Common POS Mistakes</h2>
+      
+      <h3>Ignoring Metrc Sync</h3>
+      <p>Some operators treat their POS and Metrc as separate systems. They are not. Your POS must mirror Metrc at all times. Check the sync status daily. Small gaps become big problems fast.</p>
+      
+      <h3>Picking on Price Alone</h3>
+      <p>The cheapest POS often lacks solid Metrc integration. A system that saves you $50 per month but creates compliance issues will cost more in penalties. Look at total cost, not just monthly fees.</p>
+      
+      <h3>Skipping the Training</h3>
+      <p>POS systems have learning curves. Staff who skip training make errors. Those errors create Metrc discrepancies. Invest time in training before you open. It pays off.</p>
+      
+      <h3>No Cash Handling Protocols</h3>
+      <p>Running a cash-only business is harder than it sounds. You need procedures for counting, depositing, and securing cash. Your POS should support these workflows. If it does not, create a manual process until you upgrade.</p>
+    </section>
+
+    <section>
+      <h2>Setting Up Your POS for Maine</h3>
+      <p>Start with Metrc first. Create your Metrc account through the OCP licensing portal. Get your facility ID. Connect your POS to your Metrc account using the API key Metrc provides.</p>
+      <p>Test the connection before you open. Run a few mock sales. Verify the data appears in Metrc. If it does not, fix the integration before you serve a single customer.</p>
+      <p>Train your staff on the compliance aspects. They need to understand why Metrc matters. When staff understand the why, they make fewer mistakes.</p>
+    </section>
+
+    <section>
+      <h2>POS Costs for a Maine Dispensary</h2>
+      <p>Budget realistically. Here is what Maine operators typically pay:</p>
+      <ul>
+        <li><strong>Metrc:</strong> $25-50/month</li>
+        <li><strong>POS software:</strong> $79-300/month</li>
+        <li><strong>Hardware (registers, scanners):</strong> $500-2,000 upfront</li>
+        <li><strong>Setup and training:</strong> Often free with subscription, sometimes $200-500</li>
+      </ul>
+      <p>Total first-year cost typically runs $2,000-5,000 for software and hardware. This does not include cash handling services, which add $200-500 monthly for armored car pickup and safe services.</p>
+    </section>
+
+    <section>
+      <h2>Switching POS Systems</h2>
+      <p>You might outgrow your first POS. Growth often means new requirements. More locations. More inventory. Tighter compliance deadlines.</p>
+      <p>Switching is painful. Data migration from one POS to another rarely goes smoothly. Metrc history stays in Metrc, but your sales records, customer data, and product library may need manual re-entry.</p>
+      <p>Pick your first POS carefully. It is easier to start with the right system than to switch later.</p>
+    </section>
+
+    <section>
+      <h2>FAQ</h2>
+      
+      <details>
+        <summary>Can I use a regular retail POS in Maine?</summary>
+        <p>No. Standard POS systems do not integrate with Metrc. Maine law requires all cannabis sales to be tracked in the state seed-to-sale system. You need a cannabis-specific POS that supports Metrc.</p>
+      </details>
+      
+      <details>
+        <summary>What happens if my POS goes offline?</summary>
+        <p>You must maintain compliance manually or halt sales until it is restored. Metrc requires real-time data. If your POS cannot transmit, you cannot sell adult-use cannabis legally. Most providers offer offline mode with backup procedures. Know yours before you need it.</p>
+      </details>
+      
+      <details>
+        <summary>How do I connect my POS to Metrc?</summary>
+        <p>Metrc provides an API key through your licensee account. You give this key to your POS provider. They handle the technical integration. Plan for 1-2 weeks of setup and testing before opening.</p>
+      </details>
+      
+      <details>
+        <summary>Do I need separate systems for medical and adult-use?</summary>
+        <p>Maine's program allows dual-license operations. Your POS should handle both. Some operators run separate systems. Most find it easier to use one POS with separate inventory pools for medical and adult-use products.</p>
+      </details>
+      
+      <details>
+        <summary>What hardware do I need?</summary>
+        <p>At minimum, you need a touchscreen terminal, barcode scanner, and receipt printer. Most dispensaries add a second screen for customers, a label printer for product labels, and a dedicated cash drawer. Budget $1,500-3,000 for complete hardware setup.</p>
+      </details>
     </section>
 
     <section class="further-reading">
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine Seed-to-Sale Tracking Info</a></li>
+        <li><a href="https://www.metrc.com/partner/maine/" target="_blank" rel="noopener noreferrer">Metrc Maine — Official Tracking System</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec504.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 504 — Cannabis Store Operations</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Cost Breakdown</a></li>
+        <li><a href="/roi-calculator/">ROI Calculator</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>Pricing and features are subject to change. Verify current information with providers.</em></p>
+      <p><em>Pricing and features are subject to change. Verify current information with POS providers and the Maine OCP before purchasing.</em></p>
     </section>
   </article>
 </Layout>
@@ -61,8 +187,8 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2 { margin-top: 0; }
-  section h3 { margin-top: 1.5rem; color: var(--color-primary); }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
   th { background: var(--color-background); }
@@ -71,4 +197,24 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+
+  details {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(88, 129, 87, 0.05);
+    border-radius: 0.5rem;
+  }
+  
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  summary:hover {
+    color: var(--color-primary);
+  }
 </style>

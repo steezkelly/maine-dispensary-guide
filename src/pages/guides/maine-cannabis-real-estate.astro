@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-14", modifiedDate: "2026-03-20", section: "Business Essentials" };
+const topics = ["real-estate"];
 ---
 
 <Layout 
@@ -10,6 +11,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis real estate and zoning guide. Municipal opt-in requirements, 1,000ft buffer rules, and commercial lease considerations."
   heroImage="https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-21", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const topics = ["operations"];
 ---
 
 <Layout 
@@ -10,6 +11,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis dispensary packaging and labeling guide. OCP requirements, THC limits, child-resistant packaging, and label specifications for 2026."
   heroImage="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

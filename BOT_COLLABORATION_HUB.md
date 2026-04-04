@@ -823,3 +823,134 @@ These were identified but not implemented in this sprint:
 ---
 
 *End of Frontend UX Sprint Documentation*
+
+---
+
+## 🟢 COMPLETED: Smart Related Articles System
+**[April 4, 2026 - 2:30 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE
+- **Objective:** Replace static related articles with topic-based intelligent matching
+
+---
+
+### WHY THIS SPRINT
+
+Previously, all guide pages showed the same static related articles regardless of content. This was identified during self-audit of the RelatedArticles component.
+
+**Problems identified:**
+1. Only 6 of 15 city guides were in the related articles array
+2. Dead code (`cityName` prop) existed
+3. No intelligence - all city guides showed identical recommendations
+4. Not contextual based on actual guide topics
+
+---
+
+### WHAT WAS BUILT
+
+#### 1. Topic Data (`src/data/topics.json`)
+
+```json
+{
+  "topics": {
+    "city": { "label": "City Guide", "related": ["market", "real-estate", "licensing"] },
+    "market": { "label": "Market Analysis", "related": ["finance", "real-estate", "compliance"] },
+    "licensing": { "label": "Licensing", "related": ["compliance", "real-estate", "operations"] },
+    "finance": { "label": "Finance & Taxes", "related": ["business", "real-estate", "operations"] },
+    "real-estate": { "label": "Real Estate & Zoning", "related": ["city", "licensing", "operations"] },
+    "operations": { "label": "Operations", "related": ["compliance", "finance", "business"] },
+    "compliance": { "label": "Compliance", "related": ["licensing", "operations", "finance"] },
+    "marketing": { "label": "Marketing", "related": ["compliance", "operations", "business"] },
+    "business": { "label": "Business Planning", "related": ["finance", "marketing", "real-estate"] }
+  },
+  "foundational": ["/launch-checklist/", "/roi-calculator/", "/resources/"]
+}
+```
+
+#### 2. Topic Assignment (Sub-agents)
+
+**15 city guides** received `topics: ["city", "market"]`
+
+**26 technical guides** received appropriate topics:
+| Topic | Guides |
+|-------|--------|
+| licensing | license, staffing-licensing |
+| finance | costs, 280e-taxation, banking, funding, workers-comp |
+| real-estate | real-estate, security, locations |
+| operations | pos, inventory, packaging, delivery, hiring |
+| compliance | regulations, edibles, cultivation, extraction, testing, events, waste |
+| marketing | marketing-compliance |
+| business | business-plan, vendor-directory |
+| market | market |
+
+#### 3. Smart Matching Algorithm (`RelatedArticles.astro`)
+
+```javascript
+function calculateScore(guideTopics, currentTopics) {
+  let score = 0;
+  for (const topic of guideTopics) {
+    if (currentTopics.includes(topic)) score += 2;      // Direct match
+    const relatedTopics = topicsData.topics[topic]?.related || [];
+    for (const related of relatedTopics) {
+      if (guideTopics.includes(related)) score += 1;  // Related topic
+    }
+  }
+  return score;
+}
+```
+
+**Scoring example:**
+- Portland guide: `["city", "market"]`
+- Bangor guide: `["city", "market"]` → Score: 4 (both match, both directions)
+- License guide: `["licensing"]` → Score: 0 (no overlap)
+
+#### 4. Layout Updates
+
+- Changed `relatedCategory` prop to `topics: string[]`
+- RelatedArticles receives `currentTopics` and `currentPath`
+- Automatically excludes current page from results
+
+---
+
+### SCALING PATH
+
+When adding more fine-grained topics (e.g., multiple 280E guides):
+
+1. Add topic to guide frontmatter: `topics: ["finance", "280e"]`
+2. Add topic definition to `topics.json`:
+   ```json
+   "280e": { "label": "280E Tax", "related": ["finance", "taxation"] }
+   ```
+3. System automatically picks up granularity
+
+---
+
+### FILES CHANGED
+
+| File | Change |
+|------|--------|
+| `src/data/topics.json` | New - topic definitions and relationships |
+| `src/components/RelatedArticles.astro` | Rewritten with smart matching |
+| `src/layouts/Layout.astro` | Updated prop from `relatedCategory` to `topics` |
+| `src/pages/guides/*.astro` | All 41 guides updated with topics |
+
+---
+
+### SUB-AGENTS USED
+
+1. **City Guides Agent** - Updated 15 city guides with `topics: ["city", "market"]`
+2. **Technical Guides Agent** - Updated 26 guides with appropriate topic arrays
+3. **Fix Agent** - Fixed `topics` prop not being passed to Layout in 35 guides
+
+---
+
+### VERIFICATION
+
+- **Build:** 64 pages, all passing
+- **Topics passed:** 41/41 guide pages now pass topics to Layout
+- **Matching:** Each guide shows 3 related guides + 3 essential resources
+
+---
+
+*End of Smart Related Articles Sprint Documentation*

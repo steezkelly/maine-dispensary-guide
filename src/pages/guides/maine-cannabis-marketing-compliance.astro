@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-21", modifiedDate: "2026-03-22", section: "Compliance & Legal" };
+const topics = ["marketing"];
 ---
 
 <Layout 
@@ -10,6 +11,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis marketing compliance guide. Advertising rules, digital restrictions, and branding best practices for dispensary owners in 2026."
   heroImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

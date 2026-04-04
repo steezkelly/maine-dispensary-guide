@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-25", modifiedDate: "2026-03-20", section: "City Guides" };
+const topics = ["compliance"];
 export const title = "Maine Cannabis Events 2026";
 ---
 
@@ -11,6 +12,7 @@ export const title = "Maine Cannabis Events 2026";
   description="Cannabis events and regulatory updates in Maine for 2026. How to stay connected with OCP rule changes and industry events."
   heroImage="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

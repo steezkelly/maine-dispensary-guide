@@ -239,6 +239,33 @@ const article = {
 - "Start Here" path for beginners (4-step visual journey)
 - Guide users from overview → specifics → action
 
+### Related Articles (Smart Matching)
+Guide pages automatically show related articles based on topic intersection.
+
+**Topic Definition:** `src/data/topics.json`
+```json
+{
+  "topics": {
+    "city": { "label": "City Guide", "related": ["market", "real-estate"] },
+    "finance": { "label": "Finance", "related": ["business", "real-estate"] }
+  }
+}
+```
+
+**Guide Frontmatter:**
+```astro
+const topics = ["finance", "licensing"];
+---
+<Layout title="..." topics={topics}>
+```
+
+**Scoring Algorithm:**
+- Direct topic match: +2 points
+- Related topic match: +1 point
+- Shows top 3 by score + 3 essential resources
+
+**Available Topics:** city, market, licensing, finance, real-estate, operations, compliance, marketing, business
+
 ---
 
 ## Astro-Specific Patterns

@@ -8,21 +8,27 @@ interface Props {
 const { title, type = 'passion', level = 'h3' } = Astro.props;
 
 const icons = {
-  passion: '✨',
-  tip: '💡',
-  success: '🌱'
+  passion: '✦',
+  tip: '◆',
+  success: '▲'
+};
+
+const accents = {
+  passion: 'var(--color-accent)',
+  tip: 'var(--color-soft-green)',
+  success: 'var(--color-primary)'
 };
 
 const bgColor = {
-  passion: 'rgba(88, 129, 87, 0.1)',
-  tip: 'rgba(163, 177, 138, 0.15)',
-  success: 'rgba(13, 78, 80, 0.05)'
+  passion: 'rgba(88, 129, 87, 0.08)',
+  tip: 'rgba(163, 177, 138, 0.12)',
+  success: 'rgba(13, 78, 80, 0.06)'
 };
 ---
 
-<div class="callout" style={`background-color: ${bgColor[type]}`}>
+<div class="callout" style={`--callout-accent: ${accents[type]}; background-color: ${bgColor[type]};`}>
   <div class="callout-header">
-    <span class="callout-icon">{icons[type]}</span>
+    <span class="callout-icon" style={`color: ${accents[type]};`}>{icons[type]}</span>
     {level === 'h2' ? <h2>{title}</h2> : <h3>{title}</h3>}
   </div>
   <div class="callout-content">
@@ -32,10 +38,26 @@ const bgColor = {
 
 <style>
   .callout {
-    padding: 1.5rem;
-    border-radius: 1rem;
-    margin: 2rem 0;
-    border: 1px solid var(--color-border);
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    border-radius: 0 1rem 1rem 0;
+    margin: 2.5rem 0;
+    border: none;
+    border-left: 4px solid var(--callout-accent);
+    position: relative;
+    box-shadow: 0 2px 12px rgba(13, 78, 80, 0.06);
+  }
+
+  .callout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0 1rem 1rem 0;
+    border: 1px solid var(--callout-accent);
+    opacity: 0.2;
+    pointer-events: none;
   }
 
   .callout-header {
@@ -46,7 +68,8 @@ const bgColor = {
   }
 
   .callout-icon {
-    font-size: 1.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
   }
 
   .callout-header h2,
@@ -55,15 +78,33 @@ const bgColor = {
     font-family: var(--font-serif);
     color: var(--color-primary);
     font-size: 1.125rem;
+    font-weight: 700;
   }
 
   .callout-content {
     font-size: 0.9375rem;
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--color-text);
   }
 
   .callout-content :global(p:last-child) {
     margin-bottom: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .callout {
+      animation: calloutReveal 0.5s ease-out;
+    }
+  }
+
+  @keyframes calloutReveal {
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 </style>

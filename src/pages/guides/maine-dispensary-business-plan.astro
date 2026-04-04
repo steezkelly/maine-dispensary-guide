@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-11", modifiedDate: "2026-03-18", section: "Business Essentials" };
+const topics = ["business"];
 ---
 
 <Layout 
@@ -10,6 +11,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis dispensary business plan guide. Investor-ready pitch decks, financial projections, and operational strategy for 2026."
   heroImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">

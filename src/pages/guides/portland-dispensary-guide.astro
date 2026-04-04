@@ -8,6 +8,7 @@ const article = {
   modifiedDate: "2026-03-28",
   section: "City Guides"
 };
+const topics = ["city", "market"];
 ---
 
 <Layout 
@@ -15,6 +16,7 @@ const article = {
   description="Portland, Maine cannabis dispensary guide. 2026 market opportunities, strategic locations, local fee structures, and OCP investment requirements."
   heroImage="https://images.unsplash.com/photo-1507090960745-b32f65d3113a?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={["city", "market"]}
 >
   <article>
     <div class="article-header">
@@ -22,8 +24,11 @@ const article = {
       <p class="subtitle">How to open a cannabis dispensary in Portland, Maine</p>
     </div>
 
-    <section class="fact-box">
-      <h2>📋 Portland at a Glance</h2>
+    <section class="fact-box reveal" style="animation-delay: 0.1s;">
+      <div class="fact-box-header">
+        <span class="fact-box-icon">◈</span>
+        <h2>Portland at a Glance</h2>
+      </div>
       <table aria-label="Portland dispensary requirements and market data" caption="Key requirements and market data for opening a dispensary in Portland">
         <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
         <tbody>
@@ -37,7 +42,7 @@ const article = {
       </table>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.2s;">
       <h2>The Portland Opportunity</h2>
       <p>Portland is Maine's largest city — 68,000 residents, 130K+ in the metro area. It's where the money is, if you can stomach the competition. The customer base here is different from anywhere else in the state: educated, discerning, willing to pay more for quality. Tourism doesn't hurt either.</p>
     </section>
@@ -46,7 +51,7 @@ const article = {
       Look, Portland isn't for everyone. It's expensive, saturated, and the locals have opinions. But if you've got a point of difference — real craft, serious knowledge, something they can't get elsewhere — Portland rewards that. This market bites back if you come in generic.
     </Callout>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.3s;">
       <h2>Portland Market Data</h2>
       <table aria-label="Portland market data">
         <thead>
@@ -62,13 +67,13 @@ const article = {
       </table>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.4s;">
       <h2>Local X-Factor: Portland's Craft Consumer</h2>
       <p><strong>What sets Portland apart:</strong> This isn't a price-driven market. Portland customers actively seek out local cultivators and artisanal products — and they'll pay 15-25% more for them. That premium is what makes higher rent workable.</p>
       <p><strong>Strategic Implication:</strong> If you're thinking commodity retail, look elsewhere. Portland rewards the curated approach. Find Maine growers you can work with closely and build your reputation around that.</p>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.5s;">
       <h2>Local Regulations</h2>
       <p>Portland has specific local regulations for cannabis businesses:</p>
       <ul>
@@ -81,7 +86,7 @@ const article = {
       </ul>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.6s;">
       <h2>Best Locations in Portland</h2>
       <table aria-label="Portland best dispensary locations by area" caption="Recommended commercial areas for dispensary locations in Portland Maine with pros, cons, and rent estimates">
         <thead>
@@ -96,7 +101,7 @@ const article = {
       </table>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.7s;">
       <h2>Nearby Markets</h2>
       <p>Looking for less saturated markets near Portland? These nearby cities offer different competitive landscapes:</p>
       <table aria-label="Portland nearby markets">
@@ -112,7 +117,7 @@ const article = {
       </table>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.8s;">
       <h2>Key Takeaways</h2>
       <ul>
         <li><strong>Premium market:</strong> Portland customers pay more for quality — use that</li>
@@ -123,7 +128,7 @@ const article = {
       </ul>
     </section>
 
-    <section>
+    <section class="reveal" style="animation-delay: 0.9s;">
       <h2>Next Steps</h2>
       <ol>
         <li>Apply for <a href="https://www.maine.gov/dafs/ocp/adult-use/applications-forms" target="_blank" rel="noopener">state license</a> through OCP</li>
@@ -157,15 +162,48 @@ const article = {
   section { margin-bottom: 2rem; }
   section h2, section h3 { margin-top: 1.5rem; }
   section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
+
+  .fact-box {
+    background: linear-gradient(135deg, rgba(88, 129, 87, 0.08) 0%, rgba(163, 177, 138, 0.06) 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fact-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  }
+
+  .fact-box-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .fact-box-icon {
+    font-size: 1.25rem;
+    color: var(--color-accent);
+  }
+
+  .fact-box h2 {
+    margin-top: 0;
+    font-size: 1.375rem;
+  }
+
+  .fact-box table { margin: 0; }
+
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
 </style>

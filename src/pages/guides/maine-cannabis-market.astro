@@ -2,7 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-12", modifiedDate: "2026-03-20", section: "Business Essentials" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-12", modifiedDate: "2026-04-04", section: "Business Essentials" };
+const topics = ["market"];
 ---
 
 <Layout 
@@ -10,95 +11,113 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   description="Maine cannabis market analysis for dispensary entrepreneurs. Market size, growth trends, competitive landscape, and consumer demand for 2026."
   heroImage="https://images.unsplash.com/photo-1588421357574-87938a86fa28?auto=format&fit=crop&q=80&w=1200&h=400"
   article={article}
+  topics={topics}
 >
   <article>
     <div class="article-header">
       <h1>Maine Cannabis Market Analysis</h1>
-      <p class="subtitle">Understanding the opportunity in Maine's cannabis industry</p>
+      <p class="subtitle">What operators need to know about Maine's cannabis industry</p>
     </div>
 
-    <section>
-      <h2>Market Overview</h2>
-      <Callout title="A Land of Opportunity" type="passion">
-        Maine's cannabis market is a frontier of possibility. From the coastal towns to the inland cities, there's a unique spirit of independence and quality that defines our local industry. By understanding these market dynamics, you're not just reading data—you're mapping out your path to success in one of the most exciting sectors in the state!
-      </Callout>
-      <p>Maine's cannabis market has grown significantly since retail sales launched in 2020. Under the <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine adult-use cannabis program</a>, established by <strong>28-B M.R.S.</strong>, the combination of medical and adult-use programs creates a substantial opportunity for dispensary operators. With a population of approximately 1.4 million people, a strong tourism industry, and a culture that values local products, Maine offers unique advantages for cannabis entrepreneurs.</p>
-      <p>The market is mature enough to have established players and customer expectations, but still growing enough to reward well-positioned newcomers. According to <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP market data</a>, sales have increased steadily year over year since implementation.</p>
+    <section class="fact-box">
+      <h2>Maine Cannabis Market at a Glance</h2>
+      <table aria-label="Maine cannabis market key metrics">
+        <tbody>
+          <tr><td><strong>Market Size (2025)</strong></td><td>$200-250M (Medical + Adult-Use)</td></tr>
+          <tr><td><strong>Annual Growth</strong></td><td>10-15%</td></tr>
+          <tr><td><strong>Active Patients</strong></td><td>50,000+</td></tr>
+          <tr><td><strong>Licensed Dispensaries</strong></td><td>80-100 retail locations</td></tr>
+          <tr><td><strong>Population</strong></td><td>1.4 million (3rd smallest US state)</td></tr>
+          <tr><td><strong>Competition Level</strong></td><td>Portland crowded, rural areas open</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
-      <h2>Market Size & Growth</h2>
+      <h2>Market Overview</h2>
+      <p>Maine's cannabis market has grown since retail sales launched in 2020. The state runs both medical and adult-use programs under <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine's adult-use cannabis program</a>, established by 28-B M.R.S. Together, these programs give dispensary operators access to a broad customer base.</p>
+      <p>About 1.4 million people live in Maine. The state draws tourists in summer. Many residents prefer local products. These factors create a distinct market from larger states.</p>
+      <p>Sales have climbed every year since implementation, according to OCP data. The market is mature enough to have established players and customer expectations. But it's still growing enough to reward newcomers who find the right position.</p>
+    </section>
+
+    <Callout title="The Reality Check" type="passion">
+      Maine isn't for everyone. It's a small, price-conscious market with strong local preferences and seasonal tourism swings. If you're expecting Portland-scale returns on a rural Maine budget, think again. But if you understand the dynamics and position right, there's money to be made here.
+    </Callout>
+
+    <section>
+      <h2>Market Size and Growth</h2>
       <table aria-label="Maine cannabis market size and growth metrics" caption="Market size estimates, projected growth rates, and registered patient counts for Maine cannabis">
         <thead>
           <tr><th>Metric</th><th>Estimate</th><th>Notes</th></tr>
         </thead>
         <tbody>
           <tr><td>Total Market Size (2025)</td><td>$200-250M</td><td>Medical + Adult-Use combined</td></tr>
-          <tr><td>Projected Growth (Annual)</td><td>10-15%</td><td>Conservative estimate</td></tr>
+          <tr><td>Projected Growth</td><td>10-15% per year</td><td>Conservative estimate</td></tr>
           <tr><td>Medical Patients</td><td>50,000+</td><td>Active registrations</td></tr>
-          <tr><td>Adult-Use Customers</td><td>Growing rapidly</td><td>Expanding customer base</td></tr>
+          <tr><td>Adult-Use Customers</td><td>Growing</td><td>Expanding base</td></tr>
           <tr><td>Dispensaries</td><td>80-100</td><td>Licensed retail locations</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Market Drivers: What's Fueling Growth</h2>
+      <h2>What's Driving Growth</h2>
       
-      <h3>Population & Demographics</h3>
+      <h3>Population and Demographics</h3>
       <ul>
-        <li><strong>Stable population base:</strong> Year-round residents provide consistent demand</li>
-        <li><strong>Aging population:</strong> Medical cannabis appeal for pain management, nausea, other conditions</li>
-        <li><strong>Millennial/Gen-Z presence:</strong> Strong adult-use market in college towns (Portland, Orono)</li>
+        <li><strong>Stable base:</strong> Year-round residents provide steady demand</li>
+        <li><strong>Aging population:</strong> Medical cannabis helps with pain, nausea, other conditions</li>
+        <li><strong>College towns:</strong> Portland and Orono have strong adult-use markets</li>
       </ul>
 
       <h3>Economic Factors</h3>
       <ul>
-        <li><strong>Tourism boost:</strong> Summer tourism adds significant adult-use sales</li>
-        <li><strong>Local preference:</strong> Maine consumers prefer local/craft products</li>
-        <li><strong>Limited competition:</strong> Many areas remain underserved</li>
+        <li><strong>Tourism boost:</strong> Summer visitors add significant adult-use sales</li>
+        <li><strong>Local preference:</strong> Maine buyers choose local and craft products</li>
+        <li><strong>Open areas:</strong> Many towns have no dispensaries yet</li>
       </ul>
 
       <h3>Regulatory Environment</h3>
       <ul>
-        <li><strong>Established program:</strong> Mature licensing and compliance framework</li>
-        <li><strong>Reasonably permissive:</strong> Less restrictive than some neighboring states</li>
-        <li><strong>Vertical integration allowed:</strong> Operators can control multiple license types</li>
+        <li><strong>Established program:</strong> The licensing system works and rules are clear</li>
+        <li><strong>Reasonably permissive:</strong> Less restrictive than some nearby states</li>
+        <li><strong>Vertical integration allowed:</strong> You can hold multiple license types</li>
       </ul>
 
-      <h3>Hidden Challenge: The Seasonal Whiplash</h3>
-      <p>Tourism creates dramatic seasonality—coastal dispensaries may see 40-60% higher sales in summer months, but face lean winters. Plan your financial model to survive the slow season while capitalizing on summer peaks.</p>
+      <h3>The Seasonal Whiplash Problem</h3>
+      <p>Tourism creates dramatic seasonality. Coastal dispensaries may see 40-60% higher sales in summer months. Then face lean winters. Plan your finances to survive the slow season.</p>
     </section>
 
     <section>
       <h2>Competitive Landscape</h2>
-      <p>Understanding who you're competing against is essential for positioning your dispensary.</p>
+      <p>Know who you're up against before you pick a location.</p>
       
-      <h3>Market Concentration:</h3>
+      <h3>Market Concentration</h3>
       <ul>
-        <li><strong>Portland:</strong> Most competitive, 10+ dispensaries, saturated market</li>
-        <li><strong>Lewiston-Auburn:</strong> Moderate competition, 5-7 dispensaries</li>
-        <li><strong>Bangor:</strong> Emerging competition, 4-5 dispensaries</li>
-        <li><strong>Rural Maine:</strong> Often first-mover opportunity, 0-2 competitors</li>
+        <li><strong>Portland:</strong> Crowded. More than 10 dispensaries now.</li>
+        <li><strong>Lewiston-Auburn:</strong> Getting tight. About 5-7 dispensaries.</li>
+        <li><strong>Bangor:</strong> Growing. 4-5 dispensaries.</li>
+        <li><strong>Rural Maine:</strong> Wide open. Often 0-2 competitors.</li>
       </ul>
 
-      <h3>Key Competitor Types:</h3>
+      <h3>Types of Competitors</h3>
       <ul>
-        <li><strong>Multi-location operators:</strong> Established chains with brand recognition</li>
+        <li><strong>Multi-location operators:</strong> Chains with name recognition</li>
         <li><strong>Boutique dispensaries:</strong> Local, craft-focused, higher touch</li>
-        <li><strong>Medical-first operations:</strong> Focused on patient relationships</li>
-        <li><strong>Value-focused:</strong> Price competition, lower margins</li>
+        <li><strong>Medical-first operations:</strong> Built around patient relationships</li>
+        <li><strong>Value-focused:</strong> Compete on price, lower margins</li>
       </ul>
 
-      <h3>Expert Scenario: Finding Your Underserved Market</h3>
-      <p>An operator looking at Maine maps noticed a gap: the mid-coast region (Wiscasset to Rockland) had no dispensaries despite strong tourist traffic and year-round populations. They opened in Damariscotta and captured significant market share as the first mover. Within 18 months, they were profitable while operators in Portland were still fighting for market share.</p>
+      <h3>Finding an Underserved Market</h3>
+      <p>One operator looked at the map and noticed a gap. The mid-coast region from Wiscasset to Rockland had no dispensaries. Tourist traffic was strong. Year-round populations existed. They opened in Damariscotta. Within 18 months, they were profitable while Portland operators still fought for market share.</p>
+      <p>The lesson: sometimes the best spot is the one nobody else thought to open.</p>
     </section>
 
     <section>
-      <h2>Product Landscape: What Sells in Maine</h2>
+      <h2>What Sells in Maine</h2>
       
-      <h3>Category Breakdown:</h3>
-      <table aria-label="Maine cannabis product landscape by category" caption="Market share percentages and trends for cannabis product categories including flower, concentrates, edibles, and vapes">
+      <h3>Category Breakdown</h3>
+      <table aria-label="Maine cannabis product landscape by category" caption="Market share percentages and trends for cannabis product categories">
         <thead>
           <tr><th>Category</th><th>Market Share</th><th>Trend</th></tr>
         </thead>
@@ -112,35 +131,35 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
         </tbody>
       </table>
 
-      <h3>Maine-Specific Preferences:</h3>
+      <h3>What Maine Buyers Want</h3>
       <ul>
-        <li><strong>Local craft products:</strong> Maine consumers strongly prefer locally-grown and produced products over mass-market alternatives</li>
-        <li><strong>Organic/sustainable:</strong> Growing demand for environmentally-conscious products</li>
-        <li><strong>Value vs. Premium:</strong> Distinct segments—some shop price, others shop quality</li>
-        <li><strong>Strain preferences:</strong> Sativa and hybrid strains popular; indica has steady medical demand</li>
+        <li><strong>Local craft products:</strong> Strong preference for locally-grown cannabis over mass-market brands</li>
+        <li><strong>Organic and sustainable:</strong> Demand growing for eco-friendly products</li>
+        <li><strong>Value vs. Premium:</strong> Two distinct customer groups. Some shop price. Others shop quality.</li>
+        <li><strong>Strain preferences:</strong> Sativa and hybrid strains are popular. Indica has steady medical demand.</li>
       </ul>
 
-      <h3>Hidden Challenge: The Cultivation Surplus</h3>
-      <p>Maine has more cultivation capacity than retail demand in some product categories. This means wholesale flower prices have been declining. If you're vertically integrated, this hurts your <a href="/guides/maine-cannabis-cultivation-guide/">cultivation margins</a>. If you're purely retail, it means competitive wholesale prices—but also means price competition will intensify.</p>
+      <h3>The Cultivation Surplus Problem</h3>
+      <p>Maine grows more cannabis than retail demand in some categories. Wholesale flower prices have dropped. If you're vertically integrated, this squeezes your cultivation margins. If you're purely retail, you benefit from lower wholesale prices—but expect price competition to intensify.</p>
     </section>
 
     <section>
-      <h2>Pricing & Margins</h2>
+      <h2>Pricing and Margins</h2>
       
-      <h3>Typical Dispensary Economics:</h3>
+      <h3>Typical Dispensary Economics</h3>
       <ul>
-        <li><strong>Wholesale flower:</strong> $800-1,400 per pound (varies by quality)</li>
-        <li><strong>Retail flower:</strong> $10-25 per eighth (depending on quality)</li>
+        <li><strong>Wholesale flower:</strong> $800-1,400 per pound, depending on quality</li>
+        <li><strong>Retail flower:</strong> $10-25 per eighth</li>
         <li><strong>Gross margin:</strong> 25-40% typical</li>
         <li><strong>Net margin:</strong> 10-20% after all expenses (pre-280E)</li>
       </ul>
 
-      <h3>Factors Affecting Pricing:</h3>
+      <h3>What Affects Your Pricing</h3>
       <ul>
-        <li><strong>Location:</strong> Portland can command premium pricing; rural areas compete on value</li>
-        <li><strong>Product mix:</strong> Concentrates and edibles carry higher margins than flower</li>
-        <li><strong>Competition:</strong> More dispensaries = more price pressure</li>
-        <li><strong>Brand:</strong> Established brands can command loyalty premiums</li>
+        <li><strong>Location:</strong> Portland shops can charge more. Rural areas compete on value.</li>
+        <li><strong>Product mix:</strong> Concentrates and edibles have higher margins than flower</li>
+        <li><strong>Competition:</strong> More dispensaries nearby means more price pressure</li>
+        <li><strong>Brand:</strong> Known brands can charge more</li>
       </ul>
     </section>
 
@@ -149,97 +168,97 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
       
       <h3>Portland Metro</h3>
       <ul>
-        <li><strong>Market status:</strong> Saturated to near-saturated</li>
+        <li><strong>Status:</strong> Crowded</li>
         <li><strong>Opportunity:</strong> Differentiation, premium positioning, niche focus</li>
         <li><strong>Challenge:</strong> High rent, intense competition</li>
-        <li><strong>Best strategy:</strong> Unique experience, specialty products, exceptional service</li>
+        <li><strong>Best strategy:</strong> Unique experience, specialty products, top service</li>
       </ul>
 
       <h3>Lewiston-Auburn</h3>
       <ul>
-        <li><strong>Market status:</strong> Approaching saturation</li>
+        <li><strong>Status:</strong> Getting tight</li>
         <li><strong>Opportunity:</strong> Second-largest market, value positioning</li>
         <li><strong>Challenge:</strong> Price-sensitive customers</li>
         <li><strong>Best strategy:</strong> Competitive pricing, convenience, loyalty programs</li>
       </ul>
 
-      <h3>Bangor & Northern Maine</h3>
+      <h3>Bangor and Northern Maine</h3>
       <ul>
-        <li><strong>Market status:</strong> Underdeveloped, growing</li>
-        <li><strong>Opportunity:</strong> First-mover advantage, less competition</li>
+        <li><strong>Status:</strong> Growing</li>
+        <li><strong>Opportunity:</strong> Less competition, early arrival advantage</li>
         <li><strong>Challenge:</strong> Smaller population base</li>
         <li><strong>Best strategy:</strong> Establish brand early, build customer loyalty</li>
       </ul>
 
       <h3>Mid-Coast</h3>
       <ul>
-        <li><strong>Market status:</strong> Emerging with tourism boost</li>
-        <li><strong>Opportunity:</strong> Tourist traffic + year-round residents</li>
-        <li><strong>Challenge:</strong> Seasonal revenue fluctuation</li>
+        <li><strong>Status:</strong> Emerging with tourism boost</li>
+        <li><strong>Opportunity:</strong> Tourists plus year-round residents</li>
+        <li><strong>Challenge:</strong> Seasonal revenue swings</li>
         <li><strong>Best strategy:</strong> Balance tourist and local appeal</li>
       </ul>
 
       <h3>Rural Maine</h3>
       <ul>
-        <li><strong>Market status:</strong> Wide open, underserved</li>
-        <li><strong>Opportunity:</strong> First-mover in many towns</li>
-        <li><strong>Challenge:</strong> Lower population density, longer distances</li>
+        <li><strong>Status:</strong> Wide open, underserved</li>
+        <li><strong>Opportunity:</strong> Often the only shop in town</li>
+        <li><strong>Challenge:</strong> Lower population density, longer travel distances</li>
         <li><strong>Best strategy:</strong> Community focus, loyalty, convenience</li>
       </ul>
     </section>
 
     <section>
-      <h2>Key Success Factors</h2>
+      <h2>What Determines Success</h2>
       <ul>
-        <li><strong>Location, location, location:</strong> The #1 factor in success—get a compliant location in an underserved area</li>
-        <li><strong>Product curation:</strong> Stock what sells, but also differentiate with unique offerings</li>
-        <li><strong>Staff expertise:</strong> Knowledgeable budtenders build trust and loyalty</li>
-        <li><strong>Customer experience:</strong> Dispensaries are hospitality businesses—treat customers well</li>
-        <li><strong>Compliance excellence:</strong> Violations can shut you down—stay ahead of regulations</li>
-        <li><strong>Local roots:</strong> Maine consumers value local—support local cultivators and community</li>
-        <li><strong>Financial discipline:</strong> This is a thin-margin business—manage costs carefully</li>
+        <li><strong>Location:</strong> The biggest factor. Find a compliant spot in an underserved area.</li>
+        <li><strong>Product selection:</strong> Stock what sells, but set yourself apart with unique offerings</li>
+        <li><strong>Staff knowledge:</strong> Budtenders who know their products build trust and repeat business</li>
+        <li><strong>Customer experience:</strong> Dispensaries are hospitality businesses. Treat customers well.</li>
+        <li><strong>Compliance:</strong> Violations can shut you down. Stay ahead of regulations.</li>
+        <li><strong>Local roots:</strong> Maine buyers value local. Support local growers. Engage your community.</li>
+        <li><strong>Financial discipline:</strong> Margins are thin. Manage costs carefully.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Hidden Challenges Most Operators Face</h2>
+      <h2>Hidden Challenges</h2>
       
       <h3>1. The Staffing Squeeze</h3>
-      <p>Finding and retaining quality budtenders is harder than expected. Maine's limited labor pool means competitive wages are essential. Budget $15-25/hour for experienced budtenders plus benefits to attract and retain talent.</p>
+      <p>Finding good budtenders is harder than expected. Maine's labor pool is limited. Budget $15-25 per hour for experienced staff, plus benefits.</p>
       
-      <h3>2. The Cash-Intensive Reality</h3>
-      <p>While some progress has been made, cannabis businesses still face banking challenges. Budget for armored car services, security cash handling, and the logistical challenges of running a primarily cash business.</p>
+      <h3>2. The Cash Problem</h3>
+      <p>Banking remains difficult for cannabis businesses. Budget for armored car services and security cash handling. Plan for the logistics of running a cash-heavy business.</p>
       
       <h3>3. The Compliance Burden</h3>
-      <p>Keeping up with changing regulations, reporting requirements, and inspections takes significant time and resources. Many operators underestimate this—budget staff time and possibly a compliance manager.</p>
+      <p>Regulations change. Reports pile up. Inspections happen. Many operators underestimate the time this takes. You may need a dedicated compliance person.</p>
       
       <h3>4. The <a href="/guides/maine-cannabis-business-insurance/">Insurance Squeeze</a></h3>
-      <p>Cannabis business insurance is expensive and coverage can be limited. Expect to pay $15,000-40,000 annually for comprehensive coverage. Some operators struggle to find coverage at any price.</p>
+      <p>Cannabis business insurance is expensive. Coverage can be limited. Expect to pay $15,000-40,000 per year for comprehensive coverage. Some operators struggle to find any insurer.</p>
     </section>
 
     <section>
-      <h2>Expert Pro-Tips</h2>
+      <h2>Tips from Operators Who've Done It</h2>
       <ul>
-        <li><strong>Study the OCP data portal</strong>—understand what's actually selling, where</li>
-        <li><strong>Build relationships with local cultivators</strong>—exclusive products differentiate you</li>
-        <li><strong>Invest in staff training</strong>—knowledgeable staff create loyal customers</li>
-        <li><strong>Think beyond flower</strong>—concentrates and edibles have better margins</li>
-        <li><strong>Plan for year-round revenue</strong>—don't rely on summer tourism alone</li>
-        <li><strong>Track everything</strong>—data-driven decisions beat intuition</li>
-        <li><strong>Join the Maine Cannabis Coalition</strong>—networking and advocacy matter</li>
+        <li><strong>Study OCP data.</strong> The portal shows what's actually selling and where.</li>
+        <li><strong>Build cultivator relationships.</strong> Exclusive products set you apart.</li>
+        <li><strong>Train your staff well.</strong> Knowledgeable budtenders create loyal customers.</li>
+        <li><strong>Think beyond flower.</strong> Concentrates and edibles have better margins.</li>
+        <li><strong>Plan for year-round revenue.</strong> Don't depend on summer tourism alone.</li>
+        <li><strong>Track everything.</strong> Data beats intuition.</li>
+        <li><strong>Join the Maine Cannabis Coalition.</strong> Networking matters.</li>
       </ul>
     </section>
 
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li>$200-250M market with 10-15% annual growth expected</li>
-        <li>Portland is saturated; rural areas have first-mover opportunities</li>
-        <li>Local/craft products resonate strongly with Maine consumers</li>
-        <li>Gross margins of 25-40% are achievable but thin after expenses</li>
-        <li>Location is the #1 success factor—find compliant, underserved areas</li>
-        <li>Financial discipline is essential—this is not a get-rich-quick business</li>
-        <li>Long-term success requires building genuine community relationships</li>
+        <li>$200-250M market with 10-15% annual growth</li>
+        <li>Portland is crowded. Rural areas have room for new operators.</li>
+        <li>Local and craft products resonate strongly here.</li>
+        <li>Gross margins of 25-40% are achievable. Net margins get thin after expenses.</li>
+        <li>Location is the top success factor.</li>
+        <li>This is not a get-rich-quick business.</li>
+        <li>Long-term success requires genuine community relationships.</li>
       </ul>
     </section>
 
@@ -247,67 +266,53 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP Market Data & Reports</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP Adult-Use Program</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP Market Data and Reports</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Costs Breakdown</a></li>
+        <li><a href="/roi-calculator/">ROI Calculator</a></li>
       </ul>
     </section>
 
     <section class="faq">
-      <h2>Extreme FAQ: Market Edition</h2>
+      <h2>Market FAQ</h2>
       
       <details>
         <summary>What's the average profit margin for a Maine dispensary?</summary>
-        <p>Typical gross margins in Maine range from 25-40%, depending on product mix and competition. Net margins after <a href="/glossary/#280e-(internal-revenue-code)">280E</a> taxes, payroll, rent, and operations typically run 10-20% for well-managed operations. Newer dispensaries in underserved areas often see higher margins initially, while Portland operators face more competitive pressure.</p>
+        <p>Gross margins typically run 25-40% depending on product mix and competition. Net margins after 280E taxes, payroll, rent, and operations usually hit 10-20% for well-run shops. Newer dispensaries in underserved areas often see higher margins at first. Portland operators face more competitive pressure.</p>
       </details>
       
       <details>
         <summary>Can I sell adjacent to a school?</summary>
-        <p>No. Maine law prohibits adult-use cannabis retailers within 500 feet of any school (K-12), and many municipalities have imposed stricter limits (up to 1,000 feet). However, medical dispensaries may have slightly different requirements. Always verify both state and local distance requirements before finalizing any location.</p>
+        <p>No. Maine law prohibits adult-use cannabis retailers within 500 feet of any school. Many towns have stricter rules, up to 1,000 feet. Medical dispensaries may have different requirements. Always verify state and local rules before signing any lease.</p>
       </details>
       
       <details>
         <summary>Is the Maine market saturated?</summary>
-        <p>Not yet, but it's becoming more competitive. The Portland and Lewiston-Auburn markets are approaching saturation, while rural areas and mid-coastal towns still have opportunities. The key is finding underserved markets with strong demographics and limited competition. First-mover advantage in a new market can be significant.</p>
+        <p>Not yet, but it's getting more competitive. Portland and Lewiston-Auburn are approaching saturation. Rural areas and mid-coast towns still have room. Look for underserved markets with decent demographics and little competition.</p>
       </details>
       
       <details>
         <summary>What's selling best in Maine right now?</summary>
-        <p>Flower remains the top category, but concentrates, edibles, and vapes are growing rapidly. Maine consumers favor craft, small-batch products over mass-market brands. Local cultivators and processors have strong brand loyalty. Price-point products face intense competition, while quality-focused products command premium pricing.</p>
+        <p>Flower leads, but concentrates, edibles, and vapes are growing fast. Maine buyers favor craft and small-batch products over mass-market brands. Local cultivators have strong loyalty. Price-point products face intense competition. Quality-focused products command premium prices.</p>
       </details>
       
       <details>
         <summary>Should I focus on medical or adult-use customers?</summary>
-        <p>Both. Maine's dual-market structure means you can serve both medical patients and adult-use customers. Medical patients typically have higher purchase frequency and loyalty, while adult-use provides volume. Many successful dispensaries serve both, though some choose to specialize based on their location and target demographics.</p>
+        <p>Both. Maine's dual-market structure lets you serve medical patients and adult-use customers. Medical patients typically buy more often and show more loyalty. Adult-use brings volume. Many successful shops serve both, though some specialize based on location.</p>
       </details>
       
       <details>
-        <summary>How long until a new dispensary becomes profitable?</summary>
-        <p>Most Maine dispensaries reach break-even within 12-24 months, with <a href="/roi-calculator/">profitability</a> typically following 6-12 months after that. Factors include location quality, initial capital, operational efficiency, and competition. Conservative financial planning should assume 18 months before meaningful profitability.</p>
-      </details>
-      
-      <details>
-        <summary>What about online ordering and delivery?</summary>
-        <p>Delivery is allowed in Maine with a courier license, and many operators are adding these services. Online ordering for in-store pickup is becoming standard. However, regulations are evolving, and some municipalities have restrictions. Check current OCP regulations and local ordinances before implementing these services.</p>
+        <summary>How long until a new dispensary makes money?</summary>
+        <p>Most Maine dispensaries break even within 12-24 months. Profitability typically follows 6-12 months after that. Location quality, initial capital, operational efficiency, and competition all matter. Plan conservatively for 18 months before meaningful profitability.</p>
       </details>
       
       <details>
         <summary>How does tourism affect Maine cannabis sales?</summary>
-        <p>Tourism provides a significant boost, particularly in coastal towns and Portland. Summer months see increased traffic from visitors curious about legal cannabis. However, this creates seasonality that year-round operators must plan for. Some locations thrive on tourism; others focus on local repeat customers for stability.</p>
-      </details>
-
-      <details>
-        <summary>Do I need a drive-through to compete?</summary>
-        <p>Not necessarily. While drive-throughs can add convenience, many municipalities prohibit them for cannabis. Most Maine customers are accustomed to in-store purchases. Focus on creating an excellent in-store experience first.</p>
-      </details>
-      
-      <details>
-        <summary>What's the biggest mistake new operators make?</summary>
-        <p>Underestimating costs and overestimating first-year revenue. The reality is: higher expenses than expected, slower ramp-up than projected, and longer timeline to profitability than planned. Conservative financial planning is essential.</p>
+        <p>Tourism gives a big boost, especially in coastal towns and Portland. Summer brings visitors curious about legal cannabis. This creates seasonality that year-round operators must plan for. Some locations thrive on tourists. Others focus on local repeat customers for stability.</p>
       </details>
     </section>
 
     <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis regulations are subject to change; always consult with the Maine Office of Cannabis Policy and qualified legal counsel.</em></p>
+      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only. It does not constitute legal or financial advice. Cannabis regulations change. Consult the Maine Office of Cannabis Policy and qualified legal counsel before making decisions.</em></p>
     </section>
   </article>
 </Layout>
@@ -317,7 +322,7 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   section h2:first-child { margin-top: 0; }
   section h3 { font-size: 1.1rem; }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
@@ -328,6 +333,10 @@ const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: 
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 
   details {
     margin-bottom: 0.75rem;
