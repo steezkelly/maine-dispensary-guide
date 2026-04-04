@@ -385,6 +385,19 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 🚀 Sprint 31 — April 4, 2026 (EDT)
+**[OPENCODE] 11:55 AM EDT**
+- **Status:** ✅ COMPLETE — Block /admin/ from indexing
+- **Completed:**
+  - `Layout.astro` — Added `noindex` prop interface and conditional `<meta name="robots" content="noindex">`
+  - `seo-dashboard.astro` — Applied `noindex` prop to admin page
+  - Build verified: 64 pages, noindex tag confirmed in built HTML
+- **GSC Sitemap:** User manually submitted sitemap-index.xml to Google Search Console
+- **Diagnosis:** 5/64 pages indexed is normal for 1-week-old site with no backlinks. Main issue is Google discovery speed, not technical problems.
+- **Push:** `b4929b1` ("Block /admin/ from indexing, add noindex prop to Layout")
+
+---
+
 ## 📌 PENDING: External Linking Strategy Research
 **[OPENCODE] 04:50 AM EDT — For next session**
 
