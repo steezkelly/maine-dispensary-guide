@@ -444,6 +444,24 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 28 — April 4, 2026 (EDT)
+**[OPENCODE] 06:30 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
+- **Cross-Linking Improvements:**
+  - Regulations Further Reading: added waste-management + workers-comp-insurance links
+  - Packaging guide: added Further Reading with waste-management + product-testing links
+  - Hiring guide: added Further Reading with workers-comp-insurance + vendor-directory links
+  - Cultivation guide: added Further Reading with waste-management link
+  - All-guides: added workers-comp-insurance + business-insurance to Compliance section
+  - Waste-management Further Reading: added regulations + packaging links
+- **Fresh Crawl Results (2nd scan):** Orphan pages 8→3, weak links 4→1
+  - **CLEARED:** waste-management, workers-comp-insurance, directory (all now 2+ incoming links)
+  - **Remaining:** /site-health (internal analytics), /admin/seo-dashboard (admin), /sanford (nearby table links not yet registered)
+- **Broken External Links:** 38 (scanner artifacts — Maine.gov internal 404s, confirmed NOT in source)
+- **Deploy:** 64 pages built and deployed (SHA: 7f6cb1e)
+
+---
+
 ## 🚀 Sprint 27 — April 4, 2026 (EDT)
 **[OPENCODE] 06:25 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171→168 (-3)
