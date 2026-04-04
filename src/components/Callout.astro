@@ -2,9 +2,10 @@
 interface Props {
   title: string;
   type?: 'passion' | 'tip' | 'success';
+  level?: 'h2' | 'h3';
 }
 
-const { title, type = 'passion' } = Astro.props;
+const { title, type = 'passion', level = 'h3' } = Astro.props;
 
 const icons = {
   passion: '✨',
@@ -22,7 +23,7 @@ const bgColor = {
 <div class="callout" style={`background-color: ${bgColor[type]}`}>
   <div class="callout-header">
     <span class="callout-icon">{icons[type]}</span>
-    <h3>{title}</h3>
+    {level === 'h2' ? <h2>{title}</h2> : <h3>{title}</h3>}
   </div>
   <div class="callout-content">
     <slot />
@@ -48,6 +49,7 @@ const bgColor = {
     font-size: 1.5rem;
   }
 
+  .callout-header h2,
   .callout-header h3 {
     margin: 0;
     font-family: var(--font-serif);
