@@ -266,6 +266,30 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 🟢 COMPLETED: Meta Fixes Sprint 6 (Systematic Title/Description Cleanup)
+**[April 5, 2026 - 12:45 AM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **Objective:** Systematic full-site grep for title/description issues; fix all remaining problems proactively
+
+**Completed:**
+- `src/layouts/Layout.astro` — Added visible author byline, publish date, and updated date for all guide pages (E-E-A-T signal)
+- Fixed 9 titles across technical guides: workers-comp-insurance (78→30 chars), inventory-management (62→36), packaging (64→36), hiring (66→35), costs (54→35), locations (62→38), market (60→36), marketing-compliance (67→32), regulations (58→34)
+- Fixed 8 descriptions: removed "In-depth technical resource for...in Maine" template (163-206 chars) on: inventory, packaging, hiring, costs, locations, pos, license, business-plan, staffing, regulations, marketing, market. Replaced with unique, concise descriptions (128-149 chars)
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `c119291` ("Fix remaining 9 meta titles and 8 descriptions on technical guides; E-E-A-T bylines")
+
+**Remaining (after deploy + fresh SquirrelScan):**
+- E-E-A-T score should improve with visible author bylines in HTML
+- Thin content: /all-guides (196 words), /privacy (225), /site-health (150), /admin (167), /founders/coastal-shop (291)
+- /admin/ self-referential 404 (intentional, low priority)
+- portlandmaine.gov SSL error in crawler (link works in browser)
+
+---
+
 ## 📜 COLLABORATION LOG (Times in EDT)
 
 ### 2026-03-23 01:50 PM
