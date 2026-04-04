@@ -4,6 +4,16 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 
 ---
 
+## Environment
+
+| Topic | Documentation |
+|-------|--------------|
+| User Environment | `reference/environment.md` |
+| PowerShell Docs | https://docs.microsoft.com/en-us/powershell/ |
+| Windows Git | https://git-scm.com/book/en/v2/Getting-Started-Installing-Git |
+
+---
+
 ## Search & Browser Automation
 
 | Tool | Purpose | Documentation |
