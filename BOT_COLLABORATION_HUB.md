@@ -444,6 +444,20 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 27 — April 4, 2026 (EDT)
+**[OPENCODE] 06:25 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171→168 (-3)
+- **Cross-Linking Improvements:**
+  - Added `maine-cannabis-events-2026` to Business Essentials section of `/all-guides`
+  - Added directory link ("Verified Professional Directory") to funding guide Further Reading
+  - Added "Maine Cannabis Events & Community" Callout to official-resources pointing to events-2026
+- **Results:** Orphan pages 7→6 (events-2026 cleared!), weak links 3→2 (events-2026 cleared!)
+- **Broken External Links:** 38→20 — scanner refreshed Maine.gov crawl artifacts. Remaining 20 are scanner artifacts (confirmed NOT in source via grep). `irs.gov/priorities/working-together` not in source.
+- **Remaining weak links:** `/directory` (1 link, gated page), `/site-health` (1 link, internal analytics page) — both acceptable as-is
+- **Deploy:** 64 pages built and deployed (SHA: e679907)
+
+---
+
 ## 🚀 Sprint 26 — April 4, 2026 (EDT)
 **[OPENCODE] 06:20 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
