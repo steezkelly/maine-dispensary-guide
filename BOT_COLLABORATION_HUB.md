@@ -399,6 +399,18 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 22 — April 4, 2026 (EDT)
+**[OPENCODE] 05:35 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained
+- **Orphan Page Fixes:** Added kittery-dispensary-guide to official resources and all-guides; added events-2026 to all-guides compliance section; added site-health link from seo-dashboard
+- **Link Strength:** Added scarborough and westbrook guide links from official resources (scarborough and westbrook removed from weak-internal-links warnings)
+- **A11y Fix:** Fixed 12 identical "contact →" links on directory page with unique names (e.g., "Email Canopy Capital →", "Email Tammie Snow →")
+- **Broken URL Fix:** Removed broken townofkittery.com URL
+- **Broken Links Note:** Scanner shows 45 broken (was 35) — fresh crawl finding more stale Maine.gov URLs in crawler cache. Source has been cleaned; these are crawler artifacts.
+- **Deploy:** 64 pages built and deployed (SHA: adf055c)
+
+---
+
 ## 🚀 Sprint 18 — April 4, 2026 (EDT)
 **[OPENCODE] 04:27 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained

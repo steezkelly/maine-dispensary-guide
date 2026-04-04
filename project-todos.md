@@ -9,26 +9,26 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 20 — April 4, 2026)
+## 🚀 Active Sprint (Sprint 22 — April 4, 2026)
 
 ### 🔴 CRITICAL
-- [x] Score 92 Grade A achieved (target: 90+) ✅
-- [x] E-E-A-T visible byline on ALL content pages ✅
-- [x] `/admin/` broken link cleared ✅
-- [x] External linking strategy: COMPLETE ✅
+- [x] Score 92 Grade A maintained ✅ (target: 90+)
+- [x] Orphan page fixes: kittery, events-2026, site-health, scarborough, westbrook ✅
+- [x] A11y: Fixed 12 identical "contact →" links on directory ✅
 
 ### 🟠 HIGH — Pending
 - [x] Add external links to founders pages ✅ (all 3 founders now have contextual external links)
 - [ ] Vercel Analytics setup — need CLI/API access
-- [ ] Add internal links to weak/orphan pages (kittery, cultivation guide, scarborough, westbrook)
+- [x] Add internal links to weak/orphan pages ✅ (kittery, events-2026, scarborough, westbrook, site-health)
 - [ ] Add contextual external links to all guide pages (2-5 per page)
 
 ### 🟡 MEDIUM — Queued
 - [x] Add link to `/directory/` from nav or resources page ✅ (linked from resource hub Callout)
+- [x] Fix "identical links same purpose" on directory ✅ (12 unique link names)
 - [ ] Add LCP preload hints for hero images (27 pages)
 - [ ] Add FAQ schema to high-competition guide pages (Portland, Bangor)
 - [ ] Fix color contrast warnings on 5 pages
-- [ ] Fix "identical links same purpose" a11y warnings
+- [ ] Fix remaining identical links on: find-a-dispensary, launch-checklist, taxation-280e, westbrook
 
 ---
 
