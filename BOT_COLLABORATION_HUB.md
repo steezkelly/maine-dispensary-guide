@@ -356,6 +356,16 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 - **Status Update:** Supply Chain Mastery batch is live. New Link Architect 2.0 is operational.
 - **Next Task:** Final verification of all 41+ guides before session wrap.
 
+---
+
+## 🚀 Sprint 18 — April 4, 2026 (EDT)
+**[OPENCODE] 04:27 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained
+- **E-E-A-T Fix:** Added visible article-meta byline to ALL content pages (Layout.astro, founders pages). Article props added to coastal-shop, portland-flagship, rural-cultivator founders pages. Visible byline now renders for both guides AND founders via isContent check.
+- **City Cross-Links:** Added "Nearby Markets" section to Portland guide. Converted Scarborough nearby table text to links. Added "Nearby Opportunities" sections to Brunswick and Kittery guides.
+- **Private Directory:** Built `/directory/` gated page with session-based unlock. Access code: `maine2026` (user should change in production). Features: Capital/Lending, Legal/Licensing, Accounting/Tax, Real Estate/Zoning, Security, Construction categories. Verified badges and featured listings.
+- **Deploy:** 62 pages built and deployed to Vercel.
+
 ### 2026-03-23 01:30 PM
 [OPENCODE]
 - Completed "Supply Chain Mastery" content.

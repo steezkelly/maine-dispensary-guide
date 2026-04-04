@@ -9,30 +9,24 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 18 — April 2026)
+## 🚀 Active Sprint (Sprint 19 — TBD)
 
 ### 🔴 CRITICAL
 - [x] Score 92 Grade A achieved (target: 90+) ✅
-- [x] Clear E-E-A-T author-byline warning
-  - **Status:** Added article-meta to Layout.astro else branch, added article props to founders pages
-  - **Fix:** Visible byline now renders on ALL content pages (guides AND founders)
-  - **Note:** Scanner may still flag — likely scanner limitation (verified in built HTML)
-- [x] `/admin/` broken link cleared (SquirrelScan Links score 88)
+- [x] E-E-A-T visible byline on ALL content pages ✅
+- [x] `/admin/` broken link cleared ✅
 
-### 🟠 HIGH — Internal Linking ✅ DONE
-- [x] City guide cross-links added
-  - Portland guide: Added "Nearby Markets" section linking to South Portland, Westbrook, Scarborough, Brunswick
-  - Scarborough guide: Converted nearby table text to links (Portland, South Portland)
-  - Brunswick guide: Added "Nearby Opportunities" section with links to Lewiston, Augusta, Portland
-  - Kittery guide: Added "Nearby Opportunities" section with links to Portland, Brunswick, South Portland
-- [x] Internal link sprint (Sprint 17): 11 contextual links across 8 pages
+### 🟠 HIGH — Pending
+- [ ] Add external links to founders pages (scanner flagged 0 external links)
+- [ ] Vercel Analytics setup — need CLI/API access
+- [ ] Add article-links (external links) to all guide pages
 
-### 🟡 MEDIUM — Private Gated Directory ✅ DONE
-- [x] Built `/directory/` page — gated professional contact directory
-  - **Access:** Session-based unlock with access code (`maine2026`)
-  - **Content:** Capital/Lending, Legal/Licensing, Accounting/Tax, Real Estate, Security, Construction
-  - **Features:** Verified badges, featured listings, "Request to join" CTA
-  - **Note:** User should change the access code in production
+### 🟡 MEDIUM — Queued
+- [ ] Add link to `/directory/` from nav or resources page (currently orphan)
+- [ ] Add LCP preload hints for hero images (27 pages)
+- [ ] Add FAQ schema to high-competition guide pages (Portland, Bangor)
+- [ ] Fix color contrast warnings on 5 pages
+- [ ] Fix "identical links same purpose" a11y warnings
 
 ### 🟠 HIGH — External Linking / GEO Alliances
 - [ ] Audit and fix broken external links (12 broken Maine.gov links)
