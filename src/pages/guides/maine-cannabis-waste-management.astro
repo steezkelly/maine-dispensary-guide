@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-03-23", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["compliance"];
 export const title = "Cannabis Waste Management";
 ---
@@ -17,61 +17,100 @@ export const title = "Cannabis Waste Management";
   <article>
     <div class="article-header">
       <h1>Cannabis Waste Management</h1>
-      <p class="subtitle">Proper disposal of cannabis waste in Maine</p>
+      <p class="subtitle">How Maine dispensaries must handle cannabis waste</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <p>Proper disposal of cannabis waste is a critical compliance requirement for all licensed operators in Maine. Whether you're a cultivator, processor, or dispensary, understanding waste management regulations protects your license and the environment. Done right, it's a straightforward operational expense. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    <section class="fact-box">
+      <h2>Waste Rules at a Glance</h2>
+      <table aria-label="Maine cannabis waste requirements">
+        <tbody>
+          <tr><td><strong>Waste Handlers</strong></td><td>Must be licensed</td></tr>
+          <tr><td><strong>Documentation</strong></td><td>Required for all waste</td></tr>
+          <tr><td><strong>Metrc Logging</strong></td><td>All waste must be logged</td></tr>
+          <tr><td><strong>Record Retention</strong></td><td>3 years minimum</td></tr>
+          <tr><td><strong>Enviro Safety</strong></td><td>Must prevent contamination</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="Excellence in Compliance" type="success">
-      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
+    <section>
+      <h2>What Counts as Cannabis Waste</h2>
+      <p>Everything you throw away from your cannabis operation is waste. This includes products that fail testing. It includes expired items. It includes packaging materials that touched product. It includes trim and plant material from your cultivation.</p>
+      <p>Waste also includes anything used to process or package cannabis. Gloves,containers, and paper products that contact cannabis fall under waste rules. The OCP tracks all of it.</p>
+    </section>
+
+    <Callout title="Failed Tests Mean Destroyed Product" type="warning">
+      If a product fails testing, you cannot sell it. The lab report proves it failed. You must document the failure and destroy the product. Do not try to rework or redistribute failed products.
     </Callout>
 
+    <section>
+      <h2>Approved Disposal Methods</h2>
+      <p>Maine allows several methods for disposing of cannabis waste. Your method depends on what the waste is and how much of it you have.</p>
+      
+      <h3>Grinding and Composting</h3>
+      <p>The most common method is grinding cannabis waste with other materials. Once ground and mixed, the cannabis material loses its recreational value. The resulting compost can be used on your facility grounds or sent to a licensed composting facility.</p>
+      
+      <h3>Incineration</h3>
+      <p>Some waste must be burned. Concentrates and products with high THC levels often go to incineration. This happens at licensed waste facilities. The heat destroys everything.</p>
+      
+      <h3>Landfill Disposal</h3>
+      <p>Some waste can go to regular landfill. This includes packaging materials and non-cannabis waste. The key is that no usable cannabis material ends up in the landfill. Everything usable gets destroyed first.</p>
+    </section>
 
     <section>
-      <h2>What Constitutes Cannabis Waste?</h2>
+      <h2>Document Everything</h2>
+      <p>The OCP requires waste documentation. Every batch of waste needs a record. The record shows what was wasted, when, how much, and how it was disposed of.</p>
+      <p>Your Metrc system logs waste disposal. When you waste a product, you enter it in Metrc. This creates an automatic record. If your Metrc does not capture waste data, maintain manual logs.</p>
+      <p>Keep waste records for at least three years. The OCP can audit you at any time. Missing records create liability. Good records show compliance.</p>
+    </section>
+
+    <section>
+      <h2>Working with Waste Handlers</h2>
+      <p>You need a licensed waste handler for most disposal methods. Not every waste company handles cannabis. Find one that holds the right Maine license for cannabis waste.</p>
+      <p>Your waste handler provides documentation for every pickup. Verify this documentation matches what you shipped. Report discrepancies immediately.</p>
+      <p>Using an unlicensed waste handler creates compliance risk. If the handler does not properly dispose of your waste, the OCP holds you responsible. Verify their license before signing any contract.</p>
+    </section>
+
+    <section>
+      <h2>Environmental Responsibility</h2>
+      <p>Cannabis waste affects the environment. THC in water supplies harms fish and aquatic life. Soil contamination affects surrounding areas. Responsible disposal protects more than your license.</p>
+      <p>Follow Maine environmental regulations for waste disposal. These exist separately from OCP rules. Violating environmental law creates additional liability beyond OCP penalties.</p>
+    </section>
+
+    <section>
+      <h2>Creating a Waste SOP</h2>
+      <p>Every dispensary needs a standard operating procedure for waste. This documents how your team handles disposal from start to finish.</p>
+      <p>Your waste SOP should cover daily waste handling. It should cover bulk disposal events. It should name your waste handler. It should explain how employees report waste and document it in Metrc.</p>
+      <p>Train your team on the waste SOP. Everyone who handles waste needs to know the procedures. New employees especially need thorough training on documentation requirements.</p>
+    </section>
+
+    <section>
+      <h2>Common Mistakes</h2>
       <ul>
-        <li>Unsold or expired products</li>
-        <li>Failed test products</li>
-        <li>Trim and plant material</li>
-        <li><a href="/guides/maine-dispensary-packaging/">Packaging</a> materials</li>
-        <li>Sample products</li>
-        <li>Inventory that cannot be sold</li>
+        <li><strong>Skipping Metrc logging.</strong> Every gram of waste gets logged. Forgetting creates violations.</li>
+        <li><strong>Using unlicensed handlers.</strong> Verify before you hire. A cheap handler who creates violations costs more than a licensed one.</li>
+        <li><strong>Poor record keeping.</strong> If an inspector asks for waste records and you cannot produce them, you face penalties.</li>
+        <li><strong>Mixing waste streams improperly.</strong> Cannabis waste must be ground or destroyed before mixing with other materials. Direct landfill disposal of usable material is a violation.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Disposal Methods</h2>
-      <p>Under <a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine OCP regulations</a>, approved methods include:</p>
+      <h2>Key Citations</h2>
       <ul>
-        <li><strong>Composting</strong> - At licensed facilities</li>
-        <li><strong>Grinding</strong> - Mixed with other waste</li>
-        <li><strong>Incineration</strong> - At approved facilities</li>
-        <li><strong> landfill Disposal</strong> - With documentation</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 703</a> — Health and safety requirements</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine OCP Waste Guidance</a></li>
       </ul>
     </section>
 
     <section>
-      <h2>Requirements</h2>
+      <h2>Key Takeaways</h2>
       <ul>
-        <li>Document all waste disposal</li>
-        <li>Maintain waste logs</li>
-        <li>Use licensed waste handlers</li>
-        <li>Track waste from creation to disposal</li>
-        <li>Keep records for inspection</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Best Practices</h2>
-      <ul>
-        <li>Create waste management SOPs</li>
-        <li>Train employees on procedures</li>
-        <li>Schedule regular waste disposal</li>
-        <li>Work with licensed waste companies</li>
-        <li>Document everything</li>
+        <li>All cannabis waste must be logged in Metrc</li>
+        <li>Use only licensed waste handlers</li>
+        <li>Grinding and composting works for most waste</li>
+        <li>Incineration handles high-THC products</li>
+        <li>Keep waste records for three years minimum</li>
+        <li>Document everything from waste creation to final disposal</li>
       </ul>
     </section>
 
@@ -79,14 +118,13 @@ export const title = "Cannabis Waste Management";
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
-        <li><a href="/guides/maine-cannabis-regulations/">Cannabis Regulations Overview</a></li>
         <li><a href="/guides/maine-dispensary-packaging/">Packaging & Labeling Guide</a></li>
+        <li><a href="/guides/maine-cannabis-product-testing-guide/">Product Testing Requirements</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This is for informational purposes only and does not constitute legal or financial advice. Consult with qualified professionals.</em></p>
+      <p><em>Waste regulations change. Verify current OCP requirements before disposing of any cannabis waste.</em></p>
     </section>
   </article>
 </Layout>
@@ -96,14 +134,18 @@ export const title = "Cannabis Waste Management";
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
   th { background: var(--color-background); }
-  ul { padding-left: 1.5rem; }
+  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>

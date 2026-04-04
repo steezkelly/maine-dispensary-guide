@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-21", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-21", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["operations"];
 ---
 
@@ -16,53 +16,120 @@ const topics = ["operations"];
   <article>
     <div class="article-header">
       <h1>Packaging & Labeling Requirements</h1>
-      <p class="subtitle">Understanding Maine's cannabis <a href="/guides/maine-dispensary-packaging/">packaging</a> and labeling regulations</p>
+      <p class="subtitle">Maine's rules for cannabis product packaging</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <p>Maine has strict packaging and labeling requirements designed to protect consumers, prevent accidental ingestion, and ensure product safety. Compliance is mandatory and enforced by the Maine Office of Cannabis Policy.</p>
+    <section class="fact-box">
+      <h2>Key Packaging Rules</h2>
+      <table aria-label="Maine cannabis packaging requirements">
+        <tbody>
+          <tr><td><strong>Child Resistance</strong></td><td>Required for all products</td></tr>
+          <tr><td><strong>Opaque at Exit</strong></td><td>Cannot see product from outside</td></tr>
+          <tr><td><strong>THC Per Serving</strong></td><td>Must be clearly marked</td></tr>
+          <tr><td><strong>Batch Number</strong></td><td>Required on every package</td></tr>
+          <tr><td><strong>Warnings</strong></td><td>Keep away from children, adult use only</td></tr>
+          <tr><td><strong>Edible Limits</strong></td><td>10mg THC max per serving</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="The Art of the Reveal" type="tip">
-      Packaging is your first handshake with the customer. The rules are strict — opaque, child-resistant, specific labeling — but there's room to work within them. Think about what your brand stands for and let that show through the materials you choose.
+    <section>
+      <h2>Why Packaging Matters</h2>
+      <p>Maine takes packaging seriously. The rules exist to protect children, inform customers, and prevent overconsumption. Violations carry fines. Repeat issues risk your license.</p>
+      <p>Your packaging also affects whether customers trust your products. Clean, compliant packaging with clear information builds confidence. Sloppy or confusing packaging does the opposite.</p>
+    </section>
+
+    <Callout title="Test Results Build Trust" type="tip">
+      Include your COA QR code on packaging if your lab provides one. Customers increasingly scan these to verify potency and safety. It separates professional operators from the rest.
     </Callout>
 
     <section>
-      <h2>Packaging Requirements</h2>
+      <h2>Child-Resistant Packaging</h2>
+      <p>All cannabis products sold in Maine must use child-resistant packaging. This applies to every product type. Flower, concentrates, edibles, topicals, and tinctures all need it.</p>
+      <p>Child-resistant does not mean child-proof. It means the packaging requires some effort to open. Think push-and-turn caps. Think blister packs. Think sealed pouches with difficult openings.</p>
+      <p>The OCP follows federal standards for child-resistant packaging. Products that come from out-of-state manufacturers must also meet these standards before sale in Maine.</p>
+    </section>
+
+    <section>
+      <h2>Opaque Packaging Rule</h2>
+      <p>When a customer leaves your store, the product must not be visible through the packaging. This means no clear containers. No windows. No see-through pouches.</p>
+      <p>This rule protects everyone. It prevents accidental exposure for children who might see cannabis products in a car or on the street. It also prevents theft. Products in opaque packaging attract less attention.</p>
+    </section>
+
+    <section>
+      <h2>What Labels Must Say</h2>
+      <p>Every label needs certain information. Maine law specifies what goes on each package.</p>
+      
+      <h3>Product Identity</h3>
+      <p>The product name and strain or type must appear on the label. For edibles, this includes the product description like "Brownie" or "Gummy."</p>
+      
+      <h3>THC Content</h3>
+      <p>Labels must show THC content per serving and per package. This must match what the lab reported on the COA. If the test shows 50mg total THC, the label must say 50mg. Variations beyond acceptable margins require relabeling.</p>
+      
+      <h3>Batch Information</h3>
+      <p>Every package shows the batch number, harvest date, and production date. This ties back to Metrc records. If there is a problem with a product, this information lets you trace it.</p>
+      
+      <h3>Required Warnings</h3>
+      <p>Labels must display two warnings. One says "Keep out of reach of children." The other says "For adult use only." These must be prominent. They must be legible.</p>
+    </section>
+
+    <section>
+      <h2>Edible-Specific Rules</h2>
+      <p>Edibles face additional requirements in Maine.</p>
+      <p>Each serving of an edible cannot exceed 10mg of THC. A package might contain multiple servings. The label must show both per-serving and total package THC content.</p>
+      <p>Edibles cannot look like candy or brand-name food products. This prevents accidental ingestion by children who might mistake cannabis edibles for regular treats. The OCP checks this during product review.</p>
+      <p>Ingredients and allergen information must appear on edible labels. Customers with allergies need this information. It must be accurate and current.</p>
+    </section>
+
+    <section>
+      <h2>Labeling Best Practices</h2>
       <ul>
-        <li>Child-resistant packaging mandatory for all products</li>
-        <li>Opaque packaging required for all exit transactions</li>
-        <li>THC content clearly labeled per serving and per package</li>
-        <li>Producer name, batch number, and harvest date displayed</li>
-        <li><a href="/guides/maine-cannabis-product-testing-guide/">Laboratory testing</a> required before sale</li>
-        <li>Source from approved suppliers</li>
+        <li>Print legibly. Small fonts fail inspection.</li>
+        <li>Use permanent ink. Labels that smear create compliance issues.</li>
+        <li>Include your dispensary name and license number.</li>
+        <li>Add a QR code linking to lab results if your lab provides one.</li>
+        <li>Check label accuracy before applying. Wrong THC numbers create violations.</li>
+        <li>Store labels properly. Heat and moisture damage them.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Labeling Standards</h2>
-      <p>Every label must include the mandatory warnings: "Keep out of reach of children" and "For adult use only." The OCP also requires that all edible products list ingredients, allergen information, and net weight in metric units. Labels cannot make health claims or suggest the product cures any condition.</p>
+      <h2>Sourcing Packaging</h2>
+      <p>You can buy packaging from licensed manufacturers or third-party suppliers. The packaging must meet OCP standards. Ask suppliers for documentation that proves child resistance.</p>
+      <p>Some operators use generic packaging and apply their own labels. This works if the base packaging meets requirements. Verify before you buy.</p>
+    </section>
+
+    <section>
+      <h2>Key Citations</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec701.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 701</a> — Labeling requirements</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Section 703</a> — Health and safety requirements</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Child-resistant packaging required on all products</li>
+        <li>Packaging must be opaque at point of sale exit</li>
+        <li>THC content must match lab test results</li>
+        <li>Warnings must be prominent and legible</li>
+        <li>Edibles max out at 10mg THC per serving</li>
+        <li>Labels must include batch numbers and harvest dates</li>
+      </ul>
     </section>
 
     <section class="further-reading">
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener noreferrer">OCP Packaging & Labeling Guide</a></li>
+        <li><a href="/guides/maine-cannabis-product-testing-guide/">Product Testing Requirements</a></li>
+        <li><a href="/guides/maine-cannabis-regulations/">Regulations Overview</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>Requirements subject to change. Verify current Maine OCP requirements.</em></p>
-    </section>
-
-    <section class="further-reading">
-      <h2>Further Reading</h2>
-      <ul>
-        <li><a href="/guides/maine-cannabis-waste-management/">Cannabis Waste Disposal Guide</a></li>
-        <li><a href="/guides/maine-cannabis-product-testing-guide/">Product Testing Requirements</a></li>
-      </ul>
+      <p><em>Packaging requirements change. Verify current OCP rules before sourcing packaging.</em></p>
     </section>
   </article>
 </Layout>
@@ -72,12 +139,18 @@ const topics = ["operations"];
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  section h3 { font-size: 1.1rem; }
-  ul { padding-left: 1.5rem; }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>
