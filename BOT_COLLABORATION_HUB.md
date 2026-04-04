@@ -308,9 +308,17 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 [OPENCODE]
 - **SEO Sprint 5:** 14 city guide titles, 12 technical guide descriptions.
 
+### 2026-04-05 01:30 AM EDT
+[OPENCODE]
+- **SEO Sprint 14:** Accessibility warnings 40→34. Add aria-label/caption to all remaining tables in 6 technical guides (maine-cannabis-market, maine-cannabis-marketing-compliance, maine-cannabis-business-insurance, maine-cannabis-cultivation-guide, maine-cannabis-extraction-licensing, maine-cannabis-inventory-management).
+
+### 2026-04-05 01:15 AM EDT
+[OPENCODE]
+- **SEO Sprint 13:** Add Key Takeaways sections to portland-flagship and rural-cultivator founders pages. Add paragraph to site-health about JSON-LD. Add Brunswick Market Outlook section. Add paragraph to dispensary-locations Overview.
+
 ### 2026-04-05 12:05 AM EDT
 [OPENCODE]
-- **SEO Sprint 12:** Score 87→88. Trim 3 meta descriptions (taxation 280e, sanford, south-portland). Fix H1→H3 skip on about page (subtitle moved to .lead). Change glossary term headings from H3 to H2. Add aria-label/caption to Market Data and Best Locations tables in 4 city guides (biddeford, brunswick, kittery, lewiston). Add library-intro sentence to all-guides. Add checklist items to site-health.
+- **SEO Sprint 12:** Score 87→88. Trim 3 meta descriptions (taxation 280e, sanford, south-portland). Fix H1→H3 skip on about page (subtitle moved to .lead). Change glossary term headings from H3 to H2. Add aria-label/caption to Market Data and Best Locations tables in 4 city guides (biddeford, brunswick, kittery, lewiston).
 
 ### 2026-04-04 11:55 PM EDT
 [OPENCODE]
