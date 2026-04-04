@@ -5,6 +5,150 @@ Build high-quality backlinks from authoritative Maine cannabis industry sites to
 
 ---
 
+## External Linking Strategy — Research Findings (April 2026)
+
+### Core Question: How should new content websites approach external linking for authority/trust signals?
+
+**Key finding from Moz/Google SEO research:**
+- External links are one of the **hardest signals to manipulate**, making them highly valuable for ranking
+- Search engines interpret external links as **third-party "votes"** for credibility
+- Authoritative external links (gov, edu, established media) **boost perceived E-E-A-T**
+- Links to **non-relevant or spammy sites** hurt more than help
+- Modern Google treats `nofollow` as a **hint**, not a directive — almost any link may pass equity
+
+---
+
+### 1. Outbound vs. Inbound Balance
+
+**New sites (< 1 year):** 
+- Focus primarily on building **INBOUND links** (earned through outreach, PR, content)
+- Outbound links should be **sparse and highly selective** — only to the most authoritative relevant sources
+- For a Maine cannabis guide: link OUT to OCP, Metrc, Maine.gov, Maine Revenue Services — these are government sources that boost trust signals
+- **Target ratio:** ~1-3 outbound links per content page, mostly to .gov/.edu/.org authoritative sources
+
+**Why outbound links help E-E-A-T:**
+- Linking to official sources demonstrates your content is **fact-checked and editorially curated**
+- It shows you're part of the **trusted information ecosystem** — not an isolated content farm
+- Resource hub pages with curated authoritative links are particularly valuable (our `/resources/maine-cannabis-official-resources` page is a prime example)
+
+---
+
+### 2. Linking to Competitors (Leafly, Ganjapreneur, etc.)
+
+**Recommendation: Be selective, mostly nofollow for industry media**
+
+| Link Target | Dofollow? | Rationale |
+|-------------|-----------|-----------|
+| OCP/Maine.gov sites | ✅ YES (dofollow) | Government sources — maximum trust signal |
+| Metrc (tracking system) | ✅ YES (dofollow) | Official mandated system, authoritative |
+| IRS, Maine Revenue Services | ✅ YES (dofollow) | Government/tax authority |
+| Leafly (competitor directory) | ❌ nofollow | Large commercial competitor — don't pass equity |
+| Ganjapreneur (industry media) | ⚠️ contextual | Media reference, consider nofollow unless editorial |
+| MJBizDaily | ⚠️ contextual | High-authority national media — can dofollow if referenced as primary source |
+| MaineBiz | ✅ YES (dofollow) | Regional media covering Maine cannabis — authoritative for our niche |
+| Reddit, Quora, forums | ❌ nofollow | User-generated content, no trust signal |
+
+**Key principle:** Link OUT to competitors sparingly. If you reference Leafly as a data source, that's editorial (acceptable dofollow). If you're linking to their directory as a convenience to readers, use nofollow.
+
+---
+
+### 3. Dofollow vs. Nofollow — When to Use Each
+
+**Use DOFOLLOW for:**
+- Official government sites (maine.gov, cdc.gov, gov sites)
+- Educational institutions (.edu)
+- Established media with editorial standards (Mainebiz, Maine Public, Cannabis Business Times)
+- Primary sources you're citing as the basis of your content
+
+**Use NOFOLLOW for:**
+- Paid links, sponsored content
+- Untrusted or unknown sites
+- User-generated content (comments, forums)
+- Links to competitors that aren't primary sources
+- Affiliate/partner links
+
+**Our current approach:** We use `rel="noopener noreferrer"` on almost all external links (which does NOT add nofollow — it just prevents security vulnerabilities). We should add `rel="nofollow"` strategically to competitor links.
+
+**Action item:** Audit our current external links and add `rel="nofollow"` to:
+- Leafly links (if any)
+- Competitor directory links
+- Any paid partner listings
+
+---
+
+### 4. External Links in Resource Content — E-E-A-T Value
+
+**Our resource hub pages are our strongest E-E-A-T asset for external linking.**
+
+The `/resources/maine-cannabis-official-resources` page links to:
+- OCP, Maine Revenue Services, Department of Agriculture, CDC, State Police, Secretary of State (.gov — maximum trust)
+- Maine Municipal Association, Maine courts, bar association (.org — high trust)
+- Industry media (Cannabis Business Times, Ganjapreneur, MJBizDaily)
+
+**This pattern is editorially natural and signals:**
+- "We curated this from authoritative sources"
+- "Our information is verifiable against official government sources"
+- "We're part of the trusted Maine cannabis information ecosystem"
+
+**For E-E-A-T specifically:**
+- Government links (dofollow) = strong trust signal
+- Industry media links = moderate trust signal  
+- Links to other cannabis business guides (competitors) = low/negative signal
+
+---
+
+### 5. Anchor Text Strategy
+
+**Use descriptive, specific anchor text:**
+- ✅ "Read the OCP's adult-use license application process"
+- ✅ "Maine Revenue Services cannabis tax guidance"
+- ✅ "Metrc seed-to-sale tracking requirements"
+- ❌ "Click here", "Learn more", "Read more"
+
+**Variety matters:** Mix branded anchors (e.g., "according to Cannabis Business Times"), descriptive anchors (e.g., "Maine's cannabis excise tax rate"), and generic anchors (e.g., "the state's official guidance"). Don't over-optimize with exact-match keywords.
+
+---
+
+### 6. Frequency — How Often Should Guide Pages Link Externally?
+
+**For our 41+ city guide pages:**
+- Each guide should have **2-5 contextual external links** to authoritative Maine.gov sources
+- Link to OCP, municipal pages, tax resources where relevant
+- Keep outbound links **contextual** — inline in the content, not in a separate "External Links" section
+- The "External Links" section approach (used on founders pages) works for story/editorial content but feels unnatural on technical guide pages
+
+**For technical guide pages (licensing, taxation, security, etc.):**
+- Inline links to OCP rules and application pages are expected and natural
+- These links serve the reader AND signal credibility
+-aima: 3-8 contextual dofollow links per major guide page
+
+**For blog/story content (founders stories):**
+- Editorial-style "External Resources" section is appropriate
+- 3-5 links to authoritative sources per story
+
+---
+
+### 7. Our Specific Action Plan
+
+**✅ Already done:**
+- Founders pages now have contextual external links to OCP, Metrc, IRS, Maine Revenue Services
+- Resource hub pages have curated authoritative link collections
+- All external links use `rel="noopener noreferrer"` (security)
+
+**🔜 Next steps:**
+1. Audit existing external links — add `nofollow` to competitor links (Leafly if present, Ganjapreneur)
+2. Add 2-4 contextual dofollow links to each of the 41 city guide pages (pointing to OCP municipal authorization pages, tax resources)
+3. Add nofollow links to industry media references on guide pages
+4. Pursue earned inbound links via outreach (see outreach plan below)
+
+**❌ Avoid:**
+- Excessive outbound links (>10 per page) — looks like a link farm
+- Links to untrusted or irrelevant sites
+- Exact-match anchor text over-optimization
+- Reciprocal link schemes (exchanging links solely for SEO purpose)
+
+---
+
 ## Tier 1: Maine Media & Publications
 
 ### 1. Mainebiz (mainebiz.com) — HIGHEST PRIORITY

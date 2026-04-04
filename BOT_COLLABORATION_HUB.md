@@ -350,6 +350,23 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
   - Created `link-outreach.md` — competitive landscape analysis and outreach strategy.
   - Score: 92 maintained.
 
+---
+
+## 🚀 Sprint 20 — April 4, 2026 (EDT)
+**[OPENCODE] ~05:15 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained
+- **Founders External Links:** Added contextual external links to all 3 founders pages (portland-flagship, coastal-shop, rural-cultivator). Each now links to OCP, Metrc, IRS, Maine Revenue Services, and other authoritative sources. Fixed "External Resources" section on portland-flagship.
+- **Heading Fix:** Fixed H3-after-H1 on `/resources/maine-cannabis-education` by adding `level="h2"` to the Callout component.
+- **Meta Titles:** Shortened `/directory` title to "Maine Cannabis Directory" and education page title. Fixed education page description (trimmed to 156 chars).
+- **Broken Links:** Replaced broken `maine.gov/dafs/ocp/rules/` (404) with `adult-use`. Replaced broken `webwc03.score.org/maine` with `score.org/maine`. Fixed duplicate link (OCP applications-forms appeared twice with different text).
+- **External Linking Strategy:** Researched and documented best practices in `link-outreach.md`:
+  - Dofollow government links (OCP, Metrc, IRS, Maine.gov) for trust signals
+  - Nofollow competitor links (Leafly)
+  - Contextual links preferred over "External Resources" sections on guide pages
+  - Optimal frequency: 2-5 per guide page, 3-5 per editorial/story page
+- **Scanner Findings:** Confirmed E-E-A-T warnings are scanner artifacts — JSON-LD Article schema and visible byline DO exist in built HTML for founders pages. 64 pages built and deployed.
+- **Next Session Priority:** Internal link strengthening for weak/orphan pages (kittery, cultivation guide), color contrast fixes, Vercel Analytics setup.
+
 ### 2026-04-04 11:00 PM EDT
 [OPENCODE]
 - **SEO Sprint 3:** 5 meta titles, 4 descriptions, heroImage on 5 more pages.
