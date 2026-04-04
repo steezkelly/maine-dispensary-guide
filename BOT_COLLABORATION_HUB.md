@@ -180,11 +180,39 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 **Pushed:** `6c6f44b` ("SEO sprint 3: fix 5 meta titles, 4 meta descriptions, add heroImage to 5 pages, fix contact H3→H2, fix founders FAQ H4→H3")
 
-**Remaining (post-deploy SquirrelScan needed):**
+---
+
+## 🟢 COMPLETED: SEO Sprint 4 (Meta Fixes Round 2)
+**[April 5, 2026 - 12:10 AM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **SquirrelScan Score:** Steady at **82** (Grade B)
+- **Objective:** Fix remaining meta title/description/OG issues from latest crawl
+
+**Completed:**
+- `src/pages/guides/index.astro` — Title shortened to "Maine Dispensary Guides" (~56 chars with suffix)
+- `src/pages/market-stats.astro` — Title shortened to "Maine Cannabis Market Stats 2026" (~61 chars with suffix)
+- `src/pages/roi-calculator.astro` — Title shortened to "Maine Dispensary ROI Calculator" (~65 chars with suffix); added heroImage
+- `src/pages/site-health.astro` — Title shortened to "Site Health Dashboard" (~58 chars with suffix)
+- `src/pages/admin/seo-dashboard.astro` — Title shortened to "SEO Intelligence Dashboard" (~60 chars with suffix); added heroImage
+- `src/pages/founders/maine-cannabis-founder-coastal-shop.astro` — Title shortened to "Coastal Maine Dispensary Success Story" (~70 chars with suffix)
+- `src/pages/guides/kittery-dispensary-guide.astro` — Fixed description (204→147 chars, removed "Dispensary Guide" repetition)
+- `src/pages/guides/lewiston-dispensary-guide.astro` — Fixed description (169→139 chars)
+- `src/pages/guides/maine-cannabis-banking-solutions.astro` — Fixed description (164→145 chars)
+- `src/pages/guides/maine-cannabis-business-insurance.astro` — Fixed description (189→137 chars)
+- **Broken Maine.gov links:** Verified all 404 OCP links were already fixed in prior rounds. SquirrelScan crawl is stale — redeploy will confirm.
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `2033930` ("SEO sprint 4: fix 6 meta titles, 4 descriptions, add heroImage to roi-calculator and admin; confirm broken links already fixed")
+
+**Remaining:**
 - E-E-A-T: no visible author bylines on guide pages (JSON-LD exists but not rendered in HTML)
 - Thin content: /all-guides (196 words), /privacy (225), /site-health (150), /admin (167), /founders/coastal-shop (291)
 - /admin/ self-referential 404 (intentional, low priority)
 - portlandmaine.gov SSL error in crawler (link works in browser)
+- 12 external Maine.gov links flagged as 404 in SquirrelScan — verified fixed in code, needs redeploy to confirm
 
 ---
 
