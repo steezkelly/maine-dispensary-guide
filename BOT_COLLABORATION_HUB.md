@@ -954,3 +954,64 @@ When adding more fine-grained topics (e.g., multiple 280E guides):
 ---
 
 *End of Smart Related Articles Sprint Documentation*
+
+---
+
+## 🟢 COMPLETED: SquirrelScan Audit Fix (April 4, 2026)
+**[April 4, 2026 - 2:45 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE
+- **Audit Score:** 84/100 (B)
+- **Objective:** Fix critical accessibility issues found by SquirrelScan
+
+---
+
+### AUDIT RESULTS
+
+| Category | Score |
+|----------|-------|
+| Accessibility | 96/100 |
+| Performance | 97/100 |
+| Core SEO | 99/100 |
+| Content | 95/100 |
+| Overall | 84/100 (B) |
+
+### ISSUES FIXED
+
+#### 1. Duplicate ID "main-search" (20 pages) - FIXED ✅
+
+**Problem:** Search component was used twice in Layout.astro (desktop + mobile nav), both with hardcoded `id="main-search"`, causing duplicate ID errors.
+
+**Solution:**
+- Removed hardcoded `id="main-search"` from Search input
+- Updated keyboard shortcut logic to use `document.querySelector('.search-input')` instead of `getElementById`
+- Removed duplicate `containers` querySelector line
+
+**Files Changed:**
+- `src/components/Search.astro`
+
+---
+
+### REMAINING ISSUES (Non-Critical)
+
+| Issue | Impact | Recommendation |
+|-------|--------|----------------|
+| Broken link: `maine.gov/memap/` (404) | Low | Fix or remove link on coastal-shop founder page |
+| Title too short: `/guides` (23 chars) | Low | Expand title to 30-60 chars |
+| CSP allows 'unsafe-inline' | Low | Acceptable for Astro static site |
+| No CAPTCHA on forms | Low | Formspree has spam protection |
+| 44 sitemap orphans | Low | Already in sitemap, just not crawled |
+
+---
+
+### NEXT STEPS
+
+1. Fix `/guides` page title length
+2. Fix broken `maine.gov/memap/` link
+3. Consider adding author bylines and datePublished for E-E-A-T
+4. Content humanization continues
+
+---
+
+*End of SquirrelScan Audit Fix Documentation*
