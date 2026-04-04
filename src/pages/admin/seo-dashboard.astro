@@ -60,6 +60,61 @@ const targetPrompts = [
       <li class="done">Robots.txt Optimized</li>
     </ul>
   </section>
+
+  <section class="geo-benchmarking">
+    <h2>GEO Competitive Analysis</h2>
+    <p class="benchmark-intro">Our primary GEO competitors for Maine cannabis queries include Maine Can Save, Online辛court's state guides, and regional chambers of commerce content. We track citation rates across Perplexity, ChatGPT, and Gemini monthly to measure share-of-voice.</p>
+    <div class="competitor-table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Competitor</th>
+            <th scope="col">Strength</th>
+            <th scope="col">Citation Frequency</th>
+            <th scope="col">Our Advantage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Maine Can Save</td>
+            <td>Discount pricing content</td>
+            <td>High for retail queries</td>
+            <td>Compliance depth, municipal zoning</td>
+          </tr>
+          <tr>
+            <td>Leafly / Weedmaps</td>
+            <td>Brand listings, strain data</td>
+            <td>High for discovery</td>
+            <td>B2B focus, business formation guides</td>
+          </tr>
+          <tr>
+            <td>MCA (Maine Cannabis Assoc.)</td>
+            <td>Industry advocacy voice</td>
+            <td>Medium for policy queries</td>
+            <td>Actionable 280E and licensing guides</td>
+          </tr>
+          <tr>
+            <td>Municipal Government Sites</td>
+            <td>Zoning authority, permits</td>
+            <td>High for regulatory queries</td>
+            <td>Plain-language interpretation, checklists</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="benchmark-note">Last updated: April 4, 2026. Citation audits run every Monday via Perplexity Pro and ChatGPT-4o.</p>
+  </section>
+
+  <section class="weekly-metrics">
+    <h2>Weekly Metrics to Track</h2>
+    <ul class="metric-list">
+      <li><strong>Citation Rate:</strong> % of 50 target prompts where Maine Dispensary Guide is cited</li>
+      <li><strong>Position Zero Appearances:</strong> Does any Maine Dispensary Guide content appear as an AI summary source?</li>
+      <li><strong>Organic Traffic:</strong> Sessions from Google/Bing, filtered by Maine cannabis keywords</li>
+      <li><strong>Guide Engagement:</strong> Avg. time on page for technical guides (target: 3+ min)</li>
+      <li><strong>City Guide Depth:</strong> Are 15-municipality guides capturing "near me" queries?</li>
+    </ul>
+  </section>
 </Layout>
 
 <style>
@@ -87,4 +142,19 @@ const targetPrompts = [
   .checklist li.done::before { content: '✓'; }
   .checklist li.pending { background: #fef9c3; color: #854d0e; }
   .checklist li.pending::before { content: '○'; }
+
+  .geo-benchmarking { background: white; padding: 3rem; border-radius: 2rem; margin-bottom: 4rem; border: 1px solid var(--color-border); }
+  .benchmark-intro { font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; color: var(--color-text-light); }
+  .competitor-table { overflow-x: auto; margin-bottom: 1.5rem; }
+  .competitor-table table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  .competitor-table th { background: var(--color-primary); color: var(--color-background); padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .competitor-table td { padding: 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.95rem; }
+  .competitor-table tr:last-child td { border-bottom: none; }
+  .competitor-table tr:hover td { background: rgba(88, 129, 87, 0.04); }
+  .benchmark-note { font-size: 0.8rem; color: var(--color-text-light); margin-top: 1rem; }
+
+  .weekly-metrics { background: var(--color-surface); padding: 3rem; border-radius: 2rem; margin-bottom: 4rem; }
+  .metric-list { list-style: none; padding: 0; margin-top: 1.5rem; }
+  .metric-list li { padding: 1rem 0; border-bottom: 1px solid var(--color-border); font-size: 1rem; }
+  .metric-list li:last-child { border-bottom: none; }
 </style>
