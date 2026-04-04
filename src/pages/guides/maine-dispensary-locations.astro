@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-13", modifiedDate: "2026-03-19", section: "Business Essentials" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-13", modifiedDate: "2026-04-04", section: "Business Essentials" };
 const topics = ["real-estate"];
 ---
 
@@ -16,41 +16,108 @@ const topics = ["real-estate"];
   <article>
     <div class="article-header">
       <h1>Best Locations for a Dispensary in Maine</h1>
-      <p class="subtitle">How to choose the optimal <a href="/guides/maine-dispensary-locations/">location</a> for your Maine cannabis dispensary</p>
+      <p class="subtitle">How to pick the right spot for your Maine cannabis shop</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <p>Location is one of the most critical factors in dispensary success. Maine's diverse cities and towns offer different opportunities and challenges. This guide helps you evaluate and choose the best location. Every Maine municipality has its own zoning rules and opt-in status, making site selection a multi-step process that begins with understanding state-level buffer requirements and local commercial real estate availability.</p>
+    <section class="fact-box">
+      <h2>Location Requirements</h2>
+      <table aria-label="Maine dispensary location requirements">
+        <tbody>
+          <tr><td><strong>School Buffer</strong></td><td>500ft minimum from schools</td></tr>
+          <tr><td><strong>Opt-In Required</strong></td><td>Municipality must allow cannabis retail</td></tr>
+          <tr><td><strong>Traffic Target</strong></td><td>8,000+ vehicles per day recommended</td></tr>
+          <tr><td><strong>Lease Term</strong></td><td>5+ years recommended</td></tr>
+          <tr><td><strong>Parking</strong></td><td>Accessible spaces required</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="Finding Your Spot" type="passion">
-      Location determines everything in this business. Portland isn't the only game in town — sometimes a smaller market with less competition beats a prime corner in the biggest city. Figure out where your customers are and meet them there.
+    <section>
+      <h2>Why Location Matters</h2>
+      <p>Your location determines who walks through your door. It sets your rent. It shapes your competition. It affects how long you stay in business.</p>
+      <p>Maine gives you options. You can open in Portland. You can open in a town of 5,000 people. Each choice has tradeoffs. This guide helps you think through them.</p>
+    </section>
+
+    <Callout title="Portland Isn't the Only Answer" type="passion">
+      A town with one licensed dispensary and 20,000 people nearby beats a oversaturated Portland block every time. Look at the whole market before you sign a lease.
     </Callout>
 
     <section>
-      <h2>Key Location Factors</h2>
+      <h2>The Opt-In Rule</h2>
+      <p>Maine requires municipalities to approve cannabis retail before you can open. Not every town has opted in. Some have voted no. Others have never voted at all.</p>
+      <p>Check the OCP municipal opt-in list. This tells you where retail is allowed. It also shows which towns have approved but have no open stores yet. Those gaps are opportunities.</p>
+      <p>Some towns that voted no have changed their minds. Politics shift. If your preferred town is off the list, attend a city council meeting. Change takes effort. But it happens.</p>
+    </section>
+
+    <section>
+      <h2>The School Buffer</h2>
+      <p>Maine law requires a 500-foot buffer between dispensaries and schools. This is measured from the school property line to your entrance.</p>
+      <p>This rule limits where you can open. Commercial zones near schools are off-limits. This affects Portland and other dense areas. Many first-floor retail spaces fail this test.</p>
+      <p>Before you sign a lease, verify the buffer. Use the OCP's mapping tool or measure it yourself. A lease means nothing if you cannot get licensed because of the buffer.</p>
+    </section>
+
+    <section>
+      <h2>What to Look For</h2>
       
-      <h3>Population & Demographics</h3>
+      <h3>Traffic Counts</h3>
+      <p>More traffic means more customers. Aim for 8,000 vehicles per day on your primary road. This is a baseline. Higher is better. Corner locations with good visibility beat mid-block spots.</p>
+      
+      <h3>Parking and Accessibility</h3>
+      <p>Customers need somewhere to park. Spaces near the entrance matter. If customers have to walk far or fight for parking, they go elsewhere. Accessibility matters too. Maine requires accessible entrances and paths.</p>
+      
+      <h3>Competition</h3>
+      <p>Know who is nearby. Check the OCP license list. Find out how many dispensaries operate in your target area. One or two is manageable. More than that means price pressure and market saturation.</p>
+      
+      <h3>Rent and Lease Terms</h3>
+      <p>Cannabis retail rents vary widely in Maine. Portland premium is real. A 1,000 square foot space can cost $4,000-10,000 monthly in Portland. Smaller towns might run $1,500-3,000. Budget realistically. High rent kills thin margins.</p>
+      <p>Get a 5-year lease minimum. Licensing takes 3-6 months. You need stability while you wait. Negotiate renewal options. Your landlord is taking a risk on a cannabis tenant. They should get something for it.</p>
+    </section>
+
+    <section>
+      <h2>Demographics to Consider</h2>
+      <p>Think about who lives nearby. Year-round residents provide steady traffic. Tourists add seasonal volume. College towns have young adults who use cannabis. Retirement areas have different patterns.</p>
+      <p>Run the numbers. How many adults live within 15 miles? What is the local income level? Is the population growing or shrinking? These factors affect your revenue projections.</p>
+    </section>
+
+    <section>
+      <h2>Site Selection Process</h2>
+      <p>Start with the opt-in list. Narrow it to towns that allow retail. Eliminate any with existing oversaturation. Drive the remaining areas. Look for available retail spaces.</p>
+      <p>When you find a space, verify the school buffer first. If it passes, dig into the lease. Negotiate terms that protect you during the licensing wait. Then submit your license application to the OCP.</p>
+    </section>
+
+    <section>
+      <h2>Common Mistakes</h2>
       <ul>
-        <li>Target demographic: age 21+ population within 15-mile radius</li>
-        <li>Traffic count: minimum 8,000 vehicles per day on primary road</li>
-        <li>Competition analysis: distance from existing licensed dispensaries</li>
-        <li>Budget for build-out costs</li>
-        <li>Long-term leases (5+ years) recommended</li>
+        <li><strong>Skipping the buffer check.</strong> Signing a lease before verifying the 500ft rule wastes time and money.</li>
+        <li><strong>Ignoring competition.</strong> Portland has too many dispensaries. A town with room beats a crowded prime location.</li>
+        <li><strong>Signing short leases.</strong> You need stability during licensing and setup. Five years minimum.</li>
+        <li><strong>Overpaying for location.</strong> High rent kills margins. Cannabis retail is competitive. Thin margins plus high rent is a losing combination.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Check the opt-in list before anything else</li>
+        <li>Verify the 500ft school buffer on every potential site</li>
+        <li>Study the competition in your target area</li>
+        <li>Budget for realistic rent in your chosen market</li>
+        <li>Negotiate 5+ year leases with renewal options</li>
       </ul>
     </section>
 
     <section class="further-reading">
       <h2>Further Reading</h2>
       <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine OCP Municipal Opt-In List</a></li>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Municipal Opt-In List</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Cost Breakdown</a></li>
+        <li><a href="/roi-calculator/">ROI Calculator</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>Market conditions change. Verify current information with local authorities.</em></p>
+      <p><em>Location rules change. Verify current regulations with the Maine OCP and local authorities before signing any lease.</em></p>
     </section>
   </article>
 </Layout>
@@ -60,9 +127,8 @@ const topics = ["real-estate"];
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  section h3 { font-size: 1.1rem; }
+  section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
   th { background: var(--color-background); }
@@ -71,4 +137,8 @@ const topics = ["real-estate"];
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>
