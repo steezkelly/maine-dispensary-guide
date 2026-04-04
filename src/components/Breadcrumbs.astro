@@ -3,12 +3,13 @@ const { url } = Astro;
 const pathSegments = url.pathname.split('/').filter(segment => segment !== '');
 
 const breadcrumbs = pathSegments.map((segment, index) => {
+  if (segment === 'admin') return null;
   const href = '/' + pathSegments.slice(0, index + 1).join('/') + '/';
   const label = segment
     .replace(/-/g, ' ')
     .replace(/\b\w/g, char => char.toUpperCase());
   return { href, label };
-});
+}).filter(Boolean);
 
 const isHome = url.pathname === '/';
 ---
