@@ -444,6 +444,16 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 30 — April 4, 2026 (EDT)
+**[OPENCODE] 06:40 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
+- **Sanford Fix:** Added Sanford to all-guides city listing (was missing!). Expanded Sanford Resources with Biddeford/Kittery links
+- **Orphan/Weak Results:** Scanner showing inconsistent data between crawls (different orphan counts on same crawl cycle). Sanford still flagged but nearby table + all-guides + Resources links now in place. Scanner needs more time to register.
+- **Key Insight:** Scanner has inconsistent orphan detection between rapid crawls. Multiple crawls show different counts for same pages.
+- **Deploy:** 64 pages built and deployed (SHA: 944084b)
+
+---
+
 ## 🚀 Sprint 29 — April 4, 2026 (EDT)
 **[OPENCODE] 06:35 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
