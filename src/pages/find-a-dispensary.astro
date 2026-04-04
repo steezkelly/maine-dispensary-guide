@@ -52,7 +52,7 @@ const cities = [
       <div class="city-section">
         <div class="city-title-row">
           <h2>{city.name}</h2>
-          <a href={`/guides/${city.name.toLowerCase()}-dispensary-guide/`} class="guide-link">View City Guide &rarr;</a>
+          <a href={`/guides/${city.name.toLowerCase()}-dispensary-guide/`} class="guide-link">View {city.name} Guide &rarr;</a>
         </div>
         <div class="store-grid">
           {city.stores.map(store => (

@@ -9,17 +9,20 @@ const checklistItems = [
       {
         title: "Form your Legal Entity (LLC/Corp)",
         description: "Register your business with the <a href='https://www.maine.gov/sos/corporations-commissions/corporations-business-services' target='_blank' rel='noopener noreferrer'>Maine Secretary of State</a>. Choosing an LLC or Corporation is vital for protecting your personal assets and is a prerequisite for state licensing.",
-        link: "/guides/maine-dispensary-business-plan/"
+        link: "/guides/maine-dispensary-business-plan/",
+        cta: "Business Entity Guide"
       },
       {
         title: "Secure initial startup capital",
         description: "Maine dispensaries typically require $300k-$850k. Ensure your funds are documented and held in a <a href='/guides/maine-cannabis-banking-solutions/'>cannabis-friendly bank account</a> to pass the OCP's financial integrity checks.",
-        link: "/guides/maine-dispensary-costs/"
+        link: "/guides/maine-dispensary-costs/",
+        cta: "Startup Costs Guide"
       },
       {
         title: "Draft your 3-year Business Plan",
         description: "A professional <a href='/guides/maine-dispensary-business-plan/'>business plan</a> is required for investors and local municipal applications. It must include detailed security and operations protocols.",
-        link: "/guides/maine-dispensary-business-plan/"
+        link: "/guides/maine-dispensary-business-plan/",
+        cta: "Business Plan Guide"
       }
     ]
   },
@@ -29,12 +32,14 @@ const checklistItems = [
       {
         title: "Identify OCP-compliant municipalities",
         description: "You can only open a store in a town that has formally 'Opted-In.' Consult the <a href='https://www.maine.gov/dafs/ocp/adult-use' target='_blank' rel='noopener noreferrer'>Official OCP Opt-In List</a> to verify your target location.",
-        link: "/guides/maine-dispensary-locations/"
+        link: "/guides/maine-dispensary-locations/",
+        cta: "Municipal Opt-In Guide"
       },
       {
         title: "Secure a lease with a 'Cannabis Clause'",
         description: "Your lease must explicitly permit cannabis activities. Ensure you have a 'contingency clause' allowing you to terminate if <a href='/guides/maine-cannabis-real-estate/'>zoning</a> or licensing is denied.",
-        link: "/guides/maine-cannabis-real-estate/"
+        link: "/guides/maine-cannabis-real-estate/",
+        cta: "Real Estate Guide"
       }
     ]
   },
@@ -44,12 +49,14 @@ const checklistItems = [
       {
         title: "Submit Maine OCP IIC applications",
         description: "Every owner and employee must hold an <a href='/glossary/#iic-(individual-identification-card)'>Individual Identification Card (IIC)</a>. This requires a $52 fee, fingerprinting, and a background check.",
-        link: "/guides/maine-cannabis-staffing-licensing/"
+        link: "/guides/maine-cannabis-staffing-licensing/",
+        cta: "Staffing License Guide"
       },
       {
         title: "Complete the Conditional License app",
         description: "The <a href='/guides/maine-dispensary-license/'>Conditional License</a> is your first state-level 'Green Light.' It proves you are eligible to operate before you invest in local build-outs.",
-        link: "/guides/maine-dispensary-license/"
+        link: "/guides/maine-dispensary-license/",
+        cta: "License Application Guide"
       }
     ]
   },
@@ -59,12 +66,14 @@ const checklistItems = [
       {
         title: "Install OCP-compliant security",
         description: "Your surveillance and alarm systems must meet <a href='/guides/maine-dispensary-security/'>OCP Security Standards</a>, including 24/7 recording and restricted access monitoring.",
-        link: "/guides/maine-dispensary-security/"
+        link: "/guides/maine-dispensary-security/",
+        cta: "Security Requirements Guide"
       },
       {
         title: "Implement Metrc Tracking",
         description: "<a href='/glossary/#metrc'>Metrc</a> is Maine's mandatory track-and-trace system. You must complete state training and tag all inventory before your first sale.",
-        link: "/guides/maine-cannabis-inventory-management/"
+        link: "/guides/maine-cannabis-inventory-management/",
+        cta: "Metrc & Inventory Guide"
       }
     ]
   }
@@ -95,7 +104,7 @@ const checklistItems = [
               <div class="details-content">
                 <p set:html={item.description}></p>
                 <div class="details-actions">
-                  <a href={item.link} class="btn-detail">Read Full Guide &rarr;</a>
+                  <a href={item.link} class="btn-detail">{item.cta} &rarr;</a>
                 </div>
               </div>
             </details>
