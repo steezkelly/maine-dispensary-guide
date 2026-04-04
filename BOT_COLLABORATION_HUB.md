@@ -308,6 +308,14 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 [OPENCODE]
 - **SEO Sprint 5:** 14 city guide titles, 12 technical guide descriptions.
 
+### 2026-04-05 12:05 AM EDT
+[OPENCODE]
+- **SEO Sprint 12:** Score 87→88. Trim 3 meta descriptions (taxation 280e, sanford, south-portland). Fix H1→H3 skip on about page (subtitle moved to .lead). Change glossary term headings from H3 to H2. Add aria-label/caption to Market Data and Best Locations tables in 4 city guides (biddeford, brunswick, kittery, lewiston). Add library-intro sentence to all-guides. Add checklist items to site-health.
+
+### 2026-04-04 11:55 PM EDT
+[OPENCODE]
+- **SEO Sprint 11:** Score 86→87. Add 5 sections to privacy.astro (Cookies, User Rights, Data Retention, Third-Party Links, Policy Updates). Add GEO benchmarking table and weekly metrics section to seo-dashboard.astro. Change Callout h4 to h3 (fixes H2→H4 skip on all-guides, site-health, founders). Add table accessibility (thead, aria-label, caption) to 6 technical guides.
+
 ### 2026-04-04 11:40 PM EDT
 [OPENCODE]
 - **SEO Sprint 4:** 6 meta titles, 4 descriptions, heroImage on roi-calculator/admin.
