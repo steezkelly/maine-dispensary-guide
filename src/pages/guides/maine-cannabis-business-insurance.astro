@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-18", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-18", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["finance"];
 ---
 
@@ -20,122 +20,99 @@ const topics = ["finance"];
     </div>
 
     <section class="fact-box">
-      <h2>📋 Insurance Checklist</h2>
-      <table aria-label="Maine cannabis business insurance requirements and coverage details" caption="Key insurance requirements and coverage details for Maine dispensary operators">
-        <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <h2>Insurance Requirements at a Glance</h2>
+      <table aria-label="Maine cannabis business insurance requirements" caption="Key insurance requirements and coverage details for Maine dispensary operators">
+        <thead><tr><th scope="col">Coverage</th><th scope="col">Requirement</th><th scope="col">Est. Annual Cost</th></tr></thead>
         <tbody>
-          <tr><td><strong>Required for License</strong></td><td>Yes - proof required by OCP</td></tr>
-          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. §301, OCP Rule Chapter 1</td></tr>
-          <tr><td><strong>General Liability</strong></td><td>$1M minimum recommended</td></tr>
-          <tr><td><strong>Product Liability</strong></td><td>$1-3M recommended (CRITICAL for dispensaries)</td></tr>
-          <tr><td><strong>Workers Comp</strong></td><td>MANDATORY for all employees</td></tr>
-          <tr><td><strong>Est. Total Annual</strong></td><td>$25,000-75,000</td></tr>
+          <tr><td><strong>General Liability</strong></td><td>Required for OCP license</td><td>$5,000-15,000</td></tr>
+          <tr><td><strong>Product Liability</strong></td><td>Required — critical for dispensaries</td><td>$10,000-30,000</td></tr>
+          <tr><td><strong>Workers Comp</strong></td><td>Mandatory for all Maine employers</td><td>$3,000-10,000</td></tr>
+          <tr><td><strong>Property Insurance</strong></td><td>Required — building and inventory</td><td>$5,000-20,000</td></tr>
+          <tr><td><strong>Total Estimate</strong></td><td></td><td><strong>$25,000-75,000</strong></td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Why Insurance Matters</h2>
-      <p>Cannabis insurance isn't just a regulatory requirement—it's your business lifeline. With the industry's unique risks (product liability, theft, regulatory changes), having comprehensive coverage protects everything you've built.</p>
+      <h2>Why Insurance Is Non-Negotiable</h2>
+      <p>Insurance is required to get your OCP license. More importantly, it protects everything you have built. Cannabis businesses face unique risks that standard business insurance does not automatically cover. You need specific policies designed for this industry.</p>
+      <p>Product liability is the biggest risk for dispensaries. A customer who claims harm from a product they purchased at your store can sue you. Without product liability coverage, you pay legal defense costs out of pocket. Those costs can reach hundreds of thousands of dollars. One lawsuit without coverage can end your business.</p>
     </section>
 
-    <Callout title="Your Safety Net" type="passion">
-      Insurance is the foundation of a sustainable cannabis business. It protects your investment, your employees, and your customers—so you can focus on what you do best: serving the Maine community.
+    <Callout title="Work With a Cannabis Broker" type="tip">
+      Do not go directly to insurance carriers. Use a broker who specializes in cannabis. These brokers have relationships with carriers who actually write cannabis policies. Many major carriers will not touch cannabis without a broker involved. A cannabis broker knows which carriers are active in Maine and can get you quotes from multiple carriers at once.
     </Callout>
 
     <section>
-      <h2>The Big Four: Essential Coverage</h2>
-      <table aria-label="Maine cannabis essential insurance coverage types" caption="Four essential insurance coverage types for Maine dispensaries including general liability, product liability, property, and workers compensation">
+      <h2>The Four Essential Coverage Types</h2>
+      
+      <h3>General Liability</h3>
+      <p>General liability covers customer injuries, property damage, and slip-and-fall accidents on your premises. A customer who falls in your parking lot, a delivery person who gets injured at your loading dock — these are general liability claims. Minimum recommended coverage: $1 million per occurrence.</p>
+
+      <h3>Product Liability</h3>
+      <p>Product liability is the coverage most dispensary owners underestimate. It protects you when a customer claims they were harmed by a product they purchased. This includes adverse reactions, contamination issues, and any claim that a product caused harm. Minimum recommended: $1-3 million.</p>
+      <p>Keep meticulous records of every product you sell. Batch numbers, test results, supplier information — document everything. This documentation is your first line of defense in a product liability claim. Your insurer will want this information immediately.</p>
+
+      <h3>Property Insurance</h3>
+      <p>Property insurance covers your building, equipment, and inventory against fire, theft, water damage, and similar perils. If someone breaks into your dispensary and steals inventory, property insurance covers the loss. If a fire damages your buildout, property insurance covers the repair costs.</p>
+
+      <h3>Workers Compensation</h3>
+      <p>Maine law requires workers comp for any employer with one or more employees. This applies to you from day one of operations. Workers comp covers medical expenses and lost wages when an employee gets injured on the job. Budtenders lift heavy inventory. Security staff handle tense situations. Workplace injuries happen. Workers comp covers them.</p>
+    </section>
+
+    <section>
+      <h2>Optional but Recommended Coverage</h2>
+      <table aria-label="Maine cannabis optional insurance coverage" caption="Optional but recommended cannabis-specific insurance coverage">
         <thead>
-          <tr><th>Coverage</th><th>What It Protects</th><th>Est. Annual Cost</th></tr>
+          <tr><th>Coverage</th><th>What It Covers</th><th>Est. Annual Cost</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>General Liability</strong></td><td>Customer injuries, property damage, slip-and-falls</td><td>$5,000-15,000</td></tr>
-          <tr><td><strong>Product Liability</strong></td><td>Claims from defective products, adverse reactions</td><td>$10,000-30,000</td></tr>
-          <tr><td><strong>Property Insurance</strong></td><td>Building, equipment, inventory from fire, theft</td><td>$5,000-20,000</td></tr>
-          <tr><td><strong>Workers Comp</strong></td><td>Employee injuries, medical costs, lost wages</td><td>$3,000-10,000</td></tr>
+          <tr><td><strong>Cyber Liability</strong></td><td>Data breaches, POS system hacking, customer information theft</td><td>$2,000-5,000</td></tr>
+          <tr><td><strong>Business Interruption</strong></td><td>Lost income during forced closure from fire, disaster, or other covered event</td><td>$3,000-8,000</td></tr>
+          <tr><td><strong>Directors and Officers</strong></td><td>Lawsuits against business leadership for decisions that harmed the company</td><td>$3,000-10,000</td></tr>
+          <tr><td><strong>Transit Insurance</strong></td><td>Product stolen or damaged during delivery to customers</td><td>$1,000-3,000</td></tr>
         </tbody>
       </table>
-      <p><strong>Total Estimate: $23,000-75,000/year</strong></p>
-    </section>
-
-    <section>
-      <h2>Pro-Hack: Product Liability is #1</h2>
-      <p><strong>The critical coverage most operators underestimate:</strong> Product liability protects you when a customer claims they were harmed by a product they purchased at your dispensary. This is the #1 source of cannabis lawsuits.</p>
-      <p><strong>Pro-Hack:</strong> Document EVERY product you sell (batch numbers, test results, supplier info). This documentation is your first defense in a product liability claim.</p>
-    </section>
-
-    <section>
-      <h2>Workers Comp: The Maine Mandate</h2>
-      <p>Under <strong>Maine Workers Compensation Act</strong>, ALL employers must carry workers comp insurance if they have one or more employees. This is NOT optional.</p>
-      <table aria-label="Maine cannabis workers compensation requirements by employee type" caption="Workers compensation requirements for different employee types including full-time, part-time, owners, and contractors">
-        <thead>
-          <tr><th>Employee Type</th><th>Requirement</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Full-time</td><td>MANDATORY</td></tr>
-          <tr><td>Part-time</td><td>MANDATORY</td></tr>
-          <tr><td>Owners working in business</td><td>MANDATORY</td></tr>
-          <tr><td>Contractors</td><td>Usually NOT required (but verify)</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>Cannabis-Specific Coverage: What's Optional but Recommended</h2>
-      <table aria-label="Maine cannabis optional but recommended insurance coverage" caption="Optional but recommended cannabis-specific insurance coverage including cyber liability, business interruption, directors and officers, and transit insurance">
-        <thead>
-          <tr><th>Coverage</th><th>Why It Matters</th><th>Est. Cost</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Cyber Liability</strong></td><td>Data breaches, POS hacking, customer info theft</td><td>$2,000-5,000</td></tr>
-          <tr><td><strong>Business Interruption</strong></td><td>Lost income during closure (fire, disaster)</td><td>$3,000-8,000</td></tr>
-          <tr><td><strong>Directors & Officers</strong></td><td>Lawsuits against leadership decisions</td><td>$3,000-10,000</td></tr>
-          <tr><td><strong>Transit Insurance</strong></td><td>Product stolen/damaged during delivery</td><td>$1,000-3,000</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>Pro-Hack: The Insurance Broker Strategy</h2>
-      <p><strong>Don't go direct—use a broker:</strong> Cannabis-specialized insurance brokers have access to carriers who actually WRITE cannabis policies. Many major carriers won't touch cannabis without a broker'sstamp.</p>
-      <p><strong>Pro-Hack:</strong> Ask brokers about "package deals"—bundling coverage often saves 15-25%. Also ask about loss history discounts if you can demonstrate strong security.</p>
     </section>
 
     <section>
       <h2>Cost-Saving Strategies</h2>
       <ul>
-        <li><strong>Higher deductibles</strong> — Increase deductibles to lower premiums</li>
-        <li><strong>Security discounts</strong> — Alarm systems, cameras, vaults reduce rates</li>
-        <li><strong>Claims-free history</strong> — Maintain clean record for better rates</li>
-        <li><strong>Bundle packages</strong> — Multi-policy discounts add up</li>
-        <li><strong>Annual pay</strong> — Pay upfront for 5-10% savings</li>
+        <li><strong>Higher deductibles:</strong> Increasing your deductible from $1,000 to $5,000 can reduce premiums by 15-20%</li>
+        <li><strong>Security discounts:</strong> Alarm systems, security cameras, and vault storage demonstrate lower risk and reduce rates</li>
+        <li><strong>Claims-free history:</strong> Maintaining a clean loss history earns better renewal rates over time</li>
+        <li><strong>Package bundling:</strong> Buying multiple policies from the same carrier typically saves 10-20%</li>
+        <li><strong>Annual payment:</strong> Paying upfront instead of monthly often earns a 5-10% discount</li>
+        <li><strong>Safety training records:</strong> Documented employee safety training can reduce workers comp premiums</li>
       </ul>
     </section>
 
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li><strong>✅ Required:</strong> GL, Product Liability, Workers Comp for license</li>
-        <li><strong>⚠️ Critical:</strong> Product liability is your biggest risk</li>
-        <li><strong>💰 Estimate:</strong> Plan for $25K-75K annually</li>
-        <li><strong>💡 Pro-Hack:</strong> Use cannabis-specialized brokers</li>
-        <li><strong>📋 Document:</strong> Keep batch records for liability defense</li>
+        <li>General liability, product liability, workers comp, and property insurance are required for your OCP license</li>
+        <li>Product liability is the coverage most specific to dispensary risk — do not skimp on this</li>
+        <li>Document every product you sell with batch numbers, test results, and supplier info</li>
+        <li>Use a cannabis-specialized insurance broker rather than going directly to carriers</li>
+        <li>Budget $25,000-$75,000 per year for total insurance costs</li>
+        <li>Bundle policies with one carrier for 10-20% savings</li>
+        <li>Higher deductibles lower premiums if you have the cash reserve to cover them</li>
       </ul>
     </section>
 
     <section class="further-reading">
-      <h2>Resources</h2>
+      <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">OCP Rules Chapter 1</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/rules" target="_blank" rel="noopener">OCP Rules Chapter 1</a></li>
         <li><a href="https://www.maine.gov/labor" target="_blank" rel="noopener">Maine Workers Compensation</a></li>
         <li><a href="/guides/maine-dispensary-license/">License Guide</a></li>
+        <li><a href="/guides/maine-cannabis-workers-comp-insurance/">Workers Comp Guide</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only. Consult with a qualified insurance professional.</em></p>
+      <p><em>This guide is for informational purposes only. Consult with a qualified insurance professional for advice on your specific coverage needs.</em></p>
     </section>
   </article>
 </Layout>

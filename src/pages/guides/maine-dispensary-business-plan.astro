@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-11", modifiedDate: "2026-03-18", section: "Business Essentials" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-11", modifiedDate: "2026-04-04", section: "Business Essentials" };
 const topics = ["business"];
 ---
 
@@ -16,83 +16,65 @@ const topics = ["business"];
   <article>
     <div class="article-header">
       <h1>Dispensary Business Plan</h1>
-      <p class="subtitle">Your complete guide to creating a comprehensive <a href="/guides/maine-dispensary-business-plan/">business plan</a> for a Maine cannabis dispensary</p>
+      <p class="subtitle">Creating a comprehensive business plan for a Maine cannabis dispensary</p>
     </div>
+
+    <section class="fact-box">
+      <h2>Business Plan Components</h2>
+      <table aria-label="Maine dispensary business plan essential sections" caption="Essential sections of a Maine cannabis dispensary business plan">
+        <thead><tr><th scope="col">Section</th><th scope="col">Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Executive Summary</strong></td><td>One-page overview of your entire business concept</td></tr>
+          <tr><td><strong>Company Description</strong></td><td>Legal structure, mission, location, license type</td></tr>
+          <tr><td><strong>Market Analysis</strong></td><td>Competitors, demographics, growth projections</td></tr>
+          <tr><td><strong>Products & Services</strong></td><td>What you will sell and how</td></tr>
+          <tr><td><strong>Financial Projections</strong></td><td>Startup costs, revenue, cash flow, break-even</td></tr>
+        </tbody>
+      </table>
+    </section>
 
     <section>
       <h2>Why You Need a Business Plan</h2>
-      <p>A well-crafted business plan is essential for any Maine dispensary. It serves multiple purposes: securing funding, guiding operations, and demonstrating to regulators that you have a viable, professional approach to your business.</p>
-      <p>Whether you're seeking investment, applying for a loan, or simply organizing your thoughts, a business plan is your roadmap to success in Maine's cannabis market.</p>
+      <p>A business plan serves three purposes. First, it guides your own operations. Writing it down forces you to think through every aspect of your business before you commit money. Second, it is required to get funding from investors or banks. Third, OCP wants to see that you have a viable professional approach — a written plan demonstrates that.</p>
+      <p>Whether you are self-funding or seeking investment, a business plan is not optional. It is the first thing any serious operator creates.</p>
     </section>
 
-    <Callout title="Designing Your Success" type="passion">
-      Your business plan is more than just a document—it's the first tangible version of your dream. Writing it down makes your vision real and gives you the confidence to lead. It's the moment you stop "thinking" about a dispensary and start "building" one.
+    <Callout title="Write It Before You Need It" type="tip">
+      Start your business plan before you submit your license application. The process of writing it will reveal questions you have not thought about. Gaps in your plan will expose gaps in your thinking. Better to find those gaps now than after you have spent money on a lease.
     </Callout>
 
     <section>
       <h2>Essential Sections</h2>
       
       <h3>1. Executive Summary</h3>
-      <p>This is the first section but should be written last. Summarize your business concept, goals, financial requirements, and expected <a href="/roi-calculator/">ROI</a>. Keep it to one page.</p>
+      <p>Write this section last. It is a one-page overview of your entire business concept. Include your location, license type, target customer, and financial ask if you are seeking investment. Investors read this first. If it does not grab them, they will not read further.</p>
       
       <h3>2. Company Description</h3>
-      <ul>
-        <li>Business name and legal structure (LLC, corporation, etc.)</li>
-        <li>Mission statement</li>
-        <li><a href="/guides/maine-dispensary-locations/">Location</a> (specific Maine city/town)</li>
-        <li>License type (retail, medical, or both)</li>
-        <li>Ownership and management team</li>
-      </ul>
+      <p>Describe your business formally. Include your legal structure (LLC, corporation, etc.), your mission, your specific Maine location, whether you are seeking a retail license, a medical license, or both, and who owns and manages the business.</p>
       
       <h3>3. Market Analysis</h3>
-      <p>Research Maine's cannabis market thoroughly:</p>
-      <ul>
-        <li>Total addressable market size</li>
-        <li>Projected growth rate</li>
-        <li>Competitive landscape (other dispensaries in your area)</li>
-        <li>Target customer demographics</li>
-        <li>Market trends and opportunities</li>
-      </ul>
+      <p>Research Maine's cannabis market thoroughly before writing this section. Estimate the total addressable market. Look at how many dispensaries already exist in your target city. Describe your target customer demographics. Identify your direct competitors within 30 miles. Show that you understand the market you are entering.</p>
       
       <h3>4. Products and Services</h3>
-      <p>Detail what you'll sell:</p>
-      <ul>
-        <li>Flower (various strains)</li>
-        <li>Concentrates (wax, shatter, rosin)</li>
-        <li>Edibles</li>
-        <li>Tinctures and topicals</li>
-        <li>Accessories</li>
-        <li>Delivery services (if licensed)</li>
-      </ul>
+      <p>Describe what you will sell. For a Maine dispensary, this typically includes flower, concentrates, edibles, tinctures, topicals, and accessories. If you plan to offer delivery, include that here. Be specific about your product mix. Investors want to know if you have thought about what you will actually sell.</p>
       
-      <h3>5. Marketing Strategy</h3>
-      <p>Maine has specific marketing restrictions. Include:</p>
-      <ul>
-        <li>Brand positioning</li>
-        <li>Customer acquisition channels</li>
-        <li>Loyalty programs</li>
-        <li>Local marketing efforts</li>
-        <li>Compliance with Maine advertising rules</li>
-      </ul>
+      <h3>5. Operations Plan</h3>
+      <p>Describe how your store runs day-to-day. Include your POS system, METRC integration, security protocols, staffing plan, and supplier relationships. This is where you show that you have thought through the practical details of running a dispensary.</p>
       
-      <h3>6. Operations Plan</h3>
+      <h3>6. Financial Projections</h3>
+      <p>This is what investors spend the most time on. Be realistic. Include startup costs, three-year revenue projections, operating expense budget, monthly cash flow, and break-even analysis. Under-promise and over-deliver on projections. Investors distrust optimistic numbers.</p>
+    </section>
+
+    <section>
+      <h2>What Investors Want to See</h2>
+      <p>Maine cannabis investors have seen many business plans. They look for:</p>
       <ul>
-        <li>Day-to-day operations</li>
-        <li>Technology systems (POS, <a href="/glossary/#seed-to-sale">seed-to-sale</a>)</li>
-        <li><a href="/guides/maine-cannabis-vendor-directory/">Supplier relationships</a></li>
-        <li>Security protocols</li>
-        <li>Quality control</li>
-      </ul>
-      
-      <h3>7. Financial Projections</h3>
-      <p>This is what investors care about most:</p>
-      <ul>
-        <li><a href="/guides/maine-dispensary-costs/">Startup costs</a> breakdown</li>
-        <li>3-year revenue projections</li>
-        <li>Operating expense budget</li>
-        <li>Cash flow projections</li>
-        <li>Break-even analysis</li>
-        <li>ROI timeline</li>
+        <li>Realistic financial projections — not inflated revenue numbers</li>
+        <li>Clear understanding of Maine's regulatory environment</li>
+        <li>Specific location strategy — not vague plans to "open in Maine"</li>
+        <li>Management team with relevant experience</li>
+        <li>Evidence that you have done market research</li>
+        <li>Compliance-forward thinking — not just profit focus</li>
       </ul>
     </section>
 
@@ -107,32 +89,32 @@ const topics = ["business"];
         </thead>
         <tbody>
           <tr>
-            <td>License & Fees</td>
-            <td>$3,000 - $15,000</td>
+            <td>License and Local Fees</td>
+            <td>$3,000-15,000</td>
           </tr>
           <tr>
-            <td><a href="/guides/maine-cannabis-real-estate/">Real Estate</a> (build-out)</td>
-            <td>$100,000 - $300,000</td>
+            <td>Real Estate and Buildout</td>
+            <td>$100,000-300,000</td>
           </tr>
           <tr>
             <td>Security Systems</td>
-            <td>$25,000 - $75,000</td>
+            <td>$25,000-75,000</td>
           </tr>
           <tr>
             <td>Initial Inventory</td>
-            <td>$50,000 - $150,000</td>
+            <td>$50,000-150,000</td>
           </tr>
           <tr>
-            <td>POS & Technology</td>
-            <td>$10,000 - $30,000</td>
+            <td>POS and Technology</td>
+            <td>$10,000-30,000</td>
           </tr>
           <tr>
             <td>Working Capital (6 months)</td>
-            <td>$100,000 - $250,000</td>
+            <td>$100,000-250,000</td>
           </tr>
           <tr>
             <td><strong>Total Investment</strong></td>
-            <td><strong>$300,000 - $850,000</strong></td>
+            <td><strong>$300,000-850,000</strong></td>
           </tr>
         </tbody>
       </table>
@@ -141,11 +123,13 @@ const topics = ["business"];
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li>A business plan is essential for funding and operations</li>
-        <li>Include detailed financial projections</li>
-        <li>Research Maine's specific market conditions</li>
-        <li>Document your compliance procedures</li>
-        <li>Be realistic about timelines and costs</li>
+        <li>Write your business plan before submitting your license application</li>
+        <li>Include realistic three-year financial projections</li>
+        <li>Show specific market research — not general cannabis industry stats</li>
+        <li>Highlight your management team's relevant experience</li>
+        <li>Demonstrate that you understand Maine's compliance requirements</li>
+        <li>Address 280E tax implications in your financial planning</li>
+        <li>Budget $300K-$850K total depending on location and scale</li>
       </ul>
     </section>
 
@@ -153,12 +137,14 @@ const topics = ["business"];
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Startup Cost Guide</a></li>
+        <li><a href="/guides/maine-dispensary-locations/">Market Locations Guide</a></li>
         <li><a href="https://www.sba.gov/business-guide/plan-your-business/write-your-business-plan" target="_blank" rel="noopener noreferrer">SBA Guide: Write your business plan</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This information is for informational purposes only and does not constitute legal or financial advice. Consult with qualified professionals in Maine for specific guidance.</em></p>
+      <p><em>This information is for informational purposes only. Consult qualified professionals in Maine for specific guidance on your business plan.</em></p>
     </section>
   </article>
 </Layout>
@@ -178,4 +164,7 @@ const topics = ["business"];
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
 </style>

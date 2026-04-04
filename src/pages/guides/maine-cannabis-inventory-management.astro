@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-19", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-19", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["operations"];
 ---
 
@@ -16,109 +16,100 @@ const topics = ["operations"];
   <article>
     <div class="article-header">
       <h1>Maine Cannabis Inventory Management</h1>
-      <p class="subtitle">METRC compliance and operational excellence for Maine dispensaries</p>
+      <p class="subtitle">METRC compliance and operational inventory tracking for Maine dispensaries</p>
     </div>
 
     <section class="fact-box">
-      <h2>📋 Inventory Checklist</h2>
-      <table aria-label="Maine cannabis inventory management requirements and METRC compliance rules" caption="METRC inventory tracking requirements, RFID tagging rules, and audit thresholds for Maine dispensaries">
+      <h2>Inventory Requirements at a Glance</h2>
+      <table aria-label="Maine cannabis inventory management requirements" caption="METRC inventory tracking requirements, RFID tagging rules, and audit thresholds for Maine dispensaries">
         <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
         <tbody>
           <tr><td><strong>System Required</strong></td><td>METRC (Marijuana Enforcement Tracking Reporting Compliance)</td></tr>
-          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. §301, OCP Rule Chapter 1</td></tr>
-          <tr><td><strong>Tag Requirement</strong></td><td>RFID tags on all packages (cultivator-sourced)</td></tr>
+          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. Section 301, OCP Rule Chapter 1</td></tr>
+          <tr><td><strong>Tag Requirement</strong></td><td>RFID tags on all products (cultivator-sourced)</td></tr>
           <tr><td><strong>Inventory Reporting</strong></td><td>Daily sales upload; monthly physical inventory</td></tr>
-          <tr><td><strong>Audit Trigger</strong></td><td>>1% variance = automatic OCP review</td></tr>
-          <tr><td><strong>Cost</strong></td><td>$50-200/month + $40/pack of 1,000 RFID tags</td></tr>
+          <tr><td><strong>Variance Threshold</strong></td><td>Over 1% variance triggers OCP review</td></tr>
+          <tr><td><strong>Cost</strong></td><td>$50-200/month plus $40 per 1,000 RFID tags</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Why METRC Matters</h2>
-      <p>METRC is Maine's mandatory seed-to-sale tracking system. Under <strong>28-B M.R.S. §301</strong> and <strong>OCP Rule Chapter 1</strong>, every gram of cannabis must be tracked from cultivation to consumer. This isn't optional—it's your license to operate.</p>
+      <h2>Why METRC Is Non-Negotiable</h2>
+      <p>METRC is Maine's mandatory seed-to-sale tracking system. Under 28-B M.R.S. Section 301 and OCP Rule Chapter 1, every gram of cannabis must be tracked from the moment it leaves a cultivator to the moment it reaches a customer. You cannot opt out. You cannot use an alternative system. METRC is the system.</p>
+      <p>Every package that arrives at your dispensary has an RFID tag attached by the cultivator. When you receive it, you scan that tag and log it into METRC. When you sell it, you record the sale in your POS and that data syncs to METRC. Every gram must be accounted for at all times.</p>
     </section>
 
-    <Callout title="Compliance = Profit Protection" type="success">
-      A single inventory discrepancy can trigger an OCP investigation that shuts you down. But here's the secret: tight inventory control actually IMPROVES your bottom line by reducing shrinkage and waste.
+    <Callout title="The 1% Variance Rule" type="warning">
+      Maine OCP automatically reviews any dispensary with inventory variance exceeding 1%. This is not a warning — it is a trigger for deeper investigation. The safest store runs tight enough counts that variance never approaches 1%. Weekly mini-audits are the way to do this.
     </Callout>
 
     <section>
-      <h2>METRC Integration: The 5 Core Functions</h2>
-      <table aria-label="Maine cannabis METRC integration core functions" caption="Five core METRC functions for Maine cannabis inventory management including package tracking, inventory transfer, sales recording, waste documentation, and reporting">
+      <h2>The Five METRC Functions You Must Perform</h2>
+      <table aria-label="Maine cannabis METRC core functions" caption="Five core METRC functions for Maine cannabis inventory management">
         <thead>
-          <tr><th>Function</th><th>Your Responsibility</th><th>Frequency</th></tr>
+          <tr><th>Function</th><th>What You Do</th><th>When</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>1. Package Tracking</strong></td><td>Receive RFID-tagged products, scan into system</td><td>Per delivery</td></tr>
-          <tr><td><strong>2. Inventory Transfer</strong></td><td>Document all internal movements</td><td>Real-time</td></tr>
-          <tr><td><strong>3. Sales Recording</strong></td><td>Sync POS with METRC for each transaction</td><td>Per sale</td></tr>
-          <tr><td><strong>4. Waste Documentation</strong></td><td>Log all damaged/expired product destruction</td><td>As needed</td></tr>
-          <tr><td><strong>5. Reporting</strong></td><td>Generate monthly inventory reports</td><td>Monthly</td></tr>
+          <tr><td><strong>1. Package Receiving</strong></td><td>Scan every RFID tag when delivery arrives</td><td>Per delivery</td></tr>
+          <tr><td><strong>2. Inventory Transfers</strong></td><td>Log all internal movements between storage and sales floor</td><td>Real-time</td></tr>
+          <tr><td><strong>3. Sales Recording</strong></td><td>Sync POS transaction with METRC for each sale</td><td>Per sale</td></tr>
+          <tr><td><strong>4. Waste Documentation</strong></td><td>Record and photograph all product destruction</td><td>As needed</td></tr>
+          <tr><td><strong>5. Monthly Reports</strong></td><td>Generate and file monthly inventory reconciliation</td><td>Monthly</td></tr>
         </tbody>
       </table>
-    </section>
-
-    <section>
-      <h2>Pro-Hack: The 1% Rule</h2>
-      <p><strong>The critical threshold:</strong> Maine OCP flags any inventory variance exceeding 1% between METRC records and physical counts. At 1%+, you face automatic audit and potential license suspension.</p>
-      <p><strong>Pro-Hack:</strong> Run weekly "mini-audits" on 10% of SKU locations. Catch issues BEFORE they compound to 1%.</p>
     </section>
 
     <section>
       <h2>Daily Operations Workflow</h2>
-      <table aria-label="Maine cannabis daily inventory operations workflow" caption="Daily inventory operations workflow including morning opening, delivery receiving, throughout day POS sync, closing reconciliation, and weekly audits">
+      <p>Your inventory routine should look like this every day:</p>
+      <table aria-label="Maine cannabis daily inventory operations workflow" caption="Daily inventory operations workflow including morning review, delivery receiving, POS sync, closing reconciliation, and weekly audits">
         <thead>
           <tr><th>Time</th><th>Action</th><th>METRC Entry</th></tr>
         </thead>
         <tbody>
-          <tr><td>AM Opening</td><td>Review yesterday's sales, check par levels</td><td>Dashboard review</td></tr>
-          <tr><td>Delivery Window</td><td>Receive shipment, scan all packages</td><td>"Incoming Transfer" </td></tr>
-          <tr><td>Throughout Day</td><td>POS syncs with METRC automatically</td><td>Auto-upload</td></tr>
-          <tr><td>Closing</td><td>Reconcile POS receipts with METRC</td><td>Daily report</td></tr>
-          <tr><td>Weekly</td><td>Physical count of 10% of SKUs</td><td>Variance report</td></tr>
+          <tr><td>AM Opening</td><td>Check yesterday sales and current on-hand counts</td><td>Dashboard review</td></tr>
+          <tr><td>Delivery Window</td><td>Receive shipment, scan every package, verify against manifest</td><td>Incoming Transfer</td></tr>
+          <tr><td>Throughout Day</td><td>POS and METRC sync automatically for each sale</td><td>Auto-upload</td></tr>
+          <tr><td>Closing</td><td>Reconcile POS receipts with METRC records</td><td>Daily report</td></tr>
+          <tr><td>Weekly</td><td>Physical count of 10% of your SKU locations</td><td>Variance report</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Common METRC Mistakes (and How to Avoid)</h2>
-      <table aria-label="Maine cannabis common METRC mistakes and prevention" caption="Common METRC mistakes including forgotten returns, untagged products, delayed data entry, and ignored hold products with consequences and prevention methods">
+      <h2>Common METRC Mistakes</h2>
+      <table aria-label="Maine cannabis common METRC mistakes" caption="Common METRC mistakes with consequences and prevention methods">
         <thead>
           <tr><th>Mistake</th><th>Consequence</th><th>Prevention</th></tr>
         </thead>
         <tbody>
-          <tr><td>Forgetting to scan returns</td><td>Inventory variance</td><td>Mandatory scan protocol</td></tr>
-          <tr><td>Untagged products</td><td>Cannot sell</td><td>Verify tags on receipt</td></tr>
-          <tr><td>Delaying data entry</td><td>Lost transactions</td><td>Real-time entry rule</td></tr>
-          <tr><td>Ignoring "on hold" products</td><td>Compliance violation</td><td>Daily hold review</td></tr>
+          <tr><td>Forgetting to scan returns from customers</td><td>Inventory variance — appears as missing product</td><td>Create a mandatory scan protocol for all returns</td></tr>
+          <tr><td>Receiving untagged products</td><td>Cannot legally sell those products</td><td>Verify RFID tags are attached before signing delivery receipt</td></tr>
+          <tr><td>Delaying data entry</td><td>Lost transactions and discrepancies during audit</td><td>Enter data in real time, never batch at end of day</td></tr>
+          <tr><td>Ignoring products placed on hold</td><td>Compliance violation when hold expires</td><td>Review hold status daily and address promptly</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Inventory Best Practices</h2>
-      <ul>
-        <li><strong>Weekly physical counts</strong> — Don't wait for monthly required count</li>
-        <li><strong>FIFO rotation</strong> — First-in, first-out prevents expired product</li>
-        <li><strong>Par level monitoring</strong> — Reorder before shelves empty</li>
-        <li><strong>Staff training</strong> — Every employee needs METRC certification</li>
-        <li><strong>Backup documentation</strong> — Keep offline records of all transactions</li>
-      </ul>
+      <h2>Running Effective Audits</h2>
+      <p>Do not wait for the monthly required count to find problems. Run weekly mini-audits on a rotating 10% of your SKU locations. This catches discrepancies before they compound to the 1% trigger threshold.</p>
+      <p>When you find a variance, investigate immediately. Check the count. Check the METRC record. Check recent transactions. Most discrepancies turn out to be data entry errors that are easy to fix if you catch them early.</p>
     </section>
 
     <section>
-      <h2>Cost Breakdown</h2>
-      <table aria-label="Maine cannabis inventory management cost breakdown" caption="Inventory management costs including METRC software, RFID tags, scanner hardware, POS integration, and staff training">
+      <h2>Inventory Cost Breakdown</h2>
+      <table aria-label="Maine cannabis inventory management cost breakdown" caption="Inventory management costs including METRC software, RFID tags, scanner hardware, and POS integration">
         <thead>
           <tr><th>Item</th><th>Cost</th><th>Notes</th></tr>
         </thead>
         <tbody>
-          <tr><td>METRC Software</td><td>$50-200/month</td><td>Based on volume</td></tr>
-          <tr><td>RFID Tags</td><td>$40/1,000</td><td>Provided by cultivator</td></tr>
-          <tr><td>Scanner Hardware</td><td>$500-2,000</td><td>Handheld + fixed</td></tr>
-          <tr><td>POS Integration</td><td>$0-300/month</td><td>Depends on POS system</td></tr>
-          <tr><td>Training</td><td>$500-1,500</td><td>Initial staff cert</td></tr>
+          <tr><td>METRC Software</td><td>$50-200/month</td><td>Based on sales volume</td></tr>
+          <tr><td>RFID Tags</td><td>$40 per 1,000</td><td>Provided by cultivator, cost built into product price</td></tr>
+          <tr><td>Scanner Hardware</td><td>$500-2,000</td><td>Handheld scanner plus fixed station scanner</td></tr>
+          <tr><td>POS Integration</td><td>$0-300/month</td><td>Depends on your POS system compatibility</td></tr>
+          <tr><td>Staff Training</td><td>$500-1,500</td><td>Initial METRC certification for key staff</td></tr>
         </tbody>
       </table>
     </section>
@@ -126,25 +117,28 @@ const topics = ["operations"];
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li><strong>✅ Required:</strong> METRC integration is mandatory under 28-B M.R.S. §301</li>
-        <li><strong>⚠️ Critical:</strong> Stay under 1% variance or face audit</li>
-        <li><strong>💡 Pro-Hack:</strong> Weekly mini-audits catch problems early</li>
-        <li><strong>📊 Daily:</strong> Reconcile POS with METRC every single day</li>
+        <li>METRC integration is mandatory under 28-B M.R.S. Section 301</li>
+        <li>Over 1% inventory variance triggers automatic OCP review</li>
+        <li>Scan every package at delivery — verify tags before signing</li>
+        <li>Reconcile POS with METRC every single day at closing</li>
+        <li>Run weekly mini-audits on 10% of SKU locations</li>
+        <li>Enter all data in real time — never batch at end of day</li>
+        <li>Budget $50-200/month for METRC plus hardware costs</li>
       </ul>
     </section>
 
     <section class="further-reading">
-      <h2>Resources</h2>
+      <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">OCP Rules Chapter 1</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/rules" target="_blank" rel="noopener">OCP Rules Chapter 1</a></li>
         <li><a href="https://www.metrc.com/" target="_blank" rel="noopener">METRC Official Site</a></li>
         <li><a href="/guides/maine-dispensary-license/">License Guide</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only. Verify current requirements with OCP.</em></p>
+      <p><em>This guide is for informational purposes only. Verify current requirements with OCP before setting up your inventory system.</em></p>
     </section>
   </article>
 </Layout>

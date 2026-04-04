@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-03-23", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["compliance"];
 export const title = "Cannabis Extraction Licensing";
 ---
@@ -21,13 +21,13 @@ export const title = "Cannabis Extraction Licensing";
     </div>
 
     <section class="fact-box">
-      <h2>📋 Extraction Checklist</h2>
-      <table aria-label="Maine cannabis extraction licensing requirements and manufacturing regulations" caption="Extraction licensing requirements, manufacturing regulations, and safety compliance for Maine cannabis processors">
+      <h2>Extraction Requirements at a Glance</h2>
+      <table aria-label="Maine cannabis extraction licensing requirements" caption="Extraction licensing requirements, manufacturing regulations, and safety compliance for Maine cannabis processors">
         <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
         <tbody>
-          <tr><td><strong>License Required</strong></td><td>Manufacturing License</td></tr>
-          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. §501, OCP Rule Chapter 4</td></tr>
-          <tr><td><strong>Volatile Permit</strong></td><td>Fire marshal sign-off REQUIRED</td></tr>
+          <tr><td><strong>License Required</strong></td><td>Manufacturing License from OCP</td></tr>
+          <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. Section 501, OCP Rule Chapter 4</td></tr>
+          <tr><td><strong>Volatile Methods</strong></td><td>Local fire marshal sign-off required</td></tr>
           <tr><td><strong>Non-Volatile</strong></td><td>Lower barrier, still requires license</td></tr>
           <tr><td><strong>Testing</strong></td><td>Residual solvent testing mandatory</td></tr>
         </tbody>
@@ -35,13 +35,20 @@ export const title = "Cannabis Extraction Licensing";
     </section>
 
     <section>
-      <h2>The Volatile vs. Non-Volatile Decision</h2>
-      <p>Your extraction method determines your regulatory burden. Choose based on your budget, expertise, and market goals.</p>
+      <h2>What Is Extraction?</h2>
+      <p>Extraction separates cannabinoids and terpenes from cannabis plant material. The result is a concentrate. Concentrates sell at higher price points than flower. They are used for dabbing, vape cartridges, and edibles.</p>
+      <p>Maine requires a manufacturing license for any extraction operation. This is separate from a retail license. You cannot extract at a dispensary without the proper manufacturing authorization.</p>
     </section>
 
-    <Callout title="Safety First" type="passion">
-      Extraction is the most technically demanding area of cannabis production. Master the safety protocols, and you'll have a sustainable competitive advantage. Cut corners, and you risk everything.
+    <Callout title="Start With Non-Volatile" type="tip">
+      If you are new to extraction, start with rosin or ice water hash. These methods use heat, pressure, and water only. No solvents means no fire marshal drama, no residual solvent testing anxiety, and a faster path to market. You can always expand to volatile methods later.
     </Callout>
+
+    <section>
+      <h2>Volatile vs. Non-Volatile Methods</h2>
+      <p>Extraction methods divide into two categories. Volatile methods use flammable solvents. Non-volatile methods do not.</p>
+      <p>Volatile methods produce larger yields. They require more infrastructure. Non-volatile methods are simpler and safer but produce less concentrate.</p>
+    </section>
 
     <section>
       <h2>Method Comparison</h2>
@@ -50,38 +57,42 @@ export const title = "Cannabis Extraction Licensing";
           <tr><th>Method</th><th>Type</th><th>Fire Risk</th><th>Startup Cost</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>BHO (Butane)</strong></td><td>Volatile</td><td>HIGH</td><td>$100K+</td></tr>
-          <tr><td><strong>Propane (PHO)</strong></td><td>Volatile</td><td>HIGH</td><td>$100K+</td></tr>
-          <tr><td><strong>CO2</strong></td><td>Volatile</td><td>MEDIUM</td><td>$75-150K</td></tr>
-          <tr><td><strong>Ethanol (Cold)</strong></td><td>Volatile</td><td>MEDIUM</td><td>$50-100K</td></tr>
-          <tr><td><strong>Rosin (Heat/Press)</strong></td><td>Non-Volatile</td><td>LOW</td><td>$10-25K</td></tr>
-          <tr><td><strong>Ice Water Hash</strong></td><td>Non-Volatile</td><td>LOW</td><td>$5-15K</td></tr>
+          <tr><td><strong>BHO (Butane)</strong></td><td>Volatile</td><td>High</td><td>$100K+</td></tr>
+          <tr><td><strong>Propane (PHO)</strong></td><td>Volatile</td><td>High</td><td>$100K+</td></tr>
+          <tr><td><strong>CO2</strong></td><td>Volatile</td><td>Medium</td><td>$75-150K</td></tr>
+          <tr><td><strong>Ethanol (Cold)</strong></td><td>Volatile</td><td>Medium</td><td>$50-100K</td></tr>
+          <tr><td><strong>Rosin (Heat/Press)</strong></td><td>Non-Volatile</td><td>Low</td><td>$10-25K</td></tr>
+          <tr><td><strong>Ice Water Hash</strong></td><td>Non-Volatile</td><td>Low</td><td>$5-15K</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
       <h2>Fire Safety: The Local Approval Game</h2>
-      <p><strong>Critical requirement:</strong> Volatile extraction methods require LOCAL fire marshal approval. This is where most operators face delays.</p>
+      <p>Volatile extraction methods require local fire marshal approval. This is where most operators face delays. Fire code requirements vary by municipality.</p>
+      <p>Common fire safety requirements:</p>
       <table aria-label="Maine cannabis extraction fire safety requirements" caption="Fire safety requirements for volatile extraction including closed-loop systems, explosion-proof wiring, ventilation, solvent storage, and emergency exits">
         <thead>
           <tr><th>Requirement</th><th>What You Need</th></tr>
         </thead>
         <tbody>
-          <tr><td>Closed-loop systems</td><td> герметичные системы без открытого пламени</td></tr>
-          <tr><td>Explosion-proof wiring</td><td>All electrical in extraction area</td></tr>
-          <tr><td>Ventilation (HVAC)</td><td>Positive pressure, exhaust to exterior</td>
-          <tr><td>Solvent storage</td><td>Fire-rated cabinet, limited quantity</td></tr>
-          <tr><td>Emergency exits</td><td>Direct exterior access required</td></tr>
-          <tr><td>Fire suppression</td><td>Sprinkler system or ABC extinguishers</td></tr>
+          <tr><td>Closed-loop systems</td><td>No open-path solvent recovery</td></tr>
+          <tr><td>Explosion-proof wiring</td><td>All electrical in extraction area rated for hazardous locations</td></tr>
+          <tr><td>Ventilation (HVAC)</td><td>Positive pressure, exhaust to exterior</td></tr>
+          <tr><td>Solvent storage</td><td>Fire-rated cabinet, limited quantity on site</td></tr>
+          <tr><td>Emergency exits</td><td>Direct exterior access from extraction room</td></tr>
+          <tr><td>Fire suppression</td><td>Sprinkler system or ABC extinguishers within reach</td></tr>
         </tbody>
       </table>
-      <p><strong>Pro-Hack:</strong> Meet with YOUR local fire marshal BEFORE designing your facility. Each municipality interprets rules differently.</p>
     </section>
 
+    <Callout title="Meet Your Fire Marshal First" type="warning">
+      Do not design your extraction facility before meeting with your local fire marshal. Every municipality interprets the rules differently. One fire marshal will approve a setup that another rejects. Get verbal alignment before you spend money on equipment.
+    </Callout>
+
     <section>
-      <h2>Residual Testing: 28-B M.R.S. §503</h2>
-      <p>Under Maine law, all concentrates must pass residual solvent testing:</p>
+      <h2>Residual Testing: 28-B M.R.S. Section 503</h2>
+      <p>All concentrates must pass residual solvent testing before sale. Maine sets limits at 5,000 ppm for common solvents:</p>
       <table aria-label="Maine cannabis residual solvent testing limits" caption="Residual solvent testing limits in parts per million for butane, propane, ethanol, and CO2 extraction methods">
         <thead>
           <tr><th>Solvent</th><th>Limit (ppm)</th></tr>
@@ -93,6 +104,7 @@ export const title = "Cannabis Extraction Licensing";
           <tr><td>CO2</td><td>5,000 ppm</td></tr>
         </tbody>
       </table>
+      <p>Testing is mandatory for every batch. Keep certificates on file. OCP can request them during inspections.</p>
     </section>
 
     <section>
@@ -112,24 +124,27 @@ export const title = "Cannabis Extraction Licensing";
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li><strong>⚠️ Fire Marshal:</strong> Local approval is mandatory for volatile methods</li>
-        <li><strong>✅ Start Simple:</strong> Rosin/ice water = lowest barrier to entry</li>
-        <li><strong>📊 Testing:</strong> All concentrates need residual solvent testing</li>
-        <li><strong>💡 Pro-Hack:</strong> Meet fire marshal BEFORE building</li>
+        <li>A manufacturing license is required for all extraction operations</li>
+        <li>Volatile methods require local fire marshal sign-off before you open</li>
+        <li>Meet your fire marshal before designing your facility</li>
+        <li>Rosin and ice water hash offer the lowest barrier to entry</li>
+        <li>All concentrates require residual solvent testing per batch</li>
+        <li>Budget $30K-$65K for non-volatile, $250K-$500K for BHO/CO2</li>
       </ul>
     </section>
 
     <section class="further-reading">
-      <h2>Resources</h2>
+      <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">OCP Rules Chapter 4</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/rules" target="_blank" rel="noopener">OCP Rules Chapter 4</a></li>
         <li><a href="/guides/maine-cannabis-product-testing-guide/">Testing Guide</a></li>
+        <li><a href="/guides/maine-cannabis-regulations/">Maine Cannabis Regulations</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This is for informational purposes only. Consult qualified professionals.</em></p>
+      <p><em>This is for informational purposes only. Extraction involves significant safety and regulatory complexity. Consult qualified professionals before investing.</em></p>
     </section>
   </article>
 </Layout>

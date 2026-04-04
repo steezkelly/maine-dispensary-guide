@@ -2,13 +2,13 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-19", modifiedDate: "2026-03-22", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-19", modifiedDate: "2026-04-04", section: "Operations & Technology" };
 const topics = ["finance"];
 export const title = "Workers Compensation & HR";
 ---
 
 <Layout 
-  title="Maine Cannabis Workers Comp" 
+  title="Maine Cannabis Worker Comp" 
   description="Maine cannabis workers comp guide covering WC insurance requirements, employee authorization, and HR best practices for dispensary owners."
   heroImage="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop"
   article={article}
@@ -20,47 +20,38 @@ export const title = "Workers Compensation & HR";
       <p class="subtitle">Building your cannabis team the right way in Maine</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <p>Your team is the heart of your dispensary. Building a great workplace isn't just good ethics—it's good business. Happy, well-trained employees provide better customer service, follow compliance procedures more reliably, and help your business thrive. Maine's worker protection requirements give you a framework for creating that positive environment. Before moving forward, familiarize yourself with the <a href="/guides/maine-dispensary-license/">licensing process</a> essential for success.</p>
+    <section class="fact-box">
+      <h2>What Maine Law Requires</h2>
+      <table aria-label="Maine cannabis workers comp requirements" caption="Workers compensation and HR requirements for Maine cannabis businesses">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Workers Comp</strong></td><td>Required for all Maine employers</td></tr>
+          <tr><td><strong>Employee Permits</strong></td><td>OCP-issued worker permits required</td></tr>
+          <tr><td><strong>Background Checks</strong></td><td>State and federal criminal checks</td></tr>
+          <tr><td><strong>Training</strong></td><td>Responsible Vendor training within 90 days</td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <Callout title="Excellence in Compliance" type="success">
-      Mastering this aspect of your business is a badge of professional excellence. It ensures longevity and demonstrates your commitment to the highest standards of the Maine cannabis industry.
+    <section>
+      <h2>Workers Compensation Insurance</h2>
+      <p>Maine requires all employers to carry workers compensation insurance. Cannabis businesses are not exempt. This applies whether you have one employee or fifty.</p>
+      <p>Your workers comp policy covers medical expenses and lost wages if an employee gets hurt on the job. Budtenders lift heavy inventory. Security staff handle tense situations. These are real risks in a dispensary environment.</p>
+      <p>Without coverage, you pay these costs out of pocket. One workplace injury without insurance can threaten your entire business.</p>
+    </section>
+
+    <Callout title="Shop Early" type="tip">
+      Cannabis businesses face higher workers comp premiums than many industries. Start getting quotes 3-4 months before you plan to hire. Some insurers avoid cannabis entirely. Look for carriers that specifically serve the industry.
     </Callout>
 
-
     <section>
-      <h2>Workers Compensation Requirements</h2>
-      <p>Under Maine law, all employers must carry workers compensation insurance. Under <a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine OCP regulations</a>, cannabis businesses must also ensure:</p>
+      <h2>Coverage Requirements</h2>
+      <p>Your policy must:</p>
       <ul>
-        <li><strong>Coverage for all employees</strong> — Required by Maine law</li>
-        <li><strong>Post coverage notice</strong> — Display required workplace posters</li>
-        <li><strong>Report injuries promptly</strong> — Follow Maine WC procedures</li>
-        <li><strong>Return-to-work programs</strong> — Help injured employees return safely</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>HR Best Practices</h2>
-      <ul>
-        <li>Develop comprehensive employee handbook</li>
-        <li>Create clear job descriptions</li>
-        <li>Implement thorough onboarding</li>
-        <li>Train on compliance and safety</li>
-        <li>Establish performance review processes</li>
-        <li>Handle employee issues promptly and professionally</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Employee Authorization</h2>
-      <p>All cannabis employees must:</p>
-      <ul>
-        <li>Obtain OCP employee authorization</li>
-        <li>Pass criminal background checks</li>
-        <li>Complete required training</li>
-        <li>Maintain current authorization</li>
+        <li>Cover all employees from day one of employment</li>
+        <li>Pay for all work-related medical expenses</li>
+        <li>Provide wage replacement during recovery</li>
+        <li>Include employers liability coverage</li>
       </ul>
     </section>
 
@@ -74,19 +65,56 @@ export const title = "Workers Compensation & HR";
           <tr><td>Workers Comp Premiums</td><td>$3,000-10,000/year</td></tr>
           <tr><td>HR Software</td><td>$500-2,000/year</td></tr>
           <tr><td>Training Programs</td><td>$1,000-5,000</td></tr>
-        <tr><td>Background Checks</td><td>$50-100/employee</td></tr>
+          <tr><td>Background Checks</td><td>$50-100/employee</td></tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h2>Creating a Great Workplace</h2>
+      <h2>Employee Permits (OCP)</h2>
+      <p>Every employee at a Maine cannabis business needs an OCP-issued worker permit. This is separate from your facility license. Applications go through Maine's licensing portal.</p>
+      <p>Permit processing takes 2-4 weeks. Do not let anyone work at your facility without a valid permit. This is one of the most common compliance violations new operators face.</p>
+    </section>
+
+    <Callout title="Permit Timeline" type="warning">
+      Do not schedule an employee's first day until their permit application is submitted and acknowledged. Let them start work only after you have confirmation the permit is in process. Working without a valid permit is a license violation.
+    </Callout>
+
+    <section>
+      <h2>Building Your HR Foundation</h2>
+      <p>Strong HR practices protect your business and your team. Here is what you need:</p>
+      
+      <h3>Employee Handbook</h3>
+      <p>Your handbook sets expectations. It covers hours, pay, time off, conduct, and compliance procedures. Give every new hire a copy on their first day.</p>
+
+      <h3>Job Descriptions</h3>
+      <p>Write clear descriptions for every role. Budtender, security, manager — each has different duties and different compliance responsibilities.</p>
+
+      <h3>Training Records</h3>
+      <p>Keep records of every training session. OCP audits look for documentation. Track completion dates, topics covered, and signatures.</p>
+    </section>
+
+    <section>
+      <h2>Creating a Workplace People Want to Stay In</h2>
+      <p>Turnover in cannabis retail is high. Burnout is common. Retention starts with treating your team well from day one.</p>
       <ul>
-        <li>Competitive compensation and benefits</li>
-        <li>Positive work culture</li>
-        <li>Growth opportunities</li>
-        <li>Work-life balance</li>
-        <li>Recognition and rewards</li>
+        <li>Pay competitive wages for your market</li>
+        <li>Build predictable schedules</li>
+        <li>Train thoroughly — well-trained staff feel more confident</li>
+        <li>Address problems early, not after they escalate</li>
+        <li>Recognize good work publicly</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Workers comp insurance is mandatory for all Maine cannabis employers</li>
+        <li>Premiums run $3,000-$10,000 per year depending on payroll and claims history</li>
+        <li>Every employee needs an OCP worker permit before starting work</li>
+        <li>Start permit applications 3-4 weeks before intended hire date</li>
+        <li>Keep training records — OCP audits checks these</li>
+        <li>Invest in retention — turnover in this industry is expensive</li>
       </ul>
     </section>
 
@@ -94,12 +122,14 @@ export const title = "Workers Compensation & HR";
       <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp" target="_blank" rel="noopener">Maine Cannabis Rules</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener">OCP Adult Use Cannabis</a></li>
+        <li><a href="/guides/maine-dispensary-hiring/">Hiring Guide</a></li>
+        <li><a href="/guides/maine-cannabis-staffing-licensing/">Staffing Licensing Guide</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em>This is for informational purposes only and does not constitute legal or financial advice. Consult with qualified professionals.</em></p>
+      <p><em>This is for informational purposes only. Consult a licensed insurance broker and employment attorney for advice specific to your situation.</em></p>
     </section>
   </article>
 </Layout>
@@ -119,4 +149,7 @@ export const title = "Workers Compensation & HR";
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
 </style>

@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-03-25", section: "Compliance & Legal" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-20", modifiedDate: "2026-04-04", section: "Compliance & Legal" };
 const topics = ["finance"];
 ---
 
@@ -16,102 +16,116 @@ const topics = ["finance"];
   <article>
     <div class="article-header">
       <h1>Cannabis Banking Solutions</h1>
-      <p class="subtitle">Navigating <a href="/guides/maine-cannabis-banking-solutions/">banking</a> for your Maine cannabis business</p>
+      <p class="subtitle">Navigating banking for your Maine cannabis business</p>
     </div>
 
-    <section>
-      <h2>Overview</h2>
-      <Callout title="Fueling Your Vision" type="success">
-        Securing a banking partner is a huge milestone that turns your dream into a high-speed engine. While it takes some effort, finding that right local credit union or bank that "gets" your passion makes everything feel real. It's the moment your business truly gains its wings.
-      </Callout>
-      <p>Banking remains one of the biggest challenges for cannabis businesses. While state-legal, cannabis remains illegal at the federal level, causing many traditional banks to avoid the industry. However, options exist for Maine operators.</p>
+    <section class="fact-box">
+      <h2>Banking Challenges at a Glance</h2>
+      <table aria-label="Maine cannabis banking requirements" caption="Banking challenges and solutions for Maine cannabis businesses">
+        <thead><tr><th scope="col">Issue</th><th scope="col">Reality</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Federal Status</strong></td><td>Cannabis remains Schedule I federally</td></tr>
+          <tr><td><strong>Banks</strong></td><td>Most large banks avoid cannabis entirely</td></tr>
+          <tr><td><strong>Credit Unions</strong></td><td>More willing, but still limited</td></tr>
+          <tr><td><strong>Cash Management</strong></td><td>Critical when banking access is limited</td></tr>
+          <tr><td><strong>SAFE Banking Act</strong></td><td>Not yet federal law (as of 2026)</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
-      <h2>The Banking Challenge</h2>
-      <ul>
-        <li>Federal prohibition creates risk for banks</li>
-        <li>Many banks refuse cannabis businesses</li>
-        <li>Account closures can happen suddenly</li>
-        <li>Limited access to credit</li>
-        <li>Cash-heavy operations create security risks</li>
-      </ul>
+      <h2>The Core Problem</h2>
+      <p>Cannabis is legal in Maine. It is legal in most US states. But it remains illegal at the federal level. This creates a fundamental banking problem.</p>
+      <p>Banks are federally regulated. Their regulators worry about federal prosecution. Most banks refuse to work with cannabis businesses. Some that initially accept cannabis accounts later close them suddenly.</p>
+      <p>This leaves many dispensaries operating largely in cash. Cash-heavy businesses face real risks. Theft, robbery, and employee theft are all more likely when large cash volumes are on-site.</p>
+    </section>
+
+    <Callout title="Start Banking Relationships Early" type="tip">
+      Do not wait until you need a bank account to start looking. Begin conversations with potential banking partners 6 months before you open. Get every agreement in writing. Ask what would trigger an account review or closure. Know the exit terms before you commit.
+    </Callout>
+
+    <section>
+      <h2>Where to Find Banking Partners</h2>
+      <p>Not all financial institutions are closed to cannabis. Here is where to look:</p>
+
+      <h3>Credit Unions</h3>
+      <p>Maine credit unions are generally more flexible than large national banks. Some have developed specific cannabis banking programs. Smaller credit unions may be willing to work with you because they have more local decision-making authority.</p>
+      <p>Ask each credit union directly whether they serve cannabis businesses. Check with the Maine Credit Union League for recommendations.</p>
+
+      <h3>State-Chartered Banks</h3>
+      <p>Banks chartered at the state level face state regulators, not federal. Some are more willing to serve cannabis businesses. Build relationships early. Bring your OCP license, business plan, and financial projections to the conversation.</p>
+
+      <h3> Cannabis-Focused Service Providers</h3>
+      <p>Some companies specialize in financial services for cannabis businesses. They understand the industry. They have built banking relationships that work. These services typically charge fees but provide access to checking, payroll, and merchant processing.</p>
     </section>
 
     <section>
-      <h2>Cannabis-Friendly Banks</h2>
-      <p>Several institutions serve Maine cannabis businesses:</p>
-      
-      <h3>Credit Unions:</h3>
-      <ul>
-        <li>Some Maine credit unions serve cannabis businesses</li>
-        <li>Often more flexible than large banks</li>
-        <li>Check local options</li>
-      </ul>
-
-      <h3>State-Chartered Banks:</h3>
-      <ul>
-        <li>Some state banks are more willing</li>
-        <li>Build relationships early</li>
-        <li>Document everything</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>SAFE Banking Act</h2>
-      <p>The Secure and Fair Enforcement (SAFE) Banking Act would protect banks serving cannabis businesses. While not yet federal law:</p>
-      <ul>
-        <li>Provides safe harbor for financial institutions</li>
-        <li>Would reduce cash-only operations</li>
-        <li>Monitor for updates</li>
-        <li>May pass in future sessions</li>
-      </ul>
+      <h2>The SAFE Banking Act</h2>
+      <p>The Secure and Fair Enforcement Banking Act has been introduced in Congress multiple times. It would protect banks that serve cannabis businesses from federal penalties.</p>
+      <p>As of 2026, it has not become federal law. The industry continues to operate in a gray area. Monitor legislative developments. If it passes, banking access will expand significantly.</p>
+      <p>In the meantime, do not count on SAFE Banking to solve your banking challenges. Plan for the current reality.</p>
     </section>
 
     <section>
       <h2>Cash Management</h2>
-      <p>Until full banking access, manage cash carefully:</p>
+      <p>Until full banking access is available, manage your cash carefully. Here is how:</p>
       <ul>
-        <li>Secure safes and vaults</li>
-        <li>Armored car services for deposits</li>
-        <li>Cash management policies</li>
-        <li>Employee training on cash handling</li>
-        <li>Limit cash on premises</li>
+        <li>Use a high-quality safe that is bolted to the floor</li>
+        <li>Limit the cash kept on-site to what you need for operations</li>
+        <li>Make deposits frequently rather than letting large sums accumulate</li>
+        <li>Consider armored car services for large deposits</li>
+        <li>Use a POS system that tracks every transaction electronically</li>
+        <li>Have two employees present for cash counts</li>
       </ul>
+    </section>
+
+    <Callout title="Armored Car Services" type="tip">
+      Armored car services cost $500-$2,000 per month. They are worth it when your daily cash volume exceeds $5,000. The cost of one robbery — in money, stress, and trauma — far exceeds the annual cost of armored pickup service.
+    </Callout>
+
+    <section>
+      <h2>Payment Processing</h2>
+      <p>Interstate payment processing for cannabis is complicated. Federal law blocks most card networks from serving dispensaries. Some point-of-sale systems offer cashless ATM or pinless debit solutions. These work within the current legal constraints.</p>
+      <p>Ask your POS vendor what payment processing options they support. Budget for higher transaction fees than you would pay in a typical retail business.</p>
     </section>
 
     <section>
       <h2>Best Practices</h2>
       <ul>
-        <li>Start banking relationships early</li>
-        <li>Be transparent about your business</li>
-        <li>Maintain excellent records</li>
-        <li>Build relationships with multiple institutions</li>
-        <li>Plan for account closure scenarios</li>
-        <li>Consider payment processing solutions</li>
+        <li>Start banking conversations 6 months before opening</li>
+        <li>Get all agreements in writing</li>
+        <li>Keep detailed financial records — more than you would in a normal business</li>
+        <li>Build relationships at multiple institutions in case one closes your account</li>
+        <li>Have a plan for sudden account closure</li>
+        <li>Use armored car services for large cash volumes</li>
+        <li>Stay informed on SAFE Banking Act developments</li>
       </ul>
     </section>
 
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Banking options exist but require research</li>
-        <li>Credit unions may be more flexible</li>
-        <li>Cash management is critical</li>
-        <li>Build relationships before you need them</li>
-        <li>Monitor SAFE Banking Act developments</li>
+        <li>Federal prohibition makes cannabis banking difficult but not impossible</li>
+        <li>Credit unions are generally more willing than large banks</li>
+        <li>Start banking relationships months before you need them</li>
+        <li>Get exit terms in writing before opening an account</li>
+        <li>Cash management is a real security concern — plan for it</li>
+        <li>SAFE Banking Act has not passed — do not rely on it</li>
+        <li>Payment processing options exist but come with higher fees</li>
       </ul>
     </section>
 
-    <section class="external-resources">
-      <h2>Further Reading & Resources</h2>
+    <section class="further-reading">
+      <h2>Further Reading</h2>
       <ul>
         <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener">OCP Adult Use Information</a></li>
+        <li><a href="/guides/maine-dispensary-costs/">Dispensary Costs Guide</a></li>
       </ul>
     </section>
 
     <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis regulations are subject to change; always consult with the Maine Office of Cannabis Policy and qualified legal counsel.</em></p>
+      <p><em>This guide is for informational purposes only. Consult a financial advisor with cannabis industry experience for guidance on your specific situation.</em></p>
     </section>
   </article>
 </Layout>
@@ -128,8 +142,10 @@ const topics = ["finance"];
   th { background: var(--color-background); }
   ul { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
-  .external-resources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
-  .external-resources ul { list-style: none; padding-left: 0; }
-  .external-resources li { margin-bottom: 0.75rem; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
 </style>

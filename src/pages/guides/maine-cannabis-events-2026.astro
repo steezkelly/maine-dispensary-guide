@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-25", modifiedDate: "2026-03-20", section: "City Guides" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-25", modifiedDate: "2026-04-04", section: "City Guides" };
 const topics = ["compliance"];
 export const title = "Maine Cannabis Events 2026";
 ---
@@ -20,161 +20,192 @@ export const title = "Maine Cannabis Events 2026";
       <p class="subtitle">Industry meetups, policy hearings, craft festivals, and networking opportunities across the Pine Tree State</p>
     </div>
 
+    <section class="fact-box">
+      <h2>Key Event Dates 2026</h2>
+      <table aria-label="Major Maine cannabis events 2026" caption="Key event dates for Maine cannabis industry events in 2026">
+        <thead><tr><th>Month</th><th>Event</th><th>Location</th></tr></thead>
+        <tbody>
+          <tr><td>March</td><td>OCP Quarterly Stakeholder Meeting</td><td>Augusta</td></tr>
+          <tr><td>April</td><td>Policy Public Comment Period</td><td>Augusta + Virtual</td></tr>
+          <tr><td>May</td><td>Legislative Cannabis Caucus</td><td>State House, Augusta</td></tr>
+          <tr><td>July</td><td>OCP Compliance Workshop</td><td>Portland</td></tr>
+          <tr><td>October</td><td>Annual OCP Industry Summit</td><td>Augusta</td></tr>
+        </tbody>
+      </table>
+    </section>
+
     <section>
-      <h2>Policy & Government</h2>
-      <Callout title="Stay Connected" type="info">
-        Maine's cannabis community is thriving with events year-round. This calendar will be updated monthly as new events are announced. Bookmark this page and check back often!
-      </Callout>
-      <p>Stay informed about the regulations that shape Maine's cannabis industry. The <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> holds regular public hearings and stakeholder meetings.</p>
+      <h2>Policy and Government Events</h2>
+      <p>Stay informed about the regulations that shape Maine's cannabis industry. The Maine Office of Cannabis Policy holds regular public hearings and stakeholder meetings where licensees can learn about and comment on regulatory changes.</p>
       
       <div class="events-list">
         <div class="event-item">
           <h3>OCP Quarterly Stakeholder Meeting</h3>
           <p class="event-date">March 15, 2026 | Augusta</p>
-          <p>Quarterly update from OCP leadership on licensing, compliance, and industry trends. Open to all licensees.</p>
+          <p>Quarterly update from OCP leadership on licensing, compliance updates, and industry trends. Open to all licensees. This is the single most important recurring event for staying current with Maine cannabis regulations.</p>
         </div>
 
         <div class="event-item">
           <h3>Maine Cannabis Policy Public Comment</h3>
-          <p class="event-date">April 2026 | Augusta & Virtual</p>
-          <p>Opportunity to provide input on proposed regulatory changes. Check OCP website for agenda.</p>
+          <p class="event-date">April 2026 | Augusta and Virtual</p>
+          <p>Opportunity to provide input on proposed regulatory changes. Check the OCP website for the agenda, which is typically published two weeks before each session. Public comment periods are how the industry influences rule-making.</p>
         </div>
 
         <div class="event-item">
           <h3>Legislative Cannabis Caucus Meeting</h3>
           <p class="event-date">May 2026 | State House, Augusta</p>
-          <p>Lawmakers discuss upcoming legislation affecting the industry. Open to public observation.</p>
+          <p>Lawmakers and industry representatives discuss upcoming legislation affecting the cannabis sector. Open to public observation. Attending these sessions gives you a sense of where the legislature is heading on cannabis policy.</p>
         </div>
 
         <div class="event-item">
           <h3>OCP Compliance Workshop</h3>
           <p class="event-date">July 2026 | Portland</p>
-          <p>Detailed walkthrough of new compliance requirements for 2026. Mandatory for all licensees.</p>
+          <p>Detailed walkthrough of new compliance requirements for 2026. The 2026 workshop covers inventory tracking updates and advertising rule changes. Attendance is strongly recommended for all licensees.</p>
         </div>
 
         <div class="event-item">
           <h3>Annual OCP Industry Summit</h3>
           <p class="event-date">October 2026 | Augusta</p>
-          <p>The premier event for Maine cannabis policy. Features regulatory updates, industry speakers, and networking.</p>
+          <p>The premier annual event for Maine cannabis policy. Features regulatory updates, industry speakers, and networking. This is the largest gathering of Maine cannabis professionals in the state. Plan to attend.</p>
         </div>
       </div>
     </section>
 
     <section>
-      <h2>Industry Meetups & Networking</h2>
-      <p>Connect with fellow cannabis professionals at these regular gatherings across Maine.</p>
+      <h2>Industry Meetups and Networking</h2>
+      <p>Relationships built at industry events often become business partnerships, mentorships, and referral sources. These regular gatherings are the backbone of Maine's cannabis professional community.</p>
       
       <div class="events-list">
         <div class="event-item">
           <h3>Maine Cannabis Coalition Monthly Meetup</h3>
           <p class="event-date">First Thursday monthly | Portland</p>
-          <p>Casual networking for industry professionals. Rotating locations across Greater Portland.</p>
+          <p>Casual networking for industry professionals. Rotating locations across Greater Portland. These meetups draw 30-60 people each month. Bring business cards. This is where new operators meet their first investors and suppliers.</p>
         </div>
 
         <div class="event-item">
           <h3>Northern Maine Cannabis Alliance Mixer</h3>
           <p class="event-date">Second Friday monthly | Bangor</p>
-          <p>Networking event for Aroostook, Penobscot, and Piscataquis county businesses.</p>
+          <p>Networking event for Aroostook, Penobscot, and Piscataquis county businesses. If you are operating in northern or central Maine, this is your regional hub. It is harder to get to the Portland events from Bangor — this mixer exists so northern operators do not have to.</p>
         </div>
 
         <div class="event-item">
           <h3>Women in Maine Cannabis</h3>
-          <p class="event-date">Third Wednesday monthly | Portland & Virtual</p>
-          <p>Support and connect with women-owned cannabis businesses across the state.</p>
+          <p class="event-date">Third Wednesday monthly | Portland and Virtual</p>
+          <p>Support and connect with women-owned cannabis businesses across the state. Open to all — this group focuses on mentorship, education, and business development for women at all stages of their cannabis careers.</p>
         </div>
 
         <div class="event-item">
           <h3>Cannabis Tech Maine: Innovation Showcase</h3>
           <p class="event-date">June 2026 | Portland</p>
-          <p>Demo day featuring cannabis technology solutions from Maine startups and vendors.</p>
+          <p>Demo day featuring technology solutions from Maine startups and vendors. POS systems, inventory software, cultivation technology — this showcase helps operators evaluate tools without sitting through sales pitches at a trade show.</p>
         </div>
       </div>
     </section>
 
     <section>
-      <h2>Craft Festivals & Consumer Events</h2>
-      <p>These events showcase Maine's cannabis culture to the public and offer brand-building opportunities.</p>
+      <h2>Craft Festivals and Consumer Events</h2>
+      <p>These public events showcase Maine's cannabis culture and offer brand-building opportunities for operators.</p>
       
       <div class="events-list">
         <div class="event-item">
           <h3>Maine Craft Cannabis Festival</h3>
           <p class="event-date">August 14-16, 2026 | Portland Waterfront</p>
-          <p>Three-day celebration of Maine's craft cannabis culture. Live music, product sampling, educational sessions.</p>
+          <p>Three-day celebration of Maine's craft cannabis culture. Live music, product sampling, and educational sessions. This is the largest public cannabis event in Maine. It draws thousands of attendees and is a key opportunity for brand exposure.</p>
         </div>
 
         <div class="event-item">
-          <h3>Cannabis & Comedy Night</h3>
+          <h3>Cannabis and Comedy Night</h3>
           <p class="event-date">April 2026 | Lewiston</p>
-          <p>Fundraiser for Maine Cannabis Liberation Project featuring local comedians.</p>
+          <p>Fundraiser for Maine Cannabis Liberation Project featuring local comedians. Community event with a social justice focus. A good opportunity to connect with the advocacy side of the Maine cannabis community.</p>
         </div>
 
         <div class="event-item">
           <h3>Higher Ground: Maine Cannabis Wellness Fair</h3>
           <p class="event-date">September 2026 | Bangor</p>
-          <p>Focus on wellness applications of cannabis. Yoga, nutrition, holistic health.</p>
+          <p>Focus on wellness applications of cannabis. Yoga, nutrition, and mindful living practices. This event attracts a different demographic than the typical cannabis consumer event — older adults and wellness-focused consumers.</p>
         </div>
 
         <div class="event-item">
           <h3>Maine Grown Showcase</h3>
           <p class="event-date">October 2026 | Augusta</p>
-          <p>Annual celebration of Maine's cultivators. Product awards, grow demonstrations.</p>
+          <p>Annual celebration of Maine's cultivators. Product awards and grow demonstrations. This event is organized around cultivation and features Maine's best flower and concentrate producers.</p>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Educational Events</h2>
-      <p>Level up your knowledge with these workshops, certifications, and training opportunities.</p>
+      <p>These workshops and training opportunities help you and your team stay current with regulations and best practices.</p>
       
       <div class="events-list">
         <div class="event-item">
           <h3>Maine Budtender Certification Program</h3>
-          <p class="event-date">Multiple sessions | Portland & Online</p>
-          <p>Comprehensive training covering Maine regulations, product knowledge, and customer service. Offered through Maine Cannabis Coalition.</p>
+          <p class="event-date">Multiple sessions | Portland and Online</p>
+          <p>Comprehensive training covering Maine regulations, product knowledge, and customer service. Offered through the Maine Cannabis Coalition. Completion demonstrates professional standards to customers and can differentiate your team.</p>
         </div>
 
         <div class="event-item">
           <h3>Cannabis Business Fundamentals Workshop</h3>
           <p class="event-date">March 2026 | Augusta</p>
-          <p>Two-day intensive for aspiring cannabis entrepreneurs. Covers licensing, finance, operations.</p>
+          <p>Two-day intensive for aspiring cannabis entrepreneurs. Covers licensing, finance, operations, and compliance. This workshop is specifically designed for people who have not yet opened their first dispensary but are planning to.</p>
         </div>
 
         <div class="event-item">
-          <h3>Security & Compliance Bootcamp</h3>
+          <h3>Security and Compliance Bootcamp</h3>
           <p class="event-date">May 2026 | Online</p>
-          <p>Virtual workshop on Maine security requirements and compliance best practices.</p>
+          <p>Virtual workshop on Maine security requirements and compliance best practices. Covers METRC, inventory variance, and OCP inspection readiness. The virtual format makes it accessible from anywhere in the state.</p>
         </div>
 
         <div class="event-item">
-          <h3>Cannabis Tax & Accounting Summit</h3>
+          <h3>Cannabis Tax and Accounting Summit</h3>
           <p class="event-date">July 2026 | Portland</p>
-          <p>Specialized event covering <a href="/glossary/#280e-(internal-revenue-code)">280E</a>, state tax obligations, and financial best practices.</p>
+          <p>Specialized event covering 280E, state tax obligations, and financial best practices for Maine cannabis businesses. Cannabis accountants and CPAs present on topics specifically relevant to operators in Maine. Worth attending even if you have a CPA already — you will learn things to discuss with them.</p>
         </div>
       </div>
     </section>
 
-    <Callout title="Submit Your Event" type="success">
-      Know about an event not listed here? Contact the Maine Cannabis Coalition or submit event details through our vendor directory to get it added to this calendar.
-    </Callout>
-
     <section>
-      <h2>Save These Dates</h2>
-      <p>Here's a quick reference for the major events throughout 2026:</p>
+      <h2>Key Takeaways</h2>
       <ul>
-        <li><strong>March:</strong> OCP Quarterly Meeting, Business Fundamentals Workshop</li>
-        <li><strong>April:</strong> Policy Public Comment, Cannabis & Comedy Night</li>
-        <li><strong>May:</strong> Legislative Caucus, Security Bootcamp</li>
-        <li><strong>June:</strong> Tech Showcase</li>
-        <li><strong>July:</strong> OCP Compliance Workshop, Tax Summit</li>
-        <li><strong>August:</strong> Maine Craft Cannabis Festival</li>
-        <li><strong>September:</strong> Higher Ground Wellness Fair</li>
-        <li><strong>October:</strong> OCP Annual Summit, Maine Grown Showcase</li>
+        <li>OCP Quarterly Stakeholder Meetings are the most important recurring regulatory events — attend every one</li>
+        <li>Public comment periods are your chance to influence Maine cannabis rule-making</li>
+        <li>Monthly meetups in Portland and Bangor are the best regular networking opportunities</li>
+        <li>The Maine Craft Cannabis Festival in August is the largest public event</li>
+        <li>Budget to attend at least two in-person events per year — the relationships are worth the travel cost</li>
+        <li>Educational events like the Security Bootcamp and Tax Summit offer practical value beyond networking</li>
       </ul>
     </section>
 
-    <Callout title="Your Calendar, Your Connection" type="info">
-      These events are the heartbeat of Maine's cannabis community. Whether you're new to the industry or a seasoned veteran, showing up matters. Relationships built at these events often become partnerships, mentorships, and friendships that last careers.
-    </Callout>
+    <section class="further-reading">
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a></li>
+        <li><a href="/guides/maine-cannabis-regulations/">Maine Cannabis Regulations</a></li>
+        <li><a href="/guides/maine-dispensary-license/">License Guide</a></li>
+      </ul>
+    </section>
 
   </article>
 </Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; }
+  section h2:first-child { margin-top: 0; }
+  .events-list { margin: 1rem 0; }
+  .event-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .event-item:last-child { border-bottom: none; }
+  .event-item h3 { margin-bottom: 0.25rem; }
+  .event-date { color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .event-item p { margin: 0; }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+</style>
