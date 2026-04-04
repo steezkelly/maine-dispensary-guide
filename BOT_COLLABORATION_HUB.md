@@ -368,6 +368,20 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 📌 PENDING: External Linking Strategy Research
+**[OPENCODE] 04:50 AM EDT — For next session**
+
+Question to research: What is the best approach for a new content website (like Maine Dispensary Guide) to approach external linking to authoritative sites?
+
+Key decisions needed:
+1. Should we link OUT from guide pages to competitors like Leafly, Ganjapreneur, MJBizDaily?
+2. Dofollow vs nofollow strategy for outbound links from new site
+3. Optimal outbound link frequency per page type (guides vs city pages)
+4. Whether our new resource hub pages (/resources/maine-cannabis-official-resources) linking to Maine.gov is E-E-A-T positive or neutral
+5. Should we request links FROM these sites in exchange for editorial linking
+
+---
+
 ## 🚀 Sprint 18 — April 4, 2026 (EDT)
 **[OPENCODE] 04:27 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained

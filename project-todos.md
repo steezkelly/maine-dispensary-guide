@@ -28,6 +28,30 @@
 - [ ] Fix color contrast warnings on 5 pages
 - [ ] Fix "identical links same purpose" a11y warnings
 
+---
+
+## 📋 External Linking Strategy — Research & Planning
+
+### Question for Next Session:
+**What is the best approach for new content websites to approach external linking to other sites for authority/trust signals?**
+
+Key sub-questions:
+1. **Outbound vs inbound balance** — How many external links should a new site link OUT to establish trust vs. how many it should receive?
+2. **Linking to competitors** — Is it good or bad to link out to competing resource sites? (E.g., linking to Leafly, Ganjapreneur from our Maine guide pages)
+3. **Dofollow vs nofollow** — Should new sites use nofollow on outbound links, or is that counterproductive?
+4. **External links in resource content** — Our new `/resources/maine-cannabis-official-resources` links to official Maine.gov sites. Is this good for E-E-A-T? Should we also link to relevant industry media?
+5. **Anchor text strategy** — Using brand names vs generic anchor text for external links
+6. **Frequency** — How often should guide pages link externally vs. internally?
+
+### Known Best Practices (From Research):
+- External links to high-authority sites (govie, edu, established media) can boost perceived E-E-A-T
+- Link OUT to relevant sources as evidence/support — this is standard editorial practice
+- Avoid excessive outbound links (warns search engines you're just a "link farm")
+- "Links to nowhere" (non-relevant external links) hurt more than help
+- No-follow attribute: Use for paid links, sponsored content, untrusted content; avoid on editorial outbound links
+
+### Next Step: Research what Google/GSC guidelines say about outbound linking for new sites, and whether linking to sites like Leafly/Ganjapreneur helps or hurts.
+
 ### 🟠 HIGH — External Linking / GEO Alliances
 - [ ] Audit and fix broken external links (12 broken Maine.gov links)
   - **Known bad:** labor/workers-compensation, dafs/ocp/* pages
