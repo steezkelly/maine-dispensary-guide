@@ -16,6 +16,10 @@ Vercel. It provides high-authority cannabis business resources for
 the state of Maine — including 41+ municipal guides, technical 
 compliance maps, and B2B lead-generation tools.
 
+**SCOPE: Maine Only** — This project focuses exclusively on Maine 
+cannabis content. New England contextual content is fine, but do NOT
+propose or build state-specific hubs for other states (NJ, FL, etc.).
+
 **This is a real, monetizable web property** — not a demo or 
 learning project. Decisions about content, structure, and SEO have 
 compounding consequences. Think before acting.
@@ -42,6 +46,7 @@ compounding consequences. Think before acting.
     - **Accessibility (A11y):** SquirrelScan score is 84/100. Remaining pedantic warnings: matching "guides ▾" text to aria-labels and adding `tabindex="-1"` to hidden mobile toggles.
     - **Content Density:** Some city guides flagged as "Thin Content" (< 800 words). Humanization + expansion in progress.
     - **PDF Magnet:** The "Ultimate Founders Bible" (lead magnet) exists as MD but needs styling/conversion to PDF.
+    - **Bug:** All 3 bugs from Playwright testing FIXED (2026-04-05) — see BUGS.md for history
 - **Active work:**
     - **Content Humanization:** Removing AI patterns from pages, improving natural voice
     - **Content Expansion:** Adding depth to thin pages for SEO/GEO improvement
@@ -97,7 +102,26 @@ node scripts/content-quality.cjs "./src/**/*.astro" # Analyze content quality
 node scripts/content-expander.cjs --guide <file> # Get expansion template
 node scripts/content-audit.cjs "./src/pages/guides/*.astro" # Full site audit
 node scripts/humanize-content.cjs "./src/**/*.astro" --dry-run # Preview humanization
+node scripts/searxng-search.cjs "query" # Privacy-respecting meta-search
+node scripts/wikipedia-search.cjs "query" # Wikipedia research (free, no API key)
 ```
+
+## Search Stack (Backup Options)
+
+When Brave Search is rate-limited, use these alternatives:
+
+1. **Playwright MCP** (browser automation) — Available via OpenCode MCP
+   - Tools: `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_evaluate`
+   - Docs: `scripts/playwright-mcp-search.md`
+   - Use for: Extracting search results via Bing/Startpage
+
+2. **Wikipedia API** — Free, no rate limits
+   - `node scripts/wikipedia-search.cjs "query"`
+   - Use for: Factual research, finding citations
+
+3. **SearXNG** — Self-hosted recommended
+   - Requires: `SEARXNG_INSTANCE_URL` env var
+   - Use for: Privacy-respecting meta-search (if self-hosted)
 
 ### OpenCode Custom Commands
 - `/humanizer [url]` — Fetch URL and humanize content (removes AI patterns)
@@ -105,6 +129,7 @@ node scripts/humanize-content.cjs "./src/**/*.astro" --dry-run # Preview humaniz
 - `/audit [pattern]` — Run content quality audit on matching files
 - `/expand-all [pattern]` — Batch expand content across multiple pages
 - `/insights` — Generate OpenCode usage insights report
+- `/maintenance` — Run self-improving maintenance check
 
 ---
 
@@ -170,12 +195,49 @@ const article = {
 ## CSS & Dark Mode
 ```css
 :root { --color-background: #F2F2E2; } /* Warm Bone */
-[data-theme="dark"] { --color-background: #0D4E50; } /* Deep Spruce */
+[data-theme="dark"] { --color-background: #061A1B; } /* Deep Spruce - updated for contrast */
 ```
 
 - Use variables, never hardcode colors
 - Semantic HTML always (`<nav>`, `<main>`, `<article>`)
 - `aria-label` on interactive elements, `.sr-only` for screen readers
+- All animations must respect `prefers-reduced-motion` media query
+
+---
+
+## Frontend Design Patterns (Heritage Authority 2.0)
+
+### Animation & Motion
+- **Scroll Reveal**: Use `.reveal` class + Intersection Observer for content sections
+- **Button Feedback**: Ripple effect on click (built-in via global CSS)
+- **Link Hover**: Underline animation via `::after` pseudo-element
+- **Example**:
+```astro
+<section class="reveal" style="animation-delay: 0.2s;">
+  <!-- Content -->
+</section>
+```
+
+### Component Enhancement Guidelines
+- **Callouts**: Use geometric icons (◆ ▲ ✦) not emoji
+- **Fact-Boxes**: Add gradient bg, top accent line, icon header for key data
+- **Tables**: Always include `thead`, `aria-label`, and `caption` for a11y
+
+### Newsletter & Lead Capture
+- All newsletter/lead forms use Formspree endpoint: `https://formspree.io/f/xvgzlowz`
+- Place early on page (after stats bar) for maximum capture
+
+### Search UX
+- Press `/` to focus search (keyboard shortcut built-in)
+- Always include `id="main-search"` on primary search input
+
+### Trust Signals (Social Proof)
+- Place social proof stats (guides, entrepreneurs served) prominently
+- Use "What's New" section with pulse animation for returning users
+
+### User Journey Elements
+- "Start Here" path for beginners (4-step visual journey)
+- Guide users from overview → specifics → action
 
 ---
 

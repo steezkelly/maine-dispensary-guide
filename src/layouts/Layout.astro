@@ -4,6 +4,7 @@ import PineTree from '../components/PineTree.astro';
 import Leaf from '../components/Leaf.astro';
 import GuideSidebar from '../components/GuideSidebar.astro';
 import Search from '../components/Search.astro';
+import RelatedArticles from '../components/RelatedArticles.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
@@ -28,6 +29,7 @@ interface Props {
   article?: ArticleData;
   breadcrumbs?: Breadcrumb[];
   noindex?: boolean;
+  topics?: string[];
 }
 
 const { 
@@ -38,13 +40,14 @@ const {
   heroImage,
   article,
   breadcrumbs = [],
-  noindex = false
+  noindex = false,
+  topics = []
 } = Astro.props;
 
 // Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : `${stateName} Dispensary Guide`;
 const siteUrl = "https://mainedispensaryguide.com";
-const fullTitle = `${title} | ${siteName}`;
+const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 ---
@@ -256,6 +259,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
               <p>Download our step-by-step roadmap. 100% Free.</p>
               <a href="/download-checklist" class="btn-cta">Download PDF Checklist &rarr;</a>
             </div>
+            <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
           </div>
           <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar /></aside>
         </div>
@@ -308,6 +312,28 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       };
       const bttBtn = document.getElementById('back-to-top');
       if (bttBtn) bttBtn.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
+
+      // Scroll-triggered reveal animation
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -80px 0px',
+        threshold: 0.1
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.style.animationDelay || '0s';
+            entry.target.style.transitionDelay = delay;
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
+      });
     </script>
   </body>
 </html>
@@ -335,12 +361,12 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   }
 
   [data-theme="dark"] {
-    --color-primary: #A3B18A;
+    --color-primary: #C4D4B6;
     --color-primary-dark: #F2F2E2;
-    --color-background: #0D4E50;
-    --color-surface: #083638;
+    --color-background: #061A1B;
+    --color-surface: #0A2829;
     --color-text: #F2F2E2;
-    --color-text-light: #A3B18A;
+    --color-text-light: #B8C9B0;
     --color-border: #1D3D3D;
   }
 
@@ -437,11 +463,57 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     .nav-toggle-label { display: block; }
     .nav-search-desktop { display: none; }
     .nav-search-mobile { display: block; width: 100%; margin-bottom: 2rem; }
-    .nav-links { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(255,255,255,0.98); transform: translateX(100%); transition: transform 0.4s; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
-    .nav-links a, .dropbtn { font-size: 1.5rem; width: auto; }
+    .nav-links { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100vh; 
+      background: var(--color-background);
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+      flex-direction: column; 
+      justify-content: flex-start; 
+      padding-top: 100px;
+      align-items: center; 
+      z-index: 999; 
+      overflow-y: auto;
+    }
+    .nav-links a, .dropbtn { font-size: 1.25rem; width: auto; padding: 1rem 2rem; }
     .nav-dropdown { width: 100%; text-align: center; }
-    .dropdown-content { display: block; position: static; box-shadow: none; border: none; background: transparent; }
+    .dropdown-content { 
+      display: block; 
+      position: static; 
+      box-shadow: none; 
+      border: none; 
+      background: transparent;
+      padding: 0.5rem 0;
+    }
+    .dropdown-content a { 
+      padding: 0.75rem 1rem; 
+      font-size: 1rem;
+      opacity: 0.8;
+    }
     .nav-toggle:checked ~ .nav-links { transform: translateX(0); }
+    
+    /* Mobile Menu Close Animation */
+    .nav-toggle:not(:checked) ~ .nav-links { transform: translateX(100%); }
+    
+    /* Slide-in animation for menu items */
+    .nav-links a, .nav-dropdown .dropbtn {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .nav-toggle:checked ~ .nav-links a,
+    .nav-toggle:checked ~ .nav-links .nav-dropdown .dropbtn {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .nav-toggle:checked ~ .nav-links > *:nth-child(1) a, .nav-toggle:checked ~ .nav-links > *:nth-child(1) .dropbtn { transition-delay: 0.05s; }
+    .nav-toggle:checked ~ .nav-links > *:nth-child(2) a, .nav-toggle:checked ~ .nav-links > *:nth-child(2) .dropbtn { transition-delay: 0.1s; }
+    .nav-toggle:checked ~ .nav-links > *:nth-child(3) a { transition-delay: 0.15s; }
+    .nav-toggle:checked ~ .nav-links > *:nth-child(4) a { transition-delay: 0.2s; }
   }
 
   main { flex: 1; max-width: var(--max-width); width: 100%; margin: 0 auto; padding: 3rem 1.5rem; }
@@ -483,5 +555,223 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   .article-date::before,
   .article-updated::before {
     content: "· ";
+  }
+
+  /* Drop Cap for Article Opening - GEO "First 200 Words" Emphasis */
+  article .article-header + section > p:first-of-type::first-letter,
+  article > p:first-of-type::first-letter {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    padding-right: 0.75rem;
+    padding-top: 0.15rem;
+    color: var(--color-primary);
+  }
+
+  /* Scroll-Triggered Reveal Animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Enhanced Focus States for Accessibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Button Micro-Interactions */
+  a.btn-main,
+  a.btn-secondary,
+  .btn-cta,
+  button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+  }
+
+  a.btn-main::after,
+  a.btn-secondary::after,
+  .btn-cta::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+  }
+
+  a.btn-main:active::after,
+  a.btn-secondary:active::after,
+  .btn-cta:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  a.btn-main:active,
+  a.btn-secondary:active,
+  .btn-cta:active {
+    transform: scale(0.97);
+  }
+
+  /* Link Hover Underline Animation */
+  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a) {
+    position: relative;
+    text-decoration: none;
+  }
+
+  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a)::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+
+  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a):hover::after {
+    width: 100%;
+  }
+
+  /* Card Hover Lift Effect */
+  .hub-card,
+  .category-card,
+  .story-card,
+  .quick-link-card,
+  .new-guide-card {
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.2, 1, 0.2, 1),
+                border-color 0.3s ease;
+  }
+
+  /* Smooth Scroll Behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .hub-card,
+    .category-card,
+    .story-card,
+    .quick-link-card,
+    .new-guide-card,
+    .journey-step,
+    a.btn-main,
+    a.btn-secondary,
+    .btn-cta {
+      transition: none;
+    }
+  }
+
+  /* Improved Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin: 1.5rem 0;
+  }
+
+  th, td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    min-width: 120px;
+  }
+
+  thead {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  thead th {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: rgba(88, 129, 87, 0.04);
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.02);
+  }
+
+  tbody tr:nth-child(even):hover {
+    background: rgba(88, 129, 87, 0.06);
+  }
+
+  [data-theme="dark"] tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.02);
+  }
+
+  [data-theme="dark"] tbody tr:nth-child(even):hover {
+    background: rgba(88, 129, 87, 0.1);
+  }
+
+  /* Enhanced Heading Styles */
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--color-primary);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-top: 3rem;
+    color: var(--color-primary);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    position: relative;
+  }
+
+  h2::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--color-accent);
+    margin-bottom: 1rem;
+    border-radius: 2px;
+  }
+
+  h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-top: 2rem;
   }
 </style>
