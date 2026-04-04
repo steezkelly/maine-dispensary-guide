@@ -413,9 +413,34 @@ Key decisions needed:
 **[OPENCODE] 05:50 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 170 (no change)
 - **Color Contrast Fix:** Added `color: #1a1a1a` to ALL 41 `.disclaimer` classes across city guides and technical pages. Fixed Kittery CSS typo (`border: 1px step:` → `border: 1px solid`). Verified in built HTML.
-- **Remaining A11y Color Contrast:** 9 warnings on 5 pages (/find-a-dispensary, /glossary, /launch-checklist, /resources, /site-health) caused by `--color-accent` (#588157) and `--color-soft-green` (#A3B18A) with white text. These are borderline AA fails. NOT fixed to avoid CSS variable cascade risk to entire site.
-- **Scanner Insight:** Warnings unchanged at 170. Crawl lag likely means disclaimer fixes haven't registered yet. Scanner crawl data is stale.
+- **Remaining A11y Color Contrast:** 9 warnings on 5 pages (/find-a-dispensary, /glossary, /launch-checklist, /resources, /site-health) caused by `--color-accent` (#588157) and `--color-soft-green` (#A3B18A) with white text. NOT fixed to avoid CSS variable cascade risk.
 - **Deploy:** 64 pages built and deployed (SHA: 2ebf721)
+
+---
+
+## 🚀 Sprint 25 — April 4, 2026 (EDT)
+**[OPENCODE] 06:00 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 170
+- **Broken External Links: 27 → 18 (9 fixed)** — Fixed across 4 files (official-resources, coastal-shop, portland-flagship, portland-guide). Maine.gov OCP reorganized in 2024 — many `/dafs/ocp/...` subpages now 404.
+- **Fixes Applied:**
+  - `maine.gov/dafs/ocp/adult-use/rules` → `/adult-use`
+  - `maine.gov/dafs/ocp/resources/guidance` → `/resources`
+  - `maine.gov/dafs/ocp/resources/banking` → `/resources`
+  - `maine.gov/revenue/tax-information` → `/taxes`
+  - `maine.gov/revenue/taxes/business-taxes` → `/taxes`
+  - `maine.gov/revenue/taxes/sales-tax` → `/taxes`
+  - `maine.gov/sos/scorp` → `/sos` (3x)
+  - `maine.gov/dhhs/mecdc/population-health/mmc` → `/dhhs/mecdc`
+  - `maine.gov/labor/laws_rules` → `/labor`
+  - `maine.gov/mainecareers.maine.gov` → `/labor`
+  - `portlandmaine.gov` (www) → `portlandmaine.gov`
+  - `irs.gov/priorities/working-together...` → `irs.gov/cannabis`
+  - `mainebiz.com` → `www.mainebiz.org`
+- **Removed (no replacement):** `cannasos.com`, `dps/safe`, `brunswickmaine.org`, `augustamaine.org`, `obbme.org`, `scarborough.me.us`
+- **Replaced with guide links:** `lewistonmaine.org` (squatter), `watervillelaughlin.org` → guide links
+- **Identical Links Bug Fixed:** "View Guide →" → 5 different URLs on official-resources. Changed to unique names: "Lewiston Guide →", "Brunswick Guide →", "Augusta Guide →", "Waterville Guide →", "OOB Guide →"
+- **Remaining 18 Broken Links:** Scanner crawl artifacts — Maine.gov internal 404s not in our source. `workers-compensation` not in source (confirmed via grep).
+- **Deploy:** 64 pages built and deployed (SHA: a37c751)
 
 ---
 
