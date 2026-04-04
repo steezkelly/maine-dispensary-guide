@@ -18,22 +18,21 @@ const searchIndex = [
 <div class="search-container">
   <div class="search-input-wrapper">
     <span class="search-icon" aria-hidden="true">⌕</span>
-    <input type="text" class="search-input" placeholder="Search 41+ guides..." autocomplete="off" aria-label="Search technical guides" id="main-search" />
+    <input type="text" class="search-input" placeholder="Search 41+ guides..." autocomplete="off" aria-label="Search technical guides" />
     <span class="search-shortcut" aria-hidden="true">/</span>
   </div>
   <div class="search-results-dropdown"></div>
 </div>
 
 <script define:vars={{ searchIndex }}>
-  // Keyboard shortcut: "/" focuses search
+  const searchInput = document.querySelector('.search-input');
+  
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
       e.preventDefault();
-      const searchInput = document.getElementById('main-search');
       if (searchInput) searchInput.focus();
     }
     if (e.key === 'Escape') {
-      const searchInput = document.getElementById('main-search');
       if (searchInput) {
         searchInput.blur();
         searchInput.value = '';
@@ -43,9 +42,6 @@ const searchIndex = [
     }
   });
 
-  // Use scoped query selectors to find elements relative to their containers
-  const containers = document.querySelectorAll('.search-container');
-  // Use scoped query selectors to find elements relative to their containers
   const containers = document.querySelectorAll('.search-container');
   
   containers.forEach(container => {
