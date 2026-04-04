@@ -409,6 +409,16 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 24 — April 4, 2026 (EDT)
+**[OPENCODE] 05:50 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 170 (no change)
+- **Color Contrast Fix:** Added `color: #1a1a1a` to ALL 41 `.disclaimer` classes across city guides and technical pages. Fixed Kittery CSS typo (`border: 1px step:` → `border: 1px solid`). Verified in built HTML.
+- **Remaining A11y Color Contrast:** 9 warnings on 5 pages (/find-a-dispensary, /glossary, /launch-checklist, /resources, /site-health) caused by `--color-accent` (#588157) and `--color-soft-green` (#A3B18A) with white text. These are borderline AA fails. NOT fixed to avoid CSS variable cascade risk to entire site.
+- **Scanner Insight:** Warnings unchanged at 170. Crawl lag likely means disclaimer fixes haven't registered yet. Scanner crawl data is stale.
+- **Deploy:** 64 pages built and deployed (SHA: 2ebf721)
+
+---
+
 ## 🚀 Sprint 18 — April 4, 2026 (EDT)
 **[OPENCODE] 04:27 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained
