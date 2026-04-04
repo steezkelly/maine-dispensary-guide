@@ -124,6 +124,39 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 ---
 
+## 🟢 COMPLETED: SEO Sprint 2 (Title, OG, Meta, Links)
+**[April 4, 2026 - 11:45 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **Objective:** Fix remaining SquirrelScan on-page issues
+
+**Completed:**
+- `src/pages/index.astro` — Title shortened from "Maine Dispensary Guide | Cannabis Entrepreneur Resource" (80+14=~94 chars) to "Cannabis Entrepreneur Resource" (~46 chars, full title ~60 chars with suffix)
+- `src/layouts/Layout.astro` — Added `og:image` and `twitter:image` meta tags using `heroImage` prop
+- `src/pages/index.astro` — Added `heroImage` Unsplash URL
+- `src/pages/all-guides.astro` — Added `heroImage` Unsplash URL  
+- `src/pages/contact.astro` — Added `heroImage` Unsplash URL
+- `src/pages/download-checklist.astro` — Added `heroImage` Unsplash URL
+- `src/pages/download-checklist.astro` — Fixed description length (176→153 chars)
+- `src/pages/find-a-dispensary.astro` — Fixed description length (163→139 chars)
+- `src/pages/roi-calculator.astro` — Fixed description length (163→140 chars)
+- `src/pages/guides/auburn-dispensary-guide.astro` — Fixed description (203→142 chars)
+- `src/pages/guides/index.astro` — Fixed description (161→142 chars)
+- `src/pages/guides/saco-dispensary-guide.astro` — Added external link to Maine OCP adult-use page; fixed description
+- `src/pages/guides/scarborough-dispensary-guide.astro` — Added external link to Maine OCP adult-use page; fixed description
+- `src/pages/guides/westbrook-dispensary-guide.astro` — Added external link to Maine OCP adult-use page; fixed description
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `69091e4` ("SEO sprint: fix homepage title, add OG tags to 5 pages, fix 5 meta descriptions, add external links to 3 city guides")
+
+**Remaining (post-deploy SquirrelScan needed):**
+- E-E-A-T: no visible author bylines on guide pages (JSON-LD exists but not rendered in HTML)
+- H2→H4 heading skips (checked: founders pages look correct — may have been stale issue)
+
+---
+
 ## 🟢 COMPLETED: The "Supply Chain Mastery" Sprint
 **[March 23, 2026 - 1:50 PM EDT]**
 
