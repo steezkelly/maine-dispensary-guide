@@ -5,6 +5,7 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://mainedispensaryguide.com',
+  trailingSlash: 'never',
   output: 'static',
   adapter: vercel(),
   integrations: [mdx(), sitemap()],
