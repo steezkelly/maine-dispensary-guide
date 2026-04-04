@@ -22,21 +22,24 @@ const stats = [
       <p class="subtitle">The latest official data and trends for 2025-2026</p>
     </div>
 
-    <section class="stats-grid">
-      {stats.map(stat => (
-        <div class="stat-card">
-          <p class="stat-metric">{stat.metric}</p>
-          <p class="stat-value">{stat.value}</p>
-          <p class="stat-detail">{stat.detail}</p>
-        </div>
-      ))}
+    <section class="data-deep-dive">
+      <h2>2025 Market Snapshot</h2>
+      <section class="stats-grid">
+        {stats.map(stat => (
+          <div class="stat-card">
+            <p class="stat-metric">{stat.metric}</p>
+            <p class="stat-value">{stat.value}</p>
+            <p class="stat-detail">{stat.detail}</p>
+          </div>
+        ))}
+      </section>
+
+      <Callout title="Data-Driven Decisions" type="success">
+        Understanding the numbers is what separates a "hobby" from a "business." With over $246 million in annual sales, Maine has proven itself as a robust, mature market. Use this data to benchmark your own financial projections and find your niche.
+      </Callout>
     </section>
 
-    <Callout title="Data-Driven Decisions" type="success">
-      Understanding the numbers is what separates a "hobby" from a "business." With over $246 million in annual sales, Maine has proven itself as a robust, mature market. Use this data to benchmark your own financial projections and find your niche.
-    </Callout>
-
-    <section class="data-deep-dive">
+    <section>
       <h2>Industry Trends for 2026</h2>
       <p>As the market reaches a record high in sales, we are seeing a shift from "explosive growth" to "strategic optimization." Competition is increasing in southern hubs, while rural counties remain underserved and ripe for boutique, craft-focused dispensaries.</p>
       
