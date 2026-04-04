@@ -226,7 +226,22 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
           </div>
           <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar /></aside>
         </div>
-      ) : <slot />}
+      ) : (
+        <>
+          <slot />
+          {article && (
+            <div class="article-meta">
+              <span class="article-byline">By {article.author || "Maine Dispensary Guide Editorial Team"}</span>
+              {article.publishDate && (
+                <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              )}
+              {article.modifiedDate && article.modifiedDate !== article.publishDate && (
+                <span class="article-updated">Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </main>
     
     <button id="back-to-top" class="back-to-top" aria-label="↑ Back to Top">&uarr;</button>
