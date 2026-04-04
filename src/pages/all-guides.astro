@@ -76,6 +76,11 @@ const categories = [
     <p class="lead">Everything you need to open, operate, and scale a compliant cannabis business in the Pine Tree State.</p>
   </section>
 
+  <section class="library-intro">
+    <p>This library covers every phase of the Maine cannabis business lifecycle. From navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management. Each guide is written for Maine-specific conditions — federal 280E tax implications, state licensing tiers, and local opt-in requirements vary town by town.</p>
+    <p>City guides provide granular market analysis for 15 Maine municipalities, from Portland's competitive landscape to Bangor's underserved northern opportunity. Technical guides address specific operational challenges including POS system selection, cannabis-specific banking solutions, edibles manufacturing compliance, and delivery logistics.</p>
+  </section>
+
   <div class="category-grid">
     {categories.map(cat => (
       <div class="category-card">
@@ -126,6 +131,25 @@ const categories = [
     color: var(--color-text-light);
     max-width: 600px;
     margin: 0 auto;
+  }
+
+  .library-intro {
+    max-width: 720px;
+    margin: 0 auto 4rem;
+    padding: 2rem;
+    background: rgba(88, 129, 87, 0.05);
+    border-radius: 1.5rem;
+    border-left: 4px solid var(--color-primary);
+  }
+
+  .library-intro p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    font-size: 1.05rem;
+  }
+
+  .library-intro p:last-child {
+    margin-bottom: 0;
   }
 
   .category-grid {
