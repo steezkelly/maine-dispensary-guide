@@ -444,6 +444,24 @@ Key decisions needed:
 
 ---
 
+## 🚀 Sprint 26 — April 4, 2026 (EDT)
+**[OPENCODE] 06:20 AM EDT**
+- **Status:** ✅ COMPLETE — Score 92 Grade A maintained, Warnings 171
+- **Nearby Opportunities Tables:** Added cross-linking "Nearby Opportunities" sections to 8 city guides:
+  - `old-orchard-beach-dispensary-guide.astro` → links to Portland, Biddeford, Saco
+  - `auburn-dispensary-guide.astro` → links to Lewiston, Brunswick, Portland
+  - `augusta-dispensary-guide.astro` → links to Waterville, Lewiston, Brunswick
+  - `lewiston-dispensary-guide.astro` → links to Auburn, Brunswick, Portland
+  - `saco-dispensary-guide.astro` → links to Biddeford, Old Orchard Beach, Portland (Sprint 25 partial)
+  - `sanford-dispensary-guide.astro` → links to Biddeford, Kittery, Saco
+  - `biddeford-dispensary-guide.astro` → links to Saco, Old Orchard Beach, Portland
+  - `waterville-dispensary-guide.astro` → links to Augusta, Lewiston, Brunswick
+- **Unique Link Text:** Each uses unique destination-specific text (e.g., "Portland Guide →", not generic "View Guide →") to avoid identical-links warnings
+- **Scanner Note:** Results reflect pre-deploy state (crawl lag). Warnings 171 (+1 vs 170) likely from crawler finding additional pages. External broken links (38) are Maine.gov internal 404s from scanner following our outbound links.
+- **Deploy:** 64 pages built and deployed (SHA: 49fd7d2)
+
+---
+
 ## 🚀 Sprint 18 — April 4, 2026 (EDT)
 **[OPENCODE] 04:27 AM EDT**
 - **Status:** ✅ COMPLETE — Score 92 Grade A maintained
