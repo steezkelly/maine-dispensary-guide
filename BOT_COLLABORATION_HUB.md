@@ -151,9 +151,40 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 **Pushed:** `69091e4` ("SEO sprint: fix homepage title, add OG tags to 5 pages, fix 5 meta descriptions, add external links to 3 city guides")
 
+---
+
+## 🟢 COMPLETED: SEO Sprint 3 (Titles, OG, Headings)
+**[April 5, 2026 - 12:00 AM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **SquirrelScan Score:** Jumped from ~64 to **82** (Grade B) after previous sprint
+- **Objective:** Fix remaining title/description/heading/OG tag issues
+
+**Completed:**
+- `src/pages/resources.astro` — Title shortened; added heroImage
+- `src/pages/founders/index.astro` — Title shortened; added heroImage; fixed H4→H3 for FAQ questions
+- `src/pages/glossary.astro` — Title shortened; added heroImage
+- `src/pages/launch-checklist.astro` — Title shortened; added heroImage
+- `src/pages/privacy.astro` — Title shortened; added heroImage
+- `src/pages/all-guides.astro` — Title changed to "Maine Cannabis Resource Library"
+- `src/pages/find-a-dispensary.astro` — Title changed to "Maine Dispensary Directory"
+- `src/pages/download-checklist.astro` — Title changed to "Free Maine Dispensary Roadmap"
+- `src/pages/contact.astro` — Fixed H3→H2 for "Founder Support" and "Vendor Partnerships" sections
+- `src/pages/guides/augusta-dispensary-guide.astro` — Fixed description (171→149 chars)
+- `src/pages/guides/bangor-dispensary-guide.astro` — Fixed description (170→149 chars)
+- `src/pages/guides/biddeford-dispensary-guide.astro` — Fixed description (206→148 chars)
+- `src/pages/guides/brunswick-dispensary-guide.astro` — Fixed description (206→151 chars)
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `6c6f44b` ("SEO sprint 3: fix 5 meta titles, 4 meta descriptions, add heroImage to 5 pages, fix contact H3→H2, fix founders FAQ H4→H3")
+
 **Remaining (post-deploy SquirrelScan needed):**
 - E-E-A-T: no visible author bylines on guide pages (JSON-LD exists but not rendered in HTML)
-- H2→H4 heading skips (checked: founders pages look correct — may have been stale issue)
+- Thin content: /all-guides (196 words), /privacy (225), /site-health (150), /admin (167), /founders/coastal-shop (291)
+- /admin/ self-referential 404 (intentional, low priority)
+- portlandmaine.gov SSL error in crawler (link works in browser)
 
 ---
 
