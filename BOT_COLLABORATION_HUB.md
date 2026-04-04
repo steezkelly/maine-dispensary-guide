@@ -312,6 +312,10 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 [OPENCODE]
 - **SEO Sprint 15:** Score 88 Grade B (unchanged but quality improved). Accessibility 99→100. Content 95→96. Fixed all remaining table accessibility (13 tables across 5 pages: maine-cannabis-product-testing-guide 4 tables, maine-dispensary-costs 7 tables, south-portland Best Locations, waterville Best Locations, old-orchard-beach Best Locations, portland Best Locations, sanford Best Locations). Added thin content to 5 pages: maine-dispensary-packaging (Labeling Standards section), maine-dispensary-pos (Top POS Providers section), saco (nearby opportunities paragraph), scarborough (What Entrepreneurs Can Do Now section), westbrook (delivery market paragraph).
 
+### 2026-04-05 04:10 AM EDT
+[OPENCODE]
+- **SEO Sprint 17:** Internal linking overhaul. Added 11 contextual internal links across 8 pages: packaging→product-testing+edibles, license→edibles+testing, costs→edibles+concentrates+insurance, market→edibles+concentrates+insurance, business-plan→vendor-directory, real-estate→vendor-directory, hiring→vendor-directory. Fixed sitemap trailing slash issue (astro trailingSlash:never). Created project-todos.md for persistent todo tracking. Orphan pages now have incoming links from related content.
+
 ### 2026-04-05 03:45 AM EDT
 [OPENCODE]
 - **SEO Sprint 16:** Score 88→89. Heading order fixes across 10 pages (H1→H3 skip). Fixed: market-stats (restructured stats-grid inside H2 section), about, glossary, roi-calculator, site-health, all 3 founder pages, seo-dashboard (stat-card H3→H2), 5 guide pages (banking-solutions, market, real-estate, regulations, funding, events-2026). Removed /admin/ breadcrumb link (fixes broken link error). Added JSON-LD author/dates to founders pages (E-E-A-T). Callout component gained `level` prop for flexible heading levels. Key finding: Callout placed directly after H1 before first H2 = H1→H3 skip — fix by moving Callout inside first H2 section.

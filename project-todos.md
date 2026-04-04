@@ -12,22 +12,24 @@
 ## 🚀 Active Sprint (Sprint 17 — April 2026)
 
 ### 🔴 CRITICAL
-- [ ] Fix `/admin/` broken link error (SquirrelScan Links score 69 → needs this cleared)
-  - **Status:** Breadcrumb link removed, awaiting next crawl to confirm
+- [x] Fix `/admin/` broken link error (SquirrelScan Links score 69 → needs this cleared)
+  - **Status:** Breadcrumb link removed, next crawl will confirm
   - **Blocker:** SquirrelScan crawl timing lag
 - [ ] Clear E-E-A-T author-byline warning
   - **Status:** Added JSON-LD for founders pages, but scanner may need visible byline on ALL content pages
   - **Fix:** Ensure `article-meta` renders on ALL pages with `article` prop (not just `isGuide`)
 
-### 🟠 HIGH — Internal Linking Overhaul
-- [ ] Audit Link Architect script (`scripts/link-architect.cjs`)
-  - **Purpose:** Syncs internal links between pages, runs body-content linking
-  - **Status:** Needs review and likely re-run
-- [ ] Add internal links TO orphan pages (20 pages with <2 incoming links)
-  - **Most orphaned:** site-health, admin/seo-dashboard, brunswick, kittery, maine-cannabis-business-insurance
-  - **Fix:** Add contextual links from related pages
-- [ ] Add internal links FROM thin internal-link pages
-  - **Pages with only 1 internal link:** maine-cannabis-edibles-compliance, extraction-licensing, product-testing-guide, vendor-directory, /admin
+### 🟠 HIGH — Internal Linking Overhaul ✅ IN PROGRESS
+- [x] Audit Link Architect script (`scripts/link-architect.cjs`)
+  - **Purpose:** Syncs glossary term links in body content
+  - **Status:** Reviewed — working as designed (glossary syncing only, not cross-page linking)
+- [x] Add internal links TO orphan pages (20 pages with <2 incoming links)
+  - **Fixed:** edibles-compliance (linked from packaging, costs, license, market), extraction-licensing (from market, costs), product-testing-guide (from packaging, license), vendor-directory (from business-plan, real-estate, hiring), business-insurance (from market, costs)
+  - **Remaining orphans:** brunswick, kittery, scarborough, saco, westbrook (city guides — need cross-city links)
+- [ ] Add cross-links between city guides (brunswick, kittery, lewiston, etc.)
+  - **Priority:** Add each city guide to the "nearby cities" section of adjacent guides
+- [ ] Add cross-links from city guides to topical guides
+  - e.g., Portland guide → real-estate, costs, regulations
 
 ### 🟠 HIGH — External Linking / GEO Alliances
 - [ ] Audit and fix broken external links (12 broken Maine.gov links)
