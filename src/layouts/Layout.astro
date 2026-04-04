@@ -206,6 +206,17 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
           <div class="guide-content">
             {heroImage && <div class="guide-hero"><img src={heroImage} alt={title} width={1200} height={400} loading="eager" /></div>}
             <slot />
+            {isGuide && article && (
+              <div class="article-meta">
+                <span class="article-byline">By {article.author || "Maine Dispensary Guide Editorial Team"}</span>
+                {article.publishDate && (
+                  <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                )}
+                {article.modifiedDate && article.modifiedDate !== article.publishDate && (
+                  <span class="article-updated">Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                )}
+              </div>
+            )}
             <div class="lead-capture-box">
               <h3>Get the 2026 Maine Launch Checklist</h3>
               <p>Download our step-by-step roadmap. 100% Free.</p>
@@ -397,4 +408,31 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); min-width: 120px; }
   
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 0;
+    margin: 1.5rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .article-byline {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .article-date,
+  .article-updated {
+    color: var(--color-text-light);
+  }
+
+  .article-date::before,
+  .article-updated::before {
+    content: "· ";
+  }
 </style>

@@ -207,12 +207,31 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 
 **Pushed:** `2033930` ("SEO sprint 4: fix 6 meta titles, 4 descriptions, add heroImage to roi-calculator and admin; confirm broken links already fixed")
 
+---
+
+## 🟢 COMPLETED: SEO Sprint 5 (All City Guide Meta Fixes)
+**[April 5, 2026 - 12:25 AM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE (committed and pushed)
+- **SquirrelScan Score:** **83** (Grade B, up from 82)
+- **Objective:** Fix all remaining meta title/description issues proactively
+
+**Completed:**
+- Fixed 14 city guide titles: changed from "{City} Dispensary Guide | Maine Dispensary Guide" (62+ chars) to "{City} Maine Cannabis Dispensary Guide" (~52 chars). All 14 cities: auburn, augusta, bangor, biddeford, brunswick, kittery, lewiston, old-orchard-beach, portland, saco, sanford, scarborough, south-portland, waterville, westbrook
+- Fixed 3 founder story titles: coastal (63→55), portland-flagship (83→55), rural-cultivator (83→51)
+- Fixed 12 technical guide descriptions: removed repetitive "Expert technical guide to...in Maine. Detailed 2026 regulatory..." template (182-189 chars). Replaced with unique, concise descriptions (127-156 chars). Fixed: cultivation, delivery-rules, events-2026, edibles-compliance, waste-management, vendor-directory, product-testing, inventory-management, extraction-licensing, real-estate, funding-guide, business-insurance
+
+**Build verified:** 61 pages — all passing
+
+**Pushed:** `e43ce23` ("SEO sprint 5: fix all 14 city guide titles, fix 12 technical guide descriptions, fix founder titles")
+
 **Remaining:**
 - E-E-A-T: no visible author bylines on guide pages (JSON-LD exists but not rendered in HTML)
 - Thin content: /all-guides (196 words), /privacy (225), /site-health (150), /admin (167), /founders/coastal-shop (291)
 - /admin/ self-referential 404 (intentional, low priority)
 - portlandmaine.gov SSL error in crawler (link works in browser)
-- 12 external Maine.gov links flagged as 404 in SquirrelScan — verified fixed in code, needs redeploy to confirm
+- 11 external Maine.gov links flagged as 404 in SquirrelScan — verified fixed in code, crawl is stale
 
 ---
 
