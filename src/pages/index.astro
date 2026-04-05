@@ -58,8 +58,9 @@ const stats = [
       </div>
       <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
         <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" class="newsletter-input" />
-        <select name="stage" aria-label="Select your stage" class="newsletter-select">
-          <option value="" disabled selected>Select your stage</option>
+        <label for="newsletter-stage" class="sr-only">Your stage</label>
+        <select id="newsletter-stage" name="stage" class="newsletter-select">
+          <option value="" disabled selected>Your stage</option>
           <option value="startup">Starting a dispensary</option>
           <option value="operating">Already operating</option>
           <option value="researching">Just researching</option>
