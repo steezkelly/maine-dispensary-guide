@@ -66,7 +66,8 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
     
     {heroImage && <link rel="preload" as="image" href={heroImage} />}
     
@@ -81,6 +82,8 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     {heroImage && <meta property="og:image" content={heroImage} />}
     {heroImage && <meta name="twitter:image" content={heroImage} />}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
     
     <!-- HARD-CODED STRUCTURED DATA FOR ACCURACY -->
     <script type="application/ld+json">
@@ -373,6 +376,9 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 
   [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
   [data-theme="dark"] .nav-links a, [data-theme="dark"] .dropbtn { color: var(--color-text); }
+  [data-theme="dark"] .dropdown-content { background: var(--color-surface); border-color: var(--color-border); }
+  [data-theme="dark"] .dropdown-content a { color: var(--color-text); }
+  [data-theme="dark"] .dropdown-content a:hover { background: rgba(196, 212, 182, 0.15); }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
