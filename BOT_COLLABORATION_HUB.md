@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 91/100 (A) ✅
-**Last updated: 2026-04-04 6:58 PM EDT**
+**Last updated: 2026-04-05 12:45 AM EDT**
 
 ---
 
@@ -1033,3 +1033,156 @@ When adding more fine-grained topics (e.g., multiple 280E guides):
 ---
 
 *End of SquirrelScan Audit Fix Documentation*
+
+---
+
+## Skill Refactor: Content Intelligence Stack Overhaul
+
+**[OpenCode — 2026-04-05 7:30 PM EDT]**
+
+### What Was Done
+
+Consolidated and rebuilt the content intelligence tooling from scripts → skills.
+
+**Old Stack (scripts-based):**
+- `scripts/content-quality.cjs` — Content analysis (broken: regex SEO checks on raw .astro files)
+- `scripts/content-expander.cjs` — Thin content detection + expansion
+- `scripts/humanize-content.cjs` — Batch AI pattern removal
+- `scripts/content-audit.cjs` — Full site audit (broken: same architectural flaw)
+- `scripts/humanizer.md` (OpenCode command) — Wrapper for the above
+
+**New Stack (skill-based):**
+
+| Skill | Purpose | Commands |
+|-------|---------|----------|
+| `content-authority` | Strategic framework: 3-pillar GEO, Information Gain, citation tactics | Strategic guidance |
+| `content-humanizer` | AI pattern removal + editorial guidelines | `/humanizer [url]`, `/fix-patterns [pattern]`, `/humanize-review` |
+| `content-ops` | Audit + expand + batch operations | `/audit [pattern]`, `/expand [topic]`, `/expand-all [pattern]` |
+| `audit-website` (squirrel) | Live-site SEO audit (unchanged) | `squirrel audit [url]` |
+
+### Why Scripts Were Replaced
+
+Scripts run outside the agent's context. Skills are native to OpenCode:
+1. Scripts require manual `node` invocation; skills work as native commands
+2. Scripts can't access agent context, memory, or tool integrations
+3. Scripts require maintenance; skills self-document
+4. The `content-audit.cjs` was fundamentally broken: it tried to regex-match `<title>` and `<meta>` tags in raw `.astro` source files, but these are set via Layout.astro props and only exist in rendered HTML
+
+### Files Deleted
+
+- `scripts/content-quality.cjs` → Migrated logic to `content-ops/scripts/analyze-quality.cjs`
+- `scripts/content-expander.cjs` → Migrated logic to `content-ops/scripts/detect-thin.cjs`
+- `scripts/humanize-content.cjs` → Patterns migrated to `content-humanizer` skill
+- `scripts/content-audit.cjs` → Deleted (broken, redundant with squirrel)
+- `.config/opencode/command/humanizer.md` → Replaced by `content-humanizer` skill
+- `.agents/skills/national-hub-architect/` → Absorbed into `content-authority`
+
+### Files Created
+
+**content-humanizer** (`~/.agents/skills/content-humanizer/`):
+- `SKILL.md` — Main skill with 3 commands
+- `patterns/promotional-words.md` — 100+ promotional words
+- `patterns/ai-phrases.md` — AI-sounding phrases
+- `patterns/filler-phrases.md` — Filler words
+- `references/humanization-guide.md` — Editorial guidelines
+
+**content-ops** (`~/.agents/skills/content-ops/`):
+- `SKILL.md` — Main skill with audit/expand commands
+- `scripts/analyze-quality.cjs` — Quality analysis
+- `scripts/detect-thin.cjs` — Thin content detection
+- `references/expansion-templates.md` — Expansion templates
+
+**content-authority** (`~/.agents/skills/content-authority/`):
+- `SKILL.md` — Refactored from seo-geo-content + ai-seo + content-strategy
+- `references/GEO_STANDARDS.md` — Information Gain rules
+- `references/content-types.md` — Content type templates
+- `assets/fact-box-template.astro` — Fact box pattern
+
+### Key Lessons
+
+1. **Architecture matters:** A script that reads source files and checks for `<title>` tags will always fail in Astro — title/meta are set via Layout props, not in page files
+2. **Skills > Scripts:** Native tool integration vs. external process
+3. **False positives dominate scores:** The 17/100 audit score for index.astro was almost entirely false positives; the real issue was thin content (497 words)
+
+### Project Docs Updated
+
+- `AGENTS.md` — Skills replace scripts in Content Intelligence section
+- `reference/reference.md` — Skills table added, scripts table updated
+- `.agents/skills/self-improving/reflections.md` — Lessons logged
+- `.agents/skills/self-improving/projects/maine-dispensary-guide.md` — Skill references updated
+
+---
+
+## ✅ COMPLETED: Phase 5 — Build Verification
+**[April 4, 2026 - 7:31 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE
+- **Action:** `npm run build` — 64 pages built successfully in 3.00s
+- **Result:** No errors. Sitemap generated. All routes intact.
+
+---
+
+## ✅ COMPLETED: Phase 6 — Migrated File Cleanup
+**[April 4, 2026 - 7:31 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ COMPLETE
+- **Action:** Deleted files that were migrated to skills:
+  - `scripts/content-quality.cjs` — Absorbed into `content-ops` skill
+  - `scripts/content-expander.cjs` — Absorbed into `content-ops` skill
+  - `scripts/humanize-content.cjs` — Absorbed into `content-humanizer` skill
+  - `.config/opencode/command/humanizer.md` — Absorbed into `content-humanizer` skill
+  - `.agents/skills/national-hub-architect/` — Absorbed into `content-authority` skill
+- **Post-delete build:** ✅ `npm run build` — 64 pages built successfully in 2.77s — no broken references
+
+---
+
+## 🟡 ACTIVE: Content Expansion Backlog
+**[April 4, 2026 - 7:31 PM EDT]**
+
+Remaining thin pages from last audit (611-756 words — not yet expanded):
+- `maine-dispensary-packaging` (611w)
+- `maine-dispensary-locations` (646w)
+- `maine-dispensary-costs` (661w)
+- `maine-dispensary-business-plan` (756w)
+
+---
+
+## 🟡 CROSS-REFERENCE AUDIT: Third-Party Tools vs SquirrelScan
+**[April 5, 2026 - 12:45 AM EDT]**
+
+Ran 8 third-party tools against the live site. Summary of findings:
+
+### Tools Run
+| Tool | Result |
+|------|--------|
+| Security Headers | Grade A (capped) — CSP has `unsafe-inline`/`unsafe-eval` (same as SquirrelScan) |
+| SSL Labs | Certificate valid, trusted by all major browsers. Vercel infra quirk with SNI cert — not actionable |
+| W3C Link Checker | Found 4 broken Unsplash images, 3 broken internal links, 2 broken external links (SquirrelScan missed these) |
+| PageSpeed Insights | Requires interactive browser — webfetch can't render the dynamic results page |
+| WAVE | Requires interactive browser |
+| Schema.org Validator | Returned 404 (tool URL format changed) |
+| Google Rich Results | Requires Google account/login |
+| Social Share Preview | Requires interactive browser |
+
+### SquirrelScan vs W3C Comparison
+| Category | SquirrelScan | W3C Link Checker | New? |
+|----------|-------------|-----------------|-------|
+| Broken internal links | Found 5 (bangor) | Found 3 more (lewiston, augusta) | YES |
+| Broken external links | Found 1 (portlandmaine.gov) | Found 2 more (mainebar.org, mainechamber.com) | YES |
+| Broken images | Not checked | Found 4 broken Unsplash images | YES |
+
+### Fixed This Session (W3C discoveries)
+- 4 broken Unsplash images: augusta, find-a-dispensary, market-stats, maine-cannabis-education
+- 3 broken internal links: poland-springs, oxford, gardiner
+- 2 broken external links: mainebar.org (403), mainechamber.com (405)
+
+### Tools NOT Fully Verifiable via WebFetch (Push to Setup Pile)
+- PageSpeed Insights — needs interactive browser
+- WAVE — needs interactive browser  
+- Social Share Preview — needs interactive browser
+- Google Rich Results Test — needs Google account
+- Schema.org Validator — URL format returned 404
+
+These are business-operational pages, not city guides. Scope for expansion TBD by user.
