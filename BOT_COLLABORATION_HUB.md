@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 91/100 (A) ✅
-**Last updated: 2026-04-05 12:45 AM EDT**
+**Last updated: 2026-04-05 1:20 AM EDT**
 
 ---
 
@@ -1186,3 +1186,124 @@ Ran 8 third-party tools against the live site. Summary of findings:
 - Schema.org Validator — URL format returned 404
 
 These are business-operational pages, not city guides. Scope for expansion TBD by user.
+
+---
+
+## 🟡 CROSS-REFERENCE AUDIT: Full Third-Party Validation
+**[April 5, 2026 - 1:20 AM EDT]**
+
+Browser-based audit via Playwright MCP. Full results below.
+
+### PageSpeed Insights (Google Lighthouse)
+| Metric | Mobile | Desktop |
+|--------|--------|---------|
+| Performance | **87** | **99** |
+| Accessibility | 96 | 96 |
+| Best Practices | 100 | 100 |
+| SEO | 100 | 100 |
+| FCP | 2.7s | 0.8s |
+| LCP | 3.2s | 0.8s |
+| TBT | 0ms | 0ms |
+| CLS | 0.007 | 0.025 |
+| Speed Index | 3.8s | 0.9s |
+
+**Issues found:**
+- Render blocking requests: 1,460ms mobile / 530ms desktop (biggest win)
+- 7 long main-thread tasks on mobile (2.3s of work)
+- Images could save 66 KiB
+- CSP has `unsafe-inline`/`unsafe-eval` (same as SquirrelScan warned)
+- No HSTS policy (SquirrelScan warned)
+- No COOP (Cross-Origin-Opener-Policy)
+- No Trusted Types for DOM XSS
+- CrUX real-user data: "No Data" (site too new for Google to have field data)
+
+### WAVE WebAIM Accessibility (Homepage)
+- **1 Error**: Empty form label (search input needs `aria-label`)
+- **24 Contrast Errors**: Very low contrast throughout navigation/footer
+- **5 Alerts**: 1 redundant link (Launch Checklist link → arrow text), 4 very small text
+- **Features**: Skip link ✅, Language ✅
+- **Structure**: Excellent — H1/H2/H3 hierarchy ✅, Header ✅, Nav ✅, Main ✅, Footer ✅
+- **ARIA**: 31 elements — labels, hidden, expanded, popups all proper
+- **AIM Score: 4.8/10** — WAVE's human-impact score (0=no issues, 10=severe)
+
+**Note:** SquirrelScan scored Accessibility 99/100 while WAVE found 24 contrast errors. These are NOT contradictory — SquirrelScan's Lighthouse-based a11y checks catch programmatic errors; WAVE catches visual contrast issues that Lighthouse doesn't fully evaluate. Both are valid.
+
+### Social Share Preview
+**Facebook:**
+- Title: 55 chars ✅
+- Description: 154 chars ✅
+- og:title ✅, og:description ✅, og:image ✅
+- ⚠️ Image ratio not optimal (Facebook prefers 1.91:1)
+- ✅ Image size optimal (<8MB)
+
+**X/Twitter:**
+- twitter:card set to `summary_large_image` ✅
+- ⚠️ Missing `twitter:title` metatag (falls back to `<title>`)
+- ⚠️ Missing `twitter:description` metatag (falls back to `<meta description>`)
+- ⚠️ Missing `twitter:image` metatag (falls back to og:image)
+- ⚠️ Image ratio not optimal for Twitter cards
+- Image size: optimal (<1MB)
+
+### Google Rich Results Test
+- **No rich results detected** — Normal for informational/guide sites (not recipes, jobs, products)
+- **Crawled successfully** — Apr 4, 2026, 9:11:35 PM EDT
+- HTML validated successfully
+- WebSite structured data confirmed valid
+
+### Google Search Console
+- Requires Google login — browser session not authenticated
+- **Recommendation:** User should check manually for: index coverage, Core Web Vitals field data, manual crawl requests
+
+### Cross-Tool Summary vs SquirrelScan
+| Category | SquirrelScan | Third-Party | New Issues Found |
+|----------|-------------|-------------|-----------------|
+| Performance | 94 | PageSpeed 87 mobile | Render blocking (1,460ms), 7 long tasks |
+| Accessibility | 99 | WAVE: 24 contrast errors | Contrast issues SquirrelScan doesn't catch |
+| Security | 91 | Security Headers A | Consistent — CSP warnings same |
+| Links | 85 | W3C found 9 more | 4 images, 3 internal, 2 external |
+| Social Meta | Not checked | ⚠️ twitter:title/desc missing | X cards fall back to og:tags |
+
+### SquirrelScan Score vs Reality
+- SquirrelScan 91/100 is a fair assessment
+- PageSpeed 87 mobile is slightly below SquirrelScan's implied performance score
+- WAVE found more contrast issues than SquirrelScan flagged (24 vs ~8 generic warnings)
+- X/Twitter meta gaps are real issues SquirrelScan doesn't cover
+
+### Priority Fixes (Based on Third-Party Findings)
+1. **HIGH:** Fix empty form label on search input (WAVE error)
+2. **HIGH:** Investigate render blocking sources (1,460ms mobile savings)
+3. **MEDIUM:** Add `twitter:title` and `twitter:description` metatags
+4. **MEDIUM:** Investigate 24 contrast errors — likely dark mode nav text on dark bg
+5. **LOW:** Optimize og:image ratio (1.91:1 for Facebook)
+6. **LOW:** Add HSTS preload directive
+7. **INFO:** CrUX data "No Data" — site is too new; will appear as field data improves
+
+---
+
+## ✅ COMPLETED: Phase 7 — Skill Testing
+**[April 4, 2026 - 7:45 PM EDT]**
+
+**[OPENCODE]**
+- **Status:** ✅ Skill testing complete
+
+### content-ops — ✅ Working
+- `analyze-quality.js` — ✅ Works (had to fix Node v24.14.0 `*/` in JSDoc comments bug)
+- `detect-thin.js` — ✅ Works (same fix applied)
+- Requires `NODE_PATH` set to access glob: `$env:NODE_PATH = "C:\Users\Steve\AppData\Roaming\npm\node_modules"`
+- Test results on 15 city guides: Avg score 90/100, 1 promo word ("first-mover" in biddeford), 0 AI phrases
+- Scripts renamed from `.cjs` to `.js` to avoid Node parser issues
+
+### content-humanizer — ⚠️ Documentation only
+- No executable scripts — skill is pure reference documentation
+- `/fix-patterns [pattern]` — documented process, no script implementation
+- `/humanizer [url]` — requires manual curl + analysis steps from SKILL.md
+- `/humanize-review` — manual editorial review workflow
+- Pattern reference files exist: promotional-words.md, ai-phrases.md, filler-phrases.md
+
+### content-authority — ✅ Framework (no scripts needed)
+- Pure strategic framework — SEO/GEO methodology
+- No executable components required
+
+### audit-website (squirrel) — ✅ Available
+- Available via `npx squirrelscan`
+- Not installed globally, runs via npx
