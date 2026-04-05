@@ -105,10 +105,20 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 | `scripts/searxng-search.cjs` | Meta-search (backup) |
 | `scripts/playwright-mcp-search.md` | Playwright MCP usage guide |
 | `scripts/link-architect.cjs` | Glossary term cross-linking |
-| `scripts/content-quality.cjs` | Content analysis (source files) |
-| `scripts/content-expander.cjs` | Thin content expansion |
-| `scripts/humanize-content.cjs` | AI pattern removal |
 | `scripts/self-improving-maintenance.ps1` | Memory health check |
+
+---
+
+## OpenCode Skills
+
+| Skill | Purpose | Location |
+|-------|---------|----------|
+| `content-authority` | SEO/GEO strategic framework, 3-pillar method | `~/.agents/skills/content-authority/` |
+| `content-humanizer` | AI pattern removal, 22-category editorial guide | `~/.agents/skills/content-humanizer/` |
+| `content-ops` | Content audit, expand, batch operations | `~/.agents/skills/content-ops/` |
+| `audit-website` (squirrel) | Live-site SEO audit, 230+ rules | skill (installed) |
+| `frontend-design` | UI design patterns | skill (installed) |
+| `self-improving` | Memory system | skill (installed) |
 
 ---
 
@@ -118,14 +128,8 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 # Search (primary)
 node scripts/brave-search.cjs "query"
 
-# Research (secondary)  
+# Research (secondary)
 node scripts/wikipedia-search.cjs "query"
-
-# Content quality (source files)
-node scripts/content-quality.cjs "./src/**/*.astro"
-
-# SEO audit (rendered site - uses squirrel skill)
-squirrel audit https://mainnedispensaryguide.com --format llm
 
 # Build
 npm run build
@@ -134,6 +138,17 @@ npm run build
 npx vercel deploy --prod
 ```
 
+### OpenCode Skill Commands
+```
+/humanizer [url]            # content-humanizer: remove AI patterns from URL
+/fix-patterns [pattern]      # content-humanizer: automated regex fixer
+/humanize-review            # content-humanizer: editorial review
+/audit [pattern]            # content-ops: content quality audit
+/expand [topic]             # content-ops: research and expand topic
+/expand-all [pattern]       # content-ops: batch expand pages
+squirrel audit [url]         # audit-website: live-site SEO audit
+```
+
 ---
 
-*Last Updated: 2026-04-04*
+*Last Updated: 2026-04-05*

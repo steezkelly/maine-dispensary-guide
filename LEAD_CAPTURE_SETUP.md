@@ -1,9 +1,22 @@
 # Lead Capture Setup Guide
 
+## 📋 STATUS: MONETIZATION PLANNED — Not Yet Implemented
+
+**Date:** April 5, 2026  
+**User Decision:** Wants to implement lead capture monetization but not ready to commit to full framework yet.
+
+**Forms are READY** (enhanced with stage/interest fields) but backend setup is on hold.
+
+**Stack Decision Pending:**
+- Formspree + Zapier + Google Sheets (free tier possible)
+- OR wait until revenue justifies paid tools
+
+---
+
 ## Overview
 This guide explains how to set up lead capture from your Maine Dispensary Guide forms to Google Sheets for affiliate marketing follow-up.
 
-## Current Forms
+## Current Forms (✅ READY)
 All forms use Formspree endpoint: `https://formspree.io/f/xvgzlowz`
 
 | Form | Location | Fields Captured |

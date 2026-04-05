@@ -34,21 +34,19 @@ compounding consequences. Think before acting.
 - **Deployment:** Active on Vercel — Configured for **output: 'static'** for 100% stability
 - **Sitemap:** Auto-generated at `/sitemap-index.xml`
 - **Traffic status:** Early stage — SEO/GEO optimization for AI-discovery is the primary goal
-- **Content Intelligence:** 
+- **Content Intelligence Skills:**
+    - ✅ `content-authority` — SEO/GEO strategic framework, 3-pillar method, information gain
+    - ✅ `content-humanizer` — AI pattern removal, 22-category editorial guide, automated fixer
+    - ✅ `content-ops` — Content audit, expand, batch operations
+    - ✅ `audit-website` (squirrel) — Live-site SEO audit, 230+ rules
     - ✅ BreadcrumbList JSON-LD schema (Breadcrumbs.astro)
     - ✅ FAQ structured data component (Faq.astro)
-    - ✅ Content Quality Analyzer (`scripts/content-quality.cjs`)
-    - ✅ Content Humanizer (`scripts/humanize-content.cjs`)
-    - ✅ Content Expander (`scripts/content-expander.cjs`)
     - ✅ OpenCodeInsights plugin installed
-- **Known gaps:** 
+- **Known gaps:**
     - **Accessibility (A11y):** SquirrelScan score is 84/100. Remaining pedantic warnings: matching "guides ▾" text to aria-labels and adding `tabindex="-1"` to hidden mobile toggles.
-    - **Content Density:** Some city guides flagged as "Thin Content" (< 800 words). Humanization + expansion in progress.
     - **PDF Magnet:** The "Ultimate Founders Bible" (lead magnet) exists as MD but needs styling/conversion to PDF.
     - **Bug:** All 3 bugs from Playwright testing FIXED (2026-04-05) — see BUGS.md for history
 - **Active work:**
-    - **Content Humanization:** Removing AI patterns from pages, improving natural voice
-    - **Content Expansion:** Adding depth to thin pages for SEO/GEO improvement
     - **Link Architecture:** Ongoing body-only sync via `scripts/link-architect.cjs`.
 
 ---
@@ -97,10 +95,6 @@ different environments. You are one of them. Read this carefully.
 npm run dev          # Start local development server
 npm run build        # Production build (Static)
 node scripts/link-architect.cjs # Run Link Architect (glossary syncer)
-node scripts/content-quality.cjs "./src/**/*.astro" # Analyze content quality
-node scripts/content-expander.cjs --guide <file> # Get expansion template
-node scripts/content-quality.cjs "./src/pages/guides/*.astro" # Analyze content quality (source files)
-node scripts/humanize-content.cjs "./src/**/*.astro" --dry-run # Preview humanization
 node scripts/searxng-search.cjs "query" # Privacy-respecting meta-search
 node scripts/wikipedia-search.cjs "query" # Wikipedia research (free, no API key)
 ```
@@ -123,10 +117,12 @@ When Brave Search is rate-limited, use these alternatives:
    - Use for: Privacy-respecting meta-search (if self-hosted)
 
 ### OpenCode Custom Commands
-- `/humanizer [url]` — Fetch URL and humanize content (removes AI patterns)
-- `/expand [topic]` — Research and expand on a topic with depth
-- `/audit [pattern]` — Run content quality audit on matching files
-- `/expand-all [pattern]` — Batch expand content across multiple pages
+- `/humanizer [url]` — content-humanizer: fetch URL and humanize (AI pattern removal)
+- `/fix-patterns [pattern]` — content-humanizer: automated regex fixer on local files
+- `/humanize-review` — content-humanizer: editorial review with 22-category check
+- `/audit [pattern]` — content-ops: run content quality audit on matching files
+- `/expand [topic]` — content-ops: research and expand on a topic with depth
+- `/expand-all [pattern]` — content-ops: batch expand content across multiple pages
 - `/insights` — Generate OpenCode usage insights report
 - `/maintenance` — Run self-improving maintenance check
 
@@ -151,9 +147,9 @@ project-1/
 │   └── scripts/                 # Content intelligence scripts
 ├── scripts/
 │   ├── link-architect.cjs      # Glossary term linker
-│   ├── content-quality.cjs      # Readability & tone analyzer
-│   ├── content-expander.cjs     # Thin content detector & expansion guide
-│   └── humanize-content.cjs     # AI pattern remover
+│   ├── searxng-search.cjs      # Meta-search (backup)
+│   ├── wikipedia-search.cjs    # Wikipedia research
+│   └── brave-search.cjs        # Primary search
 ├── public/                      # Favicons and OG Images
 ├── astro.config.mjs             # Astro configuration
 ├── squirrel.toml               # Audit configuration
