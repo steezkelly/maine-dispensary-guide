@@ -1837,3 +1837,41 @@ Pushed site-wide content quality average from 80/100 to **85/100** by improving 
 [OpenCode] [2026-04-06 02:50 AM EDT]
 
 
+---
+
+## 📋 SPRINT SUMMARY: Tabbed UI Fix & Dark Mode Corrections
+**[April 6, 2026 — Early Morning Sprint]**
+
+### What We Did
+Fixed structural HTML issue on `/launch-checklist` that caused Quick Overview tab to show no content, and corrected all dark mode readability issues on the same page.
+
+### Root Cause
+The `<div id="detailed-content" role="tabpanel" class="view-content active">` opened at line 198 had no closing `</div>` tag before the `<div id="overview-content"` started at line 277. This caused the browser to misparse the DOM and collapse the overview tab's content.
+
+### Fixes Applied
+| File | Fix |
+|------|-----|
+| `src/pages/launch-checklist.astro` | Added `</div>` to close `detailed-content` div (line 276) |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.btn-detail` → `var(--color-text-light)` |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.check-card` → `var(--color-surface)` |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.btn-main` → `var(--color-surface)` |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.overview-card` → `var(--color-surface)` |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.comparison-table` → `var(--color-surface)` |
+| `src/pages/launch-checklist.astro` | Added dark mode for `.link-card` → `var(--color-surface)` |
+
+### Verified
+- Build passes: 65 pages built, sitemap generated
+- CSS warning is pre-existing (unrelated to edits)
+- `checklistItems` already contain internal links in descriptions (Phase 1-4 items link to `/guides/maine-dispensary-business-plan/`, `/guides/maine-dispensary-costs/`, etc.)
+- Both tabs (Detailed Roadmap / Quick Overview) now properly closed and structured
+
+### Pending
+- Deploy to Vercel
+- Commit to GitHub
+
+---
+
+[OpenCode] [2026-04-06 06:14 AM EDT]
+
+
+
