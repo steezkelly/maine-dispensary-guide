@@ -1,0 +1,782 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const phases = [
+  {
+    number: 1,
+    title: "Foundation",
+    subtitle: "Weeks 1-8",
+    icon: "◆",
+    steps: [
+      { label: "Form your LLC", detail: "Register with Maine Secretary of State" },
+      { label: "Secure capital", detail: "$300K-$850K total investment" },
+      { label: "Write business plan", detail: "Required for licensing and investors" }
+    ],
+    stat: { value: "$300K+", label: "Capital Needed" }
+  },
+  {
+    number: 2,
+    title: "Location",
+    subtitle: "Weeks 6-16",
+    icon: "◇",
+    steps: [
+      { label: "Find opted-in town", detail: "30+ Maine towns allow dispensaries" },
+      { label: "Sign cannabis lease", detail: "Must include contingency clause" },
+      { label: "Verify zoning", detail: "1,000ft buffer from schools" }
+    ],
+    stat: { value: "30+", label: "Opted-In Towns" }
+  },
+  {
+    number: 3,
+    title: "State License",
+    subtitle: "Weeks 12-24",
+    icon: "▲",
+    steps: [
+      { label: "Apply for IIC cards", detail: "$52/owner + fingerprinting" },
+      { label: "Submit conditional app", detail: "$500 application fee" },
+      { label: "Wait for OCP review", detail: "90-120 day processing" }
+    ],
+    stat: { value: "90-120", label: "Days for Review" }
+  },
+  {
+    number: 4,
+    title: "Build & Launch",
+    subtitle: "Weeks 20-52",
+    icon: "✦",
+    steps: [
+      { label: "Install security", detail: "OCP-compliant cameras + alarms" },
+      { label: "Complete Metrc training", detail: "State seed-to-sale tracking" },
+      { label: "Pass inspection", detail: "Final OCP approval" }
+    ],
+    stat: { value: "12-18", label: "Months Total" }
+  }
+];
+
+const mistakes = [
+  "Underestimating capital requirements",
+  "Choosing a location that hasn't opted in",
+  "No contingency clause in lease",
+  "Skipping Metrc training",
+  "Insufficient operating reserves"
+];
+
+const timelinePoints = [
+  { month: "Month 1-2", action: "Form LLC, secure capital, write business plan" },
+  { month: "Month 2-4", action: "Find location, sign lease with cannabis clause" },
+  { month: "Month 3-6", action: "Submit IIC applications, conditional license app" },
+  { month: "Month 6-9", action: "Wait for OCP review (90-120 days)" },
+  { month: "Month 9-12", action: "Security install, Metrc training, inspections" },
+  { month: "Month 12-18", action: "Final license, grand opening" }
+];
+---
+
+<Layout 
+  title="Start Here — Maine Cannabis Dispensary Roadmap" 
+  description="Your step-by-step visual guide to opening a cannabis dispensary in Maine. From forming your LLC to opening day — a simplified 12-18 month roadmap."
+  heroImage="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=1200&h=400"
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-05", modifiedDate: "2026-04-06", section: "Guides" }}
+>
+  <header class="hero">
+    <div class="hero-label">
+      <span class="pulse-dot"></span>
+      2026 Edition
+    </div>
+    <h1>Start Here: Your Maine Dispensary Roadmap</h1>
+    <p class="subtitle">A visual journey from concept to opening day — 12 to 18 months of steps, milestones, and decisions.</p>
+  </header>
+
+  <nav class="quick-nav">
+    <a href="/launch-checklist/" class="nav-link">
+      <span class="nav-icon">⇄</span>
+      Compare: Detailed Checklist View
+    </a>
+    <a href="/guides/maine-dispensary-license/" class="nav-link">
+      <span class="nav-icon">→</span>
+      License Requirements
+    </a>
+    <a href="/roi-calculator/" class="nav-link">
+      <span class="nav-icon">◈</span>
+      Calculate ROI
+    </a>
+  </nav>
+
+  <section class="journey-intro">
+    <div class="intro-text">
+      <h2>The Path to Your Dispensary</h2>
+      <p>Opening a cannabis dispensary in Maine isn't a weekend project. It's a 12-18 month journey through regulatory approvals, financial planning, and operational setup. This visual guide breaks that journey into four phases.</p>
+      <p>Each phase builds on the previous. Skip steps at your own risk — the process exists to protect both you and your future customers.</p>
+    </div>
+  </section>
+
+  <section class="journey-timeline">
+    <div class="timeline-track">
+      {phases.map((phase, i) => (
+        <div class="phase-block">
+          <div class="phase-connector">
+            <div class="connector-line"></div>
+            <div class="phase-number">{phase.number}</div>
+            <div class="connector-line"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-header">
+              <span class="phase-icon">{phase.icon}</span>
+              <div class="phase-titles">
+                <h3>{phase.title}</h3>
+                <span class="phase-time">{phase.subtitle}</span>
+              </div>
+            </div>
+            <div class="phase-steps">
+              {phase.steps.map(step => (
+                <div class="step-item">
+                  <div class="step-bullet"></div>
+                  <div class="step-info">
+                    <span class="step-label">{step.label}</span>
+                    <span class="step-detail">{step.detail}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div class="phase-stat">
+              <span class="stat-number">{phase.stat.value}</span>
+              <span class="stat-text">{phase.stat.label}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="milestone-bar">
+    <h3>The Key Milestones</h3>
+    <div class="milestones">
+      {timelinePoints.map(point => (
+        <div class="milestone">
+          <span class="milestone-time">{point.month}</span>
+          <span class="milestone-action">{point.action}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="warnings-section">
+    <div class="warnings-header">
+      <span class="warning-icon">⚠</span>
+      <h3>Where Operators Get Stuck</h3>
+    </div>
+    <div class="mistakes-grid">
+      {mistakes.map((mistake, i) => (
+        <div class="mistake-card">
+          <span class="mistake-num">{i + 1}</span>
+          <p>{mistake}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="recreational-medical">
+    <h2>Adult-Use vs. Medical: What's the Difference?</h2>
+    <p class="section-intro">Both require the same state licensing path, but adult-use has additional requirements.</p>
+    <div class="diff-cards">
+      <div class="diff-card">
+        <h4>Similar Requirements</h4>
+        <ul>
+          <li>IIC cards for all owners ($52 each)</li>
+          <li>Municipal authorization</li>
+          <li>Security systems (cameras, alarms)</li>
+          <li>Metrc seed-to-sale tracking</li>
+          <li>Product testing protocols</li>
+        </ul>
+      </div>
+      <div class="diff-card highlight">
+        <h4>Adult-Use Adds</h4>
+        <ul>
+          <li>Conditional license first, then final</li>
+          <li>Two-stage OCP application</li>
+          <li>Additional marketing restrictions</li>
+          <li>Packaging child-safety requirements</li>
+          <li>Higher annual license fees</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2>Ready to Start?</h2>
+      <p>Bookmark this page and work through each phase in order. Most entrepreneurs complete the full process in 12-18 months.</p>
+      <div class="cta-buttons">
+        <a href="/launch-checklist/" class="btn-primary">View Detailed Checklist</a>
+        <a href="/guides/maine-dispensary-license/" class="btn-secondary">License Requirements</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-surface) 100%);
+    color: white;
+    margin-bottom: 0;
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+
+  .hero h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .quick-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .nav-icon {
+    font-size: 1rem;
+  }
+
+  .journey-intro {
+    max-width: 700px;
+    margin: 0 auto 5rem;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .journey-intro h2 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+  }
+
+  .journey-intro p {
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .journey-timeline {
+    max-width: 900px;
+    margin: 0 auto 5rem;
+    padding: 0 2rem;
+  }
+
+  .timeline-track {
+    position: relative;
+  }
+
+  .phase-block {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .phase-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .connector-line {
+    flex: 1;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-border) 100%);
+    min-height: 30px;
+  }
+
+  .phase-block:first-child .connector-line:first-child {
+    background: var(--color-primary);
+    height: 30px;
+  }
+
+  .phase-number {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .phase-content {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .phase-content::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 8px solid transparent;
+    border-right-color: var(--color-border);
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .phase-icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+  }
+
+  .phase-titles h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0;
+    font-family: var(--font-serif);
+  }
+
+  .phase-time {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .phase-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .step-bullet {
+    width: 10px;
+    height: 10px;
+    background: var(--color-soft-green);
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .step-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-label {
+    font-weight: 700;
+    color: var(--color-text);
+    font-size: 1rem;
+  }
+
+  .step-detail {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .phase-stat {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--color-surface);
+    border-radius: 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+  }
+
+  .stat-text {
+    font-size: 0.7rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .milestone-bar {
+    max-width: 900px;
+    margin: 0 auto 5rem;
+    padding: 3rem;
+    background: var(--color-surface);
+    border-radius: 2rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .milestone-bar h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .milestones {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .milestone {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: white;
+    border-radius: 1rem;
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .milestone-time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .milestone-action {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    line-height: 1.4;
+  }
+
+  .warnings-section {
+    max-width: 800px;
+    margin: 0 auto 5rem;
+    padding: 0 2rem;
+  }
+
+  .warnings-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .warning-icon {
+    font-size: 1.5rem;
+    color: #f59e0b;
+  }
+
+  .warnings-header h3 {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .mistakes-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+
+  .mistake-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+
+  .mistake-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 50%;
+    font-size: 0.875rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+
+  .mistake-card p {
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .recreational-medical {
+    max-width: 800px;
+    margin: 0 auto 6rem;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .recreational-medical h2 {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .section-intro {
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+  }
+
+  .diff-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .diff-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+  }
+
+  .diff-card.highlight {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+
+  .diff-card h4 {
+    font-size: 1.125rem;
+    margin: 0 0 1rem;
+    font-family: var(--font-serif);
+  }
+
+  .diff-card.highlight h4 {
+    color: white;
+  }
+
+  .diff-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diff-card li {
+    font-size: 0.9375rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: var(--color-text-light);
+  }
+
+  .diff-card.highlight li {
+    border-bottom-color: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+  }
+
+  .diff-card li:last-child {
+    border-bottom: none;
+  }
+
+  .cta-section {
+    max-width: 700px;
+    margin: 0 auto 6rem;
+    padding: 0 2rem;
+  }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #1a6b6e 100%);
+    border-radius: 2rem;
+    padding: 4rem 3rem;
+    text-align: center;
+    color: white;
+  }
+
+  .cta-card h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-card p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    max-width: 450px;
+    margin: 0 auto 2rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: white;
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 1rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 1rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.5);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .milestones {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mistakes-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .diff-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .quick-nav {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .nav-link {
+      justify-content: center;
+    }
+
+    .phase-block {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .phase-connector {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 1rem;
+    }
+
+    .connector-line {
+      display: none;
+    }
+
+    .phase-content::before {
+      display: none;
+    }
+
+    .milestones {
+      grid-template-columns: 1fr;
+    }
+
+    .mistakes-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+    }
+  }
+</style>

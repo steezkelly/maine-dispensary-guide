@@ -135,6 +135,31 @@ const howToSchema = {
 
 <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    const viewContents = document.querySelectorAll('.view-content');
+    
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetView = btn.dataset.view;
+        
+        toggleBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        
+        viewContents.forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(targetView + '-content').classList.add('active');
+      });
+    });
+  });
+</script>
+
 <Layout 
   title="Maine Dispensary Launch Checklist" 
   description="Step-by-step roadmap for opening a cannabis dispensary in Maine. Complete timeline from entity formation to first sale, with regulatory requirements and official resource links." 
@@ -145,8 +170,32 @@ const howToSchema = {
     <div class="hero-badge">2026 Interactive Roadmap</div>
     <h1>Maine Dispensary Launch Checklist</h1>
     <p class="lead">A complete 12-18 month roadmap for opening your cannabis dispensary in Maine. Each phase builds toward your final license and first sale.</p>
+    
+    <div class="view-toggle" role="tablist" aria-label="Choose your view">
+      <button 
+        class="toggle-btn active" 
+        data-view="detailed" 
+        role="tab" 
+        aria-selected="true"
+        aria-controls="detailed-content"
+      >
+        <span class="toggle-icon">◆</span>
+        Detailed Roadmap
+      </button>
+      <button 
+        class="toggle-btn" 
+        data-view="overview" 
+        role="tab" 
+        aria-selected="false"
+        aria-controls="overview-content"
+      >
+        <span class="toggle-icon">◇</span>
+        Quick Overview
+      </button>
+    </div>
   </section>
 
+  <div id="detailed-content" role="tabpanel" class="view-content active">
   <section class="who-is-this">
     <div class="two-column">
       <div class="audience-card">
@@ -223,6 +272,154 @@ const howToSchema = {
         </div>
       </div>
     ))}
+  </div>
+
+  <div id="overview-content" role="tabpanel" class="view-content">
+    <section class="overview-hero">
+      <div class="overview-intro">
+        <h2>What You Need to Start a Cannabis Dispensary in Maine</h2>
+        <p>Opening a dispensary in Maine takes 12-18 months and requires navigating both state and local regulations. Here's the simplified path.</p>
+      </div>
+      
+      <div class="overview-grid">
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">1</span>
+            <h3>Foundation</h3>
+            <span class="phase-time">Weeks 1-8</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Form your LLC</strong> — Register with Maine Secretary of State</li>
+            <li><strong>Secure capital</strong> — $300k-$850k total investment</li>
+            <li><strong>Write business plan</strong> — Required for licensing and investors</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">$300K+</span>
+            <span class="stat-label">Minimum Capital Needed</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">2</span>
+            <h3>Location</h3>
+            <span class="phase-time">Weeks 6-16</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Find opted-in town</strong> — Only 30+ Maine towns allow dispensaries</li>
+            <li><strong>Sign lease with cannabis clause</strong> — Must permit cannabis activities</li>
+            <li><strong>Verify zoning</strong> — 1,000ft buffer from schools may apply</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">30+</span>
+            <span class="stat-label">Opted-In Municipalities</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">3</span>
+            <h3>State License</h3>
+            <span class="phase-time">Weeks 12-24</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Apply for IIC cards</strong> — $52/owner, fingerprinting, background check</li>
+            <li><strong>Submit conditional license</strong> — $500 application fee</li>
+            <li><strong>Wait for OCP review</strong> — 90-120 day processing time</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">90-120</span>
+            <span class="stat-label">Days for OCP Review</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">4</span>
+            <h3>Build & Launch</h3>
+            <span class="phase-time">Weeks 20-52</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Install security</strong> — OCP-compliant cameras and alarm systems</li>
+            <li><strong>Complete Metrc training</strong> — State seed-to-sale tracking</li>
+            <li><strong>Pass pre-license inspection</strong> — Final OCP approval</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">12-18</span>
+            <span class="stat-label">Months Total Timeline</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="recreational-vs-medical">
+      <h2>Recreational vs. Medical Dispensaries in Maine</h2>
+      <div class="comparison-table">
+        <div class="compare-row header">
+          <span>Requirement</span>
+          <span>Adult-Use (Recreational)</span>
+          <span>Medical</span>
+        </div>
+        <div class="compare-row">
+          <span>License Type</span>
+          <span>Retail Dispensary License</span>
+          <span>Dispensary License</span>
+        </div>
+        <div class="compare-row">
+          <span>Annual License Fee</span>
+          <span>$3,000-$15,000</span>
+          <span>$500-$15,000</span>
+        </div>
+        <div class="compare-row">
+          <span>Municipal Approval</span>
+          <span>Required (opt-in)</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>OCP Application</span>
+          <span>Conditional + Final</span>
+          <span>Single application</span>
+        </div>
+        <div class="compare-row">
+          <span>Product Testing</span>
+          <span>Required</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>Metrc Tracking</span>
+          <span>Required</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>Security Requirements</span>
+          <span>Full OCP compliance</span>
+          <span>Full OCP compliance</span>
+        </div>
+      </div>
+      <p class="compare-note">Both license types require IIC (Individual Identification Card) applications for all owners and key employees. The regulatory path is nearly identical, but adult-use has additional marketing and packaging restrictions.</p>
+    </section>
+
+    <section class="quick-links">
+      <h2>Deep Dive Into Each Step</h2>
+      <div class="links-grid">
+        <a href="/guides/maine-dispensary-license/" class="link-card">
+          <span class="link-title">License Requirements</span>
+          <span class="link-desc">OCP application process and requirements</span>
+        </a>
+        <a href="/guides/maine-dispensary-costs/" class="link-card">
+          <span class="link-title">Startup Costs</span>
+          <span class="link-desc">$300K-$850K breakdown</span>
+        </a>
+        <a href="/guides/maine-cannabis-real-estate/" class="link-card">
+          <span class="link-title">Real Estate & Zoning</span>
+          <span class="link-desc">Finding compliant locations</span>
+        </a>
+        <a href="/guides/maine-dispensary-security/" class="link-card">
+          <span class="link-title">Security Systems</span>
+          <span class="link-desc">OCP requirements for cameras and alarms</span>
+        </a>
+      </div>
+    </section>
   </div>
 
   <section class="faq-section">
@@ -553,6 +750,345 @@ const howToSchema = {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.75rem;
+    }
+  }
+
+  /* Tab Toggle Styles */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding: 0.5rem;
+    background: var(--color-surface);
+    border-radius: 2rem;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    border: none;
+    background: transparent;
+    border-radius: 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .toggle-btn:hover {
+    color: var(--color-primary);
+  }
+
+  .toggle-btn.active {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(13, 78, 80, 0.25);
+  }
+
+  .toggle-icon {
+    font-size: 0.75rem;
+  }
+
+  /* View Content Visibility */
+  .view-content {
+    display: none;
+  }
+
+  .view-content.active {
+    display: block;
+  }
+
+  #detailed-content.active ~ .faq-section,
+  #detailed-content.active ~ .checklist-print-cta {
+    display: block;
+  }
+
+  /* Overview Section Styles */
+  .overview-hero {
+    max-width: 900px;
+    margin: 0 auto 5rem;
+  }
+
+  .overview-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .overview-intro h2 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .overview-intro p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .overview-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .overview-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transform: translateY(-4px);
+  }
+
+  .card-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .phase-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-header h3 {
+    font-size: 1.125rem;
+    color: var(--color-primary);
+    margin: 0.5rem 0;
+    font-family: var(--font-serif);
+  }
+
+  .phase-time {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .phase-items {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+  }
+
+  .phase-items li {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .phase-items li:last-child {
+    margin-bottom: 0;
+  }
+
+  .phase-items strong {
+    color: var(--color-text);
+    display: block;
+    margin-bottom: 0.125rem;
+  }
+
+  .key-stat {
+    text-align: center;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-radius: 1rem;
+    margin-top: 1rem;
+  }
+
+  .key-stat .stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+  }
+
+  .key-stat .stat-label {
+    font-size: 0.7rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Recreational vs Medical Comparison */
+  .recreational-vs-medical {
+    max-width: 900px;
+    margin: 0 auto 5rem;
+    text-align: center;
+  }
+
+  .recreational-vs-medical h2 {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .comparison-table {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .compare-row:last-child {
+    border-bottom: none;
+  }
+
+  .compare-row.header {
+    background: var(--color-surface);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+  }
+
+  .compare-row span {
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+  }
+
+  .compare-row.header span {
+    color: var(--color-primary);
+  }
+
+  .compare-row:not(.header):hover {
+    background: rgba(88, 129, 87, 0.03);
+  }
+
+  .compare-note {
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+
+  /* Quick Links Grid */
+  .quick-links {
+    max-width: 900px;
+    margin: 0 auto 6rem;
+    text-align: center;
+  }
+
+  .quick-links h2 {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .link-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .link-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  }
+
+  .link-title {
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .link-desc {
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    line-height: 1.4;
+  }
+
+  /* Responsive for Overview */
+  @media (max-width: 900px) {
+    .overview-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .links-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .overview-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .links-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .view-toggle {
+      width: 100%;
+      flex-direction: column;
+      border-radius: 1rem;
+    }
+
+    .toggle-btn {
+      justify-content: center;
+    }
+
+    .compare-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .compare-row.header {
+      display: none;
+    }
+
+    .compare-row span:first-child {
+      font-weight: 700;
+      color: var(--color-text);
     }
   }
 </style>
