@@ -1,10 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import Faq from '../components/Faq.astro';
+
+const faqItems = [
+  {
+    question: "How long does it take to open a dispensary in Maine?",
+    answer: "Most entrepreneurs complete the full licensing process in 12-18 months from start to first sale. The conditional license application takes 90-120 days for OCP review, while municipal approvals vary by municipality. Build-out typically requires an additional 3-6 months after securing your location."
+  },
+  {
+    question: "How much capital do I need to start a dispensary in Maine?",
+    answer: "Total investment ranges from $300,000 to $850,000 depending on location, size, and build-out quality. This includes $10,000-$20,000 for licensing fees, $150,000-$400,000 for build-out and security systems, $50,000-$100,000 for initial inventory, and $50,000-$100,000 for operating capital during the ramp-up period."
+  },
+  {
+    question: "What municipalities in Maine have opted in for adult-use cannabis dispensaries?",
+    answer: "As of 2026, over 30 Maine municipalities have formally opted in to allow adult-use cannabis establishments. Key markets include Portland, Bangor, Lewiston, Augusta, South Portland, Auburn, Brunswick, Biddeford, and Sanford. You must verify your specific location is in an opted-in municipality before proceeding with licensing."
+  },
+  {
+    question: "Do I need a business plan to apply for a Maine dispensary license?",
+    answer: "Yes. A comprehensive 3-year business plan is required for both your conditional license application to the Maine OCP and for municipal authorization applications. Your business plan must include detailed security protocols, operations procedures, financial projections, and staff training programs."
+  },
+  {
+    question: "Can I operate a dispensary while my license application is pending?",
+    answer: "No. You cannot legally operate or even conduct business from your proposed location until you receive final approval from both the Maine OCP and your local municipality. Conducting business without a license is a criminal offense under Maine cannabis regulations."
+  },
+  {
+    question: "What is the difference between a conditional license and a final license?",
+    answer: "A conditional license confirms you meet the basic requirements to operate a cannabis business in Maine. It allows you to proceed with location build-out and prepare for operations. A final license is granted only after successful completion of pre-license inspection, final documentation review, and verification that all conditions have been met."
+  },
+  {
+    question: "What are the biggest mistakes first-time dispensary owners make in Maine?",
+    answer: "The most common pitfalls include: underestimating total capital requirements, choosing a location that hasn't opted in for cannabis, failing to budget for the 90-120 day OCP review timeline, neglecting to secure a lease with a cannabis contingency clause, and skipping the required Metrc seed-to-sale training. Many owners also fail to build adequate operating reserves for the ramp-up period after opening."
+  }
+];
 
 const checklistItems = [
   { 
     category: "Phase 1: Foundation", 
+    duration: "Weeks 1-8",
     items: [
       {
         title: "Form your Legal Entity (LLC/Corp)",
@@ -28,6 +61,7 @@ const checklistItems = [
   },
   { 
     category: "Phase 2: The Search", 
+    duration: "Weeks 6-16",
     items: [
       {
         title: "Identify OCP-compliant municipalities",
@@ -45,6 +79,7 @@ const checklistItems = [
   },
   { 
     category: "Phase 3: State Submission", 
+    duration: "Weeks 12-24",
     items: [
       {
         title: "Submit Maine OCP IIC applications",
@@ -62,6 +97,7 @@ const checklistItems = [
   },
   { 
     category: "Phase 4: Build & Launch", 
+    duration: "Weeks 20-52",
     items: [
       {
         title: "Install OCP-compliant security",
@@ -78,24 +114,94 @@ const checklistItems = [
     ]
   }
 ];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Open a Cannabis Dispensary in Maine",
+  "description": "Complete step-by-step roadmap for opening a licensed cannabis dispensary in Maine, covering entity formation, municipal approval, state licensing, and operational setup.",
+  "totalTime": "P12M",
+  "step": checklistItems.flatMap((section, sIdx) => 
+    section.items.map((item, iIdx) => ({
+      "@type": "HowToStep",
+      "position": sIdx * section.items.length + iIdx + 1,
+      "name": item.title,
+      "text": item.description.replace(/<[^>]+>/g, ''),
+      "url": `https://mainedispensaryguide.com${item.link}`
+    }))
+  )
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
 <Layout 
   title="Maine Dispensary Launch Checklist" 
-  description="Step-by-step roadmap for opening a cannabis dispensary in Maine. Interactive steps with technical and legal requirements." 
+  description="Step-by-step roadmap for opening a cannabis dispensary in Maine. Complete timeline from entity formation to first sale, with regulatory requirements and official resource links." 
   heroImage="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=1200&h=400"
-  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-05", modifiedDate: "2026-04-01", section: "Guides" }}
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-05", modifiedDate: "2026-04-06", section: "Guides" }}
 >
   <section class="checklist-header">
     <div class="hero-badge">2026 Interactive Roadmap</div>
     <h1>Maine Dispensary Launch Checklist</h1>
-    <p class="lead">Each phase is a step. Click any item to see the regulatory details and official links you need.</p>
+    <p class="lead">A complete 12-18 month roadmap for opening your cannabis dispensary in Maine. Each phase builds toward your final license and first sale.</p>
+  </section>
+
+  <section class="who-is-this">
+    <div class="two-column">
+      <div class="audience-card">
+        <h2>Who This Guide Is For</h2>
+        <p>This roadmap is built for entrepreneurs and investors who are serious about entering Maine's adult-use cannabis market. Whether you're a Maine native or an out-of-state operator, this checklist will walk you through every required step from concept to grand opening.</p>
+        <p>You should have access to at least $300,000 in capital and a clear understanding of Maine's regulatory environment before proceeding.</p>
+      </div>
+      <div class="timeline-card">
+        <h2>Expected Timeline</h2>
+        <div class="timeline-visual">
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 1</span>
+            <span class="timeline-duration">Weeks 1-8</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 2</span>
+            <span class="timeline-duration">Weeks 6-16</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 3</span>
+            <span class="timeline-duration">Weeks 12-24</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 4</span>
+            <span class="timeline-duration">Weeks 20-52</span>
+          </div>
+        </div>
+        <p class="timeline-note">Most operators complete the full process in 12-18 months from start to first sale.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="common-mistakes">
+    <Callout type="warning">
+      <h3>Common Mistakes to Avoid</h3>
+      <ul class="mistakes-list">
+        <li><strong>Underestimating capital:</strong> Total investment often runs $300k-$850k. Budget for overruns.</li>
+        <li><strong>Wrong location:</strong> Your site must be in a municipality that has formally opted in to cannabis retail.</li>
+        <li><strong>No contingency clause:</strong> Your commercial lease must include an exit clause if licensing is denied.</li>
+        <li><strong>Skipping Metrc training:</strong> All staff must complete state-approved seed-to-sale tracking training before handling inventory.</li>
+        <li><strong>Insufficient operating reserves:</strong> Plan for 3-6 months of operating costs after opening before revenue covers expenses.</li>
+      </ul>
+    </Callout>
   </section>
 
   <div class="checklist-container">
     {checklistItems.map(section => (
       <div class="checklist-section">
-        <h2>{section.category}</h2>
+        <div class="section-header">
+          <h2>{section.category}</h2>
+          <span class="duration-badge">{section.duration}</span>
+        </div>
         <div class="item-list">
           {section.items.map(item => (
             <details class="check-card">
@@ -109,7 +215,7 @@ const checklistItems = [
               <div class="details-content">
                 <p set:html={item.description}></p>
                 <div class="details-actions">
-                  <a href={item.link} class="btn-detail">{item.cta} &rarr;</a>
+                  <a href={item.link} class="btn-detail">{item.cta} →</a>
                 </div>
               </div>
             </details>
@@ -118,6 +224,11 @@ const checklistItems = [
       </div>
     ))}
   </div>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
 
   <section class="checklist-print-cta">
     <div class="print-box">
@@ -299,5 +410,149 @@ const checklistItems = [
     summary { padding: 1.25rem; }
     .details-content { padding: 0 1.25rem 1.5rem 4rem; }
     .item-title { font-size: 1rem; }
+  }
+
+  /* New Sections */
+  .who-is-this {
+    max-width: 900px;
+    margin: 0 auto 4rem;
+  }
+
+  .two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .audience-card, .timeline-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+  }
+
+  .audience-card h2, .timeline-card h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+
+  .audience-card p {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .timeline-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+
+  .timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .timeline-phase {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .timeline-duration {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .timeline-arrow {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .timeline-note {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-align: center;
+    font-style: italic;
+  }
+
+  .common-mistakes {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+  }
+
+  .common-mistakes h3 {
+    margin-top: 0;
+    color: var(--color-primary);
+  }
+
+  .mistakes-list {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .mistakes-list li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .mistakes-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .duration-badge {
+    background: var(--color-soft-green);
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .checklist-section h2 {
+    margin-bottom: 0;
+  }
+
+  .faq-section {
+    max-width: 800px;
+    margin: 0 auto 6rem;
+  }
+
+  .faq-section h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .two-column {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-visual {
+      justify-content: center;
+    }
+
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
   }
 </style>
