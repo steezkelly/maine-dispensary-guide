@@ -280,4 +280,16 @@ import Callout from '../components/Callout.astro';
   .glossary-box p { font-size: 0.9rem; color: var(--color-text-light); line-height: 1.6; margin-bottom: 0; }
 
   @media (max-width: 1000px) { .calc-container { grid-template-columns: 1fr; padding: 2rem; } }
+
+  [data-theme="dark"] .calc-card {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .step-box {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .glossary-box {
+    background: var(--color-surface);
+  }
 </style>

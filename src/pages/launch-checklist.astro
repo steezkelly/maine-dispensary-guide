@@ -1091,4 +1091,22 @@ const howToSchema = {
       color: var(--color-text);
     }
   }
+
+  /* Dark Mode Fixes */
+  [data-theme="dark"] .overview-card,
+  [data-theme="dark"] .link-card {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .comparison-table {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .compare-row {
+    border-bottom-color: var(--color-border);
+  }
+
+  [data-theme="dark"] .compare-row.header {
+    background: var(--color-primary);
+  }
 </style>
