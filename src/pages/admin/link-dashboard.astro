@@ -1,20 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import fs from 'fs';
-import path from 'path';
 
-const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
-const pagesPath = path.join(projectRoot, 'src/pages');
-
-// Category definitions
-const categoryMap = {
-  'guides': 'City Guide',
-  'founders': 'Founder Story',
-  'resources': 'Resource Hub',
-  'admin': 'Admin'
-};
-
-function getCategory(filePath) {
+function getCategory(filePath: string) {
   if (filePath.includes('/admin/')) return 'admin';
   if (filePath.includes('/founders/')) return 'founders';
   if (filePath.includes('/resources/')) return 'resources';
@@ -22,24 +9,31 @@ function getCategory(filePath) {
   return 'core';
 }
 
-function getPageType(filePath) {
+function getPageType(filePath: string) {
   if (filePath.endsWith('index.astro')) return 'index';
-  const file = path.basename(filePath, '.astro');
+  const file = filePath.split('/').pop() || '';
   if (file.includes('-guide')) return 'city-guide';
   if (file.includes('maine-cannabis') || file.includes('maine-dispensary')) return 'technical-guide';
   return 'utility';
 }
 
-function urlFromFile(filePath) {
-  const relative = filePath.replace(pagesPath, '').replace(/\\/g, '/').replace(/\.astro$/, '');
-  if (relative.endsWith('/index')) return relative.replace('/index', '') || '/';
-  if (relative.startsWith('/')) return relative;
-  return '/' + relative;
+function urlFromFilePath(filePath: string) {
+  // Convert glob paths like '../../pages/guides/bangor-dispensary-guide.astro' to '/guides/bangor-dispensary-guide'
+  // Strip leading ../.. from the glob path
+  const normalized = filePath.replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '');
+  // Now normalized is like 'pages/guides/bangor-dispensary-guide.astro'
+  const noPages = normalized.replace(/^pages\//, '');
+  // Now noPages is like 'guides/bangor-dispensary-guide.astro'
+  const noAstro = noPages.replace(/\.astro$/, '');
+  // Now noAstro is like 'guides/bangor-dispensary-guide'
+  const cleaned = noAstro.replace(/\/index$/, '') || '/';
+  // /guides/index → /guides, 'about' → /about
+  return cleaned.startsWith('/') ? cleaned : '/' + cleaned;
 }
 
-function extractLinks(content) {
+function extractLinks(content: string) {
   const linkRegex = /href="(\/[^"#]*?)"/g;
-  const links = [];
+  const links: string[] = [];
   let match;
   while ((match = linkRegex.exec(content)) !== null) {
     const href = match[1];
@@ -50,10 +44,9 @@ function extractLinks(content) {
   return [...new Set(links)];
 }
 
-function extractTitle(content) {
-  const titleMatch = content.match(/<title>([^<]*)<\/title>/i) || 
-                     content.match(/const title\s*=\s*["']([^"']+)["']/);
+function extractTitle(content: string) {
   const h1Match = content.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+  const titleMatch = content.match(/const title\s*=\s*["']([^"']+)["']/);
   return h1Match ? h1Match[1].trim() : (titleMatch ? titleMatch[1].trim() : 'Untitled');
 }
 
@@ -72,7 +65,6 @@ interface Link {
 }
 
 interface PageData {
-  path: string;
   url: string;
   title: string;
   type: string;
@@ -94,56 +86,39 @@ interface GraphData {
   };
 }
 
-// Scan all pages
-const allFiles: string[] = [];
-const walkDir = (dir: string) => {
-  if (!fs.existsSync(dir)) return;
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory() && entry.name !== 'admin') {
-      walkDir(fullPath);
-    } else if (entry.isFile() && entry.name.endsWith('.astro') && entry.name !== 'index.astro') {
-      allFiles.push(fullPath);
-    }
-  }
-};
-walkDir(path.join(pagesPath, 'guides'));
-walkDir(path.join(pagesPath, 'founders'));
-walkDir(path.join(pagesPath, 'resources'));
-walkDir(path.join(pagesPath, '.'));
+// Use Vite's import.meta.glob to scan all pages at build time (cross-platform)
+const rawFiles = import.meta.glob('../../pages/**/*.astro', { as: 'raw', eager: true });
 
-// Core pages
-const corePages = ['index', 'about', 'contact', 'glossary', 'roi-calculator', 'site-health', 
-                   'all-guides', 'directory', 'launch-checklist', 'download-checklist', 
-                   'market-stats', 'find-a-dispensary', 'start-here', 'privacy', 'resources'];
-corePages.forEach(name => {
-  const fp = path.join(pagesPath, `${name}.astro`);
-  if (fs.existsSync(fp)) allFiles.push(fp);
-});
+// Also load core pages at root level
+const rootFiles = import.meta.glob('../../pages/*.astro', { as: 'raw', eager: true });
 
 const pageMap = new Map<string, PageData>();
 const linkSet: Link[] = [];
 
-// First pass: extract all links from each page
-for (const file of allFiles) {
-  const url = urlFromFile(file);
-  const content = fs.readFileSync(file, 'utf8');
+// Process guide pages
+for (const [filePath, content] of Object.entries(rawFiles)) {
+  const url = urlFromFilePath(filePath);
   const title = extractTitle(content);
   const links = extractLinks(content);
-  const type = getPageType(file);
-  const category = getCategory(file);
-  
-  pageMap.set(url, {
-    path: file,
-    url,
-    title,
-    type,
-    category,
-    incoming: 0,
-    outgoing: links.length,
-    links
-  });
+  const type = getPageType(filePath);
+  const category = getCategory(filePath);
+
+  pageMap.set(url, { url, title, type, category, incoming: 0, outgoing: links.length, links });
+}
+
+// Process root-level pages
+for (const [filePath, content] of Object.entries(rootFiles)) {
+  const fileName = filePath.split('/').pop() || '';
+  if (fileName === 'index.astro') continue;
+  if (pageMap.has('/' + fileName.replace('.astro', ''))) continue;
+
+  const url = '/' + fileName.replace('.astro', '');
+  const title = extractTitle(content);
+  const links = extractLinks(content);
+  const type = getPageType(filePath);
+  const category = getCategory(filePath);
+
+  pageMap.set(url, { url, title, type, category, incoming: 0, outgoing: links.length, links });
 }
 
 // Second pass: count incoming links
@@ -171,7 +146,7 @@ for (const [url, page] of pageMap) {
 }
 
 // Stats
-const orphanPages = [...pageMap.values()].filter(p => p.incoming === 0 && p.category !== 'core').map(p => p.url);
+const orphanPages = [...pageMap.values()].filter(p => p.incoming === 0 && p.category !== 'core' && p.type !== 'index').map(p => p.url);
 const mostLinked = [...pageMap.values()]
   .sort((a, b) => b.incoming - a.incoming)
   .slice(0, 10)
