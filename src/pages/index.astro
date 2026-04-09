@@ -119,27 +119,58 @@ const stats = [
     </div>
     <div class="hub-grid">
       <a href="/guides/maine-dispensary-license/" class="hub-card">
-        <div class="hub-icon">📜</div>
+        <div class="hub-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8h16l8 8v24a4 4 0 01-4 4H12a4 4 0 01-4-4V12a4 4 0 014-4z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M28 8v8h8M16 24h16M16 32h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
         <h3>Licensing</h3>
         <p>Step-by-step state and local approval maps.</p>
       </a>
       <a href="/guides/maine-cannabis-taxation-280e/" class="hub-card">
-        <div class="hub-icon">⚖️</div>
+        <div class="hub-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 6v36M6 24h36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M14 18l6 6 14-14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
         <h3>Compliance</h3>
         <p>Mastering 280E and OCP tracking rules.</p>
       </a>
       <a href="/guides/maine-cannabis-real-estate/" class="hub-card">
-        <div class="hub-icon">📍</div>
+        <div class="hub-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 6C16.268 6 10 12.268 10 20c0 10.5 14 22 14 22s14-11.5 14-22c0-7.732-6.268-14-14-14z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="24" cy="20" r="5" stroke="currentColor" stroke-width="2.5"/>
+          </svg>
+        </div>
         <h3>Real Estate</h3>
         <p>Finding compliant zones in every town.</p>
       </a>
       <a href="/roi-calculator/" class="hub-card">
-        <div class="hub-icon">📊</div>
+        <div class="hub-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 36l10-14 8 6 14-18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="18" cy="22" r="3" fill="currentColor"/>
+            <circle cx="26" cy="28" r="3" fill="currentColor"/>
+            <circle cx="38" cy="10" r="3" fill="currentColor"/>
+          </svg>
+        </div>
         <h3>ROI Calculator</h3>
         <p>Estimate startup costs and break-even timelines.</p>
       </a>
       <a href="/resources/" class="hub-card">
-        <div class="hub-icon">🤝</div>
+        <div class="hub-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 32c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M32 16c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 3 1.5 5.5 4 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="20" cy="18" r="3" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="28" cy="30" r="3" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M36 24v6M36 30h-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
         <h3>Vendors</h3>
         <p>Connect with expert lawyers and CPAs.</p>
       </a>
@@ -569,13 +600,20 @@ const stats = [
   }
 
   .hub-icon {
-    font-size: 3.5rem;
     margin-bottom: 1.5rem;
     display: block;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .hub-card:hover .hub-icon { transform: scale(1.2) rotate(8deg); }
+  .hub-icon svg {
+    width: 64px;
+    height: 64px;
+    color: var(--color-accent);
+    transition: color 0.3s;
+  }
+
+  .hub-card:hover .hub-icon { transform: scale(1.1); }
+  .hub-card:hover .hub-icon svg { color: var(--color-primary); }
   .hub-card h3 { margin: 0 0 0.75rem; color: var(--color-primary); font-family: var(--font-serif); font-size: 1.5rem; }
   .hub-card p { margin: 0; font-size: 0.95rem; color: var(--color-text-light); line-height: 1.6; }
 

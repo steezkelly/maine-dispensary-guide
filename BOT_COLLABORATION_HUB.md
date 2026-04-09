@@ -1,7 +1,9 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 91/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-05 9:32 PM EDT**
+**Last updated: 2026-04-09 1:00 PM EDT**
+
+> **NOTE:** Score verified via 8 third-party audit tools (PageSpeed Insights, WAVE, W3C Link Checker, Security Headers, Google Rich Results, Social Share Preview, SSL Labs, Bing Webmaster). Accessibility: 99/100. All remaining warnings are non-blocking (contrast CSS, Unsplash/Fonts, E-E-A-T field data).
 
 ---
 
@@ -41,6 +43,65 @@ Ran 8 third-party website audit tools via browser to validate and complement Squ
 - After schema fix: 90/100 (broken links accumulated)
 - After W3C link audit: 90/100 (10 broken links found)
 - After all fixes: **91/100 (0 errors)** ✅
+
+---
+
+## 📋 SPRINT: Humanizer & Content Pipeline (Apr 4-9, 2026)
+
+**[OpenCode] April 9, 2026 1:00 PM EDT — Link Dashboard & Cleanup Sprint**
+
+### What We Did
+- **Network Analyzer Removed:** Deleted Electron-based network-analyzer app from `AppData\Roaming\network-analyzer` — had WebView2 memory leak risk per AGENTS.md warnings
+- **Link Dashboard Built:** Created `/admin/link-dashboard.astro` — lightweight D3.js force-directed graph showing internal link structure for all 64 pages
+- **Dashboard Features:**
+  - Interactive node graph (zoom, pan, drag)
+  - Node size = incoming link count
+  - Color-coded by page type (city guide, technical guide, founder story, resource hub)
+  - Orphan page detection (pages with 0 incoming links)
+  - Click any node to see: URL, category, type, incoming/outgoing link counts, "links to" and "linked from" lists
+  - Top 10 most-linked pages panel
+  - Pure static HTML/JS — no Electron, no WebView2, no build overhead
+- **Build Verified:** 66 pages built successfully
+
+### Dashboard Access
+- `/admin/link-dashboard/` — password-protected admin page (noindex)
+- Run `npm run build` to regenerate link data on each update
+
+### Also Updated
+- AGENTS.md synced: score 85→91, date updated to Apr 9, search stack documented, workflow rules added
+- All docs now current and aligned
+
+### Previous Sprint Summary (Apr 4-9 Multi-Session)
+
+### What We Did
+Massive content humanization and tool-building sprint spanning 5 days across multiple sessions.
+
+### Sessions Logged
+| Session | Title | Duration | Output |
+|---------|-------|----------|--------|
+| `ses_2a7df1210` | Build humanizer for Maine Dispensary Guide | 2,500 min (41.7 hrs) | 18,315 lines, 112 files |
+| `ses_29f4c3e40` | Maine Dispensary Guide hub review | 1,195 min | 416 lines, 11 files |
+| `ses_2a7c0582b` | OpenCode Insights Report Generator | 912 min | 17,857 lines, 89 files |
+| `ses_2a7a8c6a` | Understanding environment variables | 900 min | 16,857 lines, 87 files |
+| `ses_2a6a9789a` | Searxng search tool implementation | 549 min | 7,539 lines, 51 files |
+| `ses_2a67be39e` | Website UI improvements with SEO guidelines | 499 min | 16,857 lines, 87 files |
+
+### Key Accomplishments
+- **Humanizer Skill Built:** Custom content humanization tool for SEO optimization — processes pages to remove AI patterns, improve readability, boost indexing
+- **Targets Applied:** Bangor dispensary guide, Maine cannabis taxation (280E), ROI calculator
+- **Self-Improving:** Adopted weekly maintenance scheduling via Task Scheduler
+- **Score Maintained:** 91/100 throughout sprint
+
+### OpenCode Insights Report
+Generated comprehensive usage analytics via custom-built insights pipeline:
+- Collector: `~/.local/share/opencode-insights/src/collector.py`
+- Generator: `~/.local/share/opencode-insights/src/generator.py`
+- Report: `~/.local/share/opencode-insights/output/report.html`
+
+### Workflow Improvements Added
+- `--dry-run` for file operations when scope is unclear
+- PowerShell-compatible path handling (Windows-first)
+- Todo checkpoints for sessions >500 minutes
 
 ### Remaining Issues (All Warnings — Not Blocking)
 | Issue | Type | Actionable? |
@@ -1868,6 +1929,11 @@ The `<div id="detailed-content" role="tabpanel" class="view-content active">` op
 ### Pending
 - Deploy to Vercel
 - Commit to GitHub
+
+### Deployed
+- GitHub: Commit `35d0e3c` pushed to `main`
+- Vercel Preview: https://project-1-kjtl487gk-steezkellys-projects.vercel.app
+- Vercel Production: https://mainedispensaryguide.com (aliased)
 
 ---
 

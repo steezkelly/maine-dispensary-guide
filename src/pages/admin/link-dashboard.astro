@@ -1,0 +1,500 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import fs from 'fs';
+import path from 'path';
+
+const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
+const pagesPath = path.join(projectRoot, 'src/pages');
+
+// Category definitions
+const categoryMap = {
+  'guides': 'City Guide',
+  'founders': 'Founder Story',
+  'resources': 'Resource Hub',
+  'admin': 'Admin'
+};
+
+function getCategory(filePath) {
+  if (filePath.includes('/admin/')) return 'admin';
+  if (filePath.includes('/founders/')) return 'founders';
+  if (filePath.includes('/resources/')) return 'resources';
+  if (filePath.includes('/guides/')) return 'guides';
+  return 'core';
+}
+
+function getPageType(filePath) {
+  if (filePath.endsWith('index.astro')) return 'index';
+  const file = path.basename(filePath, '.astro');
+  if (file.includes('-guide')) return 'city-guide';
+  if (file.includes('maine-cannabis') || file.includes('maine-dispensary')) return 'technical-guide';
+  return 'utility';
+}
+
+function urlFromFile(filePath) {
+  const relative = filePath.replace(pagesPath, '').replace(/\\/g, '/').replace(/\.astro$/, '');
+  if (relative.endsWith('/index')) return relative.replace('/index', '') || '/';
+  if (relative.startsWith('/')) return relative;
+  return '/' + relative;
+}
+
+function extractLinks(content) {
+  const linkRegex = /href="(\/[^"#]*?)"/g;
+  const links = [];
+  let match;
+  while ((match = linkRegex.exec(content)) !== null) {
+    const href = match[1];
+    if (href.startsWith('/') && !href.startsWith('//') && !href.startsWith('/api')) {
+      links.push(href.split('#')[0]);
+    }
+  }
+  return [...new Set(links)];
+}
+
+function extractTitle(content) {
+  const titleMatch = content.match(/<title>([^<]*)<\/title>/i) || 
+                     content.match(/const title\s*=\s*["']([^"']+)["']/);
+  const h1Match = content.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+  return h1Match ? h1Match[1].trim() : (titleMatch ? titleMatch[1].trim() : 'Untitled');
+}
+
+interface Node {
+  id: string;
+  label: string;
+  type: string;
+  category: string;
+  incoming: number;
+  outgoing: number;
+}
+
+interface Link {
+  source: string;
+  target: string;
+}
+
+interface PageData {
+  path: string;
+  url: string;
+  title: string;
+  type: string;
+  category: string;
+  incoming: number;
+  outgoing: number;
+  links: string[];
+}
+
+interface GraphData {
+  nodes: Node[];
+  links: Link[];
+  stats: {
+    totalPages: number;
+    totalLinks: number;
+    orphanPages: string[];
+    mostLinked: { id: string; label: string; count: number }[];
+    categories: Record<string, number>;
+  };
+}
+
+// Scan all pages
+const allFiles: string[] = [];
+const walkDir = (dir: string) => {
+  if (!fs.existsSync(dir)) return;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory() && entry.name !== 'admin') {
+      walkDir(fullPath);
+    } else if (entry.isFile() && entry.name.endsWith('.astro') && entry.name !== 'index.astro') {
+      allFiles.push(fullPath);
+    }
+  }
+};
+walkDir(path.join(pagesPath, 'guides'));
+walkDir(path.join(pagesPath, 'founders'));
+walkDir(path.join(pagesPath, 'resources'));
+walkDir(path.join(pagesPath, '.'));
+
+// Core pages
+const corePages = ['index', 'about', 'contact', 'glossary', 'roi-calculator', 'site-health', 
+                   'all-guides', 'directory', 'launch-checklist', 'download-checklist', 
+                   'market-stats', 'find-a-dispensary', 'start-here', 'privacy', 'resources'];
+corePages.forEach(name => {
+  const fp = path.join(pagesPath, `${name}.astro`);
+  if (fs.existsSync(fp)) allFiles.push(fp);
+});
+
+const pageMap = new Map<string, PageData>();
+const linkSet: Link[] = [];
+
+// First pass: extract all links from each page
+for (const file of allFiles) {
+  const url = urlFromFile(file);
+  const content = fs.readFileSync(file, 'utf8');
+  const title = extractTitle(content);
+  const links = extractLinks(content);
+  const type = getPageType(file);
+  const category = getCategory(file);
+  
+  pageMap.set(url, {
+    path: file,
+    url,
+    title,
+    type,
+    category,
+    incoming: 0,
+    outgoing: links.length,
+    links
+  });
+}
+
+// Second pass: count incoming links
+for (const [url, page] of pageMap) {
+  for (const targetUrl of page.links) {
+    if (pageMap.has(targetUrl)) {
+      linkSet.push({ source: url, target: targetUrl });
+      const target = pageMap.get(targetUrl)!;
+      target.incoming++;
+    }
+  }
+}
+
+// Build nodes
+const nodes: Node[] = [];
+for (const [url, page] of pageMap) {
+  nodes.push({
+    id: url,
+    label: page.title || url,
+    type: page.type,
+    category: page.category,
+    incoming: page.incoming,
+    outgoing: page.outgoing
+  });
+}
+
+// Stats
+const orphanPages = [...pageMap.values()].filter(p => p.incoming === 0 && p.category !== 'core').map(p => p.url);
+const mostLinked = [...pageMap.values()]
+  .sort((a, b) => b.incoming - a.incoming)
+  .slice(0, 10)
+  .map(p => ({ id: p.url, label: p.title, count: p.incoming }));
+
+const categories: Record<string, number> = {};
+for (const page of pageMap.values()) {
+  categories[page.category] = (categories[page.category] || 0) + 1;
+}
+
+const graphData: GraphData = {
+  nodes,
+  links: linkSet,
+  stats: {
+    totalPages: pageMap.size,
+    totalLinks: linkSet.length,
+    orphanPages,
+    mostLinked,
+    categories
+  }
+};
+
+const graphJson = JSON.stringify(graphData);
+---
+<Layout title="Link Architecture Dashboard" description="Interactive internal link map for Maine Dispensary Guide — visualize page connections, identify orphans, and optimize site structure." noindex>
+  <section class="dashboard-header">
+    <h1>◆ Link Architecture Dashboard</h1>
+    <p class="lead">Interactive map of internal link structure. Node size = incoming links. Red = orphan pages (no incoming links). Click nodes to see details.</p>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value">{graphData.stats.totalPages}</span>
+      <span class="stat-label">Pages</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">{graphData.stats.totalLinks}</span>
+      <span class="stat-label">Internal Links</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value orphans">{graphData.stats.orphanPages.length}</span>
+      <span class="stat-label">Orphan Pages</span>
+    </div>
+  </div>
+
+  <div class="graph-container" id="link-graph"></div>
+
+  <div class="legend">
+    <div class="legend-title">Node Types</div>
+    <div class="legend-items">
+      <div class="legend-item"><span class="dot core"></span> Core Pages</div>
+      <div class="legend-item"><span class="dot city-guide"></span> City Guides</div>
+      <div class="legend-item"><span class="dot technical-guide"></span> Technical Guides</div>
+      <div class="legend-item"><span class="dot founder-story"></span> Founder Stories</div>
+      <div class="legend-item"><span class="dot resource-hub"></span> Resource Hubs</div>
+      <div class="legend-item"><span class="dot orphan"></span> Orphan (0 incoming)</div>
+    </div>
+  </div>
+
+  <div class="panel-grid">
+    <section class="panel orphans-panel">
+      <h2>◆ Orphan Pages <span class="badge">{graphData.stats.orphanPages.length}</span></h2>
+      {graphData.stats.orphanPages.length === 0 ? (
+        <p class="all-good">✅ No orphan pages — all content is reachable from core pages.</p>
+      ) : (
+        <ul class="orphan-list">
+          {graphData.stats.orphanPages.map(url => (
+            <li><a href={url}>{url}</a></li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="panel top-linked-panel">
+      <h2>◆ Most Linked Pages</h2>
+      <ol class="top-list">
+        {graphData.stats.mostLinked.map((page, i) => (
+          <li>
+            <span class="rank">#{i + 1}</span>
+            <a href={page.id}>{page.label}</a>
+            <span class="link-count">{page.count} in</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+
+  <div id="node-detail" class="node-detail" style="display:none;">
+    <h2 id="detail-title">Page Details</h2>
+    <div class="detail-grid">
+      <div><strong>URL:</strong> <a id="detail-url" href="#"></a></div>
+      <div><strong>Category:</strong> <span id="detail-category"></span></div>
+      <div><strong>Type:</strong> <span id="detail-type"></span></div>
+      <div><strong>Incoming Links:</strong> <span id="detail-incoming"></span></div>
+      <div><strong>Outgoing Links:</strong> <span id="detail-outgoing"></span></div>
+    </div>
+    <h3>Links To:</h3>
+    <ul id="detail-links-to" class="link-list"></ul>
+    <h3>Linked From:</h3>
+    <ul id="detail-linked-from" class="link-list"></ul>
+  </div>
+</Layout>
+
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script is:inline define:vars={{ graphJson }}>
+  const data = JSON.parse(graphJson);
+  
+  const container = document.getElementById('link-graph');
+  const width = container.clientWidth || 900;
+  const height = 600;
+  
+  const svg = d3.select('#link-graph')
+    .append('svg')
+    .attr('viewBox', [0, 0, width, height])
+    .attr('style', `max-width: 100%; height: ${height}px;`);
+  
+  const g = svg.append('g');
+  
+  svg.call(d3.zoom().scaleExtent([0.2, 3]).on('zoom', (event) => {
+    g.attr('transform', event.transform);
+  }));
+  
+  const colorMap = {
+    'core': '#588157',
+    'city-guide': '#3a5a40',
+    'technical-guide': '#6b8e4e',
+    'founder-story': '#8b7355',
+    'resource-hub': '#4a6b8a',
+    'index': '#888',
+    'orphan': '#c0392b'
+  };
+  
+  const typeColor = (d) => {
+    if (d.category === 'admin') return '#666';
+    if (d.incoming === 0 && d.type !== 'core') return colorMap.orphan;
+    return colorMap[d.category] || colorMap.core;
+  };
+  
+  const radius = (d) => Math.max(8, Math.min(30, 8 + d.incoming * 3));
+  
+  const simulation = d3.forceSimulation(data.nodes)
+    .force('link', d3.forceLink(data.links).id(d => d.id).distance(100))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => radius(d) + 5));
+  
+  const link = g.append('g')
+    .attr('class', 'links')
+    .selectAll('line')
+    .data(data.links)
+    .join('line')
+    .attr('stroke', '#ccc')
+    .attr('stroke-opacity', 0.5)
+    .attr('stroke-width', 1);
+  
+  const node = g.append('g')
+    .attr('class', 'nodes')
+    .selectAll('g')
+    .data(data.nodes)
+    .join('g')
+    .attr('class', 'node')
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended));
+  
+  node.append('circle')
+    .attr('r', radius)
+    .attr('fill', typeColor)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 2)
+    .attr('opacity', 0.85);
+  
+  node.append('text')
+    .text(d => d.label.length > 18 ? d.label.substring(0, 16) + '…' : d.label)
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => radius(d) + 14)
+    .attr('font-size', '10px')
+    .attr('fill', '#333')
+    .attr('pointer-events', 'none');
+  
+  node.on('click', (event, d) => {
+    event.stopPropagation();
+    showDetail(d);
+  });
+  
+  node.on('mouseover', function(event, d) {
+    d3.select(this).select('circle').attr('stroke-width', 4);
+    highlightConnections(d);
+  });
+  
+  node.on('mouseout', function() {
+    d3.select(this).select('circle').attr('stroke-width', 2);
+    resetHighlight();
+  });
+  
+  simulation.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+  
+  function dragstarted(event) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    event.subject.fx = event.subject.x;
+    event.subject.fy = event.subject.y;
+  }
+  
+  function dragged(event) {
+    event.subject.fx = event.x;
+    event.subject.fy = event.y;
+  }
+  
+  function dragended(event) {
+    if (!event.active) simulation.alphaTarget(0);
+    event.subject.fx = null;
+    event.subject.fy = null;
+  }
+  
+  function highlightConnections(d) {
+    const connected = new Set();
+    data.links.forEach(l => {
+      if (l.source.id === d.id) connected.add(l.target.id);
+      if (l.target.id === d.id) connected.add(l.source.id);
+    });
+    node.style('opacity', n => n.id === d.id || connected.has(n.id) ? 1 : 0.2);
+    link.style('opacity', l => l.source.id === d.id || l.target.id === d.id ? 1 : 0.1);
+  }
+  
+  function resetHighlight() {
+    node.style('opacity', 1);
+    link.style('opacity', 0.5);
+  }
+  
+  const detailPanel = document.getElementById('node-detail');
+  
+  function showDetail(d) {
+    const linksTo = data.links.filter(l => l.source.id === d.id).map(l => l.target.id);
+    const linkedFrom = data.links.filter(l => l.target.id === d.id).map(l => l.source.id);
+    
+    document.getElementById('detail-title').textContent = '◆ ' + d.label;
+    document.getElementById('detail-url').textContent = d.id;
+    document.getElementById('detail-url').href = d.id;
+    document.getElementById('detail-category').textContent = d.category;
+    document.getElementById('detail-type').textContent = d.type;
+    document.getElementById('detail-incoming').textContent = d.incoming;
+    document.getElementById('detail-outgoing').textContent = d.outgoing;
+    
+    const linksToEl = document.getElementById('detail-links-to');
+    linksToEl.innerHTML = linksTo.length 
+      ? linksTo.map(url => `<li><a href="${url}">${url}</a></li>`).join('')
+      : '<li>None</li>';
+    
+    const linkedFromEl = document.getElementById('detail-linked-from');
+    linkedFromEl.innerHTML = linkedFrom.length
+      ? linkedFrom.map(url => `<li><a href="${url}">${url}</a></li>`).join('')
+      : '<li>None</li>';
+    
+    detailPanel.style.display = 'block';
+    detailPanel.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+<style>
+  .dashboard-header { margin-bottom: 2rem; border-bottom: 2px solid var(--color-primary); padding-bottom: 1.5rem; }
+  .dashboard-header h1 { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--color-primary); }
+  .lead { color: var(--color-text-light); margin-top: 0.5rem; }
+  
+  .stats-bar { display: flex; gap: 2rem; margin-bottom: 2rem; }
+  .stat-item { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; text-align: center; min-width: 120px; }
+  .stat-value { display: block; font-size: 2.5rem; font-weight: 800; color: var(--color-primary); }
+  .stat-value.orphans { color: #c0392b; }
+  .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); }
+  
+  .graph-container { background: white; border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 1.5rem; overflow: hidden; }
+  
+  .legend { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; margin-bottom: 2rem; }
+  .legend-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--color-text-light); }
+  .legend-items { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .dot.core { background: #588157; }
+  .dot.city-guide { background: #3a5a40; }
+  .dot.technical-guide { background: #6b8e4e; }
+  .dot.founder-story { background: #8b7355; }
+  .dot.resource-hub { background: #4a6b8a; }
+  .dot.orphan { background: #c0392b; }
+  
+  .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+  .panel { background: white; padding: 2rem; border-radius: 2rem; border: 1px solid var(--color-border); }
+  .panel h2 { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--color-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .badge { background: var(--color-primary); color: var(--color-background); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.75rem; }
+  
+  .all-good { color: #166534; background: #dcfce7; padding: 1rem; border-radius: 1rem; font-weight: 600; }
+  
+  .orphan-list { list-style: none; padding: 0; margin: 0; }
+  .orphan-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .orphan-list li:last-child { border-bottom: none; }
+  .orphan-list a { color: #c0392b; font-weight: 600; }
+  
+  .top-list { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+  .top-list li { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .top-list li:last-child { border-bottom: none; }
+  .rank { font-weight: 800; color: var(--color-primary); min-width: 2rem; }
+  .top-list a { flex: 1; font-weight: 600; }
+  .link-count { font-size: 0.8rem; color: var(--color-text-light); background: var(--color-surface); padding: 0.2rem 0.5rem; border-radius: 0.5rem; }
+  
+  .node-detail { background: white; padding: 2rem; border-radius: 2rem; border: 2px solid var(--color-primary); margin-top: 2rem; }
+  .node-detail h2 { font-family: 'Fraunces', serif; color: var(--color-primary); margin-bottom: 1rem; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--color-surface); border-radius: 1rem; }
+  .detail-grid strong { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 0.25rem; }
+  .detail-grid span, .detail-grid a { font-weight: 600; }
+  .detail-grid a { color: var(--color-primary); }
+  .node-detail h3 { font-size: 1rem; color: var(--color-primary); margin: 1rem 0 0.5rem; }
+  .link-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .link-list li { background: var(--color-surface); padding: 0.3rem 0.75rem; border-radius: 0.75rem; font-size: 0.85rem; }
+  .link-list a { color: var(--color-primary); font-weight: 600; }
+  
+  @media (max-width: 768px) {
+    .panel-grid { grid-template-columns: 1fr; }
+    .stats-bar { flex-wrap: wrap; gap: 1rem; }
+  }
+</style>

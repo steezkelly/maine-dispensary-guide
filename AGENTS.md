@@ -24,16 +24,32 @@ propose or build state-specific hubs for other states (NJ, FL, etc.).
 learning project. Decisions about content, structure, and SEO have 
 compounding consequences. Think before acting.
 
+## Project Architecture
+
+- **Host:** https://mainedispensaryguide.com
+- **Core content:** `/guides/` (41+ municipal guides)
+- **ROI calculator:** `/roi-calculator/`
+- **Humanizer skill:** Processes all content before publishing
+- **Current SEO score:** 91/100
+
 ---
 
 ## Current Project Status
 
-> This section must be kept current. Last updated by: OpenCode (MiniMax M2.7) — April 4, 2026 (EDT)
+> This section must be kept current. Last updated by: OpenCode (MiniMax M2.7) — April 9, 2026 (EDT)
 
-- **Pages live:** 61 total routes (41+ city guides, technical hubs, ROI tool, vendor directory)
+- **Pages live:** 64 total routes (43 guide pages, technical hubs, ROI tool, vendor directory)
 - **Deployment:** Active on Vercel — Configured for **output: 'static'** for 100% stability
 - **Sitemap:** Auto-generated at `/sitemap-index.xml`
+- **Bing Webmaster:** ✅ Verified (`msvalidate.01` in Layout.astro)
 - **Traffic status:** Early stage — SEO/GEO optimization for AI-discovery is the primary goal
+- **SquirrelScan Score:** **91/100 (A) ✅ — 0 ERRORS** (as of Apr 5 evening sprint)
+- **Content Quality (2026-04-05 Evening):**
+    - Site avg: **85/100**
+    - Promo words: **0**
+    - AI phrases: 0
+    - Top scores: 93/100 (taxation, locations, pos, product-testing, sanford)
+- **Accessibility:** **99/100** — 26 minor contrast warnings only (CSP, Unsplash/Fonts)
 - **Content Intelligence Skills:**
     - ✅ `content-authority` — SEO/GEO strategic framework, 3-pillar method, information gain
     - ✅ `content-humanizer` — AI pattern removal, 22-category editorial guide, automated fixer
@@ -42,12 +58,36 @@ compounding consequences. Think before acting.
     - ✅ BreadcrumbList JSON-LD schema (Breadcrumbs.astro)
     - ✅ FAQ structured data component (Faq.astro)
     - ✅ OpenCodeInsights plugin installed
+- **Search Stack:**
+    - Primary: Brave Search (`brave-search.cjs`) — requires API key
+    - Secondary: Wikipedia (`wikipedia-search.cjs`) — free, no key
+    - Backup: SearXNG (`searxng-search.cjs`) — requires self-hosted instance
+    - Browser: Playwright MCP — for live-site testing and scraping
+- **Self-Improving:** Weekly maintenance scheduled via Windows Task Scheduler
 - **Known gaps:**
-    - **Accessibility (A11y):** SquirrelScan score is 84/100. Remaining pedantic warnings: matching "guides ▾" text to aria-labels and adding `tabindex="-1"` to hidden mobile toggles.
     - **PDF Magnet:** The "Ultimate Founders Bible" (lead magnet) exists as MD but needs styling/conversion to PDF.
-    - **Bug:** All 3 bugs from Playwright testing FIXED (2026-04-05) — see BUGS.md for history
+    - **Remaining sub-75 (not blockers):** cultivation (70), delivery-rules (73), inventory (73), marketing (73), homepage index (60) — Flesch readability issues
+    - **E-E-A-T:** Field data (80) — time-based, needs real traffic
 - **Active work:**
     - **Link Architecture:** Ongoing body-only sync via `scripts/link-architect.cjs`.
+
+## Preferred Workflows
+
+1. **Before editing:** Read project structure first
+2. **After large implementations:** Run verification checks
+3. **Content updates:** Always apply humanizer skill (`/humanizer`)
+4. **Multi-file changes:** Use todo tracking explicitly
+5. **Before file operations:** Always specify `--dry-run` when scope is unclear. Verify paths match the current OS (use PowerShell-compatible commands on Windows—avoid Unix-only commands like `rm` without equivalent `Remove-Item`).
+
+### Todo Checkpoint Workflow (Multi-Hour Sessions)
+For sessions expected to exceed 30 minutes, use explicit phase checkpoints:
+```
+TODOs:
+[ ] Phase 1: Understand project structure
+[ ] Phase 2: Implement feature
+[ ] Phase 3: Verify and test
+[ ] Phase 4: Document changes
+```
 
 ---
 
@@ -125,6 +165,12 @@ When Brave Search is rate-limited, use these alternatives:
 - `/expand-all [pattern]` — content-ops: batch expand content across multiple pages
 - `/insights` — Generate OpenCode usage insights report
 - `/maintenance` — Run self-improving maintenance check
+
+### Skill Library
+- `/humanizer` — Humanize content for SEO (used 4+ times successfully)
+- `/frontend-design` — UI/UX improvements
+- `/audit-website` — Full site audit with SquirrelScan
+- `/content-authority` — High-authority content optimization
 
 ---
 
@@ -297,6 +343,78 @@ All lead forms must use Formspree:
   auditing what already exists in the project.
 - Do not use trailing slashes in internal links.
 - Do not use pure white (#FFF) on dark backgrounds (use Warm Bone #F2F2E2).
+- **Do NOT use Task tool with explore/general sub-agents** — they hang and cause memory leaks. Use glob/grep/read directly instead.
+- **Do NOT run npm build commands unannounced** — always warn user first.
+
+---
+
+## Process & Agent Safety
+
+### Critical Rules (NEVER Violate)
+
+1. **OpenCode Built-in Safeguards (Use These First)**
+   - `steps: 10` limit is set in `~/.config/opencode/opencode.json` for explore/general subagents
+   - `permission.task: deny` prevents subagents from spawning children
+   - `permission.bash: ask` requires confirmation for bash commands
+   - These are the PRIMARY defense against hung agents
+
+2. **Use glob/grep/read Instead of Task Tool Sub-Agents**
+   - Task tool explore/general agents CAN HANG with no automatic recovery
+   - Use glob, grep, read tools directly — faster and more reliable
+   - If you must use a sub-agent, expect it to fail silently
+
+3. **Loop Guards**
+   - Any loop >100 iterations MUST log progress
+   - If a loop appears to be spinning without output for 30+ seconds, abort and report
+   - Pattern: `for (let i = 0; i < items.length; i++)` with no console.log = danger
+
+4. **Memory Awareness**
+   - If opencode-cli exceeds 1GB RAM, something is wrong
+   - Run `scripts/diagnose-opencode.ps1` if you notice slowness
+   - Orphaned processes must be cleaned up
+
+5. **No Heavy Builds Without Warning**
+   - electron-builder is especially dangerous on Windows (symlink handling, memory spikes)
+
+6. **Playwright Browsers MUST Be Closed**
+   - Playwright MCP uses Chrome (`mcp-chrome-5134796`), NOT Microsoft Edge
+   - After EVERY browser operation, you MUST call `browser_close`
+   - If you navigate to a URL with Playwright, you MUST close the browser before doing anything else
+   - **NEVER leave a Playwright browser open** — each open browser = ~100-750 MB memory leak
+   - **NOTE:** msedge processes are WebView2/Electron residual, NOT from Playwright
+
+7. **WebView2/Electron Orphans Are Dangerous**
+   - electron-builder creates WebView2 processes that DON'T close when the app crashes
+   - Orphaned WebView2 = 10+ GB memory consumption (129 processes seen)
+   - Never use electron-builder on Windows
+
+### OpenCode Architecture Notes
+
+- **opencode-cli** runs as sidecar server (check logs at `%USERPROFILE%\.local\share\opencode\log`)
+- **Cache:** `%USERPROFILE%\.cache\opencode` (36MB, 8023 files)
+- **Session data:** `%USERPROFILE%\.local\share\opencode\storage`
+- **Config:** `~/.config/opencode/opencode.json`
+
+### Orphan Detection Checklist (Run at Session Start)
+
+Check for hung processes:
+```powershell
+Get-Process | Where-Object { $_.Name -match "opencode|node" } | Select-Object Name, Id, @{N='MemMB';E={[math]::Round($_.WorkingSet64/1MB,0)}}
+```
+
+If opencode-cli >1GB or node processes from previous session exist, alert user.
+
+### Diagnostic Script
+
+Run when OpenCode seems stuck:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/diagnose-opencode.ps1
+```
+
+With auto-cleanup:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/diagnose-opencode.ps1 -AutoKill
+```
 
 ---
 
@@ -332,4 +450,4 @@ After completing work, evaluate:
 
 ---
 
-*Last Updated: 2026-04-04 07:30 AM EDT*
+*Last Updated: 2026-04-09 12:15 PM EDT*
