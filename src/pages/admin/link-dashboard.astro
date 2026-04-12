@@ -18,16 +18,19 @@ function getPageType(filePath: string) {
 }
 
 function urlFromFilePath(filePath: string) {
-  // Convert glob paths like '../../pages/guides/bangor-dispensary-guide.astro' to '/guides/bangor-dispensary-guide'
-  // Strip leading ../.. from the glob path
-  const normalized = filePath.replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '');
-  // Now normalized is like 'pages/guides/bangor-dispensary-guide.astro'
-  const noPages = normalized.replace(/^pages\//, '');
-  // Now noPages is like 'guides/bangor-dispensary-guide.astro'
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  const lastPagesIdx = normalizedPath.lastIndexOf('pages/');
+  
+  let noPages: string;
+  if (lastPagesIdx >= 0) {
+    noPages = normalizedPath.substring(lastPagesIdx);
+  } else {
+    const cleanPath = normalizedPath.replace(/^\.\.\//, '').replace(/^\.\.\//, '');
+    noPages = cleanPath.startsWith('pages/') ? cleanPath : 'pages/' + cleanPath;
+  }
+  
   const noAstro = noPages.replace(/\.astro$/, '');
-  // Now noAstro is like 'guides/bangor-dispensary-guide'
-  const cleaned = noAstro.replace(/\/index$/, '') || '/';
-  // /guides/index → /guides, 'about' → /about
+  const cleaned = noAstro.replace(/^pages\//, '').replace(/\/index$/, '') || '/';
   return cleaned.startsWith('/') ? cleaned : '/' + cleaned;
 }
 
@@ -121,10 +124,15 @@ for (const [filePath, content] of Object.entries(rootFiles)) {
   pageMap.set(url, { url, title, type, category, incoming: 0, outgoing: links.length, links });
 }
 
-// Second pass: count incoming links
+// Second pass: count incoming links (normalize trailing slashes for matching)
 for (const [url, page] of pageMap) {
   for (const targetUrl of page.links) {
-    if (pageMap.has(targetUrl)) {
+    let normalizedTarget = targetUrl.endsWith('/') ? targetUrl.slice(0, -1) : targetUrl;
+    if (pageMap.has(normalizedTarget)) {
+      linkSet.push({ source: url, target: normalizedTarget });
+      const target = pageMap.get(normalizedTarget)!;
+      target.incoming++;
+    } else if (pageMap.has(targetUrl)) {
       linkSet.push({ source: url, target: targetUrl });
       const target = pageMap.get(targetUrl)!;
       target.incoming++;
