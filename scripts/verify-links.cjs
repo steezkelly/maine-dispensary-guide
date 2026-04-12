@@ -8,27 +8,17 @@ if (m) {
   const unescaped = graphStr.replace(/\\\\/g, '\\').replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\'/g, "'");
   const data = JSON.parse(unescaped);
   
-  const checks = [
-    '/guides/portland-dispensary-guide',
-    '/guides/brunswick-dispensary-guide', 
-    '/guides/kittery-dispensary-guide',
-    '/guides/scarborough-dispensary-guide',
-    '/guides/auburn-dispensary-guide',
-    '/guides/lewiston-dispensary-guide',
-    '/guides/saco-dispensary-guide',
-    '/guides/sanford-dispensary-guide',
-    '/resources/maine-cannabis-education',
-    '/resources/maine-cannabis-official-resources'
-  ];
+  const sanfordOutgoing = data.links.filter(l => l.source === '/guides/sanford-dispensary-guide');
+  console.log('Sanford outgoing links:');
+  sanfordOutgoing.forEach(l => console.log(' to', l.target));
   
-  for (const url of checks) {
-    const node = data.nodes.find(n => n.id === url);
-    if (node) {
-      console.log(`${url}: incoming=${node.incoming}, outgoing=${node.outgoing}`);
-    } else {
-      console.log(`${url}: NOT FOUND`);
-    }
-  }
+  const linksToSanford = data.links.filter(l => l.target === '/guides/sanford-dispensary-guide');
+  console.log('\nLinks TO Sanford:');
+  linksToSanford.forEach(l => console.log(' from', l.source));
+  
+  const portlandLinks = data.links.filter(l => l.target === '/guides/portland-dispensary-guide');
+  console.log('\nLinks TO Portland (should include Brunswick, Kittery, Scarborough):');
+  portlandLinks.forEach(l => console.log(' from', l.source));
 } else {
   console.log('No match');
 }

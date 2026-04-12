@@ -1940,4 +1940,70 @@ The `<div id="detailed-content" role="tabpanel" class="view-content active">` op
 [OpenCode] [2026-04-06 06:14 AM EDT]
 
 
+---
+
+## 📋 SPRINT: Orphan Link Elimination — Dashboard Fix + 0 Orphans
+**[April 12, 2026 — Mid-Morning Sprint]**
+
+### What We Did
+Reduced internal linking orphans from 36 to 0 by adding contextual editorial links and fixing a critical dashboard bug.
+
+### Dashboard Bug Fix (Critical)
+**File:** `src/pages/admin/link-dashboard.astro`
+
+**Problem:** The `urlFromFilePath` function expected glob paths with `../../pages/` prefix, but Vite's `import.meta.glob` on Windows returns paths with `../` sequences (e.g., `../about.astro`) that don't contain `pages/`. The old regex `filePath.replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '')` left `../` in paths, producing broken URLs like `/../about` instead of `/about`. This made ALL guide pages appear as orphans.
+
+**Fix Applied:**
+```javascript
+function urlFromFilePath(filePath) {
+  const normalized = filePath.replace(/\\/g, '/');
+  const pagesIndex = normalized.lastIndexOf('pages/');
+  if (pagesIndex !== -1) {
+    return '/' + normalized.slice(pagesIndex + 6).replace(/\.(astro|mdx|html)$/, '');
+  }
+  let cleaned = normalized.replace(/^\.\.\//, '').replace(/^\.\.\//, '');
+  if (!cleaned.startsWith('pages/')) cleaned = 'pages/' + cleaned;
+  return '/' + cleaned.replace(/\.(astro|mdx|html)$/, '');
+}
+```
+
+**Also fixed:** Trailing slash normalization in incoming link counter:
+```javascript
+const targetUrl = url.endsWith('/') ? targetUrl.slice(0, -1) : url;
+```
+
+### Content Changes Applied
+| File | Change |
+|------|--------|
+| `maine-cannabis-banking-solutions.astro` | Added "For funding strategies" link to `/guides/maine-cannabis-funding-guide/` |
+| `maine-dispensary-locations.astro` | Added "See our Maine Market Analysis" link to `/guides/maine-cannabis-market/` |
+| `maine-dispensary-packaging.astro` | Added "See our Marketing Compliance Guide" link to `/guides/maine-cannabis-marketing-compliance/` |
+| `biddeford-dispensary-guide.astro` | Added Sanford entry to Nearby Opportunities table (York County cluster) |
+| `maine-cannabis-staffing-licensing.astro` | Added link to education resources page |
+| `maine-dispensary-hiring.astro` | Added link to education resources page |
+| `maine-cannabis-regulations.astro` | Added link to Official Resources page |
+
+### Orphan Reduction Progress
+- **Before fixes:** 36 orphans
+- **After dashboard fix:** 3 orphans (funding-guide, market, marketing-compliance)
+- **After contextual links:** **0 orphans** ✅
+
+### Scripts Used
+- `scripts/add-related-guides.cjs` — Inserts Related Guides sections before `<section class="disclaimer">`
+- `scripts/link-remaining-orphans.cjs` — Adds education/official-resources links
+- `scripts/fix-links.cjs` — Adds Sanford to Biddeford's nearby opportunities table
+- `scripts/orphan-count.cjs` — Quick orphan count verification
+
+### Pending
+- Push to GitHub and deploy to Vercel (in progress)
+- Audit broken Maine.gov external links (12 reported broken)
+
+### Next Steps
+1. Deploy to Vercel
+2. Audit and fix broken Maine.gov external links
+3. Add contextual external links to all guide pages (2-5 per page)
+4. Establish external link partnerships with Maine Chamber, Cannabis Association, OCP-linked municipalities
+
+
+
 
