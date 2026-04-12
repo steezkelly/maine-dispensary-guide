@@ -2005,5 +2005,36 @@ const targetUrl = url.endsWith('/') ? targetUrl.slice(0, -1) : url;
 4. Establish external link partnerships with Maine Chamber, Cannabis Association, OCP-linked municipalities
 
 
+---
+
+## 📋 SPRINT: Broken Maine.gov Link Fix
+**[April 12, 2026 — Mid-Afternoon Sprint]**
+
+### What We Did
+Audited all 22 unique Maine.gov external URLs and fixed 6 broken links.
+
+### Issues Found
+| URL | Issue | Fix Applied |
+|-----|-------|-------------|
+| `agriculture/` | 301 → `dacf/` (dept reorganized) | Changed to `dacf/` |
+| `agriculture/plants-indoor-hemp` | 404 (page no longer exists) | Changed to OCP adult-use link |
+| `labor` (no slash) | 302 redirect | Added trailing slash |
+| `revenue` (no slash) | 301 redirect | Added trailing slash |
+| `sos` (no slash) | 301 redirect | Added trailing slash |
+| `dafs/ocp` (no slash) | 301 redirect | Added trailing slash |
+
+### Files Changed
+- `maine-cannabis-official-resources.astro` — agriculture → dacf, labor/, sos/, added trailing slashes
+- `maine-cannabis-founder-rural-cultivator.astro` — agriculture → dacf, plants-indoor-hemp → OCP
+- `maine-cannabis-business-insurance.astro` — labor → labor/
+- `maine-cannabis-taxation-280e.astro` — revenue → revenue/
+- `maine-dispensary-security.astro` — dafs/ocp → dafs/ocp/
+- `maine-dispensary-license.astro` — dafs/ocp → dafs/ocp/
+
+### Verified
+- All Maine.gov URLs now return HTTP 200
+- Build passes: 66 pages built
+
+
 
 
