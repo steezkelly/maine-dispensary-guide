@@ -2036,5 +2036,53 @@ Audited all 22 unique Maine.gov external URLs and fixed 6 broken links.
 - Build passes: 66 pages built
 
 
+---
+
+## 📋 SPRINT: Contextual External Links + Analytics
+**[April 12, 2026 — Evening Sprint]**
+
+### What We Did
+Added contextual external links to all guide pages and activated GA4 analytics.
+
+### Analytics Setup
+- Vercel Analytics + Speed Insights: Already built-in via `@vercel/analytics/astro` (no config needed)
+- GA4: Activated with measurement ID `G-HJ3VDBKXH6` in Layout.astro
+
+### External Links Added
+- **40 guide pages** now have **2-6 contextual external links** each
+- **39 unique authoritative URLs** linked across the site
+- All placed in dedicated "External Resources" sections before `<section class="disclaimer">`
+
+### Link Strategy Applied
+| Source Type | Dofollow? | Examples |
+|-------------|-----------|---------|
+| Government (OCP, IRS, Maine.gov) | ✅ yes | OCP, IRS 280E, Maine Revenue, SOS, DPS, DEP |
+| Tracking (Metrc) | ✅ yes | Metrc, Metrc Maine partner |
+| Legislature | ✅ yes | Maine statute sections (701, 703, 201, 301, etc.) |
+| Municipal | ✅ yes | Portland, Bangor, Lewiston, Brunswick, etc. |
+| Reference (SBA, FinCEN) | contextual | SBA business guide, FinCEN statutes |
+| Industry (Metrc) | ✅ yes | Seed-to-sale tracking |
+
+### External Link Audit Results
+| Range | Pages |
+|-------|-------|
+| 6 links | 2 pages (regulations, real-estate) |
+| 4-5 links | 9 pages |
+| 3 links | 18 pages |
+| 2 links | 11 pages |
+| 1 link | 0 pages (was 15 before) |
+| 0 links | 1 page (guides/index — hub page, no external links appropriate) |
+
+### Files Changed
+- `src/layouts/Layout.astro` — GA4 script added
+- `vercel.json` — removed invalid analytics property (already built-in)
+- 41 guide pages — External Resources sections added
+
+### Commits
+- `066f97d` — feat(content): add contextual external links to all guide pages
+- `4bf973f` — fix: remove invalid analytics property from vercel.json
+- GA4 already active in Layout.astro (no separate commit needed)
+
+
 
 

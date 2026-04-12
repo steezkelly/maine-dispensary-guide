@@ -18,9 +18,9 @@
 
 ### 🟠 HIGH — Pending
 - [x] Add external links to founders pages ✅ (all 3 founders now have contextual external links)
-- [ ] Vercel Analytics setup — need CLI/API access
+- [x] Vercel Analytics setup ✅ (already built-in via @vercel/analytics/astro)
 - [x] Add internal links to weak/orphan pages ✅ (kittery, events-2026, scarborough, westbrook, site-health)
-- [ ] Add contextual external links to all guide pages (2-5 per page)
+- [x] Add contextual external links to all guide pages (2-5 per page) ✅ (40 pages now have 2-6 links each)
 
 ### 🟡 MEDIUM — Queued
 - [x] Add link to `/directory/` from nav or resources page ✅ (linked from resource hub Callout)
