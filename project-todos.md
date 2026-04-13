@@ -70,17 +70,14 @@
 ## 📋 Queued (Next Sprint)
 
 ### 🟡 MEDIUM
-- [ ] Visible author byline + date on ALL content pages (not just guides)
-  - Pages missing: founders/* pages need visible byline block, not just JSON-LD
-- [ ] Visible `lastUpdated` date on all guide pages
-  - Currently only in JSON-LD, scanner wants visible `<time>` element
-- [ ] LCP image preload hints for hero images (27 pages affected)
-  - Add `rel="preload"` for above-the-fold hero images on guide pages
+- [x] Visible author byline + date on ALL content pages (not just guides) ✅ (article-meta block in Layout.astro covers all guide + founder pages)
+- [x] Visible `lastUpdated` date on all guide pages ✅ (`<time datetime>` added to article-meta in Layout.astro)
+- [x] LCP image preload hints for hero images (27 pages affected) ✅ (built into Layout.astro heroImage preload)
 - [ ] Add `hreflang="en-US"` for internationalization signals
 
 ### 🟢 LOW
 - [ ] Founders page hero images — swap stock Unsplash for Maine-specific imagery
-- [ ] Add FAQ schema to high-competition guide pages (Portland, Bangor)
+- [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
 - [ ] Build GEO citation tracker (update `/admin/seo-dashboard/` with automated prompts)
 
 ## ⚫ BACKLOG — Future Phase
