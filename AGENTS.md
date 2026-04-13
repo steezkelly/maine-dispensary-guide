@@ -195,6 +195,7 @@ When Brave Search is rate-limited, use these alternatives:
 - `/expand-all [pattern]` — content-ops: batch expand content across multiple pages
 - `/insights` — Generate OpenCode usage insights report
 - `/maintenance` — Run self-improving maintenance check
+- `/sprint-close` — Run end-of-sprint documentation sync, build, and deploy checklist
 
 ### Skill Library
 - `/humanizer` — Humanize content for SEO (used 4+ times successfully)
