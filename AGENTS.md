@@ -94,11 +94,11 @@ Commit and push any stragglers. This check has caught desync issues where `proje
 ### Windows-Specific Patterns
 When working in this Windows environment:
 1. **Use `workdir` parameter** instead of `cd && command` chains in bash calls
-2. **Avoid Unix-only utilities** — `tail` doesn't exist in PowerShell (use `Select-Object`), `grep` use `Select-String` or the grep tool
+2. **WSL available** — for Unix-only utilities (tail, grep, etc.), use `wsl bash -c "command"` instead of PowerShell equivalents
+   - Example: `wsl bash -c "tail -20 file.txt"` instead of `Get-Content file.txt | Select-Object -Last 20`
 3. **Use `path.basename()`** for cross-platform path splitting — `f.split('/').pop()` fails on Windows `\`
 4. **Git CRLF warnings** — commit anyway unless the file is binary; `LF will be replaced by CRLF` is a warning, not an error
-
-These patterns have caused failures in prior sessions. A dedicated section here makes them pre-emptive rather than reactive.
+5. **WSL paths** — when using `wsl bash -c`, use Linux-style paths (e.g., `/mnt/c/Users/Steve/...` or relative paths from wsl's cwd)
 
 ### Todo Checkpoint Workflow (Multi-Hour Sessions)
 For sessions expected to exceed 30 minutes, use explicit phase checkpoints:
