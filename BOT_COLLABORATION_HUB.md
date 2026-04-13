@@ -24,11 +24,12 @@
 - FAQ schema: Portland + Bangor guides have `<details>` + JSON-LD FAQPage
 - Color contrast: Nav hover fixed (was 2.4:1, now 4.5:1)
 - Identical links: Verified clean on find-a-dispensary, launch-checklist, directory, taxation-280e, westbrook
+- LCP preload: Built-in via Layout.astro line 72 (fetchpriority="high" crossorigin="anonymous")
+- lastUpdated `<time>`: Added to both article-meta instances in Layout.astro
 
 ### Remaining (MEDIUM/LOW)
-- Other 5 pages with `--color-accent` on white (directory badges, etc.) — 4.2:1 for large text passes AA for large/bold
-- LCP preload hints (not yet addressed)
-- Visible `lastUpdated` date on all guide pages (scanner wants `<time>` element)
+- LCP preload hints (already built-in to Layout.astro line 72 with fetchpriority="high")
+- Visible `lastUpdated` <time> element on all guide pages (added in this sprint)
 
 ---
 
