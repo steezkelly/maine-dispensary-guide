@@ -25,10 +25,10 @@
 ### 🟡 MEDIUM — Queued
 - [x] Add link to `/directory/` from nav or resources page ✅ (linked from resource hub Callout)
 - [x] Fix "identical links same purpose" on directory ✅ (12 unique link names)
-- [ ] Add LCP preload hints for hero images (27 pages)
-- [ ] Add FAQ schema to high-competition guide pages (Portland, Bangor)
-- [ ] Fix color contrast warnings on 5 pages
-- [ ] Fix remaining identical links on: find-a-dispensary, launch-checklist, taxation-280e, westbrook
+- [x] Add LCP preload hints for hero images (27 pages) ✅ (already in Layout.astro line 72)
+- [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
+- [x] Fix color contrast warnings on 5 pages ✅ (nav hover: --color-soft-green #A3B18A → #7A9A6A, now 4.5:1)
+- [x] Fix remaining identical links on: find-a-dispensary, launch-checklist, taxation-280e, westbrook ✅ (verified clean)
 
 ---
 
