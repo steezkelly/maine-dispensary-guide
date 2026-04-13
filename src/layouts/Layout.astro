@@ -263,7 +263,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
                   <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 )}
                 {article.modifiedDate && article.modifiedDate !== article.publishDate && (
-                  <span class="article-updated">Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
                 )}
               </div>
             )}
@@ -286,7 +286,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
                 <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               )}
               {article.modifiedDate && article.modifiedDate !== article.publishDate && (
-                <span class="article-updated">Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
               )}
             </div>
           )}
