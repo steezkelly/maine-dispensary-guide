@@ -73,11 +73,32 @@ compounding consequences. Think before acting.
 
 ## Preferred Workflows
 
-1. **Before editing:** Read project structure first
-2. **After large implementations:** Run verification checks
-3. **Content updates:** Always apply humanizer skill (`/humanizer`)
-4. **Multi-file changes:** Use todo tracking explicitly
-5. **Before file operations:** Always specify `--dry-run` when scope is unclear. Verify paths match the current OS (use PowerShell-compatible commands on Windows—avoid Unix-only commands like `rm` without equivalent `Remove-Item`).
+### Pre-Flight Validation (Windows / Complex Operations)
+Before implementing features that use file operations, browser automation, or shell commands:
+1. Verify tool availability: run `--version` or `--help` for the primary tool
+2. Test a minimal operation in a temp location (touch a test file, navigate to a test URL)
+3. Confirm the target directory exists and is writable
+4. Check for Windows-incompatible patterns: `f.split('/').pop()` → use `path.basename()` instead
+
+This prevents cascading failures in long sessions. **183 command failures in a recent 14-day period** were concentrated in the most ambitious sessions — most were path/permission issues caught late.
+
+### End-of-Sprint Checklist
+At the end of every sprint, run before declaring the session done:
+1. `git status` — confirm all changes committed
+2. Compare `BOT_COLLABORATION_HUB.md` latest entry against `project-todos.md` — catch completed items still marked pending
+3. `npm run build` — confirm production build succeeds
+4. `npx vercel --prod --yes` — confirm deploy completed cleanly
+
+Commit and push any stragglers. This check has caught desync issues where `project-todos.md` still had items marked pending even after they'd been completed in a prior session.
+
+### Windows-Specific Patterns
+When working in this Windows environment:
+1. **Use `workdir` parameter** instead of `cd && command` chains in bash calls
+2. **Avoid Unix-only utilities** — `tail` doesn't exist in PowerShell (use `Select-Object`), `grep` use `Select-String` or the grep tool
+3. **Use `path.basename()`** for cross-platform path splitting — `f.split('/').pop()` fails on Windows `\`
+4. **Git CRLF warnings** — commit anyway unless the file is binary; `LF will be replaced by CRLF` is a warning, not an error
+
+These patterns have caused failures in prior sessions. A dedicated section here makes them pre-emptive rather than reactive.
 
 ### Todo Checkpoint Workflow (Multi-Hour Sessions)
 For sessions expected to exceed 30 minutes, use explicit phase checkpoints:
@@ -127,6 +148,15 @@ different environments. You are one of them. Read this carefully.
 - OpenCode: Do not touch `astro.config.mjs`, Vercel config, or 
   deployment settings without flagging in the Hub first
 - Gemini: Do not overwrite content pages without flagging in the Hub
+
+### Agent Role Patterns (Multi-Agent Sessions)
+Use these patterns when orchestrating multiple agents:
+- **Librarian agent** (task type: explore): Pre-read all relevant documentation before starting a big implementation. Run: "Read BOT_COLLABORATION_HUB.md and project-todos.md, report the current state and what needs attention."
+- **Scout agent** (task type: explore): Audit a target directory before planning changes. Run: "Explore src/pages/guides/ and report: (1) how many .astro files, (2) what patterns are used for heroImage props, (3) what patterns for external links." Then implement based on the scout's report.
+- **Build agent** (task type: general): Do the actual implementation work after scout/librarian have prepared context.
+- **Retrospective agent** (task type: explore): Read BOT_COLLABORATION_HUB and project-todos, produce a delta report before ending a session. Run: "Read both files and produce: Completed but not marked done in todos, items marked done but not actually complete, remaining items."
+
+When running multi-agent sessions, always feed the librarian/scout output to the build agent — don't let the build agent start cold.
 
 ---
 
