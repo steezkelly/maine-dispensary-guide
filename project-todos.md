@@ -88,6 +88,7 @@
 - [ ] Vendor directory page with categorized service providers
 
 ### Phase: Authority Building
+- [ ] Professional email domain setup (@mainedispensaryguide.com) — prerequisite for all outreach credibility (government, media, partnerships)
 - [ ] Guest blog outreach to Maine cannabis media outlets
 - [ ] Municipal zoning resource pages for each of the 15 opt-in towns
 - [ ] "Maine Cannabis Industry Report" — annual gated PDF with market data
