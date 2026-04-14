@@ -2214,6 +2214,50 @@ Added contextual external links to all guide pages and activated GA4 analytics.
 ### Pages Built
 - 72 pages built (up from 64 originally)
 
+---
+
+## 📋 SPRINT: GEO Implementation (Apr 14, 2026)
+
+**[OPENCODE] April 14, 2026 04:30 AM EDT**
+
+### What Is GEO
+Generative Engine Optimization (GEO) = optimizing content to be cited by AI search engines (ChatGPT, Perplexity, Google AI Overviews). 80% of AI-cited URLs don't rank in Google's top results — separate competition track.
+
+### Research Findings
+- **Statistics/data density**: +30-40% citation rate (most reliable signal)
+- **Answer capsules** (40-60 word summaries after H2s): +40% AI visibility
+- **FAQPage JSON-LD**: 3.2x more likely in AI Overviews
+- **Expert quotes with attribution**: +28-41% (variable)
+- **Content freshness**: Perplexity weights freshness at 40% of ranking signal
+
+### Pages Audited (via @explorer)
+- `maine-cannabis-taxation-280e.astro`: GEO score 2/5 — missing expert quotes, answer capsules, FAQ schema
+- `market-stats.astro`: GEO score 2/5 — had data but no source attribution or answer capsules
+- `maine-dispensary-pos.astro`: **GEO score 1/5 — TRUNCATED at 13 lines** (same bug as cultivation/marketing)
+
+### Actions Taken
+
+**Fixed truncated `pos.astro`:**
+- Rewrote from 13-line stub to 2,335-word comprehensive guide
+- All sections: Metrc requirements, POS costs, vendor selection, setup, troubleshooting, expert quote, ROI analysis
+
+**Added GEO elements to `market-stats.astro`:**
+- Answer capsules under "2025 Market Snapshot" and "Industry Trends for 2026" H2s
+- Expert quote from Maine Cannabis Industry Association (attributed)
+- Stat source attribution (Maine OCP Open Data Portal)
+- FAQPage JSON-LD with 4 Q&A pairs
+- Visible "Last updated: April 14, 2026"
+
+### Key Learning: Truncated Pages = No Index
+Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 line stubs. Google sees these as thin and excludes them from indexing. Rewriting to 1,500+ words is the fix.
+
+### Backlog Updated
+- Added "Professional email domain setup (@mainedispensaryguide.com)" to Authority Building phase
+
+### Commits
+- `86f07d1` — feat(GEO): fix truncated pos.astro + add GEO elements to market-stats
+- `98dd2a7` — feat(GEO): add GEO elements to market-stats page (answer capsules, FAQ schema, expert quote)
+
 
 
 
