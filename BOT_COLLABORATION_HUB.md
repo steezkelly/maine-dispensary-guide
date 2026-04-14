@@ -2147,6 +2147,73 @@ Added contextual external links to all guide pages and activated GA4 analytics.
 - `4bf973f` — fix: remove invalid analytics property from vercel.json
 - GA4 already active in Layout.astro (no separate commit needed)
 
+---
+
+## 📋 SPRINT: Competitive Analysis + Blog Launch (Apr 14, 2026)
+
+**[OPENCODE] April 14, 2026 03:50 AM EDT**
+
+### What We Did
+
+**Competitive Analysis:**
+- Analyzed mainecannabis.org — found critical gaps: no blog, no city pages, no schema, no multimedia, no engagement, stale content since 2024
+- Analyzed other Maine cannabis competitors (Leafly Maine, NORML Maine, Medical Jane Maine, Maine Cannabis Expo)
+- Researched SEO benchmarks for cannabis content (1,500-2,500 word posts, E-E-A-T YMYL standards, GEO opportunities)
+- Identified the Maine cannabis content space as **significantly underserved**
+
+**Technical Issues Resolved:**
+- Fixed oh-my-opencode-slim agent system (`ProviderModelNotFoundError`) — discovered `minimax/MiniMax-M2.7` model ID was wrong, correct provider is `minimax-coding-plan/MiniMax-M2.7`
+- After restart, all 6 agents (oracle, explorer, fixer, designer, librarian, orchestrator) confirmed working
+- Council (multi-model consensus) remains deferred — requires OpenRouter integration for Zen models
+
+**Content System Launched:**
+- Built 8-week blog content calendar (16 topics targeting long-tail "Maine cannabis [topic]" keywords)
+- Created blog directory `/src/pages/blog/` with first 3 posts:
+  1. `maine-cannabis-cultivation-license-2026.astro` — 3,365 words
+  2. `portland-maine-cannabis-rules-2026.astro` — 3,210 words
+  3. `maine-cannabis-microbusiness-license-2026.astro` — 5,531 words
+
+**Author Credential Infrastructure:**
+- Created `src/data/authors.json` — centralized author data with Editorial Team + Compliance Reviewer
+- Created `/about/authors.astro` — full author showcase page with editorial review process
+- Created `/about/our-team.astro` — lightweight team page with trust signals for outreach
+- Blog posts now use "Content verified by" badge linking to compliance reviewer
+
+**Local SEO Page:**
+- Created `/guides/portland-maine-cannabis.astro` — 2,400-word market-focused page for "Maine cannabis Portland" queries
+- Distinct from existing `portland-dispensary-guide.astro` (which is ordinance-focused)
+
+### GSC Coverage Analysis (User Provided Data)
+- 42 pages marked "Discovered - currently not indexed" as of Apr 9, 2026
+- Root cause: Google hasn't crawled them yet (all have `Last crawled: 1969-12-31` null value)
+- User running 6-day URL Inspection crawl request (in progress)
+- New expanded cultivation + marketing guide pages should index after Google re-crawls
+
+### Key Finding: GSC Indexing Root Cause
+- Not robots.txt, sitemap, or noindex meta — those are all clean
+- Root cause is **thin/truncated content** on cultivation and marketing pages (now rewritten)
+- Also: new pages need Google to crawl them (sitemap-submitted pages pending crawl queue)
+
+### Files Created
+- `src/pages/blog/maine-cannabis-cultivation-license-2026.astro` (3,365 words)
+- `src/pages/blog/portland-maine-cannabis-rules-2026.astro` (3,210 words)
+- `src/pages/blog/maine-cannabis-microbusiness-license-2026.astro` (5,531 words)
+- `src/pages/guides/portland-maine-cannabis.astro` (2,400 words)
+- `src/pages/about/authors.astro` (new author showcase)
+- `src/pages/about/our-team.astro` (team trust signals page)
+- `src/data/authors.json` (author data system)
+
+### Backlog Updated
+- Added "Professional email domain setup (@mainedispensaryguide.com)" to Authority Building phase — **prerequisite for all outreach credibility** (government, media, partnerships)
+
+### Commits
+- `c12cca8` — feat(blog): launch first blog post — 3,365-word cultivation license guide
+- `17f804c` — feat: launch blog post #2 + author credential infrastructure
+- `cdb0f50` — feat: blog post #3 (microbusiness 5,531 words) + Portland local SEO page
+
+### Pages Built
+- 72 pages built (up from 64 originally)
+
 
 
 
