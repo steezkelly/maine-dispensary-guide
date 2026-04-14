@@ -1,9 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import authors from '../../data/authors.json';
+
+const editorialAuthor = authors.find(a => a.id === 'editorial-team');
+const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: editorialAuthor?.name || "Maine Dispensary Guide Editorial Team",
   publishDate: "2026-04-14",
   modifiedDate: "2026-04-14",
   section: "Licensing"
@@ -372,6 +376,15 @@ const topics = ["licensing", "cultivation"];
         <li><a href="/guides/maine-dispensary-costs/">Business Cost Breakdown</a> — Detailed cost analysis for opening and operating a cannabis business in Maine</li>
       </ul>
     </section>
+
+    <section class="content-verification">
+      <div class="verification-badge">
+        <span class="verification-icon">◆</span>
+        <span class="verification-text">
+          Content verified by <a href="/about/authors">{complianceReviewer?.name || 'Maine Cannabis Compliance Reviewer'}</a>
+        </span>
+      </div>
+    </section>
   </article>
 </Layout>
 
@@ -589,6 +602,42 @@ const topics = ["licensing", "cultivation"];
 
   .related-guides a:hover {
     color: var(--color-accent);
+  }
+
+  .content-verification {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(88, 129, 87, 0.08);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .verification-icon {
+    color: var(--color-accent);
+    font-size: 0.75rem;
+  }
+
+  .verification-text {
+    color: var(--color-text-light);
+  }
+
+  .verification-text a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .verification-text a:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 768px) {
