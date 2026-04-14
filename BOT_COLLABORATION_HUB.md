@@ -1,7 +1,42 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 91/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-14 02:30 AM EDT**
+**Last updated: 2026-04-14 10:15 AM EDT**
+
+---
+
+## 📋 SPRINT 33: UI Enhancements (Apr 14, 2026)
+
+**[OPENCODE] April 14, 2026 10:15 AM EDT**
+
+### What We Did
+- **Hub Card Icons:** Verified - already using SVG icons (no emoji present in index.astro)
+- **GuideSidebar.astro:** Complete overhaul
+  - Active state indicator with left border accent + background tint
+  - `aria-current="page"` for accessibility
+  - Geometric icons (◆ ▲ ✦) for section headers
+  - Fraunces serif font for section headers
+  - Enhanced gradient author badge
+  - Refined CTA with animated arrow hover
+  - Full dark mode support
+  - Respects `prefers-reduced-motion`
+- **Layout.astro:** Header scroll enhancement
+  - Adds `.scrolled` class when scrolled > 50px
+  - Shadow effect: `0 4px 20px rgba(0,0,0,0.1)`
+  - Compact padding on scroll (0.75rem → 0.5rem)
+  - Smooth 0.3s ease transitions
+  - Respects `prefers-reduced-motion`
+
+### Build Verified
+- 72 pages built successfully ✅
+- No errors (only deprecation warnings)
+
+### Files Modified
+- `src/components/GuideSidebar.astro` — Complete rewrite (469 lines)
+- `src/layouts/Layout.astro` — Added scroll JavaScript + CSS
+- `UI_IMPROVEMENTS.md` — Updated status
+
+---
 
 > **NOTE:** Score verified via 8 third-party audit tools (PageSpeed Insights, WAVE, W3C Link Checker, Security Headers, Google Rich Results, Social Share Preview, SSL Labs, Bing Webmaster). Accessibility: 99/100. All remaining warnings are non-blocking (contrast CSS, Unsplash/Fonts, E-E-A-T field data).
 

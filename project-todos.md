@@ -29,6 +29,7 @@
 - [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
 - [x] Fix color contrast warnings on 5 pages ✅ (nav hover: --color-soft-green #A3B18A → #7A9A6A, now 4.5:1)
 - [x] Fix remaining identical links on: find-a-dispensary, launch-checklist, taxation-280e, westbrook ✅ (verified clean)
+- [x] UI Sprint 33 ✅ (Apr 14, 2026) — Guide Sidebar complete overhaul + Header scroll effect
 
 ---
 
