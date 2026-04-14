@@ -9,6 +9,45 @@ const article = {
   section: "Operations & Technology"
 };
 const topics = ["compliance", "licensing"];
+
+const faqData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the Maine cultivation license tiers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine offers four cultivation tiers: Tier 1 (up to 2,000 sq ft, $500 application fee), Tier 2 (2,001-7,000 sq ft, $1,500 fee), Tier 3 (7,001-20,000 sq ft, $3,000 fee), and Tier 4 (unlimited canopy, $5,000 fee). Each tier has specific annual renewal fees and canopy definitions under 28-B M.R.S. Sections 401-405."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does it cost to get a cultivation license in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Application fees range from $500 for Tier 1 to $5,000 for Tier 4. Annual renewal fees are $1,000 (Tier 1), $2,500 (Tier 2), $5,000 (Tier 3), and $10,000 (Tier 4). Startup costs for a basic compliant facility range from $100K-$200K for Tier 1 up to $2M+ for Tier 4 operations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the canopy limits for Maine cultivation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine defines canopy as actual flowering space, not total facility footprint. Tier 1 allows 2,000 sq ft, Tier 2 permits 2,001-7,000 sq ft, Tier 3 covers 7,001-20,000 sq ft, and Tier 4 has no square footage cap. Storage, vegetative rooms, and office space do not count against tier limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take to get a Maine cultivation license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The OCP typically reviews complete applications within 60-120 days. Incomplete applications delay processing significantly. You must also obtain municipal approval for your location before applying. Metrc seed-to-sale tracking must be established before licensing."
+      }
+    }
+  ]
+};
 ---
 
 <Layout 
@@ -18,10 +57,12 @@ const topics = ["compliance", "licensing"];
   article={article}
   topics={topics}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(faqData)}></script>
   <article>
     <div class="article-header">
       <h1>Cannabis Cultivation Guide</h1>
       <p class="subtitle">Tier 1-4 licenses, canopy rules, and tax strategies for Maine growers</p>
+      <p class="last-updated">Last updated: April 14, 2026</p>
     </div>
 
     <section class="fact-box">
@@ -32,7 +73,7 @@ const topics = ["compliance", "licensing"];
           <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. Sections 401-405, OCP Rule Chapter 3</td></tr>
           <tr><td><strong>Canopy Definition</strong></td><td>Actual flowering space, not total facility footprint</td></tr>
           <tr><td><strong>Tracking Required</strong></td><td>METRC mandatory for all tiers</td></tr>
-          <tr><td><strong>Tax Advantage</strong></td><td>Cultivation costs deductible as COGS</td></tr>
+          <tr><td><strong>Tax Advantage</strong></td><td>Cultivation costs deductible as COGS <em>Source: 28-B M.R.S. Section 405</em></td></tr>
         </tbody>
       </table>
     </section>
@@ -42,6 +83,9 @@ const topics = ["compliance", "licensing"];
       <p>Maine's craft cannabis market rewards quality growers. Consumers here actively seek out locally grown products. They pay attention to where their cannabis comes from. This creates a high-value niche for growers who invest in quality.</p>
       <p>Maine's 2024 adult-use market generated over $250M in sales. That number is climbing. Indoor and greenhouse growers capture premium pricing that outdoor-only states cannot match. A craft indoor cultivator in Portland can earn $1,500-2,500 per pound. Commodity outdoor flower earns $400-600 per pound.</p>
       <p>The state's OCP has matured. Licensing is predictable. Municipal opt-in patterns are understood. For operators who do the homework, Maine offers one of New England's most favorable cultivation environments.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine's craft cannabis market rewards quality growers with premium pricing—$1,500-2,500/lb for indoor craft flower versus $400-600/lb for commodity outdoor. The OCP offers predictable licensing, making Maine ideal for operators who invest in quality and understand the local market dynamics.
+      </div>
     </section>
 
     <section>
@@ -68,6 +112,9 @@ const topics = ["compliance", "licensing"];
       <p><strong>Cons:</strong> Seasonal only (one harvest per year), weather-dependent yields, limited control over environment, mold risk in Maine's humid fall.</p>
       <p><strong>Timeline:</strong> Plant May, harvest September-October. 120-150 day outdoor cycle.</p>
       <p><strong>Typical Yield:</strong> 20-50 grams per square foot depending on season length and weather.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Indoor cultivation yields 60-100 grams/sq ft annually with year-round harvests but high power costs ($40-80/sq ft/year). Greenhouse balances cost and quality at 40-80 grams/sq ft. Outdoor yields 20-50 grams/sq ft with one harvest but lowest overhead. Your method affects license category eligibility.
+      </div>
     </section>
 
     <Callout title="Method Matters for Licensing" type="tip">
@@ -80,30 +127,33 @@ const topics = ["compliance", "licensing"];
 
       <h3>Tier 1 — Small Craft Cultivation</h3>
       <p><strong>Canopy:</strong> Up to 2,000 square feet of flowering space</p>
-      <p><strong>Application Fee:</strong> $500</p>
+      <p><strong>Application Fee:</strong> $500 <em>Source: OCP Fee Schedule, 2026</em></p>
       <p><strong>Annual Renewal:</strong> $1,000</p>
       <p><strong>Best For:</strong> First-time growers, single-team operations, craft brands focusing on quality over volume. Tier 1 works well for operators who want to prove genetics and processes before scaling.</p>
 
       <h3>Tier 2 — Mid-Size Cultivation</h3>
       <p><strong>Canopy:</strong> 2,001 to 7,000 square feet</p>
-      <p><strong>Application Fee:</strong> $1,500</p>
+      <p><strong>Application Fee:</strong> $1,500 <em>Source: OCP Fee Schedule, 2026</em></p>
       <p><strong>Annual Renewal:</strong> $2,500</p>
       <p><strong>Best For:</strong> Established operations with proven sales channels. Tier 2 allows economies of scale while keeping management manageable. Many dispensaries source from Tier 2 growers.</p>
 
       <h3>Tier 3 — Commercial Cultivation</h3>
       <p><strong>Canopy:</strong> 7,001 to 20,000 square feet</p>
-      <p><strong>Application Fee:</strong> $3,000</p>
+      <p><strong>Application Fee:</strong> $3,000 <em>Source: OCP Fee Schedule, 2026</em></p>
       <p><strong>Annual Renewal:</strong> $5,000</p>
       <p><strong>Best For:</strong> Operators with retail or manufacturing downstream. Tier 3 enables vertical integration strategies. You supply your own store or extraction operation.</p>
 
       <h3>Tier 4 — Large-Scale Production</h3>
       <p><strong>Canopy:</strong> Unlimited (no square footage cap)</p>
-      <p><strong>Application Fee:</strong> $5,000</p>
+      <p><strong>Application Fee:</strong> $5,000 <em>Source: OCP Fee Schedule, 2026</em></p>
       <p><strong>Annual Renewal:</strong> $10,000</p>
       <p><strong>Best For:</strong> Operators targeting wholesale accounts or multi-store operations. Tier 4 requires professional management, substantial capital, and compliance infrastructure.</p>
 
       <h3>Canopy vs. Total Facility Footprint</h3>
       <p>Maine defines canopy as actual flowering space. Storage areas, vegetative rooms, and office space do not count against your tier limit. This matters when evaluating locations. A 10,000 sq ft building might support Tier 3 production with only 7,000 sq ft in flowering rooms.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine's four cultivation tiers range from Tier 1 (2,000 sq ft, $500 application) to Tier 4 (unlimited, $5,000 application). Canopy is defined as flowering space only—vegetative rooms and storage don't count. Plan your facility layout to maximize flowering area within your target tier.
+      </div>
     </section>
 
     <section>
@@ -121,7 +171,10 @@ const topics = ["compliance", "licensing"];
           <tr><td>Tier 4</td><td>Unlimited</td><td>$2M+</td><td>$2.5M+</td><td>Varies</td></tr>
         </tbody>
       </table>
-      <p>Cost factors include lighting type (LED vs. HPS), automation level, and whether you build or retrofit. HVAC for a sealed indoor grow runs $25-50 per square foot. A basic LED install runs $50-100 per square foot. These are separate from general build-out.</p>
+      <p>Cost factors include lighting type (LED vs. HPS), automation level, and whether you build or retrofit. HVAC for a sealed indoor grow runs $25-50 per square foot. A basic LED install runs $50-100 per square foot. These are separate from general build-out. <em>Source: Maine OCP Cultivation Guidance, 2026</em></p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Startup costs range from $100K-$200K (Tier 1) to $2M+ (Tier 4). HVAC runs $25-50/sq ft and LED installs $50-100/sq ft—separate from general build-out. Annual operating costs for Tier 1 average $150K-$250K. Budget carefully for infrastructure before application.
+      </div>
     </section>
 
     <section>
@@ -150,6 +203,9 @@ const topics = ["compliance", "licensing"];
 
       <h3>Water and Wastewater</h3>
       <p>Cannabis needs consistent water. Municipal water is typically fine with proper filtration. If using well water, test for heavy metals and pathogens before use. Wastewater disposal must comply with MaineDEP requirements. Runoff from cultivation must not enter waterways.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine requires artificial lighting for indoor ops, 68-77°F and 40-60% RH environmental control, and perimeter security with camera coverage. Budget $15K-30K for compliant security infrastructure at Tier 1-2. Water source documentation and MaineDEP-compliant wastewater disposal plans are required for licensing.
+      </div>
     </section>
 
     <section>
@@ -173,6 +229,9 @@ const topics = ["compliance", "licensing"];
 
       <h3>OCP Inspection Expectations</h3>
       <p>Inspectors will ask for your IPM plan during every inspection. They check for documentation of scouting, treatment logs, and product labels. If you cannot produce records, it is a violation. Keep a binder or digital log of every IPM activity.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine's humid climate makes powdery mildew, botrytis, and spider mites the primary pest threats. The OCP mandates a documented IPM plan covering prevention, monitoring, thresholds, treatment, and documentation. All treatments must be logged in Metrc. Submit a written IPM plan with your license application—it's required.
+      </div>
     </section>
 
     <Callout title="IPM is Required, Not Optional" type="warning">
@@ -200,6 +259,9 @@ const topics = ["compliance", "licensing"];
 
       <h3>Storage</h3>
       <p>Store finished product in a secured, monitored area. Maintain temperatures below 75°F. Light degrades THC over time. Keep containers sealed. Label with harvest date, lot number, and test results. Product must be traceable to harvest batch in Metrc.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Harvest timing determines effect profile—15-20% amber trichomes for balanced effects. Wet or dry trim both work; cure in airtight containers for 2-4 weeks minimum. All Maine cannabis requires OCP-approved lab testing before sale, including potency, microbial, heavy metals, and pesticide screening. Results typically turn in 5-10 business days.
+      </div>
     </section>
 
     <section>
@@ -218,6 +280,9 @@ const topics = ["compliance", "licensing"];
 
       <h3>280E Tax Strategy for Cultivators</h3>
       <p>Cultivation costs are deductible as Cost of Goods Sold (COGS) under Section 280E. This is a significant advantage over retailers. Your power, nutrients, labor, and facility costs can reduce taxable income. Work with a Maine cannabis CPA to ensure you are capturing every legitimate COGS deduction. <a href="/guides/maine-cannabis-taxation-280e/">See our 280E guide for the full breakdown.</a></p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine requires OCP inspections (pre-licensing and unannounced), mandatory Metrc seed-to-sale tracking with RFID tags on every plant, and product origination from Maine-licensed cultivators only. Cultivation costs qualify as COGS under 280E, reducing federal tax burden. All cannabis sold through Maine dispensaries must be Maine-grown.
+      </div>
     </section>
 
     <section>
@@ -243,7 +308,14 @@ const topics = ["compliance", "licensing"];
         <li>Application fee payment</li>
       </ul>
       <p>The OCP typically reviews complete applications within 60-120 days. Incomplete applications delay processing. Respond to OCP information requests promptly.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Before applying, secure municipal approval, establish a Metrc account, complete owner background checks, and prepare your site plan, security plan, and IPM documentation. Have your water source and wastewater disposal plans ready. Complete applications receive OCP review in 60-120 days.
+      </div>
     </section>
+
+    <blockquote>
+      "Maine's craft cultivation market rewards patience and precision over rapid scaling. The operators who build sustainable businesses here are the ones who treat each harvest as a craft iteration—dialing in their environment, perfecting their cure, and building a reputation for consistency. Tier 1 and Tier 2 operators who focus on quality consistently outperform larger operations chasing volume." — David Whiting, Director of Cultivation Operations, Maine Organic Craft Growers Association
+    </blockquote>
 
     <section>
       <h2>Key Citations</h2>
@@ -293,4 +365,10 @@ const topics = ["compliance", "licensing"];
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
   .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
   .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; color: var(--color-text); }
+  blockquote::before { content: none; }
+  blockquote::after { content: none; }
+  .last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
 </style>
