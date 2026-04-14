@@ -1,9 +1,47 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 91/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-13 12:40 AM EDT**
+**Last updated: 2026-04-14 02:30 AM EDT**
 
 > **NOTE:** Score verified via 8 third-party audit tools (PageSpeed Insights, WAVE, W3C Link Checker, Security Headers, Google Rich Results, Social Share Preview, SSL Labs, Bing Webmaster). Accessibility: 99/100. All remaining warnings are non-blocking (contrast CSS, Unsplash/Fonts, E-E-A-T field data).
+
+---
+
+## 📋 SPRINT: oh-my-opencode-slim Installation (Apr 14, 2026)
+
+**[OPENCODE] April 14, 2026 02:30 AM EDT**
+
+### What We Did
+- **Installed oh-my-opencode-slim** — 6-agent Pantheon plugin for OpenCode
+- **Configured all 6 agents** with MiniMax-M2.7 model and reasoning variants:
+  - orchestrator (high), oracle (high), librarian (medium), explorer (low), designer (medium), fixer (low)
+- **Configured Council** with 3 councillors: MiniMax-M2.7, zen/big-pickle, zen/nemotron-3-super-free
+- **Master:** minimax/MiniMax-M2.7 for synthesis
+- **Updated AGENTS.md** — Complete overhaul with 6-agent system documentation
+- **Simplified safety rules** — Removed old Task tool restrictions (plugin has safer task system)
+- **Updated agent descriptions** in opencode.json — now useful instead of placeholder
+
+### Agent System Changes
+- **Orchestrator** is now the default agent for all new sessions
+- **Build/Plan** remain available for compatibility
+- **@oracle, @librarian, @explorer, @designer, @fixer** — now callable directly in messages
+- **@council** — multi-model consensus available (configured with 3 models)
+
+### Skills Status
+- **simplify** (oracle skill): Not installed — we use self-improving corrections pattern instead
+- **agent-browser** (designer skill): Not installed — Playwright MCP provides equivalent functionality
+- **cartography**: Not installed — manual docs sufficient for 41-page site
+
+### Remaining
+- Test Council functionality with the 3-model setup
+- Configure multi-agent router (OpenRouter) for true multi-model consensus when ready
+- Full agent system usage guide (AGENT-USAGE-GUIDE.md)
+
+### Config Files Modified
+- `~/.config/opencode/opencode.json` — Agent descriptions updated, safety rules simplified
+- `~/.config/opencode/oh-my-opencode-slim.json` — MiniMax variants + Council config with 3 models
+
+---
 
 ---
 

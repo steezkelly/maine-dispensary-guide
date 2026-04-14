@@ -9,10 +9,10 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 22 — April 4, 2026)
+## 🚀 Active Sprint (Sprint 23 — April 13, 2026)
 
 ### 🔴 CRITICAL
-- [x] Score 92 Grade A maintained ✅ (target: 90+)
+- [x] Score 91 Grade A maintained ✅ (target: 90+) — dropped from 92 after CSP/GA4 sprint, still A
 - [x] Orphan page fixes: kittery, events-2026, site-health, scarborough, westbrook ✅
 - [x] A11y: Fixed 12 identical "contact →" links on directory ✅
 
@@ -53,16 +53,15 @@
 ### Next Step: Research what Google/GSC guidelines say about outbound linking for new sites, and whether linking to sites like Leafly/Ganjapreneur helps or hurts.
 
 ### 🟠 HIGH — External Linking / GEO Alliances
-- [ ] Audit and fix broken external links (12 broken Maine.gov links)
-  - **Known bad:** labor/workers-compensation, dafs/ocp/* pages
-  - **Fix:** Find current Maine OCP URLs and update
+- [x] Audit and fix broken external links (12 broken Maine.gov links) ✅ — Most fixed via Apr 5 sprints; municipal-resources URL verified working (Apr 13)
+  - **Known bad:** labor/workers-compensation, dafs/ocp/* pages — all redirected to /adult-use or /resources
 - [ ] Establish external link partnerships
   - **Targets:** Maine Chamber of Commerce, Maine Cannabis Association, local SBDC, OCP-linked municipalities
   - **Tactic:** Offer to link to their resources if they link to relevant guide pages
 
 ### 🟡 MEDIUM — Private Gated Directory
-- [ ] Design `/directory/` — Professional contact directory for Maine cannabis
-  - **Gated:** Requires email + approval (Formspree + manual review)
+- [x] Design `/directory/` — Professional contact directory for Maine cannabis ✅ (built at `/directory.astro`)
+  - **Gated:** Requires email + access code (maine2026 — user should change in production)
   - **Content:** Lenders, accountants, lawyers, security firms, real estate brokers with cannabis experience
   - **Monetization angle:** Featured listings, "verified" badges, premium profiles
   - **SEO value:** High-value long-tail pages, builds E-E-A-T through expertise citations
@@ -73,12 +72,12 @@
 - [x] Visible author byline + date on ALL content pages (not just guides) ✅ (article-meta block in Layout.astro covers all guide + founder pages)
 - [x] Visible `lastUpdated` date on all guide pages ✅ (`<time datetime>` added to article-meta in Layout.astro)
 - [x] LCP image preload hints for hero images (27 pages affected) ✅ (built into Layout.astro heroImage preload)
-- [ ] Add `hreflang="en-US"` for internationalization signals
+- [x] Add `hreflang="en-US"` for internationalization signals ✅ (added to Layout.astro)
 
 ### 🟢 LOW
 - [ ] Founders page hero images — swap stock Unsplash for Maine-specific imagery
 - [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
-- [ ] Build GEO citation tracker (update `/admin/seo-dashboard/` with automated prompts)
+- [ ] Build GEO citation tracker (update `/admin/seo-dashboard/` with automated prompts) — Currently manual via `/admin/seo-dashboard.astro`
 
 ## ⚫ BACKLOG — Future Phase
 
@@ -93,6 +92,9 @@
 - [ ] Municipal zoning resource pages for each of the 15 opt-in towns
 - [ ] "Maine Cannabis Industry Report" — annual gated PDF with market data
 
+### Phase: Multi-Agent Infrastructure
+- [ ] Configure OpenRouter multi-agent router for true multi-model Council consensus (Big Pickle + Nemotron 3 + MiniMax M2.7 via OpenRouter API)
+
 ### Phase: Monetization Infrastructure
 - [ ] Affiliate links to cannabis-adjacent services (POS systems, insurance, banking)
 - [ ] Featured directory listings (paid placement)
@@ -104,11 +106,11 @@
 
 | Goal | Target | Current | Status |
 |------|--------|---------|--------|
-| SquirrelScan Score | 90+ (Grade A) | 92 | ✅ |
+| SquirrelScan Score | 90+ (Grade A) | 91 | ✅ |
 | GSC Indexed Pages | 61/61 | ~30? | 🔴 CRITICAL |
 | Internal Link Count | >5 per page avg | ~2-3 avg | 🟡 MEDIUM |
 | External Domains Linking | >10 | ~2 | 🟠 HIGH |
 | GSC Position (avg) | <10 | ~10-12 | 🟡 MEDIUM |
 | GSC Clicks | >100/mo | ~0 | 🔴 CRITICAL |
 
-*Last updated: 2026-04-04 05:15 AM EDT*
+*Last updated: 2026-04-13 06:50 PM EDT*

@@ -36,7 +36,7 @@ compounding consequences. Think before acting.
 
 ## Current Project Status
 
-> This section must be kept current. Last updated by: OpenCode (MiniMax M2.7) — April 9, 2026 (EDT)
+> This section must be kept current. Last updated by: OpenCode (MiniMax M2.7) — April 13, 2026 (EDT)
 
 - **Pages live:** 64 total routes (43 guide pages, technical hubs, ROI tool, vendor directory)
 - **Deployment:** Active on Vercel — Configured for **output: 'static'** for 100% stability
@@ -149,14 +149,61 @@ different environments. You are one of them. Read this carefully.
   deployment settings without flagging in the Hub first
 - Gemini: Do not overwrite content pages without flagging in the Hub
 
-### Agent Role Patterns (Multi-Agent Sessions)
-Use these patterns when orchestrating multiple agents:
-- **Librarian agent** (task type: explore): Pre-read all relevant documentation before starting a big implementation. Run: "Read BOT_COLLABORATION_HUB.md and project-todos.md, report the current state and what needs attention."
-- **Scout agent** (task type: explore): Audit a target directory before planning changes. Run: "Explore src/pages/guides/ and report: (1) how many .astro files, (2) what patterns are used for heroImage props, (3) what patterns for external links." Then implement based on the scout's report.
-- **Build agent** (task type: general): Do the actual implementation work after scout/librarian have prepared context.
-- **Retrospective agent** (task type: explore): Read BOT_COLLABORATION_HUB and project-todos, produce a delta report before ending a session. Run: "Read both files and produce: Completed but not marked done in todos, items marked done but not actually complete, remaining items."
+---
 
-When running multi-agent sessions, always feed the librarian/scout output to the build agent — don't let the build agent start cold.
+## oh-my-opencode-slim Agent System — The 6-Agent Pantheon
+
+We now have 6 specialist agents powered by oh-my-opencode-slim. The orchestrator 
+is the **default agent** for all new sessions. 
+
+### The 6 Agents
+
+| Agent | Role | Best For |
+|-------|------|----------|
+| **Orchestrator** | Master delegator + strategic coordinator | Complex multi-step tasks, deciding which specialist to use |
+| **Oracle** | Strategic advisor + code reviewer | Major architecture decisions, persistent bugs, YAGNI enforcement, complex debugging |
+| **Librarian** | External docs + library research | Official documentation lookup, GitHub examples, understanding unfamiliar libraries |
+| **Explorer** | Codebase search + pattern matching | Fast grep/glob for finding files, "where is X?" questions |
+| **Designer** | UI/UX specialist | Styling, responsive layouts, visual polish, animations |
+| **Fixer** | Fast implementation | Well-scoped bounded tasks, test writing, small targeted changes |
+
+### How to Call Agents
+
+**In messages (most common):**
+```
+@oracle review this architecture
+@librarian how do I implement rate limiting in this library?
+@designer make this button more prominent
+```
+
+**For sub-agent tasks (background/parallel):**
+```
+Use @explorer to find all files containing X
+Call @fixer to implement this feature
+```
+
+**Council for multi-model consensus:**
+```
+@council what is the best approach for this database migration?
+```
+
+### Delegation Decision Guide
+
+Before implementing, ask:
+
+1. **Is the scope broad/uncertain?** → Use @explorer to scout first
+2. **Is it an unfamiliar library/API?** → Use @librarian to research docs first  
+3. **Is it a high-stakes decision or persistent problem?** → Use @oracle for strategic review
+4. **Is it UI/UX that users will see?** → Use @designer
+5. **Is it a well-scoped, bounded implementation?** → Use @fixer
+6. **Is it complex with no clear path?** → Orchestrator delegates appropriately
+
+**Rule of thumb:** When in doubt, delegate. Specialists do it faster and better than orchestrator.
+
+### Built-in Agents (explore/general)
+
+OpenCode's built-in `explore` and `general` agents remain available for 
+simple lookups. For serious work, use the oh-my-opencode-slim 6-agent system.
 
 ---
 
@@ -188,7 +235,7 @@ When Brave Search is rate-limited, use these alternatives:
 
 ### OpenCode Custom Commands
 - `/humanizer [url]` — content-humanizer: fetch URL and humanize (AI pattern removal)
-- `/fix-patterns [pattern]` — content-humanizer: automated regex fixer on local files
+- `/fix-patterns [pattern]` — content-humanizer: automated regex fixer on local files (use `--dry-run` to preview)
 - `/humanize-review` — content-humanizer: editorial review with 22-category check
 - `/audit [pattern]` — content-ops: run content quality audit on matching files
 - `/expand [topic]` — content-ops: research and expand on a topic with depth
@@ -227,6 +274,9 @@ project-1/
 │   ├── searxng-search.cjs      # Meta-search (backup)
 │   ├── wikipedia-search.cjs    # Wikipedia research
 │   └── brave-search.cjs        # Primary search
+├── reference/
+│   ├── reference.md            # Quick links to technical documentation
+│   └── environment.md          # User environment and PowerShell patterns
 ├── public/                      # Favicons and OG Images
 ├── astro.config.mjs             # Astro configuration
 ├── squirrel.toml               # Audit configuration
@@ -374,57 +424,53 @@ All lead forms must use Formspree:
   auditing what already exists in the project.
 - Do not use trailing slashes in internal links.
 - Do not use pure white (#FFF) on dark backgrounds (use Warm Bone #F2F2E2).
-- **Do NOT use Task tool with explore/general sub-agents** — they hang and cause memory leaks. Use glob/grep/read directly instead.
-- **Do NOT run npm build commands unannounced** — always warn user first.
+- Do NOT run npm build commands unannounced — always warn user first.
 
 ---
 
 ## Process & Agent Safety
 
-### Critical Rules (NEVER Violate)
+### Delegation Best Practices
 
-1. **OpenCode Built-in Safeguards (Use These First)**
-   - `steps: 10` limit is set in `~/.config/opencode/opencode.json` for explore/general subagents
-   - `permission.task: deny` prevents subagents from spawning children
-   - `permission.bash: ask` requires confirmation for bash commands
-   - These are the PRIMARY defense against hung agents
+1. **Use glob/grep/read for simple lookups** — faster than spawning sub-agents
+2. **Use @explorer for codebase searches** — fast parallel search
+3. **Use @librarian before unfamiliar libraries** — saves implementation time
+4. **Use @oracle for debugging** — strategic analysis beats reactive fixes
+5. **Use @designer for UI/UX work** — visual quality matters
+6. **Use @fixer for bounded tasks** — explain-to-fixer rule: if explaining takes more time, do it yourself
 
-2. **Use glob/grep/read Instead of Task Tool Sub-Agents**
-   - Task tool explore/general agents CAN HANG with no automatic recovery
-   - Use glob, grep, read tools directly — faster and more reliable
-   - If you must use a sub-agent, expect it to fail silently
+### Loop Guards
+- Any loop >100 iterations MUST log progress
+- If a loop appears to be spinning without output for 30+ seconds, abort and report
+- Pattern: `for (let i = 0; i < items.length; i++)` with no console.log = danger
 
-3. **Loop Guards**
-   - Any loop >100 iterations MUST log progress
-   - If a loop appears to be spinning without output for 30+ seconds, abort and report
-   - Pattern: `for (let i = 0; i < items.length; i++)` with no console.log = danger
+### Memory Awareness
+- If opencode-cli exceeds 1GB RAM, something is wrong
+- Run `scripts/diagnose-opencode.ps1` if you notice slowness
+- Orphaned processes must be cleaned up
 
-4. **Memory Awareness**
-   - If opencode-cli exceeds 1GB RAM, something is wrong
-   - Run `scripts/diagnose-opencode.ps1` if you notice slowness
-   - Orphaned processes must be cleaned up
-
-5. **No Heavy Builds Without Warning**
-   - electron-builder is especially dangerous on Windows (symlink handling, memory spikes)
-
-6. **Playwright Browsers MUST Be Closed**
-   - Playwright MCP uses Chrome (`mcp-chrome-5134796`), NOT Microsoft Edge
-   - After EVERY browser operation, you MUST call `browser_close`
-   - If you navigate to a URL with Playwright, you MUST close the browser before doing anything else
-   - **NEVER leave a Playwright browser open** — each open browser = ~100-750 MB memory leak
-   - **NOTE:** msedge processes are WebView2/Electron residual, NOT from Playwright
-
-7. **WebView2/Electron Orphans Are Dangerous**
-   - electron-builder creates WebView2 processes that DON'T close when the app crashes
-   - Orphaned WebView2 = 10+ GB memory consumption (129 processes seen)
-   - Never use electron-builder on Windows
+### Playwright Browsers MUST Be Closed
+- Playwright MCP uses Chrome (`mcp-chrome-5134796`), NOT Microsoft Edge
+- After EVERY browser operation, you MUST call `browser_close`
+- If you navigate to a URL with Playwright, you MUST close the browser before doing anything else
+- **NEVER leave a Playwright browser open** — each open browser = ~100-750 MB memory leak
 
 ### OpenCode Architecture Notes
 
+- **oh-my-opencode-slim** plugin loaded — 6-agent Pantheon active
 - **opencode-cli** runs as sidecar server (check logs at `%USERPROFILE%\.local\share\opencode\log`)
 - **Cache:** `%USERPROFILE%\.cache\opencode` (36MB, 8023 files)
 - **Session data:** `%USERPROFILE%\.local\share\opencode\storage`
 - **Config:** `~/.config/opencode/opencode.json`
+
+### Council Configuration (Multi-Model Consensus)
+
+Configured with 3 councillors:
+- **alpha**: minimax/MiniMax-M2.7
+- **beta**: zen/big-pickle  
+- **gamma**: zen/nemotron-3-super-free
+
+Master: minimax/MiniMax-M2.7 for synthesis. Use `@council` for high-stakes decisions needing multi-model perspective.
 
 ### Orphan Detection Checklist (Run at Session Start)
 
@@ -481,4 +527,4 @@ After completing work, evaluate:
 
 ---
 
-*Last Updated: 2026-04-09 12:15 PM EDT*
+*Last Updated: 2026-04-13 06:35 PM EDT*

@@ -23,6 +23,10 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 | Wikipedia API | Free research/citations | https://en.wikipedia.org/api/rest_v1/ |
 | SearXNG | Privacy meta-search (self-host) | https://docs.searxng.org/admin/index.html |
 | agent-browser | Vercel Labs browser CLI | https://skills.sh/vercel-labs/agent-browser/agent-browser |
+| Context7 | Documentation lookup for AI agents | https://context7.com/docs/ |
+
+**Notes:**
+- Context7 MCP: Up-to-date library docs via `context7_resolve-library-id` and `context7_query-docs` tools
 
 **Notes:**
 - Brave Search: 1000 req/month free tier. Set `BRAVE_SEARCH_API_KEY` env var.
@@ -151,4 +155,4 @@ squirrel audit [url]         # audit-website: live-site SEO audit
 
 ---
 
-*Last Updated: 2026-04-05*
+*Last Updated: 2026-04-13 06:30 PM EDT*
