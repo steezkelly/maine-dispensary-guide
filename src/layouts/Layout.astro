@@ -72,6 +72,8 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
     
     <link rel="canonical" href={Astro.url} />
+    <link rel="alternate" hreflang="en-US" href={Astro.url} />
+    <link rel="alternate" hreflang="x-default" href={Astro.url} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     
