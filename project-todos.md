@@ -95,7 +95,25 @@
 - [ ] "Maine Cannabis Industry Report" — annual gated PDF with market data
 
 ### Phase: Multi-Agent Infrastructure
-- [ ] Configure OpenRouter multi-agent router for true multi-model Council consensus (Big Pickle + Nemotron 3 + MiniMax M2.7 via OpenRouter API)
+- [x] Configure oh-my-opencode-slim 6-agent system ✅ (Apr 13)
+- [x] Fix Council system — 3/3 councillors working ✅ (Apr 14)
+  - alpha=MiniMax-M2.7, beta=big-pickle, gamma=nemotron-3-super-free
+  - Root cause: stale models.json cache — fixed by deleting and restarting
+  - Timeout increased to 5 min
+- [x] Enable foreground fallback chains ✅ (Apr 14)
+  - Per-agent model chains for rate limit protection
+  - Council master fallback: big-pickle
+- [x] Enable todo continuation ✅ (Apr 14)
+  - autoEnable threshold: 3 todos, max 5 continuations, 30s cooldown
+- [x] Set scoring engine to v2 ✅ (Apr 14)
+- [x] Reduce background concurrency to 5 ✅ (Apr 14)
+- [x] Investigate psmux/multiplexer ✅ (Apr 14)
+  - psmux v3.3.2 installed, `tmux` alias works
+  - Configured `"multiplexer": { "type": "tmux", "layout": "main-vertical", "main_pane_size": 60 }`
+  - Works with `opencode-cli` inside psmux session — spawns live panes for agents
+  - Does NOT work with OpenCode Desktop (GUI) — use CLI for multiplexer view
+  - Quick start guide: `reference/psmux-quickstart.md`
+- [ ] Configure OpenRouter multi-agent router for additional model diversity (optional future)
 
 ### Phase: Monetization Infrastructure
 - [ ] Affiliate links to cannabis-adjacent services (POS systems, insurance, banking)
@@ -115,4 +133,4 @@
 | GSC Position (avg) | <10 | ~10-12 | 🟡 MEDIUM |
 | GSC Clicks | >100/mo | ~0 | 🔴 CRITICAL |
 
-*Last updated: 2026-04-13 06:50 PM EDT*
+*Last updated: 2026-04-14 09:25 PM EDT*

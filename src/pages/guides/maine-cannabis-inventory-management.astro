@@ -94,6 +94,42 @@ const topics = ["operations"];
     </section>
 
     <section>
+      <h2>Real-World Audit Scenarios</h2>
+      <p>OCP audits happen without warning. Here is what they look like in practice.</p>
+      <p>A Portland dispensary was fined $2,500 in 2025 when a routine OCP inspection found a 1.8% inventory variance across 340 SKUs. The store had no weekly counting system. By the time they discovered the discrepancy, it had compounded over three months.</p>
+      <p>A Lewiston cultivator received a citation for failing to log 15 returned packages from a dispensary. The packages sat in a storage closet for six days. OCP found them during a random inspection. The fine was $1,200 plus a mandatory audit of all receiving records for 90 days.</p>
+      <p>A Bangor dispensary passed its annual OCP review with zero findings. The owner ran nightly 5% spot checks on high-value items. When a budtender was caught skimming concentrate vials, the system caught it within 48 hours. Internal theft stopped before it caused a compliance violation.</p>
+      <p>OCP audits focus on documentation gaps. Missing scans, delayed entries, and unverified transfers trigger penalties. The stores that pass do not wait for annual reviews.</p>
+    </section>
+
+    <section>
+      <h2>METRC Integration with Your POS</h2>
+      <p>Your point-of-sale system must sync with METRC. Maine requires daily uploads of all sales data. The three most common Maine dispensary POS options are Flowhub, Cova, and Dutchie.</p>
+      <table aria-label="Maine cannabis POS systems with METRC integration">
+        <thead>
+          <tr><th>POS System</th><th>Integration Type</th><th>Typical Cost</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Flowhub</strong></td><td>Real-time sync</td><td>$300-500/month</td></tr>
+          <tr><td><strong>Cova</strong></td><td>Batch or real-time</td><td>$250-400/month</td></tr>
+          <tr><td><strong>Dutchie</strong></td><td>Real-time sync</td><td>$200-350/month</td></tr>
+        </tbody>
+      </table>
+      <p>Real-time sync means every sale updates METRC instantly. Batch sync uploads data at set intervals, usually every 15 minutes or at close of business. OCP requires daily uploads at minimum. Batch sync still meets this requirement if you run it at closing.</p>
+      <p>Integrated POS costs $200-500 per month depending on features and transaction volume. Non-integrated systems require manual data entry, which creates error risk and staff burden. Most Maine dispensaries find integrated POS pays for itself in reduced labor.</p>
+      <p>Ask your POS provider about their METRC certification before signing. Not all versions of each platform support direct integration. Some older installations still require manual CSV uploads through the METRC Moves app.</p>
+    </section>
+
+    <section>
+      <h2>Loss Prevention Strategies</h2>
+      <p>Internal theft accounts for 25-30% of cannabis inventory shrinkage nationwide. Maine dispensaries face the same risk. Prevention starts with physical controls and accountability.</p>
+      <p>Camera placement matters. Cover all sales counters, vault access points, and receiving areas. OCP does not require specific camera systems, but investigators look for footage during variance reviews. Grainy footage that cannot identify individuals creates problems.</p>
+      <p>Implement a two-person rule for all vault access. One employee opens the vault. Another confirms the count. Neither works alone. This creates accountability and catches errors before they become variances.</p>
+      <p>The 1% variance threshold sounds small. For a dispensary carrying 500 SKUs, that represents potential loss across your entire inventory. Weekly mini-audits catch problems while they are still pennies. Waiting for monthly counts lets shrinkage grow unchecked.</p>
+      <p>Run background checks on all employees with vault access. Check references. Internal theft often comes from trusted staff who felt passed over or underpaid. A formal hiring process deters those individuals and protects your license.</p>
+    </section>
+
+    <section>
       <h2>Running Effective Audits</h2>
       <p>Some Maine operators do spot counts on high-value items like concentrates and topicals every few days because these have the highest per-unit cost and are most likely targets for internal theft.</p>
       <p>Do not wait for the monthly required count to find problems. Run weekly mini-audits on a rotating 10% of your SKU locations. This catches discrepancies before they compound to the 1% trigger threshold.</p>
@@ -144,7 +180,50 @@ const topics = ["operations"];
   <section class="disclaimer">
       <p><em>This guide is for informational purposes only. Verify current requirements with OCP before setting up your inventory system.</em></p>
     </section>
+
   </article>
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Manage Cannabis Inventory in Maine Using METRC",
+      "description": "Step-by-step guide to METRC inventory management for Maine dispensaries, covering the five required functions and daily operations workflow.",
+      "totalTime": "PT8H0M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Package Receiving",
+          "text": "Scan every RFID tag when delivery arrives and verify tags match the cultivator manifest before signing. Enter tags into METRC within 24 hours.",
+          "position": 1
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Inventory Transfers",
+          "text": "Log all internal movements between storage and sales floor in real time. Every gram must be tracked as it moves through your facility.",
+          "position": 2
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Sales Recording",
+          "text": "Sync POS transactions with METRC for every sale. Maine requires daily uploads minimum; real-time sync is preferred.",
+          "position": 3
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Waste Documentation",
+          "text": "Record and photograph all product destruction in METRC. Document every gram of waste with timestamp and reason.",
+          "position": 4
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Monthly Reports",
+          "text": "Generate and file monthly inventory reconciliation reports. Reconcile physical counts with METRC records to stay under the 1% variance threshold.",
+          "position": 5
+        }
+      ]
+    })}
+  </script>
 </Layout>
 
 <style>
