@@ -113,11 +113,55 @@ grep -c "/images/heroes/" src/pages/guides/
 # Should return count of local hero references
 ```
 
-### fal.ai Content Policy (Known Rejections)
+### fal.ai Image Models — Complete Inventory
 
-**Important:** fal.ai's Acceptable Use Policy does NOT explicitly ban cannabis imagery. The `content_policy_violation` errors come from the underlying models (Flux, Ideogram) which apply their own safety filters. These are model-specific, not platform-wide.
+**Note:** `content_policy_violation` errors come from the underlying model, not the fal.ai platform. Only `flux-pro/v1.1` has a tunable `safety_tolerance` parameter (1-6) via API.
 
-**Known rejected terms (model-level filters):**
+#### Tier 1: FLUX Family (Primary use cases)
+
+| Model | Speed | Quality | Commercial | Safety Control | Cannabis-Friendly? |
+|-------|-------|---------|------------|----------------|-------------------|
+| `flux-schnell` | ~1s | Good | ✅ | `enable_safety_checker` bool | ⚠️ May reject |
+| `flux-dev` | ~2s | High | ✅ | `enable_safety_checker` bool | ⚠️ May reject |
+| `flux-2-pro` | Fast | Pro | ✅ | On by default, auto-enhance | ⚠️ Most likely reject |
+| `flux-pro/v1.1` | Medium | Very High | ✅ | **`safety_tolerance` 1-6** | ✅ Only model with API-level control |
+| `flux-pro-5` | Medium | Very High | ✅ | `safety_tolerance: "5"` (pre-configured) | **✅ RECOMMENDED for cannabis content** |
+
+#### Tier 2: Stable Diffusion Family
+
+| Model | Speed | Quality | Commercial | Safety Control | Best For |
+|-------|-------|---------|------------|----------------|---------|
+| `stable-diffusion-v3-medium` | Medium | High | ✅ | `enable_safety_checker` bool | Research, typography |
+| `stable-diffusion-v35-medium` | Medium | High | ✅ | `enable_safety_checker` bool | Guidance scale, complex prompts |
+
+#### Tier 3: Specialty Models
+
+| Model | Speed | Quality | Commercial | Best For | Price |
+|-------|-------|---------|------------|----------|-------|
+| `ideogram-v3` | Medium | High | ✅ | **Text rendering** (diagrams, labels, infographics with text) | Standard |
+| `minimax/text-to_image` | Fast | Good | ✅ | **Batch** (up to 9 images/call), prompt optimizer | Standard |
+| `recraft-v4/pro` | Medium | Very High | ✅ | Brand systems, cohesive design | **$0.25/image** |
+| `nano-banana-2` (Google) | Fast | High | ✅ | Fast photorealism | Standard |
+| `seedance-2` (ByteDance) | Medium | High | ✅ | Latest gen model | Standard |
+
+#### Usage Examples
+
+```bash
+# Standard hero image (fast, generic scenery)
+node scripts/fal-image-gen.cjs "Maine lighthouse at sunset" flux-schnell 1200 400
+
+# Cannabis content (use safety tolerance 5)
+node scripts/fal-image-gen.cjs "cannabis storefront interior" flux-pro-5 1200 400
+
+# Infographic with text labels (ideogram is better at text)
+node scripts/fal-image-gen.cjs "Maine cannabis licensing flowchart" ideogram-v3 800 592
+
+# Override safety tolerance on any model
+node scripts/fal-image-gen.cjs "marijuana plant botanical" flux-2-pro 1200 400 --safety-tolerance 5
+```
+
+#### Known Rejected Terms & Alternatives
+
 | Banned Term | Alternative |
 |------------|-------------|
 | cannabis shop | coastal business storefront |
@@ -125,10 +169,7 @@ grep -c "/images/heroes/" src/pages/guides/
 | marijuana plant close-up | botanical illustration, green leaf study |
 | psychedelic mushroom | fungal illustration, organic pattern |
 
-**Test any cannabis/cannabis-adjacent imagery with a single image before batch.** If rejected, try:
-1. Remove the flagged keyword entirely
-2. Use indirect descriptors ("wellness business", "botanical", "coastal storefront")
-3. Try a different model (flux-schnell has looser filters than flux-2-pro)
+**Always test with a single image before batch.** If rejected, escalate safety tolerance or use indirect descriptors.
 
 ### Available Scripts
 | Script | Purpose |
