@@ -9,7 +9,7 @@ const breadcrumbs = pathSegments.map((segment, index) => {
     .replace(/-/g, ' ')
     .replace(/\b\w/g, char => char.toUpperCase());
   return { href, label };
-}).filter(Boolean);
+}).filter((crumb): crumb is { href: string; label: string } => crumb !== null);
 
 const isHome = url.pathname === '/';
 
@@ -46,12 +46,12 @@ const breadcrumbListSchema = !isHome ? {
         <a href="/">Home</a>
       </li>
       {breadcrumbs.map((crumb, index) => (
-        <li key={index}>
+        <li>
           <span class="separator">/</span>
           {index === breadcrumbs.length - 1 ? (
-            <span class="current" aria-current="page">{crumb.label}</span>
+            <span class="current" aria-current="page">{crumb?.label}</span>
           ) : (
-            <a href={crumb.href}>{crumb.label}</a>
+            <a href={crumb?.href}>{crumb?.label}</a>
           )}
         </li>
       ))}

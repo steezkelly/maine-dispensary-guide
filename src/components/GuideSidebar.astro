@@ -22,7 +22,7 @@ const complianceGuides = [
   { title: "POS Systems", href: "/guides/maine-dispensary-pos" }
 ];
 
-const isActive = (href) => currentPath === href || currentPath.startsWith(href + '/');
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(href + '/');
 ---
 
 <aside class="guide-sidebar">

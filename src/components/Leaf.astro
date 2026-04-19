@@ -2,10 +2,10 @@
 interface Props {
   size?: number;
   color?: string;
-  className?: string;
+  class?: string;
 }
 
-const { size = 24, color = "currentColor", className = "" } = Astro.props;
+const { size = 24, color = "currentColor", class: className = "" } = Astro.props;
 ---
 
 <svg 

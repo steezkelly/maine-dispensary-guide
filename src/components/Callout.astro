@@ -1,7 +1,7 @@
 ---
 interface Props {
-  title: string;
-  type?: 'passion' | 'tip' | 'success';
+  title?: string;
+  type?: 'passion' | 'tip' | 'success' | 'warning' | 'info';
   level?: 'h2' | 'h3';
 }
 
@@ -10,26 +10,32 @@ const { title, type = 'passion', level = 'h3' } = Astro.props;
 const icons = {
   passion: '✦',
   tip: '◆',
-  success: '▲'
+  success: '▲',
+  warning: '◆',
+  info: '●'
 };
 
 const accents = {
   passion: 'var(--color-accent)',
   tip: 'var(--color-soft-green)',
-  success: 'var(--color-primary)'
+  success: 'var(--color-primary)',
+  warning: 'var(--color-warning, #b4643c)',
+  info: 'var(--color-info, #4a7c9b)'
 };
 
 const bgColor = {
   passion: 'rgba(88, 129, 87, 0.08)',
   tip: 'rgba(163, 177, 138, 0.12)',
-  success: 'rgba(13, 78, 80, 0.06)'
+  success: 'rgba(13, 78, 80, 0.06)',
+  warning: 'rgba(180, 100, 60, 0.08)',
+  info: 'rgba(74, 124, 155, 0.08)'
 };
 ---
 
 <div class="callout" style={`--callout-accent: ${accents[type]}; background-color: ${bgColor[type]};`}>
   <div class="callout-header">
     <span class="callout-icon" style={`color: ${accents[type]};`}>{icons[type]}</span>
-    {level === 'h2' ? <h2>{title}</h2> : <h3>{title}</h3>}
+    {title && (level === 'h2' ? <h2>{title}</h2> : <h3>{title}</h3>)}
   </div>
   <div class="callout-content">
     <slot />

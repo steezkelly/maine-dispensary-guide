@@ -73,7 +73,7 @@ function calculateScore(guideTopics: string[], currentTopics: string[]): number 
     if (currentTopics.includes(topic)) {
       score += 2;
     }
-    const relatedTopics = topicsData.topics[topic]?.related || [];
+    const relatedTopics = (topicsData.topics as Record<string, {label: string; related: string[]}>)[topic]?.related || [];
     for (const related of relatedTopics) {
       if (guideTopics.includes(related)) {
         score += 1;
