@@ -9,7 +9,7 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 34 — April 16, 2026)
+## 🚀 Active Sprint (Sprint 36 — April 18, 2026)
 
 ### 🔴 CRITICAL
 - [x] Score 91 Grade A maintained ✅ (target: 90+)
@@ -26,6 +26,25 @@
   - **Targets:** Maine Chamber of Commerce, Maine Cannabis Association, local SBDC, OCP-linked municipalities
   - **Tactic:** Offer to link to their resources if they link to relevant guide pages
 - [ ] Domain warm-up for mainedispensaryguide.com email (Purelymail configured, catch-all routing active)
+
+### ✅ Sprint 35 Completed (Apr 18) — System Readiness
+- [x] Deleted orphaned `national-hub-architect/` directory ✅
+- [x] Fixed `src/env.d.ts` to modern Astro reference pattern ✅
+- [x] Synced `reference/project-status.md` with Sprint 34 data ✅
+- [x] Fixed `reference/reference.md` squirrelscan command ✅
+- [x] Added `.github/workflows/ci.yml` for automated typecheck + build ✅
+- [x] Added `.env.example` for new developers ✅
+- [x] Updated `AGENTS.md` with correct guide count (47 pages) ✅
+- [x] Added root doc references to `reference/reference.md` ✅
+- [x] Updated `reference/environment.md` Git version note ✅
+- [x] Committed 6 new content pages (2 blog, 4 guides) ✅
+
+### ✅ Sprint 36 Completed (Apr 18) — OG Images & Polish
+- [x] Created branded OG image (`public/og-image.svg`) — 1200x630 Heritage Authority design ✅
+- [x] Updated `Layout.astro` — all pages have `og:image` and `twitter:image` with fallback ✅
+- [x] Fixed dark mode card readability — replaced `background: white` with `var(--color-surface)` across 16 files ✅
+- [x] Replaced favicon with branded pine tree design ✅
+- [x] Updated homepage `modifiedDate` to 2026-04-18 ✅
 
 ---
 
