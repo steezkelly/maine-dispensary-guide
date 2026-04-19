@@ -124,12 +124,33 @@ These errors do not affect the build or runtime. The site builds and deploys cle
 
 ## LSP Status (lsp_diagnostics)
 
-**`lsp_diagnostics` tool is NOT functional for this project.** The tool requires `typescript-language-server` with a valid `typescript.tsdk` pointing to a `node_modules/typescript/lib` directory containing `tsserverlibrary.js`. OpenCode Desktop does not auto-configure this.
+**Status: PARTIALLY FUNCTIONAL** — Works on `.astro` files when `OPENCODE_RESPECT_LSP_DIAGNOSTICS=10` is set, but has known issues.
 
-- `npx astro check` works fine (uses tsc directly, not LSP)
-- `lsp_diagnostics` times out or fails with "Request initialize failed"
-- Workaround: Use `npx astro check src/pages/example.astro` for file-scoped type validation instead of `lsp_diagnostics`
-- The LSP limitation is a known issue with OpenCode Desktop + Astro projects — does not affect build/deploy
+### Known Issues (OpenCode core bugs, not project-specific):
+1. **TypeScript first-diagnostic skip** — `client.ts:60` ignores first diagnostic batch for TypeScript
+2. **3-second hardcoded timeout** — Too short for complex projects (Astro 6.0 with 79 pages)
+3. **150ms diagnostic debounce** — Causes delays before diagnostics return
+
+### Fix — Set Environment Variable:
+```powershell
+$env:OPENCODE_RESPECT_LSP_DIAGNOSTICS="10"
+```
+This disables debounce, extends timeout to 10 seconds, and disables the first-diagnostic skip.
+
+### How It Works:
+- `OPENCODE_RESPECT_LSP_DIAGNOSTICS=0` (default): 150ms debounce, 3s timeout, TypeScript first-diagnostic skip
+- `OPENCODE_RESPECT_LSP_DIAGNOSTICS=10`: 0ms debounce, 10s timeout, no first-diagnostic skip
+
+### The "Request initialize failed" error:
+Means TypeScript LSP couldn't find `tsserverlibrary.js` in `node_modules/typescript/lib`. This happens when:
+- TypeScript is not installed locally (must be in project's `node_modules`, not just global)
+- The LSP server failed to spawn
+
+### Workaround:
+- `npx astro check src/pages/example.astro` works reliably for file-scoped type validation
+- `npx astro check` runs tsc directly, not via LSP — unaffected by LSP issues
+
+### This does NOT affect build/deploy** — the site builds and deploys cleanly.
 
 ---
 
