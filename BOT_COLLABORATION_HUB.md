@@ -31,6 +31,33 @@
 
 ---
 
+## 📋 SPRINT 37: Favicon, Homepage Date & Sprint Close (Apr 19, 2026)
+
+**[OPENCODE] April 19, 2026 — Sprint Close**
+
+### What We Did
+- **Replaced favicon:** Generic "M" circle → branded pine tree design (Deep Spruce background, Sage Green tree, Warm Bone diamond accent)
+- **Updated homepage date:** `modifiedDate` from 2026-04-04 → 2026-04-18
+- **Synced project-todos.md:** Added Sprint 35 and 36 completion records, updated active sprint to 36
+- **Build verified:** 79 pages built successfully, no errors
+- **Deployed to production:** `https://mainedispensaryguide.com` — live with all changes
+- **Pushed to origin:** All 5 commits pushed to `origin/main` (`f442b61`)
+
+### Sprint 35-36 Summary (Apr 18-19)
+- **System Readiness (Sprint 35):** Deleted orphaned code, fixed env.d.ts, synced docs, added CI/CD, added .env.example, updated AGENTS.md, committed 6 new content pages
+- **OG Images & Polish (Sprint 36):** Created branded OG image, updated Layout.astro for fallback, fixed dark mode card readability (16 files), replaced favicon, updated homepage date
+- **Total commits:** 5 (`8304d73`, `7794681`, `e6d6269`, `70a45c8`, `f442b61`)
+- **Build:** 79 pages, clean
+- **Deploy:** Production live at `https://mainedispensaryguide.com`
+
+### What Remains
+- Domain warm-up for outreach emails (5-10/day for 1-2 weeks)
+- External link partnerships (Maine Chamber, Cannabis Association, SBDC)
+- PDF Magnet (Founders Bible) — needs styling/conversion to PDF
+- Sub-75 pages readability (cultivation 70, delivery-rules 73, inventory 73, marketing 73, homepage 60)
+
+---
+
 ## 📋 SPRINT 36: OG Images & Social Media (Apr 18, 2026)
 
 **[OPENCODE] April 18, 2026 — OG Image Sprint**
