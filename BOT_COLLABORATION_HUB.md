@@ -2688,8 +2688,8 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 - Known rejected terms documented in workflows.md with alternatives
 - Recommendation: test single image before batch generation
 
-**Commit:** TBD
-**Deployed:** Not yet — process improvements only, no content changes
+**Commit:** bf9e5c9
+**Deployed:** https://mainedispensaryguide.com ✅
 
 
 
