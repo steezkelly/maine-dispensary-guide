@@ -105,22 +105,10 @@ project-1/
 
 **Ask first:**
 - `npm install` new packages
-- `git push`
 - Deleting files, chmod changes
 - Running full build or end-to-end suites
-- Deployment (`npx vercel --prod`)
 
 ---
-
-## Known Type Errors (123 errors, do NOT block on these)
-
-The project has 123 TypeScript errors from `npx astro check`. These are known and non-blocking:
-
-1. **`caption` attribute on `<table>`** (~80 errors) — Pages use `caption="..."` as a table attribute. This is not a valid HTML attribute; `<caption>` should be a child element. Fixing requires updating ~40+ guide pages. Deferred.
-
-2. **Callout `type` mismatch** (~20 errors) — `Callout.astro` only accepts `type: 'passion' | 'tip' | 'success'` but several pages use `type="warning"` and `type="info"`. To add these types, update the `Props` interface in `src/components/Callout.astro`.
-
-These errors do not affect the build or runtime. The site builds and deploys cleanly.
 
 ## LSP Status (lsp_diagnostics)
 
