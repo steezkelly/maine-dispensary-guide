@@ -5,6 +5,46 @@
 
 ---
 
+## 📋 SPRINT 36: OG Images & Social Media (Apr 18, 2026)
+
+**[OPENCODE] April 18, 2026 — OG Image Sprint**
+
+### What We Did
+- **Created branded OG image:** `public/og-image.svg` — 1200x630 SVG with Heritage Authority design (Deep Spruce gradient, pine tree + leaf icons, geometric accents)
+- **Updated Layout.astro:** All pages now have `og:image` and `twitter:image` meta tags — uses heroImage if available, falls back to `/og-image.svg`
+- **Build verified:** 79 pages built successfully, OG image present in dist output
+- **SVG validated:** Proper XML structure, renders correctly
+
+### Impact
+- Every page now has proper social sharing images (Facebook, Twitter/X, LinkedIn, Discord, iMessage)
+- Pages with heroImage use their Unsplash image
+- Pages without heroImage use the branded default
+- Twitter Card meta tags confirmed: `summary_large_image` with proper title/description/image
+
+---
+
+## 📋 SPRINT 35: System Readiness & Cleanup (Apr 18, 2026)
+
+**[OPENCODE] April 18, 2026 — System Readiness Sprint**
+
+### What We Did
+- **Deleted orphaned code:** Removed `national-hub-architect/` directory (absorbed into content-authority, had duplicate scripts)
+- **Fixed env.d.ts:** Updated from outdated `/// <reference path="../.astro/types.d.ts" />` to modern `/// <reference types="astro/client" />`
+- **Synced documentation:** Updated `reference/project-status.md` with Sprint 34 data (73 pages, 91/100 score)
+- **Fixed reference commands:** `squirrel audit` → `npx squirrelscan` in reference.md
+- **Added CI/CD:** `.github/workflows/ci.yml` — automated typecheck + build on push/PR
+- **Added .env.example:** Documents required env vars (BRAVE_SEARCH_API_KEY)
+- **Updated AGENTS.md:** Corrected guide count (47 pages: 14 city + 33 technical), added about/ subdirectory
+- **Added root doc references:** 9 root-level docs now discoverable from reference/reference.md
+- **Updated environment.md:** Added Git version verification note
+- **Committed 6 new content pages:** 2 blog posts, 4 new guides (caregiver, taxes-2026, vertical-integration, metrc-compliance)
+
+### Build Verified
+- Typecheck: 123 errors (known, non-blocking — caption attribute + Callout type mismatch)
+- Working tree: Clean, committed as `8304d73`
+
+---
+
 ## 📋 SPRINT 34: Content Quality Sprint (Apr 16, 2026)
 
 **[OPENCODE] April 17, 2026 5:40 PM EDT — Sprint Close**
