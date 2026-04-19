@@ -221,9 +221,9 @@ async function runPipeline() {
     const num = `[${idx}/${total}]`;
     const { slug, prompt, width = 1200, height = 400, model = 'flux-schnell', target, field = 'heroImage', schema, caption } = item;
 
-    // Validate required fields
-    if (!slug || !prompt || !target) {
-      console.log(`${num} ⚠️  ${slug || 'unknown'}: Missing required fields (slug, prompt, target) — skipping`);
+    // Validate required fields (slug and prompt are required; target is optional for generate-only mode)
+    if (!slug || !prompt) {
+      console.log(`${num} ⚠️  ${slug || 'unknown'}: Missing required fields (slug, prompt) — skipping`);
       failed++;
       continue;
     }
@@ -231,7 +231,7 @@ async function runPipeline() {
     const outputDir = getOutputDir(field);
     const outputFile = path.join(outputDir, getOutputFilename(slug, field));
     const localPath = getLocalPath(slug, field);
-    const targetPath = path.isAbsolute(target) ? target : path.join(rootDir, target);
+    const targetPath = target ? (path.isAbsolute(target) ? target : path.join(rootDir, target)) : null;
 
     // Check if already exists
     if (fs.existsSync(outputFile) && !force) {
@@ -256,18 +256,22 @@ async function runPipeline() {
         console.log(`    └─ Skipped (exists)`);
       }
 
-      // Step 3: Update astro file
-      updateAstroFile(targetPath, field, localPath);
-      console.log(`    └─ Updated: ${path.basename(target)} → ${localPath}`);
+      // Step 3: Update astro file (only if target provided)
+      if (target) {
+        updateAstroFile(targetPath, field, localPath);
+        console.log(`    └─ Updated: ${path.basename(target)} → ${localPath}`);
 
-      // Step 4: Add schema if requested
-      if (schema) {
-        const added = addImageSchema(targetPath, localPath, caption, width, height);
-        if (added) {
-          console.log(`    └─ Schema added`);
-        } else {
-          console.log(`    └─ Schema skipped (already exists)`);
+        // Step 4: Add schema if requested
+        if (schema) {
+          const added = addImageSchema(targetPath, localPath, caption, width, height);
+          if (added) {
+            console.log(`    └─ Schema added`);
+          } else {
+            console.log(`    └─ Schema skipped (already exists)`);
+          }
         }
+      } else {
+        console.log(`    └─ Skipped update (no target specified)`);
       }
 
       generated++;
