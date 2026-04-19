@@ -36,6 +36,7 @@ interface Props {
   breadcrumbs?: Breadcrumb[];
   noindex?: boolean;
   topics?: string[];
+  tags?: string[];
 }
 
 const { 
@@ -47,7 +48,8 @@ const {
   article,
   breadcrumbs = [],
   noindex = false,
-  topics = []
+  topics = [],
+  tags = []
 } = Astro.props;
 
 // Site Metadata & State
@@ -275,6 +277,13 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
                 {article.modifiedDate && article.modifiedDate !== article.publishDate && (
                   <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
                 )}
+                {tags.length > 0 && (
+                  <span class="article-tags">
+                    {tags.map(tag => (
+                      <span class="tag-badge tag-{tag}">{tag.replace(/-/g, ' ')}</span>
+                    ))}
+                  </span>
+                )}
               </div>
             )}
             <div class="lead-capture-box">
@@ -297,6 +306,13 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
               )}
               {article.modifiedDate && article.modifiedDate !== article.publishDate && (
                 <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
+              )}
+              {tags.length > 0 && (
+                <span class="article-tags">
+                  {tags.map(tag => (
+                    <span class="tag-badge tag-{tag}">{tag.replace(/-/g, ' ')}</span>
+                  ))}
+                </span>
               )}
             </div>
           )}
@@ -823,5 +839,27 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     font-size: 1.5rem;
     color: var(--color-primary);
     margin-top: 2rem;
+  }
+
+  /* Tag Badges */
+  .article-tags {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+  .tag-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    background: var(--color-primary);
+    color: var(--color-background);
+  }
+  .tag-policy-watch {
+    background: var(--color-accent);
+    color: var(--color-text-dark);
   }
 </style>
