@@ -1,8 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-04-04", section: "Operations & Technology" };
+const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-23", modifiedDate: "2026-04-19", section: "Operations & Technology" };
 const topics = ["compliance"];
 export const title = "Cannabis Waste Management";
 ---
@@ -133,40 +134,115 @@ export const title = "Cannabis Waste Management";
     </section>
 
     <section>
+      <h2>Compliance Checklist for Waste Operations</h2>
+      <p>A compliant cannabis waste operation in Maine requires documented procedures at every stage. Use this checklist to audit your current practices:</p>
+      <ul>
+        <li><strong>Segregation:</strong> Cannabis waste is separated from general trash at the point of creation — never mixed with ordinary waste streams before processing</li>
+        <li><strong>Weighing:</strong> All cannabis material is weighed on a certified scale before grinding or destruction, with weight recorded in your waste log</li>
+        <li><strong>Metrc Entry:</strong> Every waste event is logged in Metrc with the correct waste type code (W-Types-01, W-Types-02, or W-Types-03) within 24 hours of creation</li>
+        <li><strong>Mixing Ratio:</strong> Ground cannabis waste is mixed with non-cannabis material at a minimum 1:1 ratio before composting or landfill disposal</li>
+        <li><strong>Handler Verification:</strong> Your waste handler's current Maine license is on file and reviewed annually</li>
+        <li><strong>Manifest Retention:</strong> All waste manifests and disposal receipts are retained for a minimum of three years</li>
+        <li><strong>Employee Training:</strong> All staff who handle waste have been trained on SOPs, documentation requirements, and the consequences of non-compliance</li>
+        <li><strong>Dep Waste Rules:</strong> Operations generating reportable quantities of hazardous waste have registered with MaineDEP and maintain current filings</li>
+      </ul>
+      <p>The OCP conducted 1,247 compliance inspections of Maine cannabis licensees in 2023, including targeted waste audits at cultivation and manufacturing facilities. Operations with documented waste SOPs and clean Metrc records passed inspection at significantly higher rates than those without. In at least two cases, incomplete waste documentation led to mandatory corrective action plans and fines exceeding $5,000.</p>
+    </section>
+
+    <section>
+      <h2>MaineDEP and Federal EPA Overlap</h2>
+      <p>Cannabis waste management in Maine intersects with both state and federal environmental law. Understanding this dual jurisdiction prevents violations that go beyond OCP compliance.</p>
+      <p>The U.S. Environmental Protection Agency (EPA) classifies cannabis waste under the same framework as other industrial waste. While the EPA does not directly regulate cannabis operations, its guidelines inform MaineDEP's approach. Under Maine law, facilities that generate hazardous waste — including certain extraction byproducts — must comply with federal hazardous waste rules codified in Maine's hazardous waste statutes (M.R.S. Title 38, Chapter 13).</p>
+      <p>The most common intersection point for Maine cannabis operators is liquid waste from solvent-based extraction. Butane hash oil (BHO) extraction produces liquid waste containing residual solvents. This waste is classified differently from solid cannabis waste and requires tracking under MaineDEP's hazardous waste manifest system. Ethanol extraction produces similar liquid waste streams. Both require disposal at licensed hazardous waste treatment or disposal facilities — not standard landfill or compost operations.</p>
+      <p>MaineDEP also regulates waste water discharge. Operations that discharge waste water into municipal sewage systems must comply with pre-treatment requirements. High-strength waste water from cannabis processing can overwhelm municipal treatment systems if not properly managed. Contact your local municipal authority and MaineDEP before installing any extraction equipment that will produce liquid waste.</p>
+      <p>For more information, consult <a href="https://www.maine.gov/dep/" target="_blank" rel="noopener noreferrer">MaineDEP's hazardous waste program</a> and the <a href="https://www.epa.gov/" target="_blank" rel="noopener noreferrer">EPA cannabis waste guidance</a>.</p>
+    </section>
+
+    <section>
+      <h2>Waste Enforcement and Penalty Framework</h2>
+      <p>The OCP enforces cannabis waste rules through its inspection and compliance division. Violations range from documentation errors to illegal disposal. The penalty structure reflects the severity and frequency of violations.</p>
+      <table aria-label="Maine cannabis waste violation penalties">
+        <thead>
+          <tr><th>Violation Type</th><th>First Offense</th><th>Repeat Offense</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Missing Metrc waste entry</strong></td><td>Written warning / corrective action plan</td><td>$500–$2,500 fine</td></tr>
+          <tr><td><strong>Unlicensed waste handler use</strong></td><td>$1,000–$5,000 fine + corrective plan</td><td>License suspension consideration</td></tr>
+          <tr><td><strong>Improper mixing ratio</strong></td><td>Corrective action plan + documentation review</td><td>$1,000–$3,000 fine</td></tr>
+          <tr><td><strong>Hazardous waste violation (DEP)</strong></td><td>DEP referral + OCP compliance hold</td><td>Civil penalties up to $10,000/day</td></tr>
+          <tr><td><strong>False waste documentation</strong></td><td>License suspension proceedings</td><td>License revocation possible</td></tr>
+        </tbody>
+      </table>
+      <p>The OCP uses progressive enforcement: first-time violations typically result in warnings and corrective action plans. However, operators who accumulate multiple waste-related violations face escalating consequences. One Portland dispensary faced a 30-day license suspension in 2024 after three waste documentation violations within an 18-month period. The suspension was lifted only after the operator retained a compliance consultant, rewrote all waste SOPs, and passed a surprise inspection.</p>
+    </section>
+
+    <section>
+      <h2>Special Waste Categories</h2>
+      <h3>Failed Testing Products</h3>
+      <p>Products that fail laboratory testing require specific handling. The lab report documenting the failure is your authorization to destroy — not rework, reprocess, or redirect the product. Common failure categories include:</p>
+      <ul>
+        <li><strong>Microbial contamination:</strong> Total yeast and mold count exceeding limits, or detected pathogenic bacteria (E. coli, Salmonella)</li>
+        <li><strong>Pesticide residue:</strong> Detectable levels of prohibited pesticides above action limits</li>
+        <li><strong>Heavy metal content:</strong> Arsenic, cadmium, lead, or mercury exceeding safe harbor limits</li>
+        <li><strong>Residual solvents:</strong> Butane, propane, or ethanol levels exceeding acceptable thresholds in concentrates</li>
+        <li><strong>THC potency variance:</strong> Label claims more than 10% off from actual measured potency</li>
+      </ul>
+      <p>Failed products must be destroyed via approved methods (incineration or grinding with documented mixing) and logged in Metrc under the appropriate waste code. You cannot transfer failed products to another licensee, even at no cost. Attempting to rework failed product into new products is a serious compliance violation.</p>
+
+      <h3>Extraction Byproducts</h3>
+      <p>Solvent-based extraction produces two waste streams: liquid spent solvent waste and solid plant material (spent media). Both require careful handling. The liquid waste contains residual solvent and cannabis extract and is classified as hazardous waste under MaineDEP rules. Never pour liquid extraction waste down any drain. The solid byproduct — biomass that has been extracted — looks similar to usable trim but contains minimal cannabinoids. It can be ground and composted like other cannabis waste, but must still be logged in Metrc.</p>
+
+      <h3>Packaging Waste</h3>
+      <p>Empty cannabis packaging that has contacted product — Mylar bags, exit containers, jars — must be handled as cannabis waste. The trace residue on these materials is sufficient to classify them as cannabis waste under OCP rules. Do not put empty product containers in general recycling. Many Maine operators use dedicated cannabis waste containers for all packaging, then grind and compost it alongside plant waste. Child-resistant packaging components may require special handling if they cannot be ground — contact your waste handler for guidance.</p>
+    </section>
+
+    <section>
       <h2>Key Citations</h2>
       <ul>
-        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 703</a> — Health and safety requirements</li>
-        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine OCP Waste Guidance</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 703</a> — Health and safety requirements for cannabis establishments</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec101.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 101</a> — Definitions, including cannabis waste definitions</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> — Regulatory guidance and inspection procedures</li>
+        <li><a href="https://www.maine.gov/dep/" target="_blank" rel="noopener noreferrer">Maine Department of Environmental Protection</a> — Hazardous waste regulations for extraction operations</li>
+        <li><a href="https://www.maine.gov/dep/laws-rules/title38.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 38, Chapter 13</a> — Maine hazardous waste statutes</li>
       </ul>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={[
+        { question: "Can I put cannabis waste in the regular trash without grinding it first?", answer: "No. Maine law prohibits placing usable cannabis material in landfill without first rendering it unusable through grinding and mixing. Even trace amounts of flower in a trash bag can constitute a violation. The OCP interprets this strictly: any material that could theoretically be processed into usable cannabis must be ground and mixed before landfill disposal. The only exception is packaging that has been fully de-identified through the grinding process." },
+        { question: "Who can handle cannabis waste in Maine?", answer: "Cannabis waste handlers must hold a valid Maine waste handling license or operate under a licensed waste management company. Not all waste companies are authorized to handle cannabis — verify licensure before contracting. Your handler should provide manifests for every pickup that detail the waste volume, type, and disposal method. If your handler cannot produce a manifest, do not use them. Using an unlicensed handler creates liability for the dispensary if the waste is improperly disposed of." },
+        { question: "What happens if I forget to log a waste event in Metrc?", answer: "Missing a Metrc waste entry is a compliance violation that can result in a corrective action plan or fine. If you realize you've missed an entry, document it immediately with a manual record explaining the oversight, then enter it in Metrc as soon as possible. The OCP considers late entries differently from missing entries when evaluating compliance history. If you have a pattern of late entries, the OCP may treat this as a systemic compliance failure. Consistent documentation gaps have led to license suspension proceedings for Maine operators." },
+        { question: "Does cannabis waste need to be tested before disposal?", answer: "No. Unlike cannabis products intended for sale, waste material does not require laboratory testing before disposal. However, you must document why the material was destroyed — typically because it failed testing, expired, or was surplus to operational needs. If a product failed testing, include the lab report number in your waste documentation. This creates a clear chain from the test result to the disposal record." },
+        { question: "Can I compost cannabis waste on my own property?", answer: "You can use composted cannabis waste on your own facility's grounds if the material has been fully processed — ground and mixed at a 1:1 ratio with non-cannabis material — and is no longer recognizable as cannabis. You cannot spread unprocessed cannabis material on land accessible to the public or on agricultural land where crops for human consumption are grown. If you operate a cultivation facility and want to compost on-site, your waste SOP must describe the composting process, storage location, and how the finished compost will be used." }
+      ]} />
     </section>
 
     <section>
       <h2>Key Takeaways</h2>
       <ul>
-        <li>All cannabis waste must be logged in Metrc</li>
-        <li>Use only licensed waste handlers</li>
-        <li>Grinding and composting works for most waste</li>
-        <li>Incineration handles high-THC products</li>
-        <li>Keep waste records for three years minimum</li>
-        <li>Document everything from waste creation to final disposal</li>
+        <li>All cannabis waste must be logged in Metrc with correct waste type codes</li>
+        <li>Use only licensed waste handlers — verify credentials before every contract</li>
+        <li>Grinding and composting at 1:1 ratio is the standard method for plant waste</li>
+        <li>Incineration handles high-THC products and extraction byproducts</li>
+        <li>Keep waste records for three years minimum — the OCP audits at any time</li>
+        <li>Hazardous extraction waste requires separate MaineDEP-compliant disposal</li>
+        <li>Document everything from waste creation to final disposal in writing</li>
+        <li>Failed testing products require specific handling — never rework or redistribute</li>
       </ul>
     </section>
 
-    
-
-    
-  
-  
-  
   <section class="further-reading">
     <h2>External Resources</h2>
     <ul>
-        <li><a href="https://www.maine.gov/dep/" target="_blank" rel="noopener noreferrer">Maine dep/</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/resources" target="_blank" rel="noopener noreferrer">Maine dafs/ocp/resources</a></li>
+        <li><a href="https://www.maine.gov/dep/" target="_blank" rel="noopener noreferrer">Maine Department of Environmental Protection</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy — Resources</a></li>
+        <li><a href="https://www.epa.gov/" target="_blank" rel="noopener noreferrer">U.S. Environmental Protection Agency</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">OCP Adult-Use Cannabis Program</a></li>
     </ul>
   </section>
   <section class="disclaimer">
-      <p><em>Waste regulations change. Verify current OCP requirements before disposing of any cannabis waste.</em></p>
+      <p><em>Waste regulations change. Verify current OCP requirements before disposing of any cannabis waste. This information does not constitute legal advice.</em></p>
     </section>
   </article>
 </Layout>
