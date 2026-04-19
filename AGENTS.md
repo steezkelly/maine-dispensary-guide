@@ -124,33 +124,31 @@ These errors do not affect the build or runtime. The site builds and deploys cle
 
 ## LSP Status (lsp_diagnostics)
 
-**Status: PARTIALLY FUNCTIONAL** — Works on `.astro` files when `OPENCODE_RESPECT_LSP_DIAGNOSTICS=10` is set, but has known issues.
+**Status: NOT WORKING** — `lsp_diagnostics` returns "The `typescript.tsdk` init option is required" for all file types in this project.
 
-### Known Issues (OpenCode core bugs, not project-specific):
-1. **TypeScript first-diagnostic skip** — `client.ts:60` ignores first diagnostic batch for TypeScript
-2. **3-second hardcoded timeout** — Too short for complex projects (Astro 6.0 with 79 pages)
-3. **150ms diagnostic debounce** — Causes delays before diagnostics return
-
-### Fix — Set Environment Variable:
-```powershell
-$env:OPENCODE_RESPECT_LSP_DIAGNOSTICS="10"
+### The Error
 ```
-This disables debounce, extends timeout to 10 seconds, and disables the first-diagnostic skip.
+Error: Request initialize failed with message: The `typescript.tsdk` init option is required.
+```
 
-### How It Works:
-- `OPENCODE_RESPECT_LSP_DIAGNOSTICS=0` (default): 150ms debounce, 3s timeout, TypeScript first-diagnostic skip
-- `OPENCODE_RESPECT_LSP_DIAGNOSTICS=10`: 0ms debounce, 10s timeout, no first-diagnostic skip
+### Root Cause
+OpenCode Desktop's LSP client fails to initialize the TypeScript language server with Astro 6.0. The error occurs even when:
+- `typescript` is installed in `node_modules/typescript/lib/tsserver.js` ✅
+- `@astrojs/language-server@2.16.6` is installed ✅
+- `astro-ls --version` returns `2.16.6` ✅
+- `OPENCODE_RESPECT_LSP_DIAGNOSTICS=10` is set ✅
+- Explicit `lsp` config with `tsdk` path added to `opencode.json` ✅
 
-### The "Request initialize failed" error:
-Means TypeScript LSP couldn't find `tsserverlibrary.js` in `node_modules/typescript/lib`. This happens when:
-- TypeScript is not installed locally (must be in project's `node_modules`, not just global)
-- The LSP server failed to spawn
+This is a **confirmed incompatibility** between OpenCode Desktop's LSP implementation and Astro 6.0 projects.
 
-### Workaround:
-- `npx astro check src/pages/example.astro` works reliably for file-scoped type validation
-- `npx astro check` runs tsc directly, not via LSP — unaffected by LSP issues
+### Workaround (Use This)
+```bash
+npx astro check src/pages/example.astro   # Type check single file
+npx astro check                           # Type check all files
+```
+This uses `tsc` directly and works reliably. It is not affected by LSP issues.
 
-### This does NOT affect build/deploy** — the site builds and deploys cleanly.
+### This does NOT affect build/deploy** — the site builds and deploys cleanly with 123 known non-blocking type errors.
 
 ---
 
