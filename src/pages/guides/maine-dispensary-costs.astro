@@ -14,7 +14,7 @@ const topics = ["finance"];
 <Layout 
   title="Maine Dispensary Startup Costs" 
   description="Maine cannabis dispensary startup cost guide. Licensing fees, buildout budgets, inventory requirements, and financial benchmarks for 2026."
-  heroImage="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200&h=400"
+  heroImage="/images/heroes/maine-dispensary-costs.jpg"
   article={article}
   topics={topics}
 >
@@ -69,6 +69,12 @@ const topics = ["finance"];
 
     <section>
       <h2>Real Estate and Build-Out</h2>
+
+      <figure class="infographic">
+        <img src="/images/infographics/startup-costs.jpg" alt="Maine cannabis dispensary startup cost breakdown: leasehold improvements, security, POS, fixtures, METRC, legal fees" width="800" height="592" loading="lazy" />
+        <figcaption>Typical startup cost breakdown for a Maine cannabis dispensary</figcaption>
+      </figure>
+
       <p>This is your biggest cost. Location determines everything else. A 1,000-1,500 square foot space works for most dispensaries.</p>
       
       <table aria-label="Maine dispensary real estate costs">
@@ -295,6 +301,10 @@ const topics = ["finance"];
       <p><em>These are estimates. Actual costs vary by location, size, and circumstances. Consult qualified professionals before making financial decisions.</em></p>
     </section>
   </article>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/startup-costs.jpg","description":"Maine cannabis dispensary startup cost breakdown","width":800,"height":592}
+  </script>
 </Layout>
 
 <style>

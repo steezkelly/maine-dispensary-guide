@@ -53,7 +53,7 @@ const faqData = {
 <Layout 
   title="Cannabis Cultivation Guide" 
   description="Maine cannabis cultivation guide. Licensing tiers, facility requirements, compliance protocols, and operational best practices for 2026." 
-  heroImage="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=400"
+  heroImage="/images/heroes/maine-cannabis-cultivation-guide.jpg"
   article={article}
   topics={topics}
 >
@@ -80,6 +80,12 @@ const faqData = {
 
     <section>
       <h2>Why Cultivate in Maine?</h2>
+
+      <figure class="infographic">
+        <img src="/images/infographics/cultivation-tiers.jpg" alt="Maine cannabis cultivation license tiers: Tier 1 through Tier 4 with canopy size comparison" width="800" height="592" loading="lazy" />
+        <figcaption>Maine's four cultivation license tiers — from 2,000 sq ft (Tier 1) to unlimited canopy (Tier 4)</figcaption>
+      </figure>
+
       <p>Maine's craft cannabis market rewards quality growers. Consumers here actively seek out locally grown products. They pay attention to where their cannabis comes from. This creates a high-value niche for growers who invest in quality.</p>
       <p>Maine's 2024 adult-use market generated over $250M in sales. That number is climbing. Indoor and greenhouse growers capture top-shelf pricing that outdoor-only states cannot match. A craft indoor cultivator in Portland can earn $1,500-2,500 per pound. Commodity outdoor flower earns $400-600 per pound.</p>
       <p>The state's OCP has matured. Licensing is predictable. Municipal opt-in patterns are understood. For operators who do the homework, Maine offers one of New England's most favorable cultivation environments.</p>
@@ -342,6 +348,10 @@ const faqData = {
       <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only. Cultivation licensing, facility requirements, and tax rules change. Consult the Maine OCP and qualified professionals before making business decisions.</em></p>
     </section>
   </article>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/cultivation-tiers.jpg","description":"Maine cannabis cultivation license tiers: Tier 1 through Tier 4 with canopy size comparison","width":800,"height":592}
+  </script>
 </Layout>
 
 <style>

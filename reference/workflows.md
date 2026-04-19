@@ -48,3 +48,102 @@ TODOs:
 [ ] Phase 3: Verify and test
 [ ] Phase 4: Document changes
 ```
+
+## Image Generation Pipeline (SPRINT 42 Lessons)
+
+### The Problem
+Manual image pipeline was error-prone across 86 images (74 heroes + 12 infographics):
+1. Generate via `fal-image-gen.cjs` → get fal.media URL
+2. Download to `public/images/heroes/`
+3. Extract Unsplash photo ID, convert to slug, rename
+4. Run `update-hero-images.cjs` to replace URLs in pages
+5. Manually verify each image was actually embedded
+
+### What Failed
+- **No content policy research upfront** — "cannabis shop" was rejected by fal.ai. Had to work around per-image, slowing batch generation significantly.
+- **No correlation check** — Could not answer "are all generated images actually embedded in pages?" without manually grepping.
+- **URL replacement had no dry-run** — Had to read files back to verify correctness.
+- **Windows path handling** — `f.split('/').pop()` fails on Windows `\` — caused filename extraction errors.
+
+### The Better Workflow
+
+**Step 0 — Research first:**
+Before batch generating images, research content policy constraints:
+- Test a prompt with the target keyword before committing to batch
+- Identify banned terms (e.g., "cannabis shop", "dispensary exterior") and their alternatives (e.g., "coastal business storefront")
+
+**Step 1 — Create manifest:**
+Build a JSON manifest describing all images to generate:
+```json
+[
+  {
+    "slug": "portland-dispensary-guide",
+    "prompt": "Maine coastal cityscape...",
+    "model": "flux-2-pro",
+    "target": "src/pages/guides/portland-dispensary-guide.astro",
+    "field": "heroImage"
+  }
+]
+```
+
+**Step 2 — Run unified pipeline:**
+```bash
+node scripts/image-pipeline.cjs manifest.json    # normal run
+node scripts/image-pipeline.cjs manifest.json --force   # regenerate all
+```
+
+**Step 3 — Audit before deploying:**
+```bash
+node scripts/image-audit.cjs all    # full audit
+node scripts/image-audit.cjs heroes # heroes only
+node scripts/image-audit.cjs infographics --schema  # infographic schema check
+```
+
+**Step 4 — Verify URL replacement (pre/post):**
+```bash
+# Before replacement
+grep -c "images.unsplash.com" src/pages/guides/
+# Should return count of Unsplash URLs
+
+# After replacement
+grep -c "images.unsplash.com" src/pages/guides/
+# Should return 0
+
+grep -c "/images/heroes/" src/pages/guides/
+# Should return count of local hero references
+```
+
+### fal.ai Content Policy (Known Rejections)
+
+**Important:** fal.ai's Acceptable Use Policy does NOT explicitly ban cannabis imagery. The `content_policy_violation` errors come from the underlying models (Flux, Ideogram) which apply their own safety filters. These are model-specific, not platform-wide.
+
+**Known rejected terms (model-level filters):**
+| Banned Term | Alternative |
+|------------|-------------|
+| cannabis shop | coastal business storefront |
+| dispensary exterior | Maine storefront, wellness business |
+| marijuana plant close-up | botanical illustration, green leaf study |
+| psychedelic mushroom | fungal illustration, organic pattern |
+
+**Test any cannabis/cannabis-adjacent imagery with a single image before batch.** If rejected, try:
+1. Remove the flagged keyword entirely
+2. Use indirect descriptors ("wellness business", "botanical", "coastal storefront")
+3. Try a different model (flux-schnell has looser filters than flux-2-pro)
+
+### Available Scripts
+| Script | Purpose |
+|--------|---------|
+| `scripts/image-pipeline.cjs` | Unified generate + download + update (SPRINT 42 improvement) |
+| `scripts/image-audit.cjs` | Audit generated vs. embedded vs. orphaned images |
+| `scripts/fal-image-gen.cjs` | Direct fal.ai generation (single image) |
+| `scripts/download-heroes.cjs` | Download hero images from fal.media URLs |
+| `scripts/download-infographics.cjs` | Download infographic images |
+| `scripts/update-hero-images.cjs` | Replace Unsplash URLs with local paths |
+
+### Image Directory Structure
+```
+public/images/
+├── heroes/          # 74 hero images (1200x400)
+├── infographics/     # 12 infographic images (800x592)
+└── content/         # Reserved for in-body content images (empty as of SPRINT 42)
+```
