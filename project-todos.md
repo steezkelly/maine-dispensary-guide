@@ -9,27 +9,23 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 23 — April 13, 2026)
+## 🚀 Active Sprint (Sprint 34 — April 16, 2026)
 
 ### 🔴 CRITICAL
-- [x] Score 91 Grade A maintained ✅ (target: 90+) — dropped from 92 after CSP/GA4 sprint, still A
-- [x] Orphan page fixes: kittery, events-2026, site-health, scarborough, westbrook ✅
-- [x] A11y: Fixed 12 identical "contact →" links on directory ✅
+- [x] Score 91 Grade A maintained ✅ (target: 90+)
+- [x] Content audit: 48 files audited (44 guides + 4 blog) ✅
+- [x] P0 fixes: 6 worst-scoring pages improved (microbusiness 46→76, portland 54→74, how-to-open 66→76, cultivation 63→88, cultivation-license 73→83, POS 73→88) ✅
+- [x] Promo/AI cleanup: All promo words eliminated (11→0), all AI phrases eliminated (1→0) ✅
+- [x] Thin content expansion: 8 pages expanded from <850 to 1000+ words (inventory, waste, edibles, delivery, banking, staffing, regulations, extraction) ✅
+- [x] GEO citations: Statistics and source citations added to all expanded pages ✅
+- [x] Schema markup: FAQ schema added to 2 pages (real-estate, market), HowTo schema added to 3 pages (how-to-open, extraction, inventory) ✅
+- [x] Readability: 40+ long sentences broken across microbusiness and portland-cannabis files ✅
 
 ### 🟠 HIGH — Pending
-- [x] Add external links to founders pages ✅ (all 3 founders now have contextual external links)
-- [x] Vercel Analytics setup ✅ (already built-in via @vercel/analytics/astro)
-- [x] Add internal links to weak/orphan pages ✅ (kittery, events-2026, scarborough, westbrook, site-health)
-- [x] Add contextual external links to all guide pages (2-5 per page) ✅ (40 pages now have 2-6 links each)
-
-### 🟡 MEDIUM — Queued
-- [x] Add link to `/directory/` from nav or resources page ✅ (linked from resource hub Callout)
-- [x] Fix "identical links same purpose" on directory ✅ (12 unique link names)
-- [x] Add LCP preload hints for hero images (27 pages) ✅ (already in Layout.astro line 72)
-- [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
-- [x] Fix color contrast warnings on 5 pages ✅ (nav hover: --color-soft-green #A3B18A → #7A9A6A, now 4.5:1)
-- [x] Fix remaining identical links on: find-a-dispensary, launch-checklist, taxation-280e, westbrook ✅ (verified clean)
-- [x] UI Sprint 33 ✅ (Apr 14, 2026) — Guide Sidebar complete overhaul + Header scroll effect
+- [ ] Establish external link partnerships
+  - **Targets:** Maine Chamber of Commerce, Maine Cannabis Association, local SBDC, OCP-linked municipalities
+  - **Tactic:** Offer to link to their resources if they link to relevant guide pages
+- [ ] Domain warm-up for mainedispensaryguide.com email (Purelymail configured, catch-all routing active)
 
 ---
 

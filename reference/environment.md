@@ -11,7 +11,7 @@
 |------|---------|------|
 | Node.js | v24.14.0 | `C:\Program Files\nodejs\` |
 | npm | 11.9.0 | `C:\Program Files\nodejs\` |
-| Git | 2.51.0.windows.1 | `C:\Program Files\Git\` |
+| Git | 2.51.0.windows.1 (verify with `git --version`) | `C:\Program Files\Git\` |
 | Python | 3.12.x | `C:\Users\Steve\AppData\Local\Programs\Python\Python312\` |
 
 ---
@@ -263,4 +263,4 @@ Select-String -Path ".\**\*.astro" -Pattern "pattern"
 
 ---
 
-*Last Updated: 2026-04-04*
+*Last Updated: 2026-04-18*

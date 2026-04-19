@@ -100,6 +100,22 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 
 ---
 
+## Root-Level Documentation
+
+| File | Purpose |
+|------|---------|
+| `BOT_COLLABORATION_HUB.md` | Multi-agent communication log (READ FIRST) |
+| `project-todos.md` | Persistent todo tracking across sprints |
+| `UI_IMPROVEMENTS.md` | UI change log and status tracker |
+| `link-outreach.md` | External linking strategy and outreach plan |
+| `PROJECT_DNA.md` | Project identity and core principles |
+| `PROJECT_STATE.md` | Current project state snapshot |
+| `BUGS.md` | Known bugs and fix status |
+| `MISSION_CONTROL.md` | Mission and priority tracker |
+| `ROADMAP_*.md` | Various roadmap drafts and plans |
+
+---
+
 ## Project Scripts
 
 | Script | Purpose |
@@ -150,9 +166,9 @@ npx vercel deploy --prod
 /audit [pattern]            # content-ops: content quality audit
 /expand [topic]             # content-ops: research and expand topic
 /expand-all [pattern]       # content-ops: batch expand pages
-squirrel audit [url]         # audit-website: live-site SEO audit
+npx squirrelscan [url]       # audit-website: live-site SEO audit (230+ rules)
 ```
 
 ---
 
-*Last Updated: 2026-04-13 06:30 PM EDT*
+*Last Updated: 2026-04-18*

@@ -1,0 +1,270 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+export const title = "Maine Metrc Compliance Guide";
+
+const article = {
+  author: "Maine Dispensary Guide Editorial Team",
+  publishDate: "2026-04-18",
+  modifiedDate: "2026-04-18",
+  section: "Operations & Compliance"
+};
+
+const topics = ["compliance", "operations"];
+---
+
+<Layout
+  title="Maine Metrc Compliance Guide: Seed-to-Sale Tracking (2026)"
+  description="Complete guide to Metrc seed-to-sale tracking for Maine cannabis businesses. Covers tag requirements, costs, compliance obligations, batch tracking, and the 2026 legislative debate."
+  heroImage="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+  article={article}
+  topics={topics}
+>
+<article>
+
+<div class="article-header">
+<h1>Metrc Compliance in Maine</h1>
+<p class="subtitle">Everything Maine cannabis licensees need to know about seed-to-sale tracking, tag requirements, and regulatory compliance</p>
+</div>
+
+<section>
+<h2>Overview</h2>
+<p>Metrc — the Marijuana Enforcement Tracking Reporting &amp; Compliance system — is the mandatory seed-to-sale tracking platform for all adult-use cannabis licensees in Maine. Required under Title 28-B, §105 of the Maine Revised Statutes, Metrc tracks every cannabis plant from its earliest growth stage through cultivation, harvesting, processing, packaging, testing, transfer, retail sale, and ultimately disposal or destruction.</p>
+<p>The Office of Cannabis Policy (OCP) partnered with Metrc LLC in November 2020 to implement the system for Maine's adult-use market. Metrc completed full implementation in just 60 days, providing the technological backbone for regulatory oversight of the state's rapidly growing cannabis industry. The system uses serialized RFID tags with barcodes to create an immutable chain of custody for every plant and product in the regulated marketplace.</p>
+</section>
+
+<section class="fact-box">
+<h2>Metrc at a Glance</h2>
+<table aria-label="Maine Metrc tracking system key metrics">
+<tbody>
+<tr><td><strong>Legal Requirement</strong></td><td>Title 28-B, §105 (Tracking system)</td></tr>
+<tr><td><strong>Partnership Start</strong></td><td>November 2020</td></tr>
+<tr><td><strong>Implementation Time</strong></td><td>60 days</td></tr>
+<tr><td><strong>Monthly Subscription</strong></td><td>$40 per licensed facility</td></tr>
+<tr><td><strong>Plant Tag Cost</strong></td><td>$0.45 each</td></tr>
+<tr><td><strong>Package Tag Cost</strong></td><td>$0.25 each</td></tr>
+<tr><td><strong>System Type</strong></td><td>Cloud-hosted, web-based (HTML5)</td></tr>
+<tr><td><strong>Tracking Method</strong></td><td>Individual + batch (FSBT)</td></tr>
+<tr><td><strong>Support Phone</strong></td><td>877-566-6506</td></tr>
+</tbody>
+</table>
+</section>
+
+<Callout title="Compliance Is Non-Negotiable" type="success">
+Accurate Metrc reporting is the foundation of regulatory compliance in Maine's adult-use cannabis market. Every gram of cannabis must be accounted for — from seed to sale to destruction. Proper Metrc management protects your license, your business, and your customers.
+</Callout>
+
+<section>
+<h2>What Is Metrc?</h2>
+<p class="answer-capsule">Metrc is a cloud-hosted, real-time seed-to-sale tracking system mandated by Maine law for all adult-use cannabis licensees. It uses serialized RFID tags to track every plant and product through the entire supply chain, providing regulators with complete visibility into the legal cannabis marketplace.</p>
+<p>Metrc is not an inventory management system or a point-of-sale platform. It is a compliance reporting tool. Its primary purpose is to enable the OCP to monitor the movement of cannabis products, prevent diversion to the illicit market, ensure accurate tax collection, and facilitate product recalls when necessary.</p>
+<p>The system tracks the following lifecycle events:</p>
+<ul>
+<li><strong>Planting:</strong> Immature plants are tagged and registered in the system</li>
+<li><strong>Cultivation:</strong> Growth stages, plant movements, and canopy changes are recorded</li>
+<li><strong>Harvesting:</strong> Mature plants are harvested and logged with weight and batch information</li>
+<li><strong>Processing:</strong> Cannabis is dried, trimmed, extracted, or manufactured into products</li>
+<li><strong>Testing:</strong> Lab results are entered, linking potency and safety data to specific batches</li>
+<li><strong>Packaging:</strong> Products are packaged with Metrc package tags and labeled per OCP requirements</li>
+<li><strong>Transfer:</strong> Products move between licensed facilities with full chain-of-custody documentation</li>
+<li><strong>Retail Sale:</strong> Final consumer transactions are recorded at the point of sale</li>
+<li><strong>Destruction:</strong> Waste and failed products are documented and destroyed with witness verification</li>
+</ul>
+</section>
+
+<section>
+<h2>Tag Requirements &amp; Costs</h2>
+<p class="answer-capsule">Every cannabis plant in Maine's adult-use program requires a unique Metrc plant tag ($0.45 each). Every packaged product requires a Metrc package tag ($0.25 each). Tags are serialized, RFID-enabled, and cannot be reused or transferred between plants.</p>
+
+<h3>Plant Tags</h3>
+<p>Plant tags are required for every individual cannabis plant in the adult-use system. Tags must be affixed to the plant and remain attached throughout its lifecycle. Tags are purchased in the following quantities:</p>
+<table aria-label="Maine Metrc plant tag pricing">
+<thead>
+<tr><th>Quantity</th><th>Total Cost</th><th>Cost Per Tag</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>$0.45</td><td>$0.45</td></tr>
+<tr><td>5</td><td>$2.25</td><td>$0.45</td></tr>
+<tr><td>10</td><td>$4.50</td><td>$0.45</td></tr>
+<tr><td>25</td><td>$11.25</td><td>$0.45</td></tr>
+<tr><td>50</td><td>$22.50</td><td>$0.45</td></tr>
+</tbody>
+</table>
+
+<h3>Package Tags</h3>
+<p>Package tags are required for every packaged cannabis product. Each tag costs $0.25 and must be affixed to the final product packaging before the product can be transferred or sold.</p>
+
+<h3>Estimated Annual Tag Costs</h3>
+<table aria-label="Estimated annual Metrc tag costs by operation size">
+<thead>
+<tr><th>Operation Size</th><th>Plants/Year</th><th>Packages/Year</th><th>Estimated Tag Cost</th></tr>
+</thead>
+<tbody>
+<tr><td>Small (Tier 1)</td><td>500</td><td>2,000</td><td>$725</td></tr>
+<tr><td>Medium (Tier 2-3)</td><td>5,000</td><td>20,000</td><td>$7,250</td></tr>
+<tr><td>Large (Tier 4)</td><td>20,000+</td><td>80,000+</td><td>$29,000+</td></tr>
+</tbody>
+</table>
+<p>These estimates do not include the $40/month ($480/year) subscription fee per licensed facility.</p>
+</section>
+
+<section>
+<h2>Compliance Requirements</h2>
+<p class="answer-capsule">Maine law requires all adult-use cannabis licensees to maintain accurate, real-time records in Metrc. This includes tracking every plant, product, transfer, sale, and disposal event. Licensees are responsible for timely and accurate data entry — errors or omissions can result in compliance violations.</p>
+
+<h3>What You Must Track</h3>
+<ul>
+<li><strong>All cannabis plants:</strong> Every plant must have a Metrc tag from the immature stage onward</li>
+<li><strong>Harvest weights:</strong> Total weight of harvested cannabis must be recorded and reconciled with plant count</li>
+<li><strong>Processing activities:</strong> All drying, trimming, extraction, and manufacturing must be logged</li>
+<li><strong>Lab test results:</strong> Certificate of analysis data must be linked to the corresponding batch in Metrc</li>
+<li><strong>Product packaging:</strong> Every packaged product must have a Metrc package tag with accurate labeling</li>
+<li><strong>Transfers between facilities:</strong> All movements of cannabis between licensed establishments require Metrc transfer manifests</li>
+<li><strong>Retail sales:</strong> Point-of-sale transactions must be recorded in Metrc, either manually, via CSV upload, or through POS integration</li>
+<li><strong>Waste and destruction:</strong> All cannabis waste must be documented, rendered unusable, and destroyed with witness verification</li>
+<li><strong>Inventory adjustments:</strong> Any discrepancies between physical inventory and Metrc records must be reported and explained</li>
+</ul>
+
+<h3>Data Entry Methods</h3>
+<p>Metrc supports three methods for data submission:</p>
+<ul>
+<li><strong>Manual entry:</strong> Direct input through the Metrc web interface</li>
+<li><strong>CSV upload:</strong> Bulk data submission via spreadsheet files</li>
+<li><strong>API integration:</strong> Real-time data sync through third-party software integrations</li>
+</ul>
+<p>Regardless of the method used, the licensee bears full responsibility for the accuracy and timeliness of all data entered into Metrc.</p>
+</section>
+
+<Callout title="Common Compliance Mistake" type="warning">
+The most frequent Metrc compliance violations involve delayed data entry and inventory discrepancies. Enter harvest data within 24 hours. Reconcile physical inventory with Metrc records weekly. Never let data entry backlog accumulate — it compounds quickly and becomes nearly impossible to correct accurately.
+</Callout>
+
+<section>
+<h2>Batch Tracking (FSBT)</h2>
+<p class="answer-capsule">Flexible Standardized Batch Tracking (FSBT) allows Maine cultivators to track groups of same-stage, same-varietal plants together rather than individually. This system was implemented following P.L. 2021, ch. 628 and significantly reduces the administrative burden on cultivation facilities.</p>
+<p>Before FSBT, every individual plant required its own Metrc tag and separate tracking record. For large cultivation operations managing thousands of plants, this created enormous administrative overhead. FSBT allows cultivators to group plants that are:</p>
+<ul>
+<li>At the same stage of growth</li>
+<li>Of the same varietal or cultivar</li>
+<li>Located in the same cultivation area</li>
+</ul>
+<p>Under batch tracking, a single batch record represents the entire group. Actions taken on the batch — such as harvesting, sampling, or destruction — apply to all plants within that batch. Individual plant tags are still required, but the tracking and reporting burden is dramatically reduced.</p>
+<p>The OCP and Metrc conducted extensive stakeholder engagement before implementing FSBT, including public presentations and white papers. The system maintains the OCP's ability to implement health and safety recalls while providing cultivators with a more practical tracking method.</p>
+</section>
+
+<section>
+<h2>Third-Party Integration</h2>
+<p class="answer-capsule">Metrc supports integration with third-party software through its API, enabling automated data sync between your business systems and the state's tracking platform. Validated integrators include POS systems, cultivation management software, and inventory platforms.</p>
+
+<h3>POS Integration</h3>
+<p>Point-of-sale systems that integrate with Metrc can automatically record retail sales, update inventory levels, and generate compliance reports. This eliminates the need for manual sales entry and reduces the risk of data entry errors. A list of validated POS integrators is available on the <a href="https://www.metrc.com/partner/maine/" target="_blank" rel="noopener noreferrer">Metrc Maine partner page</a>.</p>
+
+<h3>Cultivation &amp; Inventory Software</h3>
+<p>Many cultivation facilities use dedicated cultivation management software that integrates with Metrc. These systems track plant health, nutrient schedules, harvest timing, and environmental conditions — then automatically sync the required compliance data to Metrc. This dual-purpose approach ensures both operational efficiency and regulatory compliance.</p>
+
+<h3>CSV Uploads</h3>
+<p>For licensees without integrated software, Metrc supports CSV file uploads for bulk data entry. This is particularly useful for recording large harvests, processing batches, or inventory adjustments. However, CSV uploads require careful formatting and validation to avoid errors.</p>
+
+<Callout title="Integration Costs" type="info">
+While Metrc's base subscription is $40/month, third-party integrations carry additional costs. POS integrations typically range from $50-200/month. Cultivation management software can cost $100-500/month depending on features. Budget accordingly when planning your technology stack.
+</Callout>
+</section>
+
+<section>
+<h2>The 2026 Legislative Debate</h2>
+<p class="answer-capsule">LD 1847, debated during the 2026 legislative session, proposed extending Metrc seed-to-sale tracking to Maine's medical cannabis program. The bill sparked intense debate between regulators advocating for uniform tracking and small operators arguing the system is burdensome and costly.</p>
+<p>Currently, Metrc is required only for adult-use cannabis. The medical caregiver program — which generates $280 million annually — operates without seed-to-sale tracking. LD 1847 sought to change this by requiring medical program participants to use Metrc for inventory tracking.</p>
+
+<h3>Arguments For Extension</h3>
+<ul>
+<li><strong>Consumer safety:</strong> Uniform tracking would enable product recalls across both markets</li>
+<li><strong>Regulatory consistency:</strong> A single tracking system simplifies enforcement and oversight</li>
+<li><strong>Diversion prevention:</strong> Tracking medical cannabis would reduce the risk of product flowing to the illicit market</li>
+<li><strong>Tax accuracy:</strong> Complete tracking ensures accurate tax collection across all cannabis sales</li>
+</ul>
+
+<h3>Arguments Against Extension</h3>
+<ul>
+<li><strong>Cost burden:</strong> Small caregivers cannot absorb the $40/month subscription plus tag costs</li>
+<li><strong>Operational delays:</strong> Many adult-use operators report that Metrc creates bottlenecks in daily operations</li>
+<li><strong>System reliability:</strong> Complaints about Metrc downtime and technical issues are widespread</li>
+<li><strong>Redundancy:</strong> The medical program already has its own compliance framework and inspection regime</li>
+</ul>
+<p>Several amendments were proposed during committee hearings, including tiered requirements based on operation size and a state-hosted tracking portal as an alternative to Metrc. The outcome of this debate will significantly impact both the medical and adult-use markets.</p>
+</section>
+
+<section>
+<h2>Compliance Inspections &amp; Enforcement</h2>
+<p>The OCP uses Metrc data as a primary tool during compliance inspections. Inspectors compare physical inventory against Metrc records, verify tag placement and accuracy, review transfer manifests, and audit sales data. In 2023, the OCP completed 1,424 compliance inspections across the medical and adult-use programs.</p>
+<p>Common Metrc-related violations include:</p>
+<ul>
+<li><strong>Unreported harvests:</strong> Plants harvested but not logged in Metrc within the required timeframe</li>
+<li><strong>Inventory discrepancies:</strong> Physical count does not match Metrc records</li>
+<li><strong>Missing tags:</strong> Plants or packages without proper Metrc identification</li>
+<li><strong>Unreported transfers:</strong> Products moved between facilities without a Metrc transfer manifest</li>
+<li><strong>Late sales reporting:</strong> Retail transactions not recorded in Metrc within the required period</li>
+<li><strong>Improper destruction documentation:</strong> Cannabis waste destroyed without proper Metrc documentation and witness verification</li>
+</ul>
+<p>Violations can result in administrative penalties, mandatory corrective action plans, license suspension, or revocation. The OCP considers the severity, frequency, and intent of violations when determining enforcement actions.</p>
+</section>
+
+<section>
+<h2>Support &amp; Resources</h2>
+<p>Metrc provides several support channels for Maine licensees:</p>
+<ul>
+<li><strong>Phone Support:</strong> 877-566-6506</li>
+<li><strong>Support Portal:</strong> Available through the Metrc website</li>
+<li><strong>New Business Training:</strong> Mandatory training for new licensees entering the Metrc system</li>
+<li><strong>Industry Bulletins:</strong> Regular updates on system changes, feature releases, and compliance reminders</li>
+</ul>
+<p>Recent bulletins include ME_IB_064 (Additives in Admin, November 2025), ME_IB_063 (Metrc UI Refresh, October 2025), and ME_IB_062 (Clickable Links Feature, September 2025). Licensees should monitor bulletins regularly for important system updates.</p>
+<p>Additional resources are available through the <a href="https://www.maine.gov/dafs/ocp/stakeholders/batch-tracking" target="_blank" rel="noopener noreferrer">OCP Batch Tracking page</a>, including FSBT white papers, presentation materials, and guidance documents.</p>
+</section>
+
+<Callout title="Stay Current" type="info">
+Metrc regularly updates its platform and Maine-specific requirements. Subscribe to industry bulletins, attend OCP stakeholder meetings, and review guidance documents quarterly. Compliance requirements evolve — staying informed is your best defense against violations.
+</Callout>
+
+<section>
+<h2>Frequently Asked Questions</h2>
+<Faq faqs={[
+  { question: "Is Metrc mandatory for all Maine cannabis businesses?", answer: "Metrc is mandatory for all adult-use cannabis licensees in Maine, including cultivation facilities, manufacturing facilities, testing laboratories, and retail stores. It is not currently required for medical cannabis caregivers, though LD 1847 (2026) proposed extending it to the medical program." },
+  { question: "How much does Metrc cost in Maine?", answer: "Metrc costs $40 per month per licensed facility for the software subscription. Plant tags cost $0.45 each and package tags cost $0.25 each. There are no upfront software purchase or installation fees. Third-party integrations (POS, cultivation software) carry additional costs." },
+  { question: "How do I order Metrc tags?", answer: "Tags are ordered through the Metrc web portal after your facility is activated in the system. Plant tags and package tags can be ordered in various quantities. Tags are shipped to your licensed facility address. Plan ahead — tag delivery can take several business days." },
+  { question: "Can I use my own inventory system with Metrc?", answer: "Yes. Metrc supports API integration with third-party inventory management and cultivation software. You can use your preferred system for day-to-day operations while Metrc handles compliance reporting. However, you remain responsible for ensuring all required data is accurately submitted to Metrc." },
+  { question: "What is batch tracking (FSBT)?", answer: "Flexible Standardized Batch Tracking (FSBT) allows cultivators to track groups of same-stage, same-varietal plants together rather than individually. Implemented under P.L. 2021, ch. 628, FSBT significantly reduces the administrative burden on cultivation operations while maintaining the OCP's ability to conduct recalls." },
+  { question: "What happens if I don't update Metrc properly?", answer: "Failure to maintain accurate Metrc records can result in compliance violations during OCP inspections. Penalties range from warnings and corrective action plans to administrative fines, license suspension, or revocation. Inventory discrepancies are among the most common violations and can trigger additional scrutiny." },
+  { question: "Will Metrc be required for medical cannabis in Maine?", answer: "This is currently under legislative debate. LD 1847 (2026) proposed extending Metrc tracking to the medical program, but the bill faced significant opposition from small operators. The outcome depends on legislative action and OCP rulemaking. Monitor OCP announcements and legislative developments for updates." },
+  { question: "How do I integrate my POS with Metrc?", answer: "Metrc maintains a list of validated POS integrators on its Maine partner page. Choose a validated provider, complete the integration setup, and test the connection before going live. The integration will automatically sync sales data from your POS to Metrc, eliminating manual entry." },
+  { question: "Can I submit data to Metrc via CSV?", answer: "Yes. Metrc supports CSV file uploads for bulk data entry. This is useful for recording large harvests, processing batches, or inventory adjustments. CSV templates and formatting guidelines are available in the Metrc system. However, you are responsible for ensuring the accuracy of uploaded data." },
+  { question: "Who do I contact for Metrc support in Maine?", answer: "Metrc support is available at 877-566-6506 or through the Metrc Support Portal. For regulatory questions specific to Maine, contact the Office of Cannabis Policy at (207) 287-9330. OCP also provides guidance documents and stakeholder resources on its website." }
+]} />
+
+<section class="disclaimer">
+<p><em>This information is for informational purposes only and does not constitute legal advice. Maine's cannabis tracking requirements are subject to change through legislation and OCP rulemaking. Consult with a qualified cannabis attorney in Maine for specific guidance on your compliance obligations. For the most current information, visit the <a href="https://www.metrc.com/partner/maine/" target="_blank" rel="noopener noreferrer">Metrc Maine page</a> and the <a href="https://www.maine.gov/dafs/ocp/stakeholders/batch-tracking" target="_blank" rel="noopener noreferrer">OCP Batch Tracking page</a>.</em></p>
+</section>
+
+</article>
+</Layout>
+
+<style>
+article { max-width: 720px; margin: 0 auto; }
+.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+.subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+section { margin-bottom: 2rem; }
+section h2 { margin-top: 0; padding-top: 1rem; }
+section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+.disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-background); }
+section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+details { margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 600; }
+summary:hover { color: var(--color-primary); }
+</style>
