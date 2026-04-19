@@ -122,6 +122,15 @@ The project has 123 TypeScript errors from `npx astro check`. These are known an
 
 These errors do not affect the build or runtime. The site builds and deploys cleanly.
 
+## LSP Status (lsp_diagnostics)
+
+**`lsp_diagnostics` tool is NOT functional for this project.** The tool requires `typescript-language-server` with a valid `typescript.tsdk` pointing to a `node_modules/typescript/lib` directory containing `tsserverlibrary.js`. OpenCode Desktop does not auto-configure this.
+
+- `npx astro check` works fine (uses tsc directly, not LSP)
+- `lsp_diagnostics` times out or fails with "Request initialize failed"
+- Workaround: Use `npx astro check src/pages/example.astro` for file-scoped type validation instead of `lsp_diagnostics`
+- The LSP limitation is a known issue with OpenCode Desktop + Astro projects — does not affect build/deploy
+
 ---
 
 ## Tech Stack
