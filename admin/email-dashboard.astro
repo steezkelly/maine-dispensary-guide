@@ -1,0 +1,232 @@
+<!--
+Email Outreach Dashboard — Maine Dispensary Guide
+Access: /admin/email-dashboard/
+Auto-updates from: /data/email-tracking.json
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Outreach Dashboard — Maine Dispensary Guide</title>
+  <style>
+    :root {
+      --bg: #F2F2E2;
+      --fg: #1A2E1A;
+      --accent: #2D5016;
+      --card: #ffffff;
+      --border: #C5D4B5;
+      --muted: #5A6B52;
+      --green: #4CAF50;
+      --amber: #FFC107;
+      --gray: #9E9E9E;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #061A1B;
+        --fg: #F2F2E2;
+        --card: #0D2627;
+        --border: #1E3D3E;
+        --muted: #8BA89A;
+      }
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1, h2, h3 { font-family: Georgia, serif; margin: 0 0 1rem; }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .dashboard-header h1 { font-size: 1.8rem; }
+    .meta { color: var(--muted); font-size: 0.9rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: Georgia, serif;
+    }
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-card.sent .number { color: var(--accent); }
+    .stat-card.pending .number { color: var(--amber); }
+    .stat-card.replied .number { color: var(--green); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--accent);
+      color: #F2F2E2;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(45, 80, 22, 0.05); }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-sent { background: #E8F5E9; color: #2E7D32; }
+    .badge-pending { background: #FFF8E1; color: #F57F17; }
+    .badge-replied { background: #E3F2FD; color: #1565C0; }
+    .badge-opened { background: #F3E5F5; color: #7B1FA2; }
+    .template-tag {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .notes { font-size: 0.85rem; color: var(--muted); }
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      table { font-size: 0.85rem; }
+      th, td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <div>
+      <h1>Email Outreach Dashboard</h1>
+      <p class="meta">Maine Dispensary Guide — Domain Warm-up Campaign</p>
+      <p class="meta">Domain: <strong>mainedispensaryguide.com</strong> | Sender: <strong>steve@mainedispensaryguide.com</strong></p>
+    </div>
+    <div>
+      <p class="meta">Last updated: <span id="lastUpdated">Loading...</span></p>
+      <p class="meta">Tracking: <strong>5 of 10</strong> warm-up emails goal</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card sent">
+      <div class="number" id="statSent">0</div>
+      <div class="label">Sent</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="number" id="statPending">0</div>
+      <div class="label">Pending</div>
+    </div>
+    <div class="stat-card replied">
+      <div class="number" id="statReplied">0</div>
+      <div class="label">Replied</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="statOpenRate">N/A</div>
+      <div class="label">Open Rate</div>
+    </div>
+  </div>
+
+  <h2>Email Log</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Recipient</th>
+        <th>Organization</th>
+        <th>Template</th>
+        <th>Status</th>
+        <th>Response</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody id="emailTable">
+      <tr><td colspan="8">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-top: 2rem;">Campaign Notes</h2>
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem;">
+    <ul>
+      <li><strong>Day 1 (Apr 20):</strong> 5 warm-up emails sent to Maine SBDC, SCORE Maine, Maine Chamber, and Verrill Dana LLP</li>
+      <li><strong>Purelymail limitation:</strong> No open tracking available — Purelymail is privacy-focused and does not log opens</li>
+      <li><strong>Tracking method:</strong> Manual tracking via MessageId and response monitoring</li>
+      <li><strong>Next send:</strong> Apr 21 — 5 more warm-up emails to Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times, Maine Realtors</li>
+      <li><strong>Sender reputation:</strong> Monitor via <a href="https://mail-tester.com" target="_blank" rel="noopener">Mail-tester.com</a> — send test email to check spam score</li>
+    </ul>
+  </div>
+
+  <script is:inline>
+    async function loadData() {
+      try {
+        const resp = await fetch('/data/email-tracking.json');
+        const data = await resp.json();
+
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        const sent = data.emails.filter(e => e.status === 'sent').length;
+        const pending = data.emails.filter(e => e.response === 'pending').length;
+        const replied = data.emails.filter(e => e.response !== 'pending').length;
+
+        document.getElementById('statSent').textContent = sent;
+        document.getElementById('statPending').textContent = pending;
+        document.getElementById('statReplied').textContent = replied;
+
+        const tbody = document.getElementById('emailTable');
+        tbody.innerHTML = data.emails.map(email => {
+          const badgeClass = email.response === 'pending' ? 'badge-pending' :
+                            email.response === 'replied' ? 'badge-replied' : 'badge-sent';
+          const responseLabel = email.response === 'pending' ? '⏳ Pending' :
+                               email.response === 'replied' ? '✓ Replied' : '—';
+          return `<tr>
+            <td>${email.id}</td>
+            <td>${email.date}</td>
+            <td><strong>${email.recipient}</strong><br><span style="color:var(--muted);font-size:0.85rem;">${email.email}</span></td>
+            <td>${email.org}</td>
+            <td><span class="template-tag">${email.template}</span></td>
+            <td><span class="badge badge-sent">Sent</span></td>
+            <td><span class="badge ${badgeClass}">${responseLabel}</span></td>
+            <td class="notes">${email.notes || '—'}</td>
+          </tr>`;
+        }).join('');
+      } catch (err) {
+        console.error('Failed to load tracking data:', err);
+        document.getElementById('emailTable').innerHTML = '<tr><td colspan="8" style="color:red;">Failed to load data</td></tr>';
+      }
+    }
+    loadData();
+    setInterval(loadData, 30000); // Refresh every 30s
+  </script>
+</body>
+</html>

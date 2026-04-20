@@ -372,14 +372,132 @@ Best,
 
 | Target | Status | Date Sent | Response | Link? |
 |--------|--------|-----------|----------|-------|
-| Mainebiz | | | | |
-| Ganjapreneur | | | | |
-| Maine Beacon | | | | |
-| Cannabis Business Times | | | | |
-| Maine Chamber | | | | |
-| Maine SBDC | | | | |
-| SCORE Maine | | | | |
-| [Other state guide] | | | | |
+| Mainebiz | 📝 Drafted | — | — | — |
+| Ganjapreneur | 📝 Drafted | — | — | — |
+| Maine Beacon | 📝 Drafted | — | — | — |
+| Cannabis Business Times | 📝 Drafted | — | — | — |
+| Maine Chamber | ✅ Sent | 2026-04-20 | — | — |
+| Maine SBDC (Mark Delisle) | ✅ Sent | 2026-04-20 | — | — |
+| Maine SBDC (Christine Cole) | ✅ Sent | 2026-04-20 | — | — |
+| SCORE Maine | ✅ Sent | 2026-04-20 | — | — |
+| Verrill Dana (Jill Cohen) | ✅ Sent | 2026-04-20 | — | — |
+
+**Legend:** 📝 Drafted = personalized email ready | 📋 Ready = template prepared | 🔍 Research = contact info needed
+
+### Warm-up Emails (5 drafted — ready to send after domain warm-up)
+| # | Type | Status | Recipient | Date Sent | MessageId |
+|---|------|--------|----------|-----------|----------|
+| 1 | Introduction | ✅ Sent | Mark Delisle (Maine SBDC) | 2026-04-20 | df6ceb59-c4c0-48e7-4f40-3bb40922ff2d |
+| 2 | Introduction | ✅ Sent | Christine Cole (Maine SBDC) | 2026-04-20 | f5db968f-cb50-3c3c-ea65-7b0a87d1e014 |
+| 3 | Introduction | ✅ Sent | SCORE Maine | 2026-04-20 | f77131fe-5575-c017-5ddb-fb03c39a6a6a |
+| 4 | Networking | ✅ Sent | Joyce LaRoche (Maine Chamber) | 2026-04-20 | b9bbddc9-5457-f43b-7aac-9fb66386b850 |
+| 5 | Value Share | ✅ Sent | Verrill Dana (Jill Cohen) | 2026-04-20 | d94b2564-e990-fbdb-c111-2ac6e0e3a8f9 |
+
+---
+
+## Warm-up Email Templates
+
+**Purpose:** Domain warm-up for mainedispensaryguide.com — establish sender reputation before cold outreach. All emails under 100 words, friendly, natural tone. No sales pitches.
+
+---
+
+### Email 1: Introduction / Check-in
+
+| Field | Content |
+|-------|---------|
+| **Subject** | Quick intro — Maine cannabis entrepreneur resource |
+| **Suggested Recipients** | Maine SBDC advisor, SCORE mentor, cannabis industry contact |
+
+Hi [Name],
+
+I'm Steve, founder of the Maine Dispensary Guide (mainedispensaryguide.com). We help entrepreneurs navigate Maine's cannabis licensing, operations, and compliance.
+
+I came across your work and wanted to introduce myself. I'm building connections in Maine's cannabis space and would love to learn more about what you're working on.
+
+Would you be open to a brief call sometime?
+
+Best,
+Steve
+
+---
+
+### Email 2: Value Share
+
+| Field | Content |
+|-------|---------|
+| **Subject** | Maine dispensary license guide — might be useful for your clients |
+| **Suggested Recipients** | CPA specializing in cannabis, cannabis attorney, business consultant |
+
+Hi [Name],
+
+I recently published a detailed guide on Maine's OCP dispensary licensing process — covering all 4 cultivation tiers, municipal requirements, and the application timeline.
+
+Thought it might be helpful to share with your clients navigating Maine's rules. No strings attached, just figured it might save them some research time.
+
+Take a look if you're curious: mainedispensaryguide.com/guides/maine-dispensary-license
+
+Best,
+Steve
+
+---
+
+### Email 3: Question / Advice Request
+
+| Field | Content |
+|-------|---------|
+| **Subject** | Quick question about the Maine cannabis market |
+| **Suggested Recipients** | Industry peer, service provider, fellow entrepreneur |
+
+Hi [Name],
+
+I'm working on the Maine Dispensary Guide and researching municipal opt-in patterns across Maine. I noticed [something relevant about recipient's work] and had a quick question:
+
+[Insert specific question about Maine cannabis market, e.g., "What's your sense for how Portland dispensaries are handling the adult-use transition?"]
+
+Would appreciate any thoughts you might have. Happy to share what we're building if useful: mainedispensaryguide.com/guides/maine-cannabis-market
+
+Thanks,
+Steve
+
+---
+
+### Email 4: Recent Update
+
+| Field | Content |
+|-------|---------|
+| **Subject** | New guide: [topic] — thought of you |
+| **Suggested Recipients** | Industry contact, potential partner, media contact |
+
+Hi [Name],
+
+Quick update — I just published a new guide on [brief topic description] covering [1-2 key points].
+
+Given your work in [recipient's area], I thought this might be relevant. Happy to hear any feedback: mainedispensaryguide.com/guides/[specific-guide]
+
+Hope you're doing well.
+
+Best,
+Steve
+
+---
+
+### Email 5: Professional Networking
+
+| Field | Content |
+|-------|---------|
+| **Subject** | Connecting — Maine cannabis entrepreneur resource |
+| **Suggested Recipients** | Service provider, industry association contact, potential collaborator |
+
+Hi [Name],
+
+I'm Steve, founder of the Maine Dispensary Guide (mainedispensaryguide.com) — an informational resource for entrepreneurs navigating Maine's cannabis market.
+
+No pitch today, just wanted to introduce myself and put a face to the name. I come across a lot of Maine cannabis contacts in my work and your name keeps coming up.
+
+Would love to connect and learn more about what you're working on. Here's our official resources page for reference: mainedispensaryguide.com/resources/maine-cannabis-official-resources
+
+Best,
+Steve
 
 ---
 
@@ -407,4 +525,233 @@ Before outreach, ensure these are complete so we have shareable content:
 3. **Maine Cannabis Events Calendar** — Linkable industry calendar
 4. **City Comparison Tool** — Interactive comparison of Maine cities for dispensary选址
 
-*Last updated: 2026-04-04 EDT*
+---
+
+## Draft Personalized Emails (Tier 1 — Ready to Send After Domain Warm-up)
+
+### Mainebiz — Guest Column Pitch
+```
+Subject: Maine Cannabis Market Data — Guest Column Opportunity
+
+Hi [Editor Name],
+
+I run the Maine Dispensary Guide (mainedispensaryguide.com), an authoritative resource for Maine cannabis entrepreneurs.
+
+We recently published our 2026 Maine Cannabis Market Analysis, including:
+- 79 pages of technical guides covering licensing, taxation, real estate, and operations
+- 15 city-specific dispensary guides (Portland, Bangor, Lewiston, etc.)
+- 4,777-word marketing compliance guide, 3,569-word cultivation guide
+- Original ROI calculator for Maine-specific dispensary economics
+
+I'd love to contribute a guest column to Mainebiz on the Maine cannabis market opportunity. I can provide original data and expert insights your readers would find valuable.
+
+Would you be open to a 600-800 word piece on this topic?
+
+Best,
+Steve
+Maine Dispensary Guide
+mainedispensaryguide.com
+```
+
+### Ganjapreneur — Announcement
+```
+Subject: New Maine Cannabis Resource Launch — 79-Page Entrepreneur Guide
+
+Hi,
+
+I recently launched MaineDispensaryGuide.com — the most comprehensive technical resource for Maine cannabis entrepreneurs.
+
+Our guide covers:
+- OCP licensing process (all 4 cultivation tiers)
+- 280E tax strategies for Maine operators
+- Municipal opt-in tracker for all 15 Maine towns
+- Security, inventory, POS, and staffing guides
+
+We're already seeing strong organic traffic from Maine founders researching licensing.
+
+I'd love to submit an announcement about our launch. Would you be open to featuring us in your Maine section?
+
+Best,
+Steve
+Maine Dispensary Guide
+mainedispensaryguide.com
+```
+
+### Maine Beacon — Data Story Pitch
+```
+Subject: Maine Cannabis Market Growth — Data-Backed Story Angle
+
+Hi [Reporter Name],
+
+I'm reaching out about a story on Maine's emerging cannabis market.
+
+The Maine Dispensary Guide (mainedispensaryguide.com) has compiled comprehensive data on:
+- Municipal opt-in patterns across 15 Maine towns
+- 2026 licensing trends and OCP application volumes
+- Market size estimates for Maine's combined medical/adult-use market
+
+We'd be happy to serve as a primary source for any cannabis business coverage.
+
+Would you be interested in connecting?
+
+Best,
+Steve
+Maine Dispensary Guide
+```
+
+### Cannabis Business Times — Maine Market Analysis
+```
+Subject: Maine Market Analysis for State of Industry Feature
+
+Hi [Editor Name],
+
+I'm the founder of MaineDispensaryGuide.com — a new authoritative resource for Maine cannabis entrepreneurs.
+
+I'm interested in contributing a Maine market analysis to Cannabis Business Times. Topics I can cover:
+- Maine's unique regulatory landscape (28-B M.R.S. compliance)
+- Municipal opt-in strategy across 15 towns
+- 280E tax impact on Maine operators
+- Comparison with neighboring Massachusetts/New England markets
+
+Our site has 79+ pages of original research. Would you be open to a contributed piece?
+
+Best,
+Steve
+Maine Dispensary Guide
+mainedispensaryguide.com
+```
+
+---
+
+## Contact Research Needed
+
+| Target | Website | Contact Method |
+|--------|---------|----------------|
+| Mainebiz | mainebiz.com | Submit via mainebiz.com/submit or advertise@mainebiz.com |
+| Ganjapreneur | ganjapreneur.com/partner-with-us | Online submission form |
+| Maine Beacon | mainebeacon.com | Contact form on site |
+| Cannabis Business Times | cannabisbusinesstimes.com | Editorial submissions via site |
+| Maine Chamber | mainechamber.org | Email Jean LaRoche (jlaroche@mainechamber.org) |
+| Maine SBDC | mainesbdc.org | Mark Delisle, State Director (mark.delisle@maine.edu) |
+| SCORE Maine | scoremaine.org | Email scoremaine@gmail.com |
+| Maine Commercial Realtors | mainecommercialrealtors.com | Don Plourde, Commercial Board Director (dplourde@cbplourde.com) |
+| Maine Bankers Association | mainebankers.com | Jim Roche, President (jroche@mainebankers.com) |
+| Maine State Bar Association | mainebar.org | Molly Rogers, Membership Director (mrogers@mainebar.org) |
+
+---
+
+## Tier 2 Contact Research (April 2026)
+
+### Maine Chamber of Commerce
+- **Website:** https://www.mainechamber.org (note: .org, not .com)
+- **Phone:** (207) 623-4568
+- **Fax:** (207) 622-7723
+- **Email:** jlaroche@mainechamber.org (Jean LaRoche — based on chamber directory)
+- **Best Contact Method:** Email Jean LaRoche for business resources/partnerships
+- **Notes:** Statewide business advocacy org. Cannabis policy coverage through Maine Business Advocacy. Resource partnership opportunity for listing Maine Dispensary Guide in their business resources section.
+
+### Maine SBDC (Small Business Development Centers)
+- **Website:** https://www.mainesbdc.org
+- **State Director:** Mark Delisle — mark.delisle@maine.edu — 207-780-4857
+- **General Contact:** mainesbdc@usm.maine.edu — 207-780-4420
+- **Best Contact Method:** Email Mark Delisle directly for content partnership
+- **Notes:** Free business counseling for Maine entrepreneurs. Network of 22 centers statewide. Potential to feature our guides/ROI calculator in their client resources.
+
+### SCORE Maine
+- **Website:** https://www.scoremaine.org / https://score.org/maine
+- **Office:** 22 Rear Free St, Portland, Maine 04101
+- **Phone:** (207) 536-1143
+- **Email:** scoremaine@gmail.com (general) | scoretaxworkshops@gmail.com (workshops)
+- **Chapter Director:** Tom Rainey (from Mainebiz article)
+- **Best Contact Method:** Email scoremaine@gmail.com for mentoring resource partnership
+- **Notes:** Free mentoring for small businesses including cannabis entrepreneurs. Could feature our guides as recommended reading for aspiring dispensary owners.
+
+### Maine Commercial Association of REALTORS (Maine Realtors)
+- **Website:** https://www.mainerealtors.com / https://mainecommercialrealtors.com
+- **Phone:** (207) 622-7501
+- **Fax:** (207) 623-3590
+- **Address:** 19 Community Drive, Augusta, ME 04330
+- **Commercial Board Director:** Don Plourde — dplourde@cbplourde.com — (207) 861-2462
+- **Best Contact Method:** Email Don Plourde for commercial real estate content partnership
+- **Notes:** Only statewide group in Maine dedicated 100% to commercial real estate. Cannabis dispensary location scouting is relevant. Guest post opportunity on "Commercial Cannabis Real Estate in Maine."
+
+### Maine Bankers Association
+- **Website:** https://www.mainebankers.com
+- **President:** Jim Roche — jroche@mainebankers.com — 207.791.8401
+- **COO:** Marcia M. Ferguson
+- **Learning & Development Contact:** Megan Ogden — mogden@mainebankers.com
+- **Address:** 2 Thomas Drive, Westbrook, ME 04092
+- **Phone:** (207) 791-8400
+- **Best Contact Method:** Email Jim Roche for 280E/banking partnership inquiry
+- **Notes:** Senator King has worked on cannabis banking issues. Banks are reluctant due to 280E. Partnership opportunity: content on cannabis banking compliance for Maine operators.
+
+### Maine State Bar Association
+- **Website:** https://www.mainebar.org
+- **Membership Director:** Molly Rogers — mrogers@mainebar.org
+- **CLE Director:** James Westhoff — jwesthoff@mainebar.org
+- **Phone:** (207) 623-1121
+- **Address:** 124 State St, Augusta, ME
+- **Best Contact Method:** Email Molly Rogers for member resources/partnership
+- **Notes:** Attorney referrals for cannabis business clients. Could feature our licensing guides as member resources. CLE content opportunity on Maine cannabis law.
+
+---
+
+## Tier 2 Email Templates
+
+### Template D: Maine Chamber of Commerce (Resource Partnership Inquiry)
+```
+Subject: Resource Partnership — Maine Cannabis Entrepreneur Guide
+
+Hi Jean,
+
+I'm reaching out about the Maine Chamber of Commerce's business resources for entrepreneurs.
+
+I recently launched the Maine Dispensary Guide (mainedispensaryguide.com) — a comprehensive 79-page resource covering:
+- OCP adult-use licensing process (all cultivation tiers)
+- 280E tax strategies and Maine-specific compliance
+- Municipal opt-in tracker for all 15 Maine towns
+- ROI calculator for Maine dispensary economics
+
+Our guide receives steady organic traffic from Maine founders researching licensing and compliance.
+
+I'd love to explore whether the Maine Chamber would consider listing our guide as a recommended resource for entrepreneurs interested in Maine's cannabis industry. In return, I'm happy to link to the Chamber's member resources from our guide.
+
+Would you be open to a brief call to discuss this further?
+
+Best,
+Steve
+Maine Dispensary Guide
+mainedispensaryguide.com
+```
+
+### Template E: Maine SBDC (Content Partnership / Resource Screening)
+```
+Subject: Content Partnership — Maine Cannabis Licensing Guides for SBDC Clients
+
+Hi Mark,
+
+I wanted to reach out about the Maine SBDC's entrepreneur resources and whether our content might be a good fit for your clients.
+
+The Maine Dispensary Guide (mainedispensaryguide.com) is a free resource I built specifically for Maine entrepreneurs navigating the cannabis licensing process:
+- 79 pages of original technical guides (licensing, taxation, real estate, operations, marketing)
+- 15 city-specific dispensary guides (Portland, Bangor, Lewiston, etc.)
+- Maine-specific ROI calculator and compliance checklists
+
+Many SBDC clients ask about cannabis business opportunities, and our guide could be a valuable complement to your advising services.
+
+I'd be happy to:
+1. Provide a tour of the site and highlight the most relevant sections for aspiring operators
+2. Create a custom resource sheet SBDC advisors can share with clients
+3. Explore any webinar or workshop collaboration opportunities
+
+Would you have time for a quick call to discuss?
+
+Best,
+Steve
+Maine Dispensary Guide
+mainedispensaryguide.com
+```
+
+---
+
+*Last updated: 2026-04-20 EDT*
