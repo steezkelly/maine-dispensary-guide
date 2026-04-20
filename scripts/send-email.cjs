@@ -17,6 +17,7 @@ const path = require('path');
 const CREDENTIALS_PATH = 'C:/Users/Steve/Documents/purelymail-smtp.txt';
 const DEFAULT_FROM = 'Steve <steve@mainedispensaryguide.com>';
 const TRACKING_FILE = 'C:/Users/Steve/OpenCode Projects/project-1/public/data/email-tracking.json';
+const SENT_MAIL_DIR = 'C:/Users/Steve/OpenCode Projects/project-1/public/data/sent-mail';
 
 // Load credentials from secure file
 function loadCredentials() {
@@ -176,11 +177,37 @@ async function sendEmail({ to, subject, body, from = DEFAULT_FROM }) {
     to,
     subject,
     text: body,
-    html: body.replace(/\n/g, '<br>')
+    html: body.replace(/\n/g, '<br>'),
+    bcc: 'steve@mainedispensaryguide.com'
   };
 
   const result = await transporter.sendMail(mailOptions);
   return result;
+}
+
+// Save sent email as .eml file for local archive
+function saveSentEmail({ to, subject, body, from, messageId }) {
+  try {
+    if (!fs.existsSync(SENT_MAIL_DIR)) {
+      fs.mkdirSync(SENT_MAIL_DIR, { recursive: true });
+    }
+    const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${messageId.replace(/[<>()]/g, '').substring(0, 16)}.eml`;
+    const eml = [
+      `From: ${from}`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      `Message-ID: ${messageId}`,
+      `Date: ${new Date().toUTCString()}`,
+      `MIME-Version: 1.0`,
+      `Content-Type: text/plain; charset=utf-8`,
+      '',
+      body
+    ].join('\r\n');
+    fs.writeFileSync(path.join(SENT_MAIL_DIR, filename), eml, 'utf-8');
+    console.log(`  ✓ Saved to: ${filename}`);
+  } catch (err) {
+    console.error(`  ⚠ Could not save .eml: ${err.message}`);
+  }
 }
 
 // Auto-log sent email to tracking database
@@ -259,8 +286,8 @@ Credentials:
       subject = template.subject;
       body = template.body(vars);
     } else {
-      subject = values.subject;
-      body = values.body;
+      subject = values.subject || '(no subject)';
+      body = values.body || '(no body)';
     }
     console.log('[DRY RUN] Would send email:');
     console.log(`  To: ${values.to}`);
@@ -306,6 +333,7 @@ Credentials:
     console.log(`✓ Email sent successfully`);
     console.log(`  MessageId: ${result.messageId}`);
     logSentEmail({ to: values.to, template: values.template, messageId: result.messageId });
+    saveSentEmail({ to: values.to, subject, body, from: values.from, messageId: result.messageId });
     return result;
   } catch (error) {
     console.error(`✗ Failed to send email: ${error.message}`);
