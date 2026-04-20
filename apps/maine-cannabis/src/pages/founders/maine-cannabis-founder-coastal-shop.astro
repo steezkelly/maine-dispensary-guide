@@ -1,0 +1,89 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import NextStep from '../../components/NextStep.astro';
+
+export const title = "Success Story: The Coastal Craft Boutique";
+---
+
+<Layout 
+  title="Coastal Maine Dispensary Founder" 
+  description="How one founder built a high-end cannabis boutique in a Maine coastal town. A story of community, craft, and compliance."
+  heroImage="/images/heroes/maine-cannabis-founder-coastal-shop.jpg"
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-03-10", modifiedDate: "2026-04-01", section: "Founder Stories" }}
+>
+  <article>
+    <div class="article-header">
+      <h1>The Coastal Craft Boutique</h1>
+      <p class="subtitle">Building a legacy in Maine's seaside communities</p>
+    </div>
+
+    <section>
+      <h2>The Vision</h2>
+      <Callout title="Founder Perspective" type="passion">
+        <p>"The Maine coast isn't just a location; it's a character in our story. We didn't want to build a corporate shop; we wanted to build a place that felt like the salty air and the rugged pines." — Sarah, Founder.</p>
+      </Callout>
+      <p>Sarah's journey began in a small coastal town with a strong sense of community. Her goal was to create a space where both locals and summer visitors felt welcome, emphasizing the craft quality that Maine is known for. She focused on sourcing from Tier 1 cultivators, ensuring every product had a story.</p>
+    </section>
+
+    <section>
+      <h2>Overcoming the Municipal Maze</h2>
+      <p>The biggest hurdle was the <strong>Municipal Opt-In</strong>. Sarah spent months attending town council meetings, not as an "outsider," but as a neighbor. She studied the <a href="https://www.maine.gov/dafs/ocp/resources/municipal-resources" target="_blank" rel="noopener noreferrer">OCP's municipal authorization guidance</a> and presented a proactive <a href="/guides/maine-cannabis-real-estate/">zoning and security plan</a> that addressed the town's concerns about traffic and safety before they even asked.</p>
+    </section>
+
+    <section>
+      <h2>External Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources/municipal-resources" target="_blank" rel="noopener noreferrer">OCP Municipal Authorization Resources</a> — Official guidance for towns and applicants navigating opt-in</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources" target="_blank" rel="noopener noreferrer">OCP Guidance Documents</a> — Compliance guidance, model ordinances, and best practices</li>
+        <li><a href="https://www.memun.org/" target="_blank" rel="noopener noreferrer">Maine Municipal Association</a> — Resources for engaging with local government in Maine</li>
+      </ul>
+    </section>
+
+    <Callout title="Success Tip" type="tip">
+      Be a neighbor first, a business owner second. In Maine's small towns, trust is the currency that wins you a local authorization.
+    </Callout>
+
+    <section>
+      <h2>The Reward</h2>
+      <p>Today, the boutique is a pillar of the town. By prioritizing <strong>Expertise over Hype</strong>, Sarah has built a loyal customer base that values her team's knowledge of terpene profiles and local strains. Her business is a testament to the power of the Maine independent spirit.</p>
+    </section>
+
+    <section class="key-takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li><strong>Neighbor-first approach</strong> builds trust with local authorities and earns authorization faster than aggressive tactics.</li>
+        <li><strong>Craft quality over volume</strong> creates loyal customers in coastal communities where authenticity matters.</li>
+        <li><strong>Proactive compliance</strong> — present your full plan before regulators ask — differentiates you from less serious applicants.</li>
+        <li><strong>Community integration</strong> transforms a business into a local institution with enduring customer loyalty.</li>
+      </ul>
+    </section>
+
+    <NextStep currentPath="/founders/maine-cannabis-founder-coastal-shop/" />
+  </article>
+
+<section class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>What are the key compliance requirements?</h3>
+    <p>Consult the Maine OCP for current requirements. Key areas include licensing, inventory tracking via METRC, advertising restrictions, and product testing requirements.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I renew my license?</h3>
+    <p>License renewal requirements are established by the Maine Office of Cannabis Policy. Submit renewal applications before expiration and ensure all documentation is current.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What penalties apply for violations?</h3>
+    <p>Penalties vary by violation type and severity. The OCP maintains a penalty schedule that includes fines, license suspension, and revocation for serious or repeated violations.</p>
+  </div>
+</section>
+</Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+</style>

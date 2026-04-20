@@ -1,0 +1,76 @@
+---
+const { currentPath } = Astro.props;
+
+const steps = [
+  { path: "/guides/maine-dispensary-license/", label: "Get Your License", icon: "📜" },
+  { path: "/guides/maine-cannabis-real-estate/", label: "Find a Location", icon: "📍" },
+  { path: "/guides/maine-dispensary-costs/", label: "Calculate Startup Costs", icon: "💰" },
+  { path: "/guides/maine-cannabis-taxation-280e/", label: "Master 280E Taxes", icon: "⚖️" },
+  { path: "/market-stats/", label: "View Market Trends", icon: "📈" }
+];
+
+const nextStep = steps.find(step => step.path !== currentPath);
+---
+
+{nextStep && (
+  <div class="next-step-box">
+    <div class="next-step-content">
+      <span class="next-step-icon">{nextStep.icon}</span>
+      <div>
+        <p class="next-step-label">Recommended Next Step</p>
+        <a href={nextStep.path} class="next-step-link">{nextStep.label} &rarr;</a>
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .next-step-box {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: var(--color-primary);
+    border-radius: 1.5rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(13, 78, 80, 0.2);
+  }
+
+  .next-step-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .next-step-icon {
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+  }
+
+  .next-step-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .next-step-link {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: white !important;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .next-step-link:hover {
+    border-bottom-color: white;
+    opacity: 1;
+  }
+</style>

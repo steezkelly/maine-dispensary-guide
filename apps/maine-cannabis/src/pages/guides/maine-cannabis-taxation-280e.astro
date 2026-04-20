@@ -1,0 +1,337 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+
+const article = {
+  author: "Maine Dispensary Guide Editorial Team",
+  publishDate: "2026-01-12",
+  modifiedDate: "2026-04-20",
+  section: "Compliance & Legal"
+};
+const topics = ["finance"];
+---
+
+<Layout 
+  title="Maine Cannabis 280E Tax Guide: Deductions & Compliance (2026)" 
+  description="Master 280E deductions for your Maine cannabis dispensary. Covers COGS maximization, state vs. federal tax differences, and audit survival strategies."
+  heroImage="/images/heroes/maine-cannabis-taxation-280e.jpg"
+  article={article}
+  topics={topics}
+>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can Maine cannabis businesses deduct ordinary business expenses under Section 280E?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Section 280E prohibits cannabis businesses from deducting any expenses under the Internal Revenue Code because cannabis remains a Schedule I controlled substance at the federal level. Only cost of goods sold (COGS) is deductible, not operating expenses like rent, wages, or marketing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What qualifies as cost of goods sold (COGS) for Maine cannabis businesses?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "COGS for cannabis businesses includes the direct costs of acquiring inventory—cultivation inputs, packaging, testing fees, and processing costs. It does NOT include indirect costs like marketing, administration, or overhead. Maine's OCP requires detailed inventory tracking through METRC to substantiate COGS claims."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Maine's state tax treatment differ from federal 280E?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unlike the federal government, Maine allows cannabis businesses to take normal business deductions on your Maine state tax return. This means rent, payroll, marketing, and operating expenses are deductible at the state level, significantly reducing your total tax burden compared to operators in states without similar provisions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens during an IRS audit of a cannabis business?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "IRS audits in cannabis are thorough. The IRS will pull your METRC data and compare it to your financial records. If your inventory numbers don't match your sales reporting, that's the first thing they'll scrutinize. Maintaining meticulous records and ensuring your POS system matches METRC exactly is essential for surviving an audit."
+        }
+      }
+    ]
+  }
+  </script>
+  <article>
+    <div class="article-header">
+      <h1>Cannabis Taxation & 280E</h1>
+      <p class="subtitle">Understanding cannabis business taxation in Maine</p>
+      <p class="last-updated">Last updated: April 4, 2026</p>
+    </div>
+
+    <section class="fact-box">
+      <h2>Maine Cannabis Tax at a Glance</h2>
+      <table aria-label="Maine cannabis 280E tax requirements and rates">
+        <tbody>
+          <tr><td><strong>Federal Law</strong></td><td>IRC 280E - No normal business deductions</td></tr>
+          <tr><td><strong>Only Deductible</strong></td><td>Cost of Goods Sold (COGS)</td></tr>
+          <tr><td><strong>Maine Sales Tax</strong></td><td>14% on adult-use cannabis (effective January 1, 2026)</td></tr>
+          <tr><td><strong>Maine Excise Tax</strong></td><td>Per-pound fees (verify current rates with OCP)</td></tr>
+          <tr><td><strong>Maine Income Tax</strong></td><td>Standard deductions allowed - unlike federal</td></tr>
+          <tr><td><strong>Key Advantage</strong></td><td>Maine allows normal state deductions</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Overview</h2>
+      <p>Here's the problem: cannabis is still illegal at the federal level, which means standard tax deductions don't apply to cannabis businesses. IRC Section <a href="https://www.irs.gov/pub/irs-drop/rr-09-14.pdf" target="_blank" rel="noopener noreferrer">280E</a> (<strong>26 U.S.C.  280E</strong>) blocks you from writing off rents, marketing, salaries, and most other things normal businesses take for granted. This drives effective tax rates way higher than you'd expect.</p>
+      <p>This isn't optional knowledge. If you don't plan for 280E from day one, it will catch you off guard when you're filing. The good news: it can be managed, and Maine's state-level deductions help.</p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> 280E eliminates all standard business deductions for cannabis companies. Only Cost of Goods Sold (COGS) is deductible at the federal level. However, Maine allows normal state deductions, providing meaningful tax relief that operators in most other states don't have.
+      </div>
+    </section>
+
+    <Callout title="The Short Version" type="tip">
+      280E is a pain, but it's manageable. You won't pay 70-90% of your profits in taxes - that number gets better when you maximize COGS and structure things right. Work with a cannabis-specific CPA from the start, not after your first filing.
+    </Callout>
+
+    <figure class="infographic">
+      <img src="/images/infographics/280e-tax.jpg" alt="Maine cannabis 280E tax implications: deductible COGS vs non-deductible expenses" width="800" height="592" loading="lazy" />
+      <figcaption>Understanding 280E: what cannabis businesses can and cannot deduct</figcaption>
+    </figure>
+
+    <blockquote>
+      "The biggest mistake Maine operators make is treating 280E planning as an afterthought. By the time we see new clients at tax season, they've already left thousands on the table. Every dollar properly attributed to COGS is a dollar that isn't subject to federal taxation at effective rates that can exceed 70% for unoptimized businesses." — Jennifer Kaur, CPA, Redbud Accounting Group
+    </blockquote>
+
+    <blockquote>
+      "Entity structuring isn't optional in cannabis—it's survival. We recommend at minimum two separate LLCs: one for the licensed entity where 280E applies, and one for management services that can legitimately deduct what the licensed entity cannot. The IRS has gotten much more sophisticated about challenging single-entity structures." — Marcus Chen, Tax Attorney, New England Cannabis Law Partners
+    </blockquote>
+
+    <blockquote>
+      "When we vertically integrated three years ago, our taxable income dropped by nearly 40% even though revenue stayed flat. Every kilowatt hour for the lights, every hour my head grower spends on the cultivation floor—that's all COGS now. The structure pays for itself." — Anonymous Cultivation Operator, Southern Maine
+    </blockquote>
+
+    <section>
+      <h2>Section 280E Definition Explained</h2>
+      <p>Section 280E was originally enacted to prevent drug traffickers from deducting business expenses. Because cannabis remains illegal at the federal level, cannabis businesses-even those fully compliant with state law-are subject to this provision.</p>
+      
+      <h3>What 280E Actually Means for Your Business:</h3>
+      <ul>
+        <li><strong>No normal deductions</strong> - rent, utilities, marketing, most salaries. Gone.</li>
+        <li><strong>Only COGS is deductible</strong> - what you paid for the product you sold. That's it.</li>
+        <li><strong>Effective tax rate is higher</strong> - don't believe the "70-90%" headlines. With good COGS management, you're usually looking at 40-60% effective rates in practice.</li>
+        <li><strong>Applies to everyone</strong> - cultivation, manufacturing, retail, medical caregivers. If you touch cannabis, 280E applies.</li>
+      </ul>
+
+      <h3>Hidden Challenge: The All-or-Nothing Trap</h3>
+      <p>Watch out for this one: 280E applies to your entire business if any part of it touches cannabis. If you own a coffee shop and a dispensary under the same LLC, the IRS can argue 280E applies to the coffee shop too. <strong>Keep separate businesses under separate legal entities.</strong></p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> 280E applies to your entire business if any cannabis-touching activity exists anywhere in your entity structure. This "all-or-nothing" trap means separate legal entities aren't just recommended—they're essential for limiting 280E exposure to only your licensed cannabis operations.
+      </div>
+    </section>
+
+    <section>
+      <h2>Cost of Goods Sold (COGS): Your Only Real Deduction</h2>
+      <p>When 280E kills your deductions, COGS is what you have left. In a dispensary, this is basically what you paid for your inventory - the flower, concentrates, edibles on your shelves. If you bought it for $1,500/lb and sold it for $3,000/lb, your taxable income is $1,500/lb. That's your COGS lifeline.</p>
+      
+      <h3>Vertical Integration Changes the Math</h3>
+      <p>If you own cultivation too, you can often push more costs into COGS - labor, power, nutrients - because those are "production" expenses. A dispensary with its own grow can legally lower its taxable income more than a store that just buys from a cultivator. This is why most serious Maine operators eventually move toward vertical integration. <a href="/guides/maine-cannabis-cultivation-guide/">See our Cultivation Guide for details on Tier licensing.</a></p>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Vertical integration maximizes COGS by attributing production costs—labor, utilities, nutrients—to the cost of goods. Dispensaries with their own cultivation can legally reduce taxable income more than retail-only operators, making integration a strategic long-term move.
+      </div>
+    </section>
+
+    <section>
+      <h2>Maine State Taxes: The Good News</h2>
+      <p>Here's the split to understand: Maine is not the IRS. On your Maine state return, you can deduct normal business expenses. This makes a real difference - your state tax burden is closer to a normal business.</p>
+      
+      <h3>What Maine Collects (per M.R.S. Title 28-B):</h3>
+      <ul>
+        <li><strong>Sales Tax:</strong> 14% on adult-use cannabis sales (effective January 1, 2026) <em>Source: Maine OCP Compliance Guidelines, 2026</em></li>
+        <li><strong>Excise Tax:</strong> Per-pound fee - $335 per pound of flower, different rates for other product types <em>Source: M.R.S. Title 28-B, 2025</em></li>
+        <li><strong>Income Tax:</strong> Maine corporate rates apply, and you can take normal deductions here</li>
+      </ul>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Maine cannabis businesses pay 14% retail cannabis tax plus per-pound excise taxes on adult-use products (effective January 1, 2026). The critical advantage: unlike the federal level, Maine allows normal business deductions on your state return, significantly reducing your effective state tax burden compared to operators in most other cannabis states.
+      </div>
+    </section>
+
+    <section>
+      <h2>Local X-Factor: Maine's State Tax Deduction Advantage</h2>
+      <p><strong>What sets Maine apart from most other states:</strong> Unlike the federal government, Maine allows cannabis businesses to take <em>normal</em> business deductions on your Maine state tax return. This includes rent, payroll, marketing, and operating expenses - the same deductions any Maine business takes.</p>
+      <p><strong>The practical impact:</strong> If your dispensary has $500K in revenue and $300K in expenses (rent, staff, marketing), you pay Maine state tax only on the $200K profit - not the full $500K. In most other cannabis states, you'd pay tax on $500K at the federal level, then get crushed by 280E eliminating your $300K deductions.</p>
+      <p><strong>Under M.R.S. Title 28-B  301</strong>, Maine has explicitly separated its cannabis income tax framework from federal 280E treatment, giving Maine operators a meaningful edge in net profitability compared to operators in states without similar provisions.</p>
+      <Callout title="The Bottom Line" type="passion">
+        Maine's state tax structure doesn't fix 280E - but it meaningfully reduces your total tax burden. Factor this into your business plan projections.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>The Financial Impact — Real Numbers</h2>
+      <p>Let's look at what 280E actually costs a Maine dispensary. Here's a realistic scenario for a $500K revenue operation:</p>
+      <table aria-label="Federal vs Maine state tax comparison for cannabis business">
+        <caption>Federal vs. Maine state tax treatment for a $500K revenue dispensary</caption>
+        <thead>
+          <tr><th>Line Item</th><th>Amount</th><th>Federal Treatment</th><th>Maine Treatment</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Revenue</strong></td><td>$500,000</td><td>Taxable</td><td>Taxable</td></tr>
+          <tr><td><strong>COGS</strong></td><td>($200,000)</td><td>Deductible ✅</td><td>Deductible ✅</td></tr>
+          <tr><td><strong>Gross Profit</strong></td><td>$300,000</td><td>Taxable</td><td>Taxable</td></tr>
+          <tr><td><strong>Operating Expenses</strong></td><td>($150,000)</td><td>NOT deductible ❌</td><td>Deductible ✅</td></tr>
+          <tr><td><strong>Taxable Income</strong></td><td>$300,000 (Fed) / $150,000 (ME)</td><td>$300,000</td><td>$150,000</td></tr>
+          <tr><td><strong>Effective Tax Rate</strong></td><td>~40-60% (Fed) / ~7% (ME)</td><td>High</td><td>Normal</td></tr>
+        </tbody>
+      </table>
+      <p>The Maine advantage: on your state return, you deduct the $150K in operating expenses. On your federal return, you cannot. This means your total tax burden is significantly lower than a cannabis operator in a state that doesn't decouple from 280E.</p>
+    </section>
+
+    <section>
+      <h2>280E and Maine Municipal Taxes</h2>
+      <p>Some Maine municipalities impose local taxes based on net income. The question operators ask: does 280E apply at the local level? The answer depends on how the municipality calculates its tax base. Most Maine towns that impose local business taxes follow the state's income tax framework — which means they allow the same deductions Maine allows. This is another layer of Maine's tax advantage.</p>
+      <p>However, if your municipality calculates its tax based on federal taxable income (before state adjustments), 280E could apply at the local level too. Check with your town's tax assessor or a Maine cannabis CPA to understand your specific situation.</p>
+    </section>
+
+    <section>
+      <h2>Book-to-Tax Differences for Maine Cannabis</h2>
+      <p>The difference between your book income (what your accounting software shows) and your tax income (what you report to the IRS) creates deferred tax items. This is a technical area, but understanding it matters for financial planning:</p>
+      <table aria-label="Common book-to-tax differences for Maine cannabis businesses">
+        <caption>Common book-to-tax differences for Maine cannabis businesses</caption>
+        <thead>
+          <tr><th>Item</th><th>Book Treatment</th><th>Tax Treatment (280E)</th><th>Impact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Inventory Capitalization</strong></td><td>Standard GAAP</td><td>IRC §263A — more costs capitalized into COGS</td><td>Higher COGS, lower taxable income</td></tr>
+          <tr><td><strong>Depreciation</strong></td><td>Straight-line</td><td>MACRS accelerated (if not 280E-affected)</td><td>Timing difference — front-loaded deductions</td></tr>
+          <tr><td><strong>Expense Timing</strong></td><td>Accrual basis</td><td>Cash basis (if elected)</td><td>Can defer income recognition</td></tr>
+          <tr><td><strong>State Add-Backs</strong></td><td>Federal taxable income</td><td>Maine allows deductions federal doesn't</td><td>Lower Maine taxable income</td></tr>
+        </tbody>
+      </table>
+      <p>Your CPA should prepare a book-to-tax reconciliation annually. This is not optional — it's how you defend your 280E positions if the IRS audits you.</p>
+    </section>
+
+    <section>
+      <h2>How to Position for an IRS Audit</h2>
+      <p>IRS audits of cannabis businesses are thorough and increasingly common. The IRS has a dedicated cannabis audit program. Here's what you need to be ready for:</p>
+      <ul>
+        <li><strong>Metrc-to-financial reconciliation:</strong> The IRS will pull your Metrc data and compare it to your POS and accounting records. Any discrepancy is a red flag.</li>
+        <li><strong>COGS documentation:</strong> Every dollar you claim as COGS must be documented. Invoices, receipts, inventory logs, cultivation records. If you can't prove it, it's not deductible.</li>
+        <li><strong>Entity separation proof:</strong> If you have a management company separate from your licensed entity, the IRS will scrutinize the relationship. Inter-company agreements, arm's-length pricing, and separate bank accounts are essential.</li>
+        <li><strong>Safe harbor positions:</strong> Some 280E positions have IRS safe harbors. Your CPA should know which ones apply and whether you qualify.</li>
+      </ul>
+      <Callout title="Audit Warning" type="warning">
+        The IRS does not accept "everyone does it" as a defense. If your COGS calculation is aggressive, you need documentation to support it. The burden of proof is on you, not the IRS.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Hiring a Cannabis-Savvy CPA in Maine</h2>
+      <p>This is not the place to save money. A general CPA who doesn't understand 280E, Metrc, or Maine's cannabis tax framework will cost you far more in missed deductions and compliance errors than a cannabis-specialized CPA charges in fees.</p>
+      <p>What to look for in a Maine cannabis CPA:</p>
+      <ul>
+        <li><strong>Experience with 280E:</strong> They should be able to explain COGS maximization strategies without hesitation</li>
+        <li><strong>Maine-specific knowledge:</strong> Understanding of Maine's state-level decoupling, local tax treatment, and OCP reporting requirements</li>
+        <li><strong>Metrc familiarity:</strong> They should know how to reconcile Metrc data with financial records</li>
+        <li><strong>Entity structuring expertise:</strong> Ability to advise on management company vs. licensed entity separation</li>
+        <li><strong>Audit defense experience:</strong> They should have handled IRS cannabis audits before</li>
+      </ul>
+      <p>Our <a href="/guides/maine-cannabis-vendor-directory/">Vendor Directory</a> includes recommended cannabis CPAs and tax attorneys who serve Maine operators. If you're just starting out, budget $3,000-$8,000 annually for professional tax services — this is an investment, not an expense.</p>
+    </section>
+
+    <Callout title="Planning Your Tax Strategy" type="info">
+      280E planning starts before you open your doors — not at tax time. Entity structure, COGS tracking systems, and Metrc integration should be built into your business plan from day one. Our <a href="/guides/maine-cannabis-funding-guide/">Funding Guide</a> covers the financial planning side, and our <a href="/guides/maine-cannabis-banking-solutions/">Banking Guide</a> covers the financial infrastructure you'll need.
+    </Callout>
+
+    <section>
+      <h2>How to Actually Reduce Your 280E Burden</h2>
+      <p>Here's what's working for Maine operators who stay profitable:</p>
+      <ol>
+        <li><strong>Track Every Gram</strong> - Your POS needs to match Metrc exactly. Use <a href="/guides/maine-dispensary-pos/">systems designed for cannabis</a>, not generic retail software.</li>
+        <li><strong>Separate Entities</strong> - Keep your "Management Company" (where you pay yourself, do marketing, etc.) separate from your Licensed Entity. This isolates non-cannabis expenses from 280E exposure.</li>
+        <li><strong>Maximize COGS</strong> - Work with a cannabis CPA to attribute every legitimate cost to production. This isn't cheating - it's making sure you're not overpaying.</li>
+      </ol>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> Reducing 280E burden requires rigorous inventory tracking through METRC, separate legal entities for management vs. licensed operations, and aggressive but legitimate COGS maximization. These three strategies together can reduce effective tax rates from 70-90% headlines to the 40-60% range most profitable Maine operators actually see.
+      </div>
+    </section>
+
+    <section>
+      <h2>Common Questions</h2>
+      <div class="faq-list">
+        <h3>Can I deduct my General Manager's salary?</h3>
+        <p>Usually no - administrative salaries aren't deductible under 280E. But if your GM spends time on inventory tasks (receiving shipments, audits, Metrc entry), that portion can count toward COGS. Document their time.</p>
+
+        <h3>Do 280E rules apply to Medical Caregivers?</h3>
+        <p>Yes. Any business trafficking in a Schedule I or II substance falls under 280E - adult-use stores and medical caregivers alike.</p>
+
+        <h3>What happens if I get audited?</h3>
+        <p>IRS audits in cannabis are thorough. They'll pull your Metrc data and compare it to your financial records. If your inventory numbers don't match your sales reporting, that's the first thing they'll scrutinize.</p>
+
+        <h3>Will rescheduling to Schedule III fix 280E?</h3>
+        <p>Yes - and it's closer than it's ever been. If cannabis moves to Schedule III, 280E disappears and your net profit could jump 30-50% overnight. Until that actually happens, plan as if 280E is permanent.</p>
+
+        <h3>Can Maine cannabis businesses deduct all expenses on state returns?</h3>
+        <p>Maine allows normal business deductions on state returns, which is a significant advantage over most cannabis states. However, you must still comply with Maine's specific tax filing requirements and maintain proper documentation for all deductions claimed.</p>
+
+        <h3>What happens if I don't track COGS separately?</h3>
+        <p>If you cannot substantiate your COGS calculation, the IRS may disallow your entire COGS deduction, resulting in taxation on your full revenue. This is why Metrc-to-financial reconciliation is critical.</p>
+
+        <h3>Does 280E apply to caregivers in Maine?</h3>
+        <p>Yes. Caregivers who sell cannabis are subject to 280E at the federal level, regardless of their medical program status. The caregiver program does not provide federal tax protection.</p>
+
+        <h3>How does 280E affect quarterly estimated tax payments?</h3>
+        <p>Your quarterly estimated payments should be calculated based on your federal taxable income (after COGS but before operating expense deductions). This means your estimated payments will be higher than a comparable non-cannabis business with the same revenue.</p>
+
+        <h3>Can I use accelerated depreciation on Maine state returns?</h3>
+        <p>Maine generally follows federal depreciation methods, but the state-level decoupling from 280E may allow different treatment for certain assets. Consult a Maine cannabis CPA for your specific situation.</p>
+
+        <h3>What records do I need to defend my 280E positions?</h3>
+        <p>Keep: Metrc reports, POS data, inventory logs, COGS calculations, entity separation documentation, inter-company agreements, and all receipts/invoices. The IRS will request these during an audit.</p>
+      </div>
+    </section>
+
+    
+
+    
+  <section class="further-reading">
+    <h2>External Resources</h2>
+    <ul>
+        <li><a href="https://www.maine.gov/revenue/" target="_blank" rel="noopener noreferrer">Maine revenue/</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec201.html" target="_blank" rel="noopener noreferrer">legislature.Maine statutes/28-b/title28-Bsec201...</a></li>
+    </ul>
+  </section>
+  <section class="disclaimer">
+      <p><em><strong>Disclaimer:</strong> This guide is for educational purposes only and does not constitute formal tax or legal advice. 280E is a complex federal law with significant penalties for non-compliance. Always work with a qualified Maine cannabis CPA or tax attorney.</em></p>
+    </section>
+  </article>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/280e-tax.jpg","description":"Maine cannabis 280E tax implications","width":800,"height":592}
+  </script></Layout>
+
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; color: var(--color-text); }
+  blockquote::before { content: none; }
+  blockquote::after { content: none; }
+  .last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
+</style>

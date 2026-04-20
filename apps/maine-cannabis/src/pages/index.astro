@@ -1,0 +1,1864 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PineTree from '../components/PineTree.astro';
+import Leaf from '../components/Leaf.astro';
+
+const stats = [
+  { label: "Annual Sales", value: "$246M" },
+  { label: "Active Stores", value: "179" },
+  { label: "Price/Gram", value: "$6.62" }
+];
+
+const cityLinks = [
+  { name: "Portland", href: "/guides/portland-dispensary-guide/" },
+  { name: "Lewiston", href: "/guides/lewiston-dispensary-guide/" },
+  { name: "Bangor", href: "/guides/bangor-dispensary-guide/" },
+  { name: "Augusta", href: "/guides/augusta-dispensary-guide/" },
+  { name: "South Portland", href: "/guides/south-portland-dispensary-guide/" },
+  { name: "Biddeford", href: "/guides/biddeford-dispensary-guide/" },
+  { name: "Auburn", href: "/guides/auburn-dispensary-guide/" },
+];
+
+const recentGuides = [
+  { title: "2026 Startup Costs Breakdown", href: "/guides/maine-dispensary-costs/", date: "April 4, 2026", badge: "Updated" },
+  { title: "Bangor Market Analysis", href: "/guides/bangor-dispensary-guide/", date: "April 3, 2026", badge: "Updated" },
+  { title: "Real Estate & Zoning Guide", href: "/guides/maine-cannabis-real-estate/", date: "April 2, 2026", badge: "Updated" },
+  { title: "2026 Launch Checklist", href: "/launch-checklist/", date: "April 1, 2026", badge: "New" },
+];
+
+const journeySteps = [
+  { num: "01", title: "Get the Launch Checklist", desc: "The complete roadmap from concept to opening day — every step in one place.", href: "/launch-checklist/" },
+  { num: "02", title: "Understand Licensing", desc: "OCP Adult-Use Retail License, municipal opt-in requirements, and realistic application timelines.", href: "/guides/maine-dispensary-license/" },
+  { num: "03", title: "Run the Numbers", desc: "Model your startup costs against Maine's $246M market and find your break-even point.", href: "/roi-calculator/" },
+  { num: "04", title: "Find Your Location", desc: "Zoning rules, school buffer requirements, commercial lease negotiation, and municipal approval.", href: "/guides/maine-cannabis-real-estate/" },
+];
+---
+
+<Layout 
+  title="Maine Cannabis Entrepreneur Resource: 44 Expert Guides (2026)" 
+  description="Complete guide to opening a Maine cannabis dispensary. Licensing, compliance, real estate, and 280E taxation explained. Everything you need to open and scale." 
+  heroImage="/images/heroes/homepage.jpg"
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-01", modifiedDate: "2026-04-18", section: "Home" }}
+>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HERO: Heritage Authority — Topographic + Dramatic Typography
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="hero-manifesto" aria-labelledby="hero-heading">
+    <!-- Topographic background pattern -->
+    <div class="topo-bg" aria-hidden="true">
+      <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="topoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.04"/>
+          </linearGradient>
+        </defs>
+        <!-- Contour lines -->
+        <path d="M-50,300 Q150,200 350,350 T750,250" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
+        <path d="M-50,350 Q100,250 300,380 T750,300" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M-50,400 Q80,320 280,420 T750,360" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
+        <path d="M-50,450 Q60,380 260,480 T750,420" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M-50,500 Q40,440 240,540 T750,480" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M100,50 Q200,150 400,100 T850,150" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
+        <path d="M50,100 Q180,180 380,130 T830,180" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
+        <!-- Vertical accent lines -->
+        <line x1="680" y1="0" x2="680" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
+        <line x1="720" y1="0" x2="720" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <!-- Left: Editorial content block -->
+      <div class="hero-editorial">
+        <div class="edition-mark">
+          <span class="edition-year">Est. 2026</span>
+          <span class="edition-divider">◆</span>
+          <span class="edition-state">Maine, USA</span>
+        </div>
+        
+        <h1 id="hero-heading" class="hero-title">
+          The Professional<br/>
+          <span class="hero-title-accent">Gateway</span> to<br/>
+          Maine Cannabis
+        </h1>
+        
+        <p class="hero-descriptor">
+          Expert-vetted guidance for licensing, compliance, and growth in the Pine Tree State. 
+          Forty-four guides. One authoritative source.
+        </p>
+        
+        <div class="hero-actions">
+          <a href="/guides/maine-dispensary-license/" class="btn-primary">Start Your Application</a>
+          <a href="/roi-calculator/" class="btn-ghost">Calculate Your ROI</a>
+        </div>
+      </div>
+
+      <!-- Right: Visual anchor with botanical -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="visual-anchor">
+          <div class="anchor-ring ring-1"></div>
+          <div class="anchor-ring ring-2"></div>
+          <div class="anchor-ring ring-3"></div>
+          <div class="botanical-cluster">
+            <PineTree size={180} color="var(--color-primary)" class="cluster-pine" />
+            <Leaf size={100} color="var(--color-accent)" class="cluster-leaf cluster-leaf-1" />
+            <Leaf size={70} color="var(--color-soft-green)" class="cluster-leaf cluster-leaf-2" />
+          </div>
+          <div class="visual-caption">
+            <span class="caption-label">Maine Dispensary Guide</span>
+            <span class="caption-ref">Editorial Resource</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom flourish -->
+    <div class="hero-flourish" aria-hidden="true">
+      <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+        <path d="M0,20 Q300,0 600,20 T1200,20" fill="none" stroke="var(--color-border)" stroke-width="1"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MARKET BAR: Refined stats strip
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="market-intel" aria-label="Maine Market Statistics">
+    <div class="intel-inner">
+      <div class="intel-stats">
+        {stats.map((stat, i) => (
+          <>
+            <div class="intel-stat">
+              <span class="stat-value">{stat.value}</span>
+              <span class="stat-label">{stat.label}</span>
+            </div>
+            {i < stats.length - 1 && <div class="stat-separator" aria-hidden="true">—</div>}
+          </>
+        ))}
+      </div>
+      <a href="/market-stats/" class="intel-link">
+        Full Market Report
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MISSION: Editorial typography treatment
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="mission-manifesto" aria-labelledby="mission-heading">
+    <div class="mission-inner">
+      <div class="mission-header">
+        <span class="section-eyebrow">Our Purpose</span>
+        <h2 id="mission-heading" class="mission-title">Build Your Passion Project</h2>
+      </div>
+      
+      <div class="mission-text">
+        <p class="mission-lead">
+          Opening a dispensary in Maine is a real business with real regulations. But if you have a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance.
+        </p>
+        
+        <div class="mission-body">
+          <p>
+            We built this resource for entrepreneurs who are serious about doing this correctly: the ones who want to understand the M.R.S. citations, negotiate their own commercial lease, and file their 280E deductions properly rather than relying on luck.
+          </p>
+          <p>
+            Everything here is specific to Maine — the towns that have opted in, the fee structures that OCP publishes, the real estate patterns that only emerge when you know the market. If you are considering Maine cannabis, you need this specificity.
+          </p>
+        </div>
+        
+        <a href="/about/" class="read-more">
+          Read About Our Methodology
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Decorative botanical -->
+    <div class="mission-botanical" aria-hidden="true">
+      <svg viewBox="0 0 200 400" fill="none">
+        <path d="M100,380 C60,320 20,240 40,160 C60,80 100,40 100,40 C100,40 140,80 160,160 C180,240 140,320 100,380" stroke="var(--color-primary)" stroke-width="1" opacity="0.15"/>
+        <path d="M100,350 C75,300 50,240 60,180 C70,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
+        <path d="M100,350 C125,300 150,240 140,180 C130,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MARKET OVERVIEW: Asymmetric two-column layout
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="market-overview" aria-labelledby="overview-heading">
+    <div class="overview-inner">
+      <div class="overview-header">
+        <span class="section-eyebrow">The Opportunity</span>
+        <h2 id="overview-heading">Why Maine, Why Now</h2>
+      </div>
+      
+      <div class="overview-grid">
+        <div class="overview-main">
+          <p>
+            Maine has a medical program operating since 1999 and an adult-use market open since 2020. That combination means established patterns, more data, and a clearer picture of what works than newer state markets.
+          </p>
+          <p>
+            The Office of Cannabis Policy (OCP) oversees the industry with regulations mature enough to be predictable — you can read the actual rules, follow the actual processes, and know where the actual pitfalls are.
+          </p>
+          <p>
+            Towns must opt-in before a dispensary can operate within their borders. For entrepreneurs, this means location research is not optional — it is the first and most important strategic decision you will make.
+          </p>
+        </div>
+        
+        <div class="overview-aside">
+          <div class="aside-card">
+            <span class="aside-stat">$246M</span>
+            <span class="aside-label">Adult-use sales in 2025</span>
+          </div>
+          <div class="aside-card">
+            <span class="aside-stat">179</span>
+            <span class="aside-label">Active stores statewide</span>
+          </div>
+          <div class="aside-card highlight">
+            <span class="aside-stat">41+</span>
+            <span class="aside-label">Opt-in municipalities</span>
+          </div>
+          <p class="aside-note">
+            The opportunity is in understanding which towns have been left behind.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       OPERATIONAL EXCELLENCE: Full-width with offset content
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="operations-excellence" aria-labelledby="ops-heading">
+    <div class="ops-inner">
+      <div class="ops-header">
+        <span class="section-eyebrow">Day-to-Day Reality</span>
+        <h2 id="ops-heading">What It Takes to Run One</h2>
+      </div>
+      
+      <div class="ops-content">
+        <p>
+          Getting a license is just the start. The actual work of running a dispensary — managing inventory, staying compliant with OCP security rules, training staff who can actually explain the difference between a sativa and an indica — is where most operators discover whether they chose the right business.
+        </p>
+        <p>
+          Maine customers, especially in the Portland metro area and mid-coast college towns, care about craft and transparency. They ask questions about cultivation methods. They read menu listings before they visit. The shops that do the work on staff training — that treat budtenders as product experts rather than cashiers — tend to build real loyalty.
+        </p>
+        
+        <div class="ops-topics">
+          <a href="/guides/maine-dispensary-pos/" class="topic-tag">Point-of-Sale Systems</a>
+          <a href="/glossary/#metrc" class="topic-tag">Metrc Compliance</a>
+          <a href="/guides/maine-cannabis-taxation-280e/" class="topic-tag">280E Tax Strategy</a>
+          <a href="/launch-checklist/" class="topic-tag">Launch Checklist</a>
+        </div>
+        
+        <p class="ops-closing">
+          The operators who survive past year two tend to share certain habits: meticulous record-keeping, proactive communication with OCP, and a genuine interest in what their customers want. The ones who do not make it tend to have ignored one or more of those three.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Decorative element -->
+    <div class="ops-decoration" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="48" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.1"/>
+        <circle cx="50" cy="50" r="35" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.15"/>
+        <circle cx="50" cy="50" r="20" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CORE HUBS: Editorial card grid with hover personality
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="core-hubs" aria-labelledby="hubs-heading">
+    <div class="hubs-inner">
+      <div class="hubs-header">
+        <span class="section-eyebrow">Explore</span>
+        <h2 id="hubs-heading">Core Topics</h2>
+        <p class="hubs-subtitle">Pick a category to dig into.</p>
+      </div>
+      
+      <div class="hubs-grid">
+        <a href="/guides/maine-dispensary-license/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 8h14l10 10v22a4 4 0 01-4 4H14a4 4 0 01-4-4V12a4 4 0 014-4z"/>
+                <path d="M28 8v10h10"/>
+                <path d="M18 26h12M18 34h8"/>
+              </svg>
+            </div>
+            <h3>Licensing</h3>
+            <p>Step-by-step state and local approval maps.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-taxation-280e/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="24" cy="24" r="18"/>
+                <path d="M24 12v24M12 24h24"/>
+                <path d="M17 20l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Compliance</h3>
+            <p>Mastering 280E and OCP tracking rules.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-real-estate/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M24 6C14.6 6 7 13.6 7 23c0 12 17 21 17 21s17-9 17-21c0-9.4-7.6-17-17-17z"/>
+                <circle cx="24" cy="23" r="6"/>
+              </svg>
+            </div>
+            <h3>Real Estate</h3>
+            <p>Finding compliant zones in every town.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/roi-calculator/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 34l12-16 8 8 12-16"/>
+                <circle cx="16" cy="22" r="3" fill="currentColor"/>
+                <circle cx="28" cy="26" r="3" fill="currentColor"/>
+                <circle cx="40" cy="10" r="3" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>ROI Calculator</h3>
+            <p>Estimate startup costs and break-even timelines.</p>
+            <span class="hub-cta">Calculate <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/resources/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="20" cy="18" r="6"/>
+                <circle cx="32" cy="32" r="6"/>
+                <path d="M32 16v6M32 32l6 6"/>
+              </svg>
+            </div>
+            <h3>Vendor Directory</h3>
+            <p>Connect with expert lawyers and CPAs.</p>
+            <span class="hub-cta">Browse <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       GEO EXPLORER: Map-based visual with city pins
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="geo-explorer" aria-labelledby="geo-heading">
+    <div class="geo-inner">
+      <div class="geo-header">
+        <span class="section-eyebrow">Municipal Guides</span>
+        <h2 id="geo-heading">Explore by Location</h2>
+        <p class="geo-subtitle">
+          Maine has 41+ cities and towns that have opted in to allow cannabis retail. 
+          Each has its own zoning rules, local fees, and competitive landscape.
+        </p>
+      </div>
+      
+      <div class="geo-content">
+        <!-- Stylized map representation -->
+        <div class="geo-map" aria-hidden="true">
+          <svg viewBox="0 0 400 300" fill="none">
+            <!-- Simplified Maine outline suggestion -->
+            <path d="M50,250 L80,200 L120,180 L150,190 L180,160 L220,150 L260,140 L300,120 L340,80 L350,60 L340,40 L300,50 L260,70 L220,90 L180,100 L140,120 L100,150 L60,200 Z" 
+                  stroke="var(--color-primary)" stroke-width="1" opacity="0.2" fill="var(--color-primary)" fill-opacity="0.03"/>
+            <!-- City markers -->
+            <circle cx="320" cy="55" r="6" fill="var(--color-accent)"/>
+            <circle cx="280" cy="90" r="4" fill="var(--color-accent)" opacity="0.7"/>
+            <circle cx="240" cy="120" r="5" fill="var(--color-accent)"/>
+            <circle cx="200" cy="140" r="4" fill="var(--color-accent)" opacity="0.7"/>
+            <circle cx="160" cy="170" r="5" fill="var(--color-accent)"/>
+            <circle cx="120" cy="200" r="4" fill="var(--color-accent)" opacity="0.5"/>
+          </svg>
+        </div>
+        
+        <!-- City links as styled chips -->
+        <div class="geo-cities">
+          {cityLinks.map(city => (
+            <a href={city.href} class="city-chip">{city.name}</a>
+          ))}
+        </div>
+      </div>
+      
+      <a href="/guides/" class="btn-outline">View All 41 Municipal Guides</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       WHAT'S NEW: Editorial freshness section
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="whats-new" aria-labelledby="new-heading">
+    <div class="new-inner">
+      <div class="new-header">
+        <div class="freshness-badge">
+          <span class="pulse-dot"></span>
+          <span class="freshness-label">Updated April 2026</span>
+        </div>
+        <h2 id="new-heading">What's New</h2>
+        <p class="new-subtitle">Recent updates and additions to the guide library.</p>
+      </div>
+      
+      <div class="new-grid">
+        {recentGuides.map(guide => (
+          <a href={guide.href} class="new-card">
+            <span class={`new-badge ${guide.badge === 'New' ? 'badge-new' : ''}`}>{guide.badge}</span>
+            <span class="new-title">{guide.title}</span>
+            <span class="new-date">{guide.date}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SOCIAL PROOF: Authority stats
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="authority-stats" aria-label="Site Statistics">
+    <div class="stats-inner">
+      <p class="stats-intro">
+        This resource has been built for Maine cannabis entrepreneurs who want the real information — not the marketing version.
+      </p>
+      
+      <div class="stats-grid">
+        <div class="stat-block">
+          <span class="stat-number">2,847</span>
+          <span class="stat-text">Entrepreneurs Served</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">44</span>
+          <span class="stat-text">Expert Guides</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">15</span>
+          <span class="stat-text">City Guides</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">98%</span>
+          <span class="stat-text">Update Accuracy</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       START HERE: Journey path with personality
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="journey-path" aria-labelledby="journey-heading">
+    <div class="journey-inner">
+      <div class="journey-header">
+        <span class="section-eyebrow">For Newcomers</span>
+        <h2 id="journey-heading">Start Your Journey</h2>
+        <p class="journey-subtitle">
+          This curated path walks you through the essentials — from understanding Maine's regulatory framework to signing your commercial lease.
+        </p>
+      </div>
+      
+      <div class="journey-steps">
+        {journeySteps.map(step => (
+          <a href={step.href} class="journey-step">
+            <span class="step-num">{step.num}</span>
+            <div class="step-content">
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+            <span class="step-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NEWSLETTER: Refined inline signup
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="newsletter-section" aria-labelledby="newsletter-heading">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <h2 id="newsletter-heading">Stay Current with Maine Cannabis</h2>
+        <p>Get notified when we update guides or add new resources. No spam, just signal.</p>
+      </div>
+      <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+        <div class="form-row">
+          <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" class="form-input"/>
+          <select name="stage" aria-label="Your stage" class="form-select">
+            <option value="" disabled selected>Your stage</option>
+            <option value="startup">Starting a dispensary</option>
+            <option value="operating">Already operating</option>
+            <option value="researching">Just researching</option>
+          </select>
+          <button type="submit" class="form-btn">Subscribe</button>
+        </div>
+        <input type="hidden" name="_subject" value="Newsletter Signup - Maine Dispensary Guide"/>
+      </form>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────
+     HERITAGE AUTHORITY — CSS Custom Properties
+  ───────────────────────────────────────────────────────────────── */
+  :root {
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 6rem;
+    --space-2xl: 8rem;
+    
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 2rem;
+    --text-4xl: 2.75rem;
+    --text-5xl: 3.5rem;
+    
+    --ease-out: cubic-bezier(0.2, 1, 0.2, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     SECTION EYEBROW — Shared label style
+  ───────────────────────────────────────────────────────────────── */
+  .section-eyebrow {
+    display: inline-block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-xs);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     HERO SECTION — Manifesto Style
+  ───────────────────────────────────────────────────────────────── */
+  .hero-manifesto {
+    position: relative;
+    background: var(--color-primary);
+    color: var(--color-background);
+    padding: var(--space-xl) 0 var(--space-lg);
+    margin-bottom: var(--space-lg);
+    overflow: hidden;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topo-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .topo-bg svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-lg);
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .edition-mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .edition-divider {
+    font-size: 0.4rem;
+    color: var(--color-accent);
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(var(--text-4xl), 6vw, var(--text-5xl));
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-background);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-title-accent {
+    font-style: italic;
+    color: var(--color-soft-green);
+  }
+
+  .hero-descriptor {
+    font-size: var(--text-lg);
+    line-height: 1.7;
+    opacity: 0.9;
+    max-width: 520px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--color-background);
+    color: var(--color-primary);
+    padding: 1rem 1.75rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-background);
+    padding: 1rem 1.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    border: 1px solid rgba(242,242,226,0.3);
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(242,242,226,0.1);
+    border-color: rgba(242,242,226,0.5);
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .visual-anchor {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .anchor-ring {
+    position: absolute;
+    border: 1px solid var(--color-background);
+    border-radius: 50%;
+    opacity: 0.1;
+  }
+
+  .ring-1 { width: 100%; height: 100%; }
+  .ring-2 { width: 75%; height: 75%; animation: rotate 20s linear infinite; }
+  .ring-3 { width: 50%; height: 50%; animation: rotate 15s linear infinite reverse; }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring-2, .ring-3 { animation: none; }
+  }
+
+  .botanical-cluster {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cluster-pine {
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+  }
+
+  .cluster-leaf {
+    position: absolute;
+  }
+
+  .cluster-leaf-1 {
+    top: -20px;
+    right: -40px;
+    transform: rotate(25deg);
+  }
+
+  .cluster-leaf-2 {
+    bottom: 20px;
+    left: -50px;
+    transform: rotate(-35deg);
+  }
+
+  .visual-caption {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: var(--text-xs);
+    opacity: 0.5;
+  }
+
+  .caption-label {
+    display: block;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .caption-ref {
+    font-size: 0.65rem;
+  }
+
+  .hero-flourish {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding-top: var(--space-md);
+  }
+
+  .hero-flourish svg {
+    width: 100%;
+    height: 40px;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     MARKET INTEL — Stats Strip
+  ───────────────────────────────────────────────────────────────── */
+  .market-intel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .intel-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .intel-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .intel-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .intel-stat .stat-value {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .intel-stat .stat-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+  }
+
+  .stat-separator {
+    color: var(--color-border);
+    font-size: var(--text-lg);
+  }
+
+  .intel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: gap 0.2s var(--ease-out);
+  }
+
+  .intel-link:hover {
+    gap: var(--space-sm);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     MISSION MANIFESTO — Editorial Layout
+  ───────────────────────────────────────────────────────────────── */
+  .mission-manifesto {
+    position: relative;
+    padding: var(--space-2xl) 0;
+    margin-bottom: var(--space-2xl);
+    overflow: hidden;
+  }
+
+  .mission-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    position: relative;
+    z-index: 1;
+  }
+
+  .mission-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .mission-title {
+    font-family: var(--font-serif);
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  .mission-title::before {
+    display: none;
+  }
+
+  .mission-text {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .mission-lead {
+    font-size: var(--text-xl);
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+  }
+
+  .mission-body {
+    display: grid;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .mission-body p {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--color-text-light);
+  }
+
+  .read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: gap 0.2s var(--ease-out);
+  }
+
+  .read-more:hover {
+    gap: var(--space-sm);
+  }
+
+  .mission-botanical {
+    position: absolute;
+    right: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+    height: 400px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     MARKET OVERVIEW — Asymmetric Grid
+  ───────────────────────────────────────────────────────────────── */
+  .market-overview {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: var(--space-xl) var(--space-lg);
+    margin-bottom: var(--space-2xl);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .market-overview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  }
+
+  .overview-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .overview-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .overview-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .overview-header h2::before {
+    display: none;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .overview-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .overview-main p {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--color-text-light);
+  }
+
+  .overview-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .aside-card {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .aside-card.highlight {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+  }
+
+  .aside-stat {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .aside-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+  }
+
+  .aside-card.highlight .aside-label {
+    color: rgba(242,242,226,0.8);
+  }
+
+  .aside-note {
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--color-text-light);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     OPERATIONS EXCELLENCE — Full Width Text
+  ───────────────────────────────────────────────────────────────── */
+  .operations-excellence {
+    padding: var(--space-2xl) 0;
+    margin-bottom: var(--space-2xl);
+    position: relative;
+  }
+
+  .ops-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .ops-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .ops-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .ops-header h2::before {
+    display: none;
+  }
+
+  .ops-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ops-content p {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--color-text-light);
+  }
+
+  .ops-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding: var(--space-md) 0;
+  }
+
+  .topic-tag {
+    display: inline-block;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .topic-tag:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+  }
+
+  .ops-closing {
+    font-weight: 500;
+    color: var(--color-text) !important;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ops-decoration {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+    height: 200px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     CORE HUBS — Editorial Card Grid
+  ───────────────────────────────────────────────────────────────── */
+  .core-hubs {
+    padding: var(--space-2xl) 0;
+    margin-bottom: var(--space-2xl);
+    background: var(--color-background);
+  }
+
+  .hubs-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .hubs-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hubs-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .hubs-header h2::before {
+    display: none;
+  }
+
+  .hubs-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-light);
+    margin-top: var(--space-xs);
+  }
+
+  .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .hub-card {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: var(--space-lg) var(--space-md);
+    text-decoration: none;
+    transition: all 0.3s var(--ease-out);
+    overflow: hidden;
+  }
+
+  .hub-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow: 0 12px 40px rgba(13,78,80,0.1);
+  }
+
+  .hub-card-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .hub-icon {
+    margin-bottom: var(--space-sm);
+    transition: transform 0.3s var(--ease-spring);
+  }
+
+  .hub-icon svg {
+    width: 48px;
+    height: 48px;
+    color: var(--color-accent);
+    transition: color 0.2s;
+  }
+
+  .hub-card:hover .hub-icon {
+    transform: scale(1.05);
+  }
+
+  .hub-card:hover .hub-icon svg {
+    color: var(--color-primary);
+  }
+
+  .hub-card h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-primary);
+    margin: 0 0 var(--space-xs);
+  }
+
+  .hub-card p {
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    flex: 1;
+    margin: 0;
+  }
+
+  .hub-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: var(--space-sm);
+    transition: gap 0.2s var(--ease-out);
+  }
+
+  .hub-card:hover .hub-cta {
+    gap: 0.5rem;
+  }
+
+  .hub-bg {
+    position: absolute;
+    bottom: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--color-accent) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .hub-card:hover .hub-bg {
+    opacity: 0.03;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     GEO EXPLORER — Map + City Chips
+  ───────────────────────────────────────────────────────────────── */
+  .geo-explorer {
+    padding: var(--space-xl) var(--space-md);
+    margin-bottom: var(--space-2xl);
+    text-align: center;
+  }
+
+  .geo-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .geo-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .geo-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .geo-header h2::before {
+    display: none;
+  }
+
+  .geo-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: var(--space-xs) auto 0;
+    line-height: 1.7;
+  }
+
+  .geo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .geo-map {
+    width: 100%;
+    max-width: 500px;
+    opacity: 0.8;
+  }
+
+  .geo-map svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .geo-cities {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    max-width: 700px;
+  }
+
+  .city-chip {
+    display: inline-block;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .city-chip:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .btn-outline:hover {
+    background: var(--color-primary);
+    color: var(--color-background);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     WHAT'S NEW — Freshness Section
+  ───────────────────────────────────────────────────────────────── */
+  .whats-new {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: var(--space-xl) var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .new-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .new-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .freshness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(88,129,87,0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-dot { animation: none; }
+  }
+
+  .freshness-label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .new-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .new-header h2::before {
+    display: none;
+  }
+
+  .new-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-light);
+    margin-top: var(--space-xs);
+  }
+
+  .new-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .new-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: var(--space-md);
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .new-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(13,78,80,0.06);
+  }
+
+  .new-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-accent);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    width: fit-content;
+  }
+
+  .new-badge.badge-new {
+    background: var(--color-primary);
+  }
+
+  .new-title {
+    font-weight: 700;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+  }
+
+  .new-date {
+    font-size: var(--text-xs);
+    color: var(--color-text-light);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     AUTHORITY STATS — Social Proof
+  ───────────────────────────────────────────────────────────────── */
+  .authority-stats {
+    padding: var(--space-xl) 0;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .stats-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .stats-intro {
+    text-align: center;
+    font-size: var(--text-lg);
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto var(--space-lg);
+    line-height: 1.7;
+  }
+
+  .stats-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-primary);
+    border-radius: 1.5rem;
+    color: var(--color-background);
+  }
+
+  .stat-block {
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-text {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 60px;
+    background: rgba(242,242,226,0.2);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     JOURNEY PATH — Step-by-Step
+  ───────────────────────────────────────────────────────────────── */
+  .journey-path {
+    padding: var(--space-xl) 0;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .journey-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .journey-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .journey-header h2 {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+    margin: 0;
+  }
+
+  .journey-header h2::before {
+    display: none;
+  }
+
+  .journey-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-light);
+    max-width: 550px;
+    margin: var(--space-xs) auto 0;
+    line-height: 1.7;
+  }
+
+  .journey-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .journey-step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: var(--space-md) var(--space-lg);
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+
+  .journey-step:hover {
+    border-color: var(--color-primary);
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(13,78,80,0.08);
+  }
+
+  .step-num {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+    width: 50px;
+  }
+
+  .step-content {
+    flex: 1;
+  }
+
+  .step-content h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    color: var(--color-primary);
+    margin: 0 0 0.25rem;
+  }
+
+  .step-content p {
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .step-arrow {
+    font-size: var(--text-xl);
+    color: var(--color-text-light);
+    opacity: 0.3;
+    transition: all 0.2s var(--ease-out);
+    flex-shrink: 0;
+  }
+
+  .journey-step:hover .step-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+    color: var(--color-accent);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     NEWSLETTER — Inline Signup
+  ───────────────────────────────────────────────────────────────── */
+  .newsletter-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .newsletter-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  .newsletter-content h2 {
+    font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+    margin: 0 0 var(--space-xs);
+  }
+
+  .newsletter-content p {
+    font-size: var(--text-base);
+    color: var(--color-text-light);
+    margin: 0;
+  }
+
+  .newsletter-form {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .form-input,
+  .form-select {
+    flex: 1;
+    min-width: 180px;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: var(--text-sm);
+    background: var(--color-background);
+    color: var(--color-text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(13,78,80,0.1);
+  }
+
+  .form-btn {
+    padding: 0.875rem 1.5rem;
+    background: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .form-btn:hover {
+    background: var(--color-primary-dark);
+  }
+
+  .form-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     RESPONSIVE ADJUSTMENTS
+  ───────────────────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-descriptor {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      justify-content: center;
+    }
+
+    .hero-visual {
+      display: none;
+    }
+
+    .overview-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .overview-aside {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .aside-card {
+      flex: 1 1 calc(50% - var(--space-xs));
+      min-width: 140px;
+    }
+
+    .stats-grid {
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .stat-divider {
+      display: none;
+    }
+
+    .stat-block {
+      flex: 1 1 calc(50% - var(--space-sm));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero-manifesto {
+      min-height: auto;
+      padding: var(--space-lg) 0;
+    }
+
+    .intel-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .intel-stats {
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .stat-separator {
+      display: none;
+    }
+
+    .form-row {
+      flex-direction: column;
+    }
+
+    .form-input,
+    .form-select,
+    .form-btn {
+      width: 100%;
+    }
+
+    .journey-step {
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .step-num {
+      width: 40px;
+      font-size: var(--text-xl);
+    }
+
+    .step-arrow {
+      display: none;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     DARK MODE
+  ───────────────────────────────────────────────────────────────── */
+  [data-theme="dark"] .intel-stat .stat-value,
+  [data-theme="dark"] .aside-stat,
+  [data-theme="dark"] .hub-card h3,
+  [data-theme="dark"] .step-content h3,
+  [data-theme="dark"] .mission-title,
+  [data-theme="dark"] .ops-header h2,
+  [data-theme="dark"] .overview-header h2,
+  [data-theme="dark"] .hubs-header h2,
+  [data-theme="dark"] .geo-header h2,
+  [data-theme="dark"] .new-header h2,
+  [data-theme="dark"] .journey-header h2 {
+    color: var(--color-primary);
+  }
+
+  [data-theme="dark"] .market-intel,
+  [data-theme="dark"] .hub-card,
+  [data-theme="dark"] .new-card,
+  [data-theme="dark"] .journey-step {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
+  [data-theme="dark"] .mission-lead {
+    color: var(--color-text);
+  }
+
+  [data-theme="dark"] .ops-topics .topic-tag {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .ops-closing {
+    border-color: var(--color-border);
+  }
+</style>

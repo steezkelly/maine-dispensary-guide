@@ -1,0 +1,246 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const vendorCategories = [
+  {
+    name: "Legal & Licensing",
+    description: "Expert cannabis attorneys to guide your state and local applications.",
+    vendors: [
+      { name: "Tammie Snow, Esq.", specialty: "Licensing & Regulatory", location: "Portland" },
+      { name: "Bernstein Shur", specialty: "Corporate & Zoning", location: "Portland/Augusta" }
+    ]
+  },
+  {
+    name: "Accounting & 280E Tax",
+    description: "CPAs specializing in IRC 280E compliance and dispensary bookkeeping.",
+    vendors: [
+      { name: "BerryDunn", specialty: "Tax & Audit", location: "Portland" },
+      { name: "Macpage", specialty: "Financial Strategy", location: "South Portland" }
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Maine Cannabis Resources" 
+  description="Connect with verified Maine cannabis lawyers, accountants, and consultants. Request a professional introduction to start your project." 
+  heroImage="/images/heroes/resources.jpg"
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-05", modifiedDate: "2026-04-04", section: "Resources" }}
+>
+  
+  <script is:inline>
+    // DEFINE GLOBAL HANDLERS IN HEAD
+    window.openTheatre = function(name) {
+      const wrapper = document.getElementById('page-theatre-wrapper');
+      const input = document.getElementById('target-vendor-input');
+      const area = document.getElementById('message-text-area');
+      
+      if (input) input.value = name;
+      if (area) area.placeholder = "I would like an introduction to " + name + "...";
+      if (wrapper) wrapper.classList.add('is-active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeTheatre = function() {
+      const wrapper = document.getElementById('page-theatre-wrapper');
+      if (wrapper) wrapper.classList.remove('is-active');
+      document.body.style.overflow = '';
+    };
+  </script>
+
+  <div id="page-theatre-wrapper">
+    <div id="theatre-dimmer" class="theatre-overlay" onclick="window.closeTheatre()"></div>
+
+    <section class="resources-header">
+      <div class="hero-badge">Verified Expert Network</div>
+      <h1>Professional Vendor Directory</h1>
+      <p class="lead">Building a dispensary means building a team. We've put together a directory of Maine professionals who know cannabis.</p>
+    </section>
+
+    <section class="expert-importance">
+      <h2>The Importance of Specialized Cannabis Experts</h2>
+      <p>Operating a cannabis business in Maine has quirks that regular professionals often haven't encountered. Because cannabis is still federally illegal, dispensaries deal with IRS Section 280E, which limits business deductions. You need a CPA who's done this before, as we explain in our <a href="/guides/maine-cannabis-taxation-280e/">280E Taxation Guide</a>.</p>
+      <p>Similarly, securing compliant real estate is a labyrinth. Maine operates on an "Opt-In" municipal framework, meaning a town must explicitly vote to allow adult-use cannabis operations. Our featured legal experts understand the nuances of local zoning boards and state-level Office of Cannabis Policy (OCP) applications. They can help you navigate the complexities discussed in our <a href="/guides/maine-cannabis-real-estate/">Real Estate & Zoning Guide</a>. If you have a highly specific need not covered by our directory, please <a href="/contact/">contact us</a> directly for a custom referral.</p>
+    </section>
+
+    <div class="directory-container">
+      <div class="vendor-list">
+        {vendorCategories.map(category => (
+          <div class="category-block">
+            <h2>{category.name}</h2>
+            <p class="cat-desc">{category.description}</p>
+            <div class="vendor-grid">
+              {category.vendors.map(vendor => (
+                <div class="vendor-card">
+                  <h3>{vendor.name}</h3>
+                  <p><strong>Specialty:</strong> {vendor.specialty}</p>
+                  <p><strong>Location:</strong> {vendor.location}</p>
+                  <button 
+                    type="button" 
+                    class="btn-theatre-trigger" 
+                    onclick={`window.openTheatre('${vendor.name}')`}
+                  >
+                    Request Intro &rarr;
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <aside class="referral-sidebar">
+        <div id="referral-form-box" class="referral-box">
+          <button type="button" class="btn-close-theatre" onclick="window.closeTheatre()" aria-label="&times; Close form">&times;</button>
+          <h3>Need a Referral?</h3>
+          <p>Tell us about your project, and we will connect you with the right professional.</p>
+          
+          <form class="referral-form" action="https://formspree.io/f/xvgzlowz" method="POST" aria-labelledby="referral-form-box">
+            <label for="lead-name" class="sr-only">Full Name</label>
+            <input type="text" id="lead-name" name="name" placeholder="Full Name" required aria-required="true" />
+            
+            <label for="lead-email" class="sr-only">Business Email</label>
+            <input type="email" id="lead-email" name="email" placeholder="Business Email" required aria-required="true" />
+            
+            <label for="stage-select" class="sr-only">Your Stage</label>
+            <select name="stage" id="stage-select" required aria-required="true">
+              <option value="" disabled selected>Your stage...</option>
+              <option value="startup">Starting a dispensary</option>
+              <option value="operating">Already operating</option>
+              <option value="researching">Just researching</option>
+            </select>
+            
+            <input type="hidden" id="target-vendor-input" name="requested_professional" value="General Referral" />
+            
+            <label for="service-select" class="sr-only">Select Service Needed</label>
+            <select name="service" id="service-select" required aria-required="true">
+              <option value="">Select Service Needed...</option>
+              <option value="legal">Legal & Licensing</option>
+              <option value="accounting">Tax & 280E</option>
+              <option value="security">Security & Hardware</option>
+              <option value="real-estate">Real Estate / Zoning</option>
+            </select>
+            
+            <label for="message-text-area" class="sr-only">Describe your goals</label>
+            <textarea id="message-text-area" name="message" placeholder="Briefly describe your goals..."></textarea>
+            
+            <button type="submit" class="btn-main">Request Introduction</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+
+    <Callout title="Are you a Maine Professional?" type="passion">
+      Want to be featured in our directory? We are looking for high-authority lawyers, accountants, and security firms. <a href="mailto:admin@mainedispensaryguide.com">Contact our partnership team</a>.
+    </Callout>
+  </div>
+
+  <style is:global>
+    #page-theatre-wrapper { position: relative; width: 100%; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .theatre-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 8000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    #page-theatre-wrapper.is-active .theatre-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .referral-box {
+      background: var(--color-surface);
+      padding: 3rem;
+      border-radius: 2rem;
+      border: 2px solid var(--color-primary);
+      position: sticky;
+      top: 120px;
+      z-index: 100;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #page-theatre-wrapper.is-active .referral-box {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.1) !important;
+      z-index: 9000 !important;
+      width: 90% !important;
+      max-width: 500px !important;
+      box-shadow: 0 50px 100px rgba(0,0,0,0.6) !important;
+    }
+
+    .btn-theatre-trigger {
+      margin-top: 1.5rem;
+      background: var(--color-background);
+      color: var(--color-primary);
+      border: none;
+      padding: 1rem;
+      border-radius: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-theatre-trigger:hover { background: var(--color-primary); color: white; }
+
+    .btn-close-theatre {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 2.5rem;
+      cursor: pointer;
+      display: none;
+      color: #666;
+      line-height: 1;
+    }
+
+    #page-theatre-wrapper.is-active .btn-close-theatre { display: block; }
+
+    .directory-container { display: grid; grid-template-columns: 1fr 350px; gap: 4rem; margin-bottom: 6rem; }
+    .category-block { margin-bottom: 4rem; }
+    .vendor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .vendor-card { background: var(--color-surface); padding: 2rem; border-radius: 1.5rem; border: 1px solid var(--color-border); }
+    .referral-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+    .referral-form input, .referral-form select, .referral-form textarea { padding: 1rem; border-radius: 1rem; border: 1px solid var(--color-border); font-family: inherit; }
+    
+    @media (max-width: 1000px) {
+      .directory-container { grid-template-columns: 1fr; }
+      .referral-sidebar { order: -1; }
+    }
+
+    [data-theme="dark"] .vendor-card {
+      background: var(--color-surface);
+    }
+
+    [data-theme="dark"] .referral-box {
+      background: var(--color-surface);
+    }
+  }
+</style>
+</Layout>

@@ -1,0 +1,389 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import authors from '../../data/authors.json';
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Our Authors', href: '/about/authors' }
+];
+---
+
+<Layout 
+  title="Our Authors & Editorial Standards | Maine Dispensary Guide" 
+  description="Meet the cannabis compliance professionals and editorial experts behind Maine Dispensary Guide. Learn about our content review process and author credentials."
+  breadcrumbs={breadcrumbs}
+>
+  <div class="article-header">
+    <h1>Our Authors & Editorial Standards</h1>
+    <p class="lead">Every piece of content on Maine Dispensary Guide is written by knowledgeable professionals and reviewed for accuracy.</p>
+  </div>
+
+  <section class="editorial-process">
+    <h2>Editorial Review Process</h2>
+    <p>Maine cannabis regulations are complex and change frequently. That's why our content undergoes a multi-layer review process before publication.</p>
+    
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Primary Research</h3>
+          <p>Our editorial team researches directly from Maine Office of Cannabis Policy (OCP) sources, state statutes, and municipal regulations.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Expert Drafting</h3>
+          <p>Content is drafted by team members with direct experience in Maine cannabis licensing and operations.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Compliance Review</h3>
+          <p>A Maine-licensed compliance professional reviews all regulatory content for accuracy and currency.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Regular Updates</h3>
+          <p>We monitor regulatory changes and update content when laws or OCP guidance evolve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Callout title="Our Commitment to Accuracy" type="success">
+    For YMYL (Your Money Your Life) cannabis content, we take E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) seriously. Our review process ensures that when you base business decisions on our content, you can trust the information.
+  </Callout>
+
+  <section class="author-grid">
+    <h2>Meet Our Team</h2>
+    <div class="authors-container">
+      {authors.map((author) => (
+        <div class="author-card">
+          <div class="author-photo">
+            {author.photo ? (
+              <img src={author.photo} alt={author.name} />
+            ) : (
+              <div class="photo-placeholder">
+                <span class="initials">
+                  {author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </span>
+              </div>
+            )}
+          </div>
+          <div class="author-info">
+            <h3 class="author-name">{author.name}</h3>
+            <p class="author-role">{author.role}</p>
+            <p class="author-bio">{author.bio}</p>
+            <div class="author-credentials">
+              <h4>Credentials</h4>
+              <ul>
+                {author.credentials.map((cred) => (
+                  <li>{cred}</li>
+                ))}
+              </ul>
+            </div>
+            {author.linkedin && (
+              <a href={author.linkedin} class="linkedin-link" target="_blank" rel="noopener noreferrer">
+                Connect on LinkedIn →
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="photo-infrastructure">
+    <h2>Author Photo Program</h2>
+    <p>We're building toward full author attribution with photos. As our team grows, each author will have a dedicated profile photo to strengthen trust signals for our readers and outreach partners.</p>
+    <div class="photo-status">
+      <div class="status-item">
+        <span class="status-icon">📷</span>
+        <span>Infrastructure ready — photos can be added per-author</span>
+      </div>
+      <div class="status-item">
+        <span class="status-icon">🔗</span>
+        <span>LinkedIn integration available when profiles are complete</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-for-outreach">
+    <h2>Built for Professional Outreach</h2>
+    <p>This author infrastructure exists for a reason: when we reach out to Maine.gov, the Maine Chamber of Commerce, or academic institutions for partnerships and backlinks, we're not sending anonymous content.</p>
+    <p>Our bylined, reviewed content demonstrates the kind of professional credibility that earns links from authoritative sources.</p>
+    <a href="/about/our-team" class="btn-secondary">Back to Our Team Overview →</a>
+  </section>
+
+<section class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>What are the key compliance requirements?</h3>
+    <p>Consult the Maine OCP for current requirements. Key areas include licensing, inventory tracking via METRC, advertising restrictions, and product testing requirements.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I renew my license?</h3>
+    <p>License renewal requirements are established by the Maine Office of Cannabis Policy. Submit renewal applications before expiration and ensure all documentation is current.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What penalties apply for violations?</h3>
+    <p>Penalties vary by violation type and severity. The OCP maintains a penalty schedule that includes fines, license suspension, and revocation for serious or repeated violations.</p>
+  </div>
+</section>
+</Layout>
+
+<style>
+  .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    margin-top: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .editorial-process {
+    background: rgba(88, 129, 87, 0.04);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .process-steps {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+  }
+
+  .step-content p {
+    margin: 0;
+    color: var(--color-text-light);
+    font-size: 0.9375rem;
+  }
+
+  .author-grid {
+    margin-top: 3rem;
+  }
+
+  .authors-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .author-card {
+    display: flex;
+    gap: 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .author-card:hover {
+    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.08);
+  }
+
+  .author-photo {
+    flex-shrink: 0;
+  }
+
+  .author-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 1rem;
+    object-fit: cover;
+  }
+
+  .photo-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .initials {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--font-serif);
+  }
+
+  .author-info {
+    flex: 1;
+  }
+
+  .author-name {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .author-role {
+    margin: 0 0 1rem 0;
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .author-bio {
+    margin: 0 0 1rem 0;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .author-credentials h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+  }
+
+  .author-credentials ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .author-credentials li {
+    background: rgba(88, 129, 87, 0.1);
+    color: var(--color-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .linkedin-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .linkedin-link:hover {
+    text-decoration: underline;
+  }
+
+  .photo-infrastructure {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(13, 78, 80, 0.03);
+    border-radius: 1rem;
+  }
+
+  .photo-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+  }
+
+  .status-icon {
+    font-size: 1.25rem;
+  }
+
+  .trust-for-outreach {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(13, 78, 80, 0.04) 0%, rgba(88, 129, 87, 0.08) 100%);
+    border-radius: 1rem;
+    border-left: 4px solid var(--color-primary);
+  }
+
+  .trust-for-outreach h2 {
+    margin-top: 0;
+  }
+
+  .trust-for-outreach p {
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .author-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .author-credentials ul {
+      justify-content: center;
+    }
+  }
+</style>

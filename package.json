@@ -1,28 +1,19 @@
 {
-  "name": "maine-dispensary-guide",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "content-network",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "health-check": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/health-check.ps1",
-    "link": "node ./scripts/link-architect.cjs"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/mdx": "^5.0.1",
-    "@astrojs/sitemap": "^3.7.1",
-    "@astrojs/vercel": "^10.0.1",
-    "@fal-ai/client": "^1.9.5",
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
-    "astro": "^6.0.5",
-    "nodemailer": "^8.0.5"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "health-check": "turbo run health-check",
+    "ci-check": "turbo run ci-check"
   },
   "devDependencies": {
-    "playwright": "^1.59.1",
-    "typescript": "^5.9.3"
+    "turbo": "^2.5.3"
   }
 }

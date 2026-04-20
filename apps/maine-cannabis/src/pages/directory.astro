@@ -1,0 +1,482 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Maine Cannabis Directory" 
+  description="Exclusive network of verified Maine cannabis professionals — lenders, attorneys, accountants, and real estate specialists."
+  heroImage="/images/heroes/directory.jpg"
+  article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-05", modifiedDate: "2026-04-19", section: "Tools" }}
+>
+  <div class="directory-gate">
+    <div class="gate-header">
+      <div class="hero-badge">Members Only</div>
+      <h1>Maine Cannabis Professional Directory</h1>
+      <p class="lead">Access verified contacts for lenders, attorneys, accountants, security firms, and real estate professionals with Maine cannabis experience.</p>
+    </div>
+
+    <div class="gate-content">
+      <div class="gate-locked" id="gate-locked">
+        <div class="lock-icon">🔒</div>
+        <h2>Directory Access</h2>
+        <p>This directory is available to verified Maine cannabis operators and applicants. Enter your access credentials to view the full directory.</p>
+        
+        <form class="access-form" id="access-form">
+          <div class="form-group">
+            <label for="access-email">Business Email</label>
+            <input type="email" id="access-email" name="email" placeholder="you@yourcompany.com" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="access-password">Access Code</label>
+            <input type="password" id="access-password" name="password" placeholder="Enter your access code" required />
+          </div>
+          
+          <button type="submit" class="btn-unlock">Unlock Directory</button>
+        </form>
+        
+        <p class="access-note">Don't have access? <a href="/contact/">Request to join our network</a></p>
+      </div>
+
+      <div class="gate-unlocked hidden" id="gate-unlocked">
+        <div class="unlocked-header">
+          <span class="verified-badge">✓ Verified Access</span>
+          <button type="button" class="btn-lock" onclick="window.lockDirectory()">Lock Directory</button>
+        </div>
+
+        <section class="directory-intro">
+          <h2>Your Maine Cannabis Professional Network</h2>
+          <p>These professionals have been vetted for Maine cannabis industry experience. All contacts are active in the Maine market.</p>
+        </section>
+
+        <!-- Directory Tiers Info -->
+        <section class="tier-info">
+          <div class="tier-header">
+            <h3>Partner with Maine's Cannabis Industry</h3>
+            <p>Reach qualified operators at every stage — from license applicants to established dispensaries.</p>
+          </div>
+          <div class="tier-grid">
+            <div class="tier-card tier-basic">
+              <div class="tier-badge">Basic</div>
+              <div class="tier-price">Free</div>
+              <ul class="tier-features">
+                <li>◆ Business name and address</li>
+                <li>◆ Contact information</li>
+                <li>◆ Basic specialty description</li>
+              </ul>
+              <a href="/contact/" class="tier-cta">Get Listed</a>
+            </div>
+            <div class="tier-card tier-professional">
+              <div class="tier-badge">Professional</div>
+              <div class="tier-price">$49<span class="tier-period">/year</span></div>
+              <ul class="tier-features">
+                <li>◆ Logo and description</li>
+                <li>◆ Hours and location map</li>
+                <li>◆ Photo gallery (up to 6)</li>
+                <li>◆ Website link</li>
+                <li>◆ Category placement</li>
+              </ul>
+              <a href="/contact/" class="tier-cta">Get Featured</a>
+            </div>
+            <div class="tier-card tier-premium">
+              <div class="tier-badge">Premium</div>
+              <div class="tier-price">$149<span class="tier-period">/year</span></div>
+              <ul class="tier-features">
+                <li>◆ Video introduction</li>
+                <li>◆ Extended gallery (12 photos)</li>
+                <li>◆ Priority placement in category</li>
+                <li>◆ Analytics dashboard access</li>
+                <li>◆ Featured listing badge</li>
+                <li>◆ Lead notifications</li>
+              </ul>
+              <a href="/contact/" class="tier-cta">Get Premium</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Affiliate Resources Section -->
+        <section class="affiliate-section">
+          <div class="section-header">
+            <h3>Recommended Tools & Partners</h3>
+            <span class="sponsored-badge">Sponsored Recommendations</span>
+          </div>
+          <p class="affiliate-disclosure">These partners support our editorial mission. Maine Dispensary Guide may receive compensation from recommended providers.</p>
+          <div class="affiliate-grid">
+            <div class="affiliate-card">
+              <div class="affiliate-header">
+                <span class="affiliate-icon">💳</span>
+                <h4>Payment Processing</h4>
+              </div>
+              <p>Cashless payment solutions designed for cannabis businesses. Bank accounts, payment processing, and ATM integration.</p>
+              <div class="affiliate-cta">
+                <a href="/contact/" class="btn-affiliate">Learn About Paybotic →</a>
+                <span class="affiliate-note">Partner offer available</span>
+              </div>
+            </div>
+            <div class="affiliate-card">
+              <div class="affiliate-header">
+                <span class="affiliate-icon">📋</span>
+                <h4>Point of Sale Systems</h4>
+              </div>
+              <p>Integrated POS solutions for cannabis retail — inventory tracking, METRC compliance, and customer management.</p>
+              <div class="affiliate-cta">
+                <a href="/contact/" class="btn-affiliate">Compare POS Options →</a>
+                <span class="affiliate-note">Dutchie & Treez partners</span>
+              </div>
+            </div>
+            <div class="affiliate-card">
+              <div class="affiliate-header">
+                <span class="affiliate-icon">🛡️</span>
+                <h4>Business Insurance</h4>
+              </div>
+              <p>Coverage for dispensaries, cultivation facilities, and cannabis operations. Workers comp, liability, and property.</p>
+              <div class="affiliate-cta">
+                <a href="/contact/" class="btn-affiliate">Get Insurance Quotes →</a>
+                <span class="affiliate-note">Specialized cannabis carriers</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="directory-grid">
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>💰 Capital & Lending</h3>
+              <span class="category-sponsor">Sponsored by GreenBridge Finance</span>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Canopy Capital Group</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Cannabis business loans, cultivation financing, retail buildouts</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Specializes in Maine OCP-compliant operators. Loans $50K-$2M.</p>
+                <a href="mailto:capital@mainedispensaryguide.com" class="dir-contact">Email Canopy Capital →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Greenbridge Finance</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Equipment financing, working capital</p>
+                <p><strong>Location:</strong> Remote / Maine</p>
+                <p><strong>Note:</strong> Works with operators who have difficulty with traditional banks.</p>
+                <a href="mailto:lending@mainedispensaryguide.com" class="dir-contact">Email Greenbridge Finance →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>⚖️ Legal & Licensing</h3>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Tammie Snow, Esq.</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> OCP licensing, municipal opt-in, regulatory compliance</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Former OCP stakeholder. Handles all license types.</p>
+                <a href="mailto:legal@mainedispensaryguide.com" class="dir-contact">Email Tammie Snow →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Bernstein Shur</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Corporate law, zoning, business formation</p>
+                <p><strong>Location:</strong> Portland / Augusta</p>
+                <p><strong>Note:</strong> Large firm with dedicated cannabis practice group.</p>
+                <a href="mailto:legal@mainedispensaryguide.com" class="dir-contact">Email Bernstein Shur →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>📊 Accounting & Tax</h3>
+              <span class="category-sponsor">Sponsored by Macpage</span>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>BerryDunn</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> 280E tax strategy, audit defense, bookkeeping</p>
+                <p><strong>Location:</strong> Portland, ME</p>
+                <p><strong>Note:</strong> Large regional firm. Deep cannabis 280E expertise.</p>
+                <a href="mailto:accounting@mainedispensaryguide.com" class="dir-contact">Email BerryDunn →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Macpage</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Financial strategy, CFO services, payroll</p>
+                <p><strong>Location:</strong> South Portland, ME</p>
+                <p><strong>Note:</strong> Offers fractional CFO services for growing operators.</p>
+                <a href="mailto:accounting@mainedispensaryguide.com" class="dir-contact">Email Macpage →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>🏢 Real Estate & Zoning</h3>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>CBRE Maine</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Commercial real estate, dispensary buildouts, lease negotiations</p>
+                <p><strong>Location:</strong> Portland</p>
+                <p><strong>Note:</strong> National firm with local Maine presence. Knows opt-in municipalities.</p>
+                <a href="mailto:realestate@mainedispensaryguide.com" class="dir-contact">Email CBRE Maine →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Thebes Commercial</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Maine cannabis-specific real estate, sale-leasebacks</p>
+                <p><strong>Location:</strong> Remote / Maine</p>
+                <p><strong>Note:</strong> Focuses exclusively on Maine cannabis operators.</p>
+                <a href="mailto:realestate@mainedispensaryguide.com" class="dir-contact">Email Thebes Commercial →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>🔒 Security & Surveillance</h3>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Guardian Alarm Systems</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> OCP-compliant security systems, 24/7 monitoring, installation</p>
+                <p><strong>Location:</strong> Augusta, ME</p>
+                <p><strong>Note:</strong> Approved vendor for multiple Maine dispensaries.</p>
+                <a href="mailto:security@mainedispensaryguide.com" class="dir-contact">Email Guardian Alarm →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>SafeGuard Cannabis</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Vaults, METRC-integrated inventory security</p>
+                <p><strong>Location:</strong> Lewiston, ME</p>
+                <p><strong>Note:</strong> Specializes in Maine OCP security requirements.</p>
+                <a href="mailto:security@mainedispensaryguide.com" class="dir-contact">Email SafeGuard Cannabis →</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="dir-category">
+            <div class="category-header">
+              <h3>🏗️ Construction & Buildout</h3>
+              <span class="category-sponsor">Sponsored by Pine State Builders</span>
+            </div>
+            <div class="dir-list">
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Pine State Builders</strong>
+                  <span class="featured-tag">★ Featured</span>
+                </div>
+                <p><strong>Specialty:</strong> Dispensary buildouts, cultivation facility construction</p>
+                <p><strong>Location:</strong> Scarborough, ME</p>
+                <p><strong>Note:</strong> 5 completed Maine dispensary builds. Knows local codes.</p>
+                <a href="mailto:build@mainedispensaryguide.com" class="dir-contact">Email Pine State Builders →</a>
+              </div>
+              <div class="dir-card">
+                <div class="dir-card-header">
+                  <strong>Coastal Construction Group</strong>
+                  <span class="verified-tag">✓ Verified</span>
+                </div>
+                <p><strong>Specialty:</strong> Medical-use buildouts, ADA compliance</p>
+                <p><strong>Location:</strong> Brunswick, ME</p>
+                <p><strong>Note:</strong> Experienced with Bowdoin College area locations.</p>
+                <a href="mailto:build@mainedispensaryguide.com" class="dir-contact">Email Coastal Construction →</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="add-listing">
+          <h3>Are You a Maine Cannabis Professional?</h3>
+          <p>If you serve dispensary operators and want to be featured in this directory, contact our partnership team for listing criteria and pricing.</p>
+          <a href="/contact/" class="btn-featured">Get Your Business Featured →</a>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const GATE_CODE = 'maine2026';
+    const STORAGE_KEY = 'maine_dir_access';
+    
+    function checkAccess() {
+      const access = sessionStorage.getItem(STORAGE_KEY);
+      if (access === GATE_CODE) {
+        document.getElementById('gate-locked').classList.add('hidden');
+        document.getElementById('gate-unlocked').classList.remove('hidden');
+      }
+    }
+    
+    function lockDirectory() {
+      sessionStorage.removeItem(STORAGE_KEY);
+      document.getElementById('gate-unlocked').classList.add('hidden');
+      document.getElementById('gate-locked').classList.remove('hidden');
+    }
+    
+    window.lockDirectory = lockDirectory;
+    
+    document.getElementById('access-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('access-email').value;
+      const password = document.getElementById('access-password').value;
+      
+      if (password === GATE_CODE && email.includes('@')) {
+        sessionStorage.setItem(STORAGE_KEY, GATE_CODE);
+        document.getElementById('gate-locked').classList.add('hidden');
+        document.getElementById('gate-unlocked').classList.remove('hidden');
+      } else if (password !== GATE_CODE) {
+        alert('Invalid access code. Contact admin@mainedispensaryguide.com for access.');
+      }
+    });
+    
+    checkAccess();
+  </script>
+
+  <style>
+    .hidden { display: none; }
+    
+    .directory-gate { max-width: 1100px; margin: 0 auto; }
+    
+    .gate-header { text-align: center; margin-bottom: 4rem; }
+    .gate-header h1 { margin-top: 1rem; }
+    .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 1rem auto 0; }
+    
+    .gate-content { background: var(--color-surface); border-radius: 2rem; padding: 4rem; border: 1px solid var(--color-border); }
+    
+    .gate-locked { text-align: center; max-width: 480px; margin: 0 auto; }
+    .lock-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .gate-locked h2 { font-family: var(--font-serif); color: var(--color-primary); }
+    .gate-locked p { color: var(--color-text-light); margin: 1rem 0 2rem; }
+    
+    .access-form { display: flex; flex-direction: column; gap: 1.25rem; text-align: left; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-weight: 600; font-size: 0.875rem; }
+    .form-group input { padding: 1rem; border: 2px solid var(--color-border); border-radius: 1rem; font-size: 1rem; font-family: inherit; }
+    .form-group input:focus { outline: none; border-color: var(--color-primary); }
+    
+    .btn-unlock { background: var(--color-primary); color: white; border: none; padding: 1.25rem; border-radius: 1rem; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+    .btn-unlock:hover { background: var(--color-primary-dark); }
+    
+    .access-note { margin-top: 1.5rem; font-size: 0.875rem; color: var(--color-text-light); }
+    .access-note a { color: var(--color-accent); }
+    
+    .unlocked-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
+    .verified-badge { background: var(--color-accent); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.875rem; font-weight: 600; }
+    .btn-lock { background: none; border: 2px solid var(--color-border); padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; }
+    
+    .directory-intro { margin-bottom: 3rem; }
+    .directory-intro h2 { font-family: var(--font-serif); color: var(--color-primary); }
+    
+    /* Tier Info Section */
+    .tier-info { margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(88, 129, 87, 0.05) 0%, rgba(13, 78, 80, 0.05) 100%); border-radius: 1.5rem; }
+    .tier-header { text-align: center; margin-bottom: 2rem; }
+    .tier-header h3 { font-family: var(--font-serif); color: var(--color-primary); margin-bottom: 0.5rem; }
+    .tier-header p { color: var(--color-text-light); font-size: 0.95rem; }
+    
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .tier-card { background: var(--color-background); border: 2px solid var(--color-border); border-radius: 1.25rem; padding: 1.75rem; text-align: center; position: relative; }
+    .tier-card.tier-professional { border-color: var(--color-accent); }
+    .tier-card.tier-premium { border-color: var(--color-primary); }
+    
+    .tier-badge { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.25rem 0.75rem; border-radius: 1rem; display: inline-block; margin-bottom: 0.75rem; }
+    .tier-basic .tier-badge { background: rgba(88, 129, 87, 0.15); color: var(--color-accent); }
+    .tier-professional .tier-badge { background: var(--color-accent); color: white; }
+    .tier-premium .tier-badge { background: var(--color-primary); color: white; }
+    
+    .tier-price { font-family: var(--font-serif); font-size: 2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem; }
+    .tier-period { font-size: 0.875rem; font-weight: 400; color: var(--color-text-light); }
+    .tier-basic .tier-price { color: var(--color-text-light); }
+    
+    .tier-features { list-style: none; padding: 0; margin: 1.25rem 0 1.5rem; text-align: left; }
+    .tier-features li { font-size: 0.875rem; color: var(--color-text-light); padding: 0.35rem 0; padding-left: 1.25rem; position: relative; }
+    .tier-features li::before { content: '◆'; position: absolute; left: 0; color: var(--color-accent); font-size: 0.625rem; top: 0.45rem; }
+    
+    .tier-cta { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.2s; }
+    .tier-basic .tier-cta { background: var(--color-border); color: var(--color-text); }
+    .tier-professional .tier-cta { background: var(--color-accent); color: white; }
+    .tier-premium .tier-cta { background: var(--color-primary); color: white; }
+    .tier-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    
+    /* Affiliate Section */
+    .affiliate-section { margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+    .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .affiliate-section h3 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+    .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: var(--color-warning, #b4643c); padding: 0.35rem 0.75rem; border-radius: 1rem; }
+    .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+    
+    .affiliate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+    .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .affiliate-icon { font-size: 1.5rem; }
+    .affiliate-header h4 { margin: 0; font-size: 1rem; color: var(--color-primary); }
+    .affiliate-card p { font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+    
+    .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+    .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+    .btn-affiliate:hover { background: var(--color-primary-dark); }
+    .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+    
+    /* Category Headers */
+    .directory-grid { display: flex; flex-direction: column; gap: 3rem; }
+    .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--color-border); flex-wrap: wrap; gap: 0.5rem; }
+    .category-header h3 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+    .category-sponsor { font-size: 0.75rem; color: var(--color-text-light); font-style: italic; }
+    
+    /* Directory Cards */
+    .dir-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .dir-card { background: var(--color-background); padding: 1.5rem; border-radius: 1.25rem; border: 1px solid var(--color-border); }
+    .dir-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .dir-card-header strong { font-size: 1.1rem; color: var(--color-primary); }
+    .verified-tag { background: var(--color-accent); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+    .featured-tag { background: var(--color-primary); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+    .dir-card p { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--color-text-light); }
+    .dir-card p strong { color: var(--color-text); }
+    .dir-contact { display: inline-block; margin-top: 0.75rem; color: var(--color-accent); font-weight: 600; text-decoration: none; }
+    .dir-contact:hover { text-decoration: underline; }
+    
+    /* Add Listing CTA */
+    .add-listing { margin-top: 4rem; padding: 2rem; background: linear-gradient(135deg, rgba(88, 129, 87, 0.08) 0%, rgba(13, 78, 80, 0.05) 100%); border-radius: 1.5rem; text-align: center; }
+    .add-listing h3 { font-family: var(--font-serif); color: var(--color-primary); margin-bottom: 0.75rem; }
+    .add-listing p { color: var(--color-text-light); margin-bottom: 1.5rem; }
+    .btn-featured { display: inline-block; padding: 1rem 2rem; background: var(--color-primary); color: white; border-radius: 1rem; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+    .btn-featured:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(13, 78, 80, 0.3); }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+      .tier-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .affiliate-grid { grid-template-columns: 1fr; }
+      .gate-content { padding: 2rem; }
+    }
+    
+    @media (max-width: 600px) {
+      .tier-card { padding: 1.25rem; }
+      .tier-price { font-size: 1.75rem; }
+      .affiliate-section .section-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</Layout>
