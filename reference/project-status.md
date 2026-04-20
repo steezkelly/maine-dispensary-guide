@@ -58,13 +58,16 @@ Weekly maintenance scheduled via Windows Task Scheduler.
 
 ## Active Work
 
-- **Sprint 47 (Apr 20):** Domain warm-up + email automation ✅
-  - Purelymail SMTP integrated — 7 emails sent Apr 20
-  - Christine Cole (SBDC) replied positively — out of office until Apr 29
-  - Email tracking dashboard built at `/admin/email-dashboard/`
-  - Day 2 sends: Apr 21 (Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times, Maine Realtors)
-- **GSC Indexing:** ⚠️ User action required — log in to verify
+- **Sprint 47 (Apr 20):** EmailPipeline Phase 1 complete ✅
+  - Built `C:\Users\Steve\EmailPipeline\` — autonomous multi-site email pipeline
+  - Scripts: `db.cjs`, `imap-poll.cjs`, `queue.cjs`, `send.cjs`, `import-json.cjs`, `report.cjs`
+  - Task Scheduler: IMAP poll (15min), Daily send (weekdays 9:30am) — both registered
+  - SQLite DB: 7 contacts migrated from legacy email-tracking.json
+  - 7 emails sent Apr 20 (domain warm-up), Christine Cole SBDC replied positively (OOO until Apr 29)
+  - Next: Set real IMAP/SMTP credentials in `config/credentials/mainedispensaryguide.env`, add more contacts
+- **Sprint 47 (Apr 20):** FAQ hub page built ✅ (22 FAQs, 5 categories, FAQPage schema)
 - **PDF Magnet:** Ready for conversion (source: `ROADMAP_FOUNDERS_BIBLE.md`)
+- **GSC Indexing:** ⚠️ User action required — log in to verify
 
 ## Recent Commits (Last 5)
 

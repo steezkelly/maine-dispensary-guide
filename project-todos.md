@@ -15,9 +15,10 @@
 - [x] Score 100/100 (A) ✅ — Achieved Apr 19 (was 91)
 - [x] 0 TypeScript errors ✅ — After Sprint 46 fix
 - [x] All sub-75 pages expanded ✅ (cultivation 3,569w, delivery 1,525w, inventory 1,772w, marketing 4,777w, homepage 4,497w)
+- [x] EmailPipeline Phase 1 complete ✅ — `C:\Users\Steve\EmailPipeline\`, all scripts built, 7 contacts migrated
 
 ### 🟠 HIGH — Pending (Active)
-- [ ] Domain warm-up — 5/10 emails sent (Apr 20), tracking in link-outreach.md
+- [ ] Domain warm-up — Set real credentials in `config/credentials/mainedispensaryguide.env`, add more contacts, queue.cjs running daily
 - [ ] Establish external link partnerships (strategy exists, 5 warm-up emails sent, outreach pending)
   - **Priority targets:** Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times
   - **Secondary:** Maine Chamber, Maine SBDC, SCORE Maine
@@ -118,6 +119,7 @@
 - [x] Build "Maine Cannabis FAQ" hub page — 22 FAQs across 5 categories, FAQPage schema ✅ (Apr 20)
 - [ ] Create "Cannabis Legalized States" cross-link map (not Maine-specific — informational)
 - [x] PDF founders bible — Printable roadmap page created at `/download/roadmap` ✅ (Apr 20)
+  - **Next:** Convert `ROADMAP_FOUNDERS_BIBLE.md` to styled PDF with Heritage Authority branding
 - [ ] Vendor directory page with categorized service providers
 
 ### Phase: Authority Building
