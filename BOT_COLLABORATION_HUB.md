@@ -2954,4 +2954,54 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 - Observer agent lesson learned: configured but never invoked in 20+ sessions — now documented
 
 
+---
+
+## 📋 SPRINT 47: EmailPipeline Phase 1 + FAQ Hub + Sprint Retrospective (Apr 20, 2026 EDT)
+
+**[ORCHESTRATOR] Apr 20, 2026 EDT — Sprint 47 Complete**
+
+### What Was Done
+
+**EmailPipeline Phase 1 — ✅ BUILT**
+- New standalone pipeline at `C:\Users\Steve\EmailPipeline\`
+- Built all scripts: `db.cjs` (SQLite), `imap-poll.cjs` (IMAP reply detection), `queue.cjs` (daily sender), `send.cjs` (SMTP sender), `import-json.cjs` (migration), `report.cjs` (CLI reporting)
+- Task Scheduler XMLs + setup script: `EmailPipeline-IMAP-Poll` (15min), `EmailPipeline-DailySend` (weekdays 9:30am) — both registered
+- 7 legacy contacts migrated from `email-tracking.json` → SQLite
+- Fixed: siteId extraction bug (returned `domain.com` not `domain`), missing nodemailer in package.json, DB schema bugs (NOT NULL + parameter casing)
+- Memory system updated: `memory.md` (hot rules), `corrections.md` (sprint retrospective), `reflections.md` (sprint log), `heartbeat-state.md` (current state)
+- AGENTS.md updated: Sprint Retrospective section added to Process & Safety
+
+**FAQ Hub Page — ✅ BUILT**
+- 22 FAQs across 5 categories, FAQPage JSON-LD schema
+
+**Two new guide pages — ✅ COMMITTED**
+- `maine-cannabis-municipal-opt-in-guide.astro`
+- `maine-conditional-use-permit.astro`
+
+**Process improvements locked in:**
+- Rule: "Complete" = integration tested (not just built)
+- Rule: Delegation size cap (explanation > doing → do it myself)
+- Rule: Verify package.json deps after every fixer task
+- Rule: Schema decisions locked before implementation
+
+### What's Pending
+- Set real IMAP/SMTP credentials in `C:\Users\Steve\EmailPipeline\config\credentials\mainedispensaryguide.env`
+- Add real contacts to campaign
+- Run `node scripts/queue.cjs --once` to test live send
+- GSC indexing verification (user action required)
+- PDF Magnet conversion (`ROADMAP_FOUNDERS_BIBLE.md` → styled PDF)
+
+### Files Changed
+- `AGENTS.md` — Sprint Retrospective added to Process & Safety
+- `reference/project-status.md` — Updated active work + Sprint 47
+- `project-todos.md` — EmailPipeline Phase 1 marked complete
+- `C:\Users\Steve\.agents\self-improving\` — 4 memory files updated/created
+- `C:\Users\Steve\EmailPipeline\` — Full pipeline (all scripts, configs, templates, scheduler XMLs)
+- 2 new guide pages committed (municipal-opt-in, conditional-use-permit)
+
+### Commits
+- `7968d03` — docs(sprint-47): sync todos, status, email pipeline completion
+- `c139e5b` — feat(guides): add maine-cannabis-zoning-requirements guide (478 lines)
+
+
 
