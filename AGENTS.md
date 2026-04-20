@@ -245,6 +245,15 @@ task(description="Review homepage redesign", prompt="Compare screenshot of / aft
 
 ## Process & Safety
 
+### Sprint Retrospective (Every Multi-Step Sprint)
+After completing any sprint with 3+ steps or 4+ agents:
+1. **What worked** — note effective patterns for reuse
+2. **What failed** — bugs, wrong delegation sizes, missing deps
+3. **Is it a pattern?** — if yes, promote to `memory.md` or update `corrections.md`
+4. **Process change?** — if yes, update AGENTS.md or `memory.md`
+
+**Rule: "Complete" means tested.** Declare done only after running integration commands, not just syntax checks.
+
 ### Loop Guards
 - Any loop >100 iterations MUST log progress
 - If spinning without output for 30+ seconds, abort and report

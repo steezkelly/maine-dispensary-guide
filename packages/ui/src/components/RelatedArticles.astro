@@ -1,6 +1,4 @@
 ---
-import topicsData from '../data/topics.json';
-
 interface RelatedGuide {
   title: string;
   href: string;
@@ -72,12 +70,6 @@ function calculateScore(guideTopics: string[], currentTopics: string[]): number 
   for (const topic of guideTopics) {
     if (currentTopics.includes(topic)) {
       score += 2;
-    }
-    const relatedTopics = (topicsData.topics as Record<string, {label: string; related: string[]}>)[topic]?.related || [];
-    for (const related of relatedTopics) {
-      if (guideTopics.includes(related)) {
-        score += 1;
-      }
     }
   }
   return score;
