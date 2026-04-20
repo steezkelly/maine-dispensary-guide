@@ -1,25 +1,33 @@
 # Project Status — Maine Dispensary Guide
 
 > Live metrics and current state. Update this file at the end of each sprint.
-> Last updated by: OpenCode — April 18, 2026 (EDT)
+> Last updated by: OpenCode — April 20, 2026 (EDT)
 
 ## Deployment
 
-- **Pages live:** 73 total routes (updated from 64)
+- **Pages live:** 79 total routes (up from 73)
 - **Deployment:** Active on Vercel — Configured for **output: 'static'** for 100% stability
 - **Sitemap:** Auto-generated at `/sitemap-index.xml`
 - **Bing Webmaster:** ✅ Verified (`msvalidate.01` in Layout.astro)
+- **GA4:** ✅ Active (`G-614GHG67ZQ`)
+- **Vercel Analytics + Speed Insights:** ✅ Built-in
+- **fal.ai:** ✅ Integrated (FLUX 2 Pro, 25s generation)
 - **Traffic status:** Early stage — SEO/GEO optimization for AI-discovery is the primary goal
 
 ## SEO & Quality Scores
 
-- **SquirrelScan Score:** **91/100 (A) ✅ — 0 ERRORS** (as of Apr 16)
+- **SquirrelScan Score:** **100/100 (A) ✅ — 0 ERRORS** (as of Apr 19)
 - **Accessibility:** **99/100** — 26 minor contrast warnings only (CSP, Unsplash/Fonts)
-- **Content Quality (2026-04-16):**
-    - Site avg: **85/100**
+- **Content Quality (2026-04-20):**
+    - Site avg: **~90/100**
     - Promo words: **0**
-    - AI phrases: 0
-    - Top scores: 93/100 (taxation, locations, pos, product-testing, sanford)
+    - AI phrases: **0**
+    - All sub-75 pages expanded:
+      - cultivation-guide: 3,569 words ✅
+      - marketing-compliance: 4,777 words ✅
+      - inventory-management: 1,772 words ✅
+      - delivery-rules: 1,525 words ✅
+      - homepage: 4,497 words ✅
 
 ## Content Intelligence Skills
 
@@ -44,13 +52,26 @@ Weekly maintenance scheduled via Windows Task Scheduler.
 
 ## Known Gaps
 
-- **PDF Magnet:** The "Ultimate Founders Bible" (lead magnet) exists as MD but needs styling/conversion to PDF.
-- **Remaining sub-75:** cultivation (70), delivery-rules (73), inventory (73), marketing (73), homepage (60) — Flesch readability issues
+- **PDF Magnet:** `ROADMAP_FOUNDERS_BIBLE.md` exists but not converted to styled PDF — needs conversion + design
+- **GSC Indexing:** User needs to log in to verify current indexing status
 - **E-E-A-T:** Field data (80) — time-based, needs real traffic
 
 ## Active Work
 
-- **Sprint 34 completed Apr 16-17:** 6 worst-scoring pages improved, 8 thin pages expanded to 1000+ words, FAQ/HowTo schema added to 14 pages
-- **Link Architecture:** Operational — `scripts/link-architect.cjs` running
-- **Domain warm-up:** Preparing for outreach emails
-- **External link partnerships:** In progress
+- **Sprint 47 (Apr 20):** Domain warm-up + email automation ✅
+  - Purelymail SMTP integrated — 7 emails sent Apr 20
+  - Christine Cole (SBDC) replied positively — out of office until Apr 29
+  - Email tracking dashboard built at `/admin/email-dashboard/`
+  - Day 2 sends: Apr 21 (Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times, Maine Realtors)
+- **GSC Indexing:** ⚠️ User action required — log in to verify
+- **PDF Magnet:** Ready for conversion (source: `ROADMAP_FOUNDERS_BIBLE.md`)
+
+## Recent Commits (Last 5)
+
+| SHA | Description |
+|-----|-------------|
+| `d1789ae` | feat(email): domain warm-up system — Purelymail SMTP, tracking dashboard, 7 sends |
+| `e777288` | Sprint 46: Expand 280E guide + License denial page + internal linking |
+| `d57ba1b` | feat(images): regenerate 75 heroes with flux-pro-5 cannabis-safe model |
+| `7f185a3` | feat(image-models): add flux-pro-5 cannabis-friendly model + full model inventory |
+| `28024da` | Sprint 45: Micro-niche domination — Caregiver transition + Opt-in tracker |

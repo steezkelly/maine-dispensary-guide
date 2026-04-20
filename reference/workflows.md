@@ -188,3 +188,66 @@ public/images/
 ├── infographics/     # 12 infographic images (800x592)
 └── content/         # Reserved for in-body content images (empty as of SPRINT 42)
 ```
+
+---
+
+## Email Outreach Pipeline (SPRINT 47 Lessons)
+
+### What Was Built
+- `scripts/send-email.cjs` — Purelymail SMTP sender with 5 warm-up templates
+- `scripts/track-email.cjs` — CLI for logging sends and responses
+- `public/data/email-tracking.json` — JSON database of all sent emails
+- `admin/email-dashboard.astro` — Visual dashboard at `/admin/email-dashboard/`
+- Auto-logs every send to tracking database
+
+### Purelymail SMTP Setup
+| Setting | Value |
+|---------|-------|
+| Host | `smtp.purelymail.com` |
+| Port | 465 (SSL) |
+| Auth | App Password (NOT API key) |
+| Credentials | `C:\Users\Steve\Documents\purelymail-smtp.txt` format: `email\|password` |
+
+**IMPORTANT:** The Purelymail API key (pm-live-xxx) does NOT work as SMTP password. Generate an **App Password** in: Purelymail web UI → Settings → Security → App Passwords → Generate.
+
+### Usage
+```bash
+# Send a warm-up email (auto-logs to tracking)
+node scripts/send-email.cjs --to "Name <email@domain.com>" --template "intro"
+node scripts/send-email.cjs --to "email@domain.com" --subject "Subject" --body "Body text"
+
+# Templates: intro, valueShare, question, recentUpdate, networking
+# --dry-run for preview without sending
+
+# Log a response received
+node scripts/track-email.cjs --reply 2 --response replied --notes "Interested in call"
+
+# List all tracked emails
+node scripts/track-email.cjs --list
+```
+
+### Purelymail Limitations — No Open Tracking
+Purelymail is privacy-focused. It does NOT provide:
+- Open rate tracking
+- Bounce reports (as analytics)
+- Delivery status webhooks
+- Sent mail log
+
+Bounces come to webmail as auto-replied delivery failure notifications. Look for `X-Pm-Webmail-Alert` system messages with `SMTPAddressFailedException`.
+
+### Verified Maine Contact Email Formats
+| Contact | Email | Notes |
+|---------|-------|-------|
+| Joyce LaRoche (Maine Chamber) | `jlaroche@mainechamber.org` | NOT joycelaroche@ |
+| Verrill Dana (general) | `verrill@verrill-law.com` | Firm general inbox |
+| Mark Delisle (Maine SBDC) | `mark.delisle@maine.edu` | Direct |
+| Christine Cole (Maine SBDC) | `christine.cole@maine.edu` | Direct |
+| SCORE Maine | `scoremaine@gmail.com` | Direct |
+
+### Warm-up Campaign Progress
+- Day 1 (Apr 20): 7 sends, 1 positive auto-reply (Christine Cole, OOO until Apr 29)
+- Day 2 (Apr 21): 5 more warm-up emails planned
+- Goal: 10-15 warm-up emails before cold outreach
+
+### Dashboard
+After deploy: `/admin/email-dashboard/` — auto-refreshes every 30s, reads from `/data/email-tracking.json`.
