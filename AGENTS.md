@@ -19,9 +19,12 @@ npm run dev                          # Start local dev server
 npm run build                        # Production build (warn first!)
 npm run health-check                 # Run health check (PowerShell)
 npx astro check                      # Type check all files
-node scripts/link-architect.cjs      # Glossary term linker
-node scripts/brave-search.cjs "q"    # Primary web search
-node scripts/wikipedia-search.cjs "q" # Research (free, no key)
+node scripts/link/link-architect.cjs   # Glossary term linker
+node scripts/search/brave-search.cjs "q"    # Primary web search
+node scripts/search/wikipedia-search.cjs "q"  # Research (free, no key)
+node scripts/git/delta-typecheck.cjs  # Typecheck only changed files
+node scripts/git/sprint-handoff.cjs   # Generate Hub entry from git history
+node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
 
 **File-scoped validation (prefer these over full build):**
@@ -212,13 +215,29 @@ Available topics: city, market, licensing, finance, real-estate, operations, com
 ### Agent System — 6-Agent Pantheon
 
 | Agent | Role | Best For |
-|-------|------|----------|
+|-------|------|---------|
 | **Orchestrator** | Master delegator | Complex multi-step tasks |
 | **Oracle** | Strategic advisor | Architecture decisions, persistent bugs, YAGNI |
 | **Librarian** | External docs | Library research, official examples |
 | **Explorer** | Codebase search | Fast grep/glob, "where is X?" |
 | **Designer** | UI/UX specialist | Styling, responsive layouts, polish |
 | **Fixer** | Fast implementation | Bounded tasks, test writing |
+| **Observer** | Visual analysis | Screenshots, images, PDFs, visual regression |
+
+### When to Use @observer
+Invoke the Observer agent (via `task` with `subagent_type="observer"`) for:
+- **Screenshot comparison:** After UI changes, verify before/after match design intent
+- **Image generation review:** After fal.ai image generation, verify image quality before committing
+- **Visual regression testing:** After design system changes, check all pages for regressions
+- **PDF content extraction:** Extract text from PDFs without loading raw file into context
+- **Screenshot QA:** Capture and analyze browser output for UI bugs
+
+**Example invocation:**
+```
+task(description="Review homepage redesign", prompt="Compare screenshot of / after recent CSS changes against design intent. Report any visual regressions or issues.", subagent_type="observer")
+```
+
+**Note:** Observer is configured but was not being invoked. Use it proactively for visual QA tasks — it prevents bugs that code review misses.
 
 **Rule of thumb:** When in doubt, delegate. Specialists are faster and better.
 

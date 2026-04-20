@@ -2907,5 +2907,51 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 - 85 pages built successfully
 - 0 errors
 
+---
+
+## 📋 SPRINT 48: Script Reorganization + Path C Consolidation (Apr 20, 2026)
+
+**[ORCHESTRATOR] Apr 20, 2026 EDT — Workspace cleanup, Path C messaging, new scripts**
+
+### What Was Done
+
+**Script Reorganization — 18 scripts clustered, 13 stale deleted:**
+- `scripts/content/` — `audit-fix-loop.cjs` (dry-run auditor + --apply fixer)
+- `scripts/git/` — `delta-typecheck.cjs` (typecheck changed files only), `sprint-handoff.cjs` (git→Hub entry)
+- `scripts/image/` — `fal-image-gen.cjs`, `image-pipeline.cjs`, `image-audit.cjs`
+- `scripts/link/` — `link-architect.cjs`, `add-contextual-links.cjs`, `add-related-guides.cjs`, `add-nearby-markets.cjs`, `link-remaining-orphans.cjs`, `fix-links.cjs`
+- `scripts/search/` — `brave-search.cjs`, `wikipedia-search.cjs`, `browser-search.cjs`
+
+**Deleted (13 stale):** orphan-count, verify-links, fix-flesch.ps1, check-deploy.ps1, auto-link.ps1, searxng-search.cjs, test_fal_image.ps1, download-heroes.cjs, download-infographics.cjs, fix-old-orchard.js, analyze-launch-checklist.cjs, setup-maintenance-schedule.ps1, playwright-mcp-search.md
+
+**Path C Content Consolidation — 20 guide pages updated with market consolidation messaging:**
+- Auburn, Bangor, Biddeford, Brunswick, Kittery, Lewiston, Sanford, South Portland
+- market.astro, old-orchard-beach.astro, index.astro, market-stats.astro
+- maine-cannabis-edibles-compliance.astro, maine-cannabis-funding-guide.astro
+- Resources/education.astro, about/authors.astro, 3 founder pages
+- `directory.astro` — affiliate disclosure added, vendor emails routed to @mainedispensaryguide.com subaddresses
+
+**AGENTS.md Updated:**
+- Commands section updated with new script paths (scripts/link/, scripts/search/, etc.)
+- Observer agent documented (was configured but never invoked)
+
+**New Docs:** EXECUTION_PLANS.md, ORPHANED_TASKS_REPORT.md, download/roadmap.astro, guides/faq.astro (22 FAQs)
+
+### Verification
+- `npx astro check` → 0 errors, 0 warnings, 91 hints
+- 85 pages built
+- All new script paths tested
+
+### Files Changed
+- 18 scripts moved into clusters (R rename), 13 deleted (D)
+- 21 .astro pages modified (Path C messaging + directory updates)
+- AGENTS.md, reference/project-status.md, project-todos.md updated
+
+### Notes
+- email-tracking.json.bak deleted (backup artifact)
+- SCRIPTS.md inventory created separately
+- Self-improving memory updated (heartbeat-state, corrections, reflections, index, memory.md)
+- Observer agent lesson learned: configured but never invoked in 20+ sessions — now documented
+
 
 

@@ -3,9 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 
 const stats = [
-  { metric: "Total Annual Sales (2025)", value: "$246.4 Million", detail: "A record high for Maine's adult-use market." },
+  { metric: "Total Annual Sales (2024)", value: "$513M combined", detail: "Medical ($269M) + Adult-Use ($244M) — OCP 2024 Annual Report." },
   { metric: "Individual Transactions", value: "4.83 Million", detail: "Reflects consistent and growing consumer demand." },
-  { metric: "Active Retail Stores", value: "179 Stores", detail: "56% located in rural counties for statewide coverage." },
+  { metric: "Active Retail Stores", value: "179 adult-use retail licenses", detail: "179 retail dispensary licenses. Total licensed establishments (all types) exceeds 330 per OCP." },
   { metric: "Avg. Price Per Gram (Flower)", value: "$6.62", detail: "Stabilized pricing signaling a mature market." },
   { metric: "Regional Concentration", value: "60%", detail: "York and Cumberland counties drive majority revenue." }
 ];
@@ -25,10 +25,10 @@ const stats = [
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "How much did Maine's adult-use cannabis market generate in 2025?",
+      "name": "How much did Maine's cannabis market generate in 2024?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Maine's adult-use cannabis market generated $246.4 million in 2025 sales across 4.83 million transactions at 179 licensed stores, according to Maine OCP data."
+        "text": "Maine's combined medical and adult-use cannabis market generated $513 million in 2024 ($269M medical + $244M adult-use), according to the Maine OCP 2024 Annual Report. Adult-use sales across 179 licensed retail dispensaries accounted for $244M of that total."
       }
     },
     {
@@ -44,7 +44,7 @@ const stats = [
       "name": "Where is the majority of Maine cannabis revenue concentrated?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "60% of Maine cannabis revenue is concentrated in York and Cumberland counties, though rural counties represent an underserved and growing opportunity for boutique dispensaries."
+        "text": "60% of Maine cannabis revenue is concentrated in York and Cumberland counties (OCP 2024). The market is consolidating — cultivation canopy shrank in 2024 while establishment counts grew, signaling rationalization rather than expansion."
       }
     },
     {
@@ -52,7 +52,7 @@ const stats = [
       "name": "How many municipalities in Maine have opted into adult-use cannabis retail?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "15 Maine municipalities have formally opted into adult-use cannabis retail as of 2026, with several additional communities in active discussion about joining the program."
+        "text": "41+ Maine municipalities have formally opted into adult-use cannabis retail as of 2026 (OCP Municipal Opt-In List). Multiple additional communities are in active discussion about joining the program."
       }
     }
   ]
@@ -68,7 +68,7 @@ const stats = [
 
     <section class="data-deep-dive">
       <h2>2025 Market Snapshot</h2>
-      <p class="answer-capsule"><strong>Maine's adult-use market generated $246.4M in 2025 sales across 4.83M transactions at 179 licensed stores, with 60% revenue concentration in York/Cumberland counties.</strong> Average flower price stabilized at $6.62/gram. The market is shifting from explosive growth to strategic consolidation — operators are focusing on efficiency and customer loyalty rather than market expansion alone.</p>
+      <p class="answer-capsule"><strong>Maine's combined medical and adult-use cannabis market generated $513M in 2024 ($269M medical + $244M adult-use), making it the largest cannabis market in northern New England.</strong> The 179 adult-use retail stores and 4.83M transactions reflect a maturing market where 60% of revenue concentrates in York/Cumberland counties. Average flower price stabilized at $6.62/gram. The market is consolidating — operators focused on efficiency and customer loyalty will outlast those chasing volume growth alone.</p>
       <section class="stats-grid">
         {stats.map(stat => (
           <div class="stat-card">
@@ -87,7 +87,7 @@ const stats = [
       </blockquote>
 
       <Callout title="Data-Driven Decisions" type="success">
-        Understanding the numbers is what separates a "hobby" from a "business." With over $246 million in annual sales, Maine has proven itself as a robust, mature market. Use this data to benchmark your own financial projections and find your niche.
+        Understanding the numbers is what separates a "hobby" from a "business." With $513 million in combined annual sales, Maine has proven itself as a robust, consolidating market — one where new entrants can still find opportunity, but only if they understand efficiency, compliance, and survival first.
       </Callout>
     </section>
 
