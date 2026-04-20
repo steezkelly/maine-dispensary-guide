@@ -5,6 +5,171 @@
 
 ---
 
+## SPRINT 47: News Response — Pesticide Advisory + Tax Updates (Apr 20, 2026)
+
+**[ORCHESTRATOR] — Researched breaking Maine cannabis news, updated content**
+
+### What Was Done
+
+**News scan completed** — found 3 high-priority stories:
+1. LD 1942 (tax increase 10%→14%) — ENACTED, effective Jan 1 2026
+2. LD 1847 (medical cannabis testing) — FAILED, left on appropriations table
+3. MarijuanaVille pesticide scandal — first-ever OCP patient advisory, 190x bifenthrin, company rebranded to M-Ville
+
+**Content changes:**
+- Created `maine-medical-cannabis-pesticide-advisory-2026.astro` — breaking news blog post covering the advisory, regulatory gap, LD 1847 failure
+- Fixed stale 10%→14% adult-use tax refs in: faq, taxation-280e, vertical-integration, official-resources
+- Fixed cultivation license blog heroImage (was pointing to Unsplash)
+
+**Files changed:** 7 content files + 1 new blog post + 1 hero image
+
+**Commit:** `773f2a7` — feat(sprint-47): news response — pesticide advisory blog + 14% tax updates
+
+---
+
+## SPRINT 49: Content Network — Keyword Strategy & Phase 1 Expansion (Apr 20, 2026)
+
+**[ORCHESTRATOR] — Council session on keyword strategy, confirmed expansion priorities**
+
+### Strategic Decisions Confirmed
+
+**Expansion Order (Sequential, Validation-First):**
+1. **Phase 1: Real Estate / Zoning Vertical** ← STARTING NOW
+2. **Phase 2: Psychedelics Vertical** — Build ahead of LD 1034 Commission Report (Nov 2026)
+3. **Phase 3: Agricultural Business Vertical** — After psychedelics validated
+
+**Domain Structure:** Subdirectory first (`/guides/`), evaluate `/real-estate/` folder structure after vertical hits 20+ pages with proven value.
+
+**Key Council Insights:**
+- Real estate keyword cluster has near-zero Maine-specific competition
+- Psilocybin first-mover advantage exists — LD 1034 trigger is Nov 2026
+- Agricultural business is the franchise infrastructure (applies to cannabis + psychedelics + hemp)
+- Hemp rejected: B2C wrong intent, crowded affiliate market
+- Small business general rejected: dominated by SBA.gov
+
+### Phase 1: Real Estate / Zoning Content Cluster
+
+**Target Keywords:**
+| Keyword | Est. Volume | Competition | Content Gap |
+|---------|-------------|-------------|-------------|
+| `dispensary zoning Maine` | 70-150/mo | Near zero | Thin content, no Maine-specific authority |
+| `municipal opt-in Maine cannabis` | 40-90/mo | Negligible | Existing tracker is good, needs hub page |
+| `conditional use permit Maine cannabis` | 20-50/mo | Negligible | No Maine-specific guide exists |
+| `commercial lease cannabis Maine` | 30-70/mo | Very low | General commercial lease, not cannabis-specific |
+
+**Content Plan (10 Pages):**
+| Page | Target Keyword | Status |
+|------|----------------|--------|
+| Expand: `maine-cannabis-real-estate.astro` | Real estate hub | Thin, needs expansion |
+| Expand: `maine-dispensary-locations.astro` | Site selection | Basic, needs depth |
+| Expand: `maine-cannabis-opt-in-tracker.astro` | Opt-in tracker | 677 lines, already strong |
+| New: `maine-cannabis-zoning-requirements.astro` | Zoning requirements | **Create** |
+| New: `maine-cannabis-municipal-opt-in-guide.astro` | Opt-in process | **Create** |
+| New: `maine-conditional-use-permit.astro` | CUP process | **Create** |
+| New: `maine-cannabis-commercial-lease-guide.astro` | Commercial lease | **Create** |
+| New: `maine-cannabis-site-selection.astro` | Site selection | **Create** |
+| New: `maine-cannabis-school-buffer.astro` | 500ft buffer | **Create** |
+| New: `maine-municipal-approval-checklist.astro` | Approval checklist | **Create** |
+
+**Cross-Links to Build:**
+- City guides → real estate/zoning pages (anchor: "available commercial space in [city]")
+- License guide → opt-in guide (anchor: "municipal approval requirements")
+- Cultivation guide → zoning requirements (anchor: "facility zoning for cultivation")
+- All real estate pages → opt-in tracker (anchor: "current opt-in status by town")
+
+### Phase 2: Psychedelics Content Cluster
+
+**Trigger:** Maine LD 1034 Commission Report (Nov 2026)
+
+**Target Keywords:**
+| Keyword | Est. Volume | Competition |
+|---------|-------------|-------------|
+| `psilocybin business license Maine` | Low | Nearly zero |
+| `Maine psilocybin regulations 2026` | Low | Only news articles |
+| `psychedelic therapy business Maine` | Very low | Pure opportunity |
+
+**Content Plan (8-12 Pages):**
+- Psilocybin legislation overview (build BEFORE Nov 2026 report)
+- Psilocybin business license requirements
+- Psilocybin therapy center vs dispensary model
+- Maine LD 1034 analysis (when released)
+- Cross-link from cannabis market + regulations pages
+
+### Phase 3: Agricultural Business Content Cluster
+
+**Target Keywords:**
+| Keyword | Est. Volume | Competition |
+|---------|-------------|-------------|
+| `controlled environment agriculture Maine` | Very low | Pure gap |
+| `indoor farming business startup Maine` | Low | Near zero |
+| `agricultural zoning requirements Maine` | Low | Very low |
+
+**Why This Is the Franchise Backbone:** CEA, greenhouse compliance, and agricultural zoning apply to cannabis cultivation AND psilocybin cultivation AND future controlled plant agriculture. This vertical becomes the template for cookie-cutter expansion to other states.
+
+---
+
+## SPRINT 48: Monorepo Architecture — Content Network Foundation (Apr 20, 2026)
+
+**[ORCHESTRATOR] — Monorepo structure established, Layout.astro externalized, site-config system implemented**
+
+### What Was Done
+
+**Monorepo Structure Created:**
+```
+content-network/
+├── apps/
+│   └── maine-cannabis/       # Current site migrated here
+├── packages/
+│   ├── ui/                   # 9 components extracted
+│   ├── layouts/              # Layout.astro externalized
+│   ├── design-system/        # CSS tokens extracted
+│   ├── content-types/        # TypeScript interfaces
+│   ├── config/               # verticals, topics, cross-links
+│   └── scripts/              # CLI tools scaffolding
+├── turbo.json
+└── package.json (workspace root)
+```
+
+**Layout.astro Externalized:**
+- Now reads from `@network/maine-cannabis/src/data/site-config.json`
+- No more hardcoded site URLs, GA4 IDs, or site names
+- Component imports updated to `@network/ui/*` workspace aliases
+
+**site-config.json System:**
+```json
+{
+  "siteName": "Maine Dispensary Guide",
+  "siteUrl": "https://mainedispensaryguide.com",
+  "stateName": "Maine",
+  "vertical": "cannabis",
+  "analyticsId": "G-614GHG67ZQ",
+  "formspreeEndpoint": "xvgzlowz"
+}
+```
+
+**CI Invariant Checks Added:**
+- `scripts/ci-checks.cjs` — detects hardcoded colors, URLs, trailing slashes
+- Runs on every PR to enforce network quality standards
+
+**Component Re-exports:**
+- `apps/maine-cannabis/src/components/*.astro` → re-export from `@network/ui/*`
+- `apps/maine-cannabis/src/layouts/Layout.astro` → **full Layout with Maine config** (reads site-config.json)
+- Existing page imports continue to work without modification
+
+**Key Architecture Note:**
+Layout.astro lives in `apps/maine-cannabis/src/layouts/` (not in packages/layouts) because each vertical needs its own customized Layout that reads its own site-config.json. The packages/layouts/ directory is reserved for future base layout templates that verticals can extend.
+
+### Council Decision Implemented
+All 4 councillors recommended: monorepo with shared packages, Layout.astro as the shared "DNA", site-config.json per vertical, CI quality gates. This sprint implements the foundation.
+
+### Next Steps
+- [x] Verify build passes: `cd apps/maine-cannabis && npm run build` ✅ (86 pages built)
+- [x] Install turbo: `npm install` ✅
+- [x] Test CI checks: `node apps/maine-cannabis/scripts/ci-checks.js` ✅ (shows existing issues to fix later)
+- [ ] Phase 2 (Weeks 7-10): Build `spawn-site.cjs` CLI for new verticals
+
+---
+
 ## 📋 SPRINT 47: Domain Warm-up + Email Automation (Apr 20, 2026)
 
 **[ORCHESTRATOR] — Domain warm-up campaign launched, email automation built**
