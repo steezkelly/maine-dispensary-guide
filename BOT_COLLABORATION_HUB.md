@@ -1,7 +1,119 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-20**
+**Last updated: 2026-04-21**
+
+---
+
+## 📋 SPRINT 48: Observer Agent Vision Architecture Investigation (Apr 21, 2026)
+
+**[ORCHESTRATOR] — Deep investigation of Observer agent image analysis capabilities**
+
+### Problem Statement
+Observer agent cannot analyze images. When invoked with `task(description="...", subagent_type="observer")`, the agent returns hallucinated descriptions instead of actual image content.
+
+### Root Cause Analysis
+
+**1. MCP Tools Don't Flow to Sub-Agents**
+- MCP servers (playwright, context7, minimax) are registered in `opencode.json` globally
+- Sub-agents (including Observer) only receive: model override + built-in tools (read, grep, glob, bash)
+- The `mcps: ["playwright"]` in observer preset does NOT forward MCP tools to the sub-agent
+- This is an architectural limitation of oh-my-opencode-slim plugin
+
+**2. Observer Model Falls Back to Non-Vision MiniMax-M2.7**
+- Observer configured for `opencode/gemini-2.5-flash` in oh-my-opencode-slim.json
+- Fallback chain: gemini-2.5-flash → gemini-3-flash → big-pickle
+- Logs show Observer actually uses `minimax-coding-plan/MiniMax-M2.7`
+- MiniMax-M2.7 has **broken vision** — confirmed to hallucinate image content
+
+**3. OpenCode `read` Tool Doesn't Return Image Bytes**
+- The `read` tool only returns file metadata (size, dimensions, path)
+- Model never receives actual image bytes
+- This explains why Observer can't see images even when screenshot is taken
+
+### Configuration Files
+
+**opencode.json (lines 57-72):**
+```json
+"mcp": {
+  "playwright": { "type": "local", "command": ["npx", "@playwright/mcp@latest"], "enabled": true },
+  "context7": { "type": "local", "command": ["npx", "-y", "@upstash/context7-mcp@latest"], "enabled": true },
+  "minimax": { "type": "local", "command": ["npx", "-y", "minimax-coding-plan-mcp"], "enabled": true }
+}
+```
+
+**oh-my-opencode-slim.json (lines 51-56):**
+```json
+"observer": {
+  "model": "opencode/gemini-2.5-flash",
+  "variant": "medium",
+  "skills": [],
+  "mcps": ["playwright"]
+}
+```
+
+### MCP Tool Flow Architecture
+
+```
+MAIN CONTEXT                          SUB-AGENT (Observer)
+─────────────────                     ─────────────────────
+opencode.json MCPs:                   receives:
+├── playwright ✅                     ├── model (gemini-2.5-flash → falls back to MiniMax-M2.7)
+├── context7 ✅                       ├── built-in tools ONLY
+└── minimax ✅ (has understand_image)└── NO MCP tools ❌
+
+The mcps: ["playwright"] in observer preset does NOT forward tools to sub-agent
+```
+
+### The Working Path
+
+**Solution: Do image analysis in main context using minimax MCP's `understand_image` tool directly**
+
+The minimax-coding-plan-mcp has a working `understand_image` tool at:
+`C:\Users\Steve\AppData\Roaming\npm\node_modules\minimax-coding-plan-mcp\dist\server\tools\index.js`
+
+This tool correctly:
+- Reads local file paths and converts to base64
+- Fetches HTTP URLs and converts to base64
+- Supports data URLs directly
+- Calls MiniMax VLM API at `/v1/coding_plan/vlm`
+
+### Verification Results
+
+| Test | Result | Notes |
+|------|--------|-------|
+| Observer sub-agent spawns | ✅ Works | via `task(description="...", subagent_type="observer")` |
+| Observer sees images | ❌ FAILS | `read` tool only returns metadata, model hallucinates |
+| Playwright screenshots | ✅ Works | `playwright_browser_take_screenshot` functional |
+| Python HTTP server on :8765 | ✅ Works | Can serve local files |
+| minimax MCP registered | ✅ Works | In opencode.json |
+| minimax MCP in main context | ❌ Tools not accessible | Model doesn't invoke it properly |
+| MiniMax API key env var | ❌ NOT SET | MINIMAX_API_KEY not in environment |
+
+### Key Insight
+
+The **Observer agent pattern cannot work** in current oh-my-opencode-slim architecture because:
+1. MCP tools don't flow to sub-agents
+2. The `read` tool doesn't return image bytes
+3. Observer model falls back to non-vision MiniMax-M2.7
+
+### Recommended Workflow
+
+**Instead of using Observer sub-agent:**
+1. Use Playwright directly in main context to screenshot/capture image
+2. Pass image path/URL to model with explicit instruction to use `minimax understand_image` tool
+3. Receive description and pass to Observer sub-agent for analysis (as text)
+
+**Alternative approaches considered:**
+- External hosting (upload to imgbb/Cloudinary) — adds latency/dependencies
+- Base64 inline — observer-test.png = 655KB = ~164K tokens (too large)
+- Direct API call — MINIMAX_API_KEY not available in environment
+- Gemini via Google API — not configured in OpenCode
+
+### Files Referenced
+- `C:\Users\Steve\.config\opencode\opencode.json` — MCP server definitions
+- `C:\Users\Steve\.config\opencode\oh-my-opencode-slim.json` — Observer preset
+- `C:\Users\Steve\.agents\skills\self-improving\corrections.md` — Detailed findings logged
 
 ---
 
