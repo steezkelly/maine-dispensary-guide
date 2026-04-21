@@ -4,6 +4,9 @@
 
 ## Pre-Flight Validation (Windows / Complex Operations)
 
+> For generic category definitions, see AGENTS.md § Pre-Flight Validation.
+> This section covers Windows-specific patterns and local failure data.
+
 Before implementing features that use file operations, browser automation, or shell commands:
 
 1. Verify tool availability: run `--version` or `--help` for the primary tool
