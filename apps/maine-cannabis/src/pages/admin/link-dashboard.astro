@@ -90,10 +90,10 @@ interface GraphData {
 }
 
 // Use Vite's import.meta.glob to scan all pages at build time (cross-platform)
-const rawFiles = import.meta.glob('../../pages/**/*.astro', { as: 'raw', eager: true });
+const rawFiles = import.meta.glob('../../pages/**/*.astro', { query: '?raw', import: 'default', eager: true });
 
 // Also load core pages at root level
-const rootFiles = import.meta.glob('../../pages/*.astro', { as: 'raw', eager: true });
+const rootFiles = import.meta.glob('../../pages/*.astro', { query: '?raw', import: 'default', eager: true });
 
 const pageMap = new Map<string, PageData>();
 const linkSet: Link[] = [];
