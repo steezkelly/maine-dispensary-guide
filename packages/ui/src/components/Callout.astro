@@ -50,6 +50,8 @@ const bgColor = {
     border: none;
     border-left: 4px solid var(--callout-accent);
     position: relative;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(6px);
     box-shadow: 0 2px 12px rgba(13, 78, 80, 0.06);
   }
 
@@ -62,7 +64,7 @@ const bgColor = {
     bottom: 0;
     border-radius: 0 1rem 1rem 0;
     border: 1px solid var(--callout-accent);
-    opacity: 0.2;
+    opacity: 0.25;
     pointer-events: none;
   }
 
@@ -99,7 +101,8 @@ const bgColor = {
 
   @media (prefers-reduced-motion: no-preference) {
     .callout {
-      animation: calloutReveal 0.5s ease-out;
+      animation: calloutReveal 0.5s ease-out,
+                 calloutGlow 2s ease-in-out 0.3s infinite alternate;
     }
   }
 
@@ -112,5 +115,10 @@ const bgColor = {
       opacity: 1;
       transform: translateX(0);
     }
+  }
+
+  @keyframes calloutGlow {
+    from { box-shadow: 0 2px 12px rgba(13, 78, 80, 0.06); }
+    to { box-shadow: 0 2px 20px rgba(88, 129, 87, 0.15); }
   }
 </style>
