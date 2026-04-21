@@ -24,6 +24,7 @@ const recentGuides = [
   { title: "Bangor Market Analysis", href: "/guides/bangor-dispensary-guide/", date: "April 3, 2026", badge: "Updated" },
   { title: "Real Estate & Zoning Guide", href: "/guides/maine-cannabis-real-estate/", date: "April 2, 2026", badge: "Updated" },
   { title: "2026 Launch Checklist", href: "/launch-checklist/", date: "April 1, 2026", badge: "New" },
+  { title: "How to Open a Dispensary in Maine", href: "/blog/maine-dispensary-how-to-open/", date: "March 28, 2026", badge: "Guide" },
 ];
 
 const journeySteps = [
@@ -35,8 +36,8 @@ const journeySteps = [
 ---
 
 <Layout 
-  title="Maine Cannabis Guide 2026 | 44 Expert Resources" 
-  description="Complete guide to opening a Maine cannabis dispensary. Licensing, compliance, real estate, and 280E taxation explained. Everything you need to open and scale." 
+  title="How to Open a Dispensary in Maine (2026) — Step-by-Step Guide" 
+  description="Everything you need to open a Maine cannabis dispensary: licensing timeline, startup costs ($360K–$1M), location zoning, and OCP application steps. Start here." 
   heroImage="/images/heroes/homepage.jpg"
   article={{ author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-01", modifiedDate: "2026-04-18", section: "Home" }}
 >
@@ -568,7 +569,22 @@ const journeySteps = [
   ───────────────────────────────────────────────────────────────── */
   .hero-manifesto {
     position: relative;
-    background: var(--color-primary);
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 20% 80%,
+        rgba(88, 129, 87, 0.18) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 80% 20%,
+        rgba(13, 78, 80, 0.25) 0%,
+        transparent 50%
+      ),
+      linear-gradient(
+        180deg,
+        var(--color-primary) 0%,
+        #0A3D3F 100%
+      );
     color: var(--color-background);
     padding: var(--space-xl) 0 var(--space-lg);
     margin-bottom: var(--space-lg);
@@ -1170,19 +1186,23 @@ const journeySteps = [
 
   .hub-card {
     position: relative;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(209, 209, 193, 0.5);
     border-radius: 1rem;
     padding: var(--space-lg) var(--space-md);
     text-decoration: none;
-    transition: all 0.3s var(--ease-out);
+    transition: all 0.35s cubic-bezier(0.2, 1, 0.2, 1);
     overflow: hidden;
   }
 
   .hub-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-primary);
-    box-shadow: 0 12px 40px rgba(13,78,80,0.1);
+    transform: translateY(-6px);
+    border-color: rgba(13, 78, 80, 0.3);
+    box-shadow:
+      0 4px 16px rgba(13, 78, 80, 0.08),
+      0 16px 48px rgba(13, 78, 80, 0.12);
+    background: rgba(255, 255, 255, 0.8);
   }
 
   .hub-card-inner {
@@ -1251,14 +1271,18 @@ const journeySteps = [
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, var(--color-accent) 0%, transparent 70%);
+    background: radial-gradient(circle at 50% 120%, var(--color-accent) 0%, transparent 60%);
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s ease;
     pointer-events: none;
   }
 
   .hub-card:hover .hub-bg {
-    opacity: 0.03;
+    opacity: 0.08;
+  }
+
+  [data-theme="dark"] .hub-card:hover .hub-bg {
+    opacity: 0.12;
   }
 
   /* ─────────────────────────────────────────────────────────────────
@@ -1592,18 +1616,22 @@ const journeySteps = [
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(209, 209, 193, 0.5);
     border-radius: 1rem;
     padding: var(--space-md) var(--space-lg);
     text-decoration: none;
-    transition: all 0.2s var(--ease-out);
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
   }
 
   .journey-step:hover {
-    border-color: var(--color-primary);
+    border-color: rgba(13, 78, 80, 0.3);
     transform: translateX(8px);
-    box-shadow: 0 4px 20px rgba(13,78,80,0.08);
+    box-shadow:
+      0 4px 16px rgba(13, 78, 80, 0.08),
+      0 12px 40px rgba(13, 78, 80, 0.1);
+    background: rgba(255, 255, 255, 0.8);
   }
 
   .step-num {
@@ -1846,8 +1874,14 @@ const journeySteps = [
   [data-theme="dark"] .hub-card,
   [data-theme="dark"] .new-card,
   [data-theme="dark"] .journey-step {
-    background: var(--color-surface);
-    border-color: var(--color-border);
+    background: rgba(10, 40, 41, 0.6);
+    border-color: rgba(61, 159, 151, 0.3);
+  }
+
+  [data-theme="dark"] .hub-card:hover,
+  [data-theme="dark"] .journey-step:hover {
+    background: rgba(10, 40, 41, 0.85);
+    border-color: rgba(61, 159, 151, 0.5);
   }
 
   [data-theme="dark"] .mission-lead {

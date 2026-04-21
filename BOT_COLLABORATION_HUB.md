@@ -1,7 +1,54 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-21**
+**Last updated: 2026-04-20**
+
+---
+
+## 📋 SPRINT 50: CTR Optimization + Psychedelic Split + ROI Blog (Apr 20, 2026)
+
+**[ORCHESTRATOR] — Council-driven sprint: meta tags, internal links, schema, 3 new blog posts**
+
+### Context
+GSC data revealed: 1 click total, 33 indexed pages, top query "how to open a dispensary in Maine" (16 impressions). Council unanimous: CTR is the bottleneck, not content quality or indexing. Ran council session to align on priority actions.
+
+### What
+
+**Week 1-2 Quick Wins (zero cost, immediate impact):**
+- Meta tag refresh on 5 key pages (index, license guide, real-estate guide, costs guide, how-to blog)
+  - Homepage title: "Maine Cannabis Guide 2026" → "How to Open a Dispensary in Maine (2026) — Step-by-Step Guide"
+  - All titles rewritten to match query intent
+- Internal anchor text: Added 6 links TO `/blog/maine-dispensary-how-to-open` from: index, license guide, real-estate guide, start-here, launch-checklist, faq page
+  - Discovery: how-to blog was **fully orphaned** (zero incoming links) — fixed
+- FAQPage schema added to: `maine-dispensary-license.astro` (10 Q&A), `maine-cannabis-real-estate.astro` (8 Q&A)
+
+**3 New Blog Posts Created (all 0 errors, published Apr 20):**
+- `maine-psilocybin-2026-guide.astro` — Maine-specific psilocybin anchor page: LD 1034, commission, Oregon/Colorado comparison, operator risk, realistic timeline. ~424 lines. Links to Trump EO post.
+- `ibogaine-federal-executive-order-maine-2026.astro` — Dedicated ibogaine post: $50M research commitment, veterans' advocacy, cardiac risks, Maine angle. ~409 lines. Separate from cannabis operators (addiction treatment track, not business opportunity).
+- `maine-dispensary-roi-what-to-expect-2026.astro` — ROI blog targeting "dispensary roi" GSC gap (2 impressions, 0 clicks). $360K-$1.03M startup range, 280E math, 3 scenario models, 6 FAQs. ~700 lines.
+
+**Reciprocal cross-links:**
+- Trump psychedelic EO post: Added links to both new psychedelic posts in Related Guides section
+- New psychedelic posts: Already linked to Trump EO post, regulations guide, compliance guide
+
+**Hero image fix:**
+- Psilocybin post: `maine-psilocybin-2026.jpg` → `portland-maine-cannabis-rules-2026.jpg` (pending fal.ai generation)
+- Ibogaine post: `ibogaine-executive-order-2026.jpg` → `trump-psychedelic-executive-order-maine-psilocybin-2026.jpg` (pending fal.ai generation)
+
+### Verification
+- `npx astro check` — 0 errors, 0 warnings (3 new files + 1 modified cross-link file)
+- Blog count: 6 → 9 posts
+
+### GSC Baseline Captured (Apr 20)
+- Coverage: 33 indexed, 42 not-indexed (Google actively crawling ✅)
+- Performance: 1 click total (Apr 8, to /guides/maine-cannabis-real-estate)
+- Top queries: "how to open a dispensary in Maine" (16 imp), "how to start a dispensary in Maine" (14 imp), "cannabis business licensing in maine" (8 imp)
+- max avg position: 12.4
+
+### Deferred
+- fal.ai hero image generation for 2 psychedelic posts (lower priority, aesthetic)
+- Purelymail backlink outreach (Day 2 warm-up emails pending)
+- LD 1034 pre-commission analysis post (Month 2 — May-June per council majority vote)
 
 ---
 

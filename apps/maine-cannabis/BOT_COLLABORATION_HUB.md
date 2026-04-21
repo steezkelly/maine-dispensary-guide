@@ -5,6 +5,23 @@
 
 ---
 
+## SPRINT 50: Maine Psilocybin Anchor Page — New Blog Post (Apr 20, 2026)
+
+**[FIXER] 2026-04-20 — Created dedicated Maine psilocybin guide blog post**
+
+### What Was Done
+
+- Created `src/pages/blog/maine-psilocybin-2026-guide.astro` — dedicated anchor page for Maine psilocybin coverage
+- Splits psilocybin-specific content focus from the Trump EO post (`trump-psychedelic-executive-order-maine-psilocybin-2026.astro`), which remains the federal/national story
+- New page covers: LD 1034 vote + tabling, Commission to Study Psilocybin Services (Nov 4, 2026 report), Oregon/Colorado state program comparison, April 2026 EO implications, cannabis operator license risk, realistic 2027+ timeline
+- Tone: factual monitoring — does not speculate that psilocybin is coming to Maine
+- Includes Faq component (5 Q&As), Callout components (warning, tip×2), stat-block snapshot
+- Internal links: Trump EO post, maine-cannabis-regulations, maine-cannabis-compliance-guide, maine-dispensary-license
+- Published: `2026-04-20`, no noindex, topics: ["policy", "legislation", "psychedelics"]
+- `npx astro check` result: **0 errors, 0 warnings** ✅
+
+---
+
 ## SPRINT 47: News Response — Pesticide Advisory + Tax Updates (Apr 20, 2026)
 
 **[ORCHESTRATOR] — Researched breaking Maine cannabis news, updated content**
