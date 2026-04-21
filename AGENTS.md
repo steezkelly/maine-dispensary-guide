@@ -113,6 +113,55 @@ project-1/
 
 ---
 
+## Pre-Flight Validation
+
+Before starting any session that will: (a) run more than 20 tool calls,
+(b) touch more than 10 files, (c) use browser automation, or (d) call
+external APIs, you MUST run pre-flight. Invoke `/preflight <category>`
+or execute the equivalent checks manually.
+
+**Categories and checks:**
+
+- `environment` — `node --version`, `npm --version`, `npx astro check`
+  exit 0, target directory writable, git working tree status captured.
+- `browser-automation` — confirm no leftover Playwright processes
+  (`ps aux | grep -i playwright` returns nothing unexpected), target
+  URLs reachable via HEAD request, disk space > 2 GB free.
+- `file-write` — destination directory exists, not read-only, not
+  inside `node_modules/` or `dist/`, git branch is not `main`.
+- `external-tool` — tool binary present (`which <tool>`), `--version`
+  succeeds, credentials resolved (env vars set, no literal placeholders).
+
+**On failure:** stop, report the failed check, do NOT begin the main
+task. Fix the environment first.
+
+**On success:** capture the pre-flight report in the session as a
+single assistant message so it's discoverable in later insights runs.
+
+Rationale: 357 tool errors across 14 days, most from predictable
+environment issues. Pre-flight catches these in <30 seconds instead
+of 50 messages deep.
+
+---
+
+## Playwright Discipline (hard rule)
+
+For every `playwright_browser_navigate` or equivalent browser spawn,
+there MUST be a matching `playwright_browser_close` before the session
+ends, OR before spawning the next navigation if the first is no longer
+needed. No exceptions.
+
+Enforcement: if the session uses browser automation, the final
+assistant message before completion must include a "Browser cleanup"
+line explicitly confirming all instances were closed. If unsure,
+close defensively — re-opening is cheap; the 100–750 MB-per-instance
+leak is not.
+
+If a browser is needed across multiple sub-tasks, document the intent
+in the first navigation and close in the last sub-task.
+
+---
+
 ## LSP Status (lsp_diagnostics)
 
 **Status: NOT WORKING** — `lsp_diagnostics` returns "The `typescript.tsdk` init option is required" for all file types in this project.
@@ -140,6 +189,23 @@ npx astro check                           # Type check all files
 This uses `tsc` directly and works reliably. It is not affected by LSP issues.
 
 ### This does NOT affect build/deploy** — the site builds and deploys cleanly with 123 known non-blocking type errors.
+
+---
+
+## Type Checking — Astro Projects
+
+**Default:** Do NOT use `lsp_diagnostics` for `.astro` files. The
+`typescript.tsdk` resolution error documented previously is persistent
+and will waste 5+ minutes per occurrence.
+
+**Use instead:**
+- `npx astro check` for project-wide diagnostics.
+- `npx tsc --noEmit -p <tsconfig>` for pure TS files outside `.astro`.
+- Run both after any non-trivial edit to `src/pages`, `src/layouts`,
+  or `src/components`.
+
+Only fall back to `lsp_diagnostics` for non-Astro TypeScript files
+where the LSP is known-good.
 
 ---
 
