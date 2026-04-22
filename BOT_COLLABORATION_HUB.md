@@ -52,7 +52,7 @@
 - `45559bd` — feat: full author byline rollout (E-E-A-T), link-dashboard fix, spring 2026 data refresh (150 files, +4231/-377 lines)
 
 ### What's Pending
-- Vercel deploy verification (auto-deploy running)
+- Vercel deploy verified ✅ — live at mainedispensaryguide.com
 - GSC indexing — 42 of 79 pages still not indexed; GSC quota exceeded so no resubmission possible
 - E-E-A-T field data — time-based, needs real traffic before it updates
 
