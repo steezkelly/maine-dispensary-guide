@@ -253,21 +253,62 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         <div class="nav-links" id="navigation-menu" role="navigation">
           <div class="nav-search-mobile"><Search /></div>
           <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Guides ▾">Guides ▾</button>
-            <div class="dropdown-content">
-              <a href="/all-guides">All Guides</a>
-              <a href="/launch-checklist">Launch Checklist</a>
-              <a href="/find-a-dispensary">Find a Store</a>
+            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
+            <div class="dropdown-content multi-column">
+              <div class="topic-group">
+                <span class="topic-header">◆ Business Essentials</span>
+                <a href="/guides/maine-dispensary-license/">License Requirements</a>
+                <a href="/guides/maine-dispensary-business-plan/">Business Plan</a>
+                <a href="/guides/maine-dispensary-costs/">Startup Costs</a>
+                <a href="/guides/maine-cannabis-market/">Market Analysis</a>
+                <a href="/guides/maine-cannabis-funding-guide/">Funding & Capital</a>
+                <a href="/guides/maine-cannabis-real-estate/">Real Estate</a>
+                <a href="/guides/maine-dispensary-hiring/">Hiring & Staffing</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◆ Compliance & Legal</span>
+                <a href="/guides/maine-cannabis-regulations/">Regulations</a>
+                <a href="/guides/maine-cannabis-taxation-280e/">280E Taxation</a>
+                <a href="/guides/maine-cannabis-banking-solutions/">Banking Solutions</a>
+                <a href="/guides/maine-cannabis-staffing-licensing/">Employee Licensing</a>
+                <a href="/guides/maine-cannabis-marketing-compliance/">Marketing Compliance</a>
+                <a href="/guides/maine-cannabis-events-2026/">Cannabis Events</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◆ Operations & Technology</span>
+                <a href="/guides/maine-dispensary-security/">Security Requirements</a>
+                <a href="/guides/maine-cannabis-inventory-management/">Inventory & Metrc</a>
+                <a href="/guides/maine-dispensary-pos/">POS Systems</a>
+                <a href="/guides/maine-dispensary-packaging/">Packaging & Labeling</a>
+                <a href="/guides/maine-cannabis-delivery-rules/">Delivery Rules</a>
+                <a href="/guides/maine-cannabis-edibles-compliance/">Edibles Compliance</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◆ City & Regional Guides</span>
+                <a href="/guides/portland-dispensary-guide/">Portland</a>
+                <a href="/guides/lewiston-dispensary-guide/">Lewiston</a>
+                <a href="/guides/bangor-dispensary-guide/">Bangor</a>
+                <a href="/guides/augusta-dispensary-guide/">Augusta</a>
+                <a href="/guides/south-portland-dispensary-guide/">South Portland</a>
+                <a href="/guides/kittery-dispensary-guide/">Kittery</a>
+                <a href="/guides/">All 15 City Guides</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◆ All Guides & Tools</span>
+                <a href="/all-guides">Full Resource Library</a>
+                <a href="/launch-checklist">Launch Checklist</a>
+                <a href="/find-a-dispensary">Find a Store</a>
+              </div>
             </div>
           </div>
           <div class="nav-dropdown">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾">Business Tools ▾</button>
             <div class="dropdown-content">
-              <a href="/roi-calculator">ROI Calculator</a>
-              <a href="/market-stats">Market Stats</a>
-              <a href="/glossary">Technical Glossary</a>
-              <a href="/resources/maine-cannabis-official-resources">Official Resource Links</a>
-              <a href="/resources/maine-cannabis-education">Education & Training</a>
+              <a href="/roi-calculator">◆ ROI Calculator</a>
+              <a href="/market-stats">◆ Market Stats</a>
+              <a href="/glossary">◆ Technical Glossary</a>
+              <a href="/resources/maine-cannabis-official-resources">◆ Official Resources</a>
+              <a href="/resources/maine-cannabis-education">◆ Education & Training</a>
             </div>
           </div>
           <a href="/resources">Vendor Directory</a>
@@ -536,7 +577,12 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 
   .nav-dropdown { position: relative; }
   .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 1rem; padding: 0.5rem; border: 1px solid var(--color-border); }
+  .dropdown-content.multi-column { min-width: 680px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding: 1rem; }
+  .topic-group { display: flex; flex-direction: column; }
+  .topic-header { font-family: var(--font-serif); font-weight: 700; font-size: 0.75rem; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; margin-bottom: 0.25rem; }
+  .dropdown-content.multi-column a { color: var(--color-text); padding: 0.5rem 0.75rem; display: block; font-size: 0.8125rem; border-radius: 0.5rem; }
   .nav-dropdown:hover .dropdown-content { display: block; }
+  .nav-dropdown:hover .dropdown-content.multi-column { display: grid; }
   .dropdown-content a { color: var(--color-text); padding: 0.75rem 1rem; display: block; font-size: 0.875rem; border-radius: 0.5rem; }
   .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
 
@@ -580,7 +626,10 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       background: transparent;
       padding: 0.5rem 0;
     }
-    .dropdown-content a {
+    .dropdown-content.multi-column { display: block; width: 100%; }
+    .topic-group { text-align: left; margin-bottom: 1rem; }
+    .topic-header { font-size: 1rem; padding: 0.5rem 1rem; display: block; }
+    .dropdown-content.multi-column a {
       padding: 0.75rem 1rem;
       font-size: 1rem;
       opacity: 0.8;
