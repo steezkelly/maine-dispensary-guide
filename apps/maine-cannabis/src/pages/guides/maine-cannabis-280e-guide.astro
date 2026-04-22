@@ -3,9 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Margaret Finch",
+  authorTitle: "Finance & Taxation Analyst",
+  authorId: "margaret-finch",
   publishDate: "2026-01-12",
-  modifiedDate: "2026-04-20",
+  modifiedDate: "2026-04-21",
   section: "Compliance & Legal"
 };
 const topics = ["finance", "compliance"];
@@ -18,7 +20,7 @@ const topics = ["finance", "compliance"];
   article={article}
   topics={topics}
 >
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -418,7 +420,7 @@ const topics = ["finance", "compliance"];
   th { background: var(--color-background); font-weight: 700; }
   ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
   li { margin-bottom: 0.75rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: var(--color-disclaimer-text); }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
   .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }

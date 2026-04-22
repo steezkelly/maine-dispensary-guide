@@ -3,6 +3,8 @@
  * Each vertical site has its own site-config.json
  */
 
+import type { ArticleData } from './article';
+
 export interface SiteConfig {
   siteName: string;
   siteUrl: string;

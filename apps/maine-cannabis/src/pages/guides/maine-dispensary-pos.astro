@@ -3,7 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
   publishDate: "2026-01-20",
   modifiedDate: "2026-04-14",
   section: "Operations & Technology"
@@ -331,12 +333,12 @@ const topics = ["operations"];
   }
 
   .disclaimer {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
+    background: var(--color-disclaimer-bg);
+    border: 1px solid var(--color-disclaimer-border);
     padding: 1rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
-    color: #1a1a1a;
+    color: var(--color-disclaimer-text);
   }
 
   .further-reading {

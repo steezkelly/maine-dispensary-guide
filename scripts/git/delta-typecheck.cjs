@@ -1,5 +1,4 @@
 const { execSync } = require('child_process');
-const path = require('path');
 
 const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
 
@@ -64,7 +63,6 @@ try {
     // 6. Parse output — find lines referencing changed files
     const outputLines = checkOutput.split('\n');
     const relevantLines = [];
-    let currentFileContext = '';
     let collectingForFile = null;
 
     for (const line of outputLines) {
@@ -73,12 +71,10 @@ try {
         if (fileHeaderMatch) {
             const headerFile = fileHeaderMatch[1].replace(/\\/g, '/').split('/').pop();
             if (changedFileSet.has(headerFile)) {
-                currentFileContext = headerFile;
                 collectingForFile = headerFile;
                 relevantLines.push(`\n[${fileHeaderMatch[1]}]`);
             } else {
                 collectingForFile = null;
-                currentFileContext = '';
             }
             continue;
         }

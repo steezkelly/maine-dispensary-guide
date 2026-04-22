@@ -9,8 +9,10 @@ const breadcrumbs = [
   { label: 'Our Team', href: '/about/our-team' }
 ];
 
-const editorialTeam = authors.find(a => a.id === 'editorial-team');
-const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
+const steveKelly = authors.find(a => a.id === 'steve-kelly');
+const calvinWaters = authors.find(a => a.id === 'calvin-waters');
+const margaretFinch = authors.find(a => a.id === 'margaret-finch');
+const eliotNash = authors.find(a => a.id === 'eliot-nash');
 ---
 
 <Layout 
@@ -37,22 +39,42 @@ const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
     <div class="team-grid">
       <div class="team-card">
         <div class="card-icon">✦</div>
-        <h3>Editorial Team</h3>
-        <p>Primary research and content drafting from team members with direct Maine cannabis industry experience.</p>
+        <h3>Steve Kelly</h3>
+        <p>Founder & Publisher. Founded Maine Dispensary Guide after working with Maine cannabis operators through the early adult-use rollout. Primary research and content direction.</p>
         <ul class="credential-list">
-          <li>Industry-reviewed content</li>
-          <li>Primary research from OCP sources</li>
-          <li>Maine-specific focus</li>
+          <li>Maine cannabis industry since 2020</li>
+          <li>Primary source research from OCP</li>
+          <li>Direct operator case studies</li>
         </ul>
       </div>
       <div class="team-card">
         <div class="card-icon">◆</div>
-        <h3>Compliance Review</h3>
-        <p>All regulatory content is verified by a Maine-licensed cannabis compliance professional before publication.</p>
+        <h3>Calvin Waters</h3>
+        <p>Licensing & Compliance Analyst. Covers OCP regulatory analysis, municipal authorization, and compliance procedures for Maine cannabis operators.</p>
         <ul class="credential-list">
-          <li>Maine OCP licensee</li>
-          <li>Cannabis compliance specialization</li>
-          <li>Regulatory content review</li>
+          <li>Maine OCP regulatory analysis</li>
+          <li>Municipal opt-in process research</li>
+          <li>License application procedures</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="card-icon">◈</div>
+        <h3>Margaret Finch</h3>
+        <p>Finance & Taxation Analyst. Covers 280E tax strategy, dispensary economics, and financial planning for Maine cannabis operators.</p>
+        <ul class="credential-list">
+          <li>Cannabis business finance research</li>
+          <li>280E deduction strategy analysis</li>
+          <li>Maine operator financial benchmarking</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="card-icon">▲</div>
+        <h3>Eliot Nash</h3>
+        <p>Market & Real Estate Analyst. Covers Maine cannabis market analysis, municipal zoning, and site selection for dispensary operators.</p>
+        <ul class="credential-list">
+          <li>Maine cannabis market research</li>
+          <li>Municipal zoning analysis</li>
+          <li>Real estate and site selection</li>
         </ul>
       </div>
     </div>

@@ -4,14 +4,21 @@ import Callout from '../../components/Callout.astro';
 import NextStep from '../../components/NextStep.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Maine Dispensary Guide Editorial Team", publishDate: "2026-01-16", modifiedDate: "2026-04-19", section: "Business Essentials" };
+const article = {
+  author: "Margaret Finch",
+  authorTitle: "Finance & Taxation Analyst",
+  authorId: "margaret-finch",
+  publishDate: "2026-01-16",
+  modifiedDate: "2026-04-21",
+  section: "Business Essentials"
+};
 const topics = ["finance", "business", "licensing"];
 export const title = "Funding Your Maine Dispensary: A Founder's Guide";
 ---
 
 <Layout
   title="Maine Cannabis Startup Funding"
-  description="Maine cannabis dispensary funding guide. 280E-compliant banking, investor decks, SBA loans, and capital-raising strategies for 2026."
+  description="How to fund your Maine cannabis dispensary: $300K-$850K capital stacks, 280E-compliant banking, investor pitch structure, and SBA loans explained for 2026."
   heroImage="/images/heroes/maine-cannabis-funding-guide.jpg"
   article={article}
   topics={topics}
@@ -263,7 +270,7 @@ section h2, section h3 { margin-top: 1.5rem; }
 section h2:first-child { margin-top: 0; }
 ul, ol { padding-left: 1.5rem; }
 li { margin-bottom: 0.5rem; }
-.disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: #1a1a1a; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 2rem; color: var(--color-disclaimer-text); }
 .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
 .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 .fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }

@@ -5,10 +5,6 @@
  */
 
 const { execSync } = require('child_process');
-const path = require('path');
-
-// --- Configuration ---
-const HUB_PATH = path.resolve(__dirname, '..', 'BOT_COLLABORATION_HUB.md');
 
 // --- Helpers ---
 

@@ -4,7 +4,9 @@ import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = { 
-  author: "Maine Dispensary Guide Editorial Team", 
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst", 
   publishDate: "2026-01-15", 
   modifiedDate: "2026-04-19", 
   section: "City Guides" 
@@ -14,7 +16,7 @@ const topics = ["city", "market"];
 
 <Layout 
   title="Lewiston, Maine Cannabis Dispensary Guide (2026)" 
-  description="Lewiston, Maine cannabis dispensary guide. Navigate Maine's second-largest city market with insights on local ordinances, market demographics, and business opportunities."
+  description="Open a cannabis dispensary in Lewiston, Maine — Maine's second-largest city with fewer competitors than Portland. Local ordinances, market demographics, and OCP licensing requirements for 2026."
   heroImage="/images/heroes/lewiston-dispensary-guide.jpg"
   article={article}
   topics={topics}
@@ -243,7 +245,7 @@ const topics = ["city", "market"];
   th { background: var(--color-background); }
   ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
   .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
   .fact-box table { margin: 0; }

@@ -12,7 +12,7 @@ interface Props {
   section?: string;
 }
 
-const { currentPath, currentTopics = [], section = 'Technical Guides' } = Astro.props;
+const { currentPath, currentTopics = [] } = Astro.props;
 
 const allGuides: RelatedGuide[] = [
   { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/", topics: ["city", "market"], section: "City Guide" },

@@ -5,7 +5,9 @@ import Faq from '../../components/Faq.astro';
 import authors from '../../data/authors.json';
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
   publishDate: "2026-04-20",
   modifiedDate: "2026-04-20",
   section: "Policy & Legislation"
@@ -190,7 +192,7 @@ const tags = ["policy-watch"];
     </section>
   </article>
 
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
     {JSON.stringify({
       "@context": "https://schema.org",
       "@type": "NewsArticle",

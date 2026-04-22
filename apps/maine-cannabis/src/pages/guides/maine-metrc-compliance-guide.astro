@@ -6,7 +6,9 @@ import Faq from '../../components/Faq.astro';
 export const title = "Maine Metrc Compliance Guide";
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
   publishDate: "2026-04-18",
   modifiedDate: "2026-04-18",
   section: "Operations & Compliance"
@@ -253,7 +255,7 @@ Metrc regularly updates its platform and Maine-specific requirements. Subscribe 
 
 </article>
 
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
   {"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/metrc-tracking.jpg","description":"Maine cannabis METRC seed-to-sale tracking flow","width":800,"height":592}
   </script>
 </Layout>
@@ -267,7 +269,7 @@ section h2 { margin-top: 0; padding-top: 1rem; }
 section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
 ul, ol { padding-left: 1.5rem; }
 li { margin-bottom: 0.5rem; }
-.disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: #1a1a1a; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
 table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
 th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
 th { background: var(--color-background); }

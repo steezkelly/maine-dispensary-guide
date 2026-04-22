@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
-const pagesPath = path.join(projectRoot, 'src/pages/guides');
+const pagesPath = path.join(projectRoot, 'apps/maine-cannabis/src/pages/guides');
 
 const glossaryMap = {
     "Metrc": "/glossary/#metrc",

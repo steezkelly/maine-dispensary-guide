@@ -7,7 +7,9 @@ const editorialAuthor = authors.find(a => a.id === 'editorial-team');
 const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
   publishDate: "2026-04-19",
   modifiedDate: "2026-04-19",
   section: "Policy & Legislation"
@@ -235,7 +237,7 @@ const tags = ["policy-watch"];
     </section>
   </article>
 
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
     {JSON.stringify({
       "@context": "https://schema.org",
       "@type": "NewsArticle",

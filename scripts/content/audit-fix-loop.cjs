@@ -48,14 +48,6 @@ function log(msg) {
   console.log(msg);
 }
 
-function runCommand(cmd, timeout = 120000) {
-  try {
-    return execSync(cmd, { encoding: 'utf8', timeout, stdio: 'pipe' });
-  } catch (err) {
-    return err.stdout || err.message;
-  }
-}
-
 function countWords(content) {
   const text = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   return text.split(' ').filter(w => w.length > 0).length;

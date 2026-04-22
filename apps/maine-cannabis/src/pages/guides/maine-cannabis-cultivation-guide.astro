@@ -3,7 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
-  author: "Maine Dispensary Guide Editorial Team",
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
   publishDate: "2026-01-20",
   modifiedDate: "2026-04-14",
   section: "Operations & Technology"
@@ -349,7 +351,7 @@ const faqData = {
     </section>
   </article>
 
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
   {"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/cultivation-tiers.jpg","description":"Maine cannabis cultivation license tiers: Tier 1 through Tier 4 with canopy size comparison","width":800,"height":592}
   </script>
 </Layout>
@@ -369,7 +371,7 @@ const faqData = {
   li { margin-bottom: 0.75rem; }
   .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
   .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: var(--color-disclaimer-text); }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
   .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }

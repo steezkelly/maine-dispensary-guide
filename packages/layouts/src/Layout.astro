@@ -1,17 +1,10 @@
 ---
-import Breadcrumbs from '@network/ui/Breadcrumbs.astro';
-import PineTree from '@network/ui/PineTree.astro';
-import Leaf from '@network/ui/Leaf.astro';
-import GuideSidebar from '@network/ui/GuideSidebar.astro';
-
-declare global {
-  interface Window {
-    dataLayer: Record<string, unknown>[];
-  }
-}
-import Search from '@network/ui/Search.astro';
-import RelatedArticles from '@network/ui/RelatedArticles.astro';
-import siteConfig from '@network/maine-cannabis/src/data/site-config.json';
+import Breadcrumbs from '@network/ui/Breadcrumbs';
+import PineTree from '@network/ui/PineTree';
+import Leaf from '@network/ui/Leaf';
+import GuideSidebar from '@network/ui/GuideSidebar';
+import Search from '@network/ui/Search';
+import RelatedArticles from '@network/ui/RelatedArticles';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
@@ -30,6 +23,9 @@ interface Breadcrumb {
 interface Props {
   title: string;
   description?: string;
+  siteName: string;
+  siteUrl: string;
+  analyticsId?: string;
   stateName?: string;
   isHub?: boolean;
   heroImage?: string;
@@ -42,8 +38,11 @@ interface Props {
 
 const { 
   title, 
-  description = siteConfig.defaultDescription || "Your complete guide to opening and operating a cannabis dispensary.",
-  stateName = siteConfig.stateName,
+  description = "Your complete guide to opening and operating a cannabis dispensary.",
+  siteName: siteNameProp,
+  siteUrl: siteUrlProp,
+  analyticsId = "G-XXXXXXXXXX",
+  stateName = "Maine",
   isHub = false,
   heroImage,
   article,
@@ -54,9 +53,9 @@ const {
 } = Astro.props;
 
 // Site Metadata & State
-const siteName = isHub ? siteConfig.siteName : `${siteConfig.stateName} Dispensary Guide`;
-const siteUrl = siteConfig.siteUrl;
-const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const siteName = isHub ? siteNameProp : `${stateName} Dispensary Guide`;
+const siteUrl = siteUrlProp;
+const fullTitle = title.includes(siteNameProp) ? title : `${title} | ${siteName}`;
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 ---
@@ -101,15 +100,15 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": siteConfig.siteName,
-        "url": siteConfig.siteUrl,
+        "name": siteName,
+        "url": siteUrl,
         "description": "Your complete guide to opening and operating a cannabis dispensary.",
         "publisher": {
           "@type": "Organization",
-          "name": siteConfig.siteName,
+          "name": siteName,
           "logo": {
             "@type": "ImageObject",
-            "url": siteConfig.siteUrl + "/favicon.svg"
+            "url": siteUrl + "/favicon.svg"
           }
         }
       }
@@ -124,14 +123,14 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         "image": heroImage,
         "author": {
           "@type": "Organization",
-          "name": article.author || siteConfig.siteName
+          "name": article.author || siteName
         },
         "publisher": {
           "@type": "Organization",
-          "name": siteConfig.siteName,
+          "name": siteName,
           "logo": {
             "@type": "ImageObject",
-            "url": siteConfig.siteUrl + "/favicon.svg"
+            "url": siteUrl + "/favicon.svg"
           }
         },
         "datePublished": article.publishDate,
@@ -182,14 +181,14 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     </script>
 
     <!-- Google Analytics GA4 — Replace GA_MEASUREMENT_ID with your measurement ID -->
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`}></script>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}></script>
     <script>
       // @ts-nocheck - GA4 dataLayer global
       window.dataLayer = window.dataLayer || [];
       // @ts-ignore
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', siteConfig.analyticsId);
+      gtag('config', analyticsId);
     </script>
   </head>
   <body>
