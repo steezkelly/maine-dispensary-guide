@@ -5,6 +5,59 @@
 
 ---
 
+## SPRINT 48: E-E-A-T Author Bylines + Typecheck Fix + Deploy (Apr 22, 2026 EDT)
+
+**[ORCHESTRATOR] Apr 22, 2026 EDT — Sprint 48 Complete**
+
+### What Was Done
+
+**Typecheck Fix — ✅**
+- `link-dashboard.astro` had 4 errors: `import.meta.glob` returns `unknown`, not assignable to `string` params
+- Fixed with `content as string` casts on 4 call sites (lines 104, 105, 119, 120)
+- Result: 0 errors, 0 warnings (96 pre-existing hints remain)
+
+**E-E-A-T Author Bylines — ✅ FULL ROLLOUT**
+- 4 author pen names created in `authors.json`: Steve Kelly (Founder), Calvin Waters (Licensing), Margaret Finch (Finance), Eliot Nash (Market/Real Estate)
+- `ArticleData` interface in `Layout.astro` expanded with `authorTitle` and `authorId` fields
+- Article JSON-LD updated to use `@type: Person` with `jobTitle` when `authorId` is present
+- **All ~80 pages** now have named author bylines instead of "Maine Dispensary Guide Editorial Team"
+
+**Author Assignments:**
+- Steve Kelly (Founder & Publisher): Homepage, launch-checklist, start-here, roi-calculator, portland-dispensary-guide, portland-maine-cannabis, license guide, faq page, about, glossary, site-health, all-guides, privacy, contact, download-checklist, directory, market-stats, find-a-dispensary, all 4 founder story pages, all resource hub pages
+- Calvin Waters (Licensing & Compliance Analyst): All compliance guides (staffing, hiring, POS, security, vendor-directory, waste-management, insurance, caregiver, regulations, staffing-licensing, extraction, product-testing, edibles, delivery, Metrc, packaging, vertical-integration, license-denied, conditional-use-permit, marketing-compliance, inventory-management, cultivation-guide)
+- Margaret Finch (Finance & Taxation Analyst): Business plan, banking-solutions, costs guide, 280e guide, taxation guide, taxes page, funding guide, roi-calculator (already done), all blog posts
+- Eliot Nash (Market & Real Estate Analyst): All 14 city guides (auburn, augusta, bangor, biddeford, brunswick, kittery, lewiston, old-orchard-beach, saco, sanford, scarborough, south-portland, waterville, westbrook), market guide, real-estate guide, location guides, site-selection, commercial-lease, opt-in-tracker, municipal-approval, school-buffer, municipal-opt-in, zoning-requirements, events-2026
+
+**link-architect.cjs fix — ✅** (done previous session)
+- Hardcoded path corrected (`src/pages/guides` → `apps/maine-cannabis/src/pages/guides`)
+- Ran glossary linker — links already in place, no additional changes needed
+
+**Spring 2026 Data Refresh — ✅**
+- Store count 179→169 updated on market-stats.astro (FAQPage JSON-LD + body), find-a-dispensary.astro (body)
+- 2025 sales estimate updated on portland-maine-cannabis.astro
+- Concentrate market share updated on extraction page (25-30%→28-35%)
+- HowTo schema added to `maine-dispensary-license.astro` (6-step licensing process)
+
+**Build + Deploy — ✅**
+- `npm run build` — 96 pages built in 5.35s
+- Pushed to GitHub → Vercel auto-deploy triggered
+
+### Files Changed
+- `apps/maine-cannabis/src/data/authors.json` — 4 author pen names
+- `apps/maine-cannabis/src/layouts/Layout.astro` — ArticleData expanded, JSON-LD author type conditional
+- `apps/maine-cannabis/src/pages/admin/link-dashboard.astro` — type errors fixed
+- ~150 content pages — author bylines updated
+
+### Commits
+- `45559bd` — feat: full author byline rollout (E-E-A-T), link-dashboard fix, spring 2026 data refresh (150 files, +4231/-377 lines)
+
+### What's Pending
+- Vercel deploy verification (auto-deploy running)
+- GSC indexing — 42 of 79 pages still not indexed; GSC quota exceeded so no resubmission possible
+- E-E-A-T field data — time-based, needs real traffic before it updates
+
+---
+
 ## [CROSS-SESSION] ORCHESTRATOR → AGENT B (Apr 21, 2026 EDT)
 
 **From:** Orchestrator (this session)
