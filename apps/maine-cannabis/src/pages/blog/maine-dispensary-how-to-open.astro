@@ -338,47 +338,45 @@ const topics = ["licensing", "how-to", "start-here"];
     </section>
   </article>
 
-  <script type="application/ld+json" is:inline>
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to Open a Dispensary in Maine",
-      "description": "Step-by-step guide to opening a licensed cannabis dispensary in Maine, from choosing a location to passing your first inspection.",
-      "totalTime": "PT18H0M",
-      "step": [
-        {
-          "@type": "HowToStep",
-          "name": "Choose Your Location",
-          "text": "Confirm your municipality allows dispensaries and find a location that meets the 1,000-foot buffer from schools. Portland and Bangor have established processes; rural towns offer less competition.",
-          "position": 1
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Get Municipal Approval",
-          "text": "Submit a zoning application to your city council or planning board. Provide site plans, traffic assessment, security plan, and community benefit statement. Allow 45-180 days.",
-          "position": 2
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Complete the OCP Application",
-          "text": "Submit your adult-use dispensary application to the Maine Office of Cannabis Policy. Include Articles of Incorporation, municipal authorization letter, facility plan, security specs, and METRC seed-to-sale tracking plan.",
-          "position": 3
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Pass the Facility Inspection",
-          "text": "OCP inspectors verify your security systems, camera placement, product handling areas, METRC hardware, and building code compliance. Prepare to match your application exactly.",
-          "position": 4
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Operate and Stay Compliant",
-          "text": "Maintain daily METRC logging, handle cash securely since cannabis is federally illegal and banks limit accounts, and keep records for five years for OCP audits.",
-          "position": 5
-        }
-      ]
-    })}
-  </script>
+  <Fragment is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Open a Dispensary in Maine",
+    "description": "Step-by-step guide to opening a licensed cannabis dispensary in Maine, from choosing a location to passing your first inspection.",
+    "totalTime": "PT18H0M",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Choose Your Location",
+        "text": "Confirm your municipality allows dispensaries and find a location that meets the 1,000-foot buffer from schools. Portland and Bangor have established processes; rural towns offer less competition.",
+        "position": 1
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Get Municipal Approval",
+        "text": "Submit a zoning application to your city council or planning board. Provide site plans, traffic assessment, security plan, and community benefit statement. Allow 45-180 days.",
+        "position": 2
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Complete the OCP Application",
+        "text": "Submit your adult-use dispensary application to the Maine Office of Cannabis Policy. Include Articles of Incorporation, municipal authorization letter, facility plan, security specs, and METRC seed-to-sale tracking plan.",
+        "position": 3
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Pass the Facility Inspection",
+        "text": "OCP inspectors verify your security systems, camera placement, product handling areas, METRC hardware, and building code compliance. Prepare to match your application exactly.",
+        "position": 4
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Operate and Stay Compliant",
+        "text": "Maintain daily METRC logging, handle cash securely since cannabis is federally illegal and banks limit accounts, and keep records for five years for OCP audits.",
+        "position": 5
+      }
+    ]
+  })} />
 </Layout>
 
 <style>
