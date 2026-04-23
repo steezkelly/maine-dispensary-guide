@@ -15,16 +15,8 @@ const article = {
 };
 
 const topics = ["finance", "compliance", "business"];
----
 
-<Layout
-  title="Maine Cannabis Taxes 2026: Complete Tax Guide for Operators"
-  description="Complete guide to Maine cannabis taxes in 2026 — retail tax rates, excise taxes, sales tax, 280E deductions, and the new 14% retail tax effective January 1, 2026."
-  heroImage="/images/heroes/maine-cannabis-taxes-2026.jpg"
-  article={article}
-  topics={topics}
->
-<script type="application/ld+json" set:text={JSON.stringify({
+const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -93,7 +85,17 @@ const topics = ["finance", "compliance", "business"];
       }
     }
   ]
-})}</script>
+});
+---
+
+<Layout
+  title="Maine Cannabis Taxes 2026: Complete Tax Guide for Operators"
+  description="Complete guide to Maine cannabis taxes in 2026 — retail tax rates, excise taxes, sales tax, 280E deductions, and the new 14% retail tax effective January 1, 2026."
+  heroImage="/images/heroes/maine-cannabis-taxes-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <article>
 

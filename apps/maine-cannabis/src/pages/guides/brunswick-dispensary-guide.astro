@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the local licensing fee for a Brunswick cannabis dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Town of Brunswick charges $2,500 annually for a local cannabis retail license, in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs run approximately $3,000-$4,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the Bowdoin College student market affect cannabis sales in Brunswick?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bowdoin College creates a perpetual renewal effect: approximately 4,300 students of legal purchasing age arrive every four years with no prior brand loyalty. The college also employs 1,200 faculty and staff. This institutional effect creates a built-in customer acquisition advantage that markets without major colleges cannot match."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I operate a cannabis delivery service from Brunswick?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Delivery is permitted for licensed adult-use dispensaries in Maine. A delivery operation based in Brunswick can serve customers throughout the Midcoast region — including Bath, Topsham, Harpswell, and Freeport — areas that lack sufficient dispensary coverage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many dispensaries can Brunswick support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Brunswick and the greater Midcoast area (40,000+ residents) have 5-7 combined dispensaries. This is moderate concentration. A differentiated operator with delivery capability or strong product selection can still find room—but the consolidation environment means efficiency matters more than expansion."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the typical startup cost for a Brunswick dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total startup investment is $225,000-$450,000 before opening. This includes 1,200-1,500 sq ft buildout ($175,000-$325,000), opening inventory ($35,000-$80,000), licensing fees ($3,000-$4,000), and working capital. Annual operating costs run $160,000-$270,000."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -224,52 +271,7 @@ const topics = ["city", "market"];
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the local licensing fee for a Brunswick cannabis dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Town of Brunswick charges $2,500 annually for a local cannabis retail license, in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs run approximately $3,000-$4,000."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does the Bowdoin College student market affect cannabis sales in Brunswick?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Bowdoin College creates a perpetual renewal effect: approximately 4,300 students of legal purchasing age arrive every four years with no prior brand loyalty. The college also employs 1,200 faculty and staff. This institutional effect creates a built-in customer acquisition advantage that markets without major colleges cannot match."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I operate a cannabis delivery service from Brunswick?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Delivery is permitted for licensed adult-use dispensaries in Maine. A delivery operation based in Brunswick can serve customers throughout the Midcoast region — including Bath, Topsham, Harpswell, and Freeport — areas that lack sufficient dispensary coverage."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How many dispensaries can Brunswick support?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Brunswick and the greater Midcoast area (40,000+ residents) have 5-7 combined dispensaries. This is moderate concentration. A differentiated operator with delivery capability or strong product selection can still find room—but the consolidation environment means efficiency matters more than expansion."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the typical startup cost for a Brunswick dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Total startup investment is $225,000-$450,000 before opening. This includes 1,200-1,500 sq ft buildout ($175,000-$325,000), opening inventory ($35,000-$80,000), licensing fees ($3,000-$4,000), and working capital. Annual operating costs run $160,000-$270,000."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

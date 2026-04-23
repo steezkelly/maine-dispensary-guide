@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries currently operate in Waterville?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Waterville has 2-3 licensed adult-use dispensaries as of 2026. This is modest competition for a market serving a regional area of 50,000+ residents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Waterville unique for cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Waterville is central Maine's commercial hub with notably affordable commercial rents ($10-15/sq ft). The Colby College $500M investment is attracting high-income professionals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best location for a dispensary in Waterville?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Main Street offers proximity to Colby College. Kennedy Memorial Drive offers easier parking and regional capture. Airport area offers lowest rent for delivery-focused operations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Waterville require a local cannabis license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Waterville requires a local license in addition to the Maine OCP state license. Local fees range from $2,000-2,500 annually."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Waterville compare to Lewiston for dispensary opportunities?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lewiston has 5-7 dispensaries for 36,000 residents. Waterville has 2-3 for 16,000 city residents but serves 50,000+ regionally. Waterville's lower rents ($10-15 vs $14-20) mean better margins."
+      }
+    }
+  ]
+});
 ---
 
 <Layout title="Waterville Maine Dispensary Guide" description="Complete guide to opening a cannabis dispensary in Waterville, Maine. Central Maine market opportunities, local zoning, and OCP license requirements." heroImage="/images/heroes/waterville-dispensary-guide.jpg" article={article} topics={topics}>
@@ -229,52 +276,7 @@ const topics = ["city", "market"];
   </section>
 </article>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How many dispensaries currently operate in Waterville?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Waterville has 2-3 licensed adult-use dispensaries as of 2026. This is modest competition for a market serving a regional area of 50,000+ residents."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What makes Waterville unique for cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Waterville is central Maine's commercial hub with notably affordable commercial rents ($10-15/sq ft). The Colby College $500M investment is attracting high-income professionals."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the best location for a dispensary in Waterville?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Main Street offers proximity to Colby College. Kennedy Memorial Drive offers easier parking and regional capture. Airport area offers lowest rent for delivery-focused operations."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does Waterville require a local cannabis license?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Waterville requires a local license in addition to the Maine OCP state license. Local fees range from $2,000-2,500 annually."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does Waterville compare to Lewiston for dispensary opportunities?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Lewiston has 5-7 dispensaries for 36,000 residents. Waterville has 2-3 for 16,000 city residents but serves 50,000+ regionally. Waterville's lower rents ($10-15 vs $14-20) mean better margins."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 </Layout>
 

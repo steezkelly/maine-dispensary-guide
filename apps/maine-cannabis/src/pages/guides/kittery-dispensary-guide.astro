@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries currently operate in Kittery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kittery has 2-3 licensed adult-use dispensaries as of 2026. This is modest competition for a market that serves significant New Hampshire border traffic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Kittery unique for cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kittery's position directly across from Portsmouth, New Hampshire makes it the first Maine exit for NH residents. With 150,000+ Seacoast residents within 30 minutes, Kittery captures significant cross-border traffic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best location for a dispensary in Kittery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Route 1 bypass offers maximum visibility to highway traffic and outlet visitors. Pepperrell Road area is best for capturing NH commuters before they reach the outlet district."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Kittery require a local cannabis license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kittery requires a town-specific local license in addition to the Maine OCP state license. The local fee is $2,500 annually."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Kittery compare to Portland for dispensary opportunities?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Portland has 12+ dispensaries for 68,000 residents. Kittery has 2-3 for 10,000 permanent residents but serves a NH feeder market of 150,000+. The competitive ratio per addressable customer is better in Kittery — but the consolidation environment means operators should prioritize efficiency and retention over rapid expansion."
+      }
+    }
+  ]
+});
 ---
 
 <Layout title="Kittery Maine Dispensary Guide" description="Kittery, Maine cannabis dispensary guide. 2026 market opportunities, strategic locations, local fee structures, and OCP investment requirements." heroImage="/images/heroes/kittery-dispensary-guide.jpg" article={article} topics={topics}>
@@ -204,52 +251,7 @@ const topics = ["city", "market"];
   </section>
 </article>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How many dispensaries currently operate in Kittery?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Kittery has 2-3 licensed adult-use dispensaries as of 2026. This is modest competition for a market that serves significant New Hampshire border traffic."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What makes Kittery unique for cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Kittery's position directly across from Portsmouth, New Hampshire makes it the first Maine exit for NH residents. With 150,000+ Seacoast residents within 30 minutes, Kittery captures significant cross-border traffic."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the best location for a dispensary in Kittery?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Route 1 bypass offers maximum visibility to highway traffic and outlet visitors. Pepperrell Road area is best for capturing NH commuters before they reach the outlet district."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does Kittery require a local cannabis license?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Kittery requires a town-specific local license in addition to the Maine OCP state license. The local fee is $2,500 annually."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does Kittery compare to Portland for dispensary opportunities?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Portland has 12+ dispensaries for 68,000 residents. Kittery has 2-3 for 10,000 permanent residents but serves a NH feeder market of 150,000+. The competitive ratio per addressable customer is better in Kittery — but the consolidation environment means operators should prioritize efficiency and retention over rapid expansion."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 </Layout>
 

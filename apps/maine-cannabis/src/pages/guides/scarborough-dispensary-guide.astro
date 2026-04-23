@@ -12,6 +12,53 @@ const article = {
 };
 const topics = ["city", "market"];
 export const title = "Scarborough Dispensary Guide";
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "When might Scarborough open to cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scarborough has no announced timeline. Changes typically take 18-24 months from first council discussion to a vote. The key variable is whether operators or advocates actively push the issue."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I deliver cannabis to Scarborough from Portland?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine's adult-use regulations permit licensed dispensaries to deliver to any address in the state. A Portland or South Portland dispensary can legally deliver to Scarborough addresses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is cultivation permitted in Scarborough even without town opt-in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Under current Maine law, cultivation licenses are issued by the state and do not require municipal opt-in. You can legally operate a cultivation facility in Scarborough with only a state license."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What would a Scarborough dispensary license cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "State-level licensing fees through Maine OCP are $500-$1,500 for adult-use retail. Scarborough has not established a local licensing fee because retail is not currently permitted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Scarborough a good market for a first-time operator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Risky but potentially high-reward. Scarborough's high household income ($86K median) and commercial traffic suggest strong purchasing power, but Portland's 12+ dispensaries are only 10-15 minutes away."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -197,52 +244,7 @@ export const title = "Scarborough Dispensary Guide";
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "When might Scarborough open to cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Scarborough has no announced timeline. Changes typically take 18-24 months from first council discussion to a vote. The key variable is whether operators or advocates actively push the issue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I deliver cannabis to Scarborough from Portland?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine's adult-use regulations permit licensed dispensaries to deliver to any address in the state. A Portland or South Portland dispensary can legally deliver to Scarborough addresses."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is cultivation permitted in Scarborough even without town opt-in?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Under current Maine law, cultivation licenses are issued by the state and do not require municipal opt-in. You can legally operate a cultivation facility in Scarborough with only a state license."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What would a Scarborough dispensary license cost?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "State-level licensing fees through Maine OCP are $500-$1,500 for adult-use retail. Scarborough has not established a local licensing fee because retail is not currently permitted."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Scarborough a good market for a first-time operator?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Risky but potentially high-reward. Scarborough's high household income ($86K median) and commercial traffic suggest strong purchasing power, but Portland's 12+ dispensaries are only 10-15 minutes away."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

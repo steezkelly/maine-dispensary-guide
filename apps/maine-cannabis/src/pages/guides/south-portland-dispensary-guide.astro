@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the local licensing fee for a South Portland cannabis dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The City of South Portland charges $3,500 annually for a local cannabis retail license — the highest local fee in the Portland metro area. This is in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs are approximately $4,000-$5,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does South Portland's 2% local cannabis tax work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "South Portland is the only Maine municipality with a local cannabis tax. The 2% tax is applied at the point of sale on the total purchase price. It must be collected by the dispensary and remitted to the city monthly or quarterly. The tax reduces effective revenue by 2%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many dispensaries can South Portland support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "South Portland (26,000 residents) has 4-5 licensed dispensaries. Portland (68,000 residents) has 12+. On a per-capita basis, South Portland is slightly less saturated. The market can likely support 1-2 additional stores, particularly in the Waterfront or Industrial Park areas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best neighborhoods for a South Portland dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine Mall Road corridor offers highest traffic and visibility. Broadway (Route 1) provides good traffic at lower rent. Waterfront/Downtown serves local community feel. Industrial Park has lowest rent and large-format spaces — best for delivery hub."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the typical startup cost for a South Portland dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total startup investment is $250,000-$450,000 before opening. This includes 1,200-1,500 sq ft buildout ($175,000-$350,000), opening inventory ($30,000-$75,000), licensing fees ($4,000-$5,000), and working capital."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -253,52 +300,7 @@ const topics = ["city", "market"];
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the local licensing fee for a South Portland cannabis dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The City of South Portland charges $3,500 annually for a local cannabis retail license — the highest local fee in the Portland metro area. This is in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs are approximately $4,000-$5,000."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does South Portland's 2% local cannabis tax work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "South Portland is the only Maine municipality with a local cannabis tax. The 2% tax is applied at the point of sale on the total purchase price. It must be collected by the dispensary and remitted to the city monthly or quarterly. The tax reduces effective revenue by 2%."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How many dispensaries can South Portland support?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "South Portland (26,000 residents) has 4-5 licensed dispensaries. Portland (68,000 residents) has 12+. On a per-capita basis, South Portland is slightly less saturated. The market can likely support 1-2 additional stores, particularly in the Waterfront or Industrial Park areas."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best neighborhoods for a South Portland dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Maine Mall Road corridor offers highest traffic and visibility. Broadway (Route 1) provides good traffic at lower rent. Waterfront/Downtown serves local community feel. Industrial Park has lowest rent and large-format spaces — best for delivery hub."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the typical startup cost for a South Portland dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Total startup investment is $250,000-$450,000 before opening. This includes 1,200-1,500 sq ft buildout ($175,000-$350,000), opening inventory ($30,000-$75,000), licensing fees ($4,000-$5,000), and working capital."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

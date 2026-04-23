@@ -11,6 +11,86 @@ const article = {
   section: "Business Essentials"
 };
 const topics = ["real-estate"];
+
+const imageObjectJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ImageObject",
+  "contentUrl": "https://mainedispensaryguide.com/images/infographics/zoning-requirements.jpg",
+  "description": "Maine cannabis real estate zoning requirements",
+  "width": 800,
+  "height": 592
+});
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does 'municipal opt-in' mean for dispensary zoning in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under 28-B M.R.S. §301, Maine cannabis retail is prohibited in any municipality that has not affirmatively passed a local ordinance permitting it. This opt-in requirement means the state will not issue a dispensary license for a location in a non-opted-in town, regardless of how well you score on other criteria. As of 2026, roughly 60% of Maine municipalities have opted in, but the map is concentrated in larger cities and coastal communities. Always verify opt-in status before committing to any site."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the school buffer 500 ft or 1,000 ft in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The state default is 1,000 ft, measured property line to property line. However, municipalities may reduce this to 500 ft through their local cannabis ordinance. Several larger markets — including Portland and Bangor — have adopted the 500 ft buffer, which meaningfully expands the number of compliant sites in dense urban areas. Check the specific ordinance for your target municipality; do not assume the state default applies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I open a dispensary in a residential zone in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Cannabis retail is categorically prohibited in residential zoning districts throughout Maine. You must locate in a commercially or industrially zoned parcel that is specifically included in the municipality's cannabis ordinance as a permitted zone. Some municipalities restrict cannabis retail to a subset of commercial zones — for example, allowing it in general commercial but not in neighborhood commercial districts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need the local permit before I apply for the state cannabis license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, in practical terms. The Maine OCP requires evidence of local approval as part of its license application. The OCP will accept a conditional local approval (issued subject to state licensure) in some cases, but you must be actively pursuing — and typically have in hand — your local permit before the OCP will finalize your state license. This means you need site control (a signed lease) before you can apply locally, and you need local approval before the OCP will complete state review."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take to get a zoning permit for a Maine dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Timelines vary widely. Municipalities with simple administrative licensing processes can issue permits in 2–6 weeks for fully compliant applications. Municipalities that require a conditional use permit with a public hearing typically run 45–90 days from application to decision. If the application is contested or the planning board continues the hearing, the process can extend to 3–6 months. Budget for the longer end when building your launch timeline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get a variance to locate within the school buffer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The school buffer requirement is a state statutory prohibition under 28-B M.R.S. §301, not a zoning standard subject to local variance. No municipality can grant a variance to bring a cannabis retail location within the required buffer distance of a school. If a site fails the buffer test, you must find a different site."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if the municipality opts out after I open?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Existing licensed dispensaries are typically grandfathered under state law when a municipality opts out. However, you may face restrictions on expansions, relocations, or license transfers within the municipality. You should also expect local political hostility that can affect your operating environment. For this reason, many operators prefer markets with well-established, community-supported opt-in ordinances rather than those where the opt-in passed narrowly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I find out which Maine towns allow dispensaries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Maine Office of Cannabis Policy publishes a municipal opt-in list on its website. Our Maine Cannabis Opt-In Tracker consolidates this data with additional notes on ordinance conditions, spacing requirements, and local permit processes. Check both sources, and always confirm directly with the municipality, since the OCP list can lag behind recent votes."
+      }
+    }
+  ]
+});
 ---
 <Layout
   title="Maine Cannabis Real Estate: How to Find a Compliant Dispensary Location (2026)"
@@ -330,78 +410,9 @@ const topics = ["real-estate"];
   </section>
 </article>
 
-<script type="application/ld+json" set:text={JSON.stringify({"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/zoning-requirements.jpg","description":"Maine cannabis real estate zoning requirements","width":800,"height":592})}></script>
+<script type="application/ld+json" set:html={imageObjectJsonLd} is:inline></script>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What does 'municipal opt-in' mean for dispensary zoning in Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Under 28-B M.R.S. §301, Maine cannabis retail is prohibited in any municipality that has not affirmatively passed a local ordinance permitting it. This opt-in requirement means the state will not issue a dispensary license for a location in a non-opted-in town, regardless of how well you score on other criteria. As of 2026, roughly 60% of Maine municipalities have opted in, but the map is concentrated in larger cities and coastal communities. Always verify opt-in status before committing to any site."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is the school buffer 500 ft or 1,000 ft in Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The state default is 1,000 ft, measured property line to property line. However, municipalities may reduce this to 500 ft through their local cannabis ordinance. Several larger markets — including Portland and Bangor — have adopted the 500 ft buffer, which meaningfully expands the number of compliant sites in dense urban areas. Check the specific ordinance for your target municipality; do not assume the state default applies."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I open a dispensary in a residential zone in Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Cannabis retail is categorically prohibited in residential zoning districts throughout Maine. You must locate in a commercially or industrially zoned parcel that is specifically included in the municipality's cannabis ordinance as a permitted zone. Some municipalities restrict cannabis retail to a subset of commercial zones — for example, allowing it in general commercial but not in neighborhood commercial districts."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need the local permit before I apply for the state cannabis license?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, in practical terms. The Maine OCP requires evidence of local approval as part of its license application. The OCP will accept a conditional local approval (issued subject to state licensure) in some cases, but you must be actively pursuing — and typically have in hand — your local permit before the OCP will finalize your state license. This means you need site control (a signed lease) before you can apply locally, and you need local approval before the OCP will complete state review."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long does it take to get a zoning permit for a Maine dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Timelines vary widely. Municipalities with simple administrative licensing processes can issue permits in 2–6 weeks for fully compliant applications. Municipalities that require a conditional use permit with a public hearing typically run 45–90 days from application to decision. If the application is contested or the planning board continues the hearing, the process can extend to 3–6 months. Budget for the longer end when building your launch timeline."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I get a variance to locate within the school buffer?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. The school buffer requirement is a state statutory prohibition under 28-B M.R.S. §301, not a zoning standard subject to local variance. No municipality can grant a variance to bring a cannabis retail location within the required buffer distance of a school. If a site fails the buffer test, you must find a different site."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens if the municipality opts out after I open?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Existing licensed dispensaries are typically grandfathered under state law when a municipality opts out. However, you may face restrictions on expansions, relocations, or license transfers within the municipality. You should also expect local political hostility that can affect your operating environment. For this reason, many operators prefer markets with well-established, community-supported opt-in ordinances rather than those where the opt-in passed narrowly."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Where can I find out which Maine towns allow dispensaries?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Maine Office of Cannabis Policy publishes a municipal opt-in list on its website. Our Maine Cannabis Opt-In Tracker consolidates this data with additional notes on ordinance conditions, spacing requirements, and local permit processes. Check both sources, and always confirm directly with the municipality, since the OCP list can lag behind recent votes."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 </Layout>
 
 <style>

@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries currently operate in Old Orchard Beach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Old Orchard Beach has 1-2 licensed adult-use dispensaries as of 2026, making it one of Maine's most underserved cannabis retail markets relative to its seasonal population."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the summer population of Old Orchard Beach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Old Orchard Beach has approximately 8,000 year-round residents but sees its population swell to 100,000+ during peak summer months (June-August)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best locations for a dispensary in Old Orchard Beach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Route 5 corridor offers the best balance of tourist visibility and year-round resident traffic. The pier district maximizes summer exposure but carries seasonal risk."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Old Orchard Beach have different rules than other Maine towns?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Old Orchard Beach follows standard Maine OCP rules for adult-use dispensaries. The town requires a local license in addition to the state OCP license."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does OOB compare to Portland for dispensary opportunities?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Portland has 12+ dispensaries for 68,000 residents. OOB has 1-2 dispensaries for 8,000 permanent residents but serves 100,000+ during summer. The per-capita opportunity is higher in OOB—but the consolidating industry means operators should plan for operational efficiency over aggressive expansion."
+      }
+    }
+  ]
+});
 ---
 
 <Layout title="Old Orchard Beach Maine Dispensary Guide" description="Complete guide to opening a cannabis dispensary in Old Orchard Beach, Maine. Market analysis, seasonal strategy, local zoning, and OCP requirements." heroImage="/images/heroes/old-orchard-beach-dispensary-guide.jpg" article={article} topics={topics}>
@@ -193,52 +240,7 @@ const topics = ["city", "market"];
   </section>
 </article>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How many dispensaries currently operate in Old Orchard Beach?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Old Orchard Beach has 1-2 licensed adult-use dispensaries as of 2026, making it one of Maine's most underserved cannabis retail markets relative to its seasonal population."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the summer population of Old Orchard Beach?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Old Orchard Beach has approximately 8,000 year-round residents but sees its population swell to 100,000+ during peak summer months (June-August)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best locations for a dispensary in Old Orchard Beach?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Route 5 corridor offers the best balance of tourist visibility and year-round resident traffic. The pier district maximizes summer exposure but carries seasonal risk."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does Old Orchard Beach have different rules than other Maine towns?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Old Orchard Beach follows standard Maine OCP rules for adult-use dispensaries. The town requires a local license in addition to the state OCP license."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does OOB compare to Portland for dispensary opportunities?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Portland has 12+ dispensaries for 68,000 residents. OOB has 1-2 dispensaries for 8,000 permanent residents but serves 100,000+ during summer. The per-capita opportunity is higher in OOB—but the consolidating industry means operators should plan for operational efficiency over aggressive expansion."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 </Layout>
 

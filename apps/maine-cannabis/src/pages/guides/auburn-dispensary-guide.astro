@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the local licensing fee for an Auburn cannabis dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The City of Auburn charges $2,500 annually for a local cannabis retail license, in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs run approximately $3,000-$4,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I operate a cannabis delivery service from Auburn?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Delivery is permitted for licensed adult-use dispensaries in Maine. A delivery operation based in Auburn can serve customers throughout the L-A metro and into surrounding underserved towns like Turner and Greene."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many dispensaries can Auburn support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Auburn and the L-A metro (60,000 residents) have 7-10 combined dispensaries. The market is consolidating. A differentiated operator with strong product selection and competitive pricing can still find room—but operational efficiency matters more than market share expansion."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best neighborhoods for an Auburn dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Minot Avenue (Route 122) offers highest traffic and visibility. The Auburn Mall area provides routine errand traffic and parking. Route 136 in West Auburn has lowest rent and easiest highway access — best for delivery hub or budget positioning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the typical startup cost for an Auburn dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total startup investment is $200,000-$400,000 before opening. This includes 1,200-1,500 sq ft buildout ($150,000-$300,000), opening inventory ($30,000-$75,000), licensing fees ($3,000-$4,000), and working capital."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -206,52 +253,7 @@ const topics = ["city", "market"];
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the local licensing fee for an Auburn cannabis dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The City of Auburn charges $2,500 annually for a local cannabis retail license, in addition to Maine OCP state license fees of $500-$1,500. Total annual licensing costs run approximately $3,000-$4,000."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I operate a cannabis delivery service from Auburn?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Delivery is permitted for licensed adult-use dispensaries in Maine. A delivery operation based in Auburn can serve customers throughout the L-A metro and into surrounding underserved towns like Turner and Greene."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How many dispensaries can Auburn support?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Auburn and the L-A metro (60,000 residents) have 7-10 combined dispensaries. The market is consolidating. A differentiated operator with strong product selection and competitive pricing can still find room—but operational efficiency matters more than market share expansion."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best neighborhoods for an Auburn dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Minot Avenue (Route 122) offers highest traffic and visibility. The Auburn Mall area provides routine errand traffic and parking. Route 136 in West Auburn has lowest rent and easiest highway access — best for delivery hub or budget positioning."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the typical startup cost for an Auburn dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Total startup investment is $200,000-$400,000 before opening. This includes 1,200-1,500 sq ft buildout ($150,000-$300,000), opening inventory ($30,000-$75,000), licensing fees ($3,000-$4,000), and working capital."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

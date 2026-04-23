@@ -12,6 +12,61 @@ const article = {
 };
 const topics = ["city", "market"];
 export const title = "Saco Dispensary Guide";
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "When might Saco open to cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No guaranteed timeline, but trend lines suggest 2-3 years. The 2024 vote was 3-2 against, significantly closer than 2022. Biddeford's success is shifting opinions. Process from council discussion to vote typically takes 18-24 months."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I deliver cannabis to Saco from Biddeford?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine's adult-use regulations permit any licensed dispensary to deliver to any address in the state. The restriction is on operating a retail location within Saco, not on serving Saco customers via delivery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is cultivation legal in Saco without town approval?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine's cultivation license is state-issued. Towns cannot block cultivation under current state law. You need a state license and must comply with local zoning, but no municipal opt-in is required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Saco different from Biddeford for cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Biddeford has 4-5 stores already. Saco has zero. First-mover advantage is significant if Saco opens. Saco demographics are older and more price-conscious, valuing consistency over selection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How close were the Saco council votes on cannabis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "2022 vote was 4-1 against. 2024 vote was 3-2 against. The shift reflects Biddeford's track record and growing awareness that Saco is forgoing tax revenue."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What would a Saco cannabis license cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "State fees are $500-$1,500 for adult-use retail. Saco has no local fee yet because retail isn't permitted. If it opts in, expect a local fee of $1,000-$3,000 annually based on York County comparables."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -215,60 +270,7 @@ export const title = "Saco Dispensary Guide";
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "When might Saco open to cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No guaranteed timeline, but trend lines suggest 2-3 years. The 2024 vote was 3-2 against, significantly closer than 2022. Biddeford's success is shifting opinions. Process from council discussion to vote typically takes 18-24 months."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I deliver cannabis to Saco from Biddeford?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine's adult-use regulations permit any licensed dispensary to deliver to any address in the state. The restriction is on operating a retail location within Saco, not on serving Saco customers via delivery."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is cultivation legal in Saco without town approval?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine's cultivation license is state-issued. Towns cannot block cultivation under current state law. You need a state license and must comply with local zoning, but no municipal opt-in is required."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What makes Saco different from Biddeford for cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Biddeford has 4-5 stores already. Saco has zero. First-mover advantage is significant if Saco opens. Saco demographics are older and more price-conscious, valuing consistency over selection."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How close were the Saco council votes on cannabis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "2022 vote was 4-1 against. 2024 vote was 3-2 against. The shift reflects Biddeford's track record and growing awareness that Saco is forgoing tax revenue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What would a Saco cannabis license cost?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "State fees are $500-$1,500 for adult-use retail. Saco has no local fee yet because retail isn't permitted. If it opts in, expect a local fee of $1,000-$3,000 annually based on York County comparables."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

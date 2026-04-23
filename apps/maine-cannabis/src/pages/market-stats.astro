@@ -9,16 +9,8 @@ const stats = [
   { metric: "Avg. Price Per Gram (Flower)", value: "$6.62", detail: "Stabilized pricing signaling a mature market." },
   { metric: "Regional Concentration", value: "60%", detail: "York and Cumberland counties drive majority revenue." }
 ];
----
 
-<Layout 
-  title="Maine Cannabis Market Stats 2026" 
-  description="Maine's adult-use market generated $246M in 2025. Explore sales data, transaction counts, and retail trends for 2025-2026."
-  heroImage="/images/heroes/market-stats.jpg"
-  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-14", section: "Data" }}
->
-
-<script type="application/ld+json" set:text={JSON.stringify({
+const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -55,7 +47,17 @@ const stats = [
       }
     }
   ]
-})}</script>
+});
+---
+
+<Layout 
+  title="Maine Cannabis Market Stats 2026" 
+  description="Maine's adult-use market generated $246M in 2025. Explore sales data, transaction counts, and retail trends for 2025-2026."
+  heroImage="/images/heroes/market-stats.jpg"
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-14", section: "Data" }}
+>
+
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
   <article class="stats-article">
     <div class="article-header">

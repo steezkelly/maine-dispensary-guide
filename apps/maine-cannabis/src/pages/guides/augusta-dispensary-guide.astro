@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the local licensing fee for an Augusta cannabis dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The City of Augusta charges $2,000-$3,000 annually for a local cannabis retail license. Combined with Maine OCP state license fees ($500-$1,500 annually), total annual licensing costs are approximately $2,500-$4,500."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Augusta have any unique cannabis regulations compared to other Maine cities?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Augusta's regulations follow the standard Maine adult-use framework. What makes Augusta unique is the policy environment: OCP staff are regular customers, and operators have informal access to the people who make regulatory decisions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many dispensaries can Augusta support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Augusta has 3-4 stores for approximately 19,000 city residents and 60,000 metro-area residents. The market is moderately served but not saturated. A differentiated operator with strong product selection and competitive pricing can capture market share."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best locations for an Augusta dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cony Street (Route 9) offers highest traffic and visibility. Water Street / Downtown captures government worker traffic. Western Avenue (Route 17) serves residential neighborhoods at lower rent. I-95 Exit 112 area offers highway visibility for delivery dispatch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What startup investment is required for an Augusta dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total startup investment is $175,000-$350,000 including buildout ($125,000-$225,000), opening inventory ($25,000-$60,000), licensing fees, and working capital. Annual operating costs run $140,000-$250,000."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -204,52 +251,7 @@ const topics = ["city", "market"];
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the local licensing fee for an Augusta cannabis dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The City of Augusta charges $2,000-$3,000 annually for a local cannabis retail license. Combined with Maine OCP state license fees ($500-$1,500 annually), total annual licensing costs are approximately $2,500-$4,500."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does Augusta have any unique cannabis regulations compared to other Maine cities?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Augusta's regulations follow the standard Maine adult-use framework. What makes Augusta unique is the policy environment: OCP staff are regular customers, and operators have informal access to the people who make regulatory decisions."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How many dispensaries can Augusta support?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Augusta has 3-4 stores for approximately 19,000 city residents and 60,000 metro-area residents. The market is moderately served but not saturated. A differentiated operator with strong product selection and competitive pricing can capture market share."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best locations for an Augusta dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Cony Street (Route 9) offers highest traffic and visibility. Water Street / Downtown captures government worker traffic. Western Avenue (Route 17) serves residential neighborhoods at lower rent. I-95 Exit 112 area offers highway visibility for delivery dispatch."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What startup investment is required for an Augusta dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Total startup investment is $175,000-$350,000 including buildout ($125,000-$225,000), opening inventory ($25,000-$60,000), licensing fees, and working capital. Annual operating costs run $140,000-$250,000."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

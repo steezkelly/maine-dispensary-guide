@@ -12,6 +12,53 @@ const article = {
 };
 const topics = ["city", "market"];
 export const title = "Westbrook Dispensary Guide";
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why hasn't Westbrook opted into adult-use cannabis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Westbrook is using a Portland proximity strategy — letting Portland absorb the storefront complexity while serving residents through delivery. Council members prefer to learn from Portland's experience first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I deliver cannabis to Westbrook residents from Portland?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine's adult-use regulations permit any licensed dispensary to deliver to any address in the state. The restriction is on operating a retail location within Westbrook, not on serving Westbrook customers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is cultivation legal in Westbrook without town approval?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine's cultivation license is state-issued. Towns cannot block cultivation under current state law. Your facility must comply with local zoning and state requirements, but no municipal opt-in is required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What would a Westbrook cannabis store need to compete with Portland?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Competitive pricing, convenience advantage (being closer), customer relationships, and product selection that fills gaps in Portland's offering. First-mover advantage is significant if you open before saturation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When might Westbrook open to cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No announced timeline. The process from first council discussion to vote typically takes 18-24 months. The key trigger would be a council champion or outside pressure from operators and residents."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -198,52 +245,7 @@ export const title = "Westbrook Dispensary Guide";
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Why hasn't Westbrook opted into adult-use cannabis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Westbrook is using a Portland proximity strategy — letting Portland absorb the storefront complexity while serving residents through delivery. Council members prefer to learn from Portland's experience first."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I deliver cannabis to Westbrook residents from Portland?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine's adult-use regulations permit any licensed dispensary to deliver to any address in the state. The restriction is on operating a retail location within Westbrook, not on serving Westbrook customers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is cultivation legal in Westbrook without town approval?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine's cultivation license is state-issued. Towns cannot block cultivation under current state law. Your facility must comply with local zoning and state requirements, but no municipal opt-in is required."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What would a Westbrook cannabis store need to compete with Portland?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Competitive pricing, convenience advantage (being closer), customer relationships, and product selection that fills gaps in Portland's offering. First-mover advantage is significant if you open before saturation."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "When might Westbrook open to cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No announced timeline. The process from first council discussion to vote typically takes 18-24 months. The key trigger would be a council champion or outside pressure from operators and residents."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }

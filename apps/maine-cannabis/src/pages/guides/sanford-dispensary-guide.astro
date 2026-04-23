@@ -11,6 +11,53 @@ const article = {
   section: "City Guides"
 };
 const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries currently operate in Sanford?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Two to three licensed adult-use dispensaries currently operate in Sanford. The effective market (Sanford residents plus regional York County customers) is approximately 40,000-50,000 people."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the local licensing fee for a Sanford cannabis dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The City of Sanford charges $2,000-$2,500 annually for a local cannabis retail license. Combined with Maine OCP state license fees ($500-$1,500 annually), total annual licensing costs are approximately $2,500-$4,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I capture New Hampshire customers in Sanford?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Southern New Hampshire (Dover, Rochester, Somersworth) has limited dispensary options and higher prices. A Sanford dispensary is closer and more convenient for NH customers than Portland."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best location strategy for Sanford?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Route 109 / Main Street offers highest traffic and visibility. The I-95 Exit 19 area captures highway travelers and NH crossover. Route 11 in western Sanford serves residential neighborhoods at lower rent."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What startup investment is required for a Sanford dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total startup investment is $150,000-$300,000 including buildout ($100,000-$200,000), opening inventory ($25,000-$50,000), licensing fees, and working capital. Annual operating costs run $120,000-$220,000."
+      }
+    }
+  ]
+});
 ---
 
 <Layout 
@@ -222,52 +269,7 @@ const topics = ["city", "market"];
   </article>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How many dispensaries currently operate in Sanford?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Two to three licensed adult-use dispensaries currently operate in Sanford. The effective market (Sanford residents plus regional York County customers) is approximately 40,000-50,000 people."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the local licensing fee for a Sanford cannabis dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The City of Sanford charges $2,000-$2,500 annually for a local cannabis retail license. Combined with Maine OCP state license fees ($500-$1,500 annually), total annual licensing costs are approximately $2,500-$4,000."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I capture New Hampshire customers in Sanford?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Southern New Hampshire (Dover, Rochester, Somersworth) has limited dispensary options and higher prices. A Sanford dispensary is closer and more convenient for NH customers than Portland."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the best location strategy for Sanford?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Route 109 / Main Street offers highest traffic and visibility. The I-95 Exit 19 area captures highway travelers and NH crossover. Route 11 in western Sanford serves residential neighborhoods at lower rent."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What startup investment is required for a Sanford dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Total startup investment is $150,000-$300,000 including buildout ($100,000-$200,000), opening inventory ($25,000-$50,000), licensing fees, and working capital. Annual operating costs run $120,000-$220,000."
-      }
-    }
-  ]
-})}</script>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
