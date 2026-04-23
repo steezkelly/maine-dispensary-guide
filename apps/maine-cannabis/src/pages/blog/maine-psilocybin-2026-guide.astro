@@ -17,6 +17,35 @@ const article = {
 };
 const topics = ["policy", "legislation", "psychedelics"];
 const tags = ["policy-watch"];
+
+const ldJson = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Maine Psilocybin Guide 2026: Law, Research & What Operators Need to Know",
+  "description": "Maine's psilocybin decriminalization effort (LD 1034), the state commission studying regulated services, federal EO fast-tracking, and what it means for the Maine cannabis industry.",
+  "datePublished": "2026-04-20",
+  "dateModified": "2026-04-20",
+  "author": {
+    "@type": "Organization",
+    "name": "Maine Dispensary Guide Editorial Team"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Maine Dispensary Guide",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mainedispensaryguide.com/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mainedispensaryguide.com/blog/maine-psilocybin-2026-guide"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://mainedispensaryguide.com/images/heroes/maine-psilocybin-2026-guide.jpg"
+  }
+};
 ---
 
 <Layout
@@ -215,36 +244,7 @@ const tags = ["policy-watch"];
     </section>
   </article>
 
-  <script type="application/ld+json" is:inline>
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Maine Psilocybin Guide 2026: Law, Research & What Operators Need to Know",
-      "description": "Maine's psilocybin decriminalization effort (LD 1034), the state commission studying regulated services, federal EO fast-tracking, and what it means for the Maine cannabis industry.",
-      "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
-      "author": {
-        "@type": "Organization",
-        "name": "Maine Dispensary Guide Editorial Team"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Maine Dispensary Guide",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://mainedispensaryguide.com/logo.png"
-        }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://mainedispensaryguide.com/blog/maine-psilocybin-2026-guide"
-      },
-      "image": {
-        "@type": "ImageObject",
-        "url": "https://mainedispensaryguide.com/images/heroes/maine-psilocybin-2026-guide.jpg"
-      }
-    })}
-  </script>
+  <script type="application/ld+json" set:html={JSON.stringify(ldJson)} />
 </Layout>
 
 <style>

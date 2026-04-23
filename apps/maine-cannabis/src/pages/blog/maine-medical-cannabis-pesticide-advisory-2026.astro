@@ -17,6 +17,35 @@ const article = {
 };
 const topics = ["compliance", "patient-safety", "medical"];
 const tags = ["patient-safety", "ocp", "pesticides", "breaking"];
+
+const ldJson = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "Maine Issues First-Ever Medical Cannabis Patient Advisory After Unsafe Pesticide Levels Found in Concentrates",
+  "description": "Breaking: Maine's Office of Cannabis Policy issued its first medical cannabis patient advisory on January 22, 2026 after testing found unsafe pesticide levels in five cannabis concentrate strains sold by MarijuanaVille dispensary chain.",
+  "datePublished": "2026-04-20",
+  "dateModified": "2026-04-20",
+  "author": {
+    "@type": "Organization",
+    "name": "Maine Dispensary Guide Editorial Team"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Maine Dispensary Guide",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mainedispensaryguide.com/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mainedispensaryguide.com/blog/maine-medical-cannabis-pesticide-advisory-2026"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://mainedispensaryguide.com/images/heroes/maine-medical-cannabis-pesticide-advisory-2026.jpg"
+  }
+};
 ---
 
 <Layout 
@@ -255,36 +284,7 @@ const tags = ["patient-safety", "ocp", "pesticides", "breaking"];
     </section>
   </article>
 
-  <script type="application/ld+json" is:inline>
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "NewsArticle",
-      "headline": "Maine Issues First-Ever Medical Cannabis Patient Advisory After Unsafe Pesticide Levels Found in Concentrates",
-      "description": "Breaking: Maine's Office of Cannabis Policy issued its first medical cannabis patient advisory on January 22, 2026 after testing found unsafe pesticide levels in five cannabis concentrate strains sold by MarijuanaVille dispensary chain.",
-      "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
-      "author": {
-        "@type": "Organization",
-        "name": "Maine Dispensary Guide Editorial Team"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Maine Dispensary Guide",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://mainedispensaryguide.com/logo.png"
-        }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://mainedispensaryguide.com/blog/maine-medical-cannabis-pesticide-advisory-2026"
-      },
-      "image": {
-        "@type": "ImageObject",
-        "url": "https://mainedispensaryguide.com/images/heroes/maine-medical-cannabis-pesticide-advisory-2026.jpg"
-      }
-    })}
-  </script>
+  <script type="application/ld+json" set:html={JSON.stringify(ldJson)} />
 </Layout>
 
 <style>
