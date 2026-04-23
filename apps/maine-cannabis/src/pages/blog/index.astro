@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const posts = [
+  { url: '/blog/maine-psilocybin-2026-guide/', title: 'Maine Psilocybin Guide 2026: Law, Research & Ops', description: "Maine's psilocybin decriminalization effort (LD 1034), the state commission studying regulated services, federal EO fast-tracking, and what it means for the Maine cannabis industry.", date: '2026-04-20', section: 'Policy & Legislation' },
+  { url: '/blog/trump-psychedelic-executive-order-maine-psilocybin-2026/', title: 'Trump Psychedelic Executive Order & Maine Psilocybin', description: 'How the federal executive order on psychedelics intersects with Maine LD 1034 and what operators should know about emerging opportunities.', date: '2026-04-18', section: 'Policy & Legislation' },
+  { url: '/blog/maine-cannabis-delivery-business-guide-2026/', title: 'Maine Cannabis Delivery Business Guide 2026', description: 'Complete guide to starting a cannabis delivery service in Maine — licensing, vehicle requirements, security protocols, and OCP compliance.', date: '2026-04-15', section: 'Business Operations' },
+  { url: '/blog/portland-maine-cannabis-rules-2026/', title: 'Portland Maine Cannabis Rules 2026', description: 'Local ordinances, zoning restrictions, and city-level requirements for cannabis businesses operating in Portland, Maine.', date: '2026-04-12', section: 'Compliance' },
+  { url: '/blog/maine-dispensary-how-to-open/', title: 'How to Open a Maine Dispensary in 2026', description: 'Step-by-step guide to opening a cannabis dispensary in Maine — from licensing to first sale. Updated with current OCP requirements.', date: '2026-04-10', section: 'Business Operations' },
+  { url: '/blog/maine-dispensary-roi-what-to-expect-2026/', title: 'Maine Dispensary ROI: What to Expect in 2026', description: 'Real revenue benchmarks, operating costs, and profit margins for Maine cannabis dispensaries based on 2025 operator data.', date: '2026-04-08', section: 'Finance & Investment' },
+  { url: '/blog/maine-cannabis-microbusiness-license-2026/', title: 'Maine Microbusiness License Guide 2026', description: 'How to qualify for and operate a Maine microbusiness cannabis license — lower barriers, unique opportunities, and OCP application walkthrough.', date: '2026-04-05', section: 'Licensing' },
+  { url: '/blog/maine-cannabis-cultivation-license-2026/', title: 'Maine Cultivation License Guide 2026', description: 'Complete guide to obtaining a cannabis cultivation license in Maine — facility requirements, testing protocols, and OCP licensing process.', date: '2026-04-03', section: 'Licensing' },
+  { url: '/blog/maine-home-grow-cannabis-guide-2026/', title: 'Maine Home Grow Cannabis Guide 2026', description: 'Understanding home cultivation rights in Maine — plant limits, locality rules, and what the 2026 legislative session means for personal growers.', date: '2026-04-01', section: 'Policy & Legislation' },
+  { url: '/blog/ibogaine-federal-executive-order-maine-2026/', title: 'Ibogaine & Federal Executive Order — Maine Implications 2026', description: 'How the federal executive order on ibogaine affects Maine operators and what the psychedelic medicine landscape means for the industry.', date: '2026-03-28', section: 'Policy & Legislation' },
+  { url: '/blog/maine-medical-cannabis-pesticide-advisory-2026/', title: 'Maine Medical Cannabis Pesticide Advisory 2026', description: 'Critical pesticide rules for Maine medical cannabis cultivators — OCP compliance, testing requirements, and product safety standards.', date: '2026-03-25', section: 'Compliance' },
+];
+
+const sectionOrder = ['Policy & Legislation', 'Business Operations', 'Finance & Investment', 'Licensing', 'Compliance'];
+
+const grouped = sectionOrder.reduce((acc, section) => {
+  const items = posts.filter(p => p.section === section);
+  if (items.length > 0) acc[section] = items;
+  return acc;
+}, {} as Record<string, typeof posts>);
+---
+
+<Layout
+  title="Maine Cannabis Blog — Industry News, Guides & Analysis"
+  description="Cannabis business guides, policy analysis, and industry news for Maine operators and investors. Cultivation licenses, dispensary operations, ROI, and psilocybin legislation."
+>
+  <section class="page-header">
+    <h1>Maine Cannabis Blog</h1>
+    <p>Industry news, operational guides, and policy analysis for Maine cannabis professionals.</p>
+  </section>
+
+  {Object.entries(grouped).map(([section, sectionPosts]) => (
+    <section class="blog-section">
+      <h2>{section}</h2>
+      <div class="posts-grid">
+        {sectionPosts.map((post) => (
+          <a href={post.url} class="post-card">
+            <span class="post-date">{post.date}</span>
+            <h3>{post.title}</h3>
+            <p>{post.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  .page-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .blog-section {
+    margin-bottom: 3rem;
+  }
+  .blog-section h2 {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+    padding-bottom: 0.25rem;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .post-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .post-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .post-date {
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .post-card h3 {
+    color: var(--color-primary);
+    margin: 0.5rem 0;
+    font-size: 1.125rem;
+  }
+  .post-card p {
+    color: var(--color-text-light);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+</style>
