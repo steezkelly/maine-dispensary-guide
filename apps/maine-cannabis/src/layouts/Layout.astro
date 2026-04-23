@@ -107,7 +107,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="twitter:description" content={description} />
 
     {!noindex && (
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script type="application/ld+json" set:text={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": siteConfig.siteName,
@@ -118,14 +118,14 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         "name": siteConfig.siteName,
         "logo": {
           "@type": "ImageObject",
-          "url": siteConfig.siteUrl + "/favicon.svg"
+          "url": siteUrl + "/favicon.svg"
         }
       }
     })} />
     )}
 
     {isContent && article && !noindex && (
-      <script type="application/ld+json" set:html={JSON.stringify({
+      <script type="application/ld+json" set:text={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": title,
@@ -158,7 +158,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     )}
 
     {isContent && breadcrumbs && breadcrumbs.length > 0 && (
-      <script type="application/ld+json" set:html={JSON.stringify({
+      <script type="application/ld+json" set:text={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
