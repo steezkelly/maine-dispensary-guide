@@ -130,7 +130,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         "@type": "Article",
         "headline": title,
         "description": description,
-        "image": heroImage,
+        "image": heroImage ? (typeof heroImage === 'string' && heroImage.startsWith('http') ? heroImage : siteUrl + heroImage) : undefined,
         "author": article.authorId ? {
           "@type": "Person",
           "name": article.author,
