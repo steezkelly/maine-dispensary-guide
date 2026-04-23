@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-23 EDT**
+**Last updated: 2026-04-23 EDT (evening)**
 
 ---
 
@@ -34,6 +34,12 @@
 - **Fix:** Changed to `aria-label="Your stage starting"`
 - **Commit:** `e225711`
 
+**5. JSON-LD `is:inline` bug (32 instances across 29 files)**
+- **Root Cause:** `<script type="application/ld+json" is:inline>` with `{JSON.stringify({...})}` — `is:inline` prevents Astro from processing the template expression, so `{JSON.stringify(...)` was output literally as text
+- **Fix:** Changed to `<script type="application/ld+json" set:text={JSON.stringify({...})}>`
+- **Scope:** 32 instances across 29 files (maine-cannabis-real-estate had 2, maine-dispensary-license had 3)
+- **Commit:** `33b08ef`
+
 ### Files Changed
 - `apps/maine-cannabis/src/layouts/Layout.astro` — 3× `set:html` → `set:text`
 - `apps/maine-cannabis/src/pages/index.astro` — aria-label fix
@@ -41,6 +47,7 @@
 ### Commits
 - `fcb2177` — fix(a11y): remove duplicate main landmark from commercial-lease-guide
 - `e225711` — fix(json-ld): set:text instead of set:html on script tags; fix homepage aria-label
+- `33b08ef` — fix(json-ld): convert is:inline to set:text on 32 page-level JSON-LD script tags
 
 ---
 
