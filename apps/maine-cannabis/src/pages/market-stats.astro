@@ -18,8 +18,7 @@ const stats = [
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-14", section: "Data" }}
 >
 
-<script type="application/ld+json" is:inline>
-{
+<script type="application/ld+json" set:text={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -56,8 +55,7 @@ const stats = [
       }
     }
   ]
-}
-</script>
+})}</script>
 
   <article class="stats-article">
     <div class="article-header">

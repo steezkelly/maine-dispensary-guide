@@ -24,8 +24,7 @@ const topics = ["finance", "compliance", "business"];
   article={article}
   topics={topics}
 >
-<script type="application/ld+json" is:inline>
-{
+<script type="application/ld+json" set:text={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -94,8 +93,7 @@ const topics = ["finance", "compliance", "business"];
       }
     }
   ]
-}
-</script>
+})}</script>
 
 <article>
 

@@ -411,8 +411,7 @@ const topics = ["marketing"];
     </section>
   </article>
 
-  <script type="application/ld+json" is:inline>
-  {
+  <script type="application/ld+json" set:text={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
@@ -449,8 +448,7 @@ const topics = ["marketing"];
         }
       }
     ]
-  }
-  </script>
+  })}></script>
 </Layout>
 
 <style>

@@ -20,8 +20,7 @@ const topics = ["finance", "compliance"];
   article={article}
   topics={topics}
 >
-  <script type="application/ld+json" is:inline>
-  {
+<script type="application/ld+json" set:text={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
@@ -51,14 +50,6 @@ const topics = ["finance", "compliance"];
       },
       {
         "@type": "Question",
-        "name": "How does 280E affect quarterly estimated tax payments?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "280E significantly increases quarterly estimated tax obligations because your taxable income appears higher (no operating deductions). Work with a cannabis CPA to calculate accurate quarterly payments based on your actual COGS, not gut instinct."
-        }
-      },
-      {
-        "@type": "Question",
         "name": "Can I use accelerated depreciation on Maine state returns?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -72,10 +63,17 @@ const topics = ["finance", "compliance"];
           "@type": "Answer",
           "text": "You'll need METRC transaction records, cultivation labor logs, equipment allocation schedules, testing fee documentation, inventory purchase invoices, and packaging cost records. Every dollar you claim as COGS must be substantiated."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "How does 280E affect quarterly estimated tax payments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "280E significantly increases quarterly estimated tax obligations because your taxable income appears higher (no operating deductions). Work with a cannabis CPA to calculate accurate quarterly payments based on your actual COGS, not gut instinct."
+        }
       }
     ]
-  }
-  </script>
+  })}></script>
   <article>
     <div class="article-header">
       <h1>Maine Cannabis 280E Tax Guide</h1>

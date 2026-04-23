@@ -215,8 +215,7 @@ export const title = "Saco Dispensary Guide";
   </article>
 </Layout>
 
-<script type="application/ld+json" is:inline>
-{
+<script type="application/ld+json" set:text={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -269,8 +268,7 @@ export const title = "Saco Dispensary Guide";
       }
     }
   ]
-}
-</script>
+})}</script>
 
 <style>
   article { max-width: 720px; margin: 0 auto; }
