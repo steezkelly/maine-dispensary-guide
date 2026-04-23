@@ -1,7 +1,46 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-21 EDT**
+**Last updated: 2026-04-23 EDT**
+
+---
+
+## 📋 SPRINT 53: SquirrelScan Error Resolution (Apr 23, 2026 EDT)
+
+**[ORCHESTRATOR] Apr 23, 2026 EDT — Audit fixes applied and deployed**
+
+### Problems Fixed
+
+**1. JSON-LD parse errors (16 pages affected)**
+- **Root Cause:** `set:html={JSON.stringify({...})}` on `<script type="application/ld+json">` causes Astro to render HTML-encoded JSON (e.g., `&quot;` instead of `"`)
+- **Fix:** Changed all 3 JSON-LD `<script>` tags in Layout.astro from `set:html` to `set:text`
+  - WebSite schema (line 110): `set:text`
+  - Article schema (line 128): `set:text`
+  - BreadcrumbList schema (line 161): `set:text`
+- **Result:** JSON now renders as valid JSON-LD in built HTML
+
+**2. Article.image validation error (16 pages)**
+- **Root Cause:** `heroImage` passed as relative path (e.g., `/images/heroes/...`), but Schema.org `Article.image` requires full URL
+- **Fix:** Layout.astro line 133 uses conditional: `heroImage.startsWith('http') ? heroImage : siteUrl + heroImage`
+- **Status:** Fix already in place — confirmed working in built HTML
+
+**3. Duplicate `<main>` landmark (commercial-lease-guide)**
+- **Root Cause:** Page-level `<main class="content-grid">` conflicted with Layout's `<main id="main-content">`
+- **Fix:** Changed to `<div class="content-grid">` in commercial-lease-guide.astro
+- **Commit:** `fcb2177`
+
+**4. Homepage aria-label mismatch**
+- **Root Cause:** `<select aria-label="Your stage">` but visible text showed "Your stage starting"
+- **Fix:** Changed to `aria-label="Your stage starting"`
+- **Commit:** `e225711`
+
+### Files Changed
+- `apps/maine-cannabis/src/layouts/Layout.astro` — 3× `set:html` → `set:text`
+- `apps/maine-cannabis/src/pages/index.astro` — aria-label fix
+
+### Commits
+- `fcb2177` — fix(a11y): remove duplicate main landmark from commercial-lease-guide
+- `e225711` — fix(json-ld): set:text instead of set:html on script tags; fix homepage aria-label
 
 ---
 
