@@ -107,23 +107,21 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="twitter:description" content={description} />
 
     {!noindex && (
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": siteConfig.siteName,
+      "url": siteConfig.siteUrl,
+      "description": "Your complete guide to opening and operating a cannabis dispensary.",
+      "publisher": {
+        "@type": "Organization",
         "name": siteConfig.siteName,
-        "url": siteConfig.siteUrl,
-        "description": "Your complete guide to opening and operating a cannabis dispensary.",
-        "publisher": {
-          "@type": "Organization",
-          "name": siteConfig.siteName,
-          "logo": {
-            "@type": "ImageObject",
-            "url": siteConfig.siteUrl + "/favicon.svg"
-          }
+        "logo": {
+          "@type": "ImageObject",
+          "url": siteConfig.siteUrl + "/favicon.svg"
         }
       }
-    </script>
+    })} />
     )}
 
     {isContent && article && !noindex && (
