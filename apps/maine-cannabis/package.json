@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node -e \"const fs=require('fs');const path=require('path');const src='.vercel/output/static';const dst='../../dist';if(fs.existsSync(src)){fs.cpSync(src,dst,{recursive:true});console.log('Copied output to '+dst);}\"",
     "preview": "astro preview",
     "typecheck": "astro check",
     "health-check": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/health-check.ps1",
