@@ -3431,5 +3431,43 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 - `7968d03` — docs(sprint-47): sync todos, status, email pipeline completion
 - `c139e5b` — feat(guides): add maine-cannabis-zoning-requirements guide (478 lines)
 
+---
+
+## Navigation UX Sprint (Apr 23, 2026 EDT)
+
+**[ORCHESTRATOR] Apr 23, 2026 EDT — Navigation UX audit and fixes**
+
+### Audit Results (via @oracle)
+Top issues found in `Layout.astro`:
+
+| # | Issue | Impact | Fix |
+|---|-------|--------|-----|
+| 1 | Hover-only dropdowns (touch/keyboard fail) | HIGH | Click-based toggle with JS |
+| 2 | No mobile close button | HIGH | Added × button, visible when menu open |
+| 3 | Missing aria-expanded state | HIGH | JS toggles aria-expanded="true/false" |
+| 4 | No mobile Escape key handler | HIGH | Escape closes mobile menu |
+| 5 | No focus trap in mobile menu | MEDIUM | Escape closes menu; focus stays |
+| 6 | Mobile search hidden until menu open | MEDIUM | Search inside mobile menu (existing) |
+| 7 | Breadcrumb labels auto-generated | MEDIUM | Out of scope — needs content mapping |
+| 8 | Static sidebar content | MEDIUM | Out of scope — needs dynamic sidebar |
+
+### Changes Made (commit `21a90ce`)
+`apps/maine-cannabis/src/layouts/Layout.astro`:
+- Added `script is:inline` in `<head>` for dropdown click handling
+- Dropdowns now use `.shown` class (not `:hover`) for visibility
+- `aria-expanded` toggled correctly on click/keyboard
+- Escape key closes mobile menu and dropdowns
+- Click outside closes dropdowns
+- Mobile close button (×) visible only when menu open
+- CSS updated: `.dropdown-content { display: none }` → `.shown { display: block }`
+
+### Remaining Out-of-Scope (Lower Priority)
+- Breadcrumb label mapping (needs content audit + mapping table)
+- Dynamic contextual sidebar (needs topic-aware page context)
+- Focus trap implementation (partially addressed via Escape key)
+
+### Commits
+- `21a90ce` — fix(nav): click-based dropdowns, aria-expanded, mobile close button, keyboard support
+
 
 
