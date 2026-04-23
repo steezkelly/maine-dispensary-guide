@@ -17,9 +17,10 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Derive project root from __dirname (scripts/seo -> scripts -> project root)
+// Derive project root from __dirname (scripts/seo -> scripts -> apps/maine-cannabis)
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
-const PAGES_DIR = path.join(PROJECT_ROOT, 'apps', 'maine-cannabis', 'src', 'pages');
+// PROJECT_ROOT = apps/maine-cannabis, so src/pages is directly inside it
+const PAGES_DIR = path.join(PROJECT_ROOT, 'src', 'pages');
 
 // SEO thresholds
 const TITLE_MIN = 30;
@@ -40,8 +41,8 @@ const MISSING_PAGES = [
   '/guides/topsham-dispensary-guide/',
 ];
 
-// Glob pattern for astro files
-const GLOB_PATTERN = 'apps/maine-cannabis/src/pages/**/*.astro';
+// Glob pattern for astro files (relative to PROJECT_ROOT = apps/maine-cannabis)
+const GLOB_PATTERN = 'src/pages/**/*.astro';
 
 // ============================================================================
 // Helper Functions
