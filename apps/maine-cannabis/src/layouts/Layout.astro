@@ -406,7 +406,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
             </div>
             <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
           </div>
-          <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar /></aside>
+          <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar currentPath={Astro.url.pathname} currentTopics={topics} /></aside>
         </div>
       ) : (
         <>

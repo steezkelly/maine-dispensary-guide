@@ -1,2 +1,5 @@
-import GuideSidebar from '@network/ui/GuideSidebar';
-export default GuideSidebar;
+---
+import GuideSidebarComponent from '@network/ui/GuideSidebar';
+const { currentPath = Astro.url.pathname, currentTopics = [] } = Astro.props;
+---
+<GuideSidebarComponent currentPath={currentPath} currentTopics={currentTopics} />

@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-23 EDT (evening)**
+**Last updated: 2026-04-23 EDT (late evening)**
 
 ---
 
@@ -3468,6 +3468,42 @@ Top issues found in `Layout.astro`:
 
 ### Commits
 - `21a90ce` — fix(nav): click-based dropdowns, aria-expanded, mobile close button, keyboard support
+
+---
+
+## 📋 SPRINT: Contextual Sidebar (Apr 23, 2026 EDT)
+
+**[ORCHESTRATOR] Apr 23, 2026 EDT — Implemented topic-contextual sidebar**
+
+### Problem
+Sidebar was fully static — showed the same 3 sections (Business Guides, City Guides, Compliance) on every page regardless of topic. Meanwhile, `RelatedArticles` already had a working topic-intersection pattern with `calculateScore()` that went unused in the sidebar.
+
+### Solution
+Made GuideSidebar topic-aware using the exact same pattern as RelatedArticles.
+
+**Architecture:**
+- GuideSidebar now accepts `currentPath` and `currentTopics` props (like RelatedArticles)
+- Unified `allGuides` dataset (48 entries) with `topics[]` and `section` metadata per guide
+- `calculateScore(guideTopics, currentTopics)` awards +2 per matching topic
+- Computed sections (`relatedCityGuides`, `relatedBusinessGuides`, `relatedComplianceGuides`) are filtered by topic match and sorted by score
+- Falls back to static arrays when no topic matches (ensures sidebar never goes empty)
+
+**Files Modified:**
+1. `packages/ui/src/components/GuideSidebar.astro` — Props interface, unified allGuides, calculateScore, contextual computed sections, conditional rendering
+2. `apps/maine-cannabis/src/components/GuideSidebar.astro` — Updated wrapper to forward `currentPath` and `currentTopics`
+3. `apps/maine-cannabis/src/layouts/Layout.astro` — Wired `<GuideSidebar currentPath={Astro.url.pathname} currentTopics={topics} />`
+
+**Result:**
+- A page with `topics={["real-estate"]}` → sidebar surfaces Real Estate guides first
+- A page with `topics={["city", "market"]}` → sidebar surfaces City Guides first
+- Falls back to static arrays for pages with no topic matches
+- Active state (`isActive()`) still works correctly for current page indicator
+
+### TypeScript
+- `npx astro check` on modified files: **0 errors, 0 warnings**
+
+### Commits
+- (pending — work completed, not yet committed)
 
 
 
