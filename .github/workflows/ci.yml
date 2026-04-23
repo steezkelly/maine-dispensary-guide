@@ -28,8 +28,4 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload build artifact
-        if: success()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
+      # Build artifact upload removed — project deploys to Vercel, not GitHub Pages
