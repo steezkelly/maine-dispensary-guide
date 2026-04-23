@@ -38,21 +38,33 @@
 - Concentrate market share updated on extraction page (25-30%→28-35%)
 - HowTo schema added to `maine-dispensary-license.astro` (6-step licensing process)
 
-**Build + Deploy — ✅**
+**Build + Deploy — ✅ (CDN CACHE ISSUE)**
 - `npm run build` — 96 pages built in 5.35s
 - Pushed to GitHub → Vercel auto-deploy triggered
+- **⚠️ KNOWN ISSUE:** Vercel CDN is aggressively caching. Multiple CLI deploys (`vercel --prod`) show "Aliased: mainedispensaryguide.com" but curl shows STALE content (v1.0.4, April 17 dates). Git push was also done. Root cause unknown — possibly Vercel deployment protection or CDN cache invalidation bug. **User may need to manually purge Vercel dashboard cache or check deployment status at vercel.com dashboard.**
+- Latest deploy ID: `project-1-ntnv7hrc3`
+- Commit `9917aaf` (v1.0.6 footer bump) and `a559b2a` (nav redesign) pushed to GitHub
+
+**Navigation Redesign — ✅**
+- `Layout.astro` nav restructured: "Guides ▾" → "Browse by Topic ▾" with 5-column topic dropdown
+- Categories exposed: Business Essentials, Compliance & Legal, Operations & Technology, City & Regional Guides, All Guides & Tools
+- Mobile nav updated with stacked topic groups (CSS-only dropdowns preserved)
+- Geometric ◆ prefix added to Business Tools items
+- Typecheck: 0 errors ✅
 
 ### Files Changed
 - `apps/maine-cannabis/src/data/authors.json` — 4 author pen names
-- `apps/maine-cannabis/src/layouts/Layout.astro` — ArticleData expanded, JSON-LD author type conditional
+- `apps/maine-cannabis/src/layouts/Layout.astro` — ArticleData expanded + nav redesign
 - `apps/maine-cannabis/src/pages/admin/link-dashboard.astro` — type errors fixed
 - ~150 content pages — author bylines updated
 
 ### Commits
-- `45559bd` — feat: full author byline rollout (E-E-A-T), link-dashboard fix, spring 2026 data refresh (150 files, +4231/-377 lines)
+- `45559bd` — feat: full author byline rollout (E-E-A-T), link-dashboard fix, spring 2026 data refresh
+- `9917aaf` — chore: bump version v1.0.6 (CDN cache bust attempt)
+- `a559b2a` — feat(nav): restructure dropdowns to expose 5 topic categories
 
 ### What's Pending
-- Vercel deploy verified ✅ — live at mainedispensaryguide.com
+- Vercel CDN cache invalidation — user action needed at vercel.com dashboard
 - GSC indexing — 42 of 79 pages still not indexed; GSC quota exceeded so no resubmission possible
 - E-E-A-T field data — time-based, needs real traffic before it updates
 
