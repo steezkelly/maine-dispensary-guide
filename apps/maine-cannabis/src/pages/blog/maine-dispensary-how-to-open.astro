@@ -346,7 +346,7 @@ const topics = ["licensing", "how-to", "start-here"];
     </section>
   </article>
 
-  <Fragment is:inline set:html={JSON.stringify({
+  <script type="application/ld+json" set:text={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "HowTo",
     "name": "How to Open a Dispensary in Maine",
