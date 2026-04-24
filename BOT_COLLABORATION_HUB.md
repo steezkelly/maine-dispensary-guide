@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-24 EDT**
+**Last updated: 2026-04-24 EDT** (JSON-LD proactive fix: 13fcb98)
 
 ---
 
@@ -37,6 +37,16 @@ All 13 pages now 1,500+ words:
 
 ### Commits Pushed
 - `d202645` — Sprint 56: expand 13 thin pages to 1,500+ words, citation contacts, EmailPipeline drip campaign
+- `13fcb98` — fix(json-ld): set:text on all JSON-LD script tags to prevent HTML encoding of quotes (proactive)
+
+### JSON-LD Proactive Fix (13fcb98)
+- **Root cause:** `set:html` and malformed JSON-LD scripts in 4 files causing potential structured data errors
+- **Files fixed:**
+  - `packages/layouts/src/Layout.astro`: Article + BreadcrumbList schemas (2× `set:html` → `set:text`)
+  - `packages/ui/src/components/Breadcrumbs.astro`: BreadcrumbList schema (`set:html` → `set:text`)
+  - `maine-cannabis-taxation-280e.astro`: raw JSON inside `<script>` → `set:text={JSON.stringify({...})}`
+  - `maine-dispensary-security.astro`: malformed JSON-LD script (missing `set:text=`) → `set:text={JSON.stringify({...})}`
+- **Status:** Committed and pushed. Build is now clean of all `set:html` on JSON-LD scripts.
 
 ---
 
