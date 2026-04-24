@@ -96,23 +96,21 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="twitter:description" content={description} />
     
     <!-- HARD-CODED STRUCTURED DATA FOR ACCURACY -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
+    <script type="application/ld+json" set:text={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": siteName,
+      "url": siteUrl,
+      "description": "Your complete guide to opening and operating a cannabis dispensary.",
+      "publisher": {
+        "@type": "Organization",
         "name": siteName,
-        "url": siteUrl,
-        "description": "Your complete guide to opening and operating a cannabis dispensary.",
-        "publisher": {
-          "@type": "Organization",
-          "name": siteName,
-          "logo": {
-            "@type": "ImageObject",
-            "url": siteUrl + "/favicon.svg"
-          }
+        "logo": {
+          "@type": "ImageObject",
+          "url": siteUrl + "/favicon.svg"
         }
       }
-    </script>
+    })} />
 
     {isContent && article && !noindex && (
       <script type="application/ld+json" set:text={JSON.stringify({
