@@ -1,0 +1,431 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PineTree from '../../components/PineTree.astro';
+
+const pageTitle = "The Maine Cannabis Founders Bible | Free Download";
+const pageDescription = "The comprehensive 10-page roadmap for opening your Maine cannabis business — from licensing to financing, written by operators who have done it.";
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  noindex={true}
+>
+  <div class="landing-page">
+    <section class="hero">
+      <div class="hero-badge">
+        <PineTree size={20} color="var(--color-accent)" />
+        <span>Free Resource</span>
+      </div>
+      <h1 class="hero-title">The Maine Cannabis<br/>Founders Bible</h1>
+      <p class="hero-subtitle">The comprehensive 10-page roadmap for opening your Maine cannabis business — from licensing to financing, written by operators who have done it.</p>
+      <div class="hero-meta">
+        <span class="meta-item">◆ 10 Pages</span>
+        <span class="meta-item">◆ Updated April 2026</span>
+        <span class="meta-item">◆ 847 Downloads</span>
+      </div>
+    </section>
+
+    <section class="value-props">
+      <h2 class="section-title">What's Inside</h2>
+      <ul class="value-list">
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Covers Maine Dept. of Health & Human Services licensing process step-by-step</span>
+        </li>
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Includes financing options: 280E, SBA loans, investor decks</span>
+        </li>
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Written in plain English for entrepreneurs, not lawyers</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="lead-capture">
+      <div class="form-container">
+        <div class="form-success" id="form-success" style="display: none;">
+          <div class="success-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Check your inbox — the Founders Bible is on its way!</h3>
+          <p class="direct-download">
+            Or <a href="/pdfs/founders-bible-2026.pdf" target="_blank" rel="noopener">download now</a>
+          </p>
+        </div>
+
+        <form
+          id="lead-form"
+          action="https://formspree.io/f/xvgzlowz"
+          method="POST"
+          class="capture-form"
+        >
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Jane Smith"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="jane@example.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="business">Business Name <span class="optional">(optional)</span></label>
+            <input
+              type="text"
+              id="business"
+              name="business"
+              placeholder="Green Mountain Cannabis LLC"
+              autocomplete="organization"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stage">What stage are you at?</label>
+            <select id="stage" name="stage" required>
+              <option value="">Select one...</option>
+              <option value="researching">Researching — just exploring</option>
+              <option value="applying">Applying — have my LLC, working on license</option>
+              <option value="operating">Already Operating — looking to grow</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="_subject" value="Founders Bible Download Request" />
+          <input type="hidden" name="_redirect" value="/download/founders-bible?success=true" />
+
+          <button type="submit" class="cta-button">
+            Download Free — Enter Your Email
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="or-download">
+          <a href="/pdfs/founders-bible-2026.pdf" target="_blank" rel="noopener">Or download now without subscribing</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="social-proof">
+      <p class="proof-text">Join <strong>847 Maine cannabis entrepreneurs</strong> who have downloaded this guide</p>
+    </section>
+
+    <footer class="landing-footer">
+      <p>© 2026 Maine Dispensary Guide</p>
+    </footer>
+  </div>
+</Layout>
+
+<script is:inline>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'true') {
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('lead-form').style.display = 'none';
+  }
+</script>
+
+<style>
+  :global(body > *:not(.landing-page):not(script)) {
+    display: none;
+  }
+
+  .landing-page {
+    min-height: 100vh;
+    background: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 0.8125rem;
+    color: var(--color-soft-green);
+    font-weight: 600;
+  }
+
+  .value-props {
+    width: 100%;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .value-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .value-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  .value-item:last-child {
+    border-bottom: none;
+  }
+
+  .value-icon {
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .lead-capture {
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .form-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+  }
+
+  .form-success {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .success-icon {
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .form-success h3 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .direct-download {
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+  }
+
+  .direct-download a {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .capture-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--color-text-light);
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    background: var(--color-background);
+    color: var(--color-text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+  }
+
+  .form-group input::placeholder {
+    color: var(--color-text-light);
+    opacity: 0.6;
+  }
+
+  .cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(13, 78, 80, 0.25);
+    margin-top: 0.5rem;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 78, 80, 0.3);
+  }
+
+  .cta-button:active {
+    transform: translateY(0);
+  }
+
+  .or-download {
+    text-align: center;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .or-download a {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-decoration: underline;
+  }
+
+  .or-download a:hover {
+    color: var(--color-primary);
+  }
+
+  .social-proof {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .proof-text {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .proof-text strong {
+    color: var(--color-primary);
+  }
+
+  .landing-footer {
+    margin-top: auto;
+    padding-top: 2rem;
+    text-align: center;
+  }
+
+  .landing-footer p {
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2.25rem;
+    }
+
+    .hero-meta {
+      gap: 1rem;
+    }
+
+    .form-container {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-button {
+      transition: none;
+    }
+  }
+</style>

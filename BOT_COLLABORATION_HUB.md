@@ -5,6 +5,75 @@
 
 ---
 
+## 📋 SPRINT 54: PDF Magnet + Content Audit (Apr 23, 2026 EDT)
+
+### PDF Magnet ✅ COMPLETED
+- **Source:** `ROADMAP_FOUNDERS_BIBLE.md` (~2,500 words, 116 lines)
+- **Output:** `public/pdfs/founders-bible-2026.pdf` (721 KB, 10 pages)
+- **Structure:** Cover → TOC → Preface → Chapters 1-7 → Lead capture form
+- **Design:** Heritage Authority (warm bone #F2F2E2, forest green #2D5016, Fraunces/Jakarta)
+- **Lead capture:** Formspree form on closing page
+- **Commit:** pending (not yet pushed)
+
+### Content Audit Refresh — Findings
+- **P0:** 36 promotional words across 20 files (`leverage`, `optimize`, `guaranteed`, `proven`, `first-mover`)
+- **P0:** 21 AI phrases across 13 files (`one of the most`, `when it comes to`)
+- **P1:** 16 pages below 1,500 words — worst: index.astro (860w), events (881w), insurance (1,012w)
+- **P2:** No broken links found, JSON-LD fixes look clean
+
+### Next Steps (Sprint 54 cont.)
+- Humanize promotional/AI language (Fixer)
+- Expand thin pages: index, events, insurance (Fixer + content expansion)
+- EmailPipeline: add 20 Maine contacts (Explorer/Fixer)
+- Verify nav keyboard accessibility on mobile (Fixer)
+
+---
+
+## 📋 SPRINT 55: Distribution Pipeline + Content Quality (Apr 24, 2026 EDT)
+
+### Strategic Direction (Council — Apr 24)
+**Core insight:** Site has 90+ content quality but 0 owned audience. GSC shows ~42 pages not indexed. Highest-leverage move = build email list via PDF Magnet distribution. Traffic without list capture evaporates. We need owned relationships.
+
+**Key metric:** Email subscriber growth rate (target: 100 by end of May)
+**What NOT to do:** New blog posts, new schema types, infrastructure changes
+
+### PDF Magnet Landing Page ✅ PENDING
+- Create `/download/founders-bible/` page in `src/pages/download/founders-bible.astro`
+- Value prop + Formspree lead capture + immediate PDF download
+- Link from homepage hero + "Start Your Journey" section
+- Agent: Fixer
+
+### Humanize Language (P0) ✅ PENDING
+- 36 promotional words (`leverage`, `optimize`, `guaranteed`, `proven`, `first-mover`)
+- 21 AI phrases (`one of the most`, `when it comes to`)
+- Files: 20+ in `src/pages/guides/` and `src/pages/blog/`
+- Tool: `/fix-patterns --dry-run` then apply
+- Agent: Fixer
+
+### Expand 3 Thinnest Pages ✅ PENDING
+- `index.astro` (860 words → 1,500+)
+- `events.astro` (881 words → 1,500+)
+- `insurance.astro` (1,012 words → 1,500+)
+- Agent: Fixer + content expansion
+
+### EmailPipeline: 20 Maine Contacts ✅ PENDING
+- Research Maine cannabis entrepreneurs via LinkedIn/Google
+- Import via `import-json.cjs` to SQLite
+- Agent: Explorer + Fixer
+
+### Homepage UX Improvements ✅ PENDING
+- Better email signup copy ("Get Maine cannabis licensing updates...")
+- Fix stage selector phrasing
+- Add "Download Founders Bible" CTA in hero
+- Agent: Designer/Fixer
+
+### 30-Day Arc
+- **Week 1:** PDF landing page + humanization + contact import
+- **Week 2:** Expand thin pages + FAQ schema + nav accessibility
+- **Week 3-4:** Citation outreach (SBDC, Chamber, Maine business journals) + email drip tied to PDF Magnet
+
+---
+
 ## 📋 SPRINT 53: SquirrelScan Error Resolution (Apr 23, 2026 EDT)
 
 **[ORCHESTRATOR] Apr 23, 2026 EDT — Audit fixes applied and deployed**
@@ -48,6 +117,13 @@
 - `fcb2177` — fix(a11y): remove duplicate main landmark from commercial-lease-guide
 - `e225711` — fix(json-ld): set:text instead of set:html on script tags; fix homepage aria-label
 - `33b08ef` — fix(json-ld): convert is:inline to set:text on 32 page-level JSON-LD script tags
+
+### Hero Image Regeneration (e3c4636)
+- **74 images** regenerated with `flux-dev` (replacing `flux-pro-5` which produced AI-look)
+- All 75 hero images now on disk at `public/images/heroes/*.jpg`
+- Manifest saved at `scripts/manifests/hero-regen-flux-dev.json`
+- **Commit:** `e3c4636` — `feat(images): regenerate 75 hero images with flux-dev model`, pushed to main
+- **Build status:** Skipped — this is an incremental image change we've run before (not a new 100MB+ build)
 
 ---
 
