@@ -20,8 +20,7 @@ const topics = ["finance"];
   article={article}
   topics={topics}
 >
-  <script type="application/ld+json">
-  {
+  <script type="application/ld+json" set:text={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
@@ -58,8 +57,7 @@ const topics = ["finance"];
         }
       }
     ]
-  }
-  </script>
+  })} /></script>
   <article>
     <div class="article-header">
       <h1>Cannabis Taxation & 280E</h1>
