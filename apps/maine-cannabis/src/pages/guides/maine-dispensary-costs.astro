@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
 
 const article = {
   author: "Margaret Finch",
@@ -11,6 +12,12 @@ const article = {
   section: "Business Essentials"
 };
 const topics = ["finance"];
+
+const costsFaqs = [
+  { question: "How much does it cost to open a dispensary in Maine?", answer: "Most Maine dispensaries need $360K-$1M total. This includes: licensing fees ($3,000-$10,000), real estate and buildout ($100K-$300K), security systems ($25K-$75K), initial inventory ($50K-$150K), POS and technology ($10K-$30K), and 6 months of working capital ($100K-$250K)." },
+  { question: "What are the annual licensing costs for a Maine dispensary?", answer: "OCP annual renewal fees range from $1,000-$10,000 depending on your license tier and type. Local municipal fees vary by town: Portland charges $5,000 annually, Lewiston charges $2,500, while smaller towns may charge less or nothing. Budget $3,000-$12,000 annually for combined state and local licensing." },
+  { question: "How long before a Maine dispensary becomes profitable?", answer: "Most Maine operators report 18-36 months to break-even. Portland-area dispensaries often take 24-36 months due to competitive saturation. Underserved markets in rural Maine or growth corridors like York County may achieve break-even in 12-24 months." }
+];
 ---
 
 <Layout 
@@ -326,3 +333,5 @@ const topics = ["finance"];
   .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
   .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>
+
+<Faq faqs={costsFaqs} />

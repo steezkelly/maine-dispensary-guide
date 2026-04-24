@@ -307,7 +307,18 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         </div>
 
         <div class="nav-links" id="navigation-menu" role="navigation">
-          <button class="mobile-close-btn" aria-label="Close menu" onclick="document.getElementById('nav-toggle').checked = false;">×</button>
+          <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn"></button>
+          <script is:inline>
+            document.getElementById('mobile-close-btn').addEventListener('click', () => {
+              document.getElementById('nav-toggle').checked = false;
+            });
+            document.getElementById('mobile-close-btn').addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.getElementById('nav-toggle').checked = false;
+              }
+            });
+          </script>
           <div class="nav-search-mobile"><Search /></div>
           <div class="nav-dropdown">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>

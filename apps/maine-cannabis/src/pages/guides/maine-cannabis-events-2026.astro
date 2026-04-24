@@ -1,10 +1,17 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-01-25", modifiedDate: "2026-04-04", section: "City Guides" };
 const topics = ["compliance"];
 const titleText = "Maine Cannabis Events 2026";
+
+const eventFaqs = [
+  { question: "How do I find OCP stakeholder meetings in Maine?", answer: "The Maine Office of Cannabis Policy (OCP) posts quarterly stakeholder meeting schedules on their official website. Meetings are held in Augusta and offer virtual participation options. These are the primary venue for learning about regulatory changes before they become final." },
+  { question: "Can I network with other cannabis operators at Maine events?", answer: "Yes. OCP events, industry conferences, and local association meetings all provide networking opportunities. The Maine Cannabis Industry Association holds regular gatherings. Building relationships with other operators helps you stay informed about policy changes and best practices." },
+  { question: "Are Maine cannabis events open to the public?", answer: "Most OCP and regulatory events are open to licensees and the public. Legislative hearings allow public testimony. Some industry events require credentials or paid attendance. Check specific event details before attending." }
+];
 ---
 
 <Layout title={titleText} description="Cannabis events and regulatory updates in Maine for 2026. How to stay connected with OCP rule changes and industry events." heroImage="/images/heroes/maine-cannabis-events-2026.jpg" article={article} topics={topics}>
@@ -188,3 +195,5 @@ const titleText = "Maine Cannabis Events 2026";
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
   .fact-box table { margin: 0; }
 </style>
+
+<Faq faqs={eventFaqs} />

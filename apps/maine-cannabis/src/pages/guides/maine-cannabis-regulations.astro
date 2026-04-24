@@ -1,9 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
 
 const article = { author: "Calvin Waters", authorId: "calvin-waters", authorTitle: "Licensing & Compliance Analyst", publishDate: "2026-01-10", modifiedDate: "2026-04-04", section: "Compliance & Legal" };
 const topics = ["compliance"];
+
+const regulationsFaqs = [
+  { question: "What agency regulates cannabis businesses in Maine?", answer: "The Maine Office of Cannabis Policy (OCP) within the Department of Administrative and Financial Services regulates all adult-use cannabis businesses. Medical cannabis is regulated separately under the same agency with additional rules." },
+  { question: "What are the most common OCP compliance violations for Maine dispensaries?", answer: "Common violations include: incomplete inventory records in Metrc, expired worker permits, failure to conduct required monthly physical inventories, inadequate security system documentation, and missing or incomplete training records. Regular self-audits help catch issues before OCP inspections." },
+  { question: "How often does OCP inspect Maine dispensaries?", answer: "OCP conducts risk-based inspections rather than fixed schedules. New licensees receive more frequent visits during their first year. Established operators with clean records may go 2-3 years between inspections. Inspections can be scheduled or unannounced." }
+];
 ---
 
 <Layout 
@@ -205,3 +212,5 @@ const topics = ["compliance"];
   .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
   .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
 </style>
+
+<Faq faqs={regulationsFaqs} />

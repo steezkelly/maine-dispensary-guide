@@ -1,10 +1,17 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
 
 const article = { author: "Calvin Waters", authorId: "calvin-waters", authorTitle: "Licensing & Compliance Analyst", publishDate: "2026-01-20", modifiedDate: "2026-04-21", section: "Operations & Technology" };
 const topics = ["compliance"];
 export const title = "Cannabis Extraction Licensing";
+
+const extractionFaqs = [
+  { question: "What license do I need to extract cannabis concentrates in Maine?", answer: "You need a Manufacturing License from the OCP, which covers extraction operations. There are different license classes based on the extraction method used. Class 1 covers volatile solvents (butane, propane), Class 2 covers ethanol extraction, and Classes 3-5 cover various non-volatile methods." },
+  { question: "What is the difference between volatile and non-volatile extraction methods?", answer: "Volatile methods (butane, propane) produce high-quality concentrates but require extensive fire safety measures and closed-loop systems. Non-volatile methods (CO2, ice water, heat/pressure) are generally safer but may produce different product characteristics. Your license class depends on which methods you plan to use." },
+  { question: "How much does it cost to get an extraction license in Maine?", answer: "Manufacturing license fees vary by class and scale. Application fees plus annual renewal fees typically run $2,000-$10,000 depending on tier. Beyond licensing, extraction equipment costs $25,000-$500,000 depending on scale and automation level." }
+];
 ---
 
 <Layout 
@@ -274,3 +281,5 @@ export const title = "Cannabis Extraction Licensing";
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
   .fact-box table { margin: 0; }
 </style>
+
+<Faq faqs={extractionFaqs} />
