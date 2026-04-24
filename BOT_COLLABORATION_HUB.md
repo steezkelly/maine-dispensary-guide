@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-24 EDT** (JSON-LD proactive fix: 13fcb98)
+**Last updated: 2026-04-24 EDT** (JSON-LD root-cause fix: 95c69fe)
 
 ---
 
@@ -38,15 +38,15 @@ All 13 pages now 1,500+ words:
 ### Commits Pushed
 - `d202645` — Sprint 56: expand 13 thin pages to 1,500+ words, citation contacts, EmailPipeline drip campaign
 - `13fcb98` — fix(json-ld): set:text on all JSON-LD script tags to prevent HTML encoding of quotes (proactive)
+- `95c69fe` — fix: add set:text to WebSite JSON-LD script in @network/layouts — bare script tag caused encoding issue
 
-### JSON-LD Proactive Fix (13fcb98)
-- **Root cause:** `set:html` and malformed JSON-LD scripts in 4 files causing potential structured data errors
-- **Files fixed:**
-  - `packages/layouts/src/Layout.astro`: Article + BreadcrumbList schemas (2× `set:html` → `set:text`)
-  - `packages/ui/src/components/Breadcrumbs.astro`: BreadcrumbList schema (`set:html` → `set:text`)
-  - `maine-cannabis-taxation-280e.astro`: raw JSON inside `<script>` → `set:text={JSON.stringify({...})}`
-  - `maine-dispensary-security.astro`: malformed JSON-LD script (missing `set:text=`) → `set:text={JSON.stringify({...})}`
-- **Status:** Committed and pushed. Build is now clean of all `set:html` on JSON-LD scripts.
+### JSON-LD Root-Cause Fix (95c69fe)
+- **Root cause of Sprint 53 failure:** Sprint 53 edits were applied to `apps/maine-cannabis/src/layouts/Layout.astro` but the Astro build uses `packages/layouts/src/Layout.astro` (via `@network/layouts` workspace package). The actual Layout's WebSite schema had a **bare `<script type="application/ld+json">` tag with raw JSON** (no Astro directive at all).
+- **Why bare `<script>` breaks JSON:** Without a directive, Astro outputs JSON directly into the HTML. If any string value contains characters that look like HTML (e.g., `"` inside a quoted JSON string value), the HTML parser may mis-interpret them before the browser's JavaScript engine can parse the JSON.
+- **Why `set:text` fixes it:** `set:text` wraps the value in `JSON.stringify()`, ensuring the output is a properly serialized JSON string where all quotes are correctly escaped.
+- **Files fixed (95c69fe):**
+  - `packages/layouts/src/Layout.astro`: WebSite schema — added `set:text={JSON.stringify({...})}` around previously bare JSON
+- **Status:** Committed and pushed as `95c69fe`.
 
 ---
 
