@@ -2,6 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import PineTree from '../components/PineTree.astro';
 import Leaf from '../components/Leaf.astro';
+import Faq from '../components/Faq.astro';
+
+const homepageFaqs = [
+  { question: "How long does it take to get a Maine cannabis dispensary license?", answer: "Plan for 5-7 months under normal processing conditions. Municipal endorsement alone takes 6-12 weeks. OCP requests for additional information can add another 4-8 weeks. See the full licensing guide: /guides/maine-dispensary-license/" },
+  { question: "How much does it cost to open a Maine dispensary?", answer: "Most Maine dispensaries need $360K-$1M to open. This includes licensing fees ($3,000-$10,000), buildout ($150K-$500K), initial inventory ($50K-$100K), and working capital ($50K-$100K). See detailed breakdown: /guides/maine-dispensary-costs/" },
+  { question: "Which Maine towns allow cannabis dispensaries?", answer: "15 towns have opted in to adult-use retail as of 2026. Key markets include Portland, Lewiston, Bangor, Augusta, Biddeford, and Brunswick. Check the full opt-in list: /guides/maine-cannabis-opt-in-tracker/" },
+  { question: "What are the school buffer requirements for Maine dispensaries?", answer: "The state default is 1,000 feet, measured property line to property line. However, municipalities may reduce this to 500 feet through local ordinance. Portland and Bangor have adopted the 500 ft buffer. Check your specific municipality: /guides/maine-cannabis-school-buffer/" }
+];
 
 const stats = [
   { label: "Annual Sales", value: "$246M" },
@@ -2257,3 +2265,5 @@ const journeySteps = [
     line-height: 1.5;
   }
 </style>
+
+<Faq faqs={homepageFaqs} />
