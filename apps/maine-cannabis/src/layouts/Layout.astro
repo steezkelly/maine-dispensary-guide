@@ -121,7 +121,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
           "url": siteUrl + "/favicon.svg"
         }
       }
-    })} />
+    }).replace(/&/g, '&amp;')} />
     )}
 
     {isContent && article && !noindex && (
@@ -154,7 +154,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
           "@id": Astro.url.href
         },
         "articleSection": article.section
-      })} />
+      }).replace(/&/g, '&amp;')} />
     )}
 
     {isContent && breadcrumbs && breadcrumbs.length > 0 && (
@@ -175,7 +175,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
             "item": siteUrl + crumb.href
           }))
         ]
-      })} />
+      }).replace(/&/g, '&amp;')} />
     )}
 
     <script is:inline>
