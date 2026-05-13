@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-13 EDT** (Seed Shelf experiments noindex sprout: label decoder + menu mirage translator)
+**Last updated: 2026-05-13 EDT** (Seed Shelf experiments noindex sprout: label decoder + menu mirage + freshness stamp)
 
 ---
 
@@ -12,8 +12,9 @@
 - **Page:** `apps/maine-cannabis/src/pages/experiments/index.astro`
 - **Route:** `/experiments`
 - **Navigation:** `apps/maine-cannabis/src/layouts/Layout.astro` links `/experiments` under Browse by Topic → All Guides & Tools.
-- **Germinated sprouts:** Cannabis Label Decoder Pocket Card; Menu Mirage Translator.
+- **Germinated sprouts:** Cannabis Label Decoder Pocket Card; Menu Mirage Translator; Freshness Stamp Widget.
 - **Menu Mirage Translator shape:** 15 cannabis menu terms with `Term / What it might mean / What it does not automatically prove / Better question to ask`.
+- **Freshness Stamp Widget shape:** client-side no-data-submission mini webapp that turns last-checked date, fact type, source type, and rot speed into a copy-ready freshness stamp.
 - **Safety posture:** `noindex={true}` remains. No deploy, no rankings, no medical/legal advice, no affiliate/payments/outreach, no scraped live menus.
 - **Wiki handoff:** `/home/steve/wiki/ops/seed-shelf-mdg-experiments-passdown-2026-05-13.md`
 

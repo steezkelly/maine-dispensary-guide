@@ -24,15 +24,17 @@ const germinated = [
     summary: "A neutral translator for cannabis menu words that may sound precise but still need verification at the counter.",
     signal: "Someone uses it to ask a better question instead of trusting a hype word.",
     href: "#menu-mirage-translator"
+  },
+  {
+    status: "Germinated",
+    title: "Freshness Stamp Widget",
+    summary: "A tiny noindex webapp that stamps a fact with last checked, source type, what may have changed, and what to verify today.",
+    signal: "Someone stops trusting stale menu or hours text just because it still exists on a page.",
+    href: "#freshness-stamp-widget"
   }
 ];
 
 const seeds = [
-  {
-    title: "Freshness Stamp Widget",
-    summary: "A tiny trust block for pages where facts rot quickly: last checked, source, and what may have changed.",
-    next: "Draft one reusable markdown/HTML block."
-  },
   {
     title: "Budtender Question Card",
     summary: "Neutral questions adults can ask without turning the visit into legal, medical, or product advice.",
@@ -295,6 +297,84 @@ const seeds = [
       white-space: nowrap;
     }
 
+    .freshness-lab {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .freshness-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+    }
+
+    .freshness-field {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .freshness-field label {
+      color: var(--color-text);
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .freshness-field input,
+    .freshness-field select {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 0.9rem;
+      padding: 0.75rem 0.8rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+    }
+
+    .freshness-output {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) minmax(260px, 1.2fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .freshness-badge {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      border-radius: 1.4rem;
+      border: 2px solid var(--color-border);
+      background: var(--color-background);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .freshness-badge strong {
+      display: block;
+      color: var(--color-primary);
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .freshness-badge span {
+      color: var(--color-text-light);
+      font-weight: 700;
+    }
+
+    .freshness-copy {
+      margin: 0;
+      border: 1px dashed var(--color-border);
+      border-radius: 1.25rem;
+      padding: 1rem;
+      background: var(--color-background);
+      color: var(--color-text-light);
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
     .plain-list {
       margin: 0;
       padding-left: 1.1rem;
@@ -335,6 +415,10 @@ const seeds = [
       .mirage-table {
         display: block;
         overflow-x: auto;
+      }
+
+      .freshness-output {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -569,11 +653,152 @@ const seeds = [
       </table>
     </section>
 
+    <section id="freshness-stamp-widget" class="artifact-card" aria-labelledby="freshness-stamp-heading">
+      <span class="status-pill">◆ Third sprout</span>
+      <h2 id="freshness-stamp-heading">Freshness Stamp Widget</h2>
+      <p>
+        Facts rot at different speeds. Store hours, menus, prices, payment options, license details, and third-party listings can all look official after they have gone stale. This little webapp makes a copy-ready freshness stamp without promising live data.
+      </p>
+
+      <div class="card-panel">
+        <h4>Freshness lab</h4>
+        <p>
+          Pick the fact type, source, and last-checked date. The stamp below changes from crisp to wilting as the fact ages. It is a trust cue, not a guarantee.
+        </p>
+        <div class="freshness-lab" data-freshness-widget>
+          <div class="freshness-controls">
+            <div class="freshness-field">
+              <label for="freshness-date">Last checked</label>
+              <input id="freshness-date" type="date" value="2026-05-13" />
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-fact">Fact type</label>
+              <select id="freshness-fact">
+                <option value="Store hours or visit logistics">Store hours / visit logistics</option>
+                <option value="Menu availability or product details">Menu availability / product details</option>
+                <option value="Payment options or ordering rules">Payment options / ordering rules</option>
+                <option value="License, municipal, or regulatory detail">License / municipal detail</option>
+                <option value="Third-party listing or directory note">Third-party listing note</option>
+              </select>
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-source">Source type</label>
+              <select id="freshness-source">
+                <option value="Official/state or municipal source">Official/state or municipal source</option>
+                <option value="Shop website or menu page">Shop website or menu page</option>
+                <option value="Phone call or in-store note">Phone call or in-store note</option>
+                <option value="Third-party listing">Third-party listing</option>
+                <option value="Old internal note">Old internal note</option>
+              </select>
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-speed">Rot speed</label>
+              <select id="freshness-speed">
+                <option value="fast">Fast rot: menu, price, hours</option>
+                <option value="medium">Medium rot: policies, payment, ordering</option>
+                <option value="slow">Slow rot: license or municipal reference</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="freshness-output" aria-live="polite">
+            <div class="freshness-badge">
+              <div>
+                <strong id="freshness-status">Fresh</strong>
+                <span id="freshness-age">Checked today</span>
+              </div>
+            </div>
+            <pre id="freshness-copy" class="freshness-copy">Last checked: 2026-05-13
+Source type: Official/state or municipal source
+What may have changed: hours, availability, pricing, payment options, or local rules.
+Verify today: confirm directly with the source before relying on this detail.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h4>Good stamp language</h4>
+        <ul class="plain-list">
+          <li><strong>Last checked:</strong> the date MDG last looked at the source.</li>
+          <li><strong>Source type:</strong> official page, shop page, direct note, third-party listing, or internal note.</li>
+          <li><strong>What may have changed:</strong> hours, menu availability, payment options, ordering rules, license status, or municipal details.</li>
+          <li><strong>Verify today:</strong> a plain reminder to confirm before driving, buying, or making a plan.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="next-move" aria-labelledby="next-move-heading">
       <h2 id="next-move-heading">Next small experiment</h2>
       <p>
-        The strongest remaining seed is probably the Freshness Stamp Widget: a tiny trust block for pages where facts rot quickly. If it sounds useful, it can germinate into one reusable block before anything becomes a larger guide.
+        The most playful remaining seed is probably Cannabis SEO Slop Bingo: a copy-taste filter for spotting tired cannabis marketing phrases before they leak into serious guide pages.
       </p>
     </section>
   </main>
+
+  <script is:inline>
+    const widget = document.querySelector('[data-freshness-widget]');
+    if (widget) {
+      const dateInput = widget.querySelector('#freshness-date');
+      const factInput = widget.querySelector('#freshness-fact');
+      const sourceInput = widget.querySelector('#freshness-source');
+      const speedInput = widget.querySelector('#freshness-speed');
+      const statusOutput = widget.querySelector('#freshness-status');
+      const ageOutput = widget.querySelector('#freshness-age');
+      const copyOutput = widget.querySelector('#freshness-copy');
+
+      const rotMap = {
+        fast: { fresh: 3, warm: 10, wilt: 30 },
+        medium: { fresh: 14, warm: 45, wilt: 90 },
+        slow: { fresh: 45, warm: 120, wilt: 240 }
+      };
+
+      const mayChangeByFact = {
+        'Store hours or visit logistics': 'hours, ID rules, pickup windows, holiday closures, or payment options',
+        'Menu availability or product details': 'menu availability, batch details, package dates, prices, or product names',
+        'Payment options or ordering rules': 'accepted payment methods, preorder rules, pickup instructions, or checkout flow',
+        'License, municipal, or regulatory detail': 'license status, municipal rules, application windows, or agency page URLs',
+        'Third-party listing or directory note': 'address formatting, hours, phone numbers, ratings, map pins, or stale listing text'
+      };
+
+      function pluralizeDays(days) {
+        if (days <= 0) return 'Checked today';
+        if (days === 1) return 'Checked 1 day ago';
+        return `Checked ${days} days ago`;
+      }
+
+      function statusFor(days, speed) {
+        const rot = rotMap[speed] || rotMap.medium;
+        if (days <= rot.fresh) return ['Fresh', 'Looks recently handled. Still verify before relying on it.'];
+        if (days <= rot.warm) return ['Warming', 'Probably usable as a lead, but not as a promise.'];
+        if (days <= rot.wilt) return ['Wilting', 'Needs a fresh look before this text should guide a decision.'];
+        return ['Compost?', 'Treat as old soil: useful context, not current guidance.'];
+      }
+
+      function updateFreshness() {
+        const selected = dateInput.value ? new Date(`${dateInput.value}T00:00:00`) : new Date();
+        const today = new Date();
+        selected.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        const days = Math.max(0, Math.round((today - selected) / 86400000));
+        const [status, note] = statusFor(days, speedInput.value);
+        const mayChange = mayChangeByFact[factInput.value] || 'details may have changed';
+
+        statusOutput.textContent = status;
+        ageOutput.textContent = pluralizeDays(days);
+        copyOutput.textContent = `Last checked: ${dateInput.value || 'not set'}
+Source type: ${sourceInput.value}
+Fact type: ${factInput.value}
+Freshness status: ${status} — ${note}
+What may have changed: ${mayChange}.
+Verify today: confirm directly with the source before relying on this detail.`;
+      }
+
+      [dateInput, factInput, sourceInput, speedInput].forEach((control) => {
+        control.addEventListener('input', updateFreshness);
+        control.addEventListener('change', updateFreshness);
+      });
+
+      updateFreshness();
+    }
+  </script>
 </Layout>
