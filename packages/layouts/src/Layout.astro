@@ -413,7 +413,10 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     --font-family: 'Plus Jakarta Sans', sans-serif;
     --font-serif: 'Fraunces', serif;
     --max-width: 1200px;
-    --radius: 1.5rem;
+    --radius: 0.75rem;
+    --color-disclaimer-bg: #F2F2E2;
+    --color-disclaimer-border: #0D4E50;
+    --color-disclaimer-text: #101820;
   }
 
   [data-theme="dark"] {
@@ -424,6 +427,9 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     --color-text: #F2F2E2;
     --color-text-light: #B8C9B0;
     --color-border: #1D3D3D;
+    --color-disclaimer-bg: rgba(242, 242, 226, 0.08);
+    --color-disclaimer-border: rgba(196, 212, 182, 0.3);
+    --color-disclaimer-text: #F2F2E2;
   }
 
   [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
@@ -508,7 +514,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   .nav-links a:hover, .nav-dropdown:hover .dropbtn { background: var(--color-soft-green); color: white; }
 
   .nav-dropdown { position: relative; }
-  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 1rem; padding: 0.5rem; border: 1px solid var(--color-border); }
+  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 0.75rem; padding: 0.5rem; border: 1px solid var(--color-border); }
   .nav-dropdown:hover .dropdown-content { display: block; }
   .dropdown-content a { color: var(--color-text); padding: 0.75rem 1rem; display: block; font-size: 0.875rem; border-radius: 0.5rem; }
   .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
@@ -587,6 +593,22 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
   
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: var(--color-disclaimer-bg);
+    border: 1px solid var(--color-disclaimer-border);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-disclaimer-text);
+  }
+
+  footer .disclaimer {
+    margin-top: 1.5rem;
+    display: inline-block;
+  }
+
   h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
   table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }

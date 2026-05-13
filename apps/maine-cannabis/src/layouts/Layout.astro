@@ -389,6 +389,14 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
                 <a href="/guides/augusta-dispensary-guide">Augusta</a>
                 <a href="/guides/south-portland-dispensary-guide">South Portland</a>
                 <a href="/guides/kittery-dispensary-guide">Kittery</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Western Maine</span>
+                <a href="/guides/fryeburg-dispensary-guide">Fryeburg</a>
+                <a href="/guides/gray-dispensary-guide">Gray</a>
+                <a href="/guides/porter-dispensary-guide">Porter</a>
+                <a href="/guides/hiram-dispensary-guide">Hiram</a>
+                <a href="/guides/baldwin-dispensary-guide">Baldwin</a>
+                <a href="/guides/naples-dispensary-guide">Naples</a>
+                <a href="/guides/brownfield-dispensary-guide">Brownfield</a>
                 <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Sebago Lakes Region</span>
                 <a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region</a>
                 <a href="/guides/windham-dispensary-guide">Windham</a>
@@ -397,7 +405,23 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
                 <a href="/guides/raymond-dispensary-guide">Raymond</a>
                 <a href="/guides/standish-dispensary-guide">Standish</a>
                 <a href="/guides/sebago-dispensary-guide">Sebago</a>
-                <a href="/guides">All 20+ City Guides</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Lower Saco Valley</span>
+                <a href="/guides/limerick-dispensary-guide">Limerick</a>
+                <a href="/guides/buxton-dispensary-guide">Buxton</a>
+                <a href="/guides/limington-dispensary-guide">Limington</a>
+                <a href="/guides/cornish-dispensary-guide">Cornish</a>
+                <a href="/guides/parsonsfield-dispensary-guide">Parsonsfield</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Southern Maine Coast</span>
+                <a href="/guides/york-dispensary-guide">York</a>
+                <a href="/guides/wells-dispensary-guide">Wells</a>
+                <a href="/guides/ogunquit-dispensary-guide">Ogunquit</a>
+                <a href="/guides/kennebunk-dispensary-guide">Kennebunk</a>
+                <a href="/guides/biddeford-dispensary-guide">Biddeford</a>
+                <a href="/guides/saco-dispensary-guide">Saco</a>
+                <a href="/guides/old-orchard-beach-dispensary-guide">Old Orchard Beach</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Waldo County</span>
+                <a href="/guides/freedom-dispensary-guide">Freedom</a>
+                <a href="/guides">All 40+ City Guides</a>
               </div>
               <div class="topic-group">
                 <span class="topic-header">◆ All Guides & Tools</span>
@@ -577,12 +601,10 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     --font-family: 'Plus Jakarta Sans', sans-serif;
     --font-serif: 'Fraunces', serif;
     --max-width: 1200px;
-    --radius: 1.5rem;
-
-    /* Disclaimer / Alert Box */
-    --color-disclaimer-bg: #fff3cd;
-    --color-disclaimer-border: #ffc107;
-    --color-disclaimer-text: #1a1a1a;
+    --radius: 0.75rem;
+    --color-disclaimer-bg: #F2F2E2;
+    --color-disclaimer-border: #0D4E50;
+    --color-disclaimer-text: #101820;
   }
 
   [data-theme="dark"] {
@@ -593,11 +615,9 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     --color-text: #F2F2E2;
     --color-text-light: #B8C9B0;
     --color-border: #1D3D3D;
-
-    /* Disclaimer / Alert Box */
-    --color-disclaimer-bg: rgba(255, 243, 205, 0.15);
-    --color-disclaimer-border: rgba(255, 193, 7, 0.4);
-    --color-disclaimer-text: #3d3d0f;
+    --color-disclaimer-bg: rgba(242, 242, 226, 0.08);
+    --color-disclaimer-border: rgba(196, 212, 182, 0.3);
+    --color-disclaimer-text: #F2F2E2;
   }
 
   [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
@@ -682,7 +702,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   .nav-links a:hover, .nav-dropdown:hover .dropbtn { background: var(--color-soft-green); color: white; }
 
   .nav-dropdown { position: relative; }
-  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 1rem; padding: 0.5rem; border: 1px solid var(--color-border); }
+  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 0.75rem; padding: 0.5rem; border: 1px solid var(--color-border); }
   .dropdown-content.multi-column { min-width: 680px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding: 1rem; }
   .topic-group { display: flex; flex-direction: column; }
   .topic-header { font-family: var(--font-serif); font-weight: 700; font-size: 0.75rem; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; margin-bottom: 0.25rem; }
@@ -787,6 +807,22 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
 
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: var(--color-disclaimer-bg);
+    border: 1px solid var(--color-disclaimer-border);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-disclaimer-text);
+  }
+
+  footer .disclaimer {
+    margin-top: 1.5rem;
+    display: inline-block;
+  }
+
   h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
   table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }
