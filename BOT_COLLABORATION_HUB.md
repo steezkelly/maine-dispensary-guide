@@ -3682,5 +3682,30 @@ Made GuideSidebar topic-aware using the exact same pattern as RelatedArticles.
 ### Commits
 - (pending — work completed, not yet committed)
 
+---
 
+## 📋 SPRINT 57: Nav Dropdown Fix (May 12, 2026 EDT)
+
+**[HERMES] May 12, 2026 EDT — Fixed non-functional nav dropdowns on live site**
+
+### Problem
+"Browse by Topic" and "Business Tools" dropdown buttons in the navbar appeared as clickable buttons but had no dropdown opening behavior — they did nothing when clicked on the live site. The 5-column topic mega-menu and Business Tools dropdown content was hidden and unreachable by mouse or keyboard.
+
+### Root Cause
+The dropdown toggle JavaScript was inside `<script is:inline>` in the `<head>` as an IIFE. Since `<script is:inline>` executes synchronously during HTML parsing, `document.querySelectorAll('.nav-dropdown .dropbtn')` returned an empty NodeList — the `<body>` (and thus the nav elements) had not been parsed yet. No event listeners were ever attached to any dropdown buttons.
+
+### Fix
+Changed the IIFE wrapper to `document.addEventListener('DOMContentLoaded', ...)` so the `querySelectorAll` calls run after the nav elements are in the DOM.
+
+### Status
+- ✅ Browse by Topic → 5-column mega-menu opens with all topic groups
+- ✅ Business Tools → dropdown opens with 5 tool links
+- ✅ Close on outside click, Escape key, click-to-toggle all work
+- ✅ Build clean (100 pages, 0 errors), deployed
+
+### Commit
+- `899ffce` — fix: wrap dropdown JS in DOMContentLoaded
+
+### Files Changed
+- `apps/maine-cannabis/src/layouts/Layout.astro`
 
