@@ -45,15 +45,17 @@ const germinated = [
     summary: "A neutral in-store question card that helps adults ask clearly without asking for legal, medical, or product advice.",
     signal: "Someone walks into a shop with less awkwardness and a clearer list of facts to verify.",
     href: "#budtender-question-card"
+  },
+  {
+    status: "Germinated",
+    title: "Best Dispensary Detox Box",
+    summary: "A trust-language box that explains why MDG avoids best-of claims unless the method is visible, current, and fair.",
+    signal: "Someone trusts the restraint instead of feeling like the page dodged the question.",
+    href: "#best-dispensary-detox-box"
   }
 ];
 
 const seeds = [
-  {
-    title: "Best Dispensary Detox Box",
-    summary: "A small explanation of why Maine Dispensary Guide does not call something best without a transparent method.",
-    next: "Draft one sidebar box that feels calm, not defensive."
-  },
   {
     title: "Cannabis Claim Graveyard",
     summary: "A private/public-safe list of cannabis copy phrases to avoid, with better phrasing that stays factual.",
@@ -61,6 +63,46 @@ const seeds = [
   }
 ];
 
+
+
+const detoxRows = [
+  {
+    readerAsk: "Which shop is best near me?",
+    mdgCanSay: "Here are nearby options, current-looking logistics, and questions worth verifying today.",
+    mdgWillNotSay: "This is the best dispensary for you.",
+    realMethod: "A current scoring method with dated sources, weighting, recency checks, and disclosed limits."
+  },
+  {
+    readerAsk: "Who has the best prices?",
+    mdgCanSay: "Prices and menus change fast; compare the shop's own current menu or call before driving.",
+    mdgWillNotSay: "This store has the cheapest cannabis in Maine.",
+    realMethod: "Same-day menu snapshots across comparable products, with timestamps and exclusions."
+  },
+  {
+    readerAsk: "Who has the best quality?",
+    mdgCanSay: "Quality words need evidence. Look for batch details, test dates, package dates, and source notes.",
+    mdgWillNotSay: "This shop has the highest-quality products.",
+    realMethod: "Defined criteria, product categories, lab/test availability, freshness checks, and reviewer independence."
+  },
+  {
+    readerAsk: "Who is safest or most legal?",
+    mdgCanSay: "Verify license status, municipal rules, ID requirements, and official sources before relying on a page.",
+    mdgWillNotSay: "This shop is the safest choice or legal advice says you are fine.",
+    realMethod: "Current official-source checks plus clear separation between information and legal advice."
+  },
+  {
+    readerAsk: "Who has the best staff?",
+    mdgCanSay: "Good staff claims are hard to verify from the outside; use neutral questions at the counter.",
+    mdgWillNotSay: "This shop has the most knowledgeable budtenders.",
+    realMethod: "Transparent mystery-shop criteria, dated visits, accessibility notes, and a conflict policy."
+  },
+  {
+    readerAsk: "Who should I pick today?",
+    mdgCanSay: "Choose based on your current constraints: distance, eligibility, hours, payment, menu freshness, and what you can verify.",
+    mdgWillNotSay: "We recommend this dispensary.",
+    realMethod: "A user-controlled comparison tool where the reader chooses weights and sees source dates."
+  }
+];
 
 const budtenderQuestions = [
   {
@@ -990,10 +1032,55 @@ Verify today: confirm directly with the source before relying on this detail.</p
       </table>
     </section>
 
+
+
+    <section id="best-dispensary-detox-box" class="artifact-card" aria-labelledby="best-detox-heading">
+      <span class="status-pill">◆ Sixth sprout</span>
+      <h2 id="best-detox-heading">Best Dispensary Detox Box</h2>
+      <p>
+        A calm trust box for pages where a reader may want a “best dispensary” answer. The detox is not a dodge; it explains what MDG can verify, what would be needed for a real ranking, and why unmethoded best-of language is just another kind of slop.
+      </p>
+
+      <div class="card-panel">
+        <h4>Plain trust box</h4>
+        <p>
+          MDG does not call a dispensary “best” unless the method is visible, current, and fair. Cannabis menus, prices, hours, staff claims, and local rules can change quickly. This page is meant to help you compare facts and ask better questions, not to rank shops, sell placements, or make medical/legal recommendations.
+        </p>
+      </div>
+
+      <table class="mirage-table">
+        <thead>
+          <tr>
+            <th>Reader may ask</th>
+            <th>MDG can say</th>
+            <th>MDG will not say</th>
+            <th>What a real method would need</th>
+          </tr>
+        </thead>
+        <tbody>
+          {detoxRows.map((row) => (
+            <tr>
+              <td>{row.readerAsk}</td>
+              <td>{row.mdgCanSay}</td>
+              <td>{row.mdgWillNotSay}</td>
+              <td>{row.realMethod}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div class="card-panel">
+        <h4>Taste rule</h4>
+        <p>
+          If a sentence says “best” but cannot show the method, source date, and limit of the claim, rewrite it as a comparison prompt: what can the reader verify today?
+        </p>
+      </div>
+    </section>
+
     <section class="next-move" aria-labelledby="next-move-heading">
       <h2 id="next-move-heading">Next small experiment</h2>
       <p>
-        The strongest remaining seed is probably the Best Dispensary Detox Box: a calm trust box explaining why Maine Dispensary Guide does not call something “best” without a transparent method.
+        The strongest remaining seed is probably the Cannabis Claim Graveyard: a small avoid-this / say-this-instead table for cannabis copy claims that should be composted before they reach useful guide pages.
       </p>
     </section>
   </main>
