@@ -28,6 +28,34 @@ const cities = [
     ]
   }
 ];
+
+const directoryJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'itemListElement': cities.flatMap((city, ci) =>
+    city.stores.map((store, si) => ({
+      '@type': 'ListItem',
+      'position': ci * 10 + si + 1,
+      'item': {
+        '@type': 'LocalBusiness',
+        'name': store.name,
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': store.address,
+          'addressLocality': city.name,
+          'addressRegion': 'ME',
+          'addressCountry': 'US'
+        },
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'ratingValue': store.rating,
+          'ratingCount': 100
+        }
+      }
+    }))
+  ),
+  'numberOfItems': cities.reduce((a, c) => a + c.stores.length, 0)
+};
 ---
 
 <Layout 
@@ -252,4 +280,4 @@ const cities = [
   </Callout>
 </Layout>
 
-<script type="application/ld+json" set:text={JSON.stringify({"@context":"https://schema.org","@type":"ItemList","itemListElement":cities.flatMap((city,ci)=>city.stores.map((store,si)=>({"@type":"ListItem","position":ci*10+si+1,"item":{"@type":"LocalBusiness","name":store.name,"address":{"@type":"PostalAddress","streetAddress":store.address,"addressLocality":city.name,"addressRegion":"ME","addressCountry":"US"},"aggregateRating":{"@type":"AggregateRating","ratingValue":store.rating,"ratingCount":100}}})),"numberOfItems":cities.reduce((a,c)=>a+c.stores.length,0)})}></script>
+<script type="application/ld+json" set:text={JSON.stringify(directoryJsonLd)}></script>
