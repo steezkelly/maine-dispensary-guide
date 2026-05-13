@@ -28,6 +28,19 @@ const faqs = [
     a: "We vet all professionals before listing. Vendors must demonstrate cannabis industry experience and Maine market presence. Email <a href=\"mailto:partners@mainedispensaryguide.com\">partners@mainedispensaryguide.com</a> with your practice areas, client references, and years of cannabis-specific experience."
   }
 ];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.a.replace(/<[^>]+>/g, "")
+    }
+  }))
+};
 ---
 
 <Layout 
@@ -161,3 +174,4 @@ const faqs = [
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={JSON.stringify(faqPageSchema)}></script>
