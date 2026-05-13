@@ -237,7 +237,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
 
     <script is:inline>
       // Dropdown click-based toggle with keyboard support
-      (function() {
+      document.addEventListener('DOMContentLoaded', function() {
         const dropdownBtns = document.querySelectorAll('.nav-dropdown .dropbtn');
 
         function toggleDropdown(btn) {
@@ -289,7 +289,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
             }
           }
         });
-      })();
+      });
     </script>
   </head>
   <body>
