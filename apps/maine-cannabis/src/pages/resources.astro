@@ -136,6 +136,87 @@ const vendorCategories = [
     </Callout>
   </div>
 
+  <section class="downloadable-resources">
+    <h2>Free Compliance Downloads</h2>
+    <p class="resource-intro">These tools are used by licensed Maine operators to maintain OCP compliance and prepare for inspections.</p>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <h3>Compliance Self-Assessment</h3>
+        <p>8-domain checklist covering security, METRC, licensing, employee records, financial reporting, product testing, marketing, and municipal authorization. 88 checklist items + 3 SOP templates.</p>
+        <a href="/download/compliance-self-assessment" class="resource-link">Get the assessment →</a>
+      </div>
+      <div class="resource-card">
+        <h3>Launch Checklist</h3>
+        <p>Step-by-step weekly milestone tracker from LLC formation through OCP inspection. Covers hiring, banking, METRC setup, and pre-opening compliance review.</p>
+        <a href="/launch-checklist" class="resource-link">View the checklist →</a>
+      </div>
+      <div class="resource-card">
+        <h3>Founder's Bible</h3>
+        <p>The foundational 10-page guide covering everything from entity formation through first sale. Includes budget benchmarks, municipal strategy, and OCP timeline.</p>
+        <a href="/download/founders-bible" class="resource-link">Download the Bible →</a>
+      </div>
+      <div class="resource-card">
+        <h3>2026 Business Roadmap</h3>
+        <p>Month-by-month operating timeline with METRC reporting deadlines, OCP renewal dates, and tax filing reminders for active dispensaries.</p>
+        <a href="/download/roadmap" class="resource-link">Download roadmap →</a>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    .downloadable-resources {
+      max-width: var(--max-width);
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .downloadable-resources h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .resource-intro {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .resource-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+    }
+    .resource-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      color: var(--color-primary);
+      margin: 0 0 0.5rem;
+    }
+    .resource-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-light);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .resource-link {
+      color: var(--color-primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+
   <style is:global>
     #page-theatre-wrapper { position: relative; width: 100%; }
 
