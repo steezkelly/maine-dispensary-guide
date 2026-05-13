@@ -1,0 +1,193 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there dispensaries in Raymond, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Raymond has at least one dedicated recreational dispensary: Eclipse Cannabis Company at 1259 Roosevelt Trail. The town is also served by nearby Windham dispensary operators just minutes away on the Route 302 corridor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best location for a dispensary in Raymond?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Roosevelt Trail (Route 302) is the primary commercial corridor with established cannabis retail at Eclipse Cannabis Company. Properties along this corridor benefit from high visibility and lake-bound traffic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Raymond allow cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Raymond has opted in to cannabis retail. Eclipse Cannabis Company operates on Roosevelt Trail, and the town benefits from proximity to the higher concentration of dispensaries in nearby Windham."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Raymond compare to nearby markets for cannabis business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Raymond has lower population density than Windham ($10-16/sq ft commercial rents vs $14-18/sq ft) but benefits from proximity to Sebago Lake and Jordan Bay. Competition is lower with only 1-2 dedicated dispensaries in town, creating opportunity for operators who want a smaller-market presence with Lakes Region tourism upside."
+      }
+    }
+  ]
+});
+---
+<Layout title="Raymond, Maine Cannabis Dispensary Guide (2026)" description="Raymond, Maine cannabis dispensary guide. 2026 market analysis, Sebago Lake proximity, Roosevelt Trail corridor, and outdoor lifestyle cannabis retail opportunities." heroImage="/images/heroes/raymond-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Raymond Dispensary Guide</h1>
+    <p class="subtitle">How to open a cannabis dispensary in Raymond, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Raymond at a Glance</h2>
+    <table aria-label="Raymond dispensary requirements and market data">
+      <caption>Key requirements and market data for opening a dispensary in Raymond</caption>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>License Required</strong></td><td>Maine OCP Adult-Use Retail License</td></tr>
+        <tr><td><strong>Local Fee</strong></td><td>$1,500-2,000 annually (estimated)</td></tr>
+        <tr><td><strong>School Buffer</strong></td><td>500 ft minimum</td></tr>
+        <tr><td><strong>Commercial Rent</strong></td><td>$10-16/sq ft annually</td></tr>
+        <tr><td><strong>Current Dispensaries</strong></td><td>1 dedicated, with overflow from Windham</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>4,600+ (2020 Census)</td></tr>
+        <tr><td><strong>Lakes Region Service Area</strong></td><td>Part of 60,000+ Sebago Lakes market</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Sebago Lake, Jordan Bay, Raymond Community Forest</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Why Raymond?</h2>
+    <p>Raymond is the kind of town where the outdoor lifestyle and the cannabis customer overlap naturally. The town wraps around the northern shores of Sebago Lake, includes Jordan Bay for paddle sports, and has the Raymond Community Forest for hiking and birding. People who live in Raymond — and the visitors who come here — tend to be outdoors-oriented, which correlates strongly with cannabis use in Maine demographic data.</p>
+    <p>The cannabis market in Raymond is not saturated. Eclipse Cannabis Company at 1259 Roosevelt Trail is the main dedicated dispensary in town, with an established customer base and strong reviews — one of the better-rated operators in Cumberland County at 4.6+ stars. Windham's dispensaries (Maine's Alternative Caring, Alternative Essence, JAR Cannabis Co.) are also within minutes, making Raymond part of a broader micro-market.</p>
+    <p>This is a good entry point for an operator who wants to be close to the action — Windham and Route 302's established corridor — without competing directly with the density of operators that the bigger commercial stretches attract. Raymond offers proximity to the Lakes Region customer base with lower real estate costs than Portland markets and fewer direct competitors than the Route 302 hubs in Bridgton or Casco.</p>
+  </section>
+
+  <Callout title="Lower Competition, Higher Seasonality" type="tip">
+    Raymond's market is shaped by two factors: low current concentration (1 dedicated dispensary) and high seasonal variation. The outdoor lifestyle draws summer visitors while winter months are quieter. An operator should plan inventory and staffing around these seasonal swings rather than treating Raymond like a year-round stable market.
+  </Callout>
+
+  <section>
+    <h2>Dispensaries Serving Raymond</h2>
+    <h3>Eclipse Cannabis Company</h3>
+    <p>Located at 1259 Roosevelt Trail, Eclipse Cannabis Company is the primary dedicated dispensary in Raymond. Their recreational menu includes a full range of flower, edibles, concentrates, and pre-rolls. They maintain strong customer ratings (4.6+ stars) and serve as both a destination for Raymond residents and a convenient stop for lake visitors.</p>
+
+    <h3>Nearby Windham Options</h3>
+    <p>Windham is just minutes from Raymond and hosts several dispensaries: Maine's Alternative Caring (voted #1 medical dispensary in the Sebago Lakes area multiple times), Alternative Essence, and JAR Cannabis Co. (serving both medical and recreational markets). The proximity means some Raymond-area customers cross into Windham to shop — which is good for the regional market but means a Raymond-based operator needs to offer something that competes with Windham's selection.</p>
+  </section>
+
+  <section>
+    <h2>Licensing</h2>
+    <p>Standard Maine OCP adult-use retail licensing applies. Raymond has opted in to cannabis retail, so the town does not prohibit new operations. The process:</p>
+    <ul>
+      <li><strong>OCP Conditional Licensure:</strong> $250 application fee plus background checks and Individual Identification Cards for all principals and staff.</li>
+      <li><strong>Town Authorization:</strong> Estimated $1,500-2,000 annually for a Raymond local cannabis license based on comparable Cumberland County towns.</li>
+      <li><strong>Active Licensure:</strong> Facility plan, electrical compliance, and annual OCP fees ($500-$1,500).</li>
+    </ul>
+
+    <p>The 500-foot school buffer requirement must be satisfied. Raymond's school properties are concentrated near the town center, which leaves Roosevelt Trail and the commercial areas along Route 302 as the most viable locations.</p>
+  </section>
+
+  <section>
+    <h2>Market Positioning</h2>
+    <p>The opportunity in Raymond is not volume — it's fit. A dispensary here works best when it aligns with the community's outdoor-and-lakes identity. Product selection matters: items that complement hiking, boating, and outdoor leisure (pre-rolls, edibles for on-the-go, THC topicals for post-activity recovery) resonate more than high-concentration products aimed at heavy users.</p>
+    <p>Price sensitivity is also a factor. Raymond and the Lakes Region have a working-and-middle-class customer base alongside affluent seasonal residents. A two-tier pricing strategy — value products for locals, premium small-batch items for tourists — mirrors what Blue Lobster Cannabis does in nearby Casco with its 10% local discount program.</p>
+
+    <h3>Delivery Opportunity</h3>
+    <p>A Raymond-based operator could serve the broader Lakes Region through delivery: Naples, Sebago, Casco, Harrison, and the towns along Long Lake that lack dispensaries. Maine's delivery law (28-B M.R.S.) allows delivery to any municipality regardless of opt-in status. The smaller lakeside communities are ideal delivery targets — no competition and customers who value the convenience of not driving into Windham or Bridgton.</p>
+  </section>
+
+  <section>
+    <h2>Site Selection</h2>
+    <h3>Roosevelt Trail</h3>
+    <p>The same corridor where Eclipse Cannabis operates. High visibility, easy access from Route 302, and established cannabis retail zoning. The main constraint is finding available space that meets the school buffer.</p>
+
+    <h3>Near Route 121/Route 302 Junction</h3>
+    <p>Intersection properties capture traffic from Gray and Windham on Route 121 plus the Route 302 lake-bound flow. Good visibility, potentially lower rent than the established Roosevelt Trail corridor.</p>
+
+    <h3>Delivery-First Warehouse</h3>
+    <p>Raymond is reasonably central to the northern Lakes Region. A warehouse or light commercial space (out of sight of residential areas) can serve as a delivery hub for towns from Naples to Fryeburg. Lower overhead than a storefront and access to the full regional market.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Are there dispensaries in Raymond, Maine?</summary>
+      <p>Yes. Eclipse Cannabis Company operates at 1259 Roosevelt Trail with a 4.6-star rating. Windham's dispensaries are also within minutes of Raymond.</p>
+    </details>
+    <details>
+      <summary>Does Raymond allow cannabis retail?</summary>
+      <p>Yes. Raymond has opted in to permit cannabis retail establishments. Eclipse Cannabis Company is already operating in town.</p>
+    </details>
+    <details>
+      <summary>How does Raymond compare to nearby markets?</summary>
+      <p>Raymond has lower competition (1 dedicated dispensary) and lower commercial rents ($10-16/sq ft) than Portland-area markets. But seasonal variation is significant — summer tourism surges while winter months are quieter.</p>
+    </details>
+    <details>
+      <summary>Can I deliver to opt-out towns from a Raymond base?</summary>
+      <p>Yes. Maine law allows licensed delivery operators to serve any municipality regardless of opt-in status. This includes smaller lakeside towns that do not have dispensaries of their own.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Raymond for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

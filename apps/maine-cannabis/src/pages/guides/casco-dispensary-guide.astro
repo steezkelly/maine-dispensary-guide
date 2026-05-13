@@ -1,0 +1,188 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Casco, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Casco has at least two recreational dispensaries on Roosevelt Trail (Route 302): Blue Lobster Cannabis at 200 Roosevelt Trail and Landrace Cannabis Co. at 325 Roosevelt Trail. Both serve the Sebago Lakes Region."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Casco allow cannabis dispensaries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Casco has opted in to permit cannabis retail establishments. Multiple dispensaries are already operating, including Blue Lobster Cannabis — the first recreational store in Casco — and Landrace Cannabis Co."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Casco a unique cannabis market?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Casco sits on Sebago Lake along the Route 302 corridor, making it a gateway for Lakes Region tourism. Seasonal population increases significantly in summer. Blue Lobster Cannabis offers a 10% local resident discount and focuses on locally sourced, organically grown cannabis. Out-of-state visitors with valid medical cards from reciprocity-approved states can also purchase in Casco."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the school buffer requirement in Casco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The standard 500-foot school buffer applies in Casco, in line with Maine state law. This is measured from the nearest point of the dispensary premises to the nearest school property line."
+      }
+    }
+  ]
+});
+---
+<Layout title="Casco, Maine Cannabis Dispensary Guide (2026)" description="Casco, Maine cannabis dispensary guide. 2026 market analysis, Sebago Lake tourism impact, Route 302 corridor, and local discount programs for Lakes Region operators." heroImage="/images/heroes/casco-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Casco Dispensary Guide</h1>
+    <p class="subtitle">How to open a cannabis dispensary in Casco, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Casco at a Glance</h2>
+    <table aria-label="Casco dispensary requirements and market data">
+      <caption>Key requirements and market data for opening a dispensary in Casco</caption>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>License Required</strong></td><td>Maine OCP Adult-Use Retail License</td></tr>
+        <tr><td><strong>Local Fee</strong></td><td>$1,500-2,000 annually (estimated)</td></tr>
+        <tr><td><strong>School Buffer</strong></td><td>500 ft minimum</td></tr>
+        <tr><td><strong>Commercial Rent</strong></td><td>$10-16/sq ft annually</td></tr>
+        <tr><td><strong>Current Dispensaries</strong></td><td>2 (limited concentration)</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>3,100+ (2020 Census)</td></tr>
+        <tr><td><strong>Greater Sebago Lakes Area</strong></td><td>60,000+ year-round, surges in summer</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Sebago Lake tourism, Route 302 retail corridor</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Why Casco?</h2>
+    <p>Casco is a lakes town with a small year-round population and an outsized seasonal draw. The town sits on the east shore of Sebago Lake — Maine's second-largest lake and the deepest lake entirely within the state. In summer, the population swells as seasonal residents arrive, day-trippers come from Portland, and visitors explore the lakeside communities that define this part of western Maine.</p>
+    <p>Roosevelt Trail — which carries Route 302 through Casco toward Sebago Lake — is the main commercial artery. Two operators are already here:</p>
+
+    <h3>Blue Lobster Cannabis</h3>
+    <p>Located at 200 Roosevelt Trail, Blue Lobster was the first recreational cannabis store in Casco. Operated by the same team behind The Happy Canary cultivation brand, they bring six-plus years of medical cannabis experience into the adult-use market. Their sourcing focuses on local, organic Maine growers. They offer a permanent 10% discount for local residents of Raymond, Casco, Naples, and Bridgton — a loyalty program that builds community goodwill and drives repeat business from the year-round population.</p>
+
+    <h3>Landrace Cannabis Co. – Casco</h3>
+    <p>At 325 Roosevelt Trail, roughly a mile from the Point Sebago entrance coming from Windham, Landrace Cannabis Co. operates a recreational retail storefront. Their location positions them directly in the path of summer traffic heading toward the lake.</p>
+  </section>
+
+  <Callout title="Seasonal Market Dynamics" type="tip">
+    Casco's year-round population is roughly 3,100, but the Lakes Region seasonal surge can increase the addressable market by 30-50% during peak summer months. Stock accordingly: single-serve edibles, pre-rolls, and portable vape products sell well to tourists. Medical card holders and veterans receive a 10% local discount at Blue Lobster.
+  </Callout>
+
+  <section>
+    <h2>Licensing and Municipal Authorization</h2>
+    <p>Casco has opted in to cannabis retail, which is why two dispensaries already operate on Route 302. The process requires:</p>
+    <ul>
+      <li><strong>OCP Conditional Licensure:</strong> Submit application, complete background checks, obtain Individual Identification Cards for all principals and employees. $250 application fee.</li>
+      <li><strong>Local Authorization:</strong> Casco's town government must approve the location. Estimated local fees run $1,500-2,000 annually based on comparable towns in Cumberland County.</li>
+      <li><strong>Active Licensure:</strong> Complete facility plan, electrical compliance documentation, and pay the annual OCP licensing fee ($500-$1,500 depending on tier).</li>
+    </ul>
+
+    <p>Commercial rents in Casco are lower than Portland-area markets — likely in the $10-16 per square foot range — because the town lacks the retail density of larger cities. However, seasonal inventory management is more complex: you need enough product for the summer surge without overstocking during the shoulder months.</p>
+  </section>
+
+  <section>
+    <h2>Competition and Market Fit</h2>
+    <p>Two dispensaries in a town of 3,100 sounds like a lot on paper, but Casco is not a standalone market. Both Blue Lobster and Landrice Cannabis position themselves as Lakes Region destinations serving a much wider catchment: Raymond, Naples, Harrison, Sebago, Windham, and anyone driving toward Point Sebago from the Portland direction. The real question is whether a third operator can differentiate effectively.</p>
+    <p>Blue Lobster's differentiation is local, organically sourced product with a resident discount program. Landrace Cannabis benefits from prime lake-traffic positioning. A new entrant needs a distinct value proposition — perhaps a medical-first approach to serve patients who want the 10% excise tax exemption, or a specialty product focus that neither competitor emphasizes.</p>
+
+    <h3>Delivery as Differentiator</h3>
+    <p>A Casco-based operator could run delivery to the surrounding lake towns — Naples, Harrison, Sebago, Raymond — that have no dispensaries or only one. Maine law permits delivery to any municipality regardless of opt-in status. This is especially valuable in the Lakes Region, where small towns dot the shoreline and a patient in Sebago town proper may be 20 minutes from the nearest dispensary.</p>
+  </section>
+
+  <section>
+    <h2>Site Selection</h2>
+    <h3>Roosevelt Trail (Route 302)</h3>
+    <p>This is the established corridor. Visibility is high, parking is typically available, and the Route 302 frontage captures through-traffic from both directions. The school buffer (500 feet) must be checked for any available property along this stretch.</p>
+
+    <h3>Town Center</h3>
+    <p>Centrally located near Casco Village, with lower traffic volume but proximity to residential year-round customers. This works for a community-focused dispensary targeting the local base rather than the tourist surge.</p>
+
+    <h3>Non-Retail / Delivery-Focused</h3>
+    <p>A warehouse or commercial space off the main corridor can serve as a base for delivery operations across the Lakes Region. Lower rent, fewer visibility requirements, and the ability to serve towns that lack any dispensary presence. Many of the smaller lakeside communities — Sebago, Harrison, Naples — are within 15-20 minutes of Casco.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Are there cannabis dispensaries in Casco, Maine?</summary>
+      <p>Yes. Casco has two recreational dispensaries on Route 302 (Roosevelt Trail): Blue Lobster Cannabis at 200 Roosevelt Trail and Landrace Cannabis Co. at 325 Roosevelt Trail.</p>
+    </details>
+    <details>
+      <summary>Does Casco allow cannabis dispensaries?</summary>
+      <p>Yes. Casco has opted in to permit cannabis retail. Two recreational dispensaries are already operating in town.</p>
+    </details>
+    <details>
+      <summary>What makes Casco a unique cannabis market?</summary>
+      <p>Casco's seasonal population on Sebago Lake creates a dual revenue stream: steady year-round locals and a significant summer tourist surge. The Route 302 corridor captures lake-bound traffic from the Portland direction. Local discounts and organic product sourcing are important differentiators.</p>
+    </details>
+    <details>
+      <summary>Can out-of-state medical patients buy in Casco?</summary>
+      <p>Yes. Maine has reciprocity with 27+ states including Massachusetts, New Hampshire, New York, and others. Out-of-state patients with valid medical credentials from approved states can purchase at licensed medical dispensaries in the area.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Casco for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

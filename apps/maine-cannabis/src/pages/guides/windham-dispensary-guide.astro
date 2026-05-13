@@ -1,0 +1,201 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries are in Windham, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windham has 4-5 active dispensaries serving both medical and adult-use markets, including Maine's Alternative Caring, JAR Cannabis Co., and Alternative Essence. Route 302 through Windham has earned the nickname 'The Green Mile' for its concentration of cannabis businesses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is Route 302 in Windham called The Green Mile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windham's stretch of Route 302 has earned the nickname 'The Green Mile' because of its dense concentration of cannabis dispensaries and related businesses. Maine's Alternative Caring led the way as the town's first dispensary, and several others followed, creating a natural cannabis corridor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Windham oversaturated with cannabis dispensaries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windham has 4-5 dispensaries for roughly 17,000 residents with strong regional draw from the Lakes Region. While Route 302 has noticeable clustering, the overall market supports current operators. New entrants need clear differentiation — whether through delivery, specialty products, or a brand that appeals to a specific demographic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the licensing requirements for a Windham dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windham requires both Maine OCP state licensing and local municipal authorization. OCP application fees are $250 with annual licensing of $500-$1,500. Town-level fees are estimated at $2,000-$2,500 annually. Total first-year licensing costs run approximately $3,000-$4,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I run a delivery operation from Windham?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Licensed Windham dispensaries can deliver to any municipality in Maine regardless of opt-in status. This allows serving smaller Lakes Region towns like Naples, Sebago, Harrison, and even Fryeburg that lack their own dispensary coverage."
+      }
+    }
+  ]
+});
+---
+<Layout title="Windham, Maine Cannabis Dispensary Guide (2026)" description="Windham, Maine cannabis dispensary guide. The Green Mile on Route 302, market analysis for Maine's busiest Lakes Region cannabis corridor, and 2026 licensing requirements." heroImage="/images/heroes/windham-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Windham Dispensary Guide</h1>
+    <p class="subtitle">How to open a cannabis dispensary in Windham, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Windham at a Glance</h2>
+    <table aria-label="Windham dispensary requirements and market data">
+      <caption>Key requirements and market data for opening a dispensary in Windham</caption>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>License Required</strong></td><td>Maine OCP Adult-Use Retail License</td></tr>
+        <tr><td><strong>Local Fee</strong></td><td>$2,000-2,500 annually</td></tr>
+        <tr><td><strong>School Buffer</strong></td><td>500 ft minimum</td></tr>
+        <tr><td><strong>Commercial Rent</strong></td><td>$14-18/sq ft annually</td></tr>
+        <tr><td><strong>Current Dispensaries</strong></td><td>4-5 (moderate to high concentration)</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>17,000+ (2020 Census)</td></tr>
+        <tr><td><strong>Regional Draw</strong></td><td>Lakes Region gateway, 60,000+ service area</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Route 302 'Green Mile', commuter town to Portland, Little Sebago Lake</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Why Windham?</h2>
+    <p>Windham is the most significant cannabis market in the Sebago Lakes Region that isn't Portland-borough-adjacent. With 17,000 residents, proximity to Little Sebago Lake, and a location just 15 minutes northwest of Portland, Windham has a foot in two worlds: it's a bedroom community for Portland-area workers and a gateway to the Lakes Region. Both demographics are cannabis consumers, and the town has responded.</p>
+    <p>The defining feature of Windham's cannabis landscape is Route 302 — the stretch of highway that locals and industry participants have come to call <strong>The Green Mile</strong>. This corridor hosts the highest concentration of cannabis businesses in the Lakes Region, anchored by several established dispensaries. It is a real commercial cluster, not a marketing nickname.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in and Around Windham</h2>
+
+    <h3>Maine's Alternative Caring</h3>
+    <p>Located on Route 302, Maine's Alternative Caring is a pioneering medical dispensary that has been operating since 2018. As a vertically-integrated company — overseeing cultivation, processing, and distribution in-house — they were Windham's first cannabis dispensary and have been voted the number one medical dispensary in the Sebago Lakes area multiple years running. Their presence established Route 302 as a cannabis destination and set the standard for quality in the market.</p>
+
+    <h3>JAR Cannabis Co. – Windham</h3>
+    <p>JAR Cannabis operates separate medical and recreational storefronts in Windham. The medical location has over 1,600 reviews averaging 4.8 stars, making it one of the highest-rated dispensaries in Cumberland County. Their recreational store also performs well at 4.9 stars with 80+ reviews. JAR serves a broad regional customer base extending beyond Windham into Raymond, Casco, and the Lakes Region.</p>
+
+    <h3>Alternative Essence</h3>
+    <p>Alternative Essence operates in the Windham area with strong ratings (4.8 stars from 190+ reviews). They serve both medical and adult-use customers and are positioned along the Route 302 corridor, contributing to the Green Mile cluster.</p>
+  </section>
+
+  <Callout title="The Green Mile Effect" type="passion">
+    Route 302 through Windham has become a cannabis corridor — similar in concept to Denver's Federal Boulevard or Northampton's Route 9. Clustering creates a destination effect: consumers know where to shop, and operators benefit from shared foot traffic. The tradeoff is direct competition and higher scrutiny from local government on new applications.
+  </Callout>
+
+  <section>
+    <h2>Market Dynamics</h2>
+    <p>Four to five dispensaries for 17,000 residents is a moderate-to-high concentration. But Windham is not an island market. The town serves as the entry point to the Lakes Region from Portland, meaning every driver heading to Casco, Raymond, Naples, and Sebago passes through — or near — Windham. The seasonal multiplier is real: summer visitors heading to Sebago Lake and Long Lake drive through or stop in Windham, expanding the addressable market well beyond 17,000.</p>
+    <p>The question for a new operator is whether the market can absorb a sixth dispensary. The answer is: yes, but only with differentiation. JAR and Maine's Alternative Caring have established themselves as quality leaders. Alternative Essence has loyal customers. A new entrant needs something these operators don't offer — perhaps a specialty product line (concentrates, live resin, craft flower), a wellness-focused retail experience, or a delivery operation that serves the lake towns north and west of Windham.</p>
+  </section>
+
+  <section>
+    <h2>Licensing and Site Selection</h2>
+
+    <h3>Regulatory Requirements</h3>
+    <ul>
+      <li><strong>OCP Licensing:</strong> $250 application fee, Individual Identification Cards for all personnel, annual state fees of $500-$1,500 depending on tier.</li>
+      <li><strong>Town of Windham:</strong> Local authorization required. Windham has opted in to cannabis retail. Estimated local fees of $2,000-2,500 annually based on comparable Cumberland County municipalities.</li>
+      <li><strong>School Buffer:</strong> 500 feet minimum from any school property line.</li>
+    </ul>
+
+    <h3>Site Selection Options</h3>
+
+    <p><strong>Route 302 (The Green Mile):</strong> The established corridor. Highest visibility but limited available inventory and competitive proximity to existing dispensaries. Best for operators who want maximum exposure and are confident in their ability to differentiate.</p>
+
+    <p><strong>Route 114/Roosevelt Trail Intersection:</strong> This is an alternative commercial area in Windham with access to traffic from Gray and Falmouth. Lower concentration of cannabis retailers means less direct competition and potentially more favorable lease terms.</p>
+
+    <p><strong>Rear/Industrial Space for Delivery:</strong> A warehouse or light commercial property off the main corridors can serve as a delivery base for the broader Lakes Region. Maine's delivery law (28-B M.R.S. Section 504) permits delivery to any municipality regardless of opt-in status. This means a Windham-licensed operator can serve towns from Naples to Fryeburg that have no dispensary coverage — a significant untapped market that doesn't require a storefront in every town.</p>
+  </section>
+
+  <section>
+    <h2>Commuter Town Advantage</h2>
+    <p>Windham's demographic profile includes a significant number of Portland-area commuters — people who work in the city but live in town for housing affordability. These are experienced cannabis consumers from a mature market who are accustomed to purchasing and have disposable income. They represent a more stable, year-round customer base than purely seasonal lakes towns. An operator that captures the commuter crowd (evening and weekend shopping patterns) builds a reliable revenue foundation that isn't entirely dependent on tourist fluctuations.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How many dispensaries are in Windham, Maine?</summary>
+      <p>Windham has 4-5 active dispensaries serving medical and adult-use markets, including Maine's Alternative Caring, JAR Cannabis Co. (medical and recreational), and Alternative Essence. The Route 302 corridor is known locally as 'The Green Mile.'</p>
+    </details>
+    <details>
+      <summary>Is Windham oversaturated with dispensaries?</summary>
+      <p>Windham has a moderate-to-high concentration for its population, but the town serves as a Lakes Region gateway with a service area of 60,000+. New entrants need clear differentiation to compete with well-established operators.</p>
+    </details>
+    <details>
+      <summary>What are the licensing requirements?</summary>
+      <p>Both OCP state licensing ($250 application, $500-$1,500 annual) and Windham municipal authorization (estimated $2,000-2,500 annually) are required. First-year total licensing costs approximately $3,000-4,000.</p>
+    </details>
+    <details>
+      <summary>Can I deliver to Lakes Region towns from Windham?</summary>
+      <p>Yes. Maine law allows delivery to any municipality regardless of opt-in status. A Windham-based operator can serve Naples, Sebago, Harrison, Fryeburg, and dozens of other communities without dispensaries of their own.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Windham for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

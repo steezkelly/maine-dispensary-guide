@@ -1,0 +1,186 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Standish, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Standish has at least one active recreational dispensary: Lakewood Cannabis at 234 Northeast Road. Additional options are available in nearby Gorham and Windham."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Standish allow cannabis dispensaries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Standish has opted in to permit cannabis retail. Lakewood Cannabis operates at 234 Northeast Road with a 4.3+ star rating."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the cannabis market like in Standish?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standish has limited cannabis retail (1 dispensary) for a growing community of 10,400+ residents. The town sits between Portland and the Lakes Region, drawing from commuter traffic and seasonal visitors to Sebago Lake and the Saco River. This creates opportunity for operators seeking a smaller-market entry point with Portland spillover demand."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Standish compare to Gorham for cannabis business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standish has lower population (10,400 vs Gorham's 18,000) but also lower competition (1 dispensary vs several in Gorham). Commercial rents in Standish run $10-14/sq ft compared to Gorham's $14-20/sq ft. Both towns serve Portland commuters, but Standish's Lakes Region proximity adds a seasonal tourism dimension."
+      }
+    }
+  ]
+});
+---
+<Layout title="Standish, Maine Cannabis Dispensary Guide (2026)" description="Standish, Maine cannabis dispensary guide. 2026 market analysis, Saco River and Sebago Lake tourism, Portland commuter spillover, and Lakes Region cannabis retail opportunities." heroImage="/images/heroes/standish-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Standish Dispensary Guide</h1>
+    <p class="subtitle">How to open a cannabis dispensary in Standish, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Standish at a Glance</h2>
+    <table aria-label="Standish dispensary requirements and market data">
+      <caption>Key requirements and market data for opening a dispensary in Standish</caption>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>License Required</strong></td><td>Maine OCP Adult-Use Retail License</td></tr>
+        <tr><td><strong>Local Fee</strong></td><td>$1,500-2,000 annually (estimated)</td></tr>
+        <tr><td><strong>School Buffer</strong></td><td>500 ft minimum</td></tr>
+        <tr><td><strong>Commercial Rent</strong></td><td>$10-14/sq ft annually</td></tr>
+        <tr><td><strong>Current Dispensaries</strong></td><td>1 (low concentration, opportunity)</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>10,400+ (2020 Census)</td></tr>
+        <tr><td><strong>Regional Draw</strong></td><td>Portland commuter overflow, Lakes Region gateway</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Sebago Lake, Saco River, Steep Falls, Standish Pond</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Why Standish?</h2>
+    <p>Standish is growing. With a 2020 Census population of roughly 10,400, the town has added residents who work in Portland and Buxton but want more space, lower housing costs, and proximity to lakes and rivers. Sebago Lake, Standish Pond, and the Saco River all run through or near town, attracting summer visitors, fishermen, and outdoor recreation enthusiasts year-round.</p>
+    <p>What makes Standish interesting from a cannabis business perspective is the combination of low current competition and growing population. There is one dedicated dispensary in town — Lakewood Cannabis — for a community that is larger than Casco, Raymond, or several other towns with two or more dispensaries. The single-operator market means a new entrant faces limited direct competition while being close enough to Portland to capture spillover demand.</p>
+  </section>
+
+  <Callout title="First-Mover Advantage in a Growing Town" type="passion">
+    Standish has just one dispensary for 10,400 residents in a community that is actively growing. Lakewood Cannabis at 234 Northeast Road is the only dedicated operator in town. A well-positioned second entrant can capture a significant market share before the town reaches the saturation levels seen in Portland, Windham, or Biddeford.
+  </Callout>
+
+  <section>
+    <h2>Dispensaries Serving Standish</h2>
+
+    <h3>Lakewood Cannabis</h3>
+    <p>Located at 234 Northeast Road in Standish, Lakewood Cannabis operates a recreational retail dispensary with a 4.3+ star rating from 34 reviews. They serve both the local Standish community and regional customers heading toward Sebago Lake. Their location on Northeast Road positions them off the main Route 302 corridor, which may indicate lower rent but also lower visibility compared to Route 302 operators.</p>
+  </section>
+
+  <section>
+    <h2>Licensing Requirements</h2>
+    <p>Standish has opted in to cannabis retail, so the town does not prohibit new operations. The licensing process follows standard Maine OCP requirements:</p>
+    <ul>
+      <li><strong>OCP Conditional Licensure:</strong> $250 application fee plus background checks and Individual Identification Cards for all principals and employees.</li>
+      <li><strong>Town of Standish Authorization:</strong> Estimated $1,500-2,000 annually based on comparable small-town licensing fees in Cumberland County.</li>
+      <li><strong>Active Licensure:</strong> Complete facility plan documentation, electrical compliance, and annual OCP fees ($500-$1,500).</li>
+    </ul>
+
+    <p>Total first-year licensing costs run approximately $2,500-3,500. Commercial real estate in Standish is significantly cheaper than Portland — $10-14 per square foot annually versus $16-24 in Portland's commercial corridors. The lower overhead improves margins, particularly in the first 12-18 months when building a customer base.</p>
+  </section>
+
+  <section>
+    <h2>Site Selection</h2>
+    <h3>Route 114 Corridor</h3>
+    <p>Route 114 runs through Standish toward Sebago Lake and connects to Route 25 and Route 302. This is the primary commercial strip in town, with visibility and traffic from both Portland-area commuters and the Lakes Region. Lakewood Cannabis is located off this corridor on Northeast Road, which leaves Route 114 frontage as a potentially more visible alternative.</p>
+
+    <h3>Standish Corner / Steep Falls Area</h3>
+    <p>The Standish Corner area has residential density and local foot traffic. A community-oriented dispensary here could build loyalty with year-round residents. The tradeoff is lower visibility for through-traffic.</p>
+
+    <h3>Delivery Hub</h3>
+    <p>Standish's location — between Portland and the Lakes Region, close to Buxton, Limington, and Sebago — makes it a natural delivery hub. A warehouse-based delivery operation from Standish could serve towns in both directions: north toward Sebago and Raymond, south toward Buxton and Limington. Lower real estate costs and the ability to serve opt-out towns make this an appealing model for an operator who wants regional coverage without the expense of a storefront on a main commercial corridor.</p>
+  </section>
+
+  <section>
+    <h2>Market Positioning</h2>
+    <p>Standish sits at an intersection: Portland commuters heading home on Route 114 or Route 25, and tourists heading north to Sebago Lake, Long Lake, and the Saco River. The key positioning question is whether to emphasize the commuter audience (consistent year-round revenue, competitive pricing, convenient after-work hours) or the tourist audience (higher-margin seasonal sales, premium product presentation, seasonal inventory).</p>
+    <p>The most defensible approach serves both: carry a value-oriented product line for the commuter base alongside seasonal premium products for summer and fall visitors. This is what works in similar transitional markets across Maine — towns that are more than bedroom communities but less than full tourist destinations.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Are there dispensaries in Standish, Maine?</summary>
+      <p>Yes. Lakewood Cannabis operates at 234 Northeast Road in Standish with a 4.3+ star rating. It is currently the only dedicated dispensary in town.</p>
+    </details>
+    <details>
+      <summary>Does Standish allow cannabis dispensaries?</summary>
+      <p>Yes. Standish has opted in to permit cannabis retail establishments.</p>
+    </details>
+    <details>
+      <summary>How does Standish compare to Gorham for cannabis business?</summary>
+      <p>Standish has lower population (10,400 vs 18,000) but also significantly lower competition (1 dispensary vs several in Gorham). Commercial rents are cheaper ($10-14/sq ft vs $14-20/sq ft), and Standish's Lakes Region proximity adds a seasonal tourism dimension that Gorham lacks.</p>
+    </details>
+    <details>
+      <summary>Can I deliver to opt-out towns from Standish?</summary>
+      <p>Yes. Maine law allows licensed dispensaries to deliver to any municipality in Maine regardless of opt-in status. This includes towns without dispensary coverage throughout the greater Lakes Region and beyond.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Standish for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

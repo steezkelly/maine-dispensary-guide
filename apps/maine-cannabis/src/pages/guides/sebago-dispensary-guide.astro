@@ -1,0 +1,194 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Sebago, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "As of 2026, Sebago does not have a dedicated cannabis dispensary in town. The nearest dispensaries are in Casco (8 miles), Raymond (10 miles), and Standish (12 miles). This makes Sebago a primary delivery service opportunity — patients and recreational consumers must travel to neighboring towns or use delivery to access cannabis products."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Has Sebago opted in to cannabis retail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check with the Town of Sebago for the current opt-in status. Even if Sebago has not opted in to hosting retail dispensaries within town limits, Maine law permits licensed delivery services to deliver cannabis to residential addresses in any municipality regardless of opt-in status."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is the nearest dispensary to Sebago, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The closest dispensaries to Sebago are in Casco (Blue Lobster Cannabis and Landrace Cannabis Co. on Route 302, approximately 8 miles), Raymond (Eclipse Cannabis Company, approximately 10 miles), and standish (Lakewood Cannabis, approximately 12 miles). Windham's Green Mile corridor has 4-5 dispensaries and is about 15 miles away."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can medical cannabis be delivered to Sebago, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maine-licensed medical and adult-use delivery services can deliver to Sebago regardless of the town's opt-in status. Services like Trichome Traders deliver to most of Maine with zone-based pricing. Check with individual delivery providers for their specific coverage of the Sebago area."
+      }
+    }
+  ]
+});
+---
+<Layout title="Sebago, Maine Cannabis Dispensary Guide (2026)" description="Sebago, Maine cannabis guide — nearest dispensaries, delivery services, and market access for one of Maine's Lakes Region towns without its own dispensary." heroImage="/images/heroes/sebago-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Sebago Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access and market overview for Sebago, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Sebago at a Glance</h2>
+    <table aria-label="Sebago cannabis market data">
+      <caption>Cannabis market overview for Sebago, Maine</caption>
+      <thead><tr><th scope="col">Metric</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 (no dedicated dispensary)</td></tr>
+        <tr><td><strong>Nearest Dispensary</strong></td><td>Casco (8 miles) — Blue Lobster, Landrace Cannabis</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>1,800+ (2020 Census)</td></tr>
+        <tr><td><strong>Key Feature</strong></td><td>Sebago Lake shorefront, Saco River headwaters</td></tr>
+        <tr><td><strong>Delivery Available</strong></td><td>Yes — Maine law permits delivery to any municipality</td></tr>
+        <tr><td><strong>Regional Context</strong></td><td>Part of the broader Sebago Lakes Region with 10-12 dispensaries across neighboring towns</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Situation in Sebago</h2>
+    <p>Sebago is one of many Lakes Region towns that has no dispensary of its own. With a year-round population of approximately 1,800, the town is too small to support a dedicated retail cannabis operation — but it sits right on Sebago Lake and along the headwaters of the Saco River, meaning the seasonal population and visitor traffic are far larger than the census number suggests.</p>
+    <p>For year-round residents, the nearest dispensaries are in neighboring Casco (about 8 miles to Blue Lobster Cannabis and Landrace Cannabis Co. on Route 302) and Raymond (about 10 miles to Eclipse Cannabis Company). Windham's Green Mile corridor — the region's largest cannabis cluster with 4-5 dispensaries — is approximately 15 miles away.</p>
+    <p>This is not unusual for Maine. Hundreds of small towns have no dispensary but are within a 15-20 minute drive of neighboring towns that do. The question for residents is whether to drive, or to use delivery.</p>
+  </section>
+
+  <Callout title="Delivery Is the Answer for Small Towns" type="tip">
+    Maine's cannabis delivery law (28-B M.R.S.) allows licensed dispensaries to deliver to <em>any</em> municipality in the state, regardless of whether that town has opted in to retail sales. This means Sebago residents can legally receive deliveries from licensed operators based in Casco, Windham, or anywhere else in Maine. Several services — including Trichome Traders and other regional providers — already deliver to the Lakes Region. See our <a href="/blog/maine-medical-patient-delivery-services-2026">Medical Patient Delivery Services</a> guide for a full list.
+  </Callout>
+
+  <section>
+    <h2>Nearest Dispensaries to Sebago</h2>
+
+    <h3>Casco (8 miles)</h3>
+    <ul>
+      <li><strong>Blue Lobster Cannabis</strong> — 200 Roosevelt Trail. Locally owned recreational dispensary with organic, Maine-grown product. Offers a 10% discount for local residents of Raymond, Casco, Naples, and Bridgton. Also provides a 10% medical card holder and veteran discount.</li>
+      <li><strong>Landrace Cannabis Co.</strong> — 325 Roosevelt Trail. Recreational dispensary positioned on the main lake-bound Route 302 corridor.</li>
+    </ul>
+
+    <h3>Raymond (10 miles)</h3>
+    <ul>
+      <li><strong>Eclipse Cannabis Company</strong> — 1259 Roosevelt Trail. Recreational dispensary with 4.6-star rating, serving the Lakes Region with a full product menu.</li>
+    </ul>
+
+    <h3>Standish (12 miles)</h3>
+    <ul>
+      <li><strong>Lakewood Cannabis</strong> — 234 Northeast Road. Recreational dispensary with 4.3+ star rating, the only dedicated operator in Standish.</li>
+    </ul>
+
+    <h3>Windham (15 miles)</h3>
+    <ul>
+      <li><strong>Maine's Alternative Caring</strong> — Route 302. Vertically integrated medical dispensary voted #1 in the Sebago Lakes area multiple years. Cultivates and processes in-house.</li>
+      <li><strong>JAR Cannabis Co.</strong> — Separate medical (4.8 stars, 1,600+ reviews) and recreational (4.9 stars) storefronts. One of the highest-rated operators in Cumberland County.</li>
+      <li><strong>Alternative Essence</strong> — 4.8 stars, 190+ reviews. Medical and recreational sales along The Green Mile.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Delivery Services for Sebago Residents</h2>
+    <p>Several Maine-licensed delivery services serve the Lakes Region and can deliver to Sebago:</p>
+    <ul>
+      <li><strong>Trichome Traders</strong> (Winslow-based) — Delivers to most of Maine with a 7-zone system. Sebago likely falls into Zones 4-5 depending on exact location, with order minimums of $150-225 for free delivery.</li>
+      <li><strong>Puff Shuttle</strong> (Portland-based) — Southern Maine medical delivery service.</li>
+      <li><strong>Other regional providers</strong> — Multiple medical delivery services operate across southern and central Maine. See our full <a href="/blog/maine-medical-patient-delivery-services-2026">Medical Patient Delivery Services guide</a> for a comprehensive list.</li>
+    </ul>
+    <p>Medical patients should note that delivery services require verification with a valid medical card and matching photo ID before processing orders.</p>
+  </section>
+
+  <section>
+    <h2>Business Opportunity: First-Mover in Sebago?</h2>
+    <p>While Sebago's small year-round population (1,800) makes it a challenging stand-alone retail market, there is a case for a well-positioned operator. The seasonal population surge on Sebago Lake — combined with the town's position between Casco, Raymond, and Naples — means a dispensary here could capture a niche: serving the lake-adjacent customer without the competition of Route 302.</p>
+    <p>The risk is the same as any small-town dispensary: if the off-season is too slow, the business cannot survive. The safer play is delivery-first — a Casco, Windham, or Standish-based operator adding Sebago to their delivery zone rather than building a dedicated storefront.</p>
+    <p>For an operator considering Sebago as a location, the first step is checking the town's current opt-in status with the municipal government. Even if Sebago has not opted in, delivery service from a licensed operator in an opted-in town remains legal under state law.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/blog/maine-medical-patient-delivery-services-2026">Maine Medical Patient Delivery Services</a></li>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Are there cannabis dispensaries in Sebago, Maine?</summary>
+      <p>No. As of 2026, Sebago does not have a dedicated dispensary. The nearest options are in Casco (8 miles), Raymond (10 miles), and Windham (15 miles).</p>
+    </details>
+    <details>
+      <summary>Can medical cannabis be delivered to Sebago?</summary>
+      <p>Yes. Licensed delivery services can deliver to any Maine municipality, regardless of opt-in status. Services like Trichome Traders deliver to the Lakes Region, and Sebago is within reasonable delivery range from several operators.</p>
+    </details>
+    <details>
+      <summary>Where is the nearest dispensary to Sebago?</summary>
+      <p>Blue Lobster Cannabis and Landrace Cannabis Co. in Casco are approximately 8 miles from Sebago, both located on Route 302 (Roosevelt Trail).</p>
+    </details>
+    <details>
+      <summary>Can out-of-state medical patients buy near Sebago?</summary>
+      <p>Yes. Maine has reciprocity with 27+ states. Medical dispensaries in nearby Casco and Windham accept valid medical credentials from approved states, including Massachusetts, New Hampshire, New York, and Connecticut.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements and municipal opt-in statuses change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Sebago for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

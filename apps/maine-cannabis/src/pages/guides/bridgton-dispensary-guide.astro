@@ -1,0 +1,192 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries are in Bridgton, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bridgton has 3-4 active dispensaries across medical and adult-use markets, including Canuvo Recreational Cannabis at 152 Portland Road and Maine Only Medical at 316 Portland Road. The town serves a regional market of 20,000+ residents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Bridgton require a local cannabis license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Bridgton requires municipal authorization for cannabis businesses in addition to the Maine OCP state license. Town approval fees are typically $2,000-2,500 annually, with OCP state fees adding $500-$1,500 depending on license tier."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I deliver cannabis from Bridgton?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Licensed dispensaries in Bridgton can deliver to any municipality in Maine, regardless of whether that town has opted in to cannabis retail. This is particularly valuable for serving surrounding towns like Fryeburg, Harrison, and Brownfield that lack dispensaries of their own."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best location for a dispensary in Bridgton?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Portland Road (Route 302) is the primary retail corridor in Bridgton, with multiple existing dispensaries. High visibility and easy access from Route 117 and Route 302 intersections provide the best customer capture."
+      }
+    }
+  ]
+});
+---
+<Layout title="Bridgton, Maine Cannabis Dispensary Guide (2026)" description="Bridgton, Maine cannabis dispensary guide. 2026 market analysis, existing dispensaries on Portland Road, local fees, and Lakes Region opportunities." heroImage="/images/heroes/bridgton-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Bridgton Dispensary Guide</h1>
+    <p class="subtitle">How to open a cannabis dispensary in Bridgton, Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Bridgton at a Glance</h2>
+    <table aria-label="Bridgton dispensary requirements and market data">
+      <caption>Key requirements and market data for opening a dispensary in Bridgton</caption>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>License Required</strong></td><td>Maine OCP Adult-Use Retail License</td></tr>
+        <tr><td><strong>Local Fee</strong></td><td>$2,000-2,500 annually</td></tr>
+        <tr><td><strong>School Buffer</strong></td><td>500 ft minimum</td></tr>
+        <tr><td><strong>Commercial Rent</strong></td><td>$12-18/sq ft annually</td></tr>
+        <tr><td><strong>Current Dispensaries</strong></td><td>3-4 (moderate concentration)</td></tr>
+        <tr><td><strong>Town Population</strong></td><td>5,450+ (2020 Census)</td></tr>
+        <tr><td><strong>Regional Service Area</strong></td><td>20,000+ (including surrounding towns)</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Lakes Region tourism, Highland Lake, Scribner's ski area</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Why Bridgton?</h2>
+    <p>Bridgton sits at the intersection of two things that drive cannabis retail: consistent year-round residents and seasonal tourism. The town itself has roughly 5,500 residents, but the regional draw is much larger. Highland Lake, Long Lake and the broader Lakes Region pull visitors April through October, and Scribner's ski area brings winter traffic. A dispensary in Bridgton doesn't just serve a town — it serves the gateway to western Maine's recreational economy.</p>
+    <p>Portland Road (Route 302) is already evolving into the principal cannabis corridor for this area. There are at least three active dispensaries concentrated along this stretch — Canuvo Recreational Cannabis at 152 Portland Road, Maine Only Medical at 316 Portland Road Suite 4, and Maine's Alternative Caring with a location at 224 Portland Road. This clustering is not accidental. Route 302 gets through-traffic from Windham, Fryeburg, and points north. Anyone driving west out of the greater Portland area toward the lakes passes through this corridor.</p>
+    <p>Three to four dispensaries for a regional market of 20,000-plus is moderate concentration. It's not saturated the way Portland is, but the window for unopposed entry is closing. An operator entering Bridgton now needs differentiation — superior product sourcing, delivery service, or a brand identity that appeals to the outdoor-and-lakes lifestyle rather than a generic retail operation.</p>
+  </section>
+
+  <Callout title="Lakes Region Advantage" type="passion">
+    Bridgton's seasonal population surge is a real competitive advantage. Operators who stock appropriately for summer visitors — pre-rolls, single-serve edibles, and portable products — can capture substantial tourist revenue that year-round-only shops miss.
+  </Callout>
+
+  <section>
+    <h2>Dispensaries Serving Bridgton</h2>
+    <p>The primary retail corridor is Portland Road (Route 302), with multiple operators already established:</p>
+
+    <h3>Canuvo – Bridgton</h3>
+    <p>Located at 152 Portland Road, Canuvo operates a recreational cannabis retail location in Bridgton alongside its Biddeford store. Established in Maine since 2011, Canuvo serves both the recreational market with a range of flower, edibles, and concentrates. The Bridgton store is open Monday through Saturday 9am to 7pm, with Sunday hours from 10am.</p>
+
+    <h3>Maine Only Medical – Bridgton</h3>
+    <p>At 316 Portland Road Suite 4, Maine Only operates a medical cannabis dispensary focused on the therapeutic market. Their 2,000 square foot Bridgton space opened in August 2021 after expansion. They carry a wide variety of products positioned at affordable price points — a competitive advantage in a price-conscious rural market. Medical card holders from Maine and approved reciprocity states can shop here.</p>
+
+    <h3>Maine's Alternative Caring</h3>
+    <p>Located at 224 Portland Road, Maine's Alternative Caring is a vertically integrated medical dispensary with its own cultivation and processing operations. Voted the number one medical dispensary in the Sebago Lakes area multiple years, they serve the Bridgton market from their Windham-area location along the same Route 302 corridor.</p>
+  </section>
+
+  <section>
+    <h2>Licensing Requirements</h2>
+    <p>Operating a dispensary in Bridgton requires two levels of approval:</p>
+
+    <ul>
+      <li><strong>Maine OCP (Office of Cannabis Policy):</strong> Adult-use retail license, including Individual Identification Cards (IIC) for all principals and employees. Application fee is $250, with annual licensing fees of $500-$1,500 depending on tier.</li>
+      <li><strong>Town of Bridgton:</strong> Municipal authorization is required. The town charges approximately $2,000-2,500 annually for a cannabis retail license. Bridgton has opted in to cannabis retail, so new operators are not prohibited.</li>
+    </ul>
+
+    <p>Total first-year licensing costs run approximately $3,000-4,000 before any building improvements. OCP conditional licensure typically takes 60-90 days after application submission.</p>
+  </section>
+
+  <section>
+    <h2>Site Selection Considerations</h2>
+    <h3>Portland Road (Route 302)</h3>
+    <p>This is the established cannabis corridor. Existing clustering creates both advantage and challenge. The advantage: customers already know to look for dispensaries here. The challenge: finding a property that meets the 500-foot school buffer and has not already been zoned out by proximity to existing licensed premises.</p>
+
+    <h3>Town Center</h3>
+    <p>Downtown Bridgton has foot traffic but limited parking and potentially less convenient access. The advantage is a different customer experience — a neighborhood-style dispensary rather than a highway-retail strip operation. This works if the brand aligns with Bridgton's character as a small lakes community.</p>
+
+    <h3>Delivery-Focused Warehouse</h3>
+    <p>An operator focused on serving the broader Lakes Region — including Harrison, Brownfield, Denmark, Lovell, and Fryeburg — could run a warehouse-based delivery operation from Bridgton. Maine law allows delivery to any municipality regardless of opt-in status, meaning you can serve every town in western Maine and the lakes region from a Bridgton premises. Commercial warehouse space will be cheaper than Route 302 retail frontage.</p>
+  </section>
+
+  <section>
+    <h2>Regional Market Context</h2>
+    <p>Bridgton is part of the broader Sebago Lakes Region cannabis market. Nearby towns with dispensaries include Casco (Blue Lobster Cannabis, Landrace Cannabis Co.), Raymond (Eclipse Cannabis Company), Windham (Maine's Alternative Caring, Alternative Essence, JAR Cannabis Co.), and Standish (Lakewood Cannabis). The total regional market supports roughly 10-12 dispensaries across adult-use and medical for a year-round population of approximately 60,000-70,000.</p>
+    <p>The seasonal multiplier is significant. Lakes Region communities see population increases of 30-50% during summer months when seasonal residents arrive and tourists visit. A well-positioned operator captures both the consistent year-round base and the seasonal surge — a dual revenue stream that single-market towns cannot match.</p>
+
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/maine-cannabis-zoning-requirements">Zoning Requirements in Maine</a></li>
+        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How many dispensaries are in Bridgton, Maine?</summary>
+      <p>Bridgton has 3-4 active dispensaries along the Route 302 Portland Road corridor, serving a regional market of over 20,000 residents.</p>
+    </details>
+    <details>
+      <summary>Does Bridgton require a local cannabis license?</summary>
+      <p>Yes. Bridgton requires municipal authorization plus the Maine OCP state license. Combined fees are approximately $2,500-4,000 annually.</p>
+    </details>
+    <details>
+      <summary>Can I deliver cannabis from Bridgton?</summary>
+      <p>Yes. Licensed dispensaries can deliver to any Maine municipality, including opt-out towns like Fryeburg, Denmark, and Lovell. This is the most significant opportunity for operators looking to serve the broader Lakes Region without a physical retail presence in each town.</p>
+    </details>
+    <details>
+      <summary>What is the school buffer requirement in Bridgton?</summary>
+      <p>Same as statewide — 500 feet from any school. The buffer is measured from the nearest point on the dispensary premises to the nearest property line of the school.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements change frequently. Always consult the Maine Office of Cannabis Policy and the Town of Bridgton for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

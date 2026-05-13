@@ -1,0 +1,233 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many dispensaries serve the Sebago Lakes Region?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Sebago Lakes Region has approximately 10-12 active dispensaries across its towns, including Windham (4-5), Casco (2), Bridgton (3-4), Raymond (1), and Standish (1). This serves a year-round population of 60,000-70,000 plus a significant seasonal visitor population."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which towns in the Sebago Lakes Region have dispensaries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Currently: Windham (Route 302 'Green Mile' cluster), Casco (Route 302 Roosevelt Trail), Bridgton (Portland Road corridor), Raymond (Roosevelt Trail), and Standish (Northeast Road). Towns without dispensaries include Naples, Sebago, Harrison, Fryeburg, Lovell, Denmark, and Brownfield — all of which represent delivery service opportunities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the Sebago Lakes Region cannabis market seasonal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The Lakes Region sees a 30-50% population increase during peak summer months (June-September) when seasonal residents arrive and tourists visit Sebago Lake, Long Lake, and the Saco River. Operators should adjust inventory and staffing for this seasonal fluctuation while maintaining a year-round customer base from the resident population of 60,000+."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best way to enter the Sebago Lakes cannabis market?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There are three viable entry points: (1) a retail storefront in an underserved town like Naples or Fryeburg, (2) a delivery operation based in a lower-rent location serving the entire region, or (3) a premium product retailer targeting a specific lakeside community with a differentiated brand. Each approach has different capital requirements and risk profiles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do Maine's medical cannabis reciprocity rules apply in the Lakes Region?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Medical cannabis reciprocity applies statewide. Visiting patients from 27+ approved states (including Massachusetts, New Hampshire, New York, Connecticut, and others) can purchase at Maine medical dispensaries with valid credentials from their home state. This is particularly relevant in the Lakes Region where out-of-state summer residents are common."
+      }
+    }
+  ]
+});
+---
+<Layout title="Sebago Lakes Region Cannabis Dispensary Guide (2026)" description="Complete guide to cannabis dispensaries across Maine's Sebago Lakes Region — Bridgton, Casco, Raymond, Standish, Windham, Naples, and the broader Lakes Region market for 2026." heroImage="/images/heroes/sebago-lakes-region-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  details { background: rgba(88, 129, 87, 0.05); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { margin-top: 0.5rem; }
+  .town-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .town-card { padding: 1rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; border-left: 3px solid var(--color-primary); }
+  .town-card h3 { margin-top: 0; font-size: 1rem; }
+  .town-card p { margin: 0; font-size: 0.9rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Sebago Lakes Region Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries across Maine's Lakes Region — 2026 market overview</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Sebago Lakes Region at a Glance</h2>
+    <table aria-label="Sebago Lakes Region cannabis market data">
+      <caption>Lakes Region cannabis market overview for 2026</caption>
+      <thead><tr><th scope="col">Metric</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Total Active Dispensaries</strong></td><td>10-12 across all towns</td></tr>
+        <tr><td><strong>Year-Round Population Served</strong></td><td>60,000-70,000+</td></tr>
+        <tr><td><strong>Seasonal Surge</strong></td><td>30-50% increase (June-September)</td></tr>
+        <tr><td><strong>Towns with Dispensaries</strong></td><td>Windham, Casco, Bridgton, Raymond, Standish</td></tr>
+        <tr><td><strong>Towns Without Dispensaries</strong></td><td>Naples, Sebago, Harrison, Fryeburg, Lovell, Denmark, Brownfield, and more</td></tr>
+        <tr><td><strong>Key Economic Drivers</strong></td><td>Sebago Lake, Long Lake, Saco River, Scribner's ski area, outdoor recreation</td></tr>
+        <tr><td><strong>Typical Commercial Rent</strong></td><td>$10-18/sq ft (varies by town)</td></tr>
+        <tr><td><strong>Regulatory Environment</strong></td><td>All served towns have opted in to cannabis retail</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Regional Canvas</h2>
+    <p>The Sebago Lakes Region is Maine's most significant outdoor recreation corridor outside of Acadia. Sebago Lake — the state's largest by volume and second-largest by surface area — anchors a tourism economy that draws visitors to Casco, Raymond, Naples, Frye Island, and Standish each summer. Long Lake and the Saco River extend that draw westward into the mountains. In winter, Scribner's ski area near Bridgton and nearby Shawnee Peak (now Pleasant Mountain) in Bridgton sustain a quieter but real off-season economy.</p>
+    <p>The cannabis market in this region tells the same story as Maine's outdoor economy more broadly: year-round communities anchored in lakeside and mountain towns, with a seasonal surge that can increase the addressable customer base by 30-50% during the summer months. The total year-round population across the region's towns is approximately 60,000-70,000. Add seasonal residents, tourists, and day-trippers from the Portland metro area, and the peak-season market is substantially larger.</p>
+    <p>But the market is unevenly distributed. Five towns host nearly all the region's dispensaries, while dozens of smaller communities — many directly on lakeshore or riverfront — have none. This gap creates both an opportunity and a question: is it better to open a storefront in an unserved town, or to serve the gap through delivery?</p>
+  </section>
+
+  <Callout title="The Delivery Opportunity" type="passion">
+    At least 8 towns in the immediate Lakes Region have no dispensary coverage: Naples, Sebago, Harrison, Fryeburg, Lovell, Denmark, Brownfield, and others. Maine law (28-B M.R.S.) permits delivery from licensed dispensaries to any municipality regardless of opt-in status. A single delivery operation based in Windham, Bridgton, or Standish could serve all of them — a regional play that doesn't require a storefront in every town. See our <a href="/guides/maine-cannabis-delivery-rules">Cannabis Delivery Rules</a> guide for details.
+  </Callout>
+
+  <section>
+    <h2>Town-by-Town Breakdown</h2>
+    <div class="town-grid">
+      <div class="town-card">
+        <h3>Windham — 4-5 dispensaries</h3>
+        <p>Route 302 'Green Mile' corridor. The region's largest and most established cannabis market. Maine's Alternative Caring, JAR Cannabis Co., Alternative Essence. Commercial rents $14-18/sq ft.</p>
+      </div>
+      <div class="town-card">
+        <h3>Bridgton — 3-4 dispensaries</h3>
+        <p>Portland Road commercial corridor. Canuvo REC, Maine Only Medical. Lakes Region gateway with year-round and seasonal demand. Rents $12-18/sq ft.</p>
+      </div>
+      <div class="town-card">
+        <h3>Casco — 2 dispensaries</h3>
+        <p>Blue Lobster Cannabis, Landrace Cannabis Co. on Route 302/Roosevelt Trail. First recreational store in Casco. Direct Sebago Lake access. Rents $10-16/sq ft.</p>
+      </div>
+      <div class="town-card">
+        <h3>Raymond — 1 dispensary</h3>
+        <p>Eclipse Cannabis Company on Roosevelt Trail. Low competition, proximity to Windham cluster. Outdoor lifestyle alignment. Rents $10-16/sq ft.</p>
+      </div>
+      <div class="town-card">
+        <h3>Standish — 1 dispensary</h3>
+        <p>Lakewood Cannabis at 234 Northeast Road. Growing town (10,400+), low competition, Portland commuter overflow. Cheapest rents in the region at $10-14/sq ft.</p>
+      </div>
+      <div class="town-card">
+        <h3>Naples, Sebago, Harrison — 0 dispensaries</h3>
+        <p>No dedicated dispensaries. All represent delivery service opportunities. Naples and Harrison have year-round populations but lack retail. Direct lake and river access.</p>
+      </div>
+      <div class="town-card">
+        <h3>Fryeburg — 0 dispensaries</h3>
+        <p>Gateway to western Maine and the White Mountains. Fairgrounds bring seasonal events. No dispensary coverage, serving delivery opportunity from Bridgton or north.</p>
+      </div>
+      <div class="town-card">
+        <h3>Lovell, Denmark, Brownfield — 0 dispensaries</h3>
+        <p>Small towns with direct lake frontage (Kezar Lake, Norway Lake). No retail cannabis presence. Ideal delivery targets from nearby Bridgton or Fryeburg.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Market Dynamics and Trends</h2>
+
+    <h3>Seasonal Demand Patterns</h3>
+    <p>Sales in the Lakes Region follow a predictable pattern: steady year-round from the resident population (medical patients, regular recreational consumers, commuters), with a significant summer surge from May through September when seasonal residents arrive and Portland-area tourists visit the lakes. Fall foliage season (September-October) provides a second, smaller peak. November through April is the slowest period, with January-March typically the weakest months.</p>
+    <p>Smart operators manage inventory and staffing around these cycles. Pre-built products (pre-rolls, edibles, vapes) for the tourist season. Flower and specialty products for the year-round enthusiast base. Some operators run promotions during shoulder months to smooth the revenue curve.</p>
+
+    <h3>The Medical Market</h3>
+    <p>Maine's medical program is robust in the Lakes Region. Maine's Alternative Caring in Windham and Maine Only Medical in Bridgton serve medical patients who are exempt from the state's 10% excise tax. Medical patients in rural towns appreciate delivery — chronic pain patients, elderly patients, and those who cannot drive to the nearest dispensary during winter are the primary use case. Services like Trichome Traders (based in Winslow) already deliver to the Lakes Region with tiered pricing by distance.</p>
+
+    <h3>Reciprocity and Out-of-State Visitors</h3>
+    <p>Maine has medical cannabis reciprocity with 27+ states. This is particularly relevant in the Lakes Region, where a significant number of seasonal residents are from Massachusetts, Rhode Island, Connecticut, and other states with medical cannabis programs. A valid medical credential from an approved state allows purchasing at Maine medical dispensaries with a matching state ID. Out-of-state visitors should bring both their medical card and a valid government ID — the two documents must match by issuing state.</p>
+  </section>
+
+  <section>
+    <h2>Entry Strategies</h2>
+    <h3>Option 1: Storefront in an Unserved Town</h3>
+    <p>Towns like Naples, Fryeburg, or Harrison have no dispensaries. A first-mover in any of these towns captures the local market and the surrounding area. The risk is that the year-round population may be too small to sustain a retail operation without significant tourist traffic. Naples has the strongest case: direct Sebago Lake access, proximity to Casco and Raymond, and a year-round population supplemented by seasonal visitors.</p>
+
+    <h3>Option 2: Delivery Operation Serving the Region</h3>
+    <p>One delivery base in a lower-rent location (Standish, Windham, or Bridgton) can serve the entire region, including opt-out towns. Trichome Traders (Winslow) already demonstrates this model, delivering to most of Maine with zone-based pricing. The capital requirement is lower than a storefront (no high-visibility retail lease, fewer buildout costs), and the addressable market is larger. The tradeoff is less brand visibility and the challenge of building customer trust without a physical storefront.</p>
+
+    <h3>Option 3: Premium Retailer in an Established Market</h3>
+    <p>Entering an established market like Windham or Bridgton requires differentiation. The operator needs something the 4-5 existing dispensaries don't offer: a specialty product line (live resin, solventless concentrates, craft flower from specific Maine growers), a wellness-focused brand identity, price advantage through vertical integration, or a superior customer experience. This is the highest-risk, highest-reward strategy.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
+        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
+        <li><a href="/guides/standish-dispensary-guide">Standish Dispensary Guide</a></li>
+        <li><a href="/blog/maine-medical-patient-delivery-services-2026">Maine Medical Patient Delivery Services</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How many dispensaries serve the Sebago Lakes Region?</summary>
+      <p>Approximately 10-12 active dispensaries across five towns (Windham, Bridgton, Casco, Raymond, Standish) serving a year-round region of 60,000-70,000 residents plus seasonal visitors.</p>
+    </details>
+    <details>
+      <summary>Which towns in the Lakes Region have no dispensaries?</summary>
+      <p>Naples, Sebago, Harrison, Fryeburg, Lovell, Denmark, Brownfield, and several smaller communities have no dispensary coverage. All represent opportunities for delivery services or first-mover retail operators.</p>
+    </details>
+    <details>
+      <summary>Is the market seasonal?</summary>
+      <p>Yes. The Lakes Region sees a 30-50% population increase June through September from seasonal residents and tourists. Operators should plan inventory, staffing, and promotions around this cycle while maintaining year-round revenue from the resident population.</p>
+    </details>
+    <details>
+      <summary>Can out-of-state medical patients buy in the Lakes Region?</summary>
+      <p>Yes. Maine has reciprocity with 27+ approved states. Out-of-state patients with valid medical credentials and a matching state ID can purchase at licensed medical dispensaries. This is particularly relevant during the summer season when seasonal residents from Massachusetts and other states arrive.</p>
+    </details>
+    <details>
+      <summary>What is the best way to enter the Lakes Region cannabis market?</summary>
+      <p>Three approaches: (1) a storefront in an unserved town like Naples for first-mover advantage, (2) a delivery operation based in a lower-rent location serving the entire region, or (3) a differentiated premium retailer in an established market. Each has different capital requirements and risk levels.</p>
+    </details>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is provided for informational purposes only and does not constitute legal advice. Cannabis licensing requirements and municipal opt-in statuses change frequently. Always consult the Maine Office of Cannabis Policy and individual town governments for current regulations before making business decisions.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
