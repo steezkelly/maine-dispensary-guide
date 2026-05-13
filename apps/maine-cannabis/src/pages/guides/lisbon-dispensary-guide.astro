@@ -1,0 +1,114 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Lisbon, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Lisbon has at least three dispensaries: Lisbon Cannabis Company (medical, 5 Canal St, 4.8/5 stars, Leafly List winner 2024-2025), River Driver Cannabis Co. (recreational, 8 Main St), and Clubhouse Cannabis (medical/recreational, 385 Lisbon St)."}},{"@type":"Question","name":"What is Lisbon Cannabis Company?","acceptedAnswer":{"@type":"Answer","text":"Lisbon Cannabis Company is a medical cannabis dispensary at 5 Canal St in the historic Worumbo Mill building. Open 7am-9pm daily, it's a 2024 and 2025 Leafly List winner with the largest product selection in the area. Phone: (207) 353-5001."}},{"@type":"Question","name":"Does Lisbon Maine allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. River Driver Cannabis Co. operates a recreational storefront at 8 Main St, Lisbon, and Clubhouse Cannabis serves both medical and recreational customers at 385 Lisbon St."}},{"@type":"Question","name":"What makes Lisbon's cannabis market unique?","acceptedAnswer":{"@type":"Answer","text":"Lisbon has three dispensaries serving a small town of roughly 4,400 residents. The Worumbo Mill location (historic textile mill repurposed as Lisbon Cannabis Co.) is notable. River Driver's vintage logging-themed decor and Clubhouse Cannabis's daily deals create a competitive market with strong variety."}}]});
+---
+<Layout title="Lisbon, Maine Dispensary Guide — 3+ Dispensaries 2026" description="Lisbon, Maine dispensary guide. Lisbon Cannabis Company (Leafly List winner), River Driver Cannabis Co, and Clubhouse Cannabis serve Lisbon Falls and the Androscoggin River corridor." heroImage="/images/heroes/lisbon-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Lisbon, ME Dispensary Guide</h1>
+    <p class="subtitle">Three dispensary operators in Lisbon Falls — a competitive cannabis corridor on the Androscoggin River</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Lisbon Cannabis Quick Facts</h2>
+    <table aria-label="Lisbon cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 confirmed active</td></tr>
+        <tr><td><strong>Known Dispensaries</strong></td><td>Lisbon Cannabis Co. (med), River Driver Cannabis Co. (rec), Clubhouse Cannabis (med/rec)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,400 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Androscoggin County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Lisbon Falls has three active cannabis dispensaries serving a town of roughly 4,400 people — a notable density for its size. The town's location between Lewiston–Auburn and Brunswick creates a natural corridor that pulls traffic from both directions. Lisbon Cannabis Company at the historic Worumbo Mill has won Leafly's "List" award in both 2024 and 2025, establishing Lisbon as a quality destination in Maine's cannabis market.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Lisbon</h2>
+
+    <h3>Lisbon Cannabis Company — Medical</h3>
+    <p><strong>Address:</strong> 5 Canal St, Lisbon Falls, ME 04252 (Old Worumbo Mill)<br>
+    <strong>Phone:</strong> (207) 353-5001<br>
+    <strong>Hours:</strong> Daily 7am-9pm, 365 days/year<br>
+    <strong>Type:</strong> Medical (Maine medical card required)<br>
+    <strong>Rating:</strong> 4.8/5 (611 reviews Munchmakers); 4.9/5 (297 reviews Leafly)<br>
+    <strong>Awards:</strong> 2024 &amp; 2025 Leafly List Winner</p>
+    <p>Lisbon Cannabis Company is the area's largest medical dispensary, carrying flower, cartridges, prerolls, concentrates (diamonds, caviar, crumble, sauce), THC/CBD edibles and more. Located in the historic Worumbo Mill building, it accepts out-of-state medical cards from 30+ states and carries brands including Tru Blooms, Mighty Viking, Littlefield Confections, Smokiez, and Golden Road Hemp Extracts.</p>
+
+    <h3>River Driver Cannabis Co. — Recreational</h3>
+    <p><strong>Address:</strong> 8 Main St, Lisbon, ME 04252<br>
+    <strong>Phone:</strong> (207) 407-4436<br>
+    <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-7pm<br>
+    <strong>Type:</strong> Recreational (21+)</p>
+    <p>River Driver is a family-owned recreational dispensary with two locations (Lisbon and Brunswick). Their vintage logging and lumber décor features reclaimed barn wood. The product line includes handcrafted confections, small-batch full spectrum extracts, and local Maine farmer flower.</p>
+
+    <h3>Clubhouse Cannabis — Medical &amp; Recreational</h3>
+    <p><strong>Address:</strong> 385 Lisbon St, Lisbon, ME 04250<br>
+    <strong>Phone:</strong> (207) 407-4157<br>
+    <strong>Hours:</strong> Mon-Sat 7am-7pm, Sun 9am-5pm<br>
+    <strong>Type:</strong> Medical &amp; Recreational<br>
+    <strong>Rating:</strong> 4.9/5 (18 reviews)</p>
+    <p>Clubhouse Cannabis is known for its aggressive daily deals: Monday 10% off glass, Tuesday buy-1-cart-get-25%-off-second, Wednesday 10% off edibles, Thursday 10% off concentrates, Friday 10% off flower, and weekend "wake and bake" discounts from 7am-12pm for 15% off. Early hours (7am opening) make this the most accessible option for morning customers.</p>
+  </section>
+
+  <Callout title="Deal-Driven Competition" type="passion">
+    Lisbon's competitive density is good for consumers. Clubhouse Cannabis's daily deals (7 days a week, different product category each day) and River Driver's family-owned approach create pricing pressure that benefits buyers. Lisbon Cannabis Company's Leafly List wins establish product quality as the area's baseline standard.
+  </Callout>
+
+  <section>
+    <h2>Nearby Dispensary Options</h2>
+    <ul>
+      <li><strong>Lewiston–Auburn (~10 mi northwest):</strong> Multiple dispensaries including Friend Jen and Co, Green Mile operators</li>
+      <li><strong>Brunswick (~15 mi south):</strong> Stone Coast Cannabis, Northern Belle Holistic</li>
+      <li><strong>Topsham (~15 mi south):</strong> Several options along the I-295 corridor</li>
+      <li><strong>Bath (~15 mi southwest):</strong> Highbrow and other operators</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Worumbo Mill Renaissance</h2>
+    <p>Lisbon Falls' historic textile mill, the Worumbo Mill, has been repurposed as a commercial space housing Lisbon Cannabis Company. This adaptive reuse mirrors the broader trend of former industrial buildings in Maine being converted to cannabis operations — the same pattern visible in Biddeford's mill-to-dispensary pipeline. The mill location gives Lisbon Cannabis a unique historical backdrop that other Maine dispensaries cannot match.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/lewiston-dispensary-guide">Lewiston Dispensary Guide</a></li>
+        <li><a href="/guides/auburn-dispensary-guide">Auburn Dispensary Guide</a></li>
+        <li><a href="/guides/brunswick-dispensary-guide">Brunswick Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Lisbon, Maine?", a: "Yes. Lisbon has 3 active dispensaries: Lisbon Cannabis Company (medical, 2024-2025 Leafly List winner), River Driver Cannabis Co. (recreational), and Clubhouse Cannabis (medical & recreational)." },
+        { q: "What is Lisbon Cannabis Company?", a: "Lisbon Cannabis Company is a medical dispensary in the historic Worumbo Mill at 5 Canal St. Open 7am-9pm daily. Leafly List winner 2024 and 2025 with 4.8/5 rating across 900+ reviews." },
+        { q: "Does Lisbon allow recreational cannabis?", a: "Yes. River Driver Cannabis Co. at 8 Main St serves recreational (21+) customers. Clubhouse Cannabis at 385 Lisbon St serves both medical and recreational." },
+        { q: "Which Lisbon dispensary has the best deals?", a: "Clubhouse Cannabis runs daily deals 7 days a week — from glass discounts early in the week to flower deals and wake-and-bake specials on weekends. River Driver's approach is family-owned small-batch quality over discounts." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
