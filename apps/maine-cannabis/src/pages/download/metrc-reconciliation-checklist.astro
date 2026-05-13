@@ -1,0 +1,366 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PineTree from '@network/ui/PineTree';
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How often must Maine dispensaries reconcile METRC inventory?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine OCP requires daily inventory reconciliation for all licensed cannabis establishments. Dispensaries must verify that physical inventory matches METRC records at the close of each business day. Monthly comprehensive reconciliation reports must be filed with OCP by the 5th of each month, documenting any variances and corrective actions taken."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the acceptable inventory variance threshold in Maine METRC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine OCP expects inventory variances below 1.0% by weight for flower and 0.5% by weight for concentrates. Edibles should maintain variance below 2.0% by unit count, and topicals below 1.5% by unit count. Variances exceeding these thresholds trigger an OCP compliance review and may result in a Notice of Deficiency. A variance over 5% requires immediate escalation to the compliance officer and suspension of sales until resolved."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if a Maine dispensary fails a METRC audit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "OCP METRC audit failures are categorized by severity. Minor discrepancies (under 1% variance) require documented corrective action within 14 days. Moderate deficiencies (1-5% variance or missing records) trigger a Notice of Deficiency with a 30-day remediation deadline and potential $500-$2,000 fine. Major violations (over 5% variance, unaccounted product, or falsified records) can result in license suspension, $5,000-$10,000 fines, and referral for criminal investigation. Dispensaries with clean monthly reconciliation records typically receive warnings rather than fines for first-time minor issues."
+      }
+    }
+  ]
+});
+---
+
+<Layout
+  title="Free METRC Monthly Reconciliation Checklist for Maine Dispensaries"
+  description="Download the free monthly METRC reconciliation checklist used by Maine cannabis dispensaries to maintain OCP compliance. Daily, weekly, and monthly tracking templates included."
+  noindex={true}
+>
+  <style>
+    .download-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .doc-header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--color-surface);
+      border-radius: 2rem;
+      border: 1px solid var(--color-border);
+      margin-bottom: 3rem;
+    }
+
+    .doc-logo { margin-bottom: 1rem; }
+
+    .doc-brand {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-soft-green);
+      margin-bottom: 1rem;
+    }
+
+    .doc-title {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      line-height: 1.2;
+      color: var(--color-primary);
+      margin: 0.5rem 0;
+    }
+
+    .doc-subtitle {
+      font-size: 1.125rem;
+      color: var(--color-text-light);
+      margin: 0.75rem 0 1.5rem;
+    }
+
+    .doc-meta {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(6, 26, 27, 0.3);
+      text-decoration: none;
+      color: white;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .schedule-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.75rem;
+    }
+
+    .schedule-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      color: var(--color-primary);
+      margin: 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .schedule-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .schedule-card ul {
+      margin: 0.75rem 0 0;
+      padding-left: 1.25rem;
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    .check-count {
+      display: inline-block;
+      background: var(--color-accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.75rem;
+      margin-left: auto;
+    }
+
+    .checklist-preview {
+      background: rgba(88, 129, 87, 0.04);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .checklist-preview h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin: 0 0 1rem;
+    }
+
+    .checklist-preview pre {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .related-guides {
+      background-color: rgba(13, 78, 80, 0.03);
+      border-radius: 0.5rem;
+      padding: 1.5rem 2rem;
+      margin-top: 3rem;
+    }
+
+    .related-guides h2 {
+      font-size: 1.25rem;
+      margin-top: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .related-guides ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .related-guides li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+    }
+
+    .related-guides a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .doc-title { font-size: 1.75rem; }
+      .schedule-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <article class="download-page">
+    <div class="doc-header">
+      <div class="doc-logo">
+        <PineTree size={48} color="var(--color-primary)" />
+      </div>
+      <div class="doc-brand">Maine Dispensary Guide</div>
+      <h1 class="doc-title">METRC Monthly<br/>Reconciliation Checklist</h1>
+      <p class="doc-subtitle">The daily, weekly, and monthly tracking system Maine operators use to pass OCP inventory audits</p>
+      <div class="doc-meta">Version 2026.1 &bull; Updated May 2026 &bull; 10 pages &bull; Free Download</div>
+      <a href="/downloads/maine-metrc-reconciliation-checklist.pdf" class="download-btn" download>
+        <span>&#8595;</span> Download PDF Checklist
+      </a>
+    </div>
+
+    <section>
+      <h2>Why METRC Reconciliation Matters</h2>
+      <p>Metrc inventory tracking is the #1 source of OCP compliance violations for Maine dispensaries. Unlike marketing or signage violations, inventory discrepancies trigger immediate regulatory scrutiny because they raise questions about product diversion, record falsification, and license integrity.</p>
+      <p>The operators with the cleanest OCP inspection records share one habit: a rigorous, repeatable inventory reconciliation process. This checklist distills the workflows used by high-performing Maine dispensaries into a system anyone can implement.</p>
+    </section>
+
+    <section>
+      <h2>Reconciliation Schedule</h2>
+      <p>OCP expects documented compliance at three frequencies. This checklist covers all three:</p>
+
+      <div class="schedule-grid">
+        <div class="schedule-card">
+          <h3>Daily <span class="check-count">8 checks</span></h3>
+          <p>End-of-day closing procedure to verify physical inventory matches METRC.</p>
+          <ul>
+            <li>Export METRC active inventory report</li>
+            <li>Count flower by strain and weight</li>
+            <li>Count concentrates by SKU</li>
+            <li>Count edibles by unit</li>
+            <li>Count topicals by unit</li>
+            <li>Record variances on log sheet</li>
+            <li>Escalate if variance &gt; 1%</li>
+            <li>File report in compliance binder</li>
+          </ul>
+        </div>
+        <div class="schedule-card">
+          <h3>Weekly <span class="check-count">6 checks</span></h3>
+          <p>Comprehensive spot checks and transfer manifest reconciliation.</p>
+          <ul>
+            <li>Reconcile all inbound transfer manifests</li>
+            <li>Verify outbound sales match METRC</li>
+            <li>Review waste logs for proper documentation</li>
+            <li>Check test-result associations</li>
+            <li>Audit package adjustments</li>
+            <li>Review failed batch handling</li>
+          </ul>
+        </div>
+        <div class="schedule-card">
+          <h3>Monthly <span class="check-count">10 checks</span></h3>
+          <p>Full OCP-ready reconciliation report due by the 5th of each month.</p>
+          <ul>
+            <li>Complete physical inventory count</li>
+            <li>Generate METRC inventory summary</li>
+            <li>Reconcile all transfers and adjustments</li>
+            <li>Document variances with root-cause analysis</li>
+            <li>Verify all lab results are linked</li>
+            <li>Update SOP if process gaps found</li>
+            <li>Sign and date reconciliation log</li>
+            <li>File with OCP monthly report</li>
+            <li>Review with compliance officer</li>
+            <li>Archive for 5-year retention</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="checklist-preview">
+      <h2>Sample: Daily Reconciliation Log</h2>
+      <p>Every download includes printable log sheets. Here's the daily closing template:</p>
+      <pre>
+METRC DAILY RECONCILIATION LOG
+Date: ___________  Location: ___________  
+Completed By: ___________  Supervisor: ___________
+
+FLOWER INVENTORY
+Strain          METRC (g)  Physical (g)  Variance     Notes
+__________      __________  ___________  __________  ______
+__________      __________  ___________  __________  ______
+__________      __________  ___________  __________  ______
+
+CONCENTRATE INVENTORY
+SKU             METRC (g)  Physical (g)  Variance     Notes
+__________      __________  ___________  __________  ______
+
+EDIBLE INVENTORY
+Product         METRC (units)  Physical     Variance     Notes
+__________      ___________    __________  __________  ______
+
+VARIANCE SUMMARY
+Total Flower Variance: _______g (_____%)
+Total Concentrate Variance: _______g (_____%)
+Total Edible Variance: _______units (_____%)
+
+ESCALATION REQUIRED?  [ ] No  [ ] Yes — Contact: ___________
+
+SIGNATURES
+Inventory Manager: _________________ Date: _______
+Shift Supervisor:  _________________ Date: _______
+      </pre>
+    </section>
+
+    <section>
+      <h2>What's Included in the Download</h2>
+      <p><strong>Daily Reconciliation Log:</strong> One-page closing checklist for end-of-day inventory verification. Print a stack and keep them at your POS station.</p>
+      <p><strong>Weekly Transfer Manifest Tracker:</strong> Cross-reference all inbound and outbound transfers against METRC records. Flags missing manifests before they become audit issues.</p>
+      <p><strong>Monthly OCP Report Template:</strong> Pre-formatted reconciliation report that matches OCP's expected documentation structure. Includes variance analysis section and corrective action log.</p>
+      <p><strong>Variance Investigation Guide:</strong> Decision tree for responding to inventory discrepancies. Tells you when to escalate, when to document, and when to pause sales.</p>
+    </section>
+
+    <section>
+      <h2>How Operators Use This Checklist</h2>
+      <p><strong>New Dispensaries:</strong> Implement the full system from day one. The daily log trains staff on proper counting procedures before bad habits form. The monthly report template ensures your first OCP review shows organized, professional record-keeping.</p>
+      <p><strong>Established Dispensaries:</strong> Use the monthly template to standardize reporting across multiple locations. The variance investigation guide helps identify whether discrepancies are counting errors, METRC entry mistakes, or inventory shrinkage — each requiring different fixes.</p>
+      <p><strong>Pre-Inspection Prep:</strong> Run the full monthly checklist 30 days before any OCP audit. Operators who do this report significantly fewer deficiencies because they've already caught and documented the issues inspectors would otherwise flag.</p>
+    </section>
+
+    <div class="doc-header" style="margin-top: 3rem;">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Download the Full Checklist</h2>
+      <p class="doc-subtitle">10 pages &bull; 24 checklist items &bull; 3 log templates &bull; Print-ready PDF</p>
+      <a href="/downloads/maine-metrc-reconciliation-checklist.pdf" class="download-btn" download>
+        <span>&#8595;</span> Download Free PDF
+      </a>
+    </div>
+
+    <section class="related-guides">
+      <h2>Related Compliance Resources</h2>
+      <ul>
+        <li><a href="/guides/maine-metrc-compliance-guide">Maine METRC Compliance Guide</a> — Full seed-to-sale tracking requirements and METRC workflow</li>
+        <li><a href="/download/compliance-self-assessment">Maine Dispensary Compliance Self-Assessment</a> — 8-domain audit preparation checklist</li>
+        <li><a href="/guides/maine-cannabis-inventory-management">Maine Cannabis Inventory Management</a> — Best practices for stock control and ordering</li>
+        <li><a href="/guides/maine-dispensary-security">Maine Dispensary Security Requirements</a> — OCP facility security specifications</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
