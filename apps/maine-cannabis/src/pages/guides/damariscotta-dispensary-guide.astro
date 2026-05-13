@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there cannabis dispensaries in Damariscotta, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Damariscotta has at least 3 dispensaries: Cannabis Cured (recreational, 53A Chapman St, 207-682-0130), Above and Beyond Cannabis (medical, 464 Main St, 207-563-2100), and Greenport Cannabis (280 Main St)."}}]});
+---
+<Layout title="Damariscotta, Maine Dispensary Guide — Cannabis Cured & Above and Beyond 2026" description="Damariscotta, Maine dispensary guide. Cannabis Cured (rec), Above and Beyond Cannabis (med), and Greenport Cannabis on the Midcoast for 2026." heroImage="/images/heroes/damariscotta-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header"><h1>Damariscotta, ME Dispensary Guide</h1><p class="subtitle">Cannabis Cured, Above and Beyond Cannabis — Midcoast Maine's Lincoln County cannabis corridor</p></div>
+
+  <section class="fact-box"><h2>Damariscotta Cannabis Quick Facts</h2>
+    <table>
+      <thead><tr><th>Fact</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 confirmed active</td></tr>
+        <tr><td><strong>Known Dispensaries</strong></td><td>Cannabis Cured (rec), Above & Beyond Cannabis (med), Greenport Cannabis (rec)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~2,300 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Lincoln County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section><h2>Overview</h2>
+    <p>Damariscotta is a small Midcoast village of ~2,300 that supports three active dispensaries — more per capita than many towns triple its size. The combination of Route 1 tourist traffic, coastal community wealth, and proximity to Boothbay Harbor and Pemaquid Point creates a market that punches above its weight.</p>
+  </section>
+
+  <section><h2>Cannabis Cured — Recreational</h2>
+    <p><strong>Address:</strong> 53A Chapman Street, Damariscotta, ME 04543<br><strong>Phone:</strong> (207) 682-0130<br><strong>Hours:</strong> Mon-Wed 10am-6pm, Thu-Sat 10am-8pm, Sun 10am-4pm<br><strong>Type:</strong> Recreational (21+)</p>
+    <p>Cannabis Cured's Damariscotta location is positioned just off Main Street on Chapman Street, tucked behind familiar local businesses near downtown. Their menu carries trusted Maine brands with online ordering for pickup. The location serves customers from Newcastle, Bremen, Nobleboro, Bristol, and Waldoboro.</p>
+
+    <h3>Above and Beyond Cannabis — Medical</h3>
+    <p><strong>Address:</strong> 464 Main Street, Damariscotta, ME 04555<br><strong>Phone:</strong> (207) 563-2100<br><strong>Hours:</strong> Daily 9am-7pm<br><strong>Type:</strong> Medical<br><strong>Rating:</strong> 5.0/5 (111 reviews)</p>
+    <p>Above and Beyond Cannabis is a family-owned operation run by a father-daughter duo. They specialize in craft cannabis and are known for competitive pricing with Maine sales tax included in listed prices. They offer 15% off for first-time patients, 10% for veterans and birthdays. They also operate a smoke shop and vape shop on-site, creating a broader customer draw.</p>
+
+    <h3>Greenport Cannabis</h3>
+    <p><strong>Address:</strong> 280 Main Street, Damariscotta, ME 04543<br><strong>Phone:</strong> (207) 563-6928<br><strong>Hours:</strong> Mon-Fri 9am-7pm, Sat-Sun 10am-7pm<br><strong>Type:</strong> Recreational</p>
+  </section>
+
+  <section><h2>Nearby Dispensary Options</h2>
+    <ul>
+      <li><strong>Boothbay (~10 mi east):</strong> HIGHLY Cannaco (rec)</li>
+      <li><strong>Woolwich (~15 mi west):</strong> HIGHLY (rec)</li>
+      <li><strong>Rockland (~12 mi south):</strong> Highbrow (rec), Scrimshaw (med), Botany (rec+med)</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="further-reading"><h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/boothbay-dispensary-guide">Boothbay Dispensary Guide</a></li>
+        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a></li>
+        <li><a href="/guides/freeport-dispensary-guide">Freeport Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section"><h2>Frequently Asked Questions</h2>
+    <Faq questions={[
+      { q: "Are there dispensaries in Damariscotta, Maine?", a: "Yes. Damariscotta has 3 active dispensaries: Cannabis Cured (rec, 53A Chapman St), Above and Beyond Cannabis (med, 464 Main St), and Greenport Cannabis (rec, 280 Main St)." },
+      { q: "Which dispensary has the best deals in Damariscotta?", a: "Above and Beyond Cannabis includes sales tax in listed prices and offers 15% off for first-time patients, 10% for veterans, and birthday discounts." },
+      { q: "Does Damariscotta accept out-of-state medical cards?", a: "Contact Above and Beyond Cannabis directly about current reciprocity policies." },
+    ]} />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Always verify details directly with the dispensary.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Kennebunk, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are in Wells (approximately 5 minutes away) and Biddeford (approximately 20 minutes away)." }},
+    { "@type": "Question", "name": "Does Kennebunk allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has NOT opted in to recreational cannabis retail. This opt-out decision means no dispensaries can operate within Kennebunk, and residents must travel to neighboring towns for legal cannabis purchases." }},
+    { "@type": "Question", "name": "Where is the nearest dispensary to Kennebunk?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are in Wells, approximately 5 minutes away: Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Biddeford (approximately 20 minutes) has additional options including Stoner & Co and Canuvo." }},
+    { "@type": "Question", "name": "Why doesn't Kennebunk have dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Kennebunk's selectmen have not opted the town in to recreational cannabis retail. This is a municipal policy decision. Until the town changes its policy, no dispensaries can legally operate in Kennebunk." }}
+  ]
+});
+---
+
+<Layout title="Kennebunk, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Kennebunk, Maine cannabis guide. No dispensaries in Kennebunk — nearest options in Wells (5 min) and Biddeford (20 min) for 2026." heroImage="/images/heroes/kennebunk-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Kennebunk, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options near Kennebunk, Maine — Nearest dispensaries in Wells and Biddeford</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Kennebunk at a Glance</h2>
+    <table aria-label="Kennebunk cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — NOT opted in</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT opted in</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Wells (~5 min) — Hazy Hill Farm (1614 Post Road)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Wells (~5 min) — Curaleaf (Route 1)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~12,000</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Kennebunk is a coastal York County town of approximately 12,000 residents that has not opted in to cannabis retail. As a result, there are no dispensaries within town limits. This opt-out decision means Kennebunk residents and visitors must travel to neighboring towns for legal cannabis purchases.</p>
+    <p>The nearest dispensaries are located in Wells, approximately 5 minutes away by car. This short distance means Kennebunk residents have convenient access to cannabis despite their town's opt-out status. Additionally, Biddeford's dispensaries are approximately 20 minutes away, providing further options.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Kennebunk</h2>
+
+    <h3>Wells Dispensaries (~5 minutes)</h3>
+    <p><strong>Hazy Hill Farm (Medical)</strong><br>
+    Address: 1614 Post Road, Wells, ME 04090</p>
+    <p>Hazy Hill Farm is the nearest medical dispensary to Kennebunk, operating a farm-to-shelf model from their Post Road location. They cultivate their own cannabis and serve medical patients from the greater Kennebunk/Wells area.</p>
+    <p><strong>Curaleaf (Recreational)</strong><br>
+    Location: Route 1, Wells, ME</p>
+    <p>Curaleaf is a multi-state cannabis operator offering adult-use recreational cannabis from their Wells Route 1 location. Being on Route 1, they benefit from significant tourist traffic heading to/from Kennebunk beaches and Ogunquit.</p>
+
+    <h3>Biddeford Dispensaries (~20 minutes)</h3>
+    <p><strong>Stoner & Co</strong> and <strong>Canuvo</strong> operate in Biddeford, approximately 20 minutes from Kennebunk. Biddeford's closer proximity to I-95 makes it convenient for those traveling from further away.</p>
+  </section>
+
+  <section>
+    <h2>The Kennebunk Opt-Out</h2>
+    <p>Kennebunk's decision not to opt in to cannabis retail means no dispensaries can operate within town limits. This municipal choice reflects community preferences but creates an economic leakage whereby:</p>
+    <ul>
+      <li>Cannabis spending by Kennebunk residents goes to neighboring towns</li>
+      <li>Kennebunk does not receive cannabis tax revenue</li>
+      <li>Business opportunities that could benefit local operators go to Wells and Biddeford</li>
+    </ul>
+    <p>Municipal opt-in decisions can change over time. Any operator interested in Kennebunk should monitor town meetings and engage with local officials about potential future opt-in.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Kennebunk has NOT opted in to recreational cannabis retail. This opt-out status means no cannabis dispensaries can operate within town limits. Residents seeking legal cannabis must travel to neighboring opted-in towns.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Kennebunk, Maine?", a: "No. Kennebunk has NOT opted in to cannabis retail. No dispensaries operate in Kennebunk. The nearest options are in Wells (~5 min away)." },
+        { q: "Does Kennebunk allow cannabis dispensaries?", a: "No. Kennebunk has NOT opted in to recreational cannabis. Residents must travel to neighboring towns for legal cannabis purchases." },
+        { q: "Where is the nearest dispensary to Kennebunk?", a: "The nearest dispensaries are in Wells (~5 min): Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Biddeford options are ~20 min away." },
+        { q: "Why doesn't Kennebunk have dispensaries?", a: "Kennebunk's selectmen have not opted the town in to recreational cannabis retail. This municipal policy decision keeps dispensaries out of Kennebunk until the town changes its position." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

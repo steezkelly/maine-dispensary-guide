@@ -1,0 +1,135 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many dispensaries are in Brownfield, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Brownfield has 2 medical cannabis dispensaries: Clean Green (medical/delivery at 349 Center Conway Rd, 207-935-1128) and Greener Evolutions (medical/delivery, 207-370-8867). Both operate delivery-based models serving the rural Oxford County area." }},
+    { "@type": "Question", "name": "Does Brownfield allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Brownfield has opted in to recreational cannabis. However, only medical dispensaries currently operate in town. This represents an opportunity for recreational operators to serve the Fryeburg-Bridgton corridor." }},
+    { "@type": "Question", "name": "What makes Brownfield's dispensaries unique?", "acceptedAnswer": { "@type": "Answer", "text": "Both Clean Green and Greener Evolutions operate primarily as delivery-based dispensaries, serving the rural Oxford County region without a traditional retail storefront. Greener Evolutions specifically emphasizes small-batch organic cannabis products." }},
+    { "@type": "Question", "name": "Why is Brownfield significant for cannabis delivery?", "acceptedAnswer": { "@type": "Answer", "text": "Brownfield's location enables delivery service to a wide rural area of Oxford County, including the Fryeburg-Bridgton corridor. With a small population of only 1,200 but serving a wide rural radius, Brownfield operators fill a critical gap in the regional cannabis supply chain." }}
+  ]
+});
+---
+
+<Layout title="Brownfield, ME Dispensary Guide — Medical Cannabis with Delivery 2026" description="Brownfield, Maine dispensary guide. Two delivery-based medical dispensaries: Clean Green and Greener Evolutions serving rural Oxford County for 2026." heroImage="/images/heroes/brownfield-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Brownfield, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis dispensaries in Brownfield, Maine — Rural Oxford County delivery</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Brownfield at a Glance</h2>
+    <table aria-label="Brownfield cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 — Clean Green, Greener Evolutions</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>YES — Recreational authorized</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Clean Green (349 Center Conway Rd), Greener Evolutions (both delivery-based)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Fryeburg (~10 min) — White Mountain Craft Cannabis, The Glass Cook</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,200</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Brownfield is a small Oxford County town of approximately 1,200 residents, yet it supports two medical cannabis dispensaries — both operating primarily through delivery service. This reflects the realities of rural Maine cannabis: small resident populations are supplemented by delivery service to a wide geographic area that would otherwise lack access.</p>
+    <p>Both Clean Green and Greener Evolutions serve the Fryeburg-Bridgton corridor and the broader rural Oxford County region. With their delivery-based models, they effectively extend cannabis access across multiple towns that lack local dispensaries, including the communities between Brownfield and Bridgton.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Brownfield</h2>
+
+    <h3>Clean Green (Medical + Delivery)</h3>
+    <p><strong>Address:</strong> 349 Center Conway Rd, Brownfield, ME 04010</p>
+    <p><strong>Phone:</strong> (207) 935-1128</p>
+    <p>Clean Green operates as a medical cannabis dispensary with delivery service, serving the Brownfield area and extending across the Fryeburg-Bridgton corridor. Their delivery model allows them to reach patients in surrounding towns without requiring a physical dispensary visit.</p>
+
+    <h3>Greener Evolutions (Medical + Delivery)</h3>
+    <p><strong>Phone:</strong> (207) 370-8867</p>
+    <p>Greener Evolutions is a delivery-based medical cannabis dispensary emphasizing small-batch organic cannabis products. Their focus on organic, small-batch production differentiates them from larger-scale operations and appeals to patients seeking artisanal, craft-cannabis products.</p>
+  </section>
+
+  <section>
+    <h2>Rural Delivery Model</h2>
+    <p>The two dispensaries in Brownfield exemplify an important rural cannabis business model: delivery-based service rather than traditional retail. With only 1,200 residents, Brownfield cannot support a walk-in dispensary through foot traffic alone. The delivery model extends their market reach across multiple towns in the Fryeburg-Bridgton corridor.</p>
+    <p>This model benefits patients in:</p>
+    <ul>
+      <li>Denmark, ME</li>
+      <li>Lovell, ME</li>
+      <li>Stoneham, ME</li>
+      <li>Stow, ME</li>
+      <li>And other small Oxford County communities</li>
+    </ul>
+    <p>Maine law allows licensed dispensaries to deliver to any municipality in the state, regardless of opt-in status, making delivery service particularly valuable in rural areas.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Brownfield has opted in to recreational cannabis, though only medical dispensaries currently operate in town. This creates an opportunity for recreational operators interested in the Oxford County market.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "How many dispensaries are in Brownfield, Maine?", a: "Brownfield has 2 medical cannabis dispensaries: Clean Green (medical/delivery at 349 Center Conway Rd, 207-935-1128) and Greener Evolutions (medical/delivery, 207-370-8867). Both are delivery-based." },
+        { q: "Does Brownfield allow recreational cannabis?", a: "Yes. Brownfield has opted in to recreational cannabis but currently only medical dispensaries operate in town." },
+        { q: "What makes Brownfield's dispensaries unique?", a: "Both operate primarily as delivery-based dispensaries. Greener Evolutions emphasizes small-batch organic cannabis products." },
+        { q: "Why is Brownfield significant for cannabis delivery?", a: "With only 1,200 residents but serving a wide rural radius via delivery, Brownfield operators fill a critical gap in the Oxford County cannabis supply chain." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

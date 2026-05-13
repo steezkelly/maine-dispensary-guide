@@ -1,0 +1,142 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Limerick, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Founding Farmers operates a dispensary at 16 Main Street, Limerick, ME 04048. Founded in 2021, they primarily serve medical patients with a focus on medical marijuana products and patient services." }},
+    { "@type": "Question", "name": "What is Founding Farmers in Limerick, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Founding Farmers is a cannabis dispensary located at 16 Main Street, Limerick, ME. Established in 2021, they carry a range of medical marijuana products and offer patient-focused services. Contact: (207) 315-5259." }},
+    { "@type": "Question", "name": "Does Limerick allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Limerick does NOT appear on the official Maine adult-use opt-in community list. Founding Farmers operates primarily as a medical dispensary. For recreational cannabis, residents typically travel to Bridgton (approximately 18 miles away)." }},
+    { "@type": "Question", "name": "What dispensaries are near Limerick, ME?", "acceptedAnswer": { "@type": "Answer", "text": "In Limerick: Founding Farmers (medical, 16 Main St). Nearby: Sweet Dirt Cannabis and Canuvo in Bridgton (~18 mi, adult-use), The Glass Cook in Fryeburg (~20 mi, recreational), and Hidden Greens in Buxton (medical, ~12 mi)." }}
+  ]
+});
+---
+<Layout title="Limerick, Maine Dispensary Guide — Founding Farmers & Cannabis Options 2026" description="Limerick, Maine cannabis guide. Founding Farmers dispensary at 16 Main St. Medical cannabis options in York County's Limerick for 2026. Plus nearby recreational choices in Bridgton and Fryeburg." heroImage="/images/heroes/limerick-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Limerick, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options in Limerick and the surrounding York County area</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Limerick Cannabis Quick Facts</h2>
+    <table aria-label="Limerick cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Statewide yes; local opt-in unclear</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 — Founding Farmers (medical-focused)</td></tr>
+        <tr><td><strong>Known Dispensary</strong></td><td>Founding Farmers — 16 Main St, Limerick, ME 04048, (207) 315-5259</td></tr>
+        <tr><td><strong>Established</strong></td><td>2021</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,188 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Limerick is one of the rare small York County towns with an active cannabis dispensary. <strong>Founding Farmers</strong> has operated at 16 Main Street since 2021, serving as a medical cannabis resource for Limerick residents and the surrounding communities of Limington, Parsonsfield, Hiram, and Cornish.</p>
+    <p>With a year-round population of roughly 3,200, Limerick is small — but its location between Bridgton (18 miles east) and Portland (35 miles southeast) puts it in a corridor where several larger towns also have dispensaries. Founding Farmers fills the gap for local residents who would otherwise need to drive to Bridgton or further for their medical cannabis needs.</p>
+  </section>
+
+  <section>
+    <h2>Founding Farmers</h2>
+    <p><strong>Address:</strong> 16 Main Street, Limerick, ME 04048<br>
+    <strong>Phone:</strong> (207) 315-5259<br>
+    <strong>Established:</strong> 2021</p>
+    <p>Founding Farmers is Limerick's dispensary — a medical-focused operation carrying a range of medical marijuana products. Their website emphasizes patient services and medical card information, indicating a primary focus on the patient community rather than adult-use retail. This makes them the go-to dispensary for Limerick-area residents with medical cannabis needs.</p>
+    <p>For recreational (adult-use) cannabis, Limerick residents typically travel to Bridgton (Sweet Dirt Cannabis, Canuvo) or Fryeburg (The Glass Cook), both approximately 18-20 miles away.</p>
+  </section>
+
+  <section>
+    <h2>Serving the Rural York County Corridor</h2>
+    <p>Founding Farmers in Limerick is the nearest dispensary for several small communities that have no local options of their own:</p>
+    <ul>
+      <li><strong>Limington</strong> (~6 miles, no dispensary)</li>
+      <li><strong>Parsonsfield / Kezar Falls</strong> (~8 miles, no dispensary)</li>
+      <li><strong>Cornish</strong> (~8 miles, no dispensary)</li>
+      <li><strong>Hiram</strong> (~16 miles, no dispensary — also served by Bridgton)</li>
+    </ul>
+    <p>For these communities, Limerick is often the closest option if residents have a medical card. For adult-use purchases without a medical card, Bridgton's recreational dispensaries are typically the better choice despite the longer drive.</p>
+  </section>
+
+  <section>
+    <h2>Limerick Opt-In Status</h2>
+    <p>Limerick does not appear on the official Maine adult-use opt-in community list. This means Founding Farmers likely operates under medical cannabis licensing. The town has not publicly authorized adult-use retail dispensaries, though this can change at any time through municipal action.</p>
+    <p>If you're considering opening a recreational dispensary in Limerick, you would need to confirm current town policy with the Limerick town clerk, as opt-in decisions can change between official tracker updates.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Options</h2>
+    <p>For Limerick residents looking for more variety or adult-use options:</p>
+    <ul>
+      <li><strong>Bridgton (~18 mi east):</strong> Sweet Dirt Cannabis, Canuvo, Maine Only — all recreational</li>
+      <li><strong>Fryeburg (~20 mi north):</strong> The Glass Cook (recreational + glassblowing studio), Above All Greenery (medical)</li>
+      <li><strong>Buxton (~12 mi south):</strong> Hidden Greens (medical at 370 Narragansett Trail)</li>
+      <li><strong>Portland (~35 mi southeast):</strong> 15+ dispensaries spanning all product types and price points</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/buxton-dispensary-guide">Buxton Dispensary Guide</a></li>
+        <li><a href="/guides/limington-dispensary-guide">Limington Dispensary Guide</a></li>
+        <li><a href="/guides/parsonsfield-dispensary-guide">Parsonsfield Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any dispensaries in Limerick, Maine?", a: "Yes. Founding Farmers operates a medical-focused dispensary at 16 Main Street, Limerick, ME 04048. Established in 2021, they serve the Limerick area and nearby communities." },
+        { q: "What is Founding Farmers?", a: "Founding Farmers is a cannabis dispensary at 16 Main Street, Limerick, ME. Founded in 2021, they carry medical marijuana products and offer patient-focused services. Contact: (207) 315-5259." },
+        { q: "Does Limerick allow recreational dispensaries?", a: "Limerick does NOT appear on the official Maine adult-use opt-in list. Founding Farmers operates as a medical dispensary. For recreational purchases, residents typically travel to Bridgton (~18 mi)." },
+        { q: "What dispensaries are near Limerick?", a: "In Limerick: Founding Farmers. Nearby: Sweet Dirt and Canuvo in Bridgton (~18 mi, adult-use), The Glass Cook in Fryeburg (~20 mi), Hidden Greens in Buxton (medical, ~12 mi)." },
+        { q: "Is Founding Farmers the only dispensary between Bridgton and Portland?", a: "Founding Farmers fills an important gap between Bridgton (18 mi) and Portland (35 mi), though there are also medical options in Buxton (~12 mi south)." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

@@ -1,0 +1,84 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Boothbay, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. HIGHLY Cannaco operates a recreational dispensary at 638 Wiscasset Rd, Boothbay, ME 04537. Phone: (207) 315-6719. Founded in 2017 as medical, they expanded to adult-use in 2021 and now operate 7 locations statewide."}},{"@type":"Question","name":"What is HIGHLY Cannaco in Boothbay?","acceptedAnswer":{"@type":"Answer","text":"HIGHLY Cannaco is a recreational dispensary at 638 Wiscasset Rd, Boothbay. Founded 2017 as medical, expanded to adult-use 2021. They feature a live viewing window into their grow room and carry in-house grown living soil cannabis. Phone: (207) 315-6719. Daily 9am-7pm."}},{"@type":"Question","name":"Does Boothbay accept out-of-state medical cards?","acceptedAnswer":{"@type":"Answer","text":"HIGHLY Cannaco Boothbay primarily serves recreational (21+) customers. For medical purchases, check nearby Rockland dispensaries that may have reciprocity. Contact (207) 315-6719 for details."}}]});
+---
+<Layout title="Boothbay, Maine Dispensary Guide — HIGHLY Cannaco 2026" description="Boothbay, Maine dispensary guide. HIGHLY Cannaco recreational dispensary at 638 Wiscasset Rd with live grow room viewing in coastal Maine for 2026." heroImage="/images/heroes/boothbay-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Boothbay, ME Dispensary Guide</h1>
+    <p class="subtitle">HIGHLY Cannaco — coastal Maine's recreational dispensary with live grow room viewing</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Boothbay Cannabis Quick Facts</h2>
+    <table aria-label="Boothbay cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 (HIGHLY Cannaco — recreational)</td></tr>
+        <tr><td><strong>Known Dispensary</strong></td><td>HIGHLY Cannaco — 638 Wiscasset Rd, Boothbay, ME 04537</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 315-6719</td></tr>
+        <tr><td><strong>Founded</strong></td><td>2017 (medical), 2021 (adult-use)</td></tr>
+        <tr><td><strong>Statewide Locations</strong></td><td>7</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,200 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Lincoln County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>HIGHLY Cannaco — Boothbay</h2>
+    <p><strong>Address:</strong> 638 Wiscasset Rd, Boothbay, ME 04537<br>
+    <strong>Phone:</strong> (207) 315-6719<br>
+    <strong>Hours:</strong> Mon-Fri 9am-7pm, Sat-Sun 10am-6pm<br>
+    <strong>Type:</strong> Recreational (21+)</p>
+    <p>HIGHLY Cannaco Boothbay is the town's dispensary — and notably, one of the few in coastal Maine with a live viewing window into the grow room. Founded in 2017 as a medical operation, they expanded to adult-use in 2021 and now operate seven locations statewide. Their in-house cultivation uses living soil methods, producing terpene-rich flower like their Mr. Nasty strain.</p>
+    <p>Daily deals rotate throughout the week: Monday 10% off edibles, Tuesday 10% off vendor products, Wednesday $5 off vape cartridges, Thursday 10% off beverages, Friday 10% off the strain of the day, Saturday $5 off rosin, and Sunday 20% off CBD and gear.</p>
+  </section>
+
+  <Callout title="Grow Room Viewing" type="passion">
+    HIGHLY Cannaco's live viewing window is one of the most unique features in Maine's dispensary scene. Customers can watch the cultivation process in real time — a transparency measure that builds trust and educates consumers. For a tourist-heavy area like Boothbay Harbor, this adds a memorable experience element beyond standard retail.
+  </Callout>
+
+  <section>
+    <h2>Boothbay's Market Context</h2>
+    <p>Boothbay Harbor is one of Maine's most visited coastal destinations, drawing summer tourists for harbor cruises, seafood restaurants, and the Maine State Aquarium. HIGHLY Cannaco is the only dispensary in the immediate area, creating a natural monopoly for Boothbay visitors. Their seven-location statewide network means consistent product availability and brand recognition.</p>
+    <p>For medical patients specifically looking for medical dispensaries in the Boothbay area, Bayside Bud Shack in Northport (~20 mi north) and Rockland options (~15 mi northeast) serve both medical and recreational customers.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a></li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
+        <li><a href="/guides/damariscotta-dispensary-guide">Damariscotta Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Boothbay, Maine?", a: "Yes. HIGHLY Cannaco operates a recreational dispensary at 638 Wiscasset Rd, Boothbay. Founded 2017, expanded to adult-use 2021, now with 7 locations statewide. Phone: (207) 315-6719." },
+        { q: "What makes HIGHLY Cannaco Boothbay unique?", a: "HIGHLY Cannaco Boothbay features a live viewing window into the grow room, in-house living soil cultivation, and a seven-location statewide network. Their daily deals rotate by product category." },
+        { q: "Where can I buy medical cannabis near Boothbay?", a: "Bayside Bud Shack in Northport (~20 mi north) serves both medical and recreational. Rockland has Scrimshaw Cannabis (medical) ~15 mi northeast." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

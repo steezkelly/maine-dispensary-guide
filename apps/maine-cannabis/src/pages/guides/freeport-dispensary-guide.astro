@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Freeport, Maine?","acceptedAnswer":{"@type":"Answer","text":"Limited. Freeport has opted out of allowing recreational cannabis establishments within town limits. Be Well My Friend LLC operates a medical dispensary at 174 S Freeport Rd. The nearest recreational options are in Yarmouth (Elevate Maine, ~10 mi) and Portland (~17 mi)."}},{"@type":"Question","name":"Is recreational cannabis legal in Freeport, Maine?","acceptedAnswer":{"@type":"Answer","text":"Cannabis is legal statewide in Maine for adults 21+. However, Freeport has opted out of allowing recreational retail establishments. Purchase and possession remain legal under state law."}},{"@type":"Question","name":"Where can I buy cannabis near Freeport?","acceptedAnswer":{"@type":"Answer","text":"In Freeport: Be Well My Friend LLC (medical, 174 S Freeport Rd). Nearby recreational options include Elevate Maine in Yarmouth (50 Downeast Dr, ~10 mi) and Portland dispensaries (~17 mi). Nearby medical: Stone Coast Cannabis (Brunswick) and Northern Belle Holistic (Brunswick)."}}]});
+---
+<Layout title="Freeport, ME Dispensary Guide — Cannabis Options Near Outlets 2026" description="Freeport, Maine cannabis guide. Limited dispensaries — Freeport opted out of recreational. Find medical and recreational options near Freeport's outlet mall area." heroImage="/images/heroes/freeport-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Freeport, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options for Freeport's outlet mall visitors and year-round residents</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Freeport Cannabis Quick Facts</h2>
+    <table aria-label="Freeport cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide BUT Freeport opted out of local retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 medical (Be Well My Friend LLC at 174 S Freeport Rd)</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>OPTED OUT — recreational retail prohibited within town limits</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Elevate Maine, Yarmouth (~10 mi) or Portland (~17 mi)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~9,000 (2020 Census); outlet mall draws millions of visitors</td></tr>
+        <tr><td><strong>County</strong></td><td>Cumberland County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Freeport is best known for its premium outlet mall, L.L. Bean flagship store, and historic downtown. The outlet mall draws millions of visitors annually. Despite this massive foot traffic, <strong>Freeport has opted out of recreational cannabis retail</strong>. There is one medical dispensary in town (Be Well My Friend LLC at 174 S Freeport Rd), meaning the vast majority of visitors cannot legally purchase cannabis within the town limits.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Freeport</h2>
+
+    <h3>Be Well My Friend LLC — Medical</h3>
+    <p><strong>Address:</strong> 174 S Freeport Rd, Freeport, ME<br>
+    <strong>Phone:</strong> (855) 239-3556<br>
+    <strong>Type:</strong> Medical (Maine medical card required)</p>
+    <p>Be Well My Friend LLC serves Freeport's small medical cannabis patient community. As a medical-only operation, they don't serve the millions of recreational consumers passing through Freeport's outlet mall.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Recreational Options</h2>
+    <ul>
+      <li><strong>Elevate Maine</strong> — 50 Downeast Drive, Yarmouth, ME. ~10 mi south of Freeport on Route 88. Medical and recreational options available. Phone: (207) 242-8062.</li>
+      <li><strong>Portland (~17 mi):</strong> 15+ dispensaries spanning all product types and price points — the most convenient option for Freeport visitors willing to drive a bit further.</li>
+    </ul>
+
+    <h3>Nearest Medical Options</h3>
+    <ul>
+      <li><strong>Silver Therapeutics</strong> — Portland (medical, rec, ~17 mi)</li>
+      <li><strong>Stone Coast Cannabis</strong> — Brunswick, 220 Bath Rd (~15 mi, medical)</li>
+      <li><strong>Northern Belle Holistic</strong> — Brunswick, 408 Bath Rd (~15 mi, medical)</li>
+    </ul>
+  </section>
+
+  <Callout title="The Freeport Gap" type="passion">
+    Freeport's outlet mall draws millions of visitors annually. Not a single one of them can legally buy recreational cannabis in town because Freeport opted out. This is revenue that flows to Yarmouth, Brunswick, and Portland instead. For a town that thrives on retail, the irony is notable — and the opportunity for Freeport if opt-in sentiment ever shifts.
+  </Callout>
+
+  <section>
+    <h2>Opt-Out Context</h2>
+    <p>Freeport opted out of recreational cannabis through town-level action. The decision reflects the town's conservative stance during the early days of Maine's adult-use market. As surrounding towns have seen dispensary tax revenue from nearby communities (Yarmouth, Brunswick), the economic argument for reconsideration grows — particularly given Freeport's retail-first identity. However, there is no current public timeline for Freeport to revisit the decision.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/westbrook-dispensary-guide">Westbrook Dispensary Guide</a></li>
+        <li><a href="/guides/brunswick-dispensary-guide">Brunswick Dispensary Guide</a></li>
+        <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there dispensaries in Freeport, Maine?", a: "Limited. Freeport opted out of recreational retail. Be Well My Friend LLC is a medical-only dispensary at 174 S Freeport Rd. Recreational options are in Yarmouth (~10 mi) and Portland (~17 mi)." },
+        { q: "Is recreational cannabis legal in Freeport?", a: "Cannabis is legal statewide for adults 21+, but Freeport has opted out of allowing recreational retail. Purchase and possession remain legal." },
+        { q: "Where can I buy recreational cannabis near Freeport?", a: "Elevate Maine in Yarmouth (50 Downeast Dr, ~10 mi) offers recreational options. Portland has 15+ dispensaries (~17 mi)." },
+        { q: "Will Freeport opt in?", a: "No current public timeline for Freeport to reconsider. As surrounding towns see dispensary tax revenue, the economic argument may eventually shift town sentiment." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office before making plans.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

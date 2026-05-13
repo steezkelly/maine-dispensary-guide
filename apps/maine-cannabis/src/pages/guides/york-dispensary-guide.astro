@@ -1,0 +1,129 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many dispensaries are in York, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "York has 1 known dispensary: Tops Farm, a medical cannabis dispensary located at 647 US-1 Unit #10. There are currently no recreational dispensaries operating in York." }},
+    { "@type": "Question", "name": "Does York allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. York has opted in to recreational cannabis retail. However, only the medical dispensary Tops Farm currently operates in town, creating a significant adult-use market opportunity." }},
+    { "@type": "Question", "name": "What is the market opportunity in York?", "acceptedAnswer": { "@type": "Answer", "text": "York is a major tourism destination with 13,000+ residents and Nubble Light, beaches, and attractions that draw visitors year-round. The combination of a population that supports only one medical dispensary and a significant tourism economy creates a strong adult-use opportunity." }},
+    { "@type": "Question", "name": "What is Tops Farm?", "acceptedAnswer": { "@type": "Answer", "text": "Tops Farm is a medical cannabis dispensary located at 647 US-1 Unit #10 in York, serving medical cannabis patients in York County." }}
+  ]
+});
+---
+
+<Layout title="York, ME Dispensary Guide — Tops Farm Medical Dispensary 2026" description="York, Maine dispensary guide. Tops Farm medical dispensary on US Route 1. Coastal York County cannabis guide with recreational opportunity." heroImage="/images/heroes/york-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>York, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries in York, Maine — Coastal York County opportunity</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>York at a Glance</h2>
+    <table aria-label="York cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 — Tops Farm (medical)</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>YES — Recreational authorized</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Tops Farm (647 US-1 Unit #10)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Wells (~10 min) — Hazy Hill Farm, Curaleaf</td></tr>
+        <tr><td><strong>Population</strong></td><td>~13,000</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>York is one of Maine's most popular coastal destinations, home to iconic Nubble Light (also known as Cape Neddick Light), historic downtown, and several beaches. With a year-round population of approximately 13,000 that swells significantly during summer tourist season, York has the population and visitor base to support multiple cannabis dispensaries — yet currently has only one medical dispensary.</p>
+    <p>Tops Farm operates as York's sole cannabis dispensary, serving the medical market from its Route 1 location. The absence of recreational dispensaries in York despite the town's opt-in status represents a significant market opportunity.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in York</h2>
+
+    <h3>Tops Farm (Medical)</h3>
+    <p><strong>Address:</strong> 647 US-1 Unit #10, York, ME 03909</p>
+    <p>Tops Farm is a medical cannabis dispensary serving York-area patients from its location on US Route 1. As the only dispensary in York, Tops Farm has been serving the medical cannabis needs of York County residents.</p>
+  </section>
+
+  <section>
+    <h2>The York Opportunity</h2>
+    <p>York presents a compelling cannabis market opportunity:</p>
+    <ul>
+      <li><strong>Strong tourism economy</strong> — Nubble Light, beaches, and attractions draw visitors year-round</li>
+      <li><strong>Significant population</strong> — 13,000 residents plus seasonal visitors</li>
+      <li><strong>Only one dispensary</strong> — clear market gap for adult-use retail</li>
+      <li><strong>Affluent market</strong> — York tends toward higher disposable income demographics</li>
+      <li><strong>Route 1 visibility</strong> — US-1 provides excellent signage and traffic exposure</li>
+    </ul>
+    <p>The fact that only Tops Farm operates in York — a town of 13,000 with significant tourism — suggests either slow regulatory progress or opportunity for first movers in the adult-use space.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>York has opted in to recreational cannabis retail. Despite this authorization, only the medical dispensary Tops Farm currently operates in town. This gap between opt-in status and actual recreational retail represents both opportunity and potential regulatory complexity that operators should investigate.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "How many dispensaries are in York, Maine?", a: "York has 1 known dispensary: Tops Farm, a medical cannabis dispensary at 647 US-1 Unit #10. No recreational dispensaries currently operate in York." },
+        { q: "Does York allow recreational cannabis?", a: "Yes. York has opted in to recreational cannabis retail. However, only the medical dispensary Tops Farm currently operates in town, creating a significant adult-use opportunity." },
+        { q: "What is the market opportunity in York?", a: "York is a major tourism destination with 13,000+ residents, Nubble Light, and beaches. The combination of a population that supports only one medical dispensary and significant tourism creates a strong adult-use opportunity." },
+        { q: "What is Tops Farm?", a: "Tops Farm is a medical cannabis dispensary at 647 US-1 Unit #10 in York, serving medical cannabis patients in York County." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

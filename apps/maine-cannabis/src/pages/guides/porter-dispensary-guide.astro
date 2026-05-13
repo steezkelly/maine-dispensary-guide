@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there any cannabis dispensaries in Porter, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "No. Porter has no dedicated cannabis dispensaries within town limits. The nearest options are Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi) and Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)."}}, {"@type": "Question", "name": "Is recreational cannabis legal in Porter, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Cannabis is legal statewide in Maine for adults 21+. Porter has not opted in. Purchase and possession remain legal under state law."}}, {"@type": "Question", "name": "Where can I buy cannabis near Porter, ME?", "acceptedAnswer": {"@type": "Answer", "text": "Medical: Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi). Recreational: Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi). See our full guide for details and routes."}}, {"@type": "Question", "name": "Does Porter allow cannabis dispensaries?", "acceptedAnswer": {"@type": "Answer", "text": "Porter has not opted in to cannabis retail. The town would need to authorize cannabis establishments before any dispensary could operate locally."}}]});
+---
+<Layout title="Porter, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Porter, Maine cannabis guide. No dispensaries in Porter — find nearest medical (Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi)) and recreational (Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)) cannabis options for 2026." heroImage="/images/heroes/porter-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Porter, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options near Porter — nearest dispensaries by distance</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Porter Cannabis Quick Facts</h2>
+    <table aria-label="Porter cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT opted in</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,600 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Porter has <strong>no cannabis dispensaries</strong>. Porter sits between two dispensary hubs: Bridgton to the east (14 mi) and Fryeburg to the north (13 mi), giving residents multiple options depending on which direction they're heading.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Porter</h2>
+
+    <h3>Medical</h3>
+    <p>Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi).</p>
+
+    <h3>Recreational</h3>
+    <p>Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi).</p>
+
+    <h3>Other Options</h3>
+    <ul>
+      <li><strong>Fryeburg:</strong> The Glass Cook (recreational + glassblowing studio), The Great Atlantic Puffin Company, Above All Greenery (medical)</li>
+      <li><strong>Bridgton:</strong> Sweet Dirt Cannabis, Canuvo, Maine Only Cannabis Shop (all recreational)</li>
+      <li><strong>Limerick:</strong> Founding Farmers (medical, 16 Main St)</li>
+      <li><strong>Portland:</strong> 15+ dispensaries for the widest selection, ~30-40 mi depending on route</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Town Status</h2>
+    <p>Porter has not opted in to cannabis retail. NOT opted in. For dispensaries to open locally, town authorization would be required. Several Maine communities have shifted from opted-out to opted-in as the economic case became clearer. See our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> for the current list.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there dispensaries in Porter, Maine?", a: "No. Porter has no dispensaries. Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi). Recreational: Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)." },
+        { q: "Where can I buy cannabis near Porter?", a: "Medical: Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi). Recreational: Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)." },
+        { q: "Does Porter allow dispensaries?", a: "Porter has not opted in. Town authorization would be required." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

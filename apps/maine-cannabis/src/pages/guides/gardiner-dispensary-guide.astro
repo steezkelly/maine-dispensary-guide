@@ -1,0 +1,111 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Gardiner, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Gardiner has at least 5 active dispensaries: The Bud Bar (medical), Gardiner 4Twenty (medical), The Healing Community MEDCo (medical), Wellness Connection of Maine (medical), and Sinsemilla/Rugged Roots Trading Post (recreational). This makes Gardiner one of the most densely served small towns in Maine for cannabis access."}},{"@type":"Question","name":"What is Wellness Connection of Maine in Gardiner?","acceptedAnswer":{"@type":"Answer","text":"Wellness Connection of Maine is a medical cannabis dispensary at 31 Maine Avenue, Gardiner. Established 2011, they operate an in-house indoor garden and CO2 extraction lab. Phone: (207) 588-6055. They operate 2 adult-use and 2 medical stores statewide."}},{"@type":"Question","name":"Where is Sinsemilla in Gardiner?","acceptedAnswer":{"@type":"Answer","text":"Sinsemilla Gardiner (also known as Rugged Roots Trading Post) is a recreational dispensary at 35 Bridge St, Gardiner, ME 04345. Phone: (207) 588-7816. Rating: 4.8/5. They feature MOFGA organic flower from Rugged Roots cultivation."}},{"@type":"Question","name":"Does Gardiner accept out-of-state medical cards?","acceptedAnswer":{"@type":"Answer","text":"Maine allows reciprocity for out-of-state medical cannabis cards. Contact individual dispensaries in Gardiner about their current reciprocity policies."}}]});
+---
+<Layout title="Gardiner, Maine Dispensary Guide — 5+ Dispensaries on the Kennebec 2026" description="Gardiner, Maine dispensary guide. 5+ dispensaries including The Bud Bar, Gardiner 4Twenty, The Healing Community MEDCo, Wellness Connection, Sinsemilla/Rugged Roots on the Kennebec River for 2026." heroImage="/images/heroes/gardiner-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Gardiner, ME Dispensary Guide</h1>
+    <p class="subtitle">Five dispensaries on the Kennebec River — Gardiner's medical-heavy cannabis market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Gardiner Cannabis Quick Facts</h2>
+    <table aria-label="Gardiner cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits both</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>5+ confirmed active</td></tr>
+        <tr><td><strong>Medical Dispensaries</strong></td><td>The Bud Bar, Gardiner 4Twenty, Healing Community MEDCo, Wellness Connection</td></tr>
+        <tr><td><strong>Recreational Dispensaries</strong></td><td>Sinsemilla / Rugged Roots Trading Post</td></tr>
+        <tr><td><strong>Population</strong></td><td>~6,100 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Kennebec/Sagadahoc County line</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Gardiner, Maine's smallest city by population (~6,100), has one of the most concentrated cannabis markets in the state with 5+ active dispensaries. The heavy tilt toward medical operators reflects Gardiner's history as a longtime participant in Maine's medical cannabis program. Most dispensaries cluster along Water Street and Bridge Street in the downtown, creating a walkable cannabis corridor along the Kennebec River.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Gardiner</h2>
+
+    <h3>The Bud Bar (Medical)</h3>
+    <p><strong>Address:</strong> 325 Water St, Gardiner, ME 04345<br>
+    <strong>Phone:</strong> (207) 588-7211<br>
+    <strong>Hours:</strong> Mon-Fri 9am-7pm<br>
+    <strong>Type:</strong> Medical</p>
+    <p>The Bud Bar opened in September 2020, making it one of Gardiner's newer dispensaries. They specialize in indoor-grown cannabis with pre-rolls, edibles, and CBD products. Locally owned.</p>
+
+    <h3>Gardiner 4Twenty (Medical)</h3>
+    <p><strong>Address:</strong> 243 Water St, Gardiner, ME 04345<br>
+    <strong>Phone:</strong> (207) 588-7459<br>
+    <strong>Hours:</strong> Mon-Sat 11am-6pm<br>
+    <strong>Type:</strong> Medical</p>
+    <p>Gardiner 4Twenty specializes in medibles — a wide variety of edibles including sweet, savory, and spicy options with new products added weekly. They offer 5% veteran discount.</p>
+
+    <h3>The Healing Community MEDCo (Medical)</h3>
+    <p><strong>Address:</strong> 189 Water St, Gardiner, ME 04345<br>
+    <strong>Phone:</strong> (866) 426-3326<br>
+    <strong>Hours:</strong> Daily 9am-8pm<br>
+    <strong>Type:</strong> Medical</p>
+    <p>MEDCo operates at the busiest hours of any Gardiner dispensary (daily 9am-8pm). Their product line spans flower, medicated wholefoods, candies, chocolates, cartridges, tinctures, concentrates, beverages, and CBD. They offer delivery, loyalty rewards, and competitive pricing from a state-certified kitchen.</p>
+
+    <h3>Wellness Connection of Maine (Medical)</h3>
+    <p><strong>Address:</strong> 31 Maine Avenue, Gardiner, ME 04345<br>
+    <strong>Phone:</strong> (207) 588-6055<br>
+    <strong>Hours:</strong> Mon-Fri 10am-7pm, Sat 10am-4pm<br>
+    <strong>Type:</strong> Medical</p>
+    <p>Wellness Connection is the veteran operator — established in 2011, one of the earliest medical cannabis providers in Maine. They operate an in-house indoor garden and CO2 extraction lab. Across the state they run 2 adult-use and 2 medical stores.</p>
+
+    <h3>Sinsemilla / Rugged Roots Trading Post (Recreational)</h3>
+    <p><strong>Address:</strong> 35 Bridge St, Gardiner, ME 04345<br>
+    <strong>Phone:</strong> (207) 588-7816<br>
+    <strong>Type:</strong> Recreational (21+)<br>
+    <strong>Rating:</strong> 4.8/5 (41 reviews)</p>
+    <p>Sinsemilla is Gardiner's primary recreational dispensary, featuring MOFGA-certified organic flower from the Rugged Roots cultivation operation. They carry edibles, topicals, tinctures, concentrates, and accessories in a boutique, wheelchair-accessible environment with an education-focused approach.</p>
+  </section>
+
+  <section>
+    <h2>The Water Street Corridor</h2>
+    <p>Gardiner's cannabis dispensaries cluster along Water Street and Bridge Street in the downtown area — creating one of the most walkable cannabis corridors in small-town Maine. Four of the five dispensaries are within a few blocks of each other along the Kennebec River. This clustering creates competitive dynamics that benefit consumers through pricing, product variety, and extended hours (MEDCo stays open until 8pm daily).</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/augusta-dispensary-guide">Augusta Dispensary Guide</a></li>
+        <li><a href="/guides/lisbon-dispensary-guide">Lisbon Dispensary Guide</a></li>
+        <li><a href="/guides/westbrook-dispensary-guide">Westbrook Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Gardiner, Maine?", a: "Yes. Gardiner has 5+ active dispensaries: The Bud Bar, Gardiner 4Twenty, The Healing Community MEDCo, Wellness Connection of Maine (all medical), and Sinsemilla/Rugged Roots (recreational)." },
+        { q: "What is Wellness Connection of Maine?", a: "Wellness Connection is a medical dispensary at 31 Maine Avenue, Gardiner. Established 2011, they operate an in-house indoor garden and CO2 extraction lab. One of Maine's earliest medical cannabis providers." },
+        { q: "Where is the recreational dispensary in Gardiner?", a: "Sinsemilla / Rugged Roots Trading Post is at 35 Bridge St, Gardiner. Phone: (207) 588-7816. They feature MOFGA-certified organic flower from Rugged Roots cultivation." },
+        { q: "Does Gardiner accept out-of-state medical cards?", a: "Maine allows reciprocity for out-of-state medical cannabis cards. Contact individual Gardiner dispensaries about their current reciprocity policies." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product variety, and policies change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

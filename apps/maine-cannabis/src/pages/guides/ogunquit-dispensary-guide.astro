@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Ogunquit, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are Hazy Hill Farm and Curaleaf in Wells (approximately 5 minutes away) and Tops Farm in York (approximately 15 minutes)." }},
+    { "@type": "Question", "name": "Does Ogunquit allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has NOT opted in to recreational cannabis retail. The town has chosen to prohibit cannabis dispensaries, meaning residents and visitors must travel to neighboring towns for legal cannabis purchases." }},
+    { "@type": "Question", "name": "Why is the lack of dispensaries in Ogunquit notable?", "acceptedAnswer": { "@type": "Answer", "text": "Ogunquit is a major tourist destination with Marginal Way, Perkins Cove, and beaches that draw 10,000+ summer visitors. Yet it has no local dispensaries. This creates an ironic situation where tourism drives cannabis spending to neighboring Wells instead of keeping revenue in town." }},
+    { "@type": "Question", "name": "Where is the nearest dispensary to Ogunquit?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are in Wells (~5 minutes): Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Tops Farm medical dispensary in York is approximately 15 minutes away." }}
+  ]
+});
+---
+
+<Layout title="Ogunquit, ME Dispensary Guide — Cannabis Options for Visitors & Residents 2026" description="Ogunquit, Maine cannabis guide. No dispensaries in town — nearest are Wells (5 min) and York (15 min). Coastal tourism economy." heroImage="/images/heroes/ogunquit-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Ogunquit, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options for Ogunquit visitors and residents — Nearest dispensaries in Wells</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Ogunquit at a Glance</h2>
+    <table aria-label="Ogunquit cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — NOT opted in</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT opted in</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Hazy Hill Farm, Wells (~5 min); Tops Farm, York (~15 min)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Curaleaf, Wells (~5 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,300 (year-round); 10,000+ (summer)</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Ogunquit is one of Maine's most beloved coastal destinations, famous for Marginal Way (the scenic walkway along the ocean), Perkins Cove, and its beautiful beaches. The town has approximately 1,300 year-round residents but swells to over 10,000 during the summer tourist season.</p>
+    <p>Despite its significant seasonal population and status as a premier Maine tourist destination, Ogunquit has not opted in to cannabis retail. This creates a striking situation: a town that depends on tourism and welcomes hundreds of thousands of visitors annually cannot offer those visitors a legal local cannabis purchase option.</p>
+  </section>
+
+  <section>
+    <h2>The Ogunquit Tourism-Cannabis Paradox</h2>
+    <p>Ogunquit's lack of dispensaries represents an economic irony. The town's tourism economy brings in visitors who spend money on restaurants, hotels, shops, and attractions — but when those visitors seek legal cannabis, their spending goes elsewhere.</p>
+    <p>The nearest dispensaries are just 5 minutes away in Wells:</p>
+    <ul>
+      <li><strong>Hazy Hill Farm</strong> (medical, 1614 Post Road, Wells)</li>
+      <li><strong>Curaleaf</strong> (recreational, Route 1, Wells)</li>
+    </ul>
+    <p>This means Ogunquit visitors cannabis spending — whether from tourists seeking recreational products or locals seeking medical cannabis — flows directly to Wells. The economic opportunity cost to Ogunquit is significant but invisible in town financials.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Ogunquit</h2>
+
+    <h3>Wells Dispensaries (~5 minutes)</h3>
+    <p><strong>Hazy Hill Farm (Medical)</strong><br>
+    Address: 1614 Post Road, Wells, ME 04090</p>
+    <p>Hazy Hill Farm is the closest medical dispensary to Ogunquit, operating a farm-to-shelf model. Their Post Road location is a short drive from central Ogunquit.</p>
+    <p><strong>Curaleaf (Recreational)</strong><br>
+    Location: Route 1, Wells, ME</p>
+    <p>Curaleaf's Route 1 location is extremely convenient for Ogunquit visitors traveling from the Marginal Way/Perkins Cove area. Being on the main thoroughfare, they capture significant tourist traffic.</p>
+
+    <h3>Tops Farm, York (~15 minutes)</h3>
+    <p><strong>Tops Farm (Medical)</strong><br>
+    Address: 647 US-1 Unit #10, York, ME 03909</p>
+    <p>For Ogunquit visitors or residents headed toward York, Tops Farm provides an additional medical cannabis option approximately 15 minutes north.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Ogunquit has NOT opted in to recreational cannabis retail. This opt-out decision means no cannabis dispensaries can operate within town limits, and both residents and visitors must travel to neighboring towns for legal purchases.</p>
+    <p>The irony of Ogunquit's position — a tourism economy that sends cannabis spending to Wells — may eventually drive municipal reconsideration. For now, operators interested in Ogunquit should monitor town meetings and selectboard decisions.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Ogunquit, Maine?", a: "No. Ogunquit has NOT opted in to cannabis retail. No dispensaries operate in Ogunquit. The nearest are in Wells (~5 min away) and York (~15 min)." },
+        { q: "Does Ogunquit allow cannabis dispensaries?", a: "No. Ogunquit has chosen to prohibit cannabis dispensaries. Residents and visitors must travel to neighboring towns for legal cannabis." },
+        { q: "Why is the lack of dispensaries in Ogunquit notable?", a: "Ogunquit is a major tourist destination drawing 10,000+ summer visitors, yet has no local dispensaries. Tourism drives cannabis spending to Wells instead of keeping revenue in town." },
+        { q: "Where is the nearest dispensary to Ogunquit?", a: "Hazy Hill Farm and Curaleaf in Wells (~5 min) are the nearest options. Tops Farm in York is approximately 15 minutes away." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

@@ -1,0 +1,105 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there any cannabis dispensaries in Baldwin, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Baldwin has NO dispensaries and explicitly OPTED OUT via Local Law No. 1 of 2021. The nearest options are Founding Farmers in Limerick (~15 mi, medical) and Sweet Dirt Cannabis in Bridgton (~17 mi, recreational)."}},{"@type":"Question","name":"Is recreational cannabis legal in Baldwin, Maine?","acceptedAnswer":{"@type":"Answer","text":"Cannabis is legal statewide for adults 21+. However, Baldwin explicitly voted to prohibit cannabis retail dispensaries under Local Law No. 1 of 2021. Purchase and possession remain legal under state law."}},{"@type":"Question","name":"Where can I buy cannabis near Baldwin, ME?","acceptedAnswer":{"@type":"Answer","text":"The nearest dispensary is Founding Farmers in Limerick (~15 mi, medical). For recreational purchases, Sweet Dirt in Bridgton is ~17 mi east, or Windham's Green Mile corridor is ~18 mi east."}}]});
+---
+<Layout title="Baldwin, ME Dispensary Guide — Cannabis Options Near Baldwin 2026" description="Baldwin, Maine cannabis guide. Baldwin opted out of cannabis retail. Find the nearest medical and recreational options in Limerick, Bridgton, and Windham." heroImage="/images/heroes/baldwin-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Baldwin, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis options near Baldwin and the Sebago Lake area</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Baldwin Cannabis Quick Facts</h2>
+    <table aria-label="Baldwin cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>OPTED OUT — Local Law No. 1 of 2021 explicitly prohibits cannabis retail</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Founding Farmers, Limerick (~15 mi)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Sweet Dirt, Bridgton (~17 mi)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,520 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Cumberland County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Baldwin has <strong>no cannabis dispensaries</strong> and is one of the few towns in this region that has explicitly <strong>opted out</strong> via Local Law No. 1 of 2021. The town formalized its prohibition of cannabis retail dispensaries and on-site consumption sites, meaning no dispensary can operate in Baldwin without a formal repeal of that ordinance.</p>
+    <p>For Baldwin residents, the nearest cannabis is in Limerick (Founding Farmers, medical, ~15 mi) and Bridgton (Sweet Dirt/Canuvo, recreational, ~17 mi). The Windham Green Mile corridor on Route 302 is also accessible (~18 mi) for adult-use purchases.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Baldwin</h2>
+
+    <h3>Medical</h3>
+    <p><strong>Founding Farmers</strong> — 16 Main Street, Limerick, ME (~15 mi). Medical-focused dispensary. Phone: (207) 315-5259.</p>
+
+    <h3>Recreational (Adult-Use)</h3>
+    <p><strong>Sweet Dirt Cannabis</strong> — 1 Beaver Creek Farm Rd, Bridgton, ME (~17 mi). Recreational dispensary with full product selection.</p>
+    <p><strong>Canuvo</strong> — 152 Portland Road, Bridgton, ME (~19 mi). Recreational storefront.</p>
+
+    <h3>Windham Green Mile (~18 mi east)</h3>
+    <p>Route 302 in Windham has Maine's Alternative Caring and JAR Cannabis Co. (both medical + recreational) — one of the densest cannabis corridors near Baldwin.</p>
+  </section>
+
+  <section>
+    <h2>Baldwin's Opt-Out Ordinance</h2>
+    <p>Baldwin passed Local Law No. 1 of 2021 to prohibit cannabis retail dispensaries and on-site consumption sites. This is a formal, documented ordinance — not a passive opt-out by inaction. To allow dispensaries in Baldwin, the town would need to repeal or amend this law through the same municipal process.</p>
+    <p>Several Maine towns that initially opted out have later reversed course as the economic case became clear. Baldwin's explicit prohibition may face similar reconsideration.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any dispensaries in Baldwin, Maine?", a: "No. Baldwin has no dispensaries and explicitly opted out via Local Law No. 1 of 2021. Nearest: Limerick (~15 mi, medical) and Bridgton (~17 mi, recreational)." },
+        { q: "Is recreational cannabis legal in Baldwin?", a: "Statewide yes, but Baldwin prohibits local retail dispensaries under Local Law No. 1 of 2021. Possession and use remain legal." },
+        { q: "Where can I buy cannabis near Baldwin?", a: "Limerick has Founding Farmers (~15 mi, medical). Bridgton has Sweet Dirt/Canuvo (~17-19 mi, recreational). Windham's Green Mile is ~18 mi east." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal regulations can change. Always verify details directly with the town office before making plans.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

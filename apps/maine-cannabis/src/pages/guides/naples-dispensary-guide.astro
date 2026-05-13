@@ -1,0 +1,136 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Naples, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Naples currently has no dispensaries within town limits. The nearest dispensaries are Blue Lobster Cannabis in Casco (~10-15 minutes) and Sweet Dirt/Canuvo in Bridgton (~15-20 minutes)." }},
+    { "@type": "Question", "name": "Does Naples allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Naples appears to have opted in to cannabis retail, but no dispensaries have opened in town yet. This creates an opportunity for operators looking to be the first in this Sebago Lake-area community." }},
+    { "@type": "Question", "name": "What is the nearest dispensary to Naples?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are Blue Lobster Cannabis in Casco (approximately 10-15 minutes) and Sweet Dirt Cannabis or Canuvo in Bridgton (approximately 15-20 minutes)." }},
+    { "@type": "Question", "name": "What is Naples Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Naples is a lakes-region community on Sebago Lake, part of the broader Sebago Lakes Region. The town has approximately 4,000 residents and is a popular destination for lake recreation, boating, and seasonal visitors." }}
+  ]
+});
+---
+
+<Layout title="Naples, ME Dispensary Guide — Cannabis Options Near Sebago Lake 2026" description="Naples, Maine cannabis guide. No dispensaries in Naples — nearest are Casco (Blue Lobster) and Bridgton (Sweet Dirt, Canuvo) via Sebago Lake area." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Naples, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries near Naples, Maine — Sebago Lake region</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Naples at a Glance</h2>
+    <table aria-label="Naples cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — None currently operating</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Likely opted in (no dispensaries currently)</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Blue Lobster Cannabis (Casco, ~10-15 min)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Sweet Dirt/Canuvo (Bridgton, ~15-20 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,000</td></tr>
+        <tr><td><strong>County</strong></td><td>Cumberland County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Naples is a lakes-region community situated on Sebago Lake, one of Maine's largest and most popular lakes for recreation. With approximately 4,000 residents and a significant seasonal population from lake houses and camps, Naples has the population base to support a dispensary — yet no cannabis retailer has opened in town yet.</p>
+    <p>The nearest dispensaries are approximately 10-20 minutes away in Casco (Blue Lobster Cannabis) and Bridgton (Sweet Dirt, Canuvo). For Naples residents, this means a significant drive for cannabis products, creating an underserved market that could be opportunity for a local operator.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Naples</h2>
+
+    <h3>Blue Lobster Cannabis (Casco)</h3>
+    <p><strong>Location:</strong> Casco, ME — approximately 10-15 minutes from Naples</p>
+    <p>Blue Lobster Cannabis is the closest dispensary to Naples, serving the Casco/Naples corridor. They provide both medical and recreational cannabis options for residents of the Sebago Lake area.</p>
+
+    <h3>Sweet Dirt Cannabis (Bridgton)</h3>
+    <p><strong>Location:</strong> Bridgton, ME — approximately 15-20 minutes from Naples</p>
+    <p>Sweet Dirt Cannabis operates a recreational dispensary in Bridgton's Portland Road corridor. A well-established Maine brand, they carry a wide selection of flower, concentrates, and edibles.</p>
+
+    <h3>Canuvo (Bridgton)</h3>
+    <p><strong>Location:</strong> Bridgton, ME — approximately 15-20 minutes from Naples</p>
+    <p>Canuvo Recreational Cannabis is another Bridgton option for Naples residents, offering adult-use cannabis products from their established Portland Road location.</p>
+  </section>
+
+  <section>
+    <h2>The Naples Opportunity</h2>
+    <p>Naples represents an underserved market in Maine's cannabis landscape. Despite having approximately 4,000 year-round residents and a seasonal population that swells with lake-goers, Naples has no local cannabis dispensary.</p>
+    <p>For an operator considering Naples, the advantages include:</p>
+    <ul>
+      <li><strong>No local competition</strong> — first mover advantage in town</li>
+      <li><strong>Seasonal tourism</strong> — Sebago Lake draws visitors who may seek cannabis</li>
+      <li><strong>Commuter proximity</strong> — Naples is on the route between Portland and the western lakes region</li>
+      <li><strong>Unserved resident base</strong> — locals currently driving 15+ minutes for cannabis</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Naples appears to have opted in to cannabis retail based on available information, but no dispensaries have opened in town yet. This could indicate a slow municipal approval process, lack of suitable commercial space, or simply that no operator has pursued a Naples location yet.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Naples, Maine?", a: "No. Naples currently has no dispensaries within town limits. The nearest are Blue Lobster Cannabis in Casco (~10-15 min) and Sweet Dirt/Canuvo in Bridgton (~15-20 min)." },
+        { q: "Does Naples allow cannabis dispensaries?", a: "Naples appears to have opted in to cannabis retail, but no dispensaries have opened in town yet." },
+        { q: "What is the nearest dispensary to Naples?", a: "Blue Lobster Cannabis in Casco (~10-15 min) or Sweet Dirt/Canuvo in Bridgton (~15-20 min)." },
+        { q: "What is Naples Maine known for?", a: "Naples is a lakes-region community on Sebago Lake with approximately 4,000 residents and significant seasonal visitor population." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many dispensaries are in Wells, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Wells has 2 dispensaries: Hazy Hill Farm (medical at 1614 Post Road, farm-to-shelf model) and Curaleaf (recreational on Route 1, multi-state operator). This combination provides both medical and adult-use options in town." }},
+    { "@type": "Question", "name": "Does Wells allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Wells has allowed cannabis retail since 2020 and currently hosts both medical (Hazy Hill Farm) and recreational (Curaleaf) dispensaries. The town's early opt-in decision has made it a regional cannabis hub for York County." }},
+    { "@type": "Question", "name": "What makes Hazy Hill Farm unique?", "acceptedAnswer": { "@type": "Answer", "text": "Hazy Hill Farm operates a farm-to-shelf model, meaning they cultivate their own cannabis and sell directly to consumers from their Post Road location. This vertical integration provides product freshness and quality control that many dispensaries lack." }},
+    { "@type": "Question", "name": "Why does Wells serve Ogunquit visitors?", "acceptedAnswer": { "@type": "Answer", "text": "Ogunquit has not opted in to cannabis retail, so the many visitors to Ogunquit's beaches, Marginal Way, and Perkins Cove have no local dispensary option. They typically travel to nearby Wells (approximately 5 minutes) to purchase cannabis." }}
+  ]
+});
+---
+
+<Layout title="Wells, ME Dispensary Guide — Hazy Hill Farm & Curaleaf 2026" description="Wells, Maine dispensary guide. Hazy Hill Farm medical and Curaleaf recreational on Route 1. Wells-Ogunquit corridor cannabis options." heroImage="/images/heroes/wells-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Wells, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries in Wells, Maine — York County's cannabis corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Wells at a Glance</h2>
+    <table aria-label="Wells cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 — Hazy Hill Farm (medical), Curaleaf (recreational)</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>YES — Since 2020</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Hazy Hill Farm (1614 Post Road, farm-to-shelf)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Curaleaf (Route 1, multi-state operator)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~11,000</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Wells has established itself as a cannabis retail hub in York County, with two dispensaries serving a combined medical and adult-use market. The town's early opt-in decision (2020) positioned it to capture cannabis spending from both its own 11,000 residents and the overflow from neighboring Ogunquit, which has not opted in to cannabis retail.</p>
+    <p>This unique geographic advantage — being the nearest cannabis retailer to a major tourist destination — gives Wells an outsized market relative to its population. Wells cannabis retailers benefit from:</p>
+    <ul>
+      <li>Wells' own resident population</li>
+      <li>Ogunquit overflow (5 minutes away, 10,000+ summer visitors)</li>
+      <li>North Berwick and Berwick overflow</li>
+      <li>Route 1 through-traffic from Kittery to Portland</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Wells</h2>
+
+    <h3>Hazy Hill Farm (Medical)</h3>
+    <p><strong>Address:</strong> 1614 Post Road, Wells, ME 04090</p>
+    <p>Hazy Hill Farm operates a medical cannabis dispensary with a distinctive farm-to-shelf model. They cultivate their own cannabis products and sell directly to patients from their Post Road location. This vertical integration distinguishes them from dispensaries that merely retail third-party products.</p>
+    <p>The farm-to-shelf approach typically results in fresher products, better quality control, and often more competitive pricing since the middleman is eliminated. Patients appreciate knowing exactly where their medicine comes from.</p>
+
+    <h3>Curaleaf (Recreational)</h3>
+    <p><strong>Location:</strong> Route 1, Wells, ME</p>
+    <p>Curaleaf is a multi-state cannabis operator (MSO) offering recreational cannabis products from their Wells location on Route 1. As an MSO, Curaleaf has access to a wider variety of products, competitive pricing through scale, and established operational systems.</p>
+    <p>Curaleaf's Route 1 location provides high visibility for the thousands of tourists who travel through Wells annually en route to Ogunquit, Kennebunk, and other York County destinations.</p>
+  </section>
+
+  <section>
+    <h2>The Ogunquit Advantage</h2>
+    <p>Wells' most significant competitive advantage may be its proximity to Ogunquit, one of Maine's most visited tourist destinations. Ogunquit has not opted in to cannabis retail, meaning its thousands of summer visitors have no legal cannabis option within the town itself.</p>
+    <p>Visitors to Ogunquit's famous Marginal Way, Perkins Cove, and beaches must travel to Wells (approximately 5 minutes) to purchase legal cannabis. This creates a substantial tourist customer base that doesn't appear in Wells' population figures but represents significant revenue for Wells dispensaries.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Wells authorized cannabis retail in 2020, making it one of the earlier adopters in York County. This early decision has paid dividends in tax revenue and economic activity, establishing Wells as the cannabis destination for the southern York County region.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/blog/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "How many dispensaries are in Wells, Maine?", a: "Wells has 2 dispensaries: Hazy Hill Farm (medical at 1614 Post Road, farm-to-shelf) and Curaleaf (recreational on Route 1, multi-state operator)." },
+        { q: "Does Wells allow recreational cannabis?", a: "Yes. Wells has allowed cannabis retail since 2020 and currently hosts both medical and recreational dispensaries." },
+        { q: "What makes Hazy Hill Farm unique?", a: "Hazy Hill Farm operates a farm-to-shelf model, cultivating their own cannabis and selling directly to consumers from their Post Road location." },
+        { q: "Why does Wells serve Ogunquit visitors?", a: "Ogunquit has not opted in to cannabis retail. Visitors to Ogunquit's Marginal Way and Perkins Cove travel to Wells (~5 min) to purchase cannabis." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
