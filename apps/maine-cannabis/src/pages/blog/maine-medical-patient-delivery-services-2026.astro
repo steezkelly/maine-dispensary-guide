@@ -1,0 +1,459 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const calvinWaters = authors.find(a => a.id === 'calvin-waters');
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "Medical Cannabis"
+};
+const topics = ["medical", "operations", "compliance"];
+
+const faqItems = [
+  {
+    question: "Can Maine medical marijuana patients receive home delivery?",
+    answer: "Yes. Maine's medical cannabis program allows registered caregivers and licensed dispensaries to deliver products directly to qualifying patients. Delivery must comply with OCP rules for medical cannabis transport, including product packaging requirements, patient ID verification at delivery, and transport logs. Patients or their caregivers cannot accept delivery from an unlicensed source."
+  },
+  {
+    question: "What is the difference between a caregiver delivery and a dispensary delivery?",
+    answer: "A registered caregiver delivers cannabis they have cultivated themselves to their own registered qualifying patients. A dispensary delivery is made by an OCP-licensed dispensary or couriers operating under a dispensary's courier license, delivering products the dispensary has procured or manufactured. Both are legal delivery mechanisms for medical patients, but they operate under different regulatory frameworks and licensing requirements."
+  },
+  {
+    question: "Are there geographic restrictions on medical cannabis delivery in Maine?",
+    answer: "Caregiver deliveries are limited to the caregiver's registered patients only — there is no statewide delivery radius for caregivers. OCP-licensed dispensary delivery operates within the dispensary's authorized service area, which is defined by municipal approvals and OCP license conditions. Some municipalities restrict delivery operations as part of their local cannabis ordinances. Patients in opt-out municipalities may have limited access to licensed delivery."
+  },
+  {
+    question: "What documentation must accompany a medical cannabis delivery?",
+    answer: "Every medical cannabis delivery must include a transport manifest listing the products, quantities, patient registry ID, and delivery address. The driver must carry their OCP-issued employee badge or caregiver registration. Patient ID must be verified at the delivery address before handing over products. All deliveries must be logged in METRC for adult-use products or the relevant tracking system for medical products."
+  },
+  {
+    question: "Can caregivers charge a delivery fee to their patients?",
+    answer: "Caregivers may charge patients for the cost of cannabis products and reasonable delivery fees associated with transporting those products. However, delivery fees cannot be structured in a way that constitutes profit on transport services separate from the product sale. Caregivers should document delivery fees as cost-recovery rather than standalone service charges. OCP guidance on caregiver economics confirms this distinction."
+  },
+  {
+    question: "How do patients in rural Maine access medical cannabis delivery?",
+    answer: "Rural access is one of the most significant gaps in Maine's medical cannabis program. Many rural municipalities have opted out of allowing dispensaries, leaving patients dependent on caregivers who may be located far away. Patients in these areas should contact the Maine OCP's patient navigator office, which maintains a list of caregivers and dispensaries willing to serve underserved regions. Telehealth certification paired with caregiver networks is increasingly being used to bridge rural access gaps."
+  }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+});
+---
+
+<Layout
+  title="Maine Medical Marijuana Patient Delivery Services 2026"
+  description="Complete guide to Maine medical cannabis delivery services for patients — how caregiver delivery works, dispensary delivery options, rules, documentation, and rural access solutions in 2026."
+  heroImage="/images/heroes/maine-medical-delivery.jpg"
+  article={article}
+  topics={topics}
+>
+
+  <style>
+    .blog-post {
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+    .article-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--color-accent);
+    }
+    .article-header h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-light);
+      font-style: italic;
+    }
+    .intro {
+      font-size: 1.125rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .intro p {
+      margin-bottom: 1.25rem;
+    }
+    section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      font-size: 1.75rem;
+      color: var(--color-primary);
+      margin-top: 2.5rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-accent);
+    }
+    h2:first-of-type {
+      margin-top: 0;
+    }
+    h3 {
+      font-size: 1.25rem;
+      color: var(--color-primary);
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    p {
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .stat-block {
+      background-color: rgba(88, 129, 87, 0.06);
+      border: 1px solid var(--color-accent);
+      border-radius: 0.5rem;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+    .stat-block h3 {
+      font-size: 1.125rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+    .stat-block ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .stat-block li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+      line-height: 1.6;
+    }
+    .stat-block li:last-child {
+      border-bottom: none;
+    }
+    .process-steps {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 2rem 0;
+    }
+    .process-steps li {
+      position: relative;
+      padding-left: 3rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .process-steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2rem;
+      height: 2rem;
+      background: var(--color-primary);
+      color: var(--color-background);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+    .related-guides {
+      background-color: rgba(13, 78, 80, 0.03);
+      border-radius: 0.5rem;
+      padding: 1.5rem 2rem;
+      margin-top: 3rem;
+    }
+    .related-guides h2 {
+      border-bottom: none;
+      margin-top: 0;
+      padding-bottom: 0;
+      font-size: 1.25rem;
+    }
+    .related-guides ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .related-guides li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+      line-height: 1.5;
+    }
+    .related-guides li:last-child {
+      border-bottom: none;
+    }
+    .related-guides a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+    }
+    .related-guides a:hover {
+      color: var(--color-accent);
+    }
+    .content-verification {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .verification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(88, 129, 87, 0.08);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    .comparison-table th {
+      background: rgba(88, 129, 87, 0.08);
+      font-weight: 700;
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 2px solid var(--color-accent);
+    }
+    .comparison-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+      vertical-align: top;
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    @media (max-width: 768px) {
+      .article-header h1 { font-size: 1.875rem; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+
+  <article class="blog-post">
+    <div class="article-header">
+      <h1>Maine Medical Marijuana Patient Delivery Services in 2026</h1>
+      <p class="subtitle">How patients access medical cannabis through caregiver networks and licensed dispensary delivery — rules, documentation, and rural access solutions</p>
+    </div>
+
+    <section class="intro">
+      <p>Maine has over 112,000 registered medical cannabis patients — one of the highest per-capita medical cannabis populations in the United States. Yet for many of those patients, particularly those in rural communities, getting their medicine is harder than it should be. The nearest caregiver might be 45 minutes away. The nearest licensed dispensary could be across a county line in a town that voted no to cannabis retail. Winter roads make the drive dangerous for patients with chronic pain, mobility limitations, or seizure disorders.</p>
+      <p>Delivery is the obvious answer. And delivery exists — but the rules governing it are layered, sometimes ambiguous, and differ significantly depending on whether a caregiver or a licensed dispensary is making the delivery. Understanding those rules is essential for patients who need delivery access and for operators building delivery services to serve them.</p>
+      <p>This guide covers everything Maine medical cannabis patients and caregivers need to know about delivery in 2026: who can deliver, under what rules, with what documentation, and what to do when you live in a part of Maine where the system hasn't reached yet.</p>
+    </section>
+
+    <Callout title="How Delivery Works for Maine Medical Patients" type="success">
+      Maine medical cannabis delivery operates through two parallel channels: registered caregivers delivering cannabis they grew themselves to their own registered patients, and OCP-licensed dispensaries (or their courier affiliates) delivering to patients within their authorized service areas. Both channels are legal, both require documentation, and both are actively used — but they serve different patient populations and operate under different regulatory frameworks.
+    </Callout>
+
+    <section class="stat-block">
+      <h3>Maine Medical Cannabis Program at a Glance</h3>
+      <ul>
+        <li><strong>Registered Patients:</strong> 112,000+</li>
+        <li><strong>Registered Caregivers:</strong> 1,539</li>
+        <li><strong>Caregiver Storefronts:</strong> 237 statewide</li>
+        <li><strong>Adult-Use Dispensaries (some serve medical patients):</strong> ~80 active licenses</li>
+        <li><strong>Maximum Plants (Caregiver):</strong> 30 mature / 60 immature, or 500 sq ft canopy</li>
+        <li><strong>Delivery License Type:</strong> Courier license (OCP-issued) or caregiver registration</li>
+        <li><strong>Tracking System:</strong> METRC for adult-use; caregiver records for medical</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>The Two Delivery Channels: Caregiver vs. Dispensary</h2>
+      <p>Maine's medical cannabis delivery ecosystem is not a single system — it is two overlapping systems with different rules, different players, and different patient relationships. Understanding which channel applies to you depends on whether you are working with a registered caregiver or a licensed dispensary.</p>
+
+      <h3>Caregiver Delivery</h3>
+      <p>Registered caregivers in Maine are individuals authorized to cultivate cannabis for qualifying patients. They are not dispensaries. They cannot purchase wholesale cannabis from other caregivers or dispensaries. Everything they deliver must come from their own cultivation.</p>
+      <p>A caregiver may serve up to one patient at a time (though many caregivers are registered to serve multiple patients simultaneously). They can deliver the cannabis they have grown directly to their patients — this is the core caregiver-patient relationship. Delivery is not a separate licensed activity for caregivers; it is a natural extension of the caregiver-patient registration.</p>
+      <p>Caregivers can also operate storefronts (sometimes called caregiver centers or compassion centers), where patients come to them to purchase cannabis. Some caregivers operate both a storefront and a delivery service for patients who cannot visit in person.</p>
+
+      <h3>Dispensary and Courier Delivery</h3>
+      <p>OCP-licensed dispensaries can add a courier license to their operation, which authorizes them to deliver cannabis products to customers. This is a separate license endorsement — a dispensary license alone does not authorize delivery. The courier license requires additional compliance measures including GPS tracking on vehicles, manifest documentation, and employee badge requirements for drivers.</p>
+      <p>Dispensary delivery serves both adult-use customers and medical patients in most cases, though some dispensaries specialize in serving medical patients with specific product needs (higher THC products, specific cannabinoid profiles, certain medical formulations).</p>
+
+      <table class="comparison-table" aria-label="Comparison of caregiver vs dispensary delivery">
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>Caregiver Delivery</th>
+            <th>Dispensary / Courier Delivery</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Regulatory Basis</strong></td>
+            <td>Caregiver registration under 22 MRSA Ch. 558-C</td>
+            <td>Courier license endorsement from OCP</td>
+          </tr>
+          <tr>
+            <td><strong>Products Delivered</strong></td>
+            <td>Only what the caregiver grew</td>
+            <td>Anything the dispensary has in inventory</td>
+          </tr>
+          <tr>
+            <td><strong>Patient Relationship</strong></td>
+            <td>Caregiver must be registered to specific patient</td>
+            <td>No pre-existing relationship required</td>
+          </tr>
+          <tr>
+            <td><strong>Delivery Fee</strong></td>
+            <td>Can charge cost-recovery delivery fee</td>
+            <td>Can build delivery fee into pricing structure</td>
+          </tr>
+          <tr>
+            <td><strong>Vehicle Requirements</strong></td>
+            <td>No specific OCP vehicle mandate for caregivers</td>
+            <td>GPS tracking required on delivery vehicles</td>
+          </tr>
+          <tr>
+            <td><strong>Tracking System</strong></td>
+            <td>Internal caregiver records (no METRC for medical)</td>
+            <td>METRC required for adult-use products</td>
+          </tr>
+          <tr>
+            <td><strong>Municipal Restrictions</strong></td>
+            <td>Subject to municipality where caregiver is registered</td>
+            <td>Subject to municipality where dispensary is licensed</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Who Can Receive Medical Cannabis Delivery in Maine</h2>
+      <p>To receive a medical cannabis delivery in Maine, you must be a registered qualifying patient. This means:</p>
+      <ul>
+        <li>You hold a valid Maine medical cannabis registry identification card, or you are a visiting patient from another state with a valid medical cannabis card from your home state (Maine honors out-of-state cards for up to 30 days)</li>
+        <li>You have a written certification from a licensed medical provider — a physician, nurse practitioner, or physician assistant registered with the Maine medical cannabis program</li>
+        <li>You are receiving cannabis from a registered caregiver who is authorized to serve you, or from a licensed dispensary operating within its authorized area</li>
+      </ul>
+      <p>Patients must verify their identity at the time of delivery. The caregiver or delivery driver is required to check the patient's registry card or valid government-issued photo ID before completing the delivery. Patients cannot authorize someone else to receive the delivery on their behalf unless that person is also a registered caregiver or authorized caregiver representative for that patient.</p>
+
+      <Callout title="Patient Privacy During Delivery" type="tip">
+        Maine law protects the privacy of medical cannabis patients. Delivery drivers are required to keep patient information confidential and cannot disclose what products were delivered or to whom. Drivers cannot discuss patient information with anyone other than the patient at the delivery address. If you have concerns about delivery privacy, discuss them with your caregiver or dispensary before ordering.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Documentation Requirements for Every Delivery</h2>
+      <p>Every medical cannabis delivery must include specific documentation to remain in compliance with Maine law. The requirements differ slightly between caregiver and dispensary delivery, but the core elements are the same.</p>
+
+      <h3>Required Delivery Documentation</h3>
+      <p><strong>Transport Manifest:</strong> A manifest must travel with every delivery, listing the products being transported, their weights and forms, the patient registry ID of the recipient, the delivery address, and the driver's information. This manifest must be available for inspection by any law enforcement officer upon request. For dispensary deliveries, the manifest must also include the dispensary's OCP license number.</p>
+      <p><strong>Patient Verification:</strong> The delivery driver must verify the patient's identity and registry status before completing delivery. This is typically done by checking the patient's Maine medical cannabis registry card or a valid photo ID. The driver's caregiver registration card or OCP-issued employee badge must also be available for inspection.</p>
+      <p><strong>Signature or Confirmation:</strong> Most caregivers and dispensaries require the patient to sign for the delivery, confirming receipt. Electronic confirmation via delivery app or messaging is increasingly common, but written records are still recommended for compliance documentation.</p>
+      <p><strong>Transport Logs:</strong> Caregivers should maintain written transport logs documenting each delivery — date, patient, products delivered, and mileage. Dispensary delivery operations must maintain these records for a minimum of three years and make them available to OCP upon request.</p>
+    </section>
+
+    <section>
+      <h2>How to Find a Caregiver or Dispensary That Delivers</h2>
+      <p>Maine does not have a centralized public registry of caregivers who offer delivery services. Finding a delivery-capable caregiver or dispensary currently requires direct outreach.</p>
+
+      <h3>Steps to Find Medical Cannabis Delivery</h3>
+      <ol class="process-steps">
+        <li><strong>Contact the OCP Patient Navigator:</strong> The Office of Cannabis Policy maintains a patient navigator service specifically for Maine medical cannabis patients. The navigator can provide information about caregivers and dispensaries operating in your area and whether any offer delivery services. This is the most reliable starting point for patients who cannot find delivery options through word of mouth.</li>
+        <li><strong>Search the Caregiver Directory:</strong> OCP publishes a list of registered caregivers on its website, organized by county. While this list does not indicate which caregivers offer delivery, it gives patients a starting point for direct outreach. Contact caregivers in your area and ask about their delivery policies.</li>
+        <li><strong>Check with Local Dispensaries:</strong> Call dispensaries in your region and ask whether they offer delivery to medical patients. Many dispensaries that operate courier services will deliver to patients within a defined radius. Ask about minimum order requirements, delivery fees, and wait times.</li>
+        <li><strong>Ask Your Certifying Provider:</strong> Medical providers who certify patients for the Maine medical cannabis program often have relationships with specific caregivers or dispensaries and can make referrals. This is especially useful for patients in rural areas where finding a caregiver through public channels is difficult.</li>
+        <li><strong>Connect Through Patient Networks:</strong> Maine has several active patient advocacy groups and online communities where patients share information about caregivers and dispensaries, including which ones offer delivery. These networks are particularly valuable for patients in underserved rural areas.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Rural Access: Maine's Most Pressing Delivery Challenge</h2>
+      <p>Maine's rural delivery challenge is not hypothetical. It is a structural problem caused by the intersection of three facts: Maine is heavily rural, many municipalities have opted out of allowing dispensaries, and the caregiver program — which fills much of the gap — has no formal statewide delivery infrastructure.</p>
+      <p>Consider Aroostook County, Maine's largest and most rural county. Several Aroostook municipalities have opted out of allowing cannabis retail. Patients there depend entirely on caregivers. But a caregiver operating in northern Aroostook might serve patients spread across 50 or 100 miles. Delivering to patients in remote locations can take hours per trip. Some caregivers do make these runs; many do not, or limit delivery to patients within a manageable radius.</p>
+      <p>The result is a tiered access problem: patients near caregiver storefronts or in municipalities with active dispensaries have reasonable access. Patients in opt-out rural towns may have no delivery options and physically cannot travel the distance to their nearest caregiver.</p>
+
+      <h3>Bridging the Rural Gap: Emerging Solutions</h3>
+      <p><strong>Telehealth Certification:</strong> Several Maine providers now offer telehealth appointments for medical cannabis certification, which removes a significant access barrier for rural patients who cannot travel to a certifying provider. Pairing telehealth certification with a caregiver delivery relationship creates a functional remote-patient care model.</p>
+      <p><strong>Regional Caregiver Networks:</strong> Some caregivers have formed informal cooperative networks that share delivery runs. Rather than each caregiver making their own long-distance deliveries, network caregivers coordinate routes and cover each other's patient territories. These arrangements are legal as long as each caregiver remains the registered provider for their own patients.</p>
+      <p><strong>Dispensary Satellite Delivery:</strong> Some OCP-licensed dispensaries have sought courier licenses specifically to serve rural patient populations. These operations tend to concentrate in areas with the highest rural access gaps. Contacting dispensaries in adjacent counties can sometimes identify delivery-capable operators willing to serve a wider radius.</p>
+      <p><strong>Mail-Order Cannabis:</strong> Maine law does not explicitly authorize mail-order delivery of cannabis products, and any shipment through the postal service or private carriers would face federal legal complications (cannabis remains a Schedule I controlled substance under federal law). No legitimate Maine cannabis operator currently ships cannabis through the mail. Delivery must be by the operator's own driver or a licensed courier.</p>
+    </section>
+
+    <section>
+      <h2>Delivery Limits and Patient Purchase Limits</h2>
+      <p>Maine medical cannabis patients are subject to possession limits defined by their certifying provider's recommendation and Maine law. As of 2026:</p>
+      <ul>
+        <li><strong>Medical Cannabis Purchase Limit:</strong> Patients may purchase up to 2.5 ounces of usable cannabis flower per day from a dispensary. Caregiver transactions have no fixed statutory limit but are governed by the certifying provider's recommendation in the patient's certification.</li>
+        <li><strong>Concentrate and Infused Products:</strong> Separate limits apply to concentrates, tinctures, edibles, and topicals. These are calculated based on THC content rather than physical weight. The certifying provider's recommendation will specify limits for these product categories.</li>
+        <li><strong>Delivery Minimums:</strong> Many caregivers and dispensaries set minimum order sizes for delivery, particularly in rural areas where the cost of a delivery run is high relative to the order value. Ask about minimum order requirements when arranging delivery.</li>
+      </ul>
+      <p>Drivers making deliveries are not authorized to transport more cannabis than the patient's documented purchase limit. If an order exceeds the patient's limit for the day, the delivery should not be completed until the excess is removed or the patient provides documentation that a previous purchase limit has reset.</p>
+    </section>
+
+    <section>
+      <h2>For Operators: Building a Compliant Medical Delivery Service</h2>
+      <p>If you are a caregiver or dispensary operator considering adding delivery to your services, the regulatory requirements are manageable but must be followed precisely.</p>
+
+      <h3>For Caregivers Adding Delivery</h3>
+      <p>As a registered caregiver, delivery is an extension of your existing registration — you do not need a separate courier license to deliver to your registered patients. However, you do need to:</p>
+      <ul>
+        <li>Maintain transport logs for every delivery, including date, patient registry ID, products delivered, and delivery address</li>
+        <li>Ensure your vehicle is properly insured for transport of cannabis products</li>
+        <li>Verify patient identity at every delivery before handing over products</li>
+        <li>Charge delivery fees as documented cost recovery, not as a separate profit-generating service</li>
+        <li>Keep all records for a minimum of three years</li>
+      </ul>
+
+      <h3>For Dispensaries Adding Courier Delivery</h3>
+      <p>A dispensary must apply for a courier license endorsement through OCP before making any deliveries. The application requires:</p>
+      <ul>
+        <li>Updated facility security plan including vehicle security specifications</li>
+        <li>GPS tracking system documentation for all delivery vehicles</li>
+        <li>Driver training procedures and employee badge documentation</li>
+        <li>Delivery manifest and tracking procedures</li>
+        <li>Updated standard operating procedures for delivery operations</li>
+      </ul>
+      <p>Courier license holders must also register all delivery vehicles with OCP and cannot use vehicles that are not on the approved registry. The registration process typically takes 30–60 days after submission of a complete application.</p>
+
+      <Callout title="Municipal Delivery Authorization" type="warning">
+        Even with an OCP courier license, delivery operations must comply with the municipality where the dispensary is licensed. Some municipalities restrict delivery to specific hours, require additional municipal delivery permits, or prohibit delivery operations entirely. Check with your municipal cannabis authority before launching any delivery service.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq items={faqItems} />
+    </section>
+
+    <section class="related-guides">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Program Guide</a> — Complete guide to becoming a registered caregiver, plant limits, and patient relationships</li>
+        <li><a href="/guides/maine-cannabis-delivery-rules">Cannabis Delivery Rules in Maine</a> — OCP requirements for licensed delivery operations, vehicle security, and manifest documentation</li>
+        <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">How to Start a Cannabis Delivery Business in Maine</a> — Business licensing, costs, and market opportunity for delivery entrepreneurs</li>
+        <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Full OCP regulatory framework for Maine cannabis businesses</li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Municipal Opt-In Tracker</a> — See which Maine towns allow dispensaries and which have opted out, affecting delivery access</li>
+      </ul>
+    </section>
+
+    <div class="content-verification">
+      <span class="verification-badge">
+        <span class="verification-icon">◆</span>
+        <span class="verification-text">Reviewed by Calvin Waters, Licensing & Compliance Analyst. Last updated May 2026. <a href="/about">About our editorial process</a>.</span>
+      </span>
+    </div>
+  </article>
+</Layout>
+
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>

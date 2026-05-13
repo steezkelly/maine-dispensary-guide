@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 
 const posts = [
+  { url: '/blog/maine-medical-patient-delivery-services-2026/', title: 'Maine Medical Marijuana Patient Delivery Services 2026', description: 'How Maine medical cannabis patients access delivery through caregiver networks and licensed dispensaries — rules, documentation, rural access solutions, and operator requirements.', date: '2026-05-13', section: 'Medical Cannabis' },
   { url: '/blog/maine-cannabis-social-equity-program-2026/', title: 'Maine Cannabis Social Equity Program Guide 2026', description: 'Maine\'s Social Equity Program offers fee reductions, priority licensing, and grant funding for cannabis entrepreneurs from communities harmed by prohibition. Eligibility rules and application process.', date: '2026-05-13', section: 'Policy & Legislation' },
   { url: '/blog/maine-psilocybin-2026-guide/', title: 'Maine Psilocybin Guide 2026: Law, Research & Ops', description: "Maine's psilocybin decriminalization effort (LD 1034), the state commission studying regulated services, federal EO fast-tracking, and what it means for the Maine cannabis industry.", date: '2026-04-20', section: 'Policy & Legislation' },
   { url: '/blog/trump-psychedelic-executive-order-maine-psilocybin-2026/', title: 'Trump Psychedelic Executive Order & Maine Psilocybin', description: 'How the federal executive order on psychedelics intersects with Maine LD 1034 and what operators should know about emerging opportunities.', date: '2026-04-18', section: 'Policy & Legislation' },
@@ -16,7 +17,7 @@ const posts = [
   { url: '/blog/maine-medical-cannabis-pesticide-advisory-2026/', title: 'Maine Medical Cannabis Pesticide Advisory 2026', description: 'Critical pesticide rules for Maine medical cannabis cultivators — OCP compliance, testing requirements, and product safety standards.', date: '2026-03-25', section: 'Compliance' },
 ];
 
-const sectionOrder = ['Policy & Legislation', 'Business Operations', 'Finance & Investment', 'Licensing', 'Compliance'];
+const sectionOrder = ['Medical Cannabis', 'Policy & Legislation', 'Business Operations', 'Finance & Investment', 'Licensing', 'Compliance'];
 
 const grouped = sectionOrder.reduce((acc, section) => {
   const items = posts.filter(p => p.section === section);

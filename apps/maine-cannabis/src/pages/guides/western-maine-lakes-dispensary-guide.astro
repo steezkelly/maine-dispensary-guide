@@ -1,0 +1,183 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const towns = [
+  {
+    name: "Bridgton",
+    county: "Cumberland",
+    adultUseStores: [
+      { name: "The Great Atlantic Puffin Company Adult Use", operator: "Puffin Company 3 LLC", address: "510 Portland Rd", website: "https://greatatlanticpuffincorec.com/home/" },
+      { name: "Canuvo", operator: "Wellrick Inc", address: "152 Portland Rd", website: "" },
+      { name: "Rugged Roots", operator: "Rugged Roots, LLC", address: "1 Beaver Creek Farm Rd", website: "https://www.ruggedrootsinc.com" }
+    ],
+    operatorNote: "Bridgton is the strongest lakes-region retail cluster in this set: three active adult-use store licenses on or near Portland Road/Route 302. New entrants should treat the town as a competitive convenience-retail market, not a blank-map opportunity."
+  },
+  {
+    name: "Casco",
+    county: "Cumberland",
+    adultUseStores: [
+      { name: "Blue Lobster Cannabis", operator: "Blue Lobster Farms LLC", address: "200 Roosevelt Trl", website: "https://bluelobstercannabis.com" },
+      { name: "Landrace Cannabis Co.", operator: "Pine Tree Maine 2, LLC", address: "325 Roosevelt Trl", website: "https://www.landracecanna.com" }
+    ],
+    operatorNote: "Casco has two active adult-use stores on Roosevelt Trail/Route 302, making it a real retail node for Sebago Lake traffic rather than an unserved rural town."
+  },
+  {
+    name: "Raymond",
+    county: "Cumberland",
+    adultUseStores: [],
+    operatorNote: "No active adult-use storefront licenses were listed in the March 2025 OCP adult-use establishment file. Raymond still matters for search demand because customers may compare nearby Casco, Windham, Bridgton, and Portland-area options."
+  },
+  {
+    name: "Standish",
+    county: "Cumberland",
+    adultUseStores: [],
+    operatorNote: "No active adult-use storefront licenses were listed in the March 2025 OCP adult-use establishment file. If pursuing Standish, verify current municipal rules directly before assuming retail is available."
+  },
+  {
+    name: "Sebago",
+    county: "Cumberland",
+    adultUseStores: [],
+    operatorNote: "No active adult-use storefront licenses were listed in the March 2025 OCP adult-use establishment file. The town is better covered as part of a lakes-region customer-capture page than as a standalone dispensary cluster today."
+  },
+  {
+    name: "Naples",
+    county: "Cumberland",
+    adultUseStores: [],
+    operatorNote: "No active adult-use storefront licenses were listed in the March 2025 OCP adult-use establishment file. Naples has seasonal visitor demand, but shoppers appear more likely to be served by nearby Bridgton, Casco, Windham, or Portland-area operators unless new licenses appear."
+  },
+  {
+    name: "Windham",
+    county: "Cumberland",
+    adultUseStores: [
+      { name: "JAR Cannabis Co.", operator: "JAR Co. Windham LLC", address: "11 Storm Dr Unit 4", website: "https://www.windhammaine.us/" },
+      { name: "Paul's Boutique Nursery", operator: "Paul's Boutique Nursery LLC", address: "8 Crimson Dr Unit 3", website: "https://paulsboutiquenursery.com/home" }
+    ],
+    operatorNote: "Windham is the nearest stronger commercial hub for the Sebago Lake corridor, with two active adult-use store licenses in the OCP file."
+  },
+  {
+    name: "Poland",
+    county: "Androscoggin",
+    adultUseStores: [
+      { name: "HI-LO Dispensary", operator: "HI-LO Dispensary, LLC", address: "435 Maine Street", website: "" },
+      { name: "The Cannabis Cabin", operator: "The Cannabis Cabin LLC", address: "50 Mechanic Falls Rd", website: "https://thecabincannabis.ca/" }
+    ],
+    operatorNote: "Poland is outside Cumberland County but relevant for western-lakes route planning and Oxford/Androscoggin customers."
+  }
+];
+
+const totalStores = towns.reduce((sum, town) => sum + town.adultUseStores.length, 0);
+const sourceUrl = "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Adult_Use_Establishments_And_Contacts_2025_03_01.csv";
+---
+
+<Layout
+  title="Western Maine Lakes Dispensary Guide"
+  description="Adult-use cannabis dispensary availability in Bridgton, Casco, Raymond, Standish, Sebago, Naples, Windham, and nearby western Maine towns."
+  heroImage="/images/heroes/brunswick-dispensary-guide.jpg"
+  article={article}
+  topics={["city", "market"]}
+>
+<style>
+  article { max-width: 820px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  .fact-box { background: linear-gradient(135deg, rgba(88, 129, 87, 0.08) 0%, rgba(163, 177, 138, 0.06) 100%); padding: 2rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .town-card { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; background: var(--color-surface, #fff); }
+  .town-card h3 { margin-top: 0; color: var(--color-primary); }
+  .store-list { padding-left: 1.25rem; }
+  .store-list li { margin-bottom: 0.75rem; }
+  .status-empty { color: var(--color-text-light); font-style: italic; }
+  .source-note { font-size: 0.925rem; color: var(--color-text-light); }
+  table { width: 100%; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Western Maine Lakes Dispensary Guide</h1>
+    <p class="subtitle">Adult-use store availability in Bridgton, Casco, Raymond, Standish, Sebago, Naples, Windham, and nearby western Maine towns.</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Quick Answer</h2>
+    <p>As of the Maine Office of Cannabis Policy adult-use establishment file dated March 1, 2025, this lakes-region set includes <strong>{totalStores} active adult-use store licenses</strong>: three in Bridgton, two in Casco, two in Windham, and two in nearby Poland. Raymond, Standish, Sebago, and Naples did not show active adult-use storefront licenses in that file.</p>
+    <p class="source-note">Source: <a href={sourceUrl} target="_blank" rel="noopener noreferrer">Maine OCP Adult Use Establishments and Contacts CSV, 2025-03-01</a>. Operators should verify current status with OCP and the municipality before making lease, zoning, or license decisions.</p>
+  </section>
+
+  <section>
+    <h2>Town-by-Town Adult-Use Store Availability</h2>
+    {towns.map((town) => (
+      <div class="town-card">
+        <h3>{town.name}, Maine</h3>
+        <p><strong>County:</strong> {town.county}</p>
+        {town.adultUseStores.length > 0 ? (
+          <ul class="store-list">
+            {town.adultUseStores.map((store) => (
+              <li>
+                <strong>{store.name}</strong> — {store.address}
+                <br />
+                <span>{store.operator}</span>
+                {store.website && (
+                  <>
+                    <br />
+                    <a href={store.website} target="_blank" rel="noopener noreferrer nofollow">Website</a>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="status-empty">No active adult-use storefront licenses found in the March 2025 OCP file.</p>
+        )}
+        <p>{town.operatorNote}</p>
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>What This Means for Operators</h2>
+    <p>The small-town opportunity is not simply “find towns without stores.” In the Sebago and western-lakes corridor, Route 302 already concentrates retail in Bridgton and Casco, while Windham captures traffic closer to Greater Portland. A new operator should compare municipal opt-in status, traffic patterns, frontage, parking, local buffers, and whether the town is underserved by format rather than underserved by license count alone.</p>
+    <p>For content strategy, these towns should be covered even when they have no active storefront. Searchers in Raymond, Standish, Sebago, and Naples still need a clear answer: whether a local dispensary is available, which nearby town has adult-use stores, and what to verify before applying for municipal approval.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Markets to Compare</h2>
+    <table aria-label="Nearby western Maine cannabis retail markets">
+      <caption>Nearby towns and how they fit into a western Maine retail strategy</caption>
+      <thead>
+        <tr>
+          <th scope="col">Market</th>
+          <th scope="col">Adult-use stores in OCP file</th>
+          <th scope="col">Strategic note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Bridgton</td><td>3</td><td>Primary lakes-region cluster; competitive but proven demand.</td></tr>
+        <tr><td>Casco</td><td>2</td><td>Route 302 visibility; relevant to Sebago Lake traffic.</td></tr>
+        <tr><td>Windham</td><td>2</td><td>Greater Portland edge market with stronger year-round commercial traffic.</td></tr>
+        <tr><td>Poland</td><td>2</td><td>Useful comparison market for Androscoggin/Oxford corridor customers.</td></tr>
+        <tr><td>Raymond / Standish / Sebago / Naples</td><td>0 listed</td><td>Cover as no-active-store towns and point readers to nearby licensed options.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Verification Checklist Before Choosing a Town</h2>
+    <ul>
+      <li>Confirm the town has opted in to the adult-use license type you want to operate.</li>
+      <li>Read the current municipal ordinance for buffers, caps, public-hearing requirements, and local fees.</li>
+      <li>Verify the property is not disqualified by school, childcare, residential, or shoreland zoning rules.</li>
+      <li>Check the current OCP license list again; stores can open, close, move, or change status after the March 2025 file.</li>
+      <li>Compare nearby-store density against seasonal traffic instead of relying on resident population alone.</li>
+    </ul>
+  </section>
+</article>
+</Layout>

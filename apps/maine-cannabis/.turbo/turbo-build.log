@@ -2,15 +2,16 @@
 > @network/maine-cannabis@1.0.0 build
 > astro build && node -e "const fs=require('fs');const path=require('path');const src='.vercel/output/static';const dst='../../dist';if(fs.existsSync(src)){fs.cpSync(src,dst,{recursive:true});console.log('Copied output to '+dst);}"
 
-02:59:14 [types] Generated 21ms
-02:59:14 [build] output: "static"
-02:59:14 [build] mode: "static"
-02:59:14 [build] directory: /home/steve/maine-dispensary-guide/apps/maine-cannabis/dist/
-02:59:14 [build] adapter: @astrojs/vercel
-02:59:14 [build] Collecting build info...
-02:59:14 [build] ✓ Completed in 43ms.
-02:59:14 [build] Building static entrypoints...
-02:59:16 [WARN] [vite] [esbuild css minify]
+02:59:26 [vite] Re-optimizing dependencies because vite config has changed
+02:59:27 [types] Generated 56ms
+02:59:27 [build] output: "static"
+02:59:27 [build] mode: "static"
+02:59:27 [build] directory: /home/steve/maine-dispensary-guide/apps/maine-cannabis/dist/
+02:59:27 [build] adapter: @astrojs/vercel
+02:59:27 [build] Collecting build info...
+02:59:27 [build] ✓ Completed in 83ms.
+02:59:27 [build] Building static entrypoints...
+02:59:29 [WARN] [vite] [esbuild css minify]
 ▲ [WARNING] Unexpected "<" [css-syntax-error]
 
     <stdin>:1:1144:
@@ -18,7 +19,7 @@
         ╵                                                           ^
 
 
-02:59:16 [WARN] [vite] [esbuild css minify]
+02:59:29 [WARN] [vite] [esbuild css minify]
 ▲ [WARNING] Unexpected "}" [css-syntax-error]
 
     <stdin>:105:2:
@@ -26,117 +27,117 @@
           ╵   ^
 
 
-02:59:16 [vite] ✓ built in 2.08s
-02:59:17 [vite] ✓ built in 21ms
-02:59:17 [build] Rearranging server assets...
+02:59:29 [vite] ✓ built in 2.09s
+02:59:29 [vite] ✓ built in 23ms
+02:59:29 [build] Rearranging server assets...
 
  generating static routes 
-02:59:17   ├─ /about/authors/index.html (+9ms) 
-02:59:17   ├─ /about/our-team/index.html (+2ms) 
-02:59:17   ├─ /about/index.html (+2ms) 
-02:59:17   ├─ /admin/link-dashboard/index.html (+12ms) 
-02:59:17   ├─ /admin/seo-dashboard/index.html (+2ms) 
-02:59:17   ├─ /all-guides/index.html (+2ms) 
-02:59:17   ├─ /blog/ibogaine-federal-executive-order-maine-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-cannabis-cultivation-license-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-cannabis-delivery-business-guide-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-cannabis-microbusiness-license-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-cannabis-social-equity-program-2026/index.html (+1ms) 
-02:59:17   ├─ /blog/maine-dispensary-how-to-open/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-dispensary-roi-what-to-expect-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-home-grow-cannabis-guide-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-medical-cannabis-pesticide-advisory-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/maine-psilocybin-2026-guide/index.html (+3ms) 
-02:59:17   ├─ /blog/portland-maine-cannabis-rules-2026/index.html (+1ms) 
-02:59:17   ├─ /blog/trump-psychedelic-executive-order-maine-psilocybin-2026/index.html (+2ms) 
-02:59:17   ├─ /blog/index.html (+1ms) 
-02:59:17   ├─ /contact/index.html (+1ms) 
-02:59:17   ├─ /directory/index.html (+1ms) 
-02:59:17   ├─ /download/founders-bible/index.html (+1ms) 
-02:59:17   ├─ /download/roadmap/index.html (+2ms) 
-02:59:17   ├─ /download-checklist/index.html (+1ms) 
-02:59:17   ├─ /find-a-dispensary/index.html (+1ms) 
-02:59:17   ├─ /founders/maine-cannabis-founder-coastal-shop/index.html (+1ms) 
-02:59:17   ├─ /founders/maine-cannabis-founder-portland-flagship/index.html (+1ms) 
-02:59:17   ├─ /founders/maine-cannabis-founder-rural-cultivator/index.html (+1ms) 
-02:59:17   ├─ /founders/index.html (+1ms) 
-02:59:17   ├─ /glossary/index.html (+1ms) 
-02:59:17   ├─ /guides/auburn-dispensary-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/augusta-dispensary-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/bangor-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/biddeford-dispensary-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/brunswick-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/faq/index.html (+3ms) 
-02:59:17   ├─ /guides/kittery-dispensary-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/lewiston-dispensary-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-280e-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-banking-solutions/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-business-insurance/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-caregiver-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-commercial-lease-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-cultivation-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-delivery-rules/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-edibles-compliance/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-events-2026/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-extraction-licensing/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-funding-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-inventory-management/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-license-denied/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-market/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-marketing-compliance/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-municipal-opt-in-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-opt-in-tracker/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-product-testing-guide/index.html (+3ms) 
-02:59:17   ├─ /guides/maine-cannabis-real-estate/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-regulations/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-school-buffer/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-site-selection/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-staffing-licensing/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-taxation-280e/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-taxes-2026/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-vendor-directory/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-vertical-integration/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-cannabis-waste-management/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-workers-comp-insurance/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-cannabis-zoning-requirements/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-conditional-use-permit/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-dispensary-business-plan/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-dispensary-costs/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-dispensary-hiring/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-dispensary-license/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-dispensary-locations/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-dispensary-packaging/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-dispensary-pos/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-dispensary-security/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-metrc-compliance-guide/index.html (+2ms) 
-02:59:17   ├─ /guides/maine-municipal-approval-checklist/index.html (+1ms) 
-02:59:17   ├─ /guides/maine-ocp-license-map/index.html (+1ms) 
-02:59:17   ├─ /guides/old-orchard-beach-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/portland-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/portland-maine-cannabis/index.html (+2ms) 
-02:59:17   ├─ /guides/saco-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/sanford-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/scarborough-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/south-portland-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/waterville-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/westbrook-dispensary-guide/index.html (+1ms) 
-02:59:17   ├─ /guides/index.html (+1ms) 
-02:59:17   ├─ /launch-checklist/index.html (+1ms) 
-02:59:17   ├─ /market-stats/index.html (+1ms) 
-02:59:17   ├─ /newsletter/index.html (+1ms) 
-02:59:17   ├─ /privacy/index.html (+1ms) 
-02:59:17   ├─ /resources/maine-cannabis-education/index.html (+2ms) 
-02:59:17   ├─ /resources/maine-cannabis-official-resources/index.html (+1ms) 
-02:59:17   ├─ /resources/index.html (+1ms) 
-02:59:17   ├─ /roi-calculator/index.html (+1ms) 
-02:59:17   ├─ /site-health/index.html (+1ms) 
-02:59:17   ├─ /start-here/index.html (+1ms) 
-02:59:17   ├─ /index.html (+2ms) 
-02:59:17 ✓ Completed in 184ms.
+02:59:29   ├─ /about/authors/index.html (+8ms) 
+02:59:29   ├─ /about/our-team/index.html (+2ms) 
+02:59:29   ├─ /about/index.html (+1ms) 
+02:59:29   ├─ /admin/link-dashboard/index.html (+11ms) 
+02:59:29   ├─ /admin/seo-dashboard/index.html (+2ms) 
+02:59:29   ├─ /all-guides/index.html (+2ms) 
+02:59:29   ├─ /blog/ibogaine-federal-executive-order-maine-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-cannabis-cultivation-license-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-cannabis-delivery-business-guide-2026/index.html (+3ms) 
+02:59:29   ├─ /blog/maine-cannabis-microbusiness-license-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-cannabis-social-equity-program-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-dispensary-how-to-open/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-dispensary-roi-what-to-expect-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-home-grow-cannabis-guide-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-medical-cannabis-pesticide-advisory-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/maine-psilocybin-2026-guide/index.html (+2ms) 
+02:59:29   ├─ /blog/portland-maine-cannabis-rules-2026/index.html (+3ms) 
+02:59:29   ├─ /blog/trump-psychedelic-executive-order-maine-psilocybin-2026/index.html (+2ms) 
+02:59:29   ├─ /blog/index.html (+1ms) 
+02:59:29   ├─ /contact/index.html (+1ms) 
+02:59:29   ├─ /directory/index.html (+1ms) 
+02:59:29   ├─ /download/founders-bible/index.html (+1ms) 
+02:59:29   ├─ /download/roadmap/index.html (+1ms) 
+02:59:29   ├─ /download-checklist/index.html (+1ms) 
+02:59:29   ├─ /find-a-dispensary/index.html (+1ms) 
+02:59:29   ├─ /founders/maine-cannabis-founder-coastal-shop/index.html (+1ms) 
+02:59:29   ├─ /founders/maine-cannabis-founder-portland-flagship/index.html (+1ms) 
+02:59:29   ├─ /founders/maine-cannabis-founder-rural-cultivator/index.html (+1ms) 
+02:59:29   ├─ /founders/index.html (+1ms) 
+02:59:29   ├─ /glossary/index.html (+1ms) 
+02:59:29   ├─ /guides/auburn-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/augusta-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/bangor-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/biddeford-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/brunswick-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/faq/index.html (+2ms) 
+02:59:29   ├─ /guides/kittery-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/lewiston-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-280e-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-banking-solutions/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-business-insurance/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-caregiver-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-commercial-lease-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-cultivation-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-delivery-rules/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-edibles-compliance/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-events-2026/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-extraction-licensing/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-funding-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-inventory-management/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-license-denied/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-market/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-marketing-compliance/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-municipal-opt-in-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-opt-in-tracker/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-product-testing-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-real-estate/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-regulations/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-school-buffer/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-site-selection/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-staffing-licensing/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-taxation-280e/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-taxes-2026/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-vendor-directory/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-vertical-integration/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-cannabis-waste-management/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-workers-comp-insurance/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-cannabis-zoning-requirements/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-conditional-use-permit/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-dispensary-business-plan/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-dispensary-costs/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-dispensary-hiring/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-dispensary-license/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-dispensary-locations/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-dispensary-packaging/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-dispensary-pos/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-dispensary-security/index.html (+1ms) 
+02:59:29   ├─ /guides/maine-metrc-compliance-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-municipal-approval-checklist/index.html (+2ms) 
+02:59:29   ├─ /guides/maine-ocp-license-map/index.html (+1ms) 
+02:59:29   ├─ /guides/old-orchard-beach-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/portland-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/portland-maine-cannabis/index.html (+1ms) 
+02:59:29   ├─ /guides/saco-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/sanford-dispensary-guide/index.html (+2ms) 
+02:59:29   ├─ /guides/scarborough-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/south-portland-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/waterville-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/westbrook-dispensary-guide/index.html (+1ms) 
+02:59:29   ├─ /guides/index.html (+1ms) 
+02:59:29   ├─ /launch-checklist/index.html (+1ms) 
+02:59:29   ├─ /market-stats/index.html (+1ms) 
+02:59:29   ├─ /newsletter/index.html (+1ms) 
+02:59:29   ├─ /privacy/index.html (+1ms) 
+02:59:29   ├─ /resources/maine-cannabis-education/index.html (+2ms) 
+02:59:29   ├─ /resources/maine-cannabis-official-resources/index.html (+1ms) 
+02:59:29   ├─ /resources/index.html (+1ms) 
+02:59:29   ├─ /roi-calculator/index.html (+1ms) 
+02:59:29   ├─ /site-health/index.html (+1ms) 
+02:59:29   ├─ /start-here/index.html (+1ms) 
+02:59:29   ├─ /index.html (+2ms) 
+02:59:29 ✓ Completed in 179ms.
 
-02:59:17 [build] ✓ Completed in 2.32s.
-02:59:17 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
-02:59:17 [@astrojs/vercel] Copying static files to .vercel/output/static
-02:59:17 [build] 101 page(s) built in 2.39s
-02:59:17 [build] Complete!
+02:59:29 [build] ✓ Completed in 2.32s.
+02:59:29 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+02:59:29 [@astrojs/vercel] Copying static files to .vercel/output/static
+02:59:29 [build] 101 page(s) built in 2.43s
+02:59:29 [build] Complete!
 Copied output to ../../dist
