@@ -438,6 +438,24 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   [data-theme="dark"] .dropdown-content a { color: var(--color-text); }
   [data-theme="dark"] .dropdown-content a:hover { background: rgba(196, 212, 182, 0.15); }
 
+  /* Dark mode card hover states */
+  [data-theme="dark"] .hub-card:hover,
+  [data-theme="dark"] .category-card:hover,
+  [data-theme="dark"] .story-card:hover,
+  [data-theme="dark"] .quick-link-card:hover,
+  [data-theme="dark"] .new-guide-card:hover,
+  [data-theme="dark"] .fact-box:hover,
+  [data-theme="dark"] .town-card:hover,
+  [data-theme="dark"] .resource-card:hover,
+  [data-theme="dark"] .stat-block:hover,
+  [data-theme="dark"] .answer-capsule:hover,
+  [data-theme="dark"] .checklist-item:hover,
+  [data-theme="dark"] .faq-item:hover,
+  [data-theme="dark"] .infographic:hover,
+  [data-theme="dark"] .blog-post:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
   body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; width: 100%; }
@@ -737,15 +755,54 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     width: 100%;
   }
 
-  /* Card Hover Lift Effect */
+  /* Card Hover Lift Effect — Homepage Cards */
   .hub-card,
   .category-card,
   .story-card,
   .quick-link-card,
   .new-guide-card {
-    transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), 
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1),
                 box-shadow 0.3s cubic-bezier(0.2, 1, 0.2, 1),
                 border-color 0.3s ease;
+  }
+
+  /* Content Card Hover — Guide/Article Pages */
+  .fact-box,
+  .town-card,
+  .resource-card,
+  .stat-block,
+  .answer-capsule,
+  .disclaimer,
+  .checklist-item,
+  .faq-item,
+  .infographic,
+  .blog-post,
+  .reveal {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  /* Card Hover with translateY lift + shadow depth */
+  .hub-card:hover,
+  .category-card:hover,
+  .story-card:hover,
+  .quick-link-card:hover,
+  .new-guide-card:hover,
+  .fact-box:hover,
+  .town-card:hover,
+  .resource-card:hover,
+  .stat-block:hover,
+  .answer-capsule:hover,
+  .checklist-item:hover,
+  .faq-item:hover,
+  .infographic:hover,
+  .blog-post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.1);
+  }
+
+  /* Subtle border-color shift on hover */
+  .disclaimer:hover {
+    border-color: var(--color-accent);
   }
 
   /* Smooth Scroll Behavior */
@@ -762,6 +819,16 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     .story-card,
     .quick-link-card,
     .new-guide-card,
+    .fact-box,
+    .town-card,
+    .resource-card,
+    .stat-block,
+    .answer-capsule,
+    .disclaimer,
+    .checklist-item,
+    .faq-item,
+    .infographic,
+    .blog-post,
     .journey-step,
     a.btn-main,
     a.btn-secondary,
