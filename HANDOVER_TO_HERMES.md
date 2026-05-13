@@ -62,7 +62,7 @@ This document is the **complete source of truth** for the Maine Dispensary Guide
 - **Purelymail SMTP** — steve@mainedispensaryguide.com configured (credentials in `config/credentials/mainedispensaryguide.env`)
 - **20 Maine cannabis contacts** researched and saved to `scripts/data/maine-cannabis-contacts.json`
 - **20 citation outreach contacts** saved to `scripts/data/maine-citation-contacts.json`
-- **Drip campaign templates** in `templates/mainedispensaryguide/founders-bible-{1,2,3,4}.txt`
+- **Drip campaign templates** — were in EmailPipeline (Windows, not transferred); contact data is in repo, rebuild templates on Linux
 - **Outreach strategy** documented in `link-outreach.md`
 - **Note:** EmailPipeline (Windows-specific, Phase 1 only) was NOT transferred — rebuild on Linux using the contact data and templates above
 
@@ -297,12 +297,12 @@ project-1/
 │   └── maine-cannabis/           # Main Astro site
 │       └── src/
 │           ├── layouts/Layout.astro  # Main layout, ALL global CSS, JSON-LD
-│           ├── components/          # 9 components (Breadcrumbs, Callout, Faq, etc.)
+│           ├── components/          # Local overrides (GuideSidebar, Search, etc.)
 │           └── pages/              # Routes (guides, founders, blog, resources, admin)
 ├── packages/
-│   ├── ui/                       # Shared UI components
-│   └── layouts/                  # Shared layouts
-├── scripts/                      # 23 CLI tools
+│   ├── ui/                       # Shared UI components (imported as @network/ui)
+│   └── layouts/                  # Shared layouts (imported as @network/layouts)
+├── scripts/                      # CLI tools (search, link, image, git, content, seo)
 ├── reference/                    # Technical docs
 ├── public/
 │   ├── images/heroes/            # 74 hero images
@@ -364,7 +364,7 @@ project-1/
 ### Sprint 56 (Apr 24) ✅
 - 13 thin pages expanded to 1,500+ words
 - Citation outreach contacts researched (20 Maine contacts in `scripts/data/maine-cannabis-contacts.json`)
-- Drip campaign templates created in `templates/mainedispensaryguide/`
+- Drip campaign concepts designed (EmailPipeline on Windows — templates not in repo)
 
 ### Sprint 55 (Apr 24) ✅
 - PDF Magnet landing page built
