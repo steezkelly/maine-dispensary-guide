@@ -58,13 +58,13 @@ This document is the **complete source of truth** for the Maine Dispensary Guide
 
 ## 2. WHAT'S WORKING (INFRASTRUCTURE)
 
-### Email Pipeline ✅
-- **Purelymail SMTP** configured for `steve@mainedispensaryguide.com`
-- **EmailPipeline** installed at `C:\Users\Steve\EmailPipeline\` (Windows path — NOT in repo)
-- Scripts: `db.cjs`, `imap-poll.cjs`, `queue.cjs`, `send.cjs`, `import-json.cjs`, `report.cjs`
-- **Task Scheduler jobs:** IMAP poll (every 15 min), Daily send (weekdays 9:30am)
-- **Credentials:** Stored in `config/credentials/mainedispensaryguide.env` (NOT committed to repo)
-- **7 contacts migrated** from legacy tracking, drip campaign enrolled
+### Email Outreach (Data Available in Repo) ✅
+- **Purelymail SMTP** — steve@mainedispensaryguide.com configured (credentials in `config/credentials/mainedispensaryguide.env`)
+- **20 Maine cannabis contacts** researched and saved to `scripts/data/maine-cannabis-contacts.json`
+- **20 citation outreach contacts** saved to `scripts/data/maine-citation-contacts.json`
+- **Drip campaign templates** in `templates/mainedispensaryguide/founders-bible-{1,2,3,4}.txt`
+- **Outreach strategy** documented in `link-outreach.md`
+- **Note:** EmailPipeline (Windows-specific, Phase 1 only) was NOT transferred — rebuild on Linux using the contact data and templates above
 
 ### fal.ai Image Generation ✅
 - **Integrated:** `scripts/image/fal-image-gen.cjs`
@@ -230,24 +230,24 @@ npx astro check
 # Restart opencode-cli after copying
 ```
 
-### Priority 3: EmailPipeline Setup
+### Priority 3: Verify Email Outreach Data
 ```bash
-# Copy C:\Users\Steve\EmailPipeline\ to mint-pc
-# Copy config/credentials/mainedispensaryguide.env
-
-# Set up Task Scheduler / cron for:
-# - IMAP poll every 15 minutes
-# - Daily send weekdays at 9:30am
+# Review contact data and templates already in repo:
+ls scripts/data/maine-cannabis-contacts.json
+ls scripts/data/maine-citation-contacts.json
+ls templates/mainedispensaryguide/
+cat link-outreach.md
+# Rebuild email automation on Linux using these as source material
 ```
 
 ### Priority 4: Open Remaining Items
 
 | Item | Owner | Notes |
 |------|-------|-------|
-| **Vercel project cleanup** | User (manual) | Delete orphaned Vercel project |
+| **Vercel project cleanup** | User (manual) | Delete orphaned Vercel project in Vercel dashboard |
 | **GSC indexing check** | User (manual) | Log in to Google Search Console, check 42 non-indexed pages |
 | **Mantis Ad Network** | Future | Apply at mantis.ad when traffic hits 5K+ pageviews/month |
-| **EmailPipeline Phase 2** | Agent | Set real IMAP/SMTP credentials, add more Maine contacts |
+| **Email outreach rebuild** | Agent | Use contacts + templates in repo to rebuild on Linux |
 
 ---
 
@@ -363,8 +363,8 @@ project-1/
 
 ### Sprint 56 (Apr 24) ✅
 - 13 thin pages expanded to 1,500+ words
-- Citation outreach contacts researched (20 Maine contacts)
-- EmailPipeline drip campaign set up
+- Citation outreach contacts researched (20 Maine contacts in `scripts/data/maine-cannabis-contacts.json`)
+- Drip campaign templates created in `templates/mainedispensaryguide/`
 
 ### Sprint 55 (Apr 24) ✅
 - PDF Magnet landing page built
@@ -422,8 +422,9 @@ Use this to verify you've transferred everything:
 - [ ] Brave Search API key (from brave.com/search/api/)
 - [ ] Purelymail SMTP credentials (`config/credentials/mainedispensaryguide.env`)
 - [ ] OpenCode config directory (`~/.config/opencode/`)
-- [ ] EmailPipeline directory (`C:\Users\Steve\EmailPipeline\`)
 - [ ] MiniMax API key (in `~/.config/opencode/opencode.json`)
+
+**Note:** EmailPipeline was Windows-specific and NOT transferred. Contact data and templates are in the repo — rebuild on Linux.
 
 ---
 
