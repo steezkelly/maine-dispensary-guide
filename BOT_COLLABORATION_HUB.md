@@ -1,7 +1,50 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-24 EDT** (JSON-LD root-cause fix: 95c69fe)
+**Last updated: 2026-04-25 EDT** (Research integration sprint: OCP license map, newsletter page, nofollow audit, Mantis docs)
+
+---
+
+## 📋 SPRINT 57: Research Integration — Link Building + Monetization (Apr 25, 2026 EDT)
+
+### OCP Open Data Page ✅ DONE
+- **Page:** `apps/maine-cannabis/src/pages/guides/maine-ocp-license-map.astro`
+- **Purpose:** Highest-leverage link-bait identified in research doc. Mirrors OCP open data licensee dataset with filterable regional breakdowns, licensee density vs. population table, and methodology section.
+- **Press pitch angle:** "Complete Map of Every Licensed Maine Dispensary" — local Maine press (Press Herald, MaineBiz) and cannabis trade press (Ganjapreneur, MJBizDaily) regularly cover data-driven cannabis stories.
+- **Content:** 318+ total licenses across 5 types, 8 regional breakdowns, stores-per-10K density table by region, untappd market analysis for Aroostook/Hancock/Washington counties.
+
+### Newsletter Page ✅ DONE
+- **Page:** `apps/maine-cannabis/src/pages/newsletter.astro`
+- **Purpose:** Owned audience channel. Formspree signup form + Beehiiv direct link + recent issue samples.
+- **Key insight from research:** Newsletter is the only owned audience channel that compounds. PDF magnet captures leads, but without a follow-up system, conversion is minimal.
+- **Existing email pipeline (Purelymail SMTP)** continues as-is — does NOT switch to Apollo/Instantly per research doc (unnecessary spend given Purelymail is already live).
+
+### Mantis Ad Network Documentation ✅ DONE
+- **File:** `reference/reference.md` — added Ad Networks (Cannabis-Safe) section
+- **Key finding:** Mantis is the only cannabis-safe display option. AdSense/Mediavine/Raptive/Ezoic all gate on AdSense standing — which cannabis content cannot achieve.
+- **Setup steps documented:** Apply at mantis.ad → add JS embed → estimated $5-15 RPM
+- **Action:** Claim account at `mantis.ad` when traffic reaches 5K+ pageviews/month
+
+### Outbound Link Audit + Nofollow ✅ DONE
+- **Files edited:**
+  - `resources/maine-cannabis-education.astro` — Leafly Learning link → `rel="noopener noreferrer nofollow"` (competitor)
+  - `resources/maine-cannabis-official-resources.astro` — Ganjapreneur link → `rel="noopener noreferrer nofollow"` (industry media, competitive reference)
+- **Rationale from research:** `noopener noreferrer` does NOT add nofollow — just prevents security vulnerabilities. Adding `nofollow` to competitor/commercial links prevents passing SEO equity to sites that don't reciprocate.
+
+### What Was NOT Implemented (Correctly) ❌
+- **OutreachFrog/Rhino Rank/Outreach Monks:** Not integrated. Research doc is generic — project's `link-outreach.md` already has more tailored strategy. Paid link vendors only make sense after organic earned links prove the content model.
+- **Apollo + Instantly stack:** Not adopted. Project has Purelymail SMTP running via EmailPipeline. Re-engineering costs time and money for zero gain at early-traffic stage.
+- **Direct marketplace link buys (PRposting/Linkhouse):** Not started. Recommence after OCP data page earns first editorial link. Budget of $500-800/mo for 3-5 links/month makes sense from Month 3 onwards.
+
+### Research Doc Accuracy Score
+| Claim | Verdict |
+|-------|---------|
+| OutreachFrog accepts cannabis, billing trap on subscriptions | ✅ Plausible — à la carte only |
+| Outreach Monks cannabis tier (DR20+ from $119) | ✅ Plausible — strongest mainstream fit |
+| Mantis is only cannabis-safe display network | ✅ Confirmed — AdSense/Mediavine/Raptive all gate |
+| DIY Apollo+Instantly for $99/year listings | ⚠️ Overstated — Purelymail already running |
+| Maine OCP dataset as highest-leverage link-bait | ✅ Confirmed — built it |
+| Revenue ceiling $30K-150K/yr ARR | ⚠️ Needs validation against actual contact pipeline |
 
 ---
 

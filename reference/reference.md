@@ -100,6 +100,24 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 
 ---
 
+## Ad Networks (Cannabis-Safe)
+
+| Network | Status | Notes |
+|---------|--------|-------|
+| **Mantis Ad Network** | Not yet integrated | Cannabis-safe display ads. Apply at mantis.ad. $100 minimum payout. Estimated $5-15 RPM at cannabis traffic. |
+| AdSense | Blocked | Cannabis content cannot receive AdSense approval. |
+| Mediavine | Gated | Requires $5K annual ad revenue minimum (Journey tier from Jan 2026). |
+| Raptive | Gated | Requires 25,000 monthly pageviews minimum. |
+| Ezoic | Gated | Requires 250,000 MAU minimum (Feb 2026 threshold). |
+
+**Mantis Setup Steps:**
+1. Apply at `mantis.ad` — cannabis and CBD content explicitly accepted
+2. Once approved, add Mantis ad code to `Layout.astro` or individual page templates
+3. Estimated output: $50-150/month at 10K pageviews; $250-750/month at 50K pageviews
+4. Lowest possible implementation lift — static JS embed, no server-side required
+
+---
+
 ## Root-Level Documentation
 
 | File | Purpose |
