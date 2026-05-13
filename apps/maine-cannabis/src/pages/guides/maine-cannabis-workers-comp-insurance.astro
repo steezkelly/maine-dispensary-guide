@@ -12,6 +12,8 @@ const workersCompFaqs = [
   { question: "How does Section 280E affect cannabis business deductions for payroll?", answer: "IRC Section 280E prohibits cannabis businesses from deducting normal business expenses at the federal level. However, Maine allows state-level deductions for normal business expenses including payroll. This means your workers comp premiums and employee wages are deductible on Maine state taxes even though they may not be federally deductible." },
   { question: "What happens if an employee gets injured at my Maine dispensary?", answer: "Without workers comp coverage, you pay all medical costs and lost wages from your own pocket. With proper coverage, your insurance handles these costs. Maine law requires employers to carry specific coverage limits. Failure to maintain coverage can result in fines and potential license review by OCP." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is workers compensation insurance required for Maine cannabis businesses?","acceptedAnswer":{"@type":"Answer","text":"Yes. Workers comp is mandatory for all Maine employers regardless of industry. Your cannabis dispensary must carry workers compensation coverage from the moment you hire your first employee. Operating without it is illegal and exposes you to significant liability."}},{"@type":"Question","name":"How does Section 280E affect cannabis business deductions for payroll?","acceptedAnswer":{"@type":"Answer","text":"IRC Section 280E prohibits cannabis businesses from deducting normal business expenses at the federal level. However, Maine allows state-level deductions for normal business expenses including payroll. This means your workers comp premiums and employee wages are deductible on Maine state taxes even though they may not be federally deductible."}},{"@type":"Question","name":"What happens if an employee gets injured at my Maine dispensary?","acceptedAnswer":{"@type":"Answer","text":"Without workers comp coverage, you pay all medical costs and lost wages from your own pocket. With proper coverage, your insurance handles these costs. Maine law requires employers to carry specific coverage limits. Failure to maintain coverage can result in fines and potential license review by OCP."}}]});
+
 ---
 
 <Layout 
@@ -227,5 +229,6 @@ const workersCompFaqs = [
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={workersCompFaqs} />

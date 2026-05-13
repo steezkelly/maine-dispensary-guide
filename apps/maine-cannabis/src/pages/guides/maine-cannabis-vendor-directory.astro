@@ -26,6 +26,8 @@ const vendorFaqs = [
     answer: "Essential vendors include: a cannabis-experienced attorney for licensing, a CPA familiar with 280E, a security company that understands OCP camera requirements, a Metrc-integrated POS system, and a licensed testing lab for product compliance."
   }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I find cannabis-friendly vendors in Maine?","acceptedAnswer":{"@type":"Answer","text":"This vendor directory provides verified contacts for attorneys, CPAs, security firms, and consultants with Maine cannabis experience. You can also ask other operators for recommendations or contact the Maine Cannabis Industry Association for referrals."}},{"@type":"Question","name":"Why do I need a cannabis-specialized CPA?","acceptedAnswer":{"@type":"Answer","text":"Standard accountants may not understand IRC Section 280E, which prohibits cannabis businesses from deducting normal business expenses at the federal level. A cannabis-specialized CPA knows how to maximize your state deductions and navigate the unique tax situation of cannabis operators."}},{"@type":"Question","name":"What vendors are essential for opening a Maine dispensary?","acceptedAnswer":{"@type":"Answer","text":"Essential vendors include: a cannabis-experienced attorney for licensing, a CPA familiar with 280E, a security company that understands OCP camera requirements, a Metrc-integrated POS system, and a licensed testing lab for product compliance."}}]});
+
 ---
 <Layout title="Maine Cannabis Vendor Directory" description="Verified Maine cannabis vendor directory. Connect with licensed lawyers, CPAs, security firms, and consultants for your dispensary project." heroImage="/images/heroes/maine-cannabis-vendor-directory.jpg" article={article} topics={topics}>
 
@@ -324,5 +326,6 @@ const vendorFaqs = [
 </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={vendorFaqs} />

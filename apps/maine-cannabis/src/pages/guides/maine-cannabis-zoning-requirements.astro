@@ -12,6 +12,8 @@ const article = {
   section: "Business Essentials"
 };
 const topics = ["real-estate", "compliance"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I find out which Maine towns have opted in to allow cannabis retail?","acceptedAnswer":{"@type":"Answer","text":"The Maine Office of Cannabis Policy maintains a municipal opt-in list on its website. Our Maine Cannabis Opt-In Tracker consolidates this data with additional notes on ordinance conditions, spacing requirements, and local permit processes. For the most current status, contact the municipal clerk or planning office directly — the OCP list can lag behind recent votes by 60–90 days."}},{"@type":"Question","name":"What is the school buffer distance for Maine dispensaries?","acceptedAnswer":{"@type":"Answer","text":"The state default is 1,000 ft, measured property line to property line. However, municipalities may reduce this to 500 ft through a local ordinance amendment. Several larger markets — including Portland and Bangor — have adopted the 500 ft buffer. Always check the specific ordinance for your target municipality, as the buffer standard varies."}},{"@type":"Question","name":"What is the difference between a local permit and a state license for Maine cannabis?","acceptedAnswer":{"@type":"Answer","text":"The local permit is issued by your municipality and confirms your specific site meets all local zoning requirements (correct zone, buffer clearance, parking, signage, hours, etc.). The state license is issued by the Maine OCP and confirms you meet all state licensing criteria (background checks, financial readiness, security plan, etc.). Both are required before you can open, and you generally need the local permit before the OCP will finalize review of your state application. They are separate processes running on separate timelines."}},{"@type":"Question","name":"How long does it take to get a local zoning permit for a Maine dispensary?","acceptedAnswer":{"@type":"Answer","text":"Timelines vary by municipality and permit type. Municipalities with streamlined administrative review (no public hearing) can issue permits in 2–6 weeks for fully compliant applications. Municipalities that require a Conditional Use Permit with a public hearing typically run 45–90 days from submission to decision. If the application is contested or the planning board continues the hearing, the process can extend to 3–6 months. Build for the longer end when creating your launch timeline."}}]});
+
 ---
 
 <Layout
@@ -488,3 +490,4 @@ const topics = ["real-estate", "compliance"];
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>

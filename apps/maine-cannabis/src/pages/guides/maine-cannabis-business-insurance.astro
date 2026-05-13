@@ -11,6 +11,8 @@ const insuranceFaqs = [
   { question: "Why is product liability insurance especially important for dispensaries?", answer: "Product liability covers lawsuits from customers who claim harm from products purchased at your dispensary. Without this coverage, you pay legal defense costs out of pocket — potentially hundreds of thousands of dollars. A single lawsuit without coverage can end your business. This is the most critical insurance type for retail operators." },
   { question: "Can I use standard commercial insurance for my Maine cannabis business?", answer: "No. Most mainstream insurance carriers will not cover cannabis businesses directly. You need policies from brokers and carriers who specialize in the cannabis industry. Maine has growing cannabis expertise among local brokers, but the market is still fragmented. Work with a cannabis-specialized broker who can submit your application to multiple carriers." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is cannabis business insurance required in Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. General liability insurance is required to obtain and maintain your OCP license. Product liability coverage, while not explicitly mandated by state law, is effectively required in practice because the risk of product-related lawsuits is substantial. Workers comp is mandatory for all Maine employers regardless of industry."}},{"@type":"Question","name":"Why is product liability insurance especially important for dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Product liability covers lawsuits from customers who claim harm from products purchased at your dispensary. Without this coverage, you pay legal defense costs out of pocket — potentially hundreds of thousands of dollars. A single lawsuit without coverage can end your business. This is the most critical insurance type for retail operators."}},{"@type":"Question","name":"Can I use standard commercial insurance for my Maine cannabis business?","acceptedAnswer":{"@type":"Answer","text":"No. Most mainstream insurance carriers will not cover cannabis businesses directly. You need policies from brokers and carriers who specialize in the cannabis industry. Maine has growing cannabis expertise among local brokers, but the market is still fragmented. Work with a cannabis-specialized broker who can submit your application to multiple carriers."}}]});
+
 ---
 
 <Layout 
@@ -235,5 +237,6 @@ const insuranceFaqs = [
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={insuranceFaqs} />

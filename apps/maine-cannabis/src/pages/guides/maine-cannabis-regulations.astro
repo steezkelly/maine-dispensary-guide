@@ -11,6 +11,8 @@ const regulationsFaqs = [
   { question: "What are the most common OCP compliance violations for Maine dispensaries?", answer: "Common violations include: incomplete inventory records in Metrc, expired worker permits, failure to conduct required monthly physical inventories, inadequate security system documentation, and missing or incomplete training records. Regular self-audits help catch issues before OCP inspections." },
   { question: "How often does OCP inspect Maine dispensaries?", answer: "OCP conducts risk-based inspections rather than fixed schedules. New licensees receive more frequent visits during their first year. Established operators with clean records may go 2-3 years between inspections. Inspections can be scheduled or unannounced." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What agency regulates cannabis businesses in Maine?","acceptedAnswer":{"@type":"Answer","text":"The Maine Office of Cannabis Policy (OCP) within the Department of Administrative and Financial Services regulates all adult-use cannabis businesses. Medical cannabis is regulated separately under the same agency with additional rules."}},{"@type":"Question","name":"What are the most common OCP compliance violations for Maine dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Common violations include: incomplete inventory records in Metrc, expired worker permits, failure to conduct required monthly physical inventories, inadequate security system documentation, and missing or incomplete training records. Regular self-audits help catch issues before OCP inspections."}},{"@type":"Question","name":"How often does OCP inspect Maine dispensaries?","acceptedAnswer":{"@type":"Answer","text":"OCP conducts risk-based inspections rather than fixed schedules. New licensees receive more frequent visits during their first year. Established operators with clean records may go 2-3 years between inspections. Inspections can be scheduled or unannounced."}}]});
+
 ---
 
 <Layout 
@@ -233,5 +235,6 @@ const regulationsFaqs = [
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={regulationsFaqs} />

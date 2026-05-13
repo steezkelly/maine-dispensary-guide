@@ -12,6 +12,8 @@ const extractionFaqs = [
   { question: "What is the difference between volatile and non-volatile extraction methods?", answer: "Volatile methods (butane, propane) produce high-quality concentrates but require extensive fire safety measures and closed-loop systems. Non-volatile methods (CO2, ice water, heat/pressure) are generally safer but may produce different product characteristics. Your license class depends on which methods you plan to use." },
   { question: "How much does it cost to get an extraction license in Maine?", answer: "Manufacturing license fees vary by class and scale. Application fees plus annual renewal fees typically run $2,000-$10,000 depending on tier. Beyond licensing, extraction equipment costs $25,000-$500,000 depending on scale and automation level." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What license do I need to extract cannabis concentrates in Maine?","acceptedAnswer":{"@type":"Answer","text":"You need a Manufacturing License from the OCP, which covers extraction operations. There are different license classes based on the extraction method used. Class 1 covers volatile solvents (butane, propane), Class 2 covers ethanol extraction, and Classes 3-5 cover various non-volatile methods."}},{"@type":"Question","name":"What is the difference between volatile and non-volatile extraction methods?","acceptedAnswer":{"@type":"Answer","text":"Volatile methods (butane, propane) produce high-quality concentrates but require extensive fire safety measures and closed-loop systems. Non-volatile methods (CO2, ice water, heat/pressure) are generally safer but may produce different product characteristics. Your license class depends on which methods you plan to use."}},{"@type":"Question","name":"How much does it cost to get an extraction license in Maine?","acceptedAnswer":{"@type":"Answer","text":"Manufacturing license fees vary by class and scale. Application fees plus annual renewal fees typically run $2,000-$10,000 depending on tier. Beyond licensing, extraction equipment costs $25,000-$500,000 depending on scale and automation level."}}]});
+
 ---
 
 <Layout 
@@ -310,5 +312,6 @@ const extractionFaqs = [
     })}></script>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={extractionFaqs} />

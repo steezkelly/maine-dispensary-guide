@@ -18,6 +18,8 @@ const costsFaqs = [
   { question: "What are the annual licensing costs for a Maine dispensary?", answer: "OCP annual renewal fees range from $1,000-$10,000 depending on your license tier and type. Local municipal fees vary by town: Portland charges $5,000 annually, Lewiston charges $2,500, while smaller towns may charge less or nothing. Budget $3,000-$12,000 annually for combined state and local licensing." },
   { question: "How long before a Maine dispensary becomes profitable?", answer: "Most Maine operators report 18-36 months to break-even. Portland-area dispensaries often take 24-36 months due to competitive saturation. Underserved markets in rural Maine or growth corridors like York County may achieve break-even in 12-24 months." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does it cost to open a dispensary in Maine?","acceptedAnswer":{"@type":"Answer","text":"Most Maine dispensaries need $360K-$1M total. This includes: licensing fees ($3,000-$10,000), real estate and buildout ($100K-$300K), security systems ($25K-$75K), initial inventory ($50K-$150K), POS and technology ($10K-$30K), and 6 months of working capital ($100K-$250K)."}},{"@type":"Question","name":"What are the annual licensing costs for a Maine dispensary?","acceptedAnswer":{"@type":"Answer","text":"OCP annual renewal fees range from $1,000-$10,000 depending on your license tier and type. Local municipal fees vary by town: Portland charges $5,000 annually, Lewiston charges $2,500, while smaller towns may charge less or nothing. Budget $3,000-$12,000 annually for combined state and local licensing."}},{"@type":"Question","name":"How long before a Maine dispensary becomes profitable?","acceptedAnswer":{"@type":"Answer","text":"Most Maine operators report 18-36 months to break-even. Portland-area dispensaries often take 24-36 months due to competitive saturation. Underserved markets in rural Maine or growth corridors like York County may achieve break-even in 12-24 months."}}]});
+
 ---
 
 <Layout 
@@ -363,5 +365,6 @@ const costsFaqs = [
   <script type="application/ld+json" set:text={JSON.stringify({"@context":"https://schema.org","@type":"ImageObject","contentUrl":"https://mainedispensaryguide.com/images/infographics/startup-costs.jpg","description":"Maine cannabis dispensary startup cost breakdown","width":800,"height":592})}></script>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={costsFaqs} />

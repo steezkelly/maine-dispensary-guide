@@ -12,6 +12,8 @@ const eventFaqs = [
   { question: "Can I network with other cannabis operators at Maine events?", answer: "Yes. OCP events, industry conferences, and local association meetings all provide networking opportunities. The Maine Cannabis Industry Association holds regular gatherings. Building relationships with other operators helps you stay informed about policy changes and best practices." },
   { question: "Are Maine cannabis events open to the public?", answer: "Most OCP and regulatory events are open to licensees and the public. Legislative hearings allow public testimony. Some industry events require credentials or paid attendance. Check specific event details before attending." }
 ];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I find OCP stakeholder meetings in Maine?","acceptedAnswer":{"@type":"Answer","text":"The Maine Office of Cannabis Policy (OCP) posts quarterly stakeholder meeting schedules on their official website. Meetings are held in Augusta and offer virtual participation options. These are the primary venue for learning about regulatory changes before they become final."}},{"@type":"Question","name":"Can I network with other cannabis operators at Maine events?","acceptedAnswer":{"@type":"Answer","text":"Yes. OCP events, industry conferences, and local association meetings all provide networking opportunities. The Maine Cannabis Industry Association holds regular gatherings. Building relationships with other operators helps you stay informed about policy changes and best practices."}},{"@type":"Question","name":"Are Maine cannabis events open to the public?","acceptedAnswer":{"@type":"Answer","text":"Most OCP and regulatory events are open to licensees and the public. Legislative hearings allow public testimony. Some industry events require credentials or paid attendance. Check specific event details before attending."}}]});
+
 ---
 
 <Layout title={titleText} description="Cannabis events and regulatory updates in Maine for 2026. How to stay connected with OCP rule changes and industry events." heroImage="/images/heroes/maine-cannabis-events-2026.jpg" article={article} topics={topics}>
@@ -197,5 +199,6 @@ const eventFaqs = [
   </article>
 
 </Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
 
 <Faq faqs={eventFaqs} />
