@@ -10,6 +10,15 @@ const homepageFaqs = [
   { question: "Which Maine towns allow cannabis dispensaries?", answer: "15 towns have opted in to adult-use retail as of 2026. Key markets include Portland, Lewiston, Bangor, Augusta, Biddeford, and Brunswick. Check the full opt-in list: /guides/maine-cannabis-opt-in-tracker/" },
   { question: "What are the school buffer requirements for Maine dispensaries?", answer: "The state default is 1,000 feet, measured property line to property line. However, municipalities may reduce this to 500 feet through local ordinance. Portland and Bangor have adopted the 500 ft buffer. Check your specific municipality: /guides/maine-cannabis-school-buffer/" }
 ];
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": homepageFaqs.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+  }))
+});
 
 const stats = [
   { label: "Annual Sales", value: "$246M" },
@@ -2266,5 +2275,5 @@ const journeySteps = [
   </section>
 
 </Layout>
-
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
 <Faq faqs={homepageFaqs} />

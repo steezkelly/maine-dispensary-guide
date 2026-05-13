@@ -69,6 +69,36 @@ const siteUrl = siteConfig.siteUrl;
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
+
+// Breadcrumbs
+const breadcrumbLabels: Record<string, string> = {
+  'guides': 'Guides',
+  'about': 'About',
+  'blog': 'Blog',
+  'resources': 'Resources',
+  'founders': 'Founders',
+  'download': 'Downloads',
+  'contact': 'Contact',
+  'start-here': 'Start Here',
+  'roi-calculator': 'ROI Calculator',
+  'glossary': 'Glossary',
+  'market-stats': 'Market Stats',
+};
+
+function buildCrumbs(path: string, explicitCrumbs: Breadcrumb[]): Breadcrumb[] {
+  if (explicitCrumbs.length > 0) return explicitCrumbs;
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length === 0) return [];
+  const crumbs: Breadcrumb[] = [];
+  let running = '';
+  for (const part of parts) {
+    running = running + '/' + part;
+    crumbs.push({ label: breadcrumbLabels[part] || part.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), href: running });
+  }
+  return crumbs;
+}
+
+const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadcrumbs);
 ---
 
 <!doctype html>
@@ -157,7 +187,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       }).replace(/&/g, '&amp;')} />
     )}
 
-    {isContent && breadcrumbs && breadcrumbs.length > 0 && (
+    {allBreadcrumbs.length > 1 && !noindex && (
       <script type="application/ld+json" set:text={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -168,7 +198,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
             "name": "Home",
             "item": siteUrl
           },
-          ...breadcrumbs.map((crumb, index) => ({
+          ...allBreadcrumbs.map((crumb, index) => ({
             "@type": "ListItem",
             "position": index + 2,
             "name": crumb.label,
