@@ -28,28 +28,8 @@ const grouped = sectionOrder.reduce((acc, section) => {
   title="Maine Cannabis Blog — Industry News, Guides & Analysis"
   description="Cannabis business guides, policy analysis, and industry news for Maine operators and investors. Cultivation licenses, dispensary operations, ROI, and psilocybin legislation."
 >
-  <section class="page-header">
-    <h1>Maine Cannabis Blog</h1>
-    <p>Industry news, operational guides, and policy analysis for Maine cannabis professionals.</p>
-  </section>
+  <style>
 
-  {Object.entries(grouped).map(([section, sectionPosts]) => (
-    <section class="blog-section">
-      <h2>{section}</h2>
-      <div class="posts-grid">
-        {sectionPosts.map((post) => (
-          <a href={post.url} class="post-card">
-            <span class="post-date">{post.date}</span>
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-          </a>
-        ))}
-      </div>
-    </section>
-  ))}
-</Layout>
-
-<style>
   .page-header {
     margin-bottom: 3rem;
     text-align: center;
@@ -103,4 +83,25 @@ const grouped = sectionOrder.reduce((acc, section) => {
     margin: 0;
     font-size: 0.9375rem;
   }
+
 </style>
+<section class="page-header">
+    <h1>Maine Cannabis Blog</h1>
+    <p>Industry news, operational guides, and policy analysis for Maine cannabis professionals.</p>
+  </section>
+
+  {Object.entries(grouped).map(([section, sectionPosts]) => (
+    <section class="blog-section">
+      <h2>{section}</h2>
+      <div class="posts-grid">
+        {sectionPosts.map((post) => (
+          <a href={post.url} class="post-card">
+            <span class="post-date">{post.date}</span>
+            <h3>{post.title}</h3>
+            <p>{post.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Layout>

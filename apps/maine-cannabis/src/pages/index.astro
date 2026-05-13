@@ -50,620 +50,8 @@ const journeySteps = [
   article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-01", modifiedDate: "2026-04-21", section: "Home" }}
 >
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       HERO: Heritage Authority — Topographic + Dramatic Typography
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="hero-manifesto" aria-labelledby="hero-heading">
-    <!-- Topographic background pattern -->
-    <div class="topo-bg" aria-hidden="true">
-      <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="topoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.08"/>
-            <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.04"/>
-          </linearGradient>
-        </defs>
-        <!-- Contour lines -->
-        <path d="M-50,300 Q150,200 350,350 T750,250" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
-        <path d="M-50,350 Q100,250 300,380 T750,300" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
-        <path d="M-50,400 Q80,320 280,420 T750,360" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
-        <path d="M-50,450 Q60,380 260,480 T750,420" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
-        <path d="M-50,500 Q40,440 240,540 T750,480" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
-        <path d="M100,50 Q200,150 400,100 T850,150" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
-        <path d="M50,100 Q180,180 380,130 T830,180" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
-        <!-- Vertical accent lines -->
-        <line x1="680" y1="0" x2="680" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
-        <line x1="720" y1="0" x2="720" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
-      </svg>
-    </div>
+  <style>
 
-    <div class="hero-inner">
-      <!-- Left: Editorial content block -->
-      <div class="hero-editorial">
-        <div class="edition-mark">
-          <span class="edition-year">Est. 2026</span>
-          <span class="edition-divider">◆</span>
-          <span class="edition-state">Maine, USA</span>
-        </div>
-        
-        <h1 id="hero-heading" class="hero-title">
-          The Professional<br/>
-          <span class="hero-title-accent">Gateway</span> to<br/>
-          Maine Cannabis
-        </h1>
-        
-        <p class="hero-descriptor">
-          Expert-vetted guidance for licensing, compliance, and growth in the Pine Tree State. 
-          Forty-four guides. One authoritative source.
-        </p>
-        
-        <div class="hero-actions">
-          <a href="/guides/maine-dispensary-license/" class="btn-primary">Start Your Application</a>
-          <a href="/roi-calculator/" class="btn-ghost">Calculate Your ROI</a>
-        </div>
-        <a href="/download/founders-bible" class="hero-secondary-cta">Download the Founders Bible <span aria-hidden="true">→</span></a>
-      </div>
-
-      <!-- Right: Visual anchor with botanical -->
-      <div class="hero-visual" aria-hidden="true">
-        <div class="visual-anchor">
-          <div class="anchor-ring ring-1"></div>
-          <div class="anchor-ring ring-2"></div>
-          <div class="anchor-ring ring-3"></div>
-          <div class="botanical-cluster">
-            <PineTree size={180} color="var(--color-primary)" class="cluster-pine" />
-            <Leaf size={100} color="var(--color-accent)" class="cluster-leaf cluster-leaf-1" />
-            <Leaf size={70} color="var(--color-soft-green)" class="cluster-leaf cluster-leaf-2" />
-          </div>
-          <div class="visual-caption">
-            <span class="caption-label">Maine Dispensary Guide</span>
-            <span class="caption-ref">Editorial Resource</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom flourish -->
-    <div class="hero-flourish" aria-hidden="true">
-      <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-        <path d="M0,20 Q300,0 600,20 T1200,20" fill="none" stroke="var(--color-border)" stroke-width="1"/>
-      </svg>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MARKET BAR: Refined stats strip
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="market-intel" aria-label="Maine Market Statistics">
-    <div class="intel-inner">
-      <div class="intel-stats">
-        {stats.map((stat, i) => (
-          <>
-            <div class="intel-stat">
-              <span class="stat-value">{stat.value}</span>
-              <span class="stat-label">{stat.label}</span>
-            </div>
-            {i < stats.length - 1 && <div class="stat-separator" aria-hidden="true">—</div>}
-          </>
-        ))}
-      </div>
-      <a href="/market-stats/" class="intel-link">
-        Full Market Report
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MISSION: Editorial typography treatment
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="mission-manifesto" aria-labelledby="mission-heading">
-    <div class="mission-inner">
-      <div class="mission-header">
-        <span class="section-eyebrow">Our Purpose</span>
-        <h2 id="mission-heading" class="mission-title">Build Your Passion Project</h2>
-      </div>
-      
-      <div class="mission-text">
-        <p class="mission-lead">
-          Opening a dispensary in Maine is a real business with real regulations. But if you have a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance.
-        </p>
-        
-        <div class="mission-body">
-          <p>
-            We built this resource for entrepreneurs who are serious about doing this correctly: the ones who want to understand the M.R.S. citations, negotiate their own commercial lease, and file their 280E deductions properly rather than relying on luck.
-          </p>
-          <p>
-            Everything here is specific to Maine — the towns that have opted in, the fee structures that OCP publishes, the real estate patterns that only emerge when you know the market. If you are considering Maine cannabis, you need this specificity.
-          </p>
-        </div>
-        
-        <a href="/about/" class="read-more">
-          Read About Our Methodology
-          <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-    
-    <!-- Decorative botanical -->
-    <div class="mission-botanical" aria-hidden="true">
-      <svg viewBox="0 0 200 400" fill="none">
-        <path d="M100,380 C60,320 20,240 40,160 C60,80 100,40 100,40 C100,40 140,80 160,160 C180,240 140,320 100,380" stroke="var(--color-primary)" stroke-width="1" opacity="0.15"/>
-        <path d="M100,350 C75,300 50,240 60,180 C70,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
-        <path d="M100,350 C125,300 150,240 140,180 C130,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
-      </svg>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MARKET OVERVIEW: Asymmetric two-column layout
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="market-overview" aria-labelledby="overview-heading">
-    <div class="overview-inner">
-      <div class="overview-header">
-        <span class="section-eyebrow">The Opportunity</span>
-        <h2 id="overview-heading">Why Maine, Why Now</h2>
-      </div>
-      
-      <div class="overview-grid">
-        <div class="overview-main">
-          <p>
-            Maine has a medical program operating since 1999 and an adult-use market open since 2020. That combination means established patterns, more data, and a clearer picture of what works than newer state markets.
-          </p>
-          <p>
-            The Office of Cannabis Policy (OCP) oversees the industry with regulations mature enough to be predictable — you can read the actual rules, follow the actual processes, and know where the actual pitfalls are.
-          </p>
-          <p>
-            Towns must opt-in before a dispensary can operate within their borders. For entrepreneurs, this means location research is not optional — it is the first and most important strategic decision you will make.
-          </p>
-        </div>
-        
-        <div class="overview-aside">
-          <div class="aside-card">
-            <span class="aside-stat">$246M</span>
-            <span class="aside-label">Adult-use sales in 2025</span>
-          </div>
-          <div class="aside-card">
-            <span class="aside-stat">169</span>
-            <span class="aside-label">Active stores statewide</span>
-          </div>
-          <div class="aside-card highlight">
-            <span class="aside-stat">41+</span>
-            <span class="aside-label">Opt-in municipalities</span>
-          </div>
-          <p class="aside-note">
-            The opportunity is in understanding which towns have been left behind.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       OPERATIONAL EXCELLENCE: Full-width with offset content
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="operations-excellence" aria-labelledby="ops-heading">
-    <div class="ops-inner">
-      <div class="ops-header">
-        <span class="section-eyebrow">Day-to-Day Reality</span>
-        <h2 id="ops-heading">What It Takes to Run One</h2>
-      </div>
-      
-      <div class="ops-content">
-        <p>
-          Getting a license is just the start. The actual work of running a dispensary — managing inventory, staying compliant with OCP security rules, training staff who can actually explain the difference between a sativa and an indica — is where most operators discover whether they chose the right business.
-        </p>
-        <p>
-          Maine customers, especially in the Portland metro area and mid-coast college towns, care about craft and transparency. They ask questions about cultivation methods. They read menu listings before they visit. The shops that do the work on staff training — that treat budtenders as product experts rather than cashiers — tend to build real loyalty.
-        </p>
-        
-        <div class="ops-topics">
-          <a href="/guides/maine-dispensary-pos/" class="topic-tag">Point-of-Sale Systems</a>
-          <a href="/glossary/#metrc" class="topic-tag">Metrc Compliance</a>
-          <a href="/guides/maine-cannabis-taxation-280e/" class="topic-tag">280E Tax Strategy</a>
-          <a href="/launch-checklist/" class="topic-tag">Launch Checklist</a>
-        </div>
-        
-        <p class="ops-closing">
-          The operators who survive past year two tend to share certain habits: meticulous record-keeping, proactive communication with OCP, and a genuine interest in what their customers want. The ones who do not make it tend to have ignored one or more of those three.
-        </p>
-      </div>
-    </div>
-    
-    <!-- Decorative element -->
-    <div class="ops-decoration" aria-hidden="true">
-      <svg viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="50" r="48" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.1"/>
-        <circle cx="50" cy="50" r="35" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.15"/>
-        <circle cx="50" cy="50" r="20" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.2"/>
-      </svg>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       CORE HUBS: Editorial card grid with hover personality
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="core-hubs" aria-labelledby="hubs-heading">
-    <div class="hubs-inner">
-      <div class="hubs-header">
-        <span class="section-eyebrow">Explore</span>
-        <h2 id="hubs-heading">Core Topics</h2>
-        <p class="hubs-subtitle">Pick a category to dig into.</p>
-      </div>
-      
-      <div class="hubs-grid">
-        <a href="/guides/maine-dispensary-license/" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M14 8h14l10 10v22a4 4 0 01-4 4H14a4 4 0 01-4-4V12a4 4 0 014-4z"/>
-                <path d="M28 8v10h10"/>
-                <path d="M18 26h12M18 34h8"/>
-              </svg>
-            </div>
-            <h3>Licensing</h3>
-            <p>Step-by-step state and local approval maps.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-        
-        <a href="/guides/maine-cannabis-taxation-280e/" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="24" cy="24" r="18"/>
-                <path d="M24 12v24M12 24h24"/>
-                <path d="M17 20l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3>Compliance</h3>
-            <p>Mastering 280E and OCP tracking rules.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-        
-        <a href="/guides/maine-cannabis-real-estate/" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M24 6C14.6 6 7 13.6 7 23c0 12 17 21 17 21s17-9 17-21c0-9.4-7.6-17-17-17z"/>
-                <circle cx="24" cy="23" r="6"/>
-              </svg>
-            </div>
-            <h3>Real Estate</h3>
-            <p>Finding compliant zones in every town.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-        
-        <a href="/roi-calculator/" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M8 34l12-16 8 8 12-16"/>
-                <circle cx="16" cy="22" r="3" fill="currentColor"/>
-                <circle cx="28" cy="26" r="3" fill="currentColor"/>
-                <circle cx="40" cy="10" r="3" fill="currentColor"/>
-              </svg>
-            </div>
-            <h3>ROI Calculator</h3>
-            <p>Estimate startup costs and break-even timelines.</p>
-            <span class="hub-cta">Calculate <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-        
-        <a href="/resources/" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="20" cy="18" r="6"/>
-                <circle cx="32" cy="32" r="6"/>
-                <path d="M32 16v6M32 32l6 6"/>
-              </svg>
-            </div>
-            <h3>Vendor Directory</h3>
-            <p>Connect with expert lawyers and CPAs.</p>
-            <span class="hub-cta">Browse <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       GEO EXPLORER: Map-based visual with city pins
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="geo-explorer" aria-labelledby="geo-heading">
-    <div class="geo-inner">
-      <div class="geo-header">
-        <span class="section-eyebrow">Municipal Guides</span>
-        <h2 id="geo-heading">Explore by Location</h2>
-        <p class="geo-subtitle">
-          Maine has 41+ cities and towns that have opted in to allow cannabis retail. 
-          Each has its own zoning rules, local fees, and competitive landscape.
-        </p>
-      </div>
-      
-      <div class="geo-content">
-        <!-- Stylized map representation -->
-        <div class="geo-map" aria-hidden="true">
-          <svg viewBox="0 0 400 300" fill="none">
-            <!-- Simplified Maine outline suggestion -->
-            <path d="M50,250 L80,200 L120,180 L150,190 L180,160 L220,150 L260,140 L300,120 L340,80 L350,60 L340,40 L300,50 L260,70 L220,90 L180,100 L140,120 L100,150 L60,200 Z" 
-                  stroke="var(--color-primary)" stroke-width="1" opacity="0.2" fill="var(--color-primary)" fill-opacity="0.03"/>
-            <!-- City markers -->
-            <circle cx="320" cy="55" r="6" fill="var(--color-accent)"/>
-            <circle cx="280" cy="90" r="4" fill="var(--color-accent)" opacity="0.7"/>
-            <circle cx="240" cy="120" r="5" fill="var(--color-accent)"/>
-            <circle cx="200" cy="140" r="4" fill="var(--color-accent)" opacity="0.7"/>
-            <circle cx="160" cy="170" r="5" fill="var(--color-accent)"/>
-            <circle cx="120" cy="200" r="4" fill="var(--color-accent)" opacity="0.5"/>
-          </svg>
-        </div>
-        
-        <!-- City links as styled chips -->
-        <div class="geo-cities">
-          {cityLinks.map(city => (
-            <a href={city.href} class="city-chip">{city.name}</a>
-          ))}
-        </div>
-      </div>
-      
-      <a href="/guides/" class="btn-outline">View All 41 Municipal Guides</a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       WHAT'S NEW: Editorial freshness section
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="whats-new" aria-labelledby="new-heading">
-    <div class="new-inner">
-      <div class="new-header">
-        <div class="freshness-badge">
-          <span class="pulse-dot"></span>
-          <span class="freshness-label">Updated April 2026</span>
-        </div>
-        <h2 id="new-heading">What's New</h2>
-        <p class="new-subtitle">Recent updates and additions to the guide library.</p>
-      </div>
-      
-      <div class="new-grid">
-        {recentGuides.map(guide => (
-          <a href={guide.href} class="new-card">
-            <span class={`new-badge ${guide.badge === 'New' ? 'badge-new' : ''}`}>{guide.badge}</span>
-            <span class="new-title">{guide.title}</span>
-            <span class="new-date">{guide.date}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       SOCIAL PROOF: Authority stats
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="authority-stats" aria-label="Site Statistics">
-    <div class="stats-inner">
-      <p class="stats-intro">
-        This resource has been built for Maine cannabis entrepreneurs who want the real information — not the marketing version.
-      </p>
-      
-      <div class="stats-grid">
-        <div class="stat-block">
-          <span class="stat-number">2,847</span>
-          <span class="stat-text">Entrepreneurs Served</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">44</span>
-          <span class="stat-text">Expert Guides</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">15</span>
-          <span class="stat-text">City Guides</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">98%</span>
-          <span class="stat-text">Update Accuracy</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       START HERE: Journey path with personality
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="journey-path" aria-labelledby="journey-heading">
-    <div class="journey-inner">
-      <div class="journey-header">
-        <span class="section-eyebrow">For Newcomers</span>
-        <h2 id="journey-heading">Start Your Journey</h2>
-        <p class="journey-subtitle">
-          This curated path walks you through the essentials — from understanding Maine's regulatory framework to signing your commercial lease.
-        </p>
-      </div>
-      
-      <div class="journey-steps">
-        {journeySteps.map(step => (
-          <a href={step.href} class="journey-step">
-            <span class="step-num">{step.num}</span>
-            <div class="step-content">
-              <h3>{step.title}</h3>
-              <p>{step.desc}</p>
-            </div>
-            <span class="step-arrow" aria-hidden="true">→</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="journey-detail" aria-labelledby="journey-detail-heading">
-    <div class="journey-detail-inner">
-      <h2 id="journey-detail-heading">Your Four-Stage Roadmap to Opening Day</h2>
-      
-      <div class="detail-stage">
-        <h3>Stage 1: Get the Launch Checklist</h3>
-        <p>The launch checklist is your first real tool. It breaks down every step from having a concept to opening your doors. The checklist covers entity formation, OCP pre-application requirements, municipal zoning confirmation, and the specific documents you need before filing. Most applicants who get rejected by OCP failed because they skipped checklist items, not because their business concept was weak.</p>
-        <p>Plan to spend two to four weeks on pre-launch tasks before submitting your OCP application. That includes registering your business entity with the Maine Secretary of State, getting your EIN from the IRS, opening a commercial bank account, and securing a commercial lease in an opt-in municipality. Each of these steps has documentation requirements that take time to compile.</p>
-      </div>
-
-      <div class="detail-stage">
-        <h3>Stage 2: Understand Licensing</h3>
-        <p>Maine requires an OCP Adult-Use Retail License before you can sell cannabis products. The application process has multiple rounds: initial submission, municipal endorsement, background checks, and final OCP review. Timeline from submission to license approval typically runs five to seven months, assuming no request for additional information.</p>
-        <p>Municipal endorsement is a separate process handled at the town level. Not all Maine municipalities have opted in to allow cannabis retail. As of early 2026, 41 municipalities have opted in, but many have not. Portland, Lewiston, Bangor, Augusta, South Portland, and Biddeford are among the largest markets with active retail licensing. Some towns have caps on the number of licenses they will issue, which creates urgency for early applicants.</p>
-        <p>The OCP publishes fee schedules and application timelines on its website. Review these before you begin. Application fees run $800 to $1,500 depending on license type. There are also annual renewal fees. Budget for both.</p>
-      </div>
-
-      <div class="detail-stage">
-        <h3>Stage 3: Run the Numbers</h3>
-        <p>Maine's adult-use market generated $246.4 million in sales in 2025, according to OCP data. The market saw 4.83 million individual transactions. Average price per gram hovered around $6.62. These numbers tell you the market is real and substantial, but they do not tell you whether YOUR specific business plan makes sense.</p>
-        <p>Startup costs for a Maine dispensary range from $360,000 to $1 million depending on location, buildout quality, and inventory initial stock. The largest single expense is typically buildout and leasehold improvements, followed by security systems required by OCP rules. Plan for at least six months of operating capital before opening, because regulatory delays can push your opening date back.</p>
-        <p>Use the ROI calculator on this site to model your specific numbers. Input your estimated buildout cost, rent, staff count, and expected daily transaction count. The calculator will show you your break-even point and estimated months to profitability under different scenarios.</p>
-      </div>
-
-      <div class="detail-stage">
-        <h3>Stage 4: Find Your Location</h3>
-        <p>Location is the highest-impact strategic decision you will make. Maine's opt-in requirement means you are choosing from a specific set of municipalities, and within those municipalities, you are constrained by zoning rules that prohibit cannabis retail within 500 feet of a school or certain other protected locations.</p>
-        <p>In Portland, commercial lease rates vary significantly by neighborhood. Congress Street and the Old Port command premium rents but offer foot traffic. Locations in outer neighborhoods like Riverton or East Deering cost less but may have lower customer traffic. In Bangor, central Hammond Street locations outperform peripheral locations in most customer traffic analyses.</p>
-        <p>Your lease negotiation matters. OCP requires you to demonstrate control over your location before your license can be finalized. That means you need a signed lease before you can complete licensing, but you need a license before you can legally operate. This creates a window where you are committed to a location without being able to generate revenue. Factor that timing into your financial model.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="market-deep-dive" aria-labelledby="market-dive-heading">
-    <div class="market-dive-inner">
-      <h2 id="market-dive-heading">Maine Market Deep Dive</h2>
-      
-      <div class="dive-grid">
-        <div class="dive-card">
-          <h3>Market Concentration</h3>
-          <p>The Portland metro area accounts for roughly 35% of total state adult-use sales. Lewiston-Bangor corridor accounts for another 20%. The remaining 45% is distributed across mid-coast towns, western Maine, and Aroostook County. This concentration creates opportunity in underserved regions and intensity in Portland that makes differentiation critical.</p>
-        </div>
-        
-        <div class="dive-card">
-          <h3>Product Mix Trends</h3>
-          <p>Concentrates and vapes have gained share since 2024. Flower remains strong but faces pressure from convenience formats. Edibles are a growing category, particularly among tourists and older consumers. Understanding product mix trends matters for your initial inventory decisions and vendor relationships.</p>
-        </div>
-        
-        <div class="dive-card">
-          <h3>Customer Demographics</h3>
-          <p>Maine's cannabis customer base skews slightly older than national averages, reflecting the state's population demographics. College towns like Orono and Brunswick show spikes in younger demographics during academic years. Coastal and tourism-heavy areas like Bar Harbor and Camden show seasonal variation that affects staffing and inventory planning.</p>
-        </div>
-        
-        <div class="dive-card">
-          <h3>Competitive Density</h3>
-          <p>With 169 active stores statewide, Maine has meaningful competition in some markets and genuine gaps in others. The Augusta-Waterville corridor has fewer dispensaries per capita than Portland. Some rural towns have no dispensary at all despite being in opt-in municipalities, creating opportunity for early movers willing to build customer habits in underserved areas.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="homepage-faq" aria-labelledby="faq-heading">
-    <div class="faq-inner">
-      <h2 id="faq-heading">Common Questions</h2>
-      
-      <div class="faq-list">
-        <div class="faq-item">
-          <h3>How long does it take to get a Maine dispensary license?</h3>
-          <p>From initial application submission to active license,plan for five to seven months under normal processing conditions. Municipal endorsement alone can take six to twelve weeks. If OCP requests additional information, add another four to eight weeks. The most common delays come from incomplete application materials, so double-check every required document before submission.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3>What does a Maine dispensary license cost?</h3>
-          <p>OCP application fees are $800 for the initial submission, with additional fees at licensing and renewal. Municipal endorsement fees vary by town. Portland charges a $5,000 application fee plus annual renewal fees. Lewiston charges $2,500. Smaller towns may charge less or have no local fee at all. Budget $5,000 to $10,000 for combined state and local licensing fees in the first year.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3>Can I get a dispensary license in my town?</h3>
-          <p>Maine municipalities must formally opt in to allow cannabis retail before a license can be issued for a location within their borders. Check our municipal guide for your specific town. If your town has not opted in, you cannot operate a dispensary there regardless of state license status. Advocacy at the municipal level is an option some entrepreneurs pursue when the local commercial community would support it.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3>What are the school buffer requirements?</h3>
-          <p>Maine law prohibits cannabis retail from being within 500 feet of a school, playground, child care facility, or certain other protected locations. The buffer is measured from the nearest entrance of your retail space to the nearest boundary of the protected location. OCP verifies this during the licensing process using mapping data. Confirm your specific location's compliance before signing a lease.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="resource-hubs" aria-labelledby="resource-hubs-heading">
-    <div class="resource-hubs-inner">
-      <h2 id="resource-hubs-heading">More Resources</h2>
-      
-      <div class="resource-links">
-        <a href="/guides/maine-dispensary-license/" class="resource-link">
-          <span class="resource-icon">◆</span>
-          <div>
-            <h3>Licensing Guide</h3>
-            <p>Complete OCP application walkthrough with document checklist</p>
-          </div>
-        </a>
-        
-        <a href="/guides/maine-cannabis-real-estate/" class="resource-link">
-          <span class="resource-icon">◆</span>
-          <div>
-            <h3>Real Estate & Zoning</h3>
-            <p>Municipal opt-in map, school buffer rules, and lease negotiation guide</p>
-          </div>
-        </a>
-        
-        <a href="/guides/maine-cannabis-taxation-280e/" class="resource-link">
-          <span class="resource-icon">◆</span>
-          <div>
-            <h3>280E Tax Strategy</h3>
-            <p>How to handle IRS Section 280E and reduce your tax exposure legally</p>
-          </div>
-        </a>
-        
-        <a href="/market-stats/" class="resource-link">
-          <span class="resource-icon">◆</span>
-          <div>
-            <h3>Market Statistics</h3>
-            <p>Sales data, transaction counts, and growth trends by region</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       NEWSLETTER: Refined inline signup
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="newsletter-section" aria-labelledby="newsletter-heading">
-    <div class="newsletter-inner">
-      <div class="newsletter-content">
-        <h2 id="newsletter-heading">Stay Current with Maine Cannabis</h2>
-        <p>Get Maine cannabis licensing updates and new guide alerts — no spam, unsubscribe anytime.</p>
-      </div>
-      <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
-        <div class="form-row">
-          <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" class="form-input"/>
-          <select name="stage" aria-label="Which best describes you?" class="form-select">
-            <option value="" disabled selected>Starting Out</option>
-            <option value="startup">Starting a dispensary</option>
-            <option value="operating">Already operating</option>
-            <option value="researching">Just researching</option>
-          </select>
-          <button type="submit" class="form-btn">Subscribe</button>
-        </div>
-        <input type="hidden" name="_subject" value="Newsletter Signup - Maine Dispensary Guide"/>
-      </form>
-    </div>
-  </section>
-
-</Layout>
-
-<style>
   /* ─────────────────────────────────────────────────────────────────
      HERITAGE AUTHORITY — CSS Custom Properties
   ───────────────────────────────────────────────────────────────── */
@@ -2264,6 +1652,619 @@ const journeySteps = [
     margin: 0;
     line-height: 1.5;
   }
+
 </style>
+<!-- ═══════════════════════════════════════════════════════════════
+       HERO: Heritage Authority — Topographic + Dramatic Typography
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="hero-manifesto" aria-labelledby="hero-heading">
+    <!-- Topographic background pattern -->
+    <div class="topo-bg" aria-hidden="true">
+      <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="topoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.04"/>
+          </linearGradient>
+        </defs>
+        <!-- Contour lines -->
+        <path d="M-50,300 Q150,200 350,350 T750,250" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
+        <path d="M-50,350 Q100,250 300,380 T750,300" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M-50,400 Q80,320 280,420 T750,360" fill="none" stroke="url(#topoGrad)" stroke-width="1.5"/>
+        <path d="M-50,450 Q60,380 260,480 T750,420" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M-50,500 Q40,440 240,540 T750,480" fill="none" stroke="url(#topoGrad)" stroke-width="1"/>
+        <path d="M100,50 Q200,150 400,100 T850,150" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
+        <path d="M50,100 Q180,180 380,130 T830,180" fill="none" stroke="url(#topoGrad)" stroke-width="0.75"/>
+        <!-- Vertical accent lines -->
+        <line x1="680" y1="0" x2="680" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
+        <line x1="720" y1="0" x2="720" y2="600" stroke="url(#topoGrad)" stroke-width="0.5" stroke-dasharray="4,8"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <!-- Left: Editorial content block -->
+      <div class="hero-editorial">
+        <div class="edition-mark">
+          <span class="edition-year">Est. 2026</span>
+          <span class="edition-divider">◆</span>
+          <span class="edition-state">Maine, USA</span>
+        </div>
+        
+        <h1 id="hero-heading" class="hero-title">
+          The Professional<br/>
+          <span class="hero-title-accent">Gateway</span> to<br/>
+          Maine Cannabis
+        </h1>
+        
+        <p class="hero-descriptor">
+          Expert-vetted guidance for licensing, compliance, and growth in the Pine Tree State. 
+          Forty-four guides. One authoritative source.
+        </p>
+        
+        <div class="hero-actions">
+          <a href="/guides/maine-dispensary-license/" class="btn-primary">Start Your Application</a>
+          <a href="/roi-calculator/" class="btn-ghost">Calculate Your ROI</a>
+        </div>
+        <a href="/download/founders-bible" class="hero-secondary-cta">Download the Founders Bible <span aria-hidden="true">→</span></a>
+      </div>
+
+      <!-- Right: Visual anchor with botanical -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="visual-anchor">
+          <div class="anchor-ring ring-1"></div>
+          <div class="anchor-ring ring-2"></div>
+          <div class="anchor-ring ring-3"></div>
+          <div class="botanical-cluster">
+            <PineTree size={180} color="var(--color-primary)" class="cluster-pine" />
+            <Leaf size={100} color="var(--color-accent)" class="cluster-leaf cluster-leaf-1" />
+            <Leaf size={70} color="var(--color-soft-green)" class="cluster-leaf cluster-leaf-2" />
+          </div>
+          <div class="visual-caption">
+            <span class="caption-label">Maine Dispensary Guide</span>
+            <span class="caption-ref">Editorial Resource</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom flourish -->
+    <div class="hero-flourish" aria-hidden="true">
+      <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+        <path d="M0,20 Q300,0 600,20 T1200,20" fill="none" stroke="var(--color-border)" stroke-width="1"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MARKET BAR: Refined stats strip
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="market-intel" aria-label="Maine Market Statistics">
+    <div class="intel-inner">
+      <div class="intel-stats">
+        {stats.map((stat, i) => (
+          <>
+            <div class="intel-stat">
+              <span class="stat-value">{stat.value}</span>
+              <span class="stat-label">{stat.label}</span>
+            </div>
+            {i < stats.length - 1 && <div class="stat-separator" aria-hidden="true">—</div>}
+          </>
+        ))}
+      </div>
+      <a href="/market-stats/" class="intel-link">
+        Full Market Report
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MISSION: Editorial typography treatment
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="mission-manifesto" aria-labelledby="mission-heading">
+    <div class="mission-inner">
+      <div class="mission-header">
+        <span class="section-eyebrow">Our Purpose</span>
+        <h2 id="mission-heading" class="mission-title">Build Your Passion Project</h2>
+      </div>
+      
+      <div class="mission-text">
+        <p class="mission-lead">
+          Opening a dispensary in Maine is a real business with real regulations. But if you have a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance.
+        </p>
+        
+        <div class="mission-body">
+          <p>
+            We built this resource for entrepreneurs who are serious about doing this correctly: the ones who want to understand the M.R.S. citations, negotiate their own commercial lease, and file their 280E deductions properly rather than relying on luck.
+          </p>
+          <p>
+            Everything here is specific to Maine — the towns that have opted in, the fee structures that OCP publishes, the real estate patterns that only emerge when you know the market. If you are considering Maine cannabis, you need this specificity.
+          </p>
+        </div>
+        
+        <a href="/about/" class="read-more">
+          Read About Our Methodology
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Decorative botanical -->
+    <div class="mission-botanical" aria-hidden="true">
+      <svg viewBox="0 0 200 400" fill="none">
+        <path d="M100,380 C60,320 20,240 40,160 C60,80 100,40 100,40 C100,40 140,80 160,160 C180,240 140,320 100,380" stroke="var(--color-primary)" stroke-width="1" opacity="0.15"/>
+        <path d="M100,350 C75,300 50,240 60,180 C70,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
+        <path d="M100,350 C125,300 150,240 140,180 C130,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MARKET OVERVIEW: Asymmetric two-column layout
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="market-overview" aria-labelledby="overview-heading">
+    <div class="overview-inner">
+      <div class="overview-header">
+        <span class="section-eyebrow">The Opportunity</span>
+        <h2 id="overview-heading">Why Maine, Why Now</h2>
+      </div>
+      
+      <div class="overview-grid">
+        <div class="overview-main">
+          <p>
+            Maine has a medical program operating since 1999 and an adult-use market open since 2020. That combination means established patterns, more data, and a clearer picture of what works than newer state markets.
+          </p>
+          <p>
+            The Office of Cannabis Policy (OCP) oversees the industry with regulations mature enough to be predictable — you can read the actual rules, follow the actual processes, and know where the actual pitfalls are.
+          </p>
+          <p>
+            Towns must opt-in before a dispensary can operate within their borders. For entrepreneurs, this means location research is not optional — it is the first and most important strategic decision you will make.
+          </p>
+        </div>
+        
+        <div class="overview-aside">
+          <div class="aside-card">
+            <span class="aside-stat">$246M</span>
+            <span class="aside-label">Adult-use sales in 2025</span>
+          </div>
+          <div class="aside-card">
+            <span class="aside-stat">169</span>
+            <span class="aside-label">Active stores statewide</span>
+          </div>
+          <div class="aside-card highlight">
+            <span class="aside-stat">41+</span>
+            <span class="aside-label">Opt-in municipalities</span>
+          </div>
+          <p class="aside-note">
+            The opportunity is in understanding which towns have been left behind.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       OPERATIONAL EXCELLENCE: Full-width with offset content
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="operations-excellence" aria-labelledby="ops-heading">
+    <div class="ops-inner">
+      <div class="ops-header">
+        <span class="section-eyebrow">Day-to-Day Reality</span>
+        <h2 id="ops-heading">What It Takes to Run One</h2>
+      </div>
+      
+      <div class="ops-content">
+        <p>
+          Getting a license is just the start. The actual work of running a dispensary — managing inventory, staying compliant with OCP security rules, training staff who can actually explain the difference between a sativa and an indica — is where most operators discover whether they chose the right business.
+        </p>
+        <p>
+          Maine customers, especially in the Portland metro area and mid-coast college towns, care about craft and transparency. They ask questions about cultivation methods. They read menu listings before they visit. The shops that do the work on staff training — that treat budtenders as product experts rather than cashiers — tend to build real loyalty.
+        </p>
+        
+        <div class="ops-topics">
+          <a href="/guides/maine-dispensary-pos/" class="topic-tag">Point-of-Sale Systems</a>
+          <a href="/glossary/#metrc" class="topic-tag">Metrc Compliance</a>
+          <a href="/guides/maine-cannabis-taxation-280e/" class="topic-tag">280E Tax Strategy</a>
+          <a href="/launch-checklist/" class="topic-tag">Launch Checklist</a>
+        </div>
+        
+        <p class="ops-closing">
+          The operators who survive past year two tend to share certain habits: meticulous record-keeping, proactive communication with OCP, and a genuine interest in what their customers want. The ones who do not make it tend to have ignored one or more of those three.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Decorative element -->
+    <div class="ops-decoration" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="48" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.1"/>
+        <circle cx="50" cy="50" r="35" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.15"/>
+        <circle cx="50" cy="50" r="20" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CORE HUBS: Editorial card grid with hover personality
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="core-hubs" aria-labelledby="hubs-heading">
+    <div class="hubs-inner">
+      <div class="hubs-header">
+        <span class="section-eyebrow">Explore</span>
+        <h2 id="hubs-heading">Core Topics</h2>
+        <p class="hubs-subtitle">Pick a category to dig into.</p>
+      </div>
+      
+      <div class="hubs-grid">
+        <a href="/guides/maine-dispensary-license/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 8h14l10 10v22a4 4 0 01-4 4H14a4 4 0 01-4-4V12a4 4 0 014-4z"/>
+                <path d="M28 8v10h10"/>
+                <path d="M18 26h12M18 34h8"/>
+              </svg>
+            </div>
+            <h3>Licensing</h3>
+            <p>Step-by-step state and local approval maps.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-taxation-280e/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="24" cy="24" r="18"/>
+                <path d="M24 12v24M12 24h24"/>
+                <path d="M17 20l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Compliance</h3>
+            <p>Mastering 280E and OCP tracking rules.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-real-estate/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M24 6C14.6 6 7 13.6 7 23c0 12 17 21 17 21s17-9 17-21c0-9.4-7.6-17-17-17z"/>
+                <circle cx="24" cy="23" r="6"/>
+              </svg>
+            </div>
+            <h3>Real Estate</h3>
+            <p>Finding compliant zones in every town.</p>
+            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/roi-calculator/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 34l12-16 8 8 12-16"/>
+                <circle cx="16" cy="22" r="3" fill="currentColor"/>
+                <circle cx="28" cy="26" r="3" fill="currentColor"/>
+                <circle cx="40" cy="10" r="3" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>ROI Calculator</h3>
+            <p>Estimate startup costs and break-even timelines.</p>
+            <span class="hub-cta">Calculate <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+        
+        <a href="/resources/" class="hub-card">
+          <div class="hub-card-inner">
+            <div class="hub-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="20" cy="18" r="6"/>
+                <circle cx="32" cy="32" r="6"/>
+                <path d="M32 16v6M32 32l6 6"/>
+              </svg>
+            </div>
+            <h3>Vendor Directory</h3>
+            <p>Connect with expert lawyers and CPAs.</p>
+            <span class="hub-cta">Browse <span aria-hidden="true">→</span></span>
+          </div>
+          <div class="hub-bg" aria-hidden="true"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       GEO EXPLORER: Map-based visual with city pins
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="geo-explorer" aria-labelledby="geo-heading">
+    <div class="geo-inner">
+      <div class="geo-header">
+        <span class="section-eyebrow">Municipal Guides</span>
+        <h2 id="geo-heading">Explore by Location</h2>
+        <p class="geo-subtitle">
+          Maine has 41+ cities and towns that have opted in to allow cannabis retail. 
+          Each has its own zoning rules, local fees, and competitive landscape.
+        </p>
+      </div>
+      
+      <div class="geo-content">
+        <!-- Stylized map representation -->
+        <div class="geo-map" aria-hidden="true">
+          <svg viewBox="0 0 400 300" fill="none">
+            <!-- Simplified Maine outline suggestion -->
+            <path d="M50,250 L80,200 L120,180 L150,190 L180,160 L220,150 L260,140 L300,120 L340,80 L350,60 L340,40 L300,50 L260,70 L220,90 L180,100 L140,120 L100,150 L60,200 Z" 
+                  stroke="var(--color-primary)" stroke-width="1" opacity="0.2" fill="var(--color-primary)" fill-opacity="0.03"/>
+            <!-- City markers -->
+            <circle cx="320" cy="55" r="6" fill="var(--color-accent)"/>
+            <circle cx="280" cy="90" r="4" fill="var(--color-accent)" opacity="0.7"/>
+            <circle cx="240" cy="120" r="5" fill="var(--color-accent)"/>
+            <circle cx="200" cy="140" r="4" fill="var(--color-accent)" opacity="0.7"/>
+            <circle cx="160" cy="170" r="5" fill="var(--color-accent)"/>
+            <circle cx="120" cy="200" r="4" fill="var(--color-accent)" opacity="0.5"/>
+          </svg>
+        </div>
+        
+        <!-- City links as styled chips -->
+        <div class="geo-cities">
+          {cityLinks.map(city => (
+            <a href={city.href} class="city-chip">{city.name}</a>
+          ))}
+        </div>
+      </div>
+      
+      <a href="/guides/" class="btn-outline">View All 41 Municipal Guides</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       WHAT'S NEW: Editorial freshness section
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="whats-new" aria-labelledby="new-heading">
+    <div class="new-inner">
+      <div class="new-header">
+        <div class="freshness-badge">
+          <span class="pulse-dot"></span>
+          <span class="freshness-label">Updated April 2026</span>
+        </div>
+        <h2 id="new-heading">What's New</h2>
+        <p class="new-subtitle">Recent updates and additions to the guide library.</p>
+      </div>
+      
+      <div class="new-grid">
+        {recentGuides.map(guide => (
+          <a href={guide.href} class="new-card">
+            <span class={`new-badge ${guide.badge === 'New' ? 'badge-new' : ''}`}>{guide.badge}</span>
+            <span class="new-title">{guide.title}</span>
+            <span class="new-date">{guide.date}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SOCIAL PROOF: Authority stats
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="authority-stats" aria-label="Site Statistics">
+    <div class="stats-inner">
+      <p class="stats-intro">
+        This resource has been built for Maine cannabis entrepreneurs who want the real information — not the marketing version.
+      </p>
+      
+      <div class="stats-grid">
+        <div class="stat-block">
+          <span class="stat-number">2,847</span>
+          <span class="stat-text">Entrepreneurs Served</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">44</span>
+          <span class="stat-text">Expert Guides</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">15</span>
+          <span class="stat-text">City Guides</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-block">
+          <span class="stat-number">98%</span>
+          <span class="stat-text">Update Accuracy</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       START HERE: Journey path with personality
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="journey-path" aria-labelledby="journey-heading">
+    <div class="journey-inner">
+      <div class="journey-header">
+        <span class="section-eyebrow">For Newcomers</span>
+        <h2 id="journey-heading">Start Your Journey</h2>
+        <p class="journey-subtitle">
+          This curated path walks you through the essentials — from understanding Maine's regulatory framework to signing your commercial lease.
+        </p>
+      </div>
+      
+      <div class="journey-steps">
+        {journeySteps.map(step => (
+          <a href={step.href} class="journey-step">
+            <span class="step-num">{step.num}</span>
+            <div class="step-content">
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+            <span class="step-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="journey-detail" aria-labelledby="journey-detail-heading">
+    <div class="journey-detail-inner">
+      <h2 id="journey-detail-heading">Your Four-Stage Roadmap to Opening Day</h2>
+      
+      <div class="detail-stage">
+        <h3>Stage 1: Get the Launch Checklist</h3>
+        <p>The launch checklist is your first real tool. It breaks down every step from having a concept to opening your doors. The checklist covers entity formation, OCP pre-application requirements, municipal zoning confirmation, and the specific documents you need before filing. Most applicants who get rejected by OCP failed because they skipped checklist items, not because their business concept was weak.</p>
+        <p>Plan to spend two to four weeks on pre-launch tasks before submitting your OCP application. That includes registering your business entity with the Maine Secretary of State, getting your EIN from the IRS, opening a commercial bank account, and securing a commercial lease in an opt-in municipality. Each of these steps has documentation requirements that take time to compile.</p>
+      </div>
+
+      <div class="detail-stage">
+        <h3>Stage 2: Understand Licensing</h3>
+        <p>Maine requires an OCP Adult-Use Retail License before you can sell cannabis products. The application process has multiple rounds: initial submission, municipal endorsement, background checks, and final OCP review. Timeline from submission to license approval typically runs five to seven months, assuming no request for additional information.</p>
+        <p>Municipal endorsement is a separate process handled at the town level. Not all Maine municipalities have opted in to allow cannabis retail. As of early 2026, 41 municipalities have opted in, but many have not. Portland, Lewiston, Bangor, Augusta, South Portland, and Biddeford are among the largest markets with active retail licensing. Some towns have caps on the number of licenses they will issue, which creates urgency for early applicants.</p>
+        <p>The OCP publishes fee schedules and application timelines on its website. Review these before you begin. Application fees run $800 to $1,500 depending on license type. There are also annual renewal fees. Budget for both.</p>
+      </div>
+
+      <div class="detail-stage">
+        <h3>Stage 3: Run the Numbers</h3>
+        <p>Maine's adult-use market generated $246.4 million in sales in 2025, according to OCP data. The market saw 4.83 million individual transactions. Average price per gram hovered around $6.62. These numbers tell you the market is real and substantial, but they do not tell you whether YOUR specific business plan makes sense.</p>
+        <p>Startup costs for a Maine dispensary range from $360,000 to $1 million depending on location, buildout quality, and inventory initial stock. The largest single expense is typically buildout and leasehold improvements, followed by security systems required by OCP rules. Plan for at least six months of operating capital before opening, because regulatory delays can push your opening date back.</p>
+        <p>Use the ROI calculator on this site to model your specific numbers. Input your estimated buildout cost, rent, staff count, and expected daily transaction count. The calculator will show you your break-even point and estimated months to profitability under different scenarios.</p>
+      </div>
+
+      <div class="detail-stage">
+        <h3>Stage 4: Find Your Location</h3>
+        <p>Location is the highest-impact strategic decision you will make. Maine's opt-in requirement means you are choosing from a specific set of municipalities, and within those municipalities, you are constrained by zoning rules that prohibit cannabis retail within 500 feet of a school or certain other protected locations.</p>
+        <p>In Portland, commercial lease rates vary significantly by neighborhood. Congress Street and the Old Port command premium rents but offer foot traffic. Locations in outer neighborhoods like Riverton or East Deering cost less but may have lower customer traffic. In Bangor, central Hammond Street locations outperform peripheral locations in most customer traffic analyses.</p>
+        <p>Your lease negotiation matters. OCP requires you to demonstrate control over your location before your license can be finalized. That means you need a signed lease before you can complete licensing, but you need a license before you can legally operate. This creates a window where you are committed to a location without being able to generate revenue. Factor that timing into your financial model.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="market-deep-dive" aria-labelledby="market-dive-heading">
+    <div class="market-dive-inner">
+      <h2 id="market-dive-heading">Maine Market Deep Dive</h2>
+      
+      <div class="dive-grid">
+        <div class="dive-card">
+          <h3>Market Concentration</h3>
+          <p>The Portland metro area accounts for roughly 35% of total state adult-use sales. Lewiston-Bangor corridor accounts for another 20%. The remaining 45% is distributed across mid-coast towns, western Maine, and Aroostook County. This concentration creates opportunity in underserved regions and intensity in Portland that makes differentiation critical.</p>
+        </div>
+        
+        <div class="dive-card">
+          <h3>Product Mix Trends</h3>
+          <p>Concentrates and vapes have gained share since 2024. Flower remains strong but faces pressure from convenience formats. Edibles are a growing category, particularly among tourists and older consumers. Understanding product mix trends matters for your initial inventory decisions and vendor relationships.</p>
+        </div>
+        
+        <div class="dive-card">
+          <h3>Customer Demographics</h3>
+          <p>Maine's cannabis customer base skews slightly older than national averages, reflecting the state's population demographics. College towns like Orono and Brunswick show spikes in younger demographics during academic years. Coastal and tourism-heavy areas like Bar Harbor and Camden show seasonal variation that affects staffing and inventory planning.</p>
+        </div>
+        
+        <div class="dive-card">
+          <h3>Competitive Density</h3>
+          <p>With 169 active stores statewide, Maine has meaningful competition in some markets and genuine gaps in others. The Augusta-Waterville corridor has fewer dispensaries per capita than Portland. Some rural towns have no dispensary at all despite being in opt-in municipalities, creating opportunity for early movers willing to build customer habits in underserved areas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="homepage-faq" aria-labelledby="faq-heading">
+    <div class="faq-inner">
+      <h2 id="faq-heading">Common Questions</h2>
+      
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>How long does it take to get a Maine dispensary license?</h3>
+          <p>From initial application submission to active license,plan for five to seven months under normal processing conditions. Municipal endorsement alone can take six to twelve weeks. If OCP requests additional information, add another four to eight weeks. The most common delays come from incomplete application materials, so double-check every required document before submission.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>What does a Maine dispensary license cost?</h3>
+          <p>OCP application fees are $800 for the initial submission, with additional fees at licensing and renewal. Municipal endorsement fees vary by town. Portland charges a $5,000 application fee plus annual renewal fees. Lewiston charges $2,500. Smaller towns may charge less or have no local fee at all. Budget $5,000 to $10,000 for combined state and local licensing fees in the first year.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>Can I get a dispensary license in my town?</h3>
+          <p>Maine municipalities must formally opt in to allow cannabis retail before a license can be issued for a location within their borders. Check our municipal guide for your specific town. If your town has not opted in, you cannot operate a dispensary there regardless of state license status. Advocacy at the municipal level is an option some entrepreneurs pursue when the local commercial community would support it.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>What are the school buffer requirements?</h3>
+          <p>Maine law prohibits cannabis retail from being within 500 feet of a school, playground, child care facility, or certain other protected locations. The buffer is measured from the nearest entrance of your retail space to the nearest boundary of the protected location. OCP verifies this during the licensing process using mapping data. Confirm your specific location's compliance before signing a lease.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resource-hubs" aria-labelledby="resource-hubs-heading">
+    <div class="resource-hubs-inner">
+      <h2 id="resource-hubs-heading">More Resources</h2>
+      
+      <div class="resource-links">
+        <a href="/guides/maine-dispensary-license/" class="resource-link">
+          <span class="resource-icon">◆</span>
+          <div>
+            <h3>Licensing Guide</h3>
+            <p>Complete OCP application walkthrough with document checklist</p>
+          </div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-real-estate/" class="resource-link">
+          <span class="resource-icon">◆</span>
+          <div>
+            <h3>Real Estate & Zoning</h3>
+            <p>Municipal opt-in map, school buffer rules, and lease negotiation guide</p>
+          </div>
+        </a>
+        
+        <a href="/guides/maine-cannabis-taxation-280e/" class="resource-link">
+          <span class="resource-icon">◆</span>
+          <div>
+            <h3>280E Tax Strategy</h3>
+            <p>How to handle IRS Section 280E and reduce your tax exposure legally</p>
+          </div>
+        </a>
+        
+        <a href="/market-stats/" class="resource-link">
+          <span class="resource-icon">◆</span>
+          <div>
+            <h3>Market Statistics</h3>
+            <p>Sales data, transaction counts, and growth trends by region</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NEWSLETTER: Refined inline signup
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="newsletter-section" aria-labelledby="newsletter-heading">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <h2 id="newsletter-heading">Stay Current with Maine Cannabis</h2>
+        <p>Get Maine cannabis licensing updates and new guide alerts — no spam, unsubscribe anytime.</p>
+      </div>
+      <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+        <div class="form-row">
+          <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" class="form-input"/>
+          <select name="stage" aria-label="Which best describes you?" class="form-select">
+            <option value="" disabled selected>Starting Out</option>
+            <option value="startup">Starting a dispensary</option>
+            <option value="operating">Already operating</option>
+            <option value="researching">Just researching</option>
+          </select>
+          <button type="submit" class="form-btn">Subscribe</button>
+        </div>
+        <input type="hidden" name="_subject" value="Newsletter Signup - Maine Dispensary Guide"/>
+      </form>
+    </div>
+  </section>
+
+</Layout>
 
 <Faq faqs={homepageFaqs} />

@@ -20,128 +20,8 @@ const eliotNash = authors.find(a => a.id === 'eliot-nash');
   description="Meet the experienced cannabis business professionals behind Maine Dispensary Guide — licensed compliance reviewers and industry analysts."
   breadcrumbs={breadcrumbs}
 >
-  <div class="article-header">
-    <h1>Our Team</h1>
-    <p class="lead">Professional cannabis business guidance, reviewed by licensed Maine compliance experts.</p>
-  </div>
+  <style>
 
-  <section class="intro">
-    <p>Maine Dispensary Guide provides factual, detailed cannabis business information for Maine entrepreneurs. Our content bridges the gap between regulatory complexity and practical business implementation.</p>
-    <p>What sets us apart: <strong>every regulatory claim in our content is reviewed by a Maine-licensed cannabis compliance professional</strong> before publication. This isn't just editorial care — it's a structured review process designed to protect the entrepreneurs who rely on our guidance.</p>
-  </section>
-
-  <Callout title="Credential Verification for Outreach" type="success">
-    When we reach out to Maine.gov, the Maine Chamber of Commerce, or academic institutions, we're not sending anonymous content. Our bylined, reviewed content demonstrates the professional credibility that earns links from authoritative sources.
-  </Callout>
-
-  <section class="team-preview">
-    <h2>Content Review Credentials</h2>
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="card-icon">✦</div>
-        <h3>Steve Kelly</h3>
-        <p>Founder & Publisher. Founded Maine Dispensary Guide after working with Maine cannabis operators through the early adult-use rollout. Primary research and content direction.</p>
-        <ul class="credential-list">
-          <li>Maine cannabis industry since 2020</li>
-          <li>Primary source research from OCP</li>
-          <li>Direct operator case studies</li>
-        </ul>
-      </div>
-      <div class="team-card">
-        <div class="card-icon">◆</div>
-        <h3>Calvin Waters</h3>
-        <p>Licensing & Compliance Analyst. Covers OCP regulatory analysis, municipal authorization, and compliance procedures for Maine cannabis operators.</p>
-        <ul class="credential-list">
-          <li>Maine OCP regulatory analysis</li>
-          <li>Municipal opt-in process research</li>
-          <li>License application procedures</li>
-        </ul>
-      </div>
-      <div class="team-card">
-        <div class="card-icon">◈</div>
-        <h3>Margaret Finch</h3>
-        <p>Finance & Taxation Analyst. Covers 280E tax strategy, dispensary economics, and financial planning for Maine cannabis operators.</p>
-        <ul class="credential-list">
-          <li>Cannabis business finance research</li>
-          <li>280E deduction strategy analysis</li>
-          <li>Maine operator financial benchmarking</li>
-        </ul>
-      </div>
-      <div class="team-card">
-        <div class="card-icon">▲</div>
-        <h3>Eliot Nash</h3>
-        <p>Market & Real Estate Analyst. Covers Maine cannabis market analysis, municipal zoning, and site selection for dispensary operators.</p>
-        <ul class="credential-list">
-          <li>Maine cannabis market research</li>
-          <li>Municipal zoning analysis</li>
-          <li>Real estate and site selection</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="review-process">
-    <h2>How We Ensure Accuracy</h2>
-    <p>Maine cannabis regulations are complex and change frequently. Our review process:</p>
-    <ol class="process-list">
-      <li><strong>Source Verification</strong> — We cite primary sources including Maine OCP, state statutes, and municipal ordinances.</li>
-      <li><strong>Expert Review</strong> — Regulatory content is reviewed by someone with Maine cannabis licensing experience.</li>
-      <li><strong>Regular Updates</strong> — When regulations change, we update our content promptly.</li>
-    </ol>
-  </section>
-
-  <section class="meet-authors">
-    <h2>Meet Our Authors</h2>
-    <p>Learn more about the professionals behind our content:</p>
-    <div class="author-links">
-      {authors.map((author) => (
-        <a href="/about/authors" class="author-link-card">
-          <div class="author-link-photo">
-            {author.photo ? (
-              <img src={author.photo} alt={author.name} />
-            ) : (
-              <div class="photo-placeholder">
-                <span class="initials">
-                  {author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                </span>
-              </div>
-            )}
-          </div>
-          <div class="author-link-info">
-            <h3>{author.name}</h3>
-            <p class="author-link-role">{author.role}</p>
-            <p class="author-link-bio">{author.bio}</p>
-          </div>
-          <span class="arrow">→</span>
-        </a>
-      ))}
-    </div>
-    <p class="full-team-link"><a href="/about/authors">View full author profiles →</a></p>
-  </section>
-
-  <section class="why-matters">
-    <h2>Why Author Credentials Matter</h2>
-    <p>For YMYL (Your Money Your Life) content like cannabis business guidance, Google's quality raters specifically check:</p>
-    <ul>
-      <li><strong>Experience</strong> — Do authors have real-world Maine cannabis industry experience?</li>
-      <li><strong>Expertise</strong> — Is there evidence of professional knowledge in cannabis compliance?</li>
-      <li><strong>Authoritativeness</strong> — Does the publication demonstrate recognized industry knowledge?</li>
-      <li><strong>Trustworthiness</strong> — Is the information accurate and sourced properly?</li>
-    </ul>
-    <p>Our author infrastructure is designed to demonstrate all four of these qualities to both search engines and human readers.</p>
-  </section>
-
-  <section class="cta-section">
-    <h3>Ready to Start Your Maine Cannabis Business?</h3>
-    <p>Use our comprehensive guides, license tools, and compliance resources to build your operation the right way.</p>
-    <div class="cta-buttons">
-      <a href="/launch-checklist" class="btn-main">Launch Checklist</a>
-      <a href="/all-guides" class="btn-secondary">Browse All Guides</a>
-    </div>
-  </section>
-</Layout>
-
-<style>
   .article-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -416,4 +296,125 @@ const eliotNash = authors.find(a => a.id === 'eliot-nash');
       display: none;
     }
   }
+
 </style>
+<div class="article-header">
+    <h1>Our Team</h1>
+    <p class="lead">Professional cannabis business guidance, reviewed by licensed Maine compliance experts.</p>
+  </div>
+
+  <section class="intro">
+    <p>Maine Dispensary Guide provides factual, detailed cannabis business information for Maine entrepreneurs. Our content bridges the gap between regulatory complexity and practical business implementation.</p>
+    <p>What sets us apart: <strong>every regulatory claim in our content is reviewed by a Maine-licensed cannabis compliance professional</strong> before publication. This isn't just editorial care — it's a structured review process designed to protect the entrepreneurs who rely on our guidance.</p>
+  </section>
+
+  <Callout title="Credential Verification for Outreach" type="success">
+    When we reach out to Maine.gov, the Maine Chamber of Commerce, or academic institutions, we're not sending anonymous content. Our bylined, reviewed content demonstrates the professional credibility that earns links from authoritative sources.
+  </Callout>
+
+  <section class="team-preview">
+    <h2>Content Review Credentials</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="card-icon">✦</div>
+        <h3>Steve Kelly</h3>
+        <p>Founder & Publisher. Founded Maine Dispensary Guide after working with Maine cannabis operators through the early adult-use rollout. Primary research and content direction.</p>
+        <ul class="credential-list">
+          <li>Maine cannabis industry since 2020</li>
+          <li>Primary source research from OCP</li>
+          <li>Direct operator case studies</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="card-icon">◆</div>
+        <h3>Calvin Waters</h3>
+        <p>Licensing & Compliance Analyst. Covers OCP regulatory analysis, municipal authorization, and compliance procedures for Maine cannabis operators.</p>
+        <ul class="credential-list">
+          <li>Maine OCP regulatory analysis</li>
+          <li>Municipal opt-in process research</li>
+          <li>License application procedures</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="card-icon">◈</div>
+        <h3>Margaret Finch</h3>
+        <p>Finance & Taxation Analyst. Covers 280E tax strategy, dispensary economics, and financial planning for Maine cannabis operators.</p>
+        <ul class="credential-list">
+          <li>Cannabis business finance research</li>
+          <li>280E deduction strategy analysis</li>
+          <li>Maine operator financial benchmarking</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="card-icon">▲</div>
+        <h3>Eliot Nash</h3>
+        <p>Market & Real Estate Analyst. Covers Maine cannabis market analysis, municipal zoning, and site selection for dispensary operators.</p>
+        <ul class="credential-list">
+          <li>Maine cannabis market research</li>
+          <li>Municipal zoning analysis</li>
+          <li>Real estate and site selection</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="review-process">
+    <h2>How We Ensure Accuracy</h2>
+    <p>Maine cannabis regulations are complex and change frequently. Our review process:</p>
+    <ol class="process-list">
+      <li><strong>Source Verification</strong> — We cite primary sources including Maine OCP, state statutes, and municipal ordinances.</li>
+      <li><strong>Expert Review</strong> — Regulatory content is reviewed by someone with Maine cannabis licensing experience.</li>
+      <li><strong>Regular Updates</strong> — When regulations change, we update our content promptly.</li>
+    </ol>
+  </section>
+
+  <section class="meet-authors">
+    <h2>Meet Our Authors</h2>
+    <p>Learn more about the professionals behind our content:</p>
+    <div class="author-links">
+      {authors.map((author) => (
+        <a href="/about/authors" class="author-link-card">
+          <div class="author-link-photo">
+            {author.photo ? (
+              <img src={author.photo} alt={author.name} />
+            ) : (
+              <div class="photo-placeholder">
+                <span class="initials">
+                  {author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </span>
+              </div>
+            )}
+          </div>
+          <div class="author-link-info">
+            <h3>{author.name}</h3>
+            <p class="author-link-role">{author.role}</p>
+            <p class="author-link-bio">{author.bio}</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+    </div>
+    <p class="full-team-link"><a href="/about/authors">View full author profiles →</a></p>
+  </section>
+
+  <section class="why-matters">
+    <h2>Why Author Credentials Matter</h2>
+    <p>For YMYL (Your Money Your Life) content like cannabis business guidance, Google's quality raters specifically check:</p>
+    <ul>
+      <li><strong>Experience</strong> — Do authors have real-world Maine cannabis industry experience?</li>
+      <li><strong>Expertise</strong> — Is there evidence of professional knowledge in cannabis compliance?</li>
+      <li><strong>Authoritativeness</strong> — Does the publication demonstrate recognized industry knowledge?</li>
+      <li><strong>Trustworthiness</strong> — Is the information accurate and sourced properly?</li>
+    </ul>
+    <p>Our author infrastructure is designed to demonstrate all four of these qualities to both search engines and human readers.</p>
+  </section>
+
+  <section class="cta-section">
+    <h3>Ready to Start Your Maine Cannabis Business?</h3>
+    <p>Use our comprehensive guides, license tools, and compliance resources to build your operation the right way.</p>
+    <div class="cta-buttons">
+      <a href="/launch-checklist" class="btn-main">Launch Checklist</a>
+      <a href="/all-guides" class="btn-secondary">Browse All Guides</a>
+    </div>
+  </section>
+</Layout>

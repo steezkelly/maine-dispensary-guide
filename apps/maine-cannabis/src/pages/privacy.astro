@@ -8,7 +8,17 @@ import Layout from '../layouts/Layout.astro';
   heroImage="/images/heroes/privacy.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-01", modifiedDate: "2026-04-04", section: "Legal" }}
 >
-  <article class="legal-page">
+  <style>
+
+  .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+  .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+  h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
+  section { margin-bottom: 3rem; }
+  h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  p { line-height: 1.8; }
+
+</style>
+<article class="legal-page">
     <h1>Privacy Policy</h1>
     <p class="last-updated">Last Updated: March 23, 2026</p>
 
@@ -62,13 +72,5 @@ import Layout from '../layouts/Layout.astro';
       <p>If you have questions regarding this policy or your data rights, please reach out to <a href="mailto:admin@mainedispensaryguide.com">admin@mainedispensaryguide.com</a>. For urgent matters related to data breaches or security incidents, please include "SECURITY" in your email subject line for priority handling.</p>
     </section>
   </article>
-</Layout>
 
-<style>
-  .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
-  .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
-  h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
-  section { margin-bottom: 3rem; }
-  h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
-  p { line-height: 1.8; }
-</style>
+</Layout>

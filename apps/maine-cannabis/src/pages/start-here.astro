@@ -77,143 +77,8 @@ const timelinePoints = [
   heroImage="/images/heroes/start-here.jpg"
   article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-05", modifiedDate: "2026-04-21", section: "Guides" }}
 >
-  <header class="hero">
-    <div class="hero-label">
-      <span class="pulse-dot"></span>
-      2026 Edition
-    </div>
-    <h1>Start Here: Your Maine Dispensary Roadmap</h1>
-    <p class="subtitle">A visual journey from concept to opening day — 12 to 18 months of steps, milestones, and decisions.</p>
-  </header>
+  <style>
 
-  <nav class="quick-nav">
-    <a href="/launch-checklist/" class="nav-link">
-      <span class="nav-icon">⇄</span>
-      Compare: Detailed Checklist View
-    </a>
-    <a href="/guides/maine-dispensary-license/" class="nav-link">
-      <span class="nav-icon">→</span>
-      License Requirements
-    </a>
-    <a href="/roi-calculator/" class="nav-link">
-      <span class="nav-icon">◈</span>
-      Calculate ROI
-    </a>
-  </nav>
-
-  <section class="journey-intro">
-    <div class="intro-text">
-      <h2>The Path to Your Dispensary</h2>
-      <p>Opening a cannabis dispensary in Maine isn't a weekend project. It's a 12-18 month journey through regulatory approvals, financial planning, and operational setup. This visual guide breaks that journey into four phases. For the complete checklist version of this roadmap, see our <a href="/blog/maine-dispensary-how-to-open/">step-by-step guide to opening a dispensary in Maine</a>.</p>
-      <p>Each phase builds on the previous. Skip steps at your own risk — the process exists to protect both you and your future customers.</p>
-    </div>
-  </section>
-
-  <section class="journey-timeline">
-    <div class="timeline-track">
-      {phases.map((phase, i) => (
-        <div class="phase-block">
-          <div class="phase-connector">
-            <div class="connector-line"></div>
-            <div class="phase-number">{phase.number}</div>
-            <div class="connector-line"></div>
-          </div>
-          <div class="phase-content">
-            <div class="phase-header">
-              <span class="phase-icon">{phase.icon}</span>
-              <div class="phase-titles">
-                <h3>{phase.title}</h3>
-                <span class="phase-time">{phase.subtitle}</span>
-              </div>
-            </div>
-            <div class="phase-steps">
-              {phase.steps.map(step => (
-                <div class="step-item">
-                  <div class="step-bullet"></div>
-                  <div class="step-info">
-                    <span class="step-label">{step.label}</span>
-                    <span class="step-detail">{step.detail}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div class="phase-stat">
-              <span class="stat-number">{phase.stat.value}</span>
-              <span class="stat-text">{phase.stat.label}</span>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="milestone-bar">
-    <h3>The Key Milestones</h3>
-    <div class="milestones">
-      {timelinePoints.map(point => (
-        <div class="milestone">
-          <span class="milestone-time">{point.month}</span>
-          <span class="milestone-action">{point.action}</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="warnings-section">
-    <div class="warnings-header">
-      <span class="warning-icon">⚠</span>
-      <h3>Where Operators Get Stuck</h3>
-    </div>
-    <div class="mistakes-grid">
-      {mistakes.map((mistake, i) => (
-        <div class="mistake-card">
-          <span class="mistake-num">{i + 1}</span>
-          <p>{mistake}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="recreational-medical">
-    <h2>Adult-Use vs. Medical: What's the Difference?</h2>
-    <p class="section-intro">Both require the same state licensing path, but adult-use has additional requirements.</p>
-    <div class="diff-cards">
-      <div class="diff-card">
-        <h4>Similar Requirements</h4>
-        <ul>
-          <li>IIC cards for all owners ($52 each)</li>
-          <li>Municipal authorization</li>
-          <li>Security systems (cameras, alarms)</li>
-          <li>Metrc seed-to-sale tracking</li>
-          <li>Product testing protocols</li>
-        </ul>
-      </div>
-      <div class="diff-card highlight">
-        <h4>Adult-Use Adds</h4>
-        <ul>
-          <li>Conditional license first, then final</li>
-          <li>Two-stage OCP application</li>
-          <li>Additional marketing restrictions</li>
-          <li>Packaging child-safety requirements</li>
-          <li>Higher annual license fees</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-section">
-    <div class="cta-card">
-      <h2>Ready to Start?</h2>
-      <p>Bookmark this page and work through each phase in order. Most entrepreneurs complete the full process in 12-18 months.</p>
-      <div class="cta-buttons">
-        <a href="/launch-checklist/" class="btn-primary">View Detailed Checklist</a>
-        <a href="/guides/maine-dispensary-license/" class="btn-secondary">License Requirements</a>
-      </div>
-    </div>
-  </section>
-</Layout>
-
-<style>
   .hero {
     text-align: center;
     padding: 4rem 2rem 3rem;
@@ -804,4 +669,140 @@ const timelinePoints = [
   [data-theme="dark"] .nav-link {
     background: var(--color-surface);
   }
+
 </style>
+<header class="hero">
+    <div class="hero-label">
+      <span class="pulse-dot"></span>
+      2026 Edition
+    </div>
+    <h1>Start Here: Your Maine Dispensary Roadmap</h1>
+    <p class="subtitle">A visual journey from concept to opening day — 12 to 18 months of steps, milestones, and decisions.</p>
+  </header>
+
+  <nav class="quick-nav">
+    <a href="/launch-checklist/" class="nav-link">
+      <span class="nav-icon">⇄</span>
+      Compare: Detailed Checklist View
+    </a>
+    <a href="/guides/maine-dispensary-license/" class="nav-link">
+      <span class="nav-icon">→</span>
+      License Requirements
+    </a>
+    <a href="/roi-calculator/" class="nav-link">
+      <span class="nav-icon">◈</span>
+      Calculate ROI
+    </a>
+  </nav>
+
+  <section class="journey-intro">
+    <div class="intro-text">
+      <h2>The Path to Your Dispensary</h2>
+      <p>Opening a cannabis dispensary in Maine isn't a weekend project. It's a 12-18 month journey through regulatory approvals, financial planning, and operational setup. This visual guide breaks that journey into four phases. For the complete checklist version of this roadmap, see our <a href="/blog/maine-dispensary-how-to-open/">step-by-step guide to opening a dispensary in Maine</a>.</p>
+      <p>Each phase builds on the previous. Skip steps at your own risk — the process exists to protect both you and your future customers.</p>
+    </div>
+  </section>
+
+  <section class="journey-timeline">
+    <div class="timeline-track">
+      {phases.map((phase, i) => (
+        <div class="phase-block">
+          <div class="phase-connector">
+            <div class="connector-line"></div>
+            <div class="phase-number">{phase.number}</div>
+            <div class="connector-line"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-header">
+              <span class="phase-icon">{phase.icon}</span>
+              <div class="phase-titles">
+                <h3>{phase.title}</h3>
+                <span class="phase-time">{phase.subtitle}</span>
+              </div>
+            </div>
+            <div class="phase-steps">
+              {phase.steps.map(step => (
+                <div class="step-item">
+                  <div class="step-bullet"></div>
+                  <div class="step-info">
+                    <span class="step-label">{step.label}</span>
+                    <span class="step-detail">{step.detail}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div class="phase-stat">
+              <span class="stat-number">{phase.stat.value}</span>
+              <span class="stat-text">{phase.stat.label}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="milestone-bar">
+    <h3>The Key Milestones</h3>
+    <div class="milestones">
+      {timelinePoints.map(point => (
+        <div class="milestone">
+          <span class="milestone-time">{point.month}</span>
+          <span class="milestone-action">{point.action}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="warnings-section">
+    <div class="warnings-header">
+      <span class="warning-icon">⚠</span>
+      <h3>Where Operators Get Stuck</h3>
+    </div>
+    <div class="mistakes-grid">
+      {mistakes.map((mistake, i) => (
+        <div class="mistake-card">
+          <span class="mistake-num">{i + 1}</span>
+          <p>{mistake}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="recreational-medical">
+    <h2>Adult-Use vs. Medical: What's the Difference?</h2>
+    <p class="section-intro">Both require the same state licensing path, but adult-use has additional requirements.</p>
+    <div class="diff-cards">
+      <div class="diff-card">
+        <h4>Similar Requirements</h4>
+        <ul>
+          <li>IIC cards for all owners ($52 each)</li>
+          <li>Municipal authorization</li>
+          <li>Security systems (cameras, alarms)</li>
+          <li>Metrc seed-to-sale tracking</li>
+          <li>Product testing protocols</li>
+        </ul>
+      </div>
+      <div class="diff-card highlight">
+        <h4>Adult-Use Adds</h4>
+        <ul>
+          <li>Conditional license first, then final</li>
+          <li>Two-stage OCP application</li>
+          <li>Additional marketing restrictions</li>
+          <li>Packaging child-safety requirements</li>
+          <li>Higher annual license fees</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2>Ready to Start?</h2>
+      <p>Bookmark this page and work through each phase in order. Most entrepreneurs complete the full process in 12-18 months.</p>
+      <div class="cta-buttons">
+        <a href="/launch-checklist/" class="btn-primary">View Detailed Checklist</a>
+        <a href="/guides/maine-dispensary-license/" class="btn-secondary">License Requirements</a>
+      </div>
+    </div>
+  </section>
+</Layout>

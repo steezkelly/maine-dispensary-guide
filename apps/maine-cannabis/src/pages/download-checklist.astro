@@ -33,106 +33,8 @@ const roadmapFeatures = [
   heroImage="/images/heroes/download-checklist.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-04", section: "Tools" }}
 >
-  <section class="download-hero">
-    <div class="hero-container">
-      <div class="hero-text">
-        <div class="hero-badge">Verified Founder Asset</div>
-        <h1>Your Professional Roadmap to the Maine Market</h1>
-        <p class="lead">Stop guessing at regulations. Download the definitive, 40-page founder's guide to launching and scaling a Maine cannabis dispensary.</p>
-        
-        <form class="lead-capture-form" action="https://formspree.io/f/xvgzlowz" method="POST">
-          <div class="input-stack">
-            <label for="lead-name" class="sr-only">Your Name</label>
-            <input type="text" id="lead-name" name="name" placeholder="Your Name" required />
-            <label for="lead-email" class="sr-only">Business Email Address</label>
-            <input type="email" id="lead-email" name="email" placeholder="Business Email Address" required />
-            <label for="lead-stage" class="sr-only">Where are you in your journey?</label>
-            <select id="lead-stage" name="stage" required>
-              <option value="" disabled selected>Where are you in your journey?</option>
-              <option value="startup">I'm starting a dispensary</option>
-              <option value="operating">I already operate a dispensary</option>
-              <option value="researching">I'm just researching the industry</option>
-            </select>
-            <label for="lead-interest" class="sr-only">Biggest challenge?</label>
-            <select id="lead-interest" name="interest">
-              <option value="" disabled selected>Biggest challenge right now?</option>
-              <option value="licensing">Licensing &amp; Compliance</option>
-              <option value="banking">Banking &amp; Finance</option>
-              <option value="real-estate">Real Estate &amp; Zoning</option>
-              <option value="operations">Day-to-Day Operations</option>
-              <option value="not-sure">Not sure yet</option>
-            </select>
-            <button type="submit" class="btn-primary">Send Me the Roadmap &rarr;</button>
-          </div>
-          <p class="form-disclaimer">Join 500+ Maine entrepreneurs. 100% Privacy. Zero Spam.</p>
-        </form>
-      </div>
-      
-      <div class="hero-visual">
-        <div class="document-preview">
-          <div class="preview-badge">PDF</div>
-          <div class="preview-content">
-            <div class="preview-logo">
-              <PineTree size={40} color="var(--color-primary)" />
-            </div>
-            <div class="preview-title">2026 ROADMAP</div>
-            <div class="preview-lines">
-              <div class="line"></div>
-              <div class="line short"></div>
-              <div class="line"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <style>
 
-  <section class="feature-overview">
-    <h2>What's inside the guide?</h2>
-    <div class="feature-grid">
-      {roadmapFeatures.map(feature => (
-        <div class="feature-card">
-          <span class="feature-icon">{feature.icon}</span>
-          <h3>{feature.title}</h3>
-          <p>{feature.desc}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="roadmap-deep-dive">
-    <h2>Detailed Timeline: From Concept to Opening Day</h2>
-    <p>The guide walks founders through four phases, each with actionable checklists, estimated timelines, and Common Pitfall warnings from real operators who have navigated this process before.</p>
-    <div class="phase-list">
-      <div class="phase-item">
-        <h3>Phase 1: Entity Formation (Months 1-2)</h3>
-        <p>Form your Maine LLC or corporation, obtain an EIN, open a cannabis-friendly bank account, and begin your OCP Individual Identification Card (IIC) application. The guide includes a bank comparison chart of Maine's seven cannabis-friendly financial institutions.</p>
-      </div>
-      <div class="phase-item">
-        <h3>Phase 2: Location & Zoning (Months 2-5)</h3>
-        <p>Identify municipalities that have Opted-In to adult-use retail. Execute a lease with a cannabis clause. Complete municipal zoning approval and site plan review. The guide provides a contact list for planning offices in all 15 Opted-In communities.</p>
-      </div>
-      <div class="phase-item">
-        <h3>Phase 3: State Licensing (Months 4-8)</h3>
-        <p>Submit your Conditional License application to the Maine OCP. Prepare for the 60-day public comment period. Complete buildout to OCP specifications. Pass final inspection. The guide includes a $12,000 contingency budget for unexpected licensing delays.</p>
-      </div>
-      <div class="phase-item">
-        <h3>Phase 4: Opening & Compliance (Month 9+)</h3>
-        <p>Launch with a compliant inventory, trained staff, and Metrc seed-to-sale integration. Navigate IRS Section 280E tax obligations from day one. The guide includes a 90-day post-launch checklist for maintaining compliance.</p>
-      </div>
-    </div>
-  </section>
-
-  <Callout title="Who is this roadmap for?" type="info">
-    This guide is best suited for first-time cannabis entrepreneurs, investors evaluating Maine market entry, and existing medical marijuana operators transitioning to the adult-use market. It is not a substitute for legal counsel or a licensed Maine cannabis attorney.
-  </Callout>
-
-  <section class="trust-footer">
-    <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
-  </section>
-</Layout>
-
-<style>
   .download-hero {
     background: var(--color-surface);
     padding: 6rem 0;
@@ -389,4 +291,103 @@ const roadmapFeatures = [
   [data-theme="dark"] .input-stack {
     background: var(--color-surface);
   }
+
 </style>
+<section class="download-hero">
+    <div class="hero-container">
+      <div class="hero-text">
+        <div class="hero-badge">Verified Founder Asset</div>
+        <h1>Your Professional Roadmap to the Maine Market</h1>
+        <p class="lead">Stop guessing at regulations. Download the definitive, 40-page founder's guide to launching and scaling a Maine cannabis dispensary.</p>
+        
+        <form class="lead-capture-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+          <div class="input-stack">
+            <label for="lead-name" class="sr-only">Your Name</label>
+            <input type="text" id="lead-name" name="name" placeholder="Your Name" required />
+            <label for="lead-email" class="sr-only">Business Email Address</label>
+            <input type="email" id="lead-email" name="email" placeholder="Business Email Address" required />
+            <label for="lead-stage" class="sr-only">Where are you in your journey?</label>
+            <select id="lead-stage" name="stage" required>
+              <option value="" disabled selected>Where are you in your journey?</option>
+              <option value="startup">I'm starting a dispensary</option>
+              <option value="operating">I already operate a dispensary</option>
+              <option value="researching">I'm just researching the industry</option>
+            </select>
+            <label for="lead-interest" class="sr-only">Biggest challenge?</label>
+            <select id="lead-interest" name="interest">
+              <option value="" disabled selected>Biggest challenge right now?</option>
+              <option value="licensing">Licensing &amp; Compliance</option>
+              <option value="banking">Banking &amp; Finance</option>
+              <option value="real-estate">Real Estate &amp; Zoning</option>
+              <option value="operations">Day-to-Day Operations</option>
+              <option value="not-sure">Not sure yet</option>
+            </select>
+            <button type="submit" class="btn-primary">Send Me the Roadmap &rarr;</button>
+          </div>
+          <p class="form-disclaimer">Join 500+ Maine entrepreneurs. 100% Privacy. Zero Spam.</p>
+        </form>
+      </div>
+      
+      <div class="hero-visual">
+        <div class="document-preview">
+          <div class="preview-badge">PDF</div>
+          <div class="preview-content">
+            <div class="preview-logo">
+              <PineTree size={40} color="var(--color-primary)" />
+            </div>
+            <div class="preview-title">2026 ROADMAP</div>
+            <div class="preview-lines">
+              <div class="line"></div>
+              <div class="line short"></div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-overview">
+    <h2>What's inside the guide?</h2>
+    <div class="feature-grid">
+      {roadmapFeatures.map(feature => (
+        <div class="feature-card">
+          <span class="feature-icon">{feature.icon}</span>
+          <h3>{feature.title}</h3>
+          <p>{feature.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="roadmap-deep-dive">
+    <h2>Detailed Timeline: From Concept to Opening Day</h2>
+    <p>The guide walks founders through four phases, each with actionable checklists, estimated timelines, and Common Pitfall warnings from real operators who have navigated this process before.</p>
+    <div class="phase-list">
+      <div class="phase-item">
+        <h3>Phase 1: Entity Formation (Months 1-2)</h3>
+        <p>Form your Maine LLC or corporation, obtain an EIN, open a cannabis-friendly bank account, and begin your OCP Individual Identification Card (IIC) application. The guide includes a bank comparison chart of Maine's seven cannabis-friendly financial institutions.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 2: Location & Zoning (Months 2-5)</h3>
+        <p>Identify municipalities that have Opted-In to adult-use retail. Execute a lease with a cannabis clause. Complete municipal zoning approval and site plan review. The guide provides a contact list for planning offices in all 15 Opted-In communities.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 3: State Licensing (Months 4-8)</h3>
+        <p>Submit your Conditional License application to the Maine OCP. Prepare for the 60-day public comment period. Complete buildout to OCP specifications. Pass final inspection. The guide includes a $12,000 contingency budget for unexpected licensing delays.</p>
+      </div>
+      <div class="phase-item">
+        <h3>Phase 4: Opening & Compliance (Month 9+)</h3>
+        <p>Launch with a compliant inventory, trained staff, and Metrc seed-to-sale integration. Navigate IRS Section 280E tax obligations from day one. The guide includes a 90-day post-launch checklist for maintaining compliance.</p>
+      </div>
+    </div>
+  </section>
+
+  <Callout title="Who is this roadmap for?" type="info">
+    This guide is best suited for first-time cannabis entrepreneurs, investors evaluating Maine market entry, and existing medical marijuana operators transitioning to the adult-use market. It is not a substitute for legal counsel or a licensed Maine cannabis attorney.
+  </Callout>
+
+  <section class="trust-footer">
+    <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
+  </section>
+</Layout>

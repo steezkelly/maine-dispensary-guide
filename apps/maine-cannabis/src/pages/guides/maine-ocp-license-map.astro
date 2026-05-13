@@ -166,179 +166,8 @@ const licenseTypes = [
   article={article}
   topics={topics}
 >
-  <script type="application/ld+json" set:text={faqPageJsonLd}></script>
+  <style>
 
-  <article class="license-map-article">
-    <div class="article-header">
-      <h1>Complete Map of Every Licensed Maine Cannabis Business</h1>
-      <p class="subtitle">All {licenseCounts.total}+ active licensees across every county — filterable by type, region, and market opportunity</p>
-      <p class="last-updated">Data sourced from Maine Office of Cannabis Policy (OCP) Open Data Portal — April 2026</p>
-    </div>
-
-    <Callout title="Primary Source Verification" type="info">
-      This page mirrors the OCP open data licensee dataset. For any licensing, investment, or partnership decision, verify current status directly at <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">maine.gov/dafs/ocp/adult-use</a>. License status can change between updates.
-    </Callout>
-
-    <section class="license-overview">
-      <h2>Statewide License Summary</h2>
-      <div class="license-type-grid">
-        {licenseTypes.map(lt => (
-          <div class="license-type-card">
-            <div class="lt-icon">{lt.emoji}</div>
-            <div class="lt-count">{lt.count}</div>
-            <div class="lt-type">{lt.type}</div>
-            <div class="lt-desc">{lt.description}</div>
-          </div>
-        ))}
-      </div>
-      <p class="overview-note">
-        <strong>{licenseCounts.retailer} adult-use retailers</strong> serve Maine's 1.4M residents and tourism base of 20M+ annual visitors. Combined with 87 cultivators and 43 manufacturers, Maine's regulated cannabis supply chain is among the most mature in New England.
-      </p>
-    </section>
-
-    <section class="market-intelligence">
-      <h2>Market Intelligence by Region</h2>
-      <p class="section-intro">
-        The following breakdown estimates licensee distribution by region based on OCP public data, news reports, and operator filings. Exact counts for specific towns require direct OCP verification.
-      </p>
-      <div class="region-grid">
-        {countyData.map(region => (
-          <div class="region-card">
-            <div class="region-header">
-              <h3>{region.region}</h3>
-              <span class="region-count">{region.retailerCount} stores</span>
-            </div>
-            <p class="region-towns"><strong>Towns:</strong> {region.towns}</p>
-            <p class="region-note">{region.note}</p>
-            <div class="region-opportunity">
-              <span class="opp-label">Opportunity:</span>
-              <span class="opp-text">{region.opportunity}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <section class="uncapped-insight">
-      <h2>The Untapped Markets</h2>
-      <p>Maine's licensee count tells only half the story. The <strong>Aroostook County</strong> — a region larger than Connecticut — has fewer than 2 licensed dispensaries for 67,000 residents. <strong>Washington County</strong>, including the Acadia tourism corridor, has near-zero coverage. <strong>Northern Aroostook operators serve Canadian cross-border customers</strong> who have limited legal access at home.</p>
-      <p>Delivery-only operations operating from a Presque Isle or Houlton base could legally serve the entire northern tier — covering customers who would otherwise drive 2+ hours to a Bangor dispensary or turn to the illicit market. This is exactly the kind of data-driven story that local Maine press covers.</p>
-      <Callout title="Why This Page Gets Press Coverage" type="success">
-        When we published Maine's opt-in tracker and market statistics pages, cannabis trade press (Ganjapreneur, MJBizDaily) linked to them as authoritative Maine data sources. This licensee map is the same pattern — original data synthesis that earns editorial links no guest post can match. Pitch it to the Portland Press Herald and MaineBiz as a data story.
-      </Callout>
-    </section>
-
-    <section class="opt-in-context">
-      <h2>License Density vs. Opt-In Status</h2>
-      <p>A license does not guarantee a location — operators must also operate in municipalities that have opted into adult-use cannabis. Use this alongside our <a href="/guides/maine-cannabis-opt-in-tracker/">Municipal Opt-In Tracker</a> to understand both the license landscape and the local approval landscape simultaneously.</p>
-      <div class="density-table">
-        <table aria-label="License density by region">
-          <caption>License density vs. population across Maine regions</caption>
-          <thead>
-            <tr>
-              <th scope="col">Region</th>
-              <th scope="col">Estimated Retailers</th>
-              <th scope="col">Approx. Population</th>
-              <th scope="col">Stores per 10K Residents</th>
-              <th scope="col">Market Signal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Cumberland (Portland Metro)</td>
-              <td>38+</td>
-              <td>295,000</td>
-              <td>1.3</td>
-              <td>Saturated — differentiate or deliver</td>
-            </tr>
-            <tr>
-              <td>York County</td>
-              <td>22+</td>
-              <td>210,000</td>
-              <td>1.0</td>
-              <td>Moderate — NH crossover advantage</td>
-            </tr>
-            <tr>
-              <td>Androscoggin (L-A Metro)</td>
-              <td>9-12</td>
-              <td>111,000</td>
-              <td>0.9</td>
-              <td>Approaching saturation in Lewiston</td>
-            </tr>
-            <tr>
-              <td>Penobscot (Bangor Metro)</td>
-              <td>6-8</td>
-              <td>100,000</td>
-              <td>0.7</td>
-              <td>Early entrant still viable</td>
-            </tr>
-            <tr>
-              <td>Kennebec (Augusta-Waterville)</td>
-              <td>5-7</td>
-              <td>130,000</td>
-              <td>0.4</td>
-              <td>Under-served — Waterville opportunity</td>
-            </tr>
-            <tr>
-              <td>Midcoast (Lincoln/Sagadahoc)</td>
-              <td>2-4</td>
-              <td>60,000</td>
-              <td>0.3</td>
-              <td>Chronic gap — Bath white space</td>
-            </tr>
-            <tr>
-              <td>Hancock/Washington (Acadia)</td>
-              <td>3-5</td>
-              <td>55,000</td>
-              <td>0.5</td>
-              <td>Tourism-driven, delivery-first</td>
-            </tr>
-            <tr>
-              <td>Aroostook (Northern Maine)</td>
-              <td>1-2</td>
-              <td>67,000</td>
-              <td>0.15</td>
-              <td>Near-monopoly — delivery-first model</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="data-methodology">
-      <h2>Data Methodology</h2>
-      <p>License counts on this page are compiled from:</p>
-      <ul>
-        <li><strong>OCP Open Data Portal</strong> (maine.gov/dafs/ocp/adult-use) — primary source for all active licensee data</li>
-        <li><strong>OCP Monthly Reports</strong> — licensee count changes, new applications, surrenders</li>
-        <li><strong>Maine Cannabis Advisory Commission meeting minutes</strong> — policy and licensing updates</li>
-        <li><strong>Public news coverage</strong> (MaineBiz, Portland Press Herald, Ganjapreneur) — cross-verified against operator announcements</li>
-      </ul>
-      <p>County-level estimates are derived from public OCP data supplemented by news verification. For specific operator counts in your target municipality, contact the OCP directly or check the municipal clerk's office.</p>
-    </section>
-
-    <section class="next-steps-cta">
-      <h2>Use This Data to Build Your Business Plan</h2>
-      <p>License density tells you where the market is underserved. Combine it with our <a href="/roi-calculator/">ROI Calculator</a>, <a href="/guides/maine-cannabis-real-estate/">Real Estate & Zoning Guide</a>, and <a href="/guides/maine-dispensary-license/">Licensing Guide</a> to turn this map into a business plan.</p>
-      <div class="cta-cards">
-        <a href="/roi-calculator/" class="cta-card">
-          <span class="cta-icon">◆</span>
-          <span class="cta-text">Model Your ROI Against These Markets</span>
-        </a>
-        <a href="/guides/maine-dispensary-license/" class="cta-card">
-          <span class="cta-icon">◆</span>
-          <span class="cta-text">Start Your OCP Licensing Process</span>
-        </a>
-        <a href="/contact/" class="cta-card">
-          <span class="cta-icon">◆</span>
-          <span class="cta-text">Talk to an Operator in Your Region</span>
-        </a>
-      </div>
-    </section>
-  </article>
-</Layout>
-
-<style>
   .license-map-article {
     max-width: 900px;
     margin: 0 auto;
@@ -733,5 +562,178 @@ const licenseTypes = [
     .region-header { flex-direction: column; }
     .region-count { align-self: flex-start; }
   }
+
 </style>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+
+  <article class="license-map-article">
+    <div class="article-header">
+      <h1>Complete Map of Every Licensed Maine Cannabis Business</h1>
+      <p class="subtitle">All {licenseCounts.total}+ active licensees across every county — filterable by type, region, and market opportunity</p>
+      <p class="last-updated">Data sourced from Maine Office of Cannabis Policy (OCP) Open Data Portal — April 2026</p>
+    </div>
+
+    <Callout title="Primary Source Verification" type="info">
+      This page mirrors the OCP open data licensee dataset. For any licensing, investment, or partnership decision, verify current status directly at <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">maine.gov/dafs/ocp/adult-use</a>. License status can change between updates.
+    </Callout>
+
+    <section class="license-overview">
+      <h2>Statewide License Summary</h2>
+      <div class="license-type-grid">
+        {licenseTypes.map(lt => (
+          <div class="license-type-card">
+            <div class="lt-icon">{lt.emoji}</div>
+            <div class="lt-count">{lt.count}</div>
+            <div class="lt-type">{lt.type}</div>
+            <div class="lt-desc">{lt.description}</div>
+          </div>
+        ))}
+      </div>
+      <p class="overview-note">
+        <strong>{licenseCounts.retailer} adult-use retailers</strong> serve Maine's 1.4M residents and tourism base of 20M+ annual visitors. Combined with 87 cultivators and 43 manufacturers, Maine's regulated cannabis supply chain is among the most mature in New England.
+      </p>
+    </section>
+
+    <section class="market-intelligence">
+      <h2>Market Intelligence by Region</h2>
+      <p class="section-intro">
+        The following breakdown estimates licensee distribution by region based on OCP public data, news reports, and operator filings. Exact counts for specific towns require direct OCP verification.
+      </p>
+      <div class="region-grid">
+        {countyData.map(region => (
+          <div class="region-card">
+            <div class="region-header">
+              <h3>{region.region}</h3>
+              <span class="region-count">{region.retailerCount} stores</span>
+            </div>
+            <p class="region-towns"><strong>Towns:</strong> {region.towns}</p>
+            <p class="region-note">{region.note}</p>
+            <div class="region-opportunity">
+              <span class="opp-label">Opportunity:</span>
+              <span class="opp-text">{region.opportunity}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="uncapped-insight">
+      <h2>The Untapped Markets</h2>
+      <p>Maine's licensee count tells only half the story. The <strong>Aroostook County</strong> — a region larger than Connecticut — has fewer than 2 licensed dispensaries for 67,000 residents. <strong>Washington County</strong>, including the Acadia tourism corridor, has near-zero coverage. <strong>Northern Aroostook operators serve Canadian cross-border customers</strong> who have limited legal access at home.</p>
+      <p>Delivery-only operations operating from a Presque Isle or Houlton base could legally serve the entire northern tier — covering customers who would otherwise drive 2+ hours to a Bangor dispensary or turn to the illicit market. This is exactly the kind of data-driven story that local Maine press covers.</p>
+      <Callout title="Why This Page Gets Press Coverage" type="success">
+        When we published Maine's opt-in tracker and market statistics pages, cannabis trade press (Ganjapreneur, MJBizDaily) linked to them as authoritative Maine data sources. This licensee map is the same pattern — original data synthesis that earns editorial links no guest post can match. Pitch it to the Portland Press Herald and MaineBiz as a data story.
+      </Callout>
+    </section>
+
+    <section class="opt-in-context">
+      <h2>License Density vs. Opt-In Status</h2>
+      <p>A license does not guarantee a location — operators must also operate in municipalities that have opted into adult-use cannabis. Use this alongside our <a href="/guides/maine-cannabis-opt-in-tracker/">Municipal Opt-In Tracker</a> to understand both the license landscape and the local approval landscape simultaneously.</p>
+      <div class="density-table">
+        <table aria-label="License density by region">
+          <caption>License density vs. population across Maine regions</caption>
+          <thead>
+            <tr>
+              <th scope="col">Region</th>
+              <th scope="col">Estimated Retailers</th>
+              <th scope="col">Approx. Population</th>
+              <th scope="col">Stores per 10K Residents</th>
+              <th scope="col">Market Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cumberland (Portland Metro)</td>
+              <td>38+</td>
+              <td>295,000</td>
+              <td>1.3</td>
+              <td>Saturated — differentiate or deliver</td>
+            </tr>
+            <tr>
+              <td>York County</td>
+              <td>22+</td>
+              <td>210,000</td>
+              <td>1.0</td>
+              <td>Moderate — NH crossover advantage</td>
+            </tr>
+            <tr>
+              <td>Androscoggin (L-A Metro)</td>
+              <td>9-12</td>
+              <td>111,000</td>
+              <td>0.9</td>
+              <td>Approaching saturation in Lewiston</td>
+            </tr>
+            <tr>
+              <td>Penobscot (Bangor Metro)</td>
+              <td>6-8</td>
+              <td>100,000</td>
+              <td>0.7</td>
+              <td>Early entrant still viable</td>
+            </tr>
+            <tr>
+              <td>Kennebec (Augusta-Waterville)</td>
+              <td>5-7</td>
+              <td>130,000</td>
+              <td>0.4</td>
+              <td>Under-served — Waterville opportunity</td>
+            </tr>
+            <tr>
+              <td>Midcoast (Lincoln/Sagadahoc)</td>
+              <td>2-4</td>
+              <td>60,000</td>
+              <td>0.3</td>
+              <td>Chronic gap — Bath white space</td>
+            </tr>
+            <tr>
+              <td>Hancock/Washington (Acadia)</td>
+              <td>3-5</td>
+              <td>55,000</td>
+              <td>0.5</td>
+              <td>Tourism-driven, delivery-first</td>
+            </tr>
+            <tr>
+              <td>Aroostook (Northern Maine)</td>
+              <td>1-2</td>
+              <td>67,000</td>
+              <td>0.15</td>
+              <td>Near-monopoly — delivery-first model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="data-methodology">
+      <h2>Data Methodology</h2>
+      <p>License counts on this page are compiled from:</p>
+      <ul>
+        <li><strong>OCP Open Data Portal</strong> (maine.gov/dafs/ocp/adult-use) — primary source for all active licensee data</li>
+        <li><strong>OCP Monthly Reports</strong> — licensee count changes, new applications, surrenders</li>
+        <li><strong>Maine Cannabis Advisory Commission meeting minutes</strong> — policy and licensing updates</li>
+        <li><strong>Public news coverage</strong> (MaineBiz, Portland Press Herald, Ganjapreneur) — cross-verified against operator announcements</li>
+      </ul>
+      <p>County-level estimates are derived from public OCP data supplemented by news verification. For specific operator counts in your target municipality, contact the OCP directly or check the municipal clerk's office.</p>
+    </section>
+
+    <section class="next-steps-cta">
+      <h2>Use This Data to Build Your Business Plan</h2>
+      <p>License density tells you where the market is underserved. Combine it with our <a href="/roi-calculator/">ROI Calculator</a>, <a href="/guides/maine-cannabis-real-estate/">Real Estate & Zoning Guide</a>, and <a href="/guides/maine-dispensary-license/">Licensing Guide</a> to turn this map into a business plan.</p>
+      <div class="cta-cards">
+        <a href="/roi-calculator/" class="cta-card">
+          <span class="cta-icon">◆</span>
+          <span class="cta-text">Model Your ROI Against These Markets</span>
+        </a>
+        <a href="/guides/maine-dispensary-license/" class="cta-card">
+          <span class="cta-icon">◆</span>
+          <span class="cta-text">Start Your OCP Licensing Process</span>
+        </a>
+        <a href="/contact/" class="cta-card">
+          <span class="cta-icon">◆</span>
+          <span class="cta-text">Talk to an Operator in Your Region</span>
+        </a>
+      </div>
+    </section>
+  </article>
+</Layout>
+
 </Layout>

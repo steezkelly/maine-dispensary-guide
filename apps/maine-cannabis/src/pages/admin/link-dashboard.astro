@@ -180,7 +180,69 @@ const graphData: GraphData = {
 const graphJson = JSON.stringify(graphData);
 ---
 <Layout title="Link Architecture Dashboard" description="Interactive internal link map for Maine Dispensary Guide — visualize page connections, identify orphans, and optimize site structure." noindex>
-  <section class="dashboard-header">
+  <style>
+
+  .dashboard-header { margin-bottom: 2rem; border-bottom: 2px solid var(--color-primary); padding-bottom: 1.5rem; }
+  .dashboard-header h1 { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--color-primary); }
+  .lead { color: var(--color-text-light); margin-top: 0.5rem; }
+  
+  .stats-bar { display: flex; gap: 2rem; margin-bottom: 2rem; }
+  .stat-item { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; text-align: center; min-width: 120px; }
+  .stat-value { display: block; font-size: 2.5rem; font-weight: 800; color: var(--color-primary); }
+  .stat-value.orphans { color: #c0392b; }
+  .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); }
+  
+  .graph-container { background: var(--color-surface); border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 1.5rem; overflow: hidden; }
+  
+  .legend { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; margin-bottom: 2rem; }
+  .legend-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--color-text-light); }
+  .legend-items { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .dot.core { background: #588157; }
+  .dot.city-guide { background: #3a5a40; }
+  .dot.technical-guide { background: #6b8e4e; }
+  .dot.founder-story { background: #8b7355; }
+  .dot.resource-hub { background: #4a6b8a; }
+  .dot.orphan { background: #c0392b; }
+  
+  .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+  .panel { background: var(--color-surface); padding: 2rem; border-radius: 2rem; border: 1px solid var(--color-border); }
+  .panel h2 { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--color-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .badge { background: var(--color-primary); color: var(--color-background); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.75rem; }
+  
+  .all-good { color: #166534; background: #dcfce7; padding: 1rem; border-radius: 1rem; font-weight: 600; }
+  
+  .orphan-list { list-style: none; padding: 0; margin: 0; }
+  .orphan-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .orphan-list li:last-child { border-bottom: none; }
+  .orphan-list a { color: #c0392b; font-weight: 600; }
+  
+  .top-list { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+  .top-list li { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .top-list li:last-child { border-bottom: none; }
+  .rank { font-weight: 800; color: var(--color-primary); min-width: 2rem; }
+  .top-list a { flex: 1; font-weight: 600; }
+  .link-count { font-size: 0.8rem; color: var(--color-text-light); background: var(--color-surface); padding: 0.2rem 0.5rem; border-radius: 0.5rem; }
+  
+  .node-detail { background: var(--color-surface); padding: 2rem; border-radius: 2rem; border: 2px solid var(--color-primary); margin-top: 2rem; }
+  .node-detail h2 { font-family: 'Fraunces', serif; color: var(--color-primary); margin-bottom: 1rem; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--color-surface); border-radius: 1rem; }
+  .detail-grid strong { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 0.25rem; }
+  .detail-grid span, .detail-grid a { font-weight: 600; }
+  .detail-grid a { color: var(--color-primary); }
+  .node-detail h3 { font-size: 1rem; color: var(--color-primary); margin: 1rem 0 0.5rem; }
+  .link-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .link-list li { background: var(--color-surface); padding: 0.3rem 0.75rem; border-radius: 0.75rem; font-size: 0.85rem; }
+  .link-list a { color: var(--color-primary); font-weight: 600; }
+  
+  @media (max-width: 768px) {
+    .panel-grid { grid-template-columns: 1fr; }
+    .stats-bar { flex-wrap: wrap; gap: 1rem; }
+  }
+
+</style>
+<section class="dashboard-header">
     <h1>◆ Link Architecture Dashboard</h1>
     <p class="lead">Interactive map of internal link structure. Node size = incoming links. Red = orphan pages (no incoming links). Click nodes to see details.</p>
   </section>
@@ -420,64 +482,3 @@ const graphJson = JSON.stringify(graphData);
     detailPanel.scrollIntoView({ behavior: 'smooth' });
   }
 </script>
-
-<style>
-  .dashboard-header { margin-bottom: 2rem; border-bottom: 2px solid var(--color-primary); padding-bottom: 1.5rem; }
-  .dashboard-header h1 { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--color-primary); }
-  .lead { color: var(--color-text-light); margin-top: 0.5rem; }
-  
-  .stats-bar { display: flex; gap: 2rem; margin-bottom: 2rem; }
-  .stat-item { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; text-align: center; min-width: 120px; }
-  .stat-value { display: block; font-size: 2.5rem; font-weight: 800; color: var(--color-primary); }
-  .stat-value.orphans { color: #c0392b; }
-  .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); }
-  
-  .graph-container { background: var(--color-surface); border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 1.5rem; overflow: hidden; }
-  
-  .legend { background: var(--color-surface); padding: 1.5rem 2rem; border-radius: 1.5rem; margin-bottom: 2rem; }
-  .legend-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; color: var(--color-text-light); }
-  .legend-items { display: flex; flex-wrap: wrap; gap: 1.5rem; }
-  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
-  .dot.core { background: #588157; }
-  .dot.city-guide { background: #3a5a40; }
-  .dot.technical-guide { background: #6b8e4e; }
-  .dot.founder-story { background: #8b7355; }
-  .dot.resource-hub { background: #4a6b8a; }
-  .dot.orphan { background: #c0392b; }
-  
-  .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-  .panel { background: var(--color-surface); padding: 2rem; border-radius: 2rem; border: 1px solid var(--color-border); }
-  .panel h2 { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--color-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
-  .badge { background: var(--color-primary); color: var(--color-background); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.75rem; }
-  
-  .all-good { color: #166534; background: #dcfce7; padding: 1rem; border-radius: 1rem; font-weight: 600; }
-  
-  .orphan-list { list-style: none; padding: 0; margin: 0; }
-  .orphan-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
-  .orphan-list li:last-child { border-bottom: none; }
-  .orphan-list a { color: #c0392b; font-weight: 600; }
-  
-  .top-list { list-style: none; padding: 0; margin: 0; counter-reset: none; }
-  .top-list li { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
-  .top-list li:last-child { border-bottom: none; }
-  .rank { font-weight: 800; color: var(--color-primary); min-width: 2rem; }
-  .top-list a { flex: 1; font-weight: 600; }
-  .link-count { font-size: 0.8rem; color: var(--color-text-light); background: var(--color-surface); padding: 0.2rem 0.5rem; border-radius: 0.5rem; }
-  
-  .node-detail { background: var(--color-surface); padding: 2rem; border-radius: 2rem; border: 2px solid var(--color-primary); margin-top: 2rem; }
-  .node-detail h2 { font-family: 'Fraunces', serif; color: var(--color-primary); margin-bottom: 1rem; }
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--color-surface); border-radius: 1rem; }
-  .detail-grid strong { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 0.25rem; }
-  .detail-grid span, .detail-grid a { font-weight: 600; }
-  .detail-grid a { color: var(--color-primary); }
-  .node-detail h3 { font-size: 1rem; color: var(--color-primary); margin: 1rem 0 0.5rem; }
-  .link-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .link-list li { background: var(--color-surface); padding: 0.3rem 0.75rem; border-radius: 0.75rem; font-size: 0.85rem; }
-  .link-list a { color: var(--color-primary); font-weight: 600; }
-  
-  @media (max-width: 768px) {
-    .panel-grid { grid-template-columns: 1fr; }
-    .stats-bar { flex-wrap: wrap; gap: 1rem; }
-  }
-</style>

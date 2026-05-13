@@ -166,278 +166,8 @@ const howToSchema = {
   heroImage="/images/heroes/launch-checklist.jpg"
   article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-05", modifiedDate: "2026-04-21", section: "Guides" }}
 >
-  <section class="checklist-header">
-    <div class="hero-badge">2026 Interactive Roadmap</div>
-    <h1>Maine Dispensary Launch Checklist</h1>
-    <p class="lead">A complete 12-18 month roadmap for opening your cannabis dispensary in Maine. Each phase builds toward your final license and first sale.</p>
-    
-    <div class="view-toggle" role="tablist" aria-label="Choose your view">
-      <button 
-        class="toggle-btn active" 
-        data-view="detailed" 
-        role="tab" 
-        aria-selected="true"
-        aria-controls="detailed-content"
-      >
-        <span class="toggle-icon">◆</span>
-        Detailed Roadmap
-      </button>
-      <button 
-        class="toggle-btn" 
-        data-view="overview" 
-        role="tab" 
-        aria-selected="false"
-        aria-controls="overview-content"
-      >
-        <span class="toggle-icon">◇</span>
-        Quick Overview
-      </button>
-    </div>
-  </section>
+  <style>
 
-  <div id="detailed-content" role="tabpanel" class="view-content active">
-  <section class="who-is-this">
-    <div class="two-column">
-      <div class="audience-card">
-        <h2>Who This Guide Is For</h2>
-        <p>This roadmap is built for entrepreneurs and investors who are serious about entering Maine's adult-use cannabis market. Whether you're a Maine native or an out-of-state operator, this checklist will walk you through every required step from concept to grand opening. For a visual overview of the entire process, see our <a href="/blog/maine-dispensary-how-to-open/">step-by-step guide to opening a dispensary in Maine</a>.</p>
-        <p>You should have access to at least $300,000 in capital and a clear understanding of Maine's regulatory environment before proceeding.</p>
-      </div>
-      <div class="timeline-card">
-        <h2>Expected Timeline</h2>
-        <div class="timeline-visual">
-          <div class="timeline-item">
-            <span class="timeline-phase">Phase 1</span>
-            <span class="timeline-duration">Weeks 1-8</span>
-          </div>
-          <div class="timeline-arrow">→</div>
-          <div class="timeline-item">
-            <span class="timeline-phase">Phase 2</span>
-            <span class="timeline-duration">Weeks 6-16</span>
-          </div>
-          <div class="timeline-arrow">→</div>
-          <div class="timeline-item">
-            <span class="timeline-phase">Phase 3</span>
-            <span class="timeline-duration">Weeks 12-24</span>
-          </div>
-          <div class="timeline-arrow">→</div>
-          <div class="timeline-item">
-            <span class="timeline-phase">Phase 4</span>
-            <span class="timeline-duration">Weeks 20-52</span>
-          </div>
-        </div>
-        <p class="timeline-note">Most operators complete the full process in 12-18 months from start to first sale.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="common-mistakes">
-    <Callout type="warning">
-      <h3>Common Mistakes to Avoid</h3>
-      <ul class="mistakes-list">
-        <li><strong>Underestimating capital:</strong> Total investment often runs $300k-$850k. Budget for overruns.</li>
-        <li><strong>Wrong location:</strong> Your site must be in a municipality that has formally opted in to cannabis retail.</li>
-        <li><strong>No contingency clause:</strong> Your commercial lease must include an exit clause if licensing is denied.</li>
-        <li><strong>Skipping Metrc training:</strong> All staff must complete state-approved seed-to-sale tracking training before handling inventory.</li>
-        <li><strong>Insufficient operating reserves:</strong> Plan for 3-6 months of operating costs after opening before revenue covers expenses.</li>
-      </ul>
-    </Callout>
-  </section>
-
-  <div class="checklist-container">
-    {checklistItems.map(section => (
-      <div class="checklist-section">
-        <div class="section-header">
-          <h2>{section.category}</h2>
-          <span class="duration-badge">{section.duration}</span>
-        </div>
-        <div class="item-list">
-          {section.items.map(item => (
-            <details class="check-card">
-              <summary>
-                <div class="summary-content">
-                  <div class="check-ui"></div>
-                  <span class="item-title">{item.title}</span>
-                </div>
-                <span class="expand-icon">+</span>
-              </summary>
-              <div class="details-content">
-                <p set:html={item.description}></p>
-                <div class="details-actions">
-                  <a href={item.link} class="btn-detail">{item.cta} →</a>
-                </div>
-              </div>
-            </details>
-          ))}
-        </div>
-      </div>
-    ))}
-  </div>
-  </div>
-
-  <div id="overview-content" role="tabpanel" class="view-content">
-    <section class="overview-hero">
-      <div class="overview-intro">
-        <h2>What You Need to Start a Cannabis Dispensary in Maine</h2>
-        <p>Opening a dispensary in Maine takes 12-18 months and requires navigating both state and local regulations. Here's the simplified path.</p>
-      </div>
-      
-      <div class="overview-grid">
-        <div class="overview-card phase-card">
-          <div class="card-header">
-            <span class="phase-number">1</span>
-            <h3>Foundation</h3>
-            <span class="phase-time">Weeks 1-8</span>
-          </div>
-          <ul class="phase-items">
-            <li><strong>Form your LLC</strong> — Register with Maine Secretary of State</li>
-            <li><strong>Secure capital</strong> — $300k-$850k total investment</li>
-            <li><strong>Write business plan</strong> — Required for licensing and investors</li>
-          </ul>
-          <div class="key-stat">
-            <span class="stat-value">$300K+</span>
-            <span class="stat-label">Minimum Capital Needed</span>
-          </div>
-        </div>
-
-        <div class="overview-card phase-card">
-          <div class="card-header">
-            <span class="phase-number">2</span>
-            <h3>Location</h3>
-            <span class="phase-time">Weeks 6-16</span>
-          </div>
-          <ul class="phase-items">
-            <li><strong>Find opted-in town</strong> — Only 30+ Maine towns allow dispensaries</li>
-            <li><strong>Sign lease with cannabis clause</strong> — Must permit cannabis activities</li>
-            <li><strong>Verify zoning</strong> — 1,000ft buffer from schools may apply</li>
-          </ul>
-          <div class="key-stat">
-            <span class="stat-value">30+</span>
-            <span class="stat-label">Opted-In Municipalities</span>
-          </div>
-        </div>
-
-        <div class="overview-card phase-card">
-          <div class="card-header">
-            <span class="phase-number">3</span>
-            <h3>State License</h3>
-            <span class="phase-time">Weeks 12-24</span>
-          </div>
-          <ul class="phase-items">
-            <li><strong>Apply for IIC cards</strong> — $52/owner, fingerprinting, background check</li>
-            <li><strong>Submit conditional license</strong> — $500 application fee</li>
-            <li><strong>Wait for OCP review</strong> — 90-120 day processing time</li>
-          </ul>
-          <div class="key-stat">
-            <span class="stat-value">90-120</span>
-            <span class="stat-label">Days for OCP Review</span>
-          </div>
-        </div>
-
-        <div class="overview-card phase-card">
-          <div class="card-header">
-            <span class="phase-number">4</span>
-            <h3>Build & Launch</h3>
-            <span class="phase-time">Weeks 20-52</span>
-          </div>
-          <ul class="phase-items">
-            <li><strong>Install security</strong> — OCP-compliant cameras and alarm systems</li>
-            <li><strong>Complete Metrc training</strong> — State seed-to-sale tracking</li>
-            <li><strong>Pass pre-license inspection</strong> — Final OCP approval</li>
-          </ul>
-          <div class="key-stat">
-            <span class="stat-value">12-18</span>
-            <span class="stat-label">Months Total Timeline</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="recreational-vs-medical">
-      <h2>Recreational vs. Medical Dispensaries in Maine</h2>
-      <div class="comparison-table">
-        <div class="compare-row header">
-          <span>Requirement</span>
-          <span>Adult-Use (Recreational)</span>
-          <span>Medical</span>
-        </div>
-        <div class="compare-row">
-          <span>License Type</span>
-          <span>Retail Dispensary License</span>
-          <span>Dispensary License</span>
-        </div>
-        <div class="compare-row">
-          <span>Annual License Fee</span>
-          <span>$3,000-$15,000</span>
-          <span>$500-$15,000</span>
-        </div>
-        <div class="compare-row">
-          <span>Municipal Approval</span>
-          <span>Required (opt-in)</span>
-          <span>Required</span>
-        </div>
-        <div class="compare-row">
-          <span>OCP Application</span>
-          <span>Conditional + Final</span>
-          <span>Single application</span>
-        </div>
-        <div class="compare-row">
-          <span>Product Testing</span>
-          <span>Required</span>
-          <span>Required</span>
-        </div>
-        <div class="compare-row">
-          <span>Metrc Tracking</span>
-          <span>Required</span>
-          <span>Required</span>
-        </div>
-        <div class="compare-row">
-          <span>Security Requirements</span>
-          <span>Full OCP compliance</span>
-          <span>Full OCP compliance</span>
-        </div>
-      </div>
-      <p class="compare-note">Both license types require IIC (Individual Identification Card) applications for all owners and key employees. The regulatory path is nearly identical, but adult-use has additional marketing and packaging restrictions.</p>
-    </section>
-
-    <section class="quick-links">
-      <h2>Deep Dive Into Each Step</h2>
-      <div class="links-grid">
-        <a href="/guides/maine-dispensary-license/" class="link-card">
-          <span class="link-title">License Requirements</span>
-          <span class="link-desc">OCP application process and requirements</span>
-        </a>
-        <a href="/guides/maine-dispensary-costs/" class="link-card">
-          <span class="link-title">Startup Costs</span>
-          <span class="link-desc">$300K-$850K breakdown</span>
-        </a>
-        <a href="/guides/maine-cannabis-real-estate/" class="link-card">
-          <span class="link-title">Real Estate & Zoning</span>
-          <span class="link-desc">Finding compliant locations</span>
-        </a>
-        <a href="/guides/maine-dispensary-security/" class="link-card">
-          <span class="link-title">Security Systems</span>
-          <span class="link-desc">OCP requirements for cameras and alarms</span>
-        </a>
-      </div>
-    </section>
-  </div>
-
-  <section class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-    <Faq faqs={faqItems} />
-  </section>
-
-  <section class="checklist-print-cta">
-    <div class="print-box">
-      <h3>Ready to Go Offline?</h3>
-      <p>Download the high-resolution, printable PDF version of this roadmap including OCP form numbers and fee schedules.</p>
-      <a href="/download-checklist/" class="btn-main">Get the PDF Version &rarr;</a>
-    </div>
-  </section>
-</Layout>
-
-<style>
   .checklist-header {
     text-align: center;
     margin-bottom: 4rem;
@@ -1134,4 +864,275 @@ const howToSchema = {
   [data-theme="dark"] .link-card {
     background: var(--color-surface);
   }
+
 </style>
+<section class="checklist-header">
+    <div class="hero-badge">2026 Interactive Roadmap</div>
+    <h1>Maine Dispensary Launch Checklist</h1>
+    <p class="lead">A complete 12-18 month roadmap for opening your cannabis dispensary in Maine. Each phase builds toward your final license and first sale.</p>
+    
+    <div class="view-toggle" role="tablist" aria-label="Choose your view">
+      <button 
+        class="toggle-btn active" 
+        data-view="detailed" 
+        role="tab" 
+        aria-selected="true"
+        aria-controls="detailed-content"
+      >
+        <span class="toggle-icon">◆</span>
+        Detailed Roadmap
+      </button>
+      <button 
+        class="toggle-btn" 
+        data-view="overview" 
+        role="tab" 
+        aria-selected="false"
+        aria-controls="overview-content"
+      >
+        <span class="toggle-icon">◇</span>
+        Quick Overview
+      </button>
+    </div>
+  </section>
+
+  <div id="detailed-content" role="tabpanel" class="view-content active">
+  <section class="who-is-this">
+    <div class="two-column">
+      <div class="audience-card">
+        <h2>Who This Guide Is For</h2>
+        <p>This roadmap is built for entrepreneurs and investors who are serious about entering Maine's adult-use cannabis market. Whether you're a Maine native or an out-of-state operator, this checklist will walk you through every required step from concept to grand opening. For a visual overview of the entire process, see our <a href="/blog/maine-dispensary-how-to-open/">step-by-step guide to opening a dispensary in Maine</a>.</p>
+        <p>You should have access to at least $300,000 in capital and a clear understanding of Maine's regulatory environment before proceeding.</p>
+      </div>
+      <div class="timeline-card">
+        <h2>Expected Timeline</h2>
+        <div class="timeline-visual">
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 1</span>
+            <span class="timeline-duration">Weeks 1-8</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 2</span>
+            <span class="timeline-duration">Weeks 6-16</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 3</span>
+            <span class="timeline-duration">Weeks 12-24</span>
+          </div>
+          <div class="timeline-arrow">→</div>
+          <div class="timeline-item">
+            <span class="timeline-phase">Phase 4</span>
+            <span class="timeline-duration">Weeks 20-52</span>
+          </div>
+        </div>
+        <p class="timeline-note">Most operators complete the full process in 12-18 months from start to first sale.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="common-mistakes">
+    <Callout type="warning">
+      <h3>Common Mistakes to Avoid</h3>
+      <ul class="mistakes-list">
+        <li><strong>Underestimating capital:</strong> Total investment often runs $300k-$850k. Budget for overruns.</li>
+        <li><strong>Wrong location:</strong> Your site must be in a municipality that has formally opted in to cannabis retail.</li>
+        <li><strong>No contingency clause:</strong> Your commercial lease must include an exit clause if licensing is denied.</li>
+        <li><strong>Skipping Metrc training:</strong> All staff must complete state-approved seed-to-sale tracking training before handling inventory.</li>
+        <li><strong>Insufficient operating reserves:</strong> Plan for 3-6 months of operating costs after opening before revenue covers expenses.</li>
+      </ul>
+    </Callout>
+  </section>
+
+  <div class="checklist-container">
+    {checklistItems.map(section => (
+      <div class="checklist-section">
+        <div class="section-header">
+          <h2>{section.category}</h2>
+          <span class="duration-badge">{section.duration}</span>
+        </div>
+        <div class="item-list">
+          {section.items.map(item => (
+            <details class="check-card">
+              <summary>
+                <div class="summary-content">
+                  <div class="check-ui"></div>
+                  <span class="item-title">{item.title}</span>
+                </div>
+                <span class="expand-icon">+</span>
+              </summary>
+              <div class="details-content">
+                <p set:html={item.description}></p>
+                <div class="details-actions">
+                  <a href={item.link} class="btn-detail">{item.cta} →</a>
+                </div>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  </div>
+
+  <div id="overview-content" role="tabpanel" class="view-content">
+    <section class="overview-hero">
+      <div class="overview-intro">
+        <h2>What You Need to Start a Cannabis Dispensary in Maine</h2>
+        <p>Opening a dispensary in Maine takes 12-18 months and requires navigating both state and local regulations. Here's the simplified path.</p>
+      </div>
+      
+      <div class="overview-grid">
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">1</span>
+            <h3>Foundation</h3>
+            <span class="phase-time">Weeks 1-8</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Form your LLC</strong> — Register with Maine Secretary of State</li>
+            <li><strong>Secure capital</strong> — $300k-$850k total investment</li>
+            <li><strong>Write business plan</strong> — Required for licensing and investors</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">$300K+</span>
+            <span class="stat-label">Minimum Capital Needed</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">2</span>
+            <h3>Location</h3>
+            <span class="phase-time">Weeks 6-16</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Find opted-in town</strong> — Only 30+ Maine towns allow dispensaries</li>
+            <li><strong>Sign lease with cannabis clause</strong> — Must permit cannabis activities</li>
+            <li><strong>Verify zoning</strong> — 1,000ft buffer from schools may apply</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">30+</span>
+            <span class="stat-label">Opted-In Municipalities</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">3</span>
+            <h3>State License</h3>
+            <span class="phase-time">Weeks 12-24</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Apply for IIC cards</strong> — $52/owner, fingerprinting, background check</li>
+            <li><strong>Submit conditional license</strong> — $500 application fee</li>
+            <li><strong>Wait for OCP review</strong> — 90-120 day processing time</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">90-120</span>
+            <span class="stat-label">Days for OCP Review</span>
+          </div>
+        </div>
+
+        <div class="overview-card phase-card">
+          <div class="card-header">
+            <span class="phase-number">4</span>
+            <h3>Build & Launch</h3>
+            <span class="phase-time">Weeks 20-52</span>
+          </div>
+          <ul class="phase-items">
+            <li><strong>Install security</strong> — OCP-compliant cameras and alarm systems</li>
+            <li><strong>Complete Metrc training</strong> — State seed-to-sale tracking</li>
+            <li><strong>Pass pre-license inspection</strong> — Final OCP approval</li>
+          </ul>
+          <div class="key-stat">
+            <span class="stat-value">12-18</span>
+            <span class="stat-label">Months Total Timeline</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="recreational-vs-medical">
+      <h2>Recreational vs. Medical Dispensaries in Maine</h2>
+      <div class="comparison-table">
+        <div class="compare-row header">
+          <span>Requirement</span>
+          <span>Adult-Use (Recreational)</span>
+          <span>Medical</span>
+        </div>
+        <div class="compare-row">
+          <span>License Type</span>
+          <span>Retail Dispensary License</span>
+          <span>Dispensary License</span>
+        </div>
+        <div class="compare-row">
+          <span>Annual License Fee</span>
+          <span>$3,000-$15,000</span>
+          <span>$500-$15,000</span>
+        </div>
+        <div class="compare-row">
+          <span>Municipal Approval</span>
+          <span>Required (opt-in)</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>OCP Application</span>
+          <span>Conditional + Final</span>
+          <span>Single application</span>
+        </div>
+        <div class="compare-row">
+          <span>Product Testing</span>
+          <span>Required</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>Metrc Tracking</span>
+          <span>Required</span>
+          <span>Required</span>
+        </div>
+        <div class="compare-row">
+          <span>Security Requirements</span>
+          <span>Full OCP compliance</span>
+          <span>Full OCP compliance</span>
+        </div>
+      </div>
+      <p class="compare-note">Both license types require IIC (Individual Identification Card) applications for all owners and key employees. The regulatory path is nearly identical, but adult-use has additional marketing and packaging restrictions.</p>
+    </section>
+
+    <section class="quick-links">
+      <h2>Deep Dive Into Each Step</h2>
+      <div class="links-grid">
+        <a href="/guides/maine-dispensary-license/" class="link-card">
+          <span class="link-title">License Requirements</span>
+          <span class="link-desc">OCP application process and requirements</span>
+        </a>
+        <a href="/guides/maine-dispensary-costs/" class="link-card">
+          <span class="link-title">Startup Costs</span>
+          <span class="link-desc">$300K-$850K breakdown</span>
+        </a>
+        <a href="/guides/maine-cannabis-real-estate/" class="link-card">
+          <span class="link-title">Real Estate & Zoning</span>
+          <span class="link-desc">Finding compliant locations</span>
+        </a>
+        <a href="/guides/maine-dispensary-security/" class="link-card">
+          <span class="link-title">Security Systems</span>
+          <span class="link-desc">OCP requirements for cameras and alarms</span>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="checklist-print-cta">
+    <div class="print-box">
+      <h3>Ready to Go Offline?</h3>
+      <p>Download the high-resolution, printable PDF version of this roadmap including OCP form numbers and fee schedules.</p>
+      <a href="/download-checklist/" class="btn-main">Get the PDF Version &rarr;</a>
+    </div>
+  </section>
+</Layout>

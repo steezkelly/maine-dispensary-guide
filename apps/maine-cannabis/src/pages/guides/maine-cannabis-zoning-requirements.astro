@@ -21,7 +21,87 @@ const topics = ["real-estate", "compliance"];
   article={article}
   topics={topics}
 >
-  <article>
+  <style>
+
+  article {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+  }
+  section {
+    margin-bottom: 2rem;
+  }
+  section h2,
+  section h3 {
+    margin-top: 1.5rem;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+  }
+  section h2:first-child,
+  section h3:first-child {
+    margin-top: 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  th,
+  td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--color-background);
+    font-weight: 600;
+  }
+  .fact-table tr:nth-child(even) td {
+    background: rgba(88, 129, 87, 0.04);
+  }
+  ul,
+  ol {
+    padding-left: 1.5rem;
+  }
+  li {
+    margin-bottom: 0.5rem;
+  }
+  ol li {
+    margin-bottom: 0.75rem;
+  }
+  .further-reading {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .further-reading ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .further-reading li {
+    margin-bottom: 0.75rem;
+  }
+  .disclaimer {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-top: 2rem;
+    color: var(--color-text);
+  }
+
+</style>
+<article>
     <div class="article-header">
       <h1>Maine Cannabis Zoning Requirements</h1>
       <p class="subtitle">What every prospective operator needs to understand about where — and where not — to locate a dispensary in Maine</p>
@@ -406,83 +486,5 @@ const topics = ["real-estate", "compliance"];
       <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis zoning requirements in Maine are subject to frequent municipal ordinance changes; always verify current rules with the target municipality's planning office and consult qualified legal counsel before committing to any real estate.</em></p>
     </section>
   </article>
-</Layout>
 
-<style>
-  article {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .article-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .subtitle {
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-  }
-  section {
-    margin-bottom: 2rem;
-  }
-  section h2,
-  section h3 {
-    margin-top: 1.5rem;
-    color: var(--color-primary);
-    font-family: var(--font-serif);
-  }
-  section h2:first-child,
-  section h3:first-child {
-    margin-top: 0;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-  }
-  th,
-  td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
-  }
-  th {
-    background: var(--color-background);
-    font-weight: 600;
-  }
-  .fact-table tr:nth-child(even) td {
-    background: rgba(88, 129, 87, 0.04);
-  }
-  ul,
-  ol {
-    padding-left: 1.5rem;
-  }
-  li {
-    margin-bottom: 0.5rem;
-  }
-  ol li {
-    margin-bottom: 0.75rem;
-  }
-  .further-reading {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
-  }
-  .further-reading ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  .further-reading li {
-    margin-bottom: 0.75rem;
-  }
-  .disclaimer {
-    background: var(--color-background);
-    border: 1px solid var(--color-border);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    margin-top: 2rem;
-    color: var(--color-text);
-  }
-</style>
+</Layout>

@@ -9,7 +9,165 @@ import Callout from '../components/Callout.astro';
   heroImage="/images/heroes/roi-calculator.jpg"
   article={{ author: "Margaret Finch", authorTitle: "Finance & Taxation Analyst", authorId: "margaret-finch", publishDate: "2026-01-15", modifiedDate: "2026-04-21", section: "Finance" }}
 >
-  <section class="guide-header">
+  <style>
+
+  .guide-header { text-align: center; margin-bottom: 3rem; position: relative; z-index: 10; }
+  .hero-badge { display: inline-block; background: var(--color-primary); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; line-height: 1.6; }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 4rem;
+    background: var(--color-primary);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    position: relative;
+    z-index: 10;
+  }
+  .stat-item { text-align: center; color: white; }
+  .stat-value { display: block; font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
+  .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+
+  .content-section { margin-bottom: 4rem; position: relative; z-index: 10; }
+  .content-section h2 { font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-primary); }
+  .content-section h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-text); }
+  .content-section p { font-size: 1rem; line-height: 1.7; color: var(--color-text); margin-bottom: 1rem; }
+  .content-section ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+  .content-section li { font-size: 0.95rem; line-height: 1.6; color: var(--color-text); margin-bottom: 0.5rem; }
+
+  .callout-box {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.75rem;
+    background: rgba(88, 129, 87, 0.08);
+    border-left: 4px solid var(--color-primary);
+    border-radius: 0 1rem 1rem 0;
+    margin: 2rem 0;
+  }
+  .callout-box.warning { background: rgba(180, 100, 60, 0.08); border-left-color: #b4643c; }
+  .callout-box.accent { background: rgba(163, 177, 138, 0.15); border-left-color: var(--color-accent); }
+  .callout-icon { font-size: 1.25rem; color: var(--color-primary); flex-shrink: 0; }
+  .callout-box.warning .callout-icon { color: #b4643c; }
+  .callout-box.accent .callout-icon { color: var(--color-accent); }
+  .callout-content { font-size: 0.95rem; line-height: 1.6; }
+  .callout-content strong { display: block; margin-bottom: 0.5rem; font-size: 1rem; }
+  .callout-content p { margin-bottom: 0; }
+  .callout-content ul { margin-top: 0.75rem; margin-bottom: 0; }
+
+  .location-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+  .location-card { padding: 1.75rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
+  .location-card h4 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); font-size: 1.1rem; }
+  .location-card ul { margin: 0; padding-left: 1.25rem; }
+  .location-card li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+
+  .margin-breakdown {
+    background: var(--color-surface);
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    padding: 2rem;
+    margin: 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+  }
+  .margin-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
+  .margin-row:last-child { border-bottom: none; }
+  .margin-row.deduction { color: var(--color-accent); }
+  .margin-row.gross { font-weight: 600; color: var(--color-text); }
+  .margin-row.net { font-weight: 700; font-size: 1.1rem; color: var(--color-primary); border-top: 2px solid var(--color-primary); padding-top: 1rem; margin-top: 0.5rem; }
+  .margin-label { color: var(--color-text); }
+  .margin-row.deduction .margin-label { color: var(--color-accent); }
+  .margin-value { font-weight: 600; }
+
+  .strategy-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+  .strategy-card { padding: 1.75rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
+  .strategy-card h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); font-size: 1.15rem; }
+  .strategy-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.75rem; }
+  .strategy-verdict { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-bottom: 0; }
+
+  .case-study {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--color-background);
+    border-radius: 1rem;
+  }
+  .case-metric { text-align: center; }
+  .case-metric .metric-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 0.25rem; }
+  .case-metric .metric-value { display: block; font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+
+  .variables-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
+  .variable-card { padding: 1.5rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
+  .variable-card h4 { margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); font-size: 1rem; }
+  .variable-card p { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0; color: var(--color-text-light); }
+
+  .section-divider { border: none; border-top: 1px solid var(--color-border); margin: 4rem 0 3rem; }
+
+  .calculator-section { margin-bottom: 4rem; position: relative; z-index: 10; }
+  .calculator-section h2 { font-size: 1.75rem; margin-bottom: 1rem; color: var(--color-primary); }
+  .calculator-intro { font-size: 1rem; color: var(--color-text-light); margin-bottom: 3rem; max-width: 600px; }
+
+  .calc-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    background: var(--color-surface);
+    padding: 4rem;
+    border-radius: 2rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.03);
+  }
+
+  .input-section { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-background); }
+  .input-section h3 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 1.5rem; font-weight: 600; }
+  .input-group label { display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; }
+
+  .currency-input { display: flex; align-items: center; font-size: 1.75rem; font-weight: 700; color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
+  .currency-input.small { font-size: 1.25rem; }
+  .currency-input input { border: none; padding: 0.5rem; width: 100%; font-weight: 700; color: var(--color-primary); background: transparent; }
+  .currency-input input:focus { outline: none; }
+
+  .slider { width: 100%; height: 6px; background: var(--color-background); border-radius: 3px; appearance: none; outline: none; }
+  .slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
+  .slider-value { margin-top: 0.75rem; font-weight: 700; color: var(--color-primary); font-size: 0.85rem; }
+
+  .calc-results { display: flex; flex-direction: column; gap: 1.25rem; }
+  .result-card { background: var(--color-background); padding: 2rem; border-radius: 1.25rem; text-align: center; }
+  .result-card.primary { background: var(--color-primary); color: white; }
+  .result-label { display: block; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 0.5rem; opacity: 0.85; }
+  .result-value { display: block; font-family: var(--font-serif); font-size: 2.75rem; font-weight: 700; line-height: 1; margin-bottom: 1rem; }
+  .result-value.small { font-size: 1.75rem; }
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+  .gauge-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 1rem; }
+  .gauge-bar { height: 100%; width: 50%; background: #588157; border-radius: 3px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .gauge-markers { display: flex; justify-content: space-between; font-size: 0.6rem; text-transform: uppercase; font-weight: 800; opacity: 0.7; }
+
+  .optimization-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-accent); }
+  .optimization-box h4 { margin-top: 0; color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.95rem; }
+  .optimization-box p { margin-bottom: 0; font-size: 0.85rem; line-height: 1.5; }
+  .hidden { display: none; }
+
+  .how-it-works-compact { background: var(--color-background); padding: 2rem; border-radius: 1.5rem; }
+  .how-it-works-compact h3 { margin-top: 0; margin-bottom: 1.25rem; font-size: 1rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.05em; }
+  .math-steps-compact { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .step-compact { background: var(--color-surface); padding: 1rem 1.5rem; border-radius: 0.75rem; font-size: 0.85rem; }
+
+  @media (max-width: 1000px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .calc-container { grid-template-columns: 1fr; padding: 2rem; }
+    .location-comparison { grid-template-columns: 1fr; }
+    .strategy-comparison { grid-template-columns: 1fr; }
+    .variables-grid { grid-template-columns: 1fr; }
+    .case-study { grid-template-columns: repeat(2, 1fr); }
+  }
+
+</style>
+<section class="guide-header">
     <div class="hero-badge">2026 Market Data</div>
     <h1>Maine Dispensary Profitability: What Real Operators Actually Earn</h1>
     <p class="lead">Here's the honest reality of Maine dispensary profitability based on actual market data. Most new operators won't get rich quick — but a well-run dispensary in the right location can generate $200K-$500K in annual profit within 3 years.</p>
@@ -430,160 +588,3 @@ import Callout from '../components/Callout.astro';
     calculate();
   </script>
 </Layout>
-
-<style>
-  .guide-header { text-align: center; margin-bottom: 3rem; position: relative; z-index: 10; }
-  .hero-badge { display: inline-block; background: var(--color-primary); color: white; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 1.5rem; }
-  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; line-height: 1.6; }
-
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 4rem;
-    background: var(--color-primary);
-    padding: 2rem;
-    border-radius: 1.5rem;
-    position: relative;
-    z-index: 10;
-  }
-  .stat-item { text-align: center; color: white; }
-  .stat-value { display: block; font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
-  .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
-
-  .content-section { margin-bottom: 4rem; position: relative; z-index: 10; }
-  .content-section h2 { font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-primary); }
-  .content-section h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-text); }
-  .content-section p { font-size: 1rem; line-height: 1.7; color: var(--color-text); margin-bottom: 1rem; }
-  .content-section ul { margin-left: 1.5rem; margin-bottom: 1rem; }
-  .content-section li { font-size: 0.95rem; line-height: 1.6; color: var(--color-text); margin-bottom: 0.5rem; }
-
-  .callout-box {
-    display: flex;
-    gap: 1.25rem;
-    padding: 1.75rem;
-    background: rgba(88, 129, 87, 0.08);
-    border-left: 4px solid var(--color-primary);
-    border-radius: 0 1rem 1rem 0;
-    margin: 2rem 0;
-  }
-  .callout-box.warning { background: rgba(180, 100, 60, 0.08); border-left-color: #b4643c; }
-  .callout-box.accent { background: rgba(163, 177, 138, 0.15); border-left-color: var(--color-accent); }
-  .callout-icon { font-size: 1.25rem; color: var(--color-primary); flex-shrink: 0; }
-  .callout-box.warning .callout-icon { color: #b4643c; }
-  .callout-box.accent .callout-icon { color: var(--color-accent); }
-  .callout-content { font-size: 0.95rem; line-height: 1.6; }
-  .callout-content strong { display: block; margin-bottom: 0.5rem; font-size: 1rem; }
-  .callout-content p { margin-bottom: 0; }
-  .callout-content ul { margin-top: 0.75rem; margin-bottom: 0; }
-
-  .location-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
-  .location-card { padding: 1.75rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
-  .location-card h4 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); font-size: 1.1rem; }
-  .location-card ul { margin: 0; padding-left: 1.25rem; }
-  .location-card li { font-size: 0.9rem; margin-bottom: 0.4rem; }
-
-  .margin-breakdown {
-    background: var(--color-surface);
-    border-radius: 1rem;
-    border: 1px solid var(--color-border);
-    padding: 2rem;
-    margin: 2rem 0;
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
-  }
-  .margin-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
-  .margin-row:last-child { border-bottom: none; }
-  .margin-row.deduction { color: var(--color-accent); }
-  .margin-row.gross { font-weight: 600; color: var(--color-text); }
-  .margin-row.net { font-weight: 700; font-size: 1.1rem; color: var(--color-primary); border-top: 2px solid var(--color-primary); padding-top: 1rem; margin-top: 0.5rem; }
-  .margin-label { color: var(--color-text); }
-  .margin-row.deduction .margin-label { color: var(--color-accent); }
-  .margin-value { font-weight: 600; }
-
-  .strategy-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
-  .strategy-card { padding: 1.75rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
-  .strategy-card h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); font-size: 1.15rem; }
-  .strategy-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.75rem; }
-  .strategy-verdict { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-bottom: 0; }
-
-  .case-study {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: var(--color-background);
-    border-radius: 1rem;
-  }
-  .case-metric { text-align: center; }
-  .case-metric .metric-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 0.25rem; }
-  .case-metric .metric-value { display: block; font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
-
-  .variables-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-  .variable-card { padding: 1.5rem; background: var(--color-surface); border-radius: 1rem; border: 1px solid var(--color-border); }
-  .variable-card h4 { margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); font-size: 1rem; }
-  .variable-card p { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0; color: var(--color-text-light); }
-
-  .section-divider { border: none; border-top: 1px solid var(--color-border); margin: 4rem 0 3rem; }
-
-  .calculator-section { margin-bottom: 4rem; position: relative; z-index: 10; }
-  .calculator-section h2 { font-size: 1.75rem; margin-bottom: 1rem; color: var(--color-primary); }
-  .calculator-intro { font-size: 1rem; color: var(--color-text-light); margin-bottom: 3rem; max-width: 600px; }
-
-  .calc-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    margin-bottom: 3rem;
-    background: var(--color-surface);
-    padding: 4rem;
-    border-radius: 2rem;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.03);
-  }
-
-  .input-section { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-background); }
-  .input-section h3 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 1.5rem; font-weight: 600; }
-  .input-group label { display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; }
-
-  .currency-input { display: flex; align-items: center; font-size: 1.75rem; font-weight: 700; color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
-  .currency-input.small { font-size: 1.25rem; }
-  .currency-input input { border: none; padding: 0.5rem; width: 100%; font-weight: 700; color: var(--color-primary); background: transparent; }
-  .currency-input input:focus { outline: none; }
-
-  .slider { width: 100%; height: 6px; background: var(--color-background); border-radius: 3px; appearance: none; outline: none; }
-  .slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
-  .slider-value { margin-top: 0.75rem; font-weight: 700; color: var(--color-primary); font-size: 0.85rem; }
-
-  .calc-results { display: flex; flex-direction: column; gap: 1.25rem; }
-  .result-card { background: var(--color-background); padding: 2rem; border-radius: 1.25rem; text-align: center; }
-  .result-card.primary { background: var(--color-primary); color: white; }
-  .result-label { display: block; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 0.5rem; opacity: 0.85; }
-  .result-value { display: block; font-family: var(--font-serif); font-size: 2.75rem; font-weight: 700; line-height: 1; margin-bottom: 1rem; }
-  .result-value.small { font-size: 1.75rem; }
-  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-
-  .gauge-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 1rem; }
-  .gauge-bar { height: 100%; width: 50%; background: #588157; border-radius: 3px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-  .gauge-markers { display: flex; justify-content: space-between; font-size: 0.6rem; text-transform: uppercase; font-weight: 800; opacity: 0.7; }
-
-  .optimization-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-accent); }
-  .optimization-box h4 { margin-top: 0; color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.95rem; }
-  .optimization-box p { margin-bottom: 0; font-size: 0.85rem; line-height: 1.5; }
-  .hidden { display: none; }
-
-  .how-it-works-compact { background: var(--color-background); padding: 2rem; border-radius: 1.5rem; }
-  .how-it-works-compact h3 { margin-top: 0; margin-bottom: 1.25rem; font-size: 1rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.05em; }
-  .math-steps-compact { display: flex; flex-wrap: wrap; gap: 1rem; }
-  .step-compact { background: var(--color-surface); padding: 1rem 1.5rem; border-radius: 0.75rem; font-size: 0.85rem; }
-
-  @media (max-width: 1000px) {
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    .calc-container { grid-template-columns: 1fr; padding: 2rem; }
-    .location-comparison { grid-template-columns: 1fr; }
-    .strategy-comparison { grid-template-columns: 1fr; }
-    .variables-grid { grid-template-columns: 1fr; }
-    .case-study { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>

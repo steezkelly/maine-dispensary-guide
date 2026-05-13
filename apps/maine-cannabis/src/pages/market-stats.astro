@@ -57,68 +57,8 @@ const faqPageJsonLd = JSON.stringify({
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-14", section: "Data" }}
 >
 
-<script type="application/ld+json" set:text={faqPageJsonLd}></script>
-
-  <article class="stats-article">
-    <div class="article-header">
-      <h1>Maine Cannabis Market Stats</h1>
-      <p class="subtitle">The latest official data and trends for 2025-2026</p>
-      <p class="last-updated">Last updated: April 14, 2026</p>
-    </div>
-
-    <section class="data-deep-dive">
-      <h2>2025 Market Snapshot</h2>
-      <p class="answer-capsule"><strong>Maine's combined medical and adult-use cannabis market generated $513M in 2024 ($269M medical + $244M adult-use), making it the largest cannabis market in northern New England.</strong> The 169 adult-use retail stores (OCP 2026, down from 179 at peak) and 4.83M transactions reflect a maturing market where 60% of revenue concentrates in York/Cumberland counties. Average flower price stabilized at $6.62/gram. The market is consolidating — operators focused on efficiency and customer loyalty will outlast those chasing volume growth alone.</p>
-      <section class="stats-grid">
-        {stats.map(stat => (
-          <div class="stat-card">
-            <p class="stat-metric">{stat.metric}</p>
-            <p class="stat-value">{stat.value}</p>
-            <p class="stat-detail">{stat.detail}</p>
-          </div>
-        ))}
-      </section>
-
-      <p class="stat-source">Source: Maine Office of Cannabis Policy (OCP) Open Data Portal, 2025. Data reflects adult-use cannabis sales only.</p>
-
-      <blockquote class="expert-quote">
-        <p>"The $246 million in sales isn't just a number — it represents a fundamental shift in Maine's economy. The operators who will win in the next five years aren't the ones chasing volume. They're the ones building brands that rural Maine communities actually trust."</p>
-        <cite>— Sarah Mitchell, Executive Director, Maine Cannabis Industry Association (2025 Annual Report)</cite>
-      </blockquote>
-
-      <Callout title="Data-Driven Decisions" type="success">
-        Understanding the numbers is what separates a "hobby" from a "business." With $513 million in combined annual sales, Maine has proven itself as a robust, consolidating market — one where new entrants can still find opportunity, but only if they understand efficiency, compliance, and survival first.
-      </Callout>
-    </section>
-
-    <section>
-      <h2>Industry Trends for 2026</h2>
-      <p class="answer-capsule"><strong>Maine's cannabis market is entering a consolidation phase in 2026, with established operators capturing increasing market share while rural markets remain underserved.</strong> Flower prices have normalized to $6.62/gram, making efficiency the primary competitive advantage. New entrants should target micro-markets, vertically integrated product lines, or specialized retail experiences rather than direct competition with established Portland and Bangor dispensaries.</p>
-      <p>As the market reaches a record high in sales, we are seeing a shift from "explosive growth" to "strategic optimization." Competition is increasing in southern hubs, while rural counties remain underserved and ripe for boutique, craft-focused dispensaries.</p>
-      
-      <h3>Key Takeaways:</h3>
-      <ul>
-        <li><strong>Consumer Pricing:</strong> The drop to $6.62/gram means efficiency is now the #1 survival trait for new shops.</li>
-        <li><strong>Regional Strategy:</strong> While 60% of revenue is in the south, the "North Maine" opportunity is growing as tourism expands inland.</li>
-        <li><strong>Stability:</strong> 4.8 million transactions show that cannabis has become a stable part of the Maine economy.</li>
-      </ul>
-    </section>
-
-    <section class="market-outlook">
-      <h2>2026 Market Outlook</h2>
-      <p>Based on current market indicators, Maine's cannabis industry is entering a consolidation phase. Established operators with strong brand recognition are capturing increasing market share, while newer entrants face higher barriers to customer acquisition. For founders considering entry, the data suggests focusing on underserved micro-markets, vertically integrated product lines, or specialized retail experiences rather than competing directly with established Portland and Bangor operators.</p>
-      <p>Tax revenue continues to be a driver for municipal opt-in decisions. As of 2026, 15 Maine municipalities have formally opted into adult-use retail, with several additional communities in active discussion. The continued expansion of the licensee base will likely moderate prices further and increase the importance of operational efficiency and customer loyalty programs.</p>
-      <p>Use our <a href="/roi-calculator/">ROI Calculator</a> to model your specific location against these market benchmarks before committing to a lease or licensing path.</p>
-    </section>
-
-    <section class="further-reading">
-      <h2>Source & Verification</h2>
-      <p>All data is sourced from the <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> Open Data portal. Data is updated as official reports are released.</p>
-    </section>
-  </article>
-</Layout>
-
 <style>
+
   .stats-article {
     max-width: 800px;
     margin: 0 auto;
@@ -250,5 +190,66 @@ const faqPageJsonLd = JSON.stringify({
     color: var(--color-text-light);
     font-style: normal;
   }
-</style>
 
+</style>
+<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+
+  <article class="stats-article">
+    <div class="article-header">
+      <h1>Maine Cannabis Market Stats</h1>
+      <p class="subtitle">The latest official data and trends for 2025-2026</p>
+      <p class="last-updated">Last updated: April 14, 2026</p>
+    </div>
+
+    <section class="data-deep-dive">
+      <h2>2025 Market Snapshot</h2>
+      <p class="answer-capsule"><strong>Maine's combined medical and adult-use cannabis market generated $513M in 2024 ($269M medical + $244M adult-use), making it the largest cannabis market in northern New England.</strong> The 169 adult-use retail stores (OCP 2026, down from 179 at peak) and 4.83M transactions reflect a maturing market where 60% of revenue concentrates in York/Cumberland counties. Average flower price stabilized at $6.62/gram. The market is consolidating — operators focused on efficiency and customer loyalty will outlast those chasing volume growth alone.</p>
+      <section class="stats-grid">
+        {stats.map(stat => (
+          <div class="stat-card">
+            <p class="stat-metric">{stat.metric}</p>
+            <p class="stat-value">{stat.value}</p>
+            <p class="stat-detail">{stat.detail}</p>
+          </div>
+        ))}
+      </section>
+
+      <p class="stat-source">Source: Maine Office of Cannabis Policy (OCP) Open Data Portal, 2025. Data reflects adult-use cannabis sales only.</p>
+
+      <blockquote class="expert-quote">
+        <p>"The $246 million in sales isn't just a number — it represents a fundamental shift in Maine's economy. The operators who will win in the next five years aren't the ones chasing volume. They're the ones building brands that rural Maine communities actually trust."</p>
+        <cite>— Sarah Mitchell, Executive Director, Maine Cannabis Industry Association (2025 Annual Report)</cite>
+      </blockquote>
+
+      <Callout title="Data-Driven Decisions" type="success">
+        Understanding the numbers is what separates a "hobby" from a "business." With $513 million in combined annual sales, Maine has proven itself as a robust, consolidating market — one where new entrants can still find opportunity, but only if they understand efficiency, compliance, and survival first.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Industry Trends for 2026</h2>
+      <p class="answer-capsule"><strong>Maine's cannabis market is entering a consolidation phase in 2026, with established operators capturing increasing market share while rural markets remain underserved.</strong> Flower prices have normalized to $6.62/gram, making efficiency the primary competitive advantage. New entrants should target micro-markets, vertically integrated product lines, or specialized retail experiences rather than direct competition with established Portland and Bangor dispensaries.</p>
+      <p>As the market reaches a record high in sales, we are seeing a shift from "explosive growth" to "strategic optimization." Competition is increasing in southern hubs, while rural counties remain underserved and ripe for boutique, craft-focused dispensaries.</p>
+      
+      <h3>Key Takeaways:</h3>
+      <ul>
+        <li><strong>Consumer Pricing:</strong> The drop to $6.62/gram means efficiency is now the #1 survival trait for new shops.</li>
+        <li><strong>Regional Strategy:</strong> While 60% of revenue is in the south, the "North Maine" opportunity is growing as tourism expands inland.</li>
+        <li><strong>Stability:</strong> 4.8 million transactions show that cannabis has become a stable part of the Maine economy.</li>
+      </ul>
+    </section>
+
+    <section class="market-outlook">
+      <h2>2026 Market Outlook</h2>
+      <p>Based on current market indicators, Maine's cannabis industry is entering a consolidation phase. Established operators with strong brand recognition are capturing increasing market share, while newer entrants face higher barriers to customer acquisition. For founders considering entry, the data suggests focusing on underserved micro-markets, vertically integrated product lines, or specialized retail experiences rather than competing directly with established Portland and Bangor operators.</p>
+      <p>Tax revenue continues to be a driver for municipal opt-in decisions. As of 2026, 15 Maine municipalities have formally opted into adult-use retail, with several additional communities in active discussion. The continued expansion of the licensee base will likely moderate prices further and increase the importance of operational efficiency and customer loyalty programs.</p>
+      <p>Use our <a href="/roi-calculator/">ROI Calculator</a> to model your specific location against these market benchmarks before committing to a lease or licensing path.</p>
+    </section>
+
+    <section class="further-reading">
+      <h2>Source & Verification</h2>
+      <p>All data is sourced from the <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> Open Data portal. Data is updated as official reports are released.</p>
+    </section>
+  </article>
+
+</Layout>

@@ -15,130 +15,8 @@ const breadcrumbs = [
   description="Meet the cannabis compliance professionals and editorial experts behind Maine Dispensary Guide. Learn about our content review process and author credentials."
   breadcrumbs={breadcrumbs}
 >
-  <div class="article-header">
-    <h1>Our Authors & Editorial Standards</h1>
-    <p class="lead">Every piece of content on Maine Dispensary Guide is written by knowledgeable professionals and reviewed for accuracy.</p>
-  </div>
+  <style>
 
-  <section class="editorial-process">
-    <h2>Editorial Review Process</h2>
-    <p>Maine cannabis regulations are complex and change frequently. That's why our content undergoes a multi-layer review process before publication.</p>
-    
-    <div class="process-steps">
-      <div class="process-step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3>Primary Research</h3>
-          <p>Our editorial team researches directly from Maine Office of Cannabis Policy (OCP) sources, state statutes, and municipal regulations.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3>Expert Drafting</h3>
-          <p>Content is drafted by team members with direct experience in Maine cannabis licensing and operations.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3>Compliance Review</h3>
-          <p>A Maine-licensed compliance professional reviews all regulatory content for accuracy and currency.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3>Regular Updates</h3>
-          <p>We monitor regulatory changes and update content when laws or OCP guidance evolve.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <Callout title="Our Commitment to Accuracy" type="success">
-    For YMYL (Your Money Your Life) cannabis content, we take E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) seriously. Our review process ensures that when you base business decisions on our content, you can trust the information.
-  </Callout>
-
-  <section class="author-grid">
-    <h2>Meet Our Team</h2>
-    <div class="authors-container">
-      {authors.map((author) => (
-        <div class="author-card">
-          <div class="author-photo">
-            {author.photo ? (
-              <img src={author.photo} alt={author.name} />
-            ) : (
-              <div class="photo-placeholder">
-                <span class="initials">
-                  {author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                </span>
-              </div>
-            )}
-          </div>
-          <div class="author-info">
-            <h3 class="author-name">{author.name}</h3>
-            <p class="author-role">{author.role}</p>
-            <p class="author-bio">{author.bio}</p>
-            <div class="author-credentials">
-              <h4>Credentials</h4>
-              <ul>
-                {author.credentials.map((cred) => (
-                  <li>{cred}</li>
-                ))}
-              </ul>
-            </div>
-            {author.linkedin && (
-              <a href={author.linkedin} class="linkedin-link" target="_blank" rel="noopener noreferrer">
-                Connect on LinkedIn →
-              </a>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="photo-infrastructure">
-    <h2>Author Photo Program</h2>
-    <p>We're building toward full author attribution with photos. As our team grows, each author will have a dedicated profile photo to strengthen trust signals for our readers and outreach partners.</p>
-    <div class="photo-status">
-      <div class="status-item">
-        <span class="status-icon">📷</span>
-        <span>Infrastructure ready — photos can be added per-author</span>
-      </div>
-      <div class="status-item">
-        <span class="status-icon">🔗</span>
-        <span>LinkedIn integration available when profiles are complete</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="trust-for-outreach">
-    <h2>Built for Professional Outreach</h2>
-    <p>This author infrastructure exists for a reason: when we reach out to Maine.gov, the Maine Chamber of Commerce, or academic institutions for partnerships and backlinks, we're not sending anonymous content.</p>
-    <p>Our bylined, reviewed content demonstrates the kind of professional credibility that earns links from authoritative sources.</p>
-    <a href="/about/our-team" class="btn-secondary">Back to Our Team Overview →</a>
-  </section>
-
-<section class="faq-section">
-  <h2>Frequently Asked Questions</h2>
-  <div class="faq-item">
-    <h3>What are the key compliance requirements?</h3>
-    <p>Consult the Maine OCP for current requirements. Key areas include licensing, inventory tracking via METRC, advertising restrictions, and product testing requirements.</p>
-  </div>
-  <div class="faq-item">
-    <h3>How do I renew my license?</h3>
-    <p>License renewal requirements are established by the Maine Office of Cannabis Policy. Submit renewal applications before expiration and ensure all documentation is current.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What penalties apply for violations?</h3>
-    <p>Penalties vary by violation type and severity. The OCP maintains a penalty schedule that includes fines, license suspension, and revocation for serious or repeated violations.</p>
-  </div>
-</section>
-</Layout>
-
-<style>
   .article-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -386,4 +264,127 @@ const breadcrumbs = [
       justify-content: center;
     }
   }
+
 </style>
+<div class="article-header">
+    <h1>Our Authors & Editorial Standards</h1>
+    <p class="lead">Every piece of content on Maine Dispensary Guide is written by knowledgeable professionals and reviewed for accuracy.</p>
+  </div>
+
+  <section class="editorial-process">
+    <h2>Editorial Review Process</h2>
+    <p>Maine cannabis regulations are complex and change frequently. That's why our content undergoes a multi-layer review process before publication.</p>
+    
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Primary Research</h3>
+          <p>Our editorial team researches directly from Maine Office of Cannabis Policy (OCP) sources, state statutes, and municipal regulations.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Expert Drafting</h3>
+          <p>Content is drafted by team members with direct experience in Maine cannabis licensing and operations.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Compliance Review</h3>
+          <p>A Maine-licensed compliance professional reviews all regulatory content for accuracy and currency.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Regular Updates</h3>
+          <p>We monitor regulatory changes and update content when laws or OCP guidance evolve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Callout title="Our Commitment to Accuracy" type="success">
+    For YMYL (Your Money Your Life) cannabis content, we take E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) seriously. Our review process ensures that when you base business decisions on our content, you can trust the information.
+  </Callout>
+
+  <section class="author-grid">
+    <h2>Meet Our Team</h2>
+    <div class="authors-container">
+      {authors.map((author) => (
+        <div class="author-card">
+          <div class="author-photo">
+            {author.photo ? (
+              <img src={author.photo} alt={author.name} />
+            ) : (
+              <div class="photo-placeholder">
+                <span class="initials">
+                  {author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </span>
+              </div>
+            )}
+          </div>
+          <div class="author-info">
+            <h3 class="author-name">{author.name}</h3>
+            <p class="author-role">{author.role}</p>
+            <p class="author-bio">{author.bio}</p>
+            <div class="author-credentials">
+              <h4>Credentials</h4>
+              <ul>
+                {author.credentials.map((cred) => (
+                  <li>{cred}</li>
+                ))}
+              </ul>
+            </div>
+            {author.linkedin && (
+              <a href={author.linkedin} class="linkedin-link" target="_blank" rel="noopener noreferrer">
+                Connect on LinkedIn →
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="photo-infrastructure">
+    <h2>Author Photo Program</h2>
+    <p>We're building toward full author attribution with photos. As our team grows, each author will have a dedicated profile photo to strengthen trust signals for our readers and outreach partners.</p>
+    <div class="photo-status">
+      <div class="status-item">
+        <span class="status-icon">📷</span>
+        <span>Infrastructure ready — photos can be added per-author</span>
+      </div>
+      <div class="status-item">
+        <span class="status-icon">🔗</span>
+        <span>LinkedIn integration available when profiles are complete</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-for-outreach">
+    <h2>Built for Professional Outreach</h2>
+    <p>This author infrastructure exists for a reason: when we reach out to Maine.gov, the Maine Chamber of Commerce, or academic institutions for partnerships and backlinks, we're not sending anonymous content.</p>
+    <p>Our bylined, reviewed content demonstrates the kind of professional credibility that earns links from authoritative sources.</p>
+    <a href="/about/our-team" class="btn-secondary">Back to Our Team Overview →</a>
+  </section>
+
+<section class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>What are the key compliance requirements?</h3>
+    <p>Consult the Maine OCP for current requirements. Key areas include licensing, inventory tracking via METRC, advertising restrictions, and product testing requirements.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I renew my license?</h3>
+    <p>License renewal requirements are established by the Maine Office of Cannabis Policy. Submit renewal applications before expiration and ensure all documentation is current.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What penalties apply for violations?</h3>
+    <p>Penalties vary by violation type and severity. The OCP maintains a penalty schedule that includes fines, license suspension, and revocation for serious or repeated violations.</p>
+  </div>
+</section>
+</Layout>

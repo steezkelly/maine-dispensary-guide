@@ -92,34 +92,8 @@ const terms = [
   heroImage="/images/heroes/glossary.jpg"
   article={{ author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-01-10", modifiedDate: "2026-04-01", section: "Reference" }}
 >
-  <section class="glossary-header">
-    <h1>Maine Cannabis Glossary</h1>
-    <p class="lead">Understanding the specific language of the Maine market is essential for compliance and success. Use this resource to master the technical terms used by regulators and professionals.</p>
-  </section>
+  <style>
 
-  <div class="glossary-container">
-    {terms.map(item => (
-      <div class="glossary-item" id={item.term.toLowerCase().replace(/\s+/g, '-')}>
-        <h2>{item.term}</h2>
-        <p>{item.definition}</p>
-      </div>
-    ))}
-  </div>
-
-  <Callout title="Knowledge is Power" type="tip">
-    Whether you're talking to a lawyer or a state inspector, using the correct terminology shows that you are a serious, professional operator. Bookmark this page as your quick-reference guide!
-  </Callout>
-
-  <section class="glossary-cta">
-    <div class="cta-content">
-      <h2>Need more detail?</h2>
-      <p>Our deep-dive guides expand on many of these terms with step-by-step instructions.</p>
-      <a href="/all-guides/" class="btn-main">Browse Full Guides</a>
-    </div>
-  </section>
-</Layout>
-
-<style>
   .glossary-header {
     text-align: center;
     margin-bottom: 4rem;
@@ -196,4 +170,31 @@ const terms = [
   [data-theme="dark"] .btn-main {
     background: var(--color-background);
   }
+
 </style>
+<section class="glossary-header">
+    <h1>Maine Cannabis Glossary</h1>
+    <p class="lead">Understanding the specific language of the Maine market is essential for compliance and success. Use this resource to master the technical terms used by regulators and professionals.</p>
+  </section>
+
+  <div class="glossary-container">
+    {terms.map(item => (
+      <div class="glossary-item" id={item.term.toLowerCase().replace(/\s+/g, '-')}>
+        <h2>{item.term}</h2>
+        <p>{item.definition}</p>
+      </div>
+    ))}
+  </div>
+
+  <Callout title="Knowledge is Power" type="tip">
+    Whether you're talking to a lawyer or a state inspector, using the correct terminology shows that you are a serious, professional operator. Bookmark this page as your quick-reference guide!
+  </Callout>
+
+  <section class="glossary-cta">
+    <div class="cta-content">
+      <h2>Need more detail?</h2>
+      <p>Our deep-dive guides expand on many of these terms with step-by-step instructions.</p>
+      <a href="/all-guides/" class="btn-main">Browse Full Guides</a>
+    </div>
+  </section>
+</Layout>

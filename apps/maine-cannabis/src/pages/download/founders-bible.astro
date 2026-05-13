@@ -11,141 +11,8 @@ const pageDescription = "The comprehensive 10-page roadmap for opening your Main
   description={pageDescription}
   noindex={true}
 >
-  <div class="landing-page">
-    <section class="hero">
-      <div class="hero-badge">
-        <PineTree size={20} color="var(--color-accent)" />
-        <span>Free Resource</span>
-      </div>
-      <h1 class="hero-title">The Maine Cannabis<br/>Founders Bible</h1>
-      <p class="hero-subtitle">The comprehensive 10-page roadmap for opening your Maine cannabis business — from licensing to financing, written by operators who have done it.</p>
-      <div class="hero-meta">
-        <span class="meta-item">◆ 10 Pages</span>
-        <span class="meta-item">◆ Updated April 2026</span>
-        <span class="meta-item">◆ 847 Downloads</span>
-      </div>
-    </section>
+  <style>
 
-    <section class="value-props">
-      <h2 class="section-title">What's Inside</h2>
-      <ul class="value-list">
-        <li class="value-item">
-          <span class="value-icon">◆</span>
-          <span>Covers Maine Dept. of Health & Human Services licensing process step-by-step</span>
-        </li>
-        <li class="value-item">
-          <span class="value-icon">◆</span>
-          <span>Includes financing options: 280E, SBA loans, investor decks</span>
-        </li>
-        <li class="value-item">
-          <span class="value-icon">◆</span>
-          <span>Written in plain English for entrepreneurs, not lawyers</span>
-        </li>
-      </ul>
-    </section>
-
-    <section class="lead-capture">
-      <div class="form-container">
-        <div class="form-success" id="form-success" style="display: none;">
-          <div class="success-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-          <h3>Check your inbox — the Founders Bible is on its way!</h3>
-          <p class="direct-download">
-            Or <a href="/download/founders-bible" target="_blank" rel="noopener">download now without subscribing</a>
-          </p>
-        </div>
-
-        <form
-          id="lead-form"
-          action="https://formspree.io/f/xvgzlowz"
-          method="POST"
-          class="capture-form"
-        >
-          <div class="form-group">
-            <label for="name">Your Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              placeholder="Jane Smith"
-              autocomplete="name"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              placeholder="jane@example.com"
-              autocomplete="email"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="business">Business Name <span class="optional">(optional)</span></label>
-            <input
-              type="text"
-              id="business"
-              name="business"
-              placeholder="Green Mountain Cannabis LLC"
-              autocomplete="organization"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="stage">What stage are you at?</label>
-            <select id="stage" name="stage" required>
-              <option value="">Select one...</option>
-              <option value="researching">Researching — just exploring</option>
-              <option value="applying">Applying — have my LLC, working on license</option>
-              <option value="operating">Already Operating — looking to grow</option>
-            </select>
-          </div>
-
-          <input type="hidden" name="_subject" value="Founders Bible Download Request" />
-          <input type="hidden" name="_redirect" value="/download/founders-bible?success=true" />
-
-          <button type="submit" class="cta-button">
-            Download Free — Enter Your Email
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </button>
-        </form>
-
-        <div class="or-download">
-          <a href="/download/founders-bible" target="_blank" rel="noopener">Or download now without subscribing</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="social-proof">
-      <p class="proof-text">Join <strong>847 Maine cannabis entrepreneurs</strong> who have downloaded this guide</p>
-    </section>
-
-    <footer class="landing-footer">
-      <p>© 2026 Maine Dispensary Guide</p>
-    </footer>
-  </div>
-</Layout>
-
-<script is:inline>
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('success') === 'true') {
-    document.getElementById('form-success').style.display = 'block';
-    document.getElementById('lead-form').style.display = 'none';
-  }
-</script>
-
-<style>
   :global(body > *:not(.landing-page):not(script)) {
     display: none;
   }
@@ -428,4 +295,138 @@ const pageDescription = "The comprehensive 10-page roadmap for opening your Main
       transition: none;
     }
   }
+
 </style>
+<div class="landing-page">
+    <section class="hero">
+      <div class="hero-badge">
+        <PineTree size={20} color="var(--color-accent)" />
+        <span>Free Resource</span>
+      </div>
+      <h1 class="hero-title">The Maine Cannabis<br/>Founders Bible</h1>
+      <p class="hero-subtitle">The comprehensive 10-page roadmap for opening your Maine cannabis business — from licensing to financing, written by operators who have done it.</p>
+      <div class="hero-meta">
+        <span class="meta-item">◆ 10 Pages</span>
+        <span class="meta-item">◆ Updated April 2026</span>
+        <span class="meta-item">◆ 847 Downloads</span>
+      </div>
+    </section>
+
+    <section class="value-props">
+      <h2 class="section-title">What's Inside</h2>
+      <ul class="value-list">
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Covers Maine Dept. of Health & Human Services licensing process step-by-step</span>
+        </li>
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Includes financing options: 280E, SBA loans, investor decks</span>
+        </li>
+        <li class="value-item">
+          <span class="value-icon">◆</span>
+          <span>Written in plain English for entrepreneurs, not lawyers</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="lead-capture">
+      <div class="form-container">
+        <div class="form-success" id="form-success" style="display: none;">
+          <div class="success-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Check your inbox — the Founders Bible is on its way!</h3>
+          <p class="direct-download">
+            Or <a href="/download/founders-bible" target="_blank" rel="noopener">download now without subscribing</a>
+          </p>
+        </div>
+
+        <form
+          id="lead-form"
+          action="https://formspree.io/f/xvgzlowz"
+          method="POST"
+          class="capture-form"
+        >
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Jane Smith"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="jane@example.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="business">Business Name <span class="optional">(optional)</span></label>
+            <input
+              type="text"
+              id="business"
+              name="business"
+              placeholder="Green Mountain Cannabis LLC"
+              autocomplete="organization"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stage">What stage are you at?</label>
+            <select id="stage" name="stage" required>
+              <option value="">Select one...</option>
+              <option value="researching">Researching — just exploring</option>
+              <option value="applying">Applying — have my LLC, working on license</option>
+              <option value="operating">Already Operating — looking to grow</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="_subject" value="Founders Bible Download Request" />
+          <input type="hidden" name="_redirect" value="/download/founders-bible?success=true" />
+
+          <button type="submit" class="cta-button">
+            Download Free — Enter Your Email
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="or-download">
+          <a href="/download/founders-bible" target="_blank" rel="noopener">Or download now without subscribing</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="social-proof">
+      <p class="proof-text">Join <strong>847 Maine cannabis entrepreneurs</strong> who have downloaded this guide</p>
+    </section>
+
+    <footer class="landing-footer">
+      <p>© 2026 Maine Dispensary Guide</p>
+    </footer>
+  </div>
+</Layout>
+
+<script is:inline>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'true') {
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('lead-form').style.display = 'none';
+  }
+</script>

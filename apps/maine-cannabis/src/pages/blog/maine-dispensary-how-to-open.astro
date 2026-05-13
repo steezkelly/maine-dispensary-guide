@@ -24,7 +24,279 @@ const topics = ["licensing", "how-to", "start-here"];
   article={article}
   topics={topics}
 >
-  <article class="blog-post">
+  <style>
+
+  .blog-post {
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .article-header h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+
+  .intro {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .intro p {
+    margin-bottom: 1.25rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  caption {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  th {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  tr:hover {
+    background-color: rgba(88, 129, 87, 0.05);
+  }
+
+  .expert-quote {
+    background: linear-gradient(135deg, rgba(13, 78, 80, 0.04) 0%, rgba(88, 129, 87, 0.08) 100%);
+    border-left: 4px solid var(--color-primary);
+    padding: 2rem;
+    border-radius: 0 1rem 1rem 0;
+    margin: 2.5rem 0;
+  }
+
+  .expert-quote blockquote {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .expert-quote p {
+    font-size: 1.125rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--color-primary);
+  }
+
+  .expert-quote cite {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+    font-style: normal;
+    color: var(--color-text-light);
+  }
+
+  .stat-block {
+    background-color: rgba(88, 129, 87, 0.06);
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+  }
+
+  .stat-block h3 {
+    font-size: 1.125rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+  }
+
+  .stat-block ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .stat-block li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+    line-height: 1.6;
+  }
+
+  .stat-block li:last-child {
+    border-bottom: none;
+  }
+
+  .cultivator-story {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+    font-style: normal;
+    margin: 2rem 0;
+  }
+
+  .cultivator-story p {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .cultivator-story .attribution {
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+    font-style: italic;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .related-guides {
+    background-color: rgba(13, 78, 80, 0.03);
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+    margin-top: 3rem;
+  }
+
+  .related-guides h2 {
+    border-bottom: none;
+    margin-top: 0;
+    padding-bottom: 0;
+    font-size: 1.25rem;
+  }
+
+  .related-guides ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .related-guides li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(88, 129, 87, 0.15);
+    line-height: 1.5;
+  }
+
+  .related-guides li:last-child {
+    border-bottom: none;
+  }
+
+  .related-guides a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .related-guides a:hover {
+    color: var(--color-accent);
+  }
+
+  .content-verification {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(88, 129, 87, 0.08);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .verification-icon {
+    color: var(--color-accent);
+    font-size: 0.75rem;
+  }
+
+  .verification-text {
+    color: var(--color-text-light);
+  }
+
+  .verification-text a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .verification-text a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .article-header h1 {
+      font-size: 1.875rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    table {
+      font-size: 0.875rem;
+    }
+
+    td, th {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+</style>
+<article class="blog-post">
     <div class="article-header">
       <h1>How to Open a Dispensary in Maine: The Complete Step-by-Step Guide for 2026</h1>
       <p class="subtitle">Here's the exact process to open a licensed cannabis dispensary in Maine, from finding a location to your first day of sales</p>
@@ -385,275 +657,5 @@ const topics = ["licensing", "how-to", "start-here"];
       }
     ]
   })} />
+
 </Layout>
-
-<style>
-  .blog-post {
-    max-width: 42rem;
-    margin: 0 auto;
-  }
-
-  .article-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid var(--color-accent);
-  }
-
-  .article-header h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-  }
-
-  .subtitle {
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-    font-style: italic;
-  }
-
-  .intro {
-    font-size: 1.125rem;
-    line-height: 1.8;
-    margin-bottom: 2rem;
-  }
-
-  .intro p {
-    margin-bottom: 1.25rem;
-  }
-
-  section {
-    margin-bottom: 3rem;
-  }
-
-  h2 {
-    font-size: 1.75rem;
-    color: var(--color-primary);
-    margin-top: 2.5rem;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-accent);
-  }
-
-  h3 {
-    font-size: 1.25rem;
-    color: var(--color-primary);
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  p {
-    line-height: 1.7;
-    margin-bottom: 1rem;
-  }
-
-  table {
-    width: 100%;
-    margin: 1.5rem 0;
-    border-collapse: collapse;
-    font-size: 0.9375rem;
-  }
-
-  caption {
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-    text-align: left;
-    margin-bottom: 0.5rem;
-    font-style: italic;
-  }
-
-  th {
-    background-color: var(--color-primary);
-    color: var(--color-background);
-    padding: 0.75rem 1rem;
-    text-align: left;
-    font-weight: 600;
-  }
-
-  td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-accent);
-  }
-
-  tr:hover {
-    background-color: rgba(88, 129, 87, 0.05);
-  }
-
-  .expert-quote {
-    background: linear-gradient(135deg, rgba(13, 78, 80, 0.04) 0%, rgba(88, 129, 87, 0.08) 100%);
-    border-left: 4px solid var(--color-primary);
-    padding: 2rem;
-    border-radius: 0 1rem 1rem 0;
-    margin: 2.5rem 0;
-  }
-
-  .expert-quote blockquote {
-    margin: 0;
-    padding: 0;
-    border: none;
-    background: transparent;
-  }
-
-  .expert-quote p {
-    font-size: 1.125rem;
-    font-style: italic;
-    line-height: 1.7;
-    color: var(--color-primary);
-  }
-
-  .expert-quote cite {
-    display: block;
-    margin-top: 1rem;
-    font-size: 0.9375rem;
-    font-style: normal;
-    color: var(--color-text-light);
-  }
-
-  .stat-block {
-    background-color: rgba(88, 129, 87, 0.06);
-    border: 1px solid var(--color-accent);
-    border-radius: 0.5rem;
-    padding: 1.5rem 2rem;
-    margin: 2rem 0;
-  }
-
-  .stat-block h3 {
-    font-size: 1.125rem;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: var(--color-primary);
-  }
-
-  .stat-block ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .stat-block li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(88, 129, 87, 0.15);
-    line-height: 1.6;
-  }
-
-  .stat-block li:last-child {
-    border-bottom: none;
-  }
-
-  .cultivator-story {
-    background-color: var(--color-background);
-    border: 1px solid var(--color-accent);
-    border-radius: 0.5rem;
-    padding: 1.5rem 2rem;
-    font-style: normal;
-    margin: 2rem 0;
-  }
-
-  .cultivator-story p {
-    line-height: 1.8;
-    margin-bottom: 1rem;
-  }
-
-  .cultivator-story .attribution {
-    font-size: 0.9375rem;
-    color: var(--color-text-light);
-    font-style: italic;
-    margin-top: 1.5rem;
-    margin-bottom: 0;
-  }
-
-  .related-guides {
-    background-color: rgba(13, 78, 80, 0.03);
-    border-radius: 0.5rem;
-    padding: 1.5rem 2rem;
-    margin-top: 3rem;
-  }
-
-  .related-guides h2 {
-    border-bottom: none;
-    margin-top: 0;
-    padding-bottom: 0;
-    font-size: 1.25rem;
-  }
-
-  .related-guides ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .related-guides li {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(88, 129, 87, 0.15);
-    line-height: 1.5;
-  }
-
-  .related-guides li:last-child {
-    border-bottom: none;
-  }
-
-  .related-guides a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    transition: color 0.2s ease;
-  }
-
-  .related-guides a:hover {
-    color: var(--color-accent);
-  }
-
-  .content-verification {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .verification-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(88, 129, 87, 0.08);
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-  }
-
-  .verification-icon {
-    color: var(--color-accent);
-    font-size: 0.75rem;
-  }
-
-  .verification-text {
-    color: var(--color-text-light);
-  }
-
-  .verification-text a {
-    color: var(--color-primary);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .verification-text a:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    .article-header h1 {
-      font-size: 1.875rem;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-    }
-
-    table {
-      font-size: 0.875rem;
-    }
-
-    td, th {
-      padding: 0.5rem 0.75rem;
-    }
-  }
-</style>

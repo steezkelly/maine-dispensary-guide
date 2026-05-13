@@ -9,7 +9,33 @@ import Callout from '../../components/Callout.astro';
   heroImage="/images/heroes/resources-maine-cannabis-education.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-10", modifiedDate: "2026-04-04", section: "Resources" }}
 >
-  <article class="resource-hub">
+  <style>
+
+  .resource-hub { max-width: 900px; margin: 0 auto; }
+  
+  .hub-header { text-align: center; margin-bottom: 3rem; }
+  .hub-header h1 { font-size: 2.25rem; color: var(--color-primary); margin-bottom: 1rem; }
+  .lead { font-size: 1.15rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+  
+  .resource-sections { display: flex; flex-direction: column; gap: 4rem; margin-top: 3rem; }
+  
+  .resource-section h2 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .section-icon { font-size: 2rem; }
+  .resource-section > p { color: var(--color-text-light); margin-bottom: 1.5rem; line-height: 1.6; }
+  
+  .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .resource-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem; padding: 1.5rem; }
+  .resource-card h3 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.05rem; margin-bottom: 0.75rem; }
+  .resource-card > p { font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.5; }
+  
+  .resource-links { list-style: none; padding: 0; margin: 0; }
+  .resource-links li { margin-bottom: 0.5rem; }
+  .resource-links a { color: var(--color-accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+  .resource-links a:hover { text-decoration: underline; }
+
+</style>
+<article class="resource-hub">
     <div class="hub-header">
       <h1>Maine Cannabis Education & Training</h1>
       <p class="lead">Curated educational resources for Maine cannabis entrepreneurs, employees, and aspiring operators. From seed-to-sale tracking certification to budtender training programs.</p>
@@ -178,31 +204,6 @@ import Callout from '../../components/Callout.astro';
     </Callout>
   </article>
 </Layout>
-
-<style>
-  .resource-hub { max-width: 900px; margin: 0 auto; }
-  
-  .hub-header { text-align: center; margin-bottom: 3rem; }
-  .hub-header h1 { font-size: 2.25rem; color: var(--color-primary); margin-bottom: 1rem; }
-  .lead { font-size: 1.15rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; line-height: 1.7; }
-  
-  .resource-sections { display: flex; flex-direction: column; gap: 4rem; margin-top: 3rem; }
-  
-  .resource-section h2 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.5rem; margin-bottom: 0.5rem; }
-  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-  .section-icon { font-size: 2rem; }
-  .resource-section > p { color: var(--color-text-light); margin-bottom: 1.5rem; line-height: 1.6; }
-  
-  .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-  .resource-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem; padding: 1.5rem; }
-  .resource-card h3 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.05rem; margin-bottom: 0.75rem; }
-  .resource-card > p { font-size: 0.875rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.5; }
-  
-  .resource-links { list-style: none; padding: 0; margin: 0; }
-  .resource-links li { margin-bottom: 0.5rem; }
-  .resource-links a { color: var(--color-accent); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
-  .resource-links a:hover { text-decoration: underline; }
-</style>
 
 <section class="faq-section">
   <h2>Frequently Asked Questions</h2>

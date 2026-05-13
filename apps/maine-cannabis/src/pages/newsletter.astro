@@ -47,117 +47,8 @@ const recentIssues = [
   heroImage="/images/heroes/newsletter.jpg"
   article={article}
 >
-  <article class="newsletter-page">
-    <div class="article-header">
-      <div class="header-eyebrow">
-        <PineTree size={16} color="var(--color-accent)" />
-        <span>Free Weekly Publication</span>
-      </div>
-      <h1>Maine Cannabis Insider</h1>
-      <p class="subtitle">The weekly intelligence brief for Maine cannabis entrepreneurs — licensing updates, market analysis, and operator interviews delivered every Tuesday.</p>
-    </div>
+  <style>
 
-    <section class="subscribe-section">
-      <div class="subscribe-card">
-        <div class="subscribe-left">
-          <h2>Join 1,200+ Maine Cannabis Operators</h2>
-          <p>Free forever. No spam. Unsubscribe anytime. Published every Tuesday morning.</p>
-          <ul class="subscribe-perks">
-            <li>◆ Weekly licensing and regulatory updates</li>
-            <li>◆ Market intelligence by region and license type</li>
-            <li>◆ Founder interviews from Maine operators</li>
-            <li>◆ New guide announcements</li>
-          </ul>
-        </div>
-        <div class="subscribe-right">
-          <div class="beehiiv-embed" id="beehiiv-embed-form">
-            <form
-              id="newsletter-signup"
-              action="https://formspree.io/f/xvgzlowz"
-              method="POST"
-              class="inline-signup-form"
-            >
-              <div class="form-group">
-                <label for="sub-email" class="sr-only">Your Email</label>
-                <input
-                  type="email"
-                  id="sub-email"
-                  name="email"
-                  placeholder="you@yourcompany.com"
-                  required
-                  autocomplete="email"
-                  class="form-input"
-                />
-              </div>
-              <div class="form-group">
-                <label for="sub-stage" class="sr-only">Your Stage</label>
-                <select id="sub-stage" name="stage" class="form-select">
-                  <option value="" disabled selected>Your stage...</option>
-                  <option value="startup">Pre-license — researching</option>
-                  <option value="applying">Application in progress</option>
-                  <option value="operating">Already operating</option>
-                  <option value="ancillary">Service provider / investor</option>
-                </select>
-              </div>
-              <button type="submit" class="form-btn">Subscribe Free</button>
-              <input type="hidden" name="_subject" value="Newsletter Subscription — Maine Dispensary Guide" />
-              <input type="hidden" name="_tags" value="newsletter" />
-            </form>
-            <p class="form-note">Or <a href="https://app.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer">subscribe directly on Beehiiv</a> for a better experience.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="what-you-get">
-      <h2>What You'll Receive</h2>
-      <div class="benefits-grid">
-        {benefits.map(b => (
-          <div class="benefit-card">
-            <span class="benefit-icon">{b.icon}</span>
-            <div>
-              <h3>{b.title}</h3>
-              <p>{b.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <section class="sample-issues">
-      <h2>Recent Issues</h2>
-      <p class="section-intro">Every issue is written for Maine operators specifically — not national cannabis news, not generic business advice.</p>
-      <div class="issue-list">
-        {recentIssues.map(issue => (
-          <div class="issue-card">
-            <span class="issue-date">{issue.date}</span>
-            <h3>{issue.subject}</h3>
-            <p>{issue.teaser}</p>
-          </div>
-        ))}
-      </div>
-      <p class="sample-note">The full archive is available at <a href="https://mainedispensaryguide.com/newsletter" target="_blank" rel="noopener noreferrer">mainedispensaryguide.com/newsletter</a> once you subscribe.</p>
-    </section>
-
-    <section class="why-not-elsewhere">
-      <h2>Why This Isn't Just Another Newsletter</h2>
-      <p>Maine cannabis operators have access to national publications like MJBizDaily and Cannabis Business Times. Those cover the US industry broadly. This newsletter covers <em>Maine specifically</em> — OCP rule changes that only affect Maine operators, town-by-town market analysis you won't find anywhere else, and interviews with operators who opened dispensaries in Lewiston, Bangor, and Waterville.</p>
-      <p>If you're building a business in Maine's cannabis market, this newsletter is written for you.</p>
-    </section>
-
-    <section class="archive-cta">
-      <div class="archive-inner">
-        <h3>Missed an Issue?</h3>
-        <p>All past issues are archived on Beehiiv. Subscribe above to receive them weekly, or browse the full archive.</p>
-        <a href="https://app.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer" class="archive-link">
-          Browse Past Issues →
-        </a>
-      </div>
-    </section>
-  </article>
-</Layout>
-
-<style>
   .newsletter-page {
     max-width: 850px;
     margin: 0 auto;
@@ -531,5 +422,116 @@ const recentIssues = [
     .article-header h1 { font-size: 1.75rem; }
     .benefits-grid { grid-template-columns: 1fr; }
   }
+
 </style>
+<article class="newsletter-page">
+    <div class="article-header">
+      <div class="header-eyebrow">
+        <PineTree size={16} color="var(--color-accent)" />
+        <span>Free Weekly Publication</span>
+      </div>
+      <h1>Maine Cannabis Insider</h1>
+      <p class="subtitle">The weekly intelligence brief for Maine cannabis entrepreneurs — licensing updates, market analysis, and operator interviews delivered every Tuesday.</p>
+    </div>
+
+    <section class="subscribe-section">
+      <div class="subscribe-card">
+        <div class="subscribe-left">
+          <h2>Join 1,200+ Maine Cannabis Operators</h2>
+          <p>Free forever. No spam. Unsubscribe anytime. Published every Tuesday morning.</p>
+          <ul class="subscribe-perks">
+            <li>◆ Weekly licensing and regulatory updates</li>
+            <li>◆ Market intelligence by region and license type</li>
+            <li>◆ Founder interviews from Maine operators</li>
+            <li>◆ New guide announcements</li>
+          </ul>
+        </div>
+        <div class="subscribe-right">
+          <div class="beehiiv-embed" id="beehiiv-embed-form">
+            <form
+              id="newsletter-signup"
+              action="https://formspree.io/f/xvgzlowz"
+              method="POST"
+              class="inline-signup-form"
+            >
+              <div class="form-group">
+                <label for="sub-email" class="sr-only">Your Email</label>
+                <input
+                  type="email"
+                  id="sub-email"
+                  name="email"
+                  placeholder="you@yourcompany.com"
+                  required
+                  autocomplete="email"
+                  class="form-input"
+                />
+              </div>
+              <div class="form-group">
+                <label for="sub-stage" class="sr-only">Your Stage</label>
+                <select id="sub-stage" name="stage" class="form-select">
+                  <option value="" disabled selected>Your stage...</option>
+                  <option value="startup">Pre-license — researching</option>
+                  <option value="applying">Application in progress</option>
+                  <option value="operating">Already operating</option>
+                  <option value="ancillary">Service provider / investor</option>
+                </select>
+              </div>
+              <button type="submit" class="form-btn">Subscribe Free</button>
+              <input type="hidden" name="_subject" value="Newsletter Subscription — Maine Dispensary Guide" />
+              <input type="hidden" name="_tags" value="newsletter" />
+            </form>
+            <p class="form-note">Or <a href="https://app.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer">subscribe directly on Beehiiv</a> for a better experience.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="what-you-get">
+      <h2>What You'll Receive</h2>
+      <div class="benefits-grid">
+        {benefits.map(b => (
+          <div class="benefit-card">
+            <span class="benefit-icon">{b.icon}</span>
+            <div>
+              <h3>{b.title}</h3>
+              <p>{b.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="sample-issues">
+      <h2>Recent Issues</h2>
+      <p class="section-intro">Every issue is written for Maine operators specifically — not national cannabis news, not generic business advice.</p>
+      <div class="issue-list">
+        {recentIssues.map(issue => (
+          <div class="issue-card">
+            <span class="issue-date">{issue.date}</span>
+            <h3>{issue.subject}</h3>
+            <p>{issue.teaser}</p>
+          </div>
+        ))}
+      </div>
+      <p class="sample-note">The full archive is available at <a href="https://mainedispensaryguide.com/newsletter" target="_blank" rel="noopener noreferrer">mainedispensaryguide.com/newsletter</a> once you subscribe.</p>
+    </section>
+
+    <section class="why-not-elsewhere">
+      <h2>Why This Isn't Just Another Newsletter</h2>
+      <p>Maine cannabis operators have access to national publications like MJBizDaily and Cannabis Business Times. Those cover the US industry broadly. This newsletter covers <em>Maine specifically</em> — OCP rule changes that only affect Maine operators, town-by-town market analysis you won't find anywhere else, and interviews with operators who opened dispensaries in Lewiston, Bangor, and Waterville.</p>
+      <p>If you're building a business in Maine's cannabis market, this newsletter is written for you.</p>
+    </section>
+
+    <section class="archive-cta">
+      <div class="archive-inner">
+        <h3>Missed an Issue?</h3>
+        <p>All past issues are archived on Beehiiv. Subscribe above to receive them weekly, or browse the full archive.</p>
+        <a href="https://app.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer" class="archive-link">
+          Browse Past Issues →
+        </a>
+      </div>
+    </section>
+  </article>
+</Layout>
+
 </Layout>

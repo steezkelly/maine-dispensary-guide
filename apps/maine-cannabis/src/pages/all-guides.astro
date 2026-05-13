@@ -73,41 +73,8 @@ const categories = [
   heroImage="/images/heroes/all-guides.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-01", section: "Reference" }}
 >
-  <section class="page-header">
-    <div class="hero-badge">44 Expert Guides</div>
-    <h1>Maine Cannabis Resource Library</h1>
-    <p class="lead">Everything you need to open, operate, and scale a compliant cannabis business in the Pine Tree State.</p>
-  </section>
+  <style>
 
-  <section class="library-intro">
-    <p>This library covers every phase of the Maine cannabis business lifecycle. From navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management. Each guide is written for Maine-specific conditions — federal 280E tax implications, state licensing tiers, and local opt-in requirements vary town by town.</p>
-    <p>City guides provide granular market analysis for 15 Maine municipalities, from Portland's competitive landscape to Bangor's underserved northern opportunity. Technical guides address specific operational challenges including POS system selection, banking access, edibles manufacturing compliance, and delivery logistics.</p>
-    <p>The library also includes founder success stories that illustrate real-world paths from license application to successful operations, along with an ROI calculator and market statistics to support business planning decisions.</p>
-    <p>Whether you're a first-time entrepreneur exploring the regulated cannabis industry or an established operator seeking to optimize your existing license, these resources provide the regulatory guidance, financial planning tools, and operational expertise needed to build a compliant, profitable business in Maine's growing market.</p>
-  </section>
-
-  <div class="category-grid">
-    {categories.map(cat => (
-      <div class="category-card">
-        <div class="cat-header">
-          <span class="cat-icon">{cat.icon}</span>
-          <h2>{cat.name}</h2>
-        </div>
-        <ul class="guide-list">
-          {cat.guides.map(g => (
-            <li><a href={g.href}>{g.title}</a></li>
-          ))}
-        </ul>
-      </div>
-    ))}
-  </div>
-
-  <Callout title="Start with the Launch Checklist" type="info">
-    New to Maine cannabis? Begin with our <a href="/launch-checklist/">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales.
-  </Callout>
-</Layout>
-
-<style>
   .page-header {
     text-align: center;
     margin-bottom: 5rem;
@@ -249,4 +216,38 @@ const categories = [
   [data-theme="dark"] .guide-list a:hover {
     color: var(--color-accent);
   }
+
 </style>
+<section class="page-header">
+    <div class="hero-badge">44 Expert Guides</div>
+    <h1>Maine Cannabis Resource Library</h1>
+    <p class="lead">Everything you need to open, operate, and scale a compliant cannabis business in the Pine Tree State.</p>
+  </section>
+
+  <section class="library-intro">
+    <p>This library covers every phase of the Maine cannabis business lifecycle. From navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management. Each guide is written for Maine-specific conditions — federal 280E tax implications, state licensing tiers, and local opt-in requirements vary town by town.</p>
+    <p>City guides provide granular market analysis for 15 Maine municipalities, from Portland's competitive landscape to Bangor's underserved northern opportunity. Technical guides address specific operational challenges including POS system selection, banking access, edibles manufacturing compliance, and delivery logistics.</p>
+    <p>The library also includes founder success stories that illustrate real-world paths from license application to successful operations, along with an ROI calculator and market statistics to support business planning decisions.</p>
+    <p>Whether you're a first-time entrepreneur exploring the regulated cannabis industry or an established operator seeking to optimize your existing license, these resources provide the regulatory guidance, financial planning tools, and operational expertise needed to build a compliant, profitable business in Maine's growing market.</p>
+  </section>
+
+  <div class="category-grid">
+    {categories.map(cat => (
+      <div class="category-card">
+        <div class="cat-header">
+          <span class="cat-icon">{cat.icon}</span>
+          <h2>{cat.name}</h2>
+        </div>
+        <ul class="guide-list">
+          {cat.guides.map(g => (
+            <li><a href={g.href}>{g.title}</a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <Callout title="Start with the Launch Checklist" type="info">
+    New to Maine cannabis? Begin with our <a href="/launch-checklist/">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales.
+  </Callout>
+</Layout>

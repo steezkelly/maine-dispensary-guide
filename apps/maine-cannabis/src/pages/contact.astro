@@ -36,7 +36,57 @@ const faqs = [
   heroImage="/images/heroes/contact.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-01", modifiedDate: "2026-04-04", section: "About" }}
 >
-  <article class="contact-page">
+  <style>
+
+  .contact-page { max-width: 900px; margin: 0 auto; padding: 4rem 0; }
+  .header-center { text-align: center; margin-bottom: 5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
+  
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 6rem; }
+  .contact-method { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); text-align: center; }
+  .contact-method .icon { font-size: 3rem; margin-bottom: 1.5rem; }
+  .contact-method h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .contact-method p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6; }
+  .contact-link { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; text-decoration: none; }
+  .contact-link:hover { text-decoration: underline; }
+
+  .mission-statement { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
+  .mission-statement h2 { margin-top: 0; margin-bottom: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  .mission-statement p { color: var(--color-text-light); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+  .mission-statement p:last-child { margin-bottom: 0; }
+
+  .faq-section { background: var(--color-surface); padding: 4rem; border-radius: 2.5rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
+  .faq-section h2 { text-align: center; font-size: 2.25rem; color: var(--color-primary); margin-bottom: 3rem; font-family: var(--font-serif); }
+  .faq-item { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--color-border); }
+  .faq-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .faq-item h3 { font-size: 1.15rem; color: var(--color-primary); margin-bottom: 0.75rem; font-family: var(--font-serif); }
+  .faq-item p { font-size: 1.0rem; color: var(--color-text-light); line-height: 1.7; }
+  .faq-item a { color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .faq-item a:hover { border-color: var(--color-accent); }
+
+  .quick-links-section { text-align: center; margin-bottom: 5rem; }
+  .quick-links-section h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 1rem; }
+  .quick-links-section > p { color: var(--color-text-light); margin-bottom: 3rem; }
+  .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+  .quick-link-card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem; text-decoration: none; transition: all 0.2s; }
+  .quick-link-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 78, 80, 0.08); }
+  .ql-icon { font-size: 2rem; }
+  .ql-label { font-size: 0.875rem; font-weight: 700; color: var(--color-primary); text-align: center; }
+
+  @media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  [data-theme="dark"] .contact-method {
+    background: var(--color-surface);
+  }
+
+  [data-theme="dark"] .quick-link-card {
+    background: var(--color-surface);
+  }
+
+</style>
+<article class="contact-page">
     <div class="header-center">
       <h1>Connect with Our Team</h1>
       <p class="lead">Whether you're a founder with a technical question or a professional looking to join our network, we want to hear from you.</p>
@@ -109,53 +159,5 @@ const faqs = [
       The Maine Dispensary Guide provides informational resources only. Nothing on this site constitutes legal or financial advice. Always consult a licensed Maine cannabis attorney and CPA before making business decisions.
     </Callout>
   </article>
+
 </Layout>
-
-<style>
-  .contact-page { max-width: 900px; margin: 0 auto; padding: 4rem 0; }
-  .header-center { text-align: center; margin-bottom: 5rem; }
-  .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
-  
-  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 6rem; }
-  .contact-method { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); text-align: center; }
-  .contact-method .icon { font-size: 3rem; margin-bottom: 1.5rem; }
-  .contact-method h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
-  .contact-method p { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6; }
-  .contact-link { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; text-decoration: none; }
-  .contact-link:hover { text-decoration: underline; }
-
-  .mission-statement { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
-  .mission-statement h2 { margin-top: 0; margin-bottom: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
-  .mission-statement p { color: var(--color-text-light); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
-  .mission-statement p:last-child { margin-bottom: 0; }
-
-  .faq-section { background: var(--color-surface); padding: 4rem; border-radius: 2.5rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
-  .faq-section h2 { text-align: center; font-size: 2.25rem; color: var(--color-primary); margin-bottom: 3rem; font-family: var(--font-serif); }
-  .faq-item { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--color-border); }
-  .faq-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-  .faq-item h3 { font-size: 1.15rem; color: var(--color-primary); margin-bottom: 0.75rem; font-family: var(--font-serif); }
-  .faq-item p { font-size: 1.0rem; color: var(--color-text-light); line-height: 1.7; }
-  .faq-item a { color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
-  .faq-item a:hover { border-color: var(--color-accent); }
-
-  .quick-links-section { text-align: center; margin-bottom: 5rem; }
-  .quick-links-section h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 1rem; }
-  .quick-links-section > p { color: var(--color-text-light); margin-bottom: 3rem; }
-  .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
-  .quick-link-card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem; text-decoration: none; transition: all 0.2s; }
-  .quick-link-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 78, 80, 0.08); }
-  .ql-icon { font-size: 2rem; }
-  .ql-label { font-size: 0.875rem; font-weight: 700; color: var(--color-primary); text-align: center; }
-
-  @media (max-width: 768px) {
-    .contact-grid { grid-template-columns: 1fr; }
-  }
-
-  [data-theme="dark"] .contact-method {
-    background: var(--color-surface);
-  }
-
-  [data-theme="dark"] .quick-link-card {
-    background: var(--color-surface);
-  }
-</style>
