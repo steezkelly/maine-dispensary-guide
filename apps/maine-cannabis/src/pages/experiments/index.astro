@@ -38,15 +38,17 @@ const germinated = [
     summary: "A playful copy-taste filter for spotting tired cannabis marketing phrases before they leak into useful guide pages.",
     signal: "Someone rewrites hype into a clearer sentence instead of shipping another generic cannabis paragraph.",
     href: "#cannabis-seo-slop-bingo"
+  },
+  {
+    status: "Germinated",
+    title: "Budtender Question Card",
+    summary: "A neutral in-store question card that helps adults ask clearly without asking for legal, medical, or product advice.",
+    signal: "Someone walks into a shop with less awkwardness and a clearer list of facts to verify.",
+    href: "#budtender-question-card"
   }
 ];
 
 const seeds = [
-  {
-    title: "Budtender Question Card",
-    summary: "Neutral questions adults can ask without turning the visit into legal, medical, or product advice.",
-    next: "Draft a one-page card and cut anything that sounds like guidance."
-  },
   {
     title: "Best Dispensary Detox Box",
     summary: "A small explanation of why Maine Dispensary Guide does not call something best without a transparent method.",
@@ -56,6 +58,58 @@ const seeds = [
     title: "Cannabis Claim Graveyard",
     summary: "A private/public-safe list of cannabis copy phrases to avoid, with better phrasing that stays factual.",
     next: "Draft 12 avoid-this / say-this-instead pairs."
+  }
+];
+
+
+const budtenderQuestions = [
+  {
+    situation: "First visit or first visit in a while",
+    question: "What should I know before I read this menu today?",
+    avoid: "Do not ask what you should buy or what will work for a condition.",
+    verify: "Purchase eligibility, ID rules, current menu, and payment options."
+  },
+  {
+    situation: "A label number looks important",
+    question: "Can you show me where the serving size, total amount, and test date are listed?",
+    avoid: "Do not assume a higher number means better, safer, or right for you.",
+    verify: "Serving size, package amount, batch or lot number, and test date."
+  },
+  {
+    situation: "A menu word sounds precise",
+    question: "What does that term mean for this exact item on today's menu?",
+    avoid: "Do not treat words like premium, craft, live, or full spectrum as proof by themselves.",
+    verify: "How the shop defines the word and what the package or test info actually says."
+  },
+  {
+    situation: "Comparing medical and adult-use options",
+    question: "Is this item available for medical patients, adult-use customers, or both?",
+    avoid: "Do not ask for legal advice about eligibility or possession rules.",
+    verify: "Store type, card requirements, ID requirements, and current state or municipal source if unsure."
+  },
+  {
+    situation: "Trying to avoid stale information",
+    question: "Was this menu detail updated today, and what could have changed since it was posted?",
+    avoid: "Do not rely on old screenshots, old third-party listings, or cached menu text.",
+    verify: "Availability, price, package date, pickup rules, and any substitutions."
+  },
+  {
+    situation: "Something is infused or mixed",
+    question: "What exactly is added, and where is the total package amount listed?",
+    avoid: "Do not assume the name explains the serving size or all ingredients.",
+    verify: "Added cannabis material, listed serving size, package amount, and label warnings."
+  },
+  {
+    situation: "A product has a freshness or process claim",
+    question: "When was this packaged, and what process details are available on the label or test result?",
+    avoid: "Do not translate fresh, solventless, small batch, or local into a safety or quality promise.",
+    verify: "Packaged date, batch information, process wording, and source type."
+  },
+  {
+    situation: "Leaving the counter",
+    question: "Before I leave, what should I double-check on the receipt, package, or pickup order?",
+    avoid: "Do not leave with a mismatch between the menu, receipt, and package label.",
+    verify: "Correct item, quantity, price, label, order name, and any store-specific return or pickup policy."
   }
 ];
 
@@ -896,10 +950,50 @@ Verify today: confirm directly with the source before relying on this detail.</p
       </table>
     </section>
 
+
+
+    <section id="budtender-question-card" class="artifact-card" aria-labelledby="budtender-question-heading">
+      <span class="status-pill">◆ Fifth sprout</span>
+      <h2 id="budtender-question-heading">Budtender Question Card</h2>
+      <p>
+        A pocket-sized question card for adults who want to ask clearer in-store questions without asking the budtender to make medical, legal, or product decisions for them. The move is simple: name the situation, ask for verifiable facts, and leave advice-shaped guesses out of it.
+      </p>
+
+      <div class="card-panel">
+        <h4>How to use this card</h4>
+        <ul class="plain-list">
+          <li>Ask about the exact item, label, menu, source, or shop rule in front of you.</li>
+          <li>Keep questions factual: what is listed, what changed, what source says it, what should be verified today.</li>
+          <li>Avoid asking for diagnosis, treatment, dosing, legal interpretation, or a guaranteed outcome.</li>
+        </ul>
+      </div>
+
+      <table class="mirage-table">
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>Neutral question</th>
+            <th>What not to ask for</th>
+            <th>Verify before leaving</th>
+          </tr>
+        </thead>
+        <tbody>
+          {budtenderQuestions.map((item) => (
+            <tr>
+              <td>{item.situation}</td>
+              <td>{item.question}</td>
+              <td>{item.avoid}</td>
+              <td>{item.verify}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
     <section class="next-move" aria-labelledby="next-move-heading">
       <h2 id="next-move-heading">Next small experiment</h2>
       <p>
-        The strongest remaining seed is probably the Budtender Question Card: neutral in-store questions that help adults ask clearly without drifting into medical, legal, or product advice.
+        The strongest remaining seed is probably the Best Dispensary Detox Box: a calm trust box explaining why Maine Dispensary Guide does not call something “best” without a transparent method.
       </p>
     </section>
   </main>
