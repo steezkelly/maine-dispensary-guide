@@ -31,6 +31,13 @@ const germinated = [
     summary: "A tiny noindex webapp that stamps a fact with last checked, source type, what may have changed, and what to verify today.",
     signal: "Someone stops trusting stale menu or hours text just because it still exists on a page.",
     href: "#freshness-stamp-widget"
+  },
+  {
+    status: "Germinated",
+    title: "Cannabis SEO Slop Bingo",
+    summary: "A playful copy-taste filter for spotting tired cannabis marketing phrases before they leak into useful guide pages.",
+    signal: "Someone rewrites hype into a clearer sentence instead of shipping another generic cannabis paragraph.",
+    href: "#cannabis-seo-slop-bingo"
   }
 ];
 
@@ -39,11 +46,6 @@ const seeds = [
     title: "Budtender Question Card",
     summary: "Neutral questions adults can ask without turning the visit into legal, medical, or product advice.",
     next: "Draft a one-page card and cut anything that sounds like guidance."
-  },
-  {
-    title: "Cannabis SEO Slop Bingo",
-    summary: "A bingo card of tired cannabis marketing phrases that helps keep this site from sounding like every other cannabis site.",
-    next: "Draft 25 squares and use it as a copy-taste filter."
   },
   {
     title: "Best Dispensary Detox Box",
@@ -55,6 +57,35 @@ const seeds = [
     summary: "A private/public-safe list of cannabis copy phrases to avoid, with better phrasing that stays factual.",
     next: "Draft 12 avoid-this / say-this-instead pairs."
   }
+];
+
+const slopSquares = [
+  { phrase: "best dispensary near me", why: "Claims a ranking without a transparent method.", better: "Explain how readers can compare current options." },
+  { phrase: "premium top-shelf flower", why: "Stacks vague quality words without evidence.", better: "Say what can be checked: batch, label, package date, source." },
+  { phrase: "unbeatable deals", why: "Sounds like an ad and can rot fast.", better: "Use dated, sourced price context only when verified." },
+  { phrase: "trusted by everyone", why: "Everyone is not a source.", better: "Name the source type or leave the trust claim out." },
+  { phrase: "life-changing experience", why: "Drifts toward personal or therapeutic claims.", better: "Describe logistics, format, and questions to ask." },
+  { phrase: "highest quality products", why: "Quality is undefined and unmeasured.", better: "Explain what a label or shop can verify." },
+  { phrase: "safe and legal", why: "Legal/safety claims need current authority.", better: "Point readers to current official requirements." },
+  { phrase: "curated for your needs", why: "Sounds like advice without knowing the person.", better: "Offer neutral questions a reader can ask." },
+  { phrase: "perfect for beginners", why: "Beginner needs vary and can imply guidance.", better: "Explain what first-time readers should verify." },
+  { phrase: "locally loved", why: "Vibes are not evidence.", better: "Use concrete local context: route, town, hours source." },
+  { phrase: "exclusive strains", why: "Exclusivity is often unverifiable from a menu.", better: "Ask what is unusual about the specific batch." },
+  { phrase: "hand-selected", why: "Sounds careful but says nothing inspectable.", better: "Name the selection criteria or cut it." },
+  { phrase: "lab-tested for purity", why: "Purity is loaded and needs specifics.", better: "Refer to available test date, batch, and listed fields." },
+  { phrase: "discreet cannabis solutions", why: "Generic funnel language that says little.", better: "State actual visit, pickup, or ordering logistics." },
+  { phrase: "wellness journey", why: "Medical-adjacent fluff for a guide page.", better: "Keep it to consumer literacy and verification." },
+  { phrase: "elevate your lifestyle", why: "Could describe any cannabis brand page on earth.", better: "Use local, factual, page-specific language." },
+  { phrase: "knowledgeable staff", why: "Maybe true, but unsupported and generic.", better: "Suggest questions to ask staff instead." },
+  { phrase: "one-stop shop", why: "Overused and rarely informative.", better: "List the categories only if current and sourced." },
+  { phrase: "fresh inventory daily", why: "Fast-rotting claim that demands a timestamp.", better: "Add last checked and verify-today language." },
+  { phrase: "convenient location", why: "Convenient for whom?",
+    better: "Name the route, neighborhood, or nearby context." },
+  { phrase: "expert recommendations", why: "Can imply product advice.", better: "Use neutral literacy aids and verification steps." },
+  { phrase: "cannabis destination", why: "Tourism fluff without reader value.", better: "Explain practical reasons someone may compare towns." },
+  { phrase: "satisfaction guaranteed", why: "Guarantee language invites policy/legal problems.", better: "State what the page can and cannot verify." },
+  { phrase: "cutting-edge products", why: "Empty novelty claim.", better: "Describe the product category in plain terms." },
+  { phrase: "community favorite", why: "Popularity claim without data.", better: "Avoid popularity unless the method is transparent." }
 ];
 ---
 
@@ -375,6 +406,89 @@ const seeds = [
       font-size: 0.9rem;
     }
 
+    .slop-lab {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .bingo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .bingo-actions button {
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.65rem 0.95rem;
+      background: var(--color-primary);
+      color: var(--color-background);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .bingo-score {
+      color: var(--color-text-light);
+      font-weight: 800;
+    }
+
+    .bingo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .bingo-square {
+      min-height: 92px;
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 0.65rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+      font-weight: 800;
+      line-height: 1.25;
+      cursor: pointer;
+    }
+
+    .bingo-square[aria-pressed="true"] {
+      border-color: var(--color-accent);
+      box-shadow: inset 0 0 0 3px var(--color-accent);
+    }
+
+    .slop-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+    }
+
+    .slop-table th,
+    .slop-table td {
+      border: 1px solid var(--color-border);
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+      color: var(--color-text-light);
+      line-height: 1.5;
+    }
+
+    .slop-table th {
+      background: var(--color-background);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .slop-table td:first-child {
+      color: var(--color-text);
+      font-weight: 800;
+    }
+
     .plain-list {
       margin: 0;
       padding-left: 1.1rem;
@@ -419,6 +533,15 @@ const seeds = [
 
       .freshness-output {
         grid-template-columns: 1fr;
+      }
+
+      .bingo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .slop-table {
+        display: block;
+        overflow-x: auto;
       }
     }
   </style>
@@ -727,10 +850,56 @@ Verify today: confirm directly with the source before relying on this detail.</p
       </div>
     </section>
 
+    <section id="cannabis-seo-slop-bingo" class="artifact-card" aria-labelledby="slop-bingo-heading">
+      <span class="status-pill">◆ Fourth sprout</span>
+      <h2 id="slop-bingo-heading">Cannabis SEO Slop Bingo</h2>
+      <p>
+        This is a copy-taste filter for MDG drafts. It is not a public dunk list and it does not judge any shop. It catches generic cannabis marketing phrases before they turn a useful guide into the same paragraph readers have already seen everywhere.
+      </p>
+
+      <div class="card-panel">
+        <h4>Slop bingo lab</h4>
+        <p>
+          Tap a square whenever a draft uses that phrase or an obvious cousin. Shuffle makes a new card from the same 25 phrases. The goal is not perfection; it is enough friction to rewrite hype into something a reader can verify.
+        </p>
+        <div class="slop-lab" data-slop-bingo>
+          <div class="bingo-actions">
+            <button type="button" data-bingo-shuffle>Shuffle card</button>
+            <button type="button" data-bingo-clear>Clear marks</button>
+            <span class="bingo-score" data-bingo-score>0 marked</span>
+          </div>
+          <div class="bingo-grid" aria-label="Cannabis SEO Slop Bingo card">
+            {slopSquares.map((square) => (
+              <button type="button" class="bingo-square" aria-pressed="false" data-phrase={square.phrase}>{square.phrase}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <table class="slop-table">
+        <thead>
+          <tr>
+            <th>Slop phrase</th>
+            <th>Why it is slop</th>
+            <th>Better plain-language move</th>
+          </tr>
+        </thead>
+        <tbody>
+          {slopSquares.map((square) => (
+            <tr>
+              <td>{square.phrase}</td>
+              <td>{square.why}</td>
+              <td>{square.better}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
     <section class="next-move" aria-labelledby="next-move-heading">
       <h2 id="next-move-heading">Next small experiment</h2>
       <p>
-        The most playful remaining seed is probably Cannabis SEO Slop Bingo: a copy-taste filter for spotting tired cannabis marketing phrases before they leak into serious guide pages.
+        The strongest remaining seed is probably the Budtender Question Card: neutral in-store questions that help adults ask clearly without drifting into medical, legal, or product advice.
       </p>
     </section>
   </main>
@@ -799,6 +968,56 @@ Verify today: confirm directly with the source before relying on this detail.`;
       });
 
       updateFreshness();
+    }
+
+    const bingo = document.querySelector('[data-slop-bingo]');
+    if (bingo) {
+      const grid = bingo.querySelector('.bingo-grid');
+      const score = bingo.querySelector('[data-bingo-score]');
+      const shuffleButton = bingo.querySelector('[data-bingo-shuffle]');
+      const clearButton = bingo.querySelector('[data-bingo-clear]');
+      const originalPhrases = Array.from(grid.querySelectorAll('.bingo-square')).map((button) => button.textContent || '');
+
+      function updateBingoScore() {
+        const marked = grid.querySelectorAll('.bingo-square[aria-pressed="true"]').length;
+        score.textContent = `${marked} marked${marked >= 5 ? ' — bingo-shaped problem' : ''}`;
+      }
+
+      function wireSquare(button) {
+        button.addEventListener('click', () => {
+          const pressed = button.getAttribute('aria-pressed') === 'true';
+          button.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          updateBingoScore();
+        });
+      }
+
+      function renderPhrases(phrases) {
+        grid.innerHTML = '';
+        phrases.forEach((phrase) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'bingo-square';
+          button.setAttribute('aria-pressed', 'false');
+          button.dataset.phrase = phrase;
+          button.textContent = phrase;
+          wireSquare(button);
+          grid.appendChild(button);
+        });
+        updateBingoScore();
+      }
+
+      shuffleButton.addEventListener('click', () => {
+        const shuffled = [...originalPhrases].sort(() => Math.random() - 0.5);
+        renderPhrases(shuffled);
+      });
+
+      clearButton.addEventListener('click', () => {
+        grid.querySelectorAll('.bingo-square').forEach((button) => button.setAttribute('aria-pressed', 'false'));
+        updateBingoScore();
+      });
+
+      grid.querySelectorAll('.bingo-square').forEach(wireSquare);
+      updateBingoScore();
     }
   </script>
 </Layout>
