@@ -1,9 +1,21 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (Ahrefs remediation branch now includes rendered crawl regression guards for trailing slashes, broken rendered assets/links, meta length, JSON-LD parsing, and `/download` breadcrumb regressions.)
+**Last updated: 2026-05-14 EDT** (`/find-a-dispensary` now covers all 61 local guide pages with slashless internal links and passing rendered crawl guards.)
 
 ---
+
+## 📋 SPRINT 67: Directory Coverage Follow-up (May 14, 2026 EDT)
+
+### `/find-a-dispensary` expanded to all 61 local guide pages ✅ DONE — REVIEW PENDING
+- **Branch:** `fix/external-404-links`
+- **Why:** The active branch had 61 local `*-dispensary-guide.astro` pages, but `/find-a-dispensary` still exposed only 50 guide cards and the coverage test hardcoded the old count.
+- **Change:** Added the missing 11 guide cards for Alfred, Arundel, Kennebunkport, Hollis, Lyman, Waterboro, Harrison, Denmark, Lovell, Norway, and Waterford.
+- **Change:** Normalized directory guide hrefs to slashless internal URLs to match `trailingSlash: 'never'` and avoid crawl redirect noise.
+- **Fix:** Replaced Norway's dead related link to the nonexistent `/guides/oxford-dispensary-guide` with the existing Harrison guide and fixed the Waterford link typo.
+- **Regression coverage:** Updated `check-directory-coverage.test.cjs` so it requires all 61 current local guide pages exactly once and validates one map search link per guide.
+- **Verification:** `npm run check:directory-coverage:test`, `npm run check:content-health:test`, file-scoped `npx astro check` for the touched/new guide set, `npm run build`, `npm run check:hrefs`, and `npm run check:content-health` all passed. Rendered `/find-a-dispensary` contains the 61-guide badge, Waterboro guide link, slashless guide hrefs, and ItemList JSON-LD with 61 items.
+- **Safety posture:** Content/directory/test guard only. No package install, no deployment, no Vercel or infrastructure changes. Generated `.turbo/turbo-build.log` remains uncommitted build output.
 
 ## 📋 SPRINT 66: Rendered Crawl Regression Guard Pass (May 14, 2026 EDT)
 
