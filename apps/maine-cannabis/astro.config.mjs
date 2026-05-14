@@ -10,19 +10,40 @@ import { fileURLToPath } from 'node:url';
 const noindexPathPrefixes = ['/download/', '/experiments', '/admin/'];
 
 // Map a sitemap URL to its .astro source file path
+// sitemap URL pathname → source file
+// /guides → guides/index.astro
+// /guides/portland → guides/portland.astro
+// / → index.astro
 function urlToSrcPath(loc, site, pagesDir) {
   try {
     const u = new URL(loc);
-    const pathname = u.pathname.replace(/\/$/, '');
-    const p = pathname || '/';
-    const srcPath = path.join(pagesDir, p + '.astro');
-    return fs.existsSync(srcPath) ? srcPath : null;
+    // Get pathname without trailing slash, root is '/'
+    let pathname = u.pathname.replace(/\/$/, '') || '/';
+    // For root path
+    if (pathname === '/') {
+      const index = path.join(pagesDir, 'index.astro');
+      return fs.existsSync(index) ? index : null;
+    }
+    // Try index.astro in a subdirectory first (handles /guides → guides/index.astro)
+    const indexPath = path.join(pagesDir, pathname, 'index.astro');
+    if (fs.existsSync(indexPath)) return indexPath;
+    // Then try direct .astro file
+    const directPath = path.join(pagesDir, pathname + '.astro');
+    if (fs.existsSync(directPath)) return directPath;
+    // And try stripping one path segment for index pages (e.g., /blog → blog/index.astro)
+    const segments = pathname.split('/');
+    if (segments.length > 1) {
+      const parentIndex = path.join(pagesDir, segments[0], 'index.astro');
+      if (fs.existsSync(parentIndex)) return parentIndex;
+    }
+    return null;
   } catch { return null; }
 }
 
 // Extract lastmod + image from frontmatter of an .astro file
 // Frontmatter in .astro is a JS module, not pure YAML — parse it with regex
 function extractMeta(srcPath) {
+  if (!srcPath || !fs.existsSync(srcPath)) return {};
   const raw = fs.readFileSync(srcPath, 'utf8');
   const fm = raw.match(/^---([\s\S]+?)---/m);
   if (!fm) return {};
@@ -40,7 +61,8 @@ function extractMeta(srcPath) {
     lastmod = modMatch ? modMatch[1] : (pubMatch ? pubMatch[1] : null);
   }
   if (heroImageMatch) {
-    image = heroImageMatch[1].startsWith('http') ? heroImageMatch[1] : site + heroImageMatch[1];
+    const img = heroImageMatch[1];
+    image = img.startsWith('http') ? img : site + img;
   }
   return { lastmod, image };
 }
@@ -61,8 +83,11 @@ export default defineConfig({
         return true;
       },
     }),
-    // Post-process: remove any noindex pages the filter missed
-    // and inject lastmod/image metadata from frontmatter
+    // Post-process: rewrite sitemap to:
+    // 1. Exclude noindex paths (by checking URL pathname, not prefix)
+    // 2. Inject lastmod from article.modifiedDate/publishDate
+    // 3. Inject <image:image> from heroImage frontmatter
+    // Always keeps every URL that passes the noindex check — even without a source file
     {
       name: 'sitemap-postprocess',
       hooks: {
@@ -75,27 +100,26 @@ export default defineConfig({
           const locMatches = [...content.matchAll(/<loc>([^<]+)<\/loc>/g)];
           const locs = locMatches.map(m => m[1]);
 
-          let changed = false;
           const newUrlEntries = [];
 
           for (const loc of locs) {
             try {
               const url = new URL(loc);
-              const pathname = url.pathname.replace(/\/$/, '');
-              // Exclude noindex paths
+              const pathname = url.pathname;
+              // Exclude noindex paths — check pathname directly since URL is full
               if (noindexPathPrefixes.some(p => pathname.startsWith(p))) {
-                changed = true;
                 continue;
               }
-              // Extract frontmatter metadata
+              // Try to extract metadata from .astro source file
               const srcPath = urlToSrcPath(loc, 'https://mainedispensaryguide.com', pagesDir);
               const { lastmod, image } = srcPath ? extractMeta(srcPath) : {};
+              // Always include the URL — metadata is optional
               let entry = `<url><loc>${loc}</loc>`;
               if (lastmod) entry += `<lastmod>${lastmod}</lastmod>`;
               if (image) entry += `<image:image><image:loc>${image}</image:loc></image:image>`;
               entry += '</url>';
               newUrlEntries.push(entry);
-            } catch { /* keep invalid URLs */ }
+            } catch { /* skip invalid URLs */ }
           }
 
           const urlsetOpen = content.match(/<urlset[^>]*>/)?.[0]
