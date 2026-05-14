@@ -17,10 +17,10 @@ const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Hollis, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis has no adult-use dispensaries because it has not opted in to recreational cannabis. However, three medical cannabis operations serve patients: Green Roots Company (64 Hollis Road, Hollis Center), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (Hollis Center)." }},
-    { "@type": "Question", "name": "Does Hollis allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Hollis has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Hollis town limits. Three medical dispensaries/caregivers serve patients with valid Maine Medical Use of Cannabis Program (MMMP) cards." }},
-    { "@type": "Question", "name": "What is Green Roots Company known for?", "acceptedAnswer": { "@type": "Answer", "text": "Green Roots Company at 64 Hollis Road in Hollis Center is a medical dispensary known for organic cannabis, deli-style consultations, and a robust weekly deals program. Deals include Sunday 10% off glass, Wednesday 'Wicked Wheel Spin,' and Friday 10% off flower." }},
-    { "@type": "Question", "name": "What is Hollis Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis is a small York County town on the Saco River with approximately 4,800 residents. It is primarily a residential community with significant agricultural land. Despite not opting in to recreational cannabis, Hollis has a surprisingly active medical cannabis scene with three dispensary/caregiver operations." }}
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Hollis, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis has no adult-use dispensaries because it has not opted in. Three medical operations serve MMMP patients: Green Roots Company (64 Hollis Road), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (962 River Road, Hollis Center, 207-831-7727, hollismedicationstation.com)." }},
+    { "@type": "Question", "name": "Does Hollis allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Hollis has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Hollis town limits. Three medical dispensaries/caregivers serve patients with valid Maine MMMP cards." }},
+    { "@type": "Question", "name": "What is Green Roots Company known for?", "acceptedAnswer": { "@type": "Answer", "text": "Green Roots Company at 64 Hollis Road in Hollis Center is a medical dispensary known for organic cannabis, deli-style consultations, and a robust weekly deals program including Sunday glass deals, Wednesday 'Wicked Wheel Spin,' and Friday flower discounts." }},
+    { "@type": "Question", "name": "What are the hours for Hollis Medication Station?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis Medication Station at 962 River Road, Hollis Center is open Mon 8am-4pm, Tue-Sat 8am-630pm, Sun 8am-11am. Phone: 207-831-7727. Website: hollismedicationstation.com." }}
   ]
 });
 ---
@@ -100,8 +100,11 @@ const faqPageJsonLd = JSON.stringify({
     <p>Landrace Cannabis operates a medical dispensary in Hollis Center, serving patients with a curated selection of cannabis products. Their focus on quality cultivation and product selection has built a loyal patient base in the region.</p>
 
     <h3>Hollis Medication Station (Medical)</h3>
-    <p><strong>Location:</strong> Hollis Center, ME</p>
-    <p>Hollis Medication Station is a medical cannabis operation serving patients in the Hollis area. Known for its friendly staff and good quality cannabis with an impressive variety, the operation fills an important role in the local medical cannabis ecosystem.</p>
+    <p><strong>Address:</strong> 962 River Road, Hollis Center, ME 04042</p>
+    <p><strong>Phone:</strong> (207) 831-7727</p>
+    <p><strong>Website:</strong> <a href="https://www.hollismedicationstation.com">hollismedicationstation.com</a></p>
+    <p><strong>Hours:</strong> Mon 8am–4pm, Tue–Sat 8am–630pm, Sun 8am–11am</p>
+    <p>Hollis Medication Station is a medical cannabis operation serving patients in the Hollis area. Known for its friendly staff, good quality cannabis, and impressive variety of products, the operation fills an important role in the local medical cannabis ecosystem. Located on River Road in Hollis Center, it is open seven days a week.</p>
   </section>
 
   <section>
@@ -137,10 +140,10 @@ const faqPageJsonLd = JSON.stringify({
     <h2>Frequently Asked Questions</h2>
     <Faq
       questions={[
-        { q: "Are there any cannabis dispensaries in Hollis, Maine?", a: "Hollis has no adult-use dispensaries (not opted in). Three medical cannabis operations serve MMMP patients: Green Roots Company (64 Hollis Road), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (Hollis Center)." },
+        { q: "Are there any cannabis dispensaries in Hollis, Maine?", a: "Hollis has no adult-use dispensaries (not opted in). Three medical operations serve MMMP patients: Green Roots Company (64 Hollis Road), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (962 River Road, Hollis Center, 207-831-7727)." },
         { q: "Does Hollis allow recreational cannabis dispensaries?", a: "No. Hollis has NOT opted in to adult-use cannabis. No recreational stores can operate in town. Medical MMMP patients are served by three local operations." },
         { q: "What is Green Roots Company known for?", a: "Green Roots Company (64 Hollis Road) is known for organic cannabis, deli-style consultations, and a rotating weekly deals program including Sunday glass deals, Wednesday 'Wicked Wheel Spin,' and Friday flower discounts." },
-        { q: "What is Hollis Maine known for?", a: "Hollis is a Saco River town in York County with ~4,800 residents. It has an active medical cannabis scene despite not opting in to recreational, with three dispensary/caregiver operations in Hollis Center." }
+        { q: "What are the hours for Hollis Medication Station?", a: "Hollis Medication Station at 962 River Road, Hollis Center is open Mon 8am-4pm, Tue-Sat 8am-630pm, Sun 8am-11am. Phone: 207-831-7727." }
       ]}
     />
   </section>
