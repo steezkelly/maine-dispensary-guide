@@ -1,7 +1,19 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-13 EDT** (Seed Shelf experiments noindex sprout: label decoder + menu mirage + freshness stamp + slop bingo + budtender question card + best detox box)
+**Last updated: 2026-05-14 EDT** (Malformed `\\1` href repair across revenue and guide paths; local dev smoke verified)
+
+---
+
+## 📋 SPRINT 60: Conversion Path Link Repair (May 14, 2026 EDT)
+
+### Malformed href cleanup ✅ DONE — REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** A prior regex/linking pass left `href="\\1")` anchors across homepage, contact, directory, start-here, guide, founder, and blog pages. Those broke high-intent user journeys such as vendor listing CTAs, ROI/checklist navigation, OCP map CTAs, and internal guide handoffs.
+- **Change:** Replaced malformed `\\1` anchors with verified existing internal routes across 49 Astro pages, prioritizing revenue/user-facing paths (`/`, `/contact`, `/directory`, `/find-a-dispensary`, `/start-here`, `/guides/maine-ocp-license-map`) and related guide/blog links.
+- **Automation:** Added `apps/maine-cannabis/scripts/content/check-malformed-hrefs.cjs` and `npm run check:hrefs` to fail fast if future regex passes reintroduce `\\1` hrefs.
+- **Verification:** `npm run check:hrefs` passed; repo-wide search found 0 `\\1` hrefs; added internal href targets checked with 0 missing; `npx astro check src/pages/index.astro src/pages/contact.astro src/pages/start-here.astro src/pages/directory.astro src/pages/find-a-dispensary.astro src/pages/guides/maine-ocp-license-map.astro` returned 0 errors; local Astro dev smoke returned HTTP 200 and no malformed hrefs for `/`, `/contact`, `/start-here`, `/directory`, `/find-a-dispensary`, `/guides/maine-ocp-license-map`, `/all-guides`.
+- **Safety posture:** No deploy, no package install, no infra changes. Pre-existing generated `apps/maine-cannabis/.turbo/turbo-build.log` remained dirty and was not used as source work.
 
 ---
 

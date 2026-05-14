@@ -1,7 +1,29 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-13**
+**Last updated: 2026-05-14 EDT**
+
+---
+
+## SPRINT 60: Conversion Path Link Repair (May 14, 2026)
+
+**[HERMES] 2026-05-14 — Revenue/user-facing malformed href cleanup**
+
+### What Was Done
+- Replaced malformed `href="\\1")` anchors with verified internal routes across homepage, contact, directory, find-a-dispensary, start-here, OCP map, guides, blog posts, and founder stories.
+- Restored high-intent paths: vendor listing CTAs now route to contact/resources; ROI/checklist/license CTAs route to real pages; internal guide handoffs no longer dead-end.
+- Added `scripts/content/check-malformed-hrefs.cjs` and `npm run check:hrefs` so future regex/linking passes fail fast if `\\1` hrefs return.
+
+### Verification
+- `npm run check:hrefs` → pass.
+- Repo-wide Astro page search for `\\1` hrefs → 0 results.
+- Added internal href targets checked → 0 missing.
+- Targeted `npx astro check` on key touched pages → 0 errors.
+- Local Astro dev smoke: `/`, `/contact`, `/start-here`, `/directory`, `/find-a-dispensary`, `/guides/maine-ocp-license-map`, `/all-guides` all returned HTTP 200 with no malformed hrefs in rendered HTML.
+
+### Notes
+- No deploy, package install, or infrastructure change.
+- Pre-existing generated `.turbo/turbo-build.log` dirty state was left alone.
 
 ---
 
