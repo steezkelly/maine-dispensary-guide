@@ -130,13 +130,22 @@ jobs:
             if (!r.ok) throw new Error(`${r.status} ${r.statusText} for ${path}`);
             return r.json();
           });
-          const deployments = await api(`/deployments?sha=${HEAD_SHA}&environment=Preview`);
-          const deployment = deployments[0];
-          if (!deployment) throw new Error(`No Preview deployment found for ${HEAD_SHA}`);
-          const statuses = await api(`/deployments/${deployment.id}/statuses`);
-          const success = statuses.find((status) => status.state === 'success' && (status.environment_url || status.target_url));
-          if (!success) throw new Error(`No successful Preview deployment status found for ${HEAD_SHA}`);
-          console.log(success.environment_url || success.target_url);
+          const deployments = await api(`/deployments?sha=${HEAD_SHA}&per_page=20`);
+          const previewDeployments = deployments.filter((deployment) =>
+            String(deployment.environment || '').toLowerCase().startsWith('preview') ||
+            deployment.production_environment === false
+          );
+          if (previewDeployments.length === 0) throw new Error(`No Preview deployment found for ${HEAD_SHA}`);
+
+          for (const deployment of previewDeployments) {
+            const statuses = await api(`/deployments/${deployment.id}/statuses`);
+            const success = statuses.find((status) => status.state === 'success' && (status.environment_url || status.target_url));
+            if (success) {
+              console.log(success.environment_url || success.target_url);
+              process.exit(0);
+            }
+          }
+          throw new Error(`No successful Preview deployment status found for ${HEAD_SHA}`);
           NODE
           )"
           echo "PREVIEW_URL=$url" >> "$GITHUB_ENV"
