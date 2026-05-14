@@ -1,7 +1,18 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (`/find-a-dispensary` rebuilt as a 50-guide regional directory with map-search links; Bethel title typo fixed; directory coverage regression test added.)
+**Last updated: 2026-05-14 EDT** (CI workflow moved checkout/setup-node actions to Node 24-compatible majors: `actions/checkout@v6` and `actions/setup-node@v6`.)
+
+---
+
+## 📋 SPRINT 64: GitHub Actions Node 24 Runtime Follow-up (May 14, 2026 EDT)
+
+### CI action runtime majors updated ✅ REVIEW PENDING
+- **Branch:** `ci/node24-actions-v6`
+- **Why:** GitHub warned that `actions/checkout@v4` and `actions/setup-node@v4` are Node 20 actions even though the workflow itself already sets `NODE_VERSION: '24'`.
+- **Change:** Updated all five CI jobs in `.github/workflows/ci.yml` from `actions/checkout@v4` to `actions/checkout@v6` and from `actions/setup-node@v4` to `actions/setup-node@v6`.
+- **Verification:** Confirmed zero remaining checkout/setup-node `@v4` references under `.github/workflows`; parsed `.github/workflows/ci.yml` successfully with Python/YAML. `actionlint` is not installed locally. No deploy, package install, or full build was run.
+- **Safety posture:** Workflow-only CI maintenance change; no content, dependency, deploy, or Vercel setting changes.
 
 ---
 
