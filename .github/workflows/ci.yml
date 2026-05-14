@@ -111,10 +111,33 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
 
+      - name: Resolve Vercel preview URL
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          url="$({
+            gh api repos/${{ github.repository }}/deployments \
+              -f sha="$HEAD_SHA" \
+              -f environment=Preview \
+              --jq '.[0].id' | {
+                read -r deployment_id
+                if [ -n "${deployment_id:-}" ] && [ "$deployment_id" != "null" ]; then
+                  gh api repos/${{ github.repository }}/deployments/$deployment_id/statuses \
+                    --jq 'map(select(.state == "success") | .environment_url // .target_url) | .[0]'
+                fi
+              }
+          } || true)"
+          if [ -z "${url:-}" ] || [ "$url" = "null" ]; then
+            echo "Could not resolve successful Vercel preview URL for $HEAD_SHA" >&2
+            exit 1
+          fi
+          echo "PREVIEW_URL=$url" >> "$GITHUB_ENV"
+          echo "Resolved preview URL: $url"
+
       - name: Run smoke tests against preview
         run: npx playwright test
-        env:
-          PREVIEW_URL: https://project-1-git-${{ github.event.pull_request.head.ref }}-steezkellys-projects.vercel.app
 
   deploy-production:
     name: Deploy Production
