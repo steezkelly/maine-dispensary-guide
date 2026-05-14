@@ -11,19 +11,19 @@ const directoryPage = path.join(appRoot, 'src/pages/find-a-dispensary.astro');
 function existingDispensaryGuideHrefs() {
   return fs.readdirSync(guidesDir)
     .filter((name) => name.endsWith('-dispensary-guide.astro'))
-    .map((name) => `/guides/${name.replace(/\.astro$/, '')}/`)
+    .map((name) => `/guides/${name.replace(/\.astro$/, '')}`)
     .sort();
 }
 
 test('/find-a-dispensary links every local dispensary guide exactly once', () => {
   const text = fs.readFileSync(directoryPage, 'utf8');
-  const guideHrefs = [...text.matchAll(/["']?href["']?\s*:\s*[`"'](\/guides\/[a-z0-9-]+-dispensary-guide\/)[`"']/g)]
+  const guideHrefs = [...text.matchAll(/["']?href["']?\s*:\s*[`"'](\/guides\/[a-z0-9-]+-dispensary-guide)[`"']/g)]
     .map((match) => match[1])
     .sort();
   const uniqueGuideHrefs = [...new Set(guideHrefs)];
   const expectedGuideHrefs = existingDispensaryGuideHrefs();
 
-  assert.equal(expectedGuideHrefs.length, 50, 'fixture should reflect the current 50 guide pages');
+  assert.equal(expectedGuideHrefs.length, 61, 'fixture should reflect the current 61 guide pages');
   assert.deepEqual(uniqueGuideHrefs, expectedGuideHrefs);
   assert.equal(guideHrefs.length, uniqueGuideHrefs.length, 'directory should not duplicate guide links');
 });

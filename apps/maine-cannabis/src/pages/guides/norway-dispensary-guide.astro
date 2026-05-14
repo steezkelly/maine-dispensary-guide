@@ -1,0 +1,125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Norway, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No dedicated cannabis dispensaries operate within Norway town itself. The town likely opted in to recreational cannabis but has no storefront presence. Residents are served by The Hideaway in Oxford (~15 min) and West Paris Provisions in West Paris (~10 min)." }},
+    { "@type": "Question", "name": "Does Norway allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Norway appears to have likely opted in to recreational cannabis (based on surrounding market activity and OCP data), but has no confirmed storefront dispensaries operating within town limits. The absence of dispensaries may reflect market factors rather than regulatory restrictions." }},
+    { "@type": "Question", "name": "What dispensaries serve Norway residents?", "acceptedAnswer": { "@type": "Answer", "text": "Norway residents are served by The Hideaway in Oxford (1192 Main St, adult-use recreational) and West Paris Provisions (253 Bethel Rd, West Paris). The Hideaway specifically markets to Norway residents despite being located in Oxford." }},
+    { "@type": "Question", "name": "What is Norway Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Norway is the county seat of Oxford County and a town of approximately 4,200 residents. It is the largest town in the Norway-Paris area and serves as the commercial and administrative center for western Oxford County." }}
+  ]
+});
+---
+
+<Layout title="Norway, ME Dispensary Guide — Served by Oxford & West Paris 2026" description="Norway, Maine cannabis guide. No dispensaries confirmed within Norway town itself. Served by The Hideaway (Oxford) and West Paris Provisions. Likely opted in." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Norway, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access for Norway, Maine residents — Served by Oxford and West Paris</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Norway at a Glance</h2>
+    <table aria-label="Norway cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — No confirmed storefronts within Norway town itself</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Likely opted in (unconfirmed in OCP)</td></tr>
+        <tr><td><strong>Primary Dispensaries</strong></td><td>The Hideaway, Oxford (~15 min); West Paris Provisions (~10 min)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>The Hideaway, Oxford (~15 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,200 (Oxford County seat)</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Norway is the county seat of Oxford County, Maine, and the largest town in the Norway-Paris area. With approximately 4,200 residents, Norway serves as the commercial and administrative center for western Oxford County — a role reflected in its relatively robust downtown and regional significance that exceeds its population.</p>
+    <p>Despite being the county seat and the largest town in its region, Norway does not have a confirmed dispensary operating within town limits. The town's opt-in status appears to be favorable (likely opted in based on surrounding market activity and OCP data), but no cannabis retailer has established a storefront in Norway itself. This may reflect market timing, real estate factors, or other business considerations rather than regulatory barriers.</p>
+    <p>Note: The Norway Smoke Shop at 61 Main Street is a tobacco and smoke shop only — it does <strong>not</strong> sell cannabis products.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries Serving Norway Residents</h2>
+
+    <h3>The Hideaway (Oxford)</h3>
+    <p><strong>Address:</strong> 1192 Main St, Oxford, ME</p>
+    <p><strong>Distance from Norway:</strong> ~15 minutes</p>
+    <p>The Hideaway is an adult-use recreational dispensary located in Oxford that specifically markets to Norway residents. Despite the Oxford address, its proximity and deliberate marketing toward the Norway market make it the primary recreational option for Norway residents seeking adult-use cannabis.</p>
+
+    <h3>West Paris Provisions</h3>
+    <p><strong>Address:</strong> 253 Bethel Rd, West Paris, ME 04289</p>
+    <p><strong>Distance from Norway:</strong> ~10 minutes</p>
+    <p>West Paris Provisions serves the Norway area from West Paris, approximately 10 minutes away. This makes it a convenient option for Norway residents, particularly those in the eastern part of town.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Norway appears to have likely opted in to recreational cannabis based on surrounding market activity and OCP data, but this is not definitively confirmed. The town has no confirmed storefront dispensaries within its limits, which may reflect business选址 factors rather than regulatory restrictions.</p>
+    <p>Residents and operators should verify directly with the Norway town office for definitive status.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/harrison-dispensary-guide">Harrison Dispensary Guide</a></li>
+        <li><a href="/guides/waterford-dispensary-guide">Waterford Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Norway, Maine?", a: "No confirmed dispensaries operate within Norway town itself. Residents are served by The Hideaway in Oxford (~15 min) and West Paris Provisions in West Paris (~10 min)." },
+        { q: "Does Norway allow cannabis dispensaries?", a: "Norway likely opted in to recreational cannabis (based on OCP data and surrounding market), but has no confirmed storefronts. The Norway Smoke Shop is a tobacco shop only — no cannabis." },
+        { q: "What dispensaries serve Norway residents?", a: "The Hideaway in Oxford (1192 Main St, adult-use) specifically markets to Norway residents. West Paris Provisions (253 Bethel Rd, West Paris) is ~10 minutes away." },
+        { q: "What is Norway Maine known for?", a: "Norway is the Oxford County seat with ~4,200 residents — the largest town in the Norway-Paris area and commercial center for western Oxford County." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit. Note: Norway Smoke Shop is a tobacco shop, not a cannabis dispensary.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
