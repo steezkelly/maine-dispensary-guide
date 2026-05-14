@@ -1,7 +1,20 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (custom 404 page added: `src/pages/404.astro` with links to Start Here, Guides, Find a Dispensary, Contact; no search page exists so replaced form with "Browse All Guides" CTA)
+**Last updated: 2026-05-14 EDT** (`/find-a-dispensary` rebuilt as a 50-guide regional directory with map-search links; Bethel title typo fixed; directory coverage regression test added.)
+
+---
+
+## 📋 SPRINT 63: Directory Coverage Implementation Pass (May 14, 2026 EDT)
+
+### `/find-a-dispensary` coverage and map-link repair ✅ REVIEW PENDING
+- **Branch:** `kanban/t_968fbf8f-directory-coverage`
+- **Why:** The task required the revenue-facing directory to expand from partial city/store coverage to all 50 local guide pages, remove dead CTAs, add map links, fix a typo, and preserve the fake-anchor regression check.
+- **Change:** Rebuilt `apps/maine-cannabis/src/pages/find-a-dispensary.astro` as a four-region guide directory with 50 unique internal guide links and 50 Google Maps search links, replacing the stale store-card CTA model.
+- **Typo fix:** Corrected the Bethel guide title from `Sunday River & Weekend River` to `Sunday River & West Bethel`.
+- **Regression coverage:** Added `apps/maine-cannabis/scripts/content/check-directory-coverage.test.cjs` and `npm run check:directory-coverage:test` to require exactly one directory entry for every `*-dispensary-guide.astro` page and one map search link per guide. Existing `href="#"` placeholder regression remains in `npm run check:hrefs:test` / `npm run check:hrefs`.
+- **Verification:** Watched `npm run check:directory-coverage:test` fail before implementation. After implementation: `npm run check:directory-coverage:test`, `npm run check:content-health:test`, `npm run check:hrefs`, `npm run check:content-health`, `npm run typecheck`, `npm run build`, and `npm audit --audit-level=moderate` all passed; Astro check returned 0 errors with pre-existing warnings/hints.
+- **Safety posture:** No deploy and no external API calls. Full local build completed successfully.
 
 ---
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Content health QA script for Maine Dispensary Guide
- * Runs 7 bounded checks without requiring a full build.
+ * Runs 9 bounded checks. Source-level checks avoid a full build;
+ * sitemap, OG metadata, and CSS-warning checks require built output/build execution.
  *
  * Usage: node scripts/content/check-content-health.cjs
  *   (or: npm run check:content-health)
@@ -315,8 +316,10 @@ function checkCSSBuildWarnings() {
     );
     return realWarnings.slice(0, 10);
   } catch (err) {
-    // If build fails entirely, that's a different problem — don't report as CSS warning
-    return [];
+    // A failed build means the CSS-warning check did not complete; surface it
+    // instead of falsely reporting OK.
+    const message = err && err.message ? err.message.split('\n')[0] : String(err);
+    return [`build failed while scanning CSS warnings: ${message}`];
   }
 }
 

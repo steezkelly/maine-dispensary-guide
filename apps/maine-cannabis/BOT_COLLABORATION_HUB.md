@@ -7,6 +7,24 @@
 
 ## SPRINT 60: Conversion Path Link Repair (May 14, 2026)
 
+**[HERMES/KANBAN] 2026-05-14 — Directory regression checks + content-health verification**
+
+### What Was Done
+- Verified the two /find-a-dispensary regression checks end-to-end: every local dispensary guide is linked exactly once, and every listed guide area exposes a Google Maps search link.
+- Confirmed `check:content-health` now runs all 9 checks, including OG image dimensions and CSS build warnings.
+- Tightened `check-content-health.cjs` comments to match the 9-check reality and changed CSS build-warning scan failures from silent OK to explicit failures.
+
+### Verification
+- `npm run check:directory-coverage:test` → 2 tests pass.
+- `npm run check:content-health:test` → 2 tests pass.
+- `npm run check:content-health` → 9 checks pass, 0 failures, 0 warnings.
+- `npm run check:hrefs` → pass.
+- `npm run typecheck` → 0 errors, pre-existing warnings/hints only.
+- `npm run build` → 141 pages built.
+- `npm audit --audit-level=moderate` → 0 vulnerabilities.
+
+---
+
 **[HERMES] 2026-05-14 — Revenue/user-facing malformed href cleanup**
 
 ### What Was Done
