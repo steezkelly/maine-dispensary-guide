@@ -131,6 +131,9 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="manifest" href="/manifest.webmanifest" />
 
+    <!-- Social profiles — matches WebSite schema sameAs -->
+    {siteConfig.socialLinks.map(url => <link rel="me" href={url} />)}
+
     <!-- OpenSearch autodiscovery -->
     <link rel="search" href="/opensearch.xml" title="Maine Dispensary Guide" type="application/opensearchdescription+xml" />
 
@@ -256,13 +259,13 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
 
     <!-- Google Analytics GA4 -->
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`}></script>
-    <script>
+    <script define:vars={{ analyticsId: siteConfig.analyticsId }}>
       // @ts-nocheck - GA4 dataLayer global
       window.dataLayer = window.dataLayer || [];
       // @ts-ignore
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', siteConfig.analyticsId);
+      gtag('config', analyticsId);
     </script>
 
     <script is:inline>
@@ -321,8 +324,6 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         });
       });
     </script>
-  <!-- Social links for knowledge panel -->
-    {siteConfig.socialLinks.map(url => <link rel="me" href={url} />)}
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
