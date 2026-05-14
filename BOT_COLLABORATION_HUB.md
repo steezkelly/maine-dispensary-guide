@@ -1,7 +1,20 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (Ahrefs audit remediation branch cleared local broken-image, broken internal-link/PDF, overlong title/description, and JSON-LD parse checks.)
+**Last updated: 2026-05-14 EDT** (Ahrefs remediation branch now includes rendered crawl regression guards for trailing slashes, broken rendered assets/links, meta length, JSON-LD parsing, and `/download` breadcrumb regressions.)
+
+---
+
+## 📋 SPRINT 66: Rendered Crawl Regression Guard Pass (May 14, 2026 EDT)
+
+### Ahrefs-class crawl checks codified in content health ✅ REVIEW PENDING
+- **Branch:** `audit/ahrefs-may14-fixes`
+- **Why:** The previous Ahrefs remediation fixed reported issues locally; this pass makes the high-risk issue classes fail automatically before future deploys.
+- **Change:** Extended `apps/maine-cannabis/scripts/content/check-content-health.cjs` with a source-level trailing-slash internal link check for `trailingSlash: 'never'` sites.
+- **Change:** Added a rendered-output crawl guard that walks built HTML and detects broken rendered media/assets, broken internal route links, titles over 60 chars, meta descriptions over 160 chars, invalid JSON-LD, and breadcrumbs pointing at the missing `/download` parent route.
+- **Regression coverage:** Added a `check-content-health:test` fixture proving slashful internal links fail while existing dead-link and malformed-href fixtures still work.
+- **Verification:** `npm run check:hrefs`, `npm run check:content-health:test`, `npm run check:content-health`, `npm run typecheck`, and `npm run build` all passed. Rendered `dist/` inspection found 141 HTML routes, 0 titles over 60 chars, 0 descriptions over 160 chars, and 0 JSON-LD parse errors.
+- **Safety posture:** QA-script-only change; no deploy, no package install, no infrastructure changes.
 
 ---
 
