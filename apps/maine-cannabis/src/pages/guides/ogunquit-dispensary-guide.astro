@@ -18,9 +18,9 @@ const faqPageJsonLd = JSON.stringify({
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "Are there any cannabis dispensaries in Ogunquit, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are Hazy Hill Farm and Curaleaf in Wells (approximately 5 minutes away) and Tops Farm in York (approximately 15 minutes)." }},
-    { "@type": "Question", "name": "Does Ogunquit allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has NOT opted in to recreational cannabis retail. The town has chosen to prohibit cannabis dispensaries, meaning residents and visitors must travel to neighboring towns for legal cannabis purchases." }},
+    { "@type": "Question", "name": "Does Ogunquit allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has NOT opted in to recreational cannabis. The town has chosen to prohibit cannabis dispensaries, meaning residents and visitors must travel to neighboring towns for legal cannabis purchases. The nearest medical dispensary is Hazy Hill Farm in Wells, which serves MMMP patients." }},
     { "@type": "Question", "name": "Why is the lack of dispensaries in Ogunquit notable?", "acceptedAnswer": { "@type": "Answer", "text": "Ogunquit is a major tourist destination with Marginal Way, Perkins Cove, and beaches that draw 10,000+ summer visitors. Yet it has no local dispensaries. This creates an ironic situation where tourism drives cannabis spending to neighboring Wells instead of keeping revenue in town." }},
-    { "@type": "Question", "name": "Where is the nearest dispensary to Ogunquit?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are in Wells (~5 minutes): Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Tops Farm medical dispensary in York is approximately 15 minutes away." }}
+    { "@type": "Question", "name": "Where is the nearest dispensary to Ogunquit?", "acceptedAnswer": { "@type": "Answer", "text": "Hazy Hill Farm in Wells (~5 minutes, medical, 1614 Post Road) is the closest option. Curaleaf in Wells (Route 1) is also nearby but is a medical-only dispensary serving MMMP patients — not adult-use recreational. Tops Farm medical dispensary in York is approximately 15 minutes away." }}
   ]
 });
 ---
@@ -60,7 +60,7 @@ const faqPageJsonLd = JSON.stringify({
         <tr><td><strong>Dispensaries in Town</strong></td><td>0 — NOT opted in</td></tr>
         <tr><td><strong>Opt-In Status</strong></td><td>NOT opted in</td></tr>
         <tr><td><strong>Nearest Medical</strong></td><td>Hazy Hill Farm, Wells (~5 min); Tops Farm, York (~15 min)</td></tr>
-        <tr><td><strong>Nearest Recreational</strong></td><td>Curaleaf, Wells (~5 min)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Verify current status — Wells dispensaries may be medical-only</td></tr>
         <tr><td><strong>Population</strong></td><td>~1,300 (year-round); 10,000+ (summer)</td></tr>
         <tr><td><strong>County</strong></td><td>York County</td></tr>
       </tbody>
@@ -79,9 +79,8 @@ const faqPageJsonLd = JSON.stringify({
     <p>The nearest dispensaries are just 5 minutes away in Wells:</p>
     <ul>
       <li><strong>Hazy Hill Farm</strong> (medical, 1614 Post Road, Wells)</li>
-      <li><strong>Curaleaf</strong> (recreational, Route 1, Wells)</li>
     </ul>
-    <p>This means Ogunquit visitors cannabis spending — whether from tourists seeking recreational products or locals seeking medical cannabis — flows directly to Wells. The economic opportunity cost to Ogunquit is significant but invisible in town financials.</p>
+    <p>This means Ogunquit visitors cannabis spending — whether from tourists seeking recreational products or locals seeking medical cannabis — flows directly to Wells.</p>
   </section>
 
   <section>
@@ -90,10 +89,11 @@ const faqPageJsonLd = JSON.stringify({
     <h3>Wells Dispensaries (~5 minutes)</h3>
     <p><strong>Hazy Hill Farm (Medical)</strong><br>
     Address: 1614 Post Road, Wells, ME 04090</p>
-    <p>Hazy Hill Farm is the closest medical dispensary to Ogunquit, operating a farm-to-shelf model. Their Post Road location is a short drive from central Ogunquit.</p>
-    <p><strong>Curaleaf (Recreational)</strong><br>
+    <p>Hazy Hill Farm is the closest dispensary to Ogunquit, operating a farm-to-shelf model. Their Post Road location is a short drive from central Ogunquit. Hazy Hill Farm serves MMMP medical patients.</p>
+    <p><strong>Curaleaf (Medical)</strong><br>
     Location: Route 1, Wells, ME</p>
-    <p>Curaleaf's Route 1 location is extremely convenient for Ogunquit visitors traveling from the Marginal Way/Perkins Cove area. Being on the main thoroughfare, they capture significant tourist traffic.</p>
+    <p>Curaleaf's Route 1 location is extremely convenient for Ogunquit visitors traveling from the Marginal Way/Perkins Cove area. Note: Curaleaf in Wells is a medical dispensary serving MMMP patients — not adult-use recreational.</parameter>
+
 
     <h3>Tops Farm, York (~15 minutes)</h3>
     <p><strong>Tops Farm (Medical)</strong><br>
@@ -126,7 +126,7 @@ const faqPageJsonLd = JSON.stringify({
         { q: "Are there any cannabis dispensaries in Ogunquit, Maine?", a: "No. Ogunquit has NOT opted in to cannabis retail. No dispensaries operate in Ogunquit. The nearest are in Wells (~5 min away) and York (~15 min)." },
         { q: "Does Ogunquit allow cannabis dispensaries?", a: "No. Ogunquit has chosen to prohibit cannabis dispensaries. Residents and visitors must travel to neighboring towns for legal cannabis." },
         { q: "Why is the lack of dispensaries in Ogunquit notable?", a: "Ogunquit is a major tourist destination drawing 10,000+ summer visitors, yet has no local dispensaries. Tourism drives cannabis spending to Wells instead of keeping revenue in town." },
-        { q: "Where is the nearest dispensary to Ogunquit?", a: "Hazy Hill Farm and Curaleaf in Wells (~5 min) are the nearest options. Tops Farm in York is approximately 15 minutes away." }
+        { q: "Where is the nearest dispensary to Ogunquit?", a: "Hazy Hill Farm in Wells (~5 min, medical, 1614 Post Road) is the closest option. Curaleaf in Wells is also nearby (medical, MMMP patients only). Tops Farm in York is approximately 15 minutes away." }
       ]}
     />
   </section>

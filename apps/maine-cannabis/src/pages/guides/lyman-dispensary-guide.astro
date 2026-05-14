@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Lyman, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Lyman has one medical cannabis dispensary: Headquarters Medical Cannabis at 1520 Alfred Rd (Route 111), Lyman, ME 04002. It is a medical-only operation serving MMMP patients." }},
+    { "@type": "Question", "name": "Does Lyman allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Lyman has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Lyman town limits. The only dispensary in Lyman is a medical operation serving registered MMMP patients." }},
+    { "@type": "Question", "name": "What is Headquarters Medical Cannabis known for?", "acceptedAnswer": { "@type": "Answer", "text": "Headquarters Medical Cannabis at 1520 Alfred Rd is known for high-quality flower, concentrates, edibles, and vapes. The dispensary has earned a 4.8+ star rating on Weedmaps and is strategically located on Route 111 between Sanford and Biddeford." }},
+    { "@type": "Question", "name": "What is Lyman Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Lyman is a York County town with approximately 4,500 residents situated along the Route 111 corridor between Sanford and Biddeford. It is primarily a residential community with a significant rural character. The town has not opted in to recreational cannabis." }}
+  ]
+});
+---
+
+<Layout title="Lyman, ME Dispensary Guide — Headquarters Medical Cannabis 2026" description="Lyman, Maine cannabis dispensary guide. Headquarters Medical Cannabis at 1520 Alfred Rd (Route 111). Medical-only, not opted in to recreational." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Lyman, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis in Lyman, Maine — Route 111 corridor serving York County patients</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Lyman at a Glance</h2>
+    <table aria-label="Lyman cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 — Headquarters Medical Cannabis</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN — Medical only, no adult-use recreational</td></tr>
+        <tr><td><strong>Type</strong></td><td>Medical only (MMMP patients with valid card)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Biddeford (~10-15 min) — Stoner & Co., Canuvo, Undertow, Landrace</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,500</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Lyman is a York County town of approximately 4,500 residents, situated along the Route 111 corridor between Sanford and Biddeford. The town's strategic position on Route 111 — a major through-road connecting two population centers — makes it a recognizable landmark even for people who don't live in Lyman itself.</p>
+    <p>Lyman has not opted in to adult-use cannabis retail, meaning no recreational dispensaries can operate within town limits. The one dispensary currently operating in Lyman, Headquarters Medical Cannabis, serves registered medical patients under the Maine Medical Use of Cannabis Program (MMMP).</p>
+  </section>
+
+  <section>
+    <h2>Medical Cannabis in Lyman</h2>
+
+    <h3>Headquarters Medical Cannabis</h3>
+    <p><strong>Address:</strong> 1520 Alfred Rd, Lyman, ME 04002</p>
+    <p><strong>Phone:</strong> (207) 999-1038</p>
+    <p><strong>Hours:</strong> Mon 11am–5pm, Tue–Fri 10am–7pm, Sat 10am–7pm</p>
+    <p>Headquarters Medical Cannabis is the sole dispensary operating in Lyman, located on Route 111 (Alfred Road). The dispensary serves as the primary cannabis access point for Lyman's medical patients and draws from the surrounding York County region due to its position on the Sanford-Biddeford corridor.</p>
+    <p>The dispensary has earned a 4.8+ star rating on Weedmaps, indicating strong customer satisfaction with both product quality and service. Their menu includes high-quality flower, concentrates, edibles, and vape products.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Recreational Dispensaries to Lyman</h2>
+    <p>Adult-use cannabis consumers in Lyman must travel approximately 10–15 minutes to Biddeford, where multiple recreational dispensaries operate:</p>
+    <ul>
+      <li><strong>Stoner & Co.</strong> — 419 Hill Street, Biddeford — recreational, unique cultivar breeding, family-owned</li>
+      <li><strong>Canuvo</strong> — 4 Wellspring Rd, Biddeford — recreational, established operator</li>
+      <li><strong>Undertow Cannabis Co.</strong> — 30 Morin St, Biddeford — recreational</li>
+      <li><strong>Landrace Cannabis</strong> — 588 Elm Street, Biddeford — recreational, vertically integrated</li>
+    </ul>
+    <p>Biddeford's concentration of four adult-use dispensaries makes it the de facto recreational cannabis hub for the greater Lyman area, including patients from Sanford and other neighboring communities.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Lyman has <strong>not opted in</strong> to adult-use cannabis retail. No recreational cannabis establishments can operate within Lyman town limits. Medical cannabis continues to operate under the MMMP framework.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
+        <li><a href="/guides/sanford-dispensary-guide">Sanford Dispensary Guide</a></li>
+        <li><a href="/guides/waterboro-dispensary-guide">Waterboro Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Lyman, Maine?", a: "Lyman has one medical cannabis dispensary: Headquarters Medical Cannabis at 1520 Alfred Rd (Route 111), open Mon 11am–5pm, Tue–Fri 10am–7pm, Sat 10am–7pm. Medical MMMP card required." },
+        { q: "Does Lyman allow recreational cannabis dispensaries?", a: "No. Lyman has NOT opted in to adult-use cannabis. No recreational stores can operate in town. Medical patients are served by Headquarters Medical Cannabis." },
+        { q: "What is Headquarters Medical Cannabis known for?", a: "Headquarters Medical Cannabis at 1520 Alfred Rd is known for high-quality flower, concentrates, edibles, and vapes with a 4.8+ star rating on Weedmaps. Located on Route 111 between Sanford and Biddeford." },
+        { q: "What is Lyman Maine known for?", a: "Lyman is a York County town of ~4,500 residents on the Route 111 corridor between Sanford and Biddeford. Has not opted in to recreational cannabis." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit. Medical dispensaries require a valid Maine MMMP card.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

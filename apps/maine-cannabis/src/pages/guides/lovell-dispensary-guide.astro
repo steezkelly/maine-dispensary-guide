@@ -1,0 +1,125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Lovell, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Lovell has no cannabis dispensaries operating within town limits. The town is adjacent to Fryeburg, which has four active dispensaries including White Mountain Craft Cannabis and The Glass Cook, both recreational." }},
+    { "@type": "Question", "name": "Does Lovell allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Lovell's opt-in status is unclear and not definitively confirmed in available records. The town may have opted in but has no storefronts, or may have opted out entirely. The adjacent town of Fryeburg, which definitely opted in, likely serves Lovell residents regardless." }},
+    { "@type": "Question", "name": "Where do Lovell residents buy legal cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Lovell residents primarily access legal cannabis in neighboring Fryeburg (~5-10 minutes away), which has four dispensaries including White Mountain Craft Cannabis (285 Main St) and The Glass Cook (295 Bridgton Rd)." }},
+    { "@type": "Question", "name": "What is Lovell Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Lovell is a small Oxford County town of approximately 1,200 residents on the edge of the Mahoosuc Mountains region. It is a rural community known for outdoor recreation including hiking, skiing, and access to the Kezar Lake area." }}
+  ]
+});
+---
+
+<Layout title="Lovell, ME Dispensary Guide — Cannabis Near Lovell, Maine 2026" description="Lovell, Maine cannabis guide. No dispensaries in town — served by Fryeburg dispensaries (~5-10 min away). Opt-in status unconfirmed." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Lovell, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access for Lovell, Maine residents — Nearest options in Fryeburg</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Lovell at a Glance</h2>
+    <table aria-label="Lovell cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — None confirmed operating in Lovell</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Unclear — verify with town before assuming</td></tr>
+        <tr><td><strong>Nearest Dispensaries</strong></td><td>Fryeburg (~5-10 min) — White Mountain Craft Cannabis, The Glass Cook, others</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,200</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Lovell is a small Oxford County town of approximately 1,200 residents situated on the edge of the Mahoosuc Mountains region in western Maine. The town is rural and known for outdoor recreation, including access to Kezar Lake and proximity to hiking trails that attract visitors from across New England.</p>
+    <p>Lovell has no confirmed cannabis dispensaries operating within town limits. Given its small population and proximity to Fryeburg — which has a robust four-dispensary retail cluster — the absence of local cannabis retail is not surprising. Residents are well-served by the Fryeburg market just minutes away.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Lovell</h2>
+    <p>The nearest dispensaries are in Fryeburg, approximately 5–10 minutes from Lovell center:</p>
+
+    <h3>White Mountain Craft Cannabis (Recreational)</h3>
+    <p><strong>Address:</strong> 285 Main St Ste 8, Fryeburg, ME 04037</p>
+    <p>The first recreational dispensary in western Maine, serving Lovell residents and capturing cross-state NH traffic.</p>
+
+    <h3>The Glass Cook (Recreational + Glassblowing)</h3>
+    <p><strong>Address:</strong> 295 Bridgton Rd, Fryeburg, ME 04037</p>
+    <p>A unique combination of recreational cannabis retail and glassblowing studio — an experiential retail destination that draws customers from across the region.</p>
+
+    <h3>Medical Options in Fryeburg</h3>
+    <p>Above All Greenery (299 Main St) and The Great Atlantic Puffin Company (235 Bridgton Rd) serve MMMP medical patients.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Lovell's municipal opt-in status is not definitively confirmed in available records. The town's small size and proximity to Fryeburg may mean that any cannabis retail demand is naturally served by the adjacent market without requiring a local presence in Lovell itself.</p>
+    <p>Residents and operators should verify directly with the Lovell town office to confirm current status.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+        <li><a href="/guides/brownfield-dispensary-guide">Brownfield Dispensary Guide</a></li>
+        <li><a href="/guides/denmark-dispensary-guide">Denmark Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Lovell, Maine?", a: "No. Lovell has no cannabis dispensaries operating within town limits. Residents are served by Fryeburg's four dispensaries, approximately 5-10 minutes away." },
+        { q: "Does Lovell allow cannabis dispensaries?", a: "Lovell's opt-in status is not definitively confirmed. Verify directly with the town office. Regardless of status, Fryeburg dispensaries are minutes away and serve Lovell residents." },
+        { q: "Where do Lovell residents buy legal cannabis?", a: "Lovell residents primarily use Fryeburg dispensaries: White Mountain Craft Cannabis (285 Main St), The Glass Cook (295 Bridgton Rd), and two medical options." },
+        { q: "What is Lovell Maine known for?", a: "Lovell is a small Oxford County town of ~1,200 residents near the Mahoosuc Mountains, known for outdoor recreation and Kezar Lake access. No confirmed cannabis dispensaries in town." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary and confirm the town's opt-in status before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

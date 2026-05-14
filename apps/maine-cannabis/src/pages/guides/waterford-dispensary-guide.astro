@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Waterford, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Waterford has no cannabis dispensaries operating within town limits. The town is served by dispensaries in surrounding communities, particularly Oxford (Coastal Roots), Poland (slowsfarm), and Auburn (Friend Jen and Co)." }},
+    { "@type": "Question", "name": "Does Waterford allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford's opt-in status is unclear and not definitively confirmed in available records. The town appears to not have active dispensaries, but the absence of confirmed opt-in/out documentation means the status warrants direct verification with the town." }},
+    { "@type": "Question", "name": "Where do Waterford residents buy legal cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford residents are served by dispensaries in surrounding Oxford County towns: Coastal Roots in Oxford, slowsfarm in Poland, Friend Jen and Co in Auburn, and others in the greater Oxford area." }},
+    { "@type": "Question", "name": "What is Waterford Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford is a small Oxford County town of approximately 1,500 residents in western Maine, characterized by rural landscapes, farmland, and proximity to the Waterford Flat area. It is one of the smaller towns in the region without a documented cannabis retail presence." }}
+  ]
+});
+---
+
+<Layout title="Waterford, ME Dispensary Guide — Cannabis Access Near Waterford 2026" description="Waterford, Maine cannabis guide. No dispensaries in Waterford — served by Oxford, Poland, and Auburn area dispensaries." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Waterford, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access for Waterford, Maine residents — Oxford County region</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Waterford at a Glance</h2>
+    <table aria-label="Waterford cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — None confirmed operating in Waterford</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Unclear — verify with town before assuming</td></tr>
+        <tr><td><strong>Nearest Dispensaries</strong></td><td>Oxford (~15 min), Poland (~15 min), Auburn (~25 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,500</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Waterford is a small Oxford County town of approximately 1,500 residents in western Maine. The town is characterized by rural landscapes, working farmland, and the kind of close-knit community typical of Maine's smaller towns. Waterford does not appear to have any cannabis dispensaries operating within its town limits, with residents relying on dispensaries in surrounding communities for legal cannabis access.</p>
+    <p>The town's opt-in status is not definitively documented in available records, which means residents and operators should verify directly with the town before making assumptions about the current regulatory environment.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Waterford</h2>
+    <p>Waterford residents access cannabis through dispensaries in surrounding Oxford County communities:</p>
+
+    <h3>Coastal Roots (Oxford)</h3>
+    <p>Located in Oxford, approximately 15 minutes from Waterford. Coastal Roots serves the greater Oxford County area including Waterford.</p>
+
+    <h3>slowsfarm (Poland)</h3>
+    <p>A dispensary serving the Poland area, approximately 15 minutes from Waterford. Another option for Waterford residents in the southern part of town.</p>
+
+    <h3>Friend Jen and Co (Auburn)</h3>
+    <p>Serving the Auburn area, approximately 25 minutes from Waterford. Auburn has multiple dispensaries and represents the larger commercial end of the regional cannabis market.</p>
+
+    <h3>The Hideaway (Oxford)</h3>
+    <p><strong>Address:</strong> 1192 Main St, Oxford, ME</p>
+    <p>The Hideaway operates as an adult-use recreational dispensary in Oxford and markets directly to residents of surrounding towns including Norway. Their Oxford location serves as a regional access point.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Waterford's municipal opt-in status for cannabis retail is not definitively confirmed in available records. Unlike towns with clearly documented opt-in or opt-out decisions, Waterford's status appears to be undocumented in the standard OCP and municipal tracker resources.</p>
+    <p>Residents and operators should verify directly with the Waterford town office before assuming the regulatory status in either direction.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+        <li><a href="/guides/brownfield-dispensary-guide">Brownfield Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Waterford, Maine?", a: "No. Waterford has no confirmed cannabis dispensaries operating within town limits. Residents are served by dispensaries in surrounding communities: Coastal Roots (Oxford), slowsfarm (Poland), and Friend Jen and Co (Auburn)." },
+        { q: "Does Waterford allow cannabis dispensaries?", a: "Waterford's opt-in status is not definitively documented. The absence of confirmed records means status should be verified directly with the town office before making business or visit decisions." },
+        { q: "Where do Waterford residents buy legal cannabis?", a: "Waterford residents are served by dispensaries in Oxford County: Coastal Roots in Oxford, slowsfarm in Poland, and others in Auburn — all within 15-25 minutes." },
+        { q: "What is Waterford Maine known for?", a: "Waterford is a small Oxford County town of ~1,500 residents in western Maine, characterized by rural landscapes and farmland. No confirmed cannabis dispensaries in town." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary and confirm the town's opt-in status before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

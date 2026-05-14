@@ -1,0 +1,119 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Arundel, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Arundel has NOT opted in to cannabis retail. No dispensaries currently operate within Arundel town limits. The nearest options are the same as Kennebunk — primarily Biddeford dispensaries approximately 10-15 minutes away." }},
+    { "@type": "Question", "name": "Does Arundel allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Arundel has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Arundel town limits. Arundel is essentially the commercial/light-industrial corridor adjacent to Kennebunk, and its land use pattern reflects that rather than cannabis retail." }},
+    { "@type": "Question", "name": "Where is the nearest dispensary to Arundel?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries to Arundel are in Biddeford, approximately 10-15 minutes away. Four recreational dispensaries operate there: Stoner & Co., Canuvo, Undertow Cannabis Co., and Landrace Cannabis." }},
+    { "@type": "Question", "name": "What is Arundel Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Arundel is a small York County town of approximately 4,500 residents adjacent to Kennebunk. The town is largely a residential community with some commercial and light-industrial land use along its border with Kennebunk. It is named after the historic Arundel castle in England." }}
+  ]
+});
+---
+
+<Layout title="Arundel, ME Dispensary Guide — No Dispensaries (Not Opted In) 2026" description="Arundel, Maine cannabis guide. Arundel has not opted in to recreational cannabis — no dispensaries in town. Nearest are in Biddeford (~10-15 min)." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Arundel, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access for Arundel, Maine residents — Nearest options in Biddeford</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Arundel at a Glance</h2>
+    <table aria-label="Arundel cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — Not opted in</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Biddeford (~10-15 min) — Stoner & Co., Canuvo, Undertow, Landrace</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,500</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Arundel is a small York County town of approximately 4,500 residents, situated adjacent to Kennebunk. The town is largely residential in character, with some commercial and light-industrial land use along its border with Kennebunk — an area that some visitors might mistakenly associate with retail activity including cannabis dispensaries.</p>
+    <p>Despite sharing a border with Kennebunk, Arundel has not opted in to cannabis retail. No dispensaries operate within Arundel town limits. Residents seeking legal cannabis must travel approximately 10–15 minutes to Biddeford, which hosts four recreational dispensaries.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Arundel</h2>
+    <p>The nearest dispensaries to Arundel are in Biddeford, approximately 10–15 minutes away:</p>
+    <ul>
+      <li><strong>Stoner & Co.</strong> — 419 Hill Street, Biddeford — recreational, unique cultivar breeding, family-owned</li>
+      <li><strong>Canuvo</strong> — 4 Wellspring Rd, Biddeford — recreational, established operator</li>
+      <li><strong>Undertow Cannabis Co.</strong> — 30 Morin St, Biddeford — recreational</li>
+      <li><strong>Landrace Cannabis</strong> — 588 Elm Street, Biddeford — recreational, vertically integrated</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Arundel has <strong>not opted in</strong> to adult-use cannabis retail. No recreational cannabis establishments can operate within Arundel town limits.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
+        <li><a href="/guides/kennebunk-dispensary-guide">Kennebunk Dispensary Guide</a></li>
+        <li><a href="/guides/waterboro-dispensary-guide">Waterboro Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Arundel, Maine?", a: "No. Arundel has NOT opted in to cannabis retail. No dispensaries operate in Arundel. The nearest options are Biddeford's four recreational dispensaries (~10-15 min away)." },
+        { q: "Does Arundel allow cannabis dispensaries?", a: "No. Arundel has NOT opted in to adult-use cannabis. No recreational stores can operate in town." },
+        { q: "Where is the nearest dispensary to Arundel?", a: "Biddeford has four recreational dispensaries approximately 10-15 minutes from Arundel: Stoner & Co., Canuvo, Undertow Cannabis Co., and Landrace Cannabis." },
+        { q: "What is Arundel Maine known for?", a: "Arundel is a York County town of ~4,500 residents adjacent to Kennebunk, largely residential with some commercial land use. Named after Arundel castle in England." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

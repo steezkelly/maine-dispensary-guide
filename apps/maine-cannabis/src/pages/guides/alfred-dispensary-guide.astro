@@ -1,0 +1,129 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Alfred, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Alfred has one medical cannabis dispensary: High North Cannabis, a family-owned medical marijuana dispensary serving MMMP patients. However, Alfred has NOT opted in to adult-use recreational cannabis." }},
+    { "@type": "Question", "name": "Does Alfred allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Alfred has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Alfred town limits. Only medical cannabis is served by High North Cannabis." }},
+    { "@type": "Question", "name": "What is High North Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "High North Cannabis is a family-owned medical marijuana dispensary operating in Alfred. As the only cannabis business in town, it serves the medical cannabis needs of Alfred residents and surrounding York County communities." }},
+    { "@type": "Question", "name": "What is Alfred Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Alfred is the county seat of York County, Maine — home to the York County Courthouse and county government offices. It is a small town of approximately 3,500 residents that serves as the administrative center for the region." }}
+  ]
+});
+---
+
+<Layout title="Alfred, ME Dispensary Guide — High North Cannabis Medical 2026" description="Alfred, Maine cannabis guide. High North Cannabis is the only dispensary (medical-only). Alfred has not opted in to recreational cannabis." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Alfred, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis in Alfred, Maine — County seat of York County</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Alfred at a Glance</h2>
+    <table aria-label="Alfred cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 — High North Cannabis (medical only)</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN — Medical only, no adult-use recreational</td></tr>
+        <tr><td><strong>Type</strong></td><td>Medical only (MMMP patients with valid card)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Biddeford (~15-20 min) — Stoner & Co., Canuvo, Undertow, Landrace</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,500</td></tr>
+        <tr><td><strong>County</strong></td><td>York County (County Seat)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Alfred is the county seat of York County, Maine — a distinction that gives this small town of approximately 3,500 residents an administrative importance that far exceeds its population. The York County Courthouse and county government offices are located in Alfred, making it the civic center for a region of tens of thousands of people.</p>
+    <p>Despite its regional administrative importance, Alfred has not opted in to adult-use cannabis retail. The one cannabis operation in town, High North Cannabis, serves the medical cannabis needs of registered MMMP patients. Adult-use consumers must travel approximately 15–20 minutes to Biddeford for legal recreational purchases.</p>
+  </section>
+
+  <section>
+    <h2>Medical Cannabis in Alfred</h2>
+
+    <h3>High North Cannabis (Medical)</h3>
+    <p><strong>Location:</strong> Alfred, ME</p>
+    <p>High North Cannabis is a family-owned medical marijuana dispensary operating in Alfred. As the only cannabis business in town, it serves as the primary access point for medical cannabis patients in the Alfred area and surrounding York County communities.</p>
+    <p>The family-owned model typically means personalized patient care and a focus on consistent, quality products rather than the scale-oriented approach of larger operators.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Recreational Dispensaries to Alfred</h2>
+    <p>Adult-use cannabis consumers in Alfred must travel approximately 15–20 minutes to Biddeford, where four recreational dispensaries operate:</p>
+    <ul>
+      <li><strong>Stoner & Co.</strong> — 419 Hill Street, Biddeford — unique cultivar breeding, family-owned</li>
+      <li><strong>Canuvo</strong> — 4 Wellspring Rd, Biddeford — established operator</li>
+      <li><strong>Undertow Cannabis Co.</strong> — 30 Morin St, Biddeford</li>
+      <li><strong>Landrace Cannabis</strong> — 588 Elm Street, Biddeford — vertically integrated</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Alfred has <strong>not opted in</strong> to adult-use cannabis retail. No recreational cannabis establishments can operate within Alfred town limits. Medical cannabis continues to operate under the MMMP framework.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
+        <li><a href="/guides/waterboro-dispensary-guide">Waterboro Dispensary Guide</a></li>
+        <li><a href="/guides/lyman-dispensary-guide">Lyman Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Alfred, Maine?", a: "Alfred has one medical cannabis dispensary: High North Cannabis, a family-owned medical marijuana dispensary. Alfred has NOT opted in to recreational cannabis." },
+        { q: "Does Alfred allow recreational cannabis dispensaries?", a: "No. Alfred has NOT opted in to adult-use cannabis. No recreational stores can operate in town. Medical patients are served by High North Cannabis." },
+        { q: "What is High North Cannabis?", a: "High North Cannabis is a family-owned medical marijuana dispensary operating in Alfred as the only cannabis business in town, serving MMMP patients." },
+        { q: "What is Alfred Maine known for?", a: "Alfred is the county seat of York County, Maine — home to the York County Courthouse and county government. Small town of ~3,500 residents." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit. Medical dispensaries require a valid Maine MMMP card.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

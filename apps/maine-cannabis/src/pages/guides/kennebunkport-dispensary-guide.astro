@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Kennebunkport, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunkport has not opted in to cannabis retail and requires a town vote before any marijuana establishment can operate. No dispensaries currently exist within Kennebunkport town limits." }},
+    { "@type": "Question", "name": "Does Kennebunkport allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunkport requires a town vote before any marijuana establishment can operate — a higher bar than simple municipal opt-in. This means cannabis retail cannot proceed in Kennebunkport without explicit voter approval." }},
+    { "@type": "Question", "name": "Where is the nearest dispensary to Kennebunkport?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are in York: Tops Farm medical (~10 minutes). For recreational, Theory Wellness in Kittery (~15 minutes) and multiple Biddeford options (~20 minutes)." }},
+    { "@type": "Question", "name": "What is Kennebunkport Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Kennebunkport is one of Maine's most famous coastal destinations, known for Dock Square, waterfront dining, historic sea captain homes, and the exclusive Walker's Point retreat. The summer tourist season brings massive crowds to this normally quiet town of approximately 4,000 residents." }}
+  ]
+});
+---
+
+<Layout title="Kennebunkport, ME Dispensary Guide — No Dispensaries (Town Vote Required) 2026" description="Kennebunkport, Maine cannabis guide. Kennebunkport requires a town vote to allow dispensaries — none currently in town. Nearest dispensaries in York and Kittery." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Kennebunkport, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis access for Kennebunkport visitors and residents — Nearest options in York and Kittery</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Kennebunkport at a Glance</h2>
+    <table aria-label="Kennebunkport cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — Requires town vote to authorize</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN — Requires town vote per local ordinance</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>Tops Farm, York (~10 min)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Theory Wellness, Kittery (~15 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,000 (year-round); 30,000+ (summer)</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Kennebunkport is one of Maine's most iconic coastal destinations, famous for its historic sea captain homes, Dock Square shopping and dining, waterfront restaurants, and the exclusive Walker's Point retreat (formally the Bush family compound). The town has approximately 4,000 year-round residents but swells to over 30,000 during the summer tourist season.</p>
+    <p>Despite its significant tourist traffic and affluent visitor demographic — a prime market for cannabis products — Kennebunkport has not authorized cannabis retail. The town has a higher barrier than simple opt-in: it requires a town vote before any marijuana establishment can operate, meaning operators cannot simply apply for a license through the town's opt-in process.</p>
+  </section>
+
+  <section>
+    <h2>Kennebunkport's Cannabis Restrictions</h2>
+    <p>Kennebunkport's requirement for a town vote before any marijuana establishment can operate is more restrictive than the standard municipal opt-in/opt-out framework used by most Maine towns. This means:</p>
+    <ul>
+      <li>No dispensary can open in Kennebunkport without a formal town vote approving cannabis retail</li>
+      <li>The vote must be initiated through the town's legislative process (citizen petition or selectboard action)</li>
+      <li>Voters must approve by whatever margin the town's charter or state law requires</li>
+    </ul>
+    <p>This higher bar reflects the town's conservative stance on cannabis and the priorities of its year-round residents versus its tourist economy. It also means that changing Kennebunkport's cannabis policy requires significant community organizing and political will, not just a license application.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Kennebunkport</h2>
+
+    <h3>Tops Farm, York (Medical, ~10 minutes)</h3>
+    <p><strong>Address:</strong> 647 US-1 Unit #10, York, ME 03909</p>
+    <p>The closest medical cannabis option to Kennebunkport, approximately 10 minutes away in York.</p>
+
+    <h3>Theory Wellness, Kittery (Recreational, ~15 minutes)</h3>
+    <p>For adult-use cannabis, Theory Wellness in Kittery is approximately 15 minutes from Kennebunkport and serves recreational consumers.</p>
+
+    <h3>Biddeford Options (~20 minutes)</h3>
+    <p>Biddeford has four recreational dispensaries including Stoner & Co., Canuvo, Undertow Cannabis Co., and Landrace Cannabis — all approximately 20 minutes from Kennebunkport.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Kennebunkport has <strong>not authorized cannabis retail</strong> and requires a town vote before any marijuana establishment can operate. This is more restrictive than the standard opt-in/out framework and requires explicit voter approval.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/york-dispensary-guide">York Dispensary Guide</a></li>
+        <li><a href="/guides/kennebunk-dispensary-guide">Kennebunk Dispensary Guide</a></li>
+        <li><a href="/guides/wells-dispensary-guide">Wells Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Kennebunkport, Maine?", a: "No. Kennebunkport requires a town vote before any marijuana establishment can operate. No dispensaries currently exist in Kennebunkport." },
+        { q: "Does Kennebunkport allow cannabis dispensaries?", a: "No. Kennebunkport requires a town vote to authorize cannabis retail — a higher bar than standard opt-in. Operators cannot open without explicit voter approval." },
+        { q: "Where is the nearest dispensary to Kennebunkport?", a: "Tops Farm in York (~10 min, medical) is closest. For recreational, Theory Wellness in Kittery (~15 min) and Biddeford options (~20 min)." },
+        { q: "What is Kennebunkport Maine known for?", a: "Kennebunkport is a famous coastal destination known for Dock Square, waterfront dining, historic sea captain homes, and Walker's Point. ~4,000 year-round residents, 30,000+ in summer." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

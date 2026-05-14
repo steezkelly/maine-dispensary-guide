@@ -1,0 +1,151 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Hollis, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis has no adult-use dispensaries because it has not opted in to recreational cannabis. However, three medical cannabis operations serve patients: Green Roots Company (64 Hollis Road, Hollis Center), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (Hollis Center)." }},
+    { "@type": "Question", "name": "Does Hollis allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Hollis has NOT opted in to adult-use cannabis retail. No recreational cannabis stores can operate within Hollis town limits. Three medical dispensaries/caregivers serve patients with valid Maine Medical Use of Cannabis Program (MMMP) cards." }},
+    { "@type": "Question", "name": "What is Green Roots Company known for?", "acceptedAnswer": { "@type": "Answer", "text": "Green Roots Company at 64 Hollis Road in Hollis Center is a medical dispensary known for organic cannabis, deli-style consultations, and a robust weekly deals program. Deals include Sunday 10% off glass, Wednesday 'Wicked Wheel Spin,' and Friday 10% off flower." }},
+    { "@type": "Question", "name": "What is Hollis Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Hollis is a small York County town on the Saco River with approximately 4,800 residents. It is primarily a residential community with significant agricultural land. Despite not opting in to recreational cannabis, Hollis has a surprisingly active medical cannabis scene with three dispensary/caregiver operations." }}
+  ]
+});
+---
+
+<Layout title="Hollis, ME Dispensary Guide — Medical Cannabis Options 2026" description="Hollis, Maine cannabis guide. No recreational dispensaries (not opted in). Medical dispensaries: Green Roots Company, Landrace Cannabis, Hollis Medication Station in Hollis Center." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .deals-box { background: rgba(88, 129, 87, 0.06); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-border); margin-top: 1rem; }
+  .deals-box h3 { margin-top: 0; color: var(--color-primary); font-size: 1.1rem; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Hollis, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis in Hollis, Maine — Three operations serve patients in Hollis Center</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Hollis at a Glance</h2>
+    <table aria-label="Hollis cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 medical — Green Roots Company, Landrace Cannabis, Hollis Medication Station</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN — No adult-use recreational dispensaries</td></tr>
+        <tr><td><strong>Type</strong></td><td>Medical only (MMMP patients with valid card)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Biddeford (~15 min) — Stoner & Co., Canuvo, Undertow, Landrace</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,800</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Hollis is a Saco River town in York County with approximately 4,800 residents. Despite its relatively modest population, Hollis has developed a surprisingly robust medical cannabis ecosystem, with three dispensary or caregiver operations serving registered MMMP patients. This is likely a reflection of local entrepreneurism and community acceptance at the medical level, even as the town has not opted in to recreational cannabis.</p>
+    <p>The concentration of medical cannabis operations in Hollis — including two on Hollis Road itself — suggests a locally organized patient community. Hollis residents who want recreational cannabis must travel approximately 15 minutes to Biddeford, where multiple adult-use dispensaries are available.</p>
+  </section>
+
+  <section>
+    <h2>Medical Cannabis Operations in Hollis</h2>
+
+    <h3>Green Roots Company (Medical)</h3>
+    <p><strong>Address:</strong> 64 Hollis Road, Hollis Center, ME 04042</p>
+    <p><strong>Hours:</strong> Mon–Wed 9am–7pm, Thu–Sat 9am–8pm, Sun 10am–7pm</p>
+    <p>Green Roots Company is a well-regarded medical cannabis dispensary in Hollis Center. They emphasize organic, locally grown cannabis products and offer deli-style consultations where patients can speak with knowledgeable staff about strains and products. Their weekly deals program is popular among returning patients:</p>
+    <div class="deals-box">
+      <h3>Green Roots Weekly Deals</h3>
+      <ul>
+        <li><strong>Sunday:</strong> 10% off glass pieces</li>
+        <li><strong>Monday:</strong> $160 ounces of flower</li>
+        <li><strong>Tuesday:</strong> 10% off edibles</li>
+        <li><strong>Wednesday:</strong> "Wicked Wheel Spin" — gamified discount spin</li>
+        <li><strong>Thursday:</strong> 10% off concentrates</li>
+        <li><strong>Friday:</strong> 10% off flower</li>
+        <li><strong>Saturday:</strong> Free 1/8 on $125 spend</li>
+      </ul>
+    </div>
+
+    <h3>Landrace Cannabis (Medical)</h3>
+    <p><strong>Address:</strong> 415 Hollis Road, Hollis Center, ME 04042</p>
+    <p>Landrace Cannabis operates a medical dispensary in Hollis Center, serving patients with a curated selection of cannabis products. Their focus on quality cultivation and product selection has built a loyal patient base in the region.</p>
+
+    <h3>Hollis Medication Station (Medical)</h3>
+    <p><strong>Location:</strong> Hollis Center, ME</p>
+    <p>Hollis Medication Station is a medical cannabis operation serving patients in the Hollis area. Known for its friendly staff and good quality cannabis with an impressive variety, the operation fills an important role in the local medical cannabis ecosystem.</p>
+  </section>
+
+  <section>
+    <h2>Accessing Recreational Cannabis Near Hollis</h2>
+    <p>Hollis has not opted in to recreational cannabis, meaning no adult-use stores can operate within town. Residents and visitors seeking recreational cannabis must travel to neighboring Biddeford (approximately 15 minutes), where the following dispensaries serve the adult-use market:</p>
+    <ul>
+      <li><strong>Stoner & Co.</strong> — 419 Hill Street, Biddeford — recreational, known for unique cultivar breeding</li>
+      <li><strong>Canuvo</strong> — 4 Wellspring Rd, Biddeford — recreational, established medical operator</li>
+      <li><strong>Undertow Cannabis Co.</strong> — 30 Morin St, Biddeford — recreational</li>
+      <li><strong>Landrace Cannabis</strong> — 588 Elm Street, Biddeford — recreational, vertically integrated</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Hollis has <strong>not opted in</strong> to adult-use cannabis retail. This means recreational cannabis establishments cannot operate within Hollis town limits. Medical cannabis operations continue to serve registered MMMP patients under the Maine Medical Use of Cannabis Program.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/buxton-dispensary-guide">Buxton Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Hollis, Maine?", a: "Hollis has no adult-use dispensaries (not opted in). Three medical cannabis operations serve MMMP patients: Green Roots Company (64 Hollis Road), Landrace Cannabis (415 Hollis Road), and Hollis Medication Station (Hollis Center)." },
+        { q: "Does Hollis allow recreational cannabis dispensaries?", a: "No. Hollis has NOT opted in to adult-use cannabis. No recreational stores can operate in town. Medical MMMP patients are served by three local operations." },
+        { q: "What is Green Roots Company known for?", a: "Green Roots Company (64 Hollis Road) is known for organic cannabis, deli-style consultations, and a rotating weekly deals program including Sunday glass deals, Wednesday 'Wicked Wheel Spin,' and Friday flower discounts." },
+        { q: "What is Hollis Maine known for?", a: "Hollis is a Saco River town in York County with ~4,800 residents. It has an active medical cannabis scene despite not opting in to recreational, with three dispensary/caregiver operations in Hollis Center." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit. Medical dispensaries require a valid Maine MMMP card.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
