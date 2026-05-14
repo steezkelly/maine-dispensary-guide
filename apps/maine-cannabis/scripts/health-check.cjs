@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SITE_URL = 'https://mainedispensaryguide.com';
+const SITE_HOST = new URL(SITE_URL).hostname;
 const GUIDES_DIR = path.join(__dirname, '..', 'src', 'pages', 'guides');
 
 console.log('🚀 Starting Project Health Audit...\n');
@@ -30,7 +31,7 @@ function check(name, fn) {
 // 1. DNS status
 check('DNS', () => {
   try {
-    execSync(`nslookup ${SITE_URL}`, { stdio: 'pipe' });
+    execSync(`nslookup ${SITE_HOST}`, { stdio: 'pipe' });
     return 'Active';
   } catch {
     throw new Error('DNS resolution failed');

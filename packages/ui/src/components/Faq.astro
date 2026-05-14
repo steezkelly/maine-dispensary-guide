@@ -4,18 +4,26 @@ interface FAQItem {
   answer: string;
 }
 
-interface Props {
-  faqs: FAQItem[];
+interface ShortFAQItem {
+  q: string;
+  a: string;
 }
 
-const { faqs } = Astro.props;
+interface Props {
+  faqs?: FAQItem[];
+  items?: FAQItem[];
+  questions?: ShortFAQItem[];
+}
+
+const { faqs, items, questions } = Astro.props;
+const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a })) ?? [];
 
 const siteUrl = "https://mainedispensaryguide.com";
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": faqs.map(faq => ({
+  "mainEntity": normalizedFaqs.map(faq => ({
     "@type": "Question",
     "name": faq.question,
     "acceptedAnswer": {

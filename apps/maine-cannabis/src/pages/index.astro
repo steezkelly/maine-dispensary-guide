@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import Faq from '../components/Faq.astro';
+import siteConfig from '../data/site-config.json';
 
 const homepageFaqs = [
   { question: "How long does it take to get a Maine cannabis dispensary license?", answer: "Plan for 5-7 months under normal processing conditions. Municipal endorsement alone takes 6-12 weeks. OCP requests for additional information can add another 4-8 weeks. See the full licensing guide: /guides/maine-dispensary-license/" },
@@ -10,6 +11,19 @@ const homepageFaqs = [
   { question: "Which Maine towns allow cannabis dispensaries?", answer: "15 towns have opted in to adult-use retail as of 2026. Key markets include Portland, Lewiston, Bangor, Augusta, Biddeford, and Brunswick. Check the full opt-in list: /guides/maine-cannabis-opt-in-tracker/" },
   { question: "What are the school buffer requirements for Maine dispensaries?", answer: "The state default is 1,000 feet, measured property line to property line. However, municipalities may reduce this to 500 feet through local ordinance. Portland and Bangor have adopted the 500 ft buffer. Check your specific municipality: /guides/maine-cannabis-school-buffer/" }
 ];
+const websiteSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteConfig.siteName,
+  "url": siteConfig.siteUrl,
+  "description": "Your complete guide to opening and operating a cannabis dispensary in Maine.",
+  "publisher": {
+    "@type": "Organization",
+    "name": siteConfig.siteName,
+    "url": siteConfig.siteUrl,
+    "sameAs": siteConfig.socialLinks
+  }
+});
 const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -2248,6 +2262,22 @@ const journeySteps = [
             <p>Sales data, transaction counts, and growth trends by region</p>
           </div>
         </a>
+
+        <a href="/founders" class="resource-link">
+          <span class="resource-icon">◇</span>
+          <div>
+            <h3>Founder Stories</h3>
+            <p>Real Maine cannabis operator journeys — from application to grand opening</p>
+          </div>
+        </a>
+
+        <a href="/blog" class="resource-link">
+          <span class="resource-icon">✦</span>
+          <div>
+            <h3>Cannabis Blog</h3>
+            <p>Industry news, policy updates, and market intelligence for Maine operators</p>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -2278,5 +2308,6 @@ const journeySteps = [
   </section>
 
 </Layout>
+<script type="application/ld+json" set:text={websiteSchema} is:inline></script>
 <script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>
 <Faq faqs={homepageFaqs} />

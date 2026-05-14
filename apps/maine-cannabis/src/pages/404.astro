@@ -1,0 +1,304 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const suggestions = [
+  {
+    href: '/start-here',
+    label: 'Start Here',
+    desc: 'The 12-18 month roadmap to opening your Maine dispensary',
+    icon: '◆',
+    color: 'primary'
+  },
+  {
+    href: '/guides',
+    label: 'All Guides',
+    desc: '40+ city guides and technical deep-dives',
+    icon: '◇',
+    color: 'accent'
+  },
+  {
+    href: '/find-a-dispensary',
+    label: 'Find a Dispensary',
+    desc: 'Curated directory of Maine dispensaries by city',
+    icon: '▲',
+    color: 'primary'
+  },
+  {
+    href: '/roi-calculator',
+    label: 'ROI Calculator',
+    desc: 'Estimate startup investment, operating costs, and return scenarios',
+    icon: '◇',
+    color: 'accent'
+  },
+  {
+    href: '/contact',
+    label: 'Contact Us',
+    desc: 'Questions about licensing, compliance, or partnerships',
+    icon: '✦',
+    color: 'accent'
+  }
+];
+---
+
+<Layout
+  title="Page Not Found | Maine Dispensary Guide"
+  description="The page you're looking for doesn't exist. Explore our dispensary licensing guides, city resources, or contact our team."
+  noindex={true}
+>
+  <style>
+
+  .not-found-page {
+    text-align: center;
+    padding: 6rem 1.5rem 8rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .error-code {
+    font-family: var(--font-serif);
+    font-size: 10rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 0;
+    letter-spacing: -0.05em;
+  }
+
+  .error-label {
+    display: inline-block;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 0.375rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+  }
+
+  .error-title {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.25rem;
+    margin-top: 0;
+  }
+
+  .error-lead {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin-bottom: 4rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+  }
+
+  .suggestion-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    gap: 0.875rem;
+  }
+
+  .suggestion-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow: 0 12px 30px rgba(13, 78, 80, 0.1);
+  }
+
+  .suggestion-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--color-primary);
+  }
+
+  .suggestion-label {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .suggestion-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    line-height: 1.5;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    color: var(--color-border);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+
+.divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  .search-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 2rem;
+    padding: 3rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .search-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-section p {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+  }
+
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: var(--color-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .home-link:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(13, 78, 80, 0.15);
+  }
+
+  .market-stat-bar {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+  }
+
+  @media (max-width: 600px) {
+    .error-code { font-size: 6rem; }
+    .error-title { font-size: 1.75rem; }
+    .suggestions-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .suggestion-card { padding: 1.5rem 1rem; }
+    .suggestion-icon { font-size: 2rem; }
+    .market-stat-bar { gap: 2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .suggestion-card,
+    .home-link {
+      transition: none;
+    }
+  }
+
+  </style>
+
+  <article class="not-found-page">
+    <div class="error-label">404 Error</div>
+    <p class="error-code">404</p>
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-lead">
+      This page doesn't exist. It may have moved, been renamed, or never existed.
+      Explore our most useful resources below or return to the homepage.
+    </p>
+
+    <div class="market-stat-bar">
+      <div class="stat-item">
+        <span class="stat-value">$246M+</span>
+        <span class="stat-label">Maine Market</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">169</span>
+        <span class="stat-label">Active Dispensaries</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">40+</span>
+        <span class="stat-label">City Guides</span>
+      </div>
+    </div>
+
+    <div class="suggestions-grid">
+      {suggestions.map(s => (
+        <a href={s.href} class="suggestion-card">
+          <span class="suggestion-icon" aria-hidden="true">{s.icon}</span>
+          <span class="suggestion-label">{s.label}</span>
+          <span class="suggestion-desc">{s.desc}</span>
+        </a>
+      ))}
+    </div>
+
+    <div class="divider">or</div>
+
+    <div class="search-section">
+      <h2>Find What You Need</h2>
+      <p>Browse our full library of licensing guides, city profiles, and technical resources.</p>
+      <a href="/guides" class="btn-cta" style="display:inline-block;text-decoration:none;padding:0.875rem 2rem;background:var(--color-primary);color:white;border-radius:2rem;font-weight:700;font-size:0.95rem;">
+        Browse All Guides
+      </a>
+    </div>
+
+    <a href="/" class="home-link">
+      <span aria-hidden="true">←</span> Back to Homepage
+    </a>
+  </article>
+</Layout>

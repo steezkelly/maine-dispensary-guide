@@ -1,7 +1,32 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (Malformed `\\1` href repair across revenue and guide paths; local dev smoke verified)
+**Last updated: 2026-05-14 EDT** (custom 404 page added: `src/pages/404.astro` with links to Start Here, Guides, Find a Dispensary, Contact; no search page exists so replaced form with "Browse All Guides" CTA)
+
+---
+
+## 📋 SPRINT 62: Production Placeholder Href Regression Guard (May 14, 2026 EDT)
+
+### `href="#"` production page check ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** Production pages should not ship dead placeholder anchors; admin/noindex utility pages can still use `href="#"` for dashboard-style local controls.
+- **Change:** Extended `apps/maine-cannabis/scripts/content/check-malformed-hrefs.cjs` to flag `href="#"` / `href='#'` on production Astro pages while excluding non-production `admin` and `experiments` routes.
+- **Regression coverage:** Added `apps/maine-cannabis/scripts/content/check-malformed-hrefs.test.cjs` plus `npm run check:hrefs:test` to verify production placeholders fail and admin placeholders pass.
+- **Current page state:** `/find-a-dispensary` now has no production `href="#"` placeholders after the adjacent directory repair; remaining `href="#"` matches are admin-only.
+- **Verification:** Watched the new test fail before implementation; `npm run check:hrefs:test` passed; `npm run check:hrefs` passed; `npx astro check src/pages/find-a-dispensary.astro` returned 0 errors with pre-existing warnings/hints only.
+- **Safety posture:** No deploy, no package install, no infrastructure changes, no full build.
+
+---
+
+## 📋 SPRINT 61: Find-a-Dispensary Directory Coverage Repair (May 14, 2026 EDT)
+
+### `/find-a-dispensary` now indexes all local guide pages ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** The directory page only exposed 8 city sections and still rendered dead `href="#"` Directions/Menu placeholders even though the site now has 50 city, town, and regional dispensary guide pages.
+- **Change:** Reworked `apps/maine-cannabis/src/pages/find-a-dispensary.astro` into a regional guide directory with 50 unique internal links, grouped across Greater Portland/Sebago, Southern Maine/York County, Central/Western Maine, and Midcoast/Waldo/Northern Maine.
+- **Schema:** Replaced store-level `LocalBusiness` JSON-LD with an `ItemList` of guide pages so structured data now matches what the page actually publishes.
+- **Verification:** Directory href audit found 50 hrefs, 50 unique guide links, 0 missing targets. `npx astro check src/pages/find-a-dispensary.astro` completed with 0 errors. `npm run check:hrefs` passed with no malformed `\\1` hrefs or production `href="#"` placeholders.
+- **Safety posture:** Single page content/schema change plus this Hub note. No deploy, no package install, no full build.
 
 ---
 

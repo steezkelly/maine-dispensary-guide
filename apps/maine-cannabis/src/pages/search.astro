@@ -1,0 +1,209 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const searchIndex = [
+  { title: 'Maine Dispensary License Requirements', href: '/guides/maine-dispensary-license', category: 'Licensing', excerpt: 'Application steps, OCP requirements, timeline, and licensing prerequisites for Maine cannabis operators.' },
+  { title: 'Maine Dispensary Startup Costs', href: '/guides/maine-dispensary-costs', category: 'Finance', excerpt: 'Budget ranges, buildout costs, capital planning, and operating expense assumptions.' },
+  { title: 'Maine Cannabis Taxation and 280E', href: '/guides/maine-cannabis-taxation-280e', category: 'Tax', excerpt: 'Federal 280E exposure, Maine tax considerations, and practical planning notes for dispensary owners.' },
+  { title: 'Maine Cannabis Real Estate and Zoning', href: '/guides/maine-cannabis-real-estate', category: 'Real Estate', excerpt: 'Site selection, municipal opt-in rules, buffers, lease terms, and location due diligence.' },
+  { title: 'Maine Dispensary Business Plan', href: '/guides/maine-dispensary-business-plan', category: 'Business Planning', excerpt: 'Business model, market assumptions, licensing roadmap, and investor-ready planning structure.' },
+  { title: 'Maine Cannabis Market Analysis', href: '/guides/maine-cannabis-market', category: 'Market', excerpt: 'Market sizing, competitive dynamics, adult-use trends, and regional opportunity signals.' },
+  { title: 'Maine Dispensary Security Requirements', href: '/guides/maine-dispensary-security', category: 'Compliance', excerpt: 'Security planning, cameras, access controls, and operational compliance expectations.' },
+  { title: 'Maine Cannabis Inventory Management', href: '/guides/maine-cannabis-inventory-management', category: 'Operations', excerpt: 'Metrc workflows, inventory controls, reconciliation, and seed-to-sale operating discipline.' },
+  { title: 'Maine Dispensary POS Systems', href: '/guides/maine-dispensary-pos', category: 'Technology', excerpt: 'Point-of-sale selection, integrations, reporting, and compliance technology considerations.' },
+  { title: 'Find a Maine Dispensary Guide by City or Town', href: '/find-a-dispensary', category: 'City Guides', excerpt: 'Browse Maine dispensary market guides by city, town, and region.' },
+  { title: 'Portland Dispensary Guide', href: '/guides/portland-dispensary-guide', category: 'City Guides', excerpt: 'Portland cannabis retail market, local considerations, and launch guidance.' },
+  { title: 'Bangor Dispensary Guide', href: '/guides/bangor-dispensary-guide', category: 'City Guides', excerpt: 'Bangor cannabis market overview and local dispensary operating considerations.' },
+  { title: 'Augusta Dispensary Guide', href: '/guides/augusta-dispensary-guide', category: 'City Guides', excerpt: 'Augusta cannabis business guidance, municipal context, and market notes.' },
+  { title: 'All Maine Cannabis Guides', href: '/all-guides', category: 'Library', excerpt: 'Complete resource library for Maine cannabis entrepreneurs and operators.' },
+  { title: 'Maine Cannabis Official Resources', href: '/resources/maine-cannabis-official-resources', category: 'Resources', excerpt: 'Official OCP, municipal, state, and regulatory resources for Maine cannabis businesses.' },
+  { title: 'Maine Cannabis ROI Calculator', href: '/roi-calculator', category: 'Tools', excerpt: 'Estimate startup investment, revenue assumptions, margins, and return scenarios.' }
+];
+---
+
+<Layout
+  title="Search Maine Dispensary Guide"
+  description="Search Maine cannabis licensing guides, city profiles, compliance resources, and business tools."
+  noindex={true}
+>
+  <style>
+    .search-page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    .search-hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .search-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.25rem, 5vw, 4rem);
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .search-hero p {
+      color: var(--color-text-light);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .search-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: var(--shadow-md);
+      margin: 2rem 0;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 2px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      color: var(--color-text);
+      background: var(--color-background);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(13, 78, 80, 0.12);
+    }
+
+    .search-count {
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-results {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .result-card {
+      display: block;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: var(--color-text);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-category {
+      display: inline-block;
+      color: var(--color-accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-title {
+      color: var(--color-primary);
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      margin: 0 0 0.5rem;
+    }
+
+    .result-excerpt {
+      color: var(--color-text-light);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .empty-state {
+      background: var(--color-surface);
+      border: 1px dashed var(--color-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-text-light);
+    }
+  </style>
+
+  <div class="search-page">
+    <section class="search-hero">
+      <h1>Search Maine Dispensary Guide</h1>
+      <p>Find licensing guides, city profiles, compliance resources, and operator tools for Maine cannabis businesses.</p>
+    </section>
+
+    <section class="search-box" aria-label="Site search">
+      <input id="site-search" type="search" placeholder="Search licensing, 280E, Portland, zoning..." autocomplete="off" />
+    </section>
+
+    <p id="search-count" class="search-count"></p>
+    <section id="search-results" class="search-results" aria-live="polite"></section>
+  </div>
+
+  <script define:vars={{ searchIndex }}>
+    const input = document.getElementById('site-search');
+    const results = document.getElementById('search-results');
+    const count = document.getElementById('search-count');
+    const params = new URLSearchParams(window.location.search);
+
+    function render(items, query) {
+      count.textContent = query
+        ? `${items.length} result${items.length === 1 ? '' : 's'} for “${query}”`
+        : 'Showing top resources';
+
+      if (!items.length) {
+        results.innerHTML = '<div class="empty-state">No matching guides found. Try licensing, costs, zoning, 280E, Portland, or Metrc.</div>';
+        return;
+      }
+
+      results.innerHTML = items.map(item => `
+        <a class="result-card" href="${item.href}">
+          <span class="result-category">${item.category}</span>
+          <h2 class="result-title">${item.title}</h2>
+          <p class="result-excerpt">${item.excerpt}</p>
+        </a>
+      `).join('');
+    }
+
+    function search(query) {
+      const normalized = query.trim().toLowerCase();
+      if (!normalized) {
+        render(searchIndex.slice(0, 8), '');
+        return;
+      }
+
+      const tokens = normalized.split(/\s+/).filter(Boolean);
+      const filtered = searchIndex.filter(item => {
+        const haystack = `${item.title} ${item.category} ${item.excerpt}`.toLowerCase();
+        return tokens.every(token => haystack.includes(token));
+      });
+
+      render(filtered, query.trim());
+    }
+
+    const initialQuery = params.get('q') || '';
+    input.value = initialQuery;
+    search(initialQuery);
+
+    input.addEventListener('input', event => {
+      const query = event.target.value;
+      const url = new URL(window.location.href);
+      if (query.trim()) url.searchParams.set('q', query.trim());
+      else url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+      search(query);
+    });
+  </script>
+</Layout>

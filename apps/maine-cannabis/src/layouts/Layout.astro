@@ -67,6 +67,10 @@ const {
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const socialImage = heroImage
+  ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
+  : `${siteUrl}/og-image.svg`;
+const socialImageType = socialImage.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg';
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 
@@ -109,8 +113,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY" />
-    <meta name="msvalidate.01" content="F79201CCB2812011C9EB1EA042399CD3" />
+    <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
+    <meta name="msvalidate.01" content={siteConfig.bingSiteVerification} />
     <title>{fullTitle}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,16 +129,53 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="alternate" hreflang="x-default" href={Astro.url} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- OpenSearch autodiscovery -->
+    <link rel="search" href="/opensearch.xml" title="Maine Dispensary Guide" type="application/opensearchdescription+xml" />
+
+    <!-- Geo tags for local SEO -->
+    <meta name="geo.region" content="US-ME" />
+    <meta name="geo.placename" content="Maine" />
+    <meta name="geo.position" content="45.2538;-69.4455" />
+    <meta name="ICBM" content="45.2538, -69.4455" />
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:image" content={heroImage || `${siteUrl}/og-image.svg`} />
-    <meta name="twitter:image" content={heroImage || `${siteUrl}/og-image.svg`} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:url" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    <meta property="og:image:type" content={socialImageType} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:site" content="@MaineDispensary" />
+
+    {!noindex && (
+    <script type="application/ld+json" set:text={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": siteConfig.siteName,
+      "url": siteConfig.siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": siteUrl + "/favicon.svg"
+      },
+      "sameAs": [
+        "https://twitter.com/MaineDispensary"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "info@mainedispensaryguide.com"
+      }
+    })} />
+    )}
 
     {!noindex && (
     <script type="application/ld+json" set:text={JSON.stringify({
@@ -150,8 +191,16 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
           "@type": "ImageObject",
           "url": siteUrl + "/favicon.svg"
         }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": siteUrl + "/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
       }
-    }).replace(/&/g, '&amp;')} />
+    })} />
     )}
 
     {isContent && article && !noindex && (
@@ -187,26 +236,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       }).replace(/&/g, '&amp;')} />
     )}
 
-    {allBreadcrumbs.length > 1 && !noindex && (
-      <script type="application/ld+json" set:text={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": siteUrl
-          },
-          ...allBreadcrumbs.map((crumb, index) => ({
-            "@type": "ListItem",
-            "position": index + 2,
-            "name": crumb.label,
-            "item": siteUrl + crumb.href
-          }))
-        ]
-      }).replace(/&/g, '&amp;')} />
-    )}
+    {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}
 
     <script is:inline>
       const theme = (() => {
@@ -225,14 +255,14 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     </script>
 
     <!-- Google Analytics GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-614GHG67ZQ"></script>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`}></script>
     <script>
       // @ts-nocheck - GA4 dataLayer global
       window.dataLayer = window.dataLayer || [];
       // @ts-ignore
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-614GHG67ZQ');
+      gtag('config', siteConfig.analyticsId);
     </script>
 
     <script is:inline>
@@ -291,6 +321,10 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         });
       });
     </script>
+  <!-- Social links for knowledge panel -->
+    <link rel="me" href="https://www.facebook.com/mainedispensaryguide" />
+    <link rel="me" href="https://www.linkedin.com/company/mainedispensaryguide" />
+    <link rel="me" href="https://twitter.com/mainedispensary" />
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
@@ -427,8 +461,16 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
                 <span class="topic-header">◆ All Guides & Tools</span>
                 <a href="/all-guides">Full Resource Library</a>
                 <a href="/launch-checklist">Launch Checklist</a>
+                <a href="/start-here">Start Here Roadmap</a>
                 <a href="/find-a-dispensary">Find a Store</a>
+                <a href="/directory">Pro Directory</a>
                 <a href="/experiments">Experiments</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◇ Stay Connected</span>
+                <a href="/blog">Blog & News</a>
+                <a href="/founders">Founder Stories</a>
+                <a href="/newsletter">Newsletter</a>
               </div>
             </div>
           </div>

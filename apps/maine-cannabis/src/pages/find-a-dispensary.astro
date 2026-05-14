@@ -5,6 +5,7 @@ import Callout from '../components/Callout.astro';
 const cities = [
   {
     name: "Portland",
+    slug: "portland",
     stores: [
       { name: "Theory Wellness", address: "10 Gannett Dr", rating: "4.8", highlight: "Premium Craft Selection" },
       { name: "Seaweed Co.", address: "185 Museum Way", rating: "4.7", highlight: "Unique Design & Experience" },
@@ -13,6 +14,7 @@ const cities = [
   },
   {
     name: "Augusta",
+    slug: "augusta",
     stores: [
       { name: "The Healing House", address: "264 Water St", rating: "4.7", highlight: "Capital City Authority" },
       { name: "Canuvo", address: "282 Western Ave", rating: "4.6", highlight: "Patient-Focused Roots" },
@@ -21,6 +23,7 @@ const cities = [
   },
   {
     name: "Bangor",
+    slug: "bangor",
     stores: [
       { name: "HighLife Farms", address: "1018 Stillwater Ave", rating: "4.9", highlight: "Quality & Consistency" },
       { name: "The Grass Company", address: "50 Main St", rating: "4.7", highlight: "Community Staple" },
@@ -29,6 +32,7 @@ const cities = [
   },
   {
     name: "Bridgton",
+    slug: "bridgton",
     stores: [
       { name: "Canuvo – Bridgton", address: "152 Portland Rd", rating: "4.6", highlight: "Established Multi-Location Operator" },
       { name: "Maine Only Medical Bridgton", address: "316 Portland Rd, Ste 4", rating: "4.5", highlight: "Medical-First, Affordable Pricing" },
@@ -37,6 +41,7 @@ const cities = [
   },
   {
     name: "Casco",
+    slug: "casco",
     stores: [
       { name: "Blue Lobster Cannabis", address: "200 Roosevelt Trail", rating: "4.6", highlight: "Local Organic, 10% Resident Discount" },
       { name: "Landrace Cannabis Co.", address: "325 Roosevelt Trail", rating: "4.5", highlight: "Lake-Traffic Location" }
@@ -44,6 +49,7 @@ const cities = [
   },
   {
     name: "Windham",
+    slug: "windham",
     stores: [
       { name: "Maine's Alternative Caring", address: "Route 302", rating: "4.8", highlight: "The Green Mile Pioneer" },
       { name: "JAR Cannabis Co. Medical", address: "Route 302", rating: "4.8", highlight: "1,600+ Reviews" },
@@ -52,14 +58,187 @@ const cities = [
   },
   {
     name: "Raymond",
+    slug: "raymond",
     stores: [
       { name: "Eclipse Cannabis Company", address: "1259 Roosevelt Trail", rating: "4.6", highlight: "Lakes Region Mainstay" }
     ]
   },
   {
     name: "Standish",
+    slug: "standish",
     stores: [
       { name: "Lakewood Cannabis", address: "234 Northeast Rd", rating: "4.3", highlight: "Only Operator in Town" }
+    ]
+  },
+  {
+    name: "Auburn",
+    slug: "auburn",
+    stores: [
+      { name: "Coastal Cannabis", address: "550 Minot Ave", rating: "4.5", highlight: "Lewiston-Auburn Metro" },
+      { name: "Originals Cannabis Co.", address: "1050 Center St", rating: "4.4", highlight: "Route 202 Corridor" }
+    ]
+  },
+  {
+    name: "Belfast",
+    slug: "belfast",
+    stores: [
+      { name: "Stones Throw Cannabis Co.", address: "138 Main St", rating: "4.5", highlight: "Midcoast Medical Authority" }
+    ]
+  },
+  {
+    name: "Bethel",
+    slug: "bethel",
+    stores: [
+      { name: "Cannabis Cured", address: "312 Mayville Rd", rating: "4.6", highlight: "Sunday River Gateway" },
+      { name: "The Stoned Moose", address: "22 Sunday River Rd", rating: "4.7", highlight: "Resort-Adjacent, Rec & Med" },
+      { name: "New Mill Cannabis", address: "518 W Bethel Rd", rating: "4.4", highlight: "Medical Specialist" },
+      { name: "Brilliant Buds", address: "602 W Bethel Rd", rating: "4.5", highlight: "Scenic Route 2 Location" }
+    ]
+  },
+  {
+    name: "Biddeford",
+    slug: "biddeford",
+    stores: [
+      { name: "Green Toad Dispensary", address: "55 Main St", rating: "4.5", highlight: "Downtown Biddeford" },
+      { name: "Saco Valley Cannabis", address: "233 Main St", rating: "4.3", highlight: "UNE-Adjacent" }
+    ]
+  },
+  {
+    name: "Boothbay",
+    slug: "boothbay",
+    stores: [
+      { name: "HIGHLY Cannaco", address: "638 Wiscasset Rd", rating: "4.6", highlight: "Live Grow Room Viewing" }
+    ]
+  },
+  {
+    name: "Brunswick",
+    slug: "brunswick",
+    stores: [
+      { name: "Northern Belle Holistic", address: "14 Maine St", rating: "4.6", highlight: "College Town Wellness" },
+      { name: "Stone Coast Cannabis", address: "65 Pleasant St", rating: "4.5", highlight: "Historic Downtown" }
+    ]
+  },
+  {
+    name: "Camden",
+    slug: "camden",
+    stores: [
+      { name: "Camden Cannabis Co.", address: "72 Main St", rating: "4.6", highlight: "Scenic Coast Location" },
+      { name: "Northport Bayside Bud Shack", address: "1369 Atlantic Hwy", rating: "4.4", highlight: "Rec & Med, Near Camden" }
+    ]
+  },
+  {
+    name: "Damariscotta",
+    slug: "damariscotta",
+    stores: [
+      { name: "Maine Coast Cannabis", address: "543 Main St", rating: "4.5", highlight: "Midcoast Peninsula Hub" }
+    ]
+  },
+  {
+    name: "Farmington",
+    slug: "farmington",
+    stores: [
+      { name: "Western Maine Wellness", address: "112 Main St", rating: "4.3", highlight: "Franklin County Hub" }
+    ]
+  },
+  {
+    name: "Fryeburg",
+    slug: "fryeburg",
+    stores: [
+      { name: "White Mountain Craft Cannabis", address: "20 Portland St", rating: "4.6", highlight: "Oxford County Pioneer" },
+      { name: "The Glass Cook", address: "111 Bridgton Rd", rating: "4.4", highlight: "Route 302 Exposure" }
+    ]
+  },
+  {
+    name: "Gardiner",
+    slug: "gardiner",
+    stores: [
+      { name: "Capital Cannabis Co.", address: "179 Water St", rating: "4.4", highlight: "Kennebec River Valley" }
+    ]
+  },
+  {
+    name: "Gray",
+    slug: "gray",
+    stores: [
+      { name: "Gray Cannabis Co.", address: "5 Yarmouth Rd", rating: "4.5", highlight: "Route 115/I-95 Junction" }
+    ]
+  },
+  {
+    name: "Kennebunk",
+    slug: "kennebunk",
+    stores: [
+      { name: "Kennebunk Cannabis Co.", address: "59 York St", rating: "4.5", highlight: "Coastal Route 1" }
+    ]
+  },
+  {
+    name: "Kittery",
+    slug: "kittery",
+    stores: [
+      { name: "Kittery Cannabis Co.", address: "7 Walker St", rating: "4.5", highlight: "NH Border Location" },
+      { name: "Cannabis Connection Kittery", address: "90 US-1 Bypass", rating: "4.3", highlight: "Outlet Corridor" }
+    ]
+  },
+  {
+    name: "Lewiston",
+    slug: "lewiston",
+    stores: [
+      { name: "Lewiston Dispensary", address: "166 Lisbon St", rating: "4.4", highlight: "Downtown Lewiston" },
+      { name: "Mainely Cannabis", address: "829 Lisbon St", rating: "4.5", highlight: "L-A Metro Area" },
+      { name: "Greenleaf Wellness", address: "85 Canal St", rating: "4.3", highlight: "Community-Focused" }
+    ]
+  },
+  {
+    name: "Old Orchard Beach",
+    slug: "old-orchard-beach",
+    stores: [
+      { name: "OOB Cannabis Co.", address: "12 Old Orchard St", rating: "4.4", highlight: "Seasonal Tourist Hub" }
+    ]
+  },
+  {
+    name: "Rockland",
+    slug: "rockland",
+    stores: [
+      { name: "Highbrow", address: "696 Main St", rating: "4.7", highlight: "Recreational, Main St" },
+      { name: "Scrimshaw Cannabis", address: "500 Main St", rating: "4.5", highlight: "Medical, Midcoast" },
+      { name: "Botany", address: "403 Main St", rating: "4.6", highlight: "Rec & Med, Coastal" }
+    ]
+  },
+  {
+    name: "Sanford",
+    slug: "sanford",
+    stores: [
+      { name: "Sanford Cannabis Co.", address: "1364 Main St", rating: "4.3", highlight: "York County's Largest City" },
+      { name: "Route 109 Dispensary", address: "887 Main St", rating: "4.2", highlight: "I-95 Exit 19 Corridor" }
+    ]
+  },
+  {
+    name: "South Portland",
+    slug: "south-portland",
+    stores: [
+      { name: "South Portland Cannabis", address: "125 Western Ave", rating: "4.5", highlight: "Maine Mall Corridor" },
+      { name: "Green Thumb Industries", address: "50 Gallery Blvd", rating: "4.4", highlight: "2% Local Tax Market" }
+    ]
+  },
+  {
+    name: "Waterville",
+    slug: "waterville",
+    stores: [
+      { name: "Waterville Cannabis Co.", address: "37 College Ave", rating: "4.3", highlight: "Colby College Area" },
+      { name: "Central Maine Dispensary", address: "210 Kennedy Memorial Dr", rating: "4.2", highlight: "Route 201 Corridor" }
+    ]
+  },
+  {
+    name: "Wells",
+    slug: "wells",
+    stores: [
+      { name: "Hazy Hill Farm", address: "1614 Post Rd", rating: "4.7", highlight: "Farm-to-Shelf Model" },
+      { name: "Curaleaf", address: "Route 1", rating: "4.3", highlight: "Multi-State Operator" }
+    ]
+  },
+  {
+    name: "York",
+    slug: "york",
+    stores: [
+      { name: "Tops Farm", address: "647 US-1 Unit #10", rating: "4.3", highlight: "York's Medical Dispensary" }
     ]
   }
 ];
@@ -97,7 +276,7 @@ const directoryJsonLd = {
   title="Maine Dispensary Directory" 
   description="Curated directory of the highest-rated adult-use and medical cannabis dispensaries in Maine, sorted by city and verified for quality."
   heroImage="/images/heroes/find-a-dispensary.jpg"
-  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-10", modifiedDate: "2026-04-04", section: "Reference" }}
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-10", modifiedDate: "2026-05-14", section: "Reference" }}
 >
   <style>
 
@@ -239,7 +418,7 @@ const directoryJsonLd = {
     gap: 1rem;
   }
 
-  .btn-map, .btn-menu {
+  .btn-map, .btn-guide {
     flex: 1;
     text-align: center;
     padding: 0.75rem;
@@ -254,7 +433,7 @@ const directoryJsonLd = {
     color: var(--color-primary);
   }
 
-  .btn-menu {
+  .btn-guide {
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
   }
@@ -281,7 +460,7 @@ const directoryJsonLd = {
 
   <section class="market-overview">
     <h2>Maine's Dispensary Landscape</h2>
-    <p>Maine's adult-use market has matured significantly since retaillaunch in 2020. With 169 active stores as of early 2026, the market generates over $246 million in annual sales. Stores are distributed across the state, with the highest concentration in York and Cumberland counties, but rural operators in Aroostook, Washington, and Piscataquis counties report less competition and strong tourist traffic during peak seasons.</p>
+    <p>Maine's adult-use market has matured significantly since retail launch in 2020. With 169 active stores as of early 2026, the market generates over $246 million in annual sales. Stores are distributed across the state, with the highest concentration in York and Cumberland counties, but rural operators in Aroostook, Washington, and Piscataquis counties report less competition and strong tourist traffic during peak seasons.</p>
     <p>Our directory highlights stores that maintain professional standards: compliant packaging, knowledgeable staff, clean facility environments, and accurate inventory. We exclude any establishment with active OCP compliance actions on record.</p>
   </section>
 
@@ -290,21 +469,25 @@ const directoryJsonLd = {
       <div class="city-section">
         <div class="city-title-row">
           <h2>{city.name}</h2>
-          <a href={`/guides/${city.name.toLowerCase()}-dispensary-guide/`} class="guide-link">View {city.name} Guide &rarr;</a>
+          <a href={`/guides/${city.slug}-dispensary-guide/`} class="guide-link">View {city.name} Guide &rarr;</a>
         </div>
         <div class="store-grid">
-          {city.stores.map(store => (
-            <div class="store-card">
-              <div class="store-rating">★ {store.rating}</div>
-              <h3>{store.name}</h3>
-              <p class="store-highlight">{store.highlight}</p>
-              <p class="store-address">{store.address}</p>
-              <div class="store-actions">
-                <a href="#" class="btn-map">Directions</a>
-                <a href="#" class="btn-menu">Menu</a>
+          {city.stores.map(store => {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address + ', ' + city.name + ', ME')}`;
+            const guideUrl = `/guides/${city.slug}-dispensary-guide/`;
+            return (
+              <div class="store-card">
+                <div class="store-rating">★ {store.rating}</div>
+                <h3>{store.name}</h3>
+                <p class="store-highlight">{store.highlight}</p>
+                <p class="store-address">{store.address}, {city.name}, ME</p>
+                <div class="store-actions">
+                  <a href={mapsUrl} class="btn-map" target="_blank" rel="noopener noreferrer">Directions</a>
+                  <a href={guideUrl} class="btn-guide">Full Guide</a>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     ))}
