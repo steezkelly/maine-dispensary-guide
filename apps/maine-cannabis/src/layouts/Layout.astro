@@ -147,7 +147,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="manifest" href="/manifest.webmanifest" />
 
     <!-- Social profiles — matches WebSite schema sameAs -->
-    {siteConfig.socialLinks.map(url => <link rel="me" href={url} />)}
+    {siteConfig.socialLinks.map(url => (<><link rel="me" href={url} /></>))}
 
     <!-- OpenSearch autodiscovery -->
     <link rel="search" href="/opensearch.xml" title="Maine Dispensary Guide" type="application/opensearchdescription+xml" />
@@ -341,7 +341,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       });
     </script>
   <!-- Social links for knowledge panel -->
-    {siteConfig.socialLinks.map(url => <link rel="me" href={url} />)}
+    {siteConfig.socialLinks.map(url => (<><link rel="me" href={url} /></>))}
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
