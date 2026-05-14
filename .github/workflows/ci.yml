@@ -119,26 +119,26 @@ jobs:
 
       - name: Resolve Vercel preview URL
         env:
-          GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          url="$({
-            gh api repos/${{ github.repository }}/deployments \
-              -f sha="$HEAD_SHA" \
-              -f environment=Preview \
-              --jq '.[0].id' | {
-                read -r deployment_id
-                if [ -n "${deployment_id:-}" ] && [ "$deployment_id" != "null" ]; then
-                  gh api repos/${{ github.repository }}/deployments/$deployment_id/statuses \
-                    --jq 'map(select(.state == "success") | .environment_url // .target_url) | .[0]'
-                fi
-              }
-          } || true)"
-          if [ -z "${url:-}" ] || [ "$url" = "null" ]; then
-            echo "Could not resolve successful Vercel preview URL for $HEAD_SHA" >&2
-            exit 1
-          fi
+          url="$(node <<'NODE'
+          const { HEAD_SHA, REPOSITORY } = process.env;
+          const headers = { 'User-Agent': 'github-actions-preview-url-resolver' };
+          const api = (path) => fetch(`https://api.github.com/repos/${REPOSITORY}${path}`, { headers }).then((r) => {
+            if (!r.ok) throw new Error(`${r.status} ${r.statusText} for ${path}`);
+            return r.json();
+          });
+          const deployments = await api(`/deployments?sha=${HEAD_SHA}&environment=Preview`);
+          const deployment = deployments[0];
+          if (!deployment) throw new Error(`No Preview deployment found for ${HEAD_SHA}`);
+          const statuses = await api(`/deployments/${deployment.id}/statuses`);
+          const success = statuses.find((status) => status.state === 'success' && (status.environment_url || status.target_url));
+          if (!success) throw new Error(`No successful Preview deployment status found for ${HEAD_SHA}`);
+          console.log(success.environment_url || success.target_url);
+          NODE
+          )"
           echo "PREVIEW_URL=$url" >> "$GITHUB_ENV"
           echo "Resolved preview URL: $url"
 
