@@ -5,6 +5,19 @@
 
 ---
 
+## 📋 SPRINT 59: SEO/GEO Discovery Refresh (May 13, 2026 EDT)
+
+### LLM discovery files expanded ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Files:** `apps/maine-cannabis/public/llms.txt`, `apps/maine-cannabis/public/llms-full.txt`, mirrored to tracked root `public/llms.txt`.
+- **Why:** Organic/GEO traffic work needs AI crawlers and answer engines to see the full public corpus, not the stale 99-URL list that missed the latest town guides.
+- **Change:** Rebuilt `llms.txt` as a concise answer-engine discovery file with site identity, high-confidence snippets, best starting URLs, citation guidance, and 134 indexable public pages.
+- **Change:** Rebuilt `llms-full.txt` as an expanded route/title/description/source index for all public pages; noindex admin, experiments, and gated/download pages are intentionally omitted.
+- **Fix:** Removed stale trailing-slash canonical patterns and the old malformed `mendedispensaryguide.com` typo in the conditional-use-permit entry.
+- **Safety posture:** Static public text files only. No deploy, no infrastructure changes, no external API calls, no legal/medical advice expansion.
+
+---
+
 ## 📋 SPRINT 58: Seed Shelf Experiments Site Sprout (May 13, 2026 EDT)
 
 ### `/experiments` noindex local draft ✅ IN PROGRESS
