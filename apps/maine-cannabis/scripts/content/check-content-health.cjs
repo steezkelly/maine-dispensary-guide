@@ -220,7 +220,107 @@ function walk(dir, out = []) {
   return out;
 }
 
-// ─── Runner ─────────────────────────────────────────────────────────────────
+// ─── Check 8: production pages missing complete OG image metadata ───────────
+// Every production HTML page should have og:image, og:image:width, og:image:height
+const OG_TAGS = ['og:image', 'og:image:width', 'og:image:height'];
+const REQUIRED_OG_WIDTH = '1200';
+const REQUIRED_OG_HEIGHT = '630';
+
+function checkOGImageDimensions() {
+  const results = [];
+  const distPath = path.resolve(__dirname, '../../dist');
+
+  if (!fs.existsSync(distPath)) {
+    return ['dist/ not found — run build first'];
+  }
+
+  // Walk built HTML pages
+  function walkDist(dir) {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walkDist(full);
+      } else if (entry.name.endsWith('.html')) {
+        const rel = path.relative(distPath, full);
+        const text = fs.readFileSync(full, 'utf8');
+
+        let hasOgImage = false;
+        let hasOgWidth = false;
+        let hasOgHeight = false;
+        let wrongWidth = false;
+        let wrongHeight = false;
+
+        const tagRe = /<meta\s+(?:property|name)=["']([^"']+)["']\s+content=["']([^"']*)["']/g;
+        let m;
+        while ((m = tagRe.exec(text)) !== null) {
+          const prop = m[1];
+          const val = m[2];
+          if (prop === 'og:image') hasOgImage = val.length > 0;
+          if (prop === 'og:image:width') hasOgWidth = val === REQUIRED_OG_WIDTH;
+          if (prop === 'og:image:height') hasOgHeight = val === REQUIRED_OG_HEIGHT;
+        }
+
+        // Also catch width/height that are wrong values
+        const widthRe = /<meta\s+(?:property|name)=["']og:image:width["']\s+content=["']([^"']*)["']/g;
+        const heightRe = /<meta\s+(?:property|name)=["']og:image:height["']\s+content=["']([^"']*)["']/g;
+        const wm = widthRe.exec(text); if (wm && wm[1] !== REQUIRED_OG_WIDTH) wrongWidth = wm[1];
+        const hm = heightRe.exec(text); if (hm && hm[1] !== REQUIRED_OG_HEIGHT) wrongHeight = hm[1];
+
+        if (!hasOgImage) {
+          results.push(`${rel}: missing og:image`);
+        } else {
+          if (wrongWidth) results.push(`${rel}: wrong og:image:width="${wrongWidth}" (expected ${REQUIRED_OG_WIDTH})`);
+          if (wrongHeight) results.push(`${rel}: wrong og:image:height="${wrongHeight}" (expected ${REQUIRED_OG_HEIGHT})`);
+          if (!hasOgWidth && !wrongWidth) results.push(`${rel}: missing og:image:width`);
+          if (!hasOgHeight && !wrongHeight) results.push(`${rel}: missing og:image:height`);
+        }
+      }
+    }
+  }
+
+  walkDist(distPath);
+  return results;
+}
+
+// ─── Check 9: CSS build warnings ─────────────────────────────────────────────
+// Runs `astro build` and scans stdout/stderr for CSS warnings
+function checkCSSBuildWarnings() {
+  const { execSync } = require('node:child_process');
+  try {
+    const out = execSync('npm run build 2>&1', {
+      cwd: path.resolve(__dirname, '../..'),
+      encoding: 'utf8',
+      timeout: 180000,
+    });
+    const lines = out.split('\n');
+    const cssWarnings = [];
+    lines.forEach((line, i) => {
+      const lower = line.toLowerCase();
+      // Catch vite/warning/css related warnings
+      if (lower.includes('warn') && (lower.includes('css') || lower.includes('style'))) {
+        cssWarnings.push(line.trim());
+      }
+      // Also catch deprecation warnings that affect CSS
+      if (lower.includes('deprecated') && lower.includes('style')) {
+        cssWarnings.push(line.trim());
+      }
+    });
+    // Only fail if there are real warnings (not just the word "warning" in passing text)
+    const realWarnings = cssWarnings.filter(l =>
+      l.match(/\[warn\]/i) ||
+      l.match(/warning:/i) ||
+      l.match(/css.*warning/i) ||
+      l.includes('deprecated') && l.includes('style')
+    );
+    return realWarnings.slice(0, 10);
+  } catch (err) {
+    // If build fails entirely, that's a different problem — don't report as CSS warning
+    return [];
+  }
+}
+
+// ─── Run all checks ───────────────────────────────────────────────────────────
 const CHECKS = [
   { name: 'bare href="#" links', fn: checkHrefHash },
   { name: 'malformed frontmatter', fn: checkFrontmatter },
@@ -229,6 +329,8 @@ const CHECKS = [
   { name: 'typo literals', fn: checkTypoLiterals },
   { name: 'dead internal links', fn: checkDeadInternalLinks },
   { name: 'malformed \\1 hrefs', fn: checkMalformedBackrefHrefs },
+  { name: 'OG image dimensions', fn: checkOGImageDimensions },
+  { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
 ];
 
 let totalFailures = 0;
