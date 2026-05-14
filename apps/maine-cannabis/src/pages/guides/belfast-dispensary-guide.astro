@@ -1,0 +1,104 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Belfast, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Stones Throw Cannabis Co. operates a medical dispensary at 138 Main Street, Belfast. They carry in-house grown flower and concentrate products. Phone: (207) 218-1558."}},{"@type":"Question","name":"Is Stone Throw Cannabis recreational or medical?","acceptedAnswer":{"@type":"Answer","text":"Stones Throw Cannabis Co. is a medical-only dispensary. They serve Maine medical marijuana patients with a valid MMJ card and state ID. They do not serve recreational customers."}},{"@type":"Question","name":"Where can I buy recreational cannabis near Belfast?","acceptedAnswer":{"@type":"Answer","text":"Bayside Bud Shack at 1369 Atlantic Hwy in Northport (between Belfast and Camden) serves both medical and recreational customers. Other recreational options are available in Rockland and Camden area."}},{"@type":"Question","name":"Does Belfast accept out-of-state medical cards?","acceptedAnswer":{"@type":"Answer","text":"Maine allows reciprocity for out-of-state medical cannabis cards. Stones Throw Cannabis serves patients with valid MMJ cards — check with the dispensary directly about their current reciprocity policy."}}]});
+---
+<Layout title="Belfast, Maine Dispensary Guide — Stones Throw Cannabis 2026" description="Belfast, Maine dispensary guide. Stones Throw Cannabis medical dispensary at 138 Main St, plus Bayside Bud Shack nearby for recreational and medical patients on Midcoast Maine." heroImage="/images/heroes/belfast-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Belfast, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis in Belfast — Stones Throw Cannabis & Midcoast options</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Belfast Cannabis Quick Facts</h2>
+    <table aria-label="Belfast cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 (Stones Throw Cannabis — medical only)</td></tr>
+        <tr><td><strong>Known Dispensary</strong></td><td>Stones Throw Cannabis Co. — 138 Main St, Belfast, ME 04915</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 218-1558</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Bayside Bud Shack, Northport (between Belfast &amp; Camden)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~7,500 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Waldo County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Stones Throw Cannabis Co.</h2>
+    <p><strong>Address:</strong> 138 Main Street, Belfast, ME 04915<br>
+    <strong>Phone:</strong> (207) 218-1558<br>
+    <strong>Type:</strong> Medical (Maine medical card required)</p>
+    <p>Stones Throw Cannabis is Belfast's dispensary — a single-source, caregiver-owned operation run by Steven and Laura. Every product on their shelves is grown in-house, giving them full control over quality from seed to sale. Their strain selection includes Girl Scout Glue, Jelly Pancakes, K-Smorz, Maconga, and Mendo Cookies — all cultivated on-site.</p>
+    <p>Their phone ordering service is particularly valuable for patients in Belfast's surrounding communities. They carry concentrates, topicals, and flower at competitive prices for the region.</p>
+  </section>
+
+  <Callout title="Single-Source Model" type="passion">
+    Stones Throw's single-source model — growing everything they sell — is uncommon in Maine's dispensary scene. Most operators source from multiple cultivators. Stones Throw's approach means consistent genetics, controlled terpene profiles, and traceability from plant to patient. This matters to medical patients who need reliable product effects.
+  </Callout>
+
+  <section>
+    <h2>Recreational Options Near Belfast</h2>
+    <p>Belfast has only a medical dispensary. For recreational (21+) purchases, residents typically travel to:</p>
+    <ul>
+      <li><strong>Bayside Bud Shack</strong> — 1369 Atlantic Hwy, Northport (between Belfast &amp; Camden, ~5 mi). Serves both medical and recreational customers with MOFGA-certified organic flower and a 4.9-star rating.</li>
+      <li><strong>Rockland (~8 mi south):</strong> Highbrow (recreational), Scrimshaw Cannabis (medical), Cannabis Cured (medical/recreational)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Midcoast Cannabis Corridor</h2>
+    <p>Belfast sits on the Midcoast Maine corridor between Camden and Bangor (~25 mi to each). For residents in the intervening towns — Northport, Searsport, Stockton Springs, Verona Island — Belfast's Stones Throw is the nearest medical option. For recreational, the Bayside Bud Shack in Northport serves the entire Belfast-to-Camden stretch.</p>
+  </section>
+
+  <section>
+    <h2>Bayside Bud Shack (Northport)</h2>
+    <p>While not technically in Belfast, Bayside Bud Shack at 1369 Atlantic Hwy in Northport is only 5 minutes from downtown Belfast and serves as the area's primary recreational dispensary. They carry:</p>
+    <ul>
+      <li>MOFGA-certified organic flower</li>
+      <li>Solventless concentrates</li>
+      <li>Additive-free vape cartridges</li>
+      <li>Brands: High Tide Organic, Grass Roots, Paul's Boutique, Atlantic Farms, Rugged Roots, Kind Farms</li>
+      <li>5% veteran discount, 3% rewards program, ADA accessible, curbside pickup</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a></li>
+        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a></li>
+        <li><a href="/guides/freedom-dispensary-guide">Freedom Dispensary Guide</a></li>
+        <li><a href="/guides/farmington-dispensary-guide">Farmington Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Belfast, Maine?", a: "Yes. Stones Throw Cannabis Co. operates a medical dispensary at 138 Main Street, Belfast. They carry in-house grown flower and concentrate products. Phone: (207) 218-1558." },
+        { q: "Does Belfast accept out-of-state medical cards?", a: "Maine allows reciprocity for out-of-state medical cannabis cards. Contact Stones Throw Cannabis directly about their current reciprocity policy." },
+        { q: "Where can I buy recreational cannabis near Belfast?", a: "Bayside Bud Shack at 1369 Atlantic Hwy in Northport (between Belfast and Camden) serves both medical and recreational customers. Rockland also has several options (~8 mi south)." },
+        { q: "What is unique about Stones Throw Cannabis?", a: "Stones Throw is a single-source, caregiver-owned operation. All products are grown in-house, meaning full quality control from seed to sale. They offer phone ordering and serve the broader Waldo County community." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

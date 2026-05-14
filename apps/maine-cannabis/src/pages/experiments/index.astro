@@ -1,0 +1,1204 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "Experiments"
+};
+
+const germinated = [
+  {
+    status: "Germinated",
+    title: "Cannabis Label Decoder Pocket Card",
+    summary: "A compact reading card for adults trying to understand package fields, menu numbers, test dates, and marketing words without guessing.",
+    signal: "Someone says it would help them ask better questions at a shop.",
+    href: "#label-decoder"
+  },
+  {
+    status: "Germinated",
+    title: "Menu Mirage Translator",
+    summary: "A neutral translator for cannabis menu words that may sound precise but still need verification at the counter.",
+    signal: "Someone uses it to ask a better question instead of trusting a hype word.",
+    href: "#menu-mirage-translator"
+  },
+  {
+    status: "Germinated",
+    title: "Freshness Stamp Widget",
+    summary: "A tiny noindex webapp that stamps a fact with last checked, source type, what may have changed, and what to verify today.",
+    signal: "Someone stops trusting stale menu or hours text just because it still exists on a page.",
+    href: "#freshness-stamp-widget"
+  },
+  {
+    status: "Germinated",
+    title: "Cannabis SEO Slop Bingo",
+    summary: "A playful copy-taste filter for spotting tired cannabis marketing phrases before they leak into useful guide pages.",
+    signal: "Someone rewrites hype into a clearer sentence instead of shipping another generic cannabis paragraph.",
+    href: "#cannabis-seo-slop-bingo"
+  },
+  {
+    status: "Germinated",
+    title: "Budtender Question Card",
+    summary: "A neutral in-store question card that helps adults ask clearly without asking for legal, medical, or product advice.",
+    signal: "Someone walks into a shop with less awkwardness and a clearer list of facts to verify.",
+    href: "#budtender-question-card"
+  },
+  {
+    status: "Germinated",
+    title: "Best Dispensary Detox Box",
+    summary: "A trust-language box that explains why MDG avoids best-of claims unless the method is visible, current, and fair.",
+    signal: "Someone trusts the restraint instead of feeling like the page dodged the question.",
+    href: "#best-dispensary-detox-box"
+  }
+];
+
+const seeds = [
+  {
+    title: "Cannabis Claim Graveyard",
+    summary: "A private/public-safe list of cannabis copy phrases to avoid, with better phrasing that stays factual.",
+    next: "Draft 12 avoid-this / say-this-instead pairs."
+  }
+];
+
+
+
+const detoxRows = [
+  {
+    readerAsk: "Which shop is best near me?",
+    mdgCanSay: "Here are nearby options, current-looking logistics, and questions worth verifying today.",
+    mdgWillNotSay: "This is the best dispensary for you.",
+    realMethod: "A current scoring method with dated sources, weighting, recency checks, and disclosed limits."
+  },
+  {
+    readerAsk: "Who has the best prices?",
+    mdgCanSay: "Prices and menus change fast; compare the shop's own current menu or call before driving.",
+    mdgWillNotSay: "This store has the cheapest cannabis in Maine.",
+    realMethod: "Same-day menu snapshots across comparable products, with timestamps and exclusions."
+  },
+  {
+    readerAsk: "Who has the best quality?",
+    mdgCanSay: "Quality words need evidence. Look for batch details, test dates, package dates, and source notes.",
+    mdgWillNotSay: "This shop has the highest-quality products.",
+    realMethod: "Defined criteria, product categories, lab/test availability, freshness checks, and reviewer independence."
+  },
+  {
+    readerAsk: "Who is safest or most legal?",
+    mdgCanSay: "Verify license status, municipal rules, ID requirements, and official sources before relying on a page.",
+    mdgWillNotSay: "This shop is the safest choice or legal advice says you are fine.",
+    realMethod: "Current official-source checks plus clear separation between information and legal advice."
+  },
+  {
+    readerAsk: "Who has the best staff?",
+    mdgCanSay: "Good staff claims are hard to verify from the outside; use neutral questions at the counter.",
+    mdgWillNotSay: "This shop has the most knowledgeable budtenders.",
+    realMethod: "Transparent mystery-shop criteria, dated visits, accessibility notes, and a conflict policy."
+  },
+  {
+    readerAsk: "Who should I pick today?",
+    mdgCanSay: "Choose based on your current constraints: distance, eligibility, hours, payment, menu freshness, and what you can verify.",
+    mdgWillNotSay: "We recommend this dispensary.",
+    realMethod: "A user-controlled comparison tool where the reader chooses weights and sees source dates."
+  }
+];
+
+const budtenderQuestions = [
+  {
+    situation: "First visit or first visit in a while",
+    question: "What should I know before I read this menu today?",
+    avoid: "Do not ask what you should buy or what will work for a condition.",
+    verify: "Purchase eligibility, ID rules, current menu, and payment options."
+  },
+  {
+    situation: "A label number looks important",
+    question: "Can you show me where the serving size, total amount, and test date are listed?",
+    avoid: "Do not assume a higher number means better, safer, or right for you.",
+    verify: "Serving size, package amount, batch or lot number, and test date."
+  },
+  {
+    situation: "A menu word sounds precise",
+    question: "What does that term mean for this exact item on today's menu?",
+    avoid: "Do not treat words like premium, craft, live, or full spectrum as proof by themselves.",
+    verify: "How the shop defines the word and what the package or test info actually says."
+  },
+  {
+    situation: "Comparing medical and adult-use options",
+    question: "Is this item available for medical patients, adult-use customers, or both?",
+    avoid: "Do not ask for legal advice about eligibility or possession rules.",
+    verify: "Store type, card requirements, ID requirements, and current state or municipal source if unsure."
+  },
+  {
+    situation: "Trying to avoid stale information",
+    question: "Was this menu detail updated today, and what could have changed since it was posted?",
+    avoid: "Do not rely on old screenshots, old third-party listings, or cached menu text.",
+    verify: "Availability, price, package date, pickup rules, and any substitutions."
+  },
+  {
+    situation: "Something is infused or mixed",
+    question: "What exactly is added, and where is the total package amount listed?",
+    avoid: "Do not assume the name explains the serving size or all ingredients.",
+    verify: "Added cannabis material, listed serving size, package amount, and label warnings."
+  },
+  {
+    situation: "A product has a freshness or process claim",
+    question: "When was this packaged, and what process details are available on the label or test result?",
+    avoid: "Do not translate fresh, solventless, small batch, or local into a safety or quality promise.",
+    verify: "Packaged date, batch information, process wording, and source type."
+  },
+  {
+    situation: "Leaving the counter",
+    question: "Before I leave, what should I double-check on the receipt, package, or pickup order?",
+    avoid: "Do not leave with a mismatch between the menu, receipt, and package label.",
+    verify: "Correct item, quantity, price, label, order name, and any store-specific return or pickup policy."
+  }
+];
+
+const slopSquares = [
+  { phrase: "best dispensary near me", why: "Claims a ranking without a transparent method.", better: "Explain how readers can compare current options." },
+  { phrase: "premium top-shelf flower", why: "Stacks vague quality words without evidence.", better: "Say what can be checked: batch, label, package date, source." },
+  { phrase: "unbeatable deals", why: "Sounds like an ad and can rot fast.", better: "Use dated, sourced price context only when verified." },
+  { phrase: "trusted by everyone", why: "Everyone is not a source.", better: "Name the source type or leave the trust claim out." },
+  { phrase: "life-changing experience", why: "Drifts toward personal or therapeutic claims.", better: "Describe logistics, format, and questions to ask." },
+  { phrase: "highest quality products", why: "Quality is undefined and unmeasured.", better: "Explain what a label or shop can verify." },
+  { phrase: "safe and legal", why: "Legal/safety claims need current authority.", better: "Point readers to current official requirements." },
+  { phrase: "curated for your needs", why: "Sounds like advice without knowing the person.", better: "Offer neutral questions a reader can ask." },
+  { phrase: "perfect for beginners", why: "Beginner needs vary and can imply guidance.", better: "Explain what first-time readers should verify." },
+  { phrase: "locally loved", why: "Vibes are not evidence.", better: "Use concrete local context: route, town, hours source." },
+  { phrase: "exclusive strains", why: "Exclusivity is often unverifiable from a menu.", better: "Ask what is unusual about the specific batch." },
+  { phrase: "hand-selected", why: "Sounds careful but says nothing inspectable.", better: "Name the selection criteria or cut it." },
+  { phrase: "lab-tested for purity", why: "Purity is loaded and needs specifics.", better: "Refer to available test date, batch, and listed fields." },
+  { phrase: "discreet cannabis solutions", why: "Generic funnel language that says little.", better: "State actual visit, pickup, or ordering logistics." },
+  { phrase: "wellness journey", why: "Medical-adjacent fluff for a guide page.", better: "Keep it to consumer literacy and verification." },
+  { phrase: "elevate your lifestyle", why: "Could describe any cannabis brand page on earth.", better: "Use local, factual, page-specific language." },
+  { phrase: "knowledgeable staff", why: "Maybe true, but unsupported and generic.", better: "Suggest questions to ask staff instead." },
+  { phrase: "one-stop shop", why: "Overused and rarely informative.", better: "List the categories only if current and sourced." },
+  { phrase: "fresh inventory daily", why: "Fast-rotting claim that demands a timestamp.", better: "Add last checked and verify-today language." },
+  { phrase: "convenient location", why: "Convenient for whom?",
+    better: "Name the route, neighborhood, or nearby context." },
+  { phrase: "expert recommendations", why: "Can imply product advice.", better: "Use neutral literacy aids and verification steps." },
+  { phrase: "cannabis destination", why: "Tourism fluff without reader value.", better: "Explain practical reasons someone may compare towns." },
+  { phrase: "satisfaction guaranteed", why: "Guarantee language invites policy/legal problems.", better: "State what the page can and cannot verify." },
+  { phrase: "cutting-edge products", why: "Empty novelty claim.", better: "Describe the product category in plain terms." },
+  { phrase: "community favorite", why: "Popularity claim without data.", better: "Avoid popularity unless the method is transparent." }
+];
+---
+
+<Layout
+  title="Experiments — Cannabis Field Cards & Tiny Tests"
+  description="A small experimental shelf for Maine cannabis literacy tools: label decoders, menu translators, freshness stamps, and other reversible field cards."
+  article={article}
+  noindex={true}
+  topics={["compliance", "marketing", "operations"]}
+  tags={["experiments", "cannabis-literacy"]}
+>
+  <style>
+    .experiments-page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2rem 1rem 5rem;
+    }
+
+    .hero-panel {
+      background: linear-gradient(135deg, var(--color-surface), var(--color-background));
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      padding: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: "◆";
+      position: absolute;
+      right: 2rem;
+      top: 1.5rem;
+      color: var(--color-accent);
+      opacity: 0.28;
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--color-accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-panel h1 {
+      max-width: 760px;
+      margin: 0 0 1rem;
+      color: var(--color-primary);
+      font-size: clamp(2.25rem, 6vw, 4rem);
+      line-height: 0.98;
+    }
+
+    .lede {
+      max-width: 720px;
+      color: var(--color-text-light);
+      font-size: 1.08rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .guardrail-box {
+      display: grid;
+      gap: 0.6rem;
+      background: var(--color-background);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      color: var(--color-text);
+      max-width: 780px;
+    }
+
+    .guardrail-box p {
+      margin: 0;
+      color: var(--color-text-light);
+      line-height: 1.65;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 3rem 0 1.25rem;
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 0.75rem;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: var(--color-primary);
+    }
+
+    .section-note {
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+    }
+
+    .sprout-grid,
+    .seed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .sprout-card,
+    .seed-card,
+    .artifact-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.35rem;
+    }
+
+    .sprout-card {
+      border-top: 4px solid var(--color-accent);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      color: var(--color-accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .sprout-card h3,
+    .seed-card h3,
+    .artifact-card h3 {
+      margin-top: 0;
+      color: var(--color-primary);
+      font-size: 1.18rem;
+    }
+
+    .sprout-card p,
+    .seed-card p,
+    .artifact-card p,
+    .artifact-card li {
+      color: var(--color-text-light);
+      line-height: 1.65;
+    }
+
+    .seed-card .next {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.92rem;
+    }
+
+    .seed-card .next strong {
+      color: var(--color-text);
+    }
+
+    .artifact-card {
+      margin-top: 1rem;
+    }
+
+    .pocket-card {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card-panel {
+      border: 1px dashed var(--color-border);
+      border-radius: 1.25rem;
+      padding: 1rem;
+      background: var(--color-background);
+    }
+
+    .card-panel h4 {
+      margin: 0 0 0.65rem;
+      color: var(--color-primary);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .field-line {
+      display: grid;
+      grid-template-columns: 11rem 1fr;
+      gap: 0.75rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-light);
+      font-size: 0.95rem;
+    }
+
+    .field-line:last-child {
+      border-bottom: 0;
+    }
+
+    .field-label {
+      color: var(--color-text);
+      font-weight: 700;
+    }
+
+    .mirage-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.94rem;
+    }
+
+    .mirage-table th,
+    .mirage-table td {
+      border: 1px solid var(--color-border);
+      padding: 0.8rem;
+      text-align: left;
+      vertical-align: top;
+      color: var(--color-text-light);
+      line-height: 1.55;
+    }
+
+    .mirage-table th {
+      background: var(--color-background);
+      color: var(--color-primary);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mirage-table td:first-child {
+      color: var(--color-text);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .freshness-lab {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .freshness-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+    }
+
+    .freshness-field {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .freshness-field label {
+      color: var(--color-text);
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .freshness-field input,
+    .freshness-field select {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 0.9rem;
+      padding: 0.75rem 0.8rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+    }
+
+    .freshness-output {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) minmax(260px, 1.2fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .freshness-badge {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      border-radius: 1.4rem;
+      border: 2px solid var(--color-border);
+      background: var(--color-background);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .freshness-badge strong {
+      display: block;
+      color: var(--color-primary);
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .freshness-badge span {
+      color: var(--color-text-light);
+      font-weight: 700;
+    }
+
+    .freshness-copy {
+      margin: 0;
+      border: 1px dashed var(--color-border);
+      border-radius: 1.25rem;
+      padding: 1rem;
+      background: var(--color-background);
+      color: var(--color-text-light);
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+
+    .slop-lab {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .bingo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .bingo-actions button {
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.65rem 0.95rem;
+      background: var(--color-primary);
+      color: var(--color-background);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .bingo-score {
+      color: var(--color-text-light);
+      font-weight: 800;
+    }
+
+    .bingo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .bingo-square {
+      min-height: 92px;
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 0.65rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+      font-weight: 800;
+      line-height: 1.25;
+      cursor: pointer;
+    }
+
+    .bingo-square[aria-pressed="true"] {
+      border-color: var(--color-accent);
+      box-shadow: inset 0 0 0 3px var(--color-accent);
+    }
+
+    .slop-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+    }
+
+    .slop-table th,
+    .slop-table td {
+      border: 1px solid var(--color-border);
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+      color: var(--color-text-light);
+      line-height: 1.5;
+    }
+
+    .slop-table th {
+      background: var(--color-background);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .slop-table td:first-child {
+      color: var(--color-text);
+      font-weight: 800;
+    }
+
+    .plain-list {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .plain-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .next-move {
+      margin-top: 3rem;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      background: var(--color-primary);
+      color: var(--color-background);
+    }
+
+    .next-move h2,
+    .next-move p {
+      color: var(--color-background);
+    }
+
+    .next-move p {
+      opacity: 0.9;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .section-heading {
+        display: block;
+      }
+
+      .field-line {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+      }
+
+      .mirage-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .freshness-output {
+        grid-template-columns: 1fr;
+      }
+
+      .bingo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .slop-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+
+  <main class="experiments-page">
+    <section class="hero-panel">
+      <span class="eyebrow">◆ Experiments</span>
+      <h1>Cannabis field cards, tiny tests, and growing seeds</h1>
+      <p class="lede">
+        This page is a small experimental shelf for cannabis-adjacent tools that may become useful to Maine readers: label decoders, menu translators, freshness stamps, and other practical literacy aids.
+      </p>
+      <div class="guardrail-box">
+        <p><strong>How to read this:</strong> these are experiments, not recommendations, rankings, medical advice, legal advice, or paid placements.</p>
+        <p>Seeds stay small until they prove useful. A seed becomes germinated when it has one concrete artifact readers can inspect.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="germinated-heading">
+      <div class="section-heading">
+        <h2 id="germinated-heading">Germinated sprouts</h2>
+        <span class="section-note">Built enough to inspect; not necessarily launched as products.</span>
+      </div>
+      <div class="sprout-grid">
+        {germinated.map((item) => (
+          <a class="sprout-card" href={item.href}>
+            <span class="status-pill">◆ {item.status}</span>
+            <h3>{item.title}</h3>
+            <p>{item.summary}</p>
+            <p><strong>Interesting signal:</strong> {item.signal}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="seed-heading">
+      <div class="section-heading">
+        <h2 id="seed-heading">Seeds awaiting germination</h2>
+        <span class="section-note">Not a backlog. These are possibilities.</span>
+      </div>
+      <div class="seed-grid">
+        {seeds.map((seed) => (
+          <article class="seed-card">
+            <span class="status-pill">◇ Seed</span>
+            <h3>{seed.title}</h3>
+            <p>{seed.summary}</p>
+            <p class="next"><strong>Next tiny move:</strong> {seed.next}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="label-decoder" class="artifact-card" aria-labelledby="label-decoder-heading">
+      <span class="status-pill">◆ First sprout</span>
+      <h2 id="label-decoder-heading">Cannabis Label Decoder Pocket Card</h2>
+      <p>
+        A compact, plain-language card for adults reading cannabis packaging or menu listings. It is designed to help someone notice the fields worth verifying before they guess what a number or marketing word means.
+      </p>
+
+      <div class="pocket-card">
+        <div class="card-panel">
+          <h4>Before you buy</h4>
+          <ul class="plain-list">
+            <li>Am I eligible to purchase here? Medical and adult-use rules differ.</li>
+            <li>Did I check the shop's current hours, ID rules, and payment options?</li>
+            <li>Do I understand the serving size or package size?</li>
+          </ul>
+        </div>
+
+        <div class="card-panel">
+          <h4>Numbers to notice</h4>
+          <div class="field-line"><span class="field-label">THC</span><span>Listed amount or percentage</span></div>
+          <div class="field-line"><span class="field-label">CBD</span><span>Listed amount or percentage</span></div>
+          <div class="field-line"><span class="field-label">Serving size</span><span>How much one serving means on this package</span></div>
+          <div class="field-line"><span class="field-label">Total package amount</span><span>Total flower, edible, concentrate, or infused product amount</span></div>
+          <div class="field-line"><span class="field-label">Batch / lot number</span><span>Identifier tied to the tested batch</span></div>
+          <div class="field-line"><span class="field-label">Test date</span><span>When the batch was tested, if listed</span></div>
+          <div class="field-line"><span class="field-label">Packaged date</span><span>When the item was packaged, if listed</span></div>
+        </div>
+
+        <div class="card-panel">
+          <h4>Words to ask about</h4>
+          <ul class="plain-list">
+            <li>live / cured / rosin / resin</li>
+            <li>solventless</li>
+            <li>infused</li>
+            <li>full spectrum</li>
+            <li>small batch</li>
+            <li>premium / exotic / top shelf</li>
+          </ul>
+        </div>
+
+        <div class="card-panel">
+          <h4>Safer questions than guessing</h4>
+          <ul class="plain-list">
+            <li>What is the serving size on this package?</li>
+            <li>When was this batch tested or packaged?</li>
+            <li>Is this medical, adult-use, or both?</li>
+            <li>Are the menu details current today?</li>
+            <li>What should I verify before leaving the store?</li>
+          </ul>
+        </div>
+
+        <div class="card-panel">
+          <h4>Do not assume</h4>
+          <ul class="plain-list">
+            <li>That menu prices or availability are current.</li>
+            <li>That medical and adult-use rules are the same.</li>
+            <li>That a marketing word means the same thing everywhere.</li>
+            <li>That internet strain claims apply to this specific product.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu-mirage-translator" class="artifact-card" aria-labelledby="menu-mirage-heading">
+      <span class="status-pill">◆ Second sprout</span>
+      <h2 id="menu-mirage-heading">Menu Mirage Translator</h2>
+      <p>
+        Cannabis menus often use words that sound specific but can mean different things from shop to shop. This translator does not decide what is good, safe, legal, medical, or worth buying. It helps a reader slow down and ask what the word means on this menu today.
+      </p>
+
+      <div class="card-panel">
+        <h4>How to use this card</h4>
+        <ul class="plain-list">
+          <li>Treat menu words as starting points, not proof.</li>
+          <li>Ask the shop what the term means for the exact item you are looking at.</li>
+          <li>Verify dates, package details, purchase eligibility, and current availability before assuming anything.</li>
+        </ul>
+      </div>
+
+      <table class="mirage-table">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>What it might mean</th>
+            <th>What it does not automatically prove</th>
+            <th>Better question to ask</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Premium</td>
+            <td>A store's higher-priced or higher-positioned option.</td>
+            <td>That it is fresher, stronger, tested differently, or better for you.</td>
+            <td>What makes this item premium here?</td>
+          </tr>
+          <tr>
+            <td>Top shelf</td>
+            <td>A menu category for products the shop wants to feature.</td>
+            <td>That it follows a universal grading system.</td>
+            <td>How do you decide what goes on the top shelf?</td>
+          </tr>
+          <tr>
+            <td>Exotic</td>
+            <td>A marketing word for unusual genetics, flavor, look, or rarity.</td>
+            <td>That the product is rare, local, fresh, or objectively better.</td>
+            <td>What is unusual about this specific batch?</td>
+          </tr>
+          <tr>
+            <td>Live resin</td>
+            <td>A concentrate category commonly associated with fresh-frozen plant material.</td>
+            <td>That every producer uses the same process or quality bar.</td>
+            <td>Can you explain how this live resin was made and tested?</td>
+          </tr>
+          <tr>
+            <td>Live rosin</td>
+            <td>A rosin category commonly associated with fresh-frozen starting material and a solventless process.</td>
+            <td>That it is automatically cleaner, safer, or better for a person's needs.</td>
+            <td>What starting material and test information are available?</td>
+          </tr>
+          <tr>
+            <td>Cured resin</td>
+            <td>A concentrate category commonly associated with cured or dried cannabis material.</td>
+            <td>That it is lower quality or less useful than a live product.</td>
+            <td>What should I know about this batch compared with the live option?</td>
+          </tr>
+          <tr>
+            <td>Solventless</td>
+            <td>A process claim that may mean no hydrocarbon solvent was used in extraction.</td>
+            <td>That the final item is automatically risk-free or right for everyone.</td>
+            <td>What process was used, and what does the label show?</td>
+          </tr>
+          <tr>
+            <td>Infused</td>
+            <td>A product with added cannabis material, often used for pre-rolls, edibles, or beverages.</td>
+            <td>That the serving size or total amount is obvious from the name.</td>
+            <td>What exactly is added, and what is the serving or package amount?</td>
+          </tr>
+          <tr>
+            <td>Full spectrum</td>
+            <td>A broad claim that the product includes more than one compound from the plant.</td>
+            <td>That it has a standard formula or predictable experience.</td>
+            <td>What does full spectrum mean on this label or test result?</td>
+          </tr>
+          <tr>
+            <td>Small batch</td>
+            <td>A production-size claim or craft-positioning phrase.</td>
+            <td>That it is fresher, handmade, scarce, or better controlled.</td>
+            <td>How large was the batch, and when was it packaged?</td>
+          </tr>
+          <tr>
+            <td>Craft</td>
+            <td>A brand-positioning word that may point to hands-on production or local identity.</td>
+            <td>That there is a legal or universal craft certification behind it.</td>
+            <td>What practices make this producer call it craft?</td>
+          </tr>
+          <tr>
+            <td>Indoor</td>
+            <td>A cultivation setting claim.</td>
+            <td>That it is automatically better than sungrown or greenhouse cannabis.</td>
+            <td>What matters about this batch beyond where it was grown?</td>
+          </tr>
+          <tr>
+            <td>Sungrown</td>
+            <td>A cultivation setting claim that may mean outdoor or sun-assisted growing.</td>
+            <td>That it is automatically more natural, cheaper, or lower quality.</td>
+            <td>Was this outdoor, greenhouse, or mixed-light, and when was it harvested?</td>
+          </tr>
+          <tr>
+            <td>Pre-roll</td>
+            <td>A ready-to-use rolled cannabis product.</td>
+            <td>That the flower source, age, or added ingredients are obvious.</td>
+            <td>What flower or material is inside, and is anything infused?</td>
+          </tr>
+          <tr>
+            <td>Distillate</td>
+            <td>A refined cannabis extract used in many vape, edible, and infused products.</td>
+            <td>That the flavor, source material, or compound profile is self-explanatory.</td>
+            <td>What cannabinoids are listed, and are terpenes or flavors added?</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="freshness-stamp-widget" class="artifact-card" aria-labelledby="freshness-stamp-heading">
+      <span class="status-pill">◆ Third sprout</span>
+      <h2 id="freshness-stamp-heading">Freshness Stamp Widget</h2>
+      <p>
+        Facts rot at different speeds. Store hours, menus, prices, payment options, license details, and third-party listings can all look official after they have gone stale. This little webapp makes a copy-ready freshness stamp without promising live data.
+      </p>
+
+      <div class="card-panel">
+        <h4>Freshness lab</h4>
+        <p>
+          Pick the fact type, source, and last-checked date. The stamp below changes from crisp to wilting as the fact ages. It is a trust cue, not a guarantee.
+        </p>
+        <div class="freshness-lab" data-freshness-widget>
+          <div class="freshness-controls">
+            <div class="freshness-field">
+              <label for="freshness-date">Last checked</label>
+              <input id="freshness-date" type="date" value="2026-05-13" />
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-fact">Fact type</label>
+              <select id="freshness-fact">
+                <option value="Store hours or visit logistics">Store hours / visit logistics</option>
+                <option value="Menu availability or product details">Menu availability / product details</option>
+                <option value="Payment options or ordering rules">Payment options / ordering rules</option>
+                <option value="License, municipal, or regulatory detail">License / municipal detail</option>
+                <option value="Third-party listing or directory note">Third-party listing note</option>
+              </select>
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-source">Source type</label>
+              <select id="freshness-source">
+                <option value="Official/state or municipal source">Official/state or municipal source</option>
+                <option value="Shop website or menu page">Shop website or menu page</option>
+                <option value="Phone call or in-store note">Phone call or in-store note</option>
+                <option value="Third-party listing">Third-party listing</option>
+                <option value="Old internal note">Old internal note</option>
+              </select>
+            </div>
+            <div class="freshness-field">
+              <label for="freshness-speed">Rot speed</label>
+              <select id="freshness-speed">
+                <option value="fast">Fast rot: menu, price, hours</option>
+                <option value="medium">Medium rot: policies, payment, ordering</option>
+                <option value="slow">Slow rot: license or municipal reference</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="freshness-output" aria-live="polite">
+            <div class="freshness-badge">
+              <div>
+                <strong id="freshness-status">Fresh</strong>
+                <span id="freshness-age">Checked today</span>
+              </div>
+            </div>
+            <pre id="freshness-copy" class="freshness-copy">Last checked: 2026-05-13
+Source type: Official/state or municipal source
+What may have changed: hours, availability, pricing, payment options, or local rules.
+Verify today: confirm directly with the source before relying on this detail.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h4>Good stamp language</h4>
+        <ul class="plain-list">
+          <li><strong>Last checked:</strong> the date MDG last looked at the source.</li>
+          <li><strong>Source type:</strong> official page, shop page, direct note, third-party listing, or internal note.</li>
+          <li><strong>What may have changed:</strong> hours, menu availability, payment options, ordering rules, license status, or municipal details.</li>
+          <li><strong>Verify today:</strong> a plain reminder to confirm before driving, buying, or making a plan.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="cannabis-seo-slop-bingo" class="artifact-card" aria-labelledby="slop-bingo-heading">
+      <span class="status-pill">◆ Fourth sprout</span>
+      <h2 id="slop-bingo-heading">Cannabis SEO Slop Bingo</h2>
+      <p>
+        This is a copy-taste filter for MDG drafts. It is not a public dunk list and it does not judge any shop. It catches generic cannabis marketing phrases before they turn a useful guide into the same paragraph readers have already seen everywhere.
+      </p>
+
+      <div class="card-panel">
+        <h4>Slop bingo lab</h4>
+        <p>
+          Tap a square whenever a draft uses that phrase or an obvious cousin. Shuffle makes a new card from the same 25 phrases. The goal is not perfection; it is enough friction to rewrite hype into something a reader can verify.
+        </p>
+        <div class="slop-lab" data-slop-bingo>
+          <div class="bingo-actions">
+            <button type="button" data-bingo-shuffle>Shuffle card</button>
+            <button type="button" data-bingo-clear>Clear marks</button>
+            <span class="bingo-score" data-bingo-score>0 marked</span>
+          </div>
+          <div class="bingo-grid" aria-label="Cannabis SEO Slop Bingo card">
+            {slopSquares.map((square) => (
+              <button type="button" class="bingo-square" aria-pressed="false" data-phrase={square.phrase}>{square.phrase}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <table class="slop-table">
+        <thead>
+          <tr>
+            <th>Slop phrase</th>
+            <th>Why it is slop</th>
+            <th>Better plain-language move</th>
+          </tr>
+        </thead>
+        <tbody>
+          {slopSquares.map((square) => (
+            <tr>
+              <td>{square.phrase}</td>
+              <td>{square.why}</td>
+              <td>{square.better}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+
+
+    <section id="budtender-question-card" class="artifact-card" aria-labelledby="budtender-question-heading">
+      <span class="status-pill">◆ Fifth sprout</span>
+      <h2 id="budtender-question-heading">Budtender Question Card</h2>
+      <p>
+        A pocket-sized question card for adults who want to ask clearer in-store questions without asking the budtender to make medical, legal, or product decisions for them. The move is simple: name the situation, ask for verifiable facts, and leave advice-shaped guesses out of it.
+      </p>
+
+      <div class="card-panel">
+        <h4>How to use this card</h4>
+        <ul class="plain-list">
+          <li>Ask about the exact item, label, menu, source, or shop rule in front of you.</li>
+          <li>Keep questions factual: what is listed, what changed, what source says it, what should be verified today.</li>
+          <li>Avoid asking for diagnosis, treatment, dosing, legal interpretation, or a guaranteed outcome.</li>
+        </ul>
+      </div>
+
+      <table class="mirage-table">
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>Neutral question</th>
+            <th>What not to ask for</th>
+            <th>Verify before leaving</th>
+          </tr>
+        </thead>
+        <tbody>
+          {budtenderQuestions.map((item) => (
+            <tr>
+              <td>{item.situation}</td>
+              <td>{item.question}</td>
+              <td>{item.avoid}</td>
+              <td>{item.verify}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+
+
+    <section id="best-dispensary-detox-box" class="artifact-card" aria-labelledby="best-detox-heading">
+      <span class="status-pill">◆ Sixth sprout</span>
+      <h2 id="best-detox-heading">Best Dispensary Detox Box</h2>
+      <p>
+        A calm trust box for pages where a reader may want a “best dispensary” answer. The detox is not a dodge; it explains what MDG can verify, what would be needed for a real ranking, and why unmethoded best-of language is just another kind of slop.
+      </p>
+
+      <div class="card-panel">
+        <h4>Plain trust box</h4>
+        <p>
+          MDG does not call a dispensary “best” unless the method is visible, current, and fair. Cannabis menus, prices, hours, staff claims, and local rules can change quickly. This page is meant to help you compare facts and ask better questions, not to rank shops, sell placements, or make medical/legal recommendations.
+        </p>
+      </div>
+
+      <table class="mirage-table">
+        <thead>
+          <tr>
+            <th>Reader may ask</th>
+            <th>MDG can say</th>
+            <th>MDG will not say</th>
+            <th>What a real method would need</th>
+          </tr>
+        </thead>
+        <tbody>
+          {detoxRows.map((row) => (
+            <tr>
+              <td>{row.readerAsk}</td>
+              <td>{row.mdgCanSay}</td>
+              <td>{row.mdgWillNotSay}</td>
+              <td>{row.realMethod}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div class="card-panel">
+        <h4>Taste rule</h4>
+        <p>
+          If a sentence says “best” but cannot show the method, source date, and limit of the claim, rewrite it as a comparison prompt: what can the reader verify today?
+        </p>
+      </div>
+    </section>
+
+    <section class="next-move" aria-labelledby="next-move-heading">
+      <h2 id="next-move-heading">Next small experiment</h2>
+      <p>
+        The strongest remaining seed is probably the Cannabis Claim Graveyard: a small avoid-this / say-this-instead table for cannabis copy claims that should be composted before they reach useful guide pages.
+      </p>
+    </section>
+  </main>
+
+  <script is:inline>
+    const widget = document.querySelector('[data-freshness-widget]');
+    if (widget) {
+      const dateInput = widget.querySelector('#freshness-date');
+      const factInput = widget.querySelector('#freshness-fact');
+      const sourceInput = widget.querySelector('#freshness-source');
+      const speedInput = widget.querySelector('#freshness-speed');
+      const statusOutput = widget.querySelector('#freshness-status');
+      const ageOutput = widget.querySelector('#freshness-age');
+      const copyOutput = widget.querySelector('#freshness-copy');
+
+      const rotMap = {
+        fast: { fresh: 3, warm: 10, wilt: 30 },
+        medium: { fresh: 14, warm: 45, wilt: 90 },
+        slow: { fresh: 45, warm: 120, wilt: 240 }
+      };
+
+      const mayChangeByFact = {
+        'Store hours or visit logistics': 'hours, ID rules, pickup windows, holiday closures, or payment options',
+        'Menu availability or product details': 'menu availability, batch details, package dates, prices, or product names',
+        'Payment options or ordering rules': 'accepted payment methods, preorder rules, pickup instructions, or checkout flow',
+        'License, municipal, or regulatory detail': 'license status, municipal rules, application windows, or agency page URLs',
+        'Third-party listing or directory note': 'address formatting, hours, phone numbers, ratings, map pins, or stale listing text'
+      };
+
+      function pluralizeDays(days) {
+        if (days <= 0) return 'Checked today';
+        if (days === 1) return 'Checked 1 day ago';
+        return `Checked ${days} days ago`;
+      }
+
+      function statusFor(days, speed) {
+        const rot = rotMap[speed] || rotMap.medium;
+        if (days <= rot.fresh) return ['Fresh', 'Looks recently handled. Still verify before relying on it.'];
+        if (days <= rot.warm) return ['Warming', 'Probably usable as a lead, but not as a promise.'];
+        if (days <= rot.wilt) return ['Wilting', 'Needs a fresh look before this text should guide a decision.'];
+        return ['Compost?', 'Treat as old soil: useful context, not current guidance.'];
+      }
+
+      function updateFreshness() {
+        const selected = dateInput.value ? new Date(`${dateInput.value}T00:00:00`) : new Date();
+        const today = new Date();
+        selected.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        const days = Math.max(0, Math.round((today - selected) / 86400000));
+        const [status, note] = statusFor(days, speedInput.value);
+        const mayChange = mayChangeByFact[factInput.value] || 'details may have changed';
+
+        statusOutput.textContent = status;
+        ageOutput.textContent = pluralizeDays(days);
+        copyOutput.textContent = `Last checked: ${dateInput.value || 'not set'}
+Source type: ${sourceInput.value}
+Fact type: ${factInput.value}
+Freshness status: ${status} — ${note}
+What may have changed: ${mayChange}.
+Verify today: confirm directly with the source before relying on this detail.`;
+      }
+
+      [dateInput, factInput, sourceInput, speedInput].forEach((control) => {
+        control.addEventListener('input', updateFreshness);
+        control.addEventListener('change', updateFreshness);
+      });
+
+      updateFreshness();
+    }
+
+    const bingo = document.querySelector('[data-slop-bingo]');
+    if (bingo) {
+      const grid = bingo.querySelector('.bingo-grid');
+      const score = bingo.querySelector('[data-bingo-score]');
+      const shuffleButton = bingo.querySelector('[data-bingo-shuffle]');
+      const clearButton = bingo.querySelector('[data-bingo-clear]');
+      const originalPhrases = Array.from(grid.querySelectorAll('.bingo-square')).map((button) => button.textContent || '');
+
+      function updateBingoScore() {
+        const marked = grid.querySelectorAll('.bingo-square[aria-pressed="true"]').length;
+        score.textContent = `${marked} marked${marked >= 5 ? ' — bingo-shaped problem' : ''}`;
+      }
+
+      function wireSquare(button) {
+        button.addEventListener('click', () => {
+          const pressed = button.getAttribute('aria-pressed') === 'true';
+          button.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          updateBingoScore();
+        });
+      }
+
+      function renderPhrases(phrases) {
+        grid.innerHTML = '';
+        phrases.forEach((phrase) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'bingo-square';
+          button.setAttribute('aria-pressed', 'false');
+          button.dataset.phrase = phrase;
+          button.textContent = phrase;
+          wireSquare(button);
+          grid.appendChild(button);
+        });
+        updateBingoScore();
+      }
+
+      shuffleButton.addEventListener('click', () => {
+        const shuffled = [...originalPhrases].sort(() => Math.random() - 0.5);
+        renderPhrases(shuffled);
+      });
+
+      clearButton.addEventListener('click', () => {
+        grid.querySelectorAll('.bingo-square').forEach((button) => button.setAttribute('aria-pressed', 'false'));
+        updateBingoScore();
+      });
+
+      grid.querySelectorAll('.bingo-square').forEach(wireSquare);
+      updateBingoScore();
+    }
+  </script>
+</Layout>

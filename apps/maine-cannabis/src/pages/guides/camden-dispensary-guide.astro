@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there any cannabis dispensaries in Camden, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Camden has no dedicated cannabis dispensaries within town limits. The nearest dispensary is Bayside Bud Shack in Northport (~5 mi), which serves both medical and recreational customers. Other options are available in Belfast and Rockland."}},{"@type":"Question","name":"Is recreational cannabis legal in Camden, Maine?","acceptedAnswer":{"@type":"Answer","text":"Cannabis is legal statewide in Maine for adults 21+. However, Camden has not opted in to allow local retail dispensaries. Purchase and possession remain legal — residents simply cannot buy within town limits."}},{"@type":"Question","name":"Where can I buy cannabis near Camden?","acceptedAnswer":{"@type":"Answer","text":"Bayside Bud Shack in Northport (~5 mi, between Belfast and Camden) is the nearest option for both medical and recreational customers. Rockland (~7 mi south) has multiple dispensaries including Highbrow and Scrimshaw Cannabis."}}]});
+---
+<Layout title="Camden, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Camden, Maine cannabis guide. No dispensaries in Camden — find nearest medical and recreational options in Northport, Belfast, and Rockland for 2026." heroImage="/images/heroes/camden-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Camden, ME Dispensary Guide</h1>
+    <p class="subtitle">Nearest cannabis options for Camden and the Midcoast region</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Camden Cannabis Quick Facts</h2>
+    <table aria-label="Camden cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0</td></tr>
+        <tr><td><strong>Nearest Dispensary</strong></td><td>Bayside Bud Shack, Northport (~5 mi, med + rec)</td></tr>
+        <tr><td><strong>Other Nearby Options</strong></td><td>Highbrow (Rockland ~7 mi), Scrimshaw (Rockland ~7 mi)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~5,500 (2020 Census)</td></tr>
+        <tr><td><strong>Tourism</strong></td><td>Major Midcoast destination — Camden Hills State Park, harbor, sailing</td></tr>
+        <tr><td><strong>County</strong></td><td>Knox County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Camden is one of Maine's most iconic coastal towns — Camden Hills, the harbor, the Opera House, Penobscot Bay sailing. But despite heavy tourism and a vibrant year-round community, <strong>Camden has no cannabis dispensaries</strong>. Visitors looking for legal cannabis need to drive 5-7 minutes to Northport or Rockland.</p>
+    <p>This is a notable gap. Camden's affluent, tourism-heavy customer base is exactly the demographic that premium cannabis retailers target. The absence of local dispensaries means Camden's cannabis revenue flows to neighboring towns.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Camden</h2>
+
+    <h3>Bayside Bud Shack (Northport — between Belfast &amp; Camden)</h3>
+    <p><strong>Address:</strong> 1369 Atlantic Hwy, Northport, ME 04849<br>
+    <strong>Phone:</strong> (207) 505-7223<br>
+    <strong>Distance from Camden:</strong> ~5 mi north<br>
+    <strong>Type:</strong> Medical + Recreational<br>
+    <strong>Rating:</strong> 4.9/5</p>
+    <p>Bayside Bud Shack is Camden's nearest option in either direction for both medical and recreational. Their MOFGA-certified organic flower, solventless concentrates, and additive-free vape cartridges appeal to Camden's quality-conscious demographic. They offer 5% veteran discount, 3% rewards, ADA access, and curbside pickup.</p>
+
+    <h3>Rockland Options (~7 mi south)</h3>
+    <ul>
+      <li><strong>Highbrow</strong> — Recreational (696 Main St, Rockland)</li>
+      <li><strong>Scrimshaw Cannabis</strong> — Medical (500 Main St, Rockland, 207-466-9408)</li>
+      <li><strong>Cannabis Cured</strong> — Medical/Recreational (Thomaston area, Route 1)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Camden Gap</h2>
+    <p>For a town with Camden's profile, the absence of a dispensary is striking. The reasons are typical: Camden's town government has not permitted cannabis retail. Given the town's reputation as Maine's "crown jewel" coastal destination, there is economic potential for a dispensary that matches the community's aesthetic — premium, boutique, quality-focused. Whether this gap closes depends on whether Camden follows the pattern of other opted-in coastal towns.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
+        <li><a href="/guides/boothbay-dispensary-guide">Boothbay Dispensary Guide</a></li>
+        <li><a href="/guides/damariscotta-dispensary-guide">Damariscotta Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there dispensaries in Camden, Maine?", a: "No. Camden has no cannabis dispensaries. Bayside Bud Shack in Northport (~5 mi) is the nearest option for both medical and recreational." },
+        { q: "Is recreational cannabis legal in Camden?", a: "Cannabis is legal statewide for adults 21+. Camden has not opted in to local retail. Purchase and possession remain legal." },
+        { q: "Where can I buy cannabis near Camden?", a: "Bayside Bud Shack in Northport (~5 mi) serves medical and recreational. Rockland (~7 mi south) has Highbrow and Scrimshaw Cannabis." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office before making plans.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

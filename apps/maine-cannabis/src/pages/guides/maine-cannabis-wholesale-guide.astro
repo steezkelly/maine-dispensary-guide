@@ -1,0 +1,495 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import authors from '../../data/authors.json';
+
+const editorialAuthor = authors.find(a => a.id === 'editorial-team');
+const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "Business & Operations"
+};
+const topics = ["business", "wholesale", "cultivation", "operations"];
+---
+
+<Layout
+  title="Maine Cannabis Wholesale & B2B Guide 2026"
+  description="How cultivators and dispensaries wholesale cannabis in Maine — pricing, lab testing, supply agreements, and regulatory requirements."
+  heroImage="/images/heroes/maine-cannabis-wholesale-guide-2026.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+
+  .blog-post {
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .article-header h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+
+  .intro {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .intro p {
+    margin-bottom: 1.25rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.75;
+  }
+
+  ul, ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.75rem;
+  }
+
+  li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  th, td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    background: var(--color-background);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: rgba(88, 129, 87, 0.04);
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 3px;
+  }
+
+  .wholesale-market-table {
+    margin: 2rem 0;
+  }
+
+  .cultivator-tier-table {
+    margin: 2rem 0;
+  }
+
+  .price-range {
+    font-family: 'Courier New', monospace;
+    background: rgba(88, 129, 87, 0.08);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .operator-insight {
+    background: rgba(88, 129, 87, 0.06);
+    border-left: 3px solid var(--color-accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+
+  .operator-insight p {
+    margin-bottom: 0;
+    font-style: italic;
+  }
+
+  .operator-insight cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    font-style: normal;
+  }
+
+  .key-term {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .stacked-section {
+    display: grid;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .stacked-section h3 {
+    margin-top: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-header h1 { font-size: 1.875rem; }
+    h2 { font-size: 1.5rem; }
+    table { font-size: 0.875rem; }
+    th, td { padding: 0.75rem; }
+  }
+
+  </style>
+
+  <article class="blog-post">
+    <div class="article-header">
+      <h1>Maine Cannabis Wholesale & B2B Guide</h1>
+      <p class="subtitle">How cultivators and dispensaries transact in Maine's B2B cannabis market — pricing, testing, agreements, and compliance</p>
+    </div>
+
+    <section class="intro">
+      <p>Maine's adult-use cannabis market crossed $300 million in sales in 2025. Behind every dispensary shelf is a chain of B2B transactions: cultivator to dispensary, cultivator to manufacturer, store to delivery operator. Yet almost no one publishes how these transactions actually work.</p>
+      <p>This guide fills that gap. It covers how cultivators price their products for wholesale, what testing is required before a transaction can happen, how supply agreements are structured, and what the regulatory requirements are for every B2B transfer in Maine's supply chain. Whether you're a cultivator looking to move volume or a dispensary owner building supplier relationships, this is the reference that doesn't exist anywhere else.</p>
+    </section>
+
+    <Callout title="Who This Guide Is For" type="info">
+      <p><strong>Cultivators</strong> — Understand how dispensaries price sourcing decisions, what quality metrics matter, and how to position your product in a wholesale market with 88 active cultivation facilities.</p>
+      <p><strong>Dispensary operators</strong> — Learn how to evaluate cultivator pricing, structure supply agreements, and negotiate terms in a buyer's market with more cultivators than retail stores.</p>
+      <p><strong>Manufacturers</strong> — Find the requirements for sourcing flower and concentrate for extraction, edibles, and topical products.</p>
+    </Callout>
+
+    <section>
+      <h2>The Maine B2B Cannabis Landscape</h2>
+      <p>Maine's cannabis supply chain has three main B2B tiers: cultivators sell to dispensaries and manufacturers, manufacturers sell concentrate and infused products to dispensaries and delivery operators, and dispensaries sell to delivery operators (for delivery orders fulfilled from a dispensary's inventory).</p>
+      <p>As of 2025, Maine has approximately <strong>88 active cultivation facilities</strong>, <strong>74 products manufacturing facilities</strong>, and <strong>180+ licensed retail stores</strong>. The ratio matters: more cultivators than retail stores means wholesale cannabis is a buyer's market. Dispensaries have leverage to negotiate. Cultivators compete on quality and consistency to earn shelf space.</p>
+      <p>This dynamic is relatively new. In 2020-2022, supply couldn't keep up with demand. Cultivators set prices. Dispensaries paid them. By 2025, the market had shifted. Indoor Tier 2 flower that sold for $2,800/lb in 2021 now commands $1,800-2,400/lb. Outdoor commodity flower has compressed from $1,200/lb to $500-800/lb. The wholesale market is maturing.</p>
+
+      <div class="operator-insight">
+        <p>"The cultivators who are still thriving in 2026 are the ones who figured out that dispensaries aren't just buying flower — they're buying a reliable supply relationship. The grower who delivers on time, every time, with consistent quality gets premium pricing. The one who's out of stock every third order gets priced out."</p>
+        <cite>— Dispensary owner, Cumberland County, speaking anonymously</cite>
+      </div>
+    </section>
+
+    <section>
+      <h2>How Cultivator Pricing Works</h2>
+      <p>Cannabis wholesale pricing in Maine is not standardized. There is no exchange, no spot price, no published benchmark. Prices are negotiated between individual cultivators and dispensaries, and they vary based on quality tier, relationship, volume, and timing. That said, the market has developed rough tiers that operators use as starting points.</p>
+
+      <div class="cultivator-tier-table">
+        <table aria-label="Maine cannabis wholesale flower pricing by cultivator tier">
+          <thead>
+            <tr>
+              <th scope="col">Product Type</th>
+              <th scope="col">Tier</th>
+              <th scope="col">Wholesale Price Range</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Indoor, craft / living soil</strong></td>
+              <td>Tier 2</td>
+              <td><span class="price-range">$1,800–$2,400/lb</span></td>
+              <td>Premium positioning. Dispensaries sell at $14-20/gram. Target: $60-100 average transaction.</td>
+            </tr>
+            <tr>
+              <td><strong>Indoor, standard</strong></td>
+              <td>Tier 2</td>
+              <td><span class="price-range">$1,200–$1,800/lb</span></td>
+              <td>Most common. Competitive quality, reliable supply. Dispensaries sell at $10-15/gram.</td>
+            </tr>
+            <tr>
+              <td><strong>Greenhouse / light-dep</strong></td>
+              <td>Tier 2</td>
+              <td><span class="price-range">$800–$1,200/lb</span></td>
+              <td>Growing segment. Better margin for dispensary than indoor, but quality perception varies.</td>
+            </tr>
+            <tr>
+              <td><strong>Outdoor, sungrown</strong></td>
+              <td>Tier 1</td>
+              <td><span class="price-range">$400–$700/lb</span></td>
+              <td>Commodity market. Used for budget concentrate input and value-tier flower. Seasonal harvest creates price swings.</td>
+            </tr>
+            <tr>
+              <td><strong>Trim / biomass (for extraction)</strong></td>
+              <td>Tier 1</td>
+              <td><span class="price-range">$100–$300/lb</span></td>
+              <td>Used by manufacturers for concentrate production. High volume, low margin per pound.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What Dispensaries Actually Evaluate</h3>
+      <p>Price is one factor. Dispensary buyers evaluate wholesale cannabis on a set of criteria that goes beyond the sticker:</p>
+      <ul>
+        <li><strong>Consistency</strong> — Does the cultivator deliver the same quality from batch to batch? A cultivator who produces amazing flower in January but variable product in March loses the account.</li>
+        <li><strong>Reliability</strong> — Can the cultivator maintain supply through the slow months? Many outdoor growers have feast-or-famine supply cycles tied to harvest. Dispensaries prefer cultivators who can supply year-round.</li>
+        <li><strong>Testing compliance</strong> — Are all lots tested for potency, pesticides, microbes, and residual solvents before transfer? Every transaction requires a clean CoA.</li>
+        <li><strong>Packaging and labeling</strong> — Does the cultivator provide retail-ready packaging with correct labeling? Unlabeled bulk containers create extra work for dispensary staff.</li>
+        <li><strong>Strain selection</strong> — Do they carry the strains the dispensary's customers want? A dispensary in Portland with a craft consumer base needs different genetics than one in Bangor serving working-class locals.</li>
+        <li><strong>Payment terms</strong> — Net-15, Net-30, or COD? Cultivators who offerNet-30 get priority from dispensaries managing cash flow.</li>
+      </ul>
+
+      <h3>Volume Discounts and Relationship Pricing</h3>
+      <p>Most cultivators offer volume-based pricing tiers. A dispensary committing to 10+ lbs per month typically negotiates 10-20% below the listed wholesale rate. Exclusive or semi-exclusive arrangements — where a cultivator agrees not to sell to competing dispensaries in the same town — can drive pricing even lower, though such arrangements are uncommon in Maine's market.</p>
+      <p>Long-term relationships matter more than spot transactions. A cultivator who has supplied a dispensary for two years, understands their needs, and has never missed a delivery will get pricing that a new cultivator with identical product won't match. The wholesale market rewards patience and reliability.</p>
+    </section>
+
+    <section>
+      <h2>Lab Testing Requirements for Wholesale Transfers</h2>
+      <p>Every cannabis product transferred between licensed entities in Maine must be tested and cleared before it enters the wholesale transaction. This is non-negotiable under OCP rules. The testing requirement exists at every supply chain handoff: cultivation to dispensary, cultivation to manufacturer, manufacturer to dispensary.</p>
+
+      <div class="stacked-section">
+        <h3>Required Tests for Flower (Cultivator to Dispensary)</h3>
+        <ul>
+          <li><strong>Potency test</strong> — THC and CBD content, required to appear on product label</li>
+          <li><strong>Microbial testing</strong> — Total yeast and mold, total aerobic bacterial count, bile-tolerant gram-negative bacteria, E. coli, Salmonella (required for inhalable products)</li>
+          <li><strong>Pesticide testing</strong> — Panel of 60+ pesticides as required by Maine OCP</li>
+          <li><strong>Heavy metals</strong> — Arsenic, cadmium, lead, mercury (for inhalable products)</li>
+          <li><strong>Moisture content</strong> — Required for flower; ensures no mold risk in storage</li>
+          <li><strong>Mycotoxins</strong> — Aflatoxin B1, B2, G1, G2, ochratoxin A</li>
+        </ul>
+
+        <h3>Required Tests for Concentrate (Cultivator or Manufacturer to Dispensary)</h3>
+        <ul>
+          <li><strong>Potency test</strong> — Required for all concentrate products</li>
+          <li><strong>Residual solvent testing</strong> — Butane, propane, ethanol, CO2 — depends on extraction method</li>
+          <li><strong>Pesticide testing</strong> — Full panel required for all concentrate</li>
+          <li><strong>Microbial testing</strong> — Same requirements as flower for inhalable concentrate</li>
+          <li><strong>Heavy metals</strong> — Especially relevant for hydrocarbon and CO2 extracts</li>
+        </ul>
+      </div>
+
+      <p>Tests must be conducted by a <strong>certified independent testing laboratory</strong> registered with Maine OCP. Results are recorded in <strong>Metrc</strong>, Maine's seed-to-sale tracking system. A cultivator cannot transfer product to a dispensary without a corresponding Metrc movement record tied to a passed test result.</p>
+      <p>The practical implication: a cultivator who harvests on Monday typically waits 5-10 business days for test results before they can sell that lot. Dispensaries sourcing from multiple cultivators need to plan inventory around these turnaround times.</p>
+
+      <Callout title="Testing Failure Rates" type="warning">
+        <p>Pesticide failures are the most common reason wholesale lots get rejected. Maine's pesticide panel is comprehensive — 60+ compounds — and some cultivators who used legacy pest management approaches discover their IPM program produced detectable residues. Dispensaries should request the full CoA before accepting any wholesale transfer, not just a summary.</p>
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Supply Agreements and Contracts</h2>
+      <p>Cannabis B2B transactions in Maine are not governed by a standardized contract. There is no industry-wide agreement template. Most cultivator-dispensary relationships operate on a combination of a <strong>master service agreement</strong> (for the overall relationship) and individual <strong> purchase orders</strong> (for specific lots).</p>
+
+      <div class="stacked-section">
+        <h3>What a Supply Agreement Should Cover</h3>
+        <ul>
+          <li><strong>Product specifications</strong> — Strain names, THC range, growing method (indoor/greenhouse/outdoor), packaging format, quantity minimums</li>
+          <li><strong>Pricing and volume commitments</strong> — Price per pound/gram, volume tier thresholds, what happens if market price moves significantly during the agreement term</li>
+          <li><strong>Delivery schedule</strong> — Frequency of deliveries, lead time for purchase orders, who is responsible for transport</li>
+          <li><strong>Testing and compliance</strong> — Which party is responsible for lab testing costs, how failures are handled, what happens if a lot fails post-delivery</li>
+          <li><strong>Payment terms</strong> — Net-15, Net-30, COD; interest on late payments; what happens if a dispensary defaults</li>
+          <li><strong>Exclusivity</strong> — Whether the cultivator agrees not to sell competing products to other dispensaries in the same geographic area (rare but negotiable)</li>
+          <li><strong>Term and termination</strong> — Agreement duration, renewal conditions, termination for cause vs. convenience</li>
+          <li><strong>Liability and indemnification</strong> — Who bears risk if a product causes harm, who is insured for what</li>
+          <li><strong>Force majeure</strong> — What happens if a crop fails, a facility burns down, or a pandemic disrupts the market</li>
+        </ul>
+
+        <h3>Purchase Order Mechanics</h3>
+        <p>Beyond the master agreement, individual purchase orders specify what the dispensary is buying from a specific harvest lot. In practice, this flows through Metrc: the dispensary places an order, the cultivator creates a transfer manifest in Metrc, the product moves with a corresponding lab CoA, and the transaction is recorded in both parties' books.</p>
+        <p>Many smaller cultivators don't use formal purchase orders — they confirm orders via text or email and process the Metrc transfer at the time of delivery. This informal approach works for small volumes but creates disputes at scale.</p>
+      </div>
+
+      <Callout title="The Metrc Integration Layer" type="info">
+        <p>Metrc is the backbone of every B2B cannabis transaction in Maine. Every wholesale transfer — whether it's 1 gram or 100 pounds — must be recorded as a "wholesale/transfer" event in Metrc. This means no transaction is truly "off the books." Both cultivator and dispensary have a permanent, auditable record of every transfer. OCP can reconstruct the entire supply chain for any product at any time.</p>
+      </Callout>
+    </section>
+
+    <section>
+      <h2>Building Cultivator-Dispensary Relationships</h2>
+      <p>The cultivator-dispensary relationship is the most consequential B2B partnership in Maine's cannabis market. A dispensary with two reliable wholesale suppliers is operationally stable. One with six or seven relationships is building optionality but spending significant time on procurement. Finding the right balance — and choosing the right partners — shapes a business for years.</p>
+
+      <div class="stacked-section">
+        <h3>How to Evaluate a Cultivator as a Wholesale Partner</h3>
+        <ol>
+          <li><strong>Request a product sample first.</strong> Before any commercial relationship, get 3-5 grams of their current harvest lot. Evaluate appearance, smell, trim quality, and moisture. Ask to see the CoA for that lot.</li>
+          <li><strong>Check Metrc history.</strong> Ask the cultivator for their Metrc facility ID and check their track record: How many active lots do they typically carry? How quickly do they move inventory? A cultivator with 20 active lots that all move within 30 days is running efficiently. One sitting on 6-month-old inventory is signaling problems.</li>
+          <li><strong>Visit the facility.</strong> If possible, tour the grow. Dispensary buyers who have walked a cultivator's facility make better sourcing decisions. You can see scale, cleanliness, IPM practices, and staff competence firsthand.</li>
+          <li><strong>Talk to other dispensaries they supply.</strong> A cultivator's reputation in the dispensary community is an honest signal. Ask about on-time delivery rate, consistency across batches, and how they handle problems.</li>
+          <li><strong>Negotiate a trial period.</strong> Start with a single lot purchase, not a 6-month commitment. Prove the relationship works at small scale before scaling up.</li>
+        </ol>
+
+        <h3>How to Position Your Cultivation Product to Dispensaries</h3>
+        <ol>
+          <li><strong>Lead with the CoA.</strong> Send the lab result alongside every sample. Dispensary buyers who see clean pesticide results and consistent THC percentages immediately trust the professionalism of the cultivator.</li>
+          <li><strong>Know your cost of production.</strong> Indoor cultivators in Maine typically produce at $300-600/lb in direct costs (灯光, nutrients, labor, testing). If you can't produce at or below that range, you need to be premium enough to justify higher wholesale pricing. Understanding your numbers is non-negotiable in negotiations.</li>
+          <li><strong>Offer flexible delivery windows.</strong> Cultivators who can deliver on the dispensary's schedule — rather than forcing dispensaries to accept whatever day works for the cultivator — build long-term loyalty.</li>
+          <li><strong>Develop a signature strain.</strong> The Maine market rewards differentiation. A cultivator with a unique, well-grown strain that dispensaries can't source elsewhere has pricing power. Commodity flower competes purely on price.</li>
+          <li><strong>Provide marketing support.</strong> Some cultivators supply dispensaries with strain cards, photography, or point-of-sale materials. This is especially valuable for small dispensaries with limited marketing resources.</li>
+        </ol>
+      </div>
+
+      <div class="operator-insight">
+        <p>"I started by growing one exceptional strain and giving it to every dispensary in Portland for free, just to get it in front of customers. Within six months, that strain was selling out every delivery. The dispensaries came back to me asking for more. I raised my wholesale price twice and they still kept ordering. That's when I knew I had product-market fit."</p>
+        <cite>— Small-scale cultivator, Oxford County (requested anonymity)</cite>
+      </div>
+    </section>
+
+    <section>
+      <h2>Wholesale Pricing for Concentrates and Edibles</h2>
+      <p>The wholesale market for manufactured products — concentrate, edibles, topicals — operates differently than raw flower. The pricing reference points shift from per-pound to per-unit or per-gram, and the buyer is typically a dispensary's procurement manager or a delivery operator.</p>
+
+      <div class="wholesale-market-table">
+        <table aria-label="Maine wholesale pricing for concentrates and edibles">
+          <thead>
+            <tr>
+              <th scope="col">Product Category</th>
+              <th scope="col">Wholesale Price Range</th>
+              <th scope="col">Dispensary Retail</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Live resin (in-house extraction)</strong></td>
+              <td><span class="price-range">$20–$35/gram</span></td>
+              <td>$50–$80/gram</td>
+              <td>Highest margin category. Requires closed-loop extraction. Lab space required.</td>
+            </tr>
+            <tr>
+              <td><strong>BHO / hydrocarbon extract</strong></td>
+              <td><span class="price-range">$12–$25/gram</span></td>
+              <td>$30–$60/gram</td>
+              <td>Most common concentrate. Dispensaries sell in 0.5g and 1g units.</td>
+            </tr>
+            <tr>
+              <td><strong>Distillate (bulk)</strong></td>
+              <td><span class="price-range">$3,000–$6,000/kg</span></td>
+              <td>N/A (used in edibles)</td>
+              <td>Sold to edible manufacturers. Price varies by purity and starting material.</td>
+            </tr>
+            <tr>
+              <td><strong>Pre-rolls (cultivator-packaged)</strong></td>
+              <td><span class="price-range">$4–$8 each</span></td>
+              <td>$10–$18 each</td>
+              <td>Strong margin. Dispensaries prefer pre-rolls from known cultivators.</td>
+            </tr>
+            <tr>
+              <td><strong>Edibles — gummies (100mg pkg)</strong></td>
+              <td><span class="price-range">$18–$35/package</span></td>
+              <td>$30–$60/package</td>
+              <td>Standard 100mg pkg. Price compressing as more manufacturers enter market.</td>
+            </tr>
+            <tr>
+              <td><strong>Edibles — beverages</strong></td>
+              <td><span class="price-range">$2.50–$5.50/unit</span></td>
+              <td>$6–$12/unit</td>
+              <td>Growing category. Requires specialized manufacturing. Shorter shelf life matters.</td>
+            </tr>
+            <tr>
+              <td><strong>Topicals</strong></td>
+              <td><span class="price-range">$15–$40/unit</span></td>
+              <td>$30–$80/unit</td>
+              <td>Smaller market than flower and concentrate. Lower volume, loyal customer base.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Edibles manufacturers sourcing bulk distillate typically negotiate quarterly pricing based on volume commitments. A manufacturer committing to 5kg per quarter from a single concentrator supplier will get 10-15% better pricing than spot purchasing. The manufacturer-dispensary relationship then passes the margin benefit through (or captures it, depending on competitive dynamics).</p>
+    </section>
+
+    <section>
+      <h2>Manufacturer-to-Dispensary Transfers</h2>
+      <p>When a products manufacturing facility sells concentrate, edibles, or topicals to a dispensary, the same testing and Metrc requirements apply. Every product lot must be tested, every transfer must be manifested in Metrc, and every transaction must be between two licensed entities.</p>
+      <p>The practical difference from cultivator-dispensary transactions is the complexity of the supply chain. A manufacturer sourcing trim from a cultivator, extracting in their facility, and selling concentrate to 15 dispensaries has a more complex compliance operation than a cultivator selling bulk flower. Every input lot must be tracked, every output lot must be tested, and every transfer must be recorded.</p>
+      <p>For dispensaries, this means you want to work with manufacturers who are organized. Ask for their lot traceability documentation before placing a large order. A manufacturer who can show you exactly which cultivator's trim went into which concentrate lot — and trace it through their extraction process — is running a professional operation.</p>
+    </section>
+
+    <section>
+      <h2>Delivery Operators as B2B Intermediaries</h2>
+      <p>Maine's cannabis delivery operators sit in an interesting position in the B2B chain. A delivery operator with a cannabis store license can purchase wholesale from cultivators and manufacturers, then fulfill delivery orders from that inventory. The delivery operator effectively acts as a mini-dispensary with a logistics layer.</p>
+      <p>Some delivery operators source exclusively from one or two cultivators, creating a stable B2B relationship that functions like a supply agreement. Others operate more like aggregators, sourcing from multiple cultivators to offer variety. The model is still maturing — Maine had only 6 authorized delivery operators as of December 2025.</p>
+      <p>For cultivators, delivery operators represent a growing sales channel. A delivery operator serving Aroostook County can move product that the nearest Portland cultivator couldn't otherwise reach. Building relationships with delivery operators is a way for cultivators to extend their geographic reach without establishing their own delivery infrastructure.</p>
+    </section>
+
+    <section>
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li><strong>The wholesale market favors dispensaries.</strong> With 88 cultivators and 180+ stores, Maine is a buyer's market. Cultivators compete on consistency and reliability, not scarcity.</li>
+        <li><strong>Testing is non-negotiable.</strong> Every wholesale transfer requires a clean CoA recorded in Metrc. Pesticide failures are the most common rejection reason — know the full 60+ compound panel.</li>
+        <li><strong>Pricing has tiers.</strong> Indoor craft flower: $1,800-2,400/lb. Standard indoor: $1,200-1,800/lb. Greenhouse: $800-1,200/lb. Outdoor: $400-700/lb. Trim for extraction: $100-300/lb.</li>
+        <li><strong>Relationships drive pricing.</strong> A cultivator with a 2-year track record of on-time, consistent deliveries gets better pricing than a new entrant with identical product. The wholesale market rewards reliability.</li>
+        <li><strong>Supply agreements formalize expectations.</strong> A well-structured agreement covering product specs, testing responsibilities, payment terms, and termination conditions prevents the disputes that informal relationships create.</li>
+        <li><strong>Concentrate and edible wholesale operates on per-unit and per-kilogram pricing.</strong> Distillate for edibles: $3,000-6,000/kg. BHO: $12-25/gram wholesale. Gummies: $18-35/package.</li>
+        <li><strong>Metrc is the transaction record.</strong> No cannabis wholesale transfer is legitimate without a corresponding Metrc movement record. OCP can audit the full chain of custody for any product.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/blog/maine-cannabis-cultivation-license-2026">Maine Cannabis Cultivation License Guide</a> — Licensing requirements, tiers, and the path from application to harvest</li>
+        <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">Cannabis Delivery Business in Maine</a> — How delivery operators source product and serve opt-out municipalities</li>
+        <li><a href="/guides/maine-dispensary-license">Dispensary License Guide</a> — Opening a retail cannabis store in Maine</li>
+      </ul>
+    </section>
+
+    <section class="further-reading">
+      <h2>Official Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy — Adult-Use Licensing</a> — Licensing requirements, testing protocols, and OCP contact</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/testing-laboratories" target="_blank" rel="noopener noreferrer">OCP Certified Testing Laboratories</a> — List of approved testing facilities in Maine</li>
+        <li><a href="https://www.metrc.com/partner/maine/" target="_blank" rel="noopener noreferrer">Metrc Maine — Seed-to-Sale Tracking</a> — Metrc registration and wholesale transfer documentation</li>
+      </ul>
+    </section>
+
+    <section class="disclaimer">
+      <p><em><strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute legal or business advice. Cannabis regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified cannabis attorney before making business decisions.</em></p>
+    </section>
+  </article>
+</Layout>

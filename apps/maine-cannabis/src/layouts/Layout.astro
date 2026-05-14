@@ -67,6 +67,10 @@ const {
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const socialImage = heroImage
+  ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
+  : `${siteUrl}/og-image.svg`;
+const socialImageType = socialImage.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg';
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 
@@ -109,8 +113,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY" />
-    <meta name="msvalidate.01" content="F79201CCB2812011C9EB1EA042399CD3" />
+    <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
+    <meta name="msvalidate.01" content={siteConfig.bingSiteVerification} />
     <title>{fullTitle}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,16 +129,53 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <link rel="alternate" hreflang="x-default" href={Astro.url} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- OpenSearch autodiscovery -->
+    <link rel="search" href="/opensearch.xml" title="Maine Dispensary Guide" type="application/opensearchdescription+xml" />
+
+    <!-- Geo tags for local SEO -->
+    <meta name="geo.region" content="US-ME" />
+    <meta name="geo.placename" content="Maine" />
+    <meta name="geo.position" content="45.2538;-69.4455" />
+    <meta name="ICBM" content="45.2538, -69.4455" />
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:image" content={heroImage || `${siteUrl}/og-image.svg`} />
-    <meta name="twitter:image" content={heroImage || `${siteUrl}/og-image.svg`} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:url" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    <meta property="og:image:type" content={socialImageType} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:site" content="@MaineDispensary" />
+
+    {!noindex && (
+    <script type="application/ld+json" set:text={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": siteConfig.siteName,
+      "url": siteConfig.siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": siteUrl + "/favicon.svg"
+      },
+      "sameAs": [
+        "https://twitter.com/MaineDispensary"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "info@mainedispensaryguide.com"
+      }
+    })} />
+    )}
 
     {!noindex && (
     <script type="application/ld+json" set:text={JSON.stringify({
@@ -150,8 +191,16 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
           "@type": "ImageObject",
           "url": siteUrl + "/favicon.svg"
         }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": siteUrl + "/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
       }
-    }).replace(/&/g, '&amp;')} />
+    })} />
     )}
 
     {isContent && article && !noindex && (
@@ -187,26 +236,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       }).replace(/&/g, '&amp;')} />
     )}
 
-    {allBreadcrumbs.length > 1 && !noindex && (
-      <script type="application/ld+json" set:text={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": siteUrl
-          },
-          ...allBreadcrumbs.map((crumb, index) => ({
-            "@type": "ListItem",
-            "position": index + 2,
-            "name": crumb.label,
-            "item": siteUrl + crumb.href
-          }))
-        ]
-      }).replace(/&/g, '&amp;')} />
-    )}
+    {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}
 
     <script is:inline>
       const theme = (() => {
@@ -225,14 +255,14 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     </script>
 
     <!-- Google Analytics GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-614GHG67ZQ"></script>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`}></script>
     <script>
       // @ts-nocheck - GA4 dataLayer global
       window.dataLayer = window.dataLayer || [];
       // @ts-ignore
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-614GHG67ZQ');
+      gtag('config', siteConfig.analyticsId);
     </script>
 
     <script is:inline>
@@ -291,6 +321,10 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         });
       });
     </script>
+  <!-- Social links for knowledge panel -->
+    <link rel="me" href="https://www.facebook.com/mainedispensaryguide" />
+    <link rel="me" href="https://www.linkedin.com/company/mainedispensaryguide" />
+    <link rel="me" href="https://twitter.com/mainedispensary" />
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
@@ -389,6 +423,14 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
                 <a href="/guides/augusta-dispensary-guide">Augusta</a>
                 <a href="/guides/south-portland-dispensary-guide">South Portland</a>
                 <a href="/guides/kittery-dispensary-guide">Kittery</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Western Maine</span>
+                <a href="/guides/fryeburg-dispensary-guide">Fryeburg</a>
+                <a href="/guides/gray-dispensary-guide">Gray</a>
+                <a href="/guides/porter-dispensary-guide">Porter</a>
+                <a href="/guides/hiram-dispensary-guide">Hiram</a>
+                <a href="/guides/baldwin-dispensary-guide">Baldwin</a>
+                <a href="/guides/naples-dispensary-guide">Naples</a>
+                <a href="/guides/brownfield-dispensary-guide">Brownfield</a>
                 <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Sebago Lakes Region</span>
                 <a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region</a>
                 <a href="/guides/windham-dispensary-guide">Windham</a>
@@ -397,13 +439,38 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
                 <a href="/guides/raymond-dispensary-guide">Raymond</a>
                 <a href="/guides/standish-dispensary-guide">Standish</a>
                 <a href="/guides/sebago-dispensary-guide">Sebago</a>
-                <a href="/guides">All 20+ City Guides</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Lower Saco Valley</span>
+                <a href="/guides/limerick-dispensary-guide">Limerick</a>
+                <a href="/guides/buxton-dispensary-guide">Buxton</a>
+                <a href="/guides/limington-dispensary-guide">Limington</a>
+                <a href="/guides/cornish-dispensary-guide">Cornish</a>
+                <a href="/guides/parsonsfield-dispensary-guide">Parsonsfield</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Southern Maine Coast</span>
+                <a href="/guides/york-dispensary-guide">York</a>
+                <a href="/guides/wells-dispensary-guide">Wells</a>
+                <a href="/guides/ogunquit-dispensary-guide">Ogunquit</a>
+                <a href="/guides/kennebunk-dispensary-guide">Kennebunk</a>
+                <a href="/guides/biddeford-dispensary-guide">Biddeford</a>
+                <a href="/guides/saco-dispensary-guide">Saco</a>
+                <a href="/guides/old-orchard-beach-dispensary-guide">Old Orchard Beach</a>
+                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Waldo County</span>
+                <a href="/guides/freedom-dispensary-guide">Freedom</a>
+                <a href="/guides">All 40+ City Guides</a>
               </div>
               <div class="topic-group">
                 <span class="topic-header">◆ All Guides & Tools</span>
                 <a href="/all-guides">Full Resource Library</a>
                 <a href="/launch-checklist">Launch Checklist</a>
+                <a href="/start-here">Start Here Roadmap</a>
                 <a href="/find-a-dispensary">Find a Store</a>
+                <a href="/directory">Pro Directory</a>
+                <a href="/experiments">Experiments</a>
+              </div>
+              <div class="topic-group">
+                <span class="topic-header">◇ Stay Connected</span>
+                <a href="/blog">Blog & News</a>
+                <a href="/founders">Founder Stories</a>
+                <a href="/newsletter">Newsletter</a>
               </div>
             </div>
           </div>
@@ -577,12 +644,10 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     --font-family: 'Plus Jakarta Sans', sans-serif;
     --font-serif: 'Fraunces', serif;
     --max-width: 1200px;
-    --radius: 1.5rem;
-
-    /* Disclaimer / Alert Box */
-    --color-disclaimer-bg: #fff3cd;
-    --color-disclaimer-border: #ffc107;
-    --color-disclaimer-text: #1a1a1a;
+    --radius: 0.75rem;
+    --color-disclaimer-bg: #F2F2E2;
+    --color-disclaimer-border: #0D4E50;
+    --color-disclaimer-text: #101820;
   }
 
   [data-theme="dark"] {
@@ -593,11 +658,9 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     --color-text: #F2F2E2;
     --color-text-light: #B8C9B0;
     --color-border: #1D3D3D;
-
-    /* Disclaimer / Alert Box */
-    --color-disclaimer-bg: rgba(255, 243, 205, 0.15);
-    --color-disclaimer-border: rgba(255, 193, 7, 0.4);
-    --color-disclaimer-text: #3d3d0f;
+    --color-disclaimer-bg: rgba(242, 242, 226, 0.08);
+    --color-disclaimer-border: rgba(196, 212, 182, 0.3);
+    --color-disclaimer-text: #F2F2E2;
   }
 
   [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
@@ -605,6 +668,24 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   [data-theme="dark"] .dropdown-content { background: var(--color-surface); border-color: var(--color-border); }
   [data-theme="dark"] .dropdown-content a { color: var(--color-text); }
   [data-theme="dark"] .dropdown-content a:hover { background: rgba(196, 212, 182, 0.15); }
+
+  /* Dark mode card hover states */
+  [data-theme="dark"] .hub-card:hover,
+  [data-theme="dark"] .category-card:hover,
+  [data-theme="dark"] .story-card:hover,
+  [data-theme="dark"] .quick-link-card:hover,
+  [data-theme="dark"] .new-guide-card:hover,
+  [data-theme="dark"] .fact-box:hover,
+  [data-theme="dark"] .town-card:hover,
+  [data-theme="dark"] .resource-card:hover,
+  [data-theme="dark"] .stat-block:hover,
+  [data-theme="dark"] .answer-capsule:hover,
+  [data-theme="dark"] .checklist-item:hover,
+  [data-theme="dark"] .faq-item:hover,
+  [data-theme="dark"] .infographic:hover,
+  [data-theme="dark"] .blog-post:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
@@ -682,7 +763,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   .nav-links a:hover, .nav-dropdown:hover .dropbtn { background: var(--color-soft-green); color: white; }
 
   .nav-dropdown { position: relative; }
-  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 1rem; padding: 0.5rem; border: 1px solid var(--color-border); }
+  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 0.75rem; padding: 0.5rem; border: 1px solid var(--color-border); }
   .dropdown-content.multi-column { min-width: 680px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding: 1rem; }
   .topic-group { display: flex; flex-direction: column; }
   .topic-header { font-family: var(--font-serif); font-weight: 700; font-size: 0.75rem; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; margin-bottom: 0.25rem; }
@@ -787,6 +868,22 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
 
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: var(--color-disclaimer-bg);
+    border: 1px solid var(--color-disclaimer-border);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-disclaimer-text);
+  }
+
+  footer .disclaimer {
+    margin-top: 1.5rem;
+    display: inline-block;
+  }
+
   h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
   table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }
@@ -915,7 +1012,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     width: 100%;
   }
 
-  /* Card Hover Lift Effect */
+  /* Card Hover Lift Effect — Homepage Cards */
   .hub-card,
   .category-card,
   .story-card,
@@ -924,6 +1021,45 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1),
                 box-shadow 0.3s cubic-bezier(0.2, 1, 0.2, 1),
                 border-color 0.3s ease;
+  }
+
+  /* Content Card Hover — Guide/Article Pages */
+  .fact-box,
+  .town-card,
+  .resource-card,
+  .stat-block,
+  .answer-capsule,
+  .disclaimer,
+  .checklist-item,
+  .faq-item,
+  .infographic,
+  .blog-post,
+  .reveal {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  /* Card Hover with translateY lift + shadow depth */
+  .hub-card:hover,
+  .category-card:hover,
+  .story-card:hover,
+  .quick-link-card:hover,
+  .new-guide-card:hover,
+  .fact-box:hover,
+  .town-card:hover,
+  .resource-card:hover,
+  .stat-block:hover,
+  .answer-capsule:hover,
+  .checklist-item:hover,
+  .faq-item:hover,
+  .infographic:hover,
+  .blog-post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.1);
+  }
+
+  /* Subtle border-color shift on hover */
+  .disclaimer:hover {
+    border-color: var(--color-accent);
   }
 
   /* Smooth Scroll Behavior */
@@ -940,6 +1076,16 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     .story-card,
     .quick-link-card,
     .new-guide-card,
+    .fact-box,
+    .town-card,
+    .resource-card,
+    .stat-block,
+    .answer-capsule,
+    .disclaimer,
+    .checklist-item,
+    .faq-item,
+    .infographic,
+    .blog-post,
     .journey-step,
     a.btn-main,
     a.btn-secondary,

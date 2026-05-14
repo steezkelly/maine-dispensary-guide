@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Farmington, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Blue Sky Maine operates both a medical dispensary at 361 Wilton Rd and a recreational dispensary at 104 Fairbanks Rd in Farmington. They are vertically integrated with a C1D1 certified extraction facility and MOFGA-certified organic flower."}},{"@type":"Question","name":"What is Blue Sky Maine in Farmington?","acceptedAnswer":{"@type":"Answer","text":"Blue Sky Maine is a vertically integrated cannabis company with two Farmington locations. The medical store is at 361 Wilton Rd (207-778-0726) and the recreational 21+ store is at 104 Fairbanks Rd (207-578-7328). They operate an extraction lab producing live resin, shatter, batter, diamonds, and more."}},{"@type":"Question","name":"Does Farmington allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Farmington permits both medical and recreational cannabis. Blue Sky Maine's recreational storefront at 104 Fairbanks Rd serves the central Maine market with MOFGA-certified organic flower."}},{"@type":"Question","name":"What makes Farmington a unique cannabis market?","acceptedAnswer":{"@type":"Answer","text":"Farmington sits in Franklin County, central to the University of Maine at Farmington and serves the agricultural belt of western Maine. Blue Sky Maine's vertical integration — cultivation, extraction, and retail in one operation — is distinctive for a town of Farmington's size."}},{"@type":"Question","name":"What dispensaries are near Farmington?","acceptedAnswer":{"@type":"Answer","text":"In Farmington: Blue Sky Maine (medical and recreational). Nearby options include Waterville dispensaries (Cannabis Haven, AstroTerf) ~25 mi south, and Lewiston area dispensaries ~35 mi southwest."}}]});
+---
+<Layout title="Farmington, Maine Dispensary Guide — Blue Sky Maine 2026" description="Farmington, Maine dispensary guide. Blue Sky Maine medical and recreational stores, extraction lab, and MOFGA-certified organic flower in Franklin County for 2026." heroImage="/images/heroes/farmington-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Farmington, ME Dispensary Guide</h1>
+    <p class="subtitle">Blue Sky Maine's medical and recreational dispensaries — central Maine's vertically integrated cannabis operator</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Farmington Cannabis Quick Facts</h2>
+    <table aria-label="Farmington cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits both</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 (both operated by Blue Sky Maine)</td></tr>
+        <tr><td><strong>Known Dispensary</strong></td><td>Blue Sky Medical (361 Wilton Rd), Blue Sky Rec (104 Fairbanks Rd)</td></tr>
+        <tr><td><strong>Vertical Integration</strong></td><td>Yes — cultivation, extraction, retail all in Farmington</td></tr>
+        <tr><td><strong>Population</strong></td><td>~7,700 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Franklin County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Farmington is the largest town in Franklin County and home to the University of Maine at Farmington. Despite a modest population of ~7,700, the town is served by Blue Sky Maine — one of Maine's most vertically integrated cannabis operators. Blue Sky runs two separate storefronts in Farmington: a medical dispensary at 361 Wilton Rd and a recreational storefront at 104 Fairbanks Rd. Their operation extends beyond retail to include cultivation, a C1D1 certified extraction facility, and proprietary product development — rare depth for a small-town market.</p>
+  </section>
+
+  <section>
+    <h2>Blue Sky Maine — Medical Store</h2>
+    <p><strong>Address:</strong> 361 Wilton Rd, Farmington, ME 04938<br>
+    <strong>Phone:</strong> (207) 778-0726<br>
+    <strong>Hours:</strong> Mon-Sat 9am-7pm, Sun 9am-6pm<br>
+    <strong>Type:</strong> Medical (Maine medical card required)</p>
+    <p>Blue Sky's medical storefront serves the central Maine patient community with flower, concentrates, cartridges, and distillate. Their C1D1 certified extraction facility processes live resin, shatter, batter, and diamonds — products typically found only in larger metro markets. They also offer cultivation services for Maine caregivers and accept out-of-state medical cards from over 30 states.</p>
+  </section>
+
+  <section>
+    <h2>Blue Sky Maine — Recreational Store</h2>
+    <p><strong>Address:</strong> 104 Fairbanks Rd, Farmington, ME 04938<br>
+    <strong>Phone:</strong> (207) 578-7328<br>
+    <strong>Hours:</strong> Mon-Thu 9am-7pm, Fri-Sat 9am-9pm, Sun 9am-6pm<br>
+    <strong>Type:</strong> Recreational (21+)</p>
+    <p>The recreational storefront carries Blue Sky's full product line, including MOFGA-certified organic flower grown in living soil on-site in Farmington. Their proprietary processing produces live resin, shatter, batter, diamonds, and cart cartridges. Late hours on Fridays and Saturdays (until 9pm) serve the university student population and weekend traffic.</p>
+  </section>
+
+  <Callout title="Vertical Integration" type="passion">
+    Blue Sky Maine's full-stack model is distinctive for central Maine. They grow their own flower (MOFGA organic certified), process it in their own extraction lab, and sell directly through their two Farmington storefronts. This eliminates middleman costs and ensures quality control from seed to sale — a competitive advantage in a market that is otherwise served by distributors and wholesalers.
+  </Callout>
+
+  <section>
+    <h2>Farmington's Market Position</h2>
+    <p>Farmington sits roughly equidistant from the Lakes Region (Bridgton, ~25 mi), Auburn-Lewiston (~35 mi), and Waterville (~25 mi). For residents in the intervening communities — Industry, New Sharon, New Vineyard, Jay, Wilton — Farmington is the most convenient dispensary option. Blue Sky's two storefronts mean both medical patients and recreational 21+ customers have dedicated experiences without sharing a single counter space.</p>
+    <p>The University of Maine at Farmington provides a consistent customer base, particularly for the recreational storefront. Blue Sky's MOFGA organic certification also appeals to the region's agricultural consumers who value sustainable growing practices.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Options</h2>
+    <ul>
+      <li><strong>Waterville (~25 mi south):</strong> Cannabis Haven, AstroTerf (medical and recreational)</li>
+      <li><strong>Lewiston–Auburn (~35 mi southwest):</strong> Multiple dispensaries spanning medical and recreational markets</li>
+      <li><strong>Bridgton (~25 mi southeast):</strong> Sweet Dirt Cannabis, Canuvo (recreational)</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/auburn-dispensary-guide">Auburn Dispensary Guide</a></li>
+        <li><a href="/guides/waterville-dispensary-guide">Waterville Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Farmington, Maine?", a: "Yes. Blue Sky Maine operates both a medical dispensary at 361 Wilton Rd and a recreational dispensary at 104 Fairbanks Rd in Farmington. They are vertically integrated with a C1D1 extraction facility and MOFGA-certified organic flower." },
+        { q: "What is Blue Sky Maine?", a: "Blue Sky Maine is a vertically integrated cannabis company based in Farmington. They cultivate, extract, and retail cannabis through two storefronts. Their product line includes MOFGA-certified organic flower, live resin, shatter, batter, diamonds, and cartridges." },
+        { q: "Does Farmington allow recreational cannabis?", a: "Yes. Farmington permits both medical and recreational cannabis. Blue Sky Maine's recreational storefront at 104 Fairbanks Rd serves the central Maine market." },
+        { q: "What makes Farmington a unique cannabis market?", a: "Farmington's Blue Sky Maine is vertically integrated — cultivation, extraction, and retail in one operation. MOFGA organic certified flower and proprietary extraction products are rare for a town of ~7,700 residents." },
+        { q: "What dispensaries are near Farmington?", a: "Waterville has Cannabis Haven and AstroTerf (~25 mi south). Lewiston–Auburn has multiple options (~35 mi southwest). Bridgton has Sweet Dirt and Canuvo (~25 mi southeast)." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

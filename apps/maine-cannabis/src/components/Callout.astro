@@ -1,2 +1,7 @@
-import Callout from '@network/ui/Callout';
-export default Callout;
+---
+import UiCallout from '@network/ui/Callout';
+---
+
+<UiCallout {...Astro.props}>
+  <slot />
+</UiCallout>

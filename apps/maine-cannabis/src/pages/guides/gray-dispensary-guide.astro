@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many dispensaries are in Gray, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Gray has 2 medical dispensaries: High Road (medical at 21 Portland Rd Ste 7, 5.0 stars) and Token Cannabis Co. (medical at 104 Lewiston Rd with curbside pickup). There are currently no recreational dispensaries in Gray." }},
+    { "@type": "Question", "name": "Does Gray allow recreational dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Gray has opted in to recreational cannabis. However, currently only medical dispensaries operate in town. This represents a significant opportunity for recreational operators to be first-to-market on the Portland-Auburn commuter corridor." }},
+    { "@type": "Question", "name": "Why is Gray a promising location for cannabis retail?", "acceptedAnswer": { "@type": "Answer", "text": "Gray sits on the Portland-Auburn commuter corridor, placing it between two of Maine's largest cannabis markets. With 8,200 residents and no recreational dispensaries, there is a clear market gap waiting to be filled by adult-use operators." }},
+    { "@type": "Question", "name": "What makes High Road and Token Cannabis notable?", "acceptedAnswer": { "@type": "Answer", "text": "Both High Road and Token Cannabis Co. have perfect 5.0-star ratings, indicating exceptional customer service and product quality. High Road is located at 21 Portland Rd Ste 7, while Token Cannabis Co. is at 104 Lewiston Rd with curbside service." }}
+  ]
+});
+---
+
+<Layout title="Gray, ME Dispensary Guide — High Road & Token Cannabis Co. 2026" description="Gray, Maine dispensary guide. High Road and Token Cannabis Co. serve medical patients. Adult-use opportunity on Portland-Auburn commuter corridor." heroImage="/images/heroes/gray-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Gray, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries in Gray, Maine — Adult-use opportunity on the commuter corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Gray at a Glance</h2>
+    <table aria-label="Gray cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 — High Road, Token Cannabis Co.</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>YES — Recreational authorized</td></tr>
+        <tr><td><strong>Nearest Medical</strong></td><td>High Road (21 Portland Rd Ste 7), Token Cannabis Co. (104 Lewiston Rd)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Naples (~15 min), Portland (~20 min), or Raymond (~15 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~8,200</td></tr>
+        <tr><td><strong>County</strong></td><td>Cumberland County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Gray is a commuter town positioned between Portland and Auburn on the I-95 corridor, making it a strategic location for cannabis retail. With approximately 8,200 residents and two medical dispensaries already operating in town, Gray has established cannabis infrastructure but lacks adult-use recreational dispensaries.</p>
+    <p>This gap between medical-only and recreational represents a significant market opportunity. Gray residents who want to purchase recreational cannabis currently must drive to Naples, Raymond, or Portland — creating a clear first-mover advantage for any recreational operator who establishes presence in town.</p>
+    <p>The two existing medical dispensaries, High Road and Token Cannabis Co., have both achieved perfect 5.0-star ratings, indicating a well-served patient community that could translate into adult-use customers when recreational options become available.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Gray</h2>
+
+    <h3>High Road (Medical)</h3>
+    <p><strong>Address:</strong> 21 Portland Rd Ste 7, Gray, ME 04039</p>
+    <p>High Road operates a medical cannabis dispensary in Gray with a perfect 5.0-star rating. Their focus on quality and patient care has built a strong reputation in the community. The Portland Road location is on the main corridor through Gray, providing good visibility and accessibility.</p>
+
+    <h3>Token Cannabis Co. (Medical)</h3>
+    <p><strong>Address:</strong> 104 Lewiston Rd, Gray, ME 04039</p>
+    <p>Token Cannabis Co. is a medical dispensary in Gray that also boasts a perfect 5.0-star rating. They offer curbside pickup service, adding convenience for medical patients who may have mobility issues or simply prefer the contactless experience. This service model could translate well to adult-use retail.</p>
+  </section>
+
+  <section>
+    <h2>The Adult-Use Opportunity</h2>
+    <p>Gray has opted in to recreational cannabis but currently has no recreational dispensaries. This creates a classic first-mover opportunity in a community of 8,200 residents plus the additional commuter population that passes through daily.</p>
+    <p>The Portland-Auburn corridor sees substantial daily traffic, with workers commuting between the two largest cities in Maine. A recreational dispensary in Gray could capture:</p>
+    <ul>
+      <li>Gray residents who currently have no local recreational option</li>
+      <li>Commuters traveling between Portland and Auburn who could stop on their route</li>
+      <li>Residents of nearby unincorporated areas and small towns without dispensaries</li>
+    </ul>
+    <p>With two highly-rated medical dispensaries already demonstrating that Gray can support cannabis retail, the transition to adult-use appears low-risk.</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Gray has opted in to recreational cannabis retail. The town's location on the Portland-Auburn corridor and its established cannabis-positive culture make it an attractive market for recreational operators.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "How many dispensaries are in Gray, Maine?", a: "Gray has 2 medical dispensaries: High Road (medical at 21 Portland Rd Ste 7, 5.0 stars) and Token Cannabis Co. (medical at 104 Lewiston Rd with curbside pickup). There are currently no recreational dispensaries." },
+        { q: "Does Gray allow recreational dispensaries?", a: "Gray has opted in to recreational cannabis but currently only medical dispensaries operate in town. This represents a significant first-to-market opportunity." },
+        { q: "Why is Gray a promising location for cannabis retail?", a: "Gray sits on the Portland-Auburn commuter corridor with 8,200 residents and no recreational dispensaries, creating a clear market gap." },
+        { q: "What makes High Road and Token Cannabis notable?", a: "Both have perfect 5.0-star ratings. Token Cannabis Co. offers curbside pickup. High Road is at 21 Portland Rd Ste 7." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

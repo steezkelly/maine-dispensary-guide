@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Bethel, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Bethel has multiple dispensaries: Cannabis Cured (recreational at 312 Mayville Rd), The Stoned Moose (medical and recreational at 22 Sunday River Rd), New Mill Cannabis (medical at 518 W Bethel Rd), and Brilliant Buds (recreational at 602 W Bethel Rd)."}},{"@type":"Question","name":"What makes Bethel a unique cannabis market?","acceptedAnswer":{"@type":"Answer","text":"Bethel sits adjacent to Sunday River Resort, one of Maine's largest ski areas. The resort draws significant tourist traffic year-round (winter skiing, summer biking). Four dispensaries serve both the local community and resort visitors, creating one of the highest dispensary-to-population ratios in western Maine."}},{"@type":"Question","name":"Which Bethel dispensary is closest to Sunday River?","acceptedAnswer":{"@type":"Answer","text":"The Stoned Moose and Cannabis Cured are both within minutes of Sunday River Resort. The Stoned Moose is at 22 Sunday River Road (right by Sunday River Brewery), and Cannabis Cured is at 312 Mayville Rd (5-minute drive from the resort)."}},{"@type":"Question","name":"Does Bethel accept out-of-state medical cards?","acceptedAnswer":{"@type":"Answer","text":"Maine allows reciprocity for out-of-state medical cannabis cards. Contact individual Bethel dispensaries about their current reciprocity policies."}}]});
+---
+<Layout title="Bethel, Maine Dispensary Guide — Sunday River & Weekend River 2026" description="Bethel, Maine dispensary guide. 4 dispensaries near Sunday River Resort including Cannabis Cured, The Stoned Moose, New Mill Cannabis, and Brilliant Buds for 2026." heroImage="/images/heroes/bethel-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Bethel, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries near Sunday River Resort — four operators serving Bethel and the western mountains</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Bethel Cannabis Quick Facts</h2>
+    <table aria-label="Bethel cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>4 confirmed active</td></tr>
+        <tr><td><strong>Known Dispensaries</strong></td><td>Cannabis Cured (rec), The Stoned Moose (med/rec), New Mill Cannabis (med), Brilliant Buds (rec)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~2,600 (2020 Census)</td></tr>
+        <tr><td><strong>Tourism Draw</strong></td><td>Sunday River Resort, one of Maine's largest ski areas</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Bethel is a small town with a big cannabis market. Despite a population of roughly 2,600, the town supports four active dispensaries — a remarkable density. The driver is Sunday River Resort, one of New England's largest ski areas, which draws hundreds of thousands of visitors annually for winter skiing, summer biking, and fall foliage tours.</p>
+    <p>Most Bethel dispensaries cluster on Sunday River Road and West Bethel Road, within minutes of the resort and the NH border. For visitors coming from the west (New Hampshire, Massachusetts, Connecticut), Bethel is often the first Maine town they encounter with recreational cannabis.</p>
+  </section>
+
+  <Callout title="Tourism-Driven Market" type="passion">
+    Bethel's dispensary density is driven by Sunday River Resort's massive tourist traffic. Four dispensaries competing for resort visitors creates competitive pricing and product variety. For ski weekend customers, this means deals. For operators, it means fighting for Sunday River foot traffic.
+  </Callout>
+
+  <section>
+    <h2>Dispensaries in Bethel</h2>
+
+    <h3>Cannabis Cured (Recreational)</h3>
+    <p><strong>Address:</strong> 312 Mayville Rd, Bethel, ME 04217<br>
+    <strong>Phone:</strong> (207) 824-1056<br>
+    <strong>Hours:</strong> Mon-Wed 8am-6pm, Thu-Fri 8am-6pm, Sat-Sun 10am-6pm<br>
+    <strong>Type:</strong> Recreational (21+)</p>
+    <p>Cannabis Cured's Bethel location is positioned just 5 minutes from Sunday River Resort. They carry flower, edibles, and concentrates with daily deals including $35 1/8ths and $260 ounces — competitive pricing for a resort-area dispensary. Online ordering is available for pickup.</p>
+
+    <h3>The Stoned Moose / Moosehead Farms</h3>
+    <p><strong>Address:</strong> 22 Sunday River Rd, Bethel, ME 04217<br>
+    <strong>Phone:</strong> (207) 824-1135<br>
+    <strong>Hours:</strong> Daily 10am-6pm<br>
+    <strong>Type:</strong> The Stoned Moose (medical and recreational), Moosehead Farms (medical)</p>
+    <p>Owned by Mike and Jodi, The Stoned Moose operates both a medical storefront and grows on-site cannabis. Located across from Sunday River Brewery, this is arguably Bethel's most visible dispensary for resort traffic. Moosehead Farms next door serves the medical community with locally grown flower, edibles, salves, and tinctures.</p>
+
+    <h3>New Mill Cannabis (Medical)</h3>
+    <p><strong>Address:</strong> 518 W Bethel Rd, Bethel, ME 04217<br>
+    <strong>Phone:</strong> (207) 370-5603<br>
+    <strong>Hours:</strong> Mon-Sat 11am-7pm<br>
+    <strong>Type:</strong> Medical</p>
+    <p>New Mill is 7 miles from the NH border, serving not just Bethel but also Berlin, Littleton, Lancaster, and Gorham, NH. Their on-site grown cannabis product line targets the medical patients coming from New Hampshire who lack recreational access at home.</p>
+
+    <h3>Brilliant Buds (Recreational)</h3>
+    <p><strong>Address:</strong> 602 W Bethel Rd, Bethel, ME 04217<br>
+    <strong>Phone:</strong> (207) 381-4880<br>
+    <strong>Type:</strong> Recreational (21+)</p>
+    <p>Brilliant Buds operates two locations in the Bethel area with a geneticist on staff creating proprietary strains. Their small-batch craft flower approach appeals to discerning resort visitors looking for unique product. They also offer wholesale to other Maine retailers.</p>
+  </section>
+
+  <section>
+    <h2>The NH Border Advantage</h2>
+    <p>Bethel is just minutes from the New Hampshire border, where recreational cannabis is not legal. This creates consistent cross-border demand from NH residents who drive to Bethel for recreational purchases. For operators, this captive NH market supplements the local customer base and resort traffic.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+        <li><a href="/guides/brownfield-dispensary-guide">Brownfield Dispensary Guide</a></li>
+        <li><a href="/guides/farmington-dispensary-guide">Farmington Dispensary Guide</a></li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Bethel, Maine?", a: "Yes. Bethel has 4 active dispensaries: Cannabis Cured (rec, 312 Mayville Rd), The Stoned Moose (med/rec, 22 Sunday River Rd), New Mill Cannabis (med, 518 W Bethel Rd), and Brilliant Buds (rec, 602 W Bethel Rd)." },
+        { q: "What makes Bethel a unique cannabis market?", a: "Bethel sits adjacent to Sunday River Resort, drawing significant tourist traffic year-round. Four dispensaries serve both locals and resort visitors, creating one of the highest dispensary-to-population ratios in western Maine." },
+        { q: "Which Bethel dispensary is closest to Sunday River?", a: "The Stoned Moose (22 Sunday River Rd) and Cannabis Cured (312 Mayville Rd) are both within minutes of Sunday River Resort." },
+        { q: "Does Bethel accept out-of-state medical cards?", a: "Maine allows reciprocity for out-of-state medical cannabis cards. Contact individual Bethel dispensaries about their current reciprocity policies." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

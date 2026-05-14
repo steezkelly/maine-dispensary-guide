@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Buxton, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens operates a medical cannabis dispensary at 370 Narragansett Trail, Buxton, ME 04093. Phone: (207) 298-9111. They also have a second location in South Berwick. Hidden Greens is medical-only and offers delivery services." }},
+    { "@type": "Question", "name": "What is Hidden Greens in Buxton?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens is a medical cannabis dispensary at 370 Narragansett Trail, Buxton, ME. They offer delivery and also operate a second location in South Berwick at 438 Main Street. Hours: Mon-Sat 9am-9pm, Sun 9am-8pm." }},
+    { "@type": "Question", "name": "Does Hidden Greens Buxton offer delivery?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens offers delivery services to the Buxton area and surrounding communities including Limington, Hollis, and southern York County." }},
+    { "@type": "Question", "name": "Does Buxton have recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "As of this writing, Hidden Greens is medical-only. The nearest recreational dispensary options are in Biddeford (Stoner & Co, Canuvo, etc.) and Biddeford (~15 mi)."}},
+    { "@type": "Question", "name": "What dispensaries are near Buxton, ME?", "acceptedAnswer": { "@type": "Answer", "text": "In Buxton: Hidden Greens (medical, 370 Narragansett Trail). Nearby recreational options include Biddeford (Stoner & Co, Canuvo, ~15 mi), Saco (~15 mi), Scarborough (~15 mi)."}}
+  ]
+});
+---
+<Layout title="Buxton, Maine Dispensary Guide — Hidden Greens Medical Dispensary 2026" description="Buxton, Maine dispensary guide. Hidden Greens medical cannabis dispensary at 370 Narragansett Trail. Medical and recreational options near Buxton for 2026." heroImage="/images/heroes/buxton-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Buxton, ME Dispensary Guide</h1>
+    <p class="subtitle">Medical cannabis in Buxton — Hidden Greens & the southern York County corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Buxton Cannabis Quick Facts</h2>
+    <table aria-label="Buxton cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (Hidden Greens, medical)</td></tr>
+        <tr><td><strong>Known Dispensary</strong></td><td>Hidden Greens — 370 Narragansett Trail, Buxton, ME 04093, (207) 298-9111</td></tr>
+        <tr><td><strong>Delivery Available</strong></td><td>Yes — Hidden Greens offers delivery</td></tr>
+        <tr><td><strong>Population</strong></td><td>~9,000 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>York County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Buxton has roughly 9,000 residents — one of the larger towns in this expansion wave — and is home to <strong>Hidden Greens</strong>, a medical cannabis dispensary serving the southern York County corridor. With a population nearly three times larger than most towns on this list, Buxton's dispensary scene is notably thin: just one medical operator serving a town of 9,000.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Buxton</h2>
+
+    <h3>Hidden Greens — Medical Cannabis Dispensary</h3>
+    <p><strong>Address:</strong> 370 Narragansett Trail, Buxton, ME 04093<br>
+    <strong>Phone:</strong> (207) 298-9111<br>
+    <strong>Hours:</strong> Mon-Sat 9am–9pm, Sun 9am–8pm<br>
+    <strong>Type:</strong> Medical-only</p>
+    <p>Hidden Greens also operates a second location at 438 Main Street, South Berwick, giving them a footprint in both the southern and northern ends of York County. Their delivery service extends to surrounding communities including Limington, Hollis, and other towns without local dispensaries.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Recreational Dispensaries</h2>
+    <p>For adult-use recreational purchases, Buxton residents typically travel to:</p>
+    <ul>
+      <li><strong>Biddeford</strong> (~15 mi) — Stoner & Co., Canuvo, Undertow Cannabis, Landrace Cannabis</li>
+      <li><strong>Saco</strong> (~15 mi) — The Farm Stand</li>
+      <li><strong>Scarborough</strong> (~15 mi) — Multiple recreational dispensaries along the Portland commuter corridor</li>
+    </ul>
+    <p>This creates a noticeable gap: Buxton has 9,000 residents but no recreational dispensary. An adult-use operator entering Buxton would capture the medical-adjacent customer base currently driving to Biddeford or Scarborough for recreational products.</p>
+  </section>
+
+  <section>
+    <h2>Buxton's Market Position</h2>
+    <p>Hidden Greens serves as the nearest medical option for several towns to the north and east that have no dispensaries at all:</p>
+    <ul>
+      <li><strong>Limington</strong> (~6 mi from Hidden Greens)</li>
+      <li><strong>Hollis</strong> (~10 mi from Hidden Greens)</li>
+      <li><strong>Limerick</strong> (~12 mi from Hidden Greens — though with Founding Farmers at 16 Main St, Limerick)</li>
+    </ul>
+    <p>For these communities, Buxton's Hidden Greens is the closest medical dispensary — making it the functional anchor for the southern corridor between Biddeford and the lakes region.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
+        <li><a href="/guides/saco-dispensary-guide">Saco Dispensary Guide</a></li>
+        <li><a href="/guides/limington-dispensary-guide">Limington Dispensary Guide</a></li>
+        <li><a href="/guides/biddeford-dispensary-guide">Hollis Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any dispensaries in Buxton, Maine?", a: "Yes. Hidden Greens operates a medical dispensary at 370 Narragansett Trail, Buxton, ME 04093. Phone: (207) 298-9111. Hours: Mon-Sat 9am-9pm, Sun 9am-8pm." },
+        { q: "What is Hidden Greens?", a: "Hidden Greens is a medical cannabis dispensary at 370 Narragansett Trail, Buxton. They also operate a second location in South Berwick. They offer delivery to the surrounding area." },
+        { q: "Does Hidden Greens deliver?", a: "Yes. Hidden Greens offers delivery services to Buxton, Limington, Hollis, and surrounding communities." },
+        { q: "Does Buxton have recreational dispensaries?", a: "As of this writing, Hidden Greens is medical-only. The nearest recreational options are Biddeford (~15 mi), Saco (~15 mi), and Scarborough (~15 mi)."},
+        { q: "What dispensaries are near Buxton?", a: "Medical: Hidden Greens in Buxton (370 Narragansett Trail). Recreational: Biddeford (Stoner & Co, Canuvo), Saco, Scarborough — all ~15 mi." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and delivery service areas can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

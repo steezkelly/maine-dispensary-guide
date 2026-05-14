@@ -5,7 +5,7 @@ import Callout from '../components/Callout.astro';
 const categories = [
   {
     name: "Business Essentials",
-    icon: "📋",
+    icon: "◆",
     guides: [
       { title: "Maine Dispensary License Requirements", href: "/guides/maine-dispensary-license/" },
       { title: "Dispensary Business Plan", href: "/guides/maine-dispensary-business-plan/" },
@@ -13,65 +13,139 @@ const categories = [
       { title: "Maine Cannabis Market Analysis", href: "/guides/maine-cannabis-market/" },
       { title: "Funding & Capital", href: "/guides/maine-cannabis-funding-guide/" },
       { title: "Cannabis Zoning & Real Estate", href: "/guides/maine-cannabis-real-estate/" },
-      { title: "Hiring & Staffing", href: "/guides/maine-dispensary-hiring/" }
-    ]
-  },
-  {
-    name: "Compliance & Legal",
-    icon: "⚖️",
-    guides: [
-      { title: "Cannabis Regulations in Maine", href: "/guides/maine-cannabis-regulations/" },
-      { title: "Cannabis Taxation & 280E", href: "/guides/maine-cannabis-taxation-280e/" },
-      { title: "Cannabis Banking Solutions", href: "/guides/maine-cannabis-banking-solutions/" },
-      { title: "Employee Licensing (IIC/AIC)", href: "/guides/maine-cannabis-staffing-licensing/" },
-      { title: "Marketing Compliance", href: "/guides/maine-cannabis-marketing-compliance/" },
+      { title: "Hiring & Staffing", href: "/guides/maine-dispensary-hiring/" },
+      { title: "Maine Cannabis Vendor Directory", href: "/guides/maine-cannabis-vendor-directory/" },
       { title: "Maine Cannabis Events 2026", href: "/guides/maine-cannabis-events-2026/" }
     ]
   },
   {
+    name: "Compliance & Legal",
+    icon: "▲",
+    guides: [
+      { title: "Cannabis Regulations in Maine", href: "/guides/maine-cannabis-regulations/" },
+      { title: "Municipal Opt-In Tracker", href: "/guides/maine-cannabis-opt-in-tracker/" },
+      { title: "Caregiver Program Guide", href: "/guides/maine-cannabis-caregiver-guide/" },
+      { title: "280E & State Tax Guide", href: "/guides/maine-cannabis-280e-guide/" },
+      { title: "Cannabis Taxation 2026", href: "/guides/maine-cannabis-taxes-2026/" },
+      { title: "Cannabis Banking Solutions", href: "/guides/maine-cannabis-banking-solutions/" },
+      { title: "Staff Licensing (IIC/AIC)", href: "/guides/maine-cannabis-staffing-licensing/" },
+      { title: "Marketing & Advertising Rules", href: "/guides/maine-cannabis-marketing-compliance/" },
+      { title: "Business Insurance", href: "/guides/maine-cannabis-business-insurance/" },
+      { title: "Workers Compensation", href: "/guides/maine-cannabis-workers-comp-insurance/" },
+      { title: "License Denial & Appeal", href: "/guides/maine-cannabis-license-denied/" },
+      { title: "Conditional Use Permit Guide", href: "/guides/maine-conditional-use-permit/" },
+      { title: "Municipal Approval Checklist", href: "/guides/maine-municipal-approval-checklist/" }
+    ]
+  },
+  {
     name: "Operations & Technology",
-    icon: "🔧",
+    icon: "✦",
     guides: [
       { title: "Dispensary Security Requirements", href: "/guides/maine-dispensary-security/" },
-      { title: "Inventory & Metrc Management", href: "/guides/maine-cannabis-inventory-management/" },
       { title: "POS Systems for Dispensaries", href: "/guides/maine-dispensary-pos/" },
       { title: "Packaging & Labeling", href: "/guides/maine-dispensary-packaging/" },
-      { title: "Cannabis Delivery Rules", href: "/guides/maine-cannabis-delivery-rules/" },
-      { title: "Cannabis Edibles Compliance", href: "/guides/maine-cannabis-edibles-compliance/" }
+      { title: "Inventory & Metrc Management", href: "/guides/maine-cannabis-inventory-management/" },
+      { title: "METRC Compliance Guide", href: "/guides/maine-metrc-compliance-guide/" },
+      { title: "Wholesale & B2B Transactions", href: "/guides/maine-cannabis-wholesale-guide/" },
+      { title: "Delivery Rules", href: "/guides/maine-cannabis-delivery-rules/" },
+      { title: "Edibles Compliance", href: "/guides/maine-cannabis-edibles-compliance/" },
+      { title: "Product Testing Guide", href: "/guides/maine-cannabis-product-testing-guide/" },
+      { title: "Waste Management", href: "/guides/maine-cannabis-waste-management/" }
     ]
   },
   {
     name: "City & Regional Guides",
-    icon: "📍",
+    icon: "◇",
     guides: [
       { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/" },
       { title: "Lewiston Dispensary Guide", href: "/guides/lewiston-dispensary-guide/" },
       { title: "Bangor Dispensary Guide", href: "/guides/bangor-dispensary-guide/" },
       { title: "Augusta Dispensary Guide", href: "/guides/augusta-dispensary-guide/" },
       { title: "South Portland Dispensary Guide", href: "/guides/south-portland-dispensary-guide/" },
+      { title: "Scarborough Dispensary Guide", href: "/guides/scarborough-dispensary-guide/" },
+      { title: "Westbrook Dispensary Guide", href: "/guides/westbrook-dispensary-guide/" },
+      { title: "Sanford Dispensary Guide", href: "/guides/sanford-dispensary-guide/" },
+      { title: "Waterville Dispensary Guide", href: "/guides/waterville-dispensary-guide/" },
+      { title: "Auburn Dispensary Guide", href: "/guides/auburn-dispensary-guide/" },
+      { title: "Brunswick Dispensary Guide", href: "/guides/brunswick-dispensary-guide/" },
       { title: "Kittery Dispensary Guide", href: "/guides/kittery-dispensary-guide/" },
-      { title: "All City Guides (15 total)", href: "/guides/" }
+      { title: "Saco Dispensary Guide", href: "/guides/saco-dispensary-guide/" },
+      { title: "Lisbon Dispensary Guide", href: "/guides/lisbon-dispensary-guide/" },
+      { title: "Gardiner Dispensary Guide", href: "/guides/gardiner-dispensary-guide/" }
     ]
   },
   {
-    name: "Business Tools",
-    icon: "🛠️",
+    name: "Town Guides — Southern Maine",
+    icon: "◉",
     guides: [
-      { title: "ROI Calculator", href: "/roi-calculator/" },
-      { title: "Market Statistics", href: "/market-stats/" },
-      { title: "Vendor Directory", href: "/resources/" },
-      { title: "Technical Glossary", href: "/glossary/" },
-      { title: "2026 Launch Checklist", href: "/launch-checklist/" }
+      { title: "York Dispensary Guide", href: "/guides/york-dispensary-guide/" },
+      { title: "Wells Dispensary Guide", href: "/guides/wells-dispensary-guide/" },
+      { title: "Ogunquit Dispensary Guide", href: "/guides/ogunquit-dispensary-guide/" },
+      { title: "Kennebunk & Kennebunkport Guide", href: "/guides/kennebunk-dispensary-guide/" },
+      { title: "Biddeford Dispensary Guide", href: "/guides/biddeford-dispensary-guide/" },
+      { title: "Old Orchard Beach Guide", href: "/guides/old-orchard-beach-dispensary-guide/" },
+      { title: "Fryeburg Dispensary Guide", href: "/guides/fryeburg-dispensary-guide/" },
+      { title: "Gray Dispensary Guide", href: "/guides/gray-dispensary-guide/" },
+      { title: "Limerick Dispensary Guide", href: "/guides/limerick-dispensary-guide/" },
+      { title: "Buxton Dispensary Guide", href: "/guides/buxton-dispensary-guide/" },
+      { title: "Limington Dispensary Guide", href: "/guides/limington-dispensary-guide/" },
+      { title: "Cornish Dispensary Guide", href: "/guides/cornish-dispensary-guide/" },
+      { title: "Porter Dispensary Guide", href: "/guides/porter-dispensary-guide/" },
+      { title: "Hiram Dispensary Guide", href: "/guides/hiram-dispensary-guide/" },
+      { title: "Baldwin Dispensary Guide", href: "/guides/baldwin-dispensary-guide/" }
+    ]
+  },
+  {
+    name: "Town Guides — Central & Midcoast",
+    icon: "◉",
+    guides: [
+      { title: "Sebago Lakes Region Guide", href: "/guides/sebago-lakes-region-dispensary-guide/" },
+      { title: "Windham Dispensary Guide", href: "/guides/windham-dispensary-guide/" },
+      { title: "Bridgton Dispensary Guide", href: "/guides/bridgton-dispensary-guide/" },
+      { title: "Casco Dispensary Guide", href: "/guides/casco-dispensary-guide/" },
+      { title: "Raymond Dispensary Guide", href: "/guides/raymond-dispensary-guide/" },
+      { title: "Standish Dispensary Guide", href: "/guides/standish-dispensary-guide/" },
+      { title: "Sebago Dispensary Guide", href: "/guides/sebago-dispensary-guide/" },
+      { title: "Naples Dispensary Guide", href: "/guides/naples-dispensary-guide/" },
+      { title: "Brownfield Dispensary Guide", href: "/guides/brownfield-dispensary-guide/" },
+      { title: "Western Maine Lakes Guide", href: "/guides/western-maine-lakes-dispensary-guide/" },
+      { title: "Freeport Dispensary Guide", href: "/guides/freeport-dispensary-guide/" },
+      { title: "Camden Dispensary Guide", href: "/guides/camden-dispensary-guide/" },
+      { title: "Belfast Dispensary Guide", href: "/guides/belfast-dispensary-guide/" },
+      { title: "Freedom Dispensary Guide", href: "/guides/freedom-dispensary-guide/" },
+      { title: "Farmington Dispensary Guide", href: "/guides/farmington-dispensary-guide/" },
+      { title: "Bethel Dispensary Guide", href: "/guides/bethel-dispensary-guide/" },
+      { title: "Boothbay Dispensary Guide", href: "/guides/boothbay-dispensary-guide/" },
+      { title: "Rockland Dispensary Guide", href: "/guides/rockland-dispensary-guide/" },
+      { title: "Damariscotta Dispensary Guide", href: "/guides/damariscotta-dispensary-guide/" }
+    ]
+  },
+  {
+    name: "Additional Technical Guides",
+    icon: "▪",
+    guides: [
+      { title: "Portland Market Deep Dive", href: "/guides/portland-maine-cannabis/" },
+      { title: "OCP License Map", href: "/guides/maine-ocp-license-map/" },
+      { title: "Site Selection Guide", href: "/guides/maine-cannabis-site-selection/" },
+      { title: "Commercial Lease Guide", href: "/guides/maine-cannabis-commercial-lease-guide/" },
+      { title: "Cultivation Licensing", href: "/guides/maine-cannabis-extraction-licensing/" },
+      { title: "Cultivation Operations", href: "/guides/maine-cannabis-cultivation-guide/" },
+      { title: "Vertical Integration Guide", href: "/guides/maine-cannabis-vertical-integration/" },
+      { title: "School Buffer Requirements", href: "/guides/maine-cannabis-school-buffer/" },
+      { title: "Municipal Opt-In Guide", href: "/guides/maine-cannabis-municipal-opt-in-guide/" },
+      { title: "Maine Cannabis FAQ", href: "/guides/faq/" }
     ]
   }
 ];
+
+const totalGuides = categories.reduce((sum, cat) => sum + cat.guides.length, 0);
 ---
 
 <Layout 
-  title="Maine Cannabis Resource Library" 
-  description="Complete index of 44 technical guides for Maine cannabis entrepreneurs. Covering licensing, compliance, operations, real estate, taxation, and municipal zoning."
+  title="Maine Cannabis Resource Library — 95+ Expert Guides" 
+  description="Complete index of 95+ technical guides for Maine cannabis operators. Business licensing, compliance, city guides, and operational resources."
   heroImage="/images/heroes/all-guides.jpg"
-  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-04-01", section: "Reference" }}
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-05-14", section: "Reference" }}
 >
   <style>
 
@@ -154,12 +228,14 @@ const categories = [
   }
 
   .cat-icon {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    font-style: normal;
   }
 
   .cat-header h2 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--color-primary);
   }
 
@@ -170,8 +246,8 @@ const categories = [
   }
 
   .guide-list li {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.65rem;
     border-bottom: 1px solid rgba(0,0,0,0.04);
   }
 
@@ -184,12 +260,30 @@ const categories = [
   .guide-list a {
     color: var(--color-text);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.9375rem;
     transition: color 0.2s;
+    line-height: 1.4;
   }
 
   .guide-list a:hover {
     color: var(--color-accent);
+  }
+
+  .view-all {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .view-all a {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .view-all a:hover {
+    text-decoration: underline;
   }
 
   [data-theme="dark"] .category-card {
@@ -219,16 +313,15 @@ const categories = [
 
 </style>
 <section class="page-header">
-    <div class="hero-badge">44 Expert Guides</div>
+    <div class="hero-badge">{totalGuides} Expert Guides</div>
     <h1>Maine Cannabis Resource Library</h1>
     <p class="lead">Everything you need to open, operate, and scale a compliant cannabis business in the Pine Tree State.</p>
   </section>
 
   <section class="library-intro">
-    <p>This library covers every phase of the Maine cannabis business lifecycle. From navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management. Each guide is written for Maine-specific conditions — federal 280E tax implications, state licensing tiers, and local opt-in requirements vary town by town.</p>
-    <p>City guides provide granular market analysis for 15 Maine municipalities, from Portland's competitive landscape to Bangor's underserved northern opportunity. Technical guides address specific operational challenges including POS system selection, banking access, edibles manufacturing compliance, and delivery logistics.</p>
-    <p>The library also includes founder success stories that illustrate real-world paths from license application to successful operations, along with an ROI calculator and market statistics to support business planning decisions.</p>
-    <p>Whether you're a first-time entrepreneur exploring the regulated cannabis industry or an established operator seeking to optimize your existing license, these resources provide the regulatory guidance, financial planning tools, and operational expertise needed to build a compliant, profitable business in Maine's growing market.</p>
+    <p>This library covers every phase of the Maine cannabis business lifecycle — from navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management.</p>
+    <p>City and town guides provide granular market analysis for 40+ Maine municipalities, from Portland's competitive landscape to underserved opportunities in rural towns with no dispensaries. Technical guides address specific operational challenges including POS system selection, banking access, 280E tax strategy, edibles manufacturing, and delivery logistics.</p>
+    <p>New to Maine cannabis? Start with our <a href="/launch-checklist">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales — or browse the <a href="/start-here">Start Here</a> page for a visual phase-by-phase timeline.</p>
   </section>
 
   <div class="category-grid">
@@ -243,11 +336,21 @@ const categories = [
             <li><a href={g.href}>{g.title}</a></li>
           ))}
         </ul>
+        {cat.name === "City & Regional Guides" && (
+          <div class="view-all">
+            <a href="/guides">See all 40+ town & regional guides →</a>
+          </div>
+        )}
+        {cat.name === "Additional Technical Guides" && (
+          <div class="view-all">
+            <a href="/guides">Browse all technical guides →</a>
+          </div>
+        )}
       </div>
     ))}
   </div>
 
   <Callout title="Start with the Launch Checklist" type="info">
-    New to Maine cannabis? Begin with our <a href="\1")>2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales.
+    New to Maine cannabis? Begin with our <a href="/launch-checklist">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales.
   </Callout>
 </Layout>

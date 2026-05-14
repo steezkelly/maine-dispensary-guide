@@ -1,7 +1,75 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-04-25 EDT** (Research integration sprint: OCP license map, newsletter page, nofollow audit, Mantis docs)
+**Last updated: 2026-05-14 EDT** (custom 404 page added: `src/pages/404.astro` with links to Start Here, Guides, Find a Dispensary, Contact; no search page exists so replaced form with "Browse All Guides" CTA)
+
+---
+
+## 📋 SPRINT 62: Production Placeholder Href Regression Guard (May 14, 2026 EDT)
+
+### `href="#"` production page check ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** Production pages should not ship dead placeholder anchors; admin/noindex utility pages can still use `href="#"` for dashboard-style local controls.
+- **Change:** Extended `apps/maine-cannabis/scripts/content/check-malformed-hrefs.cjs` to flag `href="#"` / `href='#'` on production Astro pages while excluding non-production `admin` and `experiments` routes.
+- **Regression coverage:** Added `apps/maine-cannabis/scripts/content/check-malformed-hrefs.test.cjs` plus `npm run check:hrefs:test` to verify production placeholders fail and admin placeholders pass.
+- **Current page state:** `/find-a-dispensary` now has no production `href="#"` placeholders after the adjacent directory repair; remaining `href="#"` matches are admin-only.
+- **Verification:** Watched the new test fail before implementation; `npm run check:hrefs:test` passed; `npm run check:hrefs` passed; `npx astro check src/pages/find-a-dispensary.astro` returned 0 errors with pre-existing warnings/hints only.
+- **Safety posture:** No deploy, no package install, no infrastructure changes, no full build.
+
+---
+
+## 📋 SPRINT 61: Find-a-Dispensary Directory Coverage Repair (May 14, 2026 EDT)
+
+### `/find-a-dispensary` now indexes all local guide pages ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** The directory page only exposed 8 city sections and still rendered dead `href="#"` Directions/Menu placeholders even though the site now has 50 city, town, and regional dispensary guide pages.
+- **Change:** Reworked `apps/maine-cannabis/src/pages/find-a-dispensary.astro` into a regional guide directory with 50 unique internal links, grouped across Greater Portland/Sebago, Southern Maine/York County, Central/Western Maine, and Midcoast/Waldo/Northern Maine.
+- **Schema:** Replaced store-level `LocalBusiness` JSON-LD with an `ItemList` of guide pages so structured data now matches what the page actually publishes.
+- **Verification:** Directory href audit found 50 hrefs, 50 unique guide links, 0 missing targets. `npx astro check src/pages/find-a-dispensary.astro` completed with 0 errors. `npm run check:hrefs` passed with no malformed `\\1` hrefs or production `href="#"` placeholders.
+- **Safety posture:** Single page content/schema change plus this Hub note. No deploy, no package install, no full build.
+
+---
+
+## 📋 SPRINT 60: Conversion Path Link Repair (May 14, 2026 EDT)
+
+### Malformed href cleanup ✅ DONE — REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Why:** A prior regex/linking pass left `href="\\1")` anchors across homepage, contact, directory, start-here, guide, founder, and blog pages. Those broke high-intent user journeys such as vendor listing CTAs, ROI/checklist navigation, OCP map CTAs, and internal guide handoffs.
+- **Change:** Replaced malformed `\\1` anchors with verified existing internal routes across 49 Astro pages, prioritizing revenue/user-facing paths (`/`, `/contact`, `/directory`, `/find-a-dispensary`, `/start-here`, `/guides/maine-ocp-license-map`) and related guide/blog links.
+- **Automation:** Added `apps/maine-cannabis/scripts/content/check-malformed-hrefs.cjs` and `npm run check:hrefs` to fail fast if future regex passes reintroduce `\\1` hrefs.
+- **Verification:** `npm run check:hrefs` passed; repo-wide search found 0 `\\1` hrefs; added internal href targets checked with 0 missing; `npx astro check src/pages/index.astro src/pages/contact.astro src/pages/start-here.astro src/pages/directory.astro src/pages/find-a-dispensary.astro src/pages/guides/maine-ocp-license-map.astro` returned 0 errors; local Astro dev smoke returned HTTP 200 and no malformed hrefs for `/`, `/contact`, `/start-here`, `/directory`, `/find-a-dispensary`, `/guides/maine-ocp-license-map`, `/all-guides`.
+- **Safety posture:** No deploy, no package install, no infra changes. Pre-existing generated `apps/maine-cannabis/.turbo/turbo-build.log` remained dirty and was not used as source work.
+
+---
+
+## 📋 SPRINT 59: SEO/GEO Discovery Refresh (May 13, 2026 EDT)
+
+### LLM discovery files expanded ✅ REVIEW PENDING
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Files:** `apps/maine-cannabis/public/llms.txt`, `apps/maine-cannabis/public/llms-full.txt`, mirrored to tracked root `public/llms.txt`.
+- **Why:** Organic/GEO traffic work needs AI crawlers and answer engines to see the full public corpus, not the stale 99-URL list that missed the latest town guides.
+- **Change:** Rebuilt `llms.txt` as a concise answer-engine discovery file with site identity, high-confidence snippets, best starting URLs, citation guidance, and 134 indexable public pages.
+- **Change:** Rebuilt `llms-full.txt` as an expanded route/title/description/source index for all public pages; noindex admin, experiments, and gated/download pages are intentionally omitted.
+- **Fix:** Removed stale trailing-slash canonical patterns and the old malformed `mendedispensaryguide.com` typo in the conditional-use-permit entry.
+- **Safety posture:** Static public text files only. No deploy, no infrastructure changes, no external API calls, no legal/medical advice expansion.
+
+---
+
+## 📋 SPRINT 58: Seed Shelf Experiments Site Sprout (May 13, 2026 EDT)
+
+### `/experiments` noindex local draft ✅ IN PROGRESS
+- **Branch:** `seed-shelf-mdg-experiments`
+- **Page:** `apps/maine-cannabis/src/pages/experiments/index.astro`
+- **Route:** `/experiments`
+- **Navigation:** `apps/maine-cannabis/src/layouts/Layout.astro` links `/experiments` under Browse by Topic → All Guides & Tools.
+- **Germinated sprouts:** Cannabis Label Decoder Pocket Card; Menu Mirage Translator; Freshness Stamp Widget; Cannabis SEO Slop Bingo; Budtender Question Card; Best Dispensary Detox Box.
+- **Menu Mirage Translator shape:** 15 cannabis menu terms with `Term / What it might mean / What it does not automatically prove / Better question to ask`.
+- **Freshness Stamp Widget shape:** client-side no-data-submission mini webapp that turns last-checked date, fact type, source type, and rot speed into a copy-ready freshness stamp.
+- **Cannabis SEO Slop Bingo shape:** client-side no-data-submission tap-to-mark bingo card plus `Slop phrase / Why it is slop / Better plain-language move` table for copy QA.
+- **Budtender Question Card shape:** neutral `Situation / Neutral question / What not to ask for / Verify before leaving` table for in-store questions that avoid medical/legal/product advice.
+- **Best Dispensary Detox Box shape:** calm trust-language box plus `Reader may ask / MDG can say / MDG will not say / What a real method would need` table for avoiding unmethoded best-of claims.
+- **Safety posture:** `noindex={true}` remains. No deploy, no rankings, no medical/legal advice, no affiliate/payments/outreach, no scraped live menus.
+- **Wiki handoff:** `/home/steve/wiki/ops/seed-shelf-mdg-experiments-passdown-2026-05-13.md`
 
 ---
 

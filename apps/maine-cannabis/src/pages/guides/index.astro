@@ -22,7 +22,8 @@ const operationsGuides = [
   { title: "Security Requirements", description: "Security systems, surveillance, and inventory protection requirements.", href: "/guides/maine-dispensary-security/" },
   { title: "POS Systems for Dispensaries", description: "Compare the best point-of-sale systems for Maine cannabis businesses.", href: "/guides/maine-dispensary-pos/" },
   { title: "Packaging & Labeling", description: "Maine cannabis packaging and labeling compliance requirements.", href: "/guides/maine-dispensary-packaging/" },
-  { title: "Inventory & Metrc Management", description: "Tracking compliance and inventory management using Metrc.", href: "/guides/maine-cannabis-inventory-management/" }
+  { title: "Inventory & Metrc Management", description: "Tracking compliance and inventory management using Metrc.", href: "/guides/maine-cannabis-inventory-management/" },
+  { title: "Wholesale & B2B Transactions", description: "How cultivators and dispensaries wholesale cannabis in Maine — pricing, testing, supply agreements.", href: "/guides/maine-cannabis-wholesale-guide/" }
 ];
 
 const legalFinancialGuides = [
@@ -41,14 +42,30 @@ const cityGuides = [
   { title: "Bangor Dispensary Guide", description: "Zoning and licensing in Bangor, Maine.", href: "/guides/bangor-dispensary-guide/" },
   { title: "Lewiston Dispensary Guide", description: "Local rules and opportunities in Lewiston, Maine.", href: "/guides/lewiston-dispensary-guide/" },
   { title: "South Portland Guide", description: "A guide for the South Portland cannabis market.", href: "/guides/south-portland-dispensary-guide/" },
-  { title: "Biddeford Dispensary Guide", description: "Operating a cannabis business in Biddeford, Maine.", href: "/guides/biddeford-dispensary-guide/" },
-  { title: "Sanford Dispensary Guide", description: "York County's largest city — early entrant opportunity in southern Maine.", href: "/guides/sanford-dispensary-guide/" },
-  { title: "Auburn Dispensary Guide", description: "Requirements for Auburn, Maine dispensary businesses.", href: "/guides/auburn-dispensary-guide/" },
-  { title: "Brunswick Dispensary Guide", description: "Midcoast Maine cannabis market guide for Brunswick and surrounding towns.", href: "/guides/brunswick-dispensary-guide/" },
   { title: "Scarborough Dispensary Guide", description: "Portland-adjacent market overview for Scarborough, Maine.", href: "/guides/scarborough-dispensary-guide/" },
   { title: "Westbrook Dispensary Guide", description: "Suburban Portland cannabis market guide for Westbrook.", href: "/guides/westbrook-dispensary-guide/" },
-  { title: "Saco Dispensary Guide", description: "Southern Maine cannabis market opportunities in Saco.", href: "/guides/saco-dispensary-guide/" },
+  { title: "Sanford Dispensary Guide", description: "York County's largest city — early entrant opportunity in southern Maine.", href: "/guides/sanford-dispensary-guide/" },
   { title: "Waterville Dispensary Guide", description: "Central Maine dispensary guide for Waterville and Kennebec County.", href: "/guides/waterville-dispensary-guide/" },
+  { title: "Auburn Dispensary Guide", description: "Requirements for Auburn, Maine dispensary businesses.", href: "/guides/auburn-dispensary-guide/" },
+  { title: "Brunswick Dispensary Guide", description: "Midcoast Maine cannabis market guide for Brunswick and surrounding towns.", href: "/guides/brunswick-dispensary-guide/" },
+  { title: "Kittery Dispensary Guide", description: "Border-town cannabis market guide for Kittery, Maine.", href: "/guides/kittery-dispensary-guide/" },
+  { title: "Saco Dispensary Guide", description: "Southern Maine cannabis market opportunities in Saco.", href: "/guides/saco-dispensary-guide/" },
+  { title: "Lisbon Dispensary Guide", description: "3 dispensaries including 2024-2025 Leafly List winner Lisbon Cannabis Co, River Driver Cannabis, and Clubhouse Cannabis.", href: "/guides/lisbon-dispensary-guide/" },
+  { title: "Gardiner Dispensary Guide", description: "5+ dispensaries on the Kennebec River — The Bud Bar, Gardiner 4Twenty, MEDCo, Wellness Connection, Sinsemilla.", href: "/guides/gardiner-dispensary-guide/" },
+  { title: "Fryeburg Dispensary Guide", description: "4+ dispensaries including recreational and medical. NH border tourism hub with Fryeburg Fair seasonal surge.", href: "/guides/fryeburg-dispensary-guide/" },
+  { title: "Gray Dispensary Guide", description: "Portland-Auburn commuter corridor — 2 medical dispensaries (High Road, Token Cannabis Co.), adult-use opportunity.", href: "/guides/gray-dispensary-guide/" }
+];
+
+const southernMaineGuides = [
+  { title: "York Dispensary Guide", description: "Cannabis dispensary guide for York, Maine.", href: "/guides/york-dispensary-guide/" },
+  { title: "Wells Dispensary Guide", description: "Cannabis dispensary guide for Wells, Maine.", href: "/guides/wells-dispensary-guide/" },
+  { title: "Ogunquit Dispensary Guide", description: "Not opted in — major tourist destination with no dispensaries. Nearest: Wells (5 min) and York (15 min).", href: "/guides/ogunquit-dispensary-guide/" },
+  { title: "Kennebunk & Kennebunkport Dispensary Guide", description: "Not opted in — no dispensaries in town. Nearest options in Wells (5 min) and Biddeford (20 min).", href: "/guides/kennebunk-dispensary-guide/" },
+  { title: "Biddeford Dispensary Guide", description: "Operating a cannabis business in Biddeford, Maine.", href: "/guides/biddeford-dispensary-guide/" },
+  { title: "Old Orchard Beach Dispensary Guide", description: "Seasonal tourist market cannabis guide for Old Orchard Beach.", href: "/guides/old-orchard-beach-dispensary-guide/" }
+];
+
+const sebagoLakesGuides = [
   { title: "Sebago Lakes Region Dispensary Guide", description: "Complete cannabis market guide for Maine's Sebago Lakes Region — Bridgton, Casco, Raymond, Standish, Windham, and surrounding towns.", href: "/guides/sebago-lakes-region-dispensary-guide/" },
   { title: "Windham Dispensary Guide", description: "The Green Mile on Route 302 — Lakes Region's largest cannabis corridor with 4-5 dispensaries.", href: "/guides/windham-dispensary-guide/" },
   { title: "Bridgton Dispensary Guide", description: "Lakes Region gateway on Portland Road — 3-4 dispensaries serving a 20,000+ regional market.", href: "/guides/bridgton-dispensary-guide/" },
@@ -56,8 +73,35 @@ const cityGuides = [
   { title: "Raymond Dispensary Guide", description: "Low-competition Lakes Region market — Eclipse Cannabis Company on Roosevelt Trail.", href: "/guides/raymond-dispensary-guide/" },
   { title: "Standish Dispensary Guide", description: "Growing town between Portland and Sebago Lake — only 1 dispensary, first-mover opportunity.", href: "/guides/standish-dispensary-guide/" },
   { title: "Sebago Dispensary Guide", description: "Lakes Region town with no dedicated dispensary — nearest options and delivery services.", href: "/guides/sebago-dispensary-guide/" },
-  { title: "Old Orchard Beach Dispensary Guide", description: "Seasonal tourist market cannabis guide for Old Orchard Beach.", href: "/guides/old-orchard-beach-dispensary-guide/" },
-  { title: "Kittery Dispensary Guide", description: "Border-town cannabis market guide for Kittery, Maine.", href: "/guides/kittery-dispensary-guide/" }
+  { title: "Naples Dispensary Guide", description: "Sebago Lakes corridor — no dispensaries in Naples, nearest are Casco and Bridgton.", href: "/guides/naples-dispensary-guide/" },
+  { title: "Brownfield Dispensary Guide", description: "Rural Oxford County with two delivery-based medical dispensaries serving western Maine.", href: "/guides/brownfield-dispensary-guide/" }
+];
+
+const ruralOxfordGuides = [
+  { title: "Limerick Dispensary Guide", description: "Founding Farmers at 16 Main St — only dispensary between Bridgton and Portland for the rural York County corridor.", href: "/guides/limerick-dispensary-guide/" },
+  { title: "Buxton Dispensary Guide", description: "Hidden Greens medical dispensary at 370 Narragansett Trail — serves rural York County corridor.", href: "/guides/buxton-dispensary-guide/" },
+  { title: "Limington Dispensary Guide", description: "No dispensaries in Limington — nearest are Limerick (6 mi, medical) and Bridgton (20 mi, recreational).", href: "/guides/limington-dispensary-guide/" },
+  { title: "Cornish Dispensary Guide", description: "No dispensaries in Cornish — nearest medical in Limerick (~14 mi), recreational in Bridgton (~20 mi).", href: "/guides/cornish-dispensary-guide/" },
+  { title: "Porter Dispensary Guide", description: "No dispensaries in Porter — between Bridgton and Fryeburg, both ~14 mi.", href: "/guides/porter-dispensary-guide/" },
+  { title: "Hiram Dispensary Guide", description: "No dispensaries in Hiram — nearest are Limerick and Bridgton, both ~12 mi.", href: "/guides/hiram-dispensary-guide/" },
+  { title: "Baldwin Dispensary Guide", description: "Opted out via Local Law No. 1 of 2021 — nearest are Limerick (medical) and Bridgton (recreational).", href: "/guides/baldwin-dispensary-guide/" },
+  { title: "Parsonsfield Dispensary Guide", description: "Includes Kezar Falls — no dispensaries in town. Nearest are Limerick, Bridgton, and Fryeburg.", href: "/guides/parsonsfield-dispensary-guide/" }
+];
+
+const midcoastGuides = [
+  { title: "Freeport Dispensary Guide", description: "Freeport opted out of recreational — Be Well My Friend LLC is medical-only. Nearest rec: Westbrook and Portland.", href: "/guides/freeport-dispensary-guide/" },
+  { title: "Camden Dispensary Guide", description: "No dispensaries in Camden — nearest options in Northport (Bayside Bud Shack) and Rockland.", href: "/guides/camden-dispensary-guide/" },
+  { title: "Belfast Dispensary Guide", description: "Stones Throw Cannabis Co. medical dispensary at 138 Main St, plus Bayside Bud Shack nearby in Northport.", href: "/guides/belfast-dispensary-guide/" },
+  { title: "Boothbay Dispensary Guide", description: "HIGHLY Cannaco recreational dispensary with live grow room viewing in coastal Lincoln County.", href: "/guides/boothbay-dispensary-guide/" },
+  { title: "Damariscotta Dispensary Guide", description: "3 dispensaries on the Midcoast — Cannabis Cured (rec), Above & Beyond Cannabis (med), Greenport Cannabis in Lincoln County.", href: "/guides/damariscotta-dispensary-guide/" },
+  { title: "Rockland Dispensary Guide", description: "3 dispensaries on Main Street — Highbrow (rec), Scrimshaw Cannabis (med), Botany (rec+med) in Knox County.", href: "/guides/rockland-dispensary-guide/" },
+  { title: "Freedom Dispensary Guide", description: "Waldo County — nearly a dispensary desert. Bayside Bud Shack in Northport (~17 mi) is the only option.", href: "/guides/freedom-dispensary-guide/" }
+];
+
+const centralMaineGuides = [
+  { title: "Farmington Dispensary Guide", description: "Blue Sky Maine medical + rec stores — vertically integrated with C1D1 extraction lab and MOFGA certified organic flower.", href: "/guides/farmington-dispensary-guide/" },
+  { title: "Bethel Dispensary Guide", description: "4 dispensaries near Sunday River Resort — Cannabis Cured, The Stoned Moose, New Mill Cannabis, Brilliant Buds.", href: "/guides/bethel-dispensary-guide/" },
+  { title: "Western Maine Lakes Dispensary Guide", description: "Cannabis dispensary guide for Western Maine Lakes, Maine.", href: "/guides/western-maine-lakes-dispensary-guide/" }
 ];
 
 const faqItems = [
@@ -69,8 +113,8 @@ const faqItems = [
 ---
 
 <Layout
-  title="Maine Dispensary Guides — 50+ Expert Resources for Cannabis Operators"
-  description="Complete guides for opening and operating a cannabis dispensary in Maine. Licensing, regulations, startup costs, taxation, and local market opportunities across 20+ cities and towns."
+  title="Maine Dispensary Guides — 75+ Expert Resources for Cannabis Operators"
+  description="Complete guides for opening and operating a cannabis dispensary in Maine. Licensing, regulations, startup costs, taxation, and local market opportunities across 40+ cities and towns."
   heroImage="https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?auto=format&fit=crop&q=80&w=1200&h=400"
 >
 <style>
@@ -146,9 +190,74 @@ const faqItems = [
 </section>
 
 <section class="category-section">
-  <h2>City & Regional Guides</h2>
+  <h2>Major Cities</h2>
   <div class="guides-grid">
     {cityGuides.map((guide) => (
+      <a href={guide.href} class="guide-card">
+        <h3>{guide.title}</h3>
+        <p>{guide.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="category-section">
+  <h2>Southern Maine — York, Wells, Ogunquit, Kennebunk</h2>
+  <p style="margin-bottom:1.5rem;color:var(--color-text-light);">York County coast and inland — tourist destinations, several towns not yet opted in.</p>
+  <div class="guides-grid">
+    {southernMaineGuides.map((guide) => (
+      <a href={guide.href} class="guide-card">
+        <h3>{guide.title}</h3>
+        <p>{guide.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="category-section">
+  <h2>Sebago Lakes Region — Windham, Bridgton, Casco, Raymond</h2>
+  <p style="margin-bottom:1.5rem;color:var(--color-text-light);">Portland-to-Lakes Region corridor on Route 302 — highest dispensary density outside Portland.</p>
+  <div class="guides-grid">
+    {sebagoLakesGuides.map((guide) => (
+      <a href={guide.href} class="guide-card">
+        <h3>{guide.title}</h3>
+        <p>{guide.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="category-section">
+  <h2>Rural Oxford County — Limerick, Porter, Hiram, Cornish</h2>
+  <p style="margin-bottom:1.5rem;color:var(--color-text-light);">Under-served corridor between Portland and the Lakes Region — several towns with no dispensaries.</p>
+  <div class="guides-grid">
+    {ruralOxfordGuides.map((guide) => (
+      <a href={guide.href} class="guide-card">
+        <h3>{guide.title}</h3>
+        <p>{guide.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="category-section">
+  <h2>Midcoast — Freeport, Camden, Belfast, Rockland</h2>
+  <p style="margin-bottom:1.5rem;color:var(--color-text-light);">Lincoln and Knox Counties — mix of opted-in and opted-out towns, lower competition than Portland.</p>
+  <div class="guides-grid">
+    {midcoastGuides.map((guide) => (
+      <a href={guide.href} class="guide-card">
+        <h3>{guide.title}</h3>
+        <p>{guide.description}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="category-section">
+  <h2>Central & Western Maine — Farmington, Bethel</h2>
+  <p style="margin-bottom:1.5rem;color:var(--color-text-light);">Franklin and Oxford County highlands — rural markets with fewer operators and unique local dynamics.</p>
+  <div class="guides-grid">
+    {centralMaineGuides.map((guide) => (
       <a href={guide.href} class="guide-card">
         <h3>{guide.title}</h3>
         <p>{guide.description}</p>

@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-05-13",
+  modifiedDate: "2026-05-13",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many dispensaries are in Fryeburg, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Fryeburg has 4+ active dispensaries including White Mountain Craft Cannabis (recreational at 285 Main St), The Glass Cook (recreational + glassblowing at 295 Bridgton Rd), Above All Greenery (medical at 299 Main St), and The Great Atlantic Puffin Company (medical at 235 Bridgton Rd)." }},
+    { "@type": "Question", "name": "Is Fryeburg opted in to recreational cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Fryeburg has authorized recreational cannabis dispensaries. The town is notable for having the first recreational dispensary in western Maine, White Mountain Craft Cannabis at 285 Main St." }},
+    { "@type": "Question", "name": "Why is Fryeburg significant for cannabis retail?", "acceptedAnswer": { "@type": "Answer", "text": "Fryeburg's location on the New Hampshire border captures cross-state traffic from NH residents who cannot legally purchase cannabis in their home state. Additionally, the Fryeburg Fair draws 200,000+ visitors annually, creating a massive seasonal surge." }},
+    { "@type": "Question", "name": "What makes The Glass Cook unique?", "acceptedAnswer": { "@type": "Answer", "text": "The Glass Cook at 295 Bridgton Rd combines a recreational cannabis dispensary with an on-site glassblowing studio, offering a unique experiential retail environment that differentiates it from typical dispensaries." }}
+  ]
+});
+---
+
+<Layout title="Fryeburg, ME Dispensary Guide — 4+ Cannabis Dispensaries 2026" description="Fryeburg, Maine dispensary guide. 4+ dispensaries including recreational and medical. White Mountain Craft Cannabis, The Glass Cook, and more in Oxford County for 2026." heroImage="/images/heroes/fryeburg-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Fryeburg, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries in Fryeburg, Maine — Oxford County's premier destination</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Fryeburg at a Glance</h2>
+    <table aria-label="Fryeburg cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>4+ (White Mountain Craft Cannabis, The Glass Cook, Above All Greenery, The Great Atlantic Puffin Company)</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>YES — Recreational authorized</td></tr>
+        <tr><td><strong>Nearest Medical Dispensary</strong></td><td>Above All Greenery (299 Main St) and The Great Atlantic Puffin Company (235 Bridgton Rd)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>White Mountain Craft Cannabis (285 Main St) — First rec dispensary in western Maine</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,500</td></tr>
+        <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Fryeburg is one of Oxford County's most significant cannabis destinations. With four or more active dispensaries serving a town of only 3,500 residents, Fryeburg punches well above its weight class in the Maine cannabis market. The town's strategic position on the New Hampshire border, combined with its status as home to the first recreational dispensary in western Maine, makes it a regional hub that draws customers from across state lines.</p>
+    <p>The Fryeburg Fair, held annually, draws more than 200,000 visitors to the region — creating a massive seasonal surge that benefits cannabis retailers who stock appropriately for tourist traffic. Pre-rolls, single-serve edibles, and portable products perform particularly well during fair season.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Fryeburg</h2>
+
+    <h3>White Mountain Craft Cannabis (Recreational)</h3>
+    <p><strong>Address:</strong> 285 Main St Ste 8, Fryeburg, ME 04037</p>
+    <p>White Mountain Craft Cannabis holds the distinction of being the first recreational cannabis dispensary in western Maine. Located on Main Street, they serve the adult-use market with a curated selection of cannabis products. Their western Maine location makes them a convenient option for New Hampshire residents who can legally purchase in Maine but not in New Hampshire.</p>
+
+    <h3>The Glass Cook (Recreational + Glassblowing)</h3>
+    <p><strong>Address:</strong> 295 Bridgton Rd, Fryeburg, ME 04037</p>
+    <p>The Glass Cook is a unique destination that combines a recreational cannabis dispensary with an on-site glassblowing studio. This experiential retail concept sets it apart from typical dispensaries, offering customers an immersive environment where they can browse cannabis products and watch glassblowing demonstrations. This type of destination retail tends to generate strong word-of-mouth and repeat visits.</p>
+
+    <h3>Above All Greenery (Medical)</h3>
+    <p><strong>Address:</strong> 299 Main St, Fryeburg, ME 04037</p>
+    <p>Above All Greenery serves medical cannabis patients from their location on Main Street. They provide therapeutic-focused products for patients with qualifying conditions, maintaining the medical infrastructure that Fryeburg's cannabis market was built upon.</p>
+
+    <h3>The Great Atlantic Puffin Company (Medical)</h3>
+    <p><strong>Address:</strong> 235 Bridgton Rd, Fryeburg, ME 04037</p>
+    <p>The Great Atlantic Puffin Company operates a medical cannabis dispensary at 235 Bridgton Road. The company name reflects Maine's iconic puffin population and the state's strong connection to coastal and marine imagery in branding.</p>
+  </section>
+
+  <section>
+    <h2>NH Border Location — Cross-State Traffic</h2>
+    <p>Fryeburg's position on the Maine-New Hampshire border creates a significant competitive advantage. New Hampshire has not legalized recreational cannabis for adult use, despite surrounding states doing so. This means New Hampshire residents who wish to purchase cannabis legally must either travel to Massachusetts or Maine. Fryeburg, being one of the closest Maine dispensaries to southern New Hampshire, captures substantial cross-state traffic.</p>
+    <p>This border effect means that a dispensary in Fryeburg doesn't just compete for the local 3,500-person market — it serves an effective catchment area that extends deep into New Hampshire, potentially reaching customers from Conway, North Conway, Lincoln, and even Manchester (approximately 80 miles south).</p>
+  </section>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Fryeburg has opted in to recreational cannabis, making it one of the few western Maine towns to do so. This progressive stance has paid dividends in tax revenue and economic development, with the cannabis industry providing jobs and foot traffic to local businesses.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "How many dispensaries are in Fryeburg, Maine?", a: "Fryeburg has 4+ active dispensaries including White Mountain Craft Cannabis (recreational at 285 Main St), The Glass Cook (recreational + glassblowing at 295 Bridgton Rd), Above All Greenery (medical at 299 Main St), and The Great Atlantic Puffin Company (medical at 235 Bridgton Rd)." },
+        { q: "Is Fryeburg opted in to recreational cannabis?", a: "Yes. Fryeburg has authorized recreational cannabis dispensaries and is notable for having the first recreational dispensary in western Maine." },
+        { q: "Why is Fryeburg significant for cannabis retail?", a: "Fryeburg's location on the New Hampshire border captures cross-state traffic from NH residents. Additionally, the Fryeburg Fair draws 200,000+ visitors annually, creating a massive seasonal surge." },
+        { q: "What makes The Glass Cook unique?", a: "The Glass Cook combines a recreational cannabis dispensary with an on-site glassblowing studio, offering a unique experiential retail environment." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

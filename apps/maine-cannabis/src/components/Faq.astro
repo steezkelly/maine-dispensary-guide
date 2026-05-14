@@ -1,2 +1,38 @@
-import Faq from '@network/ui/Faq';
-export default Faq;
+---
+import UiFaq from '@network/ui/Faq';
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface ShortFAQItem {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  faqs?: FAQItem[];
+  items?: FAQItem[];
+  questions?: ShortFAQItem[];
+}
+
+const { faqs, items, questions } = Astro.props;
+const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a }));
+---
+
+{normalizedFaqs ? (
+  <UiFaq faqs={normalizedFaqs}>
+    <slot />
+  </UiFaq>
+) : (
+  <div class="faq-schema-wrapper">
+    <slot />
+  </div>
+)}
+
+<style>
+  .faq-schema-wrapper {
+    display: contents;
+  }
+</style>
