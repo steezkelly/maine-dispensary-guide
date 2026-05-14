@@ -5,7 +5,6 @@ import vercel from '@astrojs/vercel';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import yaml from 'js-yaml';
 
 // Pages that receive noindex via Layout.astro — exclude from sitemap
 const noindexPathPrefixes = ['/download/', '/experiments', '/admin/'];
@@ -28,10 +27,10 @@ function extractMeta(srcPath) {
   const fm = raw.match(/^---([\s\S]+?)---/m);
   if (!fm) return {};
   const code = fm[1];
-  // Look for top-level heroImage assignment or Layout prop
-  // heroImage="/images/..." pattern
-  const heroImageMatch = code.match(/heroImage\s*=\s*["']([^"']+)["']/);
-  // Look for article = { ... modifiedDate: ..., publishDate: ... }
+  // Look for top-level heroImage assignment in frontmatter or Layout prop in template
+  // heroImage="/images/..." pattern (in Layout component)
+  const heroImageMatch = raw.match(/heroImage\s*=\s*["']([^"']+)["']/);
+  // Look for article = { ... modifiedDate: ..., publishDate: ... } in frontmatter
   const articleMatch = code.match(/article\s*=\s*\{([^}]+)\}/);
   let lastmod = null, image = null;
   if (articleMatch) {
