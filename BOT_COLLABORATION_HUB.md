@@ -1,7 +1,23 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (CI workflow moved checkout/setup-node actions to Node 24-compatible majors: `actions/checkout@v6` and `actions/setup-node@v6`.)
+**Last updated: 2026-05-14 EDT** (Ahrefs audit remediation branch cleared local broken-image, broken internal-link/PDF, overlong title/description, and JSON-LD parse checks.)
+
+---
+
+## 📋 SPRINT 65: Ahrefs Audit Remediation Pass (May 14, 2026 EDT)
+
+### Broken media, broken internal links, meta length, and JSON-LD fixes ✅ REVIEW PENDING
+- **Branch:** `audit/ahrefs-may14-fixes`
+- **Why:** Ahrefs crawl reported broken images, broken internal links/4XXs, overlong titles/descriptions, links to redirects, noindex/sitemap concerns, and schema.org validation notices.
+- **Change:** Added missing public hero image assets for every `heroImage` route reference so rendered pages no longer point at absent `/images/heroes/*.jpg` files.
+- **Change:** Added the two missing PDF download assets under `apps/maine-cannabis/public/downloads/` for METRC reconciliation and compliance self-assessment CTAs.
+- **Change:** Updated Breadcrumbs to use slashless hrefs and route `/download/*` parent breadcrumbs through the existing `/resources` page instead of the nonexistent `/download/` route.
+- **Change:** Added layout-level SEO title/description guards in both app and shared layouts: titles keep the brand suffix only when the rendered `<title>` remains <=60 chars; meta/social descriptions are trimmed to <=160 chars without changing page body copy.
+- **Change:** Fixed `maine-cannabis-market` FAQ JSON-LD from literal `{JSON.stringify(...)}` text to Astro `set:text` output.
+- **Also present in diff:** UI guide/sidebar related-link hrefs are now slashless, reducing internal links to redirects under `trailingSlash: 'never'`.
+- **Verification:** `npm run typecheck` returned 0 errors with pre-existing warnings/hints; `npm run build` built 141 pages; `npm run check:hrefs` passed; `npm run check:content-health` passed; custom rendered-output audit returned 0 missing images, 0 broken internal links/assets, 0 titles >60 chars, 0 meta descriptions >160 chars, 0 JSON-LD parse errors, and 0 `/download` breadcrumb items.
+- **Safety posture:** No deploy, no package install, no infrastructure/Vercel setting changes. Existing untracked `apps/maine-cannabis/public/images/heroes/ai-review/` files from another agent were left untouched.
 
 ---
 
