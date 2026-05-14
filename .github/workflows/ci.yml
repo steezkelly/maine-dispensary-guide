@@ -121,11 +121,13 @@ jobs:
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           url="$(node <<'NODE'
-          const { HEAD_SHA, REPOSITORY } = process.env;
+          const { HEAD_SHA, REPOSITORY, GITHUB_TOKEN } = process.env;
           const headers = { 'User-Agent': 'github-actions-preview-url-resolver' };
+          if (GITHUB_TOKEN) headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
           const api = (path) => fetch(`https://api.github.com/repos/${REPOSITORY}${path}`, { headers }).then((r) => {
             if (!r.ok) throw new Error(`${r.status} ${r.statusText} for ${path}`);
             return r.json();
