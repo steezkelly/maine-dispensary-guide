@@ -81,7 +81,8 @@ function extractMeta(srcPath) {
   if (!fm) return {};
   const code = fm[1];
   const heroImageMatch = raw.match(/heroImage\s*=\s*["']([^"']+)["']/);
-  const articleMatch = code.match(/article\s*=\s*\{([\s\S]*?)\n\s*\}/);
+  // Look for article = { ... modifiedDate: ..., publishDate: ... } in frontmatter
+  const articleMatch = code.match(/article\s*=\s*\{([^}]+)\}/);
   let lastmod = null, image = null;
   if (articleMatch) {
     const articleBody = articleMatch[1];

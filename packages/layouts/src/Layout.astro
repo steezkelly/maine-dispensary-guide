@@ -166,7 +166,8 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
             "@type": "ListItem",
             "position": index + 2,
             "name": crumb.label,
-            "item": siteUrl + crumb.href
+            // href may have trailing slash — strip it to match trailingSlash: 'never' canonical URLs
+            "item": siteUrl + crumb.href.replace(/\/$/, '')
           }))
         ]
       })} />
