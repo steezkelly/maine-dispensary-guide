@@ -322,9 +322,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       });
     </script>
   <!-- Social links for knowledge panel -->
-    <link rel="me" href="https://www.facebook.com/mainedispensaryguide" />
-    <link rel="me" href="https://www.linkedin.com/company/mainedispensaryguide" />
-    <link rel="me" href="https://twitter.com/mainedispensary" />
+    {siteConfig.socialLinks.map(url => <link rel="me" href={url} />)}
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
