@@ -1,7 +1,47 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (`/find-a-dispensary` rebuilt as a 50-guide regional directory with map-search links; Bethel title typo fixed; directory coverage regression test added.)
+**Last updated: 2026-05-14 EDT** (Ahrefs remediation branch now includes rendered crawl regression guards for trailing slashes, broken rendered assets/links, meta length, JSON-LD parsing, and `/download` breadcrumb regressions.)
+
+---
+
+## 📋 SPRINT 66: Rendered Crawl Regression Guard Pass (May 14, 2026 EDT)
+
+### Ahrefs-class crawl checks codified in content health ✅ REVIEW PENDING
+- **Branch:** `audit/ahrefs-may14-fixes`
+- **Why:** The previous Ahrefs remediation fixed reported issues locally; this pass makes the high-risk issue classes fail automatically before future deploys.
+- **Change:** Extended `apps/maine-cannabis/scripts/content/check-content-health.cjs` with a source-level trailing-slash internal link check for `trailingSlash: 'never'` sites.
+- **Change:** Added a rendered-output crawl guard that walks built HTML and detects broken rendered media/assets, broken internal route links, titles over 60 chars, meta descriptions over 160 chars, invalid JSON-LD, and breadcrumbs pointing at the missing `/download` parent route.
+- **Regression coverage:** Added a `check-content-health:test` fixture proving slashful internal links fail while existing dead-link and malformed-href fixtures still work.
+- **Verification:** `npm run check:hrefs`, `npm run check:content-health:test`, `npm run check:content-health`, `npm run typecheck`, and `npm run build` all passed. Rendered `dist/` inspection found 141 HTML routes, 0 titles over 60 chars, 0 descriptions over 160 chars, and 0 JSON-LD parse errors.
+- **Safety posture:** QA-script-only change; no deploy, no package install, no infrastructure changes.
+
+---
+
+## 📋 SPRINT 65: Ahrefs Audit Remediation Pass (May 14, 2026 EDT)
+
+### Broken media, broken internal links, meta length, and JSON-LD fixes ✅ REVIEW PENDING
+- **Branch:** `audit/ahrefs-may14-fixes`
+- **Why:** Ahrefs crawl reported broken images, broken internal links/4XXs, overlong titles/descriptions, links to redirects, noindex/sitemap concerns, and schema.org validation notices.
+- **Change:** Added missing public hero image assets for every `heroImage` route reference so rendered pages no longer point at absent `/images/heroes/*.jpg` files.
+- **Change:** Added the two missing PDF download assets under `apps/maine-cannabis/public/downloads/` for METRC reconciliation and compliance self-assessment CTAs.
+- **Change:** Updated Breadcrumbs to use slashless hrefs and route `/download/*` parent breadcrumbs through the existing `/resources` page instead of the nonexistent `/download/` route.
+- **Change:** Added layout-level SEO title/description guards in both app and shared layouts: titles keep the brand suffix only when the rendered `<title>` remains <=60 chars; meta/social descriptions are trimmed to <=160 chars without changing page body copy.
+- **Change:** Fixed `maine-cannabis-market` FAQ JSON-LD from literal `{JSON.stringify(...)}` text to Astro `set:text` output.
+- **Also present in diff:** UI guide/sidebar related-link hrefs are now slashless, reducing internal links to redirects under `trailingSlash: 'never'`.
+- **Verification:** `npm run typecheck` returned 0 errors with pre-existing warnings/hints; `npm run build` built 141 pages; `npm run check:hrefs` passed; `npm run check:content-health` passed; custom rendered-output audit returned 0 missing images, 0 broken internal links/assets, 0 titles >60 chars, 0 meta descriptions >160 chars, 0 JSON-LD parse errors, and 0 `/download` breadcrumb items.
+- **Safety posture:** No deploy, no package install, no infrastructure/Vercel setting changes. Existing untracked `apps/maine-cannabis/public/images/heroes/ai-review/` files from another agent were left untouched.
+
+---
+
+## 📋 SPRINT 64: GitHub Actions Node 24 Runtime Follow-up (May 14, 2026 EDT)
+
+### CI action runtime majors updated ✅ REVIEW PENDING
+- **Branch:** `ci/node24-actions-v6`
+- **Why:** GitHub warned that `actions/checkout@v4` and `actions/setup-node@v4` are Node 20 actions even though the workflow itself already sets `NODE_VERSION: '24'`.
+- **Change:** Updated all five CI jobs in `.github/workflows/ci.yml` from `actions/checkout@v4` to `actions/checkout@v6` and from `actions/setup-node@v4` to `actions/setup-node@v6`.
+- **Verification:** Confirmed zero remaining checkout/setup-node `@v4` references under `.github/workflows`; parsed `.github/workflows/ci.yml` successfully with Python/YAML. `actionlint` is not installed locally. No deploy, package install, or full build was run.
+- **Safety posture:** Workflow-only CI maintenance change; no content, dependency, deploy, or Vercel setting changes.
 
 ---
 

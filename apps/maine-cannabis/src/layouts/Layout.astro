@@ -66,7 +66,22 @@ const {
 // Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
-const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const MAX_SEO_TITLE_LENGTH = 60;
+const MAX_META_DESCRIPTION_LENGTH = 160;
+const truncateMetaDescription = (value: string) => {
+  if (value.length <= MAX_META_DESCRIPTION_LENGTH) return value;
+  const trimmed = value.slice(0, MAX_META_DESCRIPTION_LENGTH - 1).trimEnd();
+  const lastSpace = trimmed.lastIndexOf(' ');
+  return `${trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '')}.`;
+};
+const brandedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+// Prefer branded title if it fits; otherwise truncate title at word boundary
+const fullTitle = brandedTitle.length <= MAX_SEO_TITLE_LENGTH
+  ? brandedTitle
+  : title.length > MAX_SEO_TITLE_LENGTH
+    ? title.slice(0, MAX_SEO_TITLE_LENGTH - 1).replace(/\s+\S*$/, '')
+    : title;
+const seoDescription = truncateMetaDescription(description);
 const socialImage = heroImage
   ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
   : `${siteUrl}/og-image.svg`;
@@ -112,7 +127,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+    <meta name="description" content={seoDescription} />
     <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
     <meta name="msvalidate.01" content={siteConfig.bingSiteVerification} />
     <title>{fullTitle}</title>
@@ -144,7 +159,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta name="ICBM" content="45.2538, -69.4455" />
 
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={seoDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:image" content={socialImage} />
@@ -155,7 +170,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={seoDescription} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:site" content="@MaineDispensary" />
 
@@ -215,6 +230,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         "image": heroImage ? (typeof heroImage === 'string' && heroImage.startsWith('http') ? heroImage : siteUrl + heroImage) : undefined,
         "author": article.authorId ? {
           "@type": "Person",
+          "@id": siteUrl + "/authors/" + article.authorId,
           "name": article.author,
           "jobTitle": article.authorTitle
         } : {

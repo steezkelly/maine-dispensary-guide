@@ -62,3 +62,16 @@ test('allows admin placeholders while still scanning production pages', () => {
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /All content health checks passed/);
 });
+
+test('flags trailing-slash internal hrefs because production uses trailingSlash never', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/existing/">Redirecting guide link</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stdout, /trailing-slash internal links: 1 issue/);
+  assert.match(result.stdout, /index\.astro:1: trailing-slash internal href → \/guides\/existing\//);
+});

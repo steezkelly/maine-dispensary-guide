@@ -4,15 +4,22 @@ const pathSegments = url.pathname.split('/').filter(segment => segment !== '');
 
 const breadcrumbs = pathSegments.map((segment, index) => {
   if (segment === 'admin') return null;
-  const href = '/' + pathSegments.slice(0, index + 1).join('/') + '/';
-  const label = segment
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, char => char.toUpperCase());
+  const isDownloadParent = segment === 'download' && index === 0 && pathSegments.length > 1;
+  const href = isDownloadParent
+    ? '/resources'
+    : '/' + pathSegments.slice(0, index + 1).join('/');
+  const label = isDownloadParent
+    ? 'Resources'
+    : segment
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, char => char.toUpperCase());
   return { href, label };
 }).filter((crumb): crumb is { href: string; label: string } => crumb !== null);
 
 const isHome = url.pathname === '/';
 
+// Use the same trailing-slash-free URL as the site's trailingSlash: 'never' config
+// so schema URLs match canonical/page URLs exactly
 const siteUrl = "https://mainedispensaryguide.com";
 
 const breadcrumbListSchema = !isHome ? {
@@ -29,7 +36,8 @@ const breadcrumbListSchema = !isHome ? {
       "@type": "ListItem",
       "position": index + 2,
       "name": crumb.label,
-      "item": siteUrl + crumb.href
+      // href always has trailing slash from the map() above; strip it to match trailingSlash: 'never'
+      "item": siteUrl + crumb.href.replace(/\/$/, '')
     }))
   ]
 } : null;

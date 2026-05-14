@@ -6,31 +6,63 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Pages that receive noindex via Layout.astro — exclude from sitemap
+// Pages with Layout noindex={true} should stay out of the public sitemap.
 const noindexPathPrefixes = ['/download/', '/experiments', '/admin/'];
+const site = 'https://mainedispensaryguide.com';
 
-// Map a sitemap URL to its .astro source file path
-// sitemap URL pathname → source file
-// /guides → guides/index.astro
-// /guides/portland → guides/portland.astro
-// / → index.astro
+function listAstroPages(dir) {
+  const entries = [];
+  for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, item.name);
+    if (item.isDirectory()) {
+      entries.push(...listAstroPages(fullPath));
+    } else if (item.isFile() && item.name.endsWith('.astro')) {
+      entries.push(fullPath);
+    }
+  }
+  return entries;
+}
+
+function routeFromSrcPath(srcPath, pagesDir) {
+  const rel = path.relative(pagesDir, srcPath).replace(/\\/g, '/');
+  let route = '/' + rel.replace(/\.astro$/, '');
+  route = route.replace(/\/index$/, '') || '/';
+  return route;
+}
+
+function isNoindexSource(srcPath, route) {
+  if (route === '/404') return true;
+  if (noindexPathPrefixes.some((prefix) => route === prefix.replace(/\/$/, '') || route.startsWith(prefix))) return true;
+  const raw = fs.readFileSync(srcPath, 'utf8');
+  return /noindex\s*=\s*\{\s*true\s*\}/.test(raw);
+}
+
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+// Map a sitemap URL to its .astro source file path.
+// sitemap URL pathname -> source file
+// /guides -> guides/index.astro
+// /guides/portland -> guides/portland.astro
+// / -> index.astro
 function urlToSrcPath(loc, site, pagesDir) {
   try {
     const u = new URL(loc);
-    // Get pathname without trailing slash, root is '/'
     let pathname = u.pathname.replace(/\/$/, '') || '/';
-    // For root path
     if (pathname === '/') {
       const index = path.join(pagesDir, 'index.astro');
       return fs.existsSync(index) ? index : null;
     }
-    // Try index.astro in a subdirectory first (handles /guides → guides/index.astro)
     const indexPath = path.join(pagesDir, pathname, 'index.astro');
     if (fs.existsSync(indexPath)) return indexPath;
-    // Then try direct .astro file
     const directPath = path.join(pagesDir, pathname + '.astro');
     if (fs.existsSync(directPath)) return directPath;
-    // And try stripping one path segment for index pages (e.g., /blog → blog/index.astro)
     const segments = pathname.split('/');
     if (segments.length > 1) {
       const parentIndex = path.join(pagesDir, segments[0], 'index.astro');
@@ -40,19 +72,16 @@ function urlToSrcPath(loc, site, pagesDir) {
   } catch { return null; }
 }
 
-// Extract lastmod + image from frontmatter of an .astro file
-// Frontmatter in .astro is a JS module, not pure YAML — parse it with regex
+// Extract lastmod + image from frontmatter of an .astro file.
+// Frontmatter in .astro is a JS module, not pure YAML — parse it with regex.
 function extractMeta(srcPath) {
   if (!srcPath || !fs.existsSync(srcPath)) return {};
   const raw = fs.readFileSync(srcPath, 'utf8');
   const fm = raw.match(/^---([\s\S]+?)---/m);
   if (!fm) return {};
   const code = fm[1];
-  // Look for top-level heroImage assignment in frontmatter or Layout prop in template
-  // heroImage="/images/..." pattern (in Layout component)
   const heroImageMatch = raw.match(/heroImage\s*=\s*["']([^"']+)["']/);
-  // Look for article = { ... modifiedDate: ..., publishDate: ... } in frontmatter
-  const articleMatch = code.match(/article\s*=\s*\{([^}]+)\}/);
+  const articleMatch = code.match(/article\s*=\s*\{([\s\S]*?)\n\s*\}/);
   let lastmod = null, image = null;
   if (articleMatch) {
     const articleBody = articleMatch[1];
