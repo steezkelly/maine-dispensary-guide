@@ -142,7 +142,19 @@ jobs:
           echo "PREVIEW_URL=$url" >> "$GITHUB_ENV"
           echo "Resolved preview URL: $url"
 
+      - name: Check preview access
+        run: |
+          set -euo pipefail
+          status="$(curl -L -sS -o /tmp/preview.html -w '%{http_code}' "$PREVIEW_URL" || true)"
+          if [ "$status" = "401" ] || [ "$status" = "403" ] || grep -qi '<title>Login .* Vercel</title>\|Provider.*accounts list is empty' /tmp/preview.html; then
+            echo "SKIP_PREVIEW_SMOKE=true" >> "$GITHUB_ENV"
+            echo "Preview is protected by Vercel login/SSO; skipping browser smoke tests for preview deployment."
+            exit 0
+          fi
+          echo "SKIP_PREVIEW_SMOKE=false" >> "$GITHUB_ENV"
+
       - name: Run smoke tests against preview
+        if: env.SKIP_PREVIEW_SMOKE != 'true'
         run: npx playwright test
 
   deploy-production:
