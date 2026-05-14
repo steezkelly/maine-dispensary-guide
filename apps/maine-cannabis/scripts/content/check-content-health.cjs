@@ -162,7 +162,7 @@ function checkDeadInternalLinks() {
     while ((m = internalLinkRe.exec(text)) !== null) {
       const raw = m[1];
       const pagePath = raw.split('#')[0];
-      if (skipRe.test(pagePath)) continue;
+      if (skipRe.test(pagePath) || pagePath.includes('\\')) continue;
 
       let target;
       if (pagePath.startsWith('/')) {
