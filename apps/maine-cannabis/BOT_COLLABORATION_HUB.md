@@ -5,6 +5,24 @@
 
 ---
 
+## SPRINT 61: External 4XX Link Audit (May 14, 2026)
+
+**[HERMES/KANBAN] 2026-05-14 — Dead outbound URL cleanup**
+
+### What Was Done
+- Audited 111 unique external `href` URLs across Astro pages and isolated dead/stale 4XX/DNS targets from crawler false positives.
+- Replaced stale outbound URLs with verified 200-response official sources: Maine OCP guidance/resources pages, Maine AG, Maine Real Estate Commission, MaineGIS, Maine SBDC, FDA psychedelic guidance, FTC disclosure guidance, and updated municipal domains for Scarborough, Waterville, and Westbrook.
+- Preserved known non-actionable Portland `portlandmaine.gov` SSL-chain crawler issue because `curl -k -L -I` confirms those pages return HTTP 200 and the Hub already records it as a crawler quirk.
+
+### Verification
+- Replacement URL spot-check: all 18 new outbound targets returned HTTP 200.
+- Search for stale/corrupted targets (`cannabislawblog`, stale Maine.gov paths, old municipal domains, corrupted statute prefixes) → 0 results.
+- `npm run check:hrefs` → pass.
+- `npx astro check <changed files>` → 0 errors, pre-existing hints only.
+- No deploy, no package install, no infrastructure changes.
+
+---
+
 ## SPRINT 60: Conversion Path Link Repair (May 14, 2026)
 
 **[HERMES/KANBAN] 2026-05-14 — Directory regression checks + content-health verification**

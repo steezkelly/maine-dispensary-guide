@@ -1,0 +1,149 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-05-14",
+  modifiedDate: "2026-05-14",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there any cannabis dispensaries in Harrison, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Harrison has no dispensaries within town limits. The nearest options are Sweet Dirt Cannabis in Bridgton (5.4 miles, ~10 minutes) and Sticky Bud Farms in Windham (~20 minutes)." }},
+    { "@type": "Question", "name": "Has Harrison opted in to cannabis retail?", "acceptedAnswer": { "@type": "Answer", "text": "Harrison has NOT opted in to adult-use cannabis retail. No recreational dispensaries can operate in Harrison town limits. Medical cannabis patients must seek dispensaries in neighboring opted-in towns." }},
+    { "@type": "Question", "name": "What is the nearest dispensary to Harrison?", "acceptedAnswer": { "@type": "Answer", "text": "Sweet Dirt Cannabis in Bridgton is closest at 5.4 miles (~10 minutes). Sticky Bud Farms in Windham is also nearby. Blue Lobster Cannabis in Casco serves the corridor as well." }},
+    { "@type": "Question", "name": "What is Harrison Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Harrison is a small lakes-region town in Cumberland County, Maine, with approximately 2,800 residents. It sits between Long Lake and Crystal Lake, part of the Sebago Lakes Region. The town has no cannabis dispensaries but benefits from proximity to Bridgton's established retail corridor." }}
+  ]
+});
+---
+
+<Layout title="Harrison, ME Dispensary Guide — Cannabis Near Harrison, Maine 2026" description="Harrison, Maine cannabis dispensary guide. No dispensaries in Harrison — nearest options are Sweet Dirt (Bridgton, 5.4 mi) and Sticky Bud Farms (Windham)." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .opportunity-box { background: rgba(88, 129, 87, 0.06); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-border); margin-top: 1.5rem; }
+  .opportunity-box h3 { margin-top: 0; color: var(--color-primary); }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Harrison, ME Dispensary Guide</h1>
+    <p class="subtitle">Cannabis dispensaries near Harrison, Maine — Sebago Lakes Region</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Harrison at a Glance</h2>
+    <table aria-label="Harrison cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — None currently operating</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>NOT OPTED IN — No adult-use cannabis retail allowed in town</td></tr>
+        <tr><td><strong>Nearest Dispensary</strong></td><td>Sweet Dirt Cannabis — Bridgton (5.4 mi, ~10 min)</td></tr>
+        <tr><td><strong>Nearest Additional</strong></td><td>Sticky Bud Farms — Windham (20 min); Blue Lobster Cannabis — Casco (~20 min)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~2,800</td></tr>
+        <tr><td><strong>County</strong></td><td>Cumberland County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Harrison is a small Cumberland County town situated between Long Lake and Crystal Lake, forming the geographic heart of the Sebago Lakes Region. With approximately 2,800 residents and a landscape defined by lakes, rolling hills, and a classic Maine village center, Harrison is a tight-knit community that attracts seasonal residents and lake enthusiasts.</p>
+    <p>Despite its proximity to Bridgton — which has a half-dozen active dispensaries along the Portland Road corridor — Harrison itself has not opted in to adult-use cannabis retail. This means no recreational cannabis store can operate within Harrison town limits, and residents who want to purchase legal cannabis must drive to neighboring towns.</p>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Harrison</h2>
+
+    <h3>Sweet Dirt Cannabis (Bridgton) — Closest</h3>
+    <p><strong>Address:</strong> 1 Beaver Creek Farm Rd, Bridgton, ME 04009</p>
+    <p><strong>Phone:</strong> (207) 352-4262</p>
+    <p><strong>Distance:</strong> 5.4 miles (~10 minutes from Harrison center)</p>
+    <p>Sweet Dirt Cannabis is the closest dispensary to Harrison and is widely regarded as one of the top dispensaries in the region. Located at 1 Beaver Creek Farm Rd in Bridgton, this recreational dispensary has earned a 5.0-star rating and carries a full product line including flower, edibles, concentrates, and accessories. The Bridgton location is on the Portland Road corridor — Maine's most established cannabis retail cluster outside of Portland.</p>
+
+    <h3>Sticky Bud Farms (Windham)</h3>
+    <p><strong>Address:</strong> 815 Roosevelt Trail Suite #3, Windham, ME 04062</p>
+    <p><strong>Phone:</strong> (207) 893-8200</p>
+    <p><strong>Distance:</strong> Approximately 20 minutes from Harrison</p>
+    <p><strong>Hours:</strong> Mon 9am–6pm, Tue–Sat 9am–7pm, Sun 11am–5pm</p>
+    <p>Sticky Bud Farms serves both medical patients and recreational customers from their Windham location on Roosevelt Trail (Route 302). With a 4.7-star rating from 51 reviews, they offer a balanced selection of flower, concentrates, edibles, vapes, and topicals. Windham's Route 302 corridor has multiple dispensaries and serves as the eastern anchor of the Sebago Lakes cannabis market.</p>
+
+    <h3>Blue Lobster Cannabis (Casco)</h3>
+    <p><strong>Location:</strong> Casco, ME — approximately 20 minutes from Harrison</p>
+    <p>Blue Lobster Cannabis serves the Sebago Lake corridor from Casco, with a focus on locally sourced, organically grown cannabis products. They offer a permanent 10% discount for local residents of Raymond, Casco, Naples, and Bridgton — a program that, while not including Harrison explicitly, reflects the community-oriented culture of the region's dispensaries.</p>
+  </section>
+
+  <section>
+    <h2>Opt-In Status</h2>
+    <p>Harrison has <strong>not opted in</strong> to adult-use cannabis retail. This means no recreational cannabis store can legally operate within Harrison town limits. Medical cannabis patients in Harrison are also not served by any in-town dispensary and must travel to neighboring opted-in communities.</p>
+    <p>Maine's opt-in system means municipalities must take formal action to allow adult-use cannabis businesses. Towns that have not opted in — like Harrison — prohibit retail cannabis establishments through local ordinance. Only medical dispensaries operating under the Maine Medical Use of Cannabis Program (MMMP) may operate in non-opted-in towns under certain conditions.</p>
+    <p>For current opt-in status across all Maine towns, see our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="opportunity-box">
+      <h3>The Harrison Market Opportunity</h3>
+      <p>For cannabis entrepreneurs evaluating Harrison as a potential market: the town's lack of dispensaries is a function of policy, not demand. Harrison's 2,800 year-round residents represent a baseline market that must travel elsewhere for cannabis — meaning every purchase currently leaks to Bridgton, Windham, or Casco.</p>
+      <p>An operator interested in Harrison would need to pursue either:</p>
+      <ul>
+        <li><strong>Municipal advocacy:</strong> Work with the town to change the opt-in status through a citizen petition and town vote. This is a longer path but creates a genuine first-mover opportunity in an underserved community.</li>
+        <li><strong>Medical-only operation:</strong> Explore whether a medical dispensary or caregiver operation could serve Harrison's MMMP patients under current town ordinances.</li>
+        <li><strong>Delivery-based model:</strong> Establish a delivery operation in a neighboring opted-in town (Bridgton is ideal given its proven retail infrastructure) and specifically target Harrison residents. Maine law permits licensed dispensaries to deliver to any municipality regardless of opt-in status.</li>
+      </ul>
+      <p>The delivery model is the fastest path to market and may be worth evaluating for an operator who wants to capture Harrison's cannabis spending without waiting for a change in municipal status.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
+        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
+        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
+        <li><a href="/guides/naples-dispensary-guide">Naples Dispensary Guide</a></li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there any cannabis dispensaries in Harrison, Maine?", a: "No. Harrison has no dispensaries within town limits. The nearest options are Sweet Dirt Cannabis in Bridgton (5.4 mi, ~10 min) and Sticky Bud Farms in Windham (~20 min)." },
+        { q: "Has Harrison opted in to cannabis retail?", a: "Harrison has NOT opted in to adult-use cannabis retail. No recreational dispensaries can operate in Harrison town limits. Medical patients must also seek dispensaries in neighboring opted-in towns." },
+        { q: "What is the nearest dispensary to Harrison?", a: "Sweet Dirt Cannabis in Bridgton at 1 Beaver Creek Farm Rd (5.4 miles, ~10 minutes) is closest. Sticky Bud Farms in Windham is also nearby." },
+        { q: "What is Harrison Maine known for?", a: "Harrison is a lakes-region town in Cumberland County between Long Lake and Crystal Lake, with approximately 2,800 residents. No cannabis dispensaries operate in town due to lack of opt-in." }
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit. Opt-in status should be confirmed with the town clerk's office.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:text={faqPageJsonLd} is:inline></script>

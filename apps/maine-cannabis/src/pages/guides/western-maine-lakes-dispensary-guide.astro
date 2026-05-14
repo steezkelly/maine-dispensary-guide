@@ -51,6 +51,12 @@ const towns = [
     operatorNote: "No dedicated dispensaries in Sebago town limits. Residents typically shop in Bridgton (15 min), Buxton (20 min), or Portland (30-40 min)."
   },
   {
+    name: "Harrison",
+    county: "Cumberland",
+    adultUseStores: [],
+    operatorNote: "No dispensaries in Harrison town limits. Harrison has NOT opted in to adult-use cannabis. Residents drive to Sweet Dirt in Bridgton (~5.4 miles, 10 min) or Sticky Bud Farms in Windham (~20 min). See our Harrison dispensary guide for full details."
+  },
+  {
     name: "Naples",
     county: "Cumberland",
     adultUseStores: [],
@@ -174,6 +180,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
       <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
       <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
       <li><a href="/guides/naples-dispensary-guide">Naples Dispensary Guide</a></li>
+      <li><a href="/guides/harrison-dispensary-guide">Harrison Dispensary Guide</a></li>
       <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
       <li><a href="/guides/standish-dispensary-guide">Standish Dispensary Guide</a></li>
       <li><a href="/guides/sebago-dispensary-guide">Sebago Dispensary Guide</a></li>
@@ -200,7 +207,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <h2>Frequently Asked Questions</h2>
     <Faq
       questions={[
-        { q: "Are there cannabis dispensaries in the western Maine lakes region?", a: "Yes. Bridgton has 3+ dispensaries, Casco has 2, and Windham has multiple operators. Smaller towns like Naples, Sebago, Raymond, and Standish currently have no or very limited dispensaries but are served by nearby Bridgton and Casco options." },
+        { q: "Are there cannabis dispensaries in the western Maine lakes region?", a: "Yes. Bridgton has 3+ dispensaries, Casco has 2, and Windham has multiple operators. Harrison has no dispensaries (not opted in). Smaller towns like Naples, Sebago, Raymond, and Standish currently have no or very limited dispensaries but are served by nearby Bridgton and Casco options." },
         { q: "Where can I buy cannabis near Sebago Lake?", a: "The nearest dispensaries to Sebago Lake are in Bridgton (Sweet Dirt, Canuvo) and Casco (Blue Lobster Cannabis, Landrace Cannabis Co.). Naples and Sebago residents typically drive 10-20 minutes to reach these options." },
       ]}
     />
