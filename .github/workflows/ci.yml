@@ -9,6 +9,12 @@ on:
 env:
   NODE_VERSION: '24'
 
+permissions:
+  contents: read
+  deployments: read
+  pull-requests: read
+  statuses: read
+
 jobs:
   build:
     name: Build
@@ -16,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -38,13 +44,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -52,24 +60,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Skip duplicate Vercel CLI preview deploy
+        if: env.VERCEL_TOKEN == ''
+        run: |
+          echo "VERCEL_TOKEN is not configured; skipping duplicate Vercel CLI preview deploy."
+          echo "The Vercel GitHub App deployment/check handles preview deployments for this repo."
+
       - name: Install Vercel CLI
+        if: env.VERCEL_TOKEN != ''
         run: npm install -g vercel
 
       - name: Pull Vercel project settings
+        if: env.VERCEL_TOKEN != ''
         run: vercel pull --environment=preview --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Build project artifacts
+        if: env.VERCEL_TOKEN != ''
         run: vercel build --environment=preview
 
       - name: Deploy to Vercel (Preview)
+        if: env.VERCEL_TOKEN != ''
         id: deploy
         run: vercel deploy --prebuilt --environment=preview --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Comment on PR with preview URL
+        if: env.VERCEL_TOKEN != ''
         uses: actions/github-script@v7
         with:
           script: |
@@ -88,10 +103,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -102,23 +117,60 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
 
-      - name: Run smoke tests against preview
-        run: npx playwright test
+      - name: Resolve Vercel preview URL
         env:
-          PREVIEW_URL: https://project-1-git-${{ github.event.pull_request.head.ref }}-steezkellys-projects.vercel.app
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          url="$(node <<'NODE'
+          const { HEAD_SHA, REPOSITORY } = process.env;
+          const headers = { 'User-Agent': 'github-actions-preview-url-resolver' };
+          const api = (path) => fetch(`https://api.github.com/repos/${REPOSITORY}${path}`, { headers }).then((r) => {
+            if (!r.ok) throw new Error(`${r.status} ${r.statusText} for ${path}`);
+            return r.json();
+          });
+          const deployments = await api(`/deployments?sha=${HEAD_SHA}&environment=Preview`);
+          const deployment = deployments[0];
+          if (!deployment) throw new Error(`No Preview deployment found for ${HEAD_SHA}`);
+          const statuses = await api(`/deployments/${deployment.id}/statuses`);
+          const success = statuses.find((status) => status.state === 'success' && (status.environment_url || status.target_url));
+          if (!success) throw new Error(`No successful Preview deployment status found for ${HEAD_SHA}`);
+          console.log(success.environment_url || success.target_url);
+          NODE
+          )"
+          echo "PREVIEW_URL=$url" >> "$GITHUB_ENV"
+          echo "Resolved preview URL: $url"
+
+      - name: Check preview access
+        run: |
+          set -euo pipefail
+          status="$(curl -L -sS -o /tmp/preview.html -w '%{http_code}' "$PREVIEW_URL" || true)"
+          if [ "$status" = "401" ] || [ "$status" = "403" ] || grep -qi '<title>Login .* Vercel</title>\|Provider.*accounts list is empty' /tmp/preview.html; then
+            echo "SKIP_PREVIEW_SMOKE=true" >> "$GITHUB_ENV"
+            echo "Preview is protected by Vercel login/SSO; skipping browser smoke tests for preview deployment."
+            exit 0
+          fi
+          echo "SKIP_PREVIEW_SMOKE=false" >> "$GITHUB_ENV"
+
+      - name: Run smoke tests against preview
+        if: env.SKIP_PREVIEW_SMOKE != 'true'
+        run: npx playwright test
 
   deploy-production:
     name: Deploy Production
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -126,21 +178,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Skip duplicate Vercel CLI production deploy
+        if: env.VERCEL_TOKEN == ''
+        run: |
+          echo "VERCEL_TOKEN is not configured; skipping duplicate Vercel CLI production deploy."
+          echo "The Vercel GitHub App deployment/check handles production deployments for this repo."
+
       - name: Install Vercel CLI
+        if: env.VERCEL_TOKEN != ''
         run: npm install -g vercel
 
       - name: Pull Vercel project settings
+        if: env.VERCEL_TOKEN != ''
         run: vercel pull --environment=production --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Build project artifacts
+        if: env.VERCEL_TOKEN != ''
         run: vercel build --environment=production
 
       - name: Deploy to Vercel (Production)
+        if: env.VERCEL_TOKEN != ''
         run: vercel deploy --prebuilt --environment=production --yes --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
   smoke-test-production:
     name: Smoke Tests (Production)
@@ -150,10 +208,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'

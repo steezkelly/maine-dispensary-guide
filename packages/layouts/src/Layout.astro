@@ -55,7 +55,17 @@ const {
 // Site Metadata & State
 const siteName = isHub ? siteNameProp : `${stateName} Dispensary Guide`;
 const siteUrl = siteUrlProp;
-const fullTitle = title.includes(siteNameProp) ? title : `${title} | ${siteName}`;
+const MAX_SEO_TITLE_LENGTH = 60;
+const MAX_META_DESCRIPTION_LENGTH = 160;
+const truncateMetaDescription = (value: string) => {
+  if (value.length <= MAX_META_DESCRIPTION_LENGTH) return value;
+  const trimmed = value.slice(0, MAX_META_DESCRIPTION_LENGTH - 1).trimEnd();
+  const lastSpace = trimmed.lastIndexOf(' ');
+  return `${trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '')}.`;
+};
+const brandedTitle = title.includes(siteNameProp) ? title : `${title} | ${siteName}`;
+const fullTitle = brandedTitle.length <= MAX_SEO_TITLE_LENGTH ? brandedTitle : title;
+const seoDescription = truncateMetaDescription(description);
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 ---
@@ -67,7 +77,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+    <meta name="description" content={seoDescription} />
     <meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY" />
     <meta name="msvalidate.01" content="F79201CCB2812011C9EB1EA042399CD3" />
     <title>{fullTitle}</title>
@@ -86,14 +96,14 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <link rel="sitemap" href="/sitemap-index.xml" />
     
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={seoDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:image" content={heroImage || `${siteUrl}/og-image.svg`} />
     <meta name="twitter:image" content={heroImage || `${siteUrl}/og-image.svg`} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={seoDescription} />
     
     <!-- HARD-CODED STRUCTURED DATA FOR ACCURACY -->
     <script type="application/ld+json" set:text={JSON.stringify({
@@ -156,7 +166,8 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
             "@type": "ListItem",
             "position": index + 2,
             "name": crumb.label,
-            "item": siteUrl + crumb.href
+            // href may have trailing slash — strip it to match trailingSlash: 'never' canonical URLs
+            "item": siteUrl + crumb.href.replace(/\/$/, '')
           }))
         ]
       })} />
