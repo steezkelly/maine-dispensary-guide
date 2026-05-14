@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Content health QA script for Maine Dispensary Guide
- * Runs 9 bounded checks. Source-level checks avoid a full build;
- * sitemap, OG metadata, and CSS-warning checks require built output/build execution.
+ * Runs bounded source-level and rendered-output checks. Source-level checks
+ * avoid a full build; sitemap, OG metadata, CSS-warning, and rendered-crawl
+ * checks require built output/build execution.
  *
  * Usage: node scripts/content/check-content-health.cjs
  *   (or: npm run check:content-health)
@@ -89,7 +90,6 @@ function checkFakeAnchorsInStores() {
 
   // Check that store card buttons don't have href="#"
   const cardRegex = /<a[^>]+href\s*=\s*["']#["'][^>]*>(Directions|Menu|Visit|View)<\/a>/gi;
-  let m;
   const lines = text.split(/\r?\n/);
   lines.forEach((line, idx) => {
     if (cardRegex.test(line)) {
@@ -225,7 +225,6 @@ function walk(dir, out = []) {
 
 // ─── Check 8: production pages missing complete OG image metadata ───────────
 // Every production HTML page should have og:image, og:image:width, og:image:height
-const OG_TAGS = ['og:image', 'og:image:width', 'og:image:height'];
 const REQUIRED_OG_WIDTH = '1200';
 const REQUIRED_OG_HEIGHT = '630';
 
@@ -298,7 +297,7 @@ function checkCSSBuildWarnings() {
     });
     const lines = out.split('\n');
     const cssWarnings = [];
-    lines.forEach((line, i) => {
+    lines.forEach((line) => {
       const lower = line.toLowerCase();
       // Catch vite/warning/css related warnings
       if (lower.includes('warn') && (lower.includes('css') || lower.includes('style'))) {

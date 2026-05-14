@@ -230,6 +230,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         "image": heroImage ? (typeof heroImage === 'string' && heroImage.startsWith('http') ? heroImage : siteUrl + heroImage) : undefined,
         "author": article.authorId ? {
           "@type": "Person",
+          "@id": siteUrl + "/authors/" + article.authorId,
           "name": article.author,
           "jobTitle": article.authorTitle
         } : {
