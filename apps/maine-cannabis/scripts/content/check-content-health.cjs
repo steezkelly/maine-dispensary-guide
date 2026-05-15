@@ -330,19 +330,20 @@ function checkCSSBuildWarnings() {
 // avoidable 3XX redirects and crawl noise.
 function checkTrailingSlashInternalLinks() {
   const results = [];
-  const hrefRe = /href\s*=\s*["'](\/[^"'#?]+\/)['"]/g;
+  const quotedInternalRouteRe = /["'](\/[^"'?]+\/)(?=[#']|["'])/g;
   const skipPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
   walk(ROOT).forEach(file => {
     const text = fs.readFileSync(file, 'utf8');
     let m;
-    while ((m = hrefRe.exec(text)) !== null) {
+    while ((m = quotedInternalRouteRe.exec(text)) !== null) {
       const href = m[1];
       if (href === '/' || skipPrefixes.some(prefix => href.startsWith(prefix))) continue;
-      if (path.extname(href)) continue;
+      const lastSegment = href.replace(/\/$/, '').split('/').pop() || '';
+      if (path.extname(lastSegment)) continue;
       const rel = path.relative(ROOT, file);
       const lineNum = text.slice(0, m.index).split(/\r?\n/).length;
-      results.push(`${rel}:${lineNum}: trailing-slash internal href → ${href}`);
+      results.push(`${rel}:${lineNum}: trailing-slash internal route string → ${href}`);
     }
   });
 
@@ -441,6 +442,8 @@ function checkRenderedCrawlBasics() {
       const normalized = target.replace(/\/$/, '') || '/';
       if (skipHrefPrefixes.some(prefix => target.startsWith(prefix)) || path.extname(target)) {
         if (!assetExists(target)) results.push(`${rel}: broken rendered asset link → ${target}`);
+      } else if (target !== '/' && target.endsWith('/') && routes.has(normalized)) {
+        results.push(`${rel}: rendered internal link redirects under trailingSlash=never → ${target}`);
       } else if (!routes.has(normalized)) {
         results.push(`${rel}: broken rendered internal link → ${target} from ${route}`);
       }

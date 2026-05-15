@@ -315,7 +315,7 @@ const breadcrumbs = [
     <h2>Meet Our Team</h2>
     <div class="authors-container">
       {authors.map((author) => (
-        <div class="author-card">
+        <div class="author-card" id={author.id}>
           <div class="author-photo">
             {author.photo ? (
               <img src={author.photo} alt={author.name} />
