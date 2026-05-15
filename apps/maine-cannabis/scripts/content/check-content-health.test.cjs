@@ -98,3 +98,27 @@ test('flags rendered slashful internal links that would redirect', () => {
   assert.match(result.stdout, /rendered crawl basics: 1 issue/);
   assert.match(result.stdout, /rendered internal link redirects under trailingSlash=never → \/guides\/existing\//);
 });
+
+test('ignores query strings when checking dead internal route links in source', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/existing?source=home">Existing guide with campaign param</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+
+  const result = runCheck(fixture);
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /All content health checks passed/);
+});
+
+test('ignores query strings for relative internal route links in source', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="./guides/existing?source=home">Existing guide with local route param</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+
+  const result = runCheck(fixture);
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /All content health checks passed/);
+});

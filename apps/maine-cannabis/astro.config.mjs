@@ -144,9 +144,9 @@ export default defineConfig({
               const srcPath = urlToSrcPath(loc, 'https://mainedispensaryguide.com', pagesDir);
               const { lastmod, image } = srcPath ? extractMeta(srcPath) : {};
               // Always include the URL — metadata is optional
-              let entry = `<url><loc>${loc}</loc>`;
-              if (lastmod) entry += `<lastmod>${lastmod}</lastmod>`;
-              if (image) entry += `<image:image><image:loc>${image}</image:loc></image:image>`;
+              let entry = `<url><loc>${escapeXml(loc)}</loc>`;
+              if (lastmod) entry += `<lastmod>${escapeXml(lastmod)}</lastmod>`;
+              if (image) entry += `<image:image><image:loc>${escapeXml(image)}</image:loc></image:image>`;
               entry += '</url>';
               newUrlEntries.push(entry);
             } catch { /* skip invalid URLs */ }

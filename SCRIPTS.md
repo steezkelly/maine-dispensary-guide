@@ -164,7 +164,8 @@ node scripts/search/browser-search.cjs "query"
 ```bash
 node scripts/send-email.cjs --to "recipient@example.com" --subject "Subject" --body "Body text"
 ```
-**Credentials:** Purelymail app password stored in environment/config.
+**Credentials:** Purelymail app password stored in `config/credentials/mainedispensaryguide.env`
+  (legacy fallback: `MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS` / `EMAIL_PIPELINE_CREDENTIALS` env var, then `C:\\Users\\Steve\\Documents\\purelymail-smtp.txt`).
 **Tracking:** `public/data/email-tracking.json`
 
 ### `track-email.cjs`

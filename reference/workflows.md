@@ -209,7 +209,7 @@ public/images/
 | Host | `smtp.purelymail.com` |
 | Port | 465 (SSL) |
 | Auth | App Password (NOT API key) |
-| Credentials | `C:\Users\Steve\Documents\purelymail-smtp.txt` format: `email\|password` |
+| Credentials | `config/credentials/mainedispensaryguide.env` (preferred) <br>`EMAIL|PASSWORD` legacy one-line format accepted for backward compatibility |
 
 **IMPORTANT:** The Purelymail API key (pm-live-xxx) does NOT work as SMTP password. Generate an **App Password** in: Purelymail web UI → Settings → Security → App Passwords → Generate.
 

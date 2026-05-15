@@ -164,7 +164,7 @@ function checkDeadInternalLinks() {
     let m;
     while ((m = internalLinkRe.exec(text)) !== null) {
       const raw = m[1];
-      const pagePath = raw.split('#')[0];
+      const pagePath = raw.split('#')[0].split('?')[0];
       if (skipRe.test(pagePath) || pagePath.includes('\\')) continue;
 
       let target;
@@ -472,6 +472,23 @@ function checkRenderedCrawlBasics() {
   return results;
 }
 
+// ─── Check 12: sitemap XML escaping ────────────────────────────────────────
+// Sitemap parsers require '&' to be escaped as '&amp;' in XML content.
+function checkSitemapXmlEntities() {
+  if (!fs.existsSync(SITEMAP)) {
+    return ['sitemap-0.xml not found — run build first'];
+  }
+
+  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const invalid = [...xml.matchAll(/&(?![a-zA-Z0-9#]+;)/g)];
+  if (invalid.length === 0) return [];
+
+  const positions = invalid.slice(0, 5).map(m => m.index);
+  const sample = positions.length ? ` (sample positions: ${positions.join(', ')})` : '';
+  const more = invalid.length > 5 ? ` (+${invalid.length - 5} more)` : '';
+  return [`sitemap-0.xml contains ${invalid.length} unescaped '&' entity violation${invalid.length > 1 ? 's' : ''}${sample}${more}`];
+}
+
 // ─── Run all checks ───────────────────────────────────────────────────────────
 const CHECKS = [
   { name: 'bare href="#" links', fn: checkHrefHash },
@@ -483,6 +500,7 @@ const CHECKS = [
   { name: 'malformed \\1 hrefs', fn: checkMalformedBackrefHrefs },
   { name: 'trailing-slash internal links', fn: checkTrailingSlashInternalLinks },
   { name: 'OG image dimensions', fn: checkOGImageDimensions },
+  { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
   { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
   { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
 ];

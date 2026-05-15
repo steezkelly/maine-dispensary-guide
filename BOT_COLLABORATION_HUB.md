@@ -1,7 +1,36 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-14 EDT** (`/find-a-dispensary` now covers all 61 local guide pages with slashless internal links and passing rendered crawl guards.)
+**Last updated: 2026-05-15 EDT** (EmailPipeline activated — SMTP credentials set, first test sent.)
+
+---
+
+## 📋 SPRINT 69: EmailPipeline Activation (May 15, 2026 EDT)
+
+### SMTP credentials configured ✅ LIVE
+- **Credentials:** Created `/home/steve/Documents/purelymail-smtp.txt` with Purelymail SMTP app password (generated via API key).
+- **Path fix:** Updated hardcoded Windows paths in `apps/maine-cannabis/scripts/send-email.cjs` to Linux. Created `.env` fallback at `config/credentials/mainedispensaryguide.env`.
+- **Verification:** Test email sent to `steve@mainedispensaryguide.com` — port 465 SSL connected, authentication OK, message delivered.
+- **Safety posture:** Credentials stored in Documents (outside repo). No deploy. No infrastructure changes.
+
+---
+
+## 📋 SPRINT 68: Crash Recovery & Branch Cleanup (May 15, 2026 EDT)
+
+### Session recovery ✅ DONE
+- **Context:** Computer crashed mid-session; resumed from scratch.
+- **Verification:** Full site health check — 152 pages build in 2.95s, 0 type errors, 0 content health failures, 0 malformed hrefs.
+- **Pushed:** Main branch to origin (already up to date).
+
+### Schema fix merged to main ✅ DONE
+- **Branch:** `audit/schema-may14-v2` → merged, pushed, deleted.
+- **Change:** Fixed `@id` path in Article author Person entity from `/about/authors#` to `/authors/` in Layout.astro. Resolved schema.org validator resolution errors.
+- **Verification:** `npm run build` passed (152 pages), `npx astro check` returned 0 errors/0 warnings.
+- **Safety posture:** No deploy, no infrastructure changes, no package install.
+
+### Stale branches cleaned up ✅ DONE
+- **Deleted:** `audit/ahrefs-may14-fixes`, `kanban/t_968fbf8f-directory-coverage`, `seed-shelf-mdg-experiments` — all superseded by merged PRs on main.
+- **Remaining:** Only `main`. `origin` also clean.
 
 ---
 

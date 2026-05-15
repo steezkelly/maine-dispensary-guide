@@ -6,30 +6,93 @@
  *   node scripts/send-email.cjs --to "recipient@example.com" --subject "Subject" --body "Body text"
  *   node scripts/send-email.cjs --to "recipient@example.com" --template "intro" --vars '{"name":"John"}'
  *
- * Credentials: stored in DO_NOT_EXPOSE directory
- *   C:\Users\Steve\Documents\purelymail-smtp.txt (format: email|password)
+ * Credentials: stored in repo-local env file
+ *   config/credentials/mainedispensaryguide.env (format: EMAIL|APP_PASSWORD or env keys)
  */
 
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 
-const CREDENTIALS_PATH = 'C:/Users/Steve/Documents/purelymail-smtp.txt';
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const CREDENTIALS_PATHS = [
+  process.env.MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS,
+  process.env.EMAIL_PIPELINE_CREDENTIALS,
+  process.env.PURELYMAIL_CREDENTIALS_FILE,
+  path.join(PROJECT_ROOT, 'config', 'credentials', 'mainedispensaryguide.env'),
+  '/home/steve/Documents/purelymail-smtp.txt'
+].filter(Boolean);
 const DEFAULT_FROM = 'Steve <steve@mainedispensaryguide.com>';
-const TRACKING_FILE = 'C:/Users/Steve/OpenCode Projects/project-1/public/data/email-tracking.json';
-const SENT_MAIL_DIR = 'C:/Users/Steve/OpenCode Projects/project-1/public/data/sent-mail';
+const TRACKING_FILE = path.join(PROJECT_ROOT, 'public', 'data', 'email-tracking.json');
+const SENT_MAIL_DIR = path.join(PROJECT_ROOT, 'public', 'data', 'sent-mail');
 
 // Load credentials from secure file
 function loadCredentials() {
-  if (!fs.existsSync(CREDENTIALS_PATH)) {
-    throw new Error(`Credentials file not found at ${CREDENTIALS_PATH}\nCreate it with format: email|password`);
+  for (const credentialsPath of CREDENTIALS_PATHS) {
+    if (!fs.existsSync(credentialsPath)) {
+      continue;
+    }
+    const content = fs.readFileSync(credentialsPath, 'utf-8').trim();
+    const parsed = parseCredentialsFile(content, credentialsPath);
+    if (parsed) {
+      return parsed;
+    }
+    throw new Error(`Invalid credentials format in ${credentialsPath}.`);
   }
-  const content = fs.readFileSync(CREDENTIALS_PATH, 'utf-8').trim();
-  const [email, password] = content.split('|');
-  if (!email || !password) {
-    throw new Error('Credentials file must contain email|password on one line');
+
+  const searched = CREDENTIALS_PATHS.map((p) => `  - ${p}`).join('\n');
+  throw new Error(
+    `No valid credentials file found.\n` +
+    `Checked the following locations:\n${searched}\n\n` +
+    `Expected format: EMAIL|APP_PASSWORD (legacy single-line)\n` +
+    `or\n` +
+    `SMTP_EMAIL=steve@mainedispensaryguide.com\nSMTP_PASSWORD=your-app-password`
+  );
+}
+
+function parseCredentialsFile(content, source) {
+  const lines = content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !line.startsWith('#'));
+
+  if (!lines.length) return null;
+
+  const pairs = Object.create(null);
+  for (const line of lines) {
+    const eq = line.indexOf('=');
+    if (eq === -1) continue;
+    const key = line.slice(0, eq).trim();
+    const value = line.slice(eq + 1).trim();
+    if (key && value) pairs[key] = value;
   }
-  return { email, password };
+
+  const email =
+    pairs.EMAIL ||
+    pairs.SMTP_EMAIL ||
+    pairs.SMTP_USER ||
+    pairs.USER ||
+    pairs.MAI_EMAIL;
+  const password =
+    pairs.PASSWORD ||
+    pairs.SMTP_PASSWORD ||
+    pairs.APP_PASSWORD ||
+    pairs.PM_PASSWORD ||
+    pairs.TOKEN;
+  if (email && password) return { email, password, source };
+
+  if (lines.length === 1 && lines[0].includes('|')) {
+    const [emailValue, passwordValue] = lines[0].split('|');
+    if (emailValue && passwordValue) {
+      return {
+        email: emailValue,
+        password: passwordValue,
+        source
+      };
+    }
+  }
+
+  return null;
 }
 
 // Warm-up email templates
@@ -264,8 +327,16 @@ Options:
   --dry-run          Print email without sending
 
 Credentials:
-  Store in C:\\Users\\Steve\\Documents\\purelymail-smtp.txt
-  Format: email|password
+  Set one of:
+    - MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS
+    - EMAIL_PIPELINE_CREDENTIALS
+    - PURELYMAIL_CREDENTIALS_FILE
+  or edit:
+    config/credentials/mainedispensaryguide.env
+  Format (supported):
+    SMTP_EMAIL=steve@mainedispensaryguide.com
+    SMTP_PASSWORD=your-app-password
+    OR legacy: email|password on one line
 `);
     process.exit(0);
   }

@@ -39,6 +39,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Validate sitemap XML encoding
+        run: |
+          npm --workspace @network/maine-cannabis run check:sitemap-xml
+
   deploy-preview:
     name: Deploy Preview
     needs: build
@@ -77,6 +81,11 @@ jobs:
       - name: Build project artifacts
         if: env.VERCEL_TOKEN != ''
         run: vercel build --environment=preview
+
+      - name: Validate sitemap XML encoding (Vercel build output)
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          node ./apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs .vercel/output/static/sitemap-0.xml
 
       - name: Deploy to Vercel (Preview)
         if: env.VERCEL_TOKEN != ''
@@ -206,6 +215,11 @@ jobs:
       - name: Build project artifacts
         if: env.VERCEL_TOKEN != ''
         run: vercel build --environment=production
+
+      - name: Validate sitemap XML encoding (Vercel build output)
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          node ./apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs .vercel/output/static/sitemap-0.xml
 
       - name: Deploy to Vercel (Production)
         if: env.VERCEL_TOKEN != ''
