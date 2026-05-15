@@ -19,7 +19,7 @@ const faqPageJsonLd = JSON.stringify({
   "mainEntity": [
     { "@type": "Question", "name": "Are there any cannabis dispensaries in Kennebunk, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are in Wells (approximately 5 minutes away) and Biddeford (approximately 20 minutes away)." }},
     { "@type": "Question", "name": "Does Kennebunk allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has NOT opted in to recreational cannabis retail. This opt-out decision means no dispensaries can operate within Kennebunk, and residents must travel to neighboring towns for legal cannabis purchases." }},
-    { "@type": "Question", "name": "Where is the nearest dispensary to Kennebunk?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are in Wells, approximately 5 minutes away: Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Biddeford (approximately 20 minutes) has additional options including Stoner & Co and Canuvo." }},
+    { "@type": "Question", "name": "Where is the nearest dispensary to Kennebunk?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest medical dispensary is Hazy Hill Farm in Wells (1614 Post Road, ~5 min). For recreational cannabis, the nearest options are in Biddeford (~20 min): Stoner & Co and Canuvo. Curaleaf in Wells is medical-only, not recreational." }},
     { "@type": "Question", "name": "Why doesn't Kennebunk have dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Kennebunk's selectmen have not opted the town in to recreational cannabis retail. This is a municipal policy decision. Until the town changes its policy, no dispensaries can legally operate in Kennebunk." }}
   ]
 });
@@ -60,7 +60,7 @@ const faqPageJsonLd = JSON.stringify({
         <tr><td><strong>Dispensaries in Town</strong></td><td>0 — NOT opted in</td></tr>
         <tr><td><strong>Opt-In Status</strong></td><td>NOT opted in</td></tr>
         <tr><td><strong>Nearest Medical</strong></td><td>Wells (~5 min) — Hazy Hill Farm (1614 Post Road)</td></tr>
-        <tr><td><strong>Nearest Recreational</strong></td><td>Wells (~5 min) — Curaleaf (Route 1)</td></tr>
+        <tr><td><strong>Nearest Recreational</strong></td><td>Biddeford (~20 min) — Stoner & Co, Canuvo</td></tr>
         <tr><td><strong>Population</strong></td><td>~12,000</td></tr>
         <tr><td><strong>County</strong></td><td>York County</td></tr>
       </tbody>
@@ -80,9 +80,10 @@ const faqPageJsonLd = JSON.stringify({
     <p><strong>Hazy Hill Farm (Medical)</strong><br>
     Address: 1614 Post Road, Wells, ME 04090</p>
     <p>Hazy Hill Farm is the nearest medical dispensary to Kennebunk, operating a farm-to-shelf model from their Post Road location. They cultivate their own cannabis and serve medical patients from the greater Kennebunk/Wells area.</p>
-    <p><strong>Curaleaf (Recreational)</strong><br>
-    Location: Route 1, Wells, ME</p>
-    <p>Curaleaf is a multi-state cannabis operator offering adult-use recreational cannabis from their Wells Route 1 location. Being on Route 1, they benefit from significant tourist traffic heading to/from Kennebunk beaches and Ogunquit.</p>
+    <p><strong>Curaleaf (Medical — MMMP)</strong><br>
+    Address: 913 Post Road, Wells, ME 04090<br>
+    Phone: (207) 360-3310</p>
+    <p>Curaleaf is a multi-state cannabis operator serving MMMP medical patients from their Post Road location. It is NOT an adult-use recreational dispensary. The nearest recreational options are in Biddeford (~20 min) and Lebanon (~25 min).</p>
 
     <h3>Biddeford Dispensaries (~20 minutes)</h3>
     <p><strong>Stoner & Co</strong> and <strong>Canuvo</strong> operate in Biddeford, approximately 20 minutes from Kennebunk. Biddeford's closer proximity to I-95 makes it convenient for those traveling from further away.</p>
@@ -122,7 +123,7 @@ const faqPageJsonLd = JSON.stringify({
       questions={[
         { q: "Are there any cannabis dispensaries in Kennebunk, Maine?", a: "No. Kennebunk has NOT opted in to cannabis retail. No dispensaries operate in Kennebunk. The nearest options are in Wells (~5 min away)." },
         { q: "Does Kennebunk allow cannabis dispensaries?", a: "No. Kennebunk has NOT opted in to recreational cannabis. Residents must travel to neighboring towns for legal cannabis purchases." },
-        { q: "Where is the nearest dispensary to Kennebunk?", a: "The nearest dispensaries are in Wells (~5 min): Hazy Hill Farm (medical, 1614 Post Road) and Curaleaf (recreational, Route 1). Biddeford options are ~20 min away." },
+        { q: "Where is the nearest dispensary to Kennebunk?", a: "Nearest medical: Hazy Hill Farm in Wells (1614 Post Road, ~5 min). For recreational: Biddeford (~20 min) — Stoner & Co and Canuvo. Curaleaf in Wells is medical-only (MMMP), not recreational." },
         { q: "Why doesn't Kennebunk have dispensaries?", a: "Kennebunk's selectmen have not opted the town in to recreational cannabis retail. This municipal policy decision keeps dispensaries out of Kennebunk until the town changes its position." }
       ]}
     />
