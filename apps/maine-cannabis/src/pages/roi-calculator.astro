@@ -46,10 +46,10 @@ import Callout from '../components/Callout.astro';
     border-radius: 0 1rem 1rem 0;
     margin: 2rem 0;
   }
-  .callout-box.warning { background: rgba(180, 100, 60, 0.08); border-left-color: #b4643c; }
+  .callout-box.warning { background: rgba(180, 100, 60, 0.08); border-left-color: var(--color-warning); }
   .callout-box.accent { background: rgba(163, 177, 138, 0.15); border-left-color: var(--color-accent); }
   .callout-icon { font-size: 1.25rem; color: var(--color-primary); flex-shrink: 0; }
-  .callout-box.warning .callout-icon { color: #b4643c; }
+  .callout-box.warning .callout-icon { color: var(--color-warning); }
   .callout-box.accent .callout-icon { color: var(--color-accent); }
   .callout-content { font-size: 0.95rem; line-height: 1.6; }
   .callout-content strong { display: block; margin-bottom: 0.5rem; font-size: 1rem; }
@@ -144,7 +144,7 @@ import Callout from '../components/Callout.astro';
   .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 
   .gauge-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 1rem; }
-  .gauge-bar { height: 100%; width: 50%; background: #588157; border-radius: 3px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .gauge-bar { height: 100%; width: 50%; background: var(--color-accent); border-radius: 3px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .gauge-markers { display: flex; justify-content: space-between; font-size: 0.6rem; text-transform: uppercase; font-weight: 800; opacity: 0.7; }
 
   .optimization-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-accent); }
@@ -560,17 +560,17 @@ import Callout from '../components/Callout.astro';
 
       if (netMonthlyProfit <= 0) {
         if (breakevenEl) breakevenEl.innerText = "Check Advice Below";
-        if (profitCard) profitCard.style.background = "#8B0000";
+        if (profitCard) profitCard.style.background = "var(--color-error)";
         if (gaugeBar) {
           gaugeBar.style.width = "15%";
-          gaugeBar.style.background = "#ff6b6b";
+          gaugeBar.style.background = "var(--color-error-light)";
         }
         if (adviceText) adviceText.innerHTML = "Net loss at these numbers. To fix it: <strong>raise your average sale by $10-15</strong>, or <strong>find cheaper rent</strong> to lower OPEX. Or both.";
       } else {
         if (profitCard) profitCard.style.background = "var(--color-primary)";
         if (gaugeBar) {
           gaugeBar.style.width = Math.min(100, 50 + (netMonthlyProfit / 1000)) + "%";
-          gaugeBar.style.background = "#588157";
+          gaugeBar.style.background = "var(--color-accent)";
         }
         if (breakevenEl) breakevenEl.innerText = monthsToBreakeven > 60 ? "5+ Years" : monthsToBreakeven + " Months";
         if (adviceText) adviceText.innerHTML = "Numbers look workable. To accelerate payback: focus on <strong>repeat customers</strong> and <strong>increasing average spend per visit</strong>.";

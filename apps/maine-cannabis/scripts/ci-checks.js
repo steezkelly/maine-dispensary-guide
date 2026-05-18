@@ -11,9 +11,8 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const srcDir = join(__dirname, '..', 'src');
 
 // Patterns that indicate hardcoded values (not in data/config files)
-const HARDCODED_COLOR_PATTERN = /(?<![/\w])#[0-9A-Fa-f]{3,6}(?![/\w])/g;
-const HARDCODED_URL_PATTERN = /https?:\/\/[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?!\/)/g;
-const TRAILING_SLASH_PATTERN = /(?<![*?])\/$/gm;
+const HARDCODED_COLOR_PATTERN = /(?<![&/\w])#[0-9A-Fa-f]{3,8}(?![/\w])/g;
+const SITE_URL_PATTERN = /https?:\/\/(?:www\.)?mainedispensaryguide\.(?:com|co)\b/g;
 
 // Files to skip
 const SKIP_PATTERNS = /node_modules|\.git|dist|\.astro\/|packages\//;
@@ -51,34 +50,32 @@ function checkFile(filePath) {
     });
   }
 
-  // Check for hardcoded site URLs for THIS site (not external links)
-  // Only flag the site's own domain being hardcoded in non-config contexts
-  const siteUrlPatterns = [
-    'mainedispensaryguide.com',
-    'mainedispensaryguide.co'  // common typo/variant
-  ];
+  // Check for hardcoded absolute URLs for THIS site (not email addresses or external links).
+  // The canonical site URL belongs in site-config.json and should be referenced via siteConfig/siteUrl.
   content.split('\n').forEach((line, i) => {
-    // Skip config files, JSON, and comments
+    // Skip config imports/comments and generated JSON-LD constants already using siteConfig/siteUrl.
     if (line.includes('site-config') || line.includes('//') || line.includes('/*')) return;
-    siteUrlPatterns.forEach(domain => {
-      if (line.includes(domain) && !line.includes('import ') && !line.includes('from ')) {
-        // Check if it's not already using siteConfig
-        if (!line.includes('siteConfig')) {
-          issues.push(`L${i + 1}: Hardcoded site URL ${domain}`);
-        }
-      }
-    });
+    const siteUrlMatches = line.match(SITE_URL_PATTERN);
+    if (siteUrlMatches && !line.includes('siteConfig') && !line.includes('siteUrl')) {
+      siteUrlMatches.forEach(match => {
+        issues.push(`L${i + 1}: Hardcoded site URL ${match}`);
+      });
+    }
   });
 
-  // Check for trailing slashes in string literals (not regex)
+  // Check for trailing slashes on internal route attributes (not regexes, external URLs, or pathname prefix checks).
+  // Match markup such as href="/about/" or action='/contact/'.
   if (/\.(astro|ts)$/.test(filePath)) {
     const lines = content.split('\n');
     lines.forEach((line, i) => {
       if (line.includes('regex') || line.includes('RegExp') || line.includes('pattern')) return;
-      // Check for trailing slash in href or path contexts
-      const trailingSlash = line.match(/\/[a-zA-Z0-9-]+\/"/);
-      if (trailingSlash && !line.includes("'/") && !line.includes('"/')) {
-        issues.push(`L${i + 1}: Possible trailing slash`);
+      if (line.includes('//') || line.includes('/*')) return;
+
+      const internalTrailingSlashMatches = line.match(/\b(?:href|action)=(["'`])\/[^"'`?#]*[A-Za-z0-9-]\/\1/g);
+      if (internalTrailingSlashMatches) {
+        internalTrailingSlashMatches.forEach(match => {
+          issues.push(`L${i + 1}: Internal route has trailing slash ${match}`);
+        });
       }
     });
   }

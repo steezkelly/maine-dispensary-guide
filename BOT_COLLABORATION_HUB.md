@@ -25,6 +25,16 @@
 - **Known blocker:** `corepack npm run ci-check` still fails on pre-existing invariant debt (hardcoded colors/site URLs and trailing-slash-pattern findings). Latest local commit is ahead of `origin/main`, so GitHub Actions has not run for the local release-readiness commits.
 - **Safety posture:** No push, no deploy, no infra/Vercel changes. Local smoke server was stopped.
 
+### CI invariant cleanup + release gate validation ✅ REVIEW PENDING
+- **Why:** Clear the release-readiness blocker from `ci-check` without changing deployment or infrastructure.
+- **Root cause:** The trailing-slash invariant was flagging any quoted/punctuated slash-ending path fragment, including external Maine/OCP/IRS/Metrc URLs and internal `Astro.url.pathname.startsWith('/guides/')` prefix checks. Those are not slashful internal links and should not block CI.
+- **Change:** Tightened `scripts/ci-checks.js` so site URL checks only flag absolute `mainedispensaryguide.com/.co` URLs outside config/siteUrl contexts, color checks ignore entity fragments such as `&#...`, and trailing-slash checks focus on internal `href=`/`action=` attributes. Added semantic status tokens in `Layout.astro` and replaced remaining hardcoded color literals in page styles with design tokens / `color-mix()` where appropriate.
+- **Validation:** `corepack npm audit --json` reports **0 vulnerabilities** across 575 dependencies; `corepack npm outdated --json` returns `{}`; `corepack npm run ci-check` now passes.
+- **Validation:** `corepack npm run typecheck`, href checks/tests, directory coverage test, content-health checks/tests, sitemap XML check, production build, and `git diff --check` all passed. Build generated 152 pages.
+- **Smoke:** Served built `dist/` locally on `127.0.0.1:4174` and confirmed HTTP 200 for `/`, `/start-here/`, `/guides/portland-dispensary-guide/`, `/find-a-dispensary/`, `/directory/`, `/contact/`, `/resources/`, and `/sitemap-index.xml`; server stopped afterward.
+- **Remaining release gate:** GitHub Actions is green for latest remote `origin/main` (`1dc291d`) but has not run for the local ahead commits because no push/deploy was performed.
+- **Safety posture:** No push, no deploy, no infra/Vercel changes.
+
 ## 📋 SPRINT 70: SEO/GEO LLM Discovery Corpus Refresh (May 18, 2026 EDT)
 
 ### `llms.txt` / `llms-full.txt` regenerated ✅ REVIEW PENDING

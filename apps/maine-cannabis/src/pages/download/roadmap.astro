@@ -20,7 +20,7 @@ import Callout from '../../components/Callout.astro';
 
     body {
       background: white !important;
-      color: #1a1a1a !important;
+      color: var(--color-text) !important;
       font-size: 11pt;
       line-height: 1.6;
     }
@@ -36,7 +36,7 @@ import Callout from '../../components/Callout.astro';
     }
 
     .doc-header {
-      border-bottom: 2px solid #061A1B;
+      border-bottom: 2px solid var(--color-primary-dark);
       padding-bottom: 1.5rem;
       margin-bottom: 2rem;
     }
@@ -47,7 +47,7 @@ import Callout from '../../components/Callout.astro';
 
     .doc-brand {
       font-size: 10pt;
-      color: #7A9A6A;
+      color: var(--color-soft-green);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -56,20 +56,20 @@ import Callout from '../../components/Callout.astro';
     .doc-title {
       font-family: Georgia, serif;
       font-size: 22pt;
-      color: #061A1B;
+      color: var(--color-primary-dark);
       margin: 0.5rem 0;
       line-height: 1.2;
     }
 
     .doc-subtitle {
       font-size: 12pt;
-      color: #444;
+      color: var(--color-text-light);
       margin: 0.5rem 0;
     }
 
     .doc-meta {
       font-size: 9pt;
-      color: #888;
+      color: var(--color-text-light);
     }
 
     .doc-section {
@@ -80,8 +80,8 @@ import Callout from '../../components/Callout.astro';
     .doc-section h2 {
       font-family: Georgia, serif;
       font-size: 14pt;
-      color: #061A1B;
-      border-bottom: 1px solid #ddd;
+      color: var(--color-primary-dark);
+      border-bottom: 1px solid var(--color-border);
       padding-bottom: 0.25rem;
       margin-top: 1.5rem;
     }
@@ -89,7 +89,7 @@ import Callout from '../../components/Callout.astro';
     .doc-section h3 {
       font-family: Georgia, serif;
       font-size: 12pt;
-      color: #061A1B;
+      color: var(--color-primary-dark);
       margin-top: 1rem;
     }
 
@@ -106,28 +106,28 @@ import Callout from '../../components/Callout.astro';
     }
 
     .doc-section a {
-      color: #7A9A6A;
+      color: var(--color-soft-green);
       text-decoration: underline;
     }
 
     .closing {
       margin-top: 2rem;
       padding-top: 1rem;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid var(--color-border);
     }
 
     .signature {
       font-style: italic;
       font-size: 12pt;
-      color: #061A1B;
+      color: var(--color-primary-dark);
     }
 
     .doc-footer {
       margin-top: 2rem;
       padding-top: 1rem;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid var(--color-border);
       font-size: 8pt;
-      color: #888;
+      color: var(--color-text-light);
       text-align: center;
     }
   }

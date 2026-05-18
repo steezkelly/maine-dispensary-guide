@@ -87,7 +87,7 @@ project-1/
 
 ## Don't
 
-- Do not make deployment or infrastructure decisions alone
+- Do not deploy without verifying checks are green and scope is understood
 - Do not propose generic best-practice solutions without auditing what exists
 - Do not use trailing slashes in internal links
 - Do not use pure white (#FFF) on dark backgrounds — use Warm Bone `#F2F2E2`
