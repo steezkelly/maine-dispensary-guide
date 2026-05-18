@@ -12,7 +12,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || path.resolve(__dirname, '../../src/pages'));
+const DEFAULT_ROOT = path.resolve(__dirname, '../../src/pages');
+const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
 const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '../../dist/sitemap-0.xml'));
 const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '../../dist'));
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '../../public'));
@@ -172,7 +173,7 @@ function checkDeadInternalLinks() {
         target = pagePath.replace(/\/$/, '');
       } else {
         target = '/' + path.relative(
-          path.resolve(ROOT, '..'),
+          ROOT,
           path.resolve(fileDir, pagePath)
         ).replace(/\\/g, '/').replace(/\/$/, '');
       }
@@ -288,12 +289,15 @@ function checkOGImageDimensions() {
 // ─── Check 9: CSS build warnings ─────────────────────────────────────────────
 // Runs `astro build` and scans stdout/stderr for CSS warnings
 function checkCSSBuildWarnings() {
+  if (process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1' || ROOT !== DEFAULT_ROOT) return [];
+
   const { execSync } = require('node:child_process');
   try {
     const out = execSync('npm run build 2>&1', {
       cwd: path.resolve(__dirname, '../..'),
       encoding: 'utf8',
       timeout: 180000,
+      maxBuffer: 20 * 1024 * 1024,
     });
     const lines = out.split('\n');
     const cssWarnings = [];
@@ -493,15 +497,17 @@ function checkSitemapXmlEntities() {
 const CHECKS = [
   { name: 'bare href="#" links', fn: checkHrefHash },
   { name: 'malformed frontmatter', fn: checkFrontmatter },
-  { name: 'noindex pages in sitemap', fn: checkNoindexInSitemap },
   { name: 'fake anchor buttons', fn: checkFakeAnchorsInStores },
   { name: 'typo literals', fn: checkTypoLiterals },
   { name: 'dead internal links', fn: checkDeadInternalLinks },
   { name: 'malformed \\1 hrefs', fn: checkMalformedBackrefHrefs },
   { name: 'trailing-slash internal links', fn: checkTrailingSlashInternalLinks },
+  // Build before rendered-output checks so a clean checkout can run this script
+  // end-to-end without a pre-existing dist/sitemap from a previous session.
+  { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
+  { name: 'noindex pages in sitemap', fn: checkNoindexInSitemap },
   { name: 'OG image dimensions', fn: checkOGImageDimensions },
   { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
-  { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
   { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
 ];
 

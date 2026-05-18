@@ -36,6 +36,7 @@ function runCheck({ pages, sitemap, dist, publicDir }) {
       CONTENT_HEALTH_SITEMAP: sitemap,
       CONTENT_HEALTH_DIST: dist,
       CONTENT_HEALTH_PUBLIC: publicDir,
+      CONTENT_HEALTH_SKIP_CSS_BUILD: '1',
     },
     encoding: 'utf8',
   });
