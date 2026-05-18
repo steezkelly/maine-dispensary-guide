@@ -1,7 +1,20 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-15 EDT** (EmailPipeline activated — SMTP credentials set, first test sent.)
+**Last updated: 2026-05-18 EDT** (LLM discovery corpus regenerated — 145 indexable public pages.)
+
+---
+
+## 📋 SPRINT 70: SEO/GEO LLM Discovery Corpus Refresh (May 18, 2026 EDT)
+
+### `llms.txt` / `llms-full.txt` regenerated ✅ REVIEW PENDING
+- **Why:** Organic/GEO work needs answer engines to see the current public corpus. The previously reviewed discovery files had drifted: root `public/llms.txt` was back to a short generic note, `llms-full.txt` still had trailing-slash URLs and the old `mendedispensaryguide.com` typo, and new local/guide pages were not represented.
+- **Change:** Regenerated `apps/maine-cannabis/public/llms.txt` as a concise answer-engine discovery index with site identity, high-confidence snippets, citation guidance, slashless canonical policy, and a 145-page public content map.
+- **Change:** Regenerated `apps/maine-cannabis/public/llms-full.txt` as a route/title/source/description corpus index for all 145 public indexable Astro routes.
+- **Change:** Mirrored the concise index to tracked root `public/llms.txt` so repo-level crawler discovery matches the deployed app copy.
+- **Exclusions:** Noindex admin, experiments, search, 404, and gated download fulfillment routes remain omitted.
+- **Validation:** Confirmed 145 public indexable routes, root/app concise files match exactly, no `mendedispensaryguide.com`, no admin/experiments route/source entries, no slashful canonical URLs, and `git diff --check` passed for the touched files.
+- **Safety posture:** Static public text + collaboration-hub note only. No deploy, package install, full build, external send, or infrastructure change.
 
 ---
 
