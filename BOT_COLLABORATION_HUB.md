@@ -16,6 +16,15 @@
 - **Known follow-up:** `npm run ci-check` now executes instead of failing on missing task/file, but it surfaces existing invariant debt in content/style rules (hardcoded colors/site URLs and prose slash examples). No content/style cleanup was attempted in this dependency pass.
 - **Safety posture:** Package/tooling manifest/lockfile alignment only. No deploy, no push, no infra changes.
 
+### release readiness re-check + Puppeteer patch refresh ✅ REVIEW PENDING
+- **Why:** Re-run the release/deploy readiness gate after the dependency tooling pass and bring the remaining patch-level npm update current.
+- **Change:** Refreshed `package-lock.json` from `puppeteer@25.0.3` / `puppeteer-core@25.0.3` to `25.0.4`; no manifest range change was needed.
+- **Validation:** `corepack npm audit --json` reports **0 vulnerabilities** across 575 dependencies; `corepack npm outdated --json` returns `{}`.
+- **Validation:** `corepack npm run typecheck` completed with **0 errors** and 145 hints; href, directory coverage, content-health, sitemap XML, and production build checks passed; build generated 152 pages.
+- **Smoke:** Served built `dist/` locally on `127.0.0.1:4174` and confirmed HTTP 200 for `/`, `/start-here/`, `/guides/portland-dispensary-guide/`, `/find-a-dispensary/`, `/directory/`, `/contact/`, `/resources/`, and `/sitemap-index.xml`.
+- **Known blocker:** `corepack npm run ci-check` still fails on pre-existing invariant debt (hardcoded colors/site URLs and trailing-slash-pattern findings). Latest local commit is ahead of `origin/main`, so GitHub Actions has not run for the local release-readiness commits.
+- **Safety posture:** No push, no deploy, no infra/Vercel changes. Local smoke server was stopped.
+
 ## 📋 SPRINT 70: SEO/GEO LLM Discovery Corpus Refresh (May 18, 2026 EDT)
 
 ### `llms.txt` / `llms-full.txt` regenerated ✅ REVIEW PENDING
