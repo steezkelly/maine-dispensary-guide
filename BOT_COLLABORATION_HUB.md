@@ -1,11 +1,18 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-18 EDT** (LLM discovery corpus regenerated — 145 indexable public pages.)
+**Last updated: 2026-05-18 EDT** (Release dependency/tooling gate validated for push — 0 audit vulns, 0 outdated entries.)
 
 ---
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
+
+### final patch dependency refresh before push ✅ REVIEW PENDING
+- **Why:** A final pre-push release gate found two new compatible patch updates after the prior validation: `astro@6.3.5` and `@types/node@25.9.0`.
+- **Change:** Refreshed `package-lock.json` only; manifest ranges already allowed the patch updates.
+- **Validation:** `corepack npm audit --json` reports **0 vulnerabilities** across 575 dependencies; `corepack npm outdated --json` returns `{}`.
+- **Validation:** `corepack npm run typecheck`, href checks/tests, directory coverage test, content-health checks/tests, sitemap XML check, `corepack npm run ci-check`, production build, and `git diff --check` all passed. Build generated 152 pages.
+- **Safety posture:** Patch-level dependency lockfile refresh and validation only. Push/deploy verification is handled as the next release gate step.
 
 ### npm dependency refresh + local validation ✅ REVIEW PENDING
 - **Why:** Finish the update pass so package manifests, lockfile, audit state, and workspace checks are aligned before the next deploy/review step.
