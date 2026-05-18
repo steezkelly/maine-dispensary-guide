@@ -22,6 +22,10 @@
     "health-check": {
       "dependsOn": [],
       "cache": false
+    },
+    "ci-check": {
+      "dependsOn": ["^build"],
+      "outputs": []
     }
   },
   "remoteCache": {

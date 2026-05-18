@@ -16,7 +16,7 @@
     "check:build-warnings": "node ./scripts/build/check-build-warnings.cjs",
     "check:content-health": "node ./scripts/content/check-content-health.cjs",
     "check:content-health:test": "node ./scripts/content/check-content-health.test.cjs",
-    "ci-check": "node ./scripts/ci-checks.cjs"
+    "ci-check": "node ./scripts/ci-checks.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",
@@ -35,8 +35,8 @@
     "nodemailer": "^8.0.5"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^25.8.0",
     "playwright": "^1.59.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

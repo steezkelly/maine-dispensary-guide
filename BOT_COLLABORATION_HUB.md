@@ -5,6 +5,17 @@
 
 ---
 
+## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
+
+### npm dependency refresh + local validation ✅ REVIEW PENDING
+- **Why:** Finish the update pass so package manifests, lockfile, audit state, and workspace checks are aligned before the next deploy/review step.
+- **Change:** Refreshed package manifests/lockfile to current npm-resolved versions, including `puppeteer@25.0.3`, app `@types/node@25.8.0`, app `typescript@6.0.3`, `astro@6.3.3`, `@astrojs/mdx@5.0.6`, and `turbo@2.9.14` in the lockfile.
+- **Change:** Repaired the app `ci-check` script path from missing `ci-checks.cjs` to existing `ci-checks.js` and registered a root Turbo `ci-check` task so the script is callable from the workspace root.
+- **Validation:** `npm audit --json` reports **0 vulnerabilities**; `npm outdated --json` returns `{}`.
+- **Validation:** `npm run typecheck` completed successfully with **0 errors**, **0 warnings**, **145 hints**; `npm run check:hrefs` passed; `npm run check:content-health` passed.
+- **Known follow-up:** `npm run ci-check` now executes instead of failing on missing task/file, but it surfaces existing invariant debt in content/style rules (hardcoded colors/site URLs and prose slash examples). No content/style cleanup was attempted in this dependency pass.
+- **Safety posture:** Package/tooling manifest/lockfile alignment only. No deploy, no push, no infra changes.
+
 ## 📋 SPRINT 70: SEO/GEO LLM Discovery Corpus Refresh (May 18, 2026 EDT)
 
 ### `llms.txt` / `llms-full.txt` regenerated ✅ REVIEW PENDING
