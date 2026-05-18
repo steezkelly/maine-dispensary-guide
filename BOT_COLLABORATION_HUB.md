@@ -36,7 +36,7 @@
 
 ## 📋 SPRINT 67: Directory Coverage Follow-up (May 14, 2026 EDT)
 
-### `/find-a-dispensary` expanded to all 61 local guide pages ✅ DONE — REVIEW PENDING
+### `/find-a-dispensary` expanded to all 61 local guide pages ✅ DONE
 - **Branch:** `fix/external-404-links`
 - **Why:** The active branch had 61 local `*-dispensary-guide.astro` pages, but `/find-a-dispensary` still exposed only 50 guide cards and the coverage test hardcoded the old count.
 - **Change:** Added the missing 11 guide cards for Alfred, Arundel, Kennebunkport, Hollis, Lyman, Waterboro, Harrison, Denmark, Lovell, Norway, and Waterford.
@@ -49,7 +49,7 @@
 
 ## 📋 SPRINT 66: Rendered Crawl Regression Guard Pass (May 14, 2026 EDT)
 
-### Ahrefs-class crawl checks codified in content health ✅ REVIEW PENDING
+### Ahrefs-class crawl checks codified in content health ✅ DONE
 - **Branch:** `audit/ahrefs-may14-fixes`
 - **Why:** The previous Ahrefs remediation fixed reported issues locally; this pass makes the high-risk issue classes fail automatically before future deploys.
 - **Change:** Extended `apps/maine-cannabis/scripts/content/check-content-health.cjs` with a source-level trailing-slash internal link check for `trailingSlash: 'never'` sites.
@@ -62,7 +62,7 @@
 
 ## 📋 SPRINT 65: Ahrefs Audit Remediation Pass (May 14, 2026 EDT)
 
-### Broken media, broken internal links, meta length, and JSON-LD fixes ✅ REVIEW PENDING
+### Broken media, broken internal links, meta length, and JSON-LD fixes ✅ DONE
 - **Branch:** `audit/ahrefs-may14-fixes`
 - **Why:** Ahrefs crawl reported broken images, broken internal links/4XXs, overlong titles/descriptions, links to redirects, noindex/sitemap concerns, and schema.org validation notices.
 - **Change:** Added missing public hero image assets for every `heroImage` route reference so rendered pages no longer point at absent `/images/heroes/*.jpg` files.
@@ -78,7 +78,7 @@
 
 ## 📋 SPRINT 64: GitHub Actions Node 24 Runtime Follow-up (May 14, 2026 EDT)
 
-### CI action runtime majors updated ✅ REVIEW PENDING
+### CI action runtime majors updated ✅ DONE
 - **Branch:** `ci/node24-actions-v6`
 - **Why:** GitHub warned that `actions/checkout@v4` and `actions/setup-node@v4` are Node 20 actions even though the workflow itself already sets `NODE_VERSION: '24'`.
 - **Change:** Updated all five CI jobs in `.github/workflows/ci.yml` from `actions/checkout@v4` to `actions/checkout@v6` and from `actions/setup-node@v4` to `actions/setup-node@v6`.
@@ -89,7 +89,7 @@
 
 ## 📋 SPRINT 63: Directory Coverage Implementation Pass (May 14, 2026 EDT)
 
-### `/find-a-dispensary` coverage and map-link repair ✅ REVIEW PENDING
+### `/find-a-dispensary` coverage and map-link repair ✅ DONE
 - **Branch:** `kanban/t_968fbf8f-directory-coverage`
 - **Why:** The task required the revenue-facing directory to expand from partial city/store coverage to all 50 local guide pages, remove dead CTAs, add map links, fix a typo, and preserve the fake-anchor regression check.
 - **Change:** Rebuilt `apps/maine-cannabis/src/pages/find-a-dispensary.astro` as a four-region guide directory with 50 unique internal guide links and 50 Google Maps search links, replacing the stale store-card CTA model.
@@ -102,7 +102,7 @@
 
 ## 📋 SPRINT 62: Production Placeholder Href Regression Guard (May 14, 2026 EDT)
 
-### `href="#"` production page check ✅ REVIEW PENDING
+### `href="#"` production page check ✅ DONE
 - **Branch:** `seed-shelf-mdg-experiments`
 - **Why:** Production pages should not ship dead placeholder anchors; admin/noindex utility pages can still use `href="#"` for dashboard-style local controls.
 - **Change:** Extended `apps/maine-cannabis/scripts/content/check-malformed-hrefs.cjs` to flag `href="#"` / `href='#'` on production Astro pages while excluding non-production `admin` and `experiments` routes.
@@ -115,7 +115,7 @@
 
 ## 📋 SPRINT 61: Find-a-Dispensary Directory Coverage Repair (May 14, 2026 EDT)
 
-### `/find-a-dispensary` now indexes all local guide pages ✅ REVIEW PENDING
+### `/find-a-dispensary` now indexes all local guide pages ✅ DONE
 - **Branch:** `seed-shelf-mdg-experiments`
 - **Why:** The directory page only exposed 8 city sections and still rendered dead `href="#"` Directions/Menu placeholders even though the site now has 50 city, town, and regional dispensary guide pages.
 - **Change:** Reworked `apps/maine-cannabis/src/pages/find-a-dispensary.astro` into a regional guide directory with 50 unique internal links, grouped across Greater Portland/Sebago, Southern Maine/York County, Central/Western Maine, and Midcoast/Waldo/Northern Maine.
@@ -127,7 +127,7 @@
 
 ## 📋 SPRINT 60: Conversion Path Link Repair (May 14, 2026 EDT)
 
-### Malformed href cleanup ✅ DONE — REVIEW PENDING
+### Malformed href cleanup ✅ DONE
 - **Branch:** `seed-shelf-mdg-experiments`
 - **Why:** A prior regex/linking pass left `href="\\1")` anchors across homepage, contact, directory, start-here, guide, founder, and blog pages. Those broke high-intent user journeys such as vendor listing CTAs, ROI/checklist navigation, OCP map CTAs, and internal guide handoffs.
 - **Change:** Replaced malformed `\\1` anchors with verified existing internal routes across 49 Astro pages, prioritizing revenue/user-facing paths (`/`, `/contact`, `/directory`, `/find-a-dispensary`, `/start-here`, `/guides/maine-ocp-license-map`) and related guide/blog links.
@@ -139,7 +139,7 @@
 
 ## 📋 SPRINT 59: SEO/GEO Discovery Refresh (May 13, 2026 EDT)
 
-### LLM discovery files expanded ✅ REVIEW PENDING
+### LLM discovery files expanded ✅ DONE
 - **Branch:** `seed-shelf-mdg-experiments`
 - **Files:** `apps/maine-cannabis/public/llms.txt`, `apps/maine-cannabis/public/llms-full.txt`, mirrored to tracked root `public/llms.txt`.
 - **Why:** Organic/GEO traffic work needs AI crawlers and answer engines to see the full public corpus, not the stale 99-URL list that missed the latest town guides.
@@ -327,9 +327,9 @@ All 13 pages now 1,500+ words:
 - All Sprint 53 keyboard requirements verified working
 
 ### Remaining Sprint 55 Work
-- EmailPipeline Phase 2: set real IMAP/SMTP credentials in `config/credentials/mainedispensaryguide.env`
 - Citation outreach: SBDC (Christine Cole back Apr 29), Maine Chamber, Mainebiz ✅ (researched 20 contacts)
-- GSC: User needs to log in and check 42 non-indexed pages
+- EmailPipeline Phase 2: **COMPLETE** — credentials configured and SMTP auth verified; campaign send execution is delegated.
+- GSC: **USER ACTION** — log in to Google Search Console and review current indexing status for the 42 non-indexed pages.
 
 ### Commits Pushed (Apr 24)
 - `8a84d9a` — Sprint 55: PDF Magnet landing page, content humanization, page expansion, email UX
@@ -3871,4 +3871,3 @@ Changed the IIFE wrapper to `document.addEventListener('DOMContentLoaded', ...)`
 
 ### Files Changed
 - `apps/maine-cannabis/src/layouts/Layout.astro`
-
