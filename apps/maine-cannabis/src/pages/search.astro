@@ -168,13 +168,27 @@ const searchIndex = [
         return;
       }
 
-      results.innerHTML = items.map(item => `
-        <a class="result-card" href="${item.href}">
-          <span class="result-category">${item.category}</span>
-          <h2 class="result-title">${item.title}</h2>
-          <p class="result-excerpt">${item.excerpt}</p>
-        </a>
-      `).join('');
+      results.textContent = '';
+      items.forEach(item => {
+        const resultLink = document.createElement('a');
+        resultLink.className = 'result-card';
+        resultLink.href = item.href;
+
+        const category = document.createElement('span');
+        category.className = 'result-category';
+        category.textContent = item.category;
+
+        const title = document.createElement('h2');
+        title.className = 'result-title';
+        title.textContent = item.title;
+
+        const excerpt = document.createElement('p');
+        excerpt.className = 'result-excerpt';
+        excerpt.textContent = item.excerpt;
+
+        resultLink.append(category, title, excerpt);
+        results.appendChild(resultLink);
+      });
     }
 
     function search(query) {

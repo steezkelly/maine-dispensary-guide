@@ -60,12 +60,22 @@ const searchIndex = [
       ).slice(0, 5);
 
       if (filtered.length > 0) {
-        resultsContainer.innerHTML = filtered.map(item => `
-          <a href="${item.href}" class="search-result-item">
-            <span>${item.title}</span>
-            <span class="result-arrow">&rarr;</span>
-          </a>
-        `).join('');
+        resultsContainer.textContent = '';
+        filtered.forEach(item => {
+          const resultLink = document.createElement('a');
+          resultLink.href = item.href;
+          resultLink.className = 'search-result-item';
+
+          const title = document.createElement('span');
+          title.textContent = item.title;
+
+          const arrow = document.createElement('span');
+          arrow.className = 'result-arrow';
+          arrow.innerHTML = '&rarr;';
+
+          resultLink.append(title, arrow);
+          resultsContainer.appendChild(resultLink);
+        });
         resultsContainer.classList.add('active');
       } else {
         resultsContainer.innerHTML = '<div class="search-no-results">No guides found.</div>';
