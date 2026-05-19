@@ -7,6 +7,13 @@
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
 
+### Ahrefs May 19 rerun link cleanup ✅ REVIEW PENDING
+- **Why:** New Ahrefs crawl `2026-05-19T18:33:32Z` confirmed the schema bucket cleared, but still showed 10 broken-page link errors, 2 redirect-link warnings, 3 external redirect notices, and a new H1/low-word-count notice.
+- **Diagnosis:** Live rendered crawl reproduced a crawler-visible `href="${item.href}"` template literal inside inline search-result scripts. Browser users only see hydrated dynamic links, but raw HTML crawlers can treat the literal as a broken internal URL. Rendered/live probes did not reproduce missing H1 on sitemap pages.
+- **Change:** Rebuilt search-result rendering in the global search component and `/search` page with DOM APIs instead of raw anchor HTML strings, removing crawl-visible template href literals. Canonicalized confirmed external redirects for MaineBiz, Curaleaf Wells, SCORE Maine, SCORE mentors, and Metrc training.
+- **Validation:** `corepack npm run check:hrefs`, `check:content-health`, `typecheck`, `build`, `check:sitemap-xml`, `git diff --check`, and rendered `dist/` verification passed. Rendered HTML has 0 `href` values containing `${...}`; the five canonicalized external targets return 200 without redirect in verification.
+- **Safety posture:** Static link/search rendering hygiene only. No package install, deploy, or infrastructure changes yet.
+
 ### Ahrefs May 19 tracked issue cleanup ✅ REVIEW PENDING
 - **Why:** May 19 Ahrefs overview still showed tracked broken-link/redirect/orphan/internal-link notices after the schema fix pass.
 - **Diagnosis:** Live/sitemap probes reproduced no internal 4XXs, no internal redirect-shape links, no noindex pages in sitemap, and no short meta descriptions. The only locally reproducible indexable weak point was `/site-health` having effectively no real incoming links, plus crawl-visible external dead/redirecting URLs.
