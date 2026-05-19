@@ -7,6 +7,13 @@
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
 
+### Ahrefs May 18 noindex/social crawl cleanup ✅ REVIEW PENDING
+- **Why:** Ahrefs May 18 site audit still reported one noindex page in sitemap and a new external 4XX notice.
+- **Change:** Added `/search` to sitemap noindex exclusions in both the shared sitemap config and app Astro config so the noindex search route is omitted from generated sitemap output.
+- **Change:** Removed the dead `https://www.linkedin.com/company/mainedispensaryguide` social profile link and replaced redirecting `https://twitter.com/mainedispensary` with canonical `https://x.com/mainedispensary` in `site-config.json`.
+- **Validation:** `corepack npm run check:hrefs`, `corepack npm run check:content-health`, `corepack npm run typecheck`, `corepack npm run build`, and `corepack npm run check:sitemap-xml` passed. Rendered sitemap has 145 URLs and no `/search`; rendered HTML has no MDG LinkedIn or Twitter URL and does include the X URL.
+- **Safety posture:** Static SEO metadata/config only. No package install, push, deploy, or infrastructure changes.
+
 ### final patch dependency refresh + push/CI smoke ✅ DONE
 - **Why:** A final pre-push release gate found two new compatible patch updates after the prior validation: `astro@6.3.5` and `@types/node@25.9.0`.
 - **Change:** Refreshed `package-lock.json` only; manifest ranges already allowed the patch updates.
