@@ -35,8 +35,8 @@ const faqItems = [
 ];
 
 const checklistItems = [
-  { 
-    category: "Phase 1: Foundation", 
+  {
+    category: "Phase 1: Foundation",
     duration: "Weeks 1-8",
     items: [
       {
@@ -59,8 +59,8 @@ const checklistItems = [
       }
     ]
   },
-  { 
-    category: "Phase 2: The Search", 
+  {
+    category: "Phase 2: The Search",
     duration: "Weeks 6-16",
     items: [
       {
@@ -77,8 +77,8 @@ const checklistItems = [
       }
     ]
   },
-  { 
-    category: "Phase 3: State Submission", 
+  {
+    category: "Phase 3: State Submission",
     duration: "Weeks 12-24",
     items: [
       {
@@ -95,8 +95,8 @@ const checklistItems = [
       }
     ]
   },
-  { 
-    category: "Phase 4: Build & Launch", 
+  {
+    category: "Phase 4: Build & Launch",
     duration: "Weeks 20-52",
     items: [
       {
@@ -121,7 +121,7 @@ const howToSchema = {
   "name": "How to Open a Cannabis Dispensary in Maine",
   "description": "Complete step-by-step roadmap for opening a licensed cannabis dispensary in Maine, covering entity formation, municipal approval, state licensing, and operational setup.",
   "totalTime": "P12M",
-  "step": checklistItems.flatMap((section, sIdx) => 
+  "step": checklistItems.flatMap((section, sIdx) =>
     section.items.map((item, iIdx) => ({
       "@type": "HowToStep",
       "position": sIdx * section.items.length + iIdx + 1,
@@ -135,24 +135,24 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
 ---
 
-<script type="application/ld+json" set:text={JSON.stringify(howToSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const toggleBtns = document.querySelectorAll('.toggle-btn');
     const viewContents = document.querySelectorAll('.view-content');
-    
+
     toggleBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const targetView = btn.dataset.view;
-        
+
         toggleBtns.forEach(b => {
           b.classList.remove('active');
           b.setAttribute('aria-selected', 'false');
         });
         btn.classList.add('active');
         btn.setAttribute('aria-selected', 'true');
-        
+
         viewContents.forEach(content => {
           content.classList.remove('active');
         });
@@ -162,9 +162,9 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   });
 </script>
 
-<Layout 
-  title="Maine Dispensary Launch Checklist" 
-  description="The complete Maine cannabis dispensary launch checklist — 12-18 month timeline covering LLC formation, OCP licensing, municipal approval, build-out, and opening day." 
+<Layout
+  title="Maine Dispensary Launch Checklist"
+  description="The complete Maine cannabis dispensary launch checklist — 12-18 month timeline covering LLC formation, OCP licensing, municipal approval, build-out, and opening day."
   heroImage="/images/heroes/launch-checklist.jpg"
   article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-05", modifiedDate: "2026-04-21", section: "Guides" }}
 >
@@ -872,22 +872,22 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <div class="hero-badge">2026 Interactive Roadmap</div>
     <h1>Maine Dispensary Launch Checklist</h1>
     <p class="lead">A complete 12-18 month roadmap for opening your cannabis dispensary in Maine. Each phase builds toward your final license and first sale.</p>
-    
+
     <div class="view-toggle" role="tablist" aria-label="Choose your view">
-      <button 
-        class="toggle-btn active" 
-        data-view="detailed" 
-        role="tab" 
+      <button
+        class="toggle-btn active"
+        data-view="detailed"
+        role="tab"
         aria-selected="true"
         aria-controls="detailed-content"
       >
         <span class="toggle-icon">◆</span>
         Detailed Roadmap
       </button>
-      <button 
-        class="toggle-btn" 
-        data-view="overview" 
-        role="tab" 
+      <button
+        class="toggle-btn"
+        data-view="overview"
+        role="tab"
         aria-selected="false"
         aria-controls="overview-content"
       >
@@ -983,7 +983,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
         <h2>What You Need to Start a Cannabis Dispensary in Maine</h2>
         <p>Opening a dispensary in Maine takes 12-18 months and requires navigating both state and local regulations. Here's the simplified path.</p>
       </div>
-      
+
       <div class="overview-grid">
         <div class="overview-card phase-card">
           <div class="card-header">
@@ -1138,4 +1138,4 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     </div>
   </section>
 </Layout>
-<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>

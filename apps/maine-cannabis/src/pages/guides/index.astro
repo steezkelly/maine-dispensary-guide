@@ -135,7 +135,7 @@ const faqItems = [
   .faq-item p { color: var(--color-text-light); line-height: 1.6; }
 </style>
 
-<script type="application/ld+json" set:text={JSON.stringify({
+<script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": faqItems.map(item => ({

@@ -38,8 +38,8 @@ interface Props {
   tags?: string[];
 }
 
-const { 
-  title, 
+const {
+  title,
   description = "Your complete guide to opening and operating a cannabis dispensary.",
   siteName: siteNameProp,
   siteUrl: siteUrlProp,
@@ -83,20 +83,20 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY" />
     <meta name="msvalidate.01" content="F79201CCB2812011C9EB1EA042399CD3" />
     <title>{fullTitle}</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-    
+
     {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
-    
+
     <link rel="canonical" href={Astro.url} />
     <link rel="alternate" hreflang="en-US" href={Astro.url} />
     <link rel="alternate" hreflang="x-default" href={Astro.url} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
-    
+
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={seoDescription} />
     <meta property="og:type" content="website" />
@@ -106,9 +106,9 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={seoDescription} />
-    
+
     <!-- HARD-CODED STRUCTURED DATA FOR ACCURACY -->
-    <script type="application/ld+json" set:text={JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": siteName,
@@ -125,7 +125,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     })} />
 
     {isContent && article && !noindex && (
-      <script type="application/ld+json" set:text={JSON.stringify({
+      <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": title,
@@ -160,7 +160,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     )}
 
     {isContent && breadcrumbs && breadcrumbs.length > 0 && (
-      <script type="application/ld+json" set:text={JSON.stringify({
+      <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -188,7 +188,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         return 'light';
       })();
       document.documentElement.setAttribute('data-theme', theme);
-      
+
       window.toggleTheme = function() {
         const current = document.documentElement.getAttribute('data-theme');
         const next = current === 'dark' ? 'light' : 'dark';
@@ -211,7 +211,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
     <div class="grain-overlay"></div>
-    
+
     <!-- GLOBAL BOTANICAL ORNAMENTS -->
     <div class="bg-ornament p1"><PineTree size={40} color="var(--color-primary)" /></div>
     <div class="bg-ornament p2"><Leaf size={30} color="var(--color-accent)" /></div>
@@ -277,7 +277,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         </div>
       </nav>
     </header>
-    
+
     <main id="main-content" role="main" tabindex="-1">
       <Breadcrumbs />
       {isGuide ? (
@@ -336,12 +336,12 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
         </>
       )}
     </main>
-    
+
     <button id="back-to-top" class="back-to-top" aria-label="↑ Back to Top">&uarr;</button>
 
     <Analytics />
     <SpeedInsights />
-    
+
     <div id="theater-overlay" class="theater-overlay" aria-hidden="true"></div>
 
     <footer role="contentinfo">
@@ -361,29 +361,29 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       (function() {
         const header = document.getElementById('site-header');
         if (!header) return;
-        
+
         const handleScroll = () => {
           const scrolled = window.scrollY > 50;
           header.classList.toggle('scrolled', scrolled);
-          
+
           const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
           const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
           const progress = (winScroll / height) * 100;
           const pb = document.getElementById("progress-bar");
           if (pb) pb.style.width = progress + "%";
-          
+
           const btt = document.getElementById('back-to-top');
           if (btt) btt.style.display = winScroll > 500 ? "block" : "none";
         };
-        
+
         // Check for reduced motion preference
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
+
         if (!prefersReducedMotion) {
           window.addEventListener('scroll', handleScroll, { passive: true });
           handleScroll(); // Initial check
         }
-        
+
         const bttBtn = document.getElementById('back-to-top');
         if (bttBtn) bttBtn.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
@@ -427,7 +427,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     --color-background: #F2F2E2; /* Warm Bone */
     --color-surface: #ffffff;
     --color-text: #101820;      /* Maximum Contrast Text */
-    --color-text-light: #4A5568; 
+    --color-text-light: #4A5568;
     --color-border: #D1D1C1;
     --font-family: 'Plus Jakarta Sans', sans-serif;
     --font-serif: 'Fraunces', serif;
@@ -478,7 +478,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
   body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; width: 100%; }
-  
+
   /* Skip Navigation */
   .skip-link {
     position: absolute;
@@ -520,13 +520,13 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
 
   #site-header { background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-border); padding: 0.75rem 0; position: sticky; top: 0; z-index: 1000; transition: padding 0.3s ease, box-shadow 0.3s ease; }
   #site-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 0.5rem 0; }
-  
+
   @media (prefers-reduced-motion: reduce) {
     #site-header { transition: none; }
   }
   #progress-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
   #progress-bar { height: 100%; background: var(--color-accent); width: 0%; transition: width 0.1s; }
-  
+
   #site-nav { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
   .logo { display: flex; align-items: center; gap: 1rem; font-family: var(--font-serif); font-size: 1.25rem; font-weight: 700; color: var(--color-primary); text-decoration: none; flex-shrink: 0; }
   .logo-icons { display: flex; align-items: center; }
@@ -570,42 +570,42 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     .nav-toggle-label { display: block; }
     .nav-search-desktop { display: none; }
     .nav-search-mobile { display: block; width: 100%; margin-bottom: 2rem; }
-    .nav-links { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100vh; 
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
       background: var(--color-background);
-      transform: translateX(100%); 
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-      flex-direction: column; 
-      justify-content: flex-start; 
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-direction: column;
+      justify-content: flex-start;
       padding-top: 100px;
-      align-items: center; 
-      z-index: 999; 
+      align-items: center;
+      z-index: 999;
       overflow-y: auto;
     }
     .nav-links a, .dropbtn { font-size: 1.25rem; width: auto; padding: 1rem 2rem; }
     .nav-dropdown { width: 100%; text-align: center; }
-    .dropdown-content { 
-      display: block; 
-      position: static; 
-      box-shadow: none; 
-      border: none; 
+    .dropdown-content {
+      display: block;
+      position: static;
+      box-shadow: none;
+      border: none;
       background: transparent;
       padding: 0.5rem 0;
     }
-    .dropdown-content a { 
-      padding: 0.75rem 1rem; 
+    .dropdown-content a {
+      padding: 0.75rem 1rem;
       font-size: 1rem;
       opacity: 0.8;
     }
     .nav-toggle:checked ~ .nav-links { transform: translateX(0); }
-    
+
     /* Mobile Menu Close Animation */
     .nav-toggle:not(:checked) ~ .nav-links { transform: translateX(100%); }
-    
+
     /* Slide-in animation for menu items */
     .nav-links a, .nav-dropdown .dropbtn {
       opacity: 0;
@@ -628,7 +628,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; }
   .footer-links a { color: var(--color-text-light); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
   .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
-  
+
   .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
 
   /* Disclaimer */
@@ -650,7 +650,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
   h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
   table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); min-width: 120px; }
-  
+
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
 
   .article-meta {

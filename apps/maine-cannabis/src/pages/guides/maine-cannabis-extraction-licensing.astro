@@ -16,8 +16,8 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
 ---
 
-<Layout 
-  title="Cannabis Extraction Licensing" 
+<Layout
+  title="Cannabis Extraction Licensing"
   description="Maine cannabis extraction licensing guide. Solvent-based and solventless methods. Class 1-5 licensing. OCP compliance explained."
   heroImage="/images/heroes/maine-cannabis-extraction-licensing.jpg"
   article={article}
@@ -217,14 +217,14 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
       </ul>
     </section>
 
-    
 
-    
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
   <section class="further-reading">
     <h2>External Resources</h2>
     <ul>
@@ -240,11 +240,11 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <h3>Butane Hash Oil (BHO)</h3>
     <p>BHO extraction uses butane as a solvent to pull cannabinoids and terpenes from cannabis plant material. The resulting concentrate, often called shatter, wax, or budder depending on consistency, can contain 60-90% THC. Maine allows BHO extraction under specific safety protocols including closed-loop systems and explosion-proof equipment.</p>
     <p>BHO extraction requires Class I Div 1 or Class I Div 2 electrical ratings for the extraction area. This means specialized explosion-proof wiring, ventilation systems that maintain negative pressure, and solvent storage that meets fire code requirements. The build-out costs for BHO-compliant space runs $150,000-$300,000 depending on facility size and existing infrastructure.</p>
-    
+
     <h3>CO2 Extraction</h3>
     <p>Supercritical CO2 extraction uses pressurized carbon dioxide to extract cannabinoids without residual solvents. CO2 extraction produces a cleaner product that passes residual solvent testing more easily than BHO. Equipment costs run higher than BHO systems, typically $200,000-$500,000 for commercial-scale units, but operating costs may be lower due to solvent recovery and reuse capabilities.</p>
     <p>CO2 extraction does not carry the explosion risk of hydrocarbon extraction, which simplifies facility requirements. However, the equipment requires professional installation and maintenance contracts to ensure pressure vessel compliance with Maine boiler and pressure vessel regulations.</p>
-    
+
     <h3>Ethanol Extraction</h3>
     <p>Ethanol extraction uses food-grade alcohol as a solvent, making it one of the safest consumable solvent options. Ethanol extraction equipment costs range from $50,000-$200,000 depending on scale. The extraction process can be performed at cold temperatures to minimize chlorophyll extraction, producing a cleaner concentrate than room-temperature ethanol extraction.</p>
     <p>Ethanol extraction's main disadvantage is the equipment required to recover solvent efficiently. Without proper recovery systems, ethanol consumption costs become prohibitive at commercial scale. Closed-loop ethanol systems with vacuum recovery reduce operating costs and improve safety profiles.</p>
@@ -265,7 +265,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
   </article>
 
-  <script type="application/ld+json" set:text={JSON.stringify({
+  <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "HowTo",
       "name": "How to Get a Cannabis Extraction License in Maine",
@@ -312,6 +312,6 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     })}></script>
 
 </Layout>
-<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
 
 <Faq faqs={extractionFaqs} />
