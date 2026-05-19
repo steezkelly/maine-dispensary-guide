@@ -175,7 +175,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta name="twitter:site" content="@MaineDispensary" />
 
     {!noindex && (
-    <script type="application/ld+json" set:text={JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": siteConfig.siteName,
@@ -184,9 +184,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         "@type": "ImageObject",
         "url": siteUrl + "/favicon.svg"
       },
-      "sameAs": [
-        "https://twitter.com/MaineDispensary"
-      ],
+      "sameAs": siteConfig.socialLinks,
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer support",
@@ -196,7 +194,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     )}
 
     {!noindex && (
-    <script type="application/ld+json" set:text={JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": siteConfig.siteName,
@@ -222,7 +220,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     )}
 
     {isContent && article && !noindex && (
-      <script type="application/ld+json" set:text={JSON.stringify({
+      <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": title,
@@ -253,7 +251,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
           "@id": Astro.url.href
         },
         "articleSection": article.section
-      }).replace(/&/g, '&amp;')} />
+      })} />
     )}
 
     {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}

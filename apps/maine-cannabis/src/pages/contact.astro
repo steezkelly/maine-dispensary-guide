@@ -43,9 +43,9 @@ const faqPageSchema = {
 };
 ---
 
-<Layout 
-  title="Contact Us | Maine Dispensary Guide" 
-  description="Reach the Maine Dispensary Guide team for licensing questions, vendor partnerships, or editorial contributions. Response within 2 business days." 
+<Layout
+  title="Contact Us | Maine Dispensary Guide"
+  description="Reach the Maine Dispensary Guide team for licensing questions, vendor partnerships, or editorial contributions. Response within 2 business days."
   heroImage="/images/heroes/contact.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-01", modifiedDate: "2026-04-04", section: "About" }}
 >
@@ -54,7 +54,7 @@ const faqPageSchema = {
   .contact-page { max-width: 900px; margin: 0 auto; padding: 4rem 0; }
   .header-center { text-align: center; margin-bottom: 5rem; }
   .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
-  
+
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 6rem; }
   .contact-method { background: var(--color-surface); padding: 3rem; border-radius: 2rem; border: 1px solid var(--color-border); text-align: center; }
   .contact-method .icon { font-size: 3rem; margin-bottom: 1.5rem; }
@@ -174,4 +174,4 @@ const faqPageSchema = {
   </article>
 
 </Layout>
-<script type="application/ld+json" set:text={JSON.stringify(faqPageSchema)}></script>
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>

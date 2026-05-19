@@ -15,8 +15,8 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
 ---
 
-<Layout 
-  title="Maine Cannabis Regulations" 
+<Layout
+  title="Maine Cannabis Regulations"
   description="Maine cannabis regulations guide. OCP compliance, local ordinances, and state laws for adult-use dispensary operations in 2026."
   heroImage="/images/heroes/maine-cannabis-regulations.jpg"
   article={article}
@@ -85,10 +85,10 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <section>
       <h2>State License Requirements</h2>
       <p>You need a state license before you open. The OCP issues Adult-Use Retail Licenses under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec201.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 28-B, Section 201</a>.</p>
-      
+
       <h3>The Application Process</h3>
       <p>Submit your application to the OCP. Include your municipal approval letter. Pay the application fee. The OCP reviews everything. They may ask for more information. The process takes 60-120 days.</p>
-      
+
       <h3>What You Must Have</h3>
       <ul>
         <li>Completed OCP application form</li>
@@ -151,13 +151,13 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <section>
       <h2>Operational Rules</h2>
       <p>Once licensed, you must follow OCP operational rules. These cover everything from security to inventory.</p>
-      
+
       <h3>Security Requirements</h3>
       <p>Your store must have 24-hour video surveillance. Cameras cover all entrances, exits, and product areas. Footage must be retained for 90 days. Access to the surveillance system is restricted to authorized personnel only.</p>
-      
+
       <h3>Inventory Tracking</h3>
       <p>Every product enters through Metrc. When you receive a shipment, you log it in Metrc. When you sell to a customer, that sale gets logged. Metrc and your POS must stay in sync. Discrepancies trigger OCP review.</p>
-      
+
       <h3>Age Verification</h3>
       <p>Verify every customer's age before sale. Anyone under 21 cannot purchase adult-use cannabis. This is not optional. Your staff must check ID. The OCP expects written age verification procedures.</p>
     </section>
@@ -235,6 +235,6 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </article>
 
 </Layout>
-<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
 
 <Faq faqs={regulationsFaqs} />

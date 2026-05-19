@@ -16,8 +16,8 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
 ---
 
-<Layout 
-  title="Maine Cannabis Worker Comp" 
+<Layout
+  title="Maine Cannabis Worker Comp"
   description="Maine cannabis workers comp guide covering WC insurance requirements, employee authorization, and HR best practices for dispensary owners."
   heroImage="/images/heroes/maine-cannabis-workers-comp-insurance.jpg"
   article={article}
@@ -144,7 +144,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <section>
       <h2>Building Your HR Foundation</h2>
       <p>Strong HR practices protect your business and your team. Here is what you need:</p>
-      
+
       <h3>Employee Handbook</h3>
       <p>Your handbook sets expectations. It covers hours, pay, and time off. It also covers conduct and compliance procedures. Give every new hire a copy on their first day.</p>
 
@@ -179,14 +179,14 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
       </ul>
     </section>
 
-    
 
-    
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
   <section class="further-reading">
     <h2>External Resources</h2>
     <ul>
@@ -229,6 +229,6 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </article>
 
 </Layout>
-<script type="application/ld+json" set:text={faqPageJsonLd}></script>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
 
 <Faq faqs={workersCompFaqs} />

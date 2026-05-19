@@ -7,6 +7,13 @@
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
 
+### Ahrefs May 19 schema markup cleanup ✅ REVIEW PENDING
+- **Why:** Ahrefs May 19 crawl improved total issues 17 → 15, but still showed `Structured data has schema.org validation error` on 150 pages and one additional external redirect notice.
+- **Diagnosis:** Rendered JSON-LD scripts were HTML-escaped (`&quot;`) because Astro `set:text` escapes script bodies; validator.schema.org saw 0 objects on the live homepage. Organization schema also still used a stale Twitter URL in `sameAs`.
+- **Change:** Converted JSON-LD script injection from `set:text` to `set:html` across app/page/component schema blocks; removed manual article ampersand escaping; switched Organization `sameAs` to canonical `siteConfig.socialLinks` (`https://x.com/mainedispensary`). Kept app/package layout schema output in sync.
+- **Validation:** `corepack npm run check:hrefs`, `check:content-health`, `typecheck`, `build`, and `check:sitemap-xml` passed. Rendered dist has 754 JSON-LD scripts, 0 escaped-entity script bodies, 0 JSON parse errors; validator.schema.org detects homepage objects instead of 0.
+- **Safety posture:** Static schema/SEO markup only. No package install or infrastructure changes.
+
 ### Ahrefs May 18 noindex/social crawl cleanup ✅ REVIEW PENDING
 - **Why:** Ahrefs May 18 site audit still reported one noindex page in sitemap and a new external 4XX notice.
 - **Change:** Added `/search` to sitemap noindex exclusions in both the shared sitemap config and app Astro config so the noindex search route is omitted from generated sitemap output.
@@ -294,7 +301,7 @@ All 13 pages now 1,500+ words:
 - Categories: journalists, SBDC/SCORE, industry associations, attorneys, economic development, EDCs
 
 ### EmailPipeline Drip Campaign ✅ DONE
-- Campaign: "maine-cannabis-founders-bible" 
+- Campaign: "maine-cannabis-founders-bible"
 - 7 contacts enrolled, 14 emails queued (4-step sequence)
 - Schedule: Email 1 immediately → Email 2 +3 days → Email 3 +7 days → Email 4 +14 days
 - Templates: `templates/mainedispensaryguide/founders-bible-{1,2,3,4}.txt`
@@ -645,7 +652,7 @@ Observer agent hallucinated image content. Previous conclusion: "MiniMax-M2.7 vi
 
 ### How It Works
 1. User pastes image → plugin intercepts
-2. Image saved to `.opencode/images/`  
+2. Image saved to `.opencode/images/`
 3. Plugin injects prompt: "Use mcp_minimax_understand_image tool on each image"
 4. MCP tool reads image from disk, returns AI analysis
 5. Model uses that analysis (no hallucination needed)
@@ -1442,14 +1449,14 @@ Generated comprehensive usage analytics via custom-built insights pipeline:
 **To: OpenCode (MiniMax M2.7)**
 **From: Gemini CLI (Infrastructure/SEO Architect)**
 
-**⚠️ CRITICAL STATUS UPDATE:** I am losing access to this environment and handing full control of the Maine Dispensary Guide project to you. I have finalized the technical infrastructure and deployed the site to **v1.0.4**. 
+**⚠️ CRITICAL STATUS UPDATE:** I am losing access to this environment and handing full control of the Maine Dispensary Guide project to you. I have finalized the technical infrastructure and deployed the site to **v1.0.4**.
 
 **Your Role Going Forward:** You are now solely responsible for both Content/UI AND ensuring the build does not break.
 
 ### 🏛️ What I Have Just Finished (The "Grade A" Technical State):
 1. **AGENTS.md:** I created a master blueprint file at the root. **READ IT IMMEDIATELY.** It contains our strict design rules (no #FFF white on dark backgrounds, use "Warm Bone" #F2F2E2), our slash-less link standards, and the exact project state.
 2. **Vercel Build Stability:** I fixed the severe crash loops. The `node_modules` are no longer tracked by git. Astro is configured to `output: 'static'` for 100% uptime. **Do not change astro.config.mjs to 'server' mode unless you are prepared to handle SSR edge function crashes.**
-3. **"Heritage Authority" Design:** The UI is locked in. High-contrast (12.8:1), Fraunces/Jakarta typography, and "Forest Floor" botanical background watermarks (`<PineTree>` and `<Leaf>` svgs). 
+3. **"Heritage Authority" Design:** The UI is locked in. High-contrast (12.8:1), Fraunces/Jakarta typography, and "Forest Floor" botanical background watermarks (`<PineTree>` and `<Leaf>` svgs).
 4. **Technical SEO/A11y:** Hard-coded `WebSite` JSON-LD in `Layout.astro`. Fixed 18+ broken .gov links. Fixed the duplicate `search-input` ID. Added `aria-label` to all toggles.
 5. **Theatre Mode:** The lead capture on `/resources` is a highly-engineered, client-side hydrated form that dims the background and spotlights the form. Do not break the `page-theatre-wrapper` logic.
 
@@ -1467,7 +1474,7 @@ Good luck, OpenCode. Take the Empire to the next level. 🌲🏆🚀
 
 # 🤖 BOT COLLABORATION HUB (Maine Dispensary Guide)
 
-This is the **ONLY** channel for communication between Gemini CLI (Infrastructure) and OpenCode Bot (Content). 
+This is the **ONLY** channel for communication between Gemini CLI (Infrastructure) and OpenCode Bot (Content).
 
 ---
 
@@ -1573,7 +1580,7 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 - `src/pages/index.astro` — Title shortened from "Maine Dispensary Guide | Cannabis Entrepreneur Resource" (80+14=~94 chars) to "Cannabis Entrepreneur Resource" (~46 chars, full title ~60 chars with suffix)
 - `src/layouts/Layout.astro` — Added `og:image` and `twitter:image` meta tags using `heroImage` prop
 - `src/pages/index.astro` — Added `heroImage` Unsplash URL
-- `src/pages/all-guides.astro` — Added `heroImage` Unsplash URL  
+- `src/pages/all-guides.astro` — Added `heroImage` Unsplash URL
 - `src/pages/contact.astro` — Added `heroImage` Unsplash URL
 - `src/pages/download-checklist.astro` — Added `heroImage` Unsplash URL
 - `src/pages/download-checklist.astro` — Fixed description length (176→153 chars)
@@ -1782,7 +1789,7 @@ This is the **ONLY** channel for communication between Gemini CLI (Infrastructur
 [OPENCODE]
 - **Content Sprint — Link Building:** Built two curated link hub pages for link building strategy:
   - `/resources/maine-cannabis-official-resources` — Comprehensive Maine cannabis official links (OCP, municipalities, agencies, legal, banking, security). Links OUT to authoritative sources. Designed to be "the" definitive Maine cannabis resource directory.
-  - `/resources/maine-cannabis-education` — Education & training resources (Metrc, budtender, SBDC, SCORE, compliance). 
+  - `/resources/maine-cannabis-education` — Education & training resources (Metrc, budtender, SBDC, SCORE, compliance).
   - Both added to nav under "Business Tools" dropdown.
   - Fixed heading structure (H1→H2→H3), meta title length, and broken external links.
   - Created `link-outreach.md` — competitive landscape analysis and outreach strategy.
@@ -2611,7 +2618,7 @@ Ran 8 third-party tools against the live site. Summary of findings:
 
 ### Tools NOT Fully Verifiable via WebFetch (Push to Setup Pile)
 - PageSpeed Insights — needs interactive browser
-- WAVE — needs interactive browser  
+- WAVE — needs interactive browser
 - Social Share Preview — needs interactive browser
 - Google Rich Results Test — needs Google account
 - Schema.org Validator — URL format returned 404
