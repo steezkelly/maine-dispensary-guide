@@ -7,6 +7,13 @@
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
 
+### Ahrefs May 19 tracked issue cleanup ✅ REVIEW PENDING
+- **Why:** May 19 Ahrefs overview still showed tracked broken-link/redirect/orphan/internal-link notices after the schema fix pass.
+- **Diagnosis:** Live/sitemap probes reproduced no internal 4XXs, no internal redirect-shape links, no noindex pages in sitemap, and no short meta descriptions. The only locally reproducible indexable weak point was `/site-health` having effectively no real incoming links, plus crawl-visible external dead/redirecting URLs.
+- **Change:** Added `/site-health` to the global footer in both app and shared layouts so it is no longer orphan/one-link dependent. Canonicalized or removed crawl-problem external URLs: Canuvo `.com` → `.org`, Great Atlantic Puffin landing URL, MaineBiz `.biz`, Ganjapreneur non-www, IRS cannabis industry page, OCP trailing slash, Rugged Roots non-www, Auburn/South Portland/Westbrook official `.gov` domains, and removed the dead Headquarters Cannabis outbound anchor while retaining the text attribution.
+- **Validation:** `corepack npm run check:hrefs`, `check:content-health`, `ci-check`, `typecheck`, `build`, `check:sitemap-xml`, `git diff --check`, and a rendered `dist/` crawl passed. Rendered crawl has 0 broken internal links, 0 slashful internal redirect shapes, and 152 incoming footer links to `/site-health`.
+- **Safety posture:** Static link/metadata hygiene only. No package install, push, deploy, or infrastructure changes.
+
 ### Ahrefs May 19 schema markup cleanup ✅ REVIEW PENDING
 - **Why:** Ahrefs May 19 crawl improved total issues 17 → 15, but still showed `Structured data has schema.org validation error` on 150 pages and one additional external redirect notice.
 - **Diagnosis:** Rendered JSON-LD scripts were HTML-escaped (`&quot;`) because Astro `set:text` escapes script bodies; validator.schema.org saw 0 objects on the live homepage. Organization schema also still used a stale Twitter URL in `sameAs`.
