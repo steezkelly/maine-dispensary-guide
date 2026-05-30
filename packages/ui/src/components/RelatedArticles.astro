@@ -85,10 +85,30 @@ function calculateScore(guideTopics: string[], currentTopics: string[]): number 
 const related = allGuides
   .filter(g => g.href !== currentPath)
   .map(g => ({ ...g, score: calculateScore(g.topics, currentTopics) }))
-  .sort((a, b) => b.score - a.score)
-  .slice(0, 3);
+  .sort((a, b) => b.score - a.score);
 
 const essentials = foundationalGuides.filter(g => g.href !== currentPath);
+
+const fallbackPool = [...new Set([...essentials.map(g => g.href), ...allGuides.slice(0, 20).map(g => g.href)])];
+const seen = new Set<string>();
+
+const relatedItems = related.filter(g => {
+  if (seen.has(g.href)) return false;
+  seen.add(g.href);
+  return true;
+});
+
+for (const href of fallbackPool) {
+  if (relatedItems.length >= 3) break;
+  if (!seen.has(href)) {
+    const item = [...essentials, ...allGuides].find(g => g.href === href);
+    if (item) {
+      const score = 'score' in item ? item.score : calculateScore(item.topics, currentTopics);
+      relatedItems.push({ ...item, score });
+      seen.add(href);
+    }
+  }
+}
 ---
 
 <aside class="related-articles">
@@ -98,7 +118,7 @@ const essentials = foundationalGuides.filter(g => g.href !== currentPath);
     <div class="related-section">
       <h3>Related by Topic</h3>
       <ul class="related-list">
-        {related.map(guide => (
+        {relatedItems.map(guide => (
           <li>
             <a href={guide.href}>
               <span class="related-title">{guide.title}</span>
