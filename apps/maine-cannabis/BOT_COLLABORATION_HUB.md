@@ -3227,3 +3227,23 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 
 
 
+
+## 2026-05-30 — Ahrefs Site Audit: "Page has only one dofollow incoming internal link"
+
+**Issue:** 18 pages flagged with only 1 dofollow internal link (PR20, depth 0, zero traffic).
+
+**Root cause:** `RelatedArticles.astro` only showed top-3 topic-matched guides. Pages with no topic overlap with the `allGuides` pool (or only overlaps with themselves) produced 0 related links, leaving each page with exactly 1 dofollow nav link.
+
+**Fix:** `packages/ui/src/components/RelatedArticles.astro`
+- Replaced `.slice(0, 3)` with a deduplicated fallback pool.
+- Pool = essentials (`/launch-checklist`, `/roi-calculator`, `/resources`) + top-20 guide entries.
+- `seen` Set deduplicates across both the topic-matched results and the fallback pool.
+- Every affected page now renders 3 Related Articles links instead of 0.
+
+**Deploy:** `git commit` → `git push` → Vercel auto-deploy triggered. Verified live on `/guides/lovell-dispensary-guide` (6 links: 3 topic + 3 essentials) and `/about/our-team` (60 unique links).
+
+**Validation:** `astro check` 0 errors/0 warnings; CI invariant checks passed; content health QA 0 failures.
+
+**Files changed:**
+- `packages/ui/src/components/RelatedArticles.astro`
+
