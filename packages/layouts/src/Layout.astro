@@ -43,7 +43,7 @@ const {
   description = "Your complete guide to opening and operating a cannabis dispensary.",
   siteName: siteNameProp,
   siteUrl: siteUrlProp,
-  analyticsId = "G-XXXXXXXXXX",
+  analyticsId,
   stateName = "Maine",
   isHub = false,
   heroImage,
@@ -198,6 +198,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
     </script>
 
     <!-- Google Analytics GA4 — Replace GA_MEASUREMENT_ID with your measurement ID -->
+    {analyticsId && <>
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}></script>
     <script>
       // @ts-nocheck - GA4 dataLayer global
@@ -207,6 +208,7 @@ const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
       gtag('js', new Date());
       gtag('config', analyticsId);
     </script>
+    </>}
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
