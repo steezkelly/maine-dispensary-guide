@@ -2,6 +2,10 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
+export const config = {
+  runtime: 'nodejs22.x',
+  supportsResponseStreaming: true,
+};
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,4 +1,16 @@
 {
+  "buildCommand": "bash vercel-build.sh",
+  "outputDirectory": "dist",
+  "routes": [
+    {
+      "src": "/4a00ca05232c46f3badda7f9f2e0e296.txt",
+      "dest": "/api/indexnow-key",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      }
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",
