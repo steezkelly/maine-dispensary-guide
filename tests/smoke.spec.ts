@@ -16,6 +16,7 @@ const IGNORED_ERROR_PATTERNS = [
   'mixpanel.com',             // Mixpanel analytics third-party
   'segment.com',              // Segment analytics third-party
   'stripe.com',               // Stripe third-party
+  'ahrefs.com',               // Ahrefs analytics blocked by CSP
 ];
 
 function filterIgnoredErrors(errors: string[]): string[] {
