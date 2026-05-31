@@ -41,7 +41,7 @@ jobs:
 
       - name: Validate sitemap XML encoding
         run: |
-          npm --workspace @network/maine-cannabis run check:sitemap-xml
+          npm --workspace @network/maine-cannabis run check:sitemap-xml -- ../../dist/sitemap-0.xml
 
   deploy-preview:
     name: Deploy Preview
