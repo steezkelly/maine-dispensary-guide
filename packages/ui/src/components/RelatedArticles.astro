@@ -66,10 +66,10 @@ const allGuides: RelatedGuide[] = [
   { title: "Business Insurance", href: "/guides/maine-cannabis-business-insurance", topics: ["finance"], section: "Finance" },
 ];
 
-const foundationalGuides = [
-  { title: "2026 Launch Checklist", href: "/launch-checklist", section: "Essential" },
-  { title: "ROI Calculator", href: "/roi-calculator", section: "Essential" },
-  { title: "Vendor Directory", href: "/resources", section: "Essential" },
+const foundationalGuides: RelatedGuide[] = [
+  { title: "2026 Launch Checklist", href: "/launch-checklist", topics: [], section: "Essential" },
+  { title: "ROI Calculator", href: "/roi-calculator", topics: [], section: "Essential" },
+  { title: "Vendor Directory", href: "/resources", topics: [], section: "Essential" },
 ];
 
 function calculateScore(guideTopics: string[], currentTopics: string[]): number {
@@ -103,8 +103,8 @@ for (const href of fallbackPool) {
   if (!seen.has(href)) {
     const item = [...essentials, ...allGuides].find(g => g.href === href);
     if (item) {
-      const score = 'score' in item ? item.score : calculateScore(item.topics, currentTopics);
-      relatedItems.push({ ...item, score });
+      const score = 'score' in item ? (item as any).score : calculateScore(item.topics, currentTopics);
+      relatedItems.push({ ...item, score: score as number });
       seen.add(href);
     }
   }
