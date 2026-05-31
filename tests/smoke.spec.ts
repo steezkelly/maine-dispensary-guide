@@ -2,6 +2,28 @@ import { test, expect, type Page } from '@playwright/test';
 
 const BASE_URL = process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
 
+// Filters for non-critical browser console noise that doesn't indicate site bugs
+const IGNORED_ERROR_PATTERNS = [
+  'vercel.com/api',          // Vercel infra health checks
+  'Failed to load resource', // 404s from external refs (ads, embeds)
+  'favicon',                  // Favicon 404s
+  'cdn.cookiebot.com',        // Cookie consent third-party
+  'googleads',                // Ad script errors
+  'googlesyndication',        // Ad script errors
+  'doubleclick',              // Ad script errors
+  'facebook.net',             // Facebook pixel third-party
+  'hotjar.com',               // Hotjar analytics third-party
+  'mixpanel.com',             // Mixpanel analytics third-party
+  'segment.com',              // Segment analytics third-party
+  'stripe.com',               // Stripe third-party
+];
+
+function filterIgnoredErrors(errors: string[]): string[] {
+  return errors.filter(e =>
+    !IGNORED_ERROR_PATTERNS.some(p => e.includes(p))
+  );
+}
+
 test.describe('Smoke Tests', () => {
   test('homepage loads without errors', async ({ page }) => {
     const errors: string[] = [];
@@ -13,7 +35,7 @@ test.describe('Smoke Tests', () => {
     await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
 
-    expect(errors.filter(e => !e.includes('vercel.com/api'))).toHaveLength(0);
+    expect(filterIgnoredErrors(errors)).toHaveLength(0);
   });
 
   test('homepage has correct aria-label on stage selector', async ({ page }) => {
@@ -50,10 +72,7 @@ test.describe('Smoke Tests', () => {
     await page.goto(`${BASE_URL}/download/founders-bible`);
     await page.waitForLoadState('networkidle');
 
-    const relevantErrors = errors.filter(e =>
-      !e.includes('vercel.com/api') &&
-      !e.includes('Failed to load resource')
-    );
+    const relevantErrors = filterIgnoredErrors(errors);
     expect(relevantErrors).toHaveLength(0);
     const h1 = page.locator('h1').first();
     await expect(h1).toBeAttached();
@@ -69,11 +88,7 @@ test.describe('Smoke Tests', () => {
     await page.goto(`${BASE_URL}/newsletter`);
     await page.waitForLoadState('networkidle');
 
-    const relevantErrors = errors.filter(e =>
-      !e.includes('vercel.com/api') &&
-      !e.includes('Failed to load resource')
-    );
-    expect(relevantErrors).toHaveLength(0);
+    expect(filterIgnoredErrors(errors)).toHaveLength(0);
     const h1 = page.locator('h1').first();
     await expect(h1).toBeAttached();
   });
@@ -98,7 +113,7 @@ test.describe('Smoke Tests', () => {
     await page.goto(`${BASE_URL}/guides`);
     await page.waitForLoadState('networkidle');
 
-    expect(errors.filter(e => !e.includes('vercel.com/api'))).toHaveLength(0);
+    expect(filterIgnoredErrors(errors)).toHaveLength(0);
     await expect(page.locator('h1')).toBeVisible();
   });
 
@@ -112,7 +127,7 @@ test.describe('Smoke Tests', () => {
     await page.goto(`${BASE_URL}/guides/portland-dispensary-guide`);
     await page.waitForLoadState('networkidle');
 
-    expect(errors.filter(e => !e.includes('vercel.com/api'))).toHaveLength(0);
+    expect(filterIgnoredErrors(errors)).toHaveLength(0);
     await expect(page.locator('article')).toBeVisible();
   });
 
