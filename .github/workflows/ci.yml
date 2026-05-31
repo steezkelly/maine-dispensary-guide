@@ -16,6 +16,7 @@ permissions:
   statuses: read
 
 jobs:
+  # ─── Shared build ───────────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -43,6 +44,7 @@ jobs:
         run: |
           npm --workspace @network/maine-cannabis run check:sitemap-xml -- ../../dist/sitemap-0.xml
 
+  # ─── PR Preview Deploy + Smoke ─────────────────────────────────────────────
   deploy-preview:
     name: Deploy Preview
     needs: build
@@ -177,9 +179,92 @@ jobs:
         if: env.SKIP_PREVIEW_SMOKE != 'true'
         run: npx playwright test
 
+  # ─── Production path: build → deploy to staging URL → smoke test → promote ──
+  deploy-staging:
+    name: Deploy Staging
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Skip Vercel CLI staging deploy (no token)
+        if: env.VERCEL_TOKEN=*** ''
+        run: |
+          echo "VERCEL_TOKEN is not configured; the Vercel GitHub App auto-deploys to production."
+          echo "A VERCEL_TOKEN secret is needed to control staging → production promotion."
+          echo "Until then, this job exists only to gate the smoke-test-production job."
+
+      - name: Install Vercel CLI
+        if: env.VERCEL_TOKEN != ''
+        run: npm install -g vercel
+
+      - name: Pull Vercel project settings
+        if: env.VERCEL_TOKEN != ''
+        run: vercel pull --environment=preview --yes
+
+      - name: Build project artifacts
+        if: env.VERCEL_TOKEN != ''
+        run: vercel build --environment=preview
+
+      - name: Validate sitemap XML encoding (Vercel build output)
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          node ./apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs .vercel/output/static/sitemap-0.xml
+
+      - name: Deploy to Vercel as staging alias
+        if: env.VERCEL_TOKEN != ''
+        id: deploy
+        run: |
+          vercel deploy --prebuilt --environment=preview --yes --token "$VERCEL_TOKEN" > deployed-url.txt
+          echo "DEPLOYED_URL=$(cat deployed-url.txt)" >> "$GITHUB_ENV"
+
+  smoke-test-staging:
+    name: Smoke Tests (Staging)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run smoke tests against staging
+        run: npx playwright test
+        env:
+          # When VERCEL_TOKEN is set, CI deploys a staging URL and we test it.
+          # When VERCEL_TOKEN is not set, Vercel GitHub App deployed to production;
+          # smoke tests still run against the real production URL to catch live regressions.
+          PREVIEW_URL: ${{ env.DEPLOYED_URL || 'https://mainedispensaryguide.com' }}
+
   deploy-production:
     name: Deploy Production
-    needs: build
+    needs: [build, smoke-test-staging]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     env:
@@ -201,8 +286,9 @@ jobs:
       - name: Skip duplicate Vercel CLI production deploy
         if: env.VERCEL_TOKEN == ''
         run: |
-          echo "VERCEL_TOKEN is not configured; skipping duplicate Vercel CLI production deploy."
-          echo "The Vercel GitHub App deployment/check handles production deployments for this repo."
+          echo "VERCEL_TOKEN is not configured; skipping Vercel CLI production deploy."
+          echo "Production deployment is handled by the Vercel GitHub App on push to main."
+          echo "A VERCEL_TOKEN would let CI control production promotion after smoke tests pass."
 
       - name: Install Vercel CLI
         if: env.VERCEL_TOKEN != ''
@@ -223,31 +309,20 @@ jobs:
 
       - name: Deploy to Vercel (Production)
         if: env.VERCEL_TOKEN != ''
-        run: vercel deploy --prebuilt --environment=production --yes --prod
+        run: vercel deploy --prebuilt --environment=production --yes --prod --token "$VERCEL_TOKEN"
 
-  smoke-test-production:
-    name: Smoke Tests (Production)
-    needs: deploy-production
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Update deployment status to production
+        if: env.VERCEL_TOKEN != ''
+        uses: actions/github-script@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install chromium --with-deps
-
-      - name: Run smoke tests against production
-        run: npx playwright test
-        env:
-          PREVIEW_URL: https://mainedispensaryguide.com
+          script: |
+            const environment_url = 'https://mainedispensaryguide.com';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'success',
+              target_url: environment_url,
+              description: 'Production deployment complete',
+              context: 'deploy/production'
+            });
