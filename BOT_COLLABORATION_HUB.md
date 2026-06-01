@@ -37,6 +37,20 @@
 - **Safety posture:** Two static text file edits; no source code, no deploy, no package install, no infra. Build picks up the new root-level files into `dist/`. The change is fully reversible (revert the 4 files).
 - **Files changed:** `apps/maine-cannabis/public/llms.txt`, `apps/maine-cannabis/public/llms-full.txt`, `public/llms.txt`, `public/llms-full.txt` (created) + Hub entry.
 
+### Sprint 71 STATUS UNCLEAR entries resolution (items 1-7) ✅ DONE
+- **Why:** The 7 remaining Sprint 71 "REVIEW PENDING" entries were each documented as completed in the Hub on May 18 but had no matching git commits. Either the work was never committed, or it was deployed directly to Vercel and the commits lost. Without a commit, a future cold-start agent reading the Hub had no way to verify the claims.
+- **Verification approach:** Re-ran each claim against the live `dist/` build and source tree on 2026-06-01.
+- **Results:** All 7 items pass. The work is real and currently in production:
+  - Item 1: 0 template-literal hrefs in `src/`, only legitimate external links.
+  - Item 2: `/site-health` in footer, no orphaned internal 4XX, no slashful internal redirects.
+  - Item 3: 0 `set:text` for JSON-LD, 94 `set:html`. Built `dist/` has 774 JSON-LD scripts, 0 escaped, 0 parse errors.
+  - Item 4: `/search` not in sitemap, 0 MDG LinkedIn/Twitter refs, 0 `mendedispensaryguide` typos.
+  - Item 5: `corepack npm audit --json` = 0 vulnerabilities (0 in all severity categories). 8 outdated deps (transitive, not blocking).
+  - Item 6: Build 152 pages in 3.5s, content-health 12/12 pass, typecheck 0 errors.
+  - Item 7: `npm run ci-check` passes; `npm run typecheck` clean; `npm run check:hrefs` clean; `npm run check:directory-coverage:test` 3/3 pass.
+- **Decision:** Mark all 7 as DONE with verification evidence. **Do not** create retrospective commits (the work is not in `git log` and back-dating commits would be dishonest). Future agents can trust the Hub claim because it's now backed by today's direct verification.
+- **Safety posture:** Verification only, no source code changes. Hub entry updated in `c554996`.
+
 ---
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
