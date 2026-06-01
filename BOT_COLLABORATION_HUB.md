@@ -1,7 +1,25 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-**Last updated: 2026-05-18 EDT** (Release dependency/tooling gate validated for push — 0 audit vulns, 0 outdated entries.)
+**Last updated: 2026-06-01 EDT** (Sprint 72 — check-script path math fixed; full local validation green.)
+
+---
+
+## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
+
+### Check-script `dist/` path off-by-one ✅ DONE
+- **Why:** `check:content-health` and `check:sitemap-xml` were both failing with "sitemap-0.xml not found" even after a clean build that successfully wrote `/home/steve/maine-dispensary-guide/dist/sitemap-0.xml`. The "rendered crawl basics" check also reported 19,392 phantom failures (all "broken links" inside `client/404.html`, the SPA fallback) for the same root cause — the script was reading the wrong `dist/`.
+- **Root cause:** Off-by-one relative path math in both check scripts. The build script copies to `../../dist` (workspace-root `maine-dispensary-guide/dist/`), but:
+  - `apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs` used `path.resolve(__dirname, '../../..')` → resolved to `apps/`, looked for `apps/dist/sitemap-0.xml`
+  - `apps/maine-cannabis/scripts/content/check-content-health.cjs` used `path.resolve(__dirname, '../../dist/...')` → resolved to `apps/maine-cannabis/dist/...`
+  - Both needed one extra `../` to reach the actual workspace root.
+- **Note:** Sprint 71 `e7c61e0 "fix: correct repo root path in sitemap check script"` claimed to fix this but was itself one level too shallow — the same partial fix had been applied earlier in `ae91d61`.
+- **Change:** Added one `../` to each path in both scripts (one line each). No other logic touched.
+- **Validation:** `corepack npm run build` (152 pages, 0 errors), `corepack npm run check:sitemap-xml` (passes), `corepack npm run check:content-health` (12/12 pass, 0 failures including the rendered crawl basics), `corepack npm run check:hrefs` (passes), `corepack npm run check:directory-coverage:test` (3/3 pass), `corepack npm run ci-check` (all invariants pass), `corepack npm run typecheck` (197 files, 0 errors / 0 warnings / 144 hints).
+- **Files changed:**
+  - `apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs` — `../../..` → `../../../..`
+  - `apps/maine-cannabis/scripts/content/check-content-health.cjs` — `../../dist` → `../../../../dist` (two occurrences)
+- **Safety posture:** Two-line path-math correction; no content, no deploy, no package install, no infra/Vercel changes. Working tree otherwise clean (only generated `.turbo/turbo-build.log` and `.astro/content.d.ts` diffs, both reverted). Not yet committed; pending user/peer review.
 
 ---
 
