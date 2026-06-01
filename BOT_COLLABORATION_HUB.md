@@ -49,6 +49,14 @@
 - **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. Reverting requires restoring the 4 wrong images from git.
 - **Files changed:** 4 hero image files overwritten, Hub entry.
 
+### Whitelist real-estate shared hero + ROI blog hero fix (Sprint 72j) ✅ DONE
+- **Why:** Two more findings from the hero-image reuse audit. First, `maine-cannabis-real-estate.jpg` is used on 8 pages (zoning, school-buffer, opt-in, site-selection, CUPO, municipal-approval, commercial-lease, real-estate) — a legitimate shared hero, same pattern as the granite + compliance clusters. Second, the ROI blog post was using the "how to open" hero image — a copy-paste that was never caught because the file existed and rendered.
+- **Whitelist:** Added `4da2eecec50f18efeee8f3c18579e151` (maine-cannabis-real-estate.jpg) to `known-shared-hero-hashes.txt` with a comment documenting the 8 legitimate use cases. content-health 13 of 13 pass after the whitelist.
+- **ROI hero fix:** Generated a fresh 1280×720 JPEG via MiniMax / Hailuo (Maine cannabis investor at a wooden desk reviewing financial documents with a small cannabis jar and laptop showing growth charts, soft coastal Maine autumn light through a window) and wired it into `maine-dispensary-roi-what-to-expect-2026.astro`. The how-to-open page is unchanged (it owns its hero correctly).
+- **Validation:** Build 152 pages, 0 errors. typecheck 197 files, 0 errors / 0 warnings / 144 hints. content-health 13 of 13 pass. hrefs clean. ci-check all pass.
+- **Safety posture:** Whitelist is purely additive (adds an entry to a documented text file). Hero image fix is a pure content/SEO fix. Reverting requires removing the whitelist entry + restoring the ROI hero from git.
+- **Files changed:** 1 whitelist entry, 1 new ROI hero image, 1 .astro frontmatter, Hub entry.
+
 ---
 
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
