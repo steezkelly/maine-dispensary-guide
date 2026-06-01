@@ -41,6 +41,14 @@
 - **Safety posture:** Pure tooling addition; no content changes, no deploy, no package install, no infra. The check is additive — runs after the existing 12 checks, surfaces but does not fix bugs. Reverting requires deleting the new check function, the new test cases, the new whitelist file, and the new CHECKS entry.
 - **Files changed:** `scripts/content/check-content-health.cjs` (added `checkDuplicateHeroImages` function + new CHECKS entry), `scripts/content/check-content-health.test.cjs` (added 2 new tests + `makeHeroes` helper), `scripts/content/known-shared-hero-hashes.txt` (new whitelist file with 2 documented hashes), Hub entry.
 
+### Fix the 4-file Naples-image bug cluster caught by the Sprint 72g guard (Sprint 72h) ✅ DONE
+- **Why:** The Sprint 72g duplicate-image check immediately flagged 1 unwhitelisted cluster: hash `8b1936c8c9150eca30a2f9a471f4d8a3` shared across 5 files. Only `naples-dispensary-guide.jpg` was legitimate; the other 4 (`maine-portland-harbor-hero.jpg`, `maine-cannabis-social-equity.jpg`, `maine-medical-delivery.jpg`, `newsletter.jpg`) were different pages incorrectly showing the Naples lake photo. The Portland guide in particular was showing a Naples image — a clear trust/SEO/OG-pretend bug.
+- **Fix:** Generated 4 new 1280×720 JPEGs via MiniMax / Hailuo (portland harbor, social equity, medical delivery rural delivery van, newsletter still life) and overwrote the 4 buggy files. No `.astro` frontmatter changes needed — the .astro files already pointed at the correct filenames; the bug was always in the file *content*, not the path (same pattern as Sprint 72f).
+- **Validation:** All 4 new hashes verified unique and different from the Naples hash. content-health 13 of 13 pass (the regression guard that previously caught this bug now confirms the fix). Build 152 pages, 0 errors. typecheck 197 files, 0 errors / 0 warnings / 144 hints. content-health:test 8 of 8 pass. hrefs clean. ci-check all pass.
+- **Provenance:** New prompts added to `docs/HERO_IMAGE_PROMPTS_2026-06-01.json` under the existing `_meta` block (the social-equity and medical-delivery images are blog-post heroes, not town guides).
+- **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. Reverting requires restoring the 4 wrong images from git.
+- **Files changed:** 4 hero image files overwritten, Hub entry.
+
 ---
 
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
