@@ -57,6 +57,15 @@
 - **Safety posture:** Whitelist is purely additive (adds an entry to a documented text file). Hero image fix is a pure content/SEO fix. Reverting requires removing the whitelist entry + restoring the ROI hero from git.
 - **Files changed:** 1 whitelist entry, 1 new ROI hero image, 1 .astro frontmatter, Hub entry.
 
+### MiniMax video use-case scoping (Sprint 73 planning) ✅ DONE
+- **Why:** Passdown §6 Priority 3 deferred the 3-clips/day MiniMax-Hailuo-02 video budget pending a specific, well-scoped use case. The standing TODO said: "Don't drop a video on the homepage without a plan."
+- **What:** Wrote `docs/VIDEO_USE_CASES_2026-06-01.md` ranking 3 specific placements by ROI, with concrete prompts, accessibility notes, and build estimates. Recommended order: (1) newsletter page atmospheric loop — highest conversion-ROI, decorative with JPEG fallback; (2) Portland guide hero — 6s pan of the actual Old Port; (3) founder pages — 3 region-specific clips (Portland downtown, York County coast, Aroostook farmland), Steve-review-gated.
+- **Deliberately deferred:** homepage hero (trust risk), mass city-guide rollout (budget), blog post headers (no info gain), actual founder interview videos (out of MiniMax scope).
+- **Why a scoping doc and not a build:** the passdown framed this as a *decision*, not a build. The 3/day budget + 20-min Hailuo-02 latency means every clip is precious; spending them on "vibes" without a measured outcome is wasteful. The doc gives Steve the inputs to make the budget decision.
+- **Validation:** doc is 13.5KB, includes 3 ranked use cases + 4 deliberately-deferred + execution order + 4 open questions for Steve. No code changes; no new dependencies; no deploy.
+- **Safety posture:** pure documentation, no code touched, no deploy, no infra. Trivially revertable.
+- **Files changed:** 1 new markdown file, Hub entry.
+
 ---
 
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
