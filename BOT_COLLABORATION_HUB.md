@@ -5,6 +5,21 @@
 
 ---
 
+## 📋 SPRINT 72e: Per-Town Hero Images for 11 Small-Town Guides (Jun 1, 2026 EDT)
+
+### MiniMax image generation → per-town hero images for 11 guides ✅ DONE
+- **Why:** Sprint 72b replaced the wrong Naples hero with the generic granite fallback on 11 small-town guides. The granite fallback is too generic — a Denmark, ME page should show a Denmark landscape, not "Maine" in general. The original 22-city directory-coverage commit (`c3172a2`) inherited the wrong hero because no per-town image was ever generated.
+- **What was tried before:** An earlier agent built `scripts/manifests/hero-regen-flux-pro-5.json` with 100+ Flux Pro prompts but never ran the generation — abandoned mid-stream, hence the granite fallback in Sprint 72b.
+- **What changed this sprint:** Used the user's MiniMax $50 subscription plan (Hailuo image-01 backend via `mcp_minimax_text_to_image`) to generate 11 town-specific 1280×720 JPEGs, total ~5.4 MB. Each prompt: town-specific geography (Sebago Lake for Harrison, Atlantic coast for Kennebunkport, Saco River for Hollis, etc.), explicit "no vehicles, no people, no signage, no text" guard against AI-glitch artifacts (Harrison test image had a blurry car that user flagged in the eyeball review).
+- **Denmark regen:** v1 prompt was a generic western-Maine rural crossroads. User noted Denmark has an iconic 4-way road split with a monument/statue. v2 prompt centered that landmark; user accepted the v2 result (rock cairn rendered).
+- **Wired:** All 11 guide frontmatters now point at `/images/heroes/{slug}-dispensary-guide.jpg`. Sitemap regenerates with the correct per-town OG image for each.
+- **Validation:** Build 152 pages, 0 errors. typecheck 197 files, 0 errors / 0 warnings / 144 hints. content-health 12/12 pass. sitemap-xml pass. hrefs clean. ci-check all pass. directory-coverage 3/3 pass.
+- **Provenance:** All 11 prompts (including both Denmark versions) saved to `docs/HERO_IMAGE_PROMPTS_2026-06-01.json` for future regeneration.
+- **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. Reverting the 11 frontmatter edits + deleting 11 image files fully restores the granite-fallback state. To be committed and pushed in this same session.
+- **Files changed:** 11 .astro frontmatters, 11 new image files in `public/images/heroes/`, 1 prompts provenance JSON in `docs/`, Hub entry.
+
+---
+
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
 
 ### Check-script `dist/` path off-by-one ✅ DONE
@@ -26,7 +41,7 @@
 - **Why it matters:** Trust/UX (Denmark guide shows Naples lake photo), SEO (Google image search surfaces Naples image for Denmark/Harrison/etc. queries), social (OG previews on shares display wrong place). 11 of 61 city guides had this issue, 17% of the directory.
 - **Change:** Replaced all 11 wrong `heroImage` values with `/images/heroes/maine-cannabis-granite-hero.jpg` — a generic "Maine landscape" hero already used by the homepage. Naples page untouched (correctly references its own image). One-line change per file.
 - **Verification:** Sitemap regenerates with all 11 fixed pages now serving the granite hero. Naples unchanged. Final build: 152 pages, 0 errors. `typecheck` 197 files, 0 errors / 0 warnings / 144 hints. `check:content-health` 12/12 pass. `check:hrefs` clean. `check:directory-coverage:test` 3/3 pass. `check:sitemap-xml` passes.
-- **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. The change is fully reversible (revert the 11 files). Pending: real per-town hero images should eventually replace the granite fallback, but that's a content-creation task, not a code fix.
+- **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. The change is fully reversible (revert the 11 files). Pending: real per-town hero images should eventually replace the granite fallback, but that's a content-creation task, not a code fix. **RESOLVED in Sprint 72e (per-town AI-generated heroes via MiniMax).**
 - **Files changed:** 11 city guide pages + Hub entry.
 
 ### `llms.txt` slashless canonical URLs + root `llms-full.txt` mirror ✅ DONE
