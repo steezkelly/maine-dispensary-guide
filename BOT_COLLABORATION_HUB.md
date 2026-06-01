@@ -31,6 +31,14 @@
 - **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. The change is fully reversible (revert the 11 files). Pending: real per-town hero images should eventually replace the granite fallback, but that's a content-creation task, not a code fix.
 - **Files changed:** 11 city guide pages + Hub entry.
 
+### `llms.txt` slashless canonical URLs + root `llms-full.txt` mirror ✅ DONE
+- **Why:** Verifying the Sprint 71 entry "llms.txt / llms-full.txt regenerated" found 126 trailing slashes in the canonical URLs in both `apps/maine-cannabis/public/llms.txt` (concise) and `apps/maine-cannabis/public/llms-full.txt` (full corpus). The Hub claim of "no slashful canonical URLs" was inaccurate. The concise file was already mirrored at root `public/llms.txt`, but the full file was not — `public/llms-full.txt` did not exist.
+- **Why it matters:** llms.txt files are explicitly for LLM crawler consumption. `trailingSlash: 'never'` is the canonical Astro config and the Hub's own "no slashful internal links" invariant. AI crawlers that don't auto-resolve slashes would 301-redirect (or worse, mis-attribute) every page reference. Mirroring both files to repo root also ensures the public discovery index is served identically from any path the crawler might fetch.
+- **Change:** Stripped 126 trailing slashes from URLs in all 4 files (app + root, concise + full). Created the missing root `public/llms-full.txt` mirror from the app version. No `mendedispensaryguide` typo in either file. App and root versions are now byte-identical.
+- **Verification:** `grep -cE "https://mainedispensaryguide.com/[a-z][a-z-]+/"` returns 0 against source and `dist/` output. 146 URL references per file (1 homepage + 145 page URLs), all slashless. Build: 152 pages, 0 errors. `check:content-health` 12/12 pass, `check:sitemap-xml` pass, `check:hrefs` clean.
+- **Safety posture:** Two static text file edits; no source code, no deploy, no package install, no infra. Build picks up the new root-level files into `dist/`. The change is fully reversible (revert the 4 files).
+- **Files changed:** `apps/maine-cannabis/public/llms.txt`, `apps/maine-cannabis/public/llms-full.txt`, `public/llms.txt`, `public/llms-full.txt` (created) + Hub entry.
+
 ---
 
 ## 📋 SPRINT 71: Dependency Hygiene + Tooling Validation (May 18, 2026 EDT)
@@ -3995,7 +4003,7 @@ Sprint 71 contains 8 "✅ REVIEW PENDING" entries that document specific work as
 | 5 | npm dependency refresh + local validation | STATUS UNCLEAR | No matching commit. Closest: `ce59c45 chore(deps): refresh final patch versions` (different message). |
 | 6 | release readiness re-check + Puppeteer patch refresh | STATUS UNCLEAR | No matching commit. |
 | 7 | CI invariant cleanup + release gate validation | STATUS UNCLEAR | No matching commit. |
-| 8 | `llms.txt` / `llms-full.txt` regenerated | STATUS UNCLEAR | No matching commit. Closest: `36d8728 SEO/GEO: schema markup, robots.txt, llms.txt, remove admin routes` (broader scope, includes llms.txt but is not the Sprint 71 entry). |
+| 8 | `llms.txt` / `llms-full.txt` regenerated | ✅ DONE (Sprint 72c) | Fixed: stripped 126 trailing slashes from URLs in both `apps/maine-cannabis/public/llms.txt` and `llms-full.txt`, created the missing root `public/llms-full.txt` mirror (concise was already mirrored), confirmed 0 trailing slashes remain in source + `dist/` build output. 146 URL references each, slashless. No `mendedispensaryguide` typo. Build copies both files to `dist/`. |
 
 **Why this matters:** the Hub's "Current Score: 100/100 (A) ✅" is what every cold-start agent reads first. Stating "0 ERRORS" when 8 documented changes are unverified in the actual codebase is a false-positive dashboard.
 
