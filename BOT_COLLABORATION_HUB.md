@@ -3,6 +3,8 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 **Last updated: 2026-06-01 EDT** (Sprint 72 — check-script path math fixed; full local validation green.)
 
+> **Hub accuracy notice (2026-06-01):** The score above reflects the validation actually re-run today, not the 8 "REVIEW PENDING" entries inherited from Sprint 71. Those entries describe changes that were *documented* in this Hub on May 18 but whose underlying git commits cannot be matched in `git log`. See **STATUS UNCLEAR** at the bottom for the full list. Do not treat them as "DONE ✅" until re-validated.
+
 ---
 
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
@@ -19,7 +21,15 @@
 - **Files changed:**
   - `apps/maine-cannabis/scripts/build/check-sitemap-xml.cjs` — `../../..` → `../../../..`
   - `apps/maine-cannabis/scripts/content/check-content-health.cjs` — `../../dist` → `../../../../dist` (two occurrences)
-- **Safety posture:** Two-line path-math correction; no content, no deploy, no package install, no infra/Vercel changes. Working tree otherwise clean (only generated `.turbo/turbo-build.log` and `.astro/content.d.ts` diffs, both reverted). Not yet committed; pending user/peer review.
+- **Safety posture:** Two-line path-math correction; no content, no deploy, no package install, no infra/Vercel changes. Working tree otherwise clean (only generated `.turbo/turbo-build.log` and `.astro/content.d.ts` diffs, both reverted). Committed as `3b24626`.
+
+### Sitemap "10 small-town guides" Naples hero-image bug ✅ DONE
+- **Why:** While validating the path fix, walked the built `dist/sitemap-0.xml` and found 10 small-town guide pages (alfred, arundel, denmark, harrison, hollis, kennebunkport, lovell, lyman, norway, waterboro, waterford) all serving `naples-dispensary-guide.jpg` as their OG/hero image. The actual `naples-dispensary-guide.astro` correctly serves its own image. The bug was inherited from the directory-coverage commit `c3172a2` (#11) — never caught because content-health and other checks do not verify per-page hero image semantics, only asset existence.
+- **Why it matters:** Trust/UX (Denmark guide shows Naples lake photo), SEO (Google image search surfaces Naples image for Denmark/Harrison/etc. queries), social (OG previews on shares display wrong place). 11 of 61 city guides had this issue, 17% of the directory.
+- **Change:** Replaced all 11 wrong `heroImage` values with `/images/heroes/maine-cannabis-granite-hero.jpg` — a generic "Maine landscape" hero already used by the homepage. Naples page untouched (correctly references its own image). One-line change per file.
+- **Verification:** Sitemap regenerates with all 11 fixed pages now serving the granite hero. Naples unchanged. Final build: 152 pages, 0 errors. `typecheck` 197 files, 0 errors / 0 warnings / 144 hints. `check:content-health` 12/12 pass. `check:hrefs` clean. `check:directory-coverage:test` 3/3 pass. `check:sitemap-xml` passes.
+- **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. The change is fully reversible (revert the 11 files). Pending: real per-town hero images should eventually replace the granite fallback, but that's a content-creation task, not a code fix.
+- **Files changed:** 11 city guide pages + Hub entry.
 
 ---
 
@@ -3969,3 +3979,37 @@ Changed the IIFE wrapper to `document.addEventListener('DOMContentLoaded', ...)`
 
 ### Files Changed
 - `apps/maine-cannabis/src/layouts/Layout.astro`
+
+---
+
+## ⚠️ STATUS UNCLEAR: Sprint 71 Entries Without Matching Commits (Jun 1, 2026 EDT)
+
+Sprint 71 contains 8 "✅ REVIEW PENDING" entries that document specific work as if it landed. Re-checking against `git log` on 2026-06-01 produced **no matching commits** for most of them. The Hub score is therefore higher than the verifiable evidence supports. Future agents should not treat these as done.
+
+| # | Hub entry (Sprint 71) | Status | Evidence |
+|---|---|---|---|
+| 1 | Ahrefs May 19 rerun link cleanup | STATUS UNCLEAR | No commit matching this scope in `git log --since=2026-05-18`. Closest: `be903ab fix(seo): clean up Ahrefs rerun link signals` (different scope). |
+| 2 | Ahrefs May 19 tracked issue cleanup | STATUS UNCLEAR | No matching commit. Closest: `cf1686f fix: clean up Ahrefs tracked link issues` (different scope). |
+| 3 | Ahrefs May 19 schema markup cleanup | STATUS UNCLEAR | No matching commit. Closest: `53846d6 fix(seo): render schema json ld without escaping (#14)` (much older). |
+| 4 | Ahrefs May 18 noindex/social crawl cleanup | STATUS UNCLEAR | No matching commit. |
+| 5 | npm dependency refresh + local validation | STATUS UNCLEAR | No matching commit. Closest: `ce59c45 chore(deps): refresh final patch versions` (different message). |
+| 6 | release readiness re-check + Puppeteer patch refresh | STATUS UNCLEAR | No matching commit. |
+| 7 | CI invariant cleanup + release gate validation | STATUS UNCLEAR | No matching commit. |
+| 8 | `llms.txt` / `llms-full.txt` regenerated | STATUS UNCLEAR | No matching commit. Closest: `36d8728 SEO/GEO: schema markup, robots.txt, llms.txt, remove admin routes` (broader scope, includes llms.txt but is not the Sprint 71 entry). |
+
+**Why this matters:** the Hub's "Current Score: 100/100 (A) ✅" is what every cold-start agent reads first. Stating "0 ERRORS" when 8 documented changes are unverified in the actual codebase is a false-positive dashboard.
+
+**Recommended next-step for a future agent:**
+1. Pick one entry (start with `llms.txt` regeneration — easy to verify: does `public/llms.txt` exist and match the 145-URL public route count?).
+2. Re-run the change from scratch, OR find the lost commit in a scratch branch / reflog / backup, OR mark the entry as "abandoned — re-deriving from scratch."
+3. Update the Hub with the real commit hash and remove the STATUS UNCLEAR notice.
+4. Once all 8 are resolved, restore the score header to the simple form.
+
+**Re-validation command:**
+```bash
+cd /home/steve/maine-dispensary-guide
+git log --since="2026-05-18" --until="2026-05-25" --oneline
+git log --all --grep="<title keyword>" --oneline
+```
+
+This is exactly the failure mode the user warned about: "go back and make sure all of that is optimized" = critical self-review pass, not just "build passed." A passing build does not validate documented work.
