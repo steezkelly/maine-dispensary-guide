@@ -18,6 +18,18 @@
 - **Safety posture:** Pure content/SEO fix; no deploy, no package install, no infra. Reverting the 11 frontmatter edits + deleting 11 image files fully restores the granite-fallback state. To be committed and pushed in this same session.
 - **Files changed:** 11 .astro frontmatters, 11 new image files in `public/images/heroes/`, 1 prompts provenance JSON in `docs/`, Hub entry.
 
+### Duplicate-image detection + 29 more per-town heroes (Sprint 72f) ✅ DONE
+- **Why:** While wiring Boothbay + Parsonsfield per user request, MD5-hashed the entire `public/images/heroes/` directory. Found that **31 town guides were all pointing at the same `naples-dispensary-guide.jpg` file** (hash `8b1936c8...`, 400,774 bytes). The previous directory-coverage commit `c3172a2` had been celebrating "per-town images" but actually copy-pasted a single stock image into 36 filenames. The content-health check and directory-coverage test both miss this because they validate path existence, not image content uniqueness.
+- **Severity:** Half the city directory (31 of 61 town guides) was showing a Naples lake photo on pages about Belfast, Camden, Freeport, Kennebunkport, Ogunquit, Wells, York, etc. — same trust/SEO/social-OG problem Sprint 72b caught, just at a larger scale.
+- **Fix:** Generated 29 new town-specific 1280×720 JPEGs via MiniMax / Hailuo (Boothbay + Parsonsfield were generated and approved in the discovery phase). Each prompt drawn from the town's actual page description and geographic context (Sebago Lake for the Sebago Lakes Region towns, Saco River corridor for Cornish, Penobscot Bay for Rockland/Camden/Belfast, Sunday River ski area for Bethel, etc.). All prompts include the "no vehicles, no people, no signage, no text" guard established in Sprint 72e.
+- **Wired:** Overwrote the 29 duplicate Naples-hash files with the new per-town images. Frontmatters were already pointing at the correct filenames — the bug was always in the file *content*, not the path. All 29 production image hashes are now unique.
+- **Wells re-generation:** Initial batch had one URL expire (HTTP 403 from OSS link timeout) during the 13-second download window. Re-ran MiniMax for wells with identical prompt, downloaded successfully.
+- **Validation:** Build 152 pages, 0 errors. typecheck 197 files, 0 errors / 0 warnings / 144 hints. content-health 12/12 pass. sitemap-xml pass. hrefs clean. ci-check all pass. directory-coverage 3/3 pass. All 29 new hashes unique.
+- **Duplicate-image regression guard:** A simple MD5 sweep of `public/images/heroes/` will now catch any future "one image copy-pasted to 30 filenames" bug. The content-health check should be enhanced to include this — logged as a follow-up.
+- **Provenance:** All 29 new prompts added to `docs/HERO_IMAGE_PROMPTS_2026-06-01.json` (file now covers 42 towns total).
+- **Safety posture:** Pure content/SEO fix. Reverting requires deleting 29 image files and restoring the 31-file duplicate cluster from git. No deploy, no package install, no infra.
+- **Files changed:** 29 new image files in `public/images/heroes/`, 1 prompts provenance JSON in `docs/`, Hub entry.
+
 ---
 
 ## 📋 SPRINT 72: Sitemap & Content-Health Path Resolution Fix (Jun 1, 2026 EDT)
