@@ -493,6 +493,58 @@ function checkSitemapXmlEntities() {
   return [`sitemap-0.xml contains ${invalid.length} unescaped '&' entity violation${invalid.length > 1 ? 's' : ''}${sample}${more}`];
 }
 
+// ─── Check 14: duplicate hero image content (MD5 sweep) ─────────────────────
+//
+// Catches the directory-coverage copy-paste bug: a single stock image saved
+// to many filenames. Path-existence checks don't catch this — same path, same
+// content, just different filenames. All town/region hero images should be
+// unique content so the page they reference shows a town-specific photo.
+//
+// Operators can whitelist intentional shared fallbacks (granite hero, generic
+// compliance graphics) by adding the MD5 to
+// `scripts/content/known-shared-hero-hashes.txt`.
+function checkDuplicateHeroImages() {
+  const results = [];
+  if (!fs.existsSync(PUBLIC_DIR)) {
+    return [`public/ directory not found at ${PUBLIC_DIR}`];
+  }
+  const heroesDir = path.join(PUBLIC_DIR, 'images', 'heroes');
+  if (!fs.existsSync(heroesDir)) {
+    return [];  // no heroes directory is fine
+  }
+  const crypto = require('node:crypto');
+  // Load whitelist (one MD5 per line, # comments OK, blank lines OK)
+  const whitelistPath = path.join(__dirname, 'known-shared-hero-hashes.txt');
+  const whitelisted = new Set();
+  if (fs.existsSync(whitelistPath)) {
+    for (const line of fs.readFileSync(whitelistPath, 'utf8').split('\n')) {
+      const stripped = line.replace(/#.*/, '').trim().toLowerCase();
+      if (/^[0-9a-f]{32}$/.test(stripped)) whitelisted.add(stripped);
+    }
+  }
+  // Sweep hero images, group by MD5
+  const hashToFiles = new Map();
+  const imageExts = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+  for (const f of fs.readdirSync(heroesDir)) {
+    const p = path.join(heroesDir, f);
+    if (!fs.statSync(p).isFile()) continue;
+    if (!imageExts.includes(path.extname(f).toLowerCase())) continue;
+    const buf = fs.readFileSync(p);
+    const h = crypto.createHash('md5').update(buf).digest('hex');
+    if (!hashToFiles.has(h)) hashToFiles.set(h, []);
+    hashToFiles.get(h).push(f);
+  }
+  // Report every hash that appears in 2+ files, unless whitelisted.
+  for (const [h, files] of hashToFiles) {
+    if (files.length < 2) continue;
+    if (whitelisted.has(h)) continue;
+    results.push(
+      `hash ${h.slice(0, 8)}... shared across ${files.length} files: ${files.slice(0, 6).join(', ')}${files.length > 6 ? ` (+${files.length - 6} more)` : ''}`
+    );
+  }
+  return results;
+}
+
 // ─── Run all checks ───────────────────────────────────────────────────────────
 const CHECKS = [
   { name: 'bare href="#" links', fn: checkHrefHash },
@@ -509,6 +561,7 @@ const CHECKS = [
   { name: 'OG image dimensions', fn: checkOGImageDimensions },
   { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
   { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
+  { name: 'duplicate hero image content', fn: checkDuplicateHeroImages },
 ];
 
 let totalFailures = 0;

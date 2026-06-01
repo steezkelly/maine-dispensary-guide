@@ -27,6 +27,14 @@ function makePages(files) {
   return { tmp, pages, sitemap, dist: path.join(tmp, 'dist'), publicDir };
 }
 
+function makeHeroes(publicDir, heroes) {
+  const heroesDir = path.join(publicDir, 'images', 'heroes');
+  fs.mkdirSync(heroesDir, { recursive: true });
+  for (const [filename, content] of Object.entries(heroes)) {
+    fs.writeFileSync(path.join(heroesDir, filename), content);
+  }
+}
+
 function runCheck({ pages, sitemap, dist, publicDir }) {
   return spawnSync(process.execPath, [script], {
     cwd: path.resolve(__dirname, '../..'),
@@ -116,6 +124,43 @@ test('ignores query strings for relative internal route links in source', () => 
   const fixture = makePages({
     'index.astro': '<a href="./guides/existing?source=home">Existing guide with local route param</a>\n',
     'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+
+  const result = runCheck(fixture);
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /All content health checks passed/);
+});
+
+test('flags duplicate hero image content (same MD5 in 2+ files)', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+  // Two files with identical content — should trigger duplicate check
+  const identicalJpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01]);
+  makeHeroes(fixture.publicDir, {
+    'town-a-dispensary-guide.jpg': identicalJpeg,
+    'town-b-dispensary-guide.jpg': identicalJpeg,
+  });
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /duplicate hero image content: 1 issue/);
+  assert.match(result.stdout, /shared across 2 files: town-a-dispensary-guide\.jpg, town-b-dispensary-guide\.jpg/);
+});
+
+test('passes when hero images are all unique content', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+  // Three files with different content
+  makeHeroes(fixture.publicDir, {
+    'town-a-dispensary-guide.jpg': Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0xAA, 0xBB]),
+    'town-b-dispensary-guide.jpg': Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0xCC, 0xDD]),
+    'town-c-dispensary-guide.jpg': Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0xEE, 0xFF]),
   });
 
   const result = runCheck(fixture);
