@@ -5,16 +5,20 @@
 
 ## 0. TL;DR
 
-MDG has 3 video clips/day via `mcp_minimax_generate_video` (MiniMax-Hailuo-02,
-1080p, 6s or 10s). The passdown (§6 Priority 3) explicitly deferred use-case
-selection until there was a specific, well-scoped plan. **This doc names 3
-specific use cases, ranked by ROI, and includes concrete prompt + placement +
-expected outcome for each.** Budget: 1 video/day, 3 videos spread over a
-week-long sprint, with each embedded in a specific page.
+MDG has a 3-clips/day MiniMax-Hailuo-02 budget via `mcp_minimax_generate_video`
+(1080p, 6 or 10 sec). **Daily rolling allowance** — not a one-time
+allocation. Budget persists across days; one good sprint spends 5 clips
+across 2 calendar days without exhausting it.
 
-**Do NOT drop a video on the homepage** (passdown's explicit warning). All
-three placements are page-specific, trust-amplifying, and link to existing
-text content.
+The passdown (§6 Priority 3) explicitly deferred use-case selection
+until there was a specific, well-scoped plan. **This doc names 3
+specific use cases, ranked by ROI, with concrete prompt + placement +
+expected outcome for each.** Recommended order: (1) newsletter page
+atmospheric loop → (2) Portland guide hero → (3) founder pages.
+
+**Do NOT drop a video on the homepage** (passdown's explicit warning).
+All three placements are page-specific, trust-amplifying, and link to
+existing text content.
 
 ---
 
@@ -74,15 +78,29 @@ emotional texture on the *exact page* where readers decide to subscribe.
 behind the benefits list and recent-issues preview. Fall back to the
 JPEG for users with `prefers-reduced-motion`.
 
-**Prompt (Hailuo-02, 10s, 1080P, aspect 16:9):**
+**Prompt A (Hailuo-02, 10s, 1080P, aspect 16:9) — atmospheric coastal:**
 
 > Slow aerial drone footage of a quiet Maine coastal town at golden
 > hour, autumn foliage along the shoreline, a fishing boat moored at
 > a weathered wooden pier, calm Atlantic water, no people, no
-> vehicles, no text, no signage, cinematic color grading, high-end
-> documentary cinematography, 24fps filmic motion
+> vehicles, no text, no signage, cinematic color grading
 
-**Expected outcome:** A 10-second atmospheric loop that reads as
+**Prompt B (Hailuo-02, 6s, 768P, aspect 16:9) — the deliverable:**
+
+> Hands holding a printed cannabis industry newsletter open on a
+> rustic wooden table, a ceramic coffee mug beside it, autumn light
+> streaming through a window, glimpses of Maine coast and trees
+> visible through the window, no people visible, no text readable on
+> the newsletter pages, professional editorial photography
+
+**Trade-off:** Prompt A is the safe default — Maine landscape,
+ambient texture, hard to get wrong. Prompt B is on-brand but more
+specific (the *deliverable* is shown, not the *subject*), which
+raises the risk of AI artefacts (hands, readable text). Recommend
+**Prompt A for v1**, then consider Prompt B once the v1 component
+proves the integration works.
+
+**Expected outcome:** A 6-10 second atmospheric loop that reads as
 "professional, Maine-specific, trustworthy" rather than "generic stock
 footage." This is exactly the trust signal the lead-capture page
 needs.
@@ -96,9 +114,9 @@ needs.
 - Use `webm` if MiniMax returns multiple formats; fall back to mp4
 - Lazy-load: this page is lead-capture, not above-the-fold content
 
-**Estimated time to build:** 2 hours (1 video gen + 1 component + tests)
-**Estimated ongoing cost:** 1 video generation (~20 min compute) per
-A/B test cycle. Stays within budget.
+**Estimated time to build:** ~2 hours (1 video gen + 1 component +
+tests). Build time estimates throughout this doc are rough; treat
+them as ±50%.
 
 ---
 
@@ -171,19 +189,17 @@ quote that immediately follows.
 **Portland flagship — James:**
 > Slow aerial over downtown Portland, Maine at golden hour, the Old
 > Port brick buildings and Casco Bay visible, no people, no vehicles,
-> no text, no signage, documentary cinematography, 24fps
+> no text, no signage
 
 **Coastal shop — York County mid-tier:**
 > Slow pan across a quiet rocky Maine Atlantic beach at low tide,
 > weathered seaside cottages in the distance, no people, no vehicles,
-> no text, no signage, autumn overcast sky, cinematic coastal
-> photography, 24fps
+> no text, no signage, autumn overcast sky
 
 **Rural cultivator — Aroostook / Washington County:**
 > Slow pan across a vast Maine farmland in autumn, distant forested
 > hills, hay field in the foreground, weathered red barn, no people,
-> no vehicles, no text, no signage, soft overcast light, documentary
-> cinematography, 24fps
+> no vehicles, no text, no signage, soft overcast light
 
 **Expected outcome:** Each founder story opens with visual texture
 specific to the region they're operating in. The reader's first
@@ -255,15 +271,18 @@ If Steve approves the video budget, the order is:
 2. **Use Case 2 (Portland guide)** — 1 video, 1 day. High
    authority, single page, easy to A/B test against the static
    hero.
-3. **Use Case 3 (founder pages)** — 3 videos, 1 day (parallel
-   async). Total commit 5 hours of build time. Steve's manual
-   review required before publication.
+3. **Use Case 3 (founder pages)** — 3 videos, 1 day per clip
+   (3 calendar days) or batched across 2 days (2+1). The daily
+   rolling budget makes this flexible. Steve's manual review
+   required before publication.
 
-Total: 5 video generations (1 + 1 + 3) across 3 days. Under the
-3/day budget if Use Case 3's 3 are generated in parallel async.
+Total across all 3 use cases: 5 video generations spread over 3-5
+calendar days. The 3/day budget is a daily cap, not a lifetime cap,
+so a 2+1+1+1 cadence is also fine if Steve wants to space the
+founder clips across a full week.
 
 **Stop conditions:** if any of the 3 Hailuo-02 generations returns
-a video that fails Steve's visual review, the day's budget is
+a video that fails Steve's visual review, that day's budget is
 spent. Don't regen-without-thinking; the next day's budget should
 fund a *different* use case, not a retry.
 
@@ -271,20 +290,31 @@ fund a *different* use case, not a retry.
 
 ## 5. OPEN QUESTIONS FOR STEVE
 
+Two real decision points, two minor. The real ones gate execution.
+
+**Real (must answer before any build):**
+
 1. **Approve the video budget at all?** The passdown deferred this
    for good reasons (3/day, AI-generated landscape risk). If the
    answer is "no, the static images are good enough", this doc
-   closes with no execution.
+   closes with no execution and the daily budget stays unspent.
+
 2. **Where should videos live on disk?** Options:
    - `apps/maine-cannabis/public/videos/` (served by Astro directly)
    - CDN (Vercel's media optimization, or Cloudflare R2)
    - Inline data: URLs in MDX (no, too large)
-   Recommendation: `public/videos/` for v1, CDN for production scale.
+   **Recommendation:** `public/videos/` for v1, CDN for production
+   scale. Vercel serves mp4 from the public dir fine for sub-50K
+   monthly visitors.
+
+**Minor (decide during build, not before):**
+
 3. **Video component library or bespoke?** Three placements share
    a need for autoplay/muted/loop/playsinline/poster. A small
    `<AtmosphericVideo>` component is the right size. Not a full
    video player — just an HTML5 video element with the right
    attribute defaults.
+
 4. **Acceptable file size?** Hailuo-02 1080P 10s clips can be
    5-15MB. Vercel's serving cost for that is negligible but
    LCP/INP on slow networks may suffer. 768P is the safer default
