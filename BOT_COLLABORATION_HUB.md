@@ -57,6 +57,16 @@
 - **Safety posture:** Whitelist is purely additive (adds an entry to a documented text file). Hero image fix is a pure content/SEO fix. Reverting requires removing the whitelist entry + restoring the ROI hero from git.
 - **Files changed:** 1 whitelist entry, 1 new ROI hero image, 1 .astro frontmatter, Hub entry.
 
+### Read actual hero image dimensions from JPEG SOF0 marker (Sprint 72k) ✅ DONE
+- **Why:** The site was hardcoding 1200x400 in the rendered `<img>` width/height and 1200x630 in the `og:image:width` / `og:image:height` meta tags. With 58 of 137 hero images now 1280×720 (the new convention from Sprints 72e/72f), this meant social media previews cropped wrong, CLS allocated incorrectly, and screen readers reported wrong image dimensions.
+- **Fix (3 places):**
+  1. `apps/maine-cannabis/src/layouts/Layout.astro` — new `getHeroImageDimensions()` reads the JPEG SOF0 marker at build time and emits truthful width/height in `<img>` and `og:image:width/height` meta. Falls back to 1200x630 on non-`/images/` paths, missing files, or unparseable JPEGs.
+  2. `scripts/content/check-content-health.cjs` — `checkOGImageDimensions()` upgraded to read the same SOF0 markers and assert meta values match. Falls back to a ≥200x100 sanity check when the image isn't local (CDN/external).
+  3. `scripts/content/check-content-health.test.cjs` — 2 new tests (flags mismatched, passes on matched) using explicit byte values for the JFIF magic. A literal `'JFIF'` string in `Buffer.from([number, ...])` is silently dropped on Node 22, producing a malformed test fixture — caught and fixed in the same commit.
+- **Validation:** Build 152 pages, 0 errors. typecheck 197 files, 0 errors / 0 warnings / 144 hints. content-health 13/13 pass — the upgraded OG check validates every built page's hero dimensions against the real JPEG file. content-health:test 10/10 pass. hrefs clean. ci-check all pass.
+- **Safety posture:** Pure SEO/UX fix. The 1200x630 fallback in `getHeroImageDimensions` matches the old hardcoded values, so reverting this commit returns the site to identical render output. The check-script change *tightens* the check (catches more bugs) but doesn't fail any existing pages — verified live.
+- **Files changed:** 1 Layout helper function, 1 check-script upgrade, 2 new test cases, Hub entry.
+
 ### MiniMax video use-case scoping (Sprint 73 planning) ✅ DONE
 - **Why:** Passdown §6 Priority 3 deferred the 3-clips/day MiniMax-Hailuo-02 video budget pending a specific, well-scoped use case. The standing TODO said: "Don't drop a video on the homepage without a plan."
 - **What:** Wrote `docs/VIDEO_USE_CASES_2026-06-01.md` ranking 3 specific placements by ROI, with concrete prompts, accessibility notes, and build estimates. Recommended order: (1) newsletter page atmospheric loop — highest conversion-ROI, decorative with JPEG fallback; (2) Portland guide hero — 6s pan of the actual Old Port; (3) founder pages — 3 region-specific clips (Portland downtown, York County coast, Aroostook farmland), Steve-review-gated.
