@@ -225,9 +225,7 @@ function walk(dir, out = []) {
 }
 
 // ─── Check 8: production pages missing complete OG image metadata ───────────
-// Every production HTML page should have og:image, og:image:width, og:image:height
-const REQUIRED_OG_WIDTH = '1200';
-const REQUIRED_OG_HEIGHT = '630';
+// ─── Check 10: OG image dimensions ────────────────────────────────────────────
 
 function checkOGImageDimensions() {
   const results = [];
@@ -235,6 +233,49 @@ function checkOGImageDimensions() {
 
   if (!fs.existsSync(distPath)) {
     return ['dist/ not found — run build first'];
+  }
+
+  // Read actual image dimensions from /public/ so we can validate the
+  // og:image:width / og:image:height meta tags match the real file.
+  // Falls back to the documented 1200x630 default if the image isn't local.
+  const dimsCache = new Map();
+  const DEFAULT_OG_WIDTH = 1200;
+  const DEFAULT_OG_HEIGHT = 630;
+  function readLocalImageDims(url) {
+    // url is absolute (e.g. https://mainedispensaryguide.com/images/heroes/x.jpg)
+    // or relative (/images/heroes/x.jpg). Only resolve /images/* against public/.
+    let rel;
+    if (url.startsWith('/images/')) rel = url.slice(1);
+    else {
+      const m = url.match(/^https?:\/\/[^/]+(\/.*)$/);
+      if (!m || !m[1].startsWith('/images/')) return null;
+      rel = m[1].slice(1);
+    }
+    if (dimsCache.has(rel)) return dimsCache.get(rel);
+    const filePath = path.join(PUBLIC_DIR, rel);
+    let data;
+    try { data = fs.readFileSync(filePath); }
+    catch { dimsCache.set(rel, null); return null; }
+    // Walk JPEG markers looking for SOF0/1/2/3
+    let i = 2;
+    while (i < data.length - 9) {
+      if (data[i] !== 0xFF) break;
+      const marker = data[i + 1];
+      if (marker === 0xD8 || marker === 0xD9 || marker === 0x00) { i += 2; continue; }
+      if (marker === 0xC0 || marker === 0xC1 || marker === 0xC2 || marker === 0xC3) {
+        const h = data.readUInt16BE(i + 5);
+        const w = data.readUInt16BE(i + 7);
+        const result = { w, h };
+        dimsCache.set(rel, result);
+        return result;
+      }
+      if (marker === 0xDA) break;
+      if (i + 4 > data.length) break;
+      const segLen = data.readUInt16BE(i + 2);
+      i += 2 + segLen;
+    }
+    dimsCache.set(rel, null);
+    return null;
   }
 
   // Walk built HTML pages
@@ -248,35 +289,45 @@ function checkOGImageDimensions() {
         const rel = path.relative(distPath, full);
         const text = fs.readFileSync(full, 'utf8');
 
-        let hasOgImage = false;
-        let hasOgWidth = false;
-        let hasOgHeight = false;
-        let wrongWidth = false;
-        let wrongHeight = false;
+        // Find og:image URL
+        const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
+        const ogImageMatch = text.match(ogImageRe);
+        const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
 
-        const tagRe = /<meta\s+(?:property|name)=["']([^"']+)["']\s+content=["']([^"']*)["']/g;
-        let m;
-        while ((m = tagRe.exec(text)) !== null) {
-          const prop = m[1];
-          const val = m[2];
-          if (prop === 'og:image') hasOgImage = val.length > 0;
-          if (prop === 'og:image:width') hasOgWidth = val === REQUIRED_OG_WIDTH;
-          if (prop === 'og:image:height') hasOgHeight = val === REQUIRED_OG_HEIGHT;
-        }
+        // Find og:image:width / height
+        const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
+        const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
+        const wMatch = text.match(wRe);
+        const hMatch = text.match(hRe);
 
-        // Also catch width/height that are wrong values
-        const widthRe = /<meta\s+(?:property|name)=["']og:image:width["']\s+content=["']([^"']*)["']/g;
-        const heightRe = /<meta\s+(?:property|name)=["']og:image:height["']\s+content=["']([^"']*)["']/g;
-        const wm = widthRe.exec(text); if (wm && wm[1] !== REQUIRED_OG_WIDTH) wrongWidth = wm[1];
-        const hm = heightRe.exec(text); if (hm && hm[1] !== REQUIRED_OG_HEIGHT) wrongHeight = hm[1];
-
-        if (!hasOgImage) {
+        if (!ogImageUrl) {
           results.push(`${rel}: missing og:image`);
+          return;
+        }
+        if (!wMatch) {
+          results.push(`${rel}: missing og:image:width`);
+        } else if (!hMatch) {
+          results.push(`${rel}: missing og:image:height`);
         } else {
-          if (wrongWidth) results.push(`${rel}: wrong og:image:width="${wrongWidth}" (expected ${REQUIRED_OG_WIDTH})`);
-          if (wrongHeight) results.push(`${rel}: wrong og:image:height="${wrongHeight}" (expected ${REQUIRED_OG_HEIGHT})`);
-          if (!hasOgWidth && !wrongWidth) results.push(`${rel}: missing og:image:width`);
-          if (!hasOgHeight && !wrongHeight) results.push(`${rel}: missing og:image:height`);
+          const reportedW = parseInt(wMatch[1], 10);
+          const reportedH = parseInt(hMatch[1], 10);
+          if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
+            const local = readLocalImageDims(ogImageUrl);
+            if (local) {
+              if (reportedW !== local.w) {
+                results.push(`${rel}: og:image:width=${reportedW} doesn't match actual image width ${local.w} (${ogImageUrl})`);
+              }
+              if (reportedH !== local.h) {
+                results.push(`${rel}: og:image:height=${reportedH} doesn't match actual image height ${local.h} (${ogImageUrl})`);
+              }
+            }
+            // External images (no local dims available): just sanity-check reasonable size
+            else {
+              if (reportedW < 200 || reportedH < 100) {
+                results.push(`${rel}: og:image dimensions look too small (${reportedW}x${reportedH}) for ${ogImageUrl}`);
+              }
+            }
+          }
         }
       }
     }

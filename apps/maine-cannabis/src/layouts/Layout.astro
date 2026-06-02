@@ -66,6 +66,7 @@ const {
 // Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
+const heroImageDims = getHeroImageDimensions(heroImage);
 const MAX_SEO_TITLE_LENGTH = 60;
 const MAX_META_DESCRIPTION_LENGTH = 160;
 const truncateMetaDescription = (value: string) => {
@@ -104,7 +105,53 @@ const breadcrumbLabels: Record<string, string> = {
   'market-stats': 'Market Stats',
 };
 
-function buildCrumbs(path: string, explicitCrumbs: Breadcrumb[]): Breadcrumb[] {
+// ─── Hero image dimensions ───────────────────────────────────────────────────
+//
+// Reads the actual width/height of a hero image from the JPEG SOF0 marker so
+// the rendered <img>, <link rel="preload">, and Open Graph meta tags report
+// truthful dimensions. Without this, the site was hardcoded to 1200x400 in
+// the <img> tag and 1200x630 in OG meta — wrong for 1280x720 hero images
+// (the new convention used by 58 of 137 hero images as of 2026-06-01), which
+// affects social media preview cropping, CLS allocation, and a11y/screen
+// reader output. Touched: 2026-06-01 Sprint 72k.
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
+function getHeroImageDimensions(heroImage: string | undefined): { w: number, h: number } {
+  const DEFAULT = { w: 1200, h: 630 };
+  if (!heroImage || !heroImage.startsWith('/images/')) return DEFAULT;
+  // heroImage is a slashless absolute path like /images/heroes/xxx.jpg
+  // The public/ dir in the Astro project is the source of truth.
+  const publicDir = path.resolve(process.cwd(), 'public');
+  const filePath = path.join(publicDir, heroImage);
+  let data: Buffer;
+  try {
+    data = fs.readFileSync(filePath);
+  } catch {
+    return DEFAULT;
+  }
+  // Walk JPEG markers looking for SOF0/1/2/3 (0xFFC0..0xFFC3). The marker
+  // is followed by a 2-byte segment length, 1-byte precision, 2-byte height,
+  // 2-byte width, all big-endian.
+  let i = 2; // skip SOI (0xFFD8)
+  while (i < data.length - 9) {
+    if (data[i] !== 0xFF) return DEFAULT;
+    const marker = data[i + 1];
+    if (marker === 0xD8 || marker === 0xD9 || marker === 0x00) { i += 2; continue; }
+    if (marker === 0xC0 || marker === 0xC1 || marker === 0xC2 || marker === 0xC3) {
+      const h = data.readUInt16BE(i + 5);
+      const w = data.readUInt16BE(i + 7);
+      return { w, h };
+    }
+    if (marker === 0xDA) return DEFAULT; // SOS: scan data follows
+    if (i + 4 > data.length) return DEFAULT;
+    const segLen = data.readUInt16BE(i + 2);
+    i += 2 + segLen;
+  }
+  return DEFAULT;
+}
+
+function buildCrumbs(path: string, explicitCrumbs: Breadcrumb[]) {
   if (explicitCrumbs.length > 0) return explicitCrumbs;
   const parts = path.split('/').filter(Boolean);
   if (parts.length === 0) return [];
@@ -166,8 +213,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta property="og:image:url" content={socialImage} />
     <meta property="og:image:secure_url" content={socialImage} />
     <meta property="og:image:type" content={socialImageType} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={String(heroImageDims.w)} />
+    <meta property="og:image:height" content={String(heroImageDims.h)} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={seoDescription} />
@@ -512,7 +559,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       {isGuide ? (
         <div class="guide-layout">
           <div class="guide-content">
-            {heroImage && <div class="guide-hero"><img src={heroImage} alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={1200} height={400} loading="eager" /></div>}
+            {heroImage && <div class="guide-hero"><img src={heroImage} alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></div>}
             <slot />
             {article && (
               <div class="article-meta">

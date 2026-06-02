@@ -168,3 +168,50 @@ test('passes when hero images are all unique content', () => {
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /All content health checks passed/);
 });
+
+test('flags OG image dimensions that do not match the actual image file', () => {
+  const jpeg1280x720 = Buffer.concat([
+    Buffer.from([0xff, 0xd8]),
+    Buffer.from([0xff, 0xe0, 0x00, 0x10]),
+    Buffer.from([0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00]),
+    Buffer.from([0xff, 0xc0, 0x00, 0x11, 0x08]),
+    Buffer.from([(720 >> 8) & 0xff, 720 & 0xff]),
+    Buffer.from([(1280 >> 8) & 0xff, 1280 & 0xff]),
+    Buffer.from([0x03, 0x01, 0x22, 0x00, 0x02, 0x11, 0x01, 0x03, 0x11, 0x01]),
+    Buffer.from([0xff, 0xd9]),
+  ]);
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\\n',
+    'guides/existing.astro': '<p>Existing guide</p>\\n',
+  });
+  makeHeroes(fixture.publicDir, { 'town-a-dispensary-guide.jpg': jpeg1280x720 });
+  const wrongMeta = '<html><head><title>Fixture</title><meta name="description" content="x"><meta property="og:image" content="/images/heroes/town-a-dispensary-guide.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="400"></head><body><a href="/">Home</a><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script></body></html>';
+  fs.writeFileSync(path.join(fixture.dist, 'index.html'), wrongMeta);
+  const result = runCheck(fixture);
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /og:image:width=1200 doesn\'t match actual image width 1280/);
+  assert.match(result.stdout, /og:image:height=400 doesn\'t match actual image height 720/);
+});
+
+test('passes when og:image dimensions match the actual image file', () => {
+  const jpeg1200x400 = Buffer.concat([
+    Buffer.from([0xff, 0xd8]),
+    Buffer.from([0xff, 0xe0, 0x00, 0x10]),
+    Buffer.from([0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00]),
+    Buffer.from([0xff, 0xc0, 0x00, 0x11, 0x08]),
+    Buffer.from([(400 >> 8) & 0xff, 400 & 0xff]),
+    Buffer.from([(1200 >> 8) & 0xff, 1200 & 0xff]),
+    Buffer.from([0x03, 0x01, 0x22, 0x00, 0x02, 0x11, 0x01, 0x03, 0x11, 0x01]),
+    Buffer.from([0xff, 0xd9]),
+  ]);
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\\n',
+    'guides/existing.astro': '<p>Existing guide</p>\\n',
+  });
+  makeHeroes(fixture.publicDir, { 'town-b-dispensary-guide.jpg': jpeg1200x400 });
+  const rightMeta = '<html><head><title>Fixture</title><meta name="description" content="x"><meta property="og:image" content="/images/heroes/town-b-dispensary-guide.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="400"></head><body><a href="/">Home</a><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script></body></html>';
+  fs.writeFileSync(path.join(fixture.dist, 'index.html'), rightMeta);
+  const result = runCheck(fixture);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /All content health checks passed/);
+});
