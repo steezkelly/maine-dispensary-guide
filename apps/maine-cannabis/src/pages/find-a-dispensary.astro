@@ -470,6 +470,106 @@ const guideRegions = [
 
 const allGuides = guideRegions.flatMap((region) => region.guides);
 
+// OCP-licensed cities not yet covered by a published guide.
+// Pulled from the OCP April 2026 data pull:
+// - adult-use: 49 unique cities w/ active "Store" license (deduped by brand+city)
+// - caregiver retail: 115 unique towns w/ active RETAIL_TOWN registration
+// Combined: 127 OCP-licensed towns; 41 overlap w/ existing MDG; 86 to add.
+const ocpCities = [
+  {"n":"Amity","t":"med","c":1,"s":["BOYETT FAMILY FARM MAINE, INC."]},
+  {"n":"Baring Plantation","t":"med","c":1,"s":["PINE ISLAND CANNABIS"]},
+  {"n":"Bath","t":"au","c":1,"s":["BROTHERS CANNABIS BATH"]},
+  {"n":"Berwick","t":"au","c":3,"s":["SILVER THERAPAUTICS BERWICK","KIND FARM RESERVE","JAR CANNABIS CO."]},
+  {"n":"Bingham","t":"med","c":1,"s":["GANJA WORLD"]},
+  {"n":"Bowdoinham","t":"med","c":1,"s":["OLD SCHOOL GUY OF MAINE, LLC"]},
+  {"n":"Brewer","t":"au","c":1,"s":["BROTHERS"]},
+  {"n":"Brooks","t":"med","c":1,"s":["ROARING ACRES SMOKE SHOP"]},
+  {"n":"Buckfield","t":"med","c":1,"s":["BACK ROAD BUDS LLC"]},
+  {"n":"Carrabassett Valley","t":"au","c":2,"s":["CANNABIS CURED RETAIL","JAR CANNABIS CO."]},
+  {"n":"Chelsea","t":"au","c":1,"s":[]},
+  {"n":"China","t":"med","c":1,"s":[]},
+  {"n":"Columbia","t":"au","c":1,"s":[]},
+  {"n":"Corinth","t":"med","c":2,"s":[]},
+  {"n":"Dedham","t":"med","c":1,"s":[]},
+  {"n":"Detroit","t":"au","c":1,"s":[]},
+  {"n":"Dexter","t":"med","c":2,"s":[]},
+  {"n":"Dixfield","t":"med","c":1,"s":[]},
+  {"n":"Dresden","t":"med","c":1,"s":[]},
+  {"n":"Eastport","t":"med","c":2,"s":[]},
+  {"n":"Eliot","t":"au","c":5,"s":[]},
+  {"n":"Enfield","t":"med","c":1,"s":[]},
+  {"n":"Fairfield","t":"au","c":1,"s":[]},
+  {"n":"Farmingdale","t":"med","c":1,"s":[]},
+  {"n":"Fort Kent","t":"med","c":2,"s":[]},
+  {"n":"Grand Isle","t":"med","c":2,"s":[]},
+  {"n":"Greenville Junction","t":"med","c":1,"s":[]},
+  {"n":"Guilford","t":"au","c":1,"s":[]},
+  {"n":"Hallowell","t":"med","c":1,"s":[]},
+  {"n":"Hammond","t":"med","c":1,"s":[]},
+  {"n":"Hampden","t":"med","c":1,"s":[]},
+  {"n":"Hollis Center","t":"au","c":1,"s":[]},
+  {"n":"Howland","t":"med","c":1,"s":[]},
+  {"n":"Jackman","t":"med","c":1,"s":[]},
+  {"n":"Jefferson","t":"med","c":3,"s":[]},
+  {"n":"Kenduskeag","t":"med","c":2,"s":[]},
+  {"n":"Lebanon","t":"au","c":4,"s":[]},
+  {"n":"Livermore Falls","t":"med","c":5,"s":[]},
+  {"n":"Lubec","t":"med","c":1,"s":[]},
+  {"n":"Madawaska","t":"med","c":1,"s":[]},
+  {"n":"Madison","t":"med","c":4,"s":[]},
+  {"n":"Manchester","t":"au","c":1,"s":[]},
+  {"n":"Mechanic Falls","t":"au","c":1,"s":[]},
+  {"n":"Medway","t":"au","c":1,"s":[]},
+  {"n":"Mexico","t":"med","c":3,"s":[]},
+  {"n":"Milo","t":"au","c":1,"s":[]},
+  {"n":"New Portland","t":"med","c":1,"s":[]},
+  {"n":"Newry","t":"au","c":2,"s":[]},
+  {"n":"Norridgewock","t":"med","c":1,"s":[]},
+  {"n":"North Anson","t":"med","c":1,"s":[]},
+  {"n":"North Berwick","t":"med","c":1,"s":[]},
+  {"n":"Northport","t":"au","c":2,"s":[]},
+  {"n":"Old Town","t":"med","c":1,"s":[]},
+  {"n":"Orland","t":"med","c":1,"s":[]},
+  {"n":"Oxford","t":"au","c":2,"s":[]},
+  {"n":"Parkman","t":"med","c":1,"s":[]},
+  {"n":"Peru","t":"au","c":1,"s":[]},
+  {"n":"Readfield","t":"med","c":1,"s":[]},
+  {"n":"Richmond","t":"med","c":3,"s":[]},
+  {"n":"Rockwood","t":"med","c":1,"s":[]},
+  {"n":"Rome","t":"med","c":1,"s":[]},
+  {"n":"Rumford","t":"med","c":3,"s":[]},
+  {"n":"Shirley Mills","t":"med","c":1,"s":[]},
+  {"n":"Smithfield","t":"med","c":1,"s":[]},
+  {"n":"Somerville","t":"au","c":1,"s":[]},
+  {"n":"South Berwick","t":"med","c":2,"s":[]},
+  {"n":"South China","t":"med","c":2,"s":[]},
+  {"n":"South Paris","t":"med","c":1,"s":[]},
+  {"n":"Steuben","t":"med","c":1,"s":[]},
+  {"n":"Thomaston","t":"au","c":2,"s":[]},
+  {"n":"Topsham","t":"med","c":2,"s":[]},
+  {"n":"Trenton","t":"med","c":2,"s":[]},
+  {"n":"Turner","t":"au","c":3,"s":[]},
+  {"n":"Unity","t":"med","c":2,"s":[]},
+  {"n":"Verona Island","t":"med","c":1,"s":[]},
+  {"n":"Waldoboro","t":"med","c":2,"s":[]},
+  {"n":"Warren","t":"med","c":2,"s":[]},
+  {"n":"West Gardiner","t":"med","c":1,"s":[]},
+  {"n":"West Paris","t":"med","c":1,"s":[]},
+  {"n":"Wilton","t":"med","c":3,"s":[]},
+  {"n":"Winslow","t":"med","c":4,"s":[]},
+  {"n":"Winthrop","t":"med","c":1,"s":[]},
+  {"n":"Wiscasset","t":"au","c":1,"s":[]},
+  {"n":"Woodstock","t":"med","c":1,"s":[]},
+  {"n":"Woolwich","t":"au","c":1,"s":[]},
+  {"n":"Yarmouth","t":"med","c":1,"s":[]},
+];
+
+const allGuideNames = new Set(allGuides.map(g => g.name.toLowerCase()));
+
+// Group OCP cities by access type, deduped against existing MDG guides
+const ocpAuCities = ocpCities.filter(c => c.t === 'au' && !allGuideNames.has(c.n.toLowerCase()));
+const ocpMedCities = ocpCities.filter(c => c.t === 'med' && !allGuideNames.has(c.n.toLowerCase()));
+
 const directoryJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
@@ -510,10 +610,26 @@ const directoryJsonLd = {
     .btn-guide { background: var(--color-primary); color: var(--color-background); }
     .btn-map { border: 1px solid var(--color-primary); color: var(--color-primary); }
     [data-theme="dark"] .guide-card, [data-theme="dark"] .market-overview { background: var(--color-surface); }
+    /* OCP-licensed cities section (compact list of additional towns w/ retail access) */
+    .ocp-section { margin-top: 4rem; padding-top: 3rem; border-top: 2px solid var(--color-border); }
+    .ocp-intro, .ocp-source { color: var(--color-text-light); line-height: 1.7; max-width: 760px; }
+    .ocp-source { font-size: 0.875rem; margin-top: 0.5rem; }
+    .ocp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .ocp-card { background: var(--color-surface); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+    .ocp-card h3 { margin: 0 0 0.5rem; font-size: 1.0625rem; font-family: var(--font-serif); color: var(--color-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .ocp-tag { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.125rem 0.5rem; border-radius: 0.5rem; font-family: var(--font-sans); }
+    .ocp-tag.au { background: var(--color-primary); color: var(--color-background); }
+    .ocp-tag.med { background: rgba(88, 129, 87, 0.15); color: var(--color-primary); }
+    .ocp-count { font-size: 0.875rem; color: var(--color-text-light); margin: 0 0 0.5rem; font-weight: 600; }
+    .ocp-sample { font-size: 0.8125rem; color: var(--color-text-light); margin: 0 0 0.75rem; line-height: 1.5; font-style: italic; }
+    .ocp-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .ocp-actions .btn-map, .ocp-actions .btn-guide-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.25rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 0.8125rem; }
+    .ocp-actions .btn-map { border: 1px solid var(--color-primary); color: var(--color-primary); }
+    .ocp-actions .btn-guide-secondary { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); }
   </style>
 
   <section class="directory-header">
-    <div class="hero-badge">61 Maine Local Guides</div>
+    <div class="hero-badge">{allGuides.length} Curated Local Guides + {ocpCities.filter(c => !allGuideNames.has(c.n.toLowerCase())).length} OCP-Licensed Towns</div>
     <h1>Find a Maine Dispensary Guide by Town or City</h1>
     <p class="lead">Use this directory to jump into the local guide for each Maine town, city, or region where Maine Dispensary Guide has published coverage. Every card links to a real guide page and a map search for that local market.</p>
   </section>
@@ -547,6 +663,28 @@ const directoryJsonLd = {
   <Callout title="Own or operate a Maine dispensary?" type="tip">
     If your local guide needs an update, use the <a href="/contact">contact form</a> with the town, license name, and source link. We prioritize corrections that can be verified against public records or operator-owned pages.
   </Callout>
+
+  <section class="ocp-section" aria-labelledby="ocp-region">
+    <h2 id="ocp-region">All OCP-Licensed Maine Cities ({ocpAuCities.length + ocpMedCities.length} additional towns)</h2>
+    <p class="ocp-intro">Maine Dispensary Guide publishes a curated local guide for the highest-traffic towns. Below are the {ocpAuCities.length + ocpMedCities.length} additional Maine towns with at least one active adult-use store or caregiver storefront licensed by the Maine Office of Cannabis Policy. Each row links to a map search and the OCP licensee search for that town. Local guides for these towns are in the editorial queue; submit your town as a <a href="/contact">suggested guide</a> if you want it prioritized.</p>
+    <p class="ocp-source">Source: <a href="http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (April 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (April 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
+    <div class="ocp-grid">
+      {[...ocpAuCities, ...ocpMedCities].sort((a, b) => a.n.localeCompare(b.n)).map((city) => (
+        <article class="ocp-card">
+          <h3>
+            {city.n}
+            {city.t === 'au' ? <span class="ocp-tag au">Adult-Use</span> : <span class="ocp-tag med">Caregiver</span>}
+          </h3>
+          <p class="ocp-count">{city.c} active {city.t === 'au' ? `store${city.c > 1 ? 's' : ''}` : `caregiver storefront${city.c > 1 ? 's' : ''}`}</p>
+          {city.s && city.s.length > 0 && <p class="ocp-sample">{city.s.slice(0, 2).join(' · ')}</p>}
+          <div class="ocp-actions">
+            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
+            <a href="http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer">OCP search</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
 </Layout>
 
 <script type="application/ld+json" set:html={JSON.stringify(directoryJsonLd)}></script>
