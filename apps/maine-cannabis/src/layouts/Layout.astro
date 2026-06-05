@@ -17,8 +17,9 @@ import Breadcrumbs from '@network/ui/Breadcrumbs';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import GuideSidebar from '@network/ui/GuideSidebar';
-import Search from '@network/ui/Search';
 import RelatedArticles from '@network/ui/RelatedArticles';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import siteConfig from '../data/site-config.json';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
@@ -179,6 +180,9 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
     {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}
 
     <script is:inline>
+      // Theme bootstrap — runs synchronously in <head> to prevent FOUC.
+      // The toggle handler (window.toggleTheme) lives in SiteHeader.astro
+      // alongside the toggle button that calls it.
       const theme = (() => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) return localStorage.getItem('theme');
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
@@ -205,68 +209,13 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
       gtag('config', analyticsId);
     </script>
 
-    <script is:inline>
-      // Dropdown click-based toggle with keyboard support
-      document.addEventListener('DOMContentLoaded', function() {
-        const dropdownBtns = document.querySelectorAll('.nav-dropdown .dropbtn');
-
-        function toggleDropdown(btn) {
-          const content = btn.nextElementSibling;
-          const isShown = content.classList.contains('shown');
-          // Close all dropdowns
-          document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-          document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-          // Open this one if it wasn't open
-          if (!isShown) {
-            content.classList.add('shown');
-            btn.setAttribute('aria-expanded', 'true');
-          }
-        }
-
-        dropdownBtns.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleDropdown(btn);
-          });
-          btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggleDropdown(btn);
-            }
-            if (e.key === 'Escape') {
-              document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-              document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-              btn.setAttribute('aria-expanded', 'false');
-              btn.focus();
-            }
-          });
-        });
-
-        // Click outside closes dropdowns
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.nav-dropdown')) {
-            document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-            document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-          }
-        });
-
-        // Escape key closes mobile menu
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            const navToggle = document.getElementById('nav-toggle');
-            if (navToggle && navToggle.checked) {
-              navToggle.checked = false;
-            }
-          }
-        });
-      });
     </script>
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
     <div class="grain-overlay"></div>
 
-    <!-- GLOBAL BOTANICAL ORNAMENTS -->
+    <!-- GLOBAL BOTANICAL ORNAMENTS (decorative, behind all content) -->
     <div class="bg-ornament p1"><PineTree size={40} color="var(--color-primary)" /></div>
     <div class="bg-ornament p2"><Leaf size={30} color="var(--color-accent)" /></div>
     <div class="bg-ornament p3"><PineTree size={50} color="var(--color-primary)" /></div>
@@ -280,151 +229,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
     <div class="bg-ornament p11"><PineTree size={35} color="var(--color-primary)" /></div>
     <div class="bg-ornament p12"><Leaf size={45} color="var(--color-accent)" /></div>
 
-    <header id="site-header" role="banner">
-      <div id="progress-container"><div id="progress-bar"></div></div>
-      <nav id="site-nav" aria-label="Main Navigation">
-        <a href="/" class="logo" aria-label={`${siteConfig.siteName} Home`}>
-          <div class="logo-icons">
-            <PineTree size={24} color="var(--color-primary)" class="logo-pine" />
-            <Leaf size={20} color="var(--color-accent)" class="logo-leaf" />
-          </div>
-          <span>{siteName}</span>
-        </a>
-
-        <div class="nav-search-desktop"><Search /></div>
-
-        <div class="nav-actions">
-          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()">
-            <div class="toggle-track">
-              <div class="toggle-thumb">
-                <span class="sun" aria-hidden="true">✦</span>
-                <span class="moon" aria-hidden="true">◆</span>
-              </div>
-            </div>
-          </button>
-          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle mobile menu" />
-          <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true" id="mobile-menu-trigger"><span></span></label>
-        </div>
-
-        <div class="nav-links" id="navigation-menu" role="navigation">
-          <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn"></button>
-          <script is:inline>
-            document.getElementById('mobile-close-btn').addEventListener('click', () => {
-              document.getElementById('nav-toggle').checked = false;
-            });
-            document.getElementById('mobile-close-btn').addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                document.getElementById('nav-toggle').checked = false;
-              }
-            });
-          </script>
-          <div class="nav-search-mobile"><Search withData={false} /></div>
-          <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
-            <div class="dropdown-content multi-column">
-              <div class="topic-group">
-                <span class="topic-header">◆ Business Essentials</span>
-                <a href="/guides/maine-dispensary-license">License Requirements</a>
-                <a href="/guides/maine-dispensary-business-plan">Business Plan</a>
-                <a href="/guides/maine-dispensary-costs">Startup Costs</a>
-                <a href="/guides/maine-cannabis-market">Market Analysis</a>
-                <a href="/guides/maine-cannabis-funding-guide">Funding & Capital</a>
-                <a href="/guides/maine-cannabis-real-estate">Real Estate</a>
-                <a href="/guides/maine-dispensary-hiring">Hiring & Staffing</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ Compliance & Legal</span>
-                <a href="/guides/maine-cannabis-regulations">Regulations</a>
-                <a href="/guides/maine-cannabis-taxation-280e">280E Taxation</a>
-                <a href="/guides/maine-cannabis-banking-solutions">Banking Solutions</a>
-                <a href="/guides/maine-cannabis-staffing-licensing">Employee Licensing</a>
-                <a href="/guides/maine-cannabis-marketing-compliance">Marketing Compliance</a>
-                <a href="/guides/maine-cannabis-events-2026">Cannabis Events</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ Operations & Technology</span>
-                <a href="/guides/maine-dispensary-security">Security Requirements</a>
-                <a href="/guides/maine-cannabis-inventory-management">Inventory & Metrc</a>
-                <a href="/guides/maine-dispensary-pos">POS Systems</a>
-                <a href="/guides/maine-dispensary-packaging">Packaging & Labeling</a>
-                <a href="/guides/maine-cannabis-delivery-rules">Delivery Rules</a>
-                <a href="/guides/maine-cannabis-edibles-compliance">Edibles Compliance</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ City & Regional Guides</span>
-                <a href="/guides/portland-dispensary-guide">Portland</a>
-                <a href="/guides/lewiston-dispensary-guide">Lewiston</a>
-                <a href="/guides/bangor-dispensary-guide">Bangor</a>
-                <a href="/guides/augusta-dispensary-guide">Augusta</a>
-                <a href="/guides/south-portland-dispensary-guide">South Portland</a>
-                <a href="/guides/kittery-dispensary-guide">Kittery</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Western Maine</span>
-                <a href="/guides/fryeburg-dispensary-guide">Fryeburg</a>
-                <a href="/guides/gray-dispensary-guide">Gray</a>
-                <a href="/guides/porter-dispensary-guide">Porter</a>
-                <a href="/guides/hiram-dispensary-guide">Hiram</a>
-                <a href="/guides/baldwin-dispensary-guide">Baldwin</a>
-                <a href="/guides/naples-dispensary-guide">Naples</a>
-                <a href="/guides/brownfield-dispensary-guide">Brownfield</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Sebago Lakes Region</span>
-                <a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region</a>
-                <a href="/guides/windham-dispensary-guide">Windham</a>
-                <a href="/guides/bridgton-dispensary-guide">Bridgton</a>
-                <a href="/guides/casco-dispensary-guide">Casco</a>
-                <a href="/guides/raymond-dispensary-guide">Raymond</a>
-                <a href="/guides/standish-dispensary-guide">Standish</a>
-                <a href="/guides/sebago-dispensary-guide">Sebago</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Lower Saco Valley</span>
-                <a href="/guides/limerick-dispensary-guide">Limerick</a>
-                <a href="/guides/buxton-dispensary-guide">Buxton</a>
-                <a href="/guides/limington-dispensary-guide">Limington</a>
-                <a href="/guides/cornish-dispensary-guide">Cornish</a>
-                <a href="/guides/parsonsfield-dispensary-guide">Parsonsfield</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Southern Maine Coast</span>
-                <a href="/guides/york-dispensary-guide">York</a>
-                <a href="/guides/wells-dispensary-guide">Wells</a>
-                <a href="/guides/ogunquit-dispensary-guide">Ogunquit</a>
-                <a href="/guides/kennebunk-dispensary-guide">Kennebunk</a>
-                <a href="/guides/biddeford-dispensary-guide">Biddeford</a>
-                <a href="/guides/saco-dispensary-guide">Saco</a>
-                <a href="/guides/old-orchard-beach-dispensary-guide">Old Orchard Beach</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Waldo County</span>
-                <a href="/guides/freedom-dispensary-guide">Freedom</a>
-                <a href="/guides">All 40+ City Guides</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ All Guides & Tools</span>
-                <a href="/all-guides">Full Resource Library</a>
-                <a href="/launch-checklist">Launch Checklist</a>
-                <a href="/start-here">Start Here Roadmap</a>
-                <a href="/find-a-dispensary">Find a Store</a>
-                <a href="/directory">Pro Directory</a>
-                <a href="/experiments">Experiments</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◇ Stay Connected</span>
-                <a href="/blog">Blog & News</a>
-                <a href="/founders">Founder Stories</a>
-                <a href="/newsletter">Newsletter</a>
-              </div>
-            </div>
-          </div>
-          <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾">Business Tools ▾</button>
-            <div class="dropdown-content">
-              <a href="/roi-calculator">◆ ROI Calculator</a>
-              <a href="/market-stats">◆ Market Stats</a>
-              <a href="/glossary">◆ Technical Glossary</a>
-              <a href="/resources/maine-cannabis-official-resources">◆ Official Resources</a>
-              <a href="/resources/maine-cannabis-education">◆ Education & Training</a>
-            </div>
-          </div>
-          <a href="/resources">Vendor Directory</a>
-          <a href="/about">About</a>
-        </div>
-      </nav>
-    </header>
+    <SiteHeader />
 
     <main id="main-content" role="main" tabindex="-1">
       <Breadcrumbs />
@@ -492,18 +297,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
 
     <div id="theater-overlay" class="theater-overlay" aria-hidden="true"></div>
 
-    <footer role="contentinfo">
-      <div class="footer-content">
-        <p>&copy; {new Date().getFullYear()} {siteName}. v1.0.6 All rights reserved.</p>
-        <nav class="footer-links" aria-label="Legal and Contact Links">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/contact">Contact Us</a>
-          <a href="/about">About</a>
-          <a href="/site-health">Site Health</a>
-        </nav>
-        <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
-      </div>
-    </footer>
+    <SiteFooter />
 
     <script is:inline>
       // Scroll handler for header effects, progress bar, and back-to-top

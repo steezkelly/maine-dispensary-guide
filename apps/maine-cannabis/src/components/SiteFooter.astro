@@ -1,0 +1,26 @@
+---
+/**
+ * SiteFooter.astro — Bottom footer + disclaimer + version line
+ *
+ * Extracted from Layout.astro (Sprint 73d refactor). Pure presentation;
+ * no scripts, no client logic. Version line is hardcoded to match
+ * /AGENTS.md "v1.0.x" convention; bump manually on releases.
+ */
+import siteConfig from '../data/site-config.json';
+
+const siteName = siteConfig.siteName;
+const currentYear = new Date().getFullYear();
+---
+
+<footer role="contentinfo">
+  <div class="footer-content">
+    <p>&copy; {currentYear} {siteName}. v1.0.6 All rights reserved.</p>
+    <nav class="footer-links" aria-label="Legal and Contact Links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/contact">Contact Us</a>
+      <a href="/about">About</a>
+      <a href="/site-health">Site Health</a>
+    </nav>
+    <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
+  </div>
+</footer>
