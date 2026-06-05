@@ -1,0 +1,495 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "clones-vs-seeds", "maine-vendors", "ocp-rules", "pest-disease"];
+---
+<Layout
+  title="Cannabis Clones vs. Seeds for Maine 2026 — Maine Vendors, HLVd, OCP Rules"
+  description="Cannabis clones vs. seeds for Maine 2026: 5 Maine vendors (Farmington, Waterville, Biddeford, Monroe, online), OCP caregiver vs. nursery rules, HLVd pest risk, and a per-plant cost comparison."
+  heroImage="/images/heroes/cannabis-clones-vs-seeds-maine-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .calendar-table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; }
+  .calendar-table-wrap table { min-width: 600px; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+  .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+  .affiliate-top-disclosure strong { color: #8b5a00; }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  .tier-callout { background: rgba(13, 78, 80, 0.05); border-left: 4px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+  .tier-callout strong { color: var(--color-primary); }
+  .vendor-card { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 1rem; padding: 1.5rem; margin: 1.5rem 0; }
+  .vendor-card h3 { margin-top: 0; color: var(--color-primary); }
+  .vendor-card .vendor-meta { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 0.75rem; }
+  .vendor-card .vendor-meta strong { color: var(--color-text); }
+  .vendor-card ul { margin-bottom: 0; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cannabis Clones vs. Seeds for Maine 2026</h1>
+    <p class="subtitle">The clones vs. seeds decision for Maine home growers, with 5 Maine vendors, OCP caregiver and registered-nursery rules, HLVd pest risk, and a per-plant cost comparison.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 6, 2026 · Last updated June 6, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase seeds through ILGM, Maine Dispensary Guide may earn a 20% commission at no extra cost to you. <strong>Maine vendor mentions (Cannabis Seed Bank of Maine, Maine Clone Company, Maine Seedlings, Seed &amp; Soil Maine, North Atlantic Seed Co.) are informational local resources only — none are currently in our affiliate program.</strong> See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's the second week of May in Presque Isle, and a second-year grower is staring at two trays on his kitchen counter. Tray A has four small cannabis clones from a Maine vendor, each 4 inches tall, already rooted, ready for the soil as soon as the last frost passes on June 1. Tray B has four germinated feminized seeds in red solo cups, planted three weeks earlier, each a fragile 2-inch sprout with cotyledon leaves. The clones are three weeks ahead in calendar time. The seeds are pest-free. Both are 4-plant grows. The cost is similar ($100 for the clones, $99 for the ILGM 10-pack). The decision looks like a coin flip — but in northern Maine, where the frost-free window is 120 days and the 14-hour daylength crossing arrives on August 15, a three-week head start is the difference between a finished photoperiod and a frosted one.</p>
+
+    <p>The clones vs. seeds decision is not a coin flip for Maine. It is a calendar, a legal framework, and a pest-risk calculation layered on top of the strain-selection decision you already made in the <a href="/blog/best-cannabis-strains-maine-outdoor-2026">strain guide</a>. This page covers the clones vs. seeds decision, the 5 Maine vendors who actually sell clones or seeds (with their real locations, prices, and license types), the OCP's two-track legal framework (caregiver vs. nursery), the HLVd pest risk that makes a "clean source" rule non-optional, and the per-plant cost math that shows you how cheap insurance looks. If you have not yet read the <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a>, start there for the legal framework, plant limits, and tagging rules. This page picks up where that one leaves off: <em>how do I actually get the plant started.</em></p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    The clones vs. seeds decision framework (advantages and disadvantages of each). Why clones are particularly useful for Maine's short season (and why autoflower clones are a category error). The 5 Maine vendors who actually sell clones or seeds, with their locations, prices, license types, and pickup vs. shipping models. The OCP's two-track legal framework (caregiver vs. nursery) and what it means for adult-use 21+ buyers. The HLVd pest risk and the 7-14 day quarantine protocol. The per-plant cost comparison and the "buy a backup" insurance pattern. The 7 beginner mistakes. Six-question FAQ.
+  </Callout>
+
+  <section>
+    <h2>The Clones vs. Seeds Decision Framework</h2>
+    <p>Before talking about Maine-specific advantages and disadvantages, the basic biology.</p>
+
+    <h3>What a clone is</h3>
+    <p>A cannabis clone is a <strong>cutting taken from a "mother" plant</strong> — a held-in-vegetative female photoperiod plant — and rooted in a medium (rockwool, peat plug, coco, water) until it develops its own root system. A clone is <strong>genetically identical to the mother</strong>: same DNA, same sex, same phenotype expression, same susceptibility to pests and disease. The industry term is "pheno-hunted cut": the mother was selected for a specific trait (yield, terpene profile, bud structure, mold resistance) and the clone carries that exact trait. <a href="https://www.maineclonecompany.com" target="_blank" rel="noopener noreferrer">Maine Clone Company</a> is explicit about this: "Pheno-Hunted Cannabis Clones &amp; Seedlings ... bred in central Maine since 2012" (verified 2026-06-06).</p>
+
+    <h3>What a seed is</h3>
+    <p>A cannabis seed is the product of <strong>sexual reproduction</strong> — a male plant pollinated a female, the female produced a seed, the seed carries a random mix of the parents' genetics. Seeds come in three types relevant to Maine home growers:</p>
+
+    <ul>
+      <li><strong>Regular seeds</strong> — ~50/50 male and female. The grower must cull males before pollen sacs open. <a href="https://www.northatlanticseed.com/blog/beginners-guide-lessons-learned-for-a-successful-outdoor-harvest-in-new-england/" target="_blank" rel="noopener noreferrer">North Atlantic Seed's New England outdoor-harvest blog</a> is explicit: "I would caution against putting regular seeds in your garden without sex testing. A burst pollen sack outside is infinitely more detrimental to other plants in stages of flower than a similar situation inside, simply due to natural winds and air movement."</li>
+      <li><strong>Feminized photoperiod seeds</strong> — bred (typically via STS or colloidal-silver reversal of a female into a male pollen producer) to produce only female plants. Modern reputable seed banks advertise 99%+ female. The <a href="/blog/autoflower-vs-feminized-maine-2026">autoflower-vs-feminized brief</a> reuses this 99% as the project standard.</li>
+      <li><strong>Autoflower seeds</strong> — also feminized; carry the <em>Cannabis ruderalis</em> day-neutral trait. Autoflower is a seed-only path because, as Maine Clone Company states, "it's impossible to keep an autoflowering mother as it would flower and die even under 24 hours of light."</li>
+    </ul>
+
+    <h3>Clone advantages</h3>
+    <ol>
+      <li><strong>Skip germination.</strong> A rooted clone is a 4-6-week-old plant at pickup. The grower skips the 1-2 week germination phase and the 2-4 week seedling/early-veg phase. For a short-season climate, this is the single biggest clone advantage.</li>
+      <li><strong>Known phenotype.</strong> Because a clone is genetically identical to its mother, every clone will grow, smell, flower, and yield the same way as the mother did. The grower is buying certainty, not a genetic lottery.</li>
+      <li><strong>Known sex.</strong> Always female (the mother is a held-in-vegetative female). No male-cull work, no accidental pollination risk. The same 99-100% certainty as feminized seeds.</li>
+      <li><strong>Head start on the growing season.</strong> Quantified in the next section — the <strong>single most important advantage for Maine</strong>.</li>
+      <li><strong>Maine-adapted genetics from Maine vendors.</strong> The 5 Maine vendors all carry pheno-hunted cuts grown in Maine's climate, often for multiple generations. <a href="https://cannabisseedbankofmaine.com" target="_blank" rel="noopener noreferrer">Cannabis Seed Bank of Maine</a> claims ~90% of its inventory is its own in-house crosses from "old local strains, some over 25 years old, to make hearty sure winner outdoor harvests in New England and Canada."</li>
+    </ol>
+
+    <h3>Clone disadvantages</h3>
+    <ol>
+      <li><strong>Transplant shock.</strong> A clone has been living in a high-humidity cloner or under 24-hour T5 light at the vendor's facility. It has not experienced outdoor sun, wind, cold nights, or low humidity. Acclimation is non-optional.</li>
+      <li><strong>Pest and disease risk.</strong> The single biggest clone risk. A clone is a living piece of a mother plant and can carry any virus, viroid, mite, or fungus the mother had. HLVd (hop latent viroid) is the dominant risk and is covered in detail below.</li>
+      <li><strong>Limited strain selection.</strong> The grower buys what the vendor currently has in production. Maine Clone Company rotates pheno-hunted cuts from breeders like Dirty Bird Genetics and Lovin' in Her Eyes; Maine Seedlings carries a smaller core list. A grower who wants a specific exotic cut from a West Coast breeder will not find it at a Maine vendor.</li>
+      <li><strong>Higher per-plant cost.</strong> A single clone at Maine Clone Company is $25; at Cannabis Seed Bank of Maine, small clones are $20 and quart-pot rooted cuts are $40; at Maine Seedlings, the 6-pack is $150 ($25/clone). By contrast, a feminized seed at ILGM runs $6.50-$15/seed depending on pack size and strain.</li>
+      <li><strong>Harder to ship.</strong> Maine Clone Company explicitly says "we do not ship clones" for "logistical and legal reasons." Maine Seedlings is in-person only in Biddeford / Scarborough. Cannabis Seed Bank of Maine's clone model is walk-in / Sunday-open in Farmington. Out-of-state clone shipping is essentially off the table for Maine buyers.</li>
+    </ol>
+
+    <h3>Seed advantages</h3>
+    <ol>
+      <li><strong>Feminization guarantee (99%+).</strong> ILGM, Seedsman, Dutch Passion, RQS all advertise 99%+ female. For autoflowers specifically, the practical female rate is 99-100% (no primary source quantifies it separately from photoperiod; the autoflower brief carries the same qualifier).</li>
+      <li><strong>No pest risk.</strong> A seed carries no mite, viroid, or root rot. The plant starts clean. This is the <strong>single biggest seed advantage</strong> for a new grower who is not set up to do HLVd RT-PCR testing.</li>
+      <li><strong>Broader selection.</strong> A seed buyer at ILGM, MSNL, Seedsman, Dutch Passion, or North Atlantic Seed has access to hundreds of breeders' catalogs: Barney's Farm, Ethos Genetics, Fast Buds, Atlas Seed, Humboldt, Dirty Bird Genetics, Purple Caper, Offensive Selections, Lamb's Breath Seeds, and more.</li>
+      <li><strong>Lower cost per plant.</strong> An ILGM 10-pack photoperiod runs $9.90-$12.90/seed; an autoflower 10-pack runs $9.90-$15.68/seed. A 4-plant grow is $50-$80 in seeds (one pack) vs. $80-$200 in Maine-vendor clones.</li>
+      <li><strong>Can store.</strong> Properly stored seeds remain viable 2-5 years. A clone dies within days of leaving the mother.</li>
+      <li><strong>Discreet shipping.</strong> Seeds are flat-packed and ship in regular USPS mail with no special handling. Clones must be kept humid and alive.</li>
+    </ol>
+
+    <h3>Seed disadvantages</h3>
+    <ol>
+      <li><strong>Germination risk.</strong> Even a reputable seed bank has a 2-5% non-germ rate. ILGM guarantees germination and replaces failed seeds; smaller banks vary. Cannabis Seed Bank of Maine claims a 90% germ rate on its seeds (homepage; treat as a vendor-specific claim).</li>
+      <li><strong>Male risk if regular seeds.</strong> Per North Atlantic Seed's New England blog: a single un-culled male in a Maine garden can pollinate every female in a 1-mile radius and ruin a regional harvest.</li>
+      <li><strong>No head start on the season.</strong> Quantified below — the <strong>single biggest seed disadvantage for Maine</strong>.</li>
+      <li><strong>Genetic lottery.</strong> A seed-grown plant is a phenotype lottery — 5 seeds of the same strain will produce 5 slightly different plants. The breeder has selected the parents for traits, but the seed is not the cut; the seed is one possible expression.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Why Clones Are Particularly Useful for Maine</h2>
+
+    <h3>The short-season math</h3>
+    <p>Maine's frost-free window is <strong>110-165 days</strong> depending on latitude (per the <a href="/blog/when-to-start-cannabis-seeds-maine-2026">Maine planting calendar</a> and the <a href="/blog/maine-home-grow-cannabis-guide-2026">home grow guide</a>):</p>
+
+    <ul>
+      <li><strong>Southern Maine</strong> (Portland, Lewiston, Augusta): 140-165 frost-free days</li>
+      <li><strong>Central Maine</strong> (Bangor, Waterville, Belfast, Rockland): 130-160 frost-free days</li>
+      <li><strong>Northern / Western Maine</strong> (Caribou, Presque Isle, Farmington, Houlton): 110-134 frost-free days</li>
+    </ul>
+
+    <p>Per the autoflower brief's daylength and frost-date math: an 8-week-flower photoperiod in Bangor (14-hour crossing Aug 13, first frost Sep 30) finishes Oct 8, <strong>after</strong> first frost. An 8-week-flower photoperiod in Caribou (14-hour crossing ~Aug 16, first frost Sep 25) finishes Oct 11, <strong>17 days after first frost</strong>. A clone compresses the calendar by 3-5 weeks. A clone transplanted in late May is in mid-vegetative growth by early June; a seed started in late May is in early-vegetative growth by mid-June. Over a 12-week vegetative window, the clone accumulates 3-5 weeks of additional biomass, which translates directly to yield at the end of the season.</p>
+
+    <h3>The photoperiod-clone advantage</h3>
+    <p>A 7-week-flower photoperiod clone transplanted May 20 in southern Maine begins flowering around Aug 11-13 (the 14-hour daylength crossing at Portland / Bangor latitude) and finishes by <strong>Sep 29 - Oct 4</strong> — comfortably before the Oct 9 Portland first frost.</p>
+
+    <p>A 7-week-flower photoperiod <em>seed</em> started indoors April 1 and transplanted May 20 begins flowering around Aug 11-13 and finishes by the same Oct 4 date — but the plant is smaller (4-6 weeks less vegetative growth), which yields less per plant. For a southern Maine grower with a 7-week photoperiod, the clone does not change whether the plant finishes in time, but it does change how big the plant gets before it flips to flower — the primary yield driver.</p>
+
+    <p>For a <strong>central or northern Maine grower</strong> with a 7-week photoperiod, the clone is the difference between a real chance of finishing and a coin-flip. Caribou's photoperiod seed scenario is an 8-week flower finishing Oct 11, 17 days late. A clone of the same 7-week photoperiod transplanted May 31 in Caribou would be a 4-week-old plant at that date, finishing Aug 31 (start of flower Aug 13-15 + 49 days) — <strong>3-4 weeks before first frost</strong>. A <em>seed</em> of the same strain started at the same time is just a 1-2 week seedling on May 31 and finishes the same Oct 11.</p>
+
+    <Callout title="Autoflower clones are a category error" type="warning">
+      <strong>Maine Clone Company</strong> is explicit: "Do you sell autoflowering clones? No, unfortunately it's impossible to keep an autoflowering mother as it would flower and die even under 24 hours of light" (FAQ, verified 2026-06-06). The autoflowering trait is day-neutral — the plant begins flowering at age 3-4 weeks regardless of light cycle. There is no benefit to a 4-week-old autoflower clone vs. a seed started at the same time, because the clock has already started ticking. A serious autoflower Maine grower buys seeds, not clones.
+    </Callout>
+
+    <h3>The northern/central Maine tier argument</h3>
+    <p>For a Caribou, Presque Isle, or Farmington grower who wants photoperiod flower (yield advantage, larger plant, October harvest), the <strong>clone is the only realistic path to a finished photoperiod</strong> in the 110-134 day frost-free window unless they accept greenhouse cost. Per the autoflower brief's decision matrix: a northern-Maine photoperiod needs both fast-finishing 7-week genetics <em>and</em> a greenhouse <em>or</em> the grower accepts frost damage. A clone of a 7-week-flower photoperiod is one piece of that — the seed of the same 7-week-flower photoperiod would need the other piece (greenhouse) to finish. So for that grower, <strong>clone + fast-finishing 7-week genetics = photoperiod possible without greenhouse</strong>; <strong>seed + 7-week genetics + greenhouse = same outcome, more money</strong>.</p>
+  </section>
+
+  <section>
+    <h2>The #1 Clone Risk: Hop Latent Viroid (HLVd)</h2>
+
+    <h3>What HLVd is</h3>
+    <p>Per the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10053334/" target="_blank" rel="noopener noreferrer">Adkar-Purushothama 2023 <em>Viruses</em> review</a>, HLVd is "the biggest concern for cannabis and hop growers worldwide" and the cause of "dudding" disease. It was first reported in California cannabis in 2019 by two independent teams (<a href="https://doi.org/10.1094/PDIS-03-19-0459-PDN" target="_blank" rel="noopener noreferrer">Bektaş et al., <em>Plant Disease</em> 103:2699</a>; <a href="https://doi.org/10.1094/PDIS-03-19-0530-PDN" target="_blank" rel="noopener noreferrer">Warren, Mercado &amp; Grace, <em>Plant Disease</em> 103:2699</a>). HLVd is a 256-nucleotide circular RNA in the family <em>Pospiviroidae</em>.</p>
+
+    <h3>How it spreads in a grow</h3>
+    <p>Adkar-Purushothama 2023 and the <a href="https://www.maineclonecompany.com/grow-education/what-is-hop-latent-viroid/" target="_blank" rel="noopener noreferrer">Maine Clone Company HLVd primer</a> both identify <strong>mechanical transmission</strong> as the primary vector: dirty cutting tools, unwashed hands, dirty gloves, and any contaminated object touching plant tissue. HLVd also transmits <strong>through water</strong> — a non-infected clone can become infected if it is in the same cloner as an infected clone. <strong>Insect transmission of HLVd in cannabis is not currently published</strong> (Adkar-Purushothama 2023: "to date insect transmission of HLVd is not known").</p>
+
+    <h3>How it manifests</h3>
+    <p>Most HLVd-infected plants are <strong>asymptomatic</strong>, which is what makes the disease so dangerous. In susceptible cultivars, symptoms include shorter internodal spacing, smaller leaves (sometimes with higher rates of chlorosis), stunting of bud size and morphology, reduction of trichomes, reduction of terpenes, and reduced overall plant vigor. Onset can be delayed until the flowering stage — the grower may not know the plant is infected until harvest, when yield and potency are both down.</p>
+
+    <h3>Yield loss</h3>
+    <p>Adkar-Purushothama 2023 (citing <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8617911/" target="_blank" rel="noopener noreferrer">Patzak et al. 2021 in <em>Plants</em> 10:2297</a>) reports cannabis yield reductions of "up to 50% in both cannabinoid and terpene production." A 2021 Dark Heart Nursery survey of 200,000 tissue tests found 90% of California cannabis facilities contaminated with HLVd and 30% of plants in each facility showing symptoms. <strong>For the Maine grower, the practical math:</strong> an HLVd-infected clone on a 2-oz Maine photoperiod, with 30% yield loss, costs the grower 0.6 oz × $300/oz Maine dispensary retail = $180 in lost flower. A single untested HLVd clone can cost the grower $200+ vs. the $25 sticker price.</p>
+
+    <h3>The "buy from a clean source" rule</h3>
+    <p>The single most important rule for a clone buyer is to <strong>buy from a vendor who can document their testing protocols and mother plant health</strong>. Concretely, the buyer should ask:</p>
+
+    <ol>
+      <li><strong>Do you test mother plants for HLVd by RT-PCR or qPCR?</strong> A vendor who says yes with a schedule ("every mother quarterly" or "every clone lot") is the standard. A vendor who cannot answer is a red flag.</li>
+      <li><strong>Where are the mothers kept?</strong> Indoor mother room is much better than outdoor; mothers held under lights, in clean medium, with IPM.</li>
+      <li><strong>How old are the mothers?</strong> A 5-year-old mother that has been cut hundreds of times is more likely to have accumulated pathogens than a 6-month-old first-generation mother.</li>
+      <li><strong>What clones did the mother come from?</strong> Vendors who use tissue-cultured, verified-clean stock are safer than vendors who propagate indefinitely from the same untested mother.</li>
+    </ol>
+
+    <p>Maine Clone Company says it has been "pheno-hunting" since 2012 — a long history, but a long history also means older mothers. <a href="https://maineseedlings.com" target="_blank" rel="noopener noreferrer">Maine Seedlings</a> says "All of our clones are first generation, meaning that they were taken from mother plants that have been started from seed" — this is a <em>better</em> practice for HLVd risk because first-generation mothers are less likely to have accumulated chronic infections. <strong>Caveat: "first generation" is not the same as "HLVd-tested."</strong></p>
+
+    <h3>The 7-14 day quarantine protocol</h3>
+    <p>The Adkar-Purushothama 2023 review recommends "a 30-day quarantine ... to properly evaluate for the presence of plant pathogens in incoming plant material. Given that HLVd infection is asymptomatic in many cannabis cultivars, it is recommended to test any new plant during the third week of quarantine, and certainly before sending the newly received plants into production." The Maine Clone Co primer is more grower-friendly: "Isolate any new cuttings or established plants coming from outside of your facility."</p>
+
+    <p>For a Maine home grower, the practical quarantine is:</p>
+
+    <ul>
+      <li><strong>Day 0:</strong> Receive clone. Put it in a separate room, tent, or covered tray — not the same space as the main grow.</li>
+      <li><strong>Day 1-3:</strong> Visual inspection. Look for pests (especially russet mites with a 30x loupe), discoloration, leaf damage. Inspect roots (white, fibrous, no smell).</li>
+      <li><strong>Day 4-7:</strong> If a microscope or loupe is available, scan leaf undersides for russet mites and spider mites. If HLVd RT-PCR testing is available (Nova Analytic Labs in Maine, other Maine testing facilities), take leaf samples at Day 7.</li>
+      <li><strong>Day 8-14:</strong> If no symptoms, integrate into the main grow. If symptoms, keep isolated or destroy.</li>
+      <li><strong>Day 21 (if testing):</strong> Send samples for HLVd RT-PCR. Maine Clone Co and the Adkar-Purushothama 2023 review both recommend testing at week 3 specifically because viroid titers are still low and false-negatives are possible at very early timepoints.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The OCP Two-Track Legal Framework: Caregiver vs. Nursery</h2>
+    <p>The legal framework for buying clones in Maine is <strong>not the same</strong> as for seeds. Seeds are adult-use products a 21+ Maine adult can buy from any licensed cannabis store, an online seed bank, or a registered caregiver. Clones are <em>immature cannabis plants</em> and the legal path depends on whether the buyer is a registered medical patient, a registered caregiver, or an unregistered adult-use adult.</p>
+
+    <h3>The caregiver track (22 MRSA §2423-A)</h3>
+    <p>Per the <a href="https://codes.findlaw.com/me/title-22-health-and-welfare/me-rev-st-stit-22-sect-2423-a/" target="_blank" rel="noopener noreferrer">FindLaw version of 22 MRSA §2423-A</a> (current as of January 01, 2025):</p>
+
+    <ul>
+      <li>A <strong>registered caregiver</strong> can cultivate up to <strong>30 mature plants, 60 immature, and unlimited seedlings</strong> (or up to 500 sq ft of mature canopy, 1,000 sq ft of immature canopy).</li>
+      <li>Per §2423-A(2)(K), a registered caregiver can "<strong>Transfer immature cannabis plants, seedlings, seeds and harvested cannabis to a qualifying patient, another caregiver or a registered dispensary for reasonable compensation or for no remuneration.</strong>" <strong>This is the legal basis for Maine Clone Company and Maine Seedlings selling clones to medical patients and other caregivers.</strong></li>
+    </ul>
+
+    <p>Caregiver application fees per the OCP FAQ: $240 for the 6-mature tier up to $1,200 for the 30-mature tier; or $1,500 flat for canopy-based.</p>
+
+    <h3>The nursery track (28-B §501(3))</h3>
+    <p>The <strong>OCP registered-nursery framework</strong> is the adult-use counterpart. Per the <a href="https://www.maine.gov/dafs/ocp/resources/faq" target="_blank" rel="noopener noreferrer">OCP FAQ</a> and <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec501.html" target="_blank" rel="noopener noreferrer">28-B §501</a>:</p>
+
+    <ul>
+      <li>The <strong>Nursery Cultivation Facility</strong> license costs $60 application + $350/year. It is the smallest adult-use cultivation tier by fee.</li>
+      <li>Per §501(3)(A): "A nursery cultivation facility may cultivate immature cannabis plants, seedlings and cannabis seeds only for sale and distribution to cannabis stores and to other cultivation facilities ... and <strong>to consumers</strong>." <strong>This is the legal basis for selling clones and seeds directly to adult-use 21+ consumers in Maine.</strong></li>
+      <li>Per §501(3)(B): the nursery can hold mature plants only for the production of more immature plants and seeds. A nursery cannot sell flower.</li>
+      <li>Per §501(11): a nursery cultivation facility can also <strong>deliver clones and seeds to consumers</strong> under the same delivery rules as a cannabis store. <strong>A 21+ adult in Maine can have clones delivered to their door from any licensed nursery or cannabis store in the state.</strong></li>
+    </ul>
+
+    <h3>What an adult-use 21+ Maine resident can do</h3>
+    <p>Three legal paths to clones for an adult-use grower:</p>
+
+    <ol>
+      <li><strong>Buy from an OCP-licensed Nursery Cultivation Facility</strong> (28-B §501(3)(D) direct consumer sales; §501(11) delivery). Examples from the 5 vendors below: Cannabis Seed Bank of Maine, Seed &amp; Soil Maine.</li>
+      <li><strong>Buy from an OCP-licensed Cannabis Store</strong> (per 28-B §501(2); the OCP FAQ confirms: "A cannabis store licensee may deliver seeds, seedlings, immature cannabis plants, cannabis, and cannabis products"). <strong>Any Maine cannabis store can deliver clones to your door.</strong></li>
+      <li><strong>Become a registered medical patient</strong> and then buy from a registered caregiver (Maine Clone Company, Maine Seedlings). A medical card requires a written certification from a Maine medical provider per 22 MRSA §2423-B(2-C).</li>
+    </ol>
+
+    <h3>What an adult-use 21+ Maine resident cannot do</h3>
+    <ul>
+      <li>Buy clones from Maine Clone Company or Maine Seedlings (medical-caregiver model; MCC: "MED CARD AND PHOTO ID REQUIRED FOR PURCHASE").</li>
+      <li>Buy from a registered caregiver <em>unless</em> they have a medical card.</li>
+    </ul>
+
+    <p>All 5 Maine vendors below will sell <strong>seeds</strong> to a 21+ adult-use buyer regardless of medical card status, because seeds are not a "cannabis product" under the 28-B statute. The Maine Clone Co FAQ is explicit: "<strong>Anyone 21+ can buy seeds</strong> (without a medical card) from our non-medical verified vendors" — but clones require the med card at MCC and Maine Seedlings.</p>
+  </section>
+
+  <section>
+    <h2>The 5 Maine Vendors (Verified 2026-06-06)</h2>
+    <p>Every claim below was verified at the vendor's actual website on 2026-06-06. Hours, addresses, prices, and current stock are from the live pages. License types (caregiver vs. nursery) are inferred from public-facing evidence (age gate, med card language, site title); call the vendor to confirm if license type matters for your legal status.</p>
+
+    <div class="vendor-card">
+      <h3>1. Cannabis Seed Bank of Maine (Farmington, ME)</h3>
+      <p class="vendor-meta"><strong>Location:</strong> Farmington, ME (Franklin County, western Maine). <strong>Phone:</strong> (207) 860-2808. <strong>Hours:</strong> "Back OPEN on Sundays starting April 5th!!!" (2026 season). In-person walk-ins. <strong>Web:</strong> <a href="https://cannabisseedbankofmaine.com" target="_blank" rel="noopener noreferrer">cannabisseedbankofmaine.com</a></p>
+      <p><strong>What they sell:</strong> Both seeds and clones. The seeds-and-clones page (dated 05/26/2026) lists feminized seeds (3-packs $40), autoflower feminized seeds (3-pack $40, Strawberry Banana), regular seeds ($35), bulk seeds ($125-500), and 90+ clone strains (small clones $20, quart pots $40). Clones are "inoculated with Mammoth Products."</p>
+      <p><strong>License type (inferred):</strong> Adult-use 21+ (no med card required per site). <strong>Shipping:</strong> Walk-in / phone for clones; seeds pickup only.</p>
+      <p><strong>Best for:</strong> Maine growers who want a one-stop walk-in shop combining seeds and clones, with ~90% in-house Maine-adapted genetics.</p>
+    </div>
+
+    <div class="vendor-card">
+      <h3>2. Maine Clone Company / Maine Clone Co (Waterville, ME)</h3>
+      <p class="vendor-meta"><strong>Location:</strong> 3 Seavey Street, Waterville, ME (Kennebec County, central Maine). <strong>Hours:</strong> Cash-only, appointment-based. <strong>Web:</strong> <a href="https://www.maineclonecompany.com" target="_blank" rel="noopener noreferrer">maineclonecompany.com</a></p>
+      <p><strong>What they sell:</strong> Clones primarily; some seeds at pickup. All clones are $25 in 4"x4" pots in ProMix Bx, under 24-hour T5 light, "usually about 12 inches tall." Current product listings include Apple Peelz #3 (Dirty Bird Genetics, Sex Melon x Bad Apple, $25, "Out of Stock"), Sour Moose #8 (Sour Lim Haze x Moose n Lobsta V2, $25), Glitterdoom #4 (Grape Cake Head #19 x Bad Apple, $25), Straw-Lectric Lemonade (Lovin' in Her Eyes, Electrify x Strawberry Cadillac, $25). Pheno-hunting since 2012.</p>
+      <p><strong>License type (inferred):</strong> <strong>Medical caregiver model.</strong> Med card and photo ID required for clones: "We are licensed under Maine's medical marijuana program, so you must present a valid patient or caregiver card and photo ID to buy clones or seeds from us. <strong>Anyone 21+ can buy seeds</strong> (without a medical card) from our non-medical verified vendors." <strong>Shipping:</strong> No. "For logistical and legal reasons, we do not ship clones."</p>
+      <p><strong>HLVd primer:</strong> The site has a substantial <a href="https://www.maineclonecompany.com/grow-education/what-is-hop-latent-viroid/" target="_blank" rel="noopener noreferrer">HLVd educational post</a> with peer-reviewed references — this is one of the best public-facing HLVd primers from any Maine vendor.</p>
+      <p><strong>Best for:</strong> Medical patients and caregivers in central Maine. <strong>Best practice: ask about mother-plant HLVd testing protocol on the phone before driving up.</strong></p>
+    </div>
+
+    <div class="vendor-card">
+      <h3>3. Maine Seedlings (Biddeford / Scarborough, ME)</h3>
+      <p class="vendor-meta"><strong>Location:</strong> Pickup-only. "We meet folks in person (and in public) Monday through Friday in either Biddeford or Scarborough." <strong>Phone/text:</strong> 1-207-613-5650. <strong>Web:</strong> <a href="https://maineseedlings.com" target="_blank" rel="noopener noreferrer">maineseedlings.com</a></p>
+      <p><strong>What they sell:</strong> Clones only (6-pack $150 = $25/clone). 2026 strain list: Maine Dream, Imperium X, Comfortably Dumb, Hyper Glue, AK-47 coming, Bruce Banner, Pineapple Chunk, Critical Kush, LFG, Alaska Thunderfuck, Sour Diesel, Trainwreck. <strong>All clones are "first generation"</strong> — taken from mother plants that have been started from seed. This is the HLVd-friendlier practice. Limit of 18 clones per strain and 36 total per buyer. Discount program: $10 off for military, veterans, medical workers, first responders.</p>
+      <p><strong>License type (inferred):</strong> <strong>Medical caregiver model.</strong> Site title: "Maine Seedlings &amp; Clones | Medical Marijuana Caregivers in Maine." <strong>Shipping:</strong> No. Pickup only, Mon-Fri in Biddeford or Scarborough.</p>
+      <p><strong>Best for:</strong> Medical patients and caregivers in southern Maine (Cumberland / York counties). The first-generation mother practice is a real HLVd risk-mitigation.</p>
+    </div>
+
+    <div class="vendor-card">
+      <h3>4. Seed &amp; Soil Maine (Monroe, ME)</h3>
+      <p class="vendor-meta"><strong>Location:</strong> 75 Back Brooks Road, Monroe, ME 04951 (Waldo County, central Maine — 25 min south of Bangor). <strong>Hours:</strong> April 18 - June 27: Wednesdays and Saturdays, 10:00 am - 3:30 pm. Year-round by appointment. <strong>Phone:</strong> 207-808-0955. <strong>Web:</strong> <a href="https://seedandsoilmaine.com" target="_blank" rel="noopener noreferrer">seedandsoilmaine.com</a></p>
+      <p><strong>What they sell:</strong> Cannabis seeds, seed-grown cannabis plants (seasonal), vegetable / herb / flower plants, worms, compost, honey. Strain types: "Offering regular, feminized, autoflower, and photoperiod varieties." <strong>Official Affiliate of Humboldt Seed Company.</strong> 2026 catalog is a PDF at <a href="https://seedandsoilmaine.com/wp-content/uploads/2026/01/SeedSoilCatalog.2026-online.pdf" target="_blank" rel="noopener noreferrer">seedandsoilmaine.com/.../SeedSoilCatalog.2026-online.pdf</a>.</p>
+      <p><strong>License type (inferred):</strong> <strong>Adult-use nursery (Humboldt Seed Co. affiliate).</strong> "Seed &amp; Soil's cannabis nursery is open to anyone over 21 years of age. We accept cash and check only." <strong>Shipping:</strong> No. Wed/Sat in season, by appointment year-round.</p>
+      <p><strong>Best for:</strong> Adult-use 21+ growers in central / midcoast Maine who want a Maine-adapted, locally grown selection plus a full nursery (vegetable / herb / flower / worms / compost / honey). The cash-and-check-only model is real friction.</p>
+    </div>
+
+    <div class="vendor-card">
+      <h3>5. North Atlantic Seed Co. (Waterville, ME)</h3>
+      <p class="vendor-meta"><strong>Location:</strong> PO Box 2724, Waterville, ME 04903. <strong>Hours:</strong> Mon-Fri 9am-4pm EST. <strong>Shipping:</strong> Monday-Friday. <strong>Web:</strong> <a href="https://www.northatlanticseed.com" target="_blank" rel="noopener noreferrer">northatlanticseed.com</a></p>
+      <p><strong>What they sell:</strong> Seeds only — adult-use online seed bank, multi-breeder catalog. Carries Barney's Farm (including the exclusive "Frozen Bananas F1 Auto"), Fast Buds, Ethos Genetics, Atlas Seed, Dirty Bird Genetics (the same genetics brand used by Maine Clone Company), Offensive Selections, Lamb's Breath Seeds, Seed &amp; Soil Maine genetics (cross-listed), Purple Caper Seeds, Grove Bags, Grow Dots fertilizer, NASC Recharge microbial inoculant. <strong>Voted #1 Seed Shop USA '24 + '25.</strong> The <a href="https://www.northatlanticseed.com/blog/beginners-guide-lessons-learned-for-a-successful-outdoor-harvest-in-new-england/" target="_blank" rel="noopener noreferrer">New England outdoor-harvest blog post</a> is the single best in-state secondary source on the 14-hour-daylength / first-frost timing math.</p>
+      <p><strong>License type (inferred):</strong> <strong>Adult-use online seed bank.</strong> Site disclaimer: "Cannabis seeds are sold as souvenirs, and collectibles only. They contain 0% THC. It is imperative that you check your state and local laws before attempting to purchase seeds." This is the standard "souvenir seed" disclaimer used by every US-facing seed bank to navigate federal hemp-vs-marijuana ambiguity. <strong>Shipping:</strong> Yes, nationwide.</p>
+      <p><strong>Best for:</strong> Maine growers who want a one-stop online seed bank with Maine roots, multi-breeder selection, fast shipping, and free-seed promos. The New England blog post is a strong cross-link partner.</p>
+    </div>
+
+    <h3>The 5 vendors at a glance</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="5 Maine cannabis clone and seed vendors 2026">
+        <thead>
+          <tr>
+            <th>Vendor</th>
+            <th>Location</th>
+            <th>Seeds?</th>
+            <th>Clones?</th>
+            <th>Adult-use 21+?</th>
+            <th>Medical?</th>
+            <th>Shipping?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Cannabis Seed Bank of Maine</strong></td><td>Farmington</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Walk-in / phone</td></tr>
+          <tr><td><strong>Maine Clone Company</strong></td><td>Waterville</td><td>Limited</td><td>Yes ($25)</td><td>Seeds only</td><td>Yes (clones)</td><td>No</td></tr>
+          <tr><td><strong>Maine Seedlings</strong></td><td>Biddeford / Scarborough</td><td>No</td><td>Yes ($150/6-pack)</td><td>No</td><td>Yes</td><td>No (pickup Mon-Fri)</td></tr>
+          <tr><td><strong>Seed &amp; Soil Maine</strong></td><td>Monroe</td><td>Yes</td><td>Limited (seed-grown plants)</td><td>Yes (cash/check)</td><td>Yes</td><td>No (Wed/Sat Apr-Jun 27)</td></tr>
+          <tr><td><strong>North Atlantic Seed Co.</strong></td><td>Waterville (online)</td><td>Yes (10+ breeders)</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes (nationwide)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cost Per Plant: Clones vs. Seeds</h2>
+
+    <h3>Per-plant cost (verified 2026-06-06)</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Cannabis clone vs seed per-plant cost Maine 2026">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Per-plant cost</th>
+            <th>Pack</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Maine Clone Company clone</td><td>$25</td><td>1 clone</td><td>maineclonecompany.com</td></tr>
+          <tr><td>Maine Seedlings clone</td><td>$25</td><td>6-pack $150</td><td>maineseedlings.com</td></tr>
+          <tr><td>CSBoM small clone</td><td>$20</td><td>1</td><td>cannabisseedbankofmaine.com</td></tr>
+          <tr><td>CSBoM quart-pot clone</td><td>$40</td><td>1</td><td>cannabisseedbankofmaine.com</td></tr>
+          <tr><td>CSBoM feminized seed</td><td>$13.33</td><td>3-pack $40</td><td>cannabisseedbankofmaine.com</td></tr>
+          <tr><td>ILGM feminized photoperiod (Afghan, 10-pack)</td><td>$9.90</td><td>10-pack $99</td><td>ilgm.com</td></tr>
+          <tr><td>ILGM autoflower (White Widow Auto, 10-pack)</td><td>$9.90</td><td>10-pack $99</td><td>ilgm.com</td></tr>
+          <tr><td>North Atlantic Seed BWL autoflower (single seed)</td><td>~$15.68</td><td>1</td><td>northatlanticseed.com</td></tr>
+          <tr><td>North Atlantic Seed BWL autoflower (bulk)</td><td>~$6.91</td><td>100-pack $690.68</td><td>northatlanticseed.com</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4-plant grow cost</h3>
+    <p>A 4-plant Maine home grow (using all 4 mature-plant sites for a single adult, or 1/3 of the 12 mature-plant limit for a household of 2):</p>
+
+    <ul>
+      <li><strong>4 Maine Clone Company clones @ $25:</strong> $100</li>
+      <li><strong>4 Maine Seedlings 6-packs (which forces 6 clones, so 4-site grow + 2 backup):</strong> $150</li>
+      <li><strong>4 Cannabis Seed Bank of Maine small clones @ $20:</strong> $80</li>
+      <li><strong>4 Cannabis Seed Bank of Maine quart pots @ $40:</strong> $160</li>
+      <li><strong>ILGM 10-pack feminized photoperiod (Afghan $99):</strong> $99 for up to 10 plants; the 4-plant grow effectively pays for 4 seeds = $39.60 of that pack</li>
+      <li><strong>ILGM 5-pack autoflower (White Widow Auto $74):</strong> $74 for 5 plants; the 4-plant grow pays for all 4 = effectively $59.20</li>
+    </ul>
+
+    <p><strong>Cheapest 4-plant grow path:</strong> Cannabis Seed Bank of Maine small clones at $80 total. <strong>Cheapest seeds path:</strong> ILGM 10-pack feminized photoperiod at $99 total.</p>
+
+    <h3>Risk-adjusted cost</h3>
+    <p>Sticker price is misleading. Loss rates matter:</p>
+
+    <ul>
+      <li><strong>Clone loss rate (industry standard, including HLVd, transplant shock, root rot):</strong> ~10%. A 4-clone order × 10% loss = 0.4 plants lost. <strong>Effective per-plant clone cost: $25/0.9 = $27.78</strong> for Maine Clone Company.</li>
+      <li><strong>Seed germ failure rate (reputable seed bank):</strong> ~2%. A 4-seed order × 2% loss = 0.08 plants lost. <strong>Effective per-plant seed cost: $9.90/0.98 = $10.10</strong> for ILGM Afghan.</li>
+      <li><strong>HLVd-specific risk premium:</strong> If a clone from an untested mother turns out to be HLVd-positive (30-50% yield loss), the effective per-plant cost is dramatically higher: $25 for the clone + 0.6 oz lost × $300/oz Maine dispensary retail = $180 in lost flower value. <strong>A single HLVd clone from a non-testing vendor can cost the grower $200+ vs. the $25 sticker.</strong></li>
+    </ul>
+
+    <h3>The "buy a backup" insurance pattern</h3>
+    <p>A serious Maine grower buys both: 1-2 backup seeds for each clone (or vice versa) in case the clone fails to root, the clone is HLVd-positive, or the photoperiod doesn't finish in time. For a 4-plant site grow: 4 clones + 1 backup seed pack (5-10 seeds) = <strong>$100 (clones) + $40 (seeds) = $140 total.</strong> The $40 backup-seed insurance is a 30% premium over the clone-only cost; for the central/northern Maine grower, the insurance is worth the premium.</p>
+  </section>
+
+  <section>
+    <h2>The 7 Beginner Mistakes for Clones</h2>
+
+    <ol>
+      <li><strong>"Buy the cheapest clone."</strong> A $20 Cannabis Seed Bank of Maine small clone from a vendor with no documented HLVd testing protocol is a 10-20% loss-rate bet (transplant shock, HLVd, root rot). A $25 Maine Clone Company clone from a 14-year-old pheno-hunting operation with an HLVd primer on the website is the same price but a much better risk-adjusted buy. <strong>Ask the vendor for the mother plant's testing protocol. If they can't tell you, walk away.</strong></li>
+
+      <li><strong>"Skip the quarantine period."</strong> A clone goes from a 24-hour-T5 vendor cloner into a grower's outdoor garden or indoor tent on Day 1. If the clone has HLVd, russet mites, or fusarium, it spreads to the rest of the grow in days. <strong>7-14 days in a separate space minimum</strong> (per Maine Clone Company's primer: "Isolate any new cuttings or established plants coming from outside of your facility"). The Adkar-Purushothama 2023 review is more conservative: 30-day quarantine with week-3 RT-PCR test.</li>
+
+      <li><strong>"Plant directly into the final container."</strong> A 4"x4" rooted clone from Maine Clone Company should not go into a 25-gallon fabric pot on Day 1. The root system is small; the surrounding soil stays wet; pythium takes hold. <strong>Pot up in 1-gallon → 3- or 5-gallon → final container</strong> over 2-3 weeks.</li>
+
+      <li><strong>"Don't acclimate to outdoor sun."</strong> The clone has been under T5 fluorescents at 24-hour light and ~70% humidity. Outdoor Maine sun in late May is full-spectrum UV at 14+ hours and ambient humidity 50-80%. <strong>Harden off the clone for 3-7 days:</strong> 1 hour outdoor morning sun on Day 1, 2 hours Day 2, 4 hours Day 3, etc. The classic "light burn" bleached-leaf symptom is the result of skipping this step.</li>
+
+      <li><strong>"Skip the root inspection."</strong> When the clone arrives, turn the pot upside down and look at the root ball. <strong>Healthy:</strong> white, fibrous, no smell. <strong>Unhealthy:</strong> brown, mushy, sour smell (root rot); root-bound (mass of circling roots with no loose soil); bone-dry (the vendor under-watered). A 12" clone with a brown mushy root ball will not recover. Reject at pickup.</li>
+
+      <li><strong>"Ignore HLVd symptoms."</strong> The most insidious clone failure. Per Adkar-Purushothama 2023: most HLVd-infected plants are <strong>asymptomatic</strong> until flower. If the clone has symptoms in veg — leaf bunching, shorter internodes, stunted growth compared to a sibling plant — the most likely cause is HLVd. <strong>Destroy the plant; do not flower it; do not take cuttings from it.</strong></li>
+
+      <li><strong>"Plant too early."</strong> Maine Clone Company's clones are 4-6 weeks old at pickup; they can be transplanted as soon as the last frost passes (May 20 in southern Maine, May 31 in central, June 1-14 in northern). The home grow guide's MOFGA transplant date (June 14) is the conservative date. <strong>The clone is already 4-6 weeks of veg old; the grower does not need to start indoor as early as for a seed.</strong> Planting a clone in mid-April means an unnecessary 4-6 weeks of indoor grow cost.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The Decision Matrix</h2>
+
+    <div class="tier-callout">
+      <strong>Choose CLONES if:</strong> (a) you're growing photoperiods, (b) you're in northern/central Maine with a tight season, (c) you want a known phenotype, (d) you can verify pest/disease testing, (e) you're willing to do a 7-14 day quarantine, (f) the strain you want is at a Maine vendor you can drive to.
+    </div>
+
+    <div class="tier-callout">
+      <strong>Choose SEEDS if:</strong> (a) you want a specific strain not at your local vendor, (b) you don't want pest risk, (c) you want to start cheap, (d) you're growing autoflowers (clones don't add value), (e) you want to ship discreetly to your door.
+    </div>
+
+    <div class="tier-callout">
+      <strong>Choose BOTH (insurance):</strong> A serious grower buys a clone of the strain they really want, AND a backup seed pack, AND labels them clearly. If the clone fails, the seed takes its place. For a 4-plant site grow: 4 clones + 1 backup seed pack = $140 total. The insurance is worth the premium for any grower who can't afford to lose a season.
+    </div>
+
+    <h2>The "Maine Clone Season" — When to Buy</h2>
+    <p>Maine clone vendors typically take orders February-April for spring pickup. <strong>Pickup window:</strong> late April to early June (corresponds to last-frost dates by region). Walk-in availability depends on demand; pre-order is recommended for popular strains. Late-summer (July-August) is when some vendors have a "second run" of clones for indoor growers or quick-finish outdoor.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "Can I buy cannabis clones as an adult-use grower in Maine?", answer: "Yes — from an OCP-licensed Nursery Cultivation Facility (per 28-B §501(3)(D) direct sales; §501(11) delivery) or from any OCP-licensed Cannabis Store (which can deliver clones per the OCP FAQ). Examples of adult-use nurseries: Cannabis Seed Bank of Maine, Seed & Soil Maine. Medical-only vendors: Maine Clone Company and Maine Seedlings, which require a Maine medical card. You can also get clones delivered to your door from any licensed Maine cannabis store." },
+      { question: "Are clones better than seeds for Maine's short season?", answer: "Yes for photoperiods in northern and central Maine. A clone transplanted in late May is in mid-vegetative growth by early June, vs. a seed started at the same time which is in early-veg by mid-June. The 3-5 week calendar head start is the difference between a 7-week photoperiod finishing before Caribou's Sep 25 first frost and not finishing. Autoflower clones are a category error (Maine Clone Co: 'impossible to keep an autoflowering mother'). For autoflowers, buy seeds." },
+      { question: "How do I know if a cannabis clone is healthy?", answer: "Inspect roots: white, fibrous, no smell. Inspect stems: no discoloration, no cankers. Inspect leaves: no spots, no pest webbing, no curling, no 'tacoing' (leaf edges curling upward — a russet mite sign). For HLVd: most infected plants are asymptomatic until flower, so visual inspection alone is insufficient. Ask the vendor for RT-PCR or qPCR mother-plant testing protocols. A vendor who can't answer is a red flag. Nova Analytic Labs and other Maine testing facilities offer HLVd RT-PCR for a fee." },
+      { question: "Can I ship cannabis clones to Maine from out of state?", answer: "Most clone vendors do not ship across state lines for legal and liability reasons. Maine Clone Company is explicit: 'we do not ship clones.' Maine Seedlings is in-person pickup only. Cannabis Seed Bank of Maine is walk-in / phone. For Maine buyers, the practical answer is to drive to a Maine vendor. Out-of-state clone shipping is essentially off the table." },
+      { question: "What is HLVd and how do I avoid it?", answer: "Hop latent viroid (HLVd) is a 256-nucleotide circular RNA pathogen that causes 'dudding' disease in cannabis, with yield losses of 30-50% per the Adkar-Purushothama 2023 Viruses review. It is primarily mechanically transmitted (dirty tools, hands, gloves, shared cloners) and is mostly asymptomatic until the flowering stage. To avoid: buy from a vendor who tests mothers by RT-PCR or qPCR; quarantine new clones 7-14 days (Adkar-Purushothama recommends 30 days with week-3 RT-PCR test); inspect roots and leaves; use first-generation mothers when possible (Maine Seedlings' practice); do not integrate untested clones into an existing grow." },
+      { question: "Are autoflower clones available in Maine?", answer: "No. As Maine Clone Company states: 'it's impossible to keep an autoflowering mother as it would flower and die even under 24 hours of light.' The autoflowering trait is day-neutral — the plant begins flowering at age 3-4 weeks regardless of light cycle. There is no benefit to a 4-week-old autoflower clone vs. a seed started at the same time, because the clock has already started ticking. A serious autoflower Maine grower buys seeds." }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor (the pillar page)</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — 7 Maine-tested strains and 5 Maine seed/clone vendor mentions</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized Seeds for Maine 2026</a> — the seed-type decision matrix</li>
+      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — the post-harvest dehumidifier, Boveda 62, and cure protocol</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup &amp; Cost for Maine 2026</a> — indoor equipment, CMP TOU electricity, and per-ounce math</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Seed Source</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>The only seed affiliate on the site (id 8112, 20% commission). For the <em>seeds</em> half of the clones-vs-seeds decision, ILGM is the recommended U.S.-facing seed bank: 20+ year track record, ships to Maine with discreet packaging, free shipping on most orders, 99%+ feminization guarantee, and a useful Marijuana Grow Bible included with every purchase. The site's existing <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a> and <a href="/blog/autoflower-vs-feminized-maine-2026">autoflower vs feminized decision matrix</a> cross-reference ILGM inventory.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🏪</span>
+          <h3>5 Maine Vendors for In-Person Pickup or Local Shipping</h3>
+        </div>
+        <p>For Maine-local clones and seeds: the 5 vendors profiled in this guide (Cannabis Seed Bank of Maine in Farmington, Maine Clone Company in Waterville, Maine Seedlings in Biddeford/Scarborough, Seed &amp; Soil Maine in Monroe, North Atlantic Seed Co. in Waterville) are real Maine businesses. Call the vendor to confirm current license type and pickup hours before driving. Equipment and soil recommendations elsewhere on the site (Mars Hydro, Spider Farmer, AC Infinity, Vivosun, Coast of Maine, Fox Farm) are informational only — these brands are not currently in our affiliate program.</p>
+        <div class="affiliate-cta">
+          <a href="/find-a-dispensary" class="btn-affiliate">Find a Maine Dispensary →</a>
+          <span class="affiliate-note">Browse dispensaries carrying seeds and clones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> and consult with a qualified attorney for specific legal guidance. The 5 Maine vendor profiles are based on each vendor's public-facing website on 2026-06-06; license types (caregiver vs. nursery) are inferred from public evidence and should be confirmed with the vendor for the buyer's specific legal status. Prices reflect Q2 2026 vendor websites and may vary. Hop latent viroid information cites the Adkar-Purushothama 2023 <em>Viruses</em> peer-reviewed review; consult a plant pathology professional or commercial cannabis testing lab for testing protocols. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>
