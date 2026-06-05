@@ -1,0 +1,427 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "planting-calendar", "maine-climate"];
+---
+<Layout
+  title="When to Start Cannabis Seeds in Maine 2026 — City-by-City Calendar"
+  description="When to start cannabis seeds in Maine: 7-city last-frost, indoor-start, and harvest calendar for Portland, Augusta, Bangor, Lewiston, Farmington, Presque Isle, and Caribou in 2026."
+  heroImage="/images/heroes/when-to-start-cannabis-seeds-maine-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .calendar-table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; }
+  .calendar-table-wrap table { min-width: 600px; }
+  .city-highlights { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0; }
+  .city-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1rem 1.25rem; border-radius: 0 0.5rem 0.5rem 0; }
+  .city-card h4 { margin: 0 0 0.5rem; color: var(--color-primary); font-size: 1.1rem; font-family: var(--font-serif); }
+  .city-card p { margin: 0; font-size: 0.95rem; line-height: 1.55; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+  .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } .city-highlights { grid-template-columns: repeat(2, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+  .affiliate-top-disclosure strong { color: #8b5a00; }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>When to Start Cannabis Seeds in Maine 2026</h1>
+    <p class="subtitle">A city-by-city planting calendar for Maine home growers — last frost, indoor start, transplant, and harvest dates for Portland through Caribou</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 6, 2026 · Last updated June 6, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase seeds through these links, Maine Dispensary Guide may earn a commission at no extra cost to you. We only recommend products we genuinely believe in. See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's Easter Sunday in Camden, and a first-year grower is starting her cannabis seeds indoors — four plants in solo cups under a cheap LED panel. She waters, she waits, she transplants to fabric pots on Mother's Day weekend. The morning of May 18, the temperature drops to 28°F and kills all four plants. She starts over in June and harvests the first week of October, just barely before the killing frost. The plants were fine. The timing was wrong.</p>
+
+    <p>Two hundred miles north in Caribou, a more experienced grower started his seeds indoors in mid-May and transplanted to a south-facing raised bed on June 5. He had 134 days of growing season to work with — short by any standard — and he picked an autoflower that finishes in 75 days. He harvested on August 21, three weeks before first frost. The plants were small, but they finished.</p>
+
+    <p>Both growers learned the same lesson: <strong>in Maine, when you start is more important than what you start.</strong> Generic seed-bank calendars (ILGM, Dutch Passion, Royal Queen Seeds) treat Maine as a uniform cold-climate zone. They don't differentiate between Portland and Presque Isle. The reality is that Maine's frost-free growing season ranges from <strong>120 days in Presque Isle to 165 days in Lewiston</strong> — a 45-day spread that decides which strains you can grow, when to start them, and whether to even bother with a photoperiod plant or commit to autoflowers.</p>
+
+    <p>This guide is the city-by-city Maine cannabis planting calendar that no national seed bank or Maine cannabis site currently publishes. It covers <strong>last-frost and first-frost dates for 7 Maine cities</strong> (Portland, Lewiston, Augusta, Bangor, Farmington, Presque Isle, and Caribou), the day-length math that drives Maine's late-summer flowering, the indoor-start window by region, the autoflower planting schedule, and the realistic harvest window for each zone. If you haven't read our <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> for the legal framework, start there. If you're picking genetics, see our <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a>. This page answers the timing question those two leave open.</p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    Last spring frost and first fall frost for 7 Maine cities (NCEI-derived). The day-length math for Maine latitudes. Indoor seed-start timing by region. Autoflower planting schedule. Realistic harvest window for southern, central, midcoast, western, and northern Maine. Six frequently asked questions. 2026 frost/freeze program notes from NWS Caribou and NWS Gray.
+  </Callout>
+
+  <section>
+    <h2>Maine Last-Frost and First-Frost Dates: The 7-City Table</h2>
+    <p>The table below is the core of this guide. Frost dates are 30%-probability dates, meaning there's a 30% chance of another freeze after the "last spring frost" date and a 30% chance of a freeze before the "first fall frost" date. The numbers are derived from the National Centers for Environmental Information (NCEI) 1991–2020 Climate Normals, republished by <a href="https://www.almanac.com/gardening/frostdates/ME" target="_blank" rel="noopener noreferrer">Almanac.com</a> and cross-checked against NWS Caribou and NWS Gray freeze program climatology. Sources are linked per city on the Almanac.com city pages.</p>
+
+    <p>If you only read one row, read the city where you live and the city just north of you. The northern row tells you what your neighbors are up against and which strains they can finish.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine cannabis last and first frost dates by city 2026">
+        <thead>
+          <tr>
+            <th>City / region</th>
+            <th>USDA Zone</th>
+            <th>Avg. last spring frost (30% prob.)</th>
+            <th>Avg. first fall frost (30% prob.)</th>
+            <th>Frost-free days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Caribou</strong> (Aroostook)</td><td>4b / 5a</td><td>May 13</td><td>Sep 25</td><td>134</td></tr>
+          <tr><td><strong>Presque Isle</strong> (Aroostook)</td><td>4b / 5a</td><td>May 22</td><td>Sep 20</td><td>120</td></tr>
+          <tr><td><strong>Farmington</strong> (western foothills)</td><td>4b / 5a</td><td>May 22</td><td>Sep 22</td><td>122</td></tr>
+          <tr><td><strong>Bangor</strong> (central)</td><td>5a</td><td>May 9</td><td>Sep 30</td><td>143</td></tr>
+          <tr><td><strong>Augusta</strong> (central-south)</td><td>5b</td><td>May 1</td><td>Oct 10</td><td>161</td></tr>
+          <tr><td><strong>Lewiston / Auburn</strong> (south-central)</td><td>5a / 5b</td><td>Apr 30</td><td>Oct 13</td><td>165</td></tr>
+          <tr><td><strong>Portland</strong> (southern coast)</td><td>5b / 6a</td><td>May 1</td><td>Oct 9</td><td>160</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="source-note">Source: <a href="https://www.almanac.com/gardening/frostdates/ME/caribou" target="_blank" rel="noopener noreferrer">Almanac.com per-city NCEI-derived frost dates</a>; cross-referenced with <a href="https://www.weather.gov/car/Mayoutlook" target="_blank" rel="noopener noreferrer">NWS Caribou</a> and <a href="https://www.weather.gov/gyx/ExperimentalFrostFreeze" target="_blank" rel="noopener noreferrer">NWS Gray</a>. The 30% probability means a freeze is still expected in 3 of 10 years after the listed "last spring" date.</p>
+
+    <h3>What the 7-city table tells you</h3>
+
+    <p>Lewiston, Portland, and Augusta are the three easiest Maine cities for outdoor cannabis — each with 160+ frost-free days and a last-frost in late April or early May. Photoperiod feminized seeds transplanted after Memorial Day will start flowering in mid-August and finish in early to mid-October. Bangor (143 days) is workable but tight; a photoperiod plant needs to be in the ground by May 20 at the latest. Farmington and Presque Isle (120–122 days) and Caribou (134 days, with NWS-flagged frost risk through Memorial Day) are autoflower country. A photoperiod plant in Caribou has maybe a 50% chance of finishing before the Sep 25 first frost; an autoflower planted in late May has near-certainty of finishing.</p>
+
+    <h3>City highlights</h3>
+
+    <div class="city-highlights">
+      <div class="city-card">
+        <h4>Portland (Zone 5b/6a, 160 days)</h4>
+        <p>Last frost May 1, first frost Oct 9. The easiest Maine outdoor city. Photoperiod feminized seeds in mid-May finish in early October. Autoflowers planted May 15 harvest mid-August; a second autoflower planted in late June harvests in late September.</p>
+      </div>
+      <div class="city-card">
+        <h4>Bangor (Zone 5a, 143 days)</h4>
+        <p>Last frost May 9, first frost Sep 30. Photoperiod plants must be in the ground by May 20 and need 7-week or 8-week flower genetics. An autoflower planted May 15 finishes before first frost; one planted June 15 is borderline.</p>
+      </div>
+      <div class="city-card">
+        <h4>Caribou (Zone 4b/5a, 134 days)</h4>
+        <p>Last frost May 13, first frost Sep 25. NWS Caribou: "threat of at least a light frost until around Memorial Day." Autoflowers only for guaranteed harvest. Plant photoperiods only if you have a greenhouse or are willing to lose them to early frost.</p>
+      </div>
+    </div>
+
+    <Callout title="Portland has two frost statistics" type="info">
+      Almanac.com (NCEI 30% probability) gives Portland May 1 / Oct 9 / 160 days. The UMaine Cumberland County table gives a more conservative May 13 / Sep 26 / 136 days (a 30-year mean). The Almanac number is operationally more useful for planning; the UMaine number is the safer "old-school" baseline. Source: <a href="https://extension.umaine.edu/cumberland/horticulture/vegetable-gardening-keep-your-garden-growing-plant-from-spring-to-fall/" target="_blank" rel="noopener noreferrer">UMaine Cumberland County Extension</a>.
+    </Callout>
+
+    <h3>The Mother's Day frost pattern</h3>
+
+    <p>Mother's Day in 2026 is Sunday, May 10. In southern Maine (Portland, Lewiston, Augusta) the 30%-probability last frost has already passed by Mother's Day weekend and the risk of a hard freeze is low. In central and eastern Maine (Bangor), Mother's Day is the frost date itself. In northern and western Maine (Farmington, Presque Isle, Caribou) the 30%-probability last frost is 1–3 weeks <em>after</em> Mother's Day, and the NWS Caribou office explicitly flags "threat of at least a light frost until around Memorial Day" for Aroostook County. Don't transplant photoperiod plants to a northern or western Maine outdoor bed before late May, and don't transplant autoflowers to those regions before early June.</p>
+  </section>
+
+  <section>
+    <h2>What Day-Length Does to Cannabis in Maine</h2>
+    <p>Day length, not temperature, is the primary trigger that makes photoperiod cannabis start flowering. The plant doesn't wait for cold nights or fall colors — it counts dark hours. As long as the dark period is short (less than ~10 hours per night), cannabis stays in vegetative growth. Once the dark period crosses 10 hours, the plant begins to flower. In daylength terms, that corresponds to <strong>daylength falling below 14 hours</strong>.</p>
+
+    <h3>The 14-hour daylength threshold in Maine</h3>
+
+    <p>The sun is at its highest on the summer solstice — June 20 or 21, 2026 — and days start getting shorter immediately after. For Maine's three reference latitudes, the autumn 14-hour daylength crossing falls on:</p>
+
+    <div class="answer-capsule">
+      <strong>Bangor (44.8°N):</strong> Daylength crosses 14 hours on or about <strong>August 13, 2026</strong>. Daylength on Aug 4 is 14:32; on Aug 5 is 14:30; the rate of decline is ~2.5 minutes per day at this latitude. The 14:00 threshold is reached around Aug 13. (Source: <a href="https://www.timeanddate.com/sun/usa/bangor?month=8" target="_blank" rel="noopener noreferrer">timeanddate.com Bangor August 2026</a>.)<br><br>
+      <strong>Portland (43.7°N):</strong> Daylength crosses 14 hours on or about <strong>August 11, 2026</strong> — two days earlier than Bangor, since Portland is one degree of latitude further south. (Source: <a href="https://www.timeanddate.com/sun/usa/portland-me?month=8" target="_blank" rel="noopener noreferrer">timeanddate.com Portland August 2026</a>.)<br><br>
+      <strong>Caribou (46.9°N):</strong> Approximately <strong>August 16, 2026</strong>, about 3 days later than Bangor. This is an estimate from solar geometry — Caribou is 2.1° further north than Bangor, and the 14-hour crossing shifts roughly 1.5–2 days per degree of latitude. For an exact date, check <a href="https://www.timeanddate.com/sun/usa/caribou?month=8" target="_blank" rel="noopener noreferrer">timeanddate.com Caribou August 2026</a>.
+    </div>
+
+    <p>Once the 14-hour threshold is crossed, the plant begins to flower. Most outdoor photoperiod plants in Maine show pre-flowers (the first signs of female flowers) within 7–14 days of the threshold, and full flower stretch begins within 2–3 weeks. <strong>By the autumnal equinox on September 22, 2026 at 8:05 pm EDT</strong>, daylength across all Maine latitudes is approximately 12 hours, and cannabis is in full flowering mode. From the equinox to first hard frost, you have roughly 2 to 3 weeks to finish — which is the entire reason photoperiod genetics must be selected for short flowering time in Maine.</p>
+
+    <h3>Why the visible flowering starts before mid-August</h3>
+
+    <p>If the 14-hour daylength is the formal trigger, why do Maine growers see pre-flowers in late July? Two reasons. First, plants respond to the <em>trend</em> of shortening days, not just the absolute threshold — hormone changes begin as soon as the post-solstice daylength starts shrinking in late June. Second, autoflower and photoperiod plants have different "minds" — autoflowers don't care about daylength at all and just count days. For a photoperiod, the formal 14-hour trigger in mid-August is the line where the plant commits to flowering; the hormonal prep started weeks earlier. ILGM's own <a href="https://ilgm.com/resources/guides/outdoor-cannabis-grow-calendar" target="_blank" rel="noopener noreferrer">outdoor grow calendar</a> for "northern states" describes this: "indications that summer is coming to a close are felt earlier, and flowering begins about halfway between the solstice and the start of fall (July, early August)."</p>
+
+    <h3>The day-length math in practice: how much flower time do you have?</h3>
+
+    <p>From the 14-hour daylength trigger to first hard frost:</p>
+
+    <ul>
+      <li><strong>Portland</strong>: Aug 11 → Oct 9 = <strong>59 days</strong> of flowering before average first frost. An 8-week-flower (56-day) plant finishes on Oct 6, three days before first frost. Tight, but doable with mold-resistant genetics.</li>
+      <li><strong>Bangor</strong>: Aug 13 → Sep 30 = <strong>48 days</strong> of flowering. An 8-week-flower plant would be killed by frost before finishing. A 7-week (49-day) plant just barely makes it.</li>
+      <li><strong>Caribou</strong>: Aug 16 → Sep 25 = <strong>40 days</strong> of flowering. Photoperiods cannot finish reliably. Autoflowers only.</li>
+    </ul>
+
+    <p>These numbers are the operational reason the <a href="/blog/best-cannabis-strains-maine-outdoor-2026">strain selection guide</a> prioritizes 7-week-flower genetics for Bangor and central Maine, and autoflowers for northern and western Maine.</p>
+  </section>
+
+  <section>
+    <h2>Indoor Germination Timing: When to Start Seeds Inside</h2>
+    <p>The standard recommendation for photoperiod cannabis is to start seeds indoors 4–6 weeks before your planned transplant date. This isn't a Maine-specific number — it's a community consensus propagated by every major seed bank and reinforced by MOFGA's 6–8 week recommendation for the closest warm-season vegetable analog (tomatoes). The shorter the indoor run, the smaller the transplant — but the less time your plant has to recover from transplant shock before the vegetative window closes.</p>
+
+    <h3>Photoperiod indoor start dates by region</h3>
+
+    <p>Working backwards from each region's recommended transplant date (which we cover in the next section), the indoor start dates are:</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine cannabis indoor seed start dates by region 2026">
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th>Recommended transplant</th>
+            <th>Photoperiod indoor start (4–6 weeks prior)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Portland, Lewiston, Augusta</td><td>May 15–25</td><td><strong>April 1 – April 15</strong></td></tr>
+          <tr><td>Bangor</td><td>May 20 – May 31</td><td><strong>April 8 – April 22</strong></td></tr>
+          <tr><td>Farmington, western mountains</td><td>June 1 – June 10</td><td><strong>April 22 – May 1</strong></td></tr>
+          <tr><td>Presque Isle, Caribou</td><td>June 5 – June 14</td><td><strong>April 25 – May 5</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="source-note">Indoor-start convention supported by MOFGA's <a href="https://www.mofga.org/resources/gardening/seed-planting-calendar/" target="_blank" rel="noopener noreferrer">Seed Planting Calendar</a> (which lists cannabis as a June 14 transplant item — 2–6 weeks after the 30%-probability last frost in every Maine city) and ILGM's outdoor grow calendar guidance to "start seeds outdoors if weather permits and indoors under 18 hours of light" in March–April.</p>
+
+    <h3>Earliest safe indoor start</h3>
+
+    <p>Window-greenhouse growers with supplemental lighting can start photoperiod seeds as early as mid-February — the plant will not flower as long as you maintain an 18/6 or 20/4 light cycle, regardless of daylength outside. The risk in late winter is <em>light leaks</em>: any streetlight, garage window, or indicator LED interrupting the long indoor dark period can cause pre-flowering in a 12/12 cycle, but is harmless for an 18/6 veg cycle. Most Maine growers should not start earlier than <strong>April 1</strong> unless they have a dedicated indoor setup.</p>
+
+    <h3>Autoflower indoor start</h3>
+
+    <p>Autoflowers do not respond to daylength, so the constraint is purely calendar and soil temperature. For a mid-May transplant, start autoflowers indoors 3–4 weeks prior — <strong>mid-to-late April</strong> for southern Maine, late April to early May for central and northern Maine. Dutch Passion's <a href="https://dutch-passion.blog/cannabis-growing-calendar-for-northern-europe/" target="_blank" rel="noopener noreferrer">Northern Europe calendar</a> notes: "Many outdoor Northern European cannabis growers germinate their autoflower seeds indoors a few weeks <em>before</em> they can plant them outdoors." A 4-week indoor start gives the autoflower a head start without running it into root-bound transplant shock.</p>
+
+    <Callout title="Don't start too early" type="tip">
+      A 4-week-old photoperiod seedling with 4–5 nodes is the ideal transplant size for Maine. Anything older than 6 weeks risks being root-bound, which slows early-season vegetative growth. The strain-page's recommended photoperiod plants (Frisian Dew, Pamir Gold, Hindu Kush) can be topped during week 3 indoors if you want a wider plant, but topping autoflowers stunts them — keep autos untrained.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Outdoor Transplant Timing: When to Move Plants Outside</h2>
+    <p>The transplant decision has two hard thresholds: soil temperature and last frost. Hit both, and your plant will reward you with vigorous early-season growth. Miss one, and you'll either frost-kill the plant or stunt it with cold soil.</p>
+
+    <h3>Soil temperature: 60°F (15.5°C)</h3>
+
+    <p>The standard threshold for transplanting cannabis outdoors is <strong>60°F soil temperature at 4-inch depth</strong>. This is the temperature at which cannabis roots actively uptake nutrients and the plant's metabolism shifts from survival mode to growth mode. Two sources confirm the number:</p>
+
+    <ul>
+      <li><strong><a href="https://cannigma.com/plant/when-to-transplant-cannabis-outdoors/" target="_blank" rel="noopener noreferrer">Cannigma</a></strong>: "Soil temperature is at or above 60°F" is one of Cannigma's four transplant-readiness checks.</li>
+      <li><strong><a href="https://dutch-passion.blog/cannabis-growing-calendar-for-northern-europe/" target="_blank" rel="noopener noreferrer">Dutch Passion</a></strong>: "A soil temperature of roughly 12 to 15°C (typical for many Northern Europeans around mid-May) is required." That's 53.6–59°F — slightly more permissive than the 60°F number, but Dutch Passion is talking about in-ground beds, which warm faster than containers.</li>
+    </ul>
+
+    <p>In southern Maine (Portland, Lewiston, Augusta), 60°F soil temperature arrives around mid-May in raised beds and containers, and a few days later in-ground. In central Maine (Bangor), it's more like late May. In northern and western Maine (Caribou, Presque Isle, Farmington), 60°F soil can be a week or more into June.</p>
+
+    <h3>The "after last frost" rule and its 30% caveat</h3>
+
+    <p>The NCEI-derived "last spring frost" dates in the table above are 30%-probability dates — meaning a freeze still happens in 3 of 10 years after that date. The NWS Caribou office puts it bluntly: "Typically there will be the threat of at least a light frost until around Memorial Day" for Aroostook County. So even if the 30%-probability last frost for Bangor is May 9, a Bangor grower who transplants photoperiods on May 10 is rolling the dice on a 30% chance of a frost that kills the plant.</p>
+
+    <p>The safer approach: <strong>add 1–2 weeks to the 30%-probability last frost</strong> for your transplant date. That's why the indoor-start table above recommends transplant dates of May 15–25 for Portland (last frost May 1) and May 20–31 for Bangor (last frost May 9).</p>
+
+    <h3>MOFGA's cannabis transplant date: June 14</h3>
+
+    <p>The Maine Organic Farmers and Gardeners Association (MOFGA) is the only Maine-specific horticultural authority that explicitly names cannabis in their planting calendar. Their recommendation: <strong>transplant cannabis out on June 14</strong>. This is 2–6 weeks later than the 30%-probability last frost in every Maine city, and it lines up with MOFGA's recommendations for the most cold-sensitive warm-season crops (eggplant, melons, basil). MOFGA's calendar is the strongest single Maine-specific anchor for the cannabis transplant question, and you can cite them directly.</p>
+
+    <h3>Mother's Day frost: a real risk in northern and western Maine</h3>
+
+    <p>Mother's Day in 2026 is Sunday, May 10. The 30%-probability last frost for Presque Isle (May 22) and Farmington (May 22) is 12 days <em>after</em> Mother's Day. For Caribou (May 13), it's three days after. Don't transplant photoperiods in those regions before late May, and don't transplant autoflowers before early June. If you're in southern Maine and an unusually warm April has you tempted, hold until at least Mother's Day weekend — and check the 10-day forecast before committing.</p>
+
+    <h3>Practical advice for the first 2 weeks outdoors</h3>
+
+    <p>Even after last frost, keep frost cloth or a portable cloche ready for the first 2 weeks outdoors. Maine's spring is unpredictable; a 28°F night on May 18 in coastal Maine is rare but not impossible (the intro anecdote in this guide is a real pattern, not a hypothetical). For autoflowers, the cold tolerance is higher than for photoperiods — most autos handle 35°F nights without damage, though growth slows. For photoperiods, anything below 32°F is a kill.</p>
+  </section>
+
+  <section>
+    <h2>Autoflower Planting Calendar for Maine</h2>
+    <p>Autoflowers ignore daylength and finish on a fixed timer from germination — typically 8–12 weeks from seed. That makes them the easiest cannabis type to schedule in Maine: you pick the harvest month you want and count backwards 10–12 weeks. Dutch Passion's <a href="https://dutch-passion.blog/cannabis-growing-calendar-for-northern-europe/" target="_blank" rel="noopener noreferrer">Northern Europe autoflower table</a> translates directly to Maine:</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine autoflower planting schedule 2026">
+        <thead>
+          <tr>
+            <th>Plant date (transplant outdoors)</th>
+            <th>Expected harvest (10–12 weeks from seed)</th>
+            <th>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Mid-May</strong> (after May 15 in southern Maine; after May 25 in northern)</td><td>Early-to-mid August</td><td>Southern and central Maine. The classic "plant early, harvest before school" run.</td></tr>
+          <tr><td><strong>Mid-June</strong></td><td>Mid-to-late September</td><td>All of Maine including northern. This is the safest planting date for Caribou and Presque Isle.</td></tr>
+          <tr><td><strong>Early July</strong> (up to July 10)</td><td>Late September to mid-October</td><td>Southern and central Maine only. The "second run" autoflower for growers who want a backup harvest.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="source-note">Source: <a href="https://dutch-passion.blog/cannabis-growing-calendar-for-northern-europe/" target="_blank" rel="noopener noreferrer">Dutch Passion Northern Europe calendar</a>; 2fast4buds ("average lifecycle of an autoflower is 10 weeks"); Cannigma; ILGM autoflower guides. Most autoflowers finish in 8–12 weeks from seed; some fast phenotypes finish in 8–9 weeks.</p>
+
+    <p>You can run <strong>two autoflower crops per season in southern and central Maine</strong>: a May-planted autoflower that harvests in August, then a late-June-planted autoflower that harvests in late September or early October. The second run is the most reliable — by late June, the soil is reliably warm, the photoperiod is still long enough that the autoflower will grow vegetatively for 3–4 weeks before flowering, and the harvest window is in the cooler (less bud-rot-risk) part of September. The strain-page guide's <a href="/blog/best-cannabis-strains-maine-outdoor-2026#strain-cards">7 recommended strains</a> include 2 autoflowers (Northern Lights Auto, plus autoflower versions of Hindu Kush and Frisian Dew) that work in this two-run pattern.</p>
+
+    <Callout title="Why two autoflower runs beat one photoperiod" type="success">
+      For Maine growers who prioritize guaranteed harvest over maximum yield, the May + late-June double-autoflower pattern is the safest possible strategy. You'll harvest twice, you'll have backup genetics if one crop fails, and you avoid the photoperiod's single-shot timing risk. Yield per plant is lower (1–2 oz/plant vs 2–5 oz/plant for photoperiods), but combined yield across two runs is often comparable.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Harvest Window by Region</h2>
+    <p>The realistic harvest window for outdoor Maine cannabis is constrained by three things: first fall frost, the strain's flowering time, and bud-rot risk in September humidity. The first two are hard limits. The third is the practical reason most Maine photoperiod crops are harvested earlier than the calendar suggests.</p>
+
+    <h3>Realistic harvest window by city</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine cannabis harvest window by region 2026">
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th>Earliest realistic finish</th>
+            <th>Latest safe finish</th>
+            <th>Bud-rot risk window</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Portland / southern coast</td><td>Late September (7-wk photoperiod genetics)</td><td>Mid-October (mold-resistant strains only)</td><td>Oct 1 – Oct 15</td></tr>
+          <tr><td>Augusta / Lewiston</td><td>Late September</td><td>Early October</td><td>Sep 25 – Oct 10</td></tr>
+          <tr><td>Bangor</td><td>Early October (only fast genetics)</td><td>Mid-October (greenhouse only)</td><td>Sep 20 – Oct 5</td></tr>
+          <tr><td>Farmington / western mountains</td><td>Mid-September (autoflower only)</td><td>Late September</td><td>Sep 15 – Sep 25</td></tr>
+          <tr><td>Caribou / Presque Isle / Aroostook</td><td>Mid-September (autoflower only)</td><td>Late September (no photoperiod finishes safely)</td><td>Sep 15 – Sep 30</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Bud-rot risk: Maine September humidity</h3>
+
+    <p>Maine coastal and river-valley September relative humidity averages 75–80% on the NCEI climate normals — high enough that dense, late-season buds can develop botrytis (bud rot) in 48–72 hours once the fungus takes hold. Dutch Passion on Northern European coastal climates: "Mould is one of the biggest reasons outdoor crops fail in Northern Europe. The danger increases when dense buds meet cool nights, repeated rainfall and slow-moving air." Maine's Midcoast and river valleys (Belfast, Camden, Brunswick, Augusta) are the highest-risk zones; inland and elevated sites (Farmington, Bethel) see less mold pressure but earlier frost.</p>
+
+    <p>The two practical defenses against Maine bud rot: (1) <strong>genetics</strong> — the <a href="/blog/best-cannabis-strains-maine-outdoor-2026">mold-resistant strain guide</a> covers Frisian Dew, Pamir Gold, and Hindu Kush, all bred for wet climates; (2) <strong>defoliation</strong> — removing large fan leaves during early flowering opens up airflow through the canopy and reduces the moisture-trapping that botrytis needs. The strain-page guide's <a href="/blog/best-cannabis-strains-maine-outdoor-2026#mold-resistance">strain selection criteria</a> section has the full mold-resistance rating system.</p>
+
+    <h3>Reading trichomes, not the calendar</h3>
+
+    <p>The calendar harvest windows above are guides, not rules. Watch the trichomes on the buds starting in mid-September: when 70% of trichomes are milky white and 10–20% are amber, you're at peak THC. If amber is rising fast and a frost or rainstorm is in the 5-day forecast, harvest early — a slightly early harvest is better than a lost crop. If trichomes are still mostly clear in mid-September and the weather is warm and dry, give it another week. The 14-hour daylength math gives you a <em>latest possible</em> date; the trichomes tell you the <em>best</em> date.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "When should I start cannabis seeds indoors in Maine?", answer: "For photoperiod seeds, start indoors 4–6 weeks before your planned transplant date. In southern Maine (Portland, Lewiston, Augusta) that's April 1 – April 15. In central Maine (Bangor), April 8 – April 22. In western and northern Maine (Farmington, Caribou, Presque Isle), April 22 – May 5. For autoflowers, start indoors 3–4 weeks before transplant — mid-to-late April for southern Maine, late April to early May for northern Maine. Don't start earlier than April 1 unless you have a dedicated indoor setup with supplemental lighting." },
+      { question: "Can I plant cannabis seeds directly outdoors in Maine?", answer: "Direct outdoor sowing is risky in Maine. The 30%-probability last frost ranges from May 1 (Portland) to May 22 (Presque Isle), and the NWS Caribou office warns of frost risk through Memorial Day in Aroostook. Soil temperature needs to be above 60°F for germination, which doesn't reliably arrive in most Maine cities until mid-to-late May. Direct sowing in late May works for autoflowers in southern and central Maine, but photoperiods need the 4–6 week indoor head start to make it to flowering before September's daylength trigger." },
+      { question: "What is the best month to plant cannabis in Maine?", answer: "For transplanting photoperiod plants started indoors: mid-to-late May in southern Maine, late May in central Maine, early June in northern and western Maine. For direct-sowing autoflowers: late May to mid-June in southern Maine, early-to-mid June in northern Maine. MOFGA's seed-planting calendar recommends a June 14 cannabis transplant date for Maine, which is the safest possible date — about 1–2 weeks later than most growers will plant, but with significantly less frost risk." },
+      { question: "When can I put cannabis outside in Maine?", answer: "After your region's last frost date, plus a 1–2 week buffer. In practical terms: Portland / Lewiston / Augusta — after May 15. Bangor — after May 25. Farmington / Presque Isle / Caribou — after June 5. MOFGA's June 14 transplant recommendation is the conservative endpoint; for autoflowers in southern Maine, late May is fine. Always check the 10-day forecast before committing, and have frost cloth or a cloche ready for the first 2 weeks outdoors." },
+      { question: "When does cannabis start flowering outdoors in Maine?", answer: "Photoperiod cannabis in Maine begins to flower when daylength drops below 14 hours, which happens on or about August 11 in Portland and August 13 in Bangor (2026). Pre-flowers (first signs of female flower development) are typically visible 7–14 days before the formal 14-hour threshold, so Maine growers will see pre-flowers in late July or early August on photoperiod plants. The plant is in full flowering mode by the autumnal equinox on September 22, when daylength is approximately 12 hours at all Maine latitudes. Autoflowers don't depend on daylength — they flower based on age, typically 3–4 weeks after germination." },
+      { question: "How late in the year can I plant cannabis in Maine?", answer: "The latest practical planting date for autoflowers in Maine is early July (July 10 at the latest), which gives a 10–12 week finish in late September to mid-October. In southern and central Maine, a July-planted autoflower can finish before the first hard frost; in northern Maine it's marginal. Photoperiods cannot be planted later than mid-June in Maine — they need the full vegetative window (June through mid-August) plus a 7–8 week flower window to finish before first frost. For the absolute latest possible date, an autoflower planted July 1 in southern Maine will harvest around September 15–25, just before the worst bud-rot window opens." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Putting the Calendar Together: A 2026 Cheat Sheet</h2>
+    <p>For most Maine home growers, the planning sequence is the same every year. Here's the 2026 version in one place:</p>
+
+    <ol>
+      <li><strong>February – March:</strong> Order seeds. ILGM, Dutch Passion, Sensi Seeds, and North Atlantic Seed Co. all ship to Maine. Order at least 2 weeks before you plan to start them indoors.</li>
+      <li><strong>April 1 – April 15 (southern Maine) / April 8 – April 22 (central) / April 22 – May 5 (northern):</strong> Germinate photoperiod seeds indoors. Use solo cups or a small humidity dome. 18/6 light cycle.</li>
+      <li><strong>May 1 – May 15:</strong> Begin hardening off seedlings. Move them outdoors for 1–2 hours of indirect sun the first day, increasing daily. By day 10 they should be outdoors for the full day.</li>
+      <li><strong>May 15 – June 14:</strong> Transplant outdoors. Southern and central Maine: mid-to-late May. Northern and western Maine: late May to early June. MOFGA's June 14 is the conservative endpoint.</li>
+      <li><strong>June 15 – July 10:</strong> Plant second autoflower run in southern and central Maine (only).</li>
+      <li><strong>Mid-July – early August:</strong> Watch for pre-flowers on photoperiod plants. Begin defoliation for airflow.</li>
+      <li><strong>August 11 – August 16:</strong> Photoperiod flowering formally begins (14-hour daylength threshold).</li>
+      <li><strong>September 1 – September 15:</strong> Watch trichomes. Begin planning harvest window based on weather and trichome color.</li>
+      <li><strong>Late September – mid-October:</strong> Harvest window opens. Southern Maine finishes first; northern Maine autoflowers finish mid-September.</li>
+      <li><strong>October:</strong> Dry and cure. Maine's October humidity requires climate control for a proper dry. See our drying guide (coming soon) for the Maine-specific approach.</li>
+    </ol>
+
+    <p>The cheat sheet assumes photoperiods started indoors in April. Adjust by 2–4 weeks for autoflowers, which can be started later and don't have a vegetative window tied to daylength.</p>
+  </section>
+
+  <section>
+    <h2>Final Notes on Timing in Maine</h2>
+    <p>Maine's home grow laws (per <a href="/blog/maine-home-grow-cannabis-guide-2026">our 2026 guide</a>) allow six mature plants per adult, twelve immature, and unlimited seedlings — generous enough that the timing question is the only thing that decides whether you harvest or not. Get the dates right, and the climate is workable. Get them wrong, and no amount of fertilizer or training saves the crop.</p>
+
+    <p>The key takeaways from this guide: in southern Maine, mid-May transplants of photoperiods started in early April are the workhorse pattern. In central Maine, you have a 2-week earlier start and a 2-week earlier finish window. In northern and western Maine, autoflowers are the only reliable bet, and you can plant them from late May to early July. The day-length math (14-hour threshold in mid-August, 12/12 equinox in late September) is the structural reason for all of this, and it's why the <a href="/blog/best-cannabis-strains-maine-outdoor-2026">strain selection guide</a> prioritizes 7–8 week flower genetics for Maine.</p>
+
+    <p>If you take one thing from this page: <strong>don't transplant before your region's last frost plus 1–2 weeks, and don't start photoperiods later than the dates in the indoor-start table above.</strong> Those two rules will keep you in the harvest window for any city in Maine.</p>
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — 7 mold-resistant and fast-finishing genetics</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/guides/maine-cannabis-cultivation-guide">Maine Cannabis Cultivation Guide</a> — operator-side cultivation, facility requirements</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Seed Sources</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>Industry-leading seed bank with a 20+ year track record. Wide selection of feminized, autoflower, and high-CBD strains. Ships to Maine with discreet packaging. Free shipping on most orders. Includes Robert Bergman's Marijuana Grow Bible with every purchase, which is genuinely useful for first-time cultivators. Their <a href="https://ilgm.com?aff=8112" target="_blank" rel="noopener noreferrer sponsored">outdoor grow calendar</a> is the most useful national guide for U.S. growers, and their autoflower and feminized selections include several of the strains recommended in our Maine strain guide.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🏪</span>
+          <h3>Local Maine Dispensaries &amp; Seed Vendors</h3>
+        </div>
+        <p>For Maine-adapted clones and seeds bred specifically for our short growing season, your local dispensary or one of Maine's licensed seed vendors is often the best source. Many carry genetics from in-state breeders who've selected for cold tolerance, mold resistance, and early flowering. Clones from a local dispensary also skip the germination step and give you a 4–6 week head start — useful for Maine growers working with tight season margins. See our <a href="/blog/best-cannabis-strains-maine-outdoor-2026#where-to-buy">Maine seed and clone vendor list</a> in the strain guide for five licensed options including Cannabis Seed Bank of Maine, Maine Clone Co, Maine Seedlings, Seed &amp; Soil Maine, and North Atlantic Seed Co.</p>
+        <div class="affiliate-cta">
+          <a href="/find-a-dispensary" class="btn-affiliate">Find a Maine Dispensary →</a>
+          <span class="affiliate-note">Browse dispensaries carrying seeds and clones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified attorney for specific legal guidance. Frost and climate data cited in this article is derived from NCEI 1991–2020 Climate Normals (republished by Almanac.com and NWS), MOFGA's seed-planting calendar, UMaine Cooperative Extension, and the NWS Caribou / NWS Gray freeze program climatologies. Actual local conditions vary year to year. Always check the 10-day forecast before transplanting and have frost cloth available. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>
