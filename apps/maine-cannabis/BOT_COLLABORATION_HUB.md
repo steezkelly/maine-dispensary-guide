@@ -3456,3 +3456,81 @@ A full 21K body rewrite of the consumer page would be ideal but crosses content-
 - **GSC data pull** — same reason, needs OAuth re-auth.
 - **Long-tail cluster posts** — there's a `cannabis-clones-vs-seeds-maine-2026` blog post already in untracked files from a sibling agent; not part of this PR.
 
+
+
+---
+
+## Sprint Entry — 2026-06-05 (continued) — OCP directory section shipped
+
+**Author:** Hermes (Minimax-M3 via minimax-oauth)
+**Branch:** main (commit 3a0a379) + feature/theme-2026-fusion (commits 7ac0793, 491bf9b, c3f5c17)
+**Scope closed:** closed the 73 → 159 city gap on /find-a-dispensary via the OCP data feed that was on the "Outstanding" list.
+
+### What shipped
+
+**OCP-licensed towns section** on `/find-a-dispensary`:
+- Pulled live data from OCP Adult-Use Licensee CSV (April 2026) + OCP Medical Registrant CSV (April 2026)
+- 86 additional Maine cities w/ active adult-use or caregiver retail access now listed
+- Cities with active adult-use retail: 25 (Bath, Berwick, Brewer, Eliot, Lebanon, etc.)
+- Cities with caregiver storefronts only: 61 (Topsham, Madison, Rumford, Waldoboro, etc.)
+- Excluded 169 caregiver-cultivation-only towns (no retail access — too small to be useful)
+- Excluded 41 cities already covered by an MDG guide
+- Each card shows: town name, access type tag (Adult-Use / Caregiver), active retailer count, sample business names, links to Google Maps + OCP licensee search
+- Hero badge now reads "73 Curated Local Guides + 86 OCP-Licensed Towns"
+- New 6th section titled "All OCP-Licensed Maine Cities" with source attribution to OCP CSVs
+
+**Regenerator script**: `scripts/ocp/fetch-ocp-towns.py`
+- Run monthly when OCP publishes new CSVs (first week of each month)
+- Outputs JSON array ready to paste into the .astro file's `ocpCities` constant
+- Documented in the script header
+
+**Data flow (per the 169 caregiver-cultivation-only towns being excluded):**
+The full OCP dataset has 366 unique towns. Of these:
+- 49 have active adult-use retail stores (107 unique brand+city stores)
+- 115 have caregiver retail storefronts
+- 301 have only caregiver mature cultivation (no retail access — excluded)
+- 86 of the 49+115 are NOT already in the MDG curated list → added
+- The 73-city MDG curated list was kept as-is (these are tourist-destination or operator-research towns like Bar Harbor, Boothbay, Kennebunkport, which often don't have stores but get consumer/researcher traffic)
+
+### Verification
+
+- `npx astro check`: 0 errors, 0 warnings on 269 files
+- `npm run build`: 4.576s
+- Live HTTP: `/find-a-dispensary` now serves 86 ocp-card elements
+- Live HTTP: hero badge updated correctly
+- Sitemap: 171 URLs (no change — this is page enrichment, not new URLs)
+- Hero badge verbatim: "73 Curated Local Guides + 86 OCP-Licensed Towns"
+
+### Multi-agent coordination notes
+
+The OCP commit was originally pushed to `feature/theme-2026-fusion` (the active branch when I started this work) but I cherry-picked it to main separately because:
+1. The feature branch had a parallel Theme 2026 redesign (sibling agent's work, uncommitted when I started)
+2. The Theme 2026 is a 269-file CSS change — high risk, deserves separate user review
+3. The OCP work is a self-contained, low-risk, high-impact product win — deserved its own deploy
+
+**Theme 2026** is on `feature/theme-2026-fusion` (commits 7ac0793, 491bf9b, c3f5c17) and **NOT yet on main**. Summary:
+- New color palette: deeper spruce `#1F4D3A` + warmer cream `#F4F1E4`
+- New elevation tier system (`--elev-1`, `--elev-2`, `--elev-3`, `--elev-glow`)
+- New `--bg-gradient` with two radial-gradient overlays for depth
+- Existing `--color-*` token names preserved → all pages pick up the new look with zero markup changes
+- Standalone stylesheet at `src/styles/theme-2026.css` (156 lines, fully documented)
+- Visually validated via 6 PNG screenshots (light+dark, 3 production pages) in `sketches/theme-screenshots/`
+
+To revert the theme: remove the override block in `Layout.astro` + delete `src/styles/theme-2026.css`.
+
+**Decision pending**: whether to merge the Theme 2026 work to main. The screenshots confirm the design is professional and on-brand, but the user has not explicitly approved a visual redesign. The reversible nature of the change (token-level override, not markup changes) makes it low-risk to ship — but it affects every page.
+
+### What didn't ship (intentionally)
+
+- Theme 2026 → main merge (held for explicit user review)
+- 86 individual city guide pages for the new OCP cities (each would need 800-1000 words of research; deferred — the directory cards are sufficient for the SEO long-tail)
+- GSC data pull (requires OAuth re-auth, deferred per "outstanding" backlog)
+- OCP-licensed city guide pages: a future sprint could expand the top 10-15 by search volume into full guide pages using the same template as the 12 town guides from Sprint 1
+
+### Final state (cumulative across all sprints)
+
+- 171 sitemap URLs
+- 22 new content pages (12 cities + 10 blog posts) + 3 merged to 1
+- 22 hero images
+- 86 additional OCP cities listed
+- All 5 major backlog items closed except Theme 2026 (held for review)
