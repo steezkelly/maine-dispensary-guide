@@ -25,6 +25,16 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 // Design system — split into tokens / globals / components for maintainability.
 // Theme 2026 (theme-2026.css) is loaded separately in step 4 to win specificity.
 import '../styles/index.css';
+// SEO + JSON-LD helpers — extracted from frontmatter (Sprint 73d refactor).
+import {
+  buildFullTitle,
+  truncateMetaDescription,
+  buildCrumbs,
+  resolveSocialImage,
+  getHeroImageDimensions,
+  type Breadcrumb,
+} from '../lib/seo';
+import { buildJsonLdGraph } from '../lib/json-ld';
 
 interface ArticleData {
   author?: string;
@@ -33,11 +43,6 @@ interface ArticleData {
   publishDate?: string;
   modifiedDate?: string;
   section?: string;
-}
-
-interface Breadcrumb {
-  label: string;
-  href: string;
 }
 
 interface Props {
@@ -69,105 +74,39 @@ const {
 // Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
-const heroImageDims = getHeroImageDimensions(heroImage);
-const MAX_SEO_TITLE_LENGTH = 60;
-const MAX_META_DESCRIPTION_LENGTH = 160;
-const truncateMetaDescription = (value: string) => {
-  if (value.length <= MAX_META_DESCRIPTION_LENGTH) return value;
-  const trimmed = value.slice(0, MAX_META_DESCRIPTION_LENGTH - 1).trimEnd();
-  const lastSpace = trimmed.lastIndexOf(' ');
-  return `${trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '')}.`;
-};
-const brandedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
-// Prefer branded title if it fits; otherwise truncate title at word boundary
-const fullTitle = brandedTitle.length <= MAX_SEO_TITLE_LENGTH
-  ? brandedTitle
-  : title.length > MAX_SEO_TITLE_LENGTH
-    ? title.slice(0, MAX_SEO_TITLE_LENGTH - 1).replace(/\s+\S*$/, '')
-    : title;
+const fullTitle = buildFullTitle(title, siteName);
 const seoDescription = truncateMetaDescription(description);
-const socialImage = heroImage
-  ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
-  : `${siteUrl}/og-image.svg`;
-const socialImageType = socialImage.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg';
+const { url: socialImage, mimeType: socialImageType } = resolveSocialImage(heroImage, siteUrl);
+const heroImageDims = getHeroImageDimensions(heroImage);
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
-// Breadcrumbs
-const breadcrumbLabels: Record<string, string> = {
-  'guides': 'Guides',
-  'about': 'About',
-  'blog': 'Blog',
-  'resources': 'Resources',
-  'founders': 'Founders',
-  'download': 'Downloads',
-  'contact': 'Contact',
-  'start-here': 'Start Here',
-  'roi-calculator': 'ROI Calculator',
-  'glossary': 'Glossary',
-  'market-stats': 'Market Stats',
-};
-
-// ─── Hero image dimensions ───────────────────────────────────────────────────
-//
-// Reads the actual width/height of a hero image from the JPEG SOF0 marker so
-// the rendered <img>, <link rel="preload">, and Open Graph meta tags report
-// truthful dimensions. Without this, the site was hardcoded to 1200x400 in
-// the <img> tag and 1200x630 in OG meta — wrong for 1280x720 hero images
-// (the new convention used by 58 of 137 hero images as of 2026-06-01), which
-// affects social media preview cropping, CLS allocation, and a11y/screen
-// reader output. Touched: 2026-06-01 Sprint 72k.
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-
-function getHeroImageDimensions(heroImage: string | undefined): { w: number, h: number } {
-  const DEFAULT = { w: 1200, h: 630 };
-  if (!heroImage || !heroImage.startsWith('/images/')) return DEFAULT;
-  // heroImage is a slashless absolute path like /images/heroes/xxx.jpg
-  // The public/ dir in the Astro project is the source of truth.
-  const publicDir = path.resolve(process.cwd(), 'public');
-  const filePath = path.join(publicDir, heroImage);
-  let data: Buffer;
-  try {
-    data = fs.readFileSync(filePath);
-  } catch {
-    return DEFAULT;
-  }
-  // Walk JPEG markers looking for SOF0/1/2/3 (0xFFC0..0xFFC3). The marker
-  // is followed by a 2-byte segment length, 1-byte precision, 2-byte height,
-  // 2-byte width, all big-endian.
-  let i = 2; // skip SOI (0xFFD8)
-  while (i < data.length - 9) {
-    if (data[i] !== 0xFF) return DEFAULT;
-    const marker = data[i + 1];
-    if (marker === 0xD8 || marker === 0xD9 || marker === 0x00) { i += 2; continue; }
-    if (marker === 0xC0 || marker === 0xC1 || marker === 0xC2 || marker === 0xC3) {
-      const h = data.readUInt16BE(i + 5);
-      const w = data.readUInt16BE(i + 7);
-      return { w, h };
-    }
-    if (marker === 0xDA) return DEFAULT; // SOS: scan data follows
-    if (i + 4 > data.length) return DEFAULT;
-    const segLen = data.readUInt16BE(i + 2);
-    i += 2 + segLen;
-  }
-  return DEFAULT;
-}
-
-function buildCrumbs(path: string, explicitCrumbs: Breadcrumb[]) {
-  if (explicitCrumbs.length > 0) return explicitCrumbs;
-  const parts = path.split('/').filter(Boolean);
-  if (parts.length === 0) return [];
-  const crumbs: Breadcrumb[] = [];
-  let running = '';
-  for (const part of parts) {
-    running = running + '/' + part;
-    crumbs.push({ label: breadcrumbLabels[part] || part.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), href: running });
-  }
-  return crumbs;
-}
-
 const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadcrumbs);
+
+// JSON-LD — single @graph with Organization + WebSite (+ Article if content).
+// Sprint 73b unified 3 separate <script> tags into one graph.
+const jsonLdGraph = noindex ? null : buildJsonLdGraph(
+  {
+    siteName: siteConfig.siteName,
+    siteUrl,
+    socialLinks: siteConfig.socialLinks,
+  },
+  isContent && article && !noindex
+    ? {
+        title,
+        description,
+        author: article.author,
+        authorTitle: article.authorTitle,
+        authorId: article.authorId,
+        publishDate: article.publishDate,
+        modifiedDate: article.modifiedDate,
+        section: article.section,
+        heroImage,
+        topics,
+        pageUrl: Astro.url.href,
+      }
+    : undefined,
+);
 ---
 
 <!doctype html>
@@ -233,85 +172,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta name="twitter:site" content="@MaineDispensary" />
     {article && <meta name="twitter:creator" content="@MaineDispensary" />}
 
-    {!noindex && (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": siteConfig.siteName,
-      "url": siteConfig.siteUrl,
-      "logo": {
-        "@type": "ImageObject",
-        "url": siteUrl + "/favicon.svg"
-      },
-      "sameAs": siteConfig.socialLinks,
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "email": "info@mainedispensaryguide.com"
-      }
-    })} />
-    )}
-
-    {!noindex && (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": siteConfig.siteName,
-      "url": siteConfig.siteUrl,
-      "description": "Your complete guide to opening and operating a cannabis dispensary.",
-      "publisher": {
-        "@type": "Organization",
-        "name": siteConfig.siteName,
-        "logo": {
-          "@type": "ImageObject",
-          "url": siteUrl + "/favicon.svg"
-        }
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": siteUrl + "/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
-    })} />
-    )}
-
-    {isContent && article && !noindex && (
-      <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": title,
-        "description": description,
-        "image": heroImage ? (typeof heroImage === 'string' && heroImage.startsWith('http') ? heroImage : siteUrl + heroImage) : undefined,
-        "author": article.authorId ? {
-          "@type": "Person",
-          "@id": siteUrl + "/about/authors#" + article.authorId,
-          "name": article.author,
-          "jobTitle": article.authorTitle,
-          "url": siteUrl + "/about/authors#" + article.authorId
-        } : {
-          "@type": "Organization",
-          "name": article.author || siteConfig.siteName
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": siteConfig.siteName,
-          "logo": {
-            "@type": "ImageObject",
-            "url": siteUrl + "/favicon.svg"
-          }
-        },
-        "datePublished": article.publishDate,
-        "dateModified": article.modifiedDate || article.publishDate,
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": Astro.url.href
-        },
-        "articleSection": article.section,
-        "keywords": topics.length > 0 ? topics.join(", ") : undefined
-      })} />
+    {!noindex && jsonLdGraph && (
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
     )}
 
     {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}
