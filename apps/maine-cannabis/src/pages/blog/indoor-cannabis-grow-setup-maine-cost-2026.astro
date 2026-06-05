@@ -1,0 +1,675 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "indoor-setup", "equipment", "maine-climate", "electricity"];
+---
+<Layout
+  title="Indoor Cannabis Grow Setup & Cost for Maine 2026 — Tent, Light, Electric"
+  description="Indoor cannabis grow setup for Maine 2026: tent sizing, LED lights, CMP TOU electricity rates, dehumidifier math, and per-ounce cost vs. outdoor and dispensary."
+  heroImage="/images/heroes/indoor-cannabis-grow-setup-maine-cost-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .calendar-table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; }
+  .calendar-table-wrap table { min-width: 600px; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+  .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+  .affiliate-top-disclosure strong { color: #8b5a00; }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  .tier-callout { background: rgba(13, 78, 80, 0.05); border-left: 4px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+  .tier-callout strong { color: var(--color-primary); }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Indoor Cannabis Grow Setup &amp; Cost for Maine 2026</h1>
+    <p class="subtitle">Tent sizing, LED light math, CMP Time-of-Use electricity rates, dehumidifier sizing, and the per-ounce cost of indoor vs. outdoor vs. dispensary in Maine.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 6, 2026 · Last updated June 6, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase seeds through ILGM, Maine Dispensary Guide may earn a 20% commission at no extra cost to you. <strong>Equipment recommendations (Mars Hydro, Spider Farmer, AC Infinity, Vivosun, Coast of Maine) are informational only — these brands are not currently in our affiliate program.</strong> See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's the third week of January in Lewiston, Maine. A 34-year-old machinist named Tyler is browsing 4×4 grow tents on his phone in his basement. He has 600 square feet of heated space, a CMP electric bill that runs $140 a month in winter, and 4 mature plant sites available under Maine's Title 28-B law. He is choosing between a $99 Vivosun S448 and a $219 Gorilla Grow Tent PRO. He has $400 to spend total. He has no idea that CMP's optional Time-of-Use rate went live on January 1, 2026 — and that scheduling his lights to run 9 PM to 9 AM would slash his grow electricity cost by roughly 40%.</p>
+
+    <p>This guide is the Maine-specific indoor grow setup, equipment, electricity, and per-ounce math. The site's existing <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> and <a href="/blog/drying-cannabis-maine-humidity-2026">Maine drying guide</a> cover the legal framework and the post-harvest protocol; this page covers the 4×4 tent, the LED, the carbon filter, the dehumidifier, the soil, and the electricity math that sits between the seed and the cure. The page also surfaces two pieces of Maine-specific data that no national grow-guide site currently publishes: CMP's Time-of-Use rate (a real cost-saver for growers who schedule their lights off-peak) and Maine's soft tap water (which means most home growers can skip reverse-osmosis filtration entirely).</p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    Indoor grow tent sizing (2×2, 2×4, 4×4) and 2026 prices. LED grow light math (PPFD, DLI, quantum board vs. blurple) and verified product recommendations. Inline fans, carbon filters, and the Maine apartment / odor-control problem. Dehumidifiers, humidifiers, and VPD by growth stage. Soil, nutrients, pH, and Maine water hardness. CMP Time-of-Use and Versant electricity rates with full cost math. Cost-per-ounce comparison: indoor vs. outdoor vs. dispensary. The Maine winter basement advantage and storm-outage planning. 7 beginner mistakes. Six FAQ answers.
+  </Callout>
+
+  <section>
+    <h2>Indoor Grow Tent Sizing</h2>
+    <p>The tent is the foundation of an indoor grow. It controls light leaks (critical for photoperiod flowering), contains the odor (when paired with a carbon filter), and lets you create a sealed environment where temperature, humidity, and CO₂ can be managed independently of the room around it.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Indoor grow tent sizing and plant capacity">
+        <thead>
+          <tr>
+            <th>Tent size</th>
+            <th>Floor area</th>
+            <th>Plant capacity (3-5 gal pots)</th>
+            <th>Use case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2×2 ft</td><td>4 sq ft</td><td>1-2</td><td>Closet / starter / single-plant trial</td></tr>
+          <tr><td>2×4 ft</td><td>8 sq ft</td><td>2-3</td><td>Home grow starter, space-constrained</td></tr>
+          <tr><td><strong>4×4 ft</strong></td><td>16 sq ft</td><td><strong>4-6</strong></td><td>Standard home-grow default</td></tr>
+          <tr><td>4×8 ft</td><td>32 sq ft</td><td>6-10</td><td>Intermediate / small commercial</td></tr>
+          <tr><td>5×9 ft</td><td>45 sq ft</td><td>8-12</td><td>Advanced / commercial</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Height and the light/plant interaction</h3>
+
+    <p>Standard tent heights across brands:</p>
+
+    <ul>
+      <li><strong>63-72 in. (5-6 ft):</strong> Vivosun and budget brands. Short; adequate for compact indicas, not workable for sativas or SCROG setups.</li>
+      <li><strong>80 in. (6 ft 8 in.):</strong> The home-grower standard. The top 12-18 in. is consumed by the inline fan + carbon filter + light hang. With the light at 18-24 in. above the canopy, the plant has roughly 36-42 in. of vertical space. Workable for most photoperiod plants but tight for many sativas that stretch 36-48 in. during flowering.</li>
+      <li><strong>6 ft 11 in. - 7 ft 11 in.:</strong> Gorilla Grow Tent (standard + 1-ft extension included). Preferred for tall sativas, SCROG, or running the light high. The $30-50 premium over standard-height tents is the cheapest insurance against running out of vertical space mid-flower.</li>
+    </ul>
+
+    <p>Source: <a href="https://modernfarms.store/blogs/modernfarms-blog/the-complete-4x4-grow-tent-setup-guide-for-cannabis-2026-three-cost-tiers-honest-yield-math-and-the-integration-logic-nobody-explains" target="_blank" rel="noopener noreferrer">Modern Farms 4×4 tent setup guide (2026)</a>.</p>
+
+    <h3>2026 prices — grow tents</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Grow tent brand model and price comparison 2026">
+        <thead>
+          <tr>
+            <th>Brand / Model</th>
+            <th>Size</th>
+            <th>Height</th>
+            <th>Price (2026)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Vivosun S448</td><td>4×4 ft</td><td>80 in.</td><td>$80-120</td><td>600D oxford / 19mm steel; budget choice</td></tr>
+          <tr><td>Mars Hydro 4×4</td><td>4×4 ft</td><td>80 in.</td><td>~$80-100</td><td>1680D diamond mylar; better canvas than Vivosun</td></tr>
+          <tr><td>Spider Farmer SF-4×4</td><td>4×4 ft</td><td>78 in.</td><td>~$120-150</td><td>2000D canvas; 2 in. shorter than competition</td></tr>
+          <tr><td>AC Infinity CLOUDLAB 844</td><td>4×4 ft</td><td>80 in.</td><td>~$190-250</td><td>2000D diamond mylar / 1-in. poles; premium</td></tr>
+          <tr><td>Gorilla Grow Tent 4×4 PRO</td><td>4×4 ft</td><td>6 ft 11 in. + extension</td><td>~$199-220</td><td>1680D / 22mm powder-coated steel; the height upgrade</td></tr>
+          <tr><td>Vivosun S448 (2×2 ft)</td><td>2×2 ft</td><td>60 in.</td><td>~$50-70</td><td>The 1-plant trial / closet grow tent</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Sources: <a href="https://vivosun.com/vivosun-4x4-mylar-hydroponic-grow-tent-for-indoor-plant-growing-48x48x80-p63933466594377747-v58820960379609764" target="_blank" rel="noopener noreferrer">Vivosun.com S448 product page</a>; <a href="https://www.gorillagrowtent.com" target="_blank" rel="noopener noreferrer">Gorilla Grow Tent</a>; <a href="https://acinfinity.com" target="_blank" rel="noopener noreferrer">AC Infinity</a>.</p>
+
+    <p><strong>Recommendation for 3 mature plants:</strong> A 4×4×80 in. tent is the practical minimum. A 2×4 tent is too narrow for 3 plants side-by-side unless using a vertical stake or SCROG approach. Budget $80-120 for a Vivosun S448 or $199+ for a Gorilla Grow Tent if running tall sativa-dominant genetics.</p>
+  </section>
+
+  <section>
+    <h2>LED Grow Lights: The 2026 Standard</h2>
+    <p>The 2026 LED grow light standard is the quantum board (QB) — distributed high-power diodes (Samsung LM301H EVO or Bridgelux 3030) on a single aluminum substrate, with efficiency of 2.7-2.85 µmol/J. COB (chip-on-board) and blurple (blue + purple LED cluster) designs are now legacy. A quantum board at $169 outperforms any blurple at any price on both yield and electricity cost.</p>
+
+    <h3>PPFD and DLI: the two numbers that matter</h3>
+
+    <p>Light intensity is measured in <strong>PPFD</strong> (photosynthetic photon flux density, µmol/m²/s) — how much usable light hits the canopy. Over a full photoperiod, this becomes the <strong>DLI</strong> (daily light integral, mol/m²/day) — the cumulative photon dose.</p>
+
+    <ul>
+      <li><strong>Seedling/clone:</strong> 100-300 PPFD</li>
+      <li><strong>Vegetative:</strong> 400-600 PPFD</li>
+      <li><strong>Flowering:</strong> 600-900 PPFD</li>
+      <li><strong>Late flower + CO₂:</strong> 800-1,500 PPFD</li>
+    </ul>
+
+    <p>A 4×4 (16 sq ft) flowering target of 700 PPFD × 12 hours = ~30 DLI. The commercial-target range is 40-55 DLI in flower, achievable with 800+ PPFD over 12 hours. Source: <a href="https://hydrobuilder.com/pages/grow-light-coverage-ppfd-calculator" target="_blank" rel="noopener noreferrer">Hydrobuilder PPFD calculator</a>; <a href="https://getgrowgoyle.com/cannabis-vpd-chart-guide/" target="_blank" rel="noopener noreferrer">Growgoyle VPD guide</a>.</p>
+
+    <h3>2026 quantum board light recommendations by tent size</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="LED grow light recommendations by tent size 2026">
+        <thead>
+          <tr>
+            <th>Tent</th>
+            <th>Light option 1 (budget)</th>
+            <th>Light option 2 (recommended)</th>
+            <th>Light option 3 (premium)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2×2 ft (1 plant)</td><td>Vivosun VS1000 100W ~$95</td><td>Mars Hydro FC-E1500 150W ~$100</td><td>Spider Farmer SF-1000 100W ~$120</td></tr>
+          <tr><td>2×4 ft (2-3 plants)</td><td>Mars Hydro FC-E3000 300W ~$169</td><td>Spider Farmer SF-2000 200W ~$219</td><td>AC Infinity Ionframe EVO4 300W ~$250</td></tr>
+          <tr><td><strong>4×4 ft (4-6 plants)</strong></td><td>Mars Hydro FC3000 EVO 300W ~$219</td><td><strong>Spider Farmer SF-4000 450W ~$319-369</strong></td><td>AC Infinity Ionframe EVO6 600W ~$450</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://www.mars-hydro.com/fc-3000-samsung-lm301h-evo-led-grow-light" target="_blank" rel="noopener noreferrer">Mars Hydro FC3000 EVO product page</a>; <a href="https://www.spider-farmer.com/products/sf-4000-led-grow-light/" target="_blank" rel="noopener noreferrer">Spider Farmer SF-4000 product page</a>; <a href="https://www.spider-farmer.com/products/sf-2000-led-grow-light/" target="_blank" rel="noopener noreferrer">SF-2000</a>; <a href="https://www.mars-hydro.com/fc-e3000-led-grow-light" target="_blank" rel="noopener noreferrer">FC-E3000</a>.</p>
+
+    <Callout title="First-grower recommendation" type="tip">
+      The Spider Farmer SF-4000 (450W, 4×4) at ~$319-369 is the best balance of coverage, efficiency, price, and 5-year warranty for a first Maine indoor grow. If on a tighter budget, the Mars Hydro FC3000 EVO (300W) at ~$219 covers a 4×4 at flower but is at the lower end of optimal wattage.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Inline Fans, Carbon Filters, and the Maine Apartment Problem</h2>
+    <p>Cannabis in flower has a strong, unmistakable odor. In an apartment, condo, or shared building, neighbors will notice within 24 hours of flip to 12/12 unless the grow tent has a sealed exhaust + carbon filter.</p>
+
+    <h3>Fan sizing: the CFM rule of thumb</h3>
+
+    <p>Target 1× tent volume per minute (passive/intake) up to 3-4× per minute (active exhaust for heat-loaded tents). With a carbon filter in line, add 25-30% to the CFM requirement due to static pressure restriction.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Inline fan and carbon filter sizing 2026">
+        <thead>
+          <tr>
+            <th>Tent</th>
+            <th>Volume (cu ft)</th>
+            <th>Min CFM (passive)</th>
+            <th>Practical CFM (active + filter)</th>
+            <th>Recommended fan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2×2×5 ft</td><td>~20</td><td>20</td><td>50-80</td><td>4-inch (Vivosun / AC Infinity Cloudline S4)</td></tr>
+          <tr><td>2×4×5 ft</td><td>~40</td><td>40</td><td>80-120</td><td>4-inch (Vivosun) or 6-inch (AC Infinity Cloudline S6)</td></tr>
+          <tr><td><strong>4×4×6.7 ft</strong></td><td>~107</td><td>107</td><td>200-350</td><td><strong>6-inch (AC Infinity Cloudline T6, 402 CFM)</strong></td></tr>
+          <tr><td>4×8×7 ft</td><td>~224</td><td>224</td><td>500-700</td><td>8-inch (AC Infinity Cloudline T8, 807 CFM)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://acinfinity.com/cloudline-t6-quiet-inline-fan-6-with-temperature-humidity-vpd-controller/" target="_blank" rel="noopener noreferrer">AC Infinity Cloudline T6 (6-inch, 402 CFM, 32 dBA, with VPD/temp controller, $149)</a>; <a href="https://acinfinity.com/cloudline-t8-quiet-inline-fan-8-with-temperature-humidity-vpd-controller/" target="_blank" rel="noopener noreferrer">Cloudline T8 (8-inch, 807 CFM, 39 dBA, $199)</a>.</p>
+
+    <h3>Carbon filter sizing and pricing</h3>
+
+    <p>Match filter size to fan size (4-in. fan → 4-in. filter). Australian activated charcoal is the gold standard (virgin, not recycled).</p>
+
+    <ul>
+      <li>4-inch × 12 in. filter: $50-70</li>
+      <li>6-inch × 12 in. filter: $70-100 (the 4×4 standard)</li>
+      <li>8-inch × 24 in. filter: $90-130</li>
+    </ul>
+
+    <h3>The Maine apartment / HOA / landlord problem</h3>
+
+    <p>Maine Title 28-B (LD 555, adult-use cannabis) governs personal home cultivation:</p>
+
+    <ol>
+      <li><strong>Plant limit:</strong> 3 mature + 3 immature (seedling) plants per person over 21, or 12 immature plants per residence. The 6-plant cap applies residence-wide.</li>
+      <li><strong>No public view:</strong> Plants must not be visible from a public way without binoculars. Indoor grows satisfy this condition automatically.</li>
+      <li><strong>Landlord / HOA:</strong> LD 799 (2017) explicitly gives Maine landlords the right to prohibit or restrict cannabis cultivation on leased premises. A tenant must have the landlord's written permission. Check your lease before setting up a tent.</li>
+      <li><strong>OCP no-public-viewing rule:</strong> Plants must be out of sight from public areas — satisfied by indoor grows.</li>
+    </ol>
+
+    <p><strong>The practical Maine apartment problem is odor control, not legality.</strong> A 6-inch inline fan + carbon filter is non-negotiable in a multi-unit building. Skip the carbon filter and you will get landlord/HOA complaints or lease violations. Budget $150-250 for the fan + filter combo.</p>
+
+    <p>Source: <a href="https://www1.maine.gov/dafs/ocp/resources/faq" target="_blank" rel="noopener noreferrer">Maine OCP FAQ</a>.</p>
+  </section>
+
+  <section>
+    <h2>Dehumidifiers, Humidifiers, and VPD</h2>
+
+    <h3>The 4 VPD targets by growth stage</h3>
+
+    <p><strong>VPD (Vapor Pressure Deficit)</strong> describes the "thirst" of the air — how strongly it pulls moisture from the plant. Too low = stagnant, moldy air. Too high = plant closes stomata, growth stalls. VPD is driven by <em>leaf temperature</em>, not air temperature — under LEDs, leaves typically run 2-4°F cooler than the surrounding air.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="VPD targets by cannabis growth stage">
+        <thead>
+          <tr>
+            <th>Growth stage</th>
+            <th>Target VPD</th>
+            <th>Air temp</th>
+            <th>Approx. RH</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Seedling / clone</td><td>0.4-0.8 kPa</td><td>75-80°F</td><td>75-85%</td></tr>
+          <tr><td>Early-mid veg</td><td>0.8-1.0 kPa</td><td>76-82°F</td><td>60-70%</td></tr>
+          <tr><td>Late veg</td><td>1.0-1.2 kPa</td><td>76-82°F</td><td>55-65%</td></tr>
+          <tr><td>Early flower (wk 1-4)</td><td>1.0-1.4 kPa</td><td>78-82°F</td><td>50-60%</td></tr>
+          <tr><td><strong>Mid-late flower (wk 5+)</strong></td><td><strong>1.2-1.6 kPa</strong></td><td>75-80°F</td><td><strong>40-55%</strong></td></tr>
+          <tr><td>Late flower / pre-harvest flush</td><td>1.5-2.0 kPa</td><td>70-75°F</td><td>35-45%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://getgrowgoyle.com/cannabis-vpd-chart-guide/" target="_blank" rel="noopener noreferrer">Growgoyle VPD chart guide</a>; <a href="https://www.spider-farmer.com/blog/vpd-chart-in-celsius-and-fahrenheit/" target="_blank" rel="noopener noreferrer">Spider Farmer VPD chart</a>.</p>
+
+    <h3>Dehumidifier sizing for a 4×4</h3>
+
+    <p>A flowering 4×4 tent transpires 0.5-2 liters of water per day. A 30-pint dehumidifier removes ~1.4 L/day; a 50-pint removes ~2.3 L/day. <strong>For a 4×4 in flower: a 50-pint unit is the practical sweet spot</strong> ($150-280 in 2026, AC Infinity / hMe / LG / Midea brands). A Maine basement (cool, lower ambient humidity) may only need a 30-pint unit for veg and early flower, upgrading to 50 pints for late flower. Dehumidifier sizing reuses the methodology from the <a href="/blog/drying-cannabis-maine-humidity-2026">Maine drying guide</a>.</p>
+
+    <h3>Humidifier for seedling / clone / early veg</h3>
+
+    <p>During seedling and early veg, ambient humidity in a heated Maine home in winter can drop to 20-30% RH — far below the 65-80% target. A small ultrasonic humidifier ($30-60, 4-6 L/day output) is adequate for a single tent. Place it outside the tent with the output directed into the intake, or inside the tent for small spaces.</p>
+  </section>
+
+  <section>
+    <h2>Soil, Nutrients, pH, and Maine Water</h2>
+
+    <h3>3-5 gallon fabric pots</h3>
+    <p>The standard home-grow container is a 3-5 gallon fabric (Smart Pot) or air-pot. 3 gal: sufficient for autoflowers or SOG setups. <strong>5 gal: the standard recommendation for photoperiod plants with 4-6 week veg.</strong> 7-15 gal: used with Coast of Maine Stonington Blend, which specifies 15 gal as optimal.</p>
+
+    <h3>Soil brands (2026 prices)</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Cannabis soil brands and 2026 prices">
+        <thead>
+          <tr>
+            <th>Brand / Product</th>
+            <th>Price (1.5 cu ft)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Fox Farm Ocean Forest</strong></td><td>$25-35</td><td>Most widely used cannabis soil in US; bat guano, earthworm castings, fish/crab meal; ready to use out of bag</td></tr>
+          <tr><td>Roots Organics Original</td><td>~$20-28</td><td>Better drainage than Ocean Forest; coco fiber + pumice; US organic brand</td></tr>
+          <tr><td><strong>Coast of Maine Stonington Blend Grower's Mix</strong></td><td>~$30-45</td><td><strong>Maine brand; lobster &amp; crab shell meal, kelp, fish bone meal, mycorrhizae; OMRI listed; the Maine-local pick</strong>; formulated for 15-gal containers</td></tr>
+          <tr><td>BioBizz Light-Mix</td><td>~$30-45</td><td>Lower out-of-bag nutrition; gives full feeding control; popular in EU</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Maine-specific note:</strong> <a href="https://coastofmaine.com/products/stonington-blend-super-soil" target="_blank" rel="noopener noreferrer">Coast of Maine Stonington Blend</a> is the only major cannabis-formulated soil brand manufactured in Maine. OMRI-listed for organic growers, widely stocked at Jack's Hardware &amp; Garden (Portland area), local co-ops, and online. A genuine Maine home-grower recommendation.</p>
+
+    <h3>pH and TDS meters</h3>
+    <p>A pH meter is essential. Cannabis prefers 6.0-6.8 in soil. Apera AI311 or Bluelab Multimedia pH Pen: $50-130. Cheap drop-checkers ($5) are insufficient for nutrient management. A TDS/EC meter is optional for soil grows; unnecessary if using a rich soil like Ocean Forest or Stonington Blend for a full cycle without additional nutrients.</p>
+
+    <h3>Nutrient lines: 3-part vs. 1-part</h3>
+    <ul>
+      <li><strong>General Hydroponics Flora Trio</strong> (FloraGro + FloraBloom + FloraMicro): $35-45 for the 3-part set; intermediate-advanced growers who want precise control.</li>
+      <li><strong>Dyna-Gro Foliage Pro + Bloom</strong> ($25-35 for the 2-bottle): beginner-friendly; simple 2-bottle for soil or hydro.</li>
+      <li><strong>Cal-Mag supplement</strong> ($15-25): required if using RO water, soft water, or coco coir. Most Maine tap water is soft; Cal-Mag may still be beneficial as a preventative. Dose: 1-2 mL/gal.</li>
+    </ul>
+
+    <h3>Maine water hardness (a Maine-specific data point)</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine city water hardness 2026">
+        <thead>
+          <tr>
+            <th>City / region</th>
+            <th>Hardness (PPM)</th>
+            <th>Classification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Portland / South Portland / Westbrook</td><td>8-10 ppm</td><td><strong>Soft</strong></td></tr>
+          <tr><td>Bangor</td><td>~6 ppm</td><td><strong>Soft</strong></td></tr>
+          <tr><td>Lewiston / Auburn</td><td>~17 ppm</td><td><strong>Soft</strong></td></tr>
+          <tr><td>Augusta</td><td>150 ppm</td><td>Hard</td></tr>
+          <tr><td>Waterville</td><td>29 ppm</td><td>Moderately soft</td></tr>
+          <tr><td>Belfast</td><td>68 ppm</td><td>Moderately hard</td></tr>
+          <tr><td>Statewide range</td><td>3-222 ppm</td><td>Varies by bedrock</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://www.waterhardness.org/state/maine" target="_blank" rel="noopener noreferrer">WaterHardness.org Maine data</a>; <a href="https://www.pwd.org/faqs/what-hardness-my-water/" target="_blank" rel="noopener noreferrer">Portland Water District</a>.</p>
+
+    <Callout title="Maine indoor grower advantage" type="tip">
+      Most of Maine's population centers (Portland, Bangor, Lewiston, coastal) have <strong>soft water below 50 ppm</strong> — well within the range where reverse osmosis is optional. Augusta and a few inland hard-rock areas may need RO or Cal-Mag fortification. A $10 water hardness test strip is sufficient to determine if RO is needed. This is a real cost-saver vs. growers in hard-water states where RO is mandatory.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Maine Electricity Cost: CMP + Versant</h2>
+    <p>This is the Maine-specific data point no national grow-guide site publishes. Maine has two investor-owned utilities: <strong>CMP</strong> (Central Maine Power, serving most of southern / central / western Maine) and <strong>Versant Power</strong> (formerly Emera Maine, serving northern and eastern Maine).</p>
+
+    <h3>CMP Time-of-Use rate (effective January 1, 2026)</h3>
+
+    <p>CMP launched an optional Time-of-Use (TOU) delivery rate in January 2026. This is a real cost-saver for indoor growers who schedule their lights to run during off-peak hours.</p>
+
+    <div class="fact-box">
+      <h2>CMP TOU rate (effective January 1, 2026)</h2>
+      <table>
+        <tr><td><strong>On-peak</strong></td><td>Mon-Fri, 5:00 PM-9:00 PM</td><td><strong>$0.503/kWh</strong> delivery charge</td></tr>
+        <tr><td><strong>Off-peak</strong></td><td>All other hours (incl. all weekend)</td><td><strong>$0.067/kWh</strong> delivery charge</td></tr>
+        <tr><td>Service charge</td><td>Monthly</td><td>$26.71/month (vs. $30.21 standard Rate A)</td></tr>
+        <tr><td>TOU benefit threshold</td><td colspan="2">≥86% of total electricity use must be in off-peak hours</td></tr>
+      </table>
+      <p class="source-note">Source: <a href="https://www.cmpco.com/time-of-use-delivery-rate" target="_blank" rel="noopener noreferrer">CMP Time-of-Use Delivery Rate page</a>. Verified January 2026.</p>
+    </div>
+
+    <p><strong>How a Maine indoor grower uses this:</strong> Set the light timer to start at 9:00 PM. With a 12/12 flower schedule, lights run 9 PM-9 AM. Zero on-peak usage. With an 18/6 veg schedule, lights run 9 PM-3 PM next day. Zero on-peak usage. The supply charge (separate from delivery) does not vary by time, but the delivery savings are real.</p>
+
+    <h3>CMP standard Rate A (non-TOU)</h3>
+    <p>Combined delivery + supply: ~$0.136/kWh (estimate based on EIA Maine data; confirm via recent CMP bill or EIA Maine state electricity profile).</p>
+
+    <h3>Versant Power (northern and eastern Maine)</h3>
+    <p>Residential rate: ~$0.22-0.25/kWh (estimate; confirm at <a href="https://www.versantpower.com/" target="_blank" rel="noopener noreferrer">versantpower.com</a>). Versant does not currently offer a residential TOU rate. If Versant's actual rate is $0.22/kWh, indoor growing in Aroostook / Washington County is cheaper in energy cost than the CMP non-TOU rate, but not as cheap as CMP's TOU off-peak rate.</p>
+
+    <h3>Electricity math: a 4×4 LED grow at Maine rates</h3>
+
+    <p>Setup: Spider Farmer SF-4000 (450W actual draw) + AC Infinity Cloudline T6 (38W avg) + dehumidifier 50-pint (280W average, runs ~8 hrs/day in flower) + circulation fans (20W) = ~788W total.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine indoor grow electricity cost per harvest 2026">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Hours/day</th>
+            <th>Days</th>
+            <th>kWh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Vegetative (18/6)</td><td>18</td><td>56 (8 weeks)</td><td>453.6 kWh</td></tr>
+          <tr><td>Flower (12/12)</td><td>12</td><td>56 (8 weeks)</td><td>302.4 kWh</td></tr>
+          <tr><td>Dehumidifier (flower only)</td><td>8</td><td>56</td><td>125.4 kWh</td></tr>
+          <tr><td>Fans (avg, full cycle)</td><td>24</td><td>112</td><td>155.9 kWh</td></tr>
+          <tr><td><strong>Total per harvest</strong></td><td></td><td></td><td><strong>~1,037 kWh</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine indoor grow electricity cost by utility 2026">
+        <thead>
+          <tr>
+            <th>Utility / rate plan</th>
+            <th>Rate</th>
+            <th>Cost per harvest</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>CMP TOU off-peak only (lights 9 PM-9 AM)</strong></td><td>$0.167/kWh combined</td><td><strong>$173</strong></td></tr>
+          <tr><td>CMP standard Rate A</td><td>$0.136/kWh</td><td><strong>$141</strong></td></tr>
+          <tr><td>Versant (estimate)</td><td>$0.22/kWh</td><td>$228</td></tr>
+          <tr><td>Versant (estimate, high end)</td><td>$0.25/kWh</td><td>$259</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Extra cost per month during veg phase</strong> (450W light × 18h = 8.1 kWh/day = ~243 kWh/month): at CMP TOU off-peak, ~$33/month; at CMP standard, ~$33/month; at Versant, ~$53/month.</p>
+
+    <p><strong>Winter basement heating cost (Maine-specific):</strong> A Maine basement in January runs ~50-55°F. To maintain 75°F inside the tent, a small 100-300W oil-filled radiator or ceramic heater is needed in addition to the LED waste heat. Additional heating: ~$15-25/month at CMP rates, $20-35/month at Versant.</p>
+  </section>
+
+  <section>
+    <h2>Cost Per Ounce: Indoor vs. Outdoor vs. Dispensary</h2>
+
+    <h3>Indoor yield benchmarks</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Indoor cannabis yield benchmarks by skill level 2026">
+        <thead>
+          <tr>
+            <th>Grower experience</th>
+            <th>Yield per 4×4 cycle</th>
+            <th>Grams per watt (LED)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Beginner (first 1-2 cycles)</td><td>4-8 oz (113-227 g)</td><td>0.3-0.5 g/W</td></tr>
+          <tr><td>Intermediate (consistent)</td><td>10-16 oz (284-454 g)</td><td>0.6-1.0 g/W</td></tr>
+          <tr><td>Advanced (SCROG, experienced)</td><td>18-32 oz (510-907 g)</td><td>1.0-1.5 g/W</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Sources: <a href="https://modernfarms.store/blogs/modernfarms-blog/the-complete-4x4-grow-tent-setup-guide-for-cannabis-2026-three-cost-tiers-honest-yield-math-and-the-integration-logic-nobody-explains" target="_blank" rel="noopener noreferrer">Modern Farms 4×4 setup guide (2026)</a>; Royal Queen Seeds 4×4 yield guide; Hydrobuilder yield estimator; CBT/Fluence 2025 commercial survey (185 commercial growers, median 35-80 g/sq ft indoor canopy).</p>
+
+    <h3>Equipment cost by tier</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Indoor grow setup cost by tier 2026 Maine">
+        <thead>
+          <tr>
+            <th>Cost category</th>
+            <th>Budget (2×2, 1 plant)</th>
+            <th>Mid (4×4, 4 plants)</th>
+            <th>Premium (4×4, 4 plants, high-end)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Tent</td><td>$50-70</td><td>$80-120</td><td>$199-250</td></tr>
+          <tr><td>LED light</td><td>$95-120</td><td>$169-369</td><td>$400-600</td></tr>
+          <tr><td>Inline fan + carbon filter</td><td>$100-150</td><td>$150-220</td><td>$250-350</td></tr>
+          <tr><td>Dehumidifier</td><td>$0-150 (basement may not need)</td><td>$150-280</td><td>$300-400</td></tr>
+          <tr><td>Soil (1.5 cu ft)</td><td>$25-35</td><td>$25-45</td><td>$35-65</td></tr>
+          <tr><td>Nutrients</td><td>$25-35</td><td>$35-80</td><td>$80-150</td></tr>
+          <tr><td>pH meter</td><td>$30-50</td><td>$50-100</td><td>$100-180</td></tr>
+          <tr><td>Fabric pots (4)</td><td>$15-20</td><td>$20-30</td><td>$25-40</td></tr>
+          <tr><td>Seeds (ILGM)</td><td>~$15</td><td>~$80</td><td>~$80</td></tr>
+          <tr><td><strong>Total equipment</strong></td><td><strong>$300-500</strong></td><td><strong>$800-1,500</strong></td><td><strong>$2,000-4,000</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Ongoing per-harvest costs (electricity + nutrients + seeds): $100-300.</p>
+
+    <h3>Equipment amortization and the "is home grow cheaper" answer</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Indoor grow cost per ounce Maine 2026">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Cost per oz</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Indoor, year 1 (mid tier)</strong></td><td>$60-165/oz</td><td>Includes full equipment amortization; cost drops sharply in year 2</td></tr>
+          <tr><td><strong>Indoor, ongoing (mid tier)</strong></td><td><strong>$13-25/oz</strong></td><td>Electricity + nutrients + seeds only</td></tr>
+          <tr><td>Outdoor (per autoflower-vs-feminized brief)</td><td>$7-15/oz</td><td>Seeds, soil, water; no electricity, no tent</td></tr>
+          <tr><td><strong>Maine dispensary retail (2026)</strong></td><td><strong>$200-400/oz</strong></td><td>Adult-use market; consistent with $10-15/g national retail</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>The honest "is home grow cheaper" answer:</strong> Indoor growing is more expensive than outdoor in year 1 due to equipment amortization. After year 1, an indoor mid-tier setup produces cannabis at $13-25/oz — dramatically cheaper than dispensary retail at $200-400/oz. The break-even is typically 2-3 harvests, or approximately 6-9 months. Outdoor is always cheaper per ounce, but indoor gives you year-round harvests, photoperiod control, and protection from Maine's October humidity and bud-rot risk.</p>
+  </section>
+
+  <section>
+    <h2>The Maine Winter Basement Grow</h2>
+    <p>Maine's climate gives basements a natural advantage for indoor cannabis cultivation:</p>
+
+    <ol>
+      <li><strong>Year-round temperature stability:</strong> Unheated Maine basements hold 50-60°F (10-15°C) even in January. This is below the ideal veg/flower temp (75-80°F) but means the space never overheats in summer — the primary challenge for indoor growers in southern states.</li>
+      <li><strong>Darkness for photoperiod control:</strong> A basement has no natural light intrusion, making it the ideal space for 12/12 flowering schedules. No light leaks from windows.</li>
+      <li><strong>Neighbor-proof:</strong> Plants are invisible from the street. Satisfies the OCP's no-public-viewing requirement by default.</li>
+      <li><strong>Winter heating is the main cost:</strong> You must heat the tent; you rarely need to cool it. A small 100-300W heater adds $15-35/month at Maine electricity rates.</li>
+    </ol>
+
+    <h3>Temperature control by season</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine basement grow temperature by season">
+        <thead>
+          <tr>
+            <th>Season</th>
+            <th>Maine basement ambient</th>
+            <th>Tent target</th>
+            <th>Action needed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Winter (Jan-Feb)</td><td>50-55°F</td><td>75-80°F</td><td><strong>Add heater</strong> (100-300W radiator, $25-50)</td></tr>
+          <tr><td>Spring / Fall</td><td>55-65°F</td><td>75-80°F</td><td>LED waste heat may be sufficient + small heater</td></tr>
+          <tr><td>Summer</td><td>60-70°F</td><td>75-80°F</td><td>LED heat + room may be sufficient; active cooling rarely needed in Maine</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Maine basement = natural advantage for indoor growing in summer.</strong> Growers in Texas, Florida, or Arizona pay hundreds per month on AC to cool their tents. A Maine basement grower may need zero active cooling June-September.</p>
+
+    <h3>Power outage planning (Maine-specific)</h3>
+
+    <p>Maine experiences winter storm outages. CMP and Versant both publish outage maps; major ice storms in 2023 and 2024 caused multi-day outages across central and northern Maine.</p>
+
+    <ul>
+      <li><strong>UPS (Uninterruptible Power Supply):</strong> A 1500VA UPS ($100-200) can run a 300W LED + small fan for 20-45 minutes — enough to complete a graceful shutdown (turn off lights, save grow journal).</li>
+      <li><strong>Battery station (Jackery / EcoFlow):</strong> A 1000Wh portable power station can run a 300W LED for ~2.5 hours, a 100W light for 8+ hours. Not a long-term solution but bridges a short outage.</li>
+      <li><strong>Generator:</strong> For serious multi-day outage protection, a 2000W generator (Honda EU2200i or equivalent) can run a tent setup indefinitely on gasoline/propane. Cost: $1,000-2,000 + fuel.</li>
+      <li><strong>No generator = not the end of the world:</strong> A 12-24 hour outage will stress plants but not kill them if temperatures stay above 55°F. The bigger risk is leaving lights off for >24 hours during late flower (can cause hermaphroditism or early-harvest stress). A small battery bank or UPS for the light circuit is the minimum sensible precaution.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Closet Grow: 1-Plant Minimum</h2>
+    <p>A 1-plant closet grow is the lowest-cost way to prove you can finish a cannabis harvest before investing in a full 4×4 tent. It is also the only practical option for renters with minimal space or strict landlords.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Closet grow 1-plant minimum equipment list 2026">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Recommended product</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Tent</td><td>Vivosun 2×2×60 in. or Mars Hydro 2×2 tent</td><td>$50-70</td></tr>
+          <tr><td>Light</td><td>Mars Hydro FC-E1500 150W OR Spider Farmer SF-1000 100W</td><td>$95-120</td></tr>
+          <tr><td>Fan</td><td>AC Infinity Cloudline S4 (4-in., ~150 CFM) OR equivalent Vivosun 4-in.</td><td>$80-120</td></tr>
+          <tr><td>Carbon filter</td><td>4×12 in. Phresh or Vivosun</td><td>$50-70</td></tr>
+          <tr><td>Soil</td><td>Fox Farm Ocean Forest (12 qt bag = enough for 2-3 runs)</td><td>$24-28</td></tr>
+          <tr><td>Seeds</td><td>ILGM White Widow Auto or ILGM OG Kush Feminized — 1 pack</td><td>$10-15</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td><strong>$300-400</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Light cycle: 18/6 for veg, 12/12 for flower. A single timer ($10) controls the schedule. Expected yield: 1-2 oz per harvest (first cycle may be less). Cost per oz: $150-250 in year 1 including equipment, dropping to $50-100/oz in year 2.</p>
+  </section>
+
+  <section>
+    <h2>The 7+ Beginner Mistakes</h2>
+
+    <ol>
+      <li><strong>Buying the cheapest tent.</strong> A $50 budget tent has 16mm poles, thin canvas, and poor zippers. It will collapse under a loaded light or rip within a year. The $80-120 Vivosun S448 is the minimum viable for a serious grow. The $199 Gorilla is worth the upgrade if running heavy equipment.</li>
+
+      <li><strong>Using a blurple LED because it's cheaper.</strong> A blurple (blue + purple LED cluster) runs at 1.0-1.5 µmol/J efficiency vs. 2.7-2.85 for a quantum board. Same grow, 2× the electricity bill, 30-50% less yield. A $169 Mars Hydro FC-E3000 outperforms any blurple at any price.</li>
+
+      <li><strong>Skipping the carbon filter.</strong> Cannabis in flower has a strong, unmistakable odor. In an apartment, condo, or shared building, neighbors will notice. A $70 carbon filter is cheaper than a lease violation. This is non-negotiable in any Maine rental.</li>
+
+      <li><strong>Overwatering seedlings.</strong> The #1 beginner indoor cannabis killer. Seedlings have minimal root systems; overwatering drowns roots and invites pythium (root rot). Water only when the top inch of soil is dry. Use a spray bottle for the first week, then transition to bottom-watering.</li>
+
+      <li><strong>Using regular (non-feminized) seeds.</strong> Half the plants will be males (or hermaphrodites) that produce no usable bud. In a 4-plant tent, one male can fertilize the entire garden and ruin a harvest. Always use feminized seeds for sinsemilla (seedless) bud. See the <a href="/blog/autoflower-vs-feminized-maine-2026">autoflower vs feminized decision matrix</a> for the full analysis.</li>
+
+      <li><strong>Skipping the pH meter.</strong> Cannabis grows in a narrow pH window (6.0-6.8 in soil). Without a pH meter, nutrient lockout, yellow leaves, and wasted nutrients are almost guaranteed. A $40-60 digital pH pen (Apera or Bluelab) is the single most cost-effective upgrade a beginner can make.</li>
+
+      <li><strong>Running 24/0 light cycle.</strong> The myth that "more light = more growth" leads some beginners to run lights 24 hours. Cannabis needs a dark period. 24/0 light cycle stresses plants, disrupts root development, and wastes electricity with no yield benefit. The correct schedule: 18/6 (veg) or 12/12 (flower).</li>
+
+      <li><strong>Ignoring VPD.</strong> The most commonly ignored metric by beginners, and the most impactful on yield and mold resistance. In late flower, low VPD (below 1.0 kPa) creates the exact conditions for bud rot (Botrytis). A $20 infrared thermometer and a VPD chart can prevent an entire ruined harvest. See the <a href="/blog/drying-cannabis-maine-humidity-2026">Maine drying guide</a> for the BudTrainer/THCFarmer RH and VPD reference.</li>
+    </ol>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "Can I grow cannabis in my apartment in Maine?", answer: "Yes — Maine law (Title 28-B) permits home cultivation for adults 21+. The practical constraints are: (1) your lease or building policy (landlords can prohibit cultivation under LD 799); (2) odor control — a carbon filter is mandatory in multi-unit buildings; (3) the 3-mature / 12-immature plant cap residence-wide. Check your lease before buying equipment." },
+      { question: "How much will my electric bill go up from an indoor grow in Maine?", answer: "For a mid-tier 4×4 grow (450W LED + fans + dehumidifier): approximately $33-53/month during vegetative phase and $50-75/month during flowering at Maine electricity rates. With CMP's optional Time-of-Use rate (lights scheduled 9 PM-9 AM off-peak), the delivery portion of the bill drops to $0.067/kWh — roughly 40% less than the standard Rate A. A full mid-tier 4×4 harvest costs ~$141-173 in electricity at CMP rates, or ~$228-259 at Versant rates." },
+      { question: "Is indoor cheaper than buying at a Maine dispensary?", answer: "Yes, after the first year. Year 1 indoor cost per ounce: $60-165/oz (equipment amortized). Ongoing indoor cost: $13-28/oz. Maine dispensary retail: $200-400/oz. The break-even point is 2-3 harvests, or approximately 6-9 months. Outdoor is even cheaper per ounce ($7-15/oz) but indoor gives you year-round harvests, photoperiod control, and protection from Maine's October humidity and bud-rot risk." },
+      { question: "What if I lose power during a Maine winter storm?", answer: "A 1500VA UPS ($100-200) keeps lights running 20-45 minutes — enough for a graceful shutdown. A Jackery/EcoFlow 1000Wh station runs a 300W light for 2-3 hours. For multi-day outage protection, a Honda EU2200i generator ($1,000-2,000) is the robust solution. In a heated Maine basement, a 12-24 hour outage will stress but not kill plants if ambient temp stays above 55°F. CMP and Versant both publish outage maps; major ice storms in 2023 and 2024 caused multi-day outages across central and northern Maine — a small battery bank is the minimum sensible precaution." },
+      { question: "Do I need a permit to grow cannabis indoors in Maine?", answer: "No. Personal home cultivation under LD 555 / Title 28-B does not require a state permit. You must comply with plant-tag labeling rules (each plant labeled with owner name and date), keep plants out of public view, and have landowner permission if renting (per LD 799). Municipalities may have additional zoning rules; check with your city/town clerk. Commercial cultivation requires a Maine OCP-issued cultivation license; renting out a grow space for payment is commercial cultivation and unlicensed commercial cultivation carries significant penalties." },
+      { question: "Should I run my grow lights during off-peak hours to save on CMP's TOU rate?", answer: "Yes, if you enroll in CMP's optional Time-of-Use rate (effective January 2026). Running lights from 9 PM to 9 AM (all off-peak) means zero on-peak delivery charges. Set your timer to start at 9 PM. The supply charge (the largest portion of your bill) does not vary by time, but the delivery savings are real — the off-peak delivery rate is $0.067/kWh vs. $0.503/kWh on-peak. The TOU rate benefits you if ≥86% of usage is off-peak, which is achievable with a 12/12 or 18/6 schedule timed to start at 9 PM." }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor (the pillar page)</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — 7 mold-resistant and fast-finishing genetics</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized Seeds for Maine 2026</a> — the seed-type decision matrix</li>
+      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — the post-harvest dehumidifier, Boveda 62, and cure protocol</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Seed Source</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>The only seed affiliate on the site (id 8112, 20% commission). For the seeds that fill your indoor tent, ILGM is the recommended U.S.-facing seed bank: 20+ year track record, ships to Maine with discreet packaging, free shipping on most orders, and a useful Marijuana Grow Bible included with every purchase. Their autoflower and feminized selections (Northern Lights Auto, White Widow Auto, Afghan, OG Kush) are well-suited to both indoor and outdoor Maine growing. The site's existing <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a> and <a href="/blog/autoflower-vs-feminized-maine-2026">autoflower vs feminized decision matrix</a> cross-reference ILGM inventory.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🏪</span>
+          <h3>Local Maine Dispensaries &amp; Equipment Vendors</h3>
+        </div>
+        <p>For Maine-local equipment, soil, and seeds: the Coast of Maine Stonington Blend cannabis soil is manufactured in-state and available at Jack's Hardware &amp; Garden (Portland), local co-ops, and online. Maine dispensaries also sell seeds and clones, and many carry Maine-bred genetics selected for indoor and short-season performance. See the site's <a href="/blog/best-cannabis-strains-maine-outdoor-2026#where-to-buy">Maine seed and clone vendor list</a> for five licensed options including Cannabis Seed Bank of Maine, Maine Clone Co, Maine Seedlings, Seed &amp; Soil Maine, and North Atlantic Seed Co. Equipment recommendations in this article (Mars Hydro, Spider Farmer, AC Infinity, Vivosun) are informational only — these brands are not currently in our affiliate program.</p>
+        <div class="affiliate-cta">
+          <a href="/find-a-dispensary" class="btn-affiliate">Find a Maine Dispensary →</a>
+          <span class="affiliate-note">Browse dispensaries carrying seeds and clones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified attorney for specific legal guidance. Electricity rates cited reflect CMP's confirmed Time-of-Use rate (January 2026) and estimates for Versant Power and CMP standard Rate A; verify at cmpco.com and versantpower.com before relying on any cost calculation. Equipment prices reflect Q2 2026 US retail and may vary by retailer. Maine dispensary retail price ($200-400/oz) should be re-verified against live dispensary menu prices on the day of publication. CO₂ enrichment equipment is not covered; not recommended for beginners. Yield figures are consensus across multiple seed-bank and equipment-manufacturer sources adjusted for typical home-grower experience; actual results vary. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>
