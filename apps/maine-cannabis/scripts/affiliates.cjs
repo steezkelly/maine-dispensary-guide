@@ -40,7 +40,7 @@ const PROGRAMS = [
     linkTemplate: (id) => `https://ilgm.com?aff=${id}`,
     linkAltTemplate: (id) => `https://ilovegrowingmarijuana.com/<page>?aff=${id}`,
     matchSenders: ['affiliatly.com', 'ilgm.com'],
-    notes: '20% standard, 30% with performance. $10 signup bonus. Reset link expires 24h.',
+    notes: '20% standard, 30% with performance. $10 signup bonus. Fully operational as of 2026-06-05: site integration live, payment method configured. Login via affiliatly.com dashboard; password resets valid 24h.',
   },
   {
     id: 'msnl',
