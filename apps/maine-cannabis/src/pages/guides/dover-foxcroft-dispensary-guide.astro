@@ -1,0 +1,103 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Dover-Foxcroft, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Dover-Foxcroft does not currently have a cannabis dispensary of any type within town limits. The town has halted its marijuana ordinance review multiple times, leaving the regulatory picture unsettled. The nearest dispensary is GreenLife in Milo (~15 min south), a medical-only operator and Piscataquis Chamber member."}},{"@type":"Question","name":"What is the closest dispensary to Dover-Foxcroft?","acceptedAnswer":{"@type":"Answer","text":"GreenLife in Milo (~15 min south) is the closest medical dispensary. For a broader selection of medical and adult-use products, Bangor dispensaries are about 45 minutes south and Waterville is ~50 minutes southwest."}},{"@type":"Question","name":"Does Dover-Foxcroft allow cannabis dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Dover-Foxcroft's marijuana ordinance has been tabled and re-tabled multiple times at town meetings. The town has neither formally opted out nor fully opted in, leaving existing and prospective operators in regulatory limbo. Any future dispensary would require a new vote and a finalized local ordinance."}},{"@type":"Question","name":"What is Dover-Foxcroft Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county, with only ~17,000 residents across 3,966 square miles. The town is known for the Mayo Regional Hospital, the Piscataquis County Fairgrounds, and its position as the commercial and healthcare hub of the rural central-Maine highlands."}}]});
+---
+<Layout title="Dover-Foxcroft, ME Dispensary Guide — Piscataquis County 2026" description="Dover-Foxcroft, Maine cannabis guide. No dispensaries in town — ordinance halted multiple times. Nearest: GreenLife Milo, Bangor options 45 min south." heroImage="/images/heroes/dover-foxcroft-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.opt-out-box{background:rgba(200,80,80,.06);padding:1.5rem;border-radius:1rem;border:1px solid var(--color-border);margin-top:1rem}.opt-out-box h3{margin-top:0;color:var(--color-error)}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Dover-Foxcroft, ME Dispensary Guide</h1>
+    <p class="subtitle">Piscataquis County's regulatory holdout — nearest dispensaries in Milo and Bangor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Dover-Foxcroft at a Glance</h2>
+    <table aria-label="Dover-Foxcroft cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — ordinance halted multiple times</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Unresolved — tabled at town meeting; neither formal opt-out nor full opt-in</td></tr>
+        <tr><td><strong>Nearest Dispensary</strong></td><td>GreenLife — Milo (~15 min south, medical)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,000 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Piscataquis County (county seat, ~17,000 county pop)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county, with only about 17,000 residents spread across 3,966 square miles of central-Maine highlands. The town is the regional hub for healthcare, government, and K-12 education, anchored by Northern Light Mayo Hospital, the Piscataquis County Fairgrounds, and the Three Rivers Whitewater kayak race that draws thousands of paddlers each spring.</p>
+    <p>On cannabis, Dover-Foxcroft is a regulatory holdout. The town has tabled its marijuana ordinance at multiple town meetings, neither formally opting out of retail sales nor finalizing a local framework to allow them. The result is a de facto pause on new dispensaries within town limits — leaving the medical patients in the greater Dover-Foxcroft area without a local option and forcing them to drive to Milo, Bangor, or Waterville.</p>
+  </section>
+
+  <section>
+    <div class="opt-out-box">
+      <h3>Dover-Foxcroft's Halted Ordinance</h3>
+      <p>Dover-Foxcroft has paused its marijuana ordinance review at multiple town meetings since legalization. Unlike towns that adopt a clean opt-out, Dover-Foxcroft's regulatory limbo leaves prospective operators without a clear path to licensure: the town has not formally prohibited cannabis retail, but it also has not adopted the zoning, licensing, and host-agreement provisions needed for new applications to move forward.</p>
+      <p>For medical patients, this means the closest dispensary is GreenLife in Milo (~15 min south). For adult-use, shoppers drive 45 minutes to Bangor or roughly 50 minutes to Waterville. The lack of a local ordinance has effectively made Dover-Foxcroft a no-store town, but its legal status is more accurately described as "unresolved" rather than "opted out."</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Nearest Dispensaries to Dover-Foxcroft</h2>
+
+    <h3>GreenLife — Milo (Medical, Piscataquis Chamber Member)</h3>
+    <p><strong>Address:</strong> 19 Park St, Milo, ME 04463<br>
+    <strong>Phone:</strong> (207) 943-7000<br>
+    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
+    <strong>Type:</strong> Medical (MMMP)</p>
+    <p>GreenLife in Milo is the closest dispensary to Dover-Foxcroft and one of the few medical dispensaries actually located within Piscataquis County. As a Piscataquis Chamber member, the store is well-integrated into the local business community and serves MMMP cardholders from Dover-Foxcroft, Milo, Brownville, Guilford, and the surrounding highland towns. A 15-minute drive south on ME-7/ME-11, GreenLife is the default medical dispensary for the county seat.</p>
+
+    <h3>Bangor Dispensaries (45 min south)</h3>
+    <p>For a broader medical and adult-use selection, Bangor's dispensary cluster is roughly 45 minutes south via I-95. Bangor has the densest dispensary scene in the Penobscot region, with both MSO and caregiver networks serving the broader county. Brewer, just across the Penobscot River, offers additional options.</p>
+
+    <h3>Waterville Dispensaries (50 min southwest)</h3>
+    <p>Waterville sits roughly 50 minutes southwest of Dover-Foxcroft on the I-95 corridor. The city's dispensary cluster serves both medical and adult-use customers, and several operators run delivery routes into the central highlands.</p>
+  </section>
+
+  <Callout title="Regulatory Limbo" type="insight">
+    Dover-Foxcroft's tabled-ordinance status is unusual in Maine. Most towns have made a clean choice — adopt a local retail framework, opt out explicitly, or default to the state rules. Dover-Foxcroft has effectively frozen at the "talking about it" stage, which for operators is functionally the same as an opt-out but legally more ambiguous. Any new operator would need to push the town to finalize its ordinance before applying for a state license.
+  </Callout>
+
+  <section>
+    <h2>Town Status & Opt-In</h2>
+    <p>Dover-Foxcroft's marijuana ordinance is in regulatory limbo — the town has tabled the issue at multiple meetings, declining to either adopt a full opt-in framework or pass a formal opt-out ordinance. The most likely next steps are: (1) a future town meeting vote to finalize an opt-in framework, (2) a formal opt-out ordinance, or (3) continued inaction.</p>
+    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/waterville-dispensary-guide">Waterville Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia National Park</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Dover-Foxcroft, Maine?", a: "No. Dover-Foxcroft does not currently have a cannabis dispensary of any type within town limits. The town has tabled its marijuana ordinance review multiple times, leaving the regulatory picture unsettled." },
+        { q: "What is the closest dispensary to Dover-Foxcroft?", a: "GreenLife in Milo (~15 min south) is the closest medical dispensary. For a broader selection of medical and adult-use products, Bangor is ~45 min south and Waterville is ~50 min southwest." },
+        { q: "Does Dover-Foxcroft allow cannabis dispensaries?", a: "Dover-Foxcroft's ordinance has been tabled and re-tabled. The town has not formally opted out, but it has not finalized a local framework for new operators either. Status is regulatory limbo." },
+        { q: "What is Dover-Foxcroft Maine known for?", a: "Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county with only ~17,000 residents across 3,966 sq mi. It is known for Mayo Regional Hospital, the Piscataquis County Fairgrounds, and the Three Rivers Whitewater kayak race." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

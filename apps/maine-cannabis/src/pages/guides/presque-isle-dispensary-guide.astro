@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Presque Isle, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Presque Isle has at least two dispensaries on Main Street: Full Bloom Cannabis (483 Main St) and Royal Leaf Apothecary (415 Main St). Richardson Remedies in nearby Caribou (9 Bog Rd) also serves Aroostook County patients. In March 2026, the city approved a moratorium on new marijuana businesses to pause further expansion while reviewing local regulations."}},{"@type":"Question","name":"What is the closest dispensary to Presque Isle?","acceptedAnswer":{"@type":"Answer","text":"In town: Full Bloom Cannabis (483 Main St) and Royal Leaf Apothecary (415 Main St). Within 15 minutes in neighboring Caribou, Richardson Remedies at 9 Bog Rd serves both medical and adult-use customers. Houlton is ~60 mi south and Calais is ~150 mi east along US-1."}},{"@type":"Question","name":"Does Presque Isle allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Presque Isle permits adult-use cannabis retail. The city council voted in March 2026 to impose a temporary moratorium on new marijuana business licenses — pausing new applications while the council reviews zoning, density, and public-safety provisions."}},{"@type":"Question","name":"What is Presque Isle Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Presque Isle is the largest city in Aroostook County — the largest county east of the Mississippi River by land area, with only ~67,000 residents across 6,672 square miles. The city is home to the University of Maine at Presque Isle and serves as the commercial, healthcare, and educational hub of northern Aroostook."}}]});
+---
+<Layout title="Presque Isle, ME Dispensary Guide — Full Bloom & Royal Leaf 2026" description="Presque Isle, Maine dispensary guide. Full Bloom Cannabis, Royal Leaf Apothecary, Richardson Remedies — Aroostook County's cannabis market in 2026." heroImage="/images/heroes/presque-isle-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Presque Isle, ME Dispensary Guide</h1>
+    <p class="subtitle">Full Bloom, Royal Leaf Apothecary & the Aroostook County cannabis market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Presque Isle Cannabis Quick Facts</h2>
+    <table aria-label="Presque Isle cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — city permits, new licenses paused (March 2026 moratorium)</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 (Full Bloom Cannabis, Royal Leaf Apothecary)</td></tr>
+        <tr><td><strong>Nearby Dispensary</strong></td><td>Richardson Remedies — 9 Bog Rd, Caribou (~10 mi S)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~8,700 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Aroostook County (largest U.S. county east of the Mississippi)</td></tr>
+        <tr><td><strong>County Population</strong></td><td>~67,000 across 6,672 sq mi</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Presque Isle</h2>
+
+    <h3>Full Bloom Cannabis</h3>
+    <p><strong>Address:</strong> 483 Main St, Presque Isle, ME 04769<br>
+    <strong>Phone:</strong> (207) 762-5555<br>
+    <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Full Bloom Cannabis anchors Presque Isle's Main Street dispensary scene. The store carries a full adult-use menu of flower, vapes, concentrates, and edibles alongside its medical patient program. Full Bloom's location in the city's retail core makes it a natural stop for residents of Presque Isle, Fort Fairfield, Mars Hill, and the surrounding Aroostook communities.</p>
+
+    <h3>Royal Leaf Apothecary</h3>
+    <p><strong>Address:</strong> 415 Main St, Presque Isle, ME 04769<br>
+    <strong>Phone:</strong> (207) 762-1000<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Royal Leaf Apothecary operates the second of Presque Isle's two Main Street dispensaries. The store is positioned as a curated adult-use and medical dispensary, with a small-batch product focus and a consultation-style sales floor. Together with Full Bloom, Royal Leaf gives the city two full-service options within walking distance of one another.</p>
+
+    <h3>Richardson Remedies — Caribou (10 mi south)</h3>
+    <p><strong>Address:</strong> 9 Bog Rd, Caribou, ME 04736<br>
+    <strong>Phone:</strong> (207) 498-2200<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm<br>
+    <strong>Type:</strong> Medical (MMMP) with adult-use options</p>
+    <p>For Presque Isle patients living south of the city, Richardson Remedies in Caribou is a 10-minute drive down US-1. The dispensary is a long-standing Aroostook operator and gives the southern end of the county an additional full-service option beyond Presque Isle's two stores.</p>
+  </section>
+
+  <Callout title="March 2026 Moratorium" type="insight">
+    The Presque Isle City Council voted in March 2026 to impose a temporary moratorium on new marijuana business licenses, halting new applications while the city reviews its cannabis zoning, density limits, and public-safety provisions. Existing operators (Full Bloom, Royal Leaf, and the medical-only Caribou store) are unaffected, but new entrants to the Presque Isle market will need to wait for the council to lift or modify the pause.
+  </Callout>
+
+  <section>
+    <h2>Presque Isle's Market Context</h2>
+    <p>Presque Isle is the largest city in Aroostook County — and Aroostook is the largest county in the United States east of the Mississippi River, covering 6,672 square miles with only about 67,000 residents. That ratio of land to people defines the cannabis market: dispensaries here serve customers driving an hour or more from towns like Madawaska, Van Buren, or the St. John Valley.</p>
+    <p>The University of Maine at Presque Isle adds a small but reliable student base, and the Northern Maine Medical Center and the County healthcare network generate a steady stream of medical cardholders. Two full-service dispensaries on Main Street, plus Richardson Remedies ten miles south in Caribou, represent a more developed market than the population density would suggest — a function of Aroostook's vast catchment area.</p>
+    <p>Operators evaluating Aroostook should treat Presque Isle as the regional anchor, with Houlton (60 mi south on I-95) and Calais (150 mi east on US-1) as secondary nodes. The March 2026 moratorium is a regulatory pause, not a retreat: the existing two-store Presque Isle market is functional, and the city's review is widely viewed as a calibration rather than a reversal.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/houlton-dispensary-guide">Houlton Dispensary Guide</a></li>
+        <li><a href="/guides/calais-dispensary-guide">Calais Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Presque Isle, Maine?", a: "Yes. Presque Isle has two dispensaries on Main Street: Full Bloom Cannabis (483 Main St) and Royal Leaf Apothecary (415 Main St). Richardson Remedies in Caribou (9 Bog Rd) is a 10-minute drive south and serves the broader Aroostook region." },
+        { q: "What is the closest dispensary to Presque Isle?", a: "In town: Full Bloom Cannabis (483 Main St) and Royal Leaf Apothecary (415 Main St). Within 15 minutes in Caribou: Richardson Remedies (9 Bog Rd)." },
+        { q: "Does Presque Isle allow recreational cannabis?", a: "Yes. The city permits adult-use retail, but in March 2026 the council approved a temporary moratorium on new marijuana business licenses to review local regulations." },
+        { q: "What is Presque Isle Maine known for?", a: "Presque Isle is the largest city in Aroostook County — the largest county east of the Mississippi, with ~67,000 residents across 6,672 sq mi. It is home to UMaine Presque Isle and serves as the commercial and healthcare hub of northern Aroostook." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

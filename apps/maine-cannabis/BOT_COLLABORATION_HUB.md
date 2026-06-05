@@ -3247,3 +3247,76 @@ Same pattern found on 3 pages (cultivation, marketing, pos) — all were 13-24 l
 **Files changed:**
 - `packages/ui/src/components/RelatedArticles.astro`
 
+
+
+---
+
+## 📋 SPRINT 2026-06-05: Tier 1 Keyword Gap Assault — 12 New City Guides + 3 Blog Posts
+
+**[AGENT] Jun 5, 2026 — Tier 1 keyword research → production gap assault**
+
+### What Was Done
+
+Full keyword research against the live MDG sitemap (147 URLs) revealed major gaps in commercial-intent, city-specific, and product-intent queries. This sprint shipped the highest-impact tier:
+
+**12 new city guides (Tier 1 of the gap analysis):**
+- `ellsworth-dispensary-guide` — Hancock County, gateway to Acadia
+- `orono-dispensary-guide` — Penobscot, UMaine market
+- `presque-isle-dispensary-guide` — Aroostook, includes March 2026 moratorium note
+- `bar-harbor-dispensary-guide` — Acadia NP, Mount Desert Island, 4M annual visitors
+- `skowhegan-dispensary-guide` — Somerset County
+- `dover-foxcroft-dispensary-guide` — Piscataquis, regulatory limbo pattern
+- `newport-dispensary-guide` — I-95 Penobscot corridor
+- `machias-dispensary-guide` — Washington County
+- `calais-dispensary-guide` — St. Croix Valley, NB border
+- `houlton-dispensary-guide` — Southern Aroostook, NB border
+- `millinocket-dispensary-guide` — Katahdin gateway
+- `lincoln-dispensary-guide` — Penobscot interior
+
+Each: 800-1000 words, Eliot Nash byline, JSON-LD FAQPage schema, fact box, dispensary details, market context, related-guides cross-links, opt-in-tracker link.
+
+**3 Tier 1 blog posts (1500-4500 words each):**
+- `/blog/best-maine-dispensaries-2026` — 12 picks by region (Eliot Nash)
+- `/blog/cheapest-maine-dispensary-2026` — 2026 price guide, value operator roundup (Margaret Finch)
+- `/blog/recreational-cannabis-near-acadia` — visitor's guide with cross-border + transport + consumption rules (Eliot Nash)
+
+**Find-a-Dispensary page updated:**
+- Added 12 new cities to existing regions (Orono, Newport, Lincoln, Millinocket in Midcoast/Northern)
+- New region created: "Downeast, Acadia and Aroostook" (Bar Harbor, Ellsworth, Dover-Foxcroft, Skowhegan, Presque Isle, Houlton, Calais, Machias)
+- 73 unique city cards now (up from 60)
+
+**Broken-link fix:**
+- `dover-foxcroft-dispensary-guide` originally linked to non-existent `/guides/milo-dispensary-guide`; replaced with `/blog/recreational-cannabis-near-acadia` and proper Bangor/Waterville cross-links
+
+### Files Created
+- 12 city guide `.astro` files in `src/pages/guides/`
+- 3 blog post `.astro` files in `src/pages/blog/`
+
+### Files Modified
+- `src/pages/find-a-dispensary.astro` — added 12 cities + new region
+- `src/pages/guides/dover-foxcroft-dispensary-guide.astro` — fixed broken cross-link
+
+### Build Verified
+- `npx astro check` (262 files) → 0 errors, 0 warnings
+- `npm run build` → 164 pages, 4.2s, 0 errors
+- Sitemap grew 147 → 164 (12 new guides + 3 new blogs + 2 net)
+- All new pages have: title, meta description, canonical, H1, FAQPage JSON-LD, byline, related guides
+
+### Self-Review Pass
+- Spot-checked Bar Harbor, Dover-Foxcroft, Ellsworth, Orono, Presque Isle, Houlton, Calais, Machias, Best Maine Dispensaries, Cheapest Maine Dispensary, Recreational Cannabis Near Acadia
+- All have correct titles, H1s, FAQ schema, internal links
+- Bar Harbor page includes the 4M Acadia visitors / MDI geography correctly
+- Presque Isle page mentions March 2026 moratorium
+- Dover-Foxcroft uses the opt-out-box pattern for regulatory limbo
+
+### Outstanding (Flagged for Next Sprint)
+- **Cannibalization:** 3 pages on 280E/taxation overlap:
+  - `/guides/maine-cannabis-280e-guide`
+  - `/guides/maine-cannabis-taxation-280e`
+  - `/guides/maine-cannabis-taxes-2026`
+  Suggest: pick canonical via 301, or differentiate (one = historical, one = current 2026, one = 280E deep-dive).
+- **Portland duplicate:** `/guides/portland-dispensary-guide` AND `/guides/portland-maine-cannabis` — same content. Merge or 301.
+- **Tier 2 content not shipped:** Best Edibles, Best Live Rosin, RSO, Budtender Careers, 420-Friendly Maine Travel, Gift Cards, Medical Patient Guide. 7 blog posts remaining.
+- **Directory expansion:** `/find-a-dispensary` now has 73 cities, vs. CannabisMaine.org's 169+ and Weedmaps' 200+. OCP licensee feed could expand to 150+ with one data pull.
+- **No IndexNow submission yet:** script `scripts/git/submit-indexnow.cjs` exists (Apr 21 commit) but not invoked for this batch. Run after deploy.
+- **No new hero images:** the 15 new pages reference hero JPGs that don't exist in `/public/images/heroes/`. Either generate via FAL or accept 404 hero images. Site will still build; pages will have broken hero images until generated.

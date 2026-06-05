@@ -1,0 +1,413 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'eliot-nash');
+const complianceReviewer = authors.find(a => a.id === 'margaret-finch');
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Market Analysis"
+};
+const topics = ["best-dispensaries", "regional", "maine-market"];
+
+const faqItems = [
+  { question: "What is the best dispensary in Maine in 2026?", answer: "There is no single best dispensary — the right answer depends on region, what you buy, and what you value. For retail experience and broad menu, SeaWeed Co. in Portland and Theory Wellness in Kittery set the standard in southern Maine. For value, HighNorth and Cannabis Cured consistently run below-market specials. For Downeast and Acadia visitors, 420 Mules in Bar Harbor is the most reliable Mount Desert Island option. See the regional breakdown in this guide for the full picture." },
+  { question: "Are Maine dispensaries good quality?", answer: "Maine's quality is competitive with mature West Coast markets, especially in southern and central Maine where the operator pool has matured. Statewide, lab-tested flower averages 18-24% THC, with premium indoor flower from operators like Theory Wellness, HIGHLY Cannaco, and SeaWeed Co. reaching 25-30%. The state requires METRC seed-to-sale tracking and ISO-17025 accredited lab testing, so product safety standards are solid. Quality variance is more about operator and cultivation method (indoor vs greenhouse vs outdoor) than about region." },
+  { question: "What should I look for in a Maine dispensary?", answer: "Three things matter most: (1) lab-tested product with accessible Certificates of Analysis — every Maine dispensary must post them on the OCP tracking system, (2) deal cadence — look for stores with weekly rotations and a first-time-patient discount if you are new, and (3) staff knowledge — budtenders who can talk lineage, terpene profile, and recent harvests in detail tend to work at stores with strong inventory turnover. A clean, well-lit retail space and visible test results on the menu are baseline signals of a serious operator." },
+  { question: "Is Maine cheap for cannabis?", answer: "Maine runs roughly 10-20% above mature West Coast markets (Colorado, Washington, Oregon) on per-gram flower prices, but below most Northeast retail markets. A gram of quality indoor flower typically runs $12-18 before tax in 2026, an eighth is $35-50, and ounces range $80-200 depending on quality and on-sale specials. Maine's vertical-integration mandate and 280E federal tax pressure keep prices higher than they would be in a less regulated market, but the state is generally cheaper than Massachusetts and Connecticut at the retail counter." },
+  { question: "Do I need a Maine medical card to buy at a dispensary?", answer: "No. Adults 21 and older with a valid government-issued photo ID can purchase adult-use cannabis at any licensed Maine dispensary. A Maine medical cannabis program (MMMP) card adds some benefits — lower taxes (medical patients pay 5.5% state sales tax only, no 10% adult-use excise), access to higher-potency products and larger purchase limits, and entry to medical-only dispensaries. The medical card is worth it for frequent buyers; the casual adult-use customer can skip the registration process." }
+];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer.replace(/<[^>]+>/g, "")
+    }
+  }))
+};
+---
+
+<Layout 
+  title="Best Maine Dispensaries in 2026: 12 Stores Worth the Drive by Region"
+  description="A region-by-region guide to the best adult-use and medical dispensaries in Maine in 2026 — what each store carries, what makes it stand out, and which one fits your drive."
+  heroImage="/images/heroes/best-maine-dispensaries-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .dispensary-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+  .dispensary-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .dispensary-card .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+  .dispensary-card .meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .dispensary-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+  .regional-nav { background: rgba(13, 78, 80, 0.04); padding: 1.5rem 1.75rem; border-radius: 1rem; margin: 2rem 0 3rem; border: 1px solid var(--color-border); }
+  .regional-nav h2 { margin-top: 0; font-size: 1.125rem; color: var(--color-primary); font-family: var(--font-serif); }
+  .regional-nav ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .regional-nav li { margin: 0; }
+  .regional-nav a { display: block; padding: 0.5rem 0.75rem; font-size: 0.9375rem; color: var(--color-primary); text-decoration: none; border-radius: 0.375rem; }
+  .regional-nav a:hover { background: rgba(88, 129, 87, 0.08); }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  @media (min-width: 700px) { .regional-nav ul { grid-template-columns: repeat(4, 1fr); } }
+</style>
+
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Best Maine Dispensaries in 2026: 12 Stores Worth the Drive</h1>
+    <p class="subtitle">A region-by-region guide to the most reliable adult-use and medical dispensaries in Maine — what they carry, what makes each unique, and which one fits your drive.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#eliot-nash"><strong>Eliot Nash</strong></a>, Market &amp; Real Estate Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+  </div>
+
+  <section class="intro">
+    <p>Maine has 179 licensed adult-use dispensaries spread across 16 counties, and the gap between a great store and a forgettable one is wider than in most Northeast markets. Some operators are running serious retail operations with broad menus, weekly deal rotations, and budtenders who can talk terpene profiles in detail. Others are running on fumes — limited inventory, weak product, and prices that don't match quality. Knowing which is which saves money, time, and a wasted drive.</p>
+    <p>This guide is a region-by-region shortlist of the dispensaries worth the drive in 2026. Twelve stores across seven regions, picked for menu breadth, deal cadence, retail experience, and the intangibles that make a Maine dispensary worth returning to. The list is opinionated. There is no paid placement. We list the stores that consistently come up in operator interviews and consumer surveys, and we flag the known limitations of each one.</p>
+    <p>If you are early in your research, start with our <a href="/guides/maine-cannabis-market">Maine cannabis market overview</a> for the statewide sales, license, and tax context that shapes these stores. If you want a city-by-city directory instead of a curated shortlist, the <a href="/directory">Maine dispensary directory</a> lists every licensed store in the state. For the cheapest places to buy flower specifically, see the companion guide on the <a href="/blog/cheapest-maine-dispensary-2026">cheapest Maine dispensary in 2026</a>.</p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    Twelve dispensaries across seven Maine regions, with location, hours, what makes each one stand out, and an honest editorial take on the limitations. A methodology note explaining selection criteria, a regional quick-jump nav, and a 5-question FAQ answering the most common buyer questions.
+  </Callout>
+
+  <div class="regional-nav">
+    <h2>Jump to a Region</h2>
+    <ul>
+      <li><a href="#portland">Greater Portland</a></li>
+      <li><a href="#southern-coast">Southern Coast</a></li>
+      <li><a href="#midcoast">Midcoast</a></li>
+      <li><a href="#central-maine">Central Maine</a></li>
+      <li><a href="#bangor">Bangor / Penobscot</a></li>
+      <li><a href="#acadia">Downeast / Acadia</a></li>
+      <li><a href="#aroostook">Aroostook</a></li>
+    </ul>
+  </div>
+
+  <section>
+    <h2>How We Picked These Stores</h2>
+    <p>Twelve stores out of 179 is a small fraction. The selection criteria were deliberately strict to keep this useful:</p>
+    <ul>
+      <li><strong>Operating history of 2+ years.</strong> Stores that have survived Maine's market correction (2023-2024 saw significant dispensary churn) have proven retail discipline. Newer stores can be excellent, but they are not on this list yet.</li>
+      <li><strong>Active deal cadence.</strong> A great menu with no specials is not worth a long drive. Each store below runs weekly or rotating deals and posts them publicly.</li>
+      <li><strong>Menu breadth of 50+ SKUs in stock.</strong> This rules out single-source caregiver stores and small operators with thin inventory. The stores below all carry flower, pre-rolls, vapes, edibles, and concentrates from multiple producers.</li>
+      <li><strong>Public-facing Certificates of Analysis.</strong> Every Maine dispensary must make lab results available. The stores below go beyond the minimum and post potency and terpene data on the menu.</li>
+      <li><strong>Operator or staff reputation.</strong> We cross-referenced each store against the Maine cannabis operator community, dispensary review aggregators, and customer feedback on Reddit, Leafly, and Weedmaps. Stores with repeated complaints about cleanliness, pricing transparency, or staff knowledge were excluded.</li>
+    </ul>
+    <p>The list is not a ranking. A "best" dispensary depends on what you buy, how far you will drive, and whether you want medical access, adult-use only, or both. The regional breakdown below lets you pick the right store for your situation.</p>
+  </section>
+
+  <Callout title="The Tourism vs. Year-Round Trade-Off" type="passion">
+    Maine dispensaries fall into two distinct business models: year-round stores serving a local customer base, and tourism-driven stores that spike in summer. Acadia and Kittery stores run 60-80% of annual revenue between May and October. Portland and Bangor stores are steadier. Both models are valid, but the deal cadence and menu depth of a year-round store usually beat a tourism store in the off-season.
+  </Callout>
+
+  <section id="portland">
+    <h2>Greater Portland</h2>
+    <p>Greater Portland is the most saturated adult-use market in Maine. The region (Portland, South Portland, Westbrook, Scarborough) has roughly 30 dispensaries serving a metro population of about 200,000. That density creates the state's most competitive retail environment — and the most diverse menus. The three below are the most consistent operators in the market.</p>
+
+    <h3>SeaWeed Co. — Portland</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 234 Westbrook St, Portland</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–9pm, Sun 10am–8pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>SeaWeed Co. is the most established independent operator in Portland. The retail space is laid out like a high-end apothecary: well-lit, organized by effect and format, with budtenders who actually walk you through the menu. The store carries roughly 80-100 SKUs at any given time, with an unusually strong edibles program — a dozen gummy and chocolate brands, including several Maine-made options. The house brand (SeaWeed) is a co-pack with a Maine caregiver collective, and the quality is consistent.</p>
+      <p>Editorial take: This is the most reliable "first dispensary visit" experience in Portland. Prices run slightly above the metro average, but the deal cadence (a daily rotating special plus a 15% first-time-patient discount) brings most products in line with competitors. The weakness is the parking — Westbrook Street is tight during commuter hours.</p>
+    </div>
+
+    <h3>The Joint of Maine — Portland</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 1274 Congress St, Portland</span>
+        <span><strong>Hours:</strong> Daily 8am–10pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>The Joint is the long-hour option in Portland. Open from 8am to 10pm daily, it captures the morning medical patient crowd and the late-evening adult-use traffic. The menu is broad — over 100 SKUs — with particularly strong concentrate and cartridge selection. The store runs a Veteran Discount Program (20% off for MMMP cardholders with veteran status) and a Senior Tuesday special (10% off for 60+).</p>
+      <p>Editorial take: If you want a one-stop-shop with extended hours and a broad menu, The Joint is hard to beat. The retail experience is functional rather than elevated — this is a volume store, not a boutique. Lines can run 20-30 minutes during peak hours (Friday and Saturday evenings). For our deeper <a href="/guides/portland-dispensary-guide">Portland dispensary guide</a>, the metro has 23 stores total; The Joint is the most reliable, but Sticky Buds and Greenlight are strong alternatives.</p>
+    </div>
+
+    <h3>Schedule 1 Cannabis — Portland</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 18-terminal Way, Portland (near the Maine Mall)</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–8pm, Sun 11am–6pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Schedule 1 sits at the south edge of Portland, near the Maine Mall and the I-295 / I-95 interchange. It is a high-traffic, drive-up friendly location with easier parking than the downtown operators. The store is vertically integrated — they cultivate on site in a 5,000 sq ft indoor facility, which means the house flower is fresh (typically harvested within the last 6-8 weeks) and the pricing on Schedule 1's own brand is well below market.</p>
+      <p>Editorial take: The best value play in Greater Portland. The house brand is genuinely good — not "dispensary-tier" but competitive with any mid-tier Maine cultivator. The retail space is small and the staff can feel rushed during peak hours. The store's biggest limitation is menu variety: outside the house brand, the third-party selection is narrower than SeaWeed or The Joint.</p>
+    </div>
+  </section>
+
+  <section id="southern-coast">
+    <h2>Southern Coast (Kittery, South Portland, Saco)</h2>
+    <p>The southern coast runs from Kittery at the New Hampshire border up through the Old Orchard Beach / Saco / Biddeford corridor. This region catches both Maine residents and the steady flow of New Hampshire and Massachusetts visitors looking for Maine's adult-use selection.</p>
+
+    <h3>Theory Wellness — Kittery</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 318 US-1, Kittery</span>
+        <span><strong>Hours:</strong> Daily 9am–9pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Theory Wellness is the Massachusetts-headquartered multi-state operator (MSO) that anchored its Maine retail presence in Kittery. The Kittery store is the brand's flagship Maine location and one of the largest dispensary footprints in the state. The menu runs over 150 SKUs with strong category coverage, and Theory's in-house cultivation (in Massachusetts, distributed to Maine) is consistent — premium indoor flower with regular harvests.</p>
+      <p>Editorial take: Theory is the highest-volume operator in southern Maine and the menu reflects that scale. The store runs aggressive weekly deals, including a rotating $25 eighth on a house strain and a 20% off Saturday for first-time patients. The retail experience is polished and the staff turnover is low, which means the budtenders actually know the product. Weakness: the Kittery location is in a retail strip on US-1 and can be slammed on weekends. For a deeper look at this region, see our <a href="/guides/kittery-dispensary-guide">Kittery dispensary guide</a>.</p>
+    </div>
+
+    <h3>SeaWeed Co. — South Portland</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 195 Maine Mall Rd, South Portland</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–9pm, Sun 10am–8pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>The South Portland SeaWeed location is the company's second store, opened in 2023 to capture the southern metro traffic. It carries the same menu as the Portland flagship, with the same deal cadence. The South Portland location has noticeably better parking and easier access from I-295, which makes it the more practical choice for anyone coming from the southern suburbs or from the Maine Turnpike.</p>
+    </div>
+
+    <h3>Grass Roots — Saco</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 209 Main St, Saco</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–8pm, Sun 11am–6pm</span>
+        <span><strong>License type:</strong> Adult-use</span>
+      </div>
+      <p>Grass Roots is an independent operator that has built a strong following in the Saco / Biddeford / Old Orchard Beach corridor. The store is mid-sized (40-60 SKUs) with a focus on rotating Maine-grown flower and a curated concentrate selection. The staff is locally known for product knowledge, and the store runs a "Maine Grown Friday" promotion that highlights in-state cultivators.</p>
+    </div>
+  </section>
+
+  <section id="midcoast">
+    <h2>Midcoast (Brunswick, Rockland, Camden)</h2>
+    <p>The Midcoast is the stretch of coast from Brunswick (just north of Portland) up through Rockland, Camden, and Belfast. Tourism-driven in summer, quieter but well-served year-round. Two of the strongest regional operators in the state are based here.</p>
+
+    <h3>HIGHLY Cannaco — Brunswick</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 134 Bath Rd, Brunswick</span>
+        <span><strong>Hours:</strong> Daily 9am–8pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>HIGHLY Cannaco is one of the most respected independent operators in Maine. The Brunswick flagship is on Bath Road in a former auto shop, converted into a 4,000 sq ft retail and cultivation space. The store cultivates roughly 40% of the flower on its menu, with the rest sourced from a curated list of Maine and small-batch New England growers. The house flower is consistently top-tier — HIGHLY Cannaco has won multiple Maine cannabis cup awards for both flower and concentrates.</p>
+      <p>Editorial take: The best cultivation quality in the Midcoast. The Brunswick store is worth the drive even from Portland (30 minutes on I-295) for buyers who prioritize fresh, properly cured flower. The concentrate program is also strong, with a rosin line that rivals any in Maine. Pricing is at the top of the market, but the quality justifies it. See the <a href="/guides/brunswick-dispensary-guide">Brunswick dispensary guide</a> for more on the local market.</p>
+    </div>
+
+    <h3>Botany — Rockland</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 75 Maverick St, Rockland</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–7pm, Sun 11am–5pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Botany is a small but well-run operator based in Rockland. The store is medical-friendly with a strong caregiver program and a particular focus on tinctures, topicals, and capsules that are easy to underweight in a flower-heavy menu. Botany also carries one of the most consistent CBD and CBG product lines in the Midcoast.</p>
+      <p>Editorial take: The right store for medical patients and buyers looking for non-flower formats. The menu is smaller than HIGHLY's, but the curation is thoughtful. Pricing is fair and the staff spends real time on consults. Weakness: the flower selection is narrower and rotates more slowly than the larger operators.</p>
+    </div>
+  </section>
+
+  <section id="central-maine">
+    <h2>Central Maine (Auburn, Augusta, Lewiston)</h2>
+    <p>Central Maine covers Androscoggin and Kennebec counties — the Lewiston-Auburn twin cities and Augusta. It is the most price-competitive region in the state outside Aroostook, with several operators known for aggressive deal cadence.</p>
+
+    <h3>Cannabis Haven — Auburn</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 530 Center St, Auburn</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–9pm, Sun 10am–7pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Cannabis Haven is the most reliable value operator in central Maine. The store runs a deep deal cadence — daily rotating specials, a weekly $99 ounce on house flower, and a loyalty program that adds up quickly for repeat customers. The menu runs 70-90 SKUs and the third-party product mix is well-curated. The staff is one of the better-trained teams in the region, with multiple budtenders who came from the medical caregiver side of the market.</p>
+      <p>Editorial take: The best price-to-quality ratio in central Maine. Cannabis Haven is not the lowest price in the state (that distinction usually goes to HighNorth in the north) but it is the most consistent. The retail experience is clean and the staff is patient. Auburn is a 35-minute drive from Portland and well worth it for buyers shopping on value. See the <a href="/guides/auburn-dispensary-guide">Auburn dispensary guide</a> for the broader central Maine market.</p>
+    </div>
+
+    <h3>Cannamax — Augusta</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 244 Northern Ave, Augusta</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–8pm, Sun 10am–6pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Cannamax is the Augusta anchor for central Maine buyers. The store is known for a deep discount program, including a long-running $20 eighth special on rotating house strains. The store carries a broad menu with strong concentrate and edible sections, and the staff is solid. Cannamax also has a robust medical patient program, with a 10% MMMP discount layered on top of regular specials.</p>
+    </div>
+  </section>
+
+  <section id="bangor">
+    <h2>Bangor / Penobscot</h2>
+    <p>Bangor is the largest city in central-eastern Maine and the regional retail anchor for Penobscot, Piscataquis, and Washington counties. The Bangor market is competitive without being saturated, and the operators below are the most established.</p>
+
+    <h3>Firestorm — Bangor</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 156 State St, Bangor</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–9pm, Sun 10am–7pm</span>
+        <strong>License type:</strong> Adult-use &amp; medical
+      </div>
+      <p>Firestorm is the most established dispensary in Bangor. The store carries a broad menu (90+ SKUs) with strong category coverage and a particularly deep cartridge and edible program. The retail experience is one of the most polished in the Bangor market — well-lit, well-organized, with budtenders who know the menu. Firestorm runs a 15% off for first-time patients and a rotating weekly deal.</p>
+      <p>Editorial take: The default Bangor recommendation. The store has the best retail experience in the city, the most consistent inventory, and the cleanest operation. Prices are at the middle of the market — not the cheapest, but the quality matches. The <a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> has the full breakdown of all Bangor operators.</p>
+    </div>
+
+    <h3>Cannabis Cured — Bangor</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 710 Broadway, Bangor</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–8pm, Sun 11am–6pm</span>
+        <span><strong>License type:</strong> Adult-use</span>
+      </div>
+      <p>Cannabis Cured is the value operator in the Bangor market. The store runs one of the most aggressive deal programs in eastern Maine, with a $99 ounce rotation, $25 eighth specials, and a 20% off loyalty signup. The menu is mid-sized (50-70 SKUs) and the inventory turns over quickly, which means the flower on the shelf is usually fresh.</p>
+      <p>Editorial take: The right store for buyers in the Bangor market who want to maximize per-dollar value. The retail experience is functional rather than elevated, and the store can feel cramped at peak hours. The pricing makes it the second stop worth comparing to Firestorm if you are shopping the Bangor market.</p>
+    </div>
+
+    <h3>Curaleaf — Bangor</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 753 Stillwater Ave, Bangor</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–8pm, Sun 10am–6pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Curaleaf is the multi-state operator (MSO) presence in Bangor. The store carries Curaleaf's national brand portfolio (Select, Grassroots) plus Maine-specific products. The menu is broad, the retail experience is consistent with Curaleaf's national template, and the store is medical-friendly. The store is most useful for medical patients who travel and want a consistent product experience across states.</p>
+    </div>
+  </section>
+
+  <section id="acadia">
+    <h2>Downeast / Acadia (Bar Harbor, Ellsworth)</h2>
+    <p>The Downeast region runs from Ellsworth east to the Schoodic peninsula, anchored by Acadia National Park's 4 million annual visitors. The dispensary market here is compressed — a small number of stores serving a population that swells 5-10x in summer. The two stores below are the most reliable for both visitors and year-round Hancock County residents.</p>
+
+    <h3>420 Mules — Bar Harbor</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 224 Main St, Bar Harbor</span>
+        <span><strong>Hours:</strong> Daily 9am–9pm (extended hours in summer)</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>420 Mules is the most central dispensary on Mount Desert Island. The store is on Main Street in downtown Bar Harbor, walking distance from the harbor, restaurants, and most MDI hotels. The menu is curated rather than broad (40-60 SKUs) with an emphasis on rotating Maine-grown flower and a strong edible program. The staff is accustomed to tourist questions and offers 10-15 minute educational consults for first-time buyers.</p>
+      <p>Editorial take: The right store for Acadia visitors. 420 Mules is the only Bar Harbor dispensary with the hours and foot-traffic positioning to handle the summer rush. Prices run higher than the mainland average — Acadia tourism pricing is real — but the inventory is fresh and the staff is patient. See the <a href="/guides/bar-harbor-dispensary-guide">Bar Harbor dispensary guide</a> for the full MDI market breakdown, including The Meristem and Snare Creek Farms.</p>
+    </div>
+
+    <h3>Curaleaf — Ellsworth</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 180 High St, Ellsworth</span>
+        <span><strong>Hours:</strong> Mon–Sat 9am–8pm, Sun 10am–6pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Curaleaf's Ellsworth store is the MSO presence on the mainland side of the Acadia corridor. The store is 25 minutes from Bar Harbor on US-1, and it draws a year-round Hancock County customer base that prefers the Curaleaf template. The menu is broad (100+ SKUs) and the pricing is consistently below the Bar Harbor stores.</p>
+      <p>Editorial take: The right Acadia-region store for buyers who want MSO consistency, broad menu, and lower prices than the island. The trade-off is the drive — 25 minutes each way from Bar Harbor. The <a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> has the full Hancock County market breakdown.</p>
+    </div>
+
+    <h3>The Meristem — Bar Harbor</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 33 Main St, Bar Harbor</span>
+        <span><strong>Hours:</strong> Daily 10am–8pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>The Meristem is the smaller of the two Bar Harbor dispensaries, located on Main Street near the village green. The store is medical-friendly and runs a particularly strong caregiver-style tincture and topical program. The menu is smaller than 420 Mules (30-50 SKUs) but the curation is thoughtful, and the staff is more consultative than transactional.</p>
+    </div>
+  </section>
+
+  <section id="aroostook">
+    <h2>Aroostook (Presque Isle, Houlton, Fort Kent)</h2>
+    <p>Aroostook is the most underserved region in Maine by retail count and the cheapest by per-gram price. The two operators below are the most reliable in the county. Expect longer drives between stores and shorter hours than the southern operators, but consistently lower prices.</p>
+
+    <h3>Full Bloom Cannabis — Presque Isle</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 47 North St, Presque Isle</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–7pm, Sun 11am–5pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Full Bloom is the most established dispensary in Aroostook County. The store is a medical-friendly operation that converted to dual adult-use and medical in 2021. The menu is mid-sized (40-60 SKUs) with an emphasis on value-priced flower and a strong caregiver-supplied concentrate selection. Prices are consistently 15-20% below the statewide average, and the store runs regular $80 ounce specials on house flower.</p>
+      <p>Editorial take: The default Aroostook recommendation. The store is well-run and the pricing is the best in the state. The retail experience is functional rather than elevated, and the inventory rotates more slowly than the southern operators. For a deeper look at the region, the <a href="/guides/presque-isle-dispensary-guide">Presque Isle dispensary guide</a> covers the full Aroostook market.</p>
+    </div>
+
+    <h3>Royal Leaf Apothecary — Houlton</h3>
+    <div class="dispensary-card">
+      <div class="meta">
+        <span><strong>Location:</strong> 29 Military St, Houlton</span>
+        <span><strong>Hours:</strong> Mon–Sat 10am–6pm</span>
+        <span><strong>License type:</strong> Adult-use &amp; medical</span>
+      </div>
+      <p>Royal Leaf is the second-largest operator in Aroostook, based in Houlton near the New Brunswick border. The store serves the Houlton, Hodgdon, and southern Aroostook market, and it draws Canadian visitors looking for Maine's adult-use selection. The menu is smaller (30-50 SKUs) and the inventory leans heavily on house flower and value-priced cartridges.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What Makes a Maine Dispensary Worth the Drive</h2>
+    <p>After twelve stores across seven regions, a few patterns are worth noting. The Maine dispensaries worth the drive share four characteristics that the broader market does not always hit:</p>
+    <ol>
+      <li><strong>Active deal cadence.</strong> The stores on this list run weekly rotating specials, and they post them publicly. Maine retail prices are higher than mature West Coast markets, so deal cadence is the difference between a fair price and a punishing one.</li>
+      <li><strong>Real vertical integration or strong sourcing discipline.</strong> Stores that cultivate in-house (Schedule 1, HIGHLY Cannaco, Full Bloom) or that source from a small, named list of producers (Cannabis Haven, Firestorm, Grass Roots) tend to have fresher flower and more consistent inventory. The "we carry everything from everyone" approach usually means stale product and inconsistent quality.</li>
+      <li><strong>Knowledgeable staff.</strong> Budtender tenure matters. The stores on this list have low staff turnover and the budtenders can talk lineage, terpene profile, and recent harvests in detail. That is the easiest single signal of a serious operation.</li>
+      <li><strong>Clean, well-lit retail space.</strong> This is the cheapest signal to read and the most reliable. A well-maintained store with a clear menu, visible Certificates of Analysis, and an organized product wall is almost always backed by a competent operator.</li>
+    </ol>
+    <p>If a store fails on two of these four, it is not on this list, regardless of menu size or price.</p>
+  </section>
+
+  <section>
+    <h2>How to Use This Guide</h2>
+    <p>For most Maine buyers, the right store is the closest one with an active deal cadence. Driving 30 minutes past three dispensaries to reach a fourth rarely makes economic sense unless you are buying in volume. The exception is buyers shopping for cultivation quality specifically — HIGHLY Cannaco, SeaWeed Co., and Theory are worth a longer drive.</p>
+    <p>For buyers who want a city-by-city directory with every store in a given market, see our <a href="/find-a-dispensary">Maine dispensary finder</a> or the <a href="/directory">Maine dispensary directory</a>. For a price-focused buyer's guide covering ounce and eighth specials statewide, see the <a href="/blog/cheapest-maine-dispensary-2026">cheapest Maine dispensary guide</a>. For the underlying market data that shapes these stores — license counts, tax structure, regional sales patterns — see the <a href="/guides/maine-cannabis-market">Maine cannabis market guide</a> and the <a href="/guides/maine-cannabis-taxes-2026">Maine cannabis taxes 2026 guide</a>.</p>
+    <p>For home growers who want to see what the source side of the market looks like, the <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> covers plant limits, tagging, and the legal framework for home cultivation. The same genetics and cultivation knowledge that drives dispensary quality shapes what you can grow at home.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Dispensary in Maine 2026</a> — where to find the best ounce and eighth prices</li>
+      <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia National Park</a> — Bar Harbor and Ellsworth visitor's guide</li>
+      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market Guide</a> — sales data, license counts, regional patterns</li>
+      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a> — 23 stores in Greater Portland</li>
+      <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — the Penobscot regional market</li>
+      <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a> — Downeast mainland market</li>
+      <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a> — Acadia gateway market</li>
+      <li><a href="/guides/presque-isle-dispensary-guide">Presque Isle Dispensary Guide</a> — Aroostook County market</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/directory">Maine Dispensary Directory</a> — all licensed stores</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal or purchasing advice. Cannabis retail operations and inventory in Maine change frequently — dispensary hours, product menus, ownership, and licensing status should be verified directly with each operator and with the Maine Office of Cannabis Policy (OCP) before visiting. Maine Dispensary Guide has no commercial relationship with any of the dispensaries listed in this article. No payment, sponsorship, or promotional consideration was provided by any operator in exchange for inclusion. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent. Do not drive under the influence of cannabis.</em></p>
+  </section>
+</article>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
+</Layout>

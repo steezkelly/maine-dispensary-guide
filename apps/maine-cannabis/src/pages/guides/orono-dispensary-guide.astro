@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Orono, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Firestorm operates a recreational and medical dispensary at 6 Stillwater Ave Suite 300 in Orono, ME 04473. It is the dominant cannabis operator in the town and the primary dispensary serving the University of Maine community."}},{"@type":"Question","name":"Does Orono Maine have recreational dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Yes. Firestorm Orono is a recreational (21+) and medical cannabis dispensary. Orono permits adult-use retail and the town has been a growth corridor for Bangor-area cannabis operators targeting the University of Maine student population."}},{"@type":"Question","name":"Where can UMaine students buy cannabis?","acceptedAnswer":{"@type":"Answer","text":"University of Maine students in Orono typically shop at Firestorm (6 Stillwater Ave Suite 300, Orono, ME 04473) and travel to nearby Bangor dispensaries (roughly 10 minutes south) for additional selection. Several Bangor operators also deliver to the Orono campus area."}},{"@type":"Question","name":"What is Orono Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Orono is a Penobscot County town of approximately 11,000 year-round residents, home to the University of Maine — Maine's flagship public university and its largest by enrollment. The Stillwater River runs through campus and the town sits on the I-395 / US-2 corridor 8 miles north of Bangor."}}]});
+---
+<Layout title="Orono, ME Dispensary Guide — Firestorm & UMaine 2026" description="Orono, Maine dispensary guide. Firestorm cannabis at 6 Stillwater Ave serving UMaine students and Penobscot County for 2026." heroImage="/images/heroes/orono-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Orono, ME Dispensary Guide</h1>
+    <p class="subtitle">Firestorm cannabis at 6 Stillwater Ave — serving UMaine and the Penobscot corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Orono Cannabis Quick Facts</h2>
+    <table aria-label="Orono cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (Firestorm — rec + medical)</td></tr>
+        <tr><td><strong>Dominant Operator</strong></td><td>Firestorm Orono — 6 Stillwater Ave Suite 300</td></tr>
+        <tr><td><strong>Population</strong></td><td>~11,000 year-round (2020 Census)</td></tr>
+        <tr><td><strong>Student Population</strong></td><td>~11,000 enrolled at University of Maine</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Orono</h2>
+
+    <h3>Firestorm — Orono</h3>
+    <p><strong>Address:</strong> 6 Stillwater Ave Suite 300, Orono, ME 04473<br>
+    <strong>Phone:</strong> (207) 974-2220<br>
+    <strong>Hours:</strong> Mon-Sat 9am-9pm, Sun 10am-7pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Firestorm is a multi-store Maine operator that has staked out the Orono market with a high-traffic Stillwater Avenue location near the University of Maine campus. The store carries a full menu of flower, vapes, concentrates, edibles, and pre-rolls from both in-house and partner cultivators, and serves both 21+ recreational customers and MMMP cardholders. Extended daily hours align with the student body's late-afternoon and evening traffic patterns.</p>
+    <p>For UMaine students specifically, the 6 Stillwater Ave location is within walking distance of the heart of campus, which is unusual for Maine dispensaries. Firestorm also runs regular menu features and loyalty pricing targeted at the Bangor-Orono trade area.</p>
+  </section>
+
+  <Callout title="University-Age Demand" type="insight">
+    Orono is unique among Maine dispensary markets in that the year-round and student populations are nearly the same size (~11,000 each). Dispensaries that tailor a portion of their menu to 21+ flower, low-dose edibles, and pre-roll multipacks tend to see higher basket frequency from this segment, even though overall transaction sizes are typically smaller than medical-heavy markets like Bangor or Ellsworth.
+  </Callout>
+
+  <section>
+    <h2>Orono's Market Context</h2>
+    <p>Orono is best understood as a university town: roughly 11,000 students are enrolled at the University of Maine, the state's flagship land-grant university, and that student population nearly equals the town's year-round resident base of about 11,000. The two populations overlap but are not identical — many students rent in Orono but commute from Old Town, Bangor, and surrounding Penobscot County towns — and together they create a dense, walkable local market along the Stillwater Avenue / College Avenue corridor.</p>
+    <p>For cannabis operators, Orono's draw is that single storefront on Stillwater Ave captures the bulk of the in-person market. Bangor's dispensary cluster, just 8 miles south on I-395, fills in for specialty products and additional selection. The town's compact retail footprint, combined with Penobscot County's broader population of roughly 153,000, also makes Orono a natural secondary market for Bangor-headquartered operators expanding their delivery range up US-2.</p>
+    <p>Operators considering expansion into the Penobscot region should view Orono as the student-facing node, Old Town as a complementary rural market, and Bangor as the regional medical and recreational anchor. Together, the three-market corridor covers most of central and northern Penobscot County's dispensary demand.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/brewer-dispensary-guide">Brewer Dispensary Guide</a></li>
+        <li><a href="/guides/old-town-dispensary-guide">Old Town Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Orono, Maine?", a: "Yes. Firestorm operates a recreational and medical dispensary at 6 Stillwater Ave Suite 300, Orono, ME 04473. It is the dominant cannabis operator in the town and the primary dispensary serving the University of Maine community." },
+        { q: "Does Orono Maine have recreational dispensaries?", a: "Yes. Firestorm Orono is a recreational (21+) and medical dispensary. Orono permits adult-use retail and the town has been a growth corridor for Bangor-area cannabis operators targeting UMaine." },
+        { q: "Where can UMaine students buy cannabis?", a: "UMaine students typically shop at Firestorm (6 Stillwater Ave Suite 300, Orono) and travel to Bangor dispensaries (~10 min south) for additional selection. Several Bangor operators also deliver to the Orono campus area." },
+        { q: "What is Orono Maine known for?", a: "Orono is a Penobscot County town of ~11,000 year-round residents, home to the University of Maine — Maine's flagship public university and its largest by enrollment. The Stillwater River runs through campus and the town sits on the I-395 / US-2 corridor 8 miles north of Bangor." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

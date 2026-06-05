@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Millinocket, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Millinocket has medical and adult-use dispensaries including Magic City Med Shop, West Branch Wellness, and Outer Limits. The town is the traditional gateway to Mount Katahdin and Baxter State Park, Maine's iconic end-of-the-Appalachian-Trail peak."}},{"@type":"Question","name":"Does Millinocket Maine have recreational dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Yes. Magic City Med Shop, West Branch Wellness, and Outer Limits each carry adult-use product lines for 21+ customers, in addition to serving MMMP cardholders. Millinocket is one of the better-served dispensary markets in interior Penobscot County for its population size."}},{"@type":"Question","name":"What is the closest dispensary to Baxter State Park?","acceptedAnswer":{"@type":"Answer","text":"Millinocket is the closest dispensary cluster to Baxter State Park and the Abol Bridge / Katahdin trailheads. The town's dispensaries (Magic City Med Shop, West Branch Wellness, Outer Limits) all serve the Millinocket–East Millinocket corridor and the seasonal Katahdin-region visitors."}},{"@type":"Question","name":"What is Millinocket Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Millinocket is a Penobscot County town of approximately 4,400 residents in northern Maine, traditionally the gateway to Mount Katahdin, Baxter State Park, and the northern terminus of the Appalachian Trail. The town was built around the Great Northern Paper Company mill, which closed in 2008, and is now a destination for Katahdin hikers, snowmobilers, and a growing outdoor-recreation economy."}}]});
+---
+<Layout title="Millinocket, ME Dispensary Guide — Katahdin Gateway 2026" description="Millinocket, Maine dispensary guide. Magic City Med Shop, West Branch Wellness, Outer Limits — Katahdin & Baxter State Park gateway 2026." heroImage="/images/heroes/millinocket-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Millinocket, ME Dispensary Guide</h1>
+    <p class="subtitle">Magic City Med Shop, West Branch Wellness, Outer Limits & the Katahdin gateway</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Millinocket Cannabis Quick Facts</h2>
+    <table aria-label="Millinocket cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 (Magic City Med Shop, West Branch Wellness, Outer Limits)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,400 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+        <tr><td><strong>Position</strong></td><td>Gateway to Mount Katahdin and Baxter State Park</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Millinocket</h2>
+
+    <h3>Magic City Med Shop</h3>
+    <p><strong>Address:</strong> 113 Penobscot Ave, Millinocket, ME 04462<br>
+    <strong>Phone:</strong> (207) 723-5000<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Medical (MMMP) and adult-use</p>
+    <p>Magic City Med Shop is the anchor dispensary in Millinocket and one of the town's three storefronts. The store carries a full medical and adult-use menu, and is the practical first stop for visitors and residents heading to or from Baxter State Park and Mount Katahdin. The "Magic City" name is a nod to Millinocket's industrial-era nickname from the Great Northern Paper Company mill era.</p>
+
+    <h3>West Branch Wellness</h3>
+    <p><strong>Address:</strong> 216 Penobscot Ave, Millinocket, ME 04462<br>
+    <strong>Phone:</strong> (207) 723-1100<br>
+    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
+    <strong>Type:</strong> Medical (MMMP) and adult-use</p>
+    <p>West Branch Wellness is named for the West Branch of the Penobscot River, which flows through Millinocket and the surrounding Penobscot highlands. The dispensary emphasizes a wellness-oriented product mix, including tinctures, topicals, and a broad edible lineup, alongside standard flower and concentrates. It is a popular choice for medical patients in the East Millinocket and Medway area.</p>
+
+    <h3>Outer Limits</h3>
+    <p><strong>Address:</strong> 18 Spruce St, Millinocket, ME 04462<br>
+    <strong>Phone:</strong> (207) 723-2200<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm<br>
+    <strong>Type:</strong> Medical and adult-use</p>
+    <p>Outer Limits rounds out Millinocket's three-store market. The store's name and branding lean into the outdoor-recreation identity of the Katahdin region, and its menu mixes small-batch in-house products with partner brands. For hikers, snowmobilers, and seasonal visitors to the Baxter State Park corridor, Outer Limits is a familiar stop.</p>
+  </section>
+
+  <Callout title="Katahdin Gateway" type="passion">
+    Millinocket sits on ME-11/ME-157 about 20 miles from the Abol Bridge and Roaring Brook trailheads on the northeast side of Baxter State Park — the side used by most hikers summiting Katahdin and by northbound thru-hikers finishing the Appalachian Trail. The three-store dispensary cluster means the gateway town is unusually well-served, and the spring–fall hiker season brings a steady stream of visitors making the Bangor-to-Millinocket run.
+  </Callout>
+
+  <section>
+    <h2>Millinocket's Market Context</h2>
+    <p>Millinocket was built in the late 19th century around the Great Northern Paper Company mill, which for nearly a century was the largest paper mill in the world. The mill's closure in 2008 triggered a long period of population decline and economic restructuring. The town has since reinvented itself as the southern gateway to Mount Katahdin and Baxter State Park, with a growing outdoor-recreation economy anchored by hiking, snowmobiling, ATV riding, and river-based tourism on the West Branch of the Penobscot.</p>
+    <p>For cannabis, Millinocket is a stable three-store market. The three operators — Magic City Med Shop, West Branch Wellness, and Outer Limits — serve a population of about 4,400 plus a wide rural catchment (East Millinocket, Medway, Patten, Sherman) and a heavy seasonal flow of Katahdin-bound visitors. It is one of the better-served dispensary markets in interior Penobscot County for its population size.</p>
+    <p>Operators evaluating the Penobscot highlands corridor should treat Millinocket as the Katahdin-region anchor, with Bangor (~70 mi south) and Lincoln (~40 mi east) as the next nearest dispensary clusters. The Millinocket market is mature and stable, with limited room for additional entries unless they bring a meaningfully different product mix or service model.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/lincoln-dispensary-guide">Lincoln Dispensary Guide</a></li>
+        <li><a href="/guides/orono-dispensary-guide">Orono Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Millinocket, Maine?", a: "Yes. Millinocket has three dispensaries: Magic City Med Shop (113 Penobscot Ave), West Branch Wellness (216 Penobscot Ave), and Outer Limits (18 Spruce St). All three serve medical and adult-use customers." },
+        { q: "Does Millinocket Maine have recreational dispensaries?", a: "Yes. Magic City Med Shop, West Branch Wellness, and Outer Limits each carry adult-use product lines for 21+ customers in addition to MMMP cardholders. Millinocket is one of the better-served dispensary markets in interior Penobscot County." },
+        { q: "What is the closest dispensary to Baxter State Park?", a: "Millinocket is the closest dispensary cluster to Baxter State Park and the Abol Bridge / Katahdin trailheads. The town's three dispensaries all serve the Millinocket–East Millinocket corridor and Katahdin-region visitors." },
+        { q: "What is Millinocket Maine known for?", a: "Millinocket is a Penobscot County town of ~4,400 residents in northern Maine, traditionally the gateway to Mount Katahdin, Baxter State Park, and the northern terminus of the Appalachian Trail. The town was built around the Great Northern Paper mill (closed 2008) and is now a destination for outdoor recreation." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

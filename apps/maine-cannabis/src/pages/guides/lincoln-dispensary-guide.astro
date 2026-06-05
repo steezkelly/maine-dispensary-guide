@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Lincoln, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Lincoln has four dispensaries: Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis. The town is one of the best-served small dispensary markets in interior Penobscot County for its population size."}},{"@type":"Question","name":"Does Lincoln Maine have recreational dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Yes. Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis all serve 21+ recreational customers in addition to MMMP cardholders. Lincoln permits adult-use retail and is a natural mid-corridor stop on the I-95 / ME-6 route."}},{"@type":"Question","name":"What is Lincoln Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Lincoln is a Penobscot County town of approximately 5,200 residents in northern Maine, situated on the Penobscot River and the I-95 / ME-6 corridor. The town is known for the Lincoln Lakes region (Mattanawcook Pond, Upper and Lower Cold Stream Ponds), its paper-mill heritage, and as a service hub for the surrounding rural northern Penobscot communities."}},{"@type":"Question","name":"What is the closest dispensary to Lincoln Maine?","acceptedAnswer":{"@type":"Answer","text":"In town: Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis. For shoppers looking for a wider menu, Bangor is ~50 mi south on I-95 and Millinocket is ~40 mi north."}}]});
+---
+<Layout title="Lincoln, ME Dispensary Guide — Just Baked & Blazin Trailz 2026" description="Lincoln, Maine dispensary guide. Just Baked Maine, Blazin Trailz, Brothers Cannabis, Experience Cannabis — Penobscot County interior market 2026." heroImage="/images/heroes/lincoln-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Lincoln, ME Dispensary Guide</h1>
+    <p class="subtitle">Just Baked Maine, Blazin Trailz, Brothers Cannabis, Experience Cannabis — interior Penobscot</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Lincoln Cannabis Quick Facts</h2>
+    <table aria-label="Lincoln cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>4 (Just Baked Maine, Blazin Trailz, Brothers Cannabis, Experience Cannabis)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~5,200 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+        <tr><td><strong>Position</strong></td><td>I-95 / ME-6 corridor, ~50 mi N of Bangor, ~40 mi S of Millinocket</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Lincoln</h2>
+
+    <h3>Just Baked Maine</h3>
+    <p><strong>Address:</strong> 75 Main St, Lincoln, ME 04457<br>
+    <strong>Phone:</strong> (207) 794-2200<br>
+    <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Just Baked Maine is one of Lincoln's flagship dispensaries and a recognizable brand across central Maine. The store specializes in baked-goods-style edibles alongside its full flower, vape, and concentrate menu, and serves both 21+ recreational customers and MMMP cardholders. Its location on Main Street puts it at the heart of Lincoln's commercial district.</p>
+
+    <h3>Blazin Trailz</h3>
+    <p><strong>Address:</strong> 9 Transalpine Rd, Lincoln, ME 04457<br>
+    <strong>Phone:</strong> (207) 794-3300<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Blazin Trailz operates just off the I-95 Lincoln exit and is the easiest dispensary to reach for travelers driving through. The store carries a broad recreational and medical menu, with a focus on flower and concentrates. The Transalpine Road location gives the store excellent highway visibility.</p>
+
+    <h3>Brothers Cannabis</h3>
+    <p><strong>Address:</strong> 1 Penobscot Valley Ave, Lincoln, ME 04457<br>
+    <strong>Phone:</strong> (207) 794-1100<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Brothers Cannabis is a family-styled operator with locations across central Maine, including this Lincoln storefront and a second location in Newport. The Penobscot Valley Avenue location is convenient for Lincoln residents and serves as a complementary stop alongside the Main Street operators.</p>
+
+    <h3>Experience Cannabis</h3>
+    <p><strong>Address:</strong> 62 Main St, Lincoln, ME 04457<br>
+    <strong>Phone:</strong> (207) 794-4400<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Experience Cannabis rounds out Lincoln's four-store market with a Main Street storefront that emphasizes the consultation and education side of the cannabis retail experience. The store's positioning as a more guided, education-first destination gives it a different brand tone from Blazin Trailz's highway-convenience approach or Just Baked's edible-driven menu.</p>
+  </section>
+
+  <Callout title="Four-Store Corridor Stop" type="insight">
+    Lincoln is one of the most dispensary-dense small towns in Maine for its population. Four operators — Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis — all serve a town of about 5,200. The I-95 / ME-6 location is the key: Lincoln is the natural fuel-and-stretch stop between Bangor and the Katahdin region, and the highway traffic has supported a deeper operator cluster than the resident population alone would justify.
+  </Callout>
+
+  <section>
+    <h2>Lincoln's Market Context</h2>
+    <p>Lincoln is a Penobscot County town of about 5,200 residents in the interior northern part of the state, on the Penobscot River and the I-95 / ME-6 corridor. The town grew up around the Lincoln Pulp & Paper mill and the surrounding Penobscot River timber industry, and it remains the service hub for the surrounding rural communities of Winn, Lee, Mattawamkeag, Springfield, and the broader Penobscot highlands. The Lincoln Lakes region — Mattanawcook Pond and the Cold Stream chain — is a popular summer and ice-fishing destination.</p>
+    <p>For cannabis, Lincoln is a mature four-store market that benefits from its I-95 / ME-6 position between Bangor and Millinocket. The four operators have differentiated themselves on menu mix (Just Baked's edibles), location and convenience (Blazin Trailz off the highway), multi-store brand reach (Brothers Cannabis), and consultative retail (Experience Cannabis). For shoppers driving north from Bangor or south from Millinocket, Lincoln is a natural stretch break and a place to find a broader selection than the typical small-town market offers.</p>
+    <p>Operators evaluating the I-95 corridor north of Bangor should treat Lincoln as a key mid-corridor node, with Bangor to the south and Millinocket to the north forming the triangle of interior Penobscot dispensary activity. The four-store market is competitive, and any new entry would need to either add a service not currently offered or capture share from a complementary regional operator.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a></li>
+        <li><a href="/guides/newport-dispensary-guide">Newport Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Lincoln, Maine?", a: "Yes. Lincoln has four dispensaries: Just Baked Maine (75 Main St), Blazin Trailz (9 Transalpine Rd), Brothers Cannabis (1 Penobscot Valley Ave), and Experience Cannabis (62 Main St)." },
+        { q: "Does Lincoln Maine have recreational dispensaries?", a: "Yes. Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis all serve 21+ recreational customers in addition to MMMP cardholders. Lincoln permits adult-use retail and is a natural mid-corridor stop on the I-95 / ME-6 route." },
+        { q: "What is Lincoln Maine known for?", a: "Lincoln is a Penobscot County town of ~5,200 residents in northern Maine, on the Penobscot River and the I-95 / ME-6 corridor. It is known for the Lincoln Lakes region (Mattanawcook Pond, Cold Stream Ponds), its paper-mill heritage, and as a service hub for the surrounding rural northern Penobscot communities." },
+        { q: "What is the closest dispensary to Lincoln Maine?", a: "In town: Just Baked Maine, Blazin Trailz, Brothers Cannabis, and Experience Cannabis. For shoppers looking for a wider menu, Bangor is ~50 mi south on I-95 and Millinocket is ~40 mi north." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

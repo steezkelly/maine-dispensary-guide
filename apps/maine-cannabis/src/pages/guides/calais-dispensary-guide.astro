@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Calais, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Calais has multiple dispensaries including The Higher Class (medical), Kannacopia, Smoke On The Water / Mt. Tom Therapeutics, and Pine Island Cannabis. The town is one of the best-served dispensary markets in Washington County and sits on the U.S.–Canada (New Brunswick) border."}},{"@type":"Question","name":"Does Calais allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Calais permits adult-use cannabis retail in addition to medical. The Higher Class serves medical cardholders, while Kannacopia, Smoke On The Water / Mt. Tom Therapeutics, and Pine Island Cannabis serve both medical and 21+ recreational customers."}},{"@type":"Question","name":"What is the closest dispensary to the New Brunswick border?","acceptedAnswer":{"@type":"Answer","text":"Calais is the closest dispensary cluster to the New Brunswick border — the international bridge at Calais–St. Stephen is just a few minutes from Main Street. The four dispensaries in town (The Higher Class, Kannacopia, Smoke On The Water / Mt. Tom Therapeutics, Pine Island Cannabis) serve both U.S. and Canadian visitors."}},{"@type":"Question","name":"What is Calais Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Calais is a Washington County city of approximately 3,000 residents on the St. Croix River across from St. Stephen, New Brunswick, Canada. The town is one of the easternmost U.S. municipalities directly on an international border and is known for its historic downtown, the St. Croix Island International Historic Site, and its role as a regional hub for the rural Down East border region."}}]});
+---
+<Layout title="Calais, ME Dispensary Guide — New Brunswick Border 2026" description="Calais, Maine dispensary guide. The Higher Class, Kannacopia, Smoke On The Water, Pine Island — Washington County border market 2026." heroImage="/images/heroes/calais-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Calais, ME Dispensary Guide</h1>
+    <p class="subtitle">The Higher Class, Kannacopia, Smoke On The Water & the New Brunswick border market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Calais Cannabis Quick Facts</h2>
+    <table aria-label="Calais cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — city permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>4 (The Higher Class, Kannacopia, Smoke On The Water / Mt. Tom Therapeutics, Pine Island Cannabis)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,000 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Washington County</td></tr>
+        <tr><td><strong>Position</strong></td><td>St. Croix River, opposite St. Stephen, New Brunswick, Canada</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Calais</h2>
+
+    <h3>The Higher Class (Medical)</h3>
+    <p><strong>Address:</strong> 207 Main St, Calais, ME 04619<br>
+    <strong>Phone:</strong> (207) 454-0000<br>
+    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
+    <strong>Type:</strong> Medical (MMMP)</p>
+    <p>The Higher Class operates as a medical dispensary on Main Street in downtown Calais. It is the established medical option for Washington County's border-region patients, including those in Calais, Baileyville, Princeton, and the surrounding rural communities. Their medical focus is intentional: in a four-store market, specialization is a differentiator.</p>
+
+    <h3>Kannacopia</h3>
+    <p><strong>Address:</strong> 282 Main St, Calais, ME 04619<br>
+    <strong>Phone:</strong> (207) 454-2222<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Kannacopia is a Calais dispensary that serves both medical and adult-use customers. Its Main Street location is convenient for visitors crossing the international bridge from St. Stephen, New Brunswick. The store carries a curated menu of flower, vapes, and edibles, and the operator has built a brand identity around the relaxed, friendly tone of the border region.</p>
+
+    <h3>Smoke On The Water / Mt. Tom Therapeutics</h3>
+    <p><strong>Address:</strong> 99 North St, Calais, ME 04619<br>
+    <strong>Phone:</strong> (207) 454-1111<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Smoke On The Water operates under a dual brand with Mt. Tom Therapeutics, combining an adult-use storefront with a medical program. The North Street location is the northern anchor of Calais's dispensary cluster and a natural last stop for travelers heading east toward the Campobello, Lubec, and Eastport border crossings.</p>
+
+    <h3>Pine Island Cannabis</h3>
+    <p><strong>Address:</strong> 176 Main St, Calais, ME 04619<br>
+    <strong>Phone:</strong> (207) 454-3300<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Pine Island Cannabis rounds out Calais's four-store market with an adult-use and medical dispensary on Main Street. The "Pine Island" name is a nod to the small islands in the St. Croix River that forms the international border. The store carries a mix of in-house and partner-branded products, and its positioning emphasizes Calais's distinctive character as a border town with year-round and seasonal Canadian visitor traffic.</p>
+  </section>
+
+  <Callout title="International Border Market" type="insight">
+    Calais is one of the most distinctive small-town cannabis markets in Maine: the international bridge at Calais–St. Stephen connects to New Brunswick, Canada, and Canadian border-town visitors historically account for a portion of Calais retail demand. For operators, this means the four-store market is supported not just by the local 3,000 residents but by cross-border visitors and the broader Washington County catchment. Importation of cannabis into Canada remains illegal, but adult-use tourists traveling to the U.S. side of the border routinely use Calais dispensaries.
+  </Callout>
+
+  <section>
+    <h2>Calais's Market Context</h2>
+    <p>Calais sits on the east bank of the St. Croix River, directly across from St. Stephen, New Brunswick — one of the easternmost U.S.-Canada land-border crossings on the East Coast. The town's downtown is built around that bridge crossing, and for over a century, the cross-border economy has been a defining feature of Calais retail. Cannabis is a natural extension of that pattern.</p>
+    <p>Calais's four-store market is unusually dense for a town of 3,000, and reflects three factors: (1) the cross-border visitor flow, (2) the broad rural catchment across eastern Washington County, and (3) the early opt-in by the city of Calais, which created room for the operator cluster to develop. The Higher Class anchors the medical segment, while Kannacopia, Smoke On The Water, and Pine Island Cannabis split the adult-use market.</p>
+    <p>Operators evaluating Washington County should treat Calais as the eastern anchor, Machias as the mid-route stop, and Ellsworth as the western gateway. All three markets are functional and distinct; the Maine NB-border region has its own cannabis geography that mirrors its 19th-century commercial geography.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/houlton-dispensary-guide">Houlton Dispensary Guide</a></li>
+        <li><a href="/guides/machias-dispensary-guide">Machias Dispensary Guide</a></li>
+        <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Calais, Maine?", a: "Yes. Calais has four dispensaries: The Higher Class (medical, 207 Main St), Kannacopia (282 Main St), Smoke On The Water / Mt. Tom Therapeutics (99 North St), and Pine Island Cannabis (176 Main St)." },
+        { q: "Does Calais allow recreational cannabis?", a: "Yes. Calais permits adult-use retail in addition to medical. The Higher Class is medical-only; Kannacopia, Smoke On The Water / Mt. Tom Therapeutics, and Pine Island Cannabis serve both medical and 21+ recreational customers." },
+        { q: "What is the closest dispensary to the New Brunswick border?", a: "Calais is the closest dispensary cluster to the New Brunswick border — the international bridge at Calais–St. Stephen is a few minutes from Main Street. All four Calais dispensaries serve U.S. and Canadian visitors." },
+        { q: "What is Calais Maine known for?", a: "Calais is a Washington County city of ~3,000 residents on the St. Croix River across from St. Stephen, New Brunswick. It is one of the easternmost U.S. municipalities on an international border, known for its historic downtown, the St. Croix Island International Historic Site, and its role as the regional hub for the rural Down East border region." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

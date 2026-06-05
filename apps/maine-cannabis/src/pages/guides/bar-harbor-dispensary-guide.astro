@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Bar Harbor, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Bar Harbor — gateway to Acadia National Park on Mount Desert Island — has dispensaries including The Meristem and 420 Mules (224 Main St). Across the Trenton Bridge on the mainland, Snare Creek Farms also serves the Bar Harbor market."}},{"@type":"Question","name":"What is the closest dispensary to Acadia National Park?","acceptedAnswer":{"@type":"Answer","text":"The Meristem and 420 Mules (224 Main St) are both located on Mount Desert Island within minutes of Acadia NP's main entrance. Ellsworth dispensaries (Curaleaf, Maine Organic Therapy, Main Street Medical) are ~25 mi west on US-1, and Trenton-based Snare Creek Farms sits just across the mainland bridge from the island."}},{"@type":"Question","name":"Does Bar Harbor allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Bar Harbor permits adult-use cannabis retail. Dispensaries in town serve both MMMP cardholders and 21+ recreational customers, and the high-summer-tourism window creates a compressed but very high-traffic seasonal cycle."}},{"@type":"Question","name":"What is Bar Harbor Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Bar Harbor is a coastal Hancock County town of ~5,500 year-round residents on Mount Desert Island. It is the primary gateway community for Acadia National Park, which draws ~4 million visitors per year, making it Maine's most-visited tourism market."}}]});
+---
+<Layout title="Bar Harbor, ME Dispensary Guide — Acadia Gateway 2026" description="Bar Harbor, Maine dispensary guide. The Meristem, 420 Mules, Snare Creek Farms — Acadia NP and Mount Desert Island cannabis market 2026." heroImage="/images/heroes/bar-harbor-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Bar Harbor, ME Dispensary Guide</h1>
+    <p class="subtitle">The Meristem, 420 Mules & the Mount Desert Island cannabis market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Bar Harbor Cannabis Quick Facts</h2>
+    <table aria-label="Bar Harbor cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries on MDI</strong></td><td>The Meristem, 420 Mules (224 Main St, Bar Harbor)</td></tr>
+        <tr><td><strong>Nearby Dispensary</strong></td><td>Snare Creek Farms — Trenton (across the mainland bridge)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~5,500 year-round (2020 Census)</td></tr>
+        <tr><td><strong>Acadia NP Visitors</strong></td><td>~4 million annually</td></tr>
+        <tr><td><strong>County</strong></td><td>Hancock County</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Bar Harbor & Mount Desert Island</h2>
+
+    <h3>420 Mules</h3>
+    <p><strong>Address:</strong> 224 Main St, Bar Harbor, ME 04609<br>
+    <strong>Phone:</strong> (207) 288-4220<br>
+    <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm (extended in summer)<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>420 Mules is the dispensary on Bar Harbor's Main Street, just a few minutes from the Acadia NP entrance on ME-3. The store carries a full adult-use menu of flower, vapes, concentrates, and edibles, with branded swag and a tourist-friendly retail floor. The name is a nod to the Carriage Roads and the working horses historically used on the island.</p>
+
+    <h3>The Meristem</h3>
+    <p><strong>Address:</strong> 33 Main St, Bar Harbor, ME 04609<br>
+    <strong>Phone:</strong> (207) 288-9400<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Medical (MMMP) and adult-use</p>
+    <p>The Meristem operates as both a medical dispensary and an adult-use retailer in downtown Bar Harbor. Its medical program is particularly relevant for island patients, where the closest Curaleaf and Maine Organic Therapy locations are across the bridge in Ellsworth.</p>
+
+    <h3>Snare Creek Farms — Trenton (across the bridge)</h3>
+    <p><strong>Address:</strong> 599 Bar Harbor Rd, Trenton, ME 04605<br>
+    <strong>Phone:</strong> (207) 667-1300<br>
+    <strong>Hours:</strong> Daily 10am-7pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Snare Creek Farms sits just over the mainland bridge from Mount Desert Island, making it the first dispensary drivers encounter coming from the Ellsworth / I-395 corridor. The Trenton location captures both Acadia-bound travelers and a portion of MDI residents who cross the bridge for shopping. It is often the practical default dispensary for visitors making a single stop on their way to or from the park.</p>
+  </section>
+
+  <Callout title="Acadia Tourism Funnel" type="passion">
+    Acadia National Park draws roughly 4 million visitors per year, with the vast majority funneling through Bar Harbor in the summer. For a cannabis operator, the strategic question is location along that funnel: a Trenton storefront captures cars crossing the bridge, a Bar Harbor Main Street location captures foot traffic already on the island, and a store further out on ME-3 toward the park entrance captures the final-mile flow. Snare Creek, 420 Mules, and The Meristem together cover the first, second, and island-arrival stages.
+  </Callout>
+
+  <section>
+    <h2>Bar Harbor's Market Context</h2>
+    <p>Bar Harbor's year-round population of about 5,500 residents is dwarfed by the seasonal flow: Acadia National Park consistently ranks among the top three most-visited national parks in the United States by total visits, and Bar Harbor is the gateway community for nearly all of that traffic. The town's compact downtown and walkable Main Street make it an unusually strong cannabis retail market during the May-October season.</p>
+    <p>For operators, Bar Harbor is a different market from Ellsworth 25 miles west. Ellsworth functions as a year-round regional hub for Hancock County; Bar Harbor is a compressed, high-intensity seasonal market. The town's dispensaries operate a heavier retail-and-tourism mix in summer and shift toward medical patient service in the off-season. Across the bridge, Trenton's Snare Creek and Ellsworth's cluster serve the mainland side of the same customer base, and together the three locations form the Mount Desert Island / Acadia cannabis corridor.</p>
+    <p>Ellsworth's existing dispensaries — Curaleaf, Maine Organic Therapy, Main Street Medical — give medical patients a mainland fallback when the MDI stores are out of stock. For tourists, the practical question is whether to stop in Trenton (closer to the highway) or in Bar Harbor itself (closer to where they are staying). Many visitors hit both, just as they hit multiple restaurants and shops on the same trip.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a></li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Bar Harbor, Maine?", a: "Yes. Bar Harbor has dispensaries on Main Street including The Meristem (33 Main St) and 420 Mules (224 Main St). Across the mainland bridge, Snare Creek Farms in Trenton also serves the Bar Harbor market." },
+        { q: "What is the closest dispensary to Acadia National Park?", a: "The Meristem and 420 Mules (224 Main St) are both on Mount Desert Island, minutes from Acadia's main entrance. Snare Creek Farms in Trenton is just across the bridge from the island and is the practical first-stop dispensary coming from Ellsworth." },
+        { q: "Does Bar Harbor allow recreational cannabis?", a: "Yes. Bar Harbor permits adult-use cannabis retail. The Meristem and 420 Mules both serve 21+ recreational customers and MMMP cardholders, and summer tourism drives a high-traffic seasonal cycle." },
+        { q: "What is Bar Harbor Maine known for?", a: "Bar Harbor is a coastal Hancock County town of ~5,500 year-round residents on Mount Desert Island. It is the primary gateway community for Acadia National Park, which draws ~4 million visitors per year — Maine's most-visited tourism market." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

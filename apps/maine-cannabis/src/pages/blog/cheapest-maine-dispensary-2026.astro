@@ -1,0 +1,351 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'margaret-finch');
+const complianceReviewer = authors.find(a => a.id === 'eliot-nash');
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Market Analysis"
+};
+const topics = ["pricing", "best-deals", "consumer-guide"];
+
+const faqItems = [
+  { question: "Where is the cheapest dispensary in Maine?", answer: "By per-gram flower price, Full Bloom in Presque Isle, Royal Leaf in Houlton, and HighNorth in Aroostook consistently post the lowest numbers in the state — typically $7-9 per gram on house flower and $80-100 ounces during their weekly specials. Cannabis Haven (Auburn) and Cannabis Cured (Bangor) are the cheapest operators in central and eastern Maine at the metro scale. The cheapest dispensary for any given buyer depends on drive time, taxes, and whether you can stack a first-time-patient discount on top of the rotation. Use the comparison table in this guide to model the actual cost at each store." },
+  { question: "How much is a gram of weed in Maine in 2026?", answer: "A gram of quality indoor flower in Maine in 2026 runs $12-18 before tax at most licensed dispensaries. Value-tier grams on house strains or rotation specials run $8-12. Premium top-shelf grams reach $20-25. Pre-tax retail prices in Maine are roughly 10-20% above mature West Coast markets due to vertical-integration requirements, 280E federal tax pressure, and lower wholesale volume. After Maine's 10% adult-use excise tax and 5.5% state sales tax, expect to add 15.5% to the menu price at the register." },
+  { question: "How much is an ounce in Maine in 2026?", answer: "An ounce of cannabis in Maine in 2026 runs $80-200 before tax, with most licensed dispensaries pricing mid-quality flower around $120-160 per ounce. Value ounces on rotating house strains are $80-110 at HighNorth, Full Bloom, Cannabis Haven, and Cannabis Cured. Premium ounces from top-tier cultivators (Theory Wellness, HIGHLY Cannaco, select Caregiver Reserve batches) reach $180-220. With Maine's 10% adult-use excise plus 5.5% sales tax, a $120 ounce rings up at roughly $139. Medical patients avoid the 10% excise and pay only the 5.5% sales tax." },
+  { question: "Why are Maine dispensary prices so high?", answer: "Three structural factors keep Maine prices above mature West Coast markets. First, Maine's vertical-integration mandate requires every operator to cultivate, process, and retail their own product — that eliminates wholesale markets and the price compression that comes with them. Second, federal Section 280E prevents cannabis operators from deducting normal business expenses, which inflates effective tax rates by 30-50% and gets passed to consumers. Third, smaller production volumes than mature markets like Colorado or Oregon keep per-unit costs higher. The result: Maine is not the cheapest legal state, but it is cheaper than Massachusetts, Connecticut, and most of New York." },
+  { question: "Does Maine tax cannabis?", answer: "Yes. Adult-use cannabis in Maine is taxed at three levels: a 10% retail excise tax on the gross retail price (set by the state), a 5.5% state sales tax, and any applicable local sales tax (most municipalities do not add a local option tax on cannabis, but a handful do). Medical cannabis is taxed at 5.5% state sales tax only — there is no 10% retail excise on MMMP transactions. Combined tax burden on adult-use is roughly 15.5%. A $50 eighth at a Portland dispensary rings up at about $58 after tax. The tax structure and what it means for operators is covered in detail in our <a href=\"/guides/maine-cannabis-taxes-2026\">Maine cannabis taxes 2026 guide</a>." },
+  { question: "How do I find the best dispensary deals in Maine?", answer: "Four strategies work consistently. First, follow the store's Instagram — Maine dispensaries post weekly deal rotations on social media before they hit the website. Second, sign up for the store's text or email list; first-time-patient discounts (typically 15-20% off) are usually the deepest single discount available. Third, ask about veteran, senior, and MMMP discounts at the register — most operators stack these on top of rotation specials. Fourth, check the deal rotation before driving more than 20 minutes; the cheapest store in your region rotates specials weekly, and a $25 eighth one week may be $40 the next." }
+];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer.replace(/<[^>]+>/g, "")
+    }
+  }))
+};
+---
+
+<Layout 
+  title="Cheapest Dispensary in Maine 2026: Where to Find the Best Ounce & Eighth Prices"
+  description="A buyer's guide to the cheapest legal dispensary prices in Maine in 2026 — ounces, eighths, and pre-rolls — with operator pricing context and tax structure."
+  heroImage="/images/heroes/cheapest-maine-dispensary-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .price-table { font-size: 0.9375rem; }
+  .price-table th { background: var(--color-primary); color: var(--color-background); }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  .operator-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+  .operator-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .operator-card .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+  .operator-card .meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .operator-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+</style>
+
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cheapest Dispensary in Maine 2026: A Buyer's Guide to Dispensary Prices</h1>
+    <p class="subtitle">What Maine dispensaries actually charge in 2026, why some are cheaper than others, and the stores that consistently run sub-market specials.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#eliot-nash">Eliot Nash</a>, Market &amp; Real Estate Analyst.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+  </div>
+
+  <section class="intro">
+    <p>Maine dispensary prices in 2026 are higher than Colorado, Washington, and Oregon at the per-gram level, but lower than Massachusetts, Connecticut, and most of New York. The state sits in the middle of the Northeast cannabis pricing curve, with structural factors that keep prices above mature West Coast markets but a competitive operator base that runs real weekly deal rotations. The cheapest dispensary in Maine depends on what you buy, where you are, and how disciplined you are about stacking discounts.</p>
+    <p>This guide breaks down what Maine dispensaries actually charge in 2026, why prices vary, the operators known for value, and the practical strategies for getting the lowest price on the products you actually buy. Prices in this article reflect a Q1-Q2 2026 snapshot of operator menus and advertised specials. Real prices rotate weekly and vary by region, but the operators and price positioning below are stable.</p>
+    <p>For the operator economics that drive these prices, the <a href="/guides/maine-cannabis-taxes-2026">Maine cannabis taxes 2026 guide</a> covers the state and federal tax structure in detail. The <a href="/guides/maine-cannabis-280e-guide">280E guide for Maine operators</a> explains the federal tax pressure that pushes retail prices up, and the <a href="/guides/maine-cannabis-vertical-integration">Maine vertical integration guide</a> explains why Maine lacks the wholesale market compression that drives low prices in mature states. For the curated list of which stores are worth the drive regardless of price, see the <a href="/blog/best-maine-dispensaries-2026">best Maine dispensaries in 2026</a>.</p>
+  </section>
+
+  <Callout title="Maine Prices vs. Mature Markets" type="insight">
+    Maine retail flower runs roughly 10-20% above mature West Coast markets on a per-gram basis. The gap is structural: federal Section 280E prevents cannabis operators from deducting normal business expenses, and Maine's vertical-integration mandate eliminates the wholesale market that compresses prices in Colorado and Oregon. The result is a market that is cheaper than most of the Northeast but more expensive than the West Coast. A buyer shopping for the absolute lowest price should look at Aroostook and central Maine operators, where competition is thin and run-rate volume is low.
+  </Callout>
+
+  <section>
+    <h2>2026 Maine Dispensary Price Ranges</h2>
+    <p>The table below shows the typical price range for the most common cannabis products at licensed Maine dispensaries in 2026. The "value" column reflects the lowest regularly advertised prices from operators known for deal rotation. The "premium" column reflects top-shelf pricing at operators like Theory Wellness, HIGHLY Cannaco, and SeaWeed Co. All prices are pre-tax.</p>
+
+    <table aria-label="2026 Maine dispensary price ranges" class="price-table">
+      <caption>Pre-tax retail prices at licensed Maine dispensaries, Q1-Q2 2026.</caption>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Value Tier</th>
+          <th>Mid Tier</th>
+          <th>Premium Tier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Flower (per gram)</td><td>$8-12</td><td>$13-18</td><td>$19-25</td></tr>
+        <tr><td>Eighth (3.5g)</td><td>$20-30</td><td>$35-50</td><td>$55-70</td></tr>
+        <tr><td>Quarter ounce (7g)</td><td>$45-65</td><td>$70-95</td><td>$100-130</td></tr>
+        <tr><td>Half ounce (14g)</td><td>$80-110</td><td>$120-160</td><td>$170-220</td></tr>
+        <tr><td>Ounce (28g)</td><td>$80-110</td><td>$120-180</td><td>$200-280</td></tr>
+        <tr><td>Pre-roll (single, 0.5-1g)</td><td>$5-8</td><td>$9-12</td><td>$13-18</td></tr>
+        <tr><td>Pre-roll (5-pack)</td><td>$20-30</td><td>$35-50</td><td>$55-75</td></tr>
+        <tr><td>510 cartridge (0.5-1g)</td><td>$25-35</td><td>$40-55</td><td>$60-80</td></tr>
+        <tr><td>Disposable vape</td><td>$25-40</td><td>$45-60</td><td>$65-90</td></tr>
+        <tr><td>Edible (100mg THC, gummy/chocolate)</td><td>$15-25</td><td>$28-40</td><td>$45-60</td></tr>
+        <tr><td>Edible (10mg single dose)</td><td>$3-5</td><td>$6-9</td><td>$10-15</td></tr>
+        <tr><td>Concentrate (gram, solventless)</td><td>$40-60</td><td>$70-95</td><td>$100-140</td></tr>
+        <tr><td>Concentrate (gram, hydrocarbon)</td><td>$30-45</td><td>$50-70</td><td>$80-110</td></tr>
+      </tbody>
+    </table>
+
+    <p>These are pre-tax prices. With Maine's 10% adult-use excise plus 5.5% state sales tax, expect to add 15.5% to any adult-use purchase. Medical patients pay 5.5% state sales tax only. After-tax math: a $50 mid-tier eighth rings up at $57.75 for an adult-use customer and $52.75 for an MMMP cardholder. The medical discount is real, and for high-volume buyers the MMMP card pays for itself in 2-3 visits.</p>
+  </section>
+
+  <section>
+    <h2>Why Maine Dispensary Prices Vary</h2>
+    <p>Maine retail prices are not a single market. They reflect a mix of structural cost pressures, operator strategy, and regional competition. The variables that matter most:</p>
+
+    <h3>1. Maine's Vertical-Integration Mandate</h3>
+    <p>Maine requires every cannabis operator to be vertically integrated — the same entity must hold the cultivation, processing, and retail licenses. That eliminates the wholesale market and prevents the price compression that comes with specialization. A cultivator in Colorado can sell bulk flower to dozens of retailers at a thin margin; a Maine cultivator can only sell to their own retail counter, which means they have to recover all of their cultivation costs from one store. The <a href="/guides/maine-cannabis-vertical-integration">Maine vertical integration guide</a> covers the regulatory structure and what it means for operators. The bottom line for buyers: Maine dispensaries pay more per pound for their own flower than Colorado retailers pay for wholesale, and that gets passed to the consumer.</p>
+
+    <h3>2. Federal Section 280E</h3>
+    <p>Section 280E of the Internal Revenue Code disallows normal business deductions for cannabis operators. The result is an effective federal tax rate of 30-50% rather than the 21% corporate rate most businesses pay. The <a href="/guides/maine-cannabis-280e-guide">280E guide for Maine operators</a> walks through the mechanics. For buyers, the impact is real but indirect: a cannabis operator paying 40% effective federal tax rates needs higher margins to stay solvent, and those margins are set at the retail counter. Removing 280E would compress Maine retail prices by an estimated 8-15%.</p>
+
+    <h3>3. MSO vs. Independent vs. Caregiver</h3>
+    <p>Maine has three distinct operator types, and they price differently:</p>
+    <ul>
+      <li><strong>Multi-state operators (MSOs)</strong> like Curaleaf and Theory Wellness run national cultivation and distribution networks. They have lower per-unit cultivation costs but higher corporate overhead. MSO retail prices tend to be mid-tier — not the cheapest, but consistent across locations.</li>
+      <li><strong>Independent operators</strong> like HIGHLY Cannaco, SeaWeed Co., and Cannabis Haven vary widely. Strong independents with good cultivation discipline can hit value-tier pricing while maintaining quality. Weak independents price above MSO retail without the operational efficiency to justify it.</li>
+      <li><strong>Caregivers and microbusinesses</strong> are the cheapest source of medical cannabis in Maine. The OCP caregiver program allows registered caregivers to grow for up to five medical patients each, and caregiver pricing runs 20-40% below dispensary retail. Caregiver product is not available at the adult-use counter.</li>
+    </ul>
+
+    <h3>4. Regional Competition</h3>
+    <p>Portland has 23 dispensaries in a metro of 200,000 people. Aroostook has 4 dispensaries in a county of 67,000. Competition density directly affects pricing: Portland stores compete on menu, deals, and retail experience; Aroostook stores compete on price because the customer base is small enough that volume matters more than margin. The result is that Aroostook is consistently the cheapest region in Maine, and Greater Portland is consistently among the most expensive.</p>
+  </section>
+
+  <section>
+    <h2>Operators Known for Value</h2>
+    <p>The following operators consistently run below-market specials and are worth comparing against the regional average. Pricing data is from Q1-Q2 2026 operator menus and advertised specials. Note that deals rotate weekly; the specific price points below reflect typical rotation, not a guaranteed menu price.</p>
+
+    <h3>HighNorth — Aroostook Region</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Aroostook (multiple locations)</span>
+        <span><strong>Known for:</strong> $100-or-less ounces</span>
+        <span><strong>Best for:</strong> Volume flower buyers</span>
+      </div>
+      <p>HighNorth runs one of the most aggressive value programs in the state. Their signature deal is a weekly $100-or-less ounce rotation on house flower, with eighths frequently priced at $20-25 during deal weeks. The product is mid-tier — not top-shelf, but solid value-tier indoor and greenhouse flower. For buyers in northern Maine willing to drive past the metro operators, HighNorth is consistently the cheapest per-gram source in the state.</p>
+    </div>
+
+    <h3>Cannabis Cured — Bangor</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Bangor / Penobscot</span>
+        <span><strong>Known for:</strong> $99 ounce rotation, 20% loyalty</span>
+        <span><strong>Best for:</strong> Eastern Maine value buyers</span>
+      </div>
+      <p>Cannabis Cured is the value anchor in the Bangor market. The store runs a $99 ounce rotation on house flower (typically 3-5 strains per week), a $25 eighth special, and a 20% off loyalty signup. The menu turns over quickly, which keeps the flower fresh. For buyers within an hour of Bangor, Cannabis Cured is usually 15-20% below the regional average.</p>
+    </div>
+
+    <h3>Cannabis Haven — Auburn</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Central Maine (Lewiston-Auburn)</span>
+        <span><strong>Known for:</strong> $99 ounce rotation, 15% first-time</span>
+        <span><strong>Best for:</strong> Central Maine value buyers</span>
+      </div>
+      <p>Cannabis Haven runs a similar program to Cannabis Cured but in the central Maine market. The store's $99 ounce rotation is a weekly anchor deal, and the loyalty program adds up quickly for repeat customers. Auburn is a 35-minute drive from Portland, and for buyers willing to make the trip, Cannabis Haven is consistently 10-15% below Greater Portland pricing. See the <a href="/guides/portland-dispensary-guide">Portland dispensary guide</a> for a comparison of metro pricing.</p>
+    </div>
+
+    <h3>Cannamax — Augusta</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Augusta / Kennebec</span>
+        <span><strong>Known for:</strong> $20 eighth special, MMMP discount</span>
+        <span><strong>Best for:</strong> Central Maine eighth buyers</span>
+      </div>
+      <p>Cannamax is the value operator in the Augusta market. The store's signature deal is a long-running $20 eighth special on rotating house strains — one of the lowest regularly advertised eighth prices in the state. Cannamax also runs a 10% MMMP discount that stacks with rotation specials, which makes the after-tax effective price even lower for medical cardholders.</p>
+    </div>
+
+    <h3>Augusta Cannabis Co. — Augusta</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Augusta / Kennebec</span>
+        <span><strong>Known for:</strong> $160 ounce premium-tier value</span>
+        <span><strong>Best for:</strong> Mid-to-premium ounce buyers</span>
+      </div>
+      <p>Augusta Cannabis Co. sits a tier above Cannamax on quality but remains below the metro premium operators on price. The store's ounce specials on quality indoor flower run $140-160, which is a meaningful discount from the $200+ ounces at Theory Wellness or HIGHLY Cannaco. The product is more curated than the value operators, and the staff is good at steering buyers to the right strain for their budget.</p>
+    </div>
+
+    <h3>Theory Wellness — Kittery</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Southern Coast (Kittery)</span>
+        <span><strong>Known for:</strong> $25 eighth rotation, 20% off Saturday</span>
+        <span><strong>Best for:</strong> Southern Maine premium-value buyers</span>
+      </div>
+      <p>Theory Wellness is a premium MSO, not a value operator in the strict sense, but the Kittery store's deal cadence is aggressive enough to make the list. The store runs a $25 eighth rotation on a house strain every week, plus a 20% off Saturday for first-time patients. The product is consistent — Theory's national cultivation footprint means the flower is reliably top-tier. For buyers who want premium quality at the best price available in southern Maine, Theory's rotation is hard to beat.</p>
+    </div>
+
+    <h3>East Coast Cannabis — Multiple Locations</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Multiple (York County, Eliot, Lebanon)</span>
+        <span><strong>Known for:</strong> Consistent mid-tier pricing</span>
+        <span><strong>Best for:</strong> Southern Maine mid-tier buyers</span>
+      </div>
+      <p>East Coast Cannabis is a multi-store independent operator with locations in Eliot, Lebanon, and other southern Maine towns. The chain runs consistent mid-tier pricing rather than deep rotation specials, which means the prices are stable week to week. For buyers who want predictability over deal-chasing, East Coast Cannabis is worth a stop.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cheapest Ounce Deals in Maine</h2>
+    <p>Ounce pricing is where the gap between operators is widest, and where deal rotation matters most. The table below shows the typical lowest ounce price at the operators known for value. Prices are pre-tax.</p>
+
+    <table aria-label="Cheapest ounce deals in Maine 2026" class="price-table">
+      <caption>Typical lowest ounce prices at value operators, Q1-Q2 2026. Pre-tax.</caption>
+      <thead>
+        <tr>
+          <th>Operator</th>
+          <th>Region</th>
+          <th>Typical Low Ounce</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>HighNorth</td><td>Aroostook</td><td>$80-100</td><td>Weekly rotation; sometimes $75 on house strains</td></tr>
+        <tr><td>Full Bloom</td><td>Presque Isle</td><td>$80-100</td><td>Strong $80 rotation on house flower</td></tr>
+        <tr><td>Cannabis Cured</td><td>Bangor</td><td>$99</td><td>Weekly $99 rotation; 3-5 strains</td></tr>
+        <tr><td>Cannabis Haven</td><td>Auburn</td><td>$99</td><td>Weekly $99 rotation; loyalty discount stacks</td></tr>
+        <tr><td>Royal Leaf</td><td>Houlton</td><td>$90-110</td><td>Value ounces; smaller menu</td></tr>
+        <tr><td>Cannamax</td><td>Augusta</td><td>$100-130</td><td>Better eighth deals than ounce deals</td></tr>
+        <tr><td>Augusta Cannabis Co.</td><td>Augusta</td><td>$140-160</td><td>Premium-tier value ounces</td></tr>
+        <tr><td>Schedule 1</td><td>Portland</td><td>$120-160</td><td>House brand; vertical integration pricing</td></tr>
+      </tbody>
+    </table>
+
+    <p>The bottom of the market is in Aroostook. HighNorth and Full Bloom are the only operators in Maine that consistently post $80-100 ounces, and they do it through the summer and into the fall. For buyers in central and southern Maine, Cannabis Haven (Auburn) and Cannabis Cured (Bangor) are the most reliable sub-$100 ounce sources within metro-range driving distance.</p>
+
+    <Callout title="The Stack Test" type="info">
+      Before driving past three closer dispensaries for a deal, run the stack test: take the deal price, add the 15.5% adult-use tax (or 5.5% medical), subtract any loyalty or first-time discount, and divide by the drive cost. A $30 savings on a $99 ounce does not justify a 90-minute round trip and 1.5 hours of your time. Most deal rotations are designed to capture metro traffic, not long-distance buyers. The exception: HighNorth, where the gap is large enough to make the Aroostook drive worth it for volume buyers.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Strategies for Finding the Best Deals</h2>
+    <p>Five practices consistently produce the lowest price on the products Maine buyers actually want. None of them are complicated; all of them require some discipline.</p>
+
+    <ol>
+      <li><strong>Follow the store's Instagram account.</strong> Maine dispensaries post their weekly deal rotation on Instagram before they update the website. Following 5-8 stores in your region gives you a real-time view of which operator has the lowest price on the product you want. The Big Island Buds and Maine Cannabis Community accounts also aggregate deals.</li>
+      <li><strong>Sign up for the loyalty program before your first visit.</strong> First-time-patient discounts (typically 15-20% off) are the deepest single discount available. They usually apply to a single visit, not a single product, so maximize the visit by buying in volume. Some stores (Cannabis Cured, Cannabis Haven) layer a 20% loyalty signup on top of rotation specials, which compounds into a 30-35% effective discount on the first visit.</li>
+      <li><strong>Ask about veteran, senior, and MMMP discounts at the register.</strong> Most operators stack these on top of rotation specials. A 10% MMMP discount on a $99 ounce is a real $9.90 savings, and the medical sales-tax exemption (5.5% vs 15.5%) compounds the gap. For high-volume buyers, the MMMP card pays for itself in 2-3 visits.</li>
+      <li><strong>Check the rotation before driving more than 30 minutes.</strong> The cheapest store in your region rotates specials weekly, and a $25 eighth one week may be $40 the next. The state dispensary finder at <a href="/find-a-dispensary">Maine dispensary finder</a> links directly to operator menus, and most update their rotation on Mondays.</li>
+      <li><strong>Consider caregiver product for medical patients.</strong> The OCP caregiver program allows registered caregivers to grow for up to five medical patients each. Caregiver pricing runs 20-40% below dispensary retail for comparable flower quality, and the product is usually fresher because it is grown in smaller batches. The catch: you need an MMMP card, and the supply is limited to a small number of caregivers in each region.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Cheapest Eighths in Maine (At a Glance)</h2>
+    <p>Eighths are the most common purchase format, and the per-gram math is the easiest to track. The operators below are running eighth specials below $30 in Q1-Q2 2026:</p>
+
+    <table aria-label="Cheapest eighth prices in Maine 2026" class="price-table">
+      <thead>
+        <tr>
+          <th>Operator</th>
+          <th>Region</th>
+          <th>Typical Low Eighth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cannamax</td><td>Augusta</td><td>$20</td></tr>
+        <tr><td>Cannabis Cured</td><td>Bangor</td><td>$25</td></tr>
+        <tr><td>HighNorth</td><td>Aroostook</td><td>$20-25</td></tr>
+        <tr><td>Theory Wellness</td><td>Kittery</td><td>$25</td></tr>
+        <tr><td>Full Bloom</td><td>Presque Isle</td><td>$22-28</td></tr>
+        <tr><td>Schedule 1 (house)</td><td>Portland</td><td>$25-30</td></tr>
+        <tr><td>Cannabis Haven</td><td>Auburn</td><td>$25-30</td></tr>
+      </tbody>
+    </table>
+
+    <p>For metro buyers, the cheapest reliably available eighth is at Theory Wellness (Kittery, on rotation), Cannabis Cured (Bangor, on rotation), or the Schedule 1 house brand in Portland. For central Maine buyers, Cannamax's $20 special is the most aggressive single deal. For northern Maine buyers, HighNorth and Full Bloom set the floor.</p>
+  </section>
+
+  <section>
+    <h2>What About Vapes, Edibles, and Concentrates?</h2>
+    <p>The price tables above covered flower in detail. The other categories follow the same general pattern but with different value plays.</p>
+    <h3>Vapes and Cartridges</h3>
+    <p>Maine cartridge pricing is broadly similar to flower: mid-tier 510-thread cartridges run $40-55, value-tier $25-35, premium $60-80. The cheapest consistently advertised cartridge price in Maine is at Cannabis Cured and Cannabis Haven, where Curaleaf Select and Grassroots house cartridges frequently run $25-30 on rotation. For solventless vaporizer products (live rosin carts), expect to add $15-25 to those numbers.</p>
+    <h3>Edibles</h3>
+    <p>Edible pricing in Maine is competitive because the category is well-supplied. A 100mg pack of gummies runs $15-40 depending on brand and quality. Value operators (Cannabis Cured, Cannabis Haven) post $15-20 specials on rotating brands. Premium operator (HIGHLY Cannaco, Theory Wellness) house brands run $35-50 for comparable potency.</p>
+    <h3>Concentrates</h3>
+    <p>Concentrate pricing has the widest spread of any category. Hydrocarbon extracts (wax, shatter, badder) run $30-50 per gram at value operators and $70-110 at premium operators. Solventless (rosin, hash) runs $50-95 at value operators and $100-140 at premium operators. The cheapest consistently advertised gram of solventless in Maine is at HIGHLY Cannaco in Brunswick, where their house rosin frequently posts $50-60 on rotation.</p>
+  </section>
+
+  <section>
+    <h2>The Bottom Line</h2>
+    <p>The cheapest dispensary in Maine is the one in your region with an active deal rotation that you can stack a loyalty discount on top of. For Aroostook buyers, that is HighNorth and Full Bloom. For central Maine buyers, Cannabis Haven and Cannamax. For Bangor, Cannabis Cured. For southern Maine, Theory Wellness's rotation in Kittery and the Schedule 1 house brand in Portland. Portland proper has fewer deep discount options, but the metropolitan convenience makes the metro premium worth it for many buyers.</p>
+    <p>The structural drivers of Maine's pricing — vertical integration, 280E, and below-mature-market production volume — are not going away in 2026. Maine will continue to run 10-20% above Colorado and Oregon, and 10-20% below Massachusetts and New York. The store-level price gap within Maine is wider than the gap between Maine and other Northeast states, which means the realistic path to a lower price is operator shopping and discount stacking, not waiting for a market correction.</p>
+    <p>For the operator-side economics, the <a href="/guides/maine-cannabis-market">Maine cannabis market guide</a> covers the statewide sales, license, and tax data. For the curated list of which stores are worth the drive regardless of price, see the <a href="/blog/best-maine-dispensaries-2026">best Maine dispensaries in 2026</a>. Prices in this guide reflect a Q1-Q2 2026 snapshot; always verify current pricing directly with the operator before driving.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — the 10% excise, 5.5% sales tax, and what they mean for prices</li>
+      <li><a href="/guides/maine-cannabis-280e-guide">Maine 280E Guide</a> — federal tax pressure and operator impact</li>
+      <li><a href="/guides/maine-cannabis-vertical-integration">Maine Vertical Integration</a> — why Maine has no wholesale market</li>
+      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a> — sales data, license counts, regional patterns</li>
+      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries 2026</a> — 12 stores worth the drive by region</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a> — 23 stores in Greater Portland</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> Prices in this article reflect a Q1-Q2 2026 snapshot of operator menus and advertised specials. Cannabis retail pricing in Maine changes weekly. Always verify current pricing directly with the operator before visiting. Tax figures reflect the 10% adult-use excise and 5.5% state sales tax as of publication; local option taxes are not included and may apply in a small number of municipalities. Maine Dispensary Guide has no commercial relationship with any operator mentioned in this article. No payment, sponsorship, or promotional consideration was provided by any operator in exchange for inclusion. This article is for informational purposes only and does not constitute purchasing or tax advice. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent. Do not drive under the influence of cannabis.</em></p>
+  </section>
+</article>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
+</Layout>

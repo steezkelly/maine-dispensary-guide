@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Machias, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Machias has dispensaries including Indian Trail Farms and Lake Smoke Farm, both serving medical and adult-use customers. The town is the county seat of Washington County and the primary retail hub for the rural Down East coast."}},{"@type":"Question","name":"What is the closest dispensary to Machias?","acceptedAnswer":{"@type":"Answer","text":"In town: Indian Trail Farms and Lake Smoke Farm. For a broader selection, Calais (~30 min NE) has additional dispensaries. Ellsworth is roughly 65 mi SW on US-1."}},{"@type":"Question","name":"Does Machias allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Machias permits adult-use cannabis retail. Indian Trail Farms and Lake Smoke Farm both serve 21+ recreational customers in addition to MMMP cardholders."}},{"@type":"Question","name":"What is Machias Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Machias is the county seat of Washington County — Maine's easternmost county and one of its most rural, with only ~31,000 residents across 2,563 sq mi. The town is known for the University of Maine at Machias, the historic Burnham Tavern (built 1770, site of the first naval battle of the American Revolution in 1775), and the Machias River, famous for its wild Atlantic salmon fishery."}}]});
+---
+<Layout title="Machias, ME Dispensary Guide — Indian Trail Farms & Lake Smoke Farm 2026" description="Machias, Maine dispensary guide. Indian Trail Farms, Lake Smoke Farm — Washington County's Down East cannabis retail hub for 2026." heroImage="/images/heroes/machias-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Machias, ME Dispensary Guide</h1>
+    <p class="subtitle">Indian Trail Farms, Lake Smoke Farm & the Washington County Down East market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Machias Cannabis Quick Facts</h2>
+    <table aria-label="Machias cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 (Indian Trail Farms, Lake Smoke Farm)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~2,500 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Washington County (county seat, ~31,000 county pop)</td></tr>
+        <tr><td><strong>Position</strong></td><td>US-1 corridor, ~65 mi NE of Ellsworth, ~30 mi SW of Calais</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Machias</h2>
+
+    <h3>Indian Trail Farms</h3>
+    <p><strong>Address:</strong> 76 Main St, Machias, ME 04654<br>
+    <strong>Phone:</strong> (207) 255-3300<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Indian Trail Farms is one of Machias's two dispensaries and a long-standing Down East operator. The store serves both 21+ recreational customers and MMMP cardholders, with a full menu of flower, vapes, concentrates, and edibles. Its Main Street location makes it a natural stop for visitors exploring the Machias River corridor, the University of Maine at Machias, or the surrounding Washington County towns.</p>
+
+    <h3>Lake Smoke Farm</h3>
+    <p><strong>Address:</strong> 10 Court St, Machias, ME 04654<br>
+    <strong>Phone:</strong> (207) 255-8100<br>
+    <strong>Hours:</strong> Mon-Sat 10am-6pm, Sun 11am-4pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Lake Smoke Farm operates a storefront in downtown Machias, complementing Indian Trail Farms with a different menu and a focus on in-house cultivation. The name is a reference to the operator's cultivation site near one of the many lakes in the area, and the store carries a small-batch, caregiver-style product line. Together, the two operators give Machias a fully developed two-store market — unusual for a town of 2,500.</p>
+  </section>
+
+  <Callout title="Down East Anchor" type="passion">
+    Machias sits on US-1 between Ellsworth (~65 mi southwest) and Calais (~30 mi northeast), at the eastern edge of Maine's populated Down East coast. With two dispensaries operating, Machias is the local retail anchor for the entire easternmost stretch of Maine — including Cutler, Lubec, Eastport, Campobello, and the Passamaquoddy communities. The town's role as the county seat and home to the University of Maine at Machias gives it a year-round base that pure tourism markets lack.
+  </Callout>
+
+  <section>
+    <h2>Machias's Market Context</h2>
+    <p>Machias is the county seat of Washington County, Maine's easternmost and one of its most rural counties. The county has about 31,000 residents spread across 2,563 square miles — a density of roughly 12 people per square mile. Within that vast area, Machias is the most concentrated population node: home to the University of Maine at Machias, the Washington County courthouse, Down East Community Hospital, and the historic Burnham Tavern, where local patriots launched the first naval engagement of the American Revolution in June 1775.</p>
+    <p>For cannabis, Machias's two-store market is anchored by year-round local demand and seasonal traffic from visitors to the Machias River, the Bold Coast, and the Quoddy region. Indian Trail Farms and Lake Smoke Farm together cover both the medical patient base and the recreational market, and the next dispensary cluster east is in Calais, roughly 30 minutes up US-1. Westbound, the next cluster is Ellsworth — more than an hour away.</p>
+    <p>Operators evaluating the Down East corridor should treat Machias as the mid-route anchor, with Calais to the northeast serving the New Brunswick border market and Ellsworth to the southwest serving the Acadia gateway. The Machias market is mature for its size, and any new entrant would need to differentiate on cultivation, brand, or specialty products rather than location.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/calais-dispensary-guide">Calais Dispensary Guide</a></li>
+        <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a></li>
+        <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Machias, Maine?", a: "Yes. Machias has two dispensaries: Indian Trail Farms (76 Main St) and Lake Smoke Farm (10 Court St). Both serve medical and adult-use customers." },
+        { q: "What is the closest dispensary to Machias?", a: "Indian Trail Farms and Lake Smoke Farm are both in Machias. For a broader selection, Calais (~30 min NE) has additional dispensaries, and Ellsworth is ~65 mi SW on US-1." },
+        { q: "Does Machias allow recreational cannabis?", a: "Yes. Machias permits adult-use cannabis retail. Both Indian Trail Farms and Lake Smoke Farm serve 21+ recreational customers and MMMP cardholders." },
+        { q: "What is Machias Maine known for?", a: "Machias is the county seat of Washington County — Maine's easternmost county with only ~31,000 residents across 2,563 sq mi. It is known for the University of Maine at Machias, the Burnham Tavern (1770, first naval engagement of the American Revolution), and the Machias River's wild Atlantic salmon fishery." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

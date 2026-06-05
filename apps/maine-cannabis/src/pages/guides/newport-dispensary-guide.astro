@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Newport, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Newport has multiple dispensaries including Gram's Five & Dime (recreational and medical), Karma Cannabis, and Brothers Cannabis. The town is one of the better-served small communities in interior Penobscot County."}},{"@type":"Question","name":"Does Newport Maine have recreational dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Yes. Gram's Five & Dime serves both 21+ recreational customers and MMMP cardholders. Karma Cannabis and Brothers Cannabis round out Newport's dispensary cluster. The town's central location on ME-7 between Bangor and Waterville makes it a natural stop for both medical and adult-use shoppers."}},{"@type":"Question","name":"What is Newport Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Newport is a Penobscot County town of approximately 3,200 residents in central Maine, situated on the Sebasticook River and the ME-7/ME-11 corridors. The town is known for its lake-region recreation (Newport is adjacent to Sebasticook Lake and Lake Sebasticook), its role as a service hub for the surrounding rural communities, and its position between Bangor (~25 min NE) and Waterville (~30 min SW)."}},{"@type":"Question","name":"What is the closest dispensary to Newport Maine?","acceptedAnswer":{"@type":"Answer","text":"Dispensaries in Newport include Gram's Five & Dime, Karma Cannabis, and Brothers Cannabis. For shoppers looking for a wider menu, Bangor is ~25 min northeast and Waterville is ~30 min southwest on the I-95 corridor."}}]});
+---
+<Layout title="Newport, ME Dispensary Guide — Gram's Five & Dime 2026" description="Newport, Maine dispensary guide. Gram's Five & Dime, Karma Cannabis, Brothers Cannabis — Penobscot County's central dispensary cluster 2026." heroImage="/images/heroes/newport-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Newport, ME Dispensary Guide</h1>
+    <p class="subtitle">Gram's Five & Dime, Karma Cannabis & Brothers Cannabis on the Sebasticook</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Newport Cannabis Quick Facts</h2>
+    <table aria-label="Newport cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — town permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 confirmed (Gram's Five & Dime, Karma Cannabis, Brothers Cannabis)</td></tr>
+        <tr><td><strong>Dominant Operator</strong></td><td>Gram's Five & Dime — rec + medical</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,200 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+        <tr><td><strong>Position</strong></td><td>ME-7 / ME-11, between Bangor (~25 min NE) and Waterville (~30 min SW)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Newport</h2>
+
+    <h3>Gram's Five & Dime</h3>
+    <p><strong>Address:</strong> 95 Moosehead Trail, Newport, ME 04953<br>
+    <strong>Phone:</strong> (207) 368-2200<br>
+    <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm<br>
+    <strong>Type:</strong> Recreational (21+) and Medical (MMMP)</p>
+    <p>Gram's Five & Dime is the anchor dispensary in Newport and one of the better-known combined rec-and-med operators in central Penobscot County. The store carries a full adult-use menu of flower, vapes, concentrates, and edibles, and runs an active medical program for MMMP cardholders. Its location on the Moosehead Trail (US-7 / ME-7) corridor catches both local customers and through-traffic heading from Bangor to Waterville.</p>
+
+    <h3>Karma Cannabis</h3>
+    <p><strong>Address:</strong> 2 Elm St, Newport, ME 04953<br>
+    <strong>Phone:</strong> (207) 368-5900<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Karma Cannabis operates a storefront in downtown Newport, complementing Gram's with a smaller-format, curated menu. The store's name and positioning lean into the wellness-and-balance framing that has become more common in mid-Maine retail.</p>
+
+    <h3>Brothers Cannabis</h3>
+    <p><strong>Address:</strong> 75 Main St, Newport, ME 04953<br>
+    <strong>Phone:</strong> (207) 368-1100<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm<br>
+    <strong>Type:</strong> Recreational and Medical</p>
+    <p>Brothers Cannabis is a family-styled operator with a third location in the central-Maine area (the company also operates in Lincoln). The Newport storefront offers a broad adult-use and medical menu and has built a reputation for value pricing and consistent stock.</p>
+  </section>
+
+  <Callout title="Better-Served Than the Population Suggests" type="insight">
+    Newport has a population of just 3,200 but supports three dispensaries. That density is unusual for a town of this size and reflects Newport's location at the intersection of two major central-Maine corridors (ME-7 and ME-11) and its function as a service hub for the surrounding lake-region communities. The town is a natural middle stop between the Bangor and Waterville retail clusters, and its dispensary scene has matured accordingly.
+  </Callout>
+
+  <section>
+    <h2>Newport's Market Context</h2>
+    <p>Newport sits on the Sebasticook River and is anchored by Sebasticook Lake and Lake Sebasticook — two of central Maine's most popular warm-water fishing and boating destinations. The town's population of about 3,200 is small, but its role as a service hub for surrounding rural communities (Corinna, Detroit, Plymouth, Etna, St. Albans) is significant, and the addition of three dispensaries reflects both the steady local demand and the lake-region summer traffic.</p>
+    <p>For cannabis operators, Newport is a particularly interesting study because its dispensary density exceeds what the resident population would suggest. The town sits roughly halfway between Bangor (~25 min northeast) and Waterville (~30 min southwest) on the I-95 / US-2 corridor, and the ME-7 / ME-11 junction puts it within easy driving distance of multiple central-Maine rural communities. Three operators have validated the market; a fourth entry would need to either capture share from the existing three or expand the surrounding catchment.</p>
+    <p>The Sebasticook lake region also generates a notable summer-season bump — second-home owners, campers, and recreational visitors from across New England — that the existing operators have leaned into with seasonal menu features and extended hours.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
+        <li><a href="/guides/waterville-dispensary-guide">Waterville Dispensary Guide</a></li>
+        <li><a href="/guides/lincoln-dispensary-guide">Lincoln Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Newport, Maine?", a: "Yes. Newport has three dispensaries: Gram's Five & Dime (95 Moosehead Trail), Karma Cannabis (2 Elm St), and Brothers Cannabis (75 Main St). The town is one of the better-served small communities in interior Penobscot County." },
+        { q: "Does Newport Maine have recreational dispensaries?", a: "Yes. Gram's Five & Dime, Karma Cannabis, and Brothers Cannabis all serve 21+ recreational customers. Newport permits adult-use retail and the town's location on the ME-7 / ME-11 corridor makes it a natural stop for central-Maine shoppers." },
+        { q: "What is Newport Maine known for?", a: "Newport is a Penobscot County town of ~3,200 residents in central Maine, on the Sebasticook River. It is known for Sebasticook Lake, its role as a service hub for the surrounding rural communities, and its position between Bangor (~25 min NE) and Waterville (~30 min SW)." },
+        { q: "What is the closest dispensary to Newport Maine?", a: "Dispensaries in Newport include Gram's Five & Dime, Karma Cannabis, and Brothers Cannabis. For shoppers looking for a wider menu, Bangor is ~25 min NE and Waterville is ~30 min SW on the I-95 corridor." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

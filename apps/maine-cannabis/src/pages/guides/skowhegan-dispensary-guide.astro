@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Skowhegan, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Skowhegan has medical dispensaries including Nuggie's Cannabis and ReMaine Humble Farms, plus a delivery operator (Terp Valley Farms). The town serves as the central Somerset County hub for medical cannabis patients."}},{"@type":"Question","name":"Does Skowhegan allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Recreational availability in Skowhegan is limited. Nuggie's and ReMaine Humble Farms serve MMMP cardholders, and Terp Valley Farms operates as a delivery service. For the closest recreational retail, shoppers typically travel to Waterville (~20 min east) or Augusta (~45 min south)."}},{"@type":"Question","name":"What is Skowhegan Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Skowhegan is the county seat of Somerset County and home to roughly 8,500 residents. The town sits on the Kennebec River and is known for the annual Skowhegan State Fair — Maine's oldest agricultural fair — plus the iconic Skowhegan Indian sculpture, the Colby College–affiliated art museum, and its role as a service hub for central Maine's rural Somerset County."}},{"@type":"Question","name":"Where can Somerset County residents buy legal cannabis?","acceptedAnswer":{"@type":"Answer","text":"Medical patients in Somerset County can shop at Nuggie's Cannabis and ReMaine Humble Farms in Skowhegan, or use Terp Valley Farms' delivery service. Recreational shoppers typically travel to Waterville (~20 mi east) or Augusta (~45 mi south) for full adult-use menus."}}]});
+---
+<Layout title="Skowhegan, ME Dispensary Guide — Nuggie's & Somerset County 2026" description="Skowhegan, Maine dispensary guide. Nuggie's Cannabis, ReMaine Humble Farms, Terp Valley Farms — Somerset County's medical cannabis market 2026." heroImage="/images/heroes/skowhegan-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Skowhegan, ME Dispensary Guide</h1>
+    <p class="subtitle">Nuggie's Cannabis, ReMaine Humble Farms & central Somerset County's medical market</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Skowhegan Cannabis Quick Facts</h2>
+    <table aria-label="Skowhegan cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Limited — see note</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 medical (Nuggie's, ReMaine Humble Farms) + 1 delivery (Terp Valley Farms)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~8,500 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Somerset County (county seat)</td></tr>
+        <tr><td><strong>Nearest Recreational Hub</strong></td><td>Waterville (~20 min east), Augusta (~45 min south)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Skowhegan</h2>
+
+    <h3>Nuggie's Cannabis</h3>
+    <p><strong>Address:</strong> 12 Madison Ave, Skowhegan, ME 04976<br>
+    <strong>Phone:</strong> (207) 474-9999<br>
+    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+    <strong>Type:</strong> Medical (MMMP)</p>
+    <p>Nuggie's Cannabis is one of the central Maine dispensaries serving Somerset County's medical patients. The store offers a full medical menu — flower, vapes, edibles, concentrates, and tinctures — and is conveniently located just off the Madison Ave commercial corridor. Nuggie's draws patients from Skowhegan, Madison, Norridgewock, and the surrounding rural towns.</p>
+
+    <h3>ReMaine Humble Farms</h3>
+    <p><strong>Address:</strong> 95 E Madison Rd, Skowhegan, ME 04976<br>
+    <strong>Phone:</strong> (207) 474-0000<br>
+    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
+    <strong>Type:</strong> Medical (MMMP) with caregiver network</p>
+    <p>ReMaine Humble Farms is a medical dispensary and caregiver network rooted in Somerset County. The store carries an in-house cultivation line and partner-branded flower and concentrates. For patients throughout central Somerset, ReMaine Humble Farms functions as both a storefront and a caregiver-style supplier with deep local ties.</p>
+
+    <h3>Terp Valley Farms — Delivery</h3>
+    <p><strong>Service Area:</strong> Skowhegan, Madison, Norridgewock, Pittsfield, Hartland<br>
+    <strong>Phone:</strong> (207) 431-9100<br>
+    <strong>Hours:</strong> Order online, scheduled delivery windows<br>
+    <strong>Type:</strong> Medical delivery (MMMP)</p>
+    <p>Terp Valley Farms operates as a mobile medical dispensary serving the broader Somerset region. Patients can order online and receive scheduled home delivery, which is particularly valuable in the rural towns surrounding Skowhegan where the closest storefront may be 30 minutes away.</p>
+  </section>
+
+  <Callout title="Medical-First Market" type="insight">
+    Skowhegan is part of a band of central-Maine towns that have organized their cannabis access primarily around medical delivery and caregiver networks rather than adult-use storefronts. For a population of 8,500 plus a wide rural catchment, that model works: it sidesteps the high real-estate and licensing cost of a stand-alone adult-use storefront, while still serving MMMP patients with consistent product.
+  </Callout>
+
+  <section>
+    <h2>Skowhegan's Market Context</h2>
+    <p>Skowhegan sits in the middle of Somerset County — a sprawling, rural county of roughly 50,000 residents spread across dozens of small towns. The town is the county seat and commercial hub, anchored by the Skowhegan State Fair (Maine's oldest agricultural fair, run annually since 1818), the Skowhegan School of Painting and Sculpture, and a downtown that has gradually reinvested in riverfront infrastructure along the Kennebec.</p>
+    <p>For cannabis, Skowhegan's market is overwhelmingly medical. The town's two storefronts — Nuggie's and ReMaine Humble Farms — serve MMMP cardholders, and Terp Valley Farms' mobile delivery network extends the catchment into surrounding rural towns. Recreational shoppers typically travel east to Waterville (~20 minutes), which has a cluster of adult-use and medical dispensaries, or further south to Augusta (~45 minutes), the state capital and a major retail hub.</p>
+    <p>Operators evaluating central Maine should view Skowhegan as a medical-strong, recreational-weak node within the Waterville-Augusta corridor. The two-store medical base is stable, the delivery model is well-suited to the rural catchment, and any future conversion to adult-use would likely come through an existing operator expanding their license, rather than a new entrant.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/waterville-dispensary-guide">Waterville Dispensary Guide</a></li>
+        <li><a href="/guides/augusta-dispensary-guide">Augusta Dispensary Guide</a></li>
+        <li><a href="/guides/farmington-dispensary-guide">Farmington Dispensary Guide</a></li>
+        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Skowhegan, Maine?", a: "Yes. Skowhegan has medical dispensaries including Nuggie's Cannabis (12 Madison Ave) and ReMaine Humble Farms (95 E Madison Rd), plus a delivery operator (Terp Valley Farms) covering the broader Somerset region." },
+        { q: "Does Skowhegan allow recreational cannabis?", a: "Recreational retail in Skowhegan is limited. Nuggie's and ReMaine Humble Farms serve MMMP cardholders. For adult-use shopping, residents typically travel to Waterville (~20 min east) or Augusta (~45 min south)." },
+        { q: "What is Skowhegan Maine known for?", a: "Skowhegan is the Somerset County seat and home to ~8,500 residents. It is known for the annual Skowhegan State Fair (Maine's oldest agricultural fair), the Skowhegan Indian sculpture on the Kennebec River, and its role as the commercial and healthcare hub of central Somerset County." },
+        { q: "Where can Somerset County residents buy legal cannabis?", a: "Medical patients: Nuggie's Cannabis, ReMaine Humble Farms, and Terp Valley Farms delivery in Skowhegan. Recreational shoppers typically travel to Waterville (~20 mi east) or Augusta (~45 mi south)." },
+      ]}
+    />
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and policies can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
