@@ -88,7 +88,7 @@ const socialImage = heroImage
   : `${siteUrl}/og-image.svg`;
 const socialImageType = socialImage.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg';
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
-const isContent = isGuide || Astro.url.pathname.startsWith('/founders/');
+const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
 // Breadcrumbs
 const breadcrumbLabels: Record<string, string> = {
@@ -207,7 +207,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={seoDescription} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? "article" : "website"} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:url" content={socialImage} />
@@ -215,11 +215,20 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta property="og:image:type" content={socialImageType} />
     <meta property="og:image:width" content={String(heroImageDims.w)} />
     <meta property="og:image:height" content={String(heroImageDims.h)} />
+    {article && (
+      <>
+        <meta property="og:article:published_time" content={article.publishDate} />
+        <meta property="og:article:modified_time" content={article.modifiedDate || article.publishDate} />
+        <meta property="og:article:author" content={article.author} />
+        <meta property="og:article:section" content={article.section} />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={seoDescription} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:site" content="@MaineDispensary" />
+    {article && <meta name="twitter:creator" content="@MaineDispensary" />}
 
     {!noindex && (
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -297,7 +306,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
           "@type": "WebPage",
           "@id": Astro.url.href
         },
-        "articleSection": article.section
+        "articleSection": article.section,
+        "keywords": topics.length > 0 ? topics.join(", ") : undefined
       })} />
     )}
 
@@ -386,8 +396,6 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
         });
       });
     </script>
-  <!-- Social links for knowledge panel -->
-    {siteConfig.socialLinks.map(url => (<><link rel="me" href={url} /></>))}
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
