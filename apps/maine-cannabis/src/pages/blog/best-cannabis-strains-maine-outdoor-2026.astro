@@ -1,0 +1,453 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'editorial-team');
+const complianceReviewer = authors.find(a => a.id === 'compliance-reviewer');
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "strain-selection", "maine-climate"];
+---
+<Layout 
+  title="Best Cannabis Strains for Maine Outdoor 2026 — Mold-Resistant & Fast-Finishing Picks"
+  description="7 best cannabis strains for Maine outdoor growing in 2026: mold-resistant, fast-finishing, cold-tolerant genetics — with affiliate links to buy seeds."
+  heroImage="/images/heroes/best-cannabis-strains-maine-outdoor-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+ article { max-width: 720px; margin: 0 auto; }.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }.subtitle { font-size: 1.25rem; color: var(--color-text-light); } section { margin-bottom: 3rem; } section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); } section h2:first-child { margin-top: 0; } table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; } th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); } th { background: var(--color-background); font-weight: 700; } ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; } li { margin-bottom: 0.75rem; }.faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }.faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }.disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }.further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }.further-reading h2 { margin-top: 0; font-size: 1.5rem; }.fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }.fact-box h2 { margin-top: 0; font-size: 1.25rem; }.fact-box table { margin: 0; width: 100%; border-collapse: collapse; }.fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }.answer-capsule strong { color: var(--color-primary); } blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; color: var(--color-text); } blockquote::before { content: none; } blockquote::after { content: none; } .last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }.intro p { margin-bottom: 1.25rem; line-height: 1.7; }.intro p:first-child { font-size: 1.1rem; } 
+.strain-rating td { font-size: 0.9rem; }
+.strain-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+.strain-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+.strain-card .strain-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+.strain-card .strain-meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+.strain-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+.affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+.affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+.sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+.affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+.affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+.affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.affiliate-icon { font-size: 1.5rem; }
+.affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+.affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+.affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+.btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+.btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+.affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+@media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } }
+.byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+.byline p { margin: 0.25rem 0; }
+.last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+.affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+.affiliate-top-disclosure strong { color: #8b5a00; }
+.faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+.faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Best Cannabis Strains for Maine Outdoor 2026</h1>
+    <p class="subtitle">Mold-resistant, fast-finishing, cold-tolerant genetics that actually finish in Maine's short season</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase seeds through these links, Maine Dispensary Guide may earn a commission at no extra cost to you. We only recommend products we genuinely believe in. See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's mid-August in Bangor. A backyard grower is walking his rows — five plants in fabric pots, all healthy, all starting to flower. Then the rain comes. It rains for four days straight. The morning of the fifth day, he spots it: a grey fuzz creeping into the densest cola of his biggest plant. Bud rot. By Sunday, he's lost the entire top — two ounces of flower that would have been his best harvest of the year.</p>
+
+    <p>This is the Maine outdoor grow in a single story. Humid summers. Bud rot. Short seasons. Cold nights in September. The Maine climate is gorgeous for camping, brutal for cannabis.</p>
+
+    <p>But here's the thing: <strong>strain selection is the single most important decision a Maine outdoor grower makes.</strong> More important than soil. More important than feeding. More important than training. Choose the wrong genetics and you're fighting botrytis from July through October. Choose the right genetics and you're hauling in dense, frosty colas by the first week of October, before the killing frost.</p>
+
+    <p>For Maine's USDA Hardiness Zones 3 through 6 — with frost-free windows ranging from 110 days in Caribou to 150 days in Kittery — you need strains that finish in 7-9 weeks of flowering, resist botrytis in 70-80% humidity, and tolerate nighttime temperatures dipping below 50°F in late September. That's a narrow set of requirements, and most of the popular West Coast and Amsterdam genetics don't fit.</p>
+
+    <p>This guide covers the seven best cannabis strains for Maine outdoor growing in 2026, plus the autoflower-vs-feminized decision, where to buy seeds in Maine, and the planting calendar by region. If you haven't yet read our complete <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a>, start there for the legal framework, plant limits, and tagging rules. This page picks up where that one leaves off: <em>which seeds to actually buy.</em></p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    Seven Maine-tested cannabis strains with flowering time, expected yield, and best region. A decision matrix for autoflower vs feminized vs regular seeds. Five Maine-licensed local seed and clone vendors. A zone-by-zone planting calendar. An FAQ block answering the questions Maine growers actually ask.
+  </Callout>
+
+  <section>
+    <h2>What Makes a Cannabis Strain Work in Maine</h2>
+    <p>Not every "fast-finishing" or "mold-resistant" strain sold online is suited to Maine. Some are marketed as cold-tolerant but still need 10+ weeks of flowering. Some resist powdery mildew in dry climates but collapse under Maine's sustained 70-80% humidity. The strains in this guide were selected against four specific criteria:</p>
+
+    <h3>The Four Selection Criteria</h3>
+
+    <p><strong>1. Mold and botrytis resistance.</strong> Maine summers are humid. July and August often see 70-80% relative humidity for days at a time, with frequent morning fog along the coast and in river valleys. Botrytis cinerea (bud rot) thrives in these conditions and can destroy a crop in 48-72 hours once it takes hold. Strains with airy, loose bud structure and natural gray mold resistance are the only realistic choice. Dense, tight indica-dominant colas can finish beautifully in a dry climate and rot on the vine in Brunswick.</p>
+
+    <p><strong>2. Short flowering time (7-9 weeks).</strong> Maine's first hard frost typically arrives between September 20 (northern Aroostook) and October 10 (southern York). For an outdoor plant to finish before frost damage, its flowering period — the time from light-cycle flip to harvest-ready trichomes — needs to be 9 weeks or less. 7-8 weeks is the sweet spot, leaving a buffer for cool weather that slows maturation in September. Anything labeled "long-flowering" or "extended vegetative" is a non-starter outdoors.</p>
+
+    <p><strong>3. Cold tolerance (USDA Zones 3-6).</strong> Nighttime temperatures in late September routinely drop into the low 40s°F across most of Maine, and northern growers see frost advisories by the second week of September. Cannabis originated in Central Asia and tolerates cool nights reasonably well, but pure tropical sativas (think Durban Poison, Thai, equatorial Hazes) stop maturing when temperatures fall below 55°F. The right Maine strains are indica-leaning or landrace hybrids that evolved in cold mountain regions — Hindu Kush, Pamir Gold, Frisian Dew.</p>
+
+    <p><strong>4. Indica dominance or hardy hybrid.</strong> Pure sativas are 12+ week flowering plants. Even "fast" sativas rarely finish in less than 10 weeks, and most can't complete flowering before Maine frost. Indica-dominant strains and indica-hybrids finish faster, handle cold better, and tend toward the bud structure (denser, more compact) that responds well to defoliation in humid climates. The strains below are at least 60% indica unless specifically noted.</p>
+
+    <table aria-label="Maine cannabis strain selection criteria" class="strain-rating">
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Why It Matters</th>
+          <th>Threshold</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mold resistance</strong></td>
+          <td>Botrytis is the #1 killer of Maine outdoor cannabis</td>
+          <td>Airy buds, gray-mold tested genetics</td>
+          <td>★★★★★</td>
+        </tr>
+        <tr>
+          <td><strong>Flowering time</strong></td>
+          <td>First hard frost ends the season</td>
+          <td>7-9 weeks max</td>
+          <td>★★★★★</td>
+        </tr>
+        <tr>
+          <td><strong>Cold tolerance</strong></td>
+          <td>Sept nights drop below 50°F in most of Maine</td>
+          <td>Hardy to 40°F nights</td>
+          <td>★★★★</td>
+        </tr>
+        <tr>
+          <td><strong>Indica / hybrid ratio</strong></td>
+          <td>Sativas usually don't finish outdoors in Maine</td>
+          <td>≥60% indica</td>
+          <td>★★★★</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>A fifth criterion — yield — is real but secondary. An 8-week strain that finishes 2 ounces per plant beats a 10-week strain that promises 4 ounces but rots in the field. Optimize for finishing first, yield second.</p>
+  </section>
+
+  <section>
+    <h2>The 7 Best Cannabis Strains for Maine Outdoor</h2>
+    <p>These are the seven strains we recommend for Maine outdoor cultivation in 2026. All are commercially available from at least one of the major seed banks (ILGM, Sensi Seeds, Dutch Passion, Seedsman, MSNL) and ship to Maine. All have demonstrated Maine performance in grow journals and breeder field reports. None of them are a guaranteed harvest — you still need solid soil, IPM, and a little luck — but each gives you a meaningfully better shot than a generic "outdoor mix" or a sativa-heavy Haze cross.</p>
+
+    <p>If you're buying online, <a href="#affiliate-section">ILGM (I Love Growing Marijuana)</a> carries most of these and ships to Maine. If you prefer in-state vendors, our <a href="#where-to-buy">local Maine seed bank list</a> below has five licensed options. None of the strains below are linked in this section — affiliate links live in the disclosure block at the bottom of the page.</p>
+
+    <h3>1. Northern Lights Auto</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Sensi Seeds (original); multiple auto versions</span>
+        <span><strong>Type:</strong> Indica-dominant autoflower (~90% indica)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks from seed</span>
+      </div>
+      <p>Northern Lights is the classic "just grow it" strain. The auto version is the easiest outdoor cannabis plant a Maine beginner can buy. From germinated seed to harvest in 75-85 days, regardless of light cycle. It finishes before first frost in all of Maine except the coldest corners of Aroostook. The buds are dense, resinous, and famously mold-resistant — the loose calyx structure lets air move through the colas even in 80% humidity.</p>
+      <p>Northern Lights Auto grows short (2-3 feet outdoors), so it stays discreet. Yield is modest — 1-2 ounces per plant outdoors in Maine — but the quality is high and the grow is nearly foolproof. If you only grow one strain your first year, this is it.</p>
+      <p><strong>Best for:</strong> Beginners. Southern and central Maine. Late-May transplant. Plant a second auto in late June for a September backup harvest.</p>
+      <p><strong>Yield in Maine:</strong> 1-2 oz/plant outdoor</p>
+      <p><strong>Best region:</strong> Southern and central Maine (Zone 5-6). Marginal in northern Aroostook.</p>
+      <p><strong>Seed bank notes:</strong> ILGM carries Northern Lights Auto as both feminized and regular auto seeds. Sensi Seeds' original auto version is widely available. Expect germination rates above 90% from reputable vendors.</p>
+    </div>
+
+    <h3>2. Blueberry</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> DJ Short (original); multiple modern cuts</span>
+        <span><strong>Type:</strong> Indica-dominant (80% indica)</span>
+        <span><strong>Flowering:</strong> 8-9 weeks</span>
+      </div>
+      <p>Blueberry is a 1970s-era indica with New England roots. DJ Short developed it in the Pacific Northwest from Afghan, Thai, and Purple Thai landraces, and the strain was selected for cold tolerance and mold resistance. The mature buds turn purple in cool nights — a useful Maine trait, because purple coloration correlates with anthocyanin production that helps plants tolerate temperature swings. The flavor is sweet berry, the effect is heavy and relaxing, and the plant finishes in 8-9 weeks.</p>
+      <p>Blueberry is a photoperiod (not auto) strain, which means it needs 12 hours of uninterrupted darkness to start flowering. In Maine, that happens naturally around late August when the day length drops below 14 hours. This works in your favor — you don't need to manipulate the light cycle. Plant by mid-May, and Blueberry will start flowering on its own around August 20 and finish by mid-to-late October, before first hard frost in southern Maine.</p>
+      <p><strong>Best for:</strong> Growers with a little experience. Central and southern Maine. The purple coloration makes it visually rewarding as well as practical.</p>
+      <p><strong>Yield in Maine:</strong> 2-3 oz/plant outdoor</p>
+      <p><strong>Best region:</strong> Southern and central Maine (Zone 5-6). Blueberry is not a short-season plant by modern standards, so central Maine (Bangor, Augusta) is the practical limit.</p>
+      <p><strong>Seed bank notes:</strong> DJ Short's original Blueberry line is available from a small number of breeders. Dutch Passion, Sensi Seeds, and ILGM all carry modern Blueberry crosses. Buy feminized if you don't want to sex plants.</p>
+    </div>
+
+    <h3>3. White Widow</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Green House Seeds (original, 1990s)</span>
+        <span><strong>Type:</strong> Balanced hybrid (60% indica / 40% sativa)</span>
+        <span><strong>Flowering:</strong> 8 weeks</span>
+      </div>
+    </div>
+    <p>White Widow is one of the most-cultivated strains in the world for a reason: it's forgiving, it's potent, and it finishes in 8 weeks. The original is a Brazilian sativa crossed with a South Indian indica, and the hybrid vigor gives it real mold resistance — the trichome coverage is so heavy it looks frosted, and the buds are dense but not so tight that air can't move through. White Widow doesn't have the absolute best cold tolerance (it's a 50/50 hybrid), but it handles Maine's September nights without problems as long as plants are healthy.</p>
+    <p>White Widow is widely available, which means it's cheap — typically $5-10 per seed from ILGM and other major banks. That makes it a good choice for growers who want to test multiple plants in their first year without spending $200 on a 10-pack of boutique genetics. The smoke is earthy, pungent, and strong. The effect is balanced — head and body — which is rare for fast-finishing strains.</p>
+    <p><strong>Best for:</strong> Budget-conscious growers. All of Maine except northern Aroostook. Photoperiod, so plant by mid-May for natural light-cycle flowering.</p>
+    <p><strong>Yield in Maine:</strong> 2-4 oz/plant outdoor</p>
+    <p><strong>Best region:</strong> Southern, central, and coastal Maine (Zones 5-6). Marginal in northern Maine — the photoperiod flip happens too late and harvest runs into frost risk.</p>
+    <p><strong>Seed bank notes:</strong> White Widow is one of the most pirated and rebranded strain names in cannabis. Buy from a known breeder (Green House Seeds, ILGM, Nirvana) to get the real genetics.</p>
+
+    <h3>4. Frisian Dew (Dutch Passion)</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Dutch Passion</span>
+        <span><strong>Type:</strong> Balanced hybrid (50/50 indica/sativa)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+      </div>
+    </div>
+    <p>Frisian Dew is one of the few commercial strains <em>bred specifically for cold, wet Northern European climates.</em> Dutch Passion developed it in the Netherlands from Frisian and Afghan genetics, and they tested it outdoors in Holland's wet autumns — conditions that closely mirror coastal Maine. The plant is famously mold-resistant: it can stand in rain for a week and still finish cleanly. The buds are loose, airy, and purple-tinged at harvest.</p>
+    <p>The 50/50 hybrid balance means Frisian Dew has a more uplifting effect than a pure indica — creative, social, and clear-headed — while still finishing in 7-8 weeks. It's a photoperiod strain, so it flowers when daylight drops to 12 hours in late August. Plant by mid-May in southern Maine, expect flowering to start around August 20, and harvest by mid-October. In a good year, the plant can produce 3-5 ounces outdoors in Maine — among the highest yields of any strain on this list.</p>
+    <p><strong>Best for:</strong> Coastal and central Maine growers dealing with high humidity. Photoperiod flowering. Growers who want mold resistance without giving up yield.</p>
+    <p><strong>Yield in Maine:</strong> 3-5 oz/plant outdoor</p>
+    <p><strong>Best region:</strong> Southern, central, and coastal Maine (Zones 5-6). The mold resistance makes it ideal for the Midcoast (Camden, Belfast, Rockland), which sees the highest humidity in the state.</p>
+    <p><strong>Seed bank notes:</strong> Frisian Dew is a Dutch Passion original. Buy direct from Dutch Passion or from ILGM/Seedsman. It's available as feminized seeds, which is what you want.</p>
+
+    <h3>5. Pamir Gold (Dutch Passion)</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Dutch Passion</span>
+        <span><strong>Type:</strong> Indica-dominant (60% indica / 40% sativa)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+      </div>
+    </div>
+    <p>Pamir Gold comes from the Pamir Mountains of Central Asia — the same mountain range where Hindu Kush originates. Dutch Passion collected the landrace genetics in the 1990s and bred Pamir Gold specifically for high-altitude, cold-climate performance. The plant tolerates frost better than almost any other commercial strain, and it's been tested at altitudes above 8,000 feet in Afghanistan and Tajikistan. If you grow in northern Maine, this is one of the safest bets.</p>
+    <p>The plant grows short and stocky with a single dominant cola and minimal side branching — useful for stealth growing and for windy exposed sites. The buds are dense but well-aerated, and the plant has strong natural resistance to gray mold. The effect is a classic indica body stone — relaxing, sleepy, and appetite-stimulating. Not a daytime strain.</p>
+    <p>Pamir Gold finishes in 7-8 weeks of flowering, which gives northern Maine growers a real chance of harvest before the September 20-30 frost window in Aroostook. Plant by late May in northern Maine and you'll be harvesting in mid-September, before the cold weather settles in.</p>
+    <p><strong>Best for:</strong> Northern Maine (Aroostook, Piscataquis, Somerset). High-altitude and exposed sites. Growers who need maximum cold tolerance.</p>
+    <p><strong>Yield in Maine:</strong> 1-3 oz/plant outdoor</p>
+    <p><strong>Best region:</strong> Northern Maine (Zone 3-4). Also performs well in central and southern Maine — it's a robust, low-maintenance plant.</p>
+    <p><strong>Seed bank notes:</strong> Pamir Gold is a Dutch Passion original. Limited availability compared to Northern Lights or White Widow — order early in the season, as it sometimes sells out. Available as feminized.</p>
+
+    <h3>6. Early Skunk (Sensi Seeds)</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Sensi Seeds</span>
+        <span><strong>Type:</strong> Indica-dominant (65% indica / 35% sativa)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+      </div>
+    </div>
+    <p>Early Skunk is Skunk #1 crossed with an Early Pearl (an outdoor-optimized early-finishing plant). The result is a fast, mold-resistant, forgiving plant that Sensi Seeds markets specifically for northern European outdoor grows. It's been a staple in UK and Dutch outdoor gardens for 20+ years and translates well to Maine.</p>
+    <p>The plant grows tall for an indica — 4-5 feet outdoors — and responds well to topping and training. Buds are dense, resinous, and the classic skunky smell means you'll want odor control if you're close to neighbors. The effect is balanced — relaxing but not couch-locking — and the yield is good. Early Skunk is among the highest-yielding strains on this list when conditions are right.</p>
+    <p>The "early" in the name is real: it finishes a full week before standard Skunk #1, which matters when you're counting days until frost. In southern Maine, you can plant Early Skunk in mid-May, watch it flower naturally in late August, and harvest by the first or second week of October — well before first hard frost.</p>
+    <p><strong>Best for:</strong> Growers who want higher yields without sacrificing cold tolerance. Coastal Maine. Photoperiod but very forgiving on timing.</p>
+    <p><strong>Yield in Maine:</strong> 3-5 oz/plant outdoor</p>
+    <p><strong>Best region:</strong> Southern and central Maine (Zones 5-6). Less suitable for northern Maine because of the photoperiod timing.</p>
+    <p><strong>Seed bank notes:</strong> Early Skunk is a Sensi Seeds original. Available as regular and feminized seeds. ILGM carries a feminized version under a similar name. Buy from Sensi or a known distributor to ensure authentic genetics.</p>
+
+    <h3>7. Hindu Kush</h3>
+    <div class="strain-card">
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Sensi Seeds (original landrace preservation)</span>
+        <span><strong>Type:</strong> Pure indica (landrace)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+      </div>
+    </div>
+    <p>Hindu Kush is a pure landrace indica from the Hindu Kush mountain range between Afghanistan and Pakistan. Sensi Seeds has preserved the original genetics for decades, and the strain remains one of the most cold-tolerant and fast-finishing indicas in commercial circulation. The plant grows short, bushy, and compact — ideal for stealth and small spaces — and the buds are dense, earthy, and resinous.</p>
+    <p>What makes Hindu Kush special for Maine is its native environment: high altitude (5,000-8,000 feet), cold winters, and hot dry summers. The genetics are adapted to dramatic temperature swings. Nighttime temperatures in the Hindu Kush routinely drop below 40°F in late summer, and the plant handles it without stress. Maine's climate is warmer overall but the autumn temperature pattern is similar.</p>
+    <p>The downside: Hindu Kush is a photoperiod strain, and pure indica plants don't stretch much in flowering. You'll get a 2-3 foot plant with a single dominant cola — small but productive. Yield is modest (1-2 ounces per plant outdoors in Maine), but the quality is excellent. The effect is a heavy, classic indica body stone — the kind of cannabis that ends your day.</p>
+    <p><strong>Best for:</strong> Growers who prioritize quality and cold tolerance over yield. All of Maine, including northern Aroostook. Stealth grows and small spaces.</p>
+    <p><strong>Yield in Maine:</strong> 1-2 oz/plant outdoor</p>
+    <p><strong>Best region:</strong> All of Maine. Hindu Kush's cold tolerance makes it the safest choice for Zone 3-4 northern Maine.</p>
+    <p><strong>Seed bank notes:</strong> Sensi Seeds carries the original Hindu Kush landrace. ILGM and Seedsman sell similar Hindu Kush lines. Buy from Sensi if you want the authentic landrace genetics.</p>
+
+    <h3>Quick Comparison</h3>
+    <table aria-label="Maine cannabis strain comparison 2026">
+      <thead>
+        <tr>
+          <th>Strain</th>
+          <th>Type</th>
+          <th>Flowering</th>
+          <th>Maine Yield (oz/plant)</th>
+          <th>Best Region</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Northern Lights Auto</td><td>Indica auto</td><td>7-8 wks</td><td>1-2</td><td>Southern / Central</td></tr>
+        <tr><td>Blueberry</td><td>Indica photo</td><td>8-9 wks</td><td>2-3</td><td>Southern / Central</td></tr>
+        <tr><td>White Widow</td><td>Hybrid photo</td><td>8 wks</td><td>2-4</td><td>Southern / Central / Coastal</td></tr>
+        <tr><td>Frisian Dew</td><td>Hybrid photo</td><td>7-8 wks</td><td>3-5</td><td>Southern / Central / Coastal</td></tr>
+        <tr><td>Pamir Gold</td><td>Indica photo</td><td>7-8 wks</td><td>1-3</td><td>Northern (Aroostook)</td></tr>
+        <tr><td>Early Skunk</td><td>Indica photo</td><td>7-8 wks</td><td>3-5</td><td>Southern / Central</td></tr>
+        <tr><td>Hindu Kush</td><td>Indica photo</td><td>7-8 wks</td><td>1-2</td><td>All of Maine</td></tr>
+      </tbody>
+    </table>
+
+    <Callout title="Mix Strains for Insurance" type="tip">
+      Don't plant all six of one strain. Plant two or three different strains so a bad year for one (e.g., early mold outbreak) doesn't wipe out your entire harvest. The auto + photoperiod mix is especially useful: a June-planted auto can finish in September as a backup if your photoperiod plants fail.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Autoflower vs Feminized vs Regular Seeds for Maine</h2>
+    <p>You'll see three seed types sold by every Maine-friendly seed bank. The choice matters more in Maine than in most states because of the short season.</p>
+
+    <h3>Autoflower Seeds</h3>
+    <p>Autoflowers (often labeled "auto") flower based on age, not light cycle. They typically start flowering 3-4 weeks after germination and finish 60-90 days from seed, regardless of how much light they get. This is a huge advantage in Maine: you can plant a late-season auto in July and still harvest in September.</p>
+    <p><strong>Pros for Maine:</strong> Finish regardless of light cycle. Plant late May through July. Can do two outdoor runs per season (a May auto + a July auto). No light-cycle management. Compact plants (2-3 feet) stay discreet. Beginner-friendly.</p>
+    <p><strong>Cons for Maine:</strong> Smaller plants = smaller yield (typically 1-2 oz per plant). No training or topping without stunting. Limited strain selection compared to photoperiods. Can't be cloned for a perpetual harvest.</p>
+
+    <h3>Feminized Photoperiod Seeds</h3>
+    <p>Feminized seeds are bred to produce only female plants (the ones that flower). Photoperiod means they flower based on light cycle — they need 12+ hours of uninterrupted darkness to start flowering. In Maine, this happens naturally in late August when daylight drops below 14 hours.</p>
+    <p><strong>Pros for Maine:</strong> Bigger plants (4-6 feet outdoors) and bigger yields (2-5 oz per plant). Trainable with topping, LST, and SCROG. Larger strain selection. Can be cloned. Generally more potent than autos.</p>
+    <p><strong>Cons for Maine:</strong> Single harvest per year (no second run). Plants must finish before first frost. Light-cycle management required if growing indoors or in a greenhouse with supplemental light. Slightly higher failure rate if timing is off.</p>
+
+    <h3>Regular Seeds</h3>
+    <p>Regular (non-feminized) seeds produce roughly 50% male and 50% female plants. Males don't produce flower — they pollinate females, which produces seeds in the buds and dramatically reduces yield. Most home growers don't want males at all.</p>
+    <p><strong>Pros for Maine:</strong> Cheaper. Used for breeding. Genetic diversity. Some growers believe regulars produce more vigorous plants.</p>
+    <p><strong>Cons for Maine:</strong> You have to sex plants and remove males before they pollinate your females — typically 4-6 weeks into the vegetative stage. That wastes time, space, and soil. If you don't catch a male in time, your whole crop can be seeded. Not recommended for first-time growers.</p>
+
+    <h3>The Decision Matrix</h3>
+    <table aria-label="Autoflower vs feminized vs regular for Maine">
+      <thead>
+        <tr>
+          <th>Factor</th>
+          <th>Autoflower</th>
+          <th>Feminized Photo</th>
+          <th>Regular</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Best for</td><td>Beginners, second runs</td><td>Experienced growers, max yield</td><td>Breeders, hobbyists</td>
+        </tr>
+        <tr><td>Plant size</td><td>2-3 ft</td><td>4-6 ft</td><td>4-6 ft</td>
+        </tr>
+        <tr><td>Yield in Maine</td><td>1-2 oz/plant</td><td>2-5 oz/plant</td><td>2-5 oz/plant (if female)</td>
+        </tr>
+        <tr><td>Time to harvest</td><td>75-90 days from seed</td><td>Mid-late October</td><td>Mid-late October</td>
+        </tr>
+        <tr><td>Risk of male plants</td><td>None (feminized auto)</td><td>None (feminized)</td><td>~50%</td>
+        </tr>
+        <tr><td>Cost per seed</td><td>$8-15</td><td>$6-15</td><td>$3-8</td>
+        </tr>
+        <tr><td>Multiple runs per season</td><td>Yes (2 runs possible)</td><td>No</td><td>No</td>
+        </tr>
+        <tr><td>Recommended for first-time Maine growers?</td><td>Yes</td><td>Yes</td><td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <Callout title="The Default for Most Maine Growers" type="success">
+      If you're a first-time or casual grower, start with autoflowers. The "plant and forget" model fits Maine's short season. Plant a feminized photoperiod in your second year once you've learned the lifecycle and want bigger yields.
+    </Callout>
+  </section>
+
+  <section id="where-to-buy">
+    <h2>Where to Buy Cannabis Seeds in Maine</h2>
+    <p>You have two main options for buying cannabis seeds in Maine: online seed banks (which ship to Maine from out of state) and licensed Maine vendors (which sell in person or online to Maine residents). Both are legal under <a href="/guides/maine-cannabis-regulations">Maine cannabis law</a> for adults 21+.</p>
+
+    <h3>Online Seed Banks (Ship to Maine)</h3>
+    <p>Most major international seed banks ship to Maine. They typically accept credit card, Bitcoin, and bank transfer, and they ship in discrete packaging. Delivery takes 5-14 days depending on the bank and the shipping method. Many offer germination guarantees (typically 70-90% germination rate, with free replacement seeds if below threshold).</p>
+    <p>Our affiliate partner for online seeds is <a href="#affiliate-section">ILGM (I Love Growing Marijuana)</a>, which carries all seven strains recommended above and ships to Maine with a 20+ year track record. See the disclosure at the bottom of this article for details. We don't claim that ILGM is the only good option — Seedsman, MSNL, Crop King, Dutch Passion, and Sensi Seeds all ship to Maine and have solid reputations. Pick the bank that carries the genetics you want at the price you're comfortable with.</p>
+
+    <h3>Local Maine Seed and Clone Vendors</h3>
+    <p>For growers who prefer to buy in-state — supporting local businesses, getting Maine-adapted genetics, and skipping shipping wait times — Maine has a small but growing network of licensed seed and clone vendors. These are listed as a buy-local complement to the online seed bank option. Maine Dispensary Guide does not have affiliate relationships with these vendors; we list them because they're useful resources for Maine growers.</p>
+
+    <ul>
+      <li><strong>Cannabis Seed Bank of Maine</strong> (Farmington, ME) — In-person seed sales with an emphasis on cold-climate and short-season genetics. Catalog focuses on strains tested in western Maine's Zone 4-5 climate.</li>
+      <li><strong>Maine Clone Co</strong> (Waterville, ME) — Operates under the medical caregiver model. Carries verified cuts of established strains and a smaller seed catalog. Clones give a 4-6 week head start over seeds.</li>
+      <li><strong>Maine Seedlings</strong> (Biddeford / Scarborough, ME) — Clone-focused vendor in southern Maine. Carries both medical and adult-use clones. Good option for growers in York and Cumberland counties who want a quick start to the season.</li>
+      <li><strong>Seed &amp; Soil Maine</strong> (Monroe, ME) — Humboldt Seed Company affiliate with a 90% germination guarantee. Carries a mix of Humboldt's catalog and locally bred genetics. Online ordering with Maine delivery.</li>
+      <li><strong>North Atlantic Seed Co.</strong> (Waterville, ME) — Wholesale and retail. Carries multiple breeders' catalogs and is a good one-stop shop for growers who want variety.</li>
+    </ul>
+
+    <p>For a current list of licensed Maine dispensaries that carry seeds or clones, see our <a href="/find-a-dispensary">Maine dispensary finder</a>. Not all Maine dispensaries carry seeds — most focus on flower and concentrates — so call ahead or check the menu before driving over.</p>
+  </section>
+
+  <section>
+    <h2>When to Plant These Strains in Maine</h2>
+    <p>Timing is everything in Maine. The window between last frost and first frost is short, and every week of delay at the start costs you at the end. Here's the planting calendar by region.</p>
+
+    <table aria-label="Maine cannabis planting calendar by region">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Southern Maine (Zone 5-6)</th>
+          <th>Central Maine (Zone 4-5)</th>
+          <th>Northern Maine (Zone 3-4)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Start seeds indoors</td><td>Early-mid April</td><td>Mid-late April</td><td>Late April</td>
+        </tr>
+        <tr><td>Transplant outdoors</td><td>Mid-late May (after May 15 frost)</td><td>Late May (after May 20 frost)</td><td>Early June (after June 1 frost)</td>
+        </tr>
+        <tr><td>Plant second autoflower</td><td>Late June to early July</td><td>Late June</td><td>Mid-late June</td>
+        </tr>
+        <tr><td>First hard frost (avg.)</td><td>October 5-10</td><td>October 1-5</td><td>September 20-30</td>
+        </tr>
+        <tr><td>Expected harvest window</td><td>Late September to mid-October</td><td>Late September to early October</td><td>Mid-late September</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>These are averages — actual frost dates vary year to year and site to site. Coastal sites run 1-2 weeks later in fall. Inland and high-elevation sites run 1-2 weeks earlier. Keep frost cloth on hand for early September cold snaps; even one night below 32°F can damage flowers.</p>
+
+    <p>For the full year-by-year indoor-to-outdoor transplant schedule, light management, and nutrient timing, see our complete <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a>. For operator-side cultivation (commercial licensing, facility requirements, plant tagging for licensed grows), see our <a href="/guides/maine-cannabis-cultivation-guide">Maine cannabis cultivation guide</a>.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "What is the easiest cannabis strain to grow in Maine?", answer: "Northern Lights Auto. It's an autoflowering indica that finishes in 75-85 days from seed, tolerates Maine's humidity, grows short enough to stay discreet, and forgives most beginner mistakes. Plant by late May in southern Maine and you'll be harvesting by mid-August — well before first frost." },
+      { question: "Do autoflowers really finish in Maine?", answer: "Yes. Autoflowers flower based on age, not light cycle, so they finish on schedule regardless of Maine's short days. Most autoflowers finish 60-90 days from germination, which means a late-May planted auto will harvest in August or early September. You can even plant a second auto in late June for a late September backup harvest." },
+      { question: "Are mold-resistant strains worth the premium?", answer: "In Maine, yes. Maine summers hit 70-80% humidity for extended periods, and botrytis (bud rot) can destroy a crop in 48-72 hours. Strains like Frisian Dew, Pamir Gold, and Northern Lights Auto are specifically bred to resist mold and cost $1-3 more per seed than generic strains. That premium is cheap insurance against losing an entire plant to bud rot. If you're growing outdoors in Maine, mold resistance isn't optional — it's the difference between a harvest and a loss." },
+      { question: "Can I grow Durban Poison or other sativas in Maine?", answer: "Not reliably outdoors. Durban Poison is a pure South African sativa that takes 9-10 weeks to flower and doesn't tolerate cold nights below 55°F. Maine's September nighttime temperatures routinely drop into the 40s°F. You can grow Durban Poison in a heated indoor or well-managed greenhouse setup, but outdoor cultivation is not realistic. If you want a sativa-leaning effect, grow a sativa-leaning hybrid like Frisian Dew or a Haze cross that's been bred for shorter flowering times." },
+      { question: "Where can I buy cannabis seeds in Maine legally?", answer: "Two main options. First, online seed banks (ILGM, Seedsman, MSNL, Dutch Passion, Sensi Seeds, Crop King) all ship to Maine. You're legally allowed to order cannabis seeds as a souvenir or for souvenir/novelty purposes in most US states, including Maine. Second, licensed Maine vendors — Cannabis Seed Bank of Maine in Farmington, Maine Clone Co in Waterville, Maine Seedlings in Biddeford/Scarborough, Seed & Soil Maine in Monroe, and North Atlantic Seed Co in Waterville — sell in person. Adults 21+ can also buy seeds and clones at some Maine dispensaries. See the local vendor list above for details." },
+      { question: "When should I start cannabis seeds in Maine?", answer: "Start photoperiod seeds indoors 4-6 weeks before your last frost date — early to mid-April in southern Maine, mid to late April in central Maine, and late April in northern Maine. Transplant outdoors after last frost (mid-May in southern Maine, late May in central Maine, early June in northern Maine). Autoflowers can be started later — early May through late June — because they flower based on age and don't need the indoor head start." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Final Notes on Buying and Growing in Maine</h2>
+    <p>Maine's home grow laws are generous — six mature plants per adult, twelve immature, unlimited seedlings — and the climate is workable if you choose genetics adapted to the conditions. The seven strains above are not the only viable options, but they're the safest bets for a first-year Maine grower who wants a real chance at harvest.</p>
+    <p>Start with one or two strains. Plant in mid-to-late May after last frost. Defoliate for airflow during the humid August stretch. Watch trichomes in late September, not the calendar. And cure slowly — Maine's October humidity will punish a rushed dry.</p>
+    <p>If you haven't already, read the full <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> for the legal framework, plant tagging rules, and indoor-vs-outdoor setup comparison. For dispensary-side growing (commercial licensing, facility requirements, plant counts under the OCP caregiver program), see our <a href="/guides/maine-cannabis-cultivation-guide">Maine cannabis cultivation guide</a>. And for the legal landscape that governs all of this, the <a href="/guides/maine-cannabis-regulations">Maine cannabis regulations guide</a> walks through Title 28-B, the OCP rulebook, and the penalty schedule.</p>
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/guides/maine-cannabis-cultivation-guide">Maine Cannabis Cultivation Guide</a> — operator-side cultivation, facility requirements</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Seed Sources</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>Industry-leading seed bank with a 20+ year track record. Wide selection of feminized, autoflower, and high-CBD strains — including Northern Lights Auto, White Widow, Blueberry, and several other strains on this list. Ships to Maine with discreet packaging. Free shipping on most orders. Includes Robert Bergman's Marijuana Grow Bible with every purchase, which is genuinely useful for first-time cultivators.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🏪</span>
+          <h3>Local Maine Dispensaries</h3>
+        </div>
+        <p>For Maine-adapted clones and seeds bred specifically for our short growing season, your local dispensary is often the best source. Many carry genetics from in-state breeders who've selected for cold tolerance, mold resistance, and early flowering. Clones from a local dispensary also skip the germination step and give you a head start on the season.</p>
+        <div class="affiliate-cta">
+          <a href="/find-a-dispensary" class="btn-affiliate">Find a Maine Dispensary →</a>
+          <span class="affiliate-note">Browse dispensaries carrying seeds and clones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified attorney for specific legal guidance. Strain performance data cited in this article reflects average results from grow journals, breeder field reports, and Maine grower accounts; actual results vary based on site conditions, weather, and grower skill. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>
