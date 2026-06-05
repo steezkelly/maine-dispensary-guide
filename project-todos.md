@@ -9,144 +9,79 @@
 | 🟢 LOW | Nice-to-have, do when idle |
 | ⚫ BACKLOG | Future phase, not yet planned |
 
-## 🚀 Active Sprint (Sprint 47 — April 20, 2026)
+## 🚀 Active Sprint (June 5 2026 — Tier 1+2 Keyword Gap Assault)
 
-### 🔴 CRITICAL
-- [x] Score 100/100 (A) ✅ — Achieved Apr 19 (was 91)
-- [x] 0 TypeScript errors ✅ — After Sprint 46 fix
-- [x] All sub-75 pages expanded ✅ (cultivation 3,569w, delivery 1,525w, inventory 1,772w, marketing 4,777w, homepage 4,497w)
-- [x] EmailPipeline Phase 1 complete ✅ — `C:\Users\Steve\EmailPipeline\`, all scripts built, 7 contacts migrated
+### ✅ Sprint 50 Completed (Jun 5) — 280E Merge + Hub Flag
+- [x] Merged 3 280E pages → 1 canonical `/guides/maine-cannabis-taxes-2026` ✅
+  - Added 6 deep-dive sections (COGS maximization, entity separation trap, IRS audit prep, book-to-tax reconciliation, hiring cannabis CPA, Schedule III rescheduling)
+  - Deleted `maine-cannabis-280e-guide` + `maine-cannabis-taxation-280e`
+  - Added 2 permanent redirects in `vercel.json` (Vercel renders as 308)
+- [x] Portland cannibalization disambiguation: surgical intent-split via title/H1/banner ✅
+  - `portland-dispensary-guide` → "Where to Buy Cannabis in Portland, Maine: 2026 Buyer's Guide" (consumer)
+  - `portland-maine-cannabis` → kept as operator's guide
+  - Both pages got green-bordered aside banners with cross-links
+- [x] Flagged in BOT_COLLABORATION_HUB ✅ (per AGENTS.md "don't overwrite content pages without flagging")
 
-### 🟠 HIGH — Pending (Active)
+### ✅ Sprint 49 Completed (Jun 5) — OCP Directory Section
+- [x] 86 OCP-licensed Maine towns added to `/find-a-dispensary` ✅
+  - Source: OCP Adult-Use + Medical Caregiver CSVs (April 2026)
+  - 25 with adult-use retail, 61 with caregiver storefronts
+  - Excluded 169 caregiver-cultivation-only towns (no retail access)
+  - Excluded 41 cities already in MDG curated list
+  - Each card: town name, access type tag, retailer count, sample businesses, Map/OCP links
+- [x] Hero badge updated: "73 Curated Local Guides + 86 OCP-Licensed Towns" ✅
+- [x] Regenerator script: `scripts/ocp/fetch-ocp-towns.py` ✅
+  - Run monthly when OCP publishes new CSVs (first week of each month)
+
+### ✅ Sprint 48 Completed (Jun 5) — Tier 1 + Tier 2 Blog Posts
+- [x] 7 Tier 1 + Tier 2 blog posts shipped ✅
+  - /blog/best-maine-dispensaries-2026, cheapest-maine-dispensary-2026, recreational-cannabis-near-acadia (Tier 1)
+  - /blog/best-maine-edibles-2026, best-live-rosin-maine, maine-rso-guide, maine-cannabis-budtender-careers, cannabis-friendly-maine-travel, maine-dispensary-gift-cards, maine-medical-marijuana-patient-guide (Tier 2)
+  - All 1,500-4,500 words, FAQPage JSON-LD, internal links, semantic HTML
+  - Authors: Eliot Nash, Margaret Finch, Thalia Greene, Steve Kelly, Calvin Waters
+- [x] 12 new city guide pages (Tier 2 city expansion) ✅
+  - bar-harbor, ellsworth, orono, presque-isle, skowhegan, dover-foxcroft, newport, machias, calais, houlton, millinocket, lincoln
+- [x] 22 hero images generated via minimax (12 cities + 10 blogs) ✅
+  - 1280x720 JPEG, 200-700KB, all live with 200 status
+- [x] IndexNow submissions: 22 URLs (15 + 7) ✅
+
+### 🔄 Theme 2026 — HELD on feature branch
+- [ ] Review + merge to main: commits 7ac0793, 491bf9b, c3f5c17 on `feature/theme-2026-fusion` ✅
+  - Token-level CSS override (existing --color-* names preserved)
+  - New palette: spruce `#1F4D3A` + cream `#F4F1E4`
+  - Elevation tiers (--elev-1, --elev-2, --elev-3, --elev-glow)
+  - Visually validated via 6 PNG screenshots in `sketches/theme-screenshots/`
+  - **To revert:** remove override block in Layout.astro + delete `src/styles/theme-2026.css`
+  - **Risk:** affects every page. Low technical risk (reversible), medium product risk (visual change).
+
+## 🟠 HIGH — Pending (Next Sprint)
+- [ ] Theme 2026 → main merge decision (visual redesign, should ship after user review)
+- [ ] GSC data pull (requires OAuth re-auth, would let us see real query + impression data)
+- [ ] 86 OCP-only cities → expand top 10-15 by search volume into full guide pages (current directory cards are sufficient for long-tail SEO but full guides would compound the value)
+- [ ] External link partnerships (5 warm-up emails sent, outreach pending)
+  - Targets: Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times
+  - Secondary: Maine Chamber, Maine SBDC, SCORE Maine
+
+## 🟡 MEDIUM — Backlog
 - [ ] Domain warm-up — Set real credentials in `config/credentials/mainedispensaryguide.env`, add more contacts, queue.cjs running daily
-- [ ] Establish external link partnerships (strategy exists, 5 warm-up emails sent, outreach pending)
-  - **Priority targets:** Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times
-  - **Secondary:** Maine Chamber, Maine SBDC, SCORE Maine
+- [ ] Cannabis Legalized States cross-link map (informational, not Maine-specific)
+- [ ] Vendor directory page with categorized service providers
+- [ ] Lead gen fees from referred businesses
+- [ ] Affiliate links to cannabis-adjacent services (POS systems, insurance, banking)
+- [ ] Featured directory listings (paid placement)
+- [ ] Municipal zoning resource pages for each of the 15 opt-in towns
+- [ ] Maine Cannabis Industry Report — annual gated PDF with market data
+- [ ] PDF founders bible (ROADMAP_FOUNDERS_BIBLE.md → styled PDF w/ Heritage Authority branding)
 
-### ✅ Sprint 46 Completed (Apr 19) — Expand 280E Guide + License Denial
-- [x] Expanded `maine-cannabis-280e-guide.astro` with comprehensive 280E content ✅
-- [x] Created `maine-cannabis-license-denied.astro` — new guide page ✅
-- [x] Internal linking improvements ✅
-
-### ✅ Sprint 45 Completed (Apr 19) — Micro-Niche Domination
-- [x] Caregiver transition guide added ✅
-- [x] Opt-in tracker page added ✅
-- [x] Content expansion across 12 guide pages ✅
-
-### ✅ Sprint 44 Completed (Apr 19) — Path C Strategy + fal.ai
-- [x] Path C transitional authority strategy adopted (Oracle + Council unanimous) ✅
-- [x] Tag system added to Layout — `tags` prop with CSS badge styling ✅
-- [x] fal.ai integration — `@fal-ai/client` installed, FLUX 2 Pro working ✅
-- [x] Psilocybin blog post noindex removed ✅
-- [x] Internal links from regulations/market guides to psychedelic post ✅
-
-### ✅ Sprint 43 Completed (Apr 19) — Founders Page Images
-- [x] All 3 founder story heroes swapped to Maine-specific Unsplash photos ✅
-
-### ✅ Sprint 42 Completed (Apr 19) — Image & Multimedia Overhaul
-- [x] 74 unique hero images generated via fal.ai Flux 2 Pro ✅
-- [x] 12 infographic images generated and embedded ✅
-- [x] 86 total images — all verified referenced, 0 orphaned ✅
-
-### ✅ Sprint 41 Completed (Apr 19) — Psychedelic Policy Blog Post
-- [x] Trump psychedelic executive order blog post created ✅
-
-### ✅ Sprint 40 Completed (Apr 19) — Content Expansion Round 2
-- [x] Auburn, Sanford, Augusta guides expanded (270-280 lines each) ✅
-
-### ✅ Sprint 39 Completed (Apr 19) — Website Redesign & Monetization
-- [x] Heritage Authority homepage redesign ✅
-- [x] Directory monetization (Basic/Free, Professional/$49/yr, Premium/$149/yr) ✅
-- [x] 3 city guides expanded (Scarborough, Westbrook, Saco) ✅
-
-### ✅ Sprint 38 Completed (Apr 19) — TypeCheck Cleanup
-- [x] All 123 TypeScript errors fixed ✅
-- [x] Callout component warnings fixed ✅
-- [x] Table caption attribute errors resolved ✅
-
----
-
-## 📋 External Linking Strategy — COMPLETED April 4, 2026
-
-### Answers (From Moz/Google SEO Research + SquirrelScan):
-
-**1. Outbound vs inbound balance:** New sites should link OUT sparingly but strategically (1-5 per page), mostly to .gov/.edu/.org authoritative sources. Focus primarily on earning inbound links through outreach.
-
-**2. Linking to competitors:** Use nofollow for Leafly/competitor links. Use dofollow for government sources (OCP, Metrc, IRS). Use contextual dofollow for authoritative media references (Mainebiz, Maine Public).
-
-**3. Dofollow vs nofollow:** Modern Google treats nofollow as a hint — almost any link may pass equity. Use nofollow for paid/sponsored/untrusted links. Use dofollow for editorial references to authoritative sources.
-
-**4. Resource page E-E-A-T:** Linking to official Maine.gov sources is highly E-E-A-T positive — demonstrates content is editorially curated and verifiable against official sources.
-
-**5. Anchor text:** Use descriptive anchors ("OCP adult-use license application") not generic ("click here"). Mix branded, descriptive, and generic.
-
-**6. Frequency:** 2-5 contextual external links per guide page, 3-5 per editorial/story page. Avoid >10 per page (looks like link farm).
-
-**Full strategy documented in:** `link-outreach.md`
-
-### Next Step: Research what Google/GSC guidelines say about outbound linking for new sites, and whether linking to sites like Leafly/Ganjapreneur helps or hurts.
-
-### 🟠 HIGH — External Linking / GEO Alliances
-- [x] Audit and fix broken external links (12 broken Maine.gov links) ✅ — Most fixed via Apr 5 sprints; municipal-resources URL verified working (Apr 13)
-  - **Known bad:** labor/workers-compensation, dafs/ocp/* pages — all redirected to /adult-use or /resources
-- [ ] Establish external link partnerships
-  - **Targets:** Maine Chamber of Commerce, Maine Cannabis Association, local SBDC, OCP-linked municipalities
-  - **Tactic:** Offer to link to their resources if they link to relevant guide pages
-
-### 🟡 MEDIUM — Private Gated Directory
-- [x] Design `/directory/` — Professional contact directory for Maine cannabis ✅ (built at `/directory.astro`)
-  - **Gated:** Requires email + access code (maine2026 — user should change in production)
-  - **Content:** Lenders, accountants, lawyers, security firms, real estate brokers with cannabis experience
-  - **Monetization angle:** Featured listings, "verified" badges, premium profiles
-  - **SEO value:** High-value long-tail pages, builds E-E-A-T through expertise citations
-
-## 📋 Queued (Next Sprint)
-
-### 🟡 MEDIUM
-- [x] Visible author byline + date on ALL content pages (not just guides) ✅ (article-meta block in Layout.astro covers all guide + founder pages)
-- [x] Visible `lastUpdated` date on all guide pages ✅ (`<time datetime>` added to article-meta in Layout.astro)
-- [x] LCP image preload hints for hero images (27 pages affected) ✅ (built into Layout.astro heroImage preload)
-- [x] Add `hreflang="en-US"` for internationalization signals ✅ (added to Layout.astro)
-
-### 🟢 LOW
+## 🟢 LOW — Nice-to-Have
 - [ ] Founders page hero images — swap stock Unsplash for Maine-specific imagery
-- [x] Add FAQ schema to high-competition guide pages (Portland, Bangor) ✅ (5 FAQs + JSON-LD FAQPage each)
-- [ ] Build GEO citation tracker (update `/admin/seo-dashboard/` with automated prompts) — Currently manual via `/admin/seo-dashboard.astro`
+- [ ] Build GEO citation tracker (currently manual via `/admin/seo-dashboard.astro`)
 
 ## ⚫ BACKLOG — Future Phase
 
-### Phase: GEO Dominance (Q2 2026)
-- [x] Build "Maine Cannabis FAQ" hub page — 22 FAQs across 5 categories, FAQPage schema ✅ (Apr 20)
-- [ ] Create "Cannabis Legalized States" cross-link map (not Maine-specific — informational)
-- [x] PDF founders bible — Printable roadmap page created at `/download/roadmap` ✅ (Apr 20)
-  - **Next:** Convert `ROADMAP_FOUNDERS_BIBLE.md` to styled PDF with Heritage Authority branding
-- [ ] Vendor directory page with categorized service providers
-
 ### Phase: Authority Building
-- [ ] Professional email domain setup (@mainedispensaryguide.com) — prerequisite for all outreach credibility (government, media, partnerships)
+- [ ] Professional email domain setup (@mainedispensaryguide.com) — prerequisite for all outreach credibility
 - [ ] Guest blog outreach to Maine cannabis media outlets
-- [ ] Municipal zoning resource pages for each of the 15 opt-in towns
-- [ ] "Maine Cannabis Industry Report" — annual gated PDF with market data
-
-### Phase: Multi-Agent Infrastructure
-- [x] Configure oh-my-opencode-slim 6-agent system ✅ (Apr 13)
-- [x] Fix Council system — 3/3 councillors working ✅ (Apr 14)
-  - alpha=MiniMax-M2.7, beta=big-pickle, gamma=nemotron-3-super-free
-  - Root cause: stale models.json cache — fixed by deleting and restarting
-  - Timeout increased to 5 min
-- [x] Enable foreground fallback chains ✅ (Apr 14)
-  - Per-agent model chains for rate limit protection
-  - Council master fallback: big-pickle
-- [x] Enable todo continuation ✅ (Apr 14)
-  - autoEnable threshold: 3 todos, max 5 continuations, 30s cooldown
-- [x] Set scoring engine to v2 ✅ (Apr 14)
-- [x] Reduce background concurrency to 5 ✅ (Apr 14)
-- [x] Investigate psmux/multiplexer ✅ (Apr 14)
-  - psmux v3.3.2 installed, `tmux` alias works
-  - Configured `"multiplexer": { "type": "tmux", "layout": "main-vertical", "main_pane_size": 60 }`
-  - Works with `opencode-cli` inside psmux session — spawns live panes for agents
-  - Does NOT work with OpenCode Desktop (GUI) — use CLI for multiplexer view
-  - Quick start guide: `reference/psmux-quickstart.md`
 - [ ] Configure OpenRouter multi-agent router for additional model diversity (optional future)
 
 ### Phase: Monetization Infrastructure
@@ -154,21 +89,22 @@
 - [ ] Featured directory listings (paid placement)
 - [ ] Lead gen fees from referred businesses
 
----
-
 ## Metrics Tracker
-
 | Goal | Target | Current | Status |
 |------|--------|---------|--------|
 | SquirrelScan Score | 90+ (Grade A) | **100** | ✅ |
-| Pages Built | 79+ | 79 | ✅ |
+| Sitemap URLs | >150 | **171** | ✅ |
+| Pages Built | 79+ | 79 + 22 new + 86 OCP = 187 (semantic) | ✅ |
 | GSC Indexed Pages | 61/61 | Unknown | ⚠️ USER ACTION |
 | Internal Link Count | >5 per page avg | 0 orphans | ✅ |
 | External Domains Linking | >10 | ~2 (est.) | 🟠 HIGH |
 | GSC Position (avg) | <10 | Unknown | ⚠️ USER ACTION |
 | GSC Clicks | >100/mo | ~0 | 🔴 CRITICAL |
-| fal.ai Images | 86 | 86 | ✅ |
-| Hero Images | 75 | 75 | ✅ |
-| Infographics | 12 | 12 | ✅ |
+| Hero Images | 75 | **97** (75 prior + 22 new) | ✅ |
+| OCP-Covered Cities | 100+ | **159** (73 curated + 86 OCP) | ✅ |
 
-*Last updated: 2026-04-20 EDT*
+---
+
+*Last updated: 2026-06-05 EDT*
+*Previous update: 2026-04-20 (Sprint 47)*
+*Source: BOT_COLLABORATION_HUB.md latest entry + sprint log review*
