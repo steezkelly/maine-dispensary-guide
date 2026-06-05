@@ -1,0 +1,145 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Berwick, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Berwick has 3+ licensed adult-use cannabis dispensaries (Silver Therapeautics, Kind Farm Reserve, JAR Cannabis Co., and others) plus a strong caregiver network. Berwick is one of the more saturated small-town markets in Maine, driven by its position on the New Hampshire border."
+      }
+    }
+  ]
+});
+---
+
+<Layout title="Berwick, ME Dispensary Guide — NH Border Cannabis Market 2026"
+  description="Berwick Maine cannabis dispensary guide. Silver Therapeautics, Kind Farm Reserve, JAR Cannabis Co., and the NH-border retail market. Store details, market context, and operator notes."
+  heroImage="/images/heroes/berwick-dispensary-guide.jpg"
+  article={article}
+  topics={topics}
+>
+  <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
+  <article>
+    <div class="article-header">
+      <h1>Berwick, ME Dispensary Guide</h1>
+      <p class="subtitle">Three-plus adult-use stores on the New Hampshire border — a small-town cannabis market driven by cross-state traffic</p>
+    </div>
+
+    <section class="fact-box">
+      <h2>Berwick Cannabis Quick Facts</h2>
+      <table aria-label="Berwick cannabis market overview">
+        <thead><tr><th>Fact</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+          <tr><td><strong>Recreational Legal</strong></td><td>Yes — Berwick permits adult-use retail</td></tr>
+          <tr><td><strong>Active Adult-Use Stores</strong></td><td>3+ (Silver Therapeautics, Kind Farm Reserve, JAR Cannabis Co.)</td></tr>
+          <tr><td><strong>Nearby Caregiver Access</strong></td><td>27 active caregivers in Berwick + Rochester NH storefronts</td></tr>
+          <tr><td><strong>Population</strong></td><td>~7,900 year-round (2020 Census)</td></tr>
+          <tr><td><strong>County</strong></td><td>York County</td></tr>
+          <tr><td><strong>Border Position</strong></td><td>Direct border with Somersworth + Rochester, NH (5 mi west of Dover NH)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Dispensaries in Berwick, Maine</h2>
+
+      <h3>Silver Therapeautics — Berwick</h3>
+      <p>
+        <strong>Address:</strong> 2 Blueberry Lane, Berwick, ME 03901<br>
+        <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-5pm<br>
+        <strong>Type:</strong> Recreational (21+) and Medical (MMMP)
+      </p>
+      <p>Silver Therapeautics operates an adult-use and medical dispensary in Berwick serving York County and the cross-border New Hampshire market. The store carries a full menu of flower, vapes, concentrates, and edibles, with a delivery service that extends into the Dover-Rochester-Somersworth NH corridor. The brand is one of the larger multi-store operators in southern Maine.</p>
+
+      <h3>Kind Farm Reserve</h3>
+      <p>
+        <strong>Address:</strong> 26 Market Street, Berwick, ME 03901<br>
+        <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
+        <strong>Type:</strong> Recreational and Medical
+      </p>
+      <p>Kind Farm Reserve operates a vertically integrated dispensary — the "Reserve" name indicates product from the operator's own cultivation, which gives the store tighter inventory control and a brand story. The Market Street location is in downtown Berwick, easy walking distance from the town center. The store emphasizes craft flower and a curated menu.</p>
+
+      <h3>JAR Cannabis Co.</h3>
+      <p>
+        <strong>Address:</strong> 73 Route 236, Berwick, ME 03901<br>
+        <strong>Hours:</strong> Daily 10am-8pm<br>
+        <strong>Type:</strong> Recreational and Medical
+      </p>
+      <p>JAR Cannabis is a Maine-grown brand with stores across the state. The Berwick location is their southernmost, positioned for cross-state traffic from the NH border towns. The Route 236 location is easy highway access for shoppers coming from Eliot, South Berwick, and the greater Portsmouth-Dover NH market.</p>
+    </section>
+
+    <Callout title="NH Border Market Dynamics" type="info">
+      Berwick is the southernmost licensed adult-use retail town in Maine on the NH border. The store cluster serves not just Berwick's 7,900 residents but also the Dover-Rochester-Somersworth NH metro (60,000+ people) where adult-use cannabis is still illegal as of 2026. New Hampshire adults drive across the border to buy in Maine — this is a significant cross-state flow that no other small Maine market enjoys at this scale. For operators, this means Berwick's customer base is larger than its population suggests.
+    </Callout>
+
+    <section>
+      <h2>Berwick's Market Context</h2>
+      <p>Berwick is a small York County town on the Salmon Falls River, which forms the Maine-New Hampshire border. The town is the southernmost adult-use retail market in Maine on the NH border, with the three-store cluster (Silver Therapeautics, Kind Farm Reserve, JAR) representing the highest small-town cannabis retail density in southern Maine. Population is about 7,900, but the actual customer base extends well beyond the town's borders into the Dover-Somersworth-Rochester NH metro.</p>
+
+      <h3>Why Berwick Has 3+ Stores</h3>
+      <p>Berwick's unusual store density (3+ adult-use stores for 7,900 residents = roughly 1 per 2,600 people) is a direct result of its NH-border position. New Hampshire has not legalized adult-use cannabis as of 2026, which means NH adults who want legal cannabis must either: (1) drive to a Massachusetts dispensary (longer drive, lower taxes), or (2) drive to a Maine dispensary on the border. Berwick is the closest Maine store cluster to the Dover-Rochester-Somersworth NH metro, and the three stores compete for that cross-state traffic.</p>
+
+      <h3>Local Regulations</h3>
+      <p>Berwick permits adult-use cannabis retail with a $1,500-2,500 annual local fee (lower than Portland's $5K, in line with other York County towns). The licensing process is standard OCP plus local review, typically 3-4 months. The town council has not imposed additional restrictions beyond OCP minimums, making Berwick a relatively operator-friendly market.</p>
+
+      <h3>Operating Context</h3>
+      <p>Commercial real estate in Berwick is moderate for southern Maine — $12-20/sq ft annually for retail space, significantly below Portsmouth NH's $30+/sq ft or Portland's $35-45. The lower rent + the cross-state demand creates a viable single-store or small-chain operator's margin. Berwick suits operators who understand the NH-border market and can position for the cross-state shopper (often: easier parking, faster checkout, competitive pricing vs Massachusetts alternatives).</p>
+    </section>
+
+    <section>
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/south-berwick-dispensary-guide">South Berwick</a> — 5 mi east, smaller market</li>
+        <li><a href="/guides/kittery-dispensary-guide">Kittery</a> — 20 mi southeast, NH border market</li>
+        <li><a href="/guides/sanford-dispensary-guide">Sanford</a> — 15 mi north, York County interior</li>
+        <li><a href="/blog/best-maine-dispensaries-2026">Best Maine dispensaries 2026</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={[
+        {
+          question: "Are there cannabis dispensaries in Berwick, Maine?",
+          answer: "Yes — 3+ adult-use dispensaries currently operate in Berwick (Silver Therapeautics, Kind Farm Reserve, JAR Cannabis Co.), plus an active caregiver network. Berwick has one of the highest small-town adult-use retail densities in southern Maine."
+        },
+        {
+          question: "Can I buy recreational cannabis in Berwick?",
+          answer: "Yes. Berwick permits adult-use retail and all three of the city's main dispensaries are licensed for recreational (21+) sales. Bring a valid government photo ID."
+        },
+        {
+          question: "Can New Hampshire residents buy cannabis in Berwick?",
+          answer: "Yes. NH residents 21+ can legally purchase adult-use cannabis at any Maine dispensary. Berwick's three-store cluster specifically serves the Dover-Rochester-Somersworth NH cross-state market, since New Hampshire has not legalized adult-use cannabis as of 2026."
+        },
+        {
+          question: "Why does Berwick have so many dispensaries for its size?",
+          answer: "Berwick is the closest Maine adult-use retail cluster to the Dover-Rochester-Somersworth NH metro (60,000+ people). The cross-state NH demand makes Berwick's effective customer base much larger than its 7,900 residents, supporting multiple competing stores."
+        },
+        {
+          question: "What's the closest medical-only dispensary to Berwick?",
+          answer: "Several of the three adult-use stores also serve medical patients. For medical-only operations, check the OCP licensee search for current registered dispensaries in York County. The caregiver network in Berwick and surrounding towns also provides medical access."
+        }
+      ]} />
+    </section>
+  </article>
+</Layout>

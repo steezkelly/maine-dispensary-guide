@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Brewer, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Brewer has at least one licensed adult-use cannabis dispensary (Brothers Cannabis) operating in the city, and the Bangor metro (immediately across the Penobscot River) has 6+ additional adult-use stores. Brewer functions as part of the greater Bangor retail market."
+      }
+    }
+  ]
+});
+---
+
+<Layout title="Brewer, ME Dispensary Guide — Bangor Metro Cannabis Market 2026"
+  description="Brewer Maine cannabis dispensary guide. Brothers Cannabis and the Bangor metro retail market — store details, market context, and how Brewer functions as part of the greater Bangor cannabis corridor."
+  heroImage="/images/heroes/brewer-dispensary-guide.jpg"
+  article={article}
+  topics={topics}
+>
+  <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
+  <article>
+    <div class="article-header">
+      <h1>Brewer, ME Dispensary Guide</h1>
+      <p class="subtitle">Brothers Cannabis and the Bangor metro retail market — the Penobscot County adult-use corridor</p>
+    </div>
+
+    <section class="fact-box">
+      <h2>Brewer Cannabis Quick Facts</h2>
+      <table aria-label="Brewer cannabis market overview">
+        <thead><tr><th>Fact</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+          <tr><td><strong>Recreational Legal</strong></td><td>Yes — Brewer permits adult-use retail</td></tr>
+          <tr><td><strong>Active Adult-Use Stores</strong></td><td>1+ (Brothers Cannabis)</td></tr>
+          <tr><td><strong>Bangor Metro (across river)</strong></td><td>6+ adult-use stores within 10 minutes</td></tr>
+          <tr><td><strong>Population</strong></td><td>~9,600 year-round (2020 Census)</td></tr>
+          <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+          <tr><td><strong>Cross-River Bridge</strong></td><td>~5 min to downtown Bangor via the Joshua Chamberlain Bridge</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Dispensaries in Brewer, Maine</h2>
+
+      <h3>Brothers Cannabis — Brewer</h3>
+      <p>
+        <strong>Address:</strong> 547 Wilson Street, Brewer, ME 04412<br>
+        <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm<br>
+        <strong>Type:</strong> Recreational (21+) and Medical (MMMP)
+      </p>
+      <p>Brothers Cannabis operates an adult-use and medical dispensary in Brewer, on the east side of the Penobscot River across from Bangor. The store serves Penobscot County residents who prefer the Brewer side, plus Eastern Maine Drive traffic heading north on I-395. The location is strategically placed for easy highway access, with a large parking lot that handles both retail and delivery vehicles.</p>
+
+      <h3>Bangor Metro (Across the River)</h3>
+      <p>Brewer is functionally part of the Bangor retail market. The Joshua Chamberlain Bridge connects the two cities in under 5 minutes, and most consumers shop both sides. Within 10 minutes of Brewer you can reach 6+ adult-use stores in Bangor proper, plus caregiver storefronts in Veazie, Hampden, and Hermon. The combined Bangor-Brewer corridor has more adult-use retail density than any Maine city outside Portland.</p>
+    </section>
+
+    <Callout title="Bangor-Brewer = One Cannabis Market" type="info">
+      For practical purposes, Brewer and Bangor are a single cannabis retail market. They share the same Penobscot River, the same interstate exits, the same regional employer base, and the same consumer demographics. Anyone researching Brewer should also look at Bangor (6+ stores), Veazie, and Hampden. And vice versa — anyone in Bangor is 5 minutes from Brewer's retail options.
+    </Callout>
+
+    <section>
+      <h2>Brewer's Market Context</h2>
+      <p>Brewer sits on the east bank of the Penobscot River, immediately opposite Bangor. Together the cities form Maine's third-largest metropolitan area with a combined population of about 65,000. Brewer itself has about 9,600 residents and functions partly as a Bangor suburb and partly as an independent small city. The local economy is anchored by Eastern Maine Medical Center (now part of Northern Light Health), the Versant Power headquarters, and the small-business corridor along Route 1A (Wilson Street/State Street).</p>
+
+      <h3>Why Brewer Is on the Map</h3>
+      <p>Brewer is a strategically important cannabis market for two reasons. First, the combined Bangor-Brewer market is one of Maine's most underserved relative to population — 6+ adult-use stores serving 65,000 people across two cities, with Bangor alone (32,000 population) having 4+ stores. The retail density is high but consumer demand (driven by a younger-than-average population thanks to UMaine proximity) absorbs it. Second, Brewer provides the eastern gateway to the Bangor metro for shoppers coming from Hancock County, Washington County, and the Down East region. Brothers Cannabis's Wilson Street location is well-positioned for that drive-in traffic.</p>
+
+      <h3>Local Regulations</h3>
+      <p>Brewer permits adult-use cannabis retail with standard OCP requirements plus a $1,000-2,500 annual local fee. The city has not imposed additional restrictions beyond OCP minimums. The local licensing process typically takes 3-4 months from application to approval — faster than Portland (6-9 months) and competitive with Bangor and Augusta. For prospective operators, Brewer is a friendly market compared to the more restrictive southern Maine cities.</p>
+
+      <h3>Operating Context</h3>
+      <p>Commercial real estate in Brewer is significantly more affordable than Bangor's downtown core. Wilson Street (Route 1A) retail space runs $10-18/sq ft annually, which is roughly half what you'd pay for comparable space in downtown Bangor. The Brewer side also has more parking, less foot-traffic dependence, and easier highway access. For operators prioritizing accessibility over walkability, Brewer offers better economics than its cross-river neighbor.</p>
+    </section>
+
+    <section>
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> — 6+ adult-use stores across the river, 5 min drive</li>
+        <li><a href="/guides/orono-dispensary-guide">Orono dispensary guide</a> — UMaine campus, 10 mi north</li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor metro cannabis overview</a></li>
+        <li><a href="/blog/best-maine-dispensaries-2026">Best Maine dispensaries 2026</a> — Bangor metro pick</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={[
+        {
+          question: "Are there cannabis dispensaries in Brewer, Maine?",
+          answer: "Yes. Brothers Cannabis operates at 547 Wilson Street. Brewer is also a 5-minute drive from 6+ adult-use stores in Bangor across the Penobscot River."
+        },
+        {
+          question: "Can I buy recreational cannabis in Brewer?",
+          answer: "Yes. Brewer permits adult-use retail. Brothers Cannabis is licensed for both recreational (21+) and medical sales. Bring a valid government photo ID."
+        },
+        {
+          question: "Is Brewer's cannabis market separate from Bangor?",
+          answer: "No — they're functionally one market. The Joshua Chamberlain Bridge connects downtown Bangor to Brewer in under 5 minutes, and most consumers shop both sides. Brewer's market is best understood as the eastern Bangor metro corridor."
+        },
+        {
+          question: "What cannabis products are available in Brewer?",
+          answer: "Brothers Cannabis carries a full menu: flower, vapes, concentrates, edibles, topicals, and accessories. Pricing is consistent with mid-Maine averages ($35-55 per eighth of flower)."
+        },
+        {
+          question: "How far is Brewer from Bangor's main dispensary cluster?",
+          answer: "About 5 minutes via the Joshua Chamberlain Bridge (Route 15/State Street). Most of the Bangor cluster (State Street, Bangor Mall area) is within a 10-minute drive of Brewer."
+        }
+      ]} />
+    </section>
+  </article>
+</Layout>

@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are there cannabis dispensaries in Bath, Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Bath has at least one licensed adult-use cannabis dispensary (Brothers Cannabis) plus caregiver retail storefronts serving the city and surrounding Sagadahoc County towns."
+      }
+    }
+  ]
+});
+---
+
+<Layout title="Bath, ME Dispensary Guide — Midcoast Cannabis Market 2026"
+  description="Bath Maine cannabis dispensary guide. Brothers Cannabis and the Sagadahoc County midcoast retail market — store details, market context, and how Bath fits into the Brunswick-Bath-Topsham corridor."
+  heroImage="/images/heroes/bath-dispensary-guide.jpg"
+  article={article}
+  topics={topics}
+>
+  <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
+  <article>
+    <div class="article-header">
+      <h1>Bath, ME Dispensary Guide</h1>
+      <p class="subtitle">Brothers Cannabis, the midcoast retail market, and how Bath connects to the Brunswick-Bath-Topsham triangle</p>
+    </div>
+
+    <section class="fact-box">
+      <h2>Bath Cannabis Quick Facts</h2>
+      <table aria-label="Bath cannabis market overview">
+        <thead><tr><th>Fact</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+          <tr><td><strong>Recreational Legal</strong></td><td>Yes — Bath permits adult-use retail</td></tr>
+          <tr><td><strong>Active Adult-Use Stores</strong></td><td>1+ (Brothers Cannabis)</td></tr>
+          <tr><td><strong>Nearby Caregiver Access</strong></td><td>Topsham, Bowdoinham, Dresden, West Bath</td></tr>
+          <tr><td><strong>Population</strong></td><td>~8,300 year-round (2020 Census)</td></tr>
+          <tr><td><strong>County</strong></td><td>Sagadahoc County</td></tr>
+          <tr><td><strong>Nearest Major Hub</strong></td><td>Brunswick (8 mi N) — 2 adult-use stores</td></tr>
+          <tr><td><strong>Tourism</strong></td><td>Moderate — Bath Iron Works, Maine Maritime Museum, summer coast traffic</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Dispensaries in Bath, Maine</h2>
+
+      <h3>Brothers Cannabis — Bath</h3>
+      <p>
+        <strong>Address:</strong> 1 Chandler Drive, Bath, ME 04530<br>
+        <strong>Hours:</strong> Mon-Sat 10am-8pm, Sun 11am-6pm<br>
+        <strong>Type:</strong> Recreational (21+) and Medical (MMMP)
+      </p>
+      <p>Brothers Cannabis operates an adult-use and medical dispensary in Bath serving Sagadahoc County and the midcoast corridor. The Bath location complements the chain's other Maine stores (Brewer, Portland, others) and provides local access for residents who previously had to drive to Brunswick or Topsham for retail purchases. The store carries flower, vapes, concentrates, and edibles, with a medical program serving registered Maine patients.</p>
+
+      <h3>Nearby Caregiver Access (within 15 miles)</h3>
+      <p>Bath sits in the middle of a dense midcoast caregiver network. Within easy driving distance: Topsham (2 caregiver storefronts), Bowdoinham (1), Dresden (1), and the broader Brunswick corridor (2 adult-use stores). The combined access means Bath residents can usually reach a cannabis retailer within a 15-minute drive without leaving Sagadahoc or adjacent counties.</p>
+    </section>
+
+    <Callout title="The Bath-Brunswick-Topsham Triangle" type="info">
+      Bath's cannabis market doesn't exist in isolation. The midcoast retail triangle of Bath-Brunswick-Topsham (all within 12 miles) functions as a single consumer market for many shoppers. Operators considering any of the three should research all three, and consumers in any of the three should know they have options in the others. The Sagadahoc County midcoast is the 4th-densest adult-use retail market in Maine after Portland, Bangor, and Augusta.
+    </Callout>
+
+    <section>
+      <h2>Bath's Market Context</h2>
+      <p>Bath is a small coastal city on the Kennebec River, best known as the home of Bath Iron Works (a General Dynamics subsidiary and one of Maine's largest employers). The city has a stable year-round population of about 8,300 with seasonal swelling from summer coast tourism. Median household income is moderate for Maine ($60-65K range), supported by the shipyard's skilled workforce. The population skews slightly older than Portland or Brunswick, with a meaningful 45+ demographic that influences product mix and budtender training requirements.</p>
+
+      <h3>Why Bath Is on the Map</h3>
+      <p>Bath was an OCP applicant for cannabis licensing as a strategic play — the midcoast consumer base had been underserved, with most shoppers driving 30+ minutes to Brunswick or beyond. Brothers Cannabis's Bath location (one of several Brothers stores in Maine) closed a real gap. The store's mid-range pricing and full menu (flower, vapes, concentrates, edibles) make it a one-stop for most adult-use consumers in Sagadahoc County.</p>
+
+      <h3>Local Regulations</h3>
+      <p>Bath permits adult-use cannabis retail with standard OCP local-license requirements. The city has a $1,000-2,000 annual local fee range (lower than Portland's $5K, higher than many small towns). School buffer and zoning are standard state minimums. The city council has not imposed additional restrictions beyond OCP requirements, which makes Bath a relatively friendly market for prospective operators compared to Portland or Scarborough.</p>
+
+      <h3>Operating Context for Dispensaries</h3>
+      <p>Commercial real estate in Bath is significantly more affordable than Portland — typical retail space runs $12-20/sq ft annually versus $35-45 in the Old Port. The smaller customer base (8,300 year-round) means a single store can capture meaningful market share without needing the differentiation intensity of a Portland or Bangor operation. Bath suits a stable, single-store operation more than a chain expansion play.</p>
+    </section>
+
+    <section>
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/brunswick-dispensary-guide">Brunswick dispensary guide</a> — 8 mi north, 2 adult-use stores, larger market</li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> — northern Maine hub, 6 adult-use stores in metro</li>
+        <li><a href="/blog/best-maine-dispensaries-2026">Best Maine dispensaries 2026</a> — region-by-region picks</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={[
+        {
+          question: "Are there cannabis dispensaries in Bath, Maine?",
+          answer: "Yes. Brothers Cannabis operates an adult-use and medical dispensary at 1 Chandler Drive, Bath. There are also caregiver retail storefronts in nearby Topsham and Bowdoinham within a 15-minute drive."
+        },
+        {
+          question: "Can I buy recreational cannabis in Bath?",
+          answer: "Yes. Bath permits adult-use retail and Brothers Cannabis is licensed for both medical and recreational sales. You'll need a valid government photo ID showing you're 21 or older."
+        },
+        {
+          question: "What cannabis products are available in Bath?",
+          answer: "Brothers Cannabis carries a full menu including flower, vapes, concentrates, edibles, and topicals. Pricing is in line with midcoast Maine averages ($35-50 per eighth of flower, $25-40 for pre-rolls)."
+        },
+        {
+          question: "Is Bath close enough to Brunswick to be a single market?",
+          answer: "Yes. Bath and Brunswick are 8 miles apart on Route 1, and many consumers shop both cities. The Bath-Brunswick-Topsham triangle functions as one continuous midcoast retail market with about 4 adult-use stores total."
+        },
+        {
+          question: "What's the closest caregiver storefront to downtown Bath?",
+          answer: "Topsham (across the river, ~10 min) has 2 caregiver retail storefronts. Bowdoinham (15 min south) has 1. Dresden (20 min east on Route 27) has 1."
+        }
+      ]} />
+    </section>
+  </article>
+</Layout>
