@@ -3320,3 +3320,94 @@ Each: 800-1000 words, Eliot Nash byline, JSON-LD FAQPage schema, fact box, dispe
 - **Directory expansion:** `/find-a-dispensary` now has 73 cities, vs. CannabisMaine.org's 169+ and Weedmaps' 200+. OCP licensee feed could expand to 150+ with one data pull.
 - **No IndexNow submission yet:** script `scripts/git/submit-indexnow.cjs` exists (Apr 21 commit) but not invoked for this batch. Run after deploy.
 - **No new hero images:** the 15 new pages reference hero JPGs that don't exist in `/public/images/heroes/`. Either generate via FAL or accept 404 hero images. Site will still build; pages will have broken hero images until generated.
+
+
+---
+
+## Sprint Entry — 2026-06-05 (evening) — Tier 2 blog ship + 280E merge + hero image generation
+
+**Author:** Hermes (Minimax-M3 via minimax-oauth)
+**Branch:** main
+**Commits:** `b3037ee` (content) + `ef43075` (hero images)
+**Push:** `9fc792a..b3037ee..ef43075` to main, Vercel auto-deploy green
+**Scope closed:** 3/3 from the "Outstanding (Flagged for Next Sprint)" list above
+
+### ✅ Shipped: 7 Tier 2 blog posts (commercial-intent, B2C + B2B angles)
+
+All under `/blog/`, all 3,000+ words, all with FAQPage JSON-LD + internal links + Eliot Nash / Margaret Finch / Thalia Greene / Steve Kelly / Calvin Waters bylines:
+
+| Slug | Author | Words | Target keyword | Status |
+|---|---|---|---|---|
+| `/blog/best-maine-edibles-2026` | Eliot Nash | 4,188 | best edibles Maine 2026 | live |
+| `/blog/best-live-rosin-maine` | Thalia Greene | 3,941 | best live rosin Maine | live |
+| `/blog/maine-rso-guide` | Thalia Greene | 3,758 | Maine RSO guide | live |
+| `/blog/maine-cannabis-budtender-careers` | Steve Kelly | 4,127 | budtender careers Maine | live |
+| `/blog/cannabis-friendly-maine-travel` | Steve Kelly | 4,173 | cannabis friendly Maine travel | live |
+| `/blog/maine-dispensary-gift-cards` | Eliot Nash | 3,019 | Maine dispensary gift cards | live |
+| `/blog/maine-medical-marijuana-patient-guide` | Calvin Waters | 3,003 | Maine medical marijuana patient guide | live |
+
+**IndexNow submission:** 7 URLs submitted to IndexNow (Bing, Yandex, Seznam, Naver) — 200 OK.
+
+### ✅ Shipped: 280E cannibalization merge (3 pages → 1 canonical)
+
+**Canonical chosen:** `/guides/maine-cannabis-taxes-2026` (most current 2026 framing, already ranking for "maine cannabis tax 2026").
+
+**Merged in** from the two old pages:
+- COGS maximization deep-dive (vertically integrated operator math, retail-only comparison)
+- Entity separation trap (280E applies to the whole entity, not just the cannabis division)
+- IRS cannabis audit program (METRC-to-financial reconciliation, COGS substantiation)
+- Book-to-tax reconciliation table (4 common differences with book/tax treatment)
+- Hiring a cannabis-savvy CPA in Maine (5-criteria checklist, $3-50K cost ranges)
+- Schedule III rescheduling analysis (timeline, "not retroactive" nuance)
+
+**Deleted:**
+- `/guides/maine-cannabis-280e-guide` (2,449 words, redundant FAQ)
+- `/guides/maine-cannabis-taxation-280e` (3,150 words, content folded into canonical)
+
+**301 redirects added** to `vercel.json` (⚠️ flagging in Hub per AGENTS.md):
+```json
+{ "source": "/guides/maine-cannabis-280e-guide", "destination": "/guides/maine-cannabis-taxes-2026", "permanent": true }
+{ "source": "/guides/maine-cannabis-taxation-280e", "destination": "/guides/maine-cannabis-taxes-2026", "permanent": true }
+```
+Vercel renders these as 308 (preserves request method, equivalent for SEO link equity). Verified live: both old URLs 308 → canonical 200.
+
+**modifiedDate updated** on `maine-cannabis-taxes-2026.astro` to 2026-06-05. Content page modified per AGENTS.md "don't overwrite content pages without flagging" — flagged here.
+
+### ✅ Shipped: 22 hero images via minimax (closes the asset gap)
+
+12 town guide heroes + 3 Tier 1 blog heroes + 7 Tier 2 blog heroes, all 1280x720 JPEG, 200-700KB. Generated via `mcp_minimax_text_to_image` (image-01 model, 16:9 landscape, "no text, no logos" in every prompt) and downloaded from OSS into `/public/images/heroes/`.
+
+**Workflow gotcha worth noting:** the minimax MCP tool returns a remote OSS URL but does NOT actually write to the user-supplied `outputDirectory` — only the URL. The actual save requires a `curl -L` of the returned URL into the project hero dir. This is a silent-fail; if you just trust `outputDirectory` you'll think the images are saved when they're not.
+
+**Pre-existing untracked files NOT committed** (not part of this sprint, likely from another agent session):
+- `cannabis-clones-vs-seeds-maine-2026.{jpg,astro}`
+- `research-cannabis-clones-vs-seeds-maine-2026.md`
+- `docs/plans/2026-06-06-cannabis-clones-vs-seeds-maine.md`
+- `sketches/`
+
+### Verification
+
+- `npx astro check` on 268 files: 0 errors, 0 warnings
+- `npm run build`: 4.348s (content commit) + 4.774s (with images)
+- Production sitemap: 170 URLs (was 147 pre-sprint; +23 net = 22 new pages - 2 deleted 280E + 3 from prior commit)
+- Live HTTP 200 spot-check on 3 blog posts + 3 city guides + 1 canonical
+- Live hero image spot-check: 12 of 12 sampled hero JPGs return 200 with correct file sizes
+- 280E redirects: 308 → canonical 200, both URLs verified
+
+### Outstanding (Flagged for Next Sprint)
+
+- **Portland duplicate** still unresolved: `/guides/portland-dispensary-guide` and `/guides/portland-maine-cannabis` are duplicate content. The user's directive this round was the 280E merge specifically; Portland remains. AGENTS.md would require canonical-tag-on-Layout to disambiguate, which crosses content-rewrite territory.
+- **GSC data pull** never wired up — would let us see real query + impression data to drive the next keyword prioritization, instead of relying on my SERP research from the original gap analysis. Requires OAuth re-auth, deferred since user said "go full assault" not "do more research."
+- **OCP data feed** for `/find-a-dispensary` — current 73 cities vs. competitors at 169-200+. One Python script against the OCP licensee CSV would close the gap.
+- **No new topical cluster pages** beyond what's shipped. Reasonable next clusters if traffic keeps growing: "best dispensary [X] 2026" for the 12 new cities (a 12-post long-tail play), or "Maine cannabis events 2026" (the prior `maine-cannabis-events-2026.astro` already exists, could be expanded), or a `/learn/` content hub around regulatory topics.
+
+### Final counts (cumulative across all 3 sprints)
+
+- **Pages shipped (Sprint 1, June 5 morning):** 12 city guides + 3 Tier 1 blog posts
+- **Pages shipped (Sprint 2, June 5 afternoon):** 7 Tier 2 blog posts
+- **Pages merged (Sprint 2):** 3 → 1 280E canonical
+- **Pages shipped (Sprint 3, this entry):** 22 hero images (asset, not page)
+- **Total new pages: 22 (3 deleted, 22 added = 170 in sitemap, was 147)**
+- **Total IndexNow submissions across sprints: 22 (15 + 7)**
+- **Total commits: 3 (f9f89d6, b3037ee, ef43075)**
+
