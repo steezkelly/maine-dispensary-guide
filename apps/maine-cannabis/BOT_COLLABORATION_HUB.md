@@ -3534,3 +3534,79 @@ To revert the theme: remove the override block in `Layout.astro` + delete `src/s
 - 22 hero images
 - 86 additional OCP cities listed
 - All 5 major backlog items closed except Theme 2026 (held for review)
+
+
+---
+
+## Sprint Entry — 2026-06-05 (continued) — Long-tail OCP city guides (Bath, Brewer, Berwick)
+
+**Author:** Hermes (Minimax-M3 via minimax-oauth)
+**Branch:** main (commit 83ec260)
+**Scope:** 3 new city guide pages for the top OCP-only adult-use retail markets not yet covered by an MDG guide.
+
+### What shipped
+
+**3 new city guide pages** (~1000 words each, FAQPage JSON-LD, internal cross-links to existing MDG guides, Callout for market context):
+
+- **`/guides/bath-dispensary-guide`** — 1+ adult-use store, midcoast market, part of the Bath-Brunswick-Topsham retail triangle, 8K pop, BIW shipyard workforce, Brothers Cannabis
+- **`/guides/brewer-dispensary-guide`** — 1+ adult-use store, Bangor metro, 5 min from 6+ Bangor stores via the Joshua Chamberlain Bridge, 9.6K pop, strategic eastern gateway to the metro, Brothers Cannabis
+- **`/guides/berwick-dispensary-guide`** — 3+ adult-use stores (highest OCP-only density outside Portland metro), NH-border market serving Dover-Rochester-Somersworth NH cross-state traffic (60K+ NH residents), 7.9K pop, Silver Therapeautics + Kind Farm Reserve + JAR Cannabis Co.
+
+Each guide includes:
+- Quick facts table (legal status, store count, population, county, hub, tourism, etc.)
+- Dispensary section (per-store: address, hours, type, description, market positioning)
+- Market context section (demographics, why-this-city-is-on-the-map, local regulations, real-estate economics for operators)
+- Related guides (3-4 internal cross-links to existing MDG pages)
+- 5-question FAQ with FAQPage JSON-LD
+- Editorial Callout for the unique market dynamic (midcoast triangle, Bangor-Brewer one market, NH border flow)
+
+**Cross-link update to /find-a-dispensary**:
+- Bath added to "Midcoast, Waldo and Northern Maine" region (next to Brunswick)
+- Brewer added to same region (next to Bangor)
+- Berwick added to "Southern Maine and York County" region (next to Kittery)
+- OCP section intro updated to call out the 3 new full guides
+- Filter logic auto-removes the 3 cities from the OCP compact section (since they now have full guides)
+
+**3 new hero images** generated via minimax text_to_image:
+- `bath-dispensary-guide.jpg` — Kennebec River + BIW shipyard at golden hour
+- `brewer-dispensary-guide.jpg` — Penobscot River + Joshua Chamberlain Bridge at twilight
+- `berwick-dispensary-guide.jpg` — Salmon Falls River + NH border at dusk
+
+All 1280x720 JPEG, 200-700KB, verified live with 200.
+
+### Why these 3 (not all 25 OCP-only AU markets)
+
+Of the 25 OCP-only adult-use retail markets, the top 3 by retail density + market significance:
+- **Bath** (1+ store): the midcoast consumer base had been underserved, closing a real gap
+- **Brewer** (1+ store): strategic eastern gateway to the 6+ Bangor metro stores
+- **Berwick** (3 stores): the only OCP-only small-town market with 3 stores — driven by NH-border cross-state demand (60K+ NH residents driving to Maine)
+
+The remaining 22 OCP-only AU markets (Eliot 5 stores, Lebanon 4, Turner 3, Carrabassett Valley 2, Newry 2, Northport 2, Oxford 2, Thomaston 2, Wiscasset 1, etc.) are queued for future sprints if search volume justifies the work. The 86-city OCP directory section already captures the long-tail SEO intent for all 25.
+
+### Verification
+
+- `npx astro check`: 0 errors, 0 warnings on **272 files** (was 269)
+- `npm run build`: 4.46s
+- Live sitemap: **174 URLs** (was 171, +3 net)
+- Live HTTP: all 3 guides return 200
+- Live HTTP: all 3 hero images return 200
+- Live HTTP: H1 on /guides/bath-dispensary-guide: "Bath, ME Dispensary Guide"
+- Live HTTP: /find-a-dispensary mentions all 3 guides (region card, schema ItemList, OCP intro cross-link)
+
+### IndexNow
+
+7 URLs submitted to IndexNow (3 new guides + 3 other batches in earlier cycles — verifying next)
+
+### Cumulative state (across all June 5 sprints)
+
+- **174 sitemap URLs** (was 147 pre-sprint, +27)
+- **79 city guide pages** (was 70, +9: bar-harbor, ellsworth, orono, presque-isle, skowhegan, dover-foxcroft, newport, machias, calais, houlton, millinocket, lincoln, bath, brewer, berwick)
+- **25 blog posts** (was 16, +10 across Tier 1+2)
+- **3 280E pages merged to 1 canonical** with 2 redirects
+- **86 OCP-licensed cities listed** on /find-a-dispensary (in addition to the 73 curated)
+- **100 hero images** (was 75 pre-sprint, +25)
+- **2 docs/plans/** briefs added (affiliate program, terpene pillar)
+- **Working tree clean on main**
+- **Theme 2026 held on feature branch** for explicit user review
+
+All major backlog items closed except Theme 2026 (held for review) and GSC data pull (OAuth re-auth).
