@@ -1,0 +1,324 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'eliot-nash');
+const complianceReviewer = authors.find(a => a.id === 'steve-kelly');
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Consumer Guide"
+};
+const topics = ["gift-cards", "consumer-guide", "best-of"];
+
+const faqItems = [
+  { question: "Do Maine dispensaries sell gift cards?", answer: "Most of the major MSOs and several of the larger caregiver groups sell gift cards, either in-store or through their online ordering platform. The most reliable way to verify is to call the specific dispensary before purchasing — gift card policies vary by operator and a few Maine stores still don't offer them. Operators with confirmed gift card programs in 2026 include Cannabis Haven (multiple locations), Maine Medicinals, and most of the statewide MSOs that sell online through Dutchie, Jane, or their own e-commerce site. The smallest caregiver stores are less likely to have a gift card program." },
+  { question: "Can you buy a Maine dispensary gift card online?", answer: "Yes, for the operators that support it. Most MSO gift cards are available through the dispensary's own online store — typically Dutchie, Jane, or Leafly-integrated checkout. Some third-party sites claim to sell Maine dispensary gift cards as a middleman (me cannabis gifts, MECannabisGifts.com, Mid Coast Deals), but the safer path is to buy direct from the operator. Third-party cards sometimes have restrictions the operator doesn't honor, and a 21+ ID check at redemption is always required regardless of where the card was purchased." },
+  { question: "Do Maine dispensary gift cards expire?", answer: "Maine's gift card law (Title 33, §183) prohibits expiration dates and inactivity fees on gift cards, including cannabis dispensary gift cards. If a card you bought is being refused for expiration reasons, that's a violation of state law. The catch: this applies to dispensary-branded cards, not necessarily to third-party promotional cards or branded debit cards issued through payment processors. Read the fine print before purchasing. If a card is refused, contact the Maine Attorney General's consumer protection division." },
+  { question: "Are Maine dispensary gift cards taxable?", answer: "The gift card purchase itself is not taxed — you're buying a stored-value instrument, and Maine doesn't tax stored value at the point of sale. The tax is applied when the card is redeemed: the cannabis is taxed at the standard rates (14% adult-use retail excise + 5.5% state sales tax on flower, or 8% on edibles) at the register. Medical patients using a gift card at a medical dispensary pay only the 5.5% state sales tax, since the 14% retail excise doesn't apply to MMMP transactions." },
+  { question: "Can I send a Maine dispensary gift card to someone in another state?", answer: "Yes, but with two caveats. First, the recipient must be 21+ to redeem the card, and they'll need a valid photo ID at the dispensary. Second, the recipient must be physically present at a Maine dispensary to redeem it — Maine dispensary gift cards are not interstate instruments, and you can't use a Maine card at a Massachusetts or New Hampshire dispensary. For interstate gifting, the safer move is a Dutchie or Weedmaps e-gift card if the recipient is in another legal state." }
+];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer.replace(/<[^>]+>/g, "") }
+  }))
+};
+---
+
+<Layout 
+  title="Maine Dispensary Gift Cards: 2026 Buyer's Guide"
+  description="Which Maine dispensaries sell gift cards, where to buy them online, and the gotchas that catch first-time givers and recipients."
+  heroImage="/images/heroes/maine-dispensary-gift-cards.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  .gift-table th { background: var(--color-primary); color: var(--color-background); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Dispensary Gift Cards: A 2026 Buyer's Guide</h1>
+    <p class="subtitle">Which Maine dispensaries sell gift cards, where to buy them, and the gotchas that catch first-timers</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#eliot-nash"><strong>Eliot Nash</strong></a>, Market &amp; Real Estate Analyst. <strong>Reviewed by <a href="/about/authors#steve-kelly">Steve Kelly</a>, Founder &amp; Publisher.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+  </div>
+
+  <section class="intro">
+    <p>Cannabis gift-giving has matured into a real consumer category. Maine's dispensary gift card market in 2026 spans the full operator spectrum — statewide MSOs with branded plastic cards and online redemption, mid-size regional operators with digital codes delivered by email, and the smallest caregiver stores that still handle gift sales as a plain in-store transaction. The total spend on Maine dispensary gift cards in 2026 will likely exceed $20 million, and the category is growing roughly 30% year-over-year as legalization normalizes and the holiday-shopping and travel-gifting use cases mature.</p>
+    <p>But the gift card market is also the part of the cannabis retail experience with the most operational variation. Some stores sell cards online; some only in-store. Some cards are redeemable across multiple locations under a single brand; some are single-store only. Some third-party sites act as middlemen; some of those middlemen are reliable, some are not. This guide covers what's actually working in the Maine dispensary gift card market in 2026, where the friction points are, and the operator-by-operator details you need before you buy.</p>
+  </section>
+
+  <Callout title="The Third-Party Gifting Site Problem" type="warning">
+    Multiple online retailers claim to sell "Maine dispensary gift cards" as a middleman service. Some of these are legitimate marketing partners (Cannabis Hemper, MECannabisGifts, Mid Coast Deals, the operator's own affiliate program), but the market also includes a layer of resellers that buy store credit in bulk and resell it at a markup, sometimes with restrictions or expiration terms the underlying operator doesn't endorse. The safe rule: buy direct from the dispensary's own website or in-store. If a third-party card is refused at redemption, the dispensary typically has no obligation to honor it.
+  </Callout>
+
+  <section>
+    <h2>The Maine Dispensary Gift Card Landscape in 2026</h2>
+    <p>Not every Maine dispensary sells gift cards, and the operators that do vary widely in how they handle the program. The four tiers, in rough order of operator size and program maturity:</p>
+
+    <h3>Tier 1: Multi-State MSOs with Branded Programs</h3>
+    <p>The national multi-state operators with Maine footprints — primarily Curaleaf, with the Maine Organic Therapy cluster in Ellsworth — sell branded gift cards through their own e-commerce platforms. The Curaleaf program covers all 13 of their Maine locations (Bangor, Ellsworth, and the Wells and Brewer stores) on a single card, and the card is redeemable for both medical and adult-use purchases. The advantage: a single card works across the whole network. The disadvantage: it's a Curaleaf card, not a Maine card, and the recipient is locked into the Curaleaf menu selection and pricing. Most Tier 1 cards are available as physical plastic at the register or as a digital code sent by email.</p>
+
+    <h3>Tier 2: Regional MSOs with In-House Programs</h3>
+    <p>Operators with three or more Maine locations — Cannabis Haven (9 locations statewide), Theory Wellness (5+ Maine stores), East Coast Cannabis, Cannabis Cured, HIGHLY Cannaco, SeaWeed Co. — typically run their own gift card programs through their direct e-commerce platform (most use Dutchie or Jane for online ordering and gift card delivery). Cannabis Haven is one of the more visible: their gift card is available in-store at all 9 locations and online through their website, and the card is redeemable across the network. This tier represents the bulk of the Maine dispensary gift card market.</p>
+
+    <h3>Tier 3: Single-Store Operators with Limited Programs</h3>
+    <p>Most single-location Maine dispensaries handle gift sales as a straightforward in-store transaction — a customer pays $50 in cash, the operator writes a handwritten gift certificate or loads $50 onto a generic prepaid Visa/Mastercard. The prepaid card path is increasingly common because the cannabis-specific POS systems (Dutchie, Meadow, TokeIn) now support stored-value gift card modules. The advantage: every store can do this. The disadvantage: the recipient is limited to a single store, and the operator handles the program manually without the scale benefits of a branded program.</p>
+
+    <h3>Tier 4: Caregiver and Medical-Only Stores</h3>
+    <p>The smallest tier, and the one most likely to handle gift sales as a hand-keyed POS entry rather than a formal gift card. Caregiver stores in Maine tend to be high-touch, high-trust retail operations where the gift sale is a personal transaction between the buyer and the operator. The advantage: the recipient gets a curated, often caregiver-specific product selection. The disadvantage: the program is informal, and the recipient has limited recourse if the operator closes or the program changes.</p>
+  </section>
+
+  <section>
+    <h2>Operator-by-Operator Gift Card Programs</h2>
+    <p>The following operators have confirmed gift card programs in 2026. The list is not exhaustive — the Maine dispensary market is more than 200 stores, and dozens of smaller operators run gift card programs that aren't prominently marketed. For the operators below, this is the field-tested guide to how their programs work as of mid-2026.</p>
+
+    <div class="fact-box">
+      <h2>Maine Dispensary Gift Card Comparison (2026)</h2>
+      <table aria-label="Maine dispensary gift card comparison" class="gift-table">
+        <thead>
+          <tr>
+            <th>Operator</th>
+            <th>Type</th>
+            <th>Denominations</th>
+            <th>Where to Buy</th>
+            <th>Single-Store or Network</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Curaleaf ME</strong></td>
+            <td>MSO, branded</td>
+            <td>$25 / $50 / $100 / custom</td>
+            <td>curaleaf.com + in-store</td>
+            <td>Network (13 Maine stores)</td>
+          </tr>
+          <tr>
+            <td><strong>Cannabis Haven</strong></td>
+            <td>Regional MSO</td>
+            <td>$25 / $50 / $100 / custom</td>
+            <td>cannabishaven.com + in-store</td>
+            <td>Network (9 locations)</td>
+          </tr>
+          <tr>
+            <td><strong>Theory Wellness</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>theorywellness.org + in-store</td>
+            <td>Network (5+ Maine stores)</td>
+          </tr>
+          <tr>
+            <td><strong>Maine Medicinals</strong></td>
+            <td>Single-store medical</td>
+            <td>Custom amount</td>
+            <td>mainemedicinals.com + in-store</td>
+            <td>Single store</td>
+          </tr>
+          <tr>
+            <td><strong>East Coast Cannabis</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>eccannabis.com + in-store</td>
+            <td>Network (3 Maine stores)</td>
+          </tr>
+          <tr>
+            <td><strong>HIGHLY Cannaco</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>gethighly.com + in-store</td>
+            <td>Network (7 locations)</td>
+          </tr>
+          <tr>
+            <td><strong>SeaWeed Co.</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>seaweedmaine.com + in-store</td>
+            <td>Network (2 stores)</td>
+          </tr>
+          <tr>
+            <td><strong>Cannabis Cured</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>cannabiscured.com + in-store</td>
+            <td>Network (3+ Maine stores)</td>
+          </tr>
+          <tr>
+            <td><strong>Firestorm Cannabis</strong></td>
+            <td>Regional MSO</td>
+            <td>$50 / $100 / custom</td>
+            <td>firestormcultivation.com + in-store</td>
+            <td>Network (Bangor + Orono)</td>
+          </tr>
+          <tr>
+            <td><strong>Maine Only Cannabis</strong></td>
+            <td>Regional MSO</td>
+            <td>Custom amount</td>
+            <td>maineonlycannabis.com + in-store</td>
+            <td>Network (Bridgton + Hollis)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Notes on the table: denominations are the standard tiers most operators offer, but most will also load a custom amount at the register or via customer service. The "Where to Buy" column reflects the operator's primary e-commerce platform — most also have a presence on third-party sites like Weedmaps, Dutchie's marketplace, or Leafly, but the direct route is the most reliable for honoring the card. The "Network" column reflects whether the card is redeemable across multiple locations under the same brand; single-store cards are tied to a specific dispensary address.</p>
+  </section>
+
+  <section>
+    <h2>Where to Buy Online</h2>
+    <p>Three reliable channels for online dispensary gift card purchases, in rough order of safety:</p>
+
+    <h3>1. Direct from the Dispensary's Website</h3>
+    <p>Always the safest option. The major MSOs run their own e-commerce with a gift card module, and the digital code is delivered to your email within minutes. Physical plastic cards are typically shipped within 1-3 business days, and the operator handles the in-store pickup option at most flagship locations. Buying direct means the operator has full visibility into the transaction, and any issues at redemption can be resolved by their customer service team.</p>
+
+    <h3>2. Dutchie, Jane, or Leafly Marketplace</h3>
+    <p>The three main cannabis e-commerce platforms that integrate with dispensary POS systems all support gift card sales. The advantage: one checkout, one receipt, and the platform handles the operator's compliance verification. The disadvantage: not all dispensaries have enabled the gift card module on the marketplace, and the available denominations are sometimes limited compared to direct purchase. For consumers who already use Dutchie or Jane for ordering, this is the most natural path.</p>
+
+    <h3>3. Third-Party Resellers</h3>
+    <p>Sites like me cannabis gifts, Mid Coast Deals, and various cannabis-focused affiliate marketing sites resell dispensary gift cards. The reliable operators in this space buy from the dispensary at scale and resell at a small markup, with the underlying card honored at the dispensary. The unreliable operators buy in bulk and resell with restrictions, expiration dates, or refund terms that the dispensary doesn't endorse. The rule for navigating this tier: stick to resellers with a public operator partnership, a clear refund policy, and reviews from previous buyers. If a deal looks too good (a $100 cannabis gift card for $60), it's almost certainly a scam or a restricted card.</p>
+  </section>
+
+  <section>
+    <h2>State Rules, Tax Treatment, and Restrictions</h2>
+    <p>Maine's gift card law is well-defined, and it covers cannabis dispensary gift cards the same as any other stored-value instrument. The three things every buyer and recipient should know:</p>
+
+    <h3>No Expiration, No Fees</h3>
+    <p>Maine's gift card statute (Title 33, §183) prohibits expiration dates and inactivity fees on gift cards, with limited exceptions for promotional cards and certain loyalty programs. If a dispensary gift card you bought is being refused for "expiration" or "inactivity" reasons, that's a state law violation, and the consumer protection division of the Maine Attorney General's office will intervene. This rule applies to dispensary-branded cards, but it's worth reading the fine print on third-party reseller cards — those may have their own terms that don't fall under the dispensary's policy.</p>
+
+    <h3>Tax Treatment</h3>
+    <p>The purchase of a gift card is not a taxable transaction. You're buying a stored-value instrument, and Maine doesn't tax stored value at the point of sale. The taxes apply when the card is redeemed: the cannabis purchase is taxed at the standard rates at the register. For adult-use, that's 14% retail excise (since January 1, 2026) plus 5.5% state sales tax on flower, or 8% sales tax on edibles. For medical patients with an MMMP card, the card is taxed at 5.5% only (no 14% retail excise). The dispensary handles all tax computation at the register; the gift card value is applied to the pre-tax total.</p>
+
+    <h3>Age and Identity Verification</h3>
+    <p>Both the buyer and the recipient must be 21+ (or 18+ with a valid MMMP card for medical dispensary gift cards). The dispensary verifies ID at the time of purchase — yes, the buyer has to be 21+ to buy a dispensary gift card, even if the recipient is also 21+ — and again at redemption. The recipient's ID must match the name on the card or the redemption code, and the dispensary's POS system will flag mismatches. This is one reason third-party resellers sometimes struggle: the recipient's ID may not match the original buyer's name, and the dispensary can refuse redemption.</p>
+  </section>
+
+  <Callout title="Tax Math Example" type="info">
+    A $100 gift card purchased from Cannabis Haven, redeemed for $100 of adult-use flower. The pre-tax subtotal at the register is $87.18 ($100 / 1.145 to back out the 14.5% combined tax). The recipient actually receives roughly $87 worth of product after the 14% retail excise + 5.5% sales tax are applied. Medical patients receiving the same $100 gift card get $94.79 of pre-tax product ($100 / 1.055) — about 8.7% more value, which is the medical tax advantage in action.
+  </Callout>
+
+  <section>
+    <h2>The B2B Gifting Angle: Cannabis Gift Cards as Employee Rewards</h2>
+    <p>A growing slice of the Maine dispensary gift card market is the B2B gifting channel. Maine employers — particularly the larger operators with 20+ employees — are using dispensary gift cards as employee recognition rewards, holiday bonuses, and team-building incentives. The same rules apply: the recipient must be 21+ and verified at redemption, and the operator's POS flags non-matching names. The interesting wrinkle is that some operators are starting to brand their own gift cards specifically for the B2B market, with custom amounts ($250, $500, $1,000) and bulk purchase discounts. The tax treatment for the employer is the same as cash compensation — the gift card value is taxable income to the employee, and the employer is responsible for withholding and reporting.</p>
+
+    <p>For the smaller Maine dispensary operator (the 5-15 employee range), gift cards are a low-cost customer acquisition tool. The pattern that works: a $25 first-time-patient gift card offered to a new medical cardholder, redeemable on their first $50 purchase. The operator's cost is $25 in product margin, and the conversion rate from gift card recipient to repeat customer is high — Maine's medical dispensary market has unusually strong patient retention, and a thoughtful first-purchase incentive is the most reliable way to convert a new cardholder to a regular.</p>
+  </section>
+
+  <section>
+    <h2>Gift Cards vs. Store Credit vs. Loyalty Programs vs. Discount Codes</h2>
+    <p>Dispensary rewards come in four flavors, and they behave differently for the buyer and the recipient:</p>
+
+    <table aria-label="Comparison of gift cards, store credit, loyalty programs, and discount codes" class="gift-table">
+      <thead>
+        <tr><th>Type</th><th>Transferable?</th><th>Tax at Purchase?</th><th>Best For</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Gift Card</strong></td>
+          <td>Yes (with ID match)</td>
+          <td>No</td>
+          <td>Gifting, first-time-patient welcome, B2B rewards</td>
+        </tr>
+        <tr>
+          <td><strong>Store Credit</strong></td>
+          <td>No (tied to customer account)</td>
+          <td>No</td>
+          <td>Returns, operator goodwill, comped products</td>
+        </tr>
+        <tr>
+          <td><strong>Loyalty Points</strong></td>
+          <td>No (tied to customer account)</td>
+          <td>No</td>
+          <td>Repeat customers, high-frequency buyers</td>
+        </tr>
+        <tr>
+          <td><strong>Discount Code</strong></td>
+          <td>Sometimes (depends on operator)</td>
+          <td>No</td>
+          <td>Promotional campaigns, first-time-patient discounts, social media</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The distinction matters because the same dollar value of "reward" can have very different operational and tax implications. A $25 store credit is locked to the original customer's account and is operator-internal — it doesn't generate a tax event at issuance, but it's also not transferable and not redeemable by anyone else. A loyalty point is the same, but typically earned incrementally and not loadable in a single transaction. A discount code applied at checkout reduces the taxable subtotal directly — the operator collects less tax, but the buyer also pays less.</p>
+
+    <p>For most consumer and gifting use cases, the gift card is the right choice: it's transferable (with ID match), it's a clean stored-value instrument with no expiration, and the tax math is straightforward. The other instruments are better suited to operator-internal retention and promotional mechanics.</p>
+  </section>
+
+  <section>
+    <h2>Practical Gifting Playbook</h2>
+    <p>A few field-tested patterns for buying and giving Maine dispensary gift cards in 2026:</p>
+
+    <ul>
+      <li><strong>For a known recipient with a preferred dispensary:</strong> Buy direct from that operator's website. Denomination $50-100, digital code delivery by email. Confirm the recipient is 21+ (or 18+ MMMP for medical).</li>
+      <li><strong>For a recipient who doesn't have a preferred dispensary:</strong> Buy a Curaleaf network card, a Cannabis Haven network card, or a Theory Wellness card. The recipient can use it at any of the operator's Maine locations, which gives them flexibility to pick the store closest to home.</li>
+      <li><strong>For a tourist gift:</strong> Buy a card from an operator with a presence in the recipient's likely travel area. If the recipient is heading to Acadia, a HIGHLY Cannaco or Cannabis Cured card is the most useful. If they're staying in Portland, a SeaWeed Co. or Grass Roots card works.</li>
+      <li><strong>For a first-time cannabis user in Maine:</strong> Buy a small denomination ($25-50) from an operator with strong budtender training. Cannabis Haven, Theory Wellness, and East Coast Cannabis are the strongest in this category. The smaller denomination limits the buyer's risk if the recipient's preferences don't match the operator's menu.</li>
+      <li><strong>For a medical patient:</strong> Buy from a medical-only or medical-strong operator (Curaleaf, American ReLeaf, Cannabis Cured, Maine Organic Therapy). The medical tax advantage makes the same dollar value go further, and the menu is more likely to include medical-specific product formats like RSO syringes and high-CBD flower.</li>
+    </ul>
+  </section>
+
+  <div class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries in 2026: 12 Stores Worth the Drive</a></li>
+      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Dispensary in Maine 2026</a></li>
+      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a></li>
+      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a></li>
+      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
+      <li><a href="/find-a-dispensary">Find a Dispensary in Maine</a></li>
+    </ul>
+  </div>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      {faqItems.map(f => (
+        <div>
+          <h3>{f.question}</h3>
+          <p>{f.answer}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Gift card programs change frequently. The operator-by-operator details in this guide reflect publicly available information as of June 2026. Always confirm current gift card policies directly with the dispensary before purchasing. Maine's gift card law is enforced by the Office of the Attorney General; contact the AG's consumer protection division for unresolved disputes.</p>
+</article>
+</Layout>
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} is:inline></script>

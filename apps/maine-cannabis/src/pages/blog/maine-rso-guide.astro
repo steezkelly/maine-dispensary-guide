@@ -1,0 +1,282 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'thalia-greene');
+const complianceReviewer = authors.find(a => a.id === 'calvin-waters');
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cultivation & Horticulture Reviewer",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Medical & Wellness"
+};
+const topics = ["rso", "medical", "concentrates"];
+
+const faqItems = [
+  { question: "What is RSO used for?", answer: "RSO is most commonly used by Maine patients for chronic pain, severe insomnia, chemotherapy-induced nausea, MS spasticity, and as a general-purpose full-spectrum cannabis oil for patients who want the entire cannabinoid and terpene profile of the plant in a single product. The original Rick Simpson protocol promoted RSO as a treatment for skin cancer and other conditions; the modern clinical consensus is that RSO is a useful symptomatic tool for the conditions above, but it is not a cure for cancer or any other disease. Buyer beware of any source that claims RSO cures cancer, multiple sclerosis, Crohn's disease, or any other specific condition — the research does not support those claims, and Maine medical providers will not prescribe RSO as a curative therapy." },
+  { question: "How do you take RSO?", answer: "RSO is taken orally, typically by dispensing a small amount (rice-grain-sized for the standard dose, slightly larger for a stronger dose) from the syringe under the tongue, or onto a piece of food. Sublingual administration produces faster onset (15-30 minutes) than swallowing directly. The onset for swallowed RSO is 45-90 minutes, with a peak at 2-3 hours and a duration of 6-10 hours. RSO is also sometimes applied topically for localized skin conditions, though the research on topical RSO efficacy is limited. Do not smoke or vape RSO; the formulation is too viscous for vaporization and combustion destroys the minor cannabinoids." },
+  { question: "Is RSO legal in Maine?", answer: "Yes. RSO is legal under both the Maine medical cannabis program (MMMP) and the adult-use program, and it is sold at licensed dispensaries throughout the state. Medical patients have access to higher-dose RSO products (up to 1g syringes, often at 50-80% THC) and pay only the 5.5% state sales tax with no 10% adult-use excise. Adult-use customers can purchase RSO subject to the standard 100mg per package limit, which means most adult-use RSO is sold as 1g syringes in doses that the buyer self-measures. There is no Maine-specific restriction on RSO format or potency beyond the standard adult-use package limit." },
+  { question: "How much RSO should a beginner take?", answer: "A beginner should start at a rice-grain-sized dose of RSO (approximately 25-50mg of RSO, containing roughly 15-30mg of THC depending on the potency of the specific product) and wait a full 24 hours before taking more. The 24-hour window is the original Rick Simpson protocol and remains the modern standard for a first-time RSO user, because the full effect of a single dose can take 12-24 hours to fully resolve. After the initial dose, a beginner can increase by a similar rice-grain amount every 2-3 days, building slowly toward the target therapeutic dose. The risk of overconsumption is real; RSO is highly concentrated, and a 1g syringe contains 500-800mg of THC at typical potency. The dosing discipline matters more than the product." },
+  { question: "How do I tell real RSO from fake RSO?", answer: "Real RSO is dark brown to black, has a thick sticky consistency that holds its shape in the syringe, and has a strong cannabis aroma that often includes a sharp solvent note (ethanol) that fades after the cure is complete. The COA on real RSO will show a total THC content of 50-80% with a meaningful minor cannabinoid profile (CBD, CBG, CBN, CBC) and a total terpene content of 2-6%. Fake RSO — usually distillate with re-added cannabis-derived terpenes, or distillate cut with coconut oil or MCT — is lighter in color, more liquid, and has a COA showing 85-95% THC with little or no terpene or minor cannabinoid content. The visual difference is real and the COA difference is definitive. If a product is labeled RSO but the COA looks like distillate, it is not RSO." }
+];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer.replace(/<[^>]+>/g, "")
+    }
+  }))
+};
+---
+
+<Layout 
+  title="RSO in Maine 2026: A Buyer's Guide to Rick Simpson Oil"
+  description="What RSO is, how to dose it, where to buy it in Maine, and the medical research context — with buyer-beware markers for distillate mislabeled as RSO."
+  heroImage="/images/heroes/maine-rso-guide.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .operator-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+  .operator-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .operator-card .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+  .operator-card .meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .operator-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+</style>
+
+<article class="blog-post">
+  <div class="article-header">
+    <h1>RSO in Maine 2026: A Buyer's Guide to Rick Simpson Oil</h1>
+    <p class="subtitle">What RSO actually is, how to dose it, where to buy it in Maine, and what the medical research says about it.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#thalia-greene"><strong>Thalia Greene</strong></a>, Cultivation &amp; Horticulture Reviewer. <strong>Reviewed by <a href="/about/authors#calvin-waters">Calvin Waters</a>, Licensing &amp; Compliance Analyst.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+  </div>
+
+  <section class="intro">
+    <p>RSO — Rick Simpson Oil — is the most medically positioned cannabis concentrate in the Maine market, and the most misunderstood. The name refers to a specific full-spectrum cannabis oil produced through an ethanol wash of decarboxylated cannabis flower, popularized by Rick Simpson, a Canadian medical cannabis advocate who promoted the oil in the early 2000s as a treatment for his own skin cancer. The original claims were expansive; the modern clinical consensus is more measured. RSO is a useful full-spectrum cannabis product with real symptomatic applications for pain, sleep, and chemotherapy-induced nausea. It is not a cure for cancer or any other disease. The distinction matters for buyers who are evaluating the product for medical use.</p>
+    <p>For a Maine buyer, the practical questions are: what is RSO, how is it different from the other concentrates on the dispensary shelf, what dose is appropriate, where can you buy legitimate RSO, and how do you tell real RSO from a distillate that has been mislabeled. This guide covers each of those questions in turn, with a candid look at the buyer-beware markers that are increasingly common in the adult-use market. For the broader medical framework — qualifying conditions, the MMMP card application, and the OCP regulatory structure — the <a href="/blog/maine-medical-marijuana-patient-guide">Maine medical marijuana patient guide</a> covers the state program in detail. For the operator-side extraction licensing that governs RSO production, see the <a href="/guides/maine-cannabis-extraction-licensing">Maine cannabis extraction licensing guide</a>.</p>
+  </section>
+
+  <Callout title="RSO vs. Distillate: A Buyer-Beware Marker" type="warning">
+    A meaningful share of products labeled "RSO" in the Maine adult-use market are actually distillate with re-added cannabis-derived terpenes, packaged in a syringe to mimic the RSO format. The visual difference is real but not always obvious to a first-time buyer. The definitive difference is the COA: real RSO tests at 50-80% THC with a meaningful minor cannabinoid profile and 2-6% total terpenes; distillate tests at 85-95% THC with little or no minor cannabinoids and 0-2% terpenes. If the COA on a syringe product looks like distillate, the product is not RSO regardless of what the label says. The COA test is fast — most Maine dispensaries can produce one within 24 hours.
+  </Callout>
+
+  <section>
+    <h2>What RSO Actually Is</h2>
+    <p>RSO is a full-spectrum cannabis oil produced by washing decarboxylated cannabis flower in food-grade ethanol, filtering out the plant material, and evaporating the ethanol to leave a thick, dark, cannabis-saturated oil. The process is mechanically simple but the result is chemically distinct from the other concentrate categories on a Maine dispensary shelf.</p>
+
+    <h3>The Production Process</h3>
+    <p>The starting material is high-quality cannabis flower that has been decarboxylated — heated to convert the THCA and CBDA into the active THC and CBD forms. The decarbed flower is submerged in food-grade ethanol (typically 190-proof or higher), agitated to dissolve the cannabinoids and terpenes, and then filtered to remove the plant material. The ethanol is evaporated, typically under low heat and sometimes under vacuum, to leave a thick dark oil. The final product is a viscous, dark brown to black substance with a strong cannabis aroma and a THC content of 50-80%.</p>
+
+    <h3>Full-Spectrum vs. Distillate</h3>
+    <p>The ethanol wash is a non-selective solvent. It pulls THC, CBD, CBG, CBN, CBC, THCV, the native terpenes, flavonoids, and the plant waxes. The result is a chemically complex oil that preserves the full cannabinoid and terpene profile of the source flower. This is the defining feature of RSO and the source of the "entourage effect" argument — the theory that the full chemical profile of the plant works synergistically in ways that isolated THC does not.</p>
+    <p>Distillate, by contrast, is the product of short-path or wiped-film distillation, a process that strips almost everything except the target cannabinoid (typically THC). The distillation process produces a 85-95% pure THC oil that has been stripped of the minor cannabinoids, the terpenes, and the flavonoids. The result is a flavorless, high-potency oil that is ideal for vapes and edibles but lacks the full-spectrum profile of RSO. The medical and subjective difference between the two is the central RSO question, and the research literature on the entourage effect — while not definitive — supports the idea that full-spectrum products produce different effects than isolated THC at the same dose.</p>
+  </section>
+
+  <section>
+    <h2>Typical Composition</h2>
+    <p>The chemical composition of well-made RSO is consistent across producers. The major categories:</p>
+    <ul>
+      <li><strong>Total THC:</strong> 50-80% by weight. The high THC content is what makes RSO a dose-respecting product. A 1g syringe at 70% THC contains 700mg of THC, which is enough for 14-28 standard doses for a tolerant patient.</li>
+      <li><strong>CBD:</strong> 0.5-3% for THC-dominant RSO. Higher-CBD formulations (1:1 or 1:2 THC:CBD) are produced by some operators and are the right choice for patients who want the CBD contribution for anxiety, inflammation, or seizure-related conditions.</li>
+      <li><strong>Minor cannabinoids:</strong> CBG (0.5-2%), CBN (0.2-1%), CBC, THCV, and others at trace levels. The full minor cannabinoid profile is what distinguishes RSO from distillate and is a meaningful contributor to the subjective effect.</li>
+      <li><strong>Terpenes:</strong> 2-6% total. The native terpene profile of the source flower is preserved through the ethanol wash, which produces a strong strain-specific aroma and contributes to the subjective effect.</li>
+      <li><strong>Plant lipids and waxes:</strong> 5-15%. The plant-derived fats and waxes are not removed in the ethanol wash, which is part of what gives RSO its thick consistency. Some operators winterize the crude oil to remove the lipids, which produces a cleaner product but loses some of the minor cannabinoids in the process.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Medical Uses: What the Research Actually Says</h2>
+    <p>The medical evidence on RSO specifically is limited; most of the cannabis and chronic pain, sleep, and nausea research is on cannabis in general, not on the RSO format. The summary below covers what the research supports, what it suggests, and what is not supported at all.</p>
+
+    <h3>Chronic Pain</h3>
+    <p>There is reasonable evidence that full-spectrum cannabis products, including RSO, produce meaningful pain reduction for chronic neuropathic pain, chronic non-cancer pain, and pain associated with multiple sclerosis. A 2017 review by the National Academies of Sciences, Engineering, and Medicine concluded that cannabis and cannabinoids are effective for chronic pain in adults. The full-spectrum profile of RSO may be more effective than isolated THC for pain specifically, though the head-to-head research is limited.</p>
+
+    <h3>Insomnia and Sleep Disorders</h3>
+    <p>THC reliably reduces sleep onset latency (the time it takes to fall asleep) and increases total sleep time in the short term. The evidence is stronger for acute use than for chronic use, where tolerance develops. RSO's full-spectrum profile and the inclusion of sedating minor cannabinoids (CBN in particular) makes it a reasonable option for severe insomnia, especially at higher doses. For milder sleep issues, a low-dose edible or a CBN-forward formulation is a more appropriate entry point than full RSO.</p>
+
+    <h3>Chemotherapy-Induced Nausea and Vomiting (CINV)</h3>
+    <p>The evidence that cannabinoids reduce CINV is among the strongest in the cannabis literature. The FDA-approved dronabinol (Marinol) and nabilone (Cesamet) are synthetic THC formulations prescribed for this indication. RSO is a reasonable full-plant alternative for patients who do not respond to or tolerate the synthetic formulations. The dosing for CINV is typically 5-10mg of THC, 3-4 times per day during chemotherapy cycles, under medical supervision.</p>
+
+    <h3>Multiple Sclerosis Spasticity</h3>
+    <p>The evidence for cannabis and MS spasticity is moderate. Sativex (nabiximols), a 1:1 THC:CBD oromucosal spray, is approved in Canada, the UK, and most of Europe for MS spasticity, and the underlying research supports the conclusion that full-spectrum cannabis products reduce spasticity symptoms. RSO is a reasonable alternative for Maine MS patients who cannot access Sativex or who prefer a more flexible dosing format.</p>
+
+    <h3>What RSO Does Not Treat</h3>
+    <p>RSO is not a cure for cancer, multiple sclerosis, Crohn's disease, ALS, Parkinson's disease, Alzheimer's disease, or any other specific condition. The original Rick Simpson protocol promoted RSO as a cancer cure; the modern clinical evidence does not support that claim. Cannabis and cannabinoid products can be useful adjunctive therapies for cancer patients (for pain, nausea, appetite, and sleep), but they are not curative. Any source that claims RSO cures a specific disease is making a claim that the research does not support. Maine medical providers will not prescribe RSO as a curative therapy, and patients should be skeptical of any dispensary that markets RSO with curative claims.</p>
+  </section>
+
+  <section>
+    <h2>Dose Protocol: Original Rick Simpson vs. Modern Clinical</h2>
+    <p>The dosing protocol for RSO is the single most important part of using the product safely, and the difference between the original Rick Simpson protocol and the modern clinical guidance is significant.</p>
+
+    <h3>The Original Rick Simpson Protocol</h3>
+    <p>Rick Simpson's original protocol was aggressive: start at a rice-grain-sized dose (approximately 25-50mg of RSO, containing 15-30mg of THC), taken once daily for the first week, twice daily for the second week, three times daily for the third week, and increasing to four times daily by the fourth week. The protocol then recommended building to 1g of RSO per day (60-90 days total) — a target most modern practitioners consider excessively high. The original protocol was designed for a population of seriously ill patients willing to tolerate significant impairment, and it reflects a different era of clinical practice and patient expectation. The high-dose target is not consistent with the modern understanding of THC tolerance, dependence, and the risk of cannabinoid hyperemesis syndrome with chronic high-dose use.</p>
+
+    <h3>Modern Clinical Dosing</h3>
+    <p>The modern clinical consensus is to start low, titrate slowly, and target the minimum effective dose. For a first-time RSO user, the right starting dose is a rice-grain-sized amount once daily, with a 24-hour wait before the next dose. The reason for the 24-hour wait is that the full effect of a single RSO dose can take 12-24 hours to resolve, and stacking doses too quickly produces severe impairment and is the most common cause of negative RSO experiences.</p>
+    <p>After the initial 24-hour period, the dose can be increased to twice daily (morning and evening, separated by 8-10 hours) and held for 2-3 days. If the symptomatic relief is adequate, hold at that dose. If not, increase by a similar rice-grain increment and hold for another 2-3 days. The target dose for most chronic pain or insomnia patients is 0.5-1g of RSO per week, divided into 2-4 daily doses. This is a fraction of the original Rick Simpson target and reflects a more measured clinical approach.</p>
+
+    <table aria-label="RSO dose protocol comparison">
+      <thead>
+        <tr><th>Phase</th><th>Original Rick Simpson Protocol</th><th>Modern Clinical Dosing</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Day 1-3</td><td>Rice-grain, 1x daily</td><td>Rice-grain, 1x daily, 24-hour hold</td></tr>
+        <tr><td>Day 4-7</td><td>Rice-grain, 2x daily</td><td>Rice-grain, 2x daily, 2-3 day hold</td></tr>
+        <tr><td>Week 2</td><td>Rice-grain, 3x daily</td><td>Increase by 1 grain, 2x daily</td></tr>
+        <tr><td>Week 3+</td><td>Build to 1g/day over 90 days</td><td>Titrate to minimum effective dose (0.5-1g/week)</td></tr>
+        <tr><td>Maximum</td><td>1g/day (60-90mg THC per dose)</td><td>Titrate to symptom relief; no fixed maximum</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Where to Buy Real RSO in Maine</h2>
+    <p>RSO is sold at most licensed Maine dispensaries, and the operator list below covers the producers and retailers with the strongest RSO programs in the state. Pricing for a 1g syringe runs $40-80 depending on the operator and the potency. Medical patients pay 5.5% state sales tax only; adult-use customers pay the standard 15.5% combined tax.</p>
+
+    <h3>Maine's Alternative Caring — Windham</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Windham, statewide distribution</span>
+        <span><strong>Format:</strong> 1g syringes, 0.5g syringes</span>
+        <span><strong>License:</strong> Medical + adult-use</span>
+      </div>
+      <p>Maine's Alternative Caring is one of the original RSO specialists in the state. The Windham-based operator produces a 1g RSO syringe at 60-75% THC with a full-spectrum profile and publishes a per-batch COA. The store is medical-friendly and the staff is trained to walk first-time RSO patients through the dosing protocol. For a buyer new to RSO, Maine's Alternative Caring is the most reliable starting point in Maine.</p>
+    </div>
+
+    <h3>Maine Craft Cannabis</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Statewide distribution (D256 BH testing)</span>
+        <span><strong>Format:</strong> 1g syringes, published test results</span>
+        <span><strong>License:</strong> Adult-use + medical</span>
+      </div>
+      <p>Maine Craft Cannabis is a vertically integrated operator that publishes detailed Certificates of Analysis for its RSO line, including the D256 cannabinoid and terpene profiles. The published test results are among the most transparent in the state and are the right place to start for a buyer who wants to verify the product's full-spectrum profile before purchasing.</p>
+    </div>
+
+    <h3>The Maine Cannabis Company / Sola</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Statewide distribution</span>
+        <span><strong>Format:</strong> RSO syringes, 4:1 THC:CBN gummies</span>
+        <span><strong>License:</strong> Adult-use + medical</span>
+      </div>
+      <p>The Maine Cannabis Company produces a Sola-branded RSO line and uses the RSO as the infusion base for the 4:1 THC:CBN gummies covered in the <a href="/blog/best-maine-edibles-2026">Maine edibles guide</a>. The RSO syringes run 60-75% THC with a published COA, and the gummies are the most accessible way for a buyer to experience a true RSO-infused edible in a measured dose format.</p>
+    </div>
+
+    <h3>Sinsemilla</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Multiple locations statewide</span>
+        <span><strong>Format:</strong> RSO syringes, RSO-infused capsules</span>
+        <span><strong>License:</strong> Adult-use + medical</span>
+      </div>
+      <p>Sinsemilla is a multi-store operator with a strong RSO program. The 1g syringes are produced in-house from the operator's own flower, and the RSO-infused capsules (typically 25mg THC per capsule) are a useful pre-measured format for buyers who do not want to dose from a syringe. The capsule format is the most accessible RSO option for older medical patients.</p>
+    </div>
+
+    <h3>Canuvo — Biddeford</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Biddeford, medical-only</span>
+        <span><strong>Format:</strong> RSO syringes, medical formulations</span>
+        <span><strong>License:</strong> Medical (MMMP only)</span>
+      </div>
+      <p>Canuvo is one of Maine's eight medical-only dispensaries and has a particularly strong RSO program for medical patients. The Biddeford location is the retail anchor; the operator also serves patients through delivery within a defined service radius. For MMMP cardholders, Canuvo is the right answer for higher-dose and specialized RSO formulations not available at the adult-use counter.</p>
+    </div>
+
+    <h3>Medical Caregivers</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Statewide</span>
+        <span><strong>Format:</strong> Caregiver-grown RSO, custom formulations</span>
+        <span><strong>License:</strong> Caregiver (medical only)</span>
+      </div>
+    </div>
+    <p>Registered Maine caregivers can grow for up to five medical patients each, and many caregivers produce their own RSO from their own flower. The caregiver RSO market is less standardized than the dispensary RSO market — every caregiver's RSO has a different potency, terpene profile, and price — but the price is typically 20-30% below dispensary retail and the patient-caregiver relationship allows for custom formulations and dosing adjustments. For a medical patient who has a stable relationship with a caregiver, the caregiver RSO is the highest-value option in the state. For a buyer new to RSO, start at a dispensary and consider the caregiver channel once you know what dose and formulation works. The <a href="/guides/maine-cannabis-caregiver-guide">Maine cannabis caregiver guide</a> covers the caregiver program in detail.</p>
+  </section>
+
+  <section>
+    <h2>Storage and Shelf Life</h2>
+    <p>RSO is more shelf-stable than flower or rosin but less stable than distillate. The full-spectrum profile degrades over time with heat, light, and oxygen exposure. The storage protocol that keeps RSO at peak quality is straightforward:</p>
+    <ul>
+      <li><strong>Refrigerator storage.</strong> RSO should be stored in a refrigerator at 35-40°F in the original syringe. Refrigerator storage slows the oxidation of the minor cannabinoids and preserves the terpene profile for 6-12 months.</li>
+      <li><strong>Upright, sealed.</strong> The syringe should be stored upright with the cap sealed to prevent air exposure. The plunger should not be depressed until use.</li>
+      <li><strong>Dark, not light.</strong> The original RSO packaging is typically opaque for light protection. If the syringe is in a clear container, transfer to an amber or opaque vessel.</li>
+      <li><strong>Shelf life:</strong> 6-12 months under refrigeration. After 12 months, the minor cannabinoid content will have degraded meaningfully even under ideal storage. Buy smaller syringes more frequently rather than stockpiling.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The RSO vs. Distillate Buyer-Beware Problem</h2>
+    <p>The single biggest problem in the Maine RSO market is the mislabeling of distillate as RSO. The format is similar (both are sold in syringes), the price is comparable ($40-80 per gram), and the visual difference is not always obvious to a first-time buyer. The mislabeling is most common at adult-use dispensaries where the staff is less likely to be familiar with the visual and chemical differences. The way to protect yourself is straightforward and requires no special equipment:</p>
+    <ol>
+      <li><strong>Ask for the COA on the specific batch before purchase.</strong> Every licensed Maine dispensary must make COAs available. A real RSO COA shows 50-80% total THC, 1-3% CBD (or higher for 1:1 formulations), a meaningful CBG and CBN content, and 2-6% total terpenes. A distillate COA shows 85-95% THC, negligible minor cannabinoids, and 0-2% terpenes.</li>
+      <li><strong>Look at the color and consistency.</strong> Real RSO is dark brown to black, with a thick, sticky consistency that holds its shape in the syringe. Distillate is lighter in color (amber to light brown) and more liquid. The visual difference is real.</li>
+      <li><strong>Smell it.</strong> Real RSO has a strong cannabis aroma with a sharp solvent note (ethanol) that fades as the cure completes. Distillate with re-added terpenes has a sweeter, more confectionery aroma that does not match the source flower.</li>
+      <li><strong>Check the price floor.</strong> Legitimate RSO cannot be sold for $20-30 per gram because the production cost is too high. A "RSO" priced significantly below the $40-80 market range is almost certainly distillate.</li>
+    </ol>
+    <p>The mislabeling is not always intentional. Some producers use the term "RSO-style" to refer to a distillate cut with cannabis-derived terpenes, and the label can be confusing. The COA test is definitive; the visual and aroma tests are directional. For a Maine buyer who wants real RSO, the COA check is the price of admission.</p>
+  </section>
+
+  <section>
+    <h2>RSO and the Medical Patient Framework</h2>
+    <p>For Maine medical cannabis patients, RSO is one of the highest-value products in the dispensary catalog. The reasons are tax-related and dose-related. The Maine medical cannabis program (MMMP) exempts medical cannabis transactions from the 10% adult-use excise tax; medical patients pay only the 5.5% state sales tax. For a patient who purchases a 1g RSO syringe per month at $60 retail, the annual tax savings versus the adult-use channel is approximately $7-8 per syringe, or $84-96 per year. Modest per purchase, but real over time.</p>
+    <p>The dose-related advantage is more important. Medical patients have access to higher-dose RSO products (up to the 250mg per package medical limit) and to the RSO-infused capsule and edible formats that are not available at the adult-use counter. The MMMP card also provides access to medical-only dispensaries (Canuvo, Northeast Alliance, Maine Organic Therapy, American ReLeaf, and others) that specialize in the RSO and full-spectrum oil formats the medical market actually buys. For a patient who uses RSO regularly, the medical card pays for itself in 2-3 months through the tax savings alone. The <a href="/blog/maine-medical-marijuana-patient-guide">Maine medical marijuana patient guide</a> covers the application process, the qualifying conditions, and the MMMP reciprocity rules.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/best-live-rosin-maine">Best Live Rosin in Maine 2026</a> — solventless concentrate buyer's guide</li>
+      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — MMMP eligibility, application, and reciprocity</li>
+      <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — gummies, chocolates, and RSO-infused formats</li>
+      <li><a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Guide</a> — caregiver program and patient relationships</li>
+      <li><a href="/guides/maine-medical-cannabis-pesticide-advisory-2026">Maine Medical Cannabis Pesticide Advisory 2026</a> — testing and patient safety</li>
+      <li><a href="/blog/maine-medical-patient-delivery-services-2026">Maine Medical Patient Delivery Services 2026</a> — MMMP delivery rules and operators</li>
+      <li><a href="/guides/maine-cannabis-extraction-licensing">Maine Cannabis Extraction Licensing</a> — operator-side rules and facility requirements</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute medical, legal, or purchasing advice. The information on medical uses of RSO reflects the current state of clinical research, which is limited and evolving. Cannabis and RSO are not cures for cancer, multiple sclerosis, Crohn's disease, ALS, or any other specific condition. Patients should consult a qualified physician before using RSO for any medical indication, and should not discontinue any prescribed medication in favor of cannabis without medical supervision. Start with a small dose (rice-grain-sized) and titrate slowly. Do not drive or operate machinery after consuming cannabis. Operator details, product menus, and pricing in this article reflect a 2026 snapshot; verify current availability directly with the dispensary before purchasing. Maine Dispensary Guide has no commercial relationship with any operator or brand mentioned in this article. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
+</Layout>

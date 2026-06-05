@@ -1,0 +1,310 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const editorialAuthor = authors.find(a => a.id === 'thalia-greene');
+const complianceReviewer = authors.find(a => a.id === 'eliot-nash');
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cultivation & Horticulture Reviewer",
+  publishDate: "2026-06-05",
+  modifiedDate: "2026-06-05",
+  section: "Cultivation & Products"
+};
+const topics = ["concentrates", "live-rosin", "solventless"];
+
+const faqItems = [
+  { question: "What is live rosin?", answer: "Live rosin is a solventless cannabis concentrate made by separating trichomes from fresh-frozen cannabis plant material using ice water (the resulting product is called bubble hash or ice-water hash), then pressing the hash at low temperature with a rosin press to extract the cannabinoids and terpenes. The 'live' refers to the fresh-frozen starting material — the plant is frozen immediately after harvest rather than dried and cured, which preserves the terpene profile that would otherwise degrade during the drying process. No chemical solvents (butane, propane, CO2) are used at any point in the process, which is what makes rosin a solventless extract and what justifies the price premium over BHO or distillate." },
+  { question: "Is live rosin better than live resin?", answer: "Solventless live rosin is generally considered the highest-quality cannabis concentrate available. The production process preserves more of the original terpene profile than hydrocarbon extraction (which uses butane or propane as a solvent and then strips the solvent through purging), and it leaves no residual solvent at detectable levels. Live resin (a hydrocarbon extract made from fresh-frozen material) preserves terpenes better than BHO made from dried flower, but the solvent purging process still costs some volatile compounds. For buyers who prioritize flavor and full-spectrum effect, live rosin is the right answer. For buyers who prioritize price per milligram of THC, distillate is a better value." },
+  { question: "Why is live rosin so expensive in Maine?", answer: "Live rosin is expensive because the production economics are unforgiving. The fresh-frozen starting material yields only 2-5% rosin by weight (compared to 15-25% for a BHO extraction), the ice-water hash process requires specialized equipment and dedicated labor, the rosin press is a slow-batch operation, and the labor cost of solventless production runs 2-3x the cost of hydrocarbon extraction. A pound of fresh-frozen flower that produces 15-20g of rosin costs the same as a pound that produces 60-100g of BHO. The price premium — typically 2-3x distillate and 1.5-2x live resin in Maine dispensaries — reflects the underlying cost of production, not retailer markup." },
+  { question: "How can I tell if my rosin is good quality?", answer: "Good live rosin has four visual and sensory markers: (1) color should be light blonde to amber, not dark brown or black (darker rosin has been exposed to heat, oxidation, or low-quality starting material); (2) consistency should be budder, badder, or jam — a wet, glossy, scoopable texture that holds its shape; (3) the cold cure should pull away cleanly from parchment; (4) the aroma should be loud and strain-specific, not flat or burnt. If your rosin is dark, dry, crumbly, or has a hay/burnt taste, it is either old, was made from low-grade material, or was over-pressed at high temperatures. The COA on every batch should show a total terpene content of 5-15% — a rosin with less than 3% terpenes is a sign of degraded starting material." },
+  { question: "What is a hash hole in Maine?", answer: "A hash hole is an infused pre-roll that uses a rosin wrap (a thin sheet of pressed rosin) around the outside of a joint, often with rosin and kief added to the inside of the joint as well. The result is a high-potency, high-terpene infused pre-roll that produces a more flavorful and more intense effect than a standard flower pre-roll. The format is popular in Maine because the state's rosin producers (Firestorm, HIGHLY Cannaco, SeaWeed Co., Cannabis Cured) all sell rosin wraps or pre-rolled hash holes at the standard 1g pre-roll size. Expect to pay 2-3x the price of a standard pre-roll — a hash hole runs $20-30 in Maine, versus $8-12 for a flower-only pre-roll." }
+];
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer.replace(/<[^>]+>/g, "")
+    }
+  }))
+};
+---
+
+<Layout 
+  title="Best Live Rosin in Maine 2026: A Solventless Buyer's Guide"
+  description="The best live rosin in Maine in 2026 — what makes it different from BHO and distillate, which operators press the cleanest hash, and how to spot a quality gram."
+  heroImage="/images/heroes/best-live-rosin-maine.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
+  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .operator-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+  .operator-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .operator-card .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+  .operator-card .meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .operator-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+</style>
+
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Best Live Rosin in Maine 2026: Solventless Concentrates Worth the Price</h1>
+    <p class="subtitle">What makes live rosin different from BHO and CO2, which Maine operators press the cleanest hash, and how to spot a quality gram.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#thalia-greene"><strong>Thalia Greene</strong></a>, Cultivation &amp; Horticulture Reviewer. <strong>Reviewed by <a href="/about/authors#eliot-nash">Eliot Nash</a>, Market &amp; Real Estate Analyst.</strong></p>
+      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+    </div>
+  </div>
+
+  <section class="intro">
+    <p>Live rosin is the most expensive cannabis concentrate on a Maine dispensary shelf, and the price gap between rosin and a BHO shatter of comparable THC content is wide enough to make a careful buyer ask what the premium actually buys. The honest answer: rosin buys flavor, a fuller spectrum of minor cannabinoids and terpenes, the absence of any residual solvent at detectable levels, and a production process that is genuinely artisanal. It does not buy more THC. A well-made live rosin typically tests at 65-80% THC; a well-made BHO shatter tests at 75-90%. The rosin wins on the subjective and the chemical; the BHO wins on the percentage and the price.</p>
+    <p>Maine's solventless concentrate scene is small but serious. The state has roughly a dozen operators producing rosin at scale, and the best of them are pressing hash from their own fresh-frozen flower — which is the right way to make rosin. The operators below are the ones whose rosin lineups justify the price premium in 2026. We cover the production process, the markers of quality, the operators to know, the hash hole and infused pre-roll trend, and the storage protocol that keeps rosin at its best after you bring it home.</p>
+    <p>For the operator-side extraction licensing that governs concentrate production in Maine, see the <a href="/guides/maine-cannabis-extraction-licensing">Maine cannabis extraction licensing guide</a>. For the operator economics that drive the rosin price premium, the <a href="/guides/maine-cannabis-market">Maine cannabis market guide</a> covers the structural cost pressures. For a companion product guide covering full-spectrum RSO, the <a href="/blog/maine-rso-guide">Maine RSO guide</a> walks through the medicinal dosing protocol and the buyer beware markers for distillate mislabeled as RSO.</p>
+  </section>
+
+  <Callout title="The Solventless Premium" type="insight">
+    Live rosin commands a 2-3x price premium over distillate and a 1.5-2x premium over BHO live resin in Maine dispensaries. The premium reflects the production economics — fresh-frozen material yields only 2-5% rosin by weight, compared to 15-25% for hydrocarbon extraction — and the labor cost of ice-water hash separation and slow-batch pressing. Only about 30-40% of Maine cannabis consumers have knowingly purchased rosin, which means the category is still a buyer's market for the operators that produce it well. The way to verify a rosin is worth the price: ask for the COA and check the total terpene percentage. Quality rosin tests at 5-15% terpenes; quality BHO tests at 2-6%. The number is the difference.
+  </Callout>
+
+  <section>
+    <h2>What Live Rosin Actually Is</h2>
+    <p>Live rosin is a solventless cannabis concentrate made through a three-step process: fresh-freezing the cannabis plant material immediately after harvest, separating the trichome heads (the resin glands that contain the cannabinoids and terpenes) from the plant material using ice water agitation, and pressing the resulting hash at low temperature with a hydraulic or pneumatic rosin press.</p>
+
+    <h3>Step 1: Fresh-Freezing</h3>
+    <p>The "live" in live rosin refers to the fresh-frozen starting material. Within hours of harvest, the cannabis flower is frozen to -20°F to -40°F. Freezing immediately preserves the volatile terpene compounds that would otherwise evaporate or degrade during the drying and curing process. The difference is measurable: dried-and-cured flower loses 30-50% of its native terpene content during the cure. Fresh-frozen material preserves most of it, and the rosin pressed from that material inherits the full aromatic and flavor profile of the live plant.</p>
+
+    <h3>Step 2: Ice-Water Hash</h3>
+    <p>The frozen flower is submerged in ice water and agitated. The cold makes the trichome heads brittle, the agitation knocks them off the plant material, and the ice-water slurry is filtered through a series of fine mesh bags (typically 73, 90, 120, and 160 microns). The trichomes collected at each micron level are dried under controlled conditions to produce hash of different qualities — the 73-micron "full melt" is the top tier, the 90 and 120 are mid-grade, and the 160 is food-grade or lower.</p>
+
+    <h3>Step 3: Rosin Press</h3>
+    <p>The dried hash is pressed in a rosin press at low temperature (180-220°F) and high pressure (800-2,500 PSI), typically for 60-120 seconds. The heat and pressure squeeze the cannabinoids and terpenes out of the hash matrix, leaving the plant waxes and lipids behind. The resulting rosin is collected on parchment paper, then typically cold-cured at refrigerator temperatures for 24-72 hours to develop the budder, badder, or jam consistency that buyers recognize as a quality solventless product.</p>
+  </section>
+
+  <section>
+    <h2>How Rosin Differs from BHO, CO2, and Distillate</h2>
+    <p>The Maine concentrate market offers four main extraction categories, and the differences between them drive the price spread and the use case. The summary below covers how each is made and the trade-offs.</p>
+
+    <h3>Rosin (Solventless)</h3>
+    <p>Mechanical extraction using ice water and heat/pressure. No chemical solvents. Highest terpene preservation (5-15%), THC content 65-80%, full-spectrum minor cannabinoid profile. Most expensive category. The right answer for buyers who prioritize flavor, full-spectrum effect, and absence of any residual solvent.</p>
+
+    <h3>Live Resin (Hydrocarbon, Fresh-Frozen)</h3>
+    <p>Hydrocarbon extraction (butane or propane) from fresh-frozen flower. The solvent is purged under vacuum at the end of the process, leaving no detectable residual solvent. Better terpene preservation than BHO from dried flower (3-8% terpenes), THC content 70-85%. Mid-tier price, more widely available than rosin.</p>
+
+    <h3>Shatter, Wax, Budder (BHO from Dried Flower)</h3>
+    <p>Hydrocarbon extraction from dried and cured flower. Lower terpene preservation (2-5%) but the highest absolute THC content (75-90%). The workhorse category of the concentrate market. Priced below live resin and well below rosin.</p>
+
+    <h3>Distillate (Hydrocarbon or CO2 + Distillation)</h3>
+    <p>Extraction followed by short-path or wiped-film distillation that strips almost everything except the target cannabinoid (typically THC). THC content 85-95%, but the distillation process removes the terpenes and most minor cannabinoids. The result is a flavorless, odorless, high-potency oil used in vapes, edibles, and infused pre-rolls. Cheapest per milligram of THC; least interesting from a flavor or full-spectrum perspective.</p>
+
+    <h3>RSO (Rick Simpson Oil, Alcohol Wash)</h3>
+    <p>Alcohol extraction that pulls a broad range of cannabinoids and terpenes. Distinct from the other categories because it is typically sold in syringe format for oral dosing rather than dabbing. THC 50-80%, full-spectrum. The <a href="/blog/maine-rso-guide">Maine RSO guide</a> covers this category in detail.</p>
+
+    <table aria-label="Cannabis extraction category comparison">
+      <thead>
+        <tr><th>Category</th><th>Method</th><th>THC %</th><th>Terpenes</th><th>Price (per gram, ME)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rosin (live, solventless)</td><td>Ice water + heat/pressure</td><td>65-80%</td><td>5-15%</td><td>$60-120</td></tr>
+        <tr><td>Live resin (hydrocarbon)</td><td>Butane/propane, fresh-frozen</td><td>70-85%</td><td>3-8%</td><td>$50-85</td></tr>
+        <tr><td>Shatter/wax/badder (BHO)</td><td>Hydrocarbon, dried flower</td><td>75-90%</td><td>2-5%</td><td>$30-70</td></tr>
+        <tr><td>Distillate</td><td>Hydrocarbon + distillation</td><td>85-95%</td><td>0-2%</td><td>$25-50</td></tr>
+        <tr><td>RSO (full-spectrum)</td><td>Ethanol wash</td><td>50-80%</td><td>2-6%</td><td>$40-80</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Quality Markers: How to Spot a Good Gram</h2>
+    <p>The visual and sensory markers of quality live rosin are learnable. The list below covers what a careful buyer should look for and what should trigger a "put it back" response.</p>
+
+    <h3>Color</h3>
+    <p>Good rosin is light blonde to amber. The lighter the color, the lower the temperature and the higher the quality of the starting material. Dark brown or black rosin has been exposed to high heat, oxidation, or low-grade starting material. Some strains naturally produce a darker rosin (heavy kush genetics, for example), but a bright golden color is the baseline expectation for quality solventless.</p>
+
+    <h3>Consistency</h3>
+    <p>Quality cold-cured rosin is budder, badder, or jam — a wet, glossy, scoopable texture that holds its shape at room temperature. Shatter consistency (brittle, glass-like) is acceptable but typically indicates a higher pressing temperature that lost some terpenes. Sauce (liquid terpenes separated from THCA crystals) is the highest-terpene format but harder to handle. Crumble (dry, crumbly) is a sign of over-drying during the cure.</p>
+
+    <h3>Terpene Preservation</h3>
+    <p>The COA on the specific batch should report 5-15% total terpenes by weight. A rosin with less than 3% terpenes is a sign of degraded starting material or excessive heat during the press. The aroma should be loud, strain-specific, and should fill a room when the jar is opened. A flat, hay-like, or burnt aroma is a sign of oxidation or contamination.</p>
+
+    <h3>Cold-Cure Pull</h3>
+    <p>A properly cold-cured rosin pulls cleanly off the parchment paper. If the rosin sticks, smears, or leaves residue on the parchment, the cure was incomplete or the moisture content is too high. The dab should vaporize cleanly at 450-550°F on a quartz banger, with no charring or harsh taste at the low end of the temperature range.</p>
+  </section>
+
+  <section>
+    <h2>Red Flags: When Rosin Is Not Worth Buying</h2>
+    <p>Four categories of product are not worth the money at any price. The first is rosin that has been through CRC — color remediation chromatography, a process that uses bentonite clay or silica to filter out the pigments that produce a dark color. CRC is a sign that the starting material was low quality; the resulting rosin looks pretty but lacks the full-spectrum profile that justified the rosin premium in the first place. A reputable Maine rosin producer does not use CRC.</p>
+    <p>The second category is "rosin" labeled products that are actually distillate with re-added botanical terpenes. The visual difference is subtle — both can look like a glossy badder — but the COA will show a THC content above 85% (distillate territory) and a terpene content below 2% (added terpenes only, not the native profile). If the COA looks too high in THC and too low in terpenes for rosin, it is not rosin.</p>
+    <p>The third category is rosin that has oxidized. A jar that has been on a dispensary shelf for six months at room temperature will lose terpenes and turn dark. The COA cannot always catch this if it was generated at packaging rather than at current testing. Look for a recent packaging date (within 90 days) and ask the budtender how long the specific batch has been on the shelf.</p>
+    <p>The fourth category is rosin priced significantly below the market floor. Maine solventless rosin at wholesale is in the $40-60 per gram range; at retail, the floor is typically $60-70 even on rotation specials. A gram priced at $30-40 is almost certainly mislabeled distillate or low-grade material dressed up with solventless marketing. If the price looks too good to be true, the product is probably not rosin.</p>
+  </section>
+
+  <section>
+    <h2>Maine Solventless Operators Worth Knowing in 2026</h2>
+    <p>The operators below are the ones pressing the cleanest hash in Maine as of 2026. The list is selective; there are other credible rosin producers, but these are the operators whose rosin lineups we trust without question. Each operator's signature line, fresh-frozen sourcing, and best product format are noted.</p>
+
+    <h3>Herbal Remedies of Maine</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Statewide distribution</span>
+        <span><strong>Signature line:</strong> Full-spectrum rosin, single-strain</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>Herbal Remedies of Maine is one of the most consistent solventless producers in the state. The operation grows in-house and processes fresh-frozen material at scale, which is the right way to make rosin. The single-strain rosin line is small but the curation is strong — typically 6-10 strains in rotation, each with a published COA showing 8-12% total terpenes. The rosin sells at a mid-tier price ($70-90 per gram) and is widely available at third-party dispensaries.</p>
+    </div>
+
+    <h3>Salty Cultivation (By Appointment)</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Direct-to-patient, by appointment</span>
+        <span><strong>Signature line:</strong> Solventless rosin and THC wax</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, single-batch</span>
+      </div>
+      <p>Salty Cultivation is a small-batch solventless specialist that operates by appointment rather than through retail distribution. The model is closer to a craft rosin maker than a commercial dispensary — single-batch production, sold directly to a small patient list, with a tight focus on quality over volume. The rosin is among the best in Maine at any price, but the access model (appointment required) means it is not a casual purchase. For a buyer willing to schedule a visit, the rosin is worth the effort.</p>
+    </div>
+
+    <h3>HIGHLY Cannaco — Brunswick</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Brunswick flagship, 7 retail locations</span>
+        <span><strong>Signature line:</strong> House rosin, jarred and infused pre-rolls</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>HIGHLY Cannaco is the most awarded rosin producer in Maine. The Brunswick-based operation grows roughly 40% of the flower on its menu in-house, and the rosin line is built from that fresh-frozen material. The signature products are the jarred budder rosin (sold by the gram at $70-90) and the hash hole infused pre-rolls ($20-28). HIGHLY has won multiple Maine cannabis cup awards for both flower and rosin, and the consistency across batches is among the best in the state. The Brunswick store is the primary retail outlet; HIGHLY also distributes through 6 additional locations statewide.</p>
+    </div>
+
+    <h3>Firestorm — Bangor + Orono</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Bangor + Orono retail, statewide distribution</span>
+        <span><strong>Signature line:</strong> Hash holes, rosin wraps, jarred rosin</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>Firestorm is the eastern Maine anchor for solventless concentrates. The Bangor and Orono stores carry a deep in-house rosin line plus a particularly strong hash hole program — the rosin-wrapped infused pre-rolls are the most popular product in the store. The rosin itself tests consistently at 8-12% terpenes, and the production scale is large enough to keep the price below the HIGHLY and Herbal Remedies tier. For a buyer in the Bangor market, Firestorm is the default solventless recommendation.</p>
+    </div>
+
+    <h3>SeaWeed Co. — Portland / South Portland</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Portland + South Portland retail, statewide distribution</span>
+        <span><strong>Signature line:</strong> House rosin, single-strain</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>SeaWeed Co. is the highest-volume Portland operator with a serious in-house rosin program. The Portland and South Portland stores carry a rotating selection of single-strain rosins, typically 6-8 strains at a time, all pressed from the operator's own fresh-frozen flower. The price runs at the top of the market ($80-110 per gram), but the consistency and the terpene preservation are consistently strong. The South Portland store has easier parking and the same menu as the Portland flagship.</p>
+    </div>
+
+    <h3>The Maine Cannabis Company — Statewide</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Statewide distribution</span>
+        <span><strong>Signature line:</strong> Solventless rosin, RSO, multi-format</span>
+        <span><strong>Sourcing:</strong> Mixed in-house and partner cultivators</span>
+      </div>
+      <p>The Maine Cannabis Company distributes a broad product line that includes a competent rosin range, an RSO line (covered in the <a href="/blog/maine-rso-guide">Maine RSO guide</a>), and a 4:1 THC:CBN sleep gummy that uses RSO as the infusion base. The rosin is not the most awarded in the state, but it is widely available and consistently produced. For a buyer who wants solventless product at a reasonable price and cannot make it to a HIGHLY or Firestorm retail location, The Maine Cannabis Company's rosin is the most accessible mid-tier option.</p>
+    </div>
+
+    <h3>Katahdin Kure — Statewide</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Wholesale + selective retail distribution</span>
+        <span><strong>Signature line:</strong> Wholesale pre-rolls, rosin</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>Katahdin Kure is a wholesale-first concentrate and pre-roll producer that supplies a large share of the infused pre-roll market in Maine. The in-house rosin line is solid, but the operator is best known for the wholesale pre-roll and hash hole program that puts a Katahdin Kure product in dispensaries statewide. For a buyer who wants to know who supplies the infused pre-rolls at their local dispensary, Katahdin Kure is one of the most common answers.</p>
+    </div>
+
+    <h3>Cannabis Cured — Bangor</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Bangor retail + statewide distribution</span>
+        <span><strong>Signature line:</strong> House rosin, hash holes, value pricing</span>
+        <span><strong>Sourcing:</strong> Mixed in-house and partner cultivators</span>
+      </div>
+      <p>Cannabis Cured is the value operator in the Bangor market, and the rosin line follows the same playbook: solid quality at a price below the HIGHLY and SeaWeed tier. The Bangor store's rosin runs $50-70 per gram on rotation specials, and the hash hole pre-rolls are among the best-priced in the state. For a buyer who wants solventless without the HIGHLY or SeaWeed price tag, Cannabis Cured is the most reliable mid-tier source.</p>
+    </div>
+
+    <h3>Sweet Dirt — Statewide</h3>
+    <div class="operator-card">
+      <div class="meta">
+        <span><strong>Region:</strong> Multiple retail + statewide distribution</span>
+        <span><strong>Signature line:</strong> Solventless rosin, multi-format</span>
+        <span><strong>Sourcing:</strong> In-house cultivation, fresh-frozen</span>
+      </div>
+      <p>Sweet Dirt is a vertically integrated operator with a broad product line. The rosin range is not the operator's flagship (the flower and edible programs are larger and more awarded), but the solventless rosin is consistently produced and widely available at Sweet Dirt stores and third-party dispensaries. The price runs at the middle of the market and the jarred rosin is a reliable purchase for buyers who want solventless from a known operator.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The Hash Hole Trend</h2>
+    <p>Hash holes — and the broader infused pre-roll category — are the most popular solventless product in Maine right now, and for good reason. A well-made hash hole combines the convenience of a pre-roll with the potency and flavor of a dab, which is a real consumer value proposition. The standard format is a 1g joint with a rosin wrap (a thin sheet of pressed rosin) around the outside, often with additional rosin and kief layered into the inside of the joint. The rosin melts into the flower as the joint burns, producing a more flavorful and more intense effect than a standard flower pre-roll.</p>
+    <p>For buyers, the practical question is whether the hash hole at a given dispensary is worth the $20-30 price (2-3x the cost of a flower-only pre-roll). The honest answer: it depends entirely on the rosin used in the wrap. A hash hole made with the same rosin the operator sells in jars for $80-100 per gram is a fair value. A hash hole made with mid-grade rosin or trim-run rosin is overpriced. The way to evaluate: ask the budtender which rosin went into the wrap. If they can name a specific strain and batch, the hash hole is probably worth it. If they cannot, pass.</p>
+    <p>The do-it-yourself alternative is a rosin-wrapped joint made at home with a rolling paper, a rosin wrap, ground flower, and a concentrate applicator. This is a more cost-effective route for experienced consumers, but the equipment and technique have a learning curve. For first-time buyers, the pre-rolled hash hole from a reputable Maine operator is the right entry point.</p>
+  </section>
+
+  <section>
+    <h2>Storage: How to Keep Rosin at Its Best</h2>
+    <p>Rosin is more fragile than other concentrate categories. The terpenes that make it worth the price are volatile and degrade with heat, light, and oxygen exposure. The storage protocol that keeps rosin at peak quality is straightforward but specific:</p>
+    <ul>
+      <li><strong>Refrigerator, not freezer.</strong> Rosin should be stored in a refrigerator at 35-40°F. Freezer storage is acceptable but produces condensation when the jar is opened, which can introduce moisture and degrade the texture. Refrigerator storage at stable temperature is the right answer.</li>
+      <li><strong>Glass jar, not plastic.</strong> Rosin is stored in glass, ideally a silicone-lined glass jar. Plastic containers can leach and will absorb some of the terpenes. The rosin should be in a single layer on parchment paper inside the glass jar.</li>
+      <li><strong>Dark, not light.</strong> Light exposure degrades cannabinoids and terpenes. An opaque or amber glass jar, stored in a dark place, is the right container. The dispensary packaging may be clear for visibility; transfer to an amber jar at home if you are storing for more than a week.</li>
+      <li><strong>Six-month shelf life, max.</strong> Properly stored rosin will keep for six months without significant degradation. After six months, the terpene loss is noticeable even under ideal conditions. Buy smaller quantities more frequently rather than stockpiling.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Operator-Side: Buying Rosin for Wholesale or White-Label</h2>
+    <p>For Maine operators considering a rosin program — either as a vertical-integration in-house product or as a wholesale purchase for resale — the economics deserve careful thought. The wholesale price for bulk live rosin in Maine is currently $35-55 per gram depending on quality and volume. The retail price runs $60-120 per gram. The margin is real but the production cost is real: a rosin press setup runs $15,000-50,000, the fresh-frozen material is expensive to source or produce, and the labor cost of ice-water hash separation and batch pressing is high. The operators doing it well in Maine have typically committed to the category as a brand pillar, not as a side product.</p>
+    <p>For a deeper look at the operator-side extraction licensing and the regulatory framework that governs solventless processing in Maine, the <a href="/guides/maine-cannabis-extraction-licensing">Maine cannabis extraction licensing guide</a> covers the OCP rules, the facility requirements, and the post-2024 testing requirements that apply to any rosin produced in Maine.</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-rso-guide">RSO in Maine: A Buyer's Guide</a> — full-spectrum oil dosing and use</li>
+      <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — gummies, chocolates, and beverages</li>
+      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries 2026</a> — 12 stores worth the drive</li>
+      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Maine Dispensary 2026</a> — ounce and eighth price guide</li>
+      <li><a href="/guides/maine-cannabis-extraction-licensing">Maine Cannabis Extraction Licensing</a> — operator-side rules and facility requirements</li>
+      <li><a href="/blog/maine-cannabis-microbusiness-license-2026">Maine Cannabis Microbusiness License 2026</a> — small-operator licensing</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute medical, legal, or purchasing advice. Cannabis concentrate products affect individuals differently; start with a small dose (a rice-grain-sized dab for solventless rosin) and wait at least 15-30 minutes before considering more. Do not drive or operate machinery after consuming cannabis. Consult a qualified physician before combining cannabis with any prescription medication. Operator details, product menus, and pricing in this article reflect a 2026 snapshot; verify current availability directly with the dispensary before purchasing. Maine Dispensary Guide has no commercial relationship with any operator or brand mentioned in this article. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
+</Layout>
