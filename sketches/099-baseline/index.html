@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BASELINE — Maine Dispensary Guide (current)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #0D4E50;
+      --color-primary-dark: #083638;
+      --color-secondary: #101820;
+      --color-accent: #588157;
+      --color-soft-green: #7A9A6A;
+      --color-background: #F2F2E2;
+      --color-surface: #ffffff;
+      --color-text: #101820;
+      --color-text-light: #4A5568;
+      --color-border: #D1D1C1;
+      --max-width: 1200px;
+      --radius: 0.75rem;
+      --font-family: 'Plus Jakarta Sans', sans-serif;
+      --font-serif: 'Fraunces', serif;
+    }
+    [data-theme="dark"] {
+      --color-primary: #C4D4B6;
+      --color-primary-dark: #F2F2E2;
+      --color-background: #061A1B;
+      --color-surface: #0A2829;
+      --color-text: #F2F2E2;
+      --color-text-light: #B8C9B0;
+      --color-border: #1D3D3D;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--color-background);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+    /* === CURRENT LINK STYLES (the problem area) === */
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    /* Footer/outbound links use --color-text-light, which is hard to read on dark */
+    .footer-links a { color: var(--color-text-light); }
+    .further-reading a { color: var(--color-primary); }
+    [data-theme="dark"] .further-reading a { color: var(--color-primary); }
+    [data-theme="dark"] a { color: var(--color-primary); }
+
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 1.5rem;
+    }
+    .nav { display: flex; gap: 1.5rem; align-items: center; max-width: var(--max-width); margin: 0 auto; }
+    .brand { font-family: var(--font-serif); font-weight: 700; font-size: 1.25rem; color: var(--color-primary); text-decoration: none; }
+    .nav a { color: var(--color-text); font-weight: 600; text-decoration: none; }
+
+    /* === HERO — the "giant white image" problem === */
+    .hero {
+      max-width: var(--max-width);
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    .guide-hero {
+      aspect-ratio: 3 / 1;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--color-border);
+      margin-bottom: 2rem;
+    }
+    .guide-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .guide-hero-baseline {
+      aspect-ratio: 3 / 1;
+      background: linear-gradient(135deg, #e8e0c4 0%, #f4ecd4 50%, #d8d0b4 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); color: var(--color-primary); font-size: 1.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+    }
+
+    h1 { font-family: var(--font-serif); font-size: 3rem; line-height: 1.05; margin: 0 0 1rem; color: var(--color-text); }
+    .subtitle { color: var(--color-text-light); font-size: 1.25rem; }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+    .stat { padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); }
+    .stat-value { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); }
+    .stat-label { color: var(--color-text-light); font-size: 0.875rem; }
+
+    /* === SECTION CARDS — all flat, all same depth === */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+    .card {
+      padding: 1.5rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .card h3 { font-family: var(--font-serif); margin: 0 0 0.5rem; color: var(--color-primary); }
+    .card p { color: var(--color-text-light); font-size: 0.9375rem; margin: 0 0 1rem; }
+
+    .further-reading {
+      background: rgba(88, 129, 87, 0.05);
+      padding: 1.5rem; border-radius: var(--radius); margin-top: 3rem;
+    }
+    .further-reading h2 { font-family: var(--font-serif); margin-top: 0; font-size: 1.25rem; }
+    .further-reading ul { padding-left: 1.25rem; }
+    .further-reading li { margin-bottom: 0.4rem; }
+
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 1000;
+      padding: 0.5rem 1rem; background: var(--color-surface);
+      border: 1px solid var(--color-border); border-radius: 999px;
+      cursor: pointer; font: inherit; color: var(--color-text);
+    }
+
+    footer { background: var(--color-surface); padding: 2rem 1.5rem; text-align: center; margin-top: 4rem; border-top: 1px solid var(--color-border); }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+
+    .baseline-banner {
+      background: #fee; border: 2px solid #c33; padding: 1rem; margin: 1rem auto;
+      max-width: var(--max-width); border-radius: var(--radius);
+      color: #800; font-weight: 700; text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">Toggle theme</button>
+  <div class="baseline-banner">⚠ BASELINE — current site. This is what the pain points look like now.</div>
+  <header>
+    <nav class="nav">
+      <a href="/" class="brand">Maine Dispensary Guide</a>
+      <a href="/guides">Guides</a>
+      <a href="/resources">Resources</a>
+      <a href="/about">About</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div class="guide-hero-baseline">[Current hero: full-bleed 3:1 image, hard rectangle]</div>
+      <h1>How to Open a Maine Dispensary in 2026</h1>
+      <p class="subtitle">Everything you need: licensing timeline, startup costs ($360K–$1M), location zoning, and OCP application steps.</p>
+    </section>
+    <div class="stats">
+      <div class="stat"><div class="stat-value">$246M</div><div class="stat-label">Annual Sales</div></div>
+      <div class="stat"><div class="stat-value">169</div><div class="stat-label">Active Stores</div></div>
+      <div class="stat"><div class="stat-value">$6.62</div><div class="stat-label">Price/Gram</div></div>
+    </div>
+    <div class="cards">
+      <div class="card"><h3>Portland</h3><p>Maine's largest market, 12+ dispensaries, $5K local fee. Saturation is real.</p><a href="#">Open guide →</a></div>
+      <div class="card"><h3>Bangor</h3><p>Strong regional draw, less competition than Portland, growing scene.</p><a href="#">Open guide →</a></div>
+      <div class="card"><h3>Lewiston</h3><p>Opt-in town with clear licensing path and lower real estate pressure.</p><a href="#">Open guide →</a></div>
+    </div>
+    <section class="further-reading">
+      <h2>External Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener">Maine OCP Adult-Use Licensing</a></li>
+        <li><a href="https://www.maine.gov/sos/" target="_blank" rel="noopener">Maine Secretary of State</a></li>
+        <li><a href="https://www.metrc.com/" target="_blank" rel="noopener">Metrc — Inventory Tracking</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy">Privacy</a>
+      <a href="https://x.com/mainedispensary" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+  </footer>
+</body>
+</html>

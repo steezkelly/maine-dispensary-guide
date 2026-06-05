@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VARIANT B — Warm Premium — Maine Dispensary Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* === DESIGN TOKENS — Warm Premium === */
+    :root {
+      --bone: #F2EDDC;          /* warmer, more paper-like */
+      --bone-2: #E9E2C9;
+      --paper: #FBF6E8;         /* pressed paper */
+      --paper-2: #FFFDF5;       /* highlight */
+      --ink: #0E1419;
+      --ink-soft: #4A5466;
+      --rule: #C9C0A4;
+      --spruce: #0D4E50;
+      --spruce-2: #0A3E40;
+      --leaf: #4F6F4E;
+      --sage: #7A9A6A;
+      --gold: #B08A3E;
+      --gold-2: #D9B26A;
+      --gold-soft: #E5CFA1;
+      /* Richer elevation */
+      --elev-shadow-1: 0 1px 0 rgba(255,255,255,.8) inset, 0 1px 2px rgba(20,16,8,.10), 0 6px 14px rgba(20,16,8,.10);
+      --elev-shadow-2: 0 1px 0 rgba(255,255,255,.8) inset, 0 2px 6px rgba(20,16,8,.12), 0 18px 40px rgba(20,16,8,.14);
+      --elev-shadow-3: 0 1px 0 rgba(255,255,255,.85) inset, 0 4px 10px rgba(20,16,8,.15), 0 30px 70px rgba(20,16,8,.18);
+      --elev-glow: 0 0 0 1px color-mix(in oklab, var(--gold) 35%, transparent), 0 0 22px color-mix(in oklab, var(--gold) 25%, transparent);
+      --radius: 16px;
+      --radius-lg: 26px;
+      --max-width: 1200px;
+      --font-family: 'Plus Jakarta Sans', sans-serif;
+      --font-serif: 'Fraunces', serif;
+    }
+    [data-theme="dark"] {
+      --bone: #0C1411;
+      --bone-2: #0F1A15;
+      --paper: #162018;
+      --paper-2: #1B2A1F;
+      --ink: #F2EBD6;
+      --ink-soft: #B8B59E;
+      --rule: #28382C;
+      --spruce: #C4D4B6;
+      --spruce-2: #DDE9C8;
+      --leaf: #88AE7E;
+      --sage: #98B084;
+      --gold: #D9B26A;
+      --gold-2: #E8C988;
+      --gold-soft: #4D3D1E;
+      --elev-shadow-1: inset 0 1px 0 rgba(255,235,180,.06), 0 2px 4px rgba(0,0,0,.5), 0 8px 18px rgba(0,0,0,.4);
+      --elev-shadow-2: inset 0 1px 0 rgba(255,235,180,.08), 0 4px 8px rgba(0,0,0,.55), 0 20px 44px rgba(0,0,0,.5);
+      --elev-shadow-3: inset 0 1px 0 rgba(255,235,180,.10), 0 6px 12px rgba(0,0,0,.6), 0 32px 72px rgba(0,0,0,.6);
+      --elev-glow: 0 0 0 1px color-mix(in oklab, var(--gold) 30%, transparent), 0 0 26px color-mix(in oklab, var(--gold) 20%, transparent);
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      color: var(--ink);
+      /* Warm paper grain — much richer than flat bone */
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklab, var(--gold) 14%, transparent), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, color-mix(in oklab, var(--leaf) 8%, transparent), transparent 70%),
+        var(--bone);
+      line-height: 1.65;
+    }
+    [data-theme="dark"] body {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, color-mix(in oklab, var(--leaf) 6%, transparent), transparent 70%),
+        var(--bone);
+    }
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.75rem; }
+
+    /* === FIX #1: LINK CONTRAST — slightly punchier gold underlinks === */
+    a {
+      color: var(--spruce);
+      text-decoration: none;
+      background-image: linear-gradient(transparent 88%, color-mix(in oklab, var(--gold) 55%, transparent) 88%, color-mix(in oklab, var(--gold) 55%, transparent) 100%);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      transition: background-image .25s, color .2s;
+    }
+    a:hover, a:focus-visible {
+      color: var(--leaf);
+      background-image: linear-gradient(transparent 80%, var(--gold) 80%, var(--gold) 100%);
+    }
+    [data-theme="dark"] a { color: var(--spruce); }
+    .footer-links a, .further-reading a { color: var(--spruce); font-weight: 600; }
+    a[target="_blank"]::after { content: " ↗"; font-size: .8em; opacity: .65; }
+
+    /* === HEADER — heavier, with gold underline accent === */
+    header {
+      background: color-mix(in oklab, var(--bone) 92%, transparent);
+      backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid var(--rule);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .nav { display: flex; gap: 1.5rem; align-items: center; max-width: var(--max-width); margin: 0 auto; padding: 1.1rem 1.75rem; }
+    .brand {
+      font-family: var(--font-serif); font-weight: 700; font-size: 1.3rem;
+      color: var(--spruce); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .brand-mark {
+      display: inline-block; width: .65em; height: .65em; border-radius: 50%;
+      background: linear-gradient(135deg, var(--leaf), var(--gold));
+      box-shadow: var(--elev-glow);
+      margin-right: .5em; vertical-align: middle;
+    }
+    .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .9375rem; background-image: none; }
+    .nav-links a:hover { color: var(--spruce); }
+
+    /* === FIX #2: HERO — pressed-paper "plaque" with a soft gold inner glow.
+       The image no longer dominates; it sits as a framed centerpiece with
+       enough breathing room that the page itself feels like the canvas. */
+    .hero { padding: 3.5rem 0 1rem; }
+    .hero-plaque {
+      max-width: 1000px; margin: 0 auto 3rem;
+      padding: 1.5rem 1.5rem 1.75rem;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, var(--paper-2), var(--paper));
+      box-shadow: var(--elev-shadow-2);
+      position: relative;
+    }
+    .hero-plaque::before {
+      content: ''; position: absolute; inset: 0;
+      border-radius: inherit; padding: 1px;
+      background: linear-gradient(180deg, color-mix(in oklab, var(--gold) 50%, transparent), transparent 30%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      pointer-events: none;
+    }
+    .hero-image {
+      aspect-ratio: 16 / 7;
+      border-radius: 14px;
+      background:
+        radial-gradient(ellipse at 70% 30%, rgba(217,178,106,.45), transparent 60%),
+        linear-gradient(135deg, #2c3e2a 0%, #1a2820 50%, #0d1812 100%);
+      position: relative; overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 8px 24px rgba(0,0,0,.25);
+    }
+    .hero-image::after {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 525'><g fill='none' stroke='%23D9B26A' stroke-opacity='.22' stroke-width='1.2'><path d='M0 380 Q300 280 600 350 T1200 320'/><path d='M0 420 Q400 340 800 400 T1200 380'/><path d='M0 460 Q500 400 1000 440 T1200 430'/></g><g fill='%23588157' fill-opacity='.45'><path d='M150 480 L185 360 L220 480 Z'/><path d='M580 490 L620 320 L660 490 Z'/><path d='M1000 480 L1020 380 L1040 480 Z'/></g><circle cx='900' cy='180' r='80' fill='%23D9B26A' fill-opacity='.15'/></svg>") center/cover no-repeat;
+    }
+    .hero-image-eyebrow {
+      position: absolute; left: 1.5rem; top: 1.25rem;
+      color: var(--gold-2); font-family: var(--font-serif); font-style: italic;
+      font-size: .875rem; letter-spacing: .04em;
+      text-shadow: 0 1px 8px rgba(0,0,0,.4);
+    }
+    .hero-image-caption {
+      position: absolute; left: 1.5rem; bottom: 1.25rem;
+      color: #F2EBD6; font-family: var(--font-serif); font-size: 1.25rem;
+      text-shadow: 0 1px 10px rgba(0,0,0,.5);
+    }
+
+    .hero-headline { max-width: 880px; margin: 0 auto; }
+    h1 {
+      font-family: var(--font-serif); font-weight: 600; font-style: italic;
+      font-size: clamp(2.75rem, 6vw, 4.75rem); line-height: 1.02; letter-spacing: -0.02em;
+      color: var(--ink); margin: 0 0 1rem;
+    }
+    h1::first-line { font-style: normal; }
+    .subtitle { color: var(--ink-soft); font-size: 1.1875rem; max-width: 62ch; }
+    .subtitle strong { color: var(--spruce); font-weight: 700; }
+
+    /* === STATS — heaviest elevation, gold accent strip on top === */
+    .stats-rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 3rem 0; }
+    .stat-plate {
+      padding: 1.75rem 2rem;
+      background: linear-gradient(180deg, var(--paper-2), var(--paper));
+      border-radius: var(--radius);
+      box-shadow: var(--elev-shadow-1);
+      position: relative; overflow: hidden;
+    }
+    .stat-plate::before {
+      content: ''; position: absolute; top: 0; left: 1.25rem; right: 1.25rem; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .stat-value {
+      font-family: var(--font-serif); font-style: italic; font-weight: 600;
+      font-size: 2.5rem; color: var(--spruce); line-height: 1;
+    }
+    .stat-label { color: var(--ink-soft); font-size: 0.875rem; margin-top: .35rem; font-weight: 600; letter-spacing: .02em; }
+
+    /* === FIX #3: EMBOSSED CARDS — pressed-paper texture, gold hairlines,
+       deep shadows. Featured card is genuinely raised off the page. === */
+    .cards-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1.5rem; margin: 3rem 0; }
+    .card {
+      padding: 1.75rem;
+      background: linear-gradient(180deg, var(--paper-2), var(--paper));
+      border-radius: var(--radius);
+      box-shadow: var(--elev-shadow-1);
+      position: relative; overflow: hidden;
+    }
+    .card h3 { font-family: var(--font-serif); font-weight: 600; margin: 0 0 .5rem; color: var(--spruce); font-size: 1.35rem; }
+    .card p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1.25rem; }
+    .card .more { font-weight: 700; }
+    .card.featured {
+      background: linear-gradient(180deg, var(--paper-2) 0%, var(--paper) 50%, color-mix(in oklab, var(--gold) 8%, var(--paper)) 100%);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      box-shadow: var(--elev-shadow-3);
+      transform: translateY(-6px);
+    }
+    .card.featured::after {
+      content: ''; position: absolute; top: 1rem; right: 1rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: radial-gradient(circle, var(--gold-2), var(--gold));
+      box-shadow: 0 0 16px color-mix(in oklab, var(--gold) 50%, transparent);
+    }
+    .card.featured h3 { font-size: 1.6rem; }
+    .badge {
+      display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gold);
+      padding: .25rem .6rem; border-radius: 999px;
+      background: color-mix(in oklab, var(--gold) 18%, transparent);
+      border: 1px solid color-mix(in oklab, var(--gold) 35%, transparent);
+      margin-bottom: .65rem;
+    }
+
+    .further-reading {
+      background: linear-gradient(180deg, var(--paper-2), var(--paper));
+      padding: 2rem 2.25rem; border-radius: var(--radius-lg);
+      margin: 2.5rem 0 0;
+      box-shadow: var(--elev-shadow-1);
+    }
+    .further-reading h2 { font-family: var(--font-serif); font-style: italic; font-weight: 600; margin-top: 0; font-size: 1.4rem; color: var(--spruce); }
+    .further-reading ul { padding-left: 1.25rem; margin: .75rem 0 0; }
+    .further-reading li { margin-bottom: .5rem; }
+
+    footer {
+      background: linear-gradient(180deg, var(--paper), var(--bone-2));
+      padding: 3rem 1.5rem; text-align: center;
+      margin-top: 5rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--spruce); font-weight: 600; background-image: none; }
+    .footer-links a:hover { color: var(--leaf); }
+
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 1000;
+      padding: .55rem 1.1rem; background: linear-gradient(180deg, var(--paper-2), var(--paper));
+      border: 1px solid var(--rule); border-radius: 999px;
+      cursor: pointer; font: inherit; color: var(--ink);
+      box-shadow: var(--elev-shadow-1);
+    }
+    .variant-tag {
+      position: fixed; bottom: 1rem; left: 1rem; z-index: 1000;
+      padding: .4rem .8rem; background: var(--gold); color: var(--ink);
+      border-radius: 999px; font-size: .75rem; font-weight: 800;
+      letter-spacing: .08em; text-transform: uppercase;
+      box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent), 0 0 18px color-mix(in oklab, var(--gold) 30%, transparent);
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">Toggle theme</button>
+  <span class="variant-tag">Variant B · Warm Premium</span>
+  <header>
+    <nav class="nav">
+      <a href="/" class="brand"><span class="brand-mark"></span>Maine Dispensary Guide</a>
+      <div class="nav-links">
+        <a href="/guides">Guides</a>
+        <a href="/resources">Resources</a>
+        <a href="/about">About</a>
+      </div>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-plaque">
+        <div class="hero-image">
+          <span class="hero-image-eyebrow">— Spring 2026 Edition</span>
+          <span class="hero-image-caption">Maine Cannabis Resource</span>
+        </div>
+      </div>
+      <div class="hero-headline">
+        <h1>How to Open a Maine Dispensary in 2026</h1>
+        <p class="subtitle">Everything you need: <strong>licensing timeline</strong>, <strong>startup costs ($360K–$1M)</strong>, location zoning, and OCP application steps.</p>
+      </div>
+    </section>
+    <div class="stats-rail">
+      <div class="stat-plate"><div class="stat-value">$246M</div><div class="stat-label">Annual Sales</div></div>
+      <div class="stat-plate"><div class="stat-value">169</div><div class="stat-label">Active Stores</div></div>
+      <div class="stat-plate"><div class="stat-value">$6.62</div><div class="stat-label">Price / Gram</div></div>
+    </div>
+    <div class="cards-grid">
+      <div class="card featured">
+        <span class="badge">Featured</span>
+        <h3>Portland</h3>
+        <p>Maine's largest market, 12+ dispensaries, $5K local fee. Saturation is real, but craft positioning works for those who earn it. Strongest tourist capture on the coast.</p>
+        <a href="#" class="more">Open Portland guide</a>
+      </div>
+      <div class="card">
+        <h3>Bangor</h3>
+        <p>Strong regional draw, less competition than Portland, growing scene.</p>
+        <a href="#" class="more">Open guide</a>
+      </div>
+      <div class="card">
+        <h3>Lewiston</h3>
+        <p>Opt-in town with clear licensing path and lower real estate pressure.</p>
+        <a href="#" class="more">Open guide</a>
+      </div>
+    </div>
+    <section class="further-reading">
+      <h2>External Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener">Maine OCP Adult-Use Licensing</a></li>
+        <li><a href="https://www.maine.gov/sos/" target="_blank" rel="noopener">Maine Secretary of State</a></li>
+        <li><a href="https://www.metrc.com/" target="_blank" rel="noopener">Metrc — Inventory Tracking</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy">Privacy</a>
+      <a href="https://x.com/mainedispensary" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+  </footer>
+</body>
+</html>

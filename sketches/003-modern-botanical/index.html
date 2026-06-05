@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VARIANT C — Modern Botanical — Maine Dispensary Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* === DESIGN TOKENS — Modern Botanical === */
+    :root {
+      --bone: #F2F2E2;
+      --bone-2: #EBEBD9;
+      --paper: #FDFCF4;
+      --ink: #0F1A14;
+      --ink-soft: #4A5A4F;
+      --rule: #D9DFCE;
+      --spruce: #1F4D3A;        /* slightly greener spruce */
+      --leaf: #588157;
+      --sage: #A8C49A;          /* brighter sage */
+      --sage-soft: #CFE0C2;
+      --mint: #D7ECCB;
+      --moss: #2A5F3A;
+      /* Frosted glass & organic */
+      --glass-bg: rgba(255, 255, 255, 0.62);
+      --glass-border: rgba(255, 255, 255, 0.85);
+      --glass-shadow: 0 8px 32px rgba(31, 77, 58, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      --card-shadow: 0 1px 2px rgba(15,26,20,.06), 0 8px 24px rgba(15,26,20,.10);
+      --raised-shadow: 0 4px 8px rgba(15,26,20,.08), 0 24px 60px rgba(15,26,20,.18);
+      --radius: 20px;            /* larger, organic */
+      --radius-lg: 32px;         /* blob-y */
+      --max-width: 1200px;
+      --font-family: 'Plus Jakarta Sans', sans-serif;
+      --font-serif: 'Fraunces', serif;
+    }
+    [data-theme="dark"] {
+      --bone: #0B1A14;
+      --bone-2: #0E2118;
+      --paper: #11261B;
+      --ink: #ECF3E4;
+      --ink-soft: #A8BBA8;
+      --rule: #1E3627;
+      --spruce: #A8C49A;
+      --leaf: #88AE7E;
+      --sage: #7DA070;
+      --sage-soft: #2A4A35;
+      --mint: #1A3826;
+      --moss: #4A7F5E;
+      --glass-bg: rgba(20, 38, 28, 0.55);
+      --glass-border: rgba(168, 196, 154, 0.18);
+      --glass-shadow: 0 8px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(168,196,154,.10);
+      --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+      --raised-shadow: 0 4px 8px rgba(0,0,0,.5), 0 24px 60px rgba(0,0,0,.6);
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%, color-mix(in oklab, var(--mint) 50%, transparent), transparent 70%),
+        radial-gradient(ellipse 50% 35% at 85% 30%, color-mix(in oklab, var(--sage-soft) 60%, transparent), transparent 70%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in oklab, var(--mint) 40%, transparent), transparent 70%),
+        var(--bone);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    [data-theme="dark"] body {
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%, color-mix(in oklab, var(--sage-soft) 30%, transparent), transparent 70%),
+        radial-gradient(ellipse 50% 35% at 85% 30%, color-mix(in oklab, var(--mint) 50%, transparent), transparent 70%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in oklab, var(--sage-soft) 30%, transparent), transparent 70%),
+        var(--bone);
+    }
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.75rem; position: relative; }
+
+    /* Decorative organic blobs in the background */
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(60px); opacity: .55; pointer-events: none; z-index: 0;
+    }
+    .blob-1 { top: 5%; left: -8%; width: 380px; height: 380px; background: var(--sage-soft); }
+    .blob-2 { top: 35%; right: -10%; width: 460px; height: 460px; background: var(--mint); opacity: .65; }
+    [data-theme="dark"] .blob { opacity: .25; }
+
+    /* === FIX #1: LINKS — bright sage, clear underline, never low contrast === */
+    a {
+      color: var(--moss);
+      text-decoration: underline;
+      text-decoration-color: var(--sage);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.2em;
+      transition: color .2s, text-decoration-color .2s;
+      font-weight: 600;
+    }
+    a:hover, a:focus-visible { color: var(--leaf); text-decoration-color: var(--leaf); }
+    [data-theme="dark"] a { color: #B5D0A8; text-decoration-color: color-mix(in oklab, #B5D0A8 50%, transparent); }
+    [data-theme="dark"] a:hover { color: #D4E4C6; text-decoration-color: currentColor; }
+    .footer-links a, .further-reading a { color: var(--moss); font-weight: 600; }
+    [data-theme="dark"] .footer-links a, [data-theme="dark"] .further-reading a { color: #B5D0A8; }
+    a[target="_blank"]::after { content: " ↗"; font-size: .8em; opacity: .65; }
+
+    /* === HEADER — glass, floating === */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .nav { display: flex; gap: 1.5rem; align-items: center; max-width: var(--max-width); margin: 0 auto; padding: 1rem 1.75rem; }
+    .brand {
+      font-family: var(--font-serif); font-weight: 700; font-size: 1.25rem;
+      color: var(--spruce); text-decoration: none; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: .55rem;
+    }
+    .brand-leaf {
+      width: 28px; height: 28px; border-radius: 50% 0 50% 0;
+      background: linear-gradient(135deg, var(--leaf), var(--moss));
+      transform: rotate(45deg);
+      box-shadow: 0 4px 12px color-mix(in oklab, var(--leaf) 50%, transparent);
+    }
+    .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .9375rem; }
+    .nav-links a:hover { color: var(--spruce); }
+
+    /* === FIX #2: HERO — frosted-glass plate, organic shape behind it.
+       The image is now one component among several rather than the whole
+       "first impression" being a giant white rectangle. === */
+    .hero { padding: 4rem 0 1.5rem; position: relative; z-index: 1; }
+    .hero-plate {
+      max-width: 1040px; margin: 0 auto 3rem;
+      padding: 1.25rem;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--glass-shadow);
+      position: relative;
+    }
+    .hero-image {
+      aspect-ratio: 16 / 7;
+      border-radius: 22px;
+      background:
+        radial-gradient(ellipse at 25% 70%, color-mix(in oklab, var(--sage) 60%, transparent), transparent 60%),
+        radial-gradient(ellipse at 80% 25%, color-mix(in oklab, var(--moss) 70%, transparent), transparent 55%),
+        linear-gradient(135deg, #1a3526 0%, #0e1f17 60%, #07140d 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-image::after {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 525'><g fill='%23A8C49A' fill-opacity='.35'><path d='M200 480 C 200 380, 250 280, 200 200 C 280 240, 300 380, 200 480 Z'/><path d='M550 490 C 540 360, 590 240, 550 140 C 660 200, 680 380, 550 490 Z'/><path d='M900 480 C 890 360, 940 260, 900 170 C 1010 220, 1020 380, 900 480 Z'/></g><g fill='none' stroke='%23D7ECCB' stroke-opacity='.4' stroke-width='1.5'><path d='M0 380 Q300 280 600 350 T1200 320'/><path d='M0 430 Q400 350 800 410 T1200 390'/></g></svg>") center/cover no-repeat;
+    }
+    .hero-image-eyebrow {
+      position: absolute; left: 1.5rem; top: 1.25rem;
+      padding: .35rem .85rem; border-radius: 999px;
+      background: rgba(255,255,255,.18); backdrop-filter: blur(8px);
+      color: #F2F8EC; font-size: .75rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .hero-image-caption {
+      position: absolute; left: 1.5rem; bottom: 1.5rem; right: 1.5rem;
+      color: #F2F8EC; font-family: var(--font-serif); font-size: 1.35rem;
+      text-shadow: 0 1px 12px rgba(0,0,0,.4);
+    }
+
+    .hero-headline { max-width: 880px; margin: 0 auto; text-align: left; }
+    h1 {
+      font-family: var(--font-serif); font-weight: 600;
+      font-size: clamp(2.5rem, 5.5vw, 4.5rem); line-height: 1.04; letter-spacing: -0.02em;
+      color: var(--ink); margin: 0 0 1rem;
+    }
+    .subtitle { color: var(--ink-soft); font-size: 1.1875rem; max-width: 62ch; }
+    .subtitle strong { color: var(--moss); font-weight: 700; }
+
+    /* === STATS — frosted tiles with subtle inner highlight === */
+    .stats-rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 3rem 0; }
+    .stat-plate {
+      padding: 1.75rem 2rem;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 2px 4px rgba(15,26,20,.08), 0 10px 24px rgba(15,26,20,.10);
+    }
+    [data-theme="dark"] .stat-plate {
+      box-shadow: inset 0 1px 0 rgba(168,196,154,.10), 0 2px 4px rgba(0,0,0,.5), 0 10px 24px rgba(0,0,0,.5);
+    }
+    .stat-value { font-family: var(--font-serif); font-size: 2.5rem; color: var(--moss); line-height: 1; font-weight: 600; }
+    .stat-label { color: var(--ink-soft); font-size: 0.875rem; margin-top: .35rem; font-weight: 600; }
+
+    /* === FIX #3: EMBOSSED/RAISED CARDS — frosted + organic.
+       The featured card uses a stronger glass layer, a bigger radius,
+       and a more obvious vertical lift so it really feels raised. === */
+    .cards-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1.5rem; margin: 3rem 0; }
+    .card {
+      padding: 1.75rem;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 2px 4px rgba(15,26,20,.08), 0 14px 32px rgba(15,26,20,.14);
+      position: relative;
+    }
+    [data-theme="dark"] .card {
+      box-shadow: inset 0 1px 0 rgba(168,196,154,.10), 0 2px 4px rgba(0,0,0,.5), 0 14px 32px rgba(0,0,0,.5);
+    }
+    .card h3 { font-family: var(--font-serif); font-weight: 600; margin: 0 0 .5rem; color: var(--moss); font-size: 1.3rem; }
+    .card p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1.25rem; }
+    .card .more { font-weight: 700; }
+    .card.featured {
+      padding: 2.25rem;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,255,255,.55) 100%);
+      box-shadow: var(--raised-shadow), inset 0 1px 0 rgba(255,255,255,.95);
+      transform: translateY(-8px);
+    }
+    [data-theme="dark"] .card.featured {
+      background: linear-gradient(180deg, rgba(30,60,42,.85) 0%, rgba(20,40,28,.55) 100%);
+    }
+    .card.featured h3 { font-size: 1.6rem; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .7rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--moss);
+      padding: .35rem .7rem; border-radius: 999px;
+      background: var(--mint);
+      margin-bottom: .75rem;
+    }
+    .badge::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--leaf); box-shadow: 0 0 0 3px color-mix(in oklab, var(--leaf) 30%, transparent);
+    }
+
+    .further-reading {
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border: 1px solid var(--glass-border);
+      padding: 2rem 2.25rem; border-radius: var(--radius-lg);
+      margin: 2.5rem 0 0;
+      box-shadow: var(--glass-shadow);
+    }
+    .further-reading h2 { font-family: var(--font-serif); font-weight: 600; margin-top: 0; font-size: 1.35rem; color: var(--moss); }
+    .further-reading ul { padding-left: 1.25rem; margin: .75rem 0 0; }
+    .further-reading li { margin-bottom: .5rem; }
+
+    footer {
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      padding: 3rem 1.5rem; text-align: center;
+      margin-top: 5rem;
+      border-top: 1px solid var(--glass-border);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--moss); font-weight: 600; }
+    .footer-links a:hover { color: var(--leaf); }
+
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 1000;
+      padding: .55rem 1.1rem;
+      background: var(--glass-bg); backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border); border-radius: 999px;
+      cursor: pointer; font: inherit; color: var(--ink);
+      box-shadow: var(--glass-shadow);
+    }
+    .variant-tag {
+      position: fixed; bottom: 1rem; left: 1rem; z-index: 1000;
+      padding: .4rem .8rem; background: var(--moss); color: var(--mint);
+      border-radius: 999px; font-size: .75rem; font-weight: 800;
+      letter-spacing: .08em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">Toggle theme</button>
+  <span class="variant-tag">Variant C · Modern Botanical</span>
+  <header>
+    <nav class="nav">
+      <a href="/" class="brand"><span class="brand-leaf"></span>Maine Dispensary Guide</a>
+      <div class="nav-links">
+        <a href="/guides">Guides</a>
+        <a href="/resources">Resources</a>
+        <a href="/about">About</a>
+      </div>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-plate">
+        <div class="hero-image">
+          <span class="hero-image-eyebrow">Maine · 2026</span>
+          <span class="hero-image-caption">Maine Cannabis Resource</span>
+        </div>
+      </div>
+      <div class="hero-headline">
+        <h1>How to Open a Maine Dispensary in 2026</h1>
+        <p class="subtitle">Everything you need: <strong>licensing timeline</strong>, <strong>startup costs ($360K–$1M)</strong>, location zoning, and OCP application steps.</p>
+      </div>
+    </section>
+    <div class="stats-rail">
+      <div class="stat-plate"><div class="stat-value">$246M</div><div class="stat-label">Annual Sales</div></div>
+      <div class="stat-plate"><div class="stat-value">169</div><div class="stat-label">Active Stores</div></div>
+      <div class="stat-plate"><div class="stat-value">$6.62</div><div class="stat-label">Price / Gram</div></div>
+    </div>
+    <div class="cards-grid">
+      <div class="card featured">
+        <span class="badge">Featured</span>
+        <h3>Portland</h3>
+        <p>Maine's largest market, 12+ dispensaries, $5K local fee. Saturation is real, but craft positioning works for those who earn it. Strongest tourist capture on the coast.</p>
+        <a href="#" class="more">Open Portland guide</a>
+      </div>
+      <div class="card">
+        <h3>Bangor</h3>
+        <p>Strong regional draw, less competition than Portland, growing scene.</p>
+        <a href="#" class="more">Open guide</a>
+      </div>
+      <div class="card">
+        <h3>Lewiston</h3>
+        <p>Opt-in town with clear licensing path and lower real estate pressure.</p>
+        <a href="#" class="more">Open guide</a>
+      </div>
+    </div>
+    <section class="further-reading">
+      <h2>External Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener">Maine OCP Adult-Use Licensing</a></li>
+        <li><a href="https://www.maine.gov/sos/" target="_blank" rel="noopener">Maine Secretary of State</a></li>
+        <li><a href="https://www.metrc.com/" target="_blank" rel="noopener">Metrc — Inventory Tracking</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy">Privacy</a>
+      <a href="https://x.com/mainedispensary" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+  </footer>
+</body>
+</html>
