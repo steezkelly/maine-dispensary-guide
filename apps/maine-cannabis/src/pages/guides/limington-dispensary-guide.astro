@@ -4,7 +4,6 @@ import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there any cannabis dispensaries in Limington, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Limington has no dedicated cannabis dispensaries within town limits. The nearest option is Hidden Greens in Buxton (~10 mi, medical + delivery), and Founding Farmers in Limerick (~6 mi, medical)."}},{"@type":"Question","name":"Is recreational cannabis legal in Limington, Maine?","acceptedAnswer":{"@type":"Answer","text":"Cannabis is legal statewide in Maine for adults 21+. Limington has not opted in to local cannabis retail. Purchase and possession remain legal under state law."}},{"@type":"Question","name":"Where can I buy cannabis near Limington, ME?","acceptedAnswer":{"@type":"Answer","text":"Medical: Founding Farmers in Limerick (~6 mi) or Hidden Greens in Buxton (~10 mi, offers delivery). Recreational: Sweet Dirt/Canuvo in Bridgton (~20 mi)."}}]});
 ---
 <Layout title="Limington, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Limington, Maine cannabis guide. No dispensaries in Limington — nearest are Limerick (6 mi) and Bridgton (20 mi) for 2026." heroImage="/images/heroes/limington-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -104,4 +103,4 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

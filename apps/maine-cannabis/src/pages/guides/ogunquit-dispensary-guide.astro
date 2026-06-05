@@ -13,16 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Ogunquit, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are Hazy Hill Farm and Curaleaf in Wells (approximately 5 minutes away) and Tops Farm in York (approximately 15 minutes)." }},
-    { "@type": "Question", "name": "Does Ogunquit allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ogunquit has NOT opted in to recreational cannabis. The town has chosen to prohibit cannabis dispensaries, meaning residents and visitors must travel to neighboring towns for legal cannabis purchases. The nearest medical dispensary is Hazy Hill Farm in Wells, which serves MMMP patients." }},
-    { "@type": "Question", "name": "Why is the lack of dispensaries in Ogunquit notable?", "acceptedAnswer": { "@type": "Answer", "text": "Ogunquit is a major tourist destination with Marginal Way, Perkins Cove, and beaches that draw 10,000+ summer visitors. Yet it has no local dispensaries. This creates an ironic situation where tourism drives cannabis spending to neighboring Wells instead of keeping revenue in town." }},
-    { "@type": "Question", "name": "Where is the nearest dispensary to Ogunquit?", "acceptedAnswer": { "@type": "Answer", "text": "Hazy Hill Farm in Wells (~5 minutes, medical, 1614 Post Road) is the closest option. Curaleaf in Wells (Route 1) is also nearby but is a medical-only dispensary serving MMMP patients — not adult-use recreational. Tops Farm medical dispensary in York is approximately 15 minutes away." }}
-  ]
-});
 ---
 
 <Layout title="Ogunquit, ME Dispensary Guide — Cannabis Options for Visitors & Residents 2026" description="Ogunquit, Maine cannabis guide. No dispensaries in town — nearest are Wells (5 min) and York (15 min). Coastal tourism economy." heroImage="/images/heroes/ogunquit-dispensary-guide.jpg" article={article} topics={topics} >
@@ -134,4 +124,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

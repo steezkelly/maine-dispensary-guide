@@ -4,7 +4,6 @@ import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there any cannabis dispensaries in Baldwin, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Baldwin has NO dispensaries and explicitly OPTED OUT via Local Law No. 1 of 2021. The nearest options are Founding Farmers in Limerick (~15 mi, medical) and Sweet Dirt Cannabis in Bridgton (~17 mi, recreational)."}},{"@type":"Question","name":"Is recreational cannabis legal in Baldwin, Maine?","acceptedAnswer":{"@type":"Answer","text":"Cannabis is legal statewide for adults 21+. However, Baldwin explicitly voted to prohibit cannabis retail dispensaries under Local Law No. 1 of 2021. Purchase and possession remain legal under state law."}},{"@type":"Question","name":"Where can I buy cannabis near Baldwin, ME?","acceptedAnswer":{"@type":"Answer","text":"The nearest dispensary is Founding Farmers in Limerick (~15 mi, medical). For recreational purchases, Sweet Dirt in Bridgton is ~17 mi east, or Windham's Green Mile corridor is ~18 mi east."}}]});
 ---
 <Layout title="Baldwin, ME Dispensary Guide — Cannabis Options Near Baldwin 2026" description="Baldwin, Maine cannabis guide. Baldwin opted out of cannabis retail. Find the nearest medical and recreational options in Limerick, Bridgton, and Windham." heroImage="/images/heroes/baldwin-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -102,4 +101,4 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal regulations can change. Always verify details directly with the town office before making plans.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

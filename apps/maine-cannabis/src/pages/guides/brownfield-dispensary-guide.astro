@@ -13,16 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many dispensaries are in Brownfield, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Brownfield has 2 medical cannabis dispensaries: Clean Green (medical/delivery at 349 Center Conway Rd, 207-935-1128) and Greener Evolutions (medical/delivery, 207-370-8867). Both operate delivery-based models serving the rural Oxford County area." }},
-    { "@type": "Question", "name": "Does Brownfield allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Brownfield has opted in to recreational cannabis. However, only medical dispensaries currently operate in town. This represents an opportunity for recreational operators to serve the Fryeburg-Bridgton corridor." }},
-    { "@type": "Question", "name": "What makes Brownfield's dispensaries unique?", "acceptedAnswer": { "@type": "Answer", "text": "Both Clean Green and Greener Evolutions operate primarily as delivery-based dispensaries, serving the rural Oxford County region without a traditional retail storefront. Greener Evolutions specifically emphasizes small-batch organic cannabis products." }},
-    { "@type": "Question", "name": "Why is Brownfield significant for cannabis delivery?", "acceptedAnswer": { "@type": "Answer", "text": "Brownfield's location enables delivery service to a wide rural area of Oxford County, including the Fryeburg-Bridgton corridor. With a small population of only 1,200 but serving a wide rural radius, Brownfield operators fill a critical gap in the regional cannabis supply chain." }}
-  ]
-});
 ---
 
 <Layout title="Brownfield, ME Dispensary Guide — Medical Cannabis with Delivery 2026" description="Brownfield, Maine dispensary guide. Two delivery-based medical dispensaries: Clean Green and Greener Evolutions serving rural Oxford County for 2026." heroImage="/images/heroes/brownfield-dispensary-guide.jpg" article={article} topics={topics} >
@@ -132,4 +122,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

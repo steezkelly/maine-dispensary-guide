@@ -13,16 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many dispensaries are in York, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "York has 1 known dispensary: Tops Farm, a medical cannabis dispensary located at 647 US-1 Unit #10. There are currently no recreational dispensaries operating in York." }},
-    { "@type": "Question", "name": "Does York allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. York has opted in to recreational cannabis retail. However, only the medical dispensary Tops Farm currently operates in town, creating a significant adult-use market opportunity." }},
-    { "@type": "Question", "name": "What is the market opportunity in York?", "acceptedAnswer": { "@type": "Answer", "text": "York is a major tourism destination with 13,000+ residents and Nubble Light, beaches, and attractions that draw visitors year-round. The combination of a population that supports only one medical dispensary and a significant tourism economy creates a strong adult-use opportunity." }},
-    { "@type": "Question", "name": "What is Tops Farm?", "acceptedAnswer": { "@type": "Answer", "text": "Tops Farm is a medical cannabis dispensary located at 647 US-1 Unit #10 in York, serving medical cannabis patients in York County." }}
-  ]
-});
 ---
 
 <Layout title="York, ME Dispensary Guide — Tops Farm Medical Dispensary 2026" description="York, Maine dispensary guide. Tops Farm medical dispensary on US Route 1. Coastal York County cannabis guide with recreational opportunity." heroImage="/images/heroes/york-dispensary-guide.jpg" article={article} topics={topics} >
@@ -126,4 +116,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

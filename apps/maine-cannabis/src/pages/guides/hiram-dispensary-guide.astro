@@ -4,7 +4,6 @@ import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there any cannabis dispensaries in Hiram, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "No. Hiram has no dedicated cannabis dispensaries within town limits. The nearest options are Founding Farmers, Limerick (~12 mi, medical) and Sweet Dirt / Canuvo, Bridgton (~12 mi, recreational)."}}, {"@type": "Question", "name": "Is recreational cannabis legal in Hiram, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Cannabis is legal statewide in Maine for adults 21+. Hiram has not opted in. Purchase and possession remain legal under state law."}}, {"@type": "Question", "name": "Where can I buy cannabis near Hiram, ME?", "acceptedAnswer": {"@type": "Answer", "text": "Medical: Founding Farmers, Limerick (~12 mi, medical). Recreational: Sweet Dirt / Canuvo, Bridgton (~12 mi, recreational). See our full guide for details and routes."}}, {"@type": "Question", "name": "Does Hiram allow cannabis dispensaries?", "acceptedAnswer": {"@type": "Answer", "text": "Hiram has not opted in to cannabis retail. The town would need to authorize cannabis establishments before any dispensary could operate locally."}}]});
 ---
 <Layout title="Hiram, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Hiram, Maine cannabis guide. No dispensaries in Hiram — find nearest medical (Founding Farmers, Limerick (~12 mi, medical)) and recreational (Sweet Dirt / Canuvo, Bridgton (~12 mi, recreational)) cannabis options for 2026." heroImage="/images/heroes/hiram-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -103,4 +102,4 @@ const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type":
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

@@ -13,17 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Buxton, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens operates a medical cannabis dispensary at 370 Narragansett Trail, Buxton, ME 04093. Phone: (207) 298-9111. They also have a second location in South Berwick. Hidden Greens is medical-only and offers delivery services." }},
-    { "@type": "Question", "name": "What is Hidden Greens in Buxton?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens is a medical cannabis dispensary at 370 Narragansett Trail, Buxton, ME. They offer delivery and also operate a second location in South Berwick at 438 Main Street. Hours: Mon-Sat 9am-9pm, Sun 9am-8pm." }},
-    { "@type": "Question", "name": "Does Hidden Greens Buxton offer delivery?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens offers delivery services to the Buxton area and surrounding communities including Limington, Hollis, and southern York County." }},
-    { "@type": "Question", "name": "Does Buxton have recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "As of this writing, Hidden Greens is medical-only. The nearest recreational dispensary options are in Biddeford (Stoner & Co, Canuvo, etc.) and Biddeford (~15 mi)."}},
-    { "@type": "Question", "name": "What dispensaries are near Buxton, ME?", "acceptedAnswer": { "@type": "Answer", "text": "In Buxton: Hidden Greens (medical, 370 Narragansett Trail). Nearby recreational options include Biddeford (Stoner & Co, Canuvo, ~15 mi), Saco (~15 mi), Scarborough (~15 mi)."}}
-  ]
-});
 ---
 <Layout title="Buxton, Maine Dispensary Guide — Hidden Greens Medical Dispensary 2026" description="Buxton, Maine dispensary guide. Hidden Greens medical cannabis dispensary at 370 Narragansett Trail. Medical and recreational options near Buxton for 2026." heroImage="/images/heroes/buxton-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -134,4 +123,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and delivery service areas can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

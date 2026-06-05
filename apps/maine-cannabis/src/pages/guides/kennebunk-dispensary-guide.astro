@@ -13,16 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Kennebunk, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has not opted in to cannabis retail, so there are no dispensaries within town limits. The nearest options are in Wells (approximately 5 minutes away) and Biddeford (approximately 20 minutes away)." }},
-    { "@type": "Question", "name": "Does Kennebunk allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Kennebunk has NOT opted in to recreational cannabis retail. This opt-out decision means no dispensaries can operate within Kennebunk, and residents must travel to neighboring towns for legal cannabis purchases." }},
-    { "@type": "Question", "name": "Where is the nearest dispensary to Kennebunk?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest medical dispensary is Hazy Hill Farm in Wells (1614 Post Road, ~5 min). For recreational cannabis, the nearest options are in Biddeford (~20 min): Stoner & Co and Canuvo. Curaleaf in Wells is medical-only, not recreational." }},
-    { "@type": "Question", "name": "Why doesn't Kennebunk have dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Kennebunk's selectmen have not opted the town in to recreational cannabis retail. This is a municipal policy decision. Until the town changes its policy, no dispensaries can legally operate in Kennebunk." }}
-  ]
-});
 ---
 
 <Layout title="Kennebunk, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Kennebunk, Maine cannabis guide. No dispensaries in Kennebunk — nearest options in Wells (5 min) and Biddeford (20 min) for 2026." heroImage="/images/heroes/kennebunk-dispensary-guide.jpg" article={article} topics={topics} >
@@ -132,4 +122,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
