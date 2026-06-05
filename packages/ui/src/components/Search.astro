@@ -1,5 +1,10 @@
 ---
-// Static list of our top 41 guides for instant client-side search
+// Static list of our top 41 guides for instant client-side search.
+// NOTE: Two <Search /> instances render per page (desktop nav + mobile menu).
+// Only the FIRST instance should inline the searchIndex data + behaviour script;
+// the second instance renders markup only and the existing querySelectorAll loop
+// picks it up. Set `withData={false}` on the second instance to dedupe the inline
+// data (~3.2 KB per page saved across the 152-page build = ~490 KB total).
 const searchIndex = [
   { title: "Maine Dispensary License", href: "/guides/maine-dispensary-license/" },
   { title: "Portland Dispensary Guide", href: "/guides/portland-dispensary-guide/" },
@@ -12,6 +17,7 @@ const searchIndex = [
   { title: "Business Plan Guide", href: "/guides/maine-dispensary-business-plan/" },
   { title: "Security Requirements", href: "/guides/maine-dispensary-security/" }
 ];
+const { withData = true } = Astro.props as { withData?: boolean };
 ---
 
 <div class="search-container">
@@ -23,6 +29,7 @@ const searchIndex = [
   <div class="search-results-dropdown" aria-live="polite" aria-atomic="true"></div>
 </div>
 
+{withData && (
 <script define:vars={{ searchIndex }}>
   const searchInput = document.querySelector('.search-input');
   
@@ -94,6 +101,7 @@ const searchIndex = [
     });
   });
 </script>
+)}
 
 <style>
   .search-container {

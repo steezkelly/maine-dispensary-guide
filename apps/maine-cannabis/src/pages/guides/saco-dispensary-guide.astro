@@ -4,7 +4,6 @@ import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"When might Saco open to cannabis retail?","acceptedAnswer":{"@type":"Answer","text":"No guaranteed timeline, but 2024 saw a 3-2 council vote against — much closer than 2022. Biddeford's success is shifting opinions. From council discussion to vote typically takes 18-24 months."}},{"@type":"Question","name":"Can I deliver cannabis to Saco from Biddeford?","acceptedAnswer":{"@type":"Answer","text":"Yes. Maine permits any licensed dispensary to deliver statewide. The restriction is on a retail location in Saco, not on serving Saco customers via delivery."}},{"@type":"Question","name":"What makes Saco different from Biddeford for cannabis retail?","acceptedAnswer":{"@type":"Answer","text":"Biddeford has 4-5 stores already. Saco has zero, meaning first-mover advantage is significant if it opens. Saco has older demographics, more family-oriented, valuing consistency over selection."}},{"@type":"Question","name":"Is cultivation legal in Saco without town approval?","acceptedAnswer":{"@type":"Answer","text":"Yes. State-issued cultivation license is not blocked by municipal opt-in. You need state license and local zoning compliance, but no town vote."}}]});
 ---
 <Layout title="Saco Dispensary Guide — Cannabis Options & Market Outlook 2026" description="Saco, Maine cannabis guide. Adult-use retail not yet permitted, but delivery from Biddeford is legal. Market outlook, council voting history, and cultivation opportunities." heroImage="/images/heroes/saco-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -76,4 +75,4 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   <p class="disclaimer"><em>Information is for reference only. Saco's cannabis policy can change through council action. Verify current status with the Saco city clerk.</em></p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

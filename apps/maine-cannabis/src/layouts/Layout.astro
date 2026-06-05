@@ -446,7 +446,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
               }
             });
           </script>
-          <div class="nav-search-mobile"><Search /></div>
+          <div class="nav-search-mobile"><Search withData={false} /></div>
           <div class="nav-dropdown">
             <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
             <div class="dropdown-content multi-column">

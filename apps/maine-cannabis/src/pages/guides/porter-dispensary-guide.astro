@@ -4,7 +4,6 @@ import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there any cannabis dispensaries in Porter, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "No. Porter has no dedicated cannabis dispensaries within town limits. The nearest options are Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi) and Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)."}}, {"@type": "Question", "name": "Is recreational cannabis legal in Porter, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Cannabis is legal statewide in Maine for adults 21+. Porter has not opted in. Purchase and possession remain legal under state law."}}, {"@type": "Question", "name": "Where can I buy cannabis near Porter, ME?", "acceptedAnswer": {"@type": "Answer", "text": "Medical: Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi). Recreational: Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi). See our full guide for details and routes."}}, {"@type": "Question", "name": "Does Porter allow cannabis dispensaries?", "acceptedAnswer": {"@type": "Answer", "text": "Porter has not opted in to cannabis retail. The town would need to authorize cannabis establishments before any dispensary could operate locally."}}]});
 ---
 <Layout title="Porter, ME Dispensary Guide — Nearest Cannabis Options 2026" description="Porter, Maine cannabis guide. No dispensaries in Porter — find nearest medical (Above All Greenery, Fryeburg (~13 mi, medical) or Founding Farmers, Limerick (~16 mi)) and recreational (Sweet Dirt, Bridgton (~14 mi) or The Hideaway, Oxford (~18 mi)) cannabis options for 2026." heroImage="/images/heroes/porter-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -103,4 +102,4 @@ const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type":
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Municipal opt-in statuses can change. Always verify details directly with the town office.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+

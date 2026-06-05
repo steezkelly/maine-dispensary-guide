@@ -13,16 +13,6 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Naples, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Naples currently has no dispensaries within town limits. The nearest dispensaries are Blue Lobster Cannabis in Casco (~10-15 minutes) and Sweet Dirt/Canuvo in Bridgton (~15-20 minutes)." }},
-    { "@type": "Question", "name": "Does Naples allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Naples appears to have opted in to cannabis retail, but no dispensaries have opened in town yet. This creates an opportunity for operators looking to be the first in this Sebago Lake-area community." }},
-    { "@type": "Question", "name": "What is the nearest dispensary to Naples?", "acceptedAnswer": { "@type": "Answer", "text": "The nearest dispensaries are Blue Lobster Cannabis in Casco (approximately 10-15 minutes) and Sweet Dirt Cannabis in Bridgton at 1 Beaver Creek Farm Rd (approximately 15-20 minutes)." }},
-    { "@type": "Question", "name": "What is Naples Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Naples is a lakes-region community on Sebago Lake, part of the broader Sebago Lakes Region. The town has approximately 4,000 residents and is a popular destination for lake recreation, boating, and seasonal visitors." }}
-  ]
-});
 ---
 
 <Layout title="Naples, ME Dispensary Guide — Cannabis Options Near Sebago Lake 2026" description="Naples, Maine cannabis guide. No dispensaries in Naples — nearest are Casco (Blue Lobster) and Bridgton (Sweet Dirt, Canuvo) via Sebago Lake area." heroImage="/images/heroes/naples-dispensary-guide.jpg" article={article} topics={topics} >
@@ -142,4 +132,4 @@ const faqPageJsonLd = JSON.stringify({
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
