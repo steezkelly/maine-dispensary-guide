@@ -1,0 +1,454 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "seed-selection", "autoflower-vs-feminized", "maine-climate"];
+---
+<Layout
+  title="Autoflower vs Feminized Seeds for Maine 2026 — Which to Choose"
+  description="Autoflower vs feminized photoperiod seeds for Maine: yield, THC, latitude-tier decision, and the buyer's decision matrix. RQS Blue Cheese 16% vs 19% within-cultivar comparison."
+  heroImage="/images/heroes/autoflower-vs-feminized-maine-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .calendar-table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; }
+  .calendar-table-wrap table { min-width: 600px; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .strain-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
+  .strain-card h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .strain-card .strain-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
+  .strain-card .strain-meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
+  .strain-card p { margin-bottom: 0.75rem; line-height: 1.65; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+  .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+  .affiliate-top-disclosure strong { color: #8b5a00; }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Autoflower vs Feminized Seeds for Maine 2026</h1>
+    <p class="subtitle">Which seed type actually wins in Maine's short, humid season — the buyer's decision matrix, with yield, THC, and latitude-tier recommendations</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 6, 2026 · Last updated June 6, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase seeds through these links, Maine Dispensary Guide may earn a commission at no extra cost to you. We only recommend products we genuinely believe in. See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's the third week of March in Bangor. A first-year grower is at his kitchen table with two seed-bank carts open on his laptop. One is loaded with autoflowers: Northern Lights Auto, White Widow Auto, Strawberry Gorilla Auto. The other is loaded with feminized photoperiods: Frisian Dew, Hollands Hope, Pamir Gold. Both will technically grow in Maine. Both are advertised as "fast-finishing" and "high-THC." The price-per-seed is comparable. The descriptions both say "ideal for outdoor growing."</p>
+
+    <p>But they are not the same product. The autoflower will flower based on age, not light cycle, and will be done in 75-90 days regardless of what the sun does. The feminized photoperiod will wait for the August daylength decline to begin flowering, and will need 7-8 more weeks of frost-free weather after that. In southern Maine, both work. In Caribou, only one is realistic. And the cost-per-ounce math flips depending on which one you pick.</p>
+
+    <p>This guide is the Maine-specific autoflower-vs-feminized (photoperiod) decision matrix. It covers what each seed type actually is, the within-cultivar THC gap (a 3-point RQS Blue Cheese comparison, not a categorical difference), the within-season yield math for Maine, the latitude-tier decision rule, and the realistic 2026 cost-per-ounce breakdown. The site already publishes a <a href="/blog/when-to-start-cannabis-seeds-maine-2026">city-by-city Maine cannabis planting calendar</a> and a <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a> (which covers 7 named strains in detail); this page answers the question those two leave open: <em>which seed type should I actually buy?</em></p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    The genetics behind autoflower and feminized photoperiod seeds. A within-cultivar THC potency comparison. Yield-per-plant and yield-per-season math for Maine. A latitude-tier decision matrix (southern / central / northern Maine). Five autoflower and five photoperiod strain recommendations with Maine-specific notes. The cost-per-ounce reality. The 2026 multi-run strategy. Six FAQ answers.
+  </Callout>
+
+  <section>
+    <h2>What an Autoflower Actually Is</h2>
+    <p>Modern autoflowering cannabis seeds carry a recessive flowering trait from <em>Cannabis ruderalis</em>, a wild relative of <em>C. sativa</em> and <em>C. indica</em> native to Central and Eastern Europe, Russia, and the former Soviet Union. Per the Wikipedia <em>Cannabis ruderalis</em> entry (citing Hillig 2004/2005 and Clarke & Merlin 2013), the species was first described in 1924 by the Russian botanist D. E. Janischewsky from plants collected in southern Siberia, reaches maturity in 5–7 weeks from seed, and <strong>enters flowering based on plant age rather than light cycle</strong>. That age-triggered flowering is the autoflower trait.</p>
+
+    <p>The autoflowering trait is recessive, so the F1 hybrid of a ruderalis × photoperiod cross is photoperiod-dominant; breeders must backcross and select for several generations (typically 4-6) to stabilize the auto trait in a commercial seed line. The Joint Doctor's <strong>Lowryder</strong> — released in the early 2000s and cross-bred through 5-6 generations of Northern Lights #2 and William's Wonder — was the first commercial, fully autoflowering, somewhat-potent seed. Modern F1 autoflowers (Fast Buds' Strawberry Gorilla Auto, ILGM's White Widow Auto, Dutch Passion's Auto Think Different) are polyhybrids with only a small percentage of the original ruderalis genome retained, stabilized through many generations. The "ruderalis is weak" reputation from Lowryder 1.0 is no longer accurate.</p>
+
+    <h3>Reliability and life cycle</h3>
+
+    <ul>
+      <li><strong>100% female (within the modern seed-bank norm of 99%+).</strong> All commercial "autoflower seeds" sold by ILGM, RQS, Dutch Passion, Fast Buds, and Dinafem are also feminized. Per Seedsman's <a href="https://www.seedsman.com/us-en/blog/cannabis-seed-feminization-how-its-done" target="_blank" rel="noopener noreferrer">feminization article</a>, the industry standard is 99%+ female. The residual 1% is hermaphrodite risk under stress, not a male-out phenotype.</li>
+      <li><strong>No light-cycle requirement.</strong> Royal Queen Seeds: "Autoflowering weed plants are not reliant on a shift in light hours and will flower automatically (generally after around 3-4 weeks of veg), regardless of how much light they receive." Maine's August daylength decline is irrelevant.</li>
+      <li><strong>8-12 week seed-to-harvest.</strong> RQS: "Autos may take as little as 10 weeks from germination." 2fast4buds: "The average lifecycle of an autoflower is 10 weeks but some strains can finish faster and others take a bit longer." Dutch Passion Northern Europe: plant May, harvest August.</li>
+      <li><strong>Plant height: 2-3 feet typically.</strong> RQS: 75-120 cm (30-47 in) for most autos. Some sativa-leaning autos stretch taller.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What a Feminized Photoperiod Seed Actually Is</h2>
+    <p>A feminized photoperiod seed is bred to produce only female plants and flowers in response to a change in light cycle — typically the natural August daylength decline in Maine. The "feminized" refers to the sex; the "photoperiod" refers to the flowering trigger.</p>
+
+    <h3>How feminized seeds are bred</h3>
+
+    <p>Feminized seeds are produced by stressing a female cannabis plant into producing male pollen, then using that pollen (which carries only X chromosomes) to fertilize another female. The resulting seeds carry only X chromosomes, so the offspring are female. Three methods are documented:</p>
+
+    <ol>
+      <li><strong>Colloidal silver.</strong> A 30 ppm+ silver nanoparticle solution is sprayed on a flowering female; silver ions disrupt ethylene production, the plant develops male pollen sacs, and the pollen is collected. Seedsman: "A colloidal silver solution (usually 30ppm or higher) is sprayed onto a flowering female plant. The silver ions disrupt the plant's ethylene production, a hormone critical for female flower development. As a result, the plant begins to develop male pollen sacs." (Caution: buds from a treated plant should not be consumed.)</li>
+      <li><strong>Silver thiosulfate (STS).</strong> The commercial gold standard. Same mechanism, more potent and consistent, used by most professional seed banks. Peer-reviewed confirmation at the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8591233/" target="_blank" rel="noopener noreferrer">PMC paper on high-CBD feminized seed production</a>.</li>
+      <li><strong>Rodelization</strong> (stress-induced hermaphroditism). A female is kept flowering past harvest and self-pollinates. Less reliable, more hermaphrodite-prone. Used by small-scale breeders; discouraged for commercial seed production.</li>
+    </ol>
+
+    <h3>Modern reliability</h3>
+
+    <p>Seedsman: "Feminized seeds… Produce 99% female plants, minimizing waste and labor." Modern reputable seed banks (ILGM, Dutch Passion, RQS, Sensi Seeds, MSNL) all advertise at "99%+" or "close to 100%" female. The 1% residual is the hermaphrodite risk under stress, not a male-out phenotype. For a Maine home grower, the practical hermie risk is heat/cold stress and <em>light leaks</em> during the dark period (a streetlight, porch light, or bright moon can interrupt the dark period and revert flowering behavior).</p>
+
+    <h3>Feminization history</h3>
+
+    <p>Per Seedsman: "The technique first gained traction in the 1990s thanks to pioneering work by Dutch cannabis seed banks… One of the earliest and most significant contributors was Dutch Passion Seed Company, which began experimenting with feminized seeds in the early 1990s. The founder of Dutch Passion, Henk van Dalen, introduced the first commercially successful feminized seeds around 1998." (Caveat: the 1998 date is a Seedsman blog attribution, not a primary archival source. Treat as a Dutch Passion corporate history claim, not an independently verified fact.)</p>
+  </section>
+
+  <section>
+    <h2>The THC Potency Gap: 3 Points, Not Categorical</h2>
+    <p>The "autoflowers are weaker" reputation is outdated. The cleanest within-cultivar comparison is from <a href="https://www.royalqueenseeds.com/us/blog-photoperiod-vs-autoflower-pros-and-cons-n1749" target="_blank" rel="noopener noreferrer">Royal Queen Seeds</a>: their Blue Cheese strain in autoflower form tests at up to 16% THC; the same Blue Cheese in photoperiod form tests at up to 19% THC. That's a 3-point gap within the same genetic family — not a categorical difference, and well within the run-to-run variation of any single plant.</p>
+
+    <p>For the top-end of the autoflower market, Fast Buds publishes <a href="https://2fast4buds.com/news/top-10-strongest-autoflowering-strains-2020" target="_blank" rel="noopener noreferrer">Encore Labs certificate data</a> for their strongest autos: Strawberry Gorilla Auto at "up to 30%," Gorilla Z Auto at "up to 30%," Cherry Cola Auto at "up to 30%." These are single-source and "up to" numbers (the median grow-out is lower), but they match or exceed high-end photoperiods like ILGM's OG Kush (27%), Granddaddy Purple (25%), and LA Confidential (23%).</p>
+
+    <p><strong>The bottom line on potency:</strong> at the top end, modern autos can match or exceed mid-tier photoperiods. The within-cultivar gap is 3 percentage points. The across-the-market gap is essentially closed for the elite autos. If you were avoiding autoflowers in 2018 because they were weak, that objection no longer holds in 2026.</p>
+
+    <Callout title="Caveat on the 30% THC number" type="info">
+      The "up to 30%" THC figures are breeder-published lab certificates (Fast Buds / Encore Labs). They're "up to" not median, and there's a conflict of interest when the breeder publishes its own lab. The 3-point within-cultivar RQS comparison (Blue Cheese Auto 16% vs Blue Cheese photoperiod 19%) is the more credible reference point for the autoflower-vs-photoperiod gap.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Yield Per Plant: Photoperiods Win. Yield Per Season: It Depends.</h2>
+    <p>Per-plant yield favors photoperiods: more veg time, more biomass, more bud. But per-season yield depends on your latitude, your frost risk, and whether you can run multiple autoflower crops.</p>
+
+    <h3>Maine-realistic yield (consensus)</h3>
+
+    <ul>
+      <li><strong>Autoflower outdoor in Maine: 1-2 oz/plant</strong> (28-57 g). This is the project-internal consensus, cross-checked against Dutch Passion's 50-100 g European outdoor range and RQS's Blue Cheese Auto 2-4 oz/plant spec sheet adjusted downward for Maine's shorter, cooler season.</li>
+      <li><strong>Photoperiod outdoor in Maine: 2-5 oz/plant</strong> (57-142 g). RQS's Blue Cheese (photoperiod) spec sheet says 18-19 oz/plant, but that's an optimized Mediterranean/greenhouse number. Maine-realistic for a fast-finishing 7-8 week photoperiod is 2-5 oz.</li>
+    </ul>
+
+    <h3>Why photoperiods yield more per plant</h3>
+
+    <p>Photoperiods have a longer vegetative window (May through mid-August in Maine, roughly 12 weeks for a 6-week indoor start) and a longer flower window (mid-August to mid-October, 8-9 weeks). More time = more photosynthesis = more biomass. RQS: "Photoperiod plants are typically able to produce larger yields given their larger size and bushier morphology; they can also be trained to maintain a perfect structure for max yields using techniques like topping and ScrOG."</p>
+
+    <h3>Why autoflowers can yield more across a season</h3>
+
+    <p>Two autoflower runs in southern Maine (mid-May transplant + early-July transplant) can each finish 1-2 oz/plant in August and October respectively. Total: <strong>2-4 oz per plant-site per season</strong>. One photoperiod run (mid-May transplant) finishes once in October, yielding 2-5 oz per plant-site. The two-run autoflower strategy wins on per-plant-site yield only in years where the photoperiod would have been frosted before finishing; in a good year with a fast 7-week photoperiod, the photoperiod wins on total yield per plant.</p>
+
+    <p>For Maine, this is the operative calculation: the autoflower's August harvest is the <em>insurance</em> against the photoperiod's October risk. If the photoperiod makes it to harvest, you get 2-5 oz in October. If it doesn't, you still have the autoflower's 1-2 oz from August.</p>
+  </section>
+
+  <section>
+    <h2>The Latitude-Tier Decision Rule</h2>
+    <p>Maine isn't one climate. The decision rule changes with your latitude. The frost dates, daylength math, and harvest windows below are from our <a href="/blog/when-to-start-cannabis-seeds-maine-2026">city-by-city Maine planting calendar</a>.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Maine autoflower vs photoperiod decision by latitude tier 2026">
+        <thead>
+          <tr>
+            <th>Latitude tier</th>
+            <th>Cities</th>
+            <th>Frost-free days</th>
+            <th>Recommended default</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Southern Maine</strong></td><td>Portland, Lewiston, Augusta, Brunswick</td><td>160-165</td><td>Either; photoperiod maximizes yield, autoflower maximizes insurance</td><td>14-hour crossing Aug 11 in Portland; 8-week-flower photo finishes Oct 6, just before first frost Oct 9</td></tr>
+          <tr><td><strong>Central Maine</strong></td><td>Bangor, Waterville, Belfast, Rockland</td><td>140-160</td><td>Autoflower is the safer bet; photoperiod only with 7-week genetics + luck</td><td>Bangor 14-hour crossing Aug 13; 8-week-flower photo finishes Oct 8, 8 days after first frost Sep 30</td></tr>
+          <tr><td><strong>Northern / Western Maine</strong></td><td>Caribou, Presque Isle, Farmington</td><td>120-134</td><td>Autoflower strongly recommended; photoperiod needs greenhouse + 7-week genetics</td><td>Caribou first-frost Sep 25; an 8-week photo finishes ~Oct 11, 17 days after first frost</td></tr>
+          <tr><td><strong>Midcoast Maine</strong></td><td>Camden, Rockland, Damariscotta</td><td>~150</td><td>Either, with mold-resistance prioritized</td><td>Coastal fog + ~150-day season; both work, but choose mold-resistant genetics either way</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The first-frost math, restated</h3>
+
+    <p>If you start a feminized photoperiod indoors 4-6 weeks before last frost and transplant in late May, you have 12 weeks of vegetative growth before the 14-hour daylength crossing in mid-August. From there, 7-9 weeks of flowering puts harvest in mid-to-late October. That's 5-6 months from seed to harvest for a photoperiod — Maine's frost-free window minus the indoor start.</p>
+
+    <p>An autoflower skips the indoor head start in some setups (you can direct-sow in late May if soil is 60°F+) and finishes regardless of light cycle. The whole lifecycle is 75-90 days from seed. That's 2.5-3 months — about half the photoperiod's time-to-harvest. For northern Maine, where 134 frost-free days is a real constraint, this is the entire point.</p>
+
+    <Callout title="The hard rule" type="tip">
+      If you live north of Bangor (Caribou, Presque Isle, Houlton, Farmington, Dover-Foxcroft, Greenville): start with autoflowers. They are the only reliable default. Photoperiods in northern Maine are a research project, not a casual grow.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Strain Recommendations by Category</h2>
+    <p>Five autoflowers and five feminized photoperiods that match Maine's climate. These are aligned with the existing <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a>, which has full 7-strain detail.</p>
+
+    <h3>Best autoflowers for Maine (3 recommended for the page; 2 short)</h3>
+
+    <div class="strain-card">
+      <h3>1. Northern Lights Auto</h3>
+      <div class="strain-meta">
+        <span><strong>Breeders:</strong> Multiple (ILGM, RQS, Sensi, WeedSeedsExpress)</span>
+        <span><strong>Type:</strong> Indica-dominant autoflower (~90% indica)</span>
+        <span><strong>Seed-to-harvest:</strong> 8-9 weeks</span>
+        <span><strong>THC:</strong> 14-18%</span>
+      </div>
+      <p>Northern Lights has been grown in Northern New England for 30+ years; the auto version inherits the cold tolerance and is one of the safest first-Maine-grow choices. The original photoperiod Northern Lights is "legendary" for outdoor Northern New England per the <a href="https://weedseedsexpress.com/us/maine" target="_blank" rel="noopener noreferrer">WeedSeedsExpress Maine page</a>; the auto version preserves the natural mold and pest resistance, finishes in 8-9 weeks, and stays under 3 feet. The <strong>Maine-specific</strong> value: this is the autoflower that handles a cold May transplant and a wet September rain without losing the harvest.</p>
+    </div>
+
+    <div class="strain-card">
+      <h3>2. White Widow Auto (ILGM, Dutch Passion)</h3>
+      <div class="strain-meta">
+        <span><strong>Breeders:</strong> ILGM, Dutch Passion, multiple</span>
+        <span><strong>Type:</strong> Indica-dominant autoflower</span>
+        <span><strong>Seed-to-harvest:</strong> 9-10 weeks</span>
+        <span><strong>THC:</strong> ~19% (ILGM lab)</span>
+      </div>
+      <p>ILGM's <a href="https://ilgm.com/products/white-widow-autoflower-seeds" target="_blank" rel="noopener noreferrer">White Widow Auto</a> spec lists 19% THC and pulls 4.8 stars from 1,704 reviews — the highest-reviewed autoflower in ILGM's catalog. White Widow's defining trait is heavy resin production; that resin is the plant's natural defense against mold, which matters in Maine's August humidity. An August harvest dodges the worst of the late-season bud-rot window. Reliable mid-THC, high-resin choice for central Maine.</p>
+    </div>
+
+    <div class="strain-card">
+      <h3>3. Strawberry Gorilla Auto (Fast Buds / 2fast4buds)</h3>
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Fast Buds</span>
+        <span><strong>Type:</strong> Balanced-hybrid autoflower</span>
+        <span><strong>Seed-to-harvest:</strong> 9-10 weeks</span>
+        <span><strong>THC:</strong> "Up to 30%" (Fast Buds / Encore Labs)</span>
+      </div>
+      <p>The top-end-potency autoflower on the lab-tested market. Per <a href="https://2fast4buds.com/news/top-10-strongest-autoflowering-strains-2020" target="_blank" rel="noopener noreferrer">2fast4buds' Top 10 list</a>, Strawberry Gorilla Auto lab-tests at "up to 30%" THC. For a Maine grower who wants the highest-THC autoflower and is willing to pay ~$12-15/seed, this is the strongest available option. Caveat: the 30% number is single-source and "up to" (the median is lower).</p>
+    </div>
+
+    <h3>Best feminized photoperiods for Maine (3 short-listed)</h3>
+
+    <div class="strain-card">
+      <h3>1. Frisian Dew (Dutch Passion)</h3>
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Dutch Passion</span>
+        <span><strong>Type:</strong> Balanced hybrid (50/50)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+        <span><strong>THC:</strong> ~15-20%</span>
+      </div>
+      <p>Dutch Passion's "best-selling outdoor feminised seed variety." Super Skunk × Purple Star, "exceptional mould resistance," "ready around early to mid October," "thrives in all climates and is especially popular in cooler ones." <strong>Maine-specific</strong>: this is the standard recommendation for a first-time northern-European outdoor photoperiod. Purple phenotypes mature slightly earlier than green ones, a useful trait in a cool year. A southern/central Maine strain.</p>
+    </div>
+
+    <div class="strain-card">
+      <h3>2. Hollands Hope (Dutch Passion)</h3>
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Dutch Passion</span>
+        <span><strong>Type:</strong> Indica-dominant</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+        <span><strong>THC:</strong> ~15-18%</span>
+      </div>
+      <p>One of the earliest premium Dutch outdoor strains, originating in the 1980s, "excels in wet, cold late summers." Early October harvest of dense, resinous buds. <strong>Maine-specific</strong>: this is the photoperiod answer to autoflower for cold coastal Maine. Early October finish means it beats most of the bud-rot window.</p>
+    </div>
+
+    <div class="strain-card">
+      <h3>3. Pamir Gold (Dutch Passion)</h3>
+      <div class="strain-meta">
+        <span><strong>Breeder:</strong> Dutch Passion</span>
+        <span><strong>Type:</strong> Indica-dominant (60% indica / 40% sativa)</span>
+        <span><strong>Flowering:</strong> 7-8 weeks</span>
+        <span><strong>THC:</strong> ~15-20%</span>
+      </div>
+      <p>Selectively bred at altitude in the Swiss Alps. "Strong mould resistance and suitable for high altitude." Mid-September finish. <strong>Maine-specific</strong>: the earliest-finishing serious photoperiod in the Dutch Passion catalog. A northern-Maine or western-Maine option for a grower who wants a photoperiod but can't risk a mid-October finish.</p>
+    </div>
+
+    <p>For the full 7-strain lineup with cultivation detail, see our <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strain guide</a>. That page has strain cards for Northern Lights, Blueberry, White Widow, Frisian Dew, Pamir Gold, Early Skunk, and Hindu Kush — and is the better place to read full breeder notes and expected yield ranges.</p>
+  </section>
+
+  <section>
+    <h2>Common Misconceptions and Pitfalls</h2>
+
+    <h3>"You can't top autoflowers"</h3>
+    <p><strong>Mostly true; partially false.</strong> Topping an autoflower in flower stunts it because autos have a fixed lifecycle. RQS: "Only low-stress forms of training can be used, and recovery time is minimal." But low-stress training (LST) is fine on an autoflower throughout veg and into early flower. <strong>For Maine: don't top autoflowers. LST is the correct technique.</strong></p>
+
+    <h3>"Autoflowers are weaker (lower THC) than photoperiods"</h3>
+    <p><strong>Outdated.</strong> True for F1 Lowryder in 2003. False for F1 modern autos in 2024. The RQS within-cultivar comparison is 16% (auto) vs 19% (photoperiod) = a 3-point gap, not a categorical difference. The top-end modern autos test at 30%, which is at the ceiling of what photoperiods achieve.</p>
+
+    <h3>"Feminized seeds are unstable / likely to hermie"</h3>
+    <p><strong>Mostly outdated; partially true.</strong> The first commercial feminized seeds (Dutch Passion, late 1990s, per Seedsman attribution) did have elevated hermaphrodite rates. Modern commercial feminized seeds from reputable breeders are stable at 99%+ female per Seedsman. The residual 1% hermie risk is real but is triggered by stress, not by the feminization itself. <strong>For Maine: light leaks are the most likely hermie trigger for an outdoor photoperiod.</strong> A streetlight, a porch light on a motion sensor, or even a bright moon can interrupt the dark period during pre-flower. Site the plant away from artificial light.</p>
+
+    <h3>"You can clone autoflowers"</h3>
+    <p><strong>Technically true; practically useless.</strong> An autoflower cutting will root and continue growing, but it will flower on its age-clock, not on a light-cycle change. You can't keep an autoflower in veg the way you can a photoperiod; the clone will flower when the original plant would have flowered, so you save a few days at most. RQS: "They aren't suitable for cloning or keeping mother plants."</p>
+
+    <h3>"Autoflowers don't need light-cycle management"</h3>
+    <p><strong>True, but more light = more yield.</strong> Dutch Passion: "Many people grow autoflowers with 20 hours of daily light all the way from seed to harvest." The autoflower does not <em>require</em> a dark period. <strong>For outdoor Maine: light cycle is not a management variable. Daylight is what it is.</strong></p>
+
+    <h3>"Photoperiods are always bigger and more potent than autos"</h3>
+    <p><strong>Partially true; partially false.</strong> Per-plant yield: photoperiods win. Top-end potency: tied (modern autos match or exceed mid-tier photoperiods). Plant size: photoperiods win (5-7 ft vs 2-3 ft). The autoflower's advantages are: speed (10 weeks vs 20+), stealth (short), no light-cycle management, multiple harvests per season.</p>
+  </section>
+
+  <section>
+    <h2>Cost Per Ounce: The 2026 Math</h2>
+    <p>Verified prices as of June 2026 from ILGM and RQS product pages:</p>
+
+    <ul>
+      <li><strong>ILGM White Widow Auto</strong>: 5-pack $74 ($14.80/seed), 10-pack $99 ($9.90/seed), 20-pack $159 ($7.95/seed)</li>
+      <li><strong>ILGM Afghan (photoperiod)</strong>: 10-pack $99 ($9.90/seed)</li>
+      <li><strong>ILGM OG Kush (photoperiod)</strong>: 10-pack $99 ($9.90/seed)</li>
+      <li><strong>RQS Blue Cheese Auto</strong>: ~$6.50/seed single-pack</li>
+      <li><strong>RQS Blue Cheese (photoperiod)</strong>: ~$7.50/seed single-pack</li>
+    </ul>
+
+    <p>For a Maine grower limited to 3 mature + 12 immature + unlimited seedlings, the relevant pack size is 3-5 seeds (one per mature plant site plus 2 backups for culling a hermie or a weak phenotype).</p>
+
+    <div class="fact-box">
+      <h2>Cost per ounce at Maine yields (seed cost only)</h2>
+      <table>
+        <tr><td><strong>3 feminized photoperiod seeds (Afghan 10-pack @ $9.90)</strong></td><td>$29.70 for 3 plants. At 2-5 oz/plant, $5.93-$14.85 per oz.</td></tr>
+        <tr><td><strong>3 autoflower seeds (White Widow Auto 5-pack @ $14.80)</strong></td><td>$44.40 for 3 plants. At 1-2 oz/plant, $14.80-$44.40 per oz.</td></tr>
+        <tr><td><strong>6-plant autoflower strategy (two runs × 3 plants, 5-pack)</strong></td><td>$88.80 seed cost, 6-12 oz finished flower, $7.40-$14.80 per oz.</td></tr>
+      </table>
+    </div>
+
+    <p><strong>Bottom line:</strong> photoperiod seeds are cheaper per ounce at typical Maine yields; autoflower seeds are competitive on a per-ounce basis only if the autoflower is run with a 2-run strategy or if a frost/failure would have wiped out a photoperiod. Both are radically cheaper than Maine dispensary retail (which runs $200-$400/oz for flower in 2026, per the site's existing pricing research).</p>
+  </section>
+
+  <section>
+    <h2>The Multi-Run Strategy</h2>
+
+    <h3>Two autoflower runs (southern/central Maine)</h3>
+    <ul>
+      <li><strong>Run 1:</strong> Indoor germ April 20-25, transplant May 20-31, harvest August.</li>
+      <li><strong>Run 2:</strong> Indoor germ June 1-5, transplant June 20-July 5, harvest September-early October.</li>
+    </ul>
+    <p>This is the <em>safe-harvest</em> strategy. Two smaller harvests, both finishing before the worst of the fall rains. Total yield per plant-site per season: 2-4 oz (1-2 oz × 2). Dutch Passion: "In Mediterranean and some temperate climates up to 3 successive crops a year are possible with autoflower cannabis seeds." For Maine's 120-165 day window, 2 is realistic, 3 is not.</p>
+
+    <h3>One photoperiod run (southern Maine only)</h3>
+    <ul>
+      <li>Indoor germ April 1-15 (4-6 week indoor start)</li>
+      <li>Transplant May 15-June 14 (MOFGA's June 14 is conservative; May 31 is the Portland/Augusta/Lewiston median)</li>
+      <li>Flower initiation mid-August (per ILGM Massachusetts FAQ; 14-hour daylength crossing)</li>
+      <li>Harvest late September to mid-October depending on cultivar and latitude</li>
+    </ul>
+    <p>Total yield per plant: 2-5 oz for a Maine photoperiod that finishes in time. Single-shot risk: an early frost in mid-September (Caribou/Farmington average first frost is Sep 22-25) can wipe out a photoperiod that hasn't finished.</p>
+
+    <h3>Hybrid: 1 autoflower + 1 photoperiod (southern/central Maine)</h3>
+    <p>The autoflower is the <em>insurance</em> — if the photoperiod fails (frost, mold, pest, training accident), the autoflower already produced an August harvest. The photoperiod is the <em>main yield</em> — finishes October, 2-5 oz, the bulk of the year's flower. Two of the three mature plant sites go to photoperiod; the third goes to autoflower. Or, for a 6-mature site count, 4 photoperiods + 2 autoflowers.</p>
+  </section>
+
+  <section>
+    <h2>The Decision Matrix</h2>
+    <p>9 rows, 1 winner per row, every row has a real source citation.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Autoflower vs photoperiod decision matrix Maine 2026">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th>Autoflower wins</th>
+            <th>Feminized photoperiod wins</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Latitude ≤ 44.8°N (Portland, Augusta, Lewiston)</strong></td><td>Insurance harvest in August</td><td>Maximum per-plant yield (2-5 oz vs 1-2 oz)</td><td><a href="https://www.royalqueenseeds.com/us/blog-photoperiod-vs-autoflower-pros-and-cons-n1749" target="_blank" rel="noopener noreferrer">RQS</a>; <a href="https://dutch-passion.com/en/blog/why-northern-europe-needs-specific-outdoor-cannabis-seeds-n1288" target="_blank" rel="noopener noreferrer">Dutch Passion Northern Europe</a></td></tr>
+          <tr><td><strong>Latitude ≥ 46.5°N (Caribou, Presque Isle, Farmington)</strong></td><td>Autoflower is the realistic default; photoperiod needs greenhouse + 7-week genetics</td><td>(n/a)</td><td>NCEI/Almanac Sep 25 first frost for Caribou; <a href="/blog/when-to-start-cannabis-seeds-maine-2026">planting calendar math</a></td></tr>
+          <tr><td><strong>Beginner / first-time Maine grower</strong></td><td>Low maintenance, no light-cycle management, no training required</td><td>(n/a)</td><td><a href="https://www.royalqueenseeds.com/us/blog-photoperiod-vs-autoflower-pros-and-cons-n1749" target="_blank" rel="noopener noreferrer">RQS</a></td></tr>
+          <tr><td><strong>Stealth / plant height &lt; 3 ft</strong></td><td>Autoflower (75-120 cm = 30-47 in)</td><td>(n/a; photoperiod is 5-7 ft)</td><td><a href="https://www.royalqueenseeds.com/us/blog-photoperiod-vs-autoflower-pros-and-cons-n1749" target="_blank" rel="noopener noreferrer">RQS</a></td></tr>
+          <tr><td><strong>Per-ounce seed cost</strong></td><td>(n/a; autoflower is more expensive per ounce at typical Maine yields)</td><td>Photoperiod (~$6-10 per oz vs ~$15-45 per oz for autoflower, single-run)</td><td><a href="https://ilgm.com/products/white-widow-autoflower-seeds" target="_blank" rel="noopener noreferrer">ILGM White Widow Auto</a>; <a href="https://ilgm.com/products/afghan-feminized-seeds" target="_blank" rel="noopener noreferrer">ILGM Afghan</a></td></tr>
+          <tr><td><strong>Top-end THC</strong></td><td>Strawberry Gorilla Auto lab-tested at "up to 30%"</td><td>OG Kush 27%, Granddaddy Purple 25%, LA Confidential 23%</td><td><a href="https://2fast4buds.com/news/top-10-strongest-autoflowering-strains-2020" target="_blank" rel="noopener noreferrer">2fast4buds</a>; <a href="https://ilgm.com/products/og-kush-feminized-seeds" target="_blank" rel="noopener noreferrer">ILGM</a></td></tr>
+          <tr><td><strong>Maine bud-rot resistance</strong></td><td>Autoflower harvests in August, before worst of the September coastal fog</td><td>Photoperiod runs <em>through</em> the September bud-rot window; needs mold-resistant genetics (Frisian Dew, Pamir Gold)</td><td><a href="https://dutch-passion.com/en/blog/why-northern-europe-needs-specific-outdoor-cannabis-seeds-n1288" target="_blank" rel="noopener noreferrer">Dutch Passion</a></td></tr>
+          <tr><td><strong>Multiple harvests per season</strong></td><td>Two autoflower runs (May + late June) yield 2-4 oz per plant-site across the season</td><td>(n/a; photoperiod is single-shot)</td><td><a href="https://dutch-passion.blog/cannabis-growing-calendar-for-northern-europe/" target="_blank" rel="noopener noreferrer">Dutch Passion Northern Europe</a></td></tr>
+          <tr><td><strong>Clone preservation / mother plant</strong></td><td>(n/a; autoflowers can't be held as mothers)</td><td>Photoperiod can be cloned and held in veg indefinitely</td><td><a href="https://www.royalqueenseeds.com/us/blog-photoperiod-vs-autoflower-pros-and-cons-n1749" target="_blank" rel="noopener noreferrer">RQS</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ul>
+      <li><strong>Southern Maine first-time grower, 3 plant sites:</strong> autoflower. The cost premium is real but the risk reduction is more valuable.</li>
+      <li><strong>Southern Maine experienced grower, 3 plant sites:</strong> photoperiod + autoflower hybrid (2 photo + 1 auto). Insurance + yield.</li>
+      <li><strong>Central Maine grower:</strong> autoflower primary, photoperiod only with Frisian Dew or Hollands Hope and a backup plan.</li>
+      <li><strong>Northern/western Maine grower:</strong> autoflower, no exceptions. Two-run if site count allows.</li>
+    </ul>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "Are autoflowers less potent than photoperiods?", answer: "Not anymore in 2026. The cleanest within-cultivar comparison is from Royal Queen Seeds: Blue Cheese Auto tests at up to 16% THC; the same Blue Cheese in photoperiod form tests at up to 19%. That's a 3-point gap, well within run-to-run variation. The top-end modern autos (Fast Buds' Strawberry Gorilla Auto, Gorilla Z Auto, Cherry Cola Auto) lab-test at 'up to 30%' via Encore Labs certificates, which matches or exceeds high-end photoperiods. The 'autos are weak' reputation was true for F1 Lowryder in 2003 but is outdated for modern F1 autos." },
+      { question: "Should I grow autoflowers in Maine?", answer: "If you live in northern or western Maine (Caribou, Presque Isle, Farmington, Houlton, Dover-Foxcroft, Greenville), yes — autoflowers are the only realistic default because the 120-134 day frost-free window doesn't reliably accommodate an 8-week photoperiod. If you live in central Maine (Bangor, Waterville, Belfast, Rockland), autoflowers are the safer choice but a fast 7-week photoperiod (Frisian Dew, Hollands Hope, Pamir Gold) can also work. If you live in southern Maine (Portland, Lewiston, Augusta, Brunswick), both work — the photoperiod maximizes per-plant yield and the autoflower maximizes insurance. For first-time Maine growers, autoflower is the recommended default." },
+      { question: "What's the best autoflower for Maine's climate?", answer: "Northern Lights Auto is the safest first-Maine-grow choice. It inherits the photoperiod Northern Lights' 30+ year track record in Northern New England, finishes in 8-9 weeks from seed, stays under 3 feet, and handles cold May transplants and wet September rain. ILGM's White Widow Auto is the highest-reviewed autoflower in ILGM's catalog (4.8 stars, 1,704 reviews) with 19% THC and heavy resin (natural mold defense). Fast Buds' Strawberry Gorilla Auto is the top-end potency choice at 'up to 30%' THC but is single-source and more expensive ($12-15/seed). The Maine outdoor strain guide has 7 full strain cards including 2 autoflowers." },
+      { question: "Can autoflowers handle a Maine frost?", answer: "Most autoflowers handle 35°F nights without damage, though growth slows. A hard frost (below 32°F) will damage the flowers but usually not kill the plant outright. The risk is that a hard frost near harvest locks moisture in the buds and triggers bud rot. This is why timing the autoflower to finish by mid-September in southern Maine (before the worst of the late-season frost risk) is the key strategy. The autoflower's short lifecycle is the entire reason it works in Maine: it finishes before the frost risk peaks." },
+      { question: "How many autoflower plants can I legally grow in Maine?", answer: "Maine's home grow law (Title 28-B, post-LD 555) allows adults 21 and older to cultivate up to 3 mature cannabis plants, 12 immature plants, and unlimited seedlings per person. The 'mature' vs 'immature' distinction matters: a mature plant is one that's flowering; an immature plant is one that hasn't started flowering. Autoflowers technically count as 'mature' the moment they begin flowering (around week 3-4), so the 3-mature cap applies to the total flowering count, autoflower or photoperiod. You can run two autoflower 'runs' per season (May + late June transplants) but at any given moment you cannot have more than 3 plants in flower." },
+      { question: "Can I top or train autoflowers?", answer: "Low-stress training (LST) only — bending branches, tying them down, SCROG-style horizontal nets. Don't top an autoflower; the recovery time will eat into its fixed lifecycle and you'll end up with a smaller plant than if you'd left it alone. LST is fine throughout veg and into early flower (the first 2-3 weeks of flower). High-stress training (topping, fimming, super-cropping, mainlining) is not recommended. RQS: 'Only low-stress forms of training can be used, and recovery time is minimal.'" }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — 7 mold-resistant and fast-finishing genetics with full cultivation detail</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Seed Sources</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>Industry-leading seed bank with a 20+ year track record. Wide selection of feminized, autoflower, and high-CBD strains including Northern Lights Auto, White Widow Auto, Afghan, OG Kush, and several other strains discussed in this guide. Ships to Maine with discreet packaging. Free shipping on most orders. Includes Robert Bergman's Marijuana Grow Bible with every purchase, which is genuinely useful for first-time cultivators. ILGM's autoflower and feminized selections are the most complete in the U.S. market.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🏪</span>
+          <h3>Local Maine Dispensaries &amp; Seed Vendors</h3>
+        </div>
+        <p>For Maine-adapted autoflower and feminized genetics bred specifically for our short growing season, your local dispensary or one of Maine's licensed seed vendors is often the best source. Many carry Maine-bred genetics selected for cold tolerance, mold resistance, and early flowering. Buying locally also skips shipping wait times and supports Maine's small cannabis economy. See our <a href="/blog/best-cannabis-strains-maine-outdoor-2026#where-to-buy">Maine seed and clone vendor list</a> in the strain guide for five licensed options including Cannabis Seed Bank of Maine, Maine Clone Co, Maine Seedlings, Seed &amp; Soil Maine, and North Atlantic Seed Co.</p>
+        <div class="affiliate-cta">
+          <a href="/find-a-dispensary" class="btn-affiliate">Find a Maine Dispensary →</a>
+          <span class="affiliate-note">Browse dispensaries carrying seeds and clones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified attorney for specific legal guidance. THC potency figures cited in this article reflect breeder-published lab data; "up to" figures are the high end of a sample range, not a guarantee for any individual plant. Yield data is a consensus across multiple seed-bank sources adjusted for Maine's climate; actual results vary based on site conditions, weather, and grower skill. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>

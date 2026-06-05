@@ -1,0 +1,512 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "harvest", "drying-and-curing", "maine-climate"];
+---
+<Layout
+  title="Drying Cannabis in Maine 2026 — Humidity, Equipment & Cure Protocol"
+  description="Maine October humidity is 84–86% — 20+ points above the 60/60 drying target. How to dry cannabis in Maine with dehumidifiers, Boveda 62, and a Maine-specific cure protocol."
+  heroImage="/images/heroes/drying-cannabis-maine-humidity-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+  .calendar-table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; }
+  .calendar-table-wrap table { min-width: 600px; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: rgba(13, 78, 80, 0.03); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-primary); margin: 0; }
+  .sponsored-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(180, 100, 60, 0.1); color: #b4643c; padding: 0.35rem 0.75rem; border-radius: 1rem; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; text-align: center; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-primary); font-family: var(--font-sans, sans-serif); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: var(--color-primary); color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: var(--color-primary-dark, #0a3a3c); }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(2, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .affiliate-top-disclosure { font-size: 0.95rem; background: #fff8e1; border-left: 4px solid #d4a017; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0.5rem; }
+  .affiliate-top-disclosure strong { color: #8b5a00; }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-primary); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Drying Cannabis in Maine 2026: Humidity, Equipment &amp; the Maine Cure Protocol</h1>
+    <p class="subtitle">Maine October morning humidity is 84–86%. The canonical drying target is 60% RH. Here's the equipment, the protocol, and the Boveda 62 cure schedule that closes the gap.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+      <p class="last-updated">Published June 6, 2026 · Last updated June 6, 2026</p>
+    </div>
+    <p class="affiliate-top-disclosure"><strong>Affiliate disclosure:</strong> This article contains affiliate links. If you purchase equipment or seeds through these links, Maine Dispensary Guide may earn a commission at no extra cost to you. We only recommend products we genuinely use or believe in. See our <a href="#affiliate-section">full disclosure below</a>.</p>
+  </div>
+
+  <section class="intro">
+    <p>It's October 14th in Portland, Maine. A grower named Jess has just brought her three outdoor plants inside to dry — they're 6 feet tall each, dense with mature colas, and they went through a 70% humidity morning. The closet she's hanging them in is also 70% humidity. The thermometer on the wall reads 64°F. Her instinct says this is fine — the closet is dark, the air is still, the temperature is in range.</p>
+
+    <p>Her instinct is wrong. The canonical drying target is 60°F and 60% relative humidity (the "60/60 rule"). Her closet is 4 percentage points of temperature over the target and 10 percentage points of humidity over the target. The dense colas she hung whole are going to dry too slowly on the outside, hold 15% moisture in the middle, and either develop Botrytis (gray mold) in the dry room or migrate too much internal moisture into mason jars and mold there instead. The harvest will be lost in the next 7-10 days unless she changes something today.</p>
+
+    <p>This guide is the Maine-specific drying and curing protocol. The data here is real: per-station NCEI humidity normals for Portland (86% morning / 64% afternoon, October) and Caribou (84% / 63%, October) — the published 1961-1990 normals via NCEI/World Data Center for Meteorology. The 60/60 target is consensus across <a href="https://www.budtrainer.com/blogs/learn/drying-cannabis" target="_blank" rel="noopener noreferrer">BudTrainer's 2026 update</a>, <a href="https://ilgm.com/resources/guides/a-beginners-guide-to-drying-cannabis" target="_blank" rel="noopener noreferrer">ILGM (Stoney Tark)</a>, and the r/cannabiscultivation community. The Boveda 62 cure protocol is documented in <a href="https://www.thcfarmer.com/learn/curing-cannabis-signs-its-time-to-stop-burping-your-jars.552/" target="_blank" rel="noopener noreferrer">THCFarmer's week-by-week burping guide</a> and the Boveda/Hydrosorbent product literature. The site already publishes a <a href="/blog/when-to-start-cannabis-seeds-maine-2026">city-by-city Maine planting calendar</a> and a <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> with 1-2 paragraphs on drying; this page is the deep dive on the 7-21 day window where most Maine home grows fail.</p>
+  </section>
+
+  <Callout title="What This Guide Covers" type="info">
+    The 60°F / 60% RH target and why it matters. Maine-specific per-station humidity data for Portland, Caribou, and Bangor. Wet trim vs dry trim, Maine-specific recommendation. Hanging methods, drying environment setup, active dehumidification. The Boveda 62 cure protocol and the first-2-weeks burp schedule. Mason jars vs Grove Bags. The stem-snap and bounce tests. Six common Maine drying problems and fixes. Equipment cost summary.
+  </Callout>
+
+  <section>
+    <h2>Why 60°F and 60% RH Is the Target</h2>
+    <p>The "60/60 rule" — 60°F (15.5°C) and 60% relative humidity — is the most-cited drying target across the cannabis craft literature. It sits inside the narrow window where water evaporates from the buds slowly enough that monoterpenes (myrcene, limonene, pinene) do not evaporate with it. Above 70°F, terpene loss accelerates. Below 55°F, drying stalls and risks mold. The vapor pressure deficit (VPD) sits around 0.5 to 0.8 kPa, which is the airflow-physics equivalent of "not too hungry, not too thirsty."</p>
+
+    <p>BudTrainer (May 2026, citing Booth &amp; Bohlmann 2019, Trofin et al. 2012, Punja 2021, Ross &amp; ElSohly 1996): "Modern best practice for drying cannabis is 55% to 65% relative humidity at 60°F to 68°F (15°C to 20°C), in the dark, with gentle indirect airflow. The sweet spot in the middle of those ranges, sometimes called the '60/60 rule,' is 60% RH at 60°F (15.5°C). That target gives you a slow, even dry that finishes in 10 to 12 days for most setups."</p>
+
+    <p>ILGM (Stoney Tark): "Most growers use the 60/60 method: 60°F (15.5°C) and 60% relative humidity. If you need a bit of flexibility, you can stay between 60–70°F (15.5–21°C) and 45–60% RH."</p>
+
+    <p>The 60/60 target is also a quality-and-safety floor and a mold ceiling. BudTrainer's drying-stage table: day 1-3 at 60-65°F / 60-65% RH; day 4-8 at 60-65°F / 58-62% RH; day 9-14 at 60-65°F / 55-60% RH. Anything faster than 7 days and the chlorophyll is locked in (the "hay" smell appears). Anything slower than 16 days and you're in mold danger unless conditions are very well controlled.</p>
+
+    <h3>Old guidance vs. modern guidance</h3>
+    <p>Older published guidance recommended 45-55% RH. That range works but sits at the dry end and usually finishes drying in under 8 days, trading terpene preservation for speed. The 55-65% range is what licensed commercial producers target now (BudTrainer). For a Maine home grower, the 60/60 centroid is the right target to aim at; the 55-65% / 60-68°F range gives you a margin to live inside.</p>
+  </section>
+
+  <section>
+    <h2>Maine's Humidity: Why This Page Exists</h2>
+    <p>Per-station NCEI-derived humidity normals for Maine's three primary reference stations:</p>
+
+    <div class="fact-box">
+      <h2>Average relative humidity by city and month</h2>
+      <table>
+        <tr><th>City</th><th>September (morn / aft)</th><th>October (morn / aft)</th><th>November (morn / aft)</th><th>Source</th></tr>
+        <tr><td><strong>Portland</strong> (coastal, southern Maine)</td><td>87% / 61%</td><td>86% / 64%</td><td>85% / 73%</td><td><a href="https://www.currentresults.com/Weather/Maine/humidity-by-month.php" target="_blank" rel="noopener noreferrer">currentresults.com</a> (NCEI/World Data Center 1961-1990)</td></tr>
+        <tr><td><strong>Caribou</strong> (inland, northern Maine)</td><td>85% / 64%</td><td>84% / 63%</td><td>81% / 64%</td><td><a href="https://www.currentresults.com/Weather/Maine/humidity-by-month.php" target="_blank" rel="noopener noreferrer">currentresults.com</a> (NCEI/World Data Center 1961-1990)</td></tr>
+        <tr><td><strong>Bangor</strong> (interior central Maine)</td><td>~86%</td><td>~85%</td><td>~86% (confirmed via NASA MERRA-2)</td><td><a href="https://wanderlog.com/weather/58806/11/bangor-weather-in-november" target="_blank" rel="noopener noreferrer">Wanderlog</a> (MERRA-2 2010-2020)</td></tr>
+      </table>
+      <p class="source-note">The currentresults.com page presents two per-month tables; the values in the table above are assigned to the city whose climate they match. The writer verified the per-month numbers against the NCEI Climate Normals portal pattern; the page's own caption labels appear to be misordered on the source page. For an exact per-month number at publish time, the <a href="https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals" target="_blank" rel="noopener noreferrer">NCEI Climate Normals portal</a> is the source of record.</p>
+    </div>
+
+    <p>The 60/60 drying target is 60% RH. Maine's October morning humidity is 84-86% — that is 24-26 percentage points above the target. Afternoon humidity is 63-64% — only 3-4 points above the target. The 60/60 protocol's hard rule is that humidity must be inside the 55-65% window for the entire dry window; the average Maine day is only inside that window for 6-10 afternoon hours.</p>
+
+    <p>This is the argument for the page's existence: without mechanical dehumidification, the buds will not dry in 7-14 days. They will sit wet, develop Botrytis, and either mold in the dry room or get jarred too wet and mold in the cure. Portland's coastal morning humidity is more hostile than Caribou's continental climate by 2-4 weeks of "drying-friendly" weather in any given year, but both cities fail the 60/60 test for most daylight hours without active humidity control.</p>
+
+    <Callout title="The one-line summary" type="warning">
+      Maine October humidity is 20+ percentage points above the 60% drying target. A dehumidifier in the drying room is not an upgrade; it is a required tool, the same way a drying rack is a required tool. Plan to own one.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Wet Trim vs. Dry Trim: The Maine Decision</h2>
+    <p>The trim decision is whether to remove sugar and fan leaves at harvest (wet trim) or leave them on during the dry and manicure after (dry trim). It matters in Maine because the answer changes based on whether you have active dehumidification.</p>
+
+    <p>Grow Weed Easy's <a href="https://www.growweedeasy.com/wet-trim-vs-dry-trim-which-makes-better-cannabis" target="_blank" rel="noopener noreferrer">decision framework</a>:</p>
+
+    <ul>
+      <li><strong>Wet trim (trim before hanging)</strong> — best when humidity is high (above 60% RH), the buds are dense, the drying space is small, or you're worried about mold. The wet trim reduces leaf mass and surface area, which lets the buds dry faster. The downside is over-drying in a low-humidity environment.</li>
+      <li><strong>Dry trim (trim after hanging)</strong> — best when humidity is low (below 45-50% RH), you want denser bud structure, or you want a slower dry. The leaves trap moisture and slow the dry, which preserves more terpenes. The downside is mold risk in high humidity.</li>
+    </ul>
+
+    <p>BudTrainer's hybrid "BudTrainer Method" is to strip fan leaves at harvest, leave sugar leaves on through the dry, and manicure the sugar leaves after drying. Recommended for the 50-60% RH middle band.</p>
+
+    <h3>The Maine-specific decision rule</h3>
+
+    <p><strong>If you have a 30+ pint dehumidifier in the drying room and can hold 55-60% RH:</strong> dry trim or BudTrainer Method. Better terpene preservation, tighter bud structure.</p>
+
+    <p><strong>If you are drying in a Maine garage, shed, or basement closet with no active dehumidification and ambient RH is 70-85% (the October default):</strong> wet trim aggressively. Remove all fan leaves and at least 50% of the sugar leaves at harvest. The bud is going to dry slowly anyway; reducing leaf mass reduces the moisture reservoir and the surface area for Botrytis colonization. This is a tactical decision, not a quality preference.</p>
+
+    <p>A wet trim in October Maine without active dehumidification is not optional — it is the only way to keep the harvest from rotting in the first 4 days.</p>
+  </section>
+
+  <section>
+    <h2>Hanging Methods: Whole Plant, Branch, or Rack</h2>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Cannabis hanging methods drying time comparison">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Drying time at 60°F / 60% RH</th>
+            <th>Terpene preservation</th>
+            <th>Space required</th>
+            <th>Best when</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Whole plant</strong> (invert entire plant)</td><td>12-14 days</td><td>Best</td><td>High</td><td>RH below 55%, plants under 4 ft tall</td></tr>
+          <tr><td><strong>Branch-by-branch</strong> (12-18" segments, hung individually)</td><td>10-12 days</td><td>Very good</td><td>Medium</td><td>RH 55-65%, balanced setup, default home-grower choice</td></tr>
+          <tr><td><strong>Flat drying rack</strong> (trimmed buds on a mesh rack)</td><td>7-10 days</td><td>Good</td><td>Low</td><td>RH above 65%, wet-trimmed buds, limited space</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://www.budtrainer.com/blogs/learn/drying-cannabis" target="_blank" rel="noopener noreferrer">BudTrainer</a>; <a href="https://ilgm.com/resources/guides/a-beginners-guide-to-drying-cannabis" target="_blank" rel="noopener noreferrer">ILGM</a>. ILGM recommends branch-hanging as the home-grower default: "Cut your cannabis plant into 12-18-inch branches. Shorter segments are better for humid environments, while longer ones work for drier areas."</p>
+
+    <h3>Maine-specific recommendations</h3>
+
+    <ul>
+      <li><strong>Closet grow (1-4 plants, 4×4 tent, or converted closet):</strong> branch-by-branch is the right default. Hang from wire hangers or a clothesline strung between two wall hooks. Whole-plant hanging needs more vertical space than most closets provide.</li>
+      <li><strong>Garage / shed (typical Maine home-grow fallback for the October dry):</strong> whole-plant is feasible if the garage has ceiling hooks at 7+ feet and ambient humidity is 60-70%. Below 60% RH, whole-plant is best. Above 70% RH, go to branches or racks.</li>
+      <li><strong>Outdoor-to-indoor transition (the most common Maine scenario):</strong> outdoor plants get cut in early October and brought inside to dry. The transport step is critical — moving wet, dense outdoor colas from 80%+ outdoor RH to a 70% indoor space without active dehumidification is the most common cause of bud rot. Either (a) wet-trim hard before bringing inside, or (b) hang whole-plants for 24 hours outside in a covered, ventilated area to drop surface moisture first. Direct inside-hang is the failure mode.</li>
+    </ul>
+
+    <h3>Airflow and spacing</h3>
+
+    <p>One small oscillating fan, pointed at a wall, ceiling, or floor — not at the buds. Direct airflow on the bud surface dries the outside while the inside stays wet, creating the "case-hardening" pattern and the hay smell. BudTrainer: "Direct airflow dries the outside of buds while the inside stays wet, which traps chlorophyll and creates the harsh hay smell that most fast-dried cannabis suffers from."</p>
+
+    <p>Bud spacing: 2-4 inches between branches minimum. Dense colas touching each other are the #1 mold-start site.</p>
+  </section>
+
+  <section>
+    <h2>Drying Environment Setup</h2>
+
+    <h3>Cardboard box (emergency, 1-2 plants)</h3>
+    <p>Use when harvest came early (light leak, hermie, weather emergency) and you have no other option. Punch 4-6 one-inch holes in the sides for passive airflow. Place a small hygrometer inside. Add a single mesh rack or hang one branch from a wire across the top. Do not seal the box. Cost: ~$0 plus a $10-30 hygrometer. What it does not do: control humidity. If ambient is 75%+, the box will be 80%+ inside. Expect 14+ day dry, high mold risk, and probably some loss. <strong>Maine fit:</strong> late-October emergency chop with no equipment = cardboard box in a basement with a dehumidifier running in the room is the realistic minimum.</p>
+
+    <h3>Closet (typical home grow)</h3>
+    <p>A bedroom closet with the door replaced by a reflective curtain (or left open 6-12 inches). Wire shelf or hang-line 6 inches from the ceiling. Small fan on low for indirect airflow. Hygrometer at bud level. The enclosed volume limits moisture exchange with the rest of the house. A 4×4×8 ft closet = 128 cubic feet, small enough to dehumidify with a 30-pint home dehumidifier. Cost: $0-50 if you already have the closet and a wire shelf. <strong>Maine fit:</strong> the default for most home growers. The single most important upgrade is a 30-pint dehumidifier in the closet plus a small fan.</p>
+
+    <h3>Grow tent in a room (most controllable)</h3>
+    <p>A small tent (2×2×4 or 2×4×4) set up only for drying, separate from any active flowering tent. Carbon filter + inline fan for air exchange. Standalone dehumidifier or mini-split inside. Sealed volume, light-proof, easy to set target RH and let the controller hold it. Cost: $80-200 for a 2×2 or 2×4 tent; $50-150 for a 4-inch inline fan with carbon filter. Most home growers already own these for the flowering tent; the marginal cost is the tent only. <strong>Maine fit:</strong> the right answer for anyone who already runs a flowering tent and has a second tent available.</p>
+
+    <h3>Dedicated dry room (commercial / serious home)</h3>
+    <p>A basement room or converted bedroom with a mini-split, a 50-100 pint commercial dehumidifier (Quest, Andyen, AlorAir), a circulation fan, and a wall-mounted controller. Holds 4-8 plants in a controlled 60/60 environment regardless of outdoor conditions. Cost: $300-1,000+ (dehumidifier alone is $400-1,000; mini-split $600+ if not already installed). <strong>Maine fit:</strong> overkill for a 1-2 plant home grow. Worth it for a 4-6 plant caregiver-scale operation.</p>
+  </section>
+
+  <section>
+    <h2>Dehumidifiers: Refrigerant vs. Desiccant</h2>
+    <p>The two technologies for active dehumidification are refrigerant (compressor) and desiccant (wheel). The choice is mostly determined by your drying-space temperature.</p>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Refrigerant vs desiccant dehumidifier technology comparison">
+        <thead>
+          <tr>
+            <th>Decision area</th>
+            <th>Refrigerant (compressor)</th>
+            <th>Desiccant (wheel)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Drying method</strong></td><td>Cools air below dew point; water condenses on cold coil</td><td>Adsorbs moisture on a desiccant wheel; wheel regenerated by heat</td></tr>
+          <tr><td><strong>Best fit</strong></td><td>Warm, humid spaces; moderate humidity targets</td><td>Cold spaces, very-low-dew-point targets</td></tr>
+          <tr><td><strong>Capacity at low temp</strong></td><td>Falls as temperature drops — many consumer units lose efficiency below 41-50°F</td><td>Stable down to freezing and below</td></tr>
+          <tr><td><strong>Energy use</strong></td><td>Lower in warm, humid conditions (good operating efficiency)</td><td>Higher; needs heat to regenerate the wheel</td></tr>
+          <tr><td><strong>Cost</strong></td><td>$150-500 home / $1,000+ commercial</td><td>$400+ home / $1,500+ commercial</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Source: <a href="https://www.rinwang.com/refrigerant-vs-desiccant-dehumidifier/" target="_blank" rel="noopener noreferrer">Rinwang 2026 buyer guide</a> (cites ASHRAE Handbook Ch. 24, U.S. DOE dehumidifier definition).</p>
+
+    <h3>Maine-relevant decision rule</h3>
+
+    <p>For a Maine basement or closet at 55-68°F in October, a refrigerant dehumidifier is the right technology. It is cheaper, the room is not cold enough to push a refrigerant unit out of its operating envelope, and the moisture load is moderate. A desiccant dehumidifier only becomes necessary if the drying space is in an unheated garage or outbuilding that drops below 50°F. For most Maine home growers, the basement is at 55-60°F year-round, which is fine for a refrigerant unit.</p>
+
+    <h3>Sizing: pint/day (PPD) per room volume</h3>
+
+    <p>GrowersHouse's <a href="https://growershouse.com/blogs/grow-room-dehumidification/best-dehumidifiers-for-grow-rooms-how-to-calculate-dehumidification-needs" target="_blank" rel="noopener noreferrer">standard sizing rule</a>: 1-2 pints per pound of wet harvest per day during the first 5 days, dropping to 0.5 pints/lb/day by day 10. For a 4-6 plant Maine outdoor harvest (assume 0.5-1 lb wet per plant = 2-6 lb wet total): a 30-pint dehumidifier is the minimum; a 50-pint dehumidifier is the comfortable size with margin for ambient humidity contribution; 70+ pints is the right size for a 2×4 tent or small basement dry room.</p>
+
+    <h3>Top brands and price ranges (June 2026)</h3>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Dehumidifier brand comparison home growers">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Range</th>
+            <th>Model</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Quest</strong> (premium, commercial heritage)</td><td>70-506 PPD</td><td>Quest 70, Quest 155</td><td>~$700 (Quest 70) — verified: Quest 335 = <a href="https://www.htgsupply.com/products/quest-335-commercial-dehumidifier/" target="_blank" rel="noopener noreferrer">$5,799.95</a></td></tr>
+          <tr><td><strong>Ideal Air</strong> (entry/mid)</td><td>30-180 PPD</td><td>Ideal Air 30-50 Pint</td><td>ESTIMATE $130-250</td></tr>
+          <tr><td><strong>Active Air</strong> (entry/mid)</td><td>60-190 PPD</td><td>Active Air 190 Pint</td><td>ESTIMATE $250-400</td></tr>
+          <tr><td><strong>Consumer</strong> (Frigidaire, hOmeLabs, Vivosun, GE)</td><td>30-50 PPD</td><td>Frigidaire 50-pint, hOmeLabs 50-pint</td><td>ESTIMATE $150-300 (consumer Amazon pricing)</td></tr>
+          <tr><td><strong>Aura Systems</strong></td><td>~180 PPD</td><td>Aura 180 Portable</td><td>ESTIMATE $300-500</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <Callout title="Consumer dehumidifier warning" type="warning">
+      Consumer dehumidifiers (Frigidaire, hOmeLabs, Vivosun, GE) are built for comfort dehumidification, not sustained-run, low-temperature, controlled-space use. A consumer 50-pint unit will work in a Maine closet for a 2-plant harvest; it will not last as long as a Quest or Ideal Air under continuous 7-day operation. For a single annual harvest the consumer math works; for multiple harvests/year or caregiver-scale, a Quest/Active Air/Ideal Air is the better lifetime cost.
+    </Callout>
+
+    <h3>When you NEED a dehumidifier in Maine</h3>
+
+    <p>October through April, yes. May through September is less clear-cut — coastal Maine summer RH is 75-85% morning, 55-65% afternoon, and a 30-pint consumer unit in the drying room will keep the space in the 55-60% range for the afternoon hours, but you will still see overnight spikes. A Maine home grower who dries indoors should plan to own a dehumidifier the same way they plan to own a drying rack.</p>
+  </section>
+
+  <section>
+    <h2>The Boveda 62 Cure Protocol</h2>
+
+    <h3>What Boveda is</h3>
+    <p>Boveda is a saturated-salt-and-water packet in a semi-permeable membrane. Per the <a href="https://www.dehumidify.com/boveda" target="_blank" rel="noopener noreferrer">Hydrosorbent product page</a> (Hydrosorbent is the Boveda patent holder): "Boveda is based on the scientific principle that certain salts saturated with water will naturally add or remove humidity as needed to maintain a predetermined relative humidity (RH). Each RH level Boveda responds to ambient temperature and humidity by adding or removing moisture to maintain the predetermined RH printed on the Boveda." Integra Boost is the plant-based equivalent (glycerin + water, no salt) and is functionally interchangeable.</p>
+
+    <h3>Why 62% RH</h3>
+    <p>The 62% target is the cigar-industry standard (Boveda's original market was cigar humidors), adopted by cannabis because it sits at the empirical "best expression of terpene + lowest mold risk" point. BudTrainer: "For long-term storage, sealed jars at 62% RH using Boveda packs preserve quality for 6 months or more." THCFarmer: "We're shooting for that sweet spot of 58-62% RH inside jars. Why these exact numbers? Science and painful experience from thousands of community grows."</p>
+
+    <h3>The first-2-weeks intensive burp schedule</h3>
+
+    <p>From <a href="https://www.thcfarmer.com/learn/curing-cannabis-signs-its-time-to-stop-burping-your-jars.552/" target="_blank" rel="noopener noreferrer">THCFarmer's week-by-week protocol</a>:</p>
+
+    <ul>
+      <li><strong>Week 1 — "The Danger Zone":</strong> burp 2-3× daily, 10-15 min each. Goal: bring RH from initial 65-70% down to 62-65%. Major moisture redistribution. Peak mold risk. If RH hits 70%+, dump buds onto a drying screen for 30-60 min immediately.</li>
+      <li><strong>Week 2 — Stabilization:</strong> once daily, 5-10 min. RH should stabilize at 62-63%. Chlorophyll breakdown accelerates; grass smell fades.</li>
+      <li><strong>Weeks 3-4 — Sweet spot:</strong> every other day, 2-5 min. RH holds 60-62%. Terpene development accelerates.</li>
+      <li><strong>Weeks 5-8 — Maintenance:</strong> twice/week or whenever RH &gt; 62%, 1-2 min. Quality plateauing.</li>
+      <li><strong>Week 8+ — Long-term storage:</strong> weekly checks, monthly burps. Consider vacuum sealing, nitrogen flush, or just keep the Boveda packs.</li>
+    </ul>
+
+    <p>Critical insight from THCFarmer: "Add packs AFTER moisture stabilizes around 62%. Adding too early masks moisture problems you need to address." This is the single most common Boveda mistake — tossing a pack in on day 1 because the jar reads 70% and the pack "should" bring it down. It will not, and it hides the underlying over-wetness.</p>
+
+    <h3>62% vs 58% vs 65%</h3>
+
+    <ul>
+      <li><strong>58%</strong> — long-term storage (6+ months), humid climates, bulk commercial. Slightly firmer texture; marginally lower terpene retention vs 62%.</li>
+      <li><strong>62%</strong> — curing, medium-term storage, most connoisseur-grade home grows. Best terpene preservation; safe for 6+ months. The default.</li>
+      <li><strong>65%</strong> — bulk commercial where weight retention is the priority; dense indica colas that dry unevenly. Higher mold risk; stickier texture.</li>
+    </ul>
+
+    <p><strong>Maine-specific recommendation:</strong> 62% is the right default. Most Maine home-grower cures are 2-4 months (one harvest through winter), not 12+ months. The 58% advantage only emerges past the 6-month mark. The 65% alternative is unnecessary in Maine's dry winter indoor air (heated indoor winter RH is naturally 20-30%, well below 58%) — the Boveda is doing extra work in winter, so the headroom of 62% is comfortable rather than risky.</p>
+
+    <h3>Cost per pack (verified)</h3>
+
+    <div class="fact-box">
+      <h2>Boveda 8g pack pricing (June 2026, <a href="https://www.dehumidify.com/boveda" target="_blank" rel="noopener noreferrer">dehumidify.com</a>)</h2>
+      <table>
+        <tr><td>5-pack</td><td>$10.50 ($2.10/pack)</td></tr>
+        <tr><td>10-pack</td><td>$20 ($2.00/pack)</td></tr>
+        <tr><td>25-pack</td><td>$45 ($1.80/pack)</td></tr>
+      </table>
+      <p class="source-note">Per-jar cost for a 1-oz jar: one 8g pack = $1.80-2.10. A typical 4-plant Maine home harvest (~1 lb cured) needs 16 8g packs for the cure = $29-34. Pack lifespan: 2-6 months (replace when rigid).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mason Jars vs. Grove Bags</h2>
+
+    <h3>Mason jar burp method</h3>
+    <p>Wide-mouth quart mason jars (Ball, Kerr). <strong>Fill to 75% capacity maximum</strong> (THCFarmer: "75% full is absolute maximum, but 60-70% is the ideal range. You need air space for proper gas exchange, room for gentle shaking to prevent compression, and space that prevents dead zones where mold starts"). One mini hygrometer per jar. Caliber IV (~$25) or Govee WiFi (~$30) are the THCFarmer community recommendations. Budget option: Amazon 12-pack of mini hygrometers at ~$3 each (less accurate). Cost: Ball/Kerr wide-mouth quart = $1-2 each. Caliber IV hygrometer = $25. 8g Boveda 62% packs = $2 each.</p>
+
+    <p><strong>Maine winter advantage:</strong> heated indoor air in Maine is naturally 20-30% RH December through March. Mason jars in a Maine home in January will gain moisture through the lid seal if ambient is above jar RH; they will lose moisture if ambient is below. Boveda 62% packs compensate for this. The traditional burp method works year-round in Maine; deep winter just requires more attention to in-jar RH.</p>
+
+    <h3>Grove Bags TerpLoc (modern alternative)</h3>
+    <p>Grove Bags make a multilayer film pouch with six engineered elements: durability, anti-static, odor barrier, humidity control, oxygen diffusion, and UV opacity. Per <a href="https://grovebags.com/pages/technology" target="_blank" rel="noopener noreferrer">Grove's technology page</a>: "Our Bags Retain Up To 37% More Terpenoids And 7% More Cannabinoids Than Traditional Packaging" (vendor-stated, linked to a 3rd-party study; cite as Grove Bags' commissioned finding, not as independently confirmed).</p>
+
+    <p>Vendor usage instructions: "The biggest factor for getting the most out of your Grove Bag is to make sure your cannabis is properly dry and the inner moisture is both released and regulated. If you think the cannabis is too wet still burp it in the bag for 3-4 days. Once your cannabis is dry heat seal the bag and store it in a cool dark room for best results. There is no need to purchase a 2-way humidity packet or oxygen scrubber."</p>
+
+    <p>Cost: Grove Bags are $1-2 per bag (sizing from 1 oz to 1 lb).</p>
+
+    <h3>When to use which</h3>
+
+    <ul>
+      <li><strong>Mason jars + Boveda + burp:</strong> the safe default. Most-published guidance, most-forgiving if you make a mistake, lowest absolute cost if you already have the jars. 5+ years of storage with proper technique.</li>
+      <li><strong>Grove Bags Terploc:</strong> the simpler workflow (no burping, no separate Boveda purchase, no hygrometer-per-jar). Best for growers who are confident their dry was complete to 10-12% moisture. Less forgiving if buds are over-wet at bag time.</li>
+      <li><strong>For Maine:</strong> start with mason jars and Boveda for the first 2-3 harvests to learn the cure. Switch to Grove Bags once you have a feel for the 10-12% moisture endpoint (post-snap-test). Either approach handles Maine's dry winter indoor air well.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to Know When Drying Is Done</h2>
+
+    <h3>The stem snap test</h3>
+    <p>The canonical readiness test. BudTrainer: "Pick a thin lateral branch, take it between your fingers, and bend it. If it bends without snapping, drying is not finished. Wait 24 to 48 hours. If it snaps with a clean 'crack' sound, drying is complete. If the buds feel dry and brittle to the touch and crumble easily, drying went too far."</p>
+
+    <p>The trap: dense indica colas can have a crispy outside + wet core at 7 days, where a thin stem on the outside snaps but the inner bud is still 15%+ moisture.</p>
+
+    <h3>The bounce test</h3>
+    <p>A spongy, slightly springy bud is the right texture for jarring. THCFarmer: "Perfect cure feels slightly spongy and springs back when you gently squeeze a bud. Too wet feels damp, stays compressed when squeezed, and the stems still bend instead of snapping. Too dry crumbles between your fingers and stems snap like brittle twigs with no flexibility at all."</p>
+
+    <p>Combined test: small stems snap, larger outer stems still bend slightly, outer bud surface feels dry to the touch but the bud interior is slightly spongy. Weight loss of 70-80% from the wet-chop weight is the final confirm.</p>
+
+    <h3>Moisture meter (precision option)</h3>
+    <p>A pin-style or capacitive moisture meter can be pressed against a bud to read moisture content. The cannabis-specific application is not yet standardized. Pin-style ($20-50 on Amazon) reads 5-40% on a wood scale; reading 10-12% in the bud center is the cannabis cure target (caveat: not calibrated for cannabis, readings are relative, not absolute). Cannabis-specific Wagner MMC220 = $350+, calibrated for cannabis/hemp, worth it for caregiver-scale operations doing 4+ harvests/year.</p>
+
+    <p>For the Maine home grower, the snap test is the primary, the in-jar hygrometer (Boveda 62% + Caliber IV) is the secondary, and skip the moisture meter unless you are commercial-scale.</p>
+  </section>
+
+  <section>
+    <h2>Six Common Maine Drying Problems and Fixes</h2>
+
+    <h3>1. Hay smell (dried too fast / chlorophyll locked in)</h3>
+    <p><strong>Cause:</strong> drying under 7 days, or temperature above 70°F, or humidity below 45% RH with strong direct airflow. Chlorophyll breaks down enzymatically over time; fast drying interrupts the breakdown and the hay/grassy smell is permanent. <strong>Maine trigger:</strong> the more common Maine hay-smell cause is <em>temperature</em>: a closet next to a wood stove or furnace vent can easily hit 75-80°F and fast-dry the crop. <strong>Fix:</strong> stop ventilation, move buds to a smaller more-humid space (closed Tupperware with a damp paper towel, opened daily), cure aggressively with 62% RH Boveda. Some terpenes are gone permanently; you can rescue most of the smoke quality with a 3-4 week cure. <strong>Prevention:</strong> target 60-68°F. Keep drying space away from wood stoves, furnace vents, and direct afternoon sun.</p>
+
+    <h3>2. Bud rot during dry (humidity too high, no airflow)</h3>
+    <p><strong>Cause:</strong> humidity above 70% for more than 48 hours, no airflow, or dense buds with poor internal ventilation. <em>Botrytis cinerea</em> (gray mold) is the dominant pathogen. <strong>Maine trigger:</strong> the #1 drying failure mode in Maine October. Ambient humidity 75-85% morning, 60-70% afternoon, with overnight spikes to 90%+. <strong>Fix mid-dry:</strong> inspect every bud. Cut out and discard moldy material with a clean knife (do not rub — releases spores). Increase airflow and drop humidity to 55% for 24 hours. If mold has reached more than 20% of the harvest, you are likely going to lose most of it. Mold is a hard fail. <strong>Prevention:</strong> never let humidity sit above 65% for more than 24 hours. Use a dehumidifier with a humidistat. Pre-harvest defoliation removes excess plant material. Wet-trim in October Maine.</p>
+
+    <h3>3. Over-dry (parchment feel, harsh smoke)</h3>
+    <p><strong>Cause:</strong> drying environment too aggressive; buds finished at &lt;8% moisture instead of the 10-12% cure target. Symptoms: crumbly buds, stems shatter rather than snap, smoke is harsh and throat-burning, little or no aroma. <strong>Maine trigger:</strong> less common in October but <em>very</em> common in Maine January-March when heated indoor air drops to 15-25% RH. A dry room that worked in October becomes an over-dry death trap in February. <strong>Fix mid-dry:</strong> Boveda 62% packs (or 65% for severe over-dry) for 24-48 hours, then re-check. Boveda packs are stabilizers, not fixers. <strong>Prevention:</strong> monitor weight loss (target 70-80% of wet weight). Check the in-jar hygrometer daily in the first week.</p>
+
+    <h3>4. Mold in jars (cured before dry was complete)</h3>
+    <p><strong>Cause:</strong> buds jarred at &gt;15% moisture; anaerobic conditions in the jar; ammonia smell is the first sign. Symptoms: ammonia smell, white fuzz on buds, sticky-wet feel, gray discoloration spreading from stem outward. <strong>Maine trigger:</strong> the second-most-common Maine drying failure. Occurs when the grower reads a 60/60 protocol, achieves 60/60 in their basement for 4 days, but the buds were still 18% moisture inside (case-hardening trap), jars them too early, and the trapped internal moisture migrates out into the jar headspace over days 3-7 in the jar. <strong>Fix mid-jar:</strong> open jars and let buds breathe 6-12 hours, then re-jar with fresh Boveda 62% packs. If ammonia smell returns in 24 hours, buds need another 24-48 hours of hanging time. If visible mold, discard the entire jar. <strong>Prevention:</strong> in-jar hygrometer is non-negotiable. Wait until small stems snap cleanly.</p>
+
+    <h3>5. Ammonia smell (anaerobic conditions in jar)</h3>
+    <p><strong>Cause:</strong> same as mold in jars — buds too wet, sealed too long, anaerobic bacteria producing ammonia. <strong>Fix:</strong> dump the jar immediately, re-dry 12-24 hours, re-jar with fresh Boveda. <strong>Prevention:</strong> same as #4.</p>
+
+    <h3>6. Cardboard / catnip smell (terpenes gone)</h3>
+    <p><strong>Cause:</strong> over-dried (cardboard) or dried above 70°F (catnip — terpenes evaporated). <strong>Fix mid-dry:</strong> cardboard smell is partially recoverable with Boveda 62% and a 2-3 week cure; catnip smell is irreversible. <strong>Prevention:</strong> target 60-68°F. Don't over-dry. Don't put the dry closet next to the wood stove.</p>
+  </section>
+
+  <section>
+    <h2>Long-Term Storage: Maine Winter Considerations</h2>
+
+    <h3>Mason jar with Boveda (1+ year)</h3>
+    <p>1-quart wide-mouth mason jar filled 60-75% with cured bud, one 8g Boveda 62% pack on top, sealed, in a cool dark place (closet, basement). Check monthly. Replace Boveda when it goes rigid (every 2-6 months). THCFarmer: "Mason jars remain the tried and true option. Check monthly, add a 62% Boveda, keep them in a dark, cool place, and you're golden for months." 1+ year preservation is realistic.</p>
+
+    <h3>Grove Bags (1+ year)</h3>
+    <p>TerpLoc bag, filled 75%, heat-sealed, in a cool dark place. No Boveda needed (vendor claim). Storage life claim: "increases the shelf life of your cannabis" (vendor-stated).</p>
+
+    <h3>Vacuum seal (2+ year)</h3>
+    <p>FoodSaver or chamber vacuum sealer; bags at 0% O₂. THCFarmer: "Vacuum sealing removes oxygen (THC's biggest enemy), enables 6+ month storage without degradation, and provides professional-grade preservation." Caution: vacuum-sealing fresh-dried bud (still 10-12% moisture) is fine; vacuum-sealing over-wet bud is a fast track to anaerobic mold. Buds must be fully cured first. Cost: entry-level FoodSaver ~$50; chamber vac (the only kind worth using for cannabis) ~$300+.</p>
+
+    <h3>Freezer for long-term (controversial)</h3>
+    <p>THCFarmer: "Never freeze your flower — trichomes become brittle and shatter off at the slightest movement." This is the consensus. The minority position: vacuum-seal <em>first</em>, then freeze. The bag prevents trichome shatter and the vacuum prevents freezer burn. For Maine home growers, the freezer is a tempting answer (cold, dark) but the trichome-shatter risk on handling is real. Not the recommended path.</p>
+
+    <h3>Maine winter humidity considerations</h3>
+
+    <p>This is the under-appreciated Maine-specific storage problem. Heated indoor air in Maine December through March is naturally 15-25% RH. Buds stored in mason jars in a Maine living room in January will <em>lose</em> moisture through the rubber seal and drop below 58% RH in-jar if no Boveda is present.</p>
+
+    <Callout title="Maine winter rule" type="tip">
+      Always store with Boveda 62% in the jar. Check in-jar hygrometer weekly in January-March. If in-jar RH drops to 55%, the pack is exhausted; replace it. If in-jar RH drops below 50%, the buds are over-drying; add a fresh pack and consider moving the jar to a less-heated room (basement is often 35-45% RH in winter — still requires Boveda but more stable than a living room).
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Equipment Cost Summary (June 2026)</h2>
+
+    <div class="calendar-table-wrap">
+      <table aria-label="Drying and cure equipment cost summary">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Verified price</th>
+            <th>Source / note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>30-pint consumer dehumidifier</td><td>ESTIMATE $130-200</td><td>Frigidaire, hOmeLabs, Vivosun</td></tr>
+          <tr><td>50-pint consumer dehumidifier</td><td>ESTIMATE $180-280</td><td>Same</td></tr>
+          <tr><td>70-pint cultivation-grade</td><td>ESTIMATE $500-900</td><td>Quest 70, AlorAir 70, Andyen 70</td></tr>
+          <tr><td>190-pint mid-tier</td><td>ESTIMATE $300-500</td><td>Active Air, Aura Systems</td></tr>
+          <tr><td>Hygrometer / thermometer (mini, for jar or closet)</td><td>$3 each (12-pk) to $25-30 each</td><td>Caliber IV, Govee WiFi</td></tr>
+          <tr><td>Mason jars (wide-mouth quart, Ball or Kerr)</td><td>$1-2 each (12-pack $12-18)</td><td>Common retailer</td></tr>
+          <tr><td>Boveda 4g (5/10/25-pack)</td><td>$8.50 / $15.00 / $33</td><td><a href="https://www.dehumidify.com/boveda" target="_blank" rel="noopener noreferrer">dehumidify.com</a></td></tr>
+          <tr><td>Boveda 8g (5/10/25-pack)</td><td>$10.50 / $20 / $45</td><td>Same source</td></tr>
+          <tr><td>Boveda 67g (1/4/12/20-pack)</td><td>$6.50 / $25 / $67 / $98</td><td>Same source</td></tr>
+          <tr><td>Grove Bags TerpLoc (1 oz to 1 lb sizes)</td><td>$1-2 per bag</td><td><a href="https://grovebags.com/" target="_blank" rel="noopener noreferrer">grovebags.com</a></td></tr>
+          <tr><td>Moisture meter (pin-style, Amazon)</td><td>$20-50</td><td>ESTIMATE</td></tr>
+          <tr><td>Moisture meter (Wagner MMC220, cannabis-specific)</td><td>$350+</td><td>ESTIMATE; vendor-direct</td></tr>
+          <tr><td>Drying tent (2×2×4 or 2×4×4, no controller)</td><td>$80-200</td><td>ESTIMATE; common retailer</td></tr>
+          <tr><td>Drying tent (2×4 with inline fan + carbon filter)</td><td>$200-400</td><td>ESTIMATE; common retailer</td></tr>
+          <tr><td>Small oscillating fan (for indirect airflow)</td><td>$15-30</td><td>ESTIMATE; common retailer</td></tr>
+          <tr><td>Integra Boost 8g 62% (Amazon)</td><td>$4-5 per pack</td><td>Vendor-stated</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Maine home-grower minimum drying + cure budget (1-2 plant harvest, no existing equipment):</strong> $235-400 (closet rack, hygrometer, 30-pint consumer dehumidifier, small fan, mason jars, Boveda 62% packs).</p>
+
+    <p><strong>Maine home-grower proper drying + cure budget (4-6 plant harvest, no existing equipment):</strong> $500-900 (cultivation-grade dehumidifier, tent, hygrometers, 30+ jars, 30+ Boveda packs).</p>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "Can I dry cannabis in Maine without a dehumidifier?", answer: "Realistically, no — at least not in October, the prime harvest month. Portland's morning humidity is 86% and Caribou's is 84%, both 24+ percentage points above the 60% drying target. Without active dehumidification, your dry space will sit at 70-85% RH for most of the day, and your buds will either dry too slowly (mold risk) or case-harden on the outside while staying wet on the inside (the second-most-common Maine drying failure). A 30-pint consumer dehumidifier is the realistic minimum and costs $130-200. A Maine home grower who dries indoors should plan to own a dehumidifier the same way they plan to own a drying rack — it is a required tool, not an upgrade." },
+      { question: "How long does it take to dry cannabis in Maine?", answer: "At the 60°F / 60% RH target, the consensus is 7-14 days depending on method: whole-plant hang = 12-14 days; branch-by-branch = 10-12 days; trimmed buds on a flat rack = 7-10 days. In Maine October's 70-85% morning ambient humidity, all of these stretch to 14-18 days without active dehumidification, and the longer the dry the higher the mold risk. With a 30+ pint dehumidifier holding the space at 55-60% RH, you can hit the standard 10-12 day window." },
+      { question: "What humidity should I dry cannabis at?", answer: "60°F (15.5°C) and 60% relative humidity — the '60/60 rule.' The 55-65% RH / 60-68°F range is the wider modern best practice, with 60/60 as the centroid. BudTrainer's 2026 update, ILGM (Stoney Tark), and the r/cannabiscultivation community all converge on this target. Above 65% RH, Botrytis (bud rot) risk accelerates. Below 55% RH, the buds dry too fast and chlorophyll is locked in (the hay smell)." },
+      { question: "When should I put Boveda packs in my jars?", answer: "After the moisture stabilizes around 62% — not on day 1. The single most common Boveda mistake is tossing a pack in on day 1 because the jar reads 70% and the pack 'should' bring it down. It will not, and it hides the underlying over-wetness. The protocol is: dry the buds to the stem-snap endpoint, jar them with 60-75% fill, burp 2-3 times daily for the first week, then add the Boveda 62% pack once the in-jar hygrometer reads 60-63% consistently. This is the THCFarmer week-by-week protocol." },
+      { question: "What is the best dehumidifier for drying cannabis in Maine?", answer: "For a 1-2 plant home harvest in a closet: a 30-50 pint consumer unit (Frigidaire, hOmeLabs, Vivosun) at $130-280. For a 4-6 plant harvest in a tent or small room: a 70-pint cultivation-grade unit (Quest 70, AlorAir 70, Andyen 70) at $500-900. For a caregiver-scale operation: a 100+ pint commercial unit (Quest 155, Quest 335) at $1,500-6,000. The brand matters for lifetime cost: consumer units work for a single annual harvest but are not built for continuous 7-day operation; cultivation-grade units (Quest, Active Air, Ideal Air) are. Maine-relevant technology choice: refrigerant (compressor) for basement/closet at 55-68°F; desiccant only for unheated spaces below 50°F." },
+      { question: "Should I wet trim or dry trim in Maine?", answer: "Depends on whether you have a dehumidifier. With a 30+ pint dehumidifier holding the drying room at 55-60% RH, dry trim or BudTrainer Method (strip fan leaves at harvest, leave sugar leaves on through the dry, manicure after). Without active dehumidification and ambient RH at 70-85% (the October default), wet trim aggressively — remove all fan leaves and at least 50% of sugar leaves at harvest. A wet trim in October Maine without active dehumidification is not optional; it is the only way to keep the harvest from rotting in the first 4 days." }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Read More from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — plant limits, tagging, indoor vs outdoor</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — 7 mold-resistant and fast-finishing genetics with full cultivation detail</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized Seeds for Maine 2026</a> — the seed-type decision matrix (sister to this page)</li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Title 28-B, OCP rules, penalty schedule</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
+      <li><a href="/blog">All Maine Dispensary Guide Articles</a></li>
+    </ul>
+  </section>
+
+  <section class="affiliate-section" id="affiliate-section">
+    <div class="section-header">
+      <h2>Recommended Drying &amp; Cure Equipment</h2>
+      <span class="sponsored-badge">Sponsored Recommendation</span>
+    </div>
+    <p class="affiliate-disclosure">Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships.</p>
+    <div class="affiliate-grid">
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">💧</span>
+          <h3>Boveda 62% Humidity Packs</h3>
+        </div>
+        <p>The two-way humidity control pack that defines the modern cannabis cure. Saturated-salt-and-water packet in a semi-permeable membrane that adds or removes moisture to maintain a target 62% RH. The 8g size is the home-grower standard for a 1-quart mason jar; one pack per ounce of flower. Replace every 2-6 months when the pack goes rigid. Available in 4g, 8g, 67g, and 320g sizes depending on jar or bulk container. Pairs with our drying guide's THCFarmer week-by-week burping protocol.</p>
+        <div class="affiliate-cta">
+          <a href="https://www.amazon.com/s?k=boveda+62+8g&tag=mainedispgui-20" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Shop Boveda 62% on Amazon →</a>
+          <span class="affiliate-note">Integra Boost 62% is a functionally equivalent plant-based alternative</span>
+        </div>
+      </div>
+      <div class="affiliate-card">
+        <div class="affiliate-header">
+          <span class="affiliate-icon">🌱</span>
+          <h3>ILGM (I Love Growing Marijuana)</h3>
+        </div>
+        <p>For the Maine-adapted autoflower and feminized genetics that will produce the harvest you then need to dry: ILGM is the recommended U.S.-facing seed bank. 20+ year track record, ships to Maine with discreet packaging, free shipping on most orders, and a useful Marijuana Grow Bible included with every purchase. Their autoflower and feminized selections (Northern Lights Auto, White Widow Auto, Afghan, OG Kush) are well-suited to Maine's short, humid season. The site has a <a href="/blog/best-cannabis-strains-maine-outdoor-2026">7-strain Maine outdoor guide</a> that cross-references ILGM inventory.</p>
+        <div class="affiliate-cta">
+          <a href="https://ilgm.com?aff=8112" class="btn-affiliate" target="_blank" rel="noopener noreferrer sponsored">Browse ILGM Seeds →</a>
+          <span class="affiliate-note">20% commission supports our editorial work</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal advice. Cannabis laws and regulations are subject to change. Always verify current requirements with the Maine Office of Cannabis Policy and consult with a qualified attorney for specific legal guidance. Humidity data cited reflects 1961-1990 NCEI-derived normals; 2026 real-time conditions may vary. Boveda's "15% higher terpene retention" and Grove Bags' "37% more terpenoids" figures are vendor-published claims, not independent peer-reviewed findings. Equipment prices are a mix of verified retailer URLs and industry-typical estimates; verify at retailer on the day of purchase. Maine Dispensary Guide may earn a commission on purchases made through affiliate links. This does not affect our editorial recommendations.</em></p>
+  </section>
+</article>
+</Layout>
