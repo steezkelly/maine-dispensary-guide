@@ -685,7 +685,7 @@ const directoryJsonLd = {
   <section class="ocp-section" aria-labelledby="ocp-region">
     <h2 id="ocp-region">All OCP-Licensed Maine Cities ({ocpAuCities.length + ocpMedCities.length} additional towns)</h2>
     <p class="ocp-intro">Maine Dispensary Guide publishes a curated local guide for the highest-traffic towns. Below are the {ocpAuCities.length + ocpMedCities.length} additional Maine towns with at least one active adult-use store or caregiver storefront licensed by the Maine Office of Cannabis Policy. Each row links to a map search and the OCP licensee search for that town. <strong>Recently added full guides:</strong> <a href="/guides/bath-dispensary-guide">Bath</a>, <a href="/guides/brewer-dispensary-guide">Brewer</a>, <a href="/guides/berwick-dispensary-guide">Berwick</a>. Local guides for other towns are in the editorial queue; submit your town as a <a href="/contact">suggested guide</a> if you want it prioritized.</p>
-    <p class="ocp-source">Source: <a href="http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (April 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (April 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
+    <p class="ocp-source">Source: <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (April 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (April 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
     <div class="ocp-grid">
       {[...ocpAuCities, ...ocpMedCities].sort((a, b) => a.n.localeCompare(b.n)).map((city) => (
         <article class="ocp-card">
@@ -697,7 +697,7 @@ const directoryJsonLd = {
           {city.s && city.s.length > 0 && <p class="ocp-sample">{city.s.slice(0, 2).join(' · ')}</p>}
           <div class="ocp-actions">
             <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
-            <a href="http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer">OCP search</a>
+            <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer">OCP search</a>
           </div>
         </article>
       ))}

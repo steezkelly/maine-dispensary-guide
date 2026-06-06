@@ -3,3 +3,21 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://mainedispensaryguide.com/sitemap-index.xml
+
+# AI / Agent Crawlers — allowed, but explicit crawl budget directive
+# These lines help crawlers prioritize sitemap over random crawling
+Crawl-delay: 1
+
+# Block known AI training bot crawlers (optional — uncomment if you want to opt out of AI training)
+# If you want to support AI indexing while opting out of training use, remove these
+# User-agent: GPTBot
+# Disallow: /
+
+# User-agent: ChatGPT-User
+# Disallow: /
+
+# User-agent: CCBot
+# Disallow: /
+
+# User-agent: OAI-SearchBot
+# Allow: /
