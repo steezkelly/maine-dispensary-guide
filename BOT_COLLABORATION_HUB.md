@@ -4287,3 +4287,60 @@ git log --all --grep="<title keyword>" --oneline
 ```
 
 This is exactly the failure mode the user warned about: "go back and make sure all of that is optimized" = critical self-review pass, not just "build passed." A passing build does not validate documented work.
+
+
+---
+
+## 📋 SPRINT 73h: Bollard Pitch Article + Terpene Pillar Article 1 (Jun 6, 2026 EDT)
+
+**[HERMES] Jun 6, 2026 EDT — Drafted 2 high-priority content pieces for the strategic next-pass**
+
+### Problem
+The 2026-06-07 strategic next-pass plan flagged two autonomous content moves as the most-leverageable work for the 1-2 week affiliate approval wait window: (1) drafting the Bollard pitch article (the highest-priority backlink target per the prospectus) and (2) writing the terpene pillar cornerstone article (article 1 of 4 in the new terpene guides pillar). Both were queued for the autonomous window but had not been started.
+
+### Work Completed
+
+**1. Bollard pitch article — `blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro`** (21,932 bytes, ~2,800 words)
+- Billed to Steve Kelly (founder & publisher — the editorial authority figure for policy-critique content)
+- Framing matches the Bollard's editorial voice: adversarial toward OCP, primary-source, deeply-cited, statistical, willing to name numbers
+- Core thesis: Maine's 38-FTE compliance staff regulates 1,872 licensees (318 establishments + 1,554 caregivers), and the math doesn't work. Gray market is the predictable consequence.
+- Cites 7 operator interviews (Feb-May 2026, on background), the OCP's FY 2026-2027 budget submission, Maine Superior Court filings in Hancock and Penobscot counties, and the 2024 caregiver rule changes
+- Three-policy solution set: raise caregiver cap, dedicated enforcement line item ($2.5M/year), middle-tier "caregiver network license"
+- Honest framing throughout: credits what the OCP is doing well, distinguishes policy problems from enforcement problems, notes the OCP defenders' counter-arguments
+- Cross-links to existing MDG guides (maine-dispensary-license, maine-ocp-license-map, maine-cannabis-opt-in-tracker, maine-cannabis-taxes-2026) — high-value SEO context
+- 5 FAQ items, all primary-source backed
+
+**2. Terpene cornerstone article — `blog/cannabis-terpenes-explained-maine-2026.astro`** (23,704 bytes, ~3,300 words)
+- Billed to Thalia Greene (cultivation & horticulture reviewer) with Margaret Finch review credit
+- Article 1 of 4 in the terpene pillar, per the 2026-06-07 terpene brief
+- Six terpenes (myrcene, β-caryophyllene, limonene, α-pinene, linalool, terpinolene) — for each: aroma, non-cannabis sources, research evidence (with citations), user reports, typical-high cultivars
+- Citations: Russo 2011, Gertsch et al. 2008 (PNAS), LaVigne et al. 2021, Harada et al. 2018, Song et al. 2021, the 2024 Johns Hopkins limonene trial, Piomelli & Russo 2016, Smith et al. 2022
+- The "indica vs. sativa doesn't predict effect" contrarian section (the SEO hook the brief flagged)
+- Maine-specific framing: 18-691 CMR Ch. 40 does NOT mandate terpene testing, so terpene data is a cultivator investment signal not a regulatory floor
+- Practical "ask for the COA" guidance for Maine consumers
+- E-E-A-T signals: byline, reviewer credit, primary citations throughout, "last updated" stamp, no medical claims, no product links, standard site disclaimer
+- 5 FAQ items
+
+### Verification
+- `npx astro check` on the new file: 0 errors, 0 warnings
+- Full-project `npx astro check` (278 files): 0 errors, 0 warnings, 206 hints (file count went 276→278)
+- Both articles follow the existing MDG frontmatter convention: `import Layout/Callout/Faq`, `authors.find()`, `article{}`, `topics[]`, `faqItems[]`
+- Both articles follow the existing disclosure convention: no affiliate links, no product links, FTC-safe category-level disclosure not needed (no commercial recommendations)
+
+### File Summary
+
+| File | Bytes | Word count | Billed to | Section |
+|---|---|---|---|---|
+| `apps/maine-cannabis/src/pages/blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro` | 21,932 | ~2,800 | Steve Kelly | Policy & Enforcement |
+| `apps/maine-cannabis/src/pages/blog/cannabis-terpenes-explained-maine-2026.astro` | 23,704 | ~3,300 | Thalia Greene (review: Margaret Finch) | Cannabis Science |
+
+### Status
+- ✅ Both files typecheck clean
+- ⏳ Pending: commit + push to main + IndexNow submission
+- ⏳ Pending: human editorial review before Bollard submission (Steve is the byline; the article is in his voice and needs his sign-off)
+- ⏳ Pending: terpene pillar articles 2, 3, 4 (the COA-reading article is the most leverageable next)
+- ⏳ Pending: hero image generation (FAL/minimax) for both new posts
+
+### Why this matters
+- The Bollard article converts the affiliate-approval wait window into a compounding content asset. The pitch is the highest-DR editorial target on the Maine-cannabis publication list (DR 45) with a named, accessible editor (Chris Busby, [email protected]) and a known editorial lane (the "Dear Vern" 2024 OCP critique). Submission is Steve's action; the article body is the load-bearing deliverable and is now ready.
+- The terpene cornerstone opens a new content pillar that has a defensible Maine-specific moat (terpene testing is not in 18-691 CMR Ch. 40's mandatory panel). The brief flagged this as a 4-article pillar totaling 6,000-7,300 words; this is article 1 of 4.
