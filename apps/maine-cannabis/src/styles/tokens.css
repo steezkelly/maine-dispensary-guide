@@ -1,0 +1,69 @@
+/* =============================================================================
+ * tokens.css — Design tokens for Maine Dispensary Guide
+ *
+ * Defines CSS custom properties for the Maine cannabis vertical.
+ * Theme 2026 overrides these via theme-2026.css (loaded after this file).
+ * Components use ONLY var(--*) — never hardcode color/spacing/typography.
+ *
+ * Loading order: tokens.css → globals.css → components.css → [theme-2026.css]
+ * ============================================================================= */
+
+:root {
+  /* === Brand palette === */
+  --color-primary: #0D4E50;          /* Deep Spruce */
+  --color-primary-dark: #083638;
+  --color-secondary: #101820;        /* Deepest Navy/Charcoal */
+  --color-accent: #588157;           /* Leaf Green */
+  --color-soft-green: #7A9A6A;       /* Sage — 4.5:1 on white */
+
+  /* === Surface palette === */
+  --color-background: #F2F2E2;       /* Warm Bone */
+  --color-surface: #ffffff;
+  --color-text: #101820;             /* Maximum contrast text */
+  --color-text-light: #4A5568;
+  --color-border: #D1D1C1;
+
+  /* === Status palette === */
+  --color-error: #8b3a3a;
+  --color-error-light: #ff6b6b;
+  --color-warning: #b4643c;
+  --color-warning-light: #f59e0b;
+  --color-warning-bg: #fef3c7;
+  --color-warning-text: #92400e;
+  --color-success: #10b981;
+  --color-success-light: #4ade80;
+  --color-success-bg: #ecfdf5;
+  --color-success-text: #065f46;
+
+  /* === Disclaimer (footer/callout) === */
+  --color-disclaimer-bg: #F2F2E2;
+  --color-disclaimer-border: #0D4E50;
+  --color-disclaimer-text: #101820;
+
+  /* === Typography === */
+  --font-family: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Fraunces', serif;
+
+  /* === Layout === */
+  --max-width: 1200px;
+  --radius: 0.75rem;
+}
+
+[data-theme="dark"] {
+  /* === Brand palette (dark) === */
+  --color-primary: #C4D4B6;
+  --color-primary-dark: #F2F2E2;
+  --color-secondary: #101820;
+
+  /* === Surface palette (dark) === */
+  --color-background: #061A1B;       /* Deep Spruce dark */
+  --color-surface: #0A2829;
+  --color-text: #F2F2E2;
+  --color-text-light: #B8C9B0;
+  --color-border: #1D3D3D;
+
+  /* === Disclaimer (dark) === */
+  --color-disclaimer-bg: rgba(242, 242, 226, 0.08);
+  --color-disclaimer-border: rgba(196, 212, 182, 0.3);
+  --color-disclaimer-text: #F2F2E2;
+}

@@ -1,0 +1,12 @@
+/* =============================================================================
+ * styles/index.css — Barrel for Layout.astro
+ *
+ * Loads in order: tokens → globals → components → theme-2026.
+ * Theme 2026 loads LAST so it wins specificity on --color-* token overrides.
+ * Remove the theme-2026 line to instantly revert to the original palette.
+ * ============================================================================= */
+
+@import './tokens.css';
+@import './globals.css';
+@import './components.css';
+@import './theme-2026.css';

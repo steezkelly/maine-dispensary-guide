@@ -17,11 +17,25 @@ import Breadcrumbs from '@network/ui/Breadcrumbs';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import GuideSidebar from '@network/ui/GuideSidebar';
-import Search from '@network/ui/Search';
 import RelatedArticles from '@network/ui/RelatedArticles';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import siteConfig from '../data/site-config.json';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+// Design system — split into tokens / globals / components for maintainability.
+// Theme 2026 (theme-2026.css) is loaded separately in step 4 to win specificity.
+import '../styles/index.css';
+// SEO + JSON-LD helpers — extracted from frontmatter (Sprint 73d refactor).
+import {
+  buildFullTitle,
+  truncateMetaDescription,
+  buildCrumbs,
+  resolveSocialImage,
+  getHeroImageDimensions,
+  type Breadcrumb,
+} from '../lib/seo';
+import { buildJsonLdGraph } from '../lib/json-ld';
 
 interface ArticleData {
   author?: string;
@@ -30,11 +44,6 @@ interface ArticleData {
   publishDate?: string;
   modifiedDate?: string;
   section?: string;
-}
-
-interface Breadcrumb {
-  label: string;
-  href: string;
 }
 
 interface Props {
@@ -66,105 +75,39 @@ const {
 // Site Metadata & State
 const siteName = isHub ? "Dispensary Guide" : siteConfig.siteName;
 const siteUrl = siteConfig.siteUrl;
-const heroImageDims = getHeroImageDimensions(heroImage);
-const MAX_SEO_TITLE_LENGTH = 60;
-const MAX_META_DESCRIPTION_LENGTH = 160;
-const truncateMetaDescription = (value: string) => {
-  if (value.length <= MAX_META_DESCRIPTION_LENGTH) return value;
-  const trimmed = value.slice(0, MAX_META_DESCRIPTION_LENGTH - 1).trimEnd();
-  const lastSpace = trimmed.lastIndexOf(' ');
-  return `${trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '')}.`;
-};
-const brandedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
-// Prefer branded title if it fits; otherwise truncate title at word boundary
-const fullTitle = brandedTitle.length <= MAX_SEO_TITLE_LENGTH
-  ? brandedTitle
-  : title.length > MAX_SEO_TITLE_LENGTH
-    ? title.slice(0, MAX_SEO_TITLE_LENGTH - 1).replace(/\s+\S*$/, '')
-    : title;
+const fullTitle = buildFullTitle(title, siteName);
 const seoDescription = truncateMetaDescription(description);
-const socialImage = heroImage
-  ? (heroImage.startsWith('http') ? heroImage : `${siteUrl}${heroImage}`)
-  : `${siteUrl}/og-image.svg`;
-const socialImageType = socialImage.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg';
+const { url: socialImage, mimeType: socialImageType } = resolveSocialImage(heroImage, siteUrl);
+const heroImageDims = getHeroImageDimensions(heroImage);
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
-// Breadcrumbs
-const breadcrumbLabels: Record<string, string> = {
-  'guides': 'Guides',
-  'about': 'About',
-  'blog': 'Blog',
-  'resources': 'Resources',
-  'founders': 'Founders',
-  'download': 'Downloads',
-  'contact': 'Contact',
-  'start-here': 'Start Here',
-  'roi-calculator': 'ROI Calculator',
-  'glossary': 'Glossary',
-  'market-stats': 'Market Stats',
-};
-
-// ─── Hero image dimensions ───────────────────────────────────────────────────
-//
-// Reads the actual width/height of a hero image from the JPEG SOF0 marker so
-// the rendered <img>, <link rel="preload">, and Open Graph meta tags report
-// truthful dimensions. Without this, the site was hardcoded to 1200x400 in
-// the <img> tag and 1200x630 in OG meta — wrong for 1280x720 hero images
-// (the new convention used by 58 of 137 hero images as of 2026-06-01), which
-// affects social media preview cropping, CLS allocation, and a11y/screen
-// reader output. Touched: 2026-06-01 Sprint 72k.
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-
-function getHeroImageDimensions(heroImage: string | undefined): { w: number, h: number } {
-  const DEFAULT = { w: 1200, h: 630 };
-  if (!heroImage || !heroImage.startsWith('/images/')) return DEFAULT;
-  // heroImage is a slashless absolute path like /images/heroes/xxx.jpg
-  // The public/ dir in the Astro project is the source of truth.
-  const publicDir = path.resolve(process.cwd(), 'public');
-  const filePath = path.join(publicDir, heroImage);
-  let data: Buffer;
-  try {
-    data = fs.readFileSync(filePath);
-  } catch {
-    return DEFAULT;
-  }
-  // Walk JPEG markers looking for SOF0/1/2/3 (0xFFC0..0xFFC3). The marker
-  // is followed by a 2-byte segment length, 1-byte precision, 2-byte height,
-  // 2-byte width, all big-endian.
-  let i = 2; // skip SOI (0xFFD8)
-  while (i < data.length - 9) {
-    if (data[i] !== 0xFF) return DEFAULT;
-    const marker = data[i + 1];
-    if (marker === 0xD8 || marker === 0xD9 || marker === 0x00) { i += 2; continue; }
-    if (marker === 0xC0 || marker === 0xC1 || marker === 0xC2 || marker === 0xC3) {
-      const h = data.readUInt16BE(i + 5);
-      const w = data.readUInt16BE(i + 7);
-      return { w, h };
-    }
-    if (marker === 0xDA) return DEFAULT; // SOS: scan data follows
-    if (i + 4 > data.length) return DEFAULT;
-    const segLen = data.readUInt16BE(i + 2);
-    i += 2 + segLen;
-  }
-  return DEFAULT;
-}
-
-function buildCrumbs(path: string, explicitCrumbs: Breadcrumb[]) {
-  if (explicitCrumbs.length > 0) return explicitCrumbs;
-  const parts = path.split('/').filter(Boolean);
-  if (parts.length === 0) return [];
-  const crumbs: Breadcrumb[] = [];
-  let running = '';
-  for (const part of parts) {
-    running = running + '/' + part;
-    crumbs.push({ label: breadcrumbLabels[part] || part.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), href: running });
-  }
-  return crumbs;
-}
-
 const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadcrumbs);
+
+// JSON-LD — single @graph with Organization + WebSite (+ Article if content).
+// Sprint 73b unified 3 separate <script> tags into one graph.
+const jsonLdGraph = noindex ? null : buildJsonLdGraph(
+  {
+    siteName: siteConfig.siteName,
+    siteUrl,
+    socialLinks: siteConfig.socialLinks,
+  },
+  isContent && article && !noindex
+    ? {
+        title,
+        description,
+        author: article.author,
+        authorTitle: article.authorTitle,
+        authorId: article.authorId,
+        publishDate: article.publishDate,
+        modifiedDate: article.modifiedDate,
+        section: article.section,
+        heroImage,
+        topics,
+        pageUrl: Astro.url.href,
+      }
+    : undefined,
+);
 ---
 
 <!doctype html>
@@ -230,90 +173,16 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <meta name="twitter:site" content="@MaineDispensary" />
     {article && <meta name="twitter:creator" content="@MaineDispensary" />}
 
-    {!noindex && (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": siteConfig.siteName,
-      "url": siteConfig.siteUrl,
-      "logo": {
-        "@type": "ImageObject",
-        "url": siteUrl + "/favicon.svg"
-      },
-      "sameAs": siteConfig.socialLinks,
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "email": "info@mainedispensaryguide.com"
-      }
-    })} />
-    )}
-
-    {!noindex && (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": siteConfig.siteName,
-      "url": siteConfig.siteUrl,
-      "description": "Your complete guide to opening and operating a cannabis dispensary.",
-      "publisher": {
-        "@type": "Organization",
-        "name": siteConfig.siteName,
-        "logo": {
-          "@type": "ImageObject",
-          "url": siteUrl + "/favicon.svg"
-        }
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": siteUrl + "/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
-    })} />
-    )}
-
-    {isContent && article && !noindex && (
-      <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": title,
-        "description": description,
-        "image": heroImage ? (typeof heroImage === 'string' && heroImage.startsWith('http') ? heroImage : siteUrl + heroImage) : undefined,
-        "author": article.authorId ? {
-          "@type": "Person",
-          "@id": siteUrl + "/about/authors#" + article.authorId,
-          "name": article.author,
-          "jobTitle": article.authorTitle,
-          "url": siteUrl + "/about/authors#" + article.authorId
-        } : {
-          "@type": "Organization",
-          "name": article.author || siteConfig.siteName
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": siteConfig.siteName,
-          "logo": {
-            "@type": "ImageObject",
-            "url": siteUrl + "/favicon.svg"
-          }
-        },
-        "datePublished": article.publishDate,
-        "dateModified": article.modifiedDate || article.publishDate,
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": Astro.url.href
-        },
-        "articleSection": article.section,
-        "keywords": topics.length > 0 ? topics.join(", ") : undefined
-      })} />
+    {!noindex && jsonLdGraph && (
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
     )}
 
     {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}
 
     <script is:inline>
+      // Theme bootstrap — runs synchronously in <head> to prevent FOUC.
+      // The toggle handler (window.toggleTheme) lives in SiteHeader.astro
+      // alongside the toggle button that calls it.
       const theme = (() => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) return localStorage.getItem('theme');
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
@@ -340,68 +209,13 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
       gtag('config', analyticsId);
     </script>
 
-    <script is:inline>
-      // Dropdown click-based toggle with keyboard support
-      document.addEventListener('DOMContentLoaded', function() {
-        const dropdownBtns = document.querySelectorAll('.nav-dropdown .dropbtn');
-
-        function toggleDropdown(btn) {
-          const content = btn.nextElementSibling;
-          const isShown = content.classList.contains('shown');
-          // Close all dropdowns
-          document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-          document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-          // Open this one if it wasn't open
-          if (!isShown) {
-            content.classList.add('shown');
-            btn.setAttribute('aria-expanded', 'true');
-          }
-        }
-
-        dropdownBtns.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleDropdown(btn);
-          });
-          btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggleDropdown(btn);
-            }
-            if (e.key === 'Escape') {
-              document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-              document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-              btn.setAttribute('aria-expanded', 'false');
-              btn.focus();
-            }
-          });
-        });
-
-        // Click outside closes dropdowns
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.nav-dropdown')) {
-            document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-            document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
-          }
-        });
-
-        // Escape key closes mobile menu
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            const navToggle = document.getElementById('nav-toggle');
-            if (navToggle && navToggle.checked) {
-              navToggle.checked = false;
-            }
-          }
-        });
-      });
     </script>
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
     <div class="grain-overlay"></div>
 
-    <!-- GLOBAL BOTANICAL ORNAMENTS -->
+    <!-- GLOBAL BOTANICAL ORNAMENTS (decorative, behind all content) -->
     <div class="bg-ornament p1"><PineTree size={40} color="var(--color-primary)" /></div>
     <div class="bg-ornament p2"><Leaf size={30} color="var(--color-accent)" /></div>
     <div class="bg-ornament p3"><PineTree size={50} color="var(--color-primary)" /></div>
@@ -415,151 +229,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
     <div class="bg-ornament p11"><PineTree size={35} color="var(--color-primary)" /></div>
     <div class="bg-ornament p12"><Leaf size={45} color="var(--color-accent)" /></div>
 
-    <header id="site-header" role="banner">
-      <div id="progress-container"><div id="progress-bar"></div></div>
-      <nav id="site-nav" aria-label="Main Navigation">
-        <a href="/" class="logo" aria-label={`${siteConfig.siteName} Home`}>
-          <div class="logo-icons">
-            <PineTree size={24} color="var(--color-primary)" class="logo-pine" />
-            <Leaf size={20} color="var(--color-accent)" class="logo-leaf" />
-          </div>
-          <span>{siteName}</span>
-        </a>
-
-        <div class="nav-search-desktop"><Search /></div>
-
-        <div class="nav-actions">
-          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()">
-            <div class="toggle-track">
-              <div class="toggle-thumb">
-                <span class="sun" aria-hidden="true">✦</span>
-                <span class="moon" aria-hidden="true">◆</span>
-              </div>
-            </div>
-          </button>
-          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle mobile menu" />
-          <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true" id="mobile-menu-trigger"><span></span></label>
-        </div>
-
-        <div class="nav-links" id="navigation-menu" role="navigation">
-          <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn"></button>
-          <script is:inline>
-            document.getElementById('mobile-close-btn').addEventListener('click', () => {
-              document.getElementById('nav-toggle').checked = false;
-            });
-            document.getElementById('mobile-close-btn').addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                document.getElementById('nav-toggle').checked = false;
-              }
-            });
-          </script>
-          <div class="nav-search-mobile"><Search withData={false} /></div>
-          <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
-            <div class="dropdown-content multi-column">
-              <div class="topic-group">
-                <span class="topic-header">◆ Business Essentials</span>
-                <a href="/guides/maine-dispensary-license">License Requirements</a>
-                <a href="/guides/maine-dispensary-business-plan">Business Plan</a>
-                <a href="/guides/maine-dispensary-costs">Startup Costs</a>
-                <a href="/guides/maine-cannabis-market">Market Analysis</a>
-                <a href="/guides/maine-cannabis-funding-guide">Funding & Capital</a>
-                <a href="/guides/maine-cannabis-real-estate">Real Estate</a>
-                <a href="/guides/maine-dispensary-hiring">Hiring & Staffing</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ Compliance & Legal</span>
-                <a href="/guides/maine-cannabis-regulations">Regulations</a>
-                <a href="/guides/maine-cannabis-taxation-280e">280E Taxation</a>
-                <a href="/guides/maine-cannabis-banking-solutions">Banking Solutions</a>
-                <a href="/guides/maine-cannabis-staffing-licensing">Employee Licensing</a>
-                <a href="/guides/maine-cannabis-marketing-compliance">Marketing Compliance</a>
-                <a href="/guides/maine-cannabis-events-2026">Cannabis Events</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ Operations & Technology</span>
-                <a href="/guides/maine-dispensary-security">Security Requirements</a>
-                <a href="/guides/maine-cannabis-inventory-management">Inventory & Metrc</a>
-                <a href="/guides/maine-dispensary-pos">POS Systems</a>
-                <a href="/guides/maine-dispensary-packaging">Packaging & Labeling</a>
-                <a href="/guides/maine-cannabis-delivery-rules">Delivery Rules</a>
-                <a href="/guides/maine-cannabis-edibles-compliance">Edibles Compliance</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ City & Regional Guides</span>
-                <a href="/guides/portland-dispensary-guide">Portland</a>
-                <a href="/guides/lewiston-dispensary-guide">Lewiston</a>
-                <a href="/guides/bangor-dispensary-guide">Bangor</a>
-                <a href="/guides/augusta-dispensary-guide">Augusta</a>
-                <a href="/guides/south-portland-dispensary-guide">South Portland</a>
-                <a href="/guides/kittery-dispensary-guide">Kittery</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Western Maine</span>
-                <a href="/guides/fryeburg-dispensary-guide">Fryeburg</a>
-                <a href="/guides/gray-dispensary-guide">Gray</a>
-                <a href="/guides/porter-dispensary-guide">Porter</a>
-                <a href="/guides/hiram-dispensary-guide">Hiram</a>
-                <a href="/guides/baldwin-dispensary-guide">Baldwin</a>
-                <a href="/guides/naples-dispensary-guide">Naples</a>
-                <a href="/guides/brownfield-dispensary-guide">Brownfield</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Sebago Lakes Region</span>
-                <a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region</a>
-                <a href="/guides/windham-dispensary-guide">Windham</a>
-                <a href="/guides/bridgton-dispensary-guide">Bridgton</a>
-                <a href="/guides/casco-dispensary-guide">Casco</a>
-                <a href="/guides/raymond-dispensary-guide">Raymond</a>
-                <a href="/guides/standish-dispensary-guide">Standish</a>
-                <a href="/guides/sebago-dispensary-guide">Sebago</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Lower Saco Valley</span>
-                <a href="/guides/limerick-dispensary-guide">Limerick</a>
-                <a href="/guides/buxton-dispensary-guide">Buxton</a>
-                <a href="/guides/limington-dispensary-guide">Limington</a>
-                <a href="/guides/cornish-dispensary-guide">Cornish</a>
-                <a href="/guides/parsonsfield-dispensary-guide">Parsonsfield</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Southern Maine Coast</span>
-                <a href="/guides/york-dispensary-guide">York</a>
-                <a href="/guides/wells-dispensary-guide">Wells</a>
-                <a href="/guides/ogunquit-dispensary-guide">Ogunquit</a>
-                <a href="/guides/kennebunk-dispensary-guide">Kennebunk</a>
-                <a href="/guides/biddeford-dispensary-guide">Biddeford</a>
-                <a href="/guides/saco-dispensary-guide">Saco</a>
-                <a href="/guides/old-orchard-beach-dispensary-guide">Old Orchard Beach</a>
-                <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Waldo County</span>
-                <a href="/guides/freedom-dispensary-guide">Freedom</a>
-                <a href="/guides">All 40+ City Guides</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◆ All Guides & Tools</span>
-                <a href="/all-guides">Full Resource Library</a>
-                <a href="/launch-checklist">Launch Checklist</a>
-                <a href="/start-here">Start Here Roadmap</a>
-                <a href="/find-a-dispensary">Find a Store</a>
-                <a href="/directory">Pro Directory</a>
-                <a href="/experiments">Experiments</a>
-              </div>
-              <div class="topic-group">
-                <span class="topic-header">◇ Stay Connected</span>
-                <a href="/blog">Blog & News</a>
-                <a href="/founders">Founder Stories</a>
-                <a href="/newsletter">Newsletter</a>
-              </div>
-            </div>
-          </div>
-          <div class="nav-dropdown">
-            <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾">Business Tools ▾</button>
-            <div class="dropdown-content">
-              <a href="/roi-calculator">◆ ROI Calculator</a>
-              <a href="/market-stats">◆ Market Stats</a>
-              <a href="/glossary">◆ Technical Glossary</a>
-              <a href="/resources/maine-cannabis-official-resources">◆ Official Resources</a>
-              <a href="/resources/maine-cannabis-education">◆ Education & Training</a>
-            </div>
-          </div>
-          <a href="/resources">Vendor Directory</a>
-          <a href="/about">About</a>
-        </div>
-      </nav>
-    </header>
+    <SiteHeader />
 
     <main id="main-content" role="main" tabindex="-1">
       <Breadcrumbs />
@@ -627,18 +297,7 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
 
     <div id="theater-overlay" class="theater-overlay" aria-hidden="true"></div>
 
-    <footer role="contentinfo">
-      <div class="footer-content">
-        <p>&copy; {new Date().getFullYear()} {siteName}. v1.0.6 All rights reserved.</p>
-        <nav class="footer-links" aria-label="Legal and Contact Links">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/contact">Contact Us</a>
-          <a href="/about">About</a>
-          <a href="/site-health">Site Health</a>
-        </nav>
-        <p class="disclaimer">Informational purposes only. Consult with professionals.</p>
-      </div>
-    </footer>
+    <SiteFooter />
 
     <script is:inline>
       // Scroll handler for header effects, progress bar, and back-to-top
@@ -697,637 +356,3 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
   </body>
 </html>
 
-<style is:global>
-  /**
-   * Layout.astro
-   * The structural "DNA" of the Maine Dispensary Guide.
-   */
-  :root {
-    --color-primary: #0D4E50;
-    --color-primary-dark: #083638;
-    --color-secondary: #101820; /* Deepest Navy/Charcoal */
-    --color-accent: #588157;    /* Leaf Green */
-    --color-soft-green: #7A9A6A; /* Sage - darkened to 4.5:1 on white */
-    --color-background: #F2F2E2; /* Warm Bone */
-    --color-surface: #ffffff;
-    --color-text: #101820;      /* Maximum Contrast Text */
-    --color-text-light: #4A5568;
-    --color-border: #D1D1C1;
-    --color-error: #8b3a3a;
-    --color-error-light: #ff6b6b;
-    --color-warning: #b4643c;
-    --color-warning-light: #f59e0b;
-    --color-warning-bg: #fef3c7;
-    --color-warning-text: #92400e;
-    --color-success: #10b981;
-    --color-success-light: #4ade80;
-    --color-success-bg: #ecfdf5;
-    --color-success-text: #065f46;
-    --font-family: 'Plus Jakarta Sans', sans-serif;
-    --font-serif: 'Fraunces', serif;
-    --max-width: 1200px;
-    --radius: 0.75rem;
-    --color-disclaimer-bg: #F2F2E2;
-    --color-disclaimer-border: #0D4E50;
-    --color-disclaimer-text: #101820;
-  }
-
-  [data-theme="dark"] {
-    --color-primary: #C4D4B6;
-    --color-primary-dark: #F2F2E2;
-    --color-background: #061A1B;
-    --color-surface: #0A2829;
-    --color-text: #F2F2E2;
-    --color-text-light: #B8C9B0;
-    --color-border: #1D3D3D;
-    --color-disclaimer-bg: rgba(242, 242, 226, 0.08);
-    --color-disclaimer-border: rgba(196, 212, 182, 0.3);
-    --color-disclaimer-text: #F2F2E2;
-  }
-
-  [data-theme="dark"] #site-header { background-color: rgba(5, 26, 27, 0.9); }
-  [data-theme="dark"] .nav-links a, [data-theme="dark"] .dropbtn { color: var(--color-text); }
-  [data-theme="dark"] .dropdown-content { background: var(--color-surface); border-color: var(--color-border); }
-  [data-theme="dark"] .dropdown-content a { color: var(--color-text); }
-  [data-theme="dark"] .dropdown-content a:hover { background: rgba(196, 212, 182, 0.15); }
-
-  /* Dark mode card hover states */
-  [data-theme="dark"] .hub-card:hover,
-  [data-theme="dark"] .category-card:hover,
-  [data-theme="dark"] .story-card:hover,
-  [data-theme="dark"] .quick-link-card:hover,
-  [data-theme="dark"] .new-guide-card:hover,
-  [data-theme="dark"] .fact-box:hover,
-  [data-theme="dark"] .town-card:hover,
-  [data-theme="dark"] .resource-card:hover,
-  [data-theme="dark"] .stat-block:hover,
-  [data-theme="dark"] .answer-capsule:hover,
-  [data-theme="dark"] .checklist-item:hover,
-  [data-theme="dark"] .faq-item:hover,
-  [data-theme="dark"] .infographic:hover,
-  [data-theme="dark"] .blog-post:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { font-family: var(--font-family); background-color: var(--color-background); color: var(--color-text); line-height: 1.6; scroll-padding-top: 100px; overflow-x: hidden; }
-  body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; width: 100%; }
-
-  /* Skip Navigation */
-  .skip-link {
-    position: absolute;
-    top: -100px;
-    left: 0;
-    background: var(--color-primary);
-    color: white;
-    padding: 1rem;
-    z-index: 9999;
-    transition: top 0.3s;
-  }
-  .skip-link:focus { top: 0; }
-
-  .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); opacity: 0.3; pointer-events: none; z-index: 999; }
-
-  /* Botanical Atmosphere (Dense & Tiny) */
-  .bg-ornament {
-    position: fixed;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.06;
-    filter: blur(0.5px);
-  }
-
-  [data-theme="dark"] .bg-ornament { opacity: 0.08; }
-
-  .p1 { top: 10%; left: 5%; transform: rotate(-15deg); }
-  .p2 { top: 25%; right: 8%; transform: rotate(20deg); }
-  .p3 { top: 45%; left: 12%; transform: rotate(10deg); }
-  .p4 { top: 65%; right: 15%; transform: rotate(-30deg); }
-  .p5 { bottom: 15%; left: 8%; transform: rotate(45deg); }
-  .p6 { bottom: 25%; right: 5%; transform: rotate(-10deg); }
-  .p7 { top: 5%; right: 25%; transform: rotate(15deg); }
-  .p8 { bottom: 5%; right: 20%; transform: rotate(-20deg); }
-  .p9 { top: 80%; left: 25%; transform: rotate(5deg); }
-  .p10 { top: 35%; right: 2%; transform: rotate(-15deg); }
-  .p11 { bottom: 40%; left: 2%; transform: rotate(30deg); }
-  .p12 { top: 55%; left: 25%; transform: rotate(-45deg); }
-
-  #site-header { background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-border); padding: 0.75rem 0; position: sticky; top: 0; z-index: 1000; transition: padding 0.3s ease, box-shadow 0.3s ease; }
-  #site-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 0.5rem 0; }
-
-  @media (prefers-reduced-motion: reduce) {
-    #site-header { transition: none; }
-  }
-  #progress-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
-  #progress-bar { height: 100%; background: var(--color-accent); width: 0%; transition: width 0.1s; }
-
-  #site-nav { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
-  .logo { display: flex; align-items: center; gap: 1rem; font-family: var(--font-serif); font-size: 1.25rem; font-weight: 700; color: var(--color-primary); text-decoration: none; flex-shrink: 0; }
-  .logo-icons { display: flex; align-items: center; }
-  .logo-leaf { margin-left: -10px; margin-bottom: -8px; }
-
-  .nav-search-desktop { flex: 1; max-width: 280px; min-width: 150px; display: block; }
-
-  .nav-actions { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-  .nav-toggle { display: none; }
-  .theme-toggle { background: transparent; border: none; cursor: pointer; }
-  .toggle-track { width: 52px; height: 26px; background: var(--color-border); border-radius: 13px; position: relative; }
-  .toggle-thumb { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-  [data-theme="dark"] .toggle-thumb { transform: translateX(26px); background: var(--color-primary); }
-  .sun, .moon { position: absolute; }
-  [data-theme="dark"] .sun { opacity: 0; }
-  [data-theme="dark"] .moon { opacity: 1; }
-  .sun { opacity: 1; }
-  .moon { opacity: 0; }
-
-  .nav-links { display: flex; gap: 1rem; align-items: center; flex-shrink: 0; }
-  .nav-links a, .dropbtn { color: var(--color-text); text-decoration: none; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: var(--radius); font-size: 0.875rem; white-space: nowrap; background: transparent; border: none; cursor: pointer; }
-  .nav-links a:hover, .nav-dropdown:hover .dropbtn { background: var(--color-soft-green); color: white; }
-
-  .nav-dropdown { position: relative; }
-  .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 0.75rem; padding: 0.5rem; border: 1px solid var(--color-border); }
-  .dropdown-content.multi-column { min-width: 680px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding: 1rem; }
-  .topic-group { display: flex; flex-direction: column; }
-  .topic-header { font-family: var(--font-serif); font-weight: 700; font-size: 0.75rem; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; margin-bottom: 0.25rem; }
-  .dropdown-content.multi-column a { color: var(--color-text); padding: 0.5rem 0.75rem; display: block; font-size: 0.8125rem; border-radius: 0.5rem; }
-  .nav-dropdown .dropdown-content { display: none; }
-  .nav-dropdown .dropdown-content.multi-column { display: none; }
-  .nav-dropdown .dropdown-content.shown { display: block; }
-  .nav-dropdown .dropdown-content.multi-column.shown { display: grid; }
-  .dropdown-content a { color: var(--color-text); padding: 0.75rem 1rem; display: block; font-size: 0.875rem; border-radius: 0.5rem; }
-  .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
-
-  .nav-search-mobile { display: none; }
-  .nav-toggle-label { display: none; width: 30px; height: 30px; position: relative; cursor: pointer; }
-  .nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after { display: block; background: var(--color-primary); height: 2px; width: 100%; position: absolute; left: 0; transition: transform 0.3s; }
-  .nav-toggle-label span { top: 50%; transform: translateY(-50%); }
-  .nav-toggle-label span::before { content: ''; top: -8px; }
-  .nav-toggle-label span::after { content: ''; top: 8px; }
-
-  .theater-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 8000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
-  :global(body.theater-active) .theater-overlay { opacity: 1; pointer-events: auto; }
-
-  @media (max-width: 1200px) {
-    .nav-toggle-label { display: block; }
-    .nav-search-desktop { display: none; }
-    .nav-search-mobile { display: block; width: 100%; margin-bottom: 2rem; }
-    .nav-links {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: var(--color-background);
-      transform: translateX(100%);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      flex-direction: column;
-      justify-content: flex-start;
-      padding-top: 100px;
-      align-items: center;
-      z-index: 999;
-      overflow-y: auto;
-    }
-    .nav-links a, .dropbtn { font-size: 1.25rem; width: auto; padding: 1rem 2rem; }
-    .nav-dropdown { width: 100%; text-align: center; }
-    .dropdown-content {
-      display: block;
-      position: static;
-      box-shadow: none;
-      border: none;
-      background: transparent;
-      padding: 0.5rem 0;
-    }
-    .dropdown-content.multi-column { display: block; width: 100%; }
-    .topic-group { text-align: left; margin-bottom: 1rem; }
-    .topic-header { font-size: 1rem; padding: 0.5rem 1rem; display: block; }
-    .dropdown-content.multi-column a {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      opacity: 0.8;
-    }
-    .nav-toggle:checked ~ .nav-links { transform: translateX(0); }
-
-    /* Mobile Close Button */
-    .mobile-close-btn {
-      display: none;
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: transparent;
-      border: none;
-      font-size: 2rem;
-      cursor: pointer;
-      color: var(--color-text);
-      padding: 0.5rem;
-      line-height: 1;
-    }
-    .nav-toggle:checked ~ .nav-links .mobile-close-btn { display: block; }
-
-    /* Mobile Menu Close Animation */
-    .nav-toggle:not(:checked) ~ .nav-links { transform: translateX(100%); }
-
-    /* Slide-in animation for menu items */
-    .nav-links a, .nav-dropdown .dropbtn {
-      opacity: 0;
-      transform: translateX(20px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-    .nav-toggle:checked ~ .nav-links a,
-    .nav-toggle:checked ~ .nav-links .nav-dropdown .dropbtn {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .nav-toggle:checked ~ .nav-links > *:nth-child(1) a, .nav-toggle:checked ~ .nav-links > *:nth-child(1) .dropbtn { transition-delay: 0.05s; }
-    .nav-toggle:checked ~ .nav-links > *:nth-child(2) a, .nav-toggle:checked ~ .nav-links > *:nth-child(2) .dropbtn { transition-delay: 0.1s; }
-    .nav-toggle:checked ~ .nav-links > *:nth-child(3) a { transition-delay: 0.15s; }
-    .nav-toggle:checked ~ .nav-links > *:nth-child(4) a { transition-delay: 0.2s; }
-  }
-
-  main { flex: 1; max-width: var(--max-width); width: 100%; margin: 0 auto; padding: 3rem 1.5rem; }
-  footer { background: var(--color-surface); padding: 5rem 1.5rem; text-align: center; }
-  .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; }
-  .footer-links a { color: var(--color-text-light); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
-  .footer-links a:hover { color: var(--color-primary); text-decoration: underline; }
-
-  .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; display: none; z-index: 999; }
-
-  /* Disclaimer */
-  .disclaimer {
-    background: var(--color-disclaimer-bg);
-    border: 1px solid var(--color-disclaimer-border);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--color-disclaimer-text);
-  }
-
-  footer .disclaimer {
-    margin-top: 1.5rem;
-    display: inline-block;
-  }
-
-  h1 { font-family: var(--font-serif); font-size: 3rem; color: var(--color-primary); }
-  h2 { font-family: var(--font-serif); font-size: 2rem; margin-top: 3rem; color: var(--color-primary); }
-  table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; }
-  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); min-width: 120px; }
-
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
-
-  .article-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 1rem 0;
-    margin: 1.5rem 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-  }
-
-  .article-byline {
-    font-weight: 600;
-    color: var(--color-primary);
-  }
-
-  .article-date,
-  .article-updated {
-    color: var(--color-text-light);
-  }
-
-  .article-date::before,
-  .article-updated::before {
-    content: "· ";
-  }
-
-  /* Drop Cap for Article Opening - GEO "First 200 Words" Emphasis */
-  article .article-header + section > p:first-of-type::first-letter,
-  article > p:first-of-type::first-letter {
-    font-family: var(--font-serif);
-    font-size: 3.5rem;
-    font-weight: 700;
-    float: left;
-    line-height: 0.8;
-    padding-right: 0.75rem;
-    padding-top: 0.15rem;
-    color: var(--color-primary);
-  }
-
-  /* Scroll-Triggered Reveal Animation */
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Enhanced Focus States for Accessibility */
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  /* Button Micro-Interactions */
-  a.btn-main,
-  a.btn-secondary,
-  .btn-cta,
-  button[type="submit"] {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
-  }
-
-  a.btn-main::after,
-  a.btn-secondary::after,
-  .btn-cta::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.4s, height 0.4s;
-  }
-
-  a.btn-main:active::after,
-  a.btn-secondary:active::after,
-  .btn-cta:active::after {
-    width: 300px;
-    height: 300px;
-  }
-
-  a.btn-main:active,
-  a.btn-secondary:active,
-  .btn-cta:active {
-    transform: scale(0.97);
-  }
-
-  /* Link Hover Underline Animation */
-  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a) {
-    position: relative;
-    text-decoration: none;
-  }
-
-  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a)::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--color-accent);
-    transition: width 0.3s ease;
-  }
-
-  a:not(.btn-main):not(.btn-secondary):not(.btn-cta):not(.nav-links a):hover::after {
-    width: 100%;
-  }
-
-  /* Card Hover Lift Effect — Homepage Cards */
-  .hub-card,
-  .category-card,
-  .story-card,
-  .quick-link-card,
-  .new-guide-card {
-    transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1),
-                box-shadow 0.3s cubic-bezier(0.2, 1, 0.2, 1),
-                border-color 0.3s ease;
-  }
-
-  /* Content Card Hover — Guide/Article Pages */
-  .fact-box,
-  .town-card,
-  .resource-card,
-  .stat-block,
-  .answer-capsule,
-  .disclaimer,
-  .checklist-item,
-  .faq-item,
-  .infographic,
-  .blog-post,
-  .reveal {
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-
-  /* Card Hover with translateY lift + shadow depth */
-  .hub-card:hover,
-  .category-card:hover,
-  .story-card:hover,
-  .quick-link-card:hover,
-  .new-guide-card:hover,
-  .fact-box:hover,
-  .town-card:hover,
-  .resource-card:hover,
-  .stat-block:hover,
-  .answer-capsule:hover,
-  .checklist-item:hover,
-  .faq-item:hover,
-  .infographic:hover,
-  .blog-post:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.1);
-  }
-
-  /* Subtle border-color shift on hover */
-  .disclaimer:hover {
-    border-color: var(--color-accent);
-  }
-
-  /* Smooth Scroll Behavior */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    .hub-card,
-    .category-card,
-    .story-card,
-    .quick-link-card,
-    .new-guide-card,
-    .fact-box,
-    .town-card,
-    .resource-card,
-    .stat-block,
-    .answer-capsule,
-    .disclaimer,
-    .checklist-item,
-    .faq-item,
-    .infographic,
-    .blog-post,
-    .journey-step,
-    a.btn-main,
-    a.btn-secondary,
-    .btn-cta {
-      transition: none;
-    }
-  }
-
-  /* Improved Table Styling */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    display: block;
-    overflow-x: auto;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    margin: 1.5rem 0;
-  }
-
-  th, td {
-    padding: 1rem 1.25rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    min-width: 120px;
-  }
-
-  thead {
-    background: var(--color-primary);
-    color: white;
-  }
-
-  thead th {
-    font-weight: 700;
-    font-size: 0.8125rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-
-  tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  tbody tr:hover {
-    background: rgba(88, 129, 87, 0.04);
-  }
-
-  tbody tr:nth-child(even) {
-    background: rgba(0,0,0,0.02);
-  }
-
-  tbody tr:nth-child(even):hover {
-    background: rgba(88, 129, 87, 0.06);
-  }
-
-  [data-theme="dark"] tbody tr:nth-child(even) {
-    background: rgba(255,255,255,0.02);
-  }
-
-  [data-theme="dark"] tbody tr:nth-child(even):hover {
-    background: rgba(88, 129, 87, 0.1);
-  }
-
-  /* Enhanced Heading Styles */
-  h1 {
-    font-family: var(--font-serif);
-    font-size: 3rem;
-    color: var(--color-primary);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-  }
-
-  h2 {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    margin-top: 3rem;
-    color: var(--color-primary);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    position: relative;
-  }
-
-  h2::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 3px;
-    background: var(--color-accent);
-    margin-bottom: 1rem;
-    border-radius: 2px;
-  }
-
-  h3 {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    color: var(--color-primary);
-    margin-top: 2rem;
-  }
-
-  /* Tag Badges */
-  .article-tags {
-    display: inline-flex;
-    gap: 0.5rem;
-    margin-left: 1rem;
-  }
-  .tag-badge {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 3px;
-    background: var(--color-primary);
-    color: var(--color-background);
-  }
-  .tag-policy-watch {
-    background: var(--color-accent);
-    color: var(--color-text-light);
-  }
-
-  /* Infographic Figures */
-  figure.infographic {
-    margin: 2.5rem 0;
-    text-align: center;
-  }
-
-  figure.infographic img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--color-border);
-  }
-
-  figure.infographic figcaption {
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-    font-style: italic;
-    text-align: center;
-  }
-
-  [data-theme="dark"] figure.infographic img {
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Hero Image — constrained container with proper aspect ratio */
-  .guide-hero {
-    aspect-ratio: 3 / 1;
-    overflow: hidden;
-    border-radius: var(--radius);
-    background: var(--color-border);
-    margin-bottom: 2rem;
-  }
-
-  .guide-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-</style>
