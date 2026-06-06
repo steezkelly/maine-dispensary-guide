@@ -1,0 +1,78 @@
+---
+/**
+ * MinimalLayout.astro — stripped-down HTML shell for utility pages
+ * (404, search, experiments) that don't need the full nav, footer,
+ * JSON-LD graph, GA4 inline, scroll observer, theater overlay, or
+ * back-to-top button.
+ *
+ * Used by:
+ *   - src/pages/404.astro          (this audit)
+ *
+ * Keeps the same CSS variables and theme bootstrap so design tokens
+ * stay consistent with the full Layout. Drops:
+ *   - SiteHeader / SiteFooter / breadcrumbs / guide-sidebar
+ *   - JSON-LD <script> block (noindex pages don't need it)
+ *   - Inline GA4 <script> (404 hits are noise in analytics)
+ *   - Hero image preload
+ *   - Related articles / lead-capture box / article-meta
+ *   - Scroll observer, back-to-top, theater overlay
+ *   - Verifications, social-links <link rel="me"> (still on real pages)
+ *
+ * Cuts roughly 30 KB of HTML per render, eliminates the soft-404 risk
+ * of a full nav telling Google "this is a real page with 50+ links".
+ */
+import '../styles/index.css';
+import siteConfig from '../data/site-config.json';
+import { buildFullTitle, truncateMetaDescription } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Page not found.' } = Astro.props;
+const fullTitle = buildFullTitle(title, siteConfig.siteName);
+const seoDescription = truncateMetaDescription(description);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={seoDescription} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme'))
+          return localStorage.getItem('theme');
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+        return 'light';
+      })();
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
+    <main id="main-content" role="main" tabindex="-1">
+      <slot />
+    </main>
+  </body>
+</html>
