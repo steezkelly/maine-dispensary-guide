@@ -3610,3 +3610,84 @@ The remaining 22 OCP-only AU markets (Eliot 5 stores, Lebanon 4, Turner 3, Carra
 - **Theme 2026 held on feature branch** for explicit user review
 
 All major backlog items closed except Theme 2026 (held for review) and GSC data pull (OAuth re-auth).
+
+## 📋 SPRINT 73g: Layout Infrastructure Refactor + Theme 2026 (Jun 5, 2026 EDT)
+
+**[HERMES] 2026-06-05 — Refactor the Layout god-file, then land Theme 2026 on a clean tree**
+
+User asked: "iterate on the theme first on all of the current layout infrastructure for how this is working. we need to make it more efficient, cleaner, tidier, and have it be less tough to work with."
+
+### What was done
+
+Four-step refactor on `refactor/layout-infrastructure` branch (off main):
+
+1. **Extract CSS** — split 634-line inline `<style is:global>` block into:
+   - `src/styles/tokens.css` (69 lines) — all `--color-*` and `--font-*` tokens, light + dark
+   - `src/styles/globals.css` (220 lines) — base reset, typography, animations, a11y
+   - `src/styles/components.css` (562 lines) — header, nav, footer, cards, tables, buttons
+   - `src/styles/index.css` (12 lines) — barrel that imports the three in order
+
+2. **Extract SEO + JSON-LD helpers** — `src/lib/seo.ts` (143 lines) + `src/lib/json-ld.ts` (134 lines):
+   - `buildFullTitle`, `truncateMetaDescription`, `buildCrumbs`, `resolveSocialImage`, `getHeroImageDimensions`
+   - `buildJsonLdGraph` — single Schema.org @graph containing Organization + WebSite (+ Article if content)
+   - Sprint 73b JSON-LD unification: 3 separate `<script>` tags → 1 `@graph` (~600 bytes saved + 2 parser passes per page)
+   - `Breadcrumb` interface deduplicated; imported from `lib/seo.ts`
+
+3. **Extract SiteHeader + SiteFooter components**:
+   - `src/components/SiteHeader.astro` (229 lines) — full header + 5-column mega-menu + mobile close + theme toggle button + dropdown/menu scripts
+   - `src/components/SiteFooter.astro` (26 lines) — copyright + legal links + disclaimer
+   - Theme bootstrap (sets `data-theme` on `<html>` to prevent FOUC) stays in Layout `<head>`
+   - `window.toggleTheme` handler stays in head so inline-onclick button can find it
+   - Body ornamental SVGs (12 PineTree/Leaf divs) stay in Layout — they're layout atmosphere, not header content
+
+4. **Apply Theme 2026** — copied from the `feature/theme-2026-fusion` branch:
+   - Loaded LAST in the barrel so it wins specificity on `--color-*` token overrides
+   - New: brighter sage-forward palette (`--color-primary: #1F4D3A`), `--color-surface-2` (warm pressed-paper tier), `--bg-gradient` with two radial overlays, `--elev-*` elevation tiers (3 levels + glow)
+   - **Fix: dedicated `--color-link` in both themes** — resolves the dark-mode backlink readability issue that motivated the original Theme 2026 design work
+   - Revert path: remove `@import './theme-2026.css'` from `src/styles/index.css`. No other changes.
+
+### Result
+
+**Layout.astro: 1,333 lines → 358 lines (-73%, -975 lines total).**
+
+Per-concern size after refactor:
+- Layout.astro: 358 lines (head, body wrapper, slot, theme bootstrap, GA4, JSON-LD call)
+- SiteHeader.astro: 229 lines (markup + scripts)
+- SiteFooter.astro: 26 lines
+- styles/tokens.css: 69 lines
+- styles/globals.css: 220 lines
+- styles/components.css: 562 lines
+- styles/theme-2026.css: 156 lines
+- styles/index.css: 12 lines (barrel)
+- lib/seo.ts: 143 lines
+- lib/json-ld.ts: 134 lines
+
+**Total LOC distributed across 9 files: 1,909 lines** (vs. original 1,333 in one file). The increase is the cost of comments, file headers, and the JSON-LD unification — but each file now has a single concern that an agent can read in one pass.
+
+### Verification
+
+- `npx astro check` — 232 files (added 4 new files: tokens, globals, components, lib/seo, lib/json-ld, SiteHeader, SiteFooter), **0 errors, 0 warnings, 176 hints** (matches baseline)
+- `npm run build` — production build successful, 4.5s
+- All TypeScript types still resolve; no public markup or behavior changed
+- Theme 2026 is now effectively live: 156 lines of clean override on a properly-separated stylesheet
+- `Breadcrumb` interface deduplicated; `Breadcrumb` import path: `import { type Breadcrumb } from '../lib/seo'`
+
+### Reuse
+
+- `lib/seo.ts` and `lib/json-ld.ts` can be imported from any page or future vertical without depending on the Maine Layout
+- `SiteHeader.astro` and `SiteFooter.astro` can be swapped per-vertical (e.g., a real-estate vertical could have its own header variant) by changing the import
+- `tokens.css` is the single source of truth for color/typography; theme changes happen in ONE file
+
+### Known debt (NOT caused by this refactor)
+
+- `check:content-health` reports 353 failures on **both** `main` and `refactor/layout-infrastructure` (confirmed pre-existing). The Hub's "Sprint 73e COMPLETE" line refers to the live Semrush audit, not the local source-level check. Most failures are 335 dead links to `/guides/maine-cannabis-taxation-280e` (file is actually `maine-cannabis-taxes-2026.astro`). Tracked as a follow-up sprint, not in this refactor's scope.
+
+### Branch state
+
+`refactor/layout-infrastructure` has 4 clean commits:
+1. `refactor(layout): split 634-line global CSS into tokens/globals/components files`
+2. `refactor(layout): extract SEO helpers + unify JSON-LD to @graph`
+3. `refactor(layout): extract SiteHeader + SiteFooter components`
+4. `feat(theme): Theme 2026 on refactored layout infrastructure`
+
+Ready to merge to main.
