@@ -1,0 +1,171 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cultivation & Horticulture Reviewer",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Cannabis Science"
+};
+const topics = ["terpenes", "cannabis-science", "consumer-guide"];
+
+const faqItems = [
+  { question: "What are cannabis terpenes?", answer: "Terpenes are volatile aromatic compounds that plants — including cannabis — produce as part of their secondary metabolism. They are the molecules responsible for the smell of a fresh blueberry, a pine forest, and a lemon peel, and they are the same chemistry that gives a strain of cannabis its distinctive aroma. Cannabis flower typically contains 1-3% terpenes by weight, with individual compounds present in fractions of a percent. The cannabis plant produces over 200 distinct terpenes; six of them — myrcene, β-caryophyllene, limonene, α-pinene, linalool, and terpinolene — make up the majority of what consumers encounter on a dispensary menu." },
+  { question: "Do terpenes get you high?", answer: "Not in the way THC does. Terpenes do not activate the CB1 cannabinoid receptor the way THC does, and they do not produce the euphoric &ldquo;high&rdquo; associated with cannabis intoxication on their own. What the research suggests is that specific terpenes modulate the effects of THC and other cannabinoids — a framing known as the &ldquo;entourage effect.&rdquo; The strongest clinical evidence so far is for limonene: a 2024 Johns Hopkins trial found that 15mg of d-limonene combined with 30mg of THC reduced self-reported anxiety compared to 30mg of THC alone. For most other terpenes, the mechanistic evidence is preclinical (cell cultures, rodent models) and the human-equivalent dose is unverified." },
+  { question: "Does Maine require terpene testing on cannabis products?", answer: "No. Maine's 18-691 CMR Ch. 40 testing rule mandates eight categories of analytes — cannabinoids, water activity, foreign matter, heavy metals, microbes, mycotoxins, pesticide residues, and (since 2023) ethyl acetate residuals for certain extracts. Terpene panels are not in the mandatory list. Some Maine testing facilities offer terpene analysis as an optional add-on, and some cultivators pay for it; many do not. As a result, terpene data on a Maine dispensary menu is a sign that the cultivator invested in the test, not a regulatory floor." },
+  { question: "Does indica vs. sativa predict how a strain will feel?", answer: "No — at least not in the way most consumers have been taught. The indica/sativa distinction is a botanical classification based on plant morphology (short and bushy vs. tall and narrow), not on chemical composition. The chemical composition — specifically the cannabinoid and terpene profile — is what actually drives effect, and that profile varies more within each category than between them. Modern research (Piomelli & Russo 2016; Smith et al. 2022) increasingly recommends selecting cannabis by its chemical profile, not by the strain name on the jar. See Article 4 in this pillar for the selection framework." },
+  { question: "How do I find a terpene profile at a Maine dispensary?", answer: "Three reliable paths. First, ask the budtender whether the cultivator paid for terpene testing; if they did, the COA is on file and they can read you the dominant terpenes. Second, check the dispensary's website or menu app; some Maine operators (Theory Wellness, HIGHLY Cannaco, select caregiver network brands) publish terpene panels on every product page. Third, ask for the Certificate of Analysis directly. Maine's OCP requires that the most recent COA be available to consumers on request, and Article 2 in this pillar walks through how to read one." }
+];
+---
+<Layout title="Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common" description="A primary-source, citation-backed guide to the six terpenes that dominate Maine dispensary menus. What the research says about effects, what users report, and what Maine consumers should actually do with terpene information given that Maine does not require terpene testing." article={article} topics={topics} heroImage="/images/heroes/terpene-guide-maine.jpg">
+
+<article>
+  <div class="article-header">
+    <p class="byline">By Thalia Greene · Reviewed by Margaret Finch · June 6, 2026</p>
+    <p class="subtitle">The six terpenes that show up on Maine dispensary menus, what the research actually says about each one, and why "indica vs. sativa" is the wrong question.</p>
+  </div>
+
+  <Callout title="Editorial Standard" type="note">
+    This article cites primary peer-reviewed literature where possible, flags folk-knowledge claims explicitly, and avoids the strain-name mythology common in cannabis consumer writing. The "indica vs. sativa" framing is addressed head-on in section 4. Where research is preclinical (cell culture, animal models), the article says so. Where research is in early human clinical stages, the article says so. Where a claim is folk-knowledge with no mechanistic support, the article says so.
+  </Callout>
+
+  <section>
+    <h2>What a terpene is, and why cannabis gets the spotlight</h2>
+
+    <p>Terpenes are volatile aromatic compounds that plants produce as part of their secondary metabolism. They are the molecules that make a ripe blueberry smell like a ripe blueberry, that make a pine forest smell the way it does, and that give citrus peels their sharp, bright top notes. Plants produce them for a reason: many of them are anti-feedant, anti-fungal, or anti-bacterial in their native ecological context. Cannabis is unusual only in the sheer concentration — 1-3% of the dry weight of a mature flower, with a small number of compounds dominating the profile.</p>
+
+    <p>The cannabis plant produces over 200 distinct terpenes and terpenoids. Six of them — myrcene, β-caryophyllene, limonene, α-pinene, linalool, and terpinolene — make up the majority of what consumers encounter on a dispensary menu, and they are the focus of most of the published research. The other 194-plus compounds are present in trace amounts, often below the threshold of the testing equipment most laboratories use, and their pharmacological contribution to the overall effect of the flower is not well characterized.</p>
+
+    <p>The reason terpenes get so much attention in cannabis writing is that, in the early 2010s, researchers began to articulate a hypothesis called the "entourage effect" — the idea that terpenes modulate the activity of THC and other cannabinoids in ways that meaningfully change the consumer's experience. The hypothesis was first framed in detail by Ethan Russo in a 2011 <em>British Journal of Pharmacology</em> paper, and it has been the subject of a slow accumulation of preclinical and clinical evidence since. The current state of the evidence is mixed: a few specific claims are now well-supported in human trials, a larger number are supported in animal or cell models, and a great deal of cannabis consumer writing confidently asserts effects that the research does not yet support. This article is going to walk that line carefully.</p>
+  </section>
+
+  <section>
+    <h2>The six most common cannabis terpenes</h2>
+
+    <p>For each terpene below: the dominant aroma, the non-cannabis sources you have probably encountered, what the research actually says about pharmacological effect, what cannabis users commonly report, and which cannabis cultivars are typically high in it. The "typical high" examples are drawn from PhenoDB cultivar averages, not from any specific Maine product. Maine's <a href="/guides/maine-cannabis-opt-in-tracker">regulatory framework</a> does not require terpene testing, so cultivar averages from international databases are the best reference data available.</p>
+
+    <h3>Myrcene</h3>
+    <p><strong>Aroma:</strong> Earthy, musky, slightly clove-like, with notes of ripe tropical fruit. The dominant terpene in most commercial cannabis.<br>
+    <strong>Non-cannabis sources:</strong> Mango, hops, thyme, lemongrass, cardamom. Also present in verbena and West African iboga.<br>
+    <strong>What the research says:</strong> LaVigne et al. (2021) demonstrated sedative and analgesic effects in rodent models via opioid receptor modulation. The human-equivalent dose is not established. The widely-repeated folk claim that "myrcene causes couch-lock above 0.5%" is pharmacologically indefensible at cannabis-consumption concentrations — the dose required to reach the receptor effect seen in the rodent models is far higher than what a consumer would inhale from even a myrcene-dominant strain. The folk claim is folklore, not pharmacology.<br>
+    <strong>What users commonly report:</strong> Physical relaxation, "body high," mild sedation. Whether the user reports are driven by myrcene itself, by the THC dose typically paired with myrcene-dominant flower, or by expectancy, is not settled.<br>
+    <strong>Typical-high cultivars:</strong> Many "indica"-labeled cultivars on Maine menus report high myrcene; check the COA rather than the strain name.</p>
+
+    <h3>β-Caryophyllene</h3>
+    <p><strong>Aroma:</strong> Black pepper, clove, woody, with a spicy finish. The second-most-common terpene in commercial cannabis.<br>
+    <strong>Non-cannabis sources:</strong> Black peppercorn, cloves, cinnamon, oregano, basil. The reason black pepper smells like black pepper.<br>
+    <strong>What the research says:</strong> This is the most mechanistically interesting terpene in cannabis. Gertsch et al. (2008) demonstrated in <em>PNAS</em> that β-caryophyllene is a selective agonist at the CB2 cannabinoid receptor, with a binding affinity of roughly 155 nM. That is a real pharmacological action on the same receptor system that THC targets, and it is the foundation of the "dietary cannabinoid" framing. β-caryophyllene also has documented anti-inflammatory activity in rodent models. The human clinical evidence is still early.<br>
+    <strong>What users commonly report:</strong> Calming, anti-anxiety, mild pain relief. The mechanism is consistent with the user reports in a way that myrcene's is not.<br>
+    <strong>Typical-high cultivars:</strong> Many Kush-derived cultivars, several Cookies family cultivars, and the classic "OG" lineage.</p>
+
+    <h3>Limonene</h3>
+    <p><strong>Aroma:</strong> Citrus, lemon, orange, with a bright, sharp top note. The most recognizable terpene in consumer products generally.<br>
+    <strong>Non-cannabis sources:</strong> Citrus peels (obviously), juniper, rosemary, peppermint. Used in cleaning products and aromatherapy.<br>
+    <strong>What the research says:</strong> The strongest clinical evidence of the entourage effect to date. A 2024 Johns Hopkins clinical trial (n=30) found that 15mg of d-limonene combined with 30mg of THC reduced self-reported anxiety compared to 30mg of THC alone. Preclinical work (Song et al. 2021) implicates adenosine A2A receptor modulation. Limonene also has documented anti-inflammatory and gastroprotective effects in rodent models. This is the terpene to cite when someone asks whether the entourage effect is "real."<br>
+    <strong>What users commonly report:</strong> Mood elevation, anxiety reduction, alertness. The user reports match the clinical evidence unusually well.<br>
+    <strong>Typical-high cultivars:</strong> Many "sativa"-labeled cultivars, several Haze-derived cultivars, most citrus-named cultivars (Lemon Haze, Tangie, etc.).</p>
+
+    <h3>α-Pinene</h3>
+    <p><strong>Aroma:</strong> Pine, fresh-cut wood, rosemary. The dominant terpene in pine forests and the smell of a fresh Christmas tree.<br>
+    <strong>Non-cannabis sources:</strong> Pine needles, rosemary, basil, dill, frankincense. Used in cleaning products and historically in turpentine.<br>
+    <strong>What the research says:</strong> Russo (2011) hypothesized that α-pinene's acetylcholinesterase inhibition might counteract THC-induced short-term memory impairment. The hypothesis is mechanistically plausible — the same receptor target is the mechanism of Alzheimer's drugs like donepezil — but it has not been tested in humans at cannabis-consumption doses. The claim is best cited as "hypothesis, not established."<br>
+    <strong>What users commonly report:</strong> Alertness, mental clarity, "head high." Whether the user reports are pharmacological or expectancy is unclear.<br>
+    <strong>Typical-high cultivars:</strong> Jack Herer, several Haze-derived cultivars, most pine-named cultivars. Pinene levels tend to be lower than myrcene or β-caryophyllene in most commercial flower.</p>
+
+    <h3>Linalool</h3>
+    <p><strong>Aroma:</strong> Floral, lavender, slightly sweet. The dominant terpene in lavender essential oil.<br>
+    <strong>Non-cannabis sources:</strong> Lavender (the source of the name), coriander, sweet orange, rosewood. Used in aromatherapy and as a sleep aid in folk medicine.<br>
+    <strong>What the research says:</strong> The best-characterized anxiolytic mechanism of any terpene. Harada et al. (2018) demonstrated in <em>Frontiers in Behavioral Neuroscience</em> that linalool modulates GABAergic transmission in mice through the same pathway as benzodiazepines. The mechanism is solid; the human clinical evidence is still early.<br>
+    <strong>What users commonly report:</strong> Anxiolytic, calming, sedating. The user reports match the preclinical evidence.<br>
+    <strong>Typical-high cultivars:</strong> Several Kush-derived cultivars, several "purple" cultivars, and most lavender-named cultivars. Linalool is also common in low-THC CBD-dominant flower.</p>
+
+    <h3>Terpinolene</h3>
+    <p><strong>Aroma:</strong> Complex — floral, piney, herbal, with citrus and sometimes a slightly soapy character. The hardest of the six to describe because the aroma is highly cultivar-dependent.<br>
+    <strong>Non-cannabis sources:</strong> Lilac, tea tree, nutmeg, apples, cumin. Used historically in perfumery.<br>
+    <strong>What the research says:</strong> The least-characterized of the six, but the most common dominant terpene in several commercially important cultivar families (most notably the Haze lineage and Jack Herer). The published research is sparse; what exists suggests a mild sedative and anti-proliferative effect in cell models.<br>
+    <strong>What users commonly report:</strong> Varied — terpinolene-dominant flower is sometimes reported as energizing, sometimes as calming, sometimes as both. The cultivar variability is real, and a single terpene profile does not predict effect.<br>
+    <strong>Typical-high cultivars:</strong> Jack Herer, most Haze family cultivars, several Dutch Passion originals.</p>
+  </section>
+
+  <section>
+    <h2>The entourage effect, with citations</h2>
+
+    <p>The "entourage effect" is the hypothesis that the combination of cannabinoids, terpenes, and other compounds in cannabis produces effects that are different from the effects of any single compound in isolation. The hypothesis is most commonly attributed to Ethan Russo's 2011 paper in the <em>British Journal of Pharmacology</em>, "Taming THC: potential cannabis synergy and phytocannabinoid-terpenoid entourage effects." That paper is worth reading in full if you are interested in the topic, but the key claims are these:</p>
+
+    <ul>
+      <li>β-Caryophyllene's CB2 activity is the strongest mechanistic argument for cannabinoid-terpenoid synergy.</li>
+      <li>Myrcene's sedating effect in rodent models, paired with the high concentrations of myrcene in many commercial cultivars, is the basis for the "myrcene couch-lock" claim — but the human dose is unverified.</li>
+      <li>Limonene's adenosine A2A activity is the basis for the "limonene modulates THC-induced anxiety" claim, and the 2024 Johns Hopkins clinical trial is the first direct human test of that claim.</li>
+      <li>Linalool's GABAergic activity is the most solid anxiolytic mechanism, but the human evidence is still preclinical.</li>
+    </ul>
+
+    <p>What the research has <em>not</em> established is the dose-response relationship. Cannabis consumers inhale somewhere between 5 and 50mg of total terpenes in a single consumption session, depending on flower quality, dose, and consumption method. The rodent models that established the mechanistic effects used doses orders of magnitude higher than that. The 2024 Johns Hopkins trial is the first study to use a human-consumable dose, and it is significant precisely because of that.</p>
+
+    <p>The honest framing for cannabis consumers is this: the entourage effect is a real hypothesis with real mechanistic support and a small but growing body of clinical evidence. The strong version of the claim — that specific terpene profiles produce specific, predictable effects — is supported by some of the evidence, contradicted by other parts of the evidence, and folk-knowledge in many of the forms it takes in dispensary conversations. As a consumer, the practical guidance is to use terpene data as one of several inputs, not as a reliable predictor of effect.</p>
+  </section>
+
+  <section>
+    <h2>Why "indica vs. sativa" does not predict effect</h2>
+
+    <p>The indica/sativa distinction is a botanical classification, not a chemical one. It originated in the 18th century to distinguish short, bushy <em>Cannabis indica</em> plants native to the Indian subcontinent from tall, narrow <em>Cannabis sativa</em> plants. The two were originally different species; modern genetics has confirmed they are the same species, and the distinction is now used to describe morphology and presumed chemical profile, not taxonomy.</p>
+
+    <p>The problem is that the correlation between morphology and chemistry is weak. A study by Smith et al. (2022) sampled over 100,000 cannabis cultivars and found that the within-category variation in terpene and cannabinoid profiles is much larger than the between-category variation. An "indica" cultivar is, on average, slightly more likely to be myrcene-dominant; a "sativa" cultivar is, on average, slightly more likely to be limonene- or terpinolene-dominant. But the average is misleading because the standard deviations overlap substantially.</p>
+
+    <p>Piomelli and Russo (2016) and a number of other researchers have argued, persuasively, that selecting cannabis by chemical profile rather than by strain name produces more predictable effects. The practical implication is that "indica" on a jar tells you what the plant looked like in the grow room, not what the consumer will experience. The chemical profile — published as a COA, when one exists — is a much better predictor.</p>
+  </section>
+
+  <section>
+    <h2>What this means for Maine consumers</h2>
+
+    <p>Maine's regulatory framework makes terpene data harder to access than it is in some other states. The OCP's <a href="/guides/maine-ocp-license-map">testing requirements</a> under 18-691 CMR Ch. 40 mandate eight categories of analyte testing — cannabinoids, water activity, foreign matter, heavy metals, microbes, mycotoxins, pesticide residues, and (since 2023) ethyl acetate residuals for certain extract types. Terpene testing is not in the mandatory list.</p>
+
+    <p>What that means in practice:</p>
+
+    <ul>
+      <li>Some Maine testing facilities offer terpene panels as an add-on. Most do.</li>
+      <li>Some Maine cultivators pay for terpene testing. Some do not.</li>
+      <li>Some Maine dispensaries publish terpene data on their product pages. Some do not.</li>
+      <li>The OCP's <a href="/guides/maine-cannabis-taxes-2026">open testing data portal</a> at maine.gov/dafs/ocp/open-data/adult-use/testing-data publishes the mandatory test results, but not the optional terpene panels.</li>
+    </ul>
+
+    <p>For consumers, the practical consequence is that terpene information is a "you have to ask for it" feature, not a "it's on the menu" feature. The good news is that the OCP requires every licensed dispensary to maintain a Certificate of Analysis for every batch, and the budtender at any licensed store can pull the COA on request. The better Maine dispensaries — Theory Wellness, HIGHLY Cannaco, select caregiver network brands, and a handful of others — publish terpene data on their product pages or menus. The less-good dispensaries do not.</p>
+  </section>
+
+  <section>
+    <h2>How to ask for terpene data at your Maine dispensary</h2>
+
+    <p>If you are at a Maine dispensary and you want terpene data, the conversation goes like this:</p>
+
+    <p><strong>You:</strong> "Do you have the COA for this batch?"<br>
+    <strong>Budtender:</strong> Will likely say yes, and either pull it up on the in-store terminal or print it for you.</p>
+
+    <p>The COA will list the mandatory panels (cannabinoids, microbes, etc.) and may or may not list a terpene panel. If the COA has a terpene section, it will list each of the detected terpenes as a percentage of dry weight, with a "total terpene" line at the bottom. If it does not, the cultivator did not pay for terpene testing, and the budtender cannot tell you what the terpene profile is.</p>
+
+    <p>If you want to be a more sophisticated consumer of terpene information, focus on the <em>top three</em> terpenes by percentage. The top three typically account for 60-80% of the total terpene content, and the secondary and tertiary compounds have diminishing predictive value. A cultivar that is, say, "0.8% myrcene, 0.4% β-caryophyllene, 0.2% limonene" is going to have a substantially different effect profile than one that is "0.3% myrcene, 0.2% β-caryophyllene, 0.7% limonene," and the budtender can usually help you translate the numbers into an effect description if you ask.</p>
+  </section>
+
+  <Callout title="Maine-Specific Note" type="note">
+    Because Maine does not require terpene testing, terpene data on a Maine product label is a signal of cultivator investment, not a regulatory floor. The licensed Maine cultivators that publish terpene data — Theory Wellness, HIGHLY Cannaco, select East Coast cannabis brands — are doing so as a quality and transparency differentiator. When you see terpene data on a Maine product, treat it as the cultivator telling you they care about the chemical profile of their flower. When you don't see it, the product may still be excellent; you just don't have the same data.
+  </Callout>
+
+  <section class="related-guides">
+    <h2>Related guides from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying cannabis in Maine: humidity, equipment, and cure</a> — covers terpene preservation during the drying and curing process</li>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide 2026</a> — covers cultivar selection and the basics of growing for terpene expression</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor cannabis grow setup and cost for Maine 2026</a> — covers environmental control and how it affects terpene retention</li>
+      <li><a href="/blog/best-live-rosin-maine">Best live rosin in Maine</a> — the concentrate format that most directly preserves the original terpene profile of the flower</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <p class="byline-end"><em>Thalia Greene is the Cultivation & Horticulture Reviewer for Maine Dispensary Guide. Margaret Finch reviewed this article for editorial accuracy and disclosure compliance.</em></p>
+
+</article>
+
+</Layout>
