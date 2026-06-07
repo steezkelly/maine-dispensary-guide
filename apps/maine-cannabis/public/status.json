@@ -1,0 +1,88 @@
+{
+  "generated": "2026-06-07T21:45:13.821Z",
+  "status": "warn",
+  "pages": {
+    "htmlCount": 224,
+    "sitemapUrlCount": 221
+  },
+  "contentHealth": {
+    "hasBaseline": true,
+    "baselineTotal": 23,
+    "currentTotal": 23,
+    "failures": {
+      "noindex pages in sitemap": 4,
+      "OG image dimensions": 1,
+      "duplicate hero image content": 18
+    },
+    "regressions": []
+  },
+  "assets": {
+    "checked": 1396,
+    "broken": 0,
+    "samples": []
+  },
+  "git": {
+    "lastCommit": "e5c90ff",
+    "uncommittedCount": 27,
+    "branch": "main"
+  },
+  "hub": {
+    "lastUpdated": "2026-06-07 EDT",
+    "claim": {
+      "found": true,
+      "score": 100,
+      "max": 100,
+      "grade": "A"
+    }
+  },
+  "checks": [
+    {
+      "name": "dist/ exists",
+      "pass": true,
+      "detail": "224 html pages"
+    },
+    {
+      "name": "sitemap-0.xml present",
+      "pass": true,
+      "detail": "221 URLs"
+    },
+    {
+      "name": "sitemap ↔ html page count",
+      "pass": true,
+      "detail": "sitemap=221 html=224 delta=3"
+    },
+    {
+      "name": "content-health baseline present",
+      "pass": true,
+      "detail": "baseline=23 current=23"
+    },
+    {
+      "name": "no content-health regressions",
+      "pass": true,
+      "detail": "no regressions"
+    },
+    {
+      "name": "broken image refs",
+      "pass": true,
+      "detail": "1396 refs checked, 0 broken",
+      "severity": "ok"
+    },
+    {
+      "name": "git working tree",
+      "pass": true,
+      "detail": "27 uncommitted files (branch: main)",
+      "severity": "warn"
+    },
+    {
+      "name": "Hub header claim matches reality",
+      "pass": true,
+      "detail": "100/100 (A)"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "warnings": 1
+  }
+}

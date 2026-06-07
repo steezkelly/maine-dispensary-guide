@@ -1,0 +1,107 @@
+---
+/**
+ * LeadFormTracker.astro
+ *
+ * Instruments a Formspree-backed lead-capture form so a successful submission
+ * fires a GA4 event we can use to measure conversion. Without this, MDG has
+ * 5 form endpoints that POST to Formspree and zero visibility into which
+ * forms are actually being used, what stages operators are at, or which
+ * services they're requesting.
+ *
+ * Usage in a page that contains a form:
+ *   <LeadFormTracker formSelector=".lead-capture-form" formName="download_checklist" />
+ *
+ * Props:
+ *   formSelector  REQUIRED. CSS selector for the <form> element. Each MDG form
+ *                 has a unique class (e.g. .lead-capture-form, .referral-form,
+ *                 .newsletter-form, .founder-bible-form).
+ *   formName      REQUIRED. A snake_case event label. Used in GA4 as
+ *                 `lead_capture.form_name`. Keep it stable — GA4 reports will
+ *                 pivot on this string.
+ *   trackFields   OPTIONAL. Array of field names whose values should be
+ *                 included in the GA4 event. Defaults to
+ *                 ['stage', 'interest', 'service']. All optional; missing
+ *                 fields are simply omitted from the event payload.
+ *
+ * What it does:
+ *   - Listens for `submit` events on the matched form(s).
+ *   - Reads each tracked field from the form before submission.
+ *   - Fires `gtag('event', 'lead_capture', { form_name, stage, interest,
+ *     service, page_path })` if gtag is available.
+ *   - Does NOT preventDefault or otherwise interfere with the Formspree POST.
+ *     The form submits normally; the GA4 event fires alongside it.
+ *   - Wraps everything in try/catch so a tracking failure can never break
+ *     the actual lead capture.
+ *
+ * Why client-side (not server-side) tracking:
+ *   - Formspree POSTs are external. There is no server-side hook on MDG
+ *     (static site) to observe the submission.
+ *   - gtag is loaded on every page by Layout.astro.
+ *   - The submit event fires before the form is POSTed, so we capture intent
+ *     even if Formspree later rejects the submission. (Treat the GA4 event
+ *     as "user clicked submit on a lead form", not "Formspree accepted".)
+ *
+ * Verification: build the site, open a form page, fill it out, submit. In
+ * DevTools console, look for `gtag('event', 'lead_capture', ...)`. Or, in
+ * GA4 DebugView (or GA4 Realtime), filter on event_name = "lead_capture".
+ *
+ * Sprint 76 observability: closes gap #4 from the 2026-06-07 MDG tracking
+ * audit. Prior state: 5 Formspree forms, 0 GA4 conversion events.
+ */
+
+interface Props {
+  formSelector: string;
+  formName: string;
+  trackFields?: string[];
+}
+
+const { formSelector, formName, trackFields = ['stage', 'interest', 'service'] } = Astro.props;
+---
+
+<script is:inline define:vars={{ formSelector, formName, trackFields }}>
+  (function () {
+    try {
+      // Defer until DOM is ready so we can find the form(s).
+      function init() {
+        var forms = document.querySelectorAll(formSelector);
+        if (!forms || forms.length === 0) {
+          // Silent: page may not contain the form (e.g. partial renders).
+          return;
+        }
+        forms.forEach(function (form) {
+          if (form.__mdgLeadTracked) return; // idempotent across re-runs
+          form.__mdgLeadTracked = true;
+          form.addEventListener('submit', function () {
+            try {
+              if (typeof window.gtag !== 'function') return;
+              var payload = {
+                form_name: formName,
+                page_path: window.location.pathname,
+              };
+              trackFields.forEach(function (name) {
+                try {
+                  var el = form.elements.namedItem(name);
+                  if (el && 'value' in el && el.value) {
+                    payload[name] = el.value;
+                  }
+                } catch (_) {
+                  // Skip this field; continue with the rest.
+                }
+              });
+              window.gtag('event', 'lead_capture', payload);
+            } catch (_) {
+              // Tracking must never break the actual form submit.
+            }
+          });
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    } catch (_) {
+      // Component-level init failure is silent by design.
+    }
+  })();
+</script>
