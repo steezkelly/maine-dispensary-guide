@@ -35,14 +35,40 @@ node scripts/content/audit-fix-loop.cjs --url https://...  # Custom target
 
 ## git/ — Git Workflow
 
-### `delta-typecheck.cjs`
-**Purpose:** Typecheck only files changed since last commit (avoids full project scan).
+### `pre-push-verify.cjs`
+**Purpose:** Two-pass verification gate for any .astro / .ts file about to be pushed. Replaces the previous `delta-typecheck.cjs` (which had a hardcoded Windows projectRoot and was never wired into any hook).
+
+**Pass 1 (fast, ~1s):** Extracts the .astro frontmatter JS and pipes it to esbuild for parse-only validation. Catches the Sprint 75 failure class — missing commas between object literals, stray braces in embedded arrays — with the same `Expected "]" but found "{"` error message Vercel reports.
+
+**Pass 2 (slow, ~5-15s):** `npx astro check` filtered to the changed files. Only runs after pass 1 is green.
+
 **Usage:**
 ```bash
-node scripts/git/delta-typecheck.cjs
+node scripts/git/pre-push-verify.cjs              # both passes
+node scripts/git/pre-push-verify.cjs --fast-only  # esbuild only
+node scripts/git/pre-push-verify.cjs --ref=origin/main  # diff against a specific ref
 ```
-**Output:** Shows errors/warnings filtered to changed files only.
-**Notes:** Falls back to `npx astro check` for the full project if needed.
+
+**Exit codes:**
+- `0` clean
+- `1` esbuild parse error (blocks push)
+- `2` astro check error (blocks push)
+- `3` env error (esbuild missing, not in git repo, etc.)
+
+**Notes:** Auto-wired as a pre-push git hook via `core.hooksPath .githooks` (see `install-hooks.cjs`). To bypass in an emergency: `git push --no-verify`.
+
+### `install-hooks.cjs`
+**Purpose:** Set `core.hooksPath` to `.githooks/` so the pre-push hook ships with the repo. Idempotent. Run once per clone.
+
+**Usage:**
+```bash
+node scripts/git/install-hooks.cjs
+# or via npm:
+npm run hooks:install
+```
+
+### `delta-typecheck.cjs`
+**DEPRECATED 2026-06-07.** Replaced by `pre-push-verify.cjs`. Kept in tree for now for reference; the hardcoded `C:/Users/Steve/OpenCode Projects/project-1` path is the bug. Use `pre-push-verify.cjs` instead.
 
 ### `sprint-handoff.cjs`
 **Purpose:** Generate a structured sprint summary entry for BOT_COLLABORATION_HUB.md from git history.

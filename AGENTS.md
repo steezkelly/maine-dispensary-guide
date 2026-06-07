@@ -22,7 +22,9 @@ npx astro check                      # Type check all files
 node scripts/link/link-architect.cjs   # Glossary term linker
 node scripts/search/brave-search.cjs "q"    # Primary web search
 node scripts/search/wikipedia-search.cjs "q"  # Research (free, no key)
-node scripts/git/delta-typecheck.cjs  # Typecheck only changed files
+node scripts/git/pre-push-verify.cjs          # Run pre-push verify gate (esbuild + astro check)
+node scripts/git/pre-push-verify.cjs --fast-only   # Fast pass only (esbuild parse, ~1s)
+node scripts/git/install-hooks.cjs            # Install pre-push hook (one-time per clone)
 node scripts/git/sprint-handoff.cjs   # Generate Hub entry from git history
 node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
@@ -59,6 +61,7 @@ project-1/
 │       ├── blog/                 # Blog posts (6 articles)
 │       └── about/                # Team and author pages
 ├── scripts/                      # 23 CLI tools (search, link-architect, health checks)
+├── .githooks/                    # Pre-push verify hook (esbuild + astro check)
 ├── reference/                    # Technical docs and config guides
 ├── public/                       # Favicons, OG images
 ├── astro.config.mjs              # Static output, Vercel adapter, trailingSlash: never

@@ -11,7 +11,10 @@
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "health-check": "turbo run health-check",
-    "ci-check": "turbo run ci-check"
+    "ci-check": "turbo run ci-check",
+    "verify:pre-push": "node scripts/git/pre-push-verify.cjs",
+    "verify:pre-push:fast": "node scripts/git/pre-push-verify.cjs --fast-only",
+    "hooks:install": "node scripts/git/install-hooks.cjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

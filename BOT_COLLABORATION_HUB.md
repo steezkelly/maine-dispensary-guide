@@ -1,8 +1,10 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
+
+**Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
 |**Last updated: 2026-06-07 EDT** (Sprint 77 form conversion instrumentation: closed gap #4 from the 2026-06-07 MDG tracking audit. **State before**: 5 Formspree-backed lead-capture forms (homepage newsletter, `/newsletter` inline signup, `/download-checklist`, `/download/founders-bible`, `/resources` referral) with **0 GA4 conversion events** — Formspree POSTs are external to the static site so the team had no visibility into how many leads were captured, which form performed best, what stage operators were at, or which referral services were requested. `LEAD_CAPTURE_SETUP.md` had said "MONETIZATION PLANNED — Not Yet Implemented" for 60+ days. **Fix**: new `apps/maine-cannabis/src/components/LeadFormTracker.astro` (~140 lines) emits an `is:inline` script that binds to a CSS-selector-matched form, listens for `submit`, and fires `gtag('event', 'lead_capture', { form_name, page_path, stage, interest, service })` from the captured form fields. Wired into all 5 form pages with stable `form_name` values: `newsletter_homepage`, `newsletter_inline`, `download_checklist`, `founders_bible`, `referral_request`. **Verified end-to-end**: built clean (5.1s), all 5 rendered HTML pages contain the gtag call, the form_name value is correctly substituted, the form selector matches the actual form class on the page, GA4 loader + gtag function are present, content-health regression check at baseline (23), check:hrefs clean, check:build-warnings clean, check:sitemap-xml clean. **Defensive design**: try/catch wrapped so a tracking failure can never break the actual form submit, idempotent across re-runs, no preventDefault (Formspree POST still works normally), event fires on click of submit so we capture intent even if Formspree later rejects. **Bonus cleanup**: removed a pre-existing duplicate `</Layout>` at the bottom of `newsletter.astro` (lines 538/540). **How to verify on production**: in GA4 DebugView, filter on event_name = "lead_capture"; the form_name dimension distinguishes which form converted. After 7 days of traffic, run a GA4 exploration pivot on form_name × stage × interest to see which form has the highest-quality leads. **Cost**: $0/mo. Lead-capture ROI now visible in the same dashboard as the rest of MDG's traffic. Prior Sprint 76 observability add (CI regression detection + email-dashboard 404 fix) preserved.)
-Sprint 76 observability: closed 2 critical gaps surfaced by the 2026-06-07 MDG tracking audit. **Fix 1**: `admin/email-dashboard.astro` lived at repo root and was never built — `curl https://mainedispensaryguide.com/admin/email-dashboard/` was returning 404. Moved to `apps/maine-cannabis/src/pages/admin/email-dashboard.astro` so Astro's page discovery picks it up; added `<meta name="robots" content="noindex,nofollow">` to keep it out of search. The dashboard now serves and the 5-row `data/email-tracking.json` becomes visible. **Fix 2**: CI ran only typecheck + build + sitemap-XML check — the 14-invariants `check:content-health.cjs` (covering trailing slashes, broken rendered media, dead internal links, malformed backref hrefs, noindex-in-sitemap, OG image dimensions, sitemap XML entities, duplicate hero hashes, fake anchor buttons, typo literals, malformed frontmatter) and the cheaper `check:hrefs` and `check:build-warnings` scripts were run only by hand at sprint close. Added 3 new CI steps to `.github/workflows/ci.yml`: `check:hrefs` (cheap pre-build pass, hard-fails on any new occurrence), `check:build-warnings` (post-build re-scan for CSS/HTML syntax warnings), and `check:content-health-regression` (runs the 14-check suite, compares per-check failure counts to a stored baseline, **fails on regression, warns on improvement, ignores stable baseline**). New `apps/maine-cannabis/scripts/content/check-content-health-regression.cjs` (130 lines) and `.content-health-baseline.json` (initial: 4 failing checks, 24 total failures) capture known/accepted failures (duplicate hero hashes for cross-page fallback pairs, 404 missing og:image, noindex-in-sitemap for /download/*, 1 build-time CSS warning). The regression pattern matters because Sprint 75's parallel session shipped a 12-syntax-error file that the typechecker caught eventually but the content suite would have flagged immediately. All 4 checks verified locally: check:hrefs clean, check:build-warnings clean, check:content-health-regression at baseline (24), email-dashboard built (9,165 bytes) with noindex tag. Sprint 73 100/100 SEO score preserved.)
+Sprint 76 observability: closed 2 critical gaps surfaced by the 2026-06-07 MDG tracking audit. **Fix 1**: `admin/email-dashboard.astro` lived at repo root and was never built — `curl https://mainedispensaryguide.com/admin/email-dashboard/` was returning 404. Moved to `apps/maine-cannabis/src/pages/admin/email-dashboard.astro` so Astro's page discovery picks it up; added `<meta name="robots" content="noindex,nofollow">` to keep it out of search. The dashboard now serves and the 5-row `data/email-tracking.json` becomes visible. **Fix 2**: CI ran only typecheck + build + sitemap-XML check — the 14-invariants `check:content-health.cjs` (covering trailing slashes, broken rendered media, dead internal links, malformed backref hrefs, noindex-in-sitemap, OG image dimensions, sitemap XML entities, duplicate hero hashes, fake anchor buttons, typo literals, malformed frontmatter) and the cheaper `check:hrefs` and `check:build-warnings` scripts were run only by hand at sprint close. Added 3 new CI steps to `.github/workflows/ci.yml`: `check:hrefs` (cheap pre-build pass, hard-fails on any new occurrence), `check:build-warnings` (post-build re-scan for CSS/HTML syntax warnings), and `check:content-health-regression` (runs the 14-check suite, compares per-check failure counts to a stored baseline, **fails on regression, warns on improvement, ignores stable baseline**). New `apps/maine-cannabis/scripts/content/check-content-health-regression.cjs` (130 lines) and `.content-health-baseline.json` (initial: 4 failing checks, 23 total failures) capture known/accepted failures (duplicate hero hashes for cross-page fallback pairs, 404 missing og:image, noindex-in-sitemap for /download/*, 1 build-time CSS warning). The regression pattern matters because Sprint 75's parallel session shipped a 12-syntax-error file that the typechecker caught eventually but the content suite would have flagged immediately. All 4 checks verified locally: check:hrefs clean, check:build-warnings clean, check:content-health-regression at baseline (23), email-dashboard built (9,165 bytes) with noindex tag. Sprint 73 100/100 SEO score preserved.)
 
 ---
 
@@ -5441,21 +5443,37 @@ city guides.
 
 **Total session commit count: 28+**
 
-**Final cumulative site state (verified live at mainedispensaryguide.com):**
+**Final cumulative site state (verified live at mainedispensaryguide.com, 2026-06-07 audit):**
 - 109 city guides (was 86 at start of session)
 - 156 total sitemap URLs across /guides/ (109 city + 47 technical
   + region guides)
 - 221 total sitemap URLs site-wide
-- 187 active retail stores (per OCP April 2026 CSV)
-- 65 active-store municipalities
-- 374,245 words published
-- 5 byline authors (Steve Kelly 34, Calvin Waters 27, Margaret Finch
-  26, Eliot Nash 112, Thalia Greene 6)
-- 0 typecheck errors / 0 warnings
-- 0 broken cross-references across all 109 city guides
-- 0 broken blog → guides references
+- 187 active retail stores (per OCP April 2026 CSV; verified in
+  market-stats.astro, market.astro, delivery-rules.astro,
+  how-to-open.astro, index.astro)
+- 65 active-store municipalities (verified textually; "65 active
+  adult-use" appears in 4+ guide pages)
+- ~336,000–540,000 words published depending on counting method
+  (335,493 body-text-only via script/style/html strip; 346,004
+  markup-stripped; 540,456 raw `wc -w` including all HTML/JSX)
+- 5 byline authors with current counts (verified by re-grep
+  2026-06-07): Steve Kelly 24, Calvin Waters 27, Margaret Finch
+  25, Eliot Nash 111, Thalia Greene 6
+  (the older "Steve Kelly 34 / Margaret Finch 26 / Eliot Nash 112"
+  counts in earlier Hub entries are stale — the 24/25/111 set
+  reflects the current post-Sprint-74a article frontmatter)
+- 0 typecheck errors / 0 warnings / 259 hints (286 files; `npx
+  astro check` confirmed 0/0/259 at audit time)
+- 0 broken cross-references across all 109 city guides (verified
+  by grep over all 109 files for `*-dispensary-guide` hrefs)
+- 0 broken blog → guides references (not re-verified at this
+  audit, inherited from Sprint 73n 190-fix pass)
 - 0 stale excise tax / grace period claims (all corrected to
   per-weight excise + 30-day product-return exemption window)
+- Content-health baseline: 4 failing checks / 23 total failures
+  captured in `apps/maine-cannabis/scripts/content/.content-health-baseline.json`
+  (Hub's earlier "24 total failures" line in the top summary
+  was off by 1 — correct value is 23)
 
 ---
 

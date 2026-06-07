@@ -22,7 +22,7 @@ npx astro check                      # Type check all files
 node scripts/link/link-architect.cjs   # Glossary term linker
 node scripts/search/brave-search.cjs "q"    # Primary web search
 node scripts/search/wikipedia-search.cjs "q"  # Research (free, no key)
-node scripts/git/delta-typecheck.cjs  # Typecheck only changed files
+node scripts/git/pre-push-verify.cjs  # Pre-push verify gate (esbuild + astro check)
 node scripts/git/sprint-handoff.cjs   # Generate Hub entry from git history
 node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
