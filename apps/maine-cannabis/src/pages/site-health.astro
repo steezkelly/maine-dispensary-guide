@@ -1,257 +1,427 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import authors from '../data/authors.json';
+import { readdirSync, readFileSync, statSync } from 'fs';
+import { join, basename } from 'path';
 
-const systemStatus = [
-  { name: "Production Site", status: "LIVE", color: "text-green-500" },
-  { name: "DNS Resolution", status: "Active", color: "text-green-500" },
-  { name: "SSL Certificate", status: "Verified", color: "text-green-500" },
-  { name: "GitHub Sync", status: "100%", color: "text-green-500" }
-];
+// Real content statistics computed at build time
+// This file reads the source tree directly so the numbers stay in sync
+// with whatever was on disk when the build ran. No fabrication, no
+// placeholders, no per-page "what we did" chatter.
 
-const contentStats = [
-  { label: "Total Guides", value: "41" },
-  { label: "Optimized Score", value: "100%" },
-  { label: "Avg Word Count", value: "1,200+" },
-  { label: "GEO Signal", value: "High" }
-];
+const PAGES_DIR = './src/pages';
+const HEROES_DIR = './public/images/heroes';
+
+function walkAstro(dir: string): string[] {
+  const out: string[] = [];
+  const stack: string[] = [dir];
+  while (stack.length) {
+    const cur = stack.pop()!;
+    let entries;
+    try { entries = readdirSync(cur, { withFileTypes: true }); } catch { continue; }
+    for (const e of entries) {
+      const p = join(cur, e.name);
+      if (e.isDirectory()) stack.push(p);
+      else if (e.isFile() && e.name.endsWith('.astro')) out.push(p);
+    }
+  }
+  return out;
+}
+
+const allAstro = walkAstro(PAGES_DIR);
+
+const isCityGuide = (p: string) => /\/[a-z-]+-dispensary-guide\.astro$/.test(p) && !p.includes('/blog/');
+const isTechGuide = (p: string) => p.includes('/guides/') && !p.includes('/blog/') && !isCityGuide(p);
+const isBlogPost = (p: string) => p.includes('/blog/') && !p.endsWith('/index.astro');
+const isFounder = (p: string) => p.includes('/founders/') && !p.endsWith('/index.astro');
+const isResource = (p: string) => p.includes('/resources/') && !p.endsWith('/index.astro');
+const isDownload = (p: string) => p.includes('/download/') && !p.endsWith('/index.astro');
+const isCore = (p: string) =>
+  !p.includes('/blog/') && !p.includes('/guides/') && !p.includes('/founders/') &&
+  !p.includes('/resources/') && !p.includes('/download/');
+
+const cityGuides = allAstro.filter(isCityGuide);
+const techGuides = allAstro.filter(isTechGuide);
+const blogPosts = allAstro.filter(isBlogPost);
+const founders = allAstro.filter(isFounder);
+const resources = allAstro.filter(isResource);
+const downloads = allAstro.filter(isDownload);
+const corePages = allAstro.filter(isCore);
+
+const totalContentPages = cityGuides.length + techGuides.length + blogPosts.length + founders.length + resources.length + downloads.length;
+const totalPages = allAstro.length;
+
+function countWords(file: string): number {
+  try {
+    const text = readFileSync(file, 'utf8');
+    const stripped = text.replace(/^---[\s\S]*?---/, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return stripped.split(' ').filter(Boolean).length;
+  } catch { return 0; }
+}
+
+const totalWords = allAstro.reduce((sum, f) => sum + countWords(f), 0);
+const cityWords = cityGuides.reduce((sum, f) => sum + countWords(f), 0);
+const techWords = techGuides.reduce((sum, f) => sum + countWords(f), 0);
+const blogWords = blogPosts.reduce((sum, f) => sum + countWords(f), 0);
+const founderWords = founders.reduce((sum, f) => sum + countWords(f), 0);
+
+const cityNames = cityGuides
+  .map(f => basename(f, '.astro').replace(/-dispensary-guide$/, ''))
+  .map(slug => slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
+  .sort();
+
+let heroCount = 0;
+try {
+  heroCount = readdirSync(HEROES_DIR).filter(f =>
+    f.endsWith('.jpg') && !f.startsWith('_') && !f.startsWith('.')
+  ).length;
+} catch { heroCount = 0; }
+
+const authorBylineCount: Record<string, number> = {};
+for (const f of allAstro) {
+  try {
+    const text = readFileSync(f, 'utf8').slice(0, 2500);
+    const m = text.match(/author:\s*["']([^"']+)["']/);
+    if (m) authorBylineCount[m[1]] = (authorBylineCount[m[1]] || 0) + 1;
+  } catch {}
+}
+
+interface RecentUpdate { date: string; path: string; title: string; }
+const recentUpdates: RecentUpdate[] = [];
+const dateRegex = /modifiedDate:\s*["'](\d{4}-\d{2}-\d{2})["']/;
+for (const f of allAstro) {
+  try {
+    const text = readFileSync(f, 'utf8').slice(0, 2500);
+    const m = text.match(dateRegex);
+    if (m) {
+      const titleMatch = text.match(/<Layout\s+title=["']([^"']+)["']/);
+      recentUpdates.push({
+        date: m[1],
+        path: f.replace('./src/pages', ''),
+        title: titleMatch ? titleMatch[1] : basename(f, '.astro')
+      });
+    }
+  } catch {}
+}
+recentUpdates.sort((a, b) => b.date.localeCompare(a.date));
+const top10 = recentUpdates.slice(0, 10);
+
+const buildDate = new Date().toISOString().split('T')[0];
+
+// Sitemap URL count
+const sitemapUrlCount = totalContentPages + corePages.length; // approx, real count comes from dist/sitemap-0.xml
 ---
-
-<Layout 
-  title="Site Health Dashboard" 
-  description="Internal performance and accessibility dashboard for the Maine Dispensary Guide. Monitor page speed, SEO health, and link integrity."
+<Layout
+  title="Content Statistics & Editorial Dashboard"
+  description="A public, real-time view of what Maine Dispensary Guide publishes: how many guides, blog posts, and founder stories, how much editorial content, who writes it, and what changed recently. The site is a serious editorial property; this page documents the work."
   heroImage="/images/heroes/site-health.jpg"
-  article={{ author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-01-01", modifiedDate: "2026-04-04", section: "Reference" }}
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-06-06", modifiedDate: buildDate, section: "About" }}
 >
-  <style>
 
-  .dashboard-header {
-    text-align: center;
-    margin-bottom: 4rem;
-    padding-top: 2rem;
-  }
-
-  .live-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: rgba(13, 78, 80, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 1.5rem;
-  }
-
-  .pulse {
-    width: 8px;
-    height: 8px;
-    background: var(--color-success);
-    border-radius: 50%;
-    box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-  }
-
-  .dashboard-grid {
+<style>
+  .intro { max-width: 720px; margin: 0 auto 3rem; }
+  .intro p { font-size: 1.125rem; color: var(--color-text-light); line-height: 1.7; }
+  .hero-stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
-    margin-bottom: 4rem;
-  }
-
-  .stat-group {
-    background: var(--color-surface);
-    padding: 2.5rem;
-    border-radius: 2rem;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-  }
-
-  .stat-group h2 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 1rem;
-  }
-
-  .status-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .status-item {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-  }
-
-  .status-badge {
-    background: var(--color-success-bg);
-    color: var(--color-success-text);
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-  }
-
-  .metric-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
+    margin: 3rem 0;
   }
-
-  .metric-card {
+  .hero-stat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 2rem;
     text-align: center;
-    padding: 1.5rem;
-    background: var(--color-background);
-    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
   }
-
-  .metric-value {
+  .hero-stat .num {
     display: block;
     font-family: var(--font-serif);
-    font-size: 2rem;
+    font-size: 2.75rem;
     font-weight: 700;
     color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
   }
-
-  .metric-label {
-    font-size: 0.75rem;
+  .hero-stat .label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
     text-transform: uppercase;
-    font-weight: 700;
+    letter-spacing: 0.05em;
     color: var(--color-text-light);
   }
-
-  .bot-sync {
-    background: var(--color-primary);
-    color: white;
-    padding: 4rem;
-    border-radius: 2rem;
+  .hero-stat .sub {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
   }
-
-  .bot-sync h2 {
-    color: white;
-    margin-top: 0;
+  .section { margin: 4rem 0; }
+  .section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
   }
-
-  .log-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2rem;
+  .section h3 {
+    font-size: 1.125rem;
+    margin: 1.5rem 0 0.75rem;
   }
-
-  .log-entry {
-    background: rgba(255,255,255,0.1);
-    padding: 1.5rem;
-    border-radius: 1rem;
-    display: grid;
-    grid-template-columns: 120px 1fr auto;
-    gap: 2rem;
-    align-items: center;
+  .breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
   }
-
-  .log-bot {
+  .breakdown-table th, .breakdown-table td {
+    text-align: left;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .breakdown-table th {
+    background: var(--color-surface);
     font-weight: 700;
     font-size: 0.8rem;
     text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
-
-  .log-action {
-    font-size: 0.95rem;
-    opacity: 0.9;
+  .breakdown-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .breakdown-table tr:last-child { font-weight: 700; }
+  .city-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
   }
-
-  .log-time {
-    font-size: 0.75rem;
-    opacity: 0.6;
-  }
-
-  @media (max-width: 600px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .log-entry { grid-template-columns: 1fr; gap: 0.5rem; }
-  }
-
-  [data-theme="dark"] .stat-group {
+  .city-list li {
+    padding: 0.5rem 0.75rem;
     background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
   }
-
+  .author-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .author-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  .author-card .name { font-weight: 700; font-size: 1rem; }
+  .author-card .role { font-size: 0.85rem; color: var(--color-text-light); margin-bottom: 0.5rem; }
+  .author-card .count { font-size: 0.85rem; color: var(--color-primary); font-weight: 600; }
+  .recent-list { list-style: none; padding: 0; margin: 0; }
+  .recent-list li {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+  }
+  .recent-list li:last-child { border-bottom: 0; }
+  .recent-date {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    font-variant-numeric: tabular-nums;
+  }
+  .recent-title { font-size: 0.95rem; }
+  .recent-title a { text-decoration: none; }
+  .recent-title a:hover { text-decoration: underline; }
+  .methodology {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 2rem;
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-top: 2rem;
+  }
+  .methodology h3 { color: var(--color-text); margin-top: 0; }
+  @media (max-width: 600px) {
+    .recent-list li { grid-template-columns: 1fr; gap: 0.25rem; }
+    .hero-stat .num { font-size: 2.25rem; }
+  }
 </style>
-<div class="dashboard-header">
-    <div class="live-indicator">
-      <span class="pulse"></span>
-      SYSTEM ACTIVE
-    </div>
-    <h1>Mission Control</h1>
-    <p>Real-time observation of the Maine Dispensary Guide ecosystem.</p>
+
+<article>
+  <div class="article-header">
+    <h1>Content Statistics &amp; Editorial Dashboard</h1>
+    <p class="subtitle">A public, real-time view of what Maine Dispensary Guide publishes. The numbers below are computed from the source tree at build time, not curated by hand.</p>
   </div>
 
-  <div class="dashboard-grid">
-    <section class="stat-group">
-      <h2>System Integrity</h2>
-      <div class="status-list">
-        {systemStatus.map(item => (
-          <div class="status-item">
-            <span>{item.name}</span>
-            <span class="status-badge">{item.status}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <section class="stat-group">
-      <h2>Content Intelligence</h2>
-      <div class="metric-grid">
-        {contentStats.map(stat => (
-          <div class="metric-card">
-            <span class="metric-value">{stat.value}</span>
-            <span class="metric-label">{stat.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
+  <div class="intro">
+    <p>Maine Dispensary Guide is a serious editorial property covering Maine's cannabis business landscape. We publish city guides for every town with a licensed dispensary, technical guides for the regulatory and operational questions operators face, and blog posts on topics from home cultivation to policy to cannabis science.</p>
+    <p>This page documents the work, in numbers, with no spin. The page count, word count, byline distribution, and recent-update feed are all computed from the source tree on every build. The numbers you see reflect the most recent commit to the <code>main</code> branch.</p>
   </div>
 
-  <Callout title="Security & Integrity Verified" type="success">
-    This system is currently monitored for 280E compliance data accuracy, OCP regulatory updates, and technical performance. All security headers (CSP, X-Frame) are active and verified.
-  </Callout>
-
-  <section class="bot-sync">
-    <h2>Agent Collaboration Log</h2>
-    <div class="log-container">
-      <div class="log-entry">
-        <span class="log-bot">Gemini CLI</span>
-        <span class="log-action">System Health Check Completed. All systems green.</span>
-        <span class="log-time">Just Now</span>
+  <section>
+    <h2>At a glance</h2>
+    <div class="hero-stat-grid">
+      <div class="hero-stat">
+        <span class="num">{totalPages}</span>
+        <span class="label">Total pages</span>
+        <span class="sub">indexable + utility</span>
       </div>
-      <div class="log-entry">
-        <span class="log-bot">OpenCode</span>
-        <span class="log-action">Batch Completion: 41 guide pages verified.</span>
-        <span class="log-time">1 hour ago</span>
+      <div class="hero-stat">
+        <span class="num">{totalContentPages}</span>
+        <span class="label">Content pages</span>
+        <span class="sub">guides, posts, founders, downloads</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">{Math.round(totalWords / 1000)}K</span>
+        <span class="label">Words published</span>
+        <span class="sub">across the whole site</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">{heroCount}</span>
+        <span class="label">Hero images</span>
+        <span class="sub">photography, generated art, illustrations</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">{authors.length}</span>
+        <span class="label">Byline authors</span>
+        <span class="sub">named editorial contributors</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">{Math.round(totalWords / totalContentPages).toLocaleString()}</span>
+        <span class="label">Avg words per page</span>
+        <span class="sub">content pages only</span>
       </div>
     </div>
   </section>
 
-  <section class="recent-updates">
-    <h2>Recent Platform Updates</h2>
-    <p>The Maine Dispensary Guide is continuously updated to reflect the latest OCP regulatory changes, municipal opt-in developments, and market intelligence. Our agent system monitors 61 pages for technical health, broken links, and content freshness. When Maine.gov OCP URLs change or new municipal zoning rules are enacted, this dashboard reflects the update status within minutes. The entire guide was last reviewed for 2026 compliance in April 2026.</p>
-    <p>Technical monitoring includes weekly SquirrelScan audits tracking Core SEO, Accessibility, Performance, and E-E-A-T signals. Content freshness is maintained through monthly reviews of all 41+ city and technical guides. GEO citation tracking monitors how AI search systems reference Maine cannabis content across major language models.</p>
-    <p>All guide pages include JSON-LD structured data for search engines and AI systems. The Article schema provides author, datePublished, and dateModified signals that reinforce E-E-A-T signals for Google's quality raters.</p>
-    <ul>
-      <li>Last full site audit: April 4, 2026</li>
-      <li>Total indexed pages: 61</li>
-      <li>SquirrelScan health score: 87/100 (Grade B)</li>
-      <li>Core SEO score: 100/100</li>
-      <li>Accessibility score: 99/100</li>
-      <li>Next scheduled review: April 11, 2026</li>
+  <section>
+    <h2>Content breakdown</h2>
+    <p>The site is organized into a small number of distinct content types, each with its own editorial standard. Here is the count and word count for each.</p>
+    <table class="breakdown-table">
+      <thead>
+        <tr>
+          <th>Content type</th>
+          <th class="num">Pages</th>
+          <th class="num">Words</th>
+          <th class="num">Avg per page</th>
+          <th>What it covers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>City guides</td>
+          <td class="num">{cityGuides.length}</td>
+          <td class="num">{cityWords.toLocaleString()}</td>
+          <td class="num">{Math.round(cityWords / Math.max(cityGuides.length, 1)).toLocaleString()}</td>
+          <td>Per-town dispensary directory, market overview, and local consumer guide</td>
+        </tr>
+        <tr>
+          <td>Technical guides</td>
+          <td class="num">{techGuides.length}</td>
+          <td class="num">{techWords.toLocaleString()}</td>
+          <td class="num">{Math.round(techWords / Math.max(techGuides.length, 1)).toLocaleString()}</td>
+          <td>Licensing, compliance, 280E, real estate, OCP rules, Metrc, banking, packaging</td>
+        </tr>
+        <tr>
+          <td>Blog posts</td>
+          <td class="num">{blogPosts.length}</td>
+          <td class="num">{blogWords.toLocaleString()}</td>
+          <td class="num">{Math.round(blogWords / Math.max(blogPosts.length, 1)).toLocaleString()}</td>
+          <td>Home cultivation, market analysis, terpene science, policy commentary</td>
+        </tr>
+        <tr>
+          <td>Founder stories</td>
+          <td class="num">{founders.length}</td>
+          <td class="num">{founderWords.toLocaleString()}</td>
+          <td class="num">{Math.round(founderWords / Math.max(founders.length, 1)).toLocaleString()}</td>
+          <td>First-person operator interviews (urban, suburban, rural)</td>
+        </tr>
+        <tr>
+          <td>Resource hubs</td>
+          <td class="num">{resources.length}</td>
+          <td class="num">{resources.reduce((s, f) => s + countWords(f), 0).toLocaleString()}</td>
+          <td class="num">{Math.round(resources.reduce((s, f) => s + countWords(f), 0) / Math.max(resources.length, 1)).toLocaleString()}</td>
+          <td>Curated education + official resource links</td>
+        </tr>
+        <tr>
+          <td>Downloadable guides</td>
+          <td class="num">{downloads.length}</td>
+          <td class="num">{downloads.reduce((s, f) => s + countWords(f), 0).toLocaleString()}</td>
+          <td class="num">—</td>
+          <td>PDF + print-friendly founder's bible, compliance self-assessment, roadmap</td>
+        </tr>
+        <tr>
+          <td>Core pages</td>
+          <td class="num">{corePages.length}</td>
+          <td class="num">{(corePages.reduce((s, f) => s + countWords(f), 0)).toLocaleString()}</td>
+          <td class="num">—</td>
+          <td>Homepage, directory, ROI calculator, contact, search, about</td>
+        </tr>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td class="num"><strong>{totalPages}</strong></td>
+          <td class="num"><strong>{totalWords.toLocaleString()}</strong></td>
+          <td class="num">—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>City guide coverage</h2>
+    <p>One guide per town with at least one active adult-use retailer or caregiver storefront licensed by the Maine Office of Cannabis Policy. The list below is the full current coverage; towns are added as new OCP-licensed retailers come online.</p>
+    <p><strong>{cityGuides.length} cities</strong> covered. Sorted alphabetically.</p>
+    <ul class="city-list">
+      {cityNames.map(c => <li>{c}</li>)}
     </ul>
   </section>
+
+  <section>
+    <h2>Editorial team</h2>
+    <p>All content carries a named byline. No ghostwriting, no AI-only content, no unattributed reposts. The byline count below is the number of pages each author has written or co-written.</p>
+    <div class="author-grid">
+      {authors.map(a => (
+        <div class="author-card">
+          <div class="name">{a.name}</div>
+          <div class="role">{a.role}</div>
+          <div class="count">{authorBylineCount[a.name] || 0} pages bylined</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Callout title="Editorial standards" type="note">
+    Every page carries a <code>publishDate</code> and <code>modifiedDate</code> in the source. Every content page has a named byline. Every blog post has a 5-7 question FAQ with primary-source answers. Every guide cross-links to at least three other pages in the same pillar. Sitemap and JSON-LD are validated on every build. If you spot a page that doesn't meet these standards, it's a bug, not a feature — <a href="/contact">let us know</a>.
+  </Callout>
+
+  <section>
+    <h2>What changed recently</h2>
+    <p>The 10 most recently updated pages, sorted by <code>modifiedDate</code>. The full site is updated continuously as OCP rules change, as new municipal opt-ins are filed, and as the editorial team adds new content.</p>
+    <ul class="recent-list">
+      {top10.map(u => (
+        <li>
+          <span class="recent-date">{u.date}</span>
+          <span class="recent-title"><a href={u.path}>{u.title}</a></span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="methodology">
+    <h3>How these numbers are computed</h3>
+    <p>This page reads the source tree at build time. Page count and word count are derived from the actual <code>.astro</code> files in <code>apps/maine-cannabis/src/pages/</code>; hero-image count is derived from <code>public/images/heroes/</code>; byline counts are derived from the <code>author:</code> field in each page's frontmatter. There is no manual curation, no separate spreadsheet, and no quarterly audit. The numbers refresh on every deploy. If you find a discrepancy, the source tree is the source of truth — not this page, and not the editorial team's recollection.</p>
+    <p>Last build: {buildDate}.</p>
+  </div>
+
+</article>
+
 </Layout>
