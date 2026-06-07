@@ -4871,3 +4871,37 @@ web components. This is the best possible Astro perf posture.
 5. AVIF variants — would save another 30% on hero images for Safari 16+ users
 6. Mobile-size srcset — generate 640w/1024w/1920w so mobile doesn't fetch desktop res
 7. WebP-only with proper fallback (drop jpg entirely) — saves 16.6MB on disk
+
+## Sprint 73p (final): Cache-rule Vercel quirk debugged (commit f84c98a)
+
+The first attempt at adding the sitemap/robots/llms/manifest cache
+rule (commit 861e484) used a combined regex with alternation
+`/(sitemap.*\.xml|robots\.txt|...)`. That regex passes Python's `re`
+module but Vercel's path-to-regexp did NOT apply it to live traffic.
+The old `s-maxage=3600, stale-while-revalidate=86400` headers stuck
+around after the deploy (Vercel edge cache: HIT, age climbing).
+
+Fix: split into 5 explicit per-pattern rules, each is a simple
+single-regex Vercel handles correctly. Will verify on next deploy
+cycle (Vercel edge cache refreshes when content changes — these
+text files have stable ETags so the cache may hold for up to
+max-age=3600 = 1 hour).
+
+The fix IS in vercel.json. The effect will be visible to crawlers
+within the next hour when the old cache entries age out. Forcing
+revalidation via `Cache-Control: no-cache` request header does not
+bypass the edge cache on Vercel.
+
+### Final cumulative state of this entire session (Sprint 73n-73p)
+
+Commits: 8 total (last 5 on main)
+- 4b57bc1 fix(seo): 190 internal links to dead URLs (Sprint 73n)
+- 1d3d788 fix(seo): 7 more dead 280E links in shared UI + llms.txt
+- 8e03e4a docs(hub): Sprint 73n (continued)
+- 48b639a perf(images): 50MB to 31MB hero asset pipeline + WebP
+- bf6c9ab docs(hub): Sprint 73o
+- caf6685 fix(a11y): 3 heading hierarchy skips
+- 06d3ec1 docs(hub): Sprint 73p
+- 861e484 perf(cache): separate static-text file rule
+- f84c98a fix(cache): split into per-file rules (Vercel regex quirk)
+- 5803a3a docs(hub): Sprint 73p (continued)
