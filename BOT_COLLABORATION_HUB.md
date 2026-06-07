@@ -4733,3 +4733,36 @@ After the 3 fixes above, the broken-link scanner returned `0 broken internal pag
 ### Why This Matters
 The 2026-06-06 audit was broad but had a gap: it didn't scan src/ for in-source link correctness, only checked the dist/ output. This pass closed that gap. The 190-link bug was real, was shipping to live, and was costing link equity. The reframe + this comprehensive pass together represent a meaningful workflow improvement: audits now go source-to-live, not just live-only.
 
+
+## 📋 SPRINT 73n (continued): 7 more dead 280E links in shared UI + llms.txt (Jun 6, 2026 EDT)
+
+**[HERMES] Jun 6, 2026 EDT — Post-deploy verify caught what the src scan missed**
+
+### What happened
+After pushing commit 4b57bc1, the post-deploy curl on the live homepage showed 1 remaining occurrence of `taxation-280e` in the rendered HTML — a JSON-LD `ItemList` entry. My src scan only checked `apps/maine-cannabis/src/`, but the `RelatedArticles.astro` component in that directory re-exports from `packages/ui/src/components/RelatedArticles.astro` (the shared UI package). The actual data source was in `packages/`, which I never scanned.
+
+### Scope of the missed bug
+- 5 occurrences in `packages/ui/src/components/` (4 components: RelatedArticles, Search, GuideSidebar, NextStep)
+- 4 occurrences in `apps/maine-cannabis/public/llms.txt` and `llms-full.txt` (AI-crawler-facing sitemap)
+- **Total: 9 occurrences across 6 files** — all pointing to dead-redirect URLs
+
+### Why the original src scan missed it
+The src scan I wrote in this turn walked `apps/maine-cannabis/src/**/*.astro` only. The shared `RelatedArticles.astro` re-export pattern meant the actual data (where the JSON-LD list is built) lives in `packages/ui/src/components/RelatedArticles.astro`. A `grep -rln` from the repo root would have caught all of them; my checker was scoped to apps/ only.
+
+### Files patched (commit 1d3d788)
+- `packages/ui/src/components/RelatedArticles.astro` (1)
+- `packages/ui/src/components/Search.astro` (1)
+- `packages/ui/src/components/GuideSidebar.astro` (2)
+- `packages/ui/src/components/NextStep.astro` (1)
+- `apps/maine-cannabis/public/llms.txt` (2 — also fixed malformed `guidesmaine-cannabis-280e-guide` URLs missing the `/`)
+- `apps/maine-cannabis/public/llms-full.txt` (2 — same fix)
+
+### Lesson for the next audit
+The audit methodology needs to include `packages/` in scope. The shared UI package re-exports happen via `@network/ui/ComponentName` in the apps/ side, so a src-only scan will always miss data that lives in packages/. The fix is either (a) scan from the repo root, or (b) follow the re-export chain in the checker.
+
+### Cumulative Sprint 73n totals
+- **Commits**: 2 (4b57bc1 + 1d3d788)
+- **Source files touched**: 24 (18 in commit 4b57bc1, 6 in commit 1d3d788)
+- **Net broken-internal-links fixed**: 197 (190 from src + 7 from packages/public)
+- **Typecheck**: 0 errors / 0 warnings / 189 hints throughout
+
