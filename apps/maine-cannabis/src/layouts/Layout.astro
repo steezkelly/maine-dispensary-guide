@@ -79,6 +79,7 @@ const fullTitle = buildFullTitle(title, siteName);
 const seoDescription = truncateMetaDescription(description);
 const { url: socialImage, mimeType: socialImageType } = resolveSocialImage(heroImage, siteUrl);
 const heroImageDims = getHeroImageDimensions(heroImage);
+const heroImageWebp = heroImage?.replace(/\.jpg$/i, '.webp');
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
@@ -236,7 +237,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
       {isGuide ? (
         <div class="guide-layout">
           <div class="guide-content">
-            {heroImage && <div class="guide-hero"><img src={heroImage} alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></div>}
+            {heroImage && <div class="guide-hero"><picture><source srcset={heroImageWebp} type="image/webp" /><img src={heroImage} alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
             <slot />
             {article && (
               <div class="article-meta">
