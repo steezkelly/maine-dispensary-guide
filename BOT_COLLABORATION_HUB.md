@@ -4833,3 +4833,41 @@ Flagged for user decision (not applied):
 
 Cumulative Sprint 73n + 73o + 73p: 197 broken links, 50MB to 31MB images, 3 a11y fixes, 0/0/191 throughout.
 
+
+## Sprint 73p (continued): Rounds 8-10 (Jun 6, 2026 EDT)
+
+### Round 8: Cache rules for static text files (commit 861e484)
+Found that Vercel was caching sitemap, robots.txt, opensearch.xml,
+llms.txt, llms-full.txt, and manifest.webmanifest with the HTML
+s-maxage=3600 rule. These files are small, change rarely, and are
+read by crawlers on every fetch batch. Added a new rule 4 in
+vercel.json that catches these files with max-age=3600,
+must-revalidate (1 hour browser cache + always revalidate).
+
+### Round 9: JS bundle + iframe audit
+Zero iframes across all 186 pages. Zero JS files in /_astro/ (Astro
+SSRs everything; no client-side framework overhead). 1175 inline
+scripts, all either JSON-LD, Vercel analytics, or self-contained
+web components. This is the best possible Astro perf posture.
+
+### Round 10: Unused source files audit
+- 9 components, 0 unused
+- 4 data files (authors, site-config, sitemap-config, topics), 0 unused
+- 186 src pages, 186 dist pages (1:1 mapping, no orphans)
+- No TODO/FIXME/console.log/lorem-ipsum anywhere
+
+### Cumulative Sprint 73n-73p totals (this entire session)
+- 197 broken internal links fixed (Sprint 73n, commits 4b57bc1 + 1d3d788)
+- 50MB to 31MB hero image pipeline + WebP fallback (Sprint 73o, commit 48b639a)
+- 3 a11y heading-skip fixes (Sprint 73p, commit caf6685)
+- vercel.json: 6 cache rules covering HTML, astro assets, images, static text, favicon (Sprint 73p, commit 861e484)
+- Typecheck: 0/0/189-191 throughout (hints vary by patch, errors+warnings always 0)
+
+### Flagged for user decision (still open)
+1. Color contrast: white on --color-accent #588157 = 4.48:1 (fails WCAG AA by 0.02)
+2. Top-level affiliate disclosure page (currently inline in 10 blog posts only)
+3. OG image dimensions (1280x720 / 1200x400 / 1024x576 / 1184x384) — none are the preferred 1200x630
+4. Infographics dir (1.9MB) — could also be optimized with sharp but lower priority
+5. AVIF variants — would save another 30% on hero images for Safari 16+ users
+6. Mobile-size srcset — generate 640w/1024w/1920w so mobile doesn't fetch desktop res
+7. WebP-only with proper fallback (drop jpg entirely) — saves 16.6MB on disk
