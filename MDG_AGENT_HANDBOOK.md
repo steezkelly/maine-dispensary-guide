@@ -34,20 +34,27 @@ vercel ls maine-dispensary-guide 2>&1 | head -3
 # Look for: Status=Ready on recent deploys, meta has githubCommitSha
 ```
 
-## Pre-push verify gate (Sprint 76b)
+## Pre-push verify gate (Sprint 76b + 78)
 
 **Installed automatically on this clone** via
-`core.hooksPath=.githooks`. Every `git push` runs:
+`core.hooksPath=.githooks`. Every `git push` runs 3 passes:
 
-1. **Fast pass (~1s)**: extracts .astro frontmatter JS, pipes to
-   esbuild parse-only. Catches the "Expected ] but found {"
-   class (the 2026-06-07 Sprint 75 cascade) with Vercel's exact
-   error message.
-2. **Slow pass (~5-15s)**: `npx astro check` filtered to changed
-   files. Only runs after pass 1 is green.
+1. **Pass 1 — esbuild parse (~1s)**: extracts .astro frontmatter
+   JS, pipes to esbuild parse-only. Catches the "Expected ]
+   but found {" class (the 2026-06-07 Sprint 75 cascade) with
+   Vercel's exact error message. **Exits 1 on failure.**
+2. **Pass 2 — astro check (~5-15s)**: `npx astro check` filtered
+   to changed files. Only runs after pass 1 is green.
+   **Exits 2 on failure.**
+3. **Pass 3 — smoke-200 (~5s, Sprint 78)**: hits every published
+   page on the live site (or `MDG_BASE`/`MDG_PREVIEW_URL`
+   override) and fails if any return non-200. Catches the
+   "build green but specific page 404s" failure mode that
+   build-time checks can't see. **Exits 4 on failure.**
 
 Bypass: `git push --no-verify`. Run manually:
-`npm run verify:pre-push` (or `--fast-only`).
+`npm run verify:pre-push` (or `--fast-only` to skip passes 2+3,
+or `--skip-smoke-200` to skip pass 3 only).
 
 Reinstall on a fresh clone: `npm run hooks:install`.
 
@@ -122,7 +129,10 @@ When 2-3 agents commit to main in parallel (current state):
 1. `git log --oneline -5` before staging — see if a sibling
    just landed a commit that intersects your work.
 2. Stage ONLY your files (`git add <specific paths>`), never
-   `git add -A` or `git add .`.
+   `git add -A` or `git add .`. Watch out: `git commit --amend`
+   picks up **all currently-staged + unstaged changes** in the
+   working tree, not just the commit you wanted to amend. If
+   you need to amend a message, stash uncommitted changes first.
 3. If you see a conflict in a file both you and a sibling
    edited, stop and ask the user — don't auto-resolve.
 4. The pre-push gate catches structural errors only. Content
@@ -133,19 +143,24 @@ When 2-3 agents commit to main in parallel (current state):
 
 ```
 # Verify locally
-npm run verify:pre-push          # structural + content (esbuild + astro)
+npm run verify:pre-push          # 3 passes: esbuild + astro + smoke-200
 npm run check:hrefs              # malformed hrefs
 npm run check:content-health      # 14 invariants
 npm run check:build-warnings      # post-build CSS warnings
 cd apps/maine-cannabis && npx astro check   # typecheck
+node apps/maine-cannabis/scripts/admin/sprint-score.cjs   # 8-check health snapshot (Sprint 77)
 
 # Deploy
-git push origin main             # pre-push gate fires automatically
+git push origin main             # pre-push gate fires automatically (3 passes)
 vercel ls maine-dispensary-guide # confirm READY
+curl -sS https://mainedispensaryguide.com/status.json | python3 -m json.tool  # machine-readable health
 
 # Debug a failed deploy
 vercel inspect <deployment-url>  # get deploymentId
 vercel inspect <deploymentId> --logs  # build log
+
+# Live-site smoke (one-off)
+MDG_BASE=https://mainedispensaryguide.com node apps/maine-cannabis/scripts/build/smoke-200.cjs
 
 # Sprint handoff
 node scripts/git/sprint-handoff.cjs   # generate Hub entry from git history
