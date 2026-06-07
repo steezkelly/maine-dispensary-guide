@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import Faq from '../components/Faq.astro';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 import siteConfig from '../data/site-config.json';
 
 const homepageFaqs = [
@@ -2340,6 +2341,7 @@ const journeySteps = [
     </div>
   </section>
 
+  <LeadFormTracker formSelector=".newsletter-form" formName="newsletter_homepage" />
 </Layout>
 <script type="application/ld+json" set:html={websiteSchema} is:inline></script>
 <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>

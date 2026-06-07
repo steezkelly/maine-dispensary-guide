@@ -17,11 +17,28 @@
 
 const https = require('node:https');
 const { URL } = require('node:url');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const SITE = 'mainedispensaryguide.com';
 const KEY_PATH = '/4a00ca05232c46f3badda7f9f2e0e296.txt';
 const SITEMAP = `https://${SITE}/sitemap-0.xml`;
 const INDEXNOW_ENDPOINT = 'api.indexnow.org';
+
+// JSONL log of every submission. Append-only, served at /data/indexnow-log.jsonl
+// on the live site (the public/ dir is copied verbatim by Astro build) so
+// external monitors / dashboards can see submission history without needing
+// to read a stateful log on the build machine.
+const LOG_PATH = path.join(__dirname, '..', 'public', 'data', 'indexnow-log.jsonl');
+function logSubmission(record) {
+  try {
+    fs.mkdirSync(path.dirname(LOG_PATH), { recursive: true });
+    fs.appendFileSync(LOG_PATH, JSON.stringify(record) + '\n', 'utf-8');
+  } catch (e) {
+    // Logging is best-effort; never let a log write block the submission.
+    console.error(`(warning) failed to append to ${LOG_PATH}: ${e.message}`);
+  }
+}
 
 function fetchText(url) {
   return new Promise((resolve, reject) => {
@@ -104,11 +121,41 @@ async function main() {
   console.log(`Key: ${key.slice(0, 8)}...`);
 
   console.log(`Submitting ${urls.length} URL(s) to IndexNow...`);
+  const startedAt = new Date().toISOString();
   const result = await submit(urls, key);
   console.log(`OK — HTTP ${result.status}, ${result.count} URL(s) submitted.`);
+  // Log the submission. If the call was --from-sitemap, log the source.
+  logSubmission({
+    timestamp: startedAt,
+    source: fromSitemap ? 'sitemap' : 'cli',
+    host: SITE,
+    urlCount: urls.length,
+    status: result.status,
+    success: true,
+    sampleUrls: urls.slice(0, 5),
+  });
 }
 
 main().catch((err) => {
   console.error('IndexNow submission failed:', err.message);
+  // Even on failure, log the attempt for observability.
+  try {
+    const urlCount = process.argv.includes('--from-sitemap') ? null : process.argv.slice(2).filter(a => !a.startsWith('--')).length;
+    require('fs').mkdirSync(path.join(__dirname, '..', 'public', 'data'), { recursive: true });
+    require('fs').appendFileSync(
+      path.join(__dirname, '..', 'public', 'data', 'indexnow-log.jsonl'),
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        source: process.argv.includes('--from-sitemap') ? 'sitemap' : 'cli',
+        host: SITE,
+        urlCount,
+        success: false,
+        error: err.message,
+      }) + '\n',
+      'utf-8',
+    );
+  } catch (_) {
+    // ignore — we already printed the real error
+  }
   process.exit(1);
 });

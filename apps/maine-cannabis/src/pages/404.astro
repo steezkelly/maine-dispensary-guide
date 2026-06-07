@@ -1,5 +1,17 @@
 ---
 import Layout from '../layouts/MinimalLayout.astro';
+import { getPageStats } from '../lib/page-stats';
+
+const stats = getPageStats();
+
+// Suggestion card "All Guides" should describe the real count.
+// Use "100+" once we're over 100, exact number for the 50-99 range, "many"
+// for the noisy sub-50 case so we never claim a wrong precise number.
+function cityGuidesLabel(n: number): string {
+  if (n >= 100) return `${n}+ city guides and technical deep-dives`;
+  if (n >= 50) return `${n} city guides and technical deep-dives`;
+  return 'city guides and technical deep-dives';
+}
 
 const suggestions = [
   {
@@ -12,7 +24,7 @@ const suggestions = [
   {
     href: '/guides',
     label: 'All Guides',
-    desc: '40+ city guides and technical deep-dives',
+    desc: cityGuidesLabel(stats.cityGuides),
     icon: '◇',
     color: 'accent'
   },
@@ -271,7 +283,7 @@ const suggestions = [
         <span class="stat-label">Active Dispensaries</span>
       </div>
       <div class="stat-item">
-        <span class="stat-value">40+</span>
+        <span class="stat-value">{stats.cityGuides >= 100 ? `${stats.cityGuides}+` : stats.cityGuides}</span>
         <span class="stat-label">City Guides</span>
       </div>
     </div>

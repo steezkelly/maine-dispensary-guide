@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import PineTree from '@network/ui/PineTree';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 
 const roadmapFeatures = [
   { 
@@ -390,4 +391,6 @@ const roadmapFeatures = [
   <section class="trust-footer">
     <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
   </section>
+
+  <LeadFormTracker formSelector=".lead-capture-form" formName="download_checklist" />
 </Layout>

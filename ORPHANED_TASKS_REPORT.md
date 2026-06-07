@@ -111,8 +111,8 @@ Items previously flagged as "pending" were audited for current accuracy:
 ### 4. PDF Magnet (Founders Bible) — NOT CONVERTED ⚠️
 
 **What exists:**
-- Source content: `ROADMAP_FOUNDERS_BIBLE.md` (comprehensive)
-- Also: `ROADMAP_BIBLE_V1.md`, `ROADMAP_ULTIMATE_EDITION.md`
+- Source content: `docs/archive/2026-04-roadmap-drafts/ROADMAP_FOUNDERS_BIBLE.md` (comprehensive)
+- Also: `docs/archive/2026-04-roadmap-drafts/ROADMAP_BIBLE_V1.md`, `docs/archive/2026-04-roadmap-drafts/ROADMAP_ULTIMATE_EDITION.md`
 - Landing page: `/download-checklist.astro` (exists)
 - Lead capture: Formspree integrated (`xvgzlowz`)
 
@@ -122,7 +122,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 - Gate/confirmation page after form submit
 
 **What to do:**
-1. Convert `ROADMAP_FOUNDERS_BIBLE.md` to styled PDF
+1. Convert `docs/archive/2026-04-roadmap-drafts/ROADMAP_FOUNDERS_BIBLE.md` to styled PDF
 2. Use Heritage Authority design (Deep Spruce, Fraunces typography)
 3. Add to download-confirmation flow
 4. Consider PDF as primary lead magnet vs. current checklist
@@ -185,7 +185,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 |------|---------|
 | `link-outreach.md` | External link/partnership strategy + tracking |
 | `OUTREACH_CAMPAIGN.md` | Email templates for outreach |
-| `ROADMAP_FOUNDERS_BIBLE.md` | PDF magnet source content |
+| `docs/archive/2026-04-roadmap-drafts/ROADMAP_FOUNDERS_BIBLE.md` | PDF magnet source content |
 | `setup_purelymail_dns.ps1` | Email domain configuration |
 | `BOT_COLLABORATION_HUB.md` | Full sprint history |
 | `project-todos.md` | Todo tracking (needs update) |

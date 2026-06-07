@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 
 const vendorCategories = [
   {
@@ -328,4 +329,6 @@ const vendorCategories = [
       background: var(--color-surface);
     }
 </style>
+
+  <LeadFormTracker formSelector=".referral-form" formName="referral_request" />
 </Layout>

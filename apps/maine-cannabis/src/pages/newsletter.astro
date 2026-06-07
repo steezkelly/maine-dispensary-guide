@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 
 const article = {
   author: "Steve Kelly",
@@ -532,6 +533,6 @@ const recentIssues = [
       </div>
     </section>
   </article>
-</Layout>
 
+  <LeadFormTracker formSelector=".inline-signup-form" formName="newsletter_inline" />
 </Layout>
