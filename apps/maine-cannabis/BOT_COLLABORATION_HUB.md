@@ -3691,3 +3691,56 @@ Per-concern size after refactor:
 4. `feat(theme): Theme 2026 on refactored layout infrastructure`
 
 Ready to merge to main.
+
+---
+
+## Date/Time Audit & Fix Pass — 2026-06-07 EDT (Hermes Audit)
+
+Following the systematic date/time audit (full report in `/home/steve/maine-dispensary-guide/SITEMAP_DATE_AUDIT_REPORT.md`), applied the high-leverage fix sequence across the site. Re-scan confirms **zero remaining wrong claims** of the audited kinds. `npx astro check` reports **0 errors, 0 warnings, 259 pre-existing hints** — no new issues introduced by the edits.
+
+### Files modified (14)
+
+| File | Change |
+|---|---|
+| `src/pages/guides/faq.astro` | Excise-tax Q&A: "14% adult-use cannabis excise tax" → per-weight excise + 14% sales tax; "15 towns" → "~30 towns" |
+| `src/pages/market-stats.astro` | "169 adult-use retail" → 180 (OCP 2025); softened unverified "60% of revenue" claim |
+| `src/pages/guides/maine-cannabis-market.astro` | "169 adult-use" → 180 with OCP 2025 citation |
+| `src/pages/guides/maine-ocp-license-map.astro` | `licenseCounts` data object + intro + description: 169/87/43/7/318 → 180/78/81/4/343 |
+| `src/pages/blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro` | 7× count updates (318/169/87/43/7/12/1554 → 343/180/78/81/4/12/1539); 18464/18648 math; "as of April 2026" → "as of December 31, 2025" |
+| `src/pages/guides/maine-cannabis-zoning-requirements.astro` | "60% of Maine's 492" opt-in → "about 30 of Maine's 500+ (~6%)" |
+| `src/pages/guides/maine-cannabis-regulations.astro` | "15 of Maine's 500+ municipalities" → "about 30 (~6%)" |
+| `src/pages/blog/maine-dispensary-how-to-open.astro` | "240+ statewide" → 180; "$224 million" → $246.4M; "~15 of 500+" → "~30 of 500+ (about 6%)" |
+| `src/pages/guides/maine-cannabis-delivery-rules.astro` | "240+ licensed dispensaries" → 180 active adult-use retail |
+| `src/pages/guides/maine-cannabis-real-estate.astro` | 4× "60% of Maine" opt-in → "about 30 of 500+ (~6%)" (in JSON-LD FAQ + intro + body) |
+| `src/pages/guides/maine-dispensary-locations.astro` | 2× "60% of Maine" → "about 30 of 500+ (~6%)" (FAQ answer + JSON-LD) |
+| `src/pages/guides/maine-cannabis-sun-grown-caregiver-150-plants.astro` | Removed unverified "30-day grace period for caregiver assistants" claim (LD 1897 context) |
+| `src/pages/download/roadmap.astro` | "approximately 60% of Maine's 492" → "about 30 of Maine's 500+ (~6% statewide)" |
+| `src/pages/guides/index.astro` | "2026 Excise Tax & Metrc Cost Update" card: "Quarterly excise tax schedule, 10% wholesale base, LD 1654 grace period" → accurate per-weight rate reduction description |
+
+### Verified-correct pages (no edits needed)
+
+- `src/pages/guides/maine-cannabis-2026-operator-cost-update.astro` — was already accurate; re-scanned, only negation-context hits remain ("Did the Maine excise tax move to 10%...?" → "No.")
+- `src/pages/guides/maine-cannabis-schedule-iii-dual-license-280e.astro` — gold standard for date sourcing
+- `src/pages/guides/maine-cannabis-taxes-2026.astro`, `maine-dispensary-costs.astro`, `maine-cannabis-funding-guide.astro` — body content already accurate (existed in negation-correct form)
+- `src/pages/index.astro`, `src/pages/search.astro` — homepage card + search excerpt already correct
+
+### Categories of fixes applied
+
+1. **Dispensary counts** (8 files): updated from OCP 2024 snapshot (169/318/87/43/7/12) to OCP 2025 Annual Report (180/343/78/81/4/12). 1,554 → 1,539 caregivers.
+2. **Municipal opt-in** (6 files): "60% of 492" and "15 towns" claims corrected to actual ~30 of ~500 municipalities (~6% statewide).
+3. **Adult-use sales 2025** (1 file): $224M → $246.4M (per OCP 2025 Annual Report: $246,423,512 / 4,835,682 transactions).
+4. **Excise tax mechanism** (already correct in source-of-truth page; only outdated downstream references in guides/index.astro card + FAQ, both fixed).
+5. **Revenue concentration** (1 file): softened unverified "60% of revenue in York/Cumberland" to "a large majority" — no OCP source for exact % at the time of audit.
+6. **Unverified grace-period claim** (1 file): removed the 30-day grace period language that couldn't be sourced to LD 1897 text.
+
+### Verification
+
+```
+$ npx astro check
+Result (281 files):
+- 0 errors
+- 0 warnings
+- 259 hints   (all pre-existing, unrelated to edits)
+```
+
+Final claim re-scan: **0 remaining wrong claims** of any audited pattern.

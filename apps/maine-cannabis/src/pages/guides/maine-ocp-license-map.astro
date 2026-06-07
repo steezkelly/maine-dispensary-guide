@@ -14,12 +14,12 @@ const article = {
 const topics = ["licensing", "market", "compliance"];
 
 const licenseCounts = {
-  retailer: 169,
-  cultivator: 87,
-  manufacturer: 43,
-  testing: 7,
+  retailer: 180,
+  cultivator: 78,
+  manufacturer: 81,
+  testing: 4,
   courier: 12,
-  total: 318
+  total: 343
 };
 
 const faqPageJsonLd = JSON.stringify({
@@ -39,7 +39,7 @@ const faqPageJsonLd = JSON.stringify({
       "name": "How many licensed cannabis businesses operate in Maine?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "As of April 2026, Maine has approximately 318 active licensed cannabis establishments across all types: 169 adult-use retailers, 87 cultivators, 43 manufacturers, 7 testing facilities, and 12 couriers. The count changes as licenses are issued, surrendered, or revoked."
+        "text": "As of December 31, 2025 (OCP 2025 Annual Report), Maine has 343 active licensed adult-use cannabis establishments across all license types: 180 cannabis retail stores, 78 cultivation facilities, 81 products manufacturing facilities, and 4 testing facilities. The OCP also lists 22 conditionally approved and 52 pending applications. The counts change as licenses are issued, surrendered, or revoked — verify current status on the OCP Open Data portal."
       }
     },
     {
@@ -161,7 +161,7 @@ const licenseTypes = [
 
 <Layout
   title="Maine Cannabis Licensee Map: Every Licensed Dispensary in Maine"
-  description="Complete map of every licensed Maine cannabis business — 169+ retailers, 87 cultivators, and 43 manufacturers filtered by county, city, and license type. Updated April 2026."
+  description="Complete map of every licensed Maine cannabis business — 180+ retailers, 78 cultivators, and 81 manufacturers filtered by county, city, and license type. Updated April 2026."
   heroImage="/images/heroes/ocp-license-map.jpg"
   article={article}
   topics={topics}
@@ -590,7 +590,7 @@ const licenseTypes = [
         ))}
       </div>
       <p class="overview-note">
-        <strong>{licenseCounts.retailer} adult-use retailers</strong> serve Maine's 1.4M residents and tourism base of 20M+ annual visitors. Combined with 87 cultivators and 43 manufacturers, Maine's regulated cannabis supply chain is among the most mature in New England.
+        <strong>{licenseCounts.retailer} adult-use retailers</strong> serve Maine's 1.4M residents and tourism base of 20M+ annual visitors. Combined with 78 cultivators and 81 manufacturers, Maine's regulated cannabis supply chain is among the most mature in New England.
       </p>
     </section>
 
