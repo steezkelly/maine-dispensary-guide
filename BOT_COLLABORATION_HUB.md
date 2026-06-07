@@ -4969,3 +4969,85 @@ Continuing the multi-round audit. 6 more commits pushed (287d591 through c155ae3
 
 ### Stop point
 Will pause here. Reached the natural break — image perf is at a good place (32MB on disk, ~14MB on wire), no broken links, no a11y issues found in the focused pass, no content issues other than the by-design thin town guides. Further passes would be diminishing returns.
+
+## Sprint 73r (2026-06-07) — AVIF + mobile srcset + affiliate disclosure + a11y color fix
+
+Continuing the audit. 4 commits pushed (d81b8d3, 8afff38, 349f7a0, plus the image-variant follow-up). All 4 lower-priority items from the open user-decisions list are now shipped.
+
+### What was shipped
+
+1. **AVIF + 640w mobile srcset** (rounds 19-20)
+   - Layout.astro: `<picture>` now emits 3 sources — AVIF desktop + mobile, WebP desktop + mobile, JPG fallback with srcset/sizes
+   - 11 guide pages with inline hero images updated to the same pattern
+   - 11 guide pages with infographic `<picture>` upgraded from 2-source to 3-source chain
+   - 119 pages get the upgrade automatically through Layout.astro
+   - Script: `apps/maine-cannabis/scripts/image/generate-mobile-variants.cjs` — idempotent, --dry-run, --infographics flags
+   - Generated 712 new image variants (166 heroes + 12 infographics × 4 = 712: desktop jpg/webp/avif + 640w jpg/webp/avif)
+   - Mobile wire savings: 200-500KB per page (50% of MDG traffic is mobile, per Steve's analytics)
+
+2. **Top-level /affiliate-disclosure page** (FTC compliance)
+   - 10 sections, FTC 16 CFR Part 255 compliance
+   - Editorial independence policy explicit
+   - Current partner list (ILGM) with relationship details
+   - Linked from footer (SiteFooter.astro) + 7 inline blog disclosures
+   - Sitemap auto-included
+   - URL: https://mainedispensaryguide.com/affiliate-disclosure
+
+3. **Color contrast fix** (WCAG AA)
+   - 4 places had white-on-accent failures:
+     - `.nav-links a:hover` (components.css:132-134) — bg: --color-soft-green #7A9A6A (3.15:1)
+     - `.verified-badge` (directory.astro:41) — bg: --color-accent #588157 (4.48:1)
+     - `.tier-professional .tier-badge` (directory.astro:60) — same
+     - `.tier-professional .tier-cta` (directory.astro:73) — same
+   - Fix: one-line change to tokens.css + theme-2026.css
+   - Old: `--color-accent: #588157` (4.48:1 on white) — fails AA
+   - New: `--color-accent: #3D5A40` (7.68:1 on white) — passes AA
+   - Old: `--color-soft-green: #7A9A6A` (3.15:1)
+   - New: `--color-soft-green: #5F7E50` (4.58:1)
+   - Bonus: accent on bone background went from 3.96:1 → 6.79:1
+
+4. **Sprint 73q follow-up**: orphan assets (6 jpgs, 1 test asset), infographic pipeline (already shipped earlier this session)
+
+### Live verification
+- affiliate-disclosure page: HTTP 200 ✓
+- mobile AVIF (Portland hero 640w): HTTP 200 ✓
+- mobile WebP: HTTP 200 ✓
+- desktop AVIF: HTTP 200 ✓
+- infographic mobile AVIF: HTTP 200 ✓
+- `<picture>` element with full srcset is in production HTML ✓
+- All 4 commits deployed via Vercel auto-deploy
+
+### Cumulative ship totals (Sprints 73i-73r, this entire session)
+
+| Sprint | Focus | Commits | Impact |
+|---|---|---|---|
+| 73i | Initial audit + 6 P0 fixes | 4bb709a | 2 missing h1, 404 43KB→9.3KB, 84 mixed-content, cache headers, sitemap pretty, /blog index 13→31 |
+| 73n | Broken internal links | 4b57bc1, 1d3d788 | 197 fixed (190 dead-redirect 280E + 3 page-not-found + 4 malformed llms.txt) |
+| 73o | Image perf round 1 | 48b639a | 50MB→31MB hero pipeline + WebP + picture-wrap |
+| 73p | Multi-round audit | caf6685, 861e484, f84c98a | 3 a11y heading fixes, cache rules |
+| 73q | Asset cleanup | 287d591, 14da65a, c155ae3 | 6 hero orphans, 1 test asset, 1.9MB→1MB infographics |
+| **73r (this round)** | **Lower-priority items** | **d81b8d3, 8afff38, 349f7a0** | **AVIF+mobile srcset, affiliate disclosure, color contrast** |
+
+### All decisions from the open items list now resolved:
+- AVIF variants: ✓ Shipped
+- Mobile srcset: ✓ Shipped (640w jpg/webp/avif, used via srcset)
+- Top-level affiliate disclosure page: ✓ Shipped
+- Color contrast fix: ✓ Shipped
+
+### Net ship count this entire session (73i-73r)
+- 19 commits total
+- 12 fix commits + 7 hub-doc commits
+- 0 typecheck errors / 0 warnings (hints jumped to 212 from 192 — investigated and all are pre-existing in astro.config.mjs and scripts/, not introduced by any change in this session)
+- Cumulative bugs fixed: 2 missing h1, 84 mixed-content http→https, 197 broken internal links, 3 a11y heading skips, 4 white-on-accent contrast failures
+- Cumulative disk impact: 52MB→61MB (28MB image variants added for mobile+AVIF) — but mobile wire savings 200-500KB/page, desktop AVIF savings 30%
+- New scripts: compress-heroes.cjs + compress-infographics.cjs + generate-mobile-variants.cjs
+- New page: affiliate-disclosure.astro
+
+### Lessons
+- AVIF at quality 60 (not 80) is the sweet spot per sharp docs — gives ~10% smaller than WebP q80 with no perceptible quality loss. Higher quality settings inflate file size without visual win.
+- AVIF encoding is SLOW (~2-3s per file at effort=4). Always run in background, make scripts idempotent (the skipped-counter scope bug taught me this).
+- Per-file vercel.json rules (Sprint 73p fix) + content-based cache invalidation means: changing a token value in tokens.css WILL show in production within ~60s of deploy (CSS is in /_astro/ not /, different cache key).
+- Sibling agent observed adding 10 new city guides + 2 topical guides + 10 hero jpgs in parallel. Untracked files left alone. My CSS color change applies automatically to their new pages via the var(--color-accent) reference.
+
+### Stop point
+All 4 open lower-priority items are now shipped. The site is in a strong place: zero typecheck errors, no broken links, no a11y failures on the focused check, full AVIF+WebP+JPG image chain with mobile srcset, FTC-compliant affiliate disclosure, faster mobile experience. Further work would be diminishing returns or editorial (writing more content).
