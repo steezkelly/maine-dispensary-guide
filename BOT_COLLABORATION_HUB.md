@@ -5283,3 +5283,88 @@ literal original URL via Python subprocess (not bash heredoc with shell escaping
   `dist/sitemap-0.xml` before deploying.
 
 Sprint 75 commit: a16b2e0
+
+## Sprint 75 cont. (2026-06-07) — final cleanup, audit fixes, AI discoverability
+
+Continuing from Sprint 75 (Sprint 75 was 13 new OCP city guides).
+This continuation focused on the deferred items + audit findings.
+
+**Audit-driven content fixes (per SITEMAP_DATE_AUDIT_REPORT):**
+- #4: 169 → 187 active retail store count (per OCP April 2026 CSV —
+  187 unique active Store LICENSEs, not 180/169 as some files claimed).
+  Updated in: index.astro, 404.astro, maine-dispensary-business-plan.astro,
+  maine-cannabis-market.astro, maine-cannabis-wholesale-guide.astro,
+  maine-ocp-license-map.astro, market-stats.astro.
+- #6 + #7: 15-Maine-municipality claim in how-to-open.astro → 65
+  (per OCP CSV — 65 active-store cities, not 15 late-2024 count).
+- #6: 'LD 1654 adds a 30-day excise tax grace period' → '30-day
+  product-return excise tax exemption window' in regulations.astro
+  (the original bill text was amended to remove the grace period).
+- Issues #1, #2, #3, #5 (CRITICAL excise tax / LD 1654 mislabels) were
+  already fixed in upstream sibling commits before this batch.
+  Confirmed: operator-cost-update.astro FAQ answers correctly explain
+  the per-weight excise + LD 1654 transfer exemption, with explicit
+  self-correcting language about the original 10% wholesale / 120-day
+  grace period proposals that were removed by amendment.
+
+**Deferred items shipped:**
+- 5 broken city-guide cross-references fixed (peru→rumford, rome→
+  belgrade, solon→bingham/kingfield, stratton→kingfield) — those 4
+  towns have no OCP retail licenses, so the broken links were converted
+  to descriptive prose. 0 broken cross-refs remain across 109 city
+  guides (verified by full cross-ref audit).
+- 24 unprocessed jpgs (sibling 73o/73q cities missing webp/avif/640w
+  variants) now have full 6-variant set. Total: 358 hero jpgs, 358 webps,
+  358 avifs, 358 mobile jpg/webp/avif. Pipeline script
+  `apps/maine-cannabis/scripts/image/compress-all-missing.cjs` (idempotent).
+- site-health.astro auto-updated to 109 cities (was 99) + 48 technical
+  guides + 34 blog posts + 5 byline authors. No manual update needed.
+
+**AI discoverability fix (high-leverage):**
+- llms.txt had 0 city guide refs (only the index page was linked).
+  Now has all 109 city guides with descriptions in the Local
+  Directory section.
+- llms-full.txt had 61 city guide refs (48 were missing). Now has all
+  109. Page count header updated from 145 to 200+.
+- This was the highest-leverage fix of the round: AI answer engines
+  and search crawlers using llms.txt can now surface every individual
+  city guide when answering Maine-cannabis queries.
+
+**Top-page count claim updates:**
+- index.astro: 41+ opt-in municipalities → 65; "With 169 active
+  stores" → 187; aside-stat 169 → 187; opt-in geo-subtitle
+  rewritten with 65/109 numbers.
+- all-guides.astro: "100+ Expert Guides" → "150+"; "40+ Maine
+  municipalities" → "109"; "40+ town & regional guides" → "109".
+- guides/index.astro: "75+ Expert Resources" → "150+"; "40+ cities
+  and towns" → "100+".
+- faq.astro homepageFaqs: 4 → 6 items (added "How many city guides
+  does Maine Dispensary Guide have?" and "Do I need a medical card
+  to buy cannabis in Maine?").
+
+**find-a-dispensary.astro integration:**
+- Sibling had pre-populated 76 city guides; my 13 Sprint 75 cities
+  were missing. Added 3 to "Central and Western Maine" section
+  (Peru, West Paris, Stratton) and 10 to "Midcoast, Waldo and
+  Northern Maine" section (Chelsea, Winslow, Solon, Rome, Somerville,
+  Columbia, Baring Plantation, Guilford, Greenville, Medway).
+  Total: 100+ searchable city guide entries.
+
+**Round 7 commits pushed (all my work this continuation):**
+- 7aa8045: 5 broken cross-refs + 24 missing image variants + 65/109 counts
+- 48283c8: 109 city guide refs in llms.txt + 48 missing in llms-full.txt
+- a4edd7d: 169 → 187 active store count (audit #4)
+- 7a91bbe: 15-municipality + LD 1654 grace period (audit #6+7)
+- 6e4cebc: 180 → 187 retail store count (ocp-license-map + wholesale)
+- 7d71283: 180 → 187 retail store count (ocp-license-map description
+  + wholesale copy)
+- e2240fa: 180 → 187 active retail store count (market-stats.astro)
+- d156ba3: 13 cities added to find-a-dispensary.astro
+
+**Memory worth saving:** the SITEMAP_DATE_AUDIT_REPORT is a great
+template — it was written by a sibling agent and identified 9
+content/counting errors (3 CRITICAL, 2 HIGH, 2 MEDIUM, 2 LOW) using
+Federal Register / Maine Revisor's Office / Maine Revenue Services
+GIB 115 / OCP Annual Report / Maine Legislature as canonical
+references. Pattern: scan source for hardcoded count strings, cross-
+check against OCP CSV, write structured severity-index report.
