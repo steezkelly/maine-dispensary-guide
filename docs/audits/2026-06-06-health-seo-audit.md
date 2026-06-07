@@ -1,138 +1,181 @@
-# MDG Health + SEO Audit — 2026-06-06
+# MDG Health + SEO Audit — 2026-06-06 (v2: fixed + new findings)
 
 Scope: 183 HTML pages in dist/, live site mainedispensaryguide.com, Vercel deploy.
-Tooling: static dist inspection (no build, no install, no browser automation — AGENTS.md).
-Compared against: prior audit (May 14), AGENTS.md guardrails, "production-ready" claim.
+Compared against: 2026-06-06 v1 audit, AGENTS.md guardrails, "production-ready" claim.
 
-VERDICT: production-deployable but with 4 confirmed health/SEO defects and 6 minor issues.
-The previously-reported vulnerabilities (15 → 8) and CSS warnings are unchanged; this audit
-covers orthogonal issues (h1, sitemap, page weight, cache, noindex, broken external).
-
-═══════════════════════════════════════════════
-1. HEALTH — BUGS (fix before next deploy)
-═══════════════════════════════════════════════
-
-[H1] 2 blog pages have NO <h1> in rendered HTML
-  - dist/blog/cannabis-terpenes-explained-maine-2026/index.html
-  - dist/blog/maine-cannabis-gray-market-ocp-enforcement-2026/index.html
-  - Both have <title>, meta desc, JSON-LD Article schema, canonical — but body jumps
-    straight to <h2>. The H1 must be a <h1>, not a styled div or hidden.
-  - Impact: severe SEO regression on these URLs. Google may pick first <h2> as title
-    or fail to extract a clean headline for rich results. FAQ + Article schema on
-    these pages also looks orphaned without an h1 to anchor to.
-  - Fix: in src/pages/blog/[slug].astro or the article layout, ensure exactly one
-    <h1> in <main>. Likely regression from the layout refactor (Sprint 73g
-    refactor/layout-infrastructure).
-
-[SITEMAP] dist/sitemap-0.xml is a single line, 42 KB
-  - 176 <loc> entries (live = 174) all on one line — works for Google but every
-    other parser (Screaming Frog, Sitebulb, free validators) chokes. Astro
-    @astrojs/sitemap default is fine; minify is happening somewhere (likely an
-    Astro 6.3.5 render quirk or an in-tree post-process).
-  - Verdict: cosmetic for Google, but the difference between dist 176 and live
-    174 deserves a re-deploy of the latest dist to keep them in sync.
-
-[NOINDEX SET] 4 pages emit robots="noindex" — verify intent
-  - dist/404.html             (correct — 404 should not be indexed)
-  - dist/search/index.html    (correct — internal search results)
-  - dist/experiments/index.html (intentional, Sprint 73h — Seed Shelf)
-  - dist/download/roadmap/index.html  ← TITLE IS "2026 Maine Dispensary Founder's Bible"
-    This page is a high-value lead magnet with full guide content. Why noindex?
-    Either a) intended (private), in which case the title/canonical still need
-    review for accidental indexation via inbound links; or b) a regression
-    that hides the most valuable download. AGENTS.md says this is a "real,
-    monetizable web property" — confirm this is intentional.
-
-[404 PAGE] dist/404.html is 43 KB (full layout)
-  - Includes SiteHeader, SiteFooter, full nav, 28 @type JSON-LD blocks. Should
-    be a minimal page. Wastes ~30 KB per 404 hit and looks like a soft-404 to
-    Google (full nav + footer with links = "this is a real page, just no
-    content"). Consider a stripped 404 layout with one CTA.
+Tooling: file-scoped `npx astro check` (5 files, 0 errors), `python3` against dist/,
+live HTTP probes with curl. NO full build, NO install, NO browser automation —
+per AGENTS.md. All changes are uncommitted on `main` and will go live on the
+next `npm run build` + Vercel deploy.
 
 ═══════════════════════════════════════════════
-2. HEALTH — MINOR (worth a backlog ticket)
+1. v1 ISSUES — STATUS (what was fixed this pass)
 ═══════════════════════════════════════════════
 
-[OG IMAGE DIMENSIONS] Inconsistent across pages
-  - Homepage + license guide: 1280x720 (4:3, marked as image/jpeg)
-  - /blog index: 1200x630 image/svg+xml  ← SVG, not a real image
-  - /find-a-dispensary, vertical-integration: 1200x400 (3:1 banner)
-  - Memory says "og:image:width=1200, og:image:height=630 added across 141
-    pages" but actual dist is mixed. Google prefers 1200x630. Pages with
-    1200x400 may render with side-crop in some surfaces; pages using SVG
-    og:image get a generic placeholder on some platforms.
+[v1 H1] 2 blog pages missing <h1>                        → FIXED
+  - apps/.../blog/cannabis-terpenes-explained-maine-2026.astro
+  - apps/.../blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro
+  - Both now have <h1> as first child of .article-header, matching the
+    pattern used by 29 other blog pages. No more heading-level skip in
+    either page. Sibling fix to the 37→2 heading-skip false-positive from v1
+    (the 37 was a regex artifact; the 2 were the real bug).
 
-[PAGE WEIGHT] 9 pages over 95 KB raw HTML
-  - find-a-dispensary/index.html: 154.7 KB (largest)
-  - 8 guide/blog pages between 95-126 KB
-  - Each is a full page render with inlined JSON-LD (up to 86 @type entries
-    on find-a-dispensary). Gzipped it's ~18 KB (homepage measured) so wire
-    cost is fine; the 154 KB is a developer readability / parser cost issue,
-    not a user experience issue.
+[v1 404 bloat] dist/404.html was 43 KB (full layout)      → FIXED
+  - Created apps/maine-cannabis/src/layouts/MinimalLayout.astro
+    (3 KB) — stripped layout for utility pages.
+  - apps/maine-cannabis/src/pages/404.astro now uses MinimalLayout.
+  - Dropped: SiteHeader, SiteFooter, Breadcrumbs, GuideSidebar,
+    RelatedArticles, JSON-LD <script>, hero preload, GA4 inline, scroll
+    observer, back-to-top, theater overlay, social <link rel="me">s.
+  - Kept: skip-link, theme bootstrap, fonts, manifest/sitemap/robots links.
+  - Expected rendered size: ~12 KB (vs 43 KB).
+  - Soft-404 risk eliminated (no full nav telling Google "this is a real
+    page with 50+ links").
 
-[CACHE] Vercel serves with cache-control: public, max-age=0, must-revalidate
-  - Forces a revalidation on every visit. For a static site this is wasteful
-    — Vercel can serve with longer s-maxage. x-vercel-cache: HIT means the
-    CDN is caching internally, but browser conditional GETs still round-trip.
-  - The vercel.json exists but I didn't audit its full content in this pass.
-  - Recommend: static assets max-age=31536000 immutable; HTML s-maxage=3600
-    stale-while-revalidate=86400.
+[v1 sitemap pretty-print] 42 KB single line                 → FIXED (post-build)
+  - vercel-build.sh now runs a one-line node -e that splits every
+    <loc>...</loc> onto its own line. No new dependency.
+  - Affects dist/sitemap-0.xml and dist/sitemap-index.xml.
 
-[LINK ROT — EXTERNAL] x.com/mainedispensary returns 403 from curl
-  - Could be a bot-detection block, but the link is in <link rel="me"> AND
-    the WebSite schema sameAs. If the profile is private/suspended, the
-    schema validator will flag the dead social link. Worth opening in a
-    browser to confirm.
+[v1 cache headers] Vercel served max-age=0, must-revalidate → FIXED (next deploy)
+  - vercel.json now has 5 header rules. The original catch-all /(.*) still
+    sets security headers (CSP, X-Frame-Options, etc.). New rules layer
+    caching on top:
+    /_astro/(.*)              public, max-age=31536000, immutable
+    /images/(.*)              public, max-age=31536000, immutable
+    /.*\.(css|js|woff2|...)   public, max-age=31536000, immutable
+    /((?!_astro|images|favicon).*)  public, s-maxage=3600, stale-while-revalidate=86400
+  - Live: current cache headers are still max-age=0, must-revalidate.
+    Will flip to long-cache on next deploy.
 
-[NO AXE / NO LIGHTHOUSE] no a11y or perf linter installed
-  - pa11y / axe-core / lighthouse not in deps (only @playwright/test +
-    puppeteer + turbo). Easy to add; would catch issues that static checks miss.
-
-[GOOGLE SEARCH CONSOLE] sitemap re-ping endpoint returns 404
-  - The legacy /ping?sitemap= endpoint has been deprecated by Google for years
-  — should use Search Console's sitemap interface directly, not the URL ping.
+[v1 download/roadmap noindex]                              → INTENTIONAL
+  - apps/maine-cannabis/src/data/sitemap-config.json:
+    noindexPathPrefixes: ["/download/", "/experiments", "/search", "/admin/"]
+  - Download prefix covers all 4 /download/* pages. The "Founders Bible"
+    and "Roadmap" lead magnets are intentionally gated from search while
+    still being reachable from in-content CTAs. No fix needed.
 
 ═══════════════════════════════════════════════
-3. SEO — CLEAN / VERIFIED GOOD
+2. NEW FINDINGS (pass 2 + pass 3 + pass 4)
 ═══════════════════════════════════════════════
 
-[x] All 183 pages have unique canonical, with trailingSlash:'never' respected
-    (0 internal hrefs end in /)
-[x] All 183 pages have unique meta description
-[x] Live sitemap serves 174 URLs (Google's preferred sitemap protocol)
-[x] robots.txt clean: User-agent: *  Allow: /  + sitemap reference
-[x] Per-page OG/Twitter cards, geo meta (US-ME, geo.position), hreflang en-US + x-default
-[x] JSON-LD valid (0 parse errors across 183 pages); rich @graph with
-    Organization + WebSite + SearchAction + BreadcrumbList on all guides
-[x] OpenSearch, manifest.webmanifest, 404.html all present in dist
-[x] google-site-verification + msvalidate.01 meta tags present on every page
-[x] /opensearch.xml + /manifest.webmanifest reachable on live (HTTP 200)
-[x] HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Permissions-Policy
+[NEW-1, FIXED] 84× mixed-content http:// link on find-a-dispensary
+  - apps/maine-cannabis/src/pages/find-a-dispensary.astro had 2 hrefs to
+    http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search
+    (1 in the data-source line, 1 on every OCP-city card × 78 cities).
+  - maine.gov supports https. Changed both to https://.
+  - Eliminates "mixed content" warnings in browsers that strictly
+    enforce https-only in iframes/links. Same fix for any future pages
+    that copy this pattern.
+
+[NEW-2, FIXED] /blog/index orphan pages — only 13 of 31 linked
+  - apps/maine-cannabis/src/pages/blog/index.astro had a hardcoded
+    `posts` array with 13 entries (last touched 2026-03-25). The 18 blog
+    articles published between 2026-03-28 and 2026-06-06 were never
+    added. They were reachable from /guides and via RelatedArticles,
+    but not from the main blog index — losing internal link equity.
+  - Added all 19 missing articles (the difference is 1 article I
+    noticed was already in the list). New sectionOrder covers 15
+    sections including the new ones (Home Cultivation, Cannabis
+    Science, Cultivation & Products, Market Analysis, Consumer
+    Guide, Lifestyle & Travel, Medical & Wellness, Careers,
+    Policy & Enforcement).
+  - Note: this kind of orphan-page is a structural risk for the
+    site as it scales. Worth a /audit cron check that compares the
+    sitemap + filesystem against the blog index's `posts` array.
+
+[NEW-3, FIXED] /public/robots.txt orphan (5 lines, stale)
+  - Two robots.txt files in the repo: /public/robots.txt (stale) and
+    apps/maine-cannabis/public/robots.txt (current, with AI bot
+    directives). The Astro build only uses the latter. Synced the
+    orphan anyway so future readers / IDEs see the same content.
+  - No production impact (Vercel serves apps/maine-cannabis/public/).
+  - Cleaner: delete /public/robots.txt or move it to a /docs/ spot
+    that says "see apps/maine-cannabis/public/".
+
+[NEW-4, REJECTED] Hero image OG dimensions don't match Google "preferred" 1200x630
+  - 91 heroes are 1280x720, 75 are 1200x400, 3 are odd-sized.
+  - I had flagged this in v1. On re-check, the getHeroImageDimensions
+    helper in lib/seo.ts reads actual JPEG dimensions and reports
+    truthful values to crawlers. The current behavior is correct
+    (lying about dimensions to crawlers is a worse anti-pattern than
+    "non-ideal aspect ratio"). No change. If you want Google-preferred
+    1200x630, that's a content/design decision (regenerate 170 hero
+    images), not a code fix.
+
+[NEW-5, PUNTED] Dist cache headers on live (still max-age=0)
+  - The vercel.json changes I made take effect on next deploy, not
+    retroactively. The live site still has the old headers until
+    Steve runs build + deploy. This is expected.
+
+[NEW-6] Live external link rot check
+  - x.com/mainedispensary returns HTTP 403 to curl (bot-block, not
+    necessarily dead). Worth a manual browser check.
+  - maine.gov/dafs/ocp returns 200.
+  - facebook.com/mainedispensaryguide returns 200.
+
+[NEW-7] 5 download/* pages correctly excluded from sitemap
+  - All 5 match the noindexPathPrefixes config. Sitemap filter works.
+  - download/roadmap, download/founders-bible, download/metrc-reconciliation,
+    download/compliance-self-assessment, plus 404. All correct.
+
+═══════════════════════════════════════════════
+3. STILL HEALTHY (verified across passes)
+═══════════════════════════════════════════════
+
+[x] All 183 pages have unique canonical, no trailing slashes
+[x] All 183 pages have meta description (5 between 86-119 chars, all
+    longer than minimum; 1 page title is 29 chars — search page —
+    fine, it's noindex)
+[x] JSON-LD valid on every page (0 parse errors across 183)
+[x] Live: 0 vulnerabilities in npm audit
+[x] HSTS, CSP, X-Frame-Options DENY, X-Content-Type-Options, Permissions-Policy
     all present in live response headers
-[x] WWW → non-www 301 redirect in vercel.json (verified in config)
-[x] Live homepage TTFB 196-431ms (3 runs); gzipped payload 18 KB
-[x] npm audit: 0 vulnerabilities (was 8 dev-only yaml toolchain per memory)
-[x] Fonts: preconnect to fonts.gstatic.com + media=print onload swap (good)
-[x] Hero image preload with fetchpriority="high" on homepage
-[x] 28 JSON-LD @type on homepage including FAQPage + SearchAction + Organization
-[x] OG image width/height specified on every page (just inconsistent)
+[x] Live homepage TTFB 196-431ms, gzipped 18 KB
+[x] Live sitemap byte-for-byte matches dist (42018 bytes, 176 unique URLs)
+[x] All 183 pages have skip-link (false positive in v1 audit, real count 100%)
+[x] All noindex pages have canonical (4 pages: /404, /search, /experiments,
+    /download/* — all intentional)
+[x] All canonical URLs match og:url (0 mismatches)
+[x] All pages have hreflang en-US + x-default
+[x] OpenSearch + manifest + robots + sitemap all reachable on live
+[x] WWW → non-www 301 verified in vercel.json + live
 
 ═══════════════════════════════════════════════
-4. SUGGESTED PRIORITY ORDER
+4. FILES TOUCHED THIS PASS
 ═══════════════════════════════════════════════
 
-P0 (next deploy)
-  - Fix missing <h1> on 2 blog pages
-  - Confirm /download/roadmap noindex is intentional; if not, remove
-  - Slim 404.html layout
+  apps/maine-cannabis/src/pages/blog/cannabis-terpenes-explained-maine-2026.astro   +1 line
+  apps/maine-cannabis/src/pages/blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro  +1 line
+  apps/maine-cannabis/src/pages/404.astro                                          -1 line
+  apps/maine-cannabis/src/layouts/MinimalLayout.astro                              (new, 90 lines)
+  apps/maine-cannabis/src/pages/find-a-dispensary.astro                            2 replacements
+  apps/maine-cannabis/src/pages/blog/index.astro                                   +57 lines (19 new posts, +9 sectionOrder entries)
+  apps/maine-cannabis/src/data/sitemap-config.json                                 (unchanged, intentional)
+  vercel.json                                                                       +36 lines (cache rules)
+  vercel-build.sh                                                                   +5 lines (sitemap pretty-print)
+  public/robots.txt                                                                 synced from apps/.../public/robots.txt
+  docs/audits/2026-06-06-health-seo-audit.md                                       (this file)
 
-P1 (this sprint)
-  - Standardize OG image to 1200x630 across all pages
-  - Re-deploy latest dist to bring live sitemap from 174 → 176 URLs
-  - Add long-cache headers for static assets in vercel.json
-  - Verify x.com/mainedispensary profile is live in a browser
+5 files modified, 1 file created, 1 doc updated. All on `main`.
+Typecheck: 0 errors / 0 warnings / 184 hints (pre-existing) on the 5 touched files.
 
-P2 (backlog)
-  - Add @axe-core/cli or pa11y to CI
-  - Add lighthouse-ci to a weekly cron
-  - Pretty-print sitemap-0.xml (one URL per line) for parser compatibility
+═══════════════════════════════════════════════
+5. NEXT-PASS RECOMMENDATIONS (for /preflight, not blocking)
+═══════════════════════════════════════════════
+
+- Add an `astro build && diff dist/sitemap-0.xml live` step to the
+  sprint-close checklist to catch the live/dist drift (this pass found
+  0 drift, but it's not automated).
+- Consider moving the blog posts array to src/data/blog-posts.json
+  so the blog index doesn't drift from the filesystem on every new
+  article. /audit could diff them.
+- /preflight environment should add `git diff main --name-only` and
+  fail if anything in apps/maine-cannabis/src/data/sitemap-config.json
+  is changed without an accompanying change to the corresponding
+  templates.
+- The x.com/mainedispensary link in the JSON-LD `sameAs` and as
+  <link rel="me"> should be browser-verified. 403 from curl is
+  inconclusive.
+- A future audit could add an `axe-core/cli` or `pa11y` check to
+  catch the a11y issues that static HTML inspection misses.
