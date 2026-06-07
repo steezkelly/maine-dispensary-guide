@@ -4453,3 +4453,46 @@ The "warn before build" + "ask before touching vercel.json" + "log to Hub" combi
 
 Net positive: this audit caught a real P0 (h1 bug) and 3 P1s that would have shipped to live without it. The bottleneck cost ~1 extra turn of permission-checking; the value was several hundred dollars worth of prevented ranking damage.
 
+
+## 📋 SPRINT 73i (continued): AGENTS.md Bottleneck Reframe (Jun 6, 2026 EDT)
+
+**[HERMES] Jun 6, 2026 EDT — Reframed 3 bottlenecking rules across 3 guidance files**
+
+### Problem
+The "ask first / without flagging / warn first" rules in the guidance docs created 3-4 extra permission ping-pongs per audit/fix turn and did not catch any real defects that the audit+typecheck loop didn't already catch. The 2026-06-06 audit commit 719ba89 surfaced this as an open thread. Steve said "let's change similar bottlenecking rules to the change we made here."
+
+### Change Applied (commit 3680334)
+Same trust-but-verify pattern as the rule we already changed: **trust the verify loop, log in the Hub, flag only on one-way-door / wholesale / irreversible changes.**
+
+3 rules reframed across 3 files:
+
+| Old rule | New rule |
+|---|---|
+| "Do NOT run `npm run build` unannounced — always warn first" | Run freely, no ask first. Routine verify step. |
+| "Do not touch `astro.config.mjs`, `vercel.json`, or deployment settings without flagging in the Hub" | Edit freely when reversible and well-tested. Flag one-way-door changes (deleting a redirect, removing a CSP source, changing the output adapter). |
+| "Do not overwrite content pages without flagging in the Hub" | Edit freely when small/mechanical/reversible (typos, missing tags, mixed-content bumps, dead links, JSON-LD corrections). Flag wholesale rewrites (>20% of page) or editorial-position changes. |
+
+Also softened: `## When Stuck` "Do not push large speculative changes without confirmation" → removed "large" (the relevant criterion is speculative, not size). Added cross-reference to `## Don't` so the new policy is the single source of truth.
+
+Also updated: commands list `(warn first!)` annotation on `npm run build` → `(run freely — see "Don't" section)`. Same in both AGENTS.md files.
+
+### Files Touched
+- `AGENTS.md` (root) — `## Don't` section, `## Safety & Permissions > Ask first`, `## When Stuck`, commands list. +32/-13 lines.
+- `apps/maine-cannabis/AGENTS.md` (customized version) — same 4 sections, kept in sync. +34/-13 lines.
+- `HANDOVER_TO_HERMES.md` — section 12 "What Not To Do" (added reframing callout + 3 new rule lines) + file-purposes table for astro.config/turbo.json/vercel.json. +29/-5 lines.
+
+Net: 3 files, +77/-18.
+
+### What Was NOT Changed
+- `docs/PASSDOWN-2026-06-01.md` "Re-touch Layout.astro without flagging in the Hub" — different concern (session-isolation, not bottleneck friction). Left as-is.
+- `docs/PASSDOWN-2026-05-13.md` "Other agent's unstaged changes... Do not commit or revert without user direction" — session-trust boundary, not a permission ping-pong rule. Left as-is.
+- `Do NOT propose or build state-specific hubs for states other than Maine` — this is a SCOPE rule, not a permission rule. Kept as a hard "Don't."
+- `Do NOT use trailing slashes in internal links` / `Do NOT use pure white (#FFF) on dark backgrounds` / `Do NOT leave Playwright browser open` — these are technical conventions, not permission gates. Kept verbatim.
+
+### Verification
+- Full-project typecheck (`npx astro check` from apps/maine-cannabis): 0 errors, 0 warnings, 189 hints (no new hints introduced — the changes were guidance files only, no .astro).
+- Both AGENTS.md files (`## Don't` section) now textually identical via `diff`.
+- Hub entry 719ba89 still references the old rule language; future agents reading the Hub chronologically will see the new rule language in the file and the reframing context in this entry.
+
+### Why This Matters
+The 2026-06-06 audit already proved the pattern works: real P0 caught, 0 false negatives from removing the gate, ~1 turn of friction saved per audit. This commit removes the same friction from 3 more touchpoints so future audits/fixes can move at the pace the verify loop allows, not the pace the ask-first chain allows.
