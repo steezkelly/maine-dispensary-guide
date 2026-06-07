@@ -5094,3 +5094,17 @@ All 4 open lower-priority items are now shipped. The site is in a strong place: 
 - **Net Sprint 73o impact:** 76 → 86 city guides (+13.2%). 4 new compliance deep-dives. 10 new hero images. Two index pages updated. OCP source data integrated into the editorial pipeline.
 - **What was NOT changed:** No AGENTS.md updates (the existing 2026-06-06 "trust the verify loop" rule is sufficient). No new components or layout changes. No new dependencies. No further compliance/legal review of the 4 sibling guides (they were already typechecked and built clean; a deeper legal review is out of scope for a content ship).
 - **Cumulative Sprint 73o: 14 new pages, 1 OCP-licensed town guide added, 4 compliance deep-dives, 2 index updates, 10 hero images, 1 Hub entry.**
+
+
+### Sprint 73p: 10 more OCP-licensed city guides (Jun 7, 2026 EDT) ✅ DONE
+- **Why:** Closed 10 of the 24 OCP-licensed town gaps remaining after Sprint 73o. The 14 backlog towns (Greenville Junction, Guilford, Solon, Baring Plantation, etc.) are 2-4 store towns in low-population regions; lower priority for a future sprint.
+- **Shipped in 2 commits** (`73dd38c`, `d678862`):
+  - **10 new city guides** targeting the next-tier OCP-licensed towns by store count and regional priority: Hallowell (5, Augusta metro), Thomaston (6, Knox County), Northport (6, Waldo County), Poland (5, Androscoggin), Woolwich (5, Sagadahoc), Bucksport (4, Hancock), Wiscasset (4, Lincoln), Southwest Harbor (4, Mount Desert Island), Mechanic Falls (2, Androscoggin), Fairfield (3, Somerset). Each ~70KB, Eliot Nash byline, operator data from OCP CSV, regional context, pricing, FAQ, cross-links.
+  - **11 sibling-session files committed separately** in `d678862`: 4 new resource cards on `index.astro` surfacing the 4 compliance deep-dives from Sprint 73o, plus 5 `related-callout` sidebars in existing guide pages cross-linking to the new compliance content, plus minor text additions to start-here, launch-checklist, roi-calculator, and search. No new components, no CSS changes.
+  - **Index updates** in `all-guides.astro` and `guides/index.astro` to surface the 10 new city guides in the right regional sections (Midcoast + Northern, Lakes & I-95).
+- **Cross-link audit:** Verified clean before commit — all `hubs_nearby` references in the 10 new guides point to existing guide files. Learned from Sprint 73o, no post-commit patches needed.
+- **Hero images:** 10 new `minimax` 16:9 images generated (240-570KB each). `hubs_nearby` references all resolved (Hallowell→augusta/gardiner/manchester, Thomaston→rockland/warren/camden, etc. — all guides shipped in Sprints 73o or 73p).
+- **Verification:** `npx astro check` 0 errors / 0 warnings / 260 hints (baseline 240 + 20 from 10 new files). `npm run build` 5.0s. All 10 guides 1 h1 each, correct title, correct hero. Vercel deploy: 291.7MB upload to `maine-dispensary-guide-2dswzbfcc-steezkellys-projects.vercel.app` (no OOM, NODE_OPTIONS=--max-old-space-size=4096 working reliably). Sitemap grew 194 → 204 URLs.
+- **Patches during execution:** `guides/index.astro` had 2 patch failures (multi-match confusion, then a duplicate Manchester line + duplicate `];`). Resolved by reading the file, re-anchoring patches with more context, and verifying the file structure end-to-end before commit. No rollback needed.
+- **Cumulative Sprint 73p impact:** 86 → 96 city guides (+11.6%). 14 OCP gap towns remain as backlog.
+- **What was NOT changed:** No AGENTS.md updates. No new components or layout changes. No new dependencies.
