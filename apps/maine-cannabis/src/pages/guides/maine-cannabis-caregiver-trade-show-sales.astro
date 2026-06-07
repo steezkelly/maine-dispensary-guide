@@ -1,0 +1,160 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Calvin Waters", authorTitle: "Licensing & Compliance Analyst", authorId: "calvin-waters", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "Compliance & Legal" };
+const topics = ["compliance", "licensing", "business", "events"];
+const titleText = "Maine Caregiver Trade Show Sales: LD 1840 Compliance Guide (Effective July 29, 2026)";
+
+const faqItems = [
+  { question: "When does LD 1840 (P.L. 2025, ch. 512) take effect?", answer: "The general effective date is July 29, 2026 — 90 days after the Second Regular Session of the 132nd Maine Legislature adjourned sine die on April 29, 2026, per Maine Constitution Article IV, Part Third, Section 16. The bill was signed into law without the Governor's signature on January 11, 2026 and chaptered as P.L. 2025, ch. 512, but the effective date runs from session adjournment, not signature. The caregiver trade show sales provision is in amended 22 M.R.S. §2423-A(2)(O)." },
+  { question: "Can a registered Maine caregiver sell cannabis at a trade show in 2026?", answer: "Starting July 29, 2026, yes — under the conditions in amended 22 M.R.S. §2423-A(2)(O). The pre-July-29 status was that caregiver sales were confined to property owned, leased, or rented by the caregiver; delivery to qualifying patients; or private arrangements with patients. The amendment explicitly adds 'at trade shows or other industry-related events regarding cannabis for medical use' as a permitted sales venue. Until July 29, caregivers can still exhibit and educate at events, but actual sales and product transfers are restricted to the existing venues." },
+  { question: "Is on-site consumption allowed at the trade show?", answer: "No. The amendment does not change Maine's general prohibition on public consumption of cannabis. Public consumption at a trade show or industry event remains illegal. Caregivers may sell and transfer product, but any consumption onsite by attendees — whether medical patients or caregivers — must occur in a private space or designated safe zone established by the host municipality under 30-A M.R.S. §3253. Operators should confirm with event organizers and the host municipality that a designated consumption area, if any, is properly permitted before the event." },
+  { question: "What about packaging and labeling at a trade show?", answer: "All product sold or transferred by a caregiver at a trade show must meet the same packaging and labeling requirements that apply to caregiver sales at the storefront. The OCP rule (18-691 C.M.R. ch. 2) requires child-resistant packaging, the universal symbol, a batch/Metrc tag, allergen and ingredient disclosure, THC/CBD content per serving and per package, and the standard caregiver registration number on the label. Trade show sales are not exempt from any of these requirements, and the OCP retains inspection authority at events the same as at the registered premises." },
+  { question: "Does LD 1840 require trip tickets or transport manifests?", answer: "Yes. The pre-amendment transport rules (22 M.R.S. §2423-A(2)(O) and 18-691 C.M.R. ch. 2 §4) require a contemporaneous transport manifest generated in Metrc whenever cannabis moves between registered locations. The amendment does not relax this — caregivers transporting product to a trade show or industry event must generate a manifest in Metrc at the time of departure, carry a printed or electronic copy during transport, and reconcile the manifest on return. The OCP will treat any product at an event without a matching manifest as unauthorized product and may pursue revocation." },
+  { question: "Are caregiver events the same as adult-use events?", answer: "No. The amendment applies only to medical cannabis sales by registered caregivers at industry events. Adult-use retail licensees do not have an analogous statutory authority to sell at a temporary event venue under 28-B M.R.S. (the Cannabis Legalization Act); adult-use sales must occur at the licensed premises. Medical patients attending a caregiver event should bring their registry identification card; sales to non-patients remain prohibited, and a caregiver who sells or transfers medical cannabis to a non-patient is subject to revocation and potential criminal referral under 22 M.R.S. §2423-A(5)." },
+  { question: "Can a caregiver charge a different price at a trade show?", answer: "Yes, but with care. The amendment permits sales at the event; it does not impose price controls. A caregiver may offer event-only pricing, a show special, or a bundled product package, provided each unit of product sold still meets the labeling and tracking rules. Discounts that would otherwise run afoul of OCP marketing rules (such as a 'two-for' that could be construed as a free sample to a non-qualifying individual) should be structured so that the qualifying patient is verified and the discount is applied at the point of sale, not in the form of free product." }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+  }))
+});
+---
+
+<Layout
+  title={titleText}
+  description="Maine registered caregivers can sell medical cannabis at trade shows and industry events starting July 29, 2026 under LD 1840 (P.L. 2025, ch. 512). Here's the compliance framework — packaging, transport manifests, patient verification, and what stays illegal."
+  heroImage="/images/heroes/maine-caregiver-trade-show-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+article { max-width: 720px; margin: 0 auto; }
+.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+.subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+.last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
+section { margin-bottom: 2rem; }
+section h2 { margin-top: 0; padding-top: 1rem; }
+section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-background); }
+section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+details { margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 600; }
+summary:hover { color: var(--color-primary); }
+.checklist li { margin-bottom: 0.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Caregiver Trade Show Sales: LD 1840 Compliance Guide</h1>
+    <p class="subtitle">What registered Maine caregivers need to do before selling medical cannabis at trade shows and industry events — effective July 29, 2026</p>
+    <p class="last-updated">Published: June 7, 2026 — last updated June 7, 2026</p>
+  </div>
+
+  <section>
+    <h2>Overview</h2>
+    <p>For the first time in Maine, registered caregivers will be able to sell and transfer medical cannabis at trade shows and other industry-related events. The change comes from LD 1840, signed into law in January 2026 as P.L. 2025, ch. 512, and effective July 29, 2026 — the 90-day general effective date following the April 29, 2026 sine die adjournment of the Second Regular Session of the 132nd Legislature.</p>
+    <p>This is the biggest operational change for Maine caregivers in over five years. The 1,539 registered caregivers in the state generated roughly $280 million in medical cannabis sales in 2023 — more than the entire adult-use market. The trade show channel gives caregivers access to a new sales venue, an in-person platform for new patient acquisition, and a route around the storefront-only restriction that has constrained caregiver distribution since the 2018 program redesign. It also introduces a new compliance surface area: transport manifests, packaging at a temporary venue, patient verification off-premises, and the OCP's inspection authority at events.</p>
+    <p>This guide walks through the operative statutory text, the compliance steps caregivers should complete before July 29, 2026, and the questions operators should be asking now while there is still a 53-day prep window.</p>
+  </section>
+
+  <section class="fact-box">
+    <h2>LD 1840 (P.L. 2025, ch. 512) — Caregiver Trade Show Sales</h2>
+    <table aria-label="LD 1840 caregiver trade show sales summary">
+      <tbody>
+        <tr><td><strong>Bill</strong></td><td>LD 1840, SP 723 (132nd Legislature)</td></tr>
+        <tr><td><strong>Sponsor</strong></td><td>Senator Hickman (Kennebec)</td></tr>
+        <tr><td><strong>Signed</strong></td><td>January 11, 2026 (Governor's Action: Unsigned — becomes law without signature per Me. Const. Art. IV Pt. 3 §2-A)</td></tr>
+        <tr><td><strong>Chaptered</strong></td><td>P.L. 2025, ch. 512</td></tr>
+        <tr><td><strong>Effective Date</strong></td><td>July 29, 2026 (90 days after April 29, 2026 sine die adjournment)</td></tr>
+        <tr><td><strong>Statutory Change</strong></td><td>Amends 22 M.R.S. §2423-A(2)(O) to add 'trade shows or other industry-related events regarding cannabis for medical use' as a permitted sales venue</td></tr>
+        <tr><td><strong>Companion Provisions</strong></td><td>Limits OCP's authority to require attestations not explicitly authorized by statute; restricts public disclosure of caregiver home addresses; requires gross sales data in OCP annual reports</td></tr>
+        <tr><td><strong>Estimated Affected Operators</strong></td><td>1,539 registered caregivers, 237 caregiver storefronts (per OCP 2025 Annual Report)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Statutory Change in Plain English</h2>
+    <p>Before LD 1840, the Maine Medical Use of Cannabis Act allowed a registered caregiver to "sell, offer to sell, furnish or transport cannabis plants or harvested cannabis for authorized conduct in accordance with this chapter on the property or premises owned, leased or rented by the caregiver, subject to the terms of any lease or rental agreement; ... or through delivery to or private arrangement with a qualifying patient or registrant as long as the delivery or private arrangement occurs on property or at premises owned, leased or rented ... by the caregiver, qualifying patient or registrant or on public property that is not designated as a safe zone by a municipality."</p>
+    <p>LD 1840 inserts a new permitted venue into that list: "at trade shows or other industry-related events regarding cannabis for medical use." The amendment does not change who may buy — sales are still limited to registered qualifying patients with valid registry identification cards — or what may be sold — the same products the caregiver is registered to cultivate, manufacture, test, or package at the registered premises.</p>
+    <p>The amendment also preserves the public-consumption prohibition. Public consumption of cannabis at the trade show or industry event remains illegal under 22 M.R.S. §2422-A and 28-B M.R.S. §1501. A caregiver who provides product for consumption at the event (as opposed to sale and removal from the venue) is selling into an illegal consumption context and risks revocation.</p>
+  </section>
+
+  <Callout title="Effective date and the prep window" type="warning">
+    The statutory change is not in effect today. Caregivers who sell or transfer cannabis at an event before July 29, 2026 are operating outside the permitted venues under §2423-A(2)(O) and risk revocation. The 53-day prep window between today and July 29 is when caregivers should: (1) update their standard operating procedures, (2) confirm with their event host that the venue is properly zoned and that a designated safe zone, if any, is permitted, (3) train staff on patient verification and Metrc manifest use, and (4) audit their packaging and labeling inventory to ensure every product available for sale at an event meets the OCP rule.
+  </Callout>
+
+  <section>
+    <h2>Compliance Checklist for the First Event</h2>
+    <ol class="checklist">
+      <li><strong>Confirm the event qualifies.</strong> The statute permits sales at "trade shows or other industry-related events regarding cannabis for medical use." Industry expos, B2B cannabis conferences, patient education events hosted by the Maine Medical Marijuana Caregivers of Maine (MMCM) or a similar trade association, and cultivation/processing conferences all qualify. A general consumer fair, a music festival, or a non-cannabis trade show does not — even if cannabis is incidental to the event.</li>
+      <li><strong>Verify zoning and municipal approval for the venue.</strong> The event must occur on a property where the host has the legal right to operate. A trade show at a convention center, a fairground building, or a municipally-owned facility is the typical case. The caregiver is responsible for confirming the venue has the appropriate commercial-event permits; OCP will not preempt a municipal zoning objection.</li>
+      <li><strong>Confirm whether a consumption area is proposed.</strong> If yes, the host must have secured a safe zone designation from the host municipality under 30-A M.R.S. §3253. The caregiver should obtain written confirmation before the event. If the event is dry (no consumption), the caregiver should have signage making that clear.</li>
+      <li><strong>Generate a Metrc transport manifest at departure.</strong> The OCP rule requires a contemporaneous manifest for any cannabis moving between registered locations. The trade show venue, for manifest purposes, is a permitted destination; the manifest must include the destination address, the package IDs being transported, the vehicle and driver, and the expected return time.</li>
+      <li><strong>Maintain a complete packaging and labeling audit at the venue.</strong> Every unit for sale must be in child-resistant packaging with the universal symbol, Metrc tag, allergen disclosure, THC/CBD content, caregiver registration number, and the standard required label statements. A caregiver may not open a package at the venue to repackage or rebrand. Pre-pack at the registered premises.</li>
+      <li><strong>Verify every buyer as a registered qualifying patient.</strong> The card must be current, the patient must be the named individual, and the sale must be recorded in Metrc against that patient's transaction history. Selling to an attendee who claims to be a patient but cannot produce a current RIC is a violation.</li>
+      <li><strong>Reconcile inventory on return.</strong> Sold product, returned product, samples, and any product that did not leave the venue must all be reconciled in Metrc against the originating manifest. The OCP's audit authority at events is the same as at the registered premises; the manifest is your evidence of compliance.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What Stays Illegal (and Worth Re-Stating)</h2>
+    <p>The amendment is narrow. It permits sales at industry events; it does not change Maine's underlying framework. Four things remain illegal and worth re-stating because they are the items most likely to be misunderstood by an operator reading only the headline:</p>
+    <ul>
+      <li><strong>On-site consumption at the event.</strong> Public consumption of cannabis remains a violation of 22 M.R.S. §2422-A and 28-B M.R.S. §1501 unless the venue is a municipally designated safe zone. A caregiver who permits, encourages, or enables consumption of product sold at the event is at risk.</li>
+      <li><strong>Sales to non-patients.</strong> Sales at the event are limited to registered qualifying patients. Walk-up retail, "any adult 21+," and event-day reciprocity for out-of-state patients are not authorized. (Visiting qualifying patients from other states are eligible under the standard visiting-patient rule, but the registration card and out-of-state verification still apply.)</li>
+      <li><strong>Adult-use product at the event.</strong> The amendment applies to medical cannabis sales by registered caregivers. A caregiver who also holds an adult-use license may not sell adult-use product at the trade show. The product must be from the medical inventory stream, in medical packaging, sold to a medical patient.</li>
+      <li><strong>Sales at non-qualifying events.</strong> A general business expo, a music festival, a food and wine event, or any venue that is not a "trade show or other industry-related event regarding cannabis for medical use" does not qualify, regardless of how the event is branded.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Strategic Considerations for Caregivers</h2>
+    <p>Beyond the compliance mechanics, the trade show channel changes a few things about how a caregiver business can be built:</p>
+    <h3>Patient acquisition cost</h3>
+    <p>Caregivers have traditionally grown through word of mouth and through storefront foot traffic where applicable. Trade shows concentrate the medical patient community in a single venue, often at lower cost per acquisition than digital advertising. For a new caregiver, the trade show channel is a cost-effective route to building a qualifying patient panel.</p>
+    <h3>Brand and product positioning</h3>
+    <p>Trade shows let caregivers differentiate on cultivation method (sun-grown, living soil, no-till), product form (fresh frozen, rosin, full-spectrum edible), and patient experience (consultations, follow-up, dosing). Caregivers who have invested in a quality story can communicate that story in a way that is hard to replicate in a card-swipe transaction.</p>
+    <h3>Wholesale relationships</h3>
+    <p>Caregivers historically have not had a B2B face. Trade shows put caregivers in the same room as adult-use cultivators, product manufacturers, and testing labs that may be interested in supply relationships. For a caregiver with a quality harvest, the trade show floor is the first time the wholesale buyer can see, smell, and shake hands with the producer.</p>
+    <h3>Compliance discipline</h3>
+    <p>The risk profile of a trade show booth is different from the risk profile of a storefront. A storefront has stable, controlled inventory, a closed camera system, and staff who know the routine. A trade show booth is a temporary, semi-public space with staff turnover, a different physical layout, and product that may sit visible to attendees during setup and breakdown. The OCP has full inspection authority at the booth. Caregivers should treat the first event as a dress rehearsal, not a revenue center.</p>
+  </section>
+
+  <Callout title="A note on the other LD 1840 provisions" type="info">
+    LD 1840 does more than add trade show sales. The bill also (1) prohibits the OCP from requiring attestations not explicitly authorized by statute, narrowing the agency's discretionary rulemaking authority; (2) restricts public disclosure of caregiver home addresses, a significant safety improvement; and (3) requires OCP's annual report to include medical program gross sales and sales tax revenue. Each of these is meaningful in its own right, but the trade show sales provision is the operational change with the most direct revenue impact for caregivers.
+  </Callout>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>LD 1840 (P.L. 2025, ch. 512) adds "trade shows or other industry-related events regarding cannabis for medical use" to the list of permitted caregiver sales venues in 22 M.R.S. §2423-A(2)(O).</li>
+      <li>Effective date: July 29, 2026. Until that date, caregiver sales at events are not statutorily permitted; sales at the storefront, via delivery, or via private arrangement with a patient remain the only options.</li>
+      <li>The amendment does not change who may buy (registered qualifying patients), what may be sold (the caregiver's normal product), or what remains illegal (on-site consumption, sales to non-patients, adult-use product, sales at non-qualifying events).</li>
+      <li>Compliance: generate a Metrc transport manifest at departure, maintain packaging and labeling at the venue, verify every buyer as a qualifying patient, reconcile inventory on return, and confirm municipal and host arrangements before the event.</li>
+      <li>Strategic value: trade shows give caregivers a new patient acquisition channel, a brand differentiation platform, and a B2B face for the first time — provided the compliance discipline is in place before the first event.</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <div class="disclaimer">
+    This content is for informational purposes only and does not constitute legal, tax, or business advice. The OCP has not yet published trade-show-specific guidance under amended §2423-A(2)(O); confirm with the OCP and your attorney before your first event. The Maine Dispensary Guide is not a law firm.
+  </div>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+</Layout>

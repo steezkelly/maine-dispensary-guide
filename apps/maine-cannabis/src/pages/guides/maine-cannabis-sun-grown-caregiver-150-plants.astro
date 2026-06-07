@@ -1,0 +1,157 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Calvin Waters", authorTitle: "Licensing & Compliance Analyst", authorId: "calvin-waters", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "Compliance & Legal" };
+const topics = ["licensing", "compliance", "business", "cultivation"];
+const titleText = "Maine Sun-Grown Caregiver 150-Plant Outdoor Cultivation: LD 1897 Guide (Effective July 29, 2026)";
+
+const faqItems = [
+  { question: "What does LD 1897 (P.L. 2025, ch. 514) actually change for Maine caregivers?", answer: "LD 1897, signed January 11, 2026 and effective July 29, 2026, creates a new caregiver cultivation category: the 'sun-grown cultivator.' A sun-grown caregiver who registers based on annual plant count may cultivate up to 150 mature cannabis plants, 300 immature plants, and unlimited seedlings between March and December. A sun-grown caregiver who registers based on annual canopy may cultivate up to 2,500 square feet of mature plant canopy and 5,000 square feet of immature plant canopy between March and December. The base caregiver limit of 30 mature plants / 500 square feet of mature canopy remains in effect for indoor and mixed-light cultivators." },
+  { question: "When does the 150-plant / 2,500-sq-ft option become available?", answer: "The new option takes effect on July 29, 2026, the general effective date for non-emergency laws passed in the Second Regular Session of the 132nd Legislature. Caregivers who wish to register as sun-grown cultivators under the new tier will need to update their registration with the Office of Cannabis Policy for the 2026 growing season. Caregivers already cultivating under the existing 30-plant limit may continue to do so; the new tier is opt-in, not mandatory." },
+  { question: "What is the legal definition of 'sun-grown cultivation' under the amendment?", answer: "Amended 22 M.R.S. §2423-A(2)(B-1) defines 'outdoor cultivation area' (the operational term the bill uses; 'sun-grown cultivator' is the registration term) as 'a cultivation area that primarily uses sunlight for the cultivation of mature cannabis plants.' The statute does not require 100% natural light — supplemental lighting during the seedling or immature phase, or during weather events, is not excluded — but the dominant lighting source for mature plants must be sunlight. A greenhouse with significant HPS or LED supplemental lighting during flower would not qualify; a high tunnel, a Hoop house, or an open-air outdoor cultivation site would." },
+  { question: "Can a sun-grown caregiver also cultivate indoors under the 30-plant base limit?", answer: "No. The amendment is explicit that a sun-grown cultivator 'may not cultivate cannabis under paragraph B' — the 30-plant base — and a caregiver cultivating under the base 30-plant rule 'may not cultivate cannabis under paragraph B-1' (the new 150-plant outdoor option). It is one or the other, not both. A caregiver who wants the operational flexibility of both an indoor and an outdoor cultivation area would need to register two separate caregiver registrations or transition to a cultivation facility license through the Office of Cannabis Policy." },
+  { question: "What is the registration fee for a sun-grown caregiver?", answer: "Amended 22 M.R.S. §2425-A(10)(B) sets the annual fee for a sun-grown cultivator at $50 to $240 for each group of 30 mature plants, with a 150-plant cap (so a fully-utilized sun-grown registration is $600 to $2,400 per year for the plant-count track). For the canopy track, the fee is $50 to $1,500 for up to 2,500 square feet of mature canopy. The fee is scaled by the OCP based on the caregiver's reported cultivation footprint. The base 30-plant caregiver registration remains $240 per year for the plant-count track and $1,500 for the canopy track." },
+  { question: "How does the sun-grown option interact with caregiver retail sales?", answer: "A sun-grown caregiver is still a caregiver under the Maine Medical Use of Cannabis Act, with all the same patient-facing rights and obligations. The 150-plant annual limit applies to mature cannabis plants in flower. A sun-grown caregiver can sell harvested product to registered qualifying patients through the same channels every caregiver uses: the registered premises, delivery, private arrangement, and (after July 29, 2026) at trade shows and industry events under LD 1840. The annual gross sales figure for a fully-utilized sun-grown caregiver is materially higher than for a 30-plant base caregiver; OCP's reporting and tax requirements are unchanged." },
+  { question: "What security and reporting requirements apply to a 150-plant outdoor cultivation site?", answer: "Amended 22 M.R.S. §2423-A(3)(B) requires an outdoor cultivation area to include 'reasonable precautions to prevent unauthorized access, such as a gated perimeter, fencing, locked gates, or natural barriers combined with signage.' The statute gives the caregiver discretion on the specific perimeter security, but the OCP has inspection authority and may require upgrades if the site is not reasonably secured. The caregiver must still report plant counts in Metrc, may not cultivate immature plants by canopy if cultivating mature plants by plant count (and vice versa), and remains subject to the 8-plant limit per registered qualifying patient under the standard caregiver rule." }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+  }))
+});
+---
+
+<Layout
+  title={titleText}
+  description="Maine sun-grown caregivers can cultivate up to 150 mature plants or 2,500 sq ft of outdoor canopy annually starting July 29, 2026 under LD 1897 (P.L. 2025, ch. 514). Plant-count vs canopy tracks, registration fees, and the indoor-cultivation restriction explained."
+  heroImage="/images/heroes/maine-sun-grown-caregiver-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+article { max-width: 720px; margin: 0 auto; }
+.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+.subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+.last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
+section { margin-bottom: 2rem; }
+section h2 { margin-top: 0; padding-top: 1rem; }
+section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-background); }
+section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+details { margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 600; }
+summary:hover { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Sun-Grown Caregiver 150-Plant Outdoor Cultivation: LD 1897 Guide</h1>
+    <p class="subtitle">How Maine's new sun-grown caregiver category expands outdoor cultivation from 30 to 150 mature plants annually — and the trade-offs the statute imposes</p>
+    <p class="last-updated">Published: June 7, 2026 — last updated June 7, 2026</p>
+  </div>
+
+  <section>
+    <h2>Overview</h2>
+    <p>LD 1897, signed into law in January 2026 as P.L. 2025, ch. 514 and effective July 29, 2026, creates a new caregiver cultivation tier in Maine. Registered caregivers who register as "sun-grown cultivators" can cultivate up to 150 mature cannabis plants, 300 immature plants, and unlimited seedlings each year between March and December — five times the existing 30-plant base caregiver limit. The amendment is the most significant expansion of caregiver cultivation rights since the 2018 program redesign and is aimed at the small, sun-grown craft segment of the medical market that the existing 30-plant cap effectively excluded from a full-season outdoor cycle.</p>
+    <p>For a caregiver who is currently limited to 30 mature plants, the new tier is a substantial economic change: a 150-plant outdoor cycle is a real wholesale-scale cultivation footprint. The bill also creates a parallel canopy-based track (2,500 sq ft of mature canopy, 5,000 sq ft of immature canopy) for caregivers who prefer canopy measurement to plant counting. Both tracks are annual, with a defined March-to-December cultivation window, and a sun-grown caregiver cannot simultaneously cultivate under the 30-plant base caregiver limit.</p>
+  </section>
+
+  <section class="fact-box">
+    <h2>LD 1897 (P.L. 2025, ch. 514) — Sun-Grown Caregiver Cultivation</h2>
+    <table aria-label="LD 1897 sun-grown caregiver cultivation summary">
+      <tbody>
+        <tr><td><strong>Bill</strong></td><td>LD 1897, HP 1268 (132nd Legislature)</td></tr>
+        <tr><td><strong>Sponsor</strong></td><td>Veterans and Legal Affairs Committee bill</td></tr>
+        <tr><td><strong>Signed</strong></td><td>January 11, 2026 (Governor's Action: Unsigned — becomes law without signature)</td></tr>
+        <tr><td><strong>Chaptered</strong></td><td>P.L. 2025, ch. 514</td></tr>
+        <tr><td><strong>Effective Date</strong></td><td>July 29, 2026</td></tr>
+        <tr><td><strong>Statutory Change — Plant Count Track</strong></td><td>Amends 22 M.R.S. §2423-A(2)(B-1) to allow up to 150 mature plants / 300 immature / unlimited seedlings, March–December annually</td></tr>
+        <tr><td><strong>Statutory Change — Canopy Track</strong></td><td>Up to 2,500 sq ft mature canopy / 5,000 sq ft immature canopy, March–December annually</td></tr>
+        <tr><td><strong>Plant-Count Fee</strong></td><td>$50–$240 per group of 30 mature plants, $50–$1,500 per canopy tier</td></tr>
+        <tr><td><strong>Canopy Fee</strong></td><td>$50–$1,500 for up to 2,500 sq ft of mature canopy</td></tr>
+        <tr><td><strong>Security Requirement</strong></td><td>Amended 22 M.R.S. §2423-A(3)(B) requires 'reasonable precautions' — gated perimeter, fencing, or natural barriers with signage</td></tr>
+        <tr><td><strong>Limitation</strong></td><td>Sun-grown caregiver cannot also cultivate under base 30-plant limit; indoor and mixed-light cultivation require a separate caregiver registration or a cultivation facility license</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>What the New Tier Looks Like in Practice</h2>
+    <p>The sun-grown caregiver track is a fundamentally different cultivation footprint from the base 30-plant caregiver. A 150-plant outdoor cycle, grown from May to October in Maine's climate, is in the same general scale as a small licensed cultivation facility. The annual yield from a well-run 150-plant site is enough to supply a caregiver's own patient panel plus a wholesale channel, or a dedicated patient panel of 200+ patients depending on dosing and product mix.</p>
+    <p>For caregivers who are already operating near the 30-plant cap and looking for a way to expand without taking on the cost and complexity of a cultivation facility license (the OCP adult-use track), the sun-grown caregiver tier is the obvious next step. The trade-off is the loss of indoor flexibility: a sun-grown caregiver cannot keep mother plants under lights, cannot run a multi-cycle indoor vegetative and flowering rotation, and cannot extend the cultivation season past December.</p>
+  </section>
+
+  <Callout title="The indoor/outdoor exclusivity" type="warning">
+    Read amended 22 M.R.S. §2423-A(2) carefully. A sun-grown caregiver 'may not cultivate cannabis under paragraph B' (the 30-plant base) and a caregiver cultivating under the 30-plant base 'may not cultivate cannabis under paragraph B-1' (the new 150-plant outdoor option). If your current operation has both an indoor mother/veg room and an outdoor flower site, you cannot register as a sun-grown caregiver unless you drop the indoor cultivation. Two options: (1) register the indoor cultivation as a separate caregiver registration with the OCP (each caregiver is a separate person, so a married couple or business partnership can stack two registrations); (2) move the indoor cultivation to a separate OCP cultivation facility license, which has its own application, fee, and tracking regime.
+  </Callout>
+
+  <section>
+    <h2>Plant-Count vs. Canopy Tracks</h2>
+    <p>The amendment gives sun-grown caregivers a choice of measurement: count plants or measure canopy. The two tracks are not interchangeable — you pick one at registration and stick with it for the season. The decision is operationally simple but has audit consequences.</p>
+    <h3>Plant-count track</h3>
+    <p>Best for caregivers who run a small number of large plants, use minimal plant-training techniques, and can do a manual count with high accuracy. The OCP inspections on a plant-count site focus on tagged-plant reconciliation: every mature plant should have a Metrc tag, the tag should match the plant, and the count should match the registration. A 150-plant site is a manageable count for a single trained inspector; the audit risk is the integrity of the tag-to-plant mapping, not the count itself.</p>
+    <h3>Canopy track</h3>
+    <p>Best for caregivers who run a high-plant-density SOG (sea of green) or who use plant-training techniques that obscure individual plant counts. The 2,500-sq-ft mature canopy track is roughly 17 plants per square foot at a typical 1.4 sq ft per plant density, which is around 42,500 sq ft of total canopy area for 150 mature plants at the same density. Canopy measurement is more flexible but invites estimation disputes. Document canopy measurements with photos at the start and end of each cycle, and have the OCP inspector walk the site with you to agree on a baseline.</p>
+  </section>
+
+  <section>
+    <h2>Operational Considerations</h2>
+    <p>For a caregiver who is currently at the 30-plant cap and considering the upgrade, the operational work is meaningful.</p>
+    <h3>Site selection and security</h3>
+    <p>A 150-plant outdoor cultivation site requires real estate. The base 30-plant caregiver can often operate on a small residential lot; a 150-plant site needs at least a half-acre of usable land, secure perimeter, and a place for drying, trimming, and storage. The amended 22 M.R.S. §2423-A(3)(B) requirement for "reasonable precautions" — gating, fencing, locked structures, signage — is a baseline, not a ceiling. Insurers will likely want more. Municipal setback rules and the 500-foot school buffer (if your site is within range) apply at the same scale as a cultivation facility.</p>
+    <h3>Plant tagging and Metrc</h3>
+    <p>A 150-plant site triples the tag load. The base caregiver with 30 plants can manage tags on a clipboard; the sun-grown caregiver should plan for a dedicated Metrc tagging workflow, ideally a tag-station setup with a tablet, label printer, and a clean surface for the tag-to-plant mapping at the point of tag application. A back-office reconciliation at the end of each month is no longer optional.</p>
+    <h3>Labor</h3>
+    <p>150 plants is a full-time cultivation job from May through October. A caregiver who is also running patient consultations, delivery, and (after July 29, 2026) trade show sales will need either a caregiver assistant registered with the OCP or a contracted labor arrangement. The 30-day grace period for caregiver assistants and contractor filings, also part of LD 1897, gives a small amount of operational flexibility during onboarding.</p>
+    <h3>Drying, processing, and storage</h3>
+    <p>150 mature plants in Maine, harvested in late September or early October, can produce 500–1,500 pounds of fresh frozen or 100–300 pounds of dried flower depending on the cultivar and the drying method. The drying and storage footprint is materially larger than a base caregiver operation. A 20-ft by 20-ft climate-controlled drying room is a realistic minimum; a comparable cured-storage area is needed for the year-round sales window.</p>
+  </section>
+
+  <section>
+    <h2>Registration Workflow (Pre-July 29, 2026)</h2>
+    <ol>
+      <li><strong>Confirm the site qualifies.</strong> The site must use sunlight as the primary lighting source for mature plants. Supplemental lighting during the seedling or immature phase is acceptable; supplemental lighting during flower is not. Greenhouses with high-intensity HPS or LED during flower will not qualify.</li>
+      <li><strong>Confirm there is no overlap with an existing indoor cultivation registration.</strong> If you currently cultivate indoors under the 30-plant base, you must either close that registration or move the indoor cultivation to a separate caregiver or facility license before registering as a sun-grown caregiver.</li>
+      <li><strong>Submit the updated caregiver registration to the OCP.</strong> The OCP has not yet published a sun-grown-specific registration form, but the standard caregiver renewal form should be updated before the 2026 growing season to include the sun-grown option. Confirm with the OCP that the form is in place before relying on the new tier for a 2026 cycle.</li>
+      <li><strong>Pay the appropriate fee.</strong> The fee is $50 to $240 for each group of 30 mature plants (so up to $1,200 at the 150-plant cap) on the plant-count track, or $50 to $1,500 on the canopy track. The OCP will scale the fee based on the registered footprint.</li>
+      <li><strong>Prepare the site for inspection.</strong> The OCP may inspect the site before issuing the registration. Perimeter security, signage, and access controls should be in place. Document the site with photos and a sketch before the inspection; a contemporaneous record is your evidence if the OCP later disputes a measurement.</li>
+      <li><strong>Set up Metrc for the larger footprint.</strong> Tags, manifests, and inventory reconciliation are all higher-volume. A small site can run on a single Metrc user license; a 150-plant site may need a second user account for a partner or assistant.</li>
+    </ol>
+  </section>
+
+  <Callout title="The April 28, 2026 federal angle" type="info">
+    Effective April 28, 2026, state-licensed medical marijuana was moved to Schedule III of the federal Controlled Substances Act by the U.S. Department of Justice (AG Order No. 6754-2026, 91 FR 22714). The change has direct tax consequences for caregivers with significant medical revenue: ordinary Section 162 business deductions are now available for the medical side. See our Maine Dual-License 280E Schedule III Apportionment Guide for the full framework.
+  </Callout>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>LD 1897 (P.L. 2025, ch. 514) creates a new sun-grown caregiver cultivation tier, effective July 29, 2026, with an annual cap of 150 mature plants / 300 immature / unlimited seedlings, or 2,500 sq ft of mature canopy / 5,000 sq ft of immature canopy.</li>
+      <li>The cultivation window is March to December. A sun-grown caregiver cannot also cultivate under the 30-plant base caregiver limit; the tracks are mutually exclusive.</li>
+      <li>Annual registration fee is $50 to $240 per group of 30 mature plants (up to $1,200 at the 150-plant cap) on the plant-count track, or $50 to $1,500 on the canopy track.</li>
+      <li>Security requirement: "reasonable precautions" against unauthorized access (gated perimeter, fencing, locked structures, or natural barriers with signage) per amended 22 M.R.S. §2423-A(3)(B).</li>
+      <li>Operational implications are real: a 150-plant site needs more land, more labor, a dedicated Metrc workflow, and a climate-controlled drying and storage footprint. Plan accordingly.</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <div class="disclaimer">
+    This content is for informational purposes only and does not constitute legal, tax, or business advice. The OCP has not yet published sun-grown-specific registration guidance under amended §2423-A(2)(B-1); confirm with the OCP and your attorney before relying on the new tier for the 2026 growing season. The Maine Dispensary Guide is not a law firm.
+  </div>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+</Layout>

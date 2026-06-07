@@ -1,0 +1,199 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Margaret Finch", authorTitle: "Finance & Taxation Analyst", authorId: "margaret-finch", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "Compliance & Legal" };
+const topics = ["finance", "compliance", "business", "tax"];
+const titleText = "Maine Dual-License Cannabis 280E: Schedule III Apportionment Guide";
+
+const faqItems = [
+  { question: "Does IRC 280E still apply to Maine cannabis businesses in 2026?", answer: "It depends. State-licensed medical cannabis — including products sold by registered Maine caregivers and licensed dispensaries — was moved to Schedule III of the federal Controlled Substances Act on April 28, 2026, by the U.S. Department of Justice. For that medical side, 280E is no longer the binding federal rule; standard Section 162 business deductions apply. Adult-use (recreational) cannabis remains on Schedule I until the DEA's broader rescheduling hearing concludes, currently scheduled to end no later than July 15, 2026. Dual-license operators must therefore keep 280E compliance for their adult-use books while reclaiming ordinary deductions on the medical side." },
+  { question: "What changed for Maine dual-license operators on April 28, 2026?", answer: "That is the effective date of the DOJ Final Order (AG Order No. 6754-2026, published at 91 Federal Register 22714). The order moved two categories of marijuana to Schedule III: (1) marijuana contained in an FDA-approved drug product, and (2) marijuana subject to a state-issued medical marijuana license. Maine caregiver storefronts, registered caregivers, and licensed medical dispensaries all qualify under the second category. The order also opened an expedited DEA registration pathway (21 CFR Part 1301) for medical licensees; applications filed within 60 days of publication — by June 27, 2026 — receive priority six-month processing and may operate under their state-issued licenses during the application pendency." },
+  { question: "What is the dual-license 280E expense apportionment strategy?", answer: "It is the practice of allocating shared overhead — rent, payroll, security, insurance, utilities, marketing, software, professional services — between Schedule III medical operations and Schedule I adult-use operations on a reasonable, contemporaneously-documented basis, so that the portion of the expense attributable to medical activity is deducted under Section 162 rather than trapped in 280E. Federal appellate precedent (Californians Helping to Alleviate Med. Problems v. Commissioner, 128 T.C. 173) and IRS audit guidance both support cost-allocation methods that use revenue, square footage, employee time, or another measurable driver, so long as the methodology is documented and consistently applied." },
+  { question: "When does the expedited DEA registration window close?", answer: "Medical cannabis entities that submit their DEA registration application within 60 days of the April 28, 2026 Federal Register publication — by close of business June 27, 2026 — qualify for the expedited six-month review. Maine dual-license operators with a Schedule III medical component should treat this as a hard deadline. Late filings still go through the standard 21 CFR Part 1301 process but without the priority lane and without the explicit statutory permission to operate under the state license during review." },
+  { question: "Does the June 29, 2026 DEA hearing change anything for adult-use?", answer: "Not immediately. The hearing (AG Order No. 6753-2026, 91 FR 22778) is the formal administrative proceeding on the proposed rescheduling of all marijuana from Schedule I to Schedule III. It begins June 29, 2026 at the DEA Hearing Facility in Arlington, Virginia, and must conclude no later than July 15, 2026. The hearing is procedural — the final rescheduling rule for adult-use comes after the ALJ issues a recommended decision, then a final DEA order, then publication in the Federal Register. Operators should not assume a specific date for adult-use Schedule III; build a tax strategy that works whether the broader rescheduling lands in late 2026, 2027, or later." },
+  { question: "Can a Maine operator keep one legal entity for both license types?", answer: "Yes. Schedule III is determined at the product level, not the entity level, so a single LLC can hold both a caregiver or medical dispensary license and an adult-use retail license. The apportionment work is the same: keep separate books, separate Metrc tag streams where feasible, separate inventory accounts, and a written allocation policy. That said, many sophisticated operators use a holding-company structure with a medical LLC and an adult-use LLC for risk and banking isolation. Either approach works for tax purposes; the entity choice should be driven by your banker, your insurer, and your litigation posture, not by the tax code." }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+  }))
+});
+---
+
+<Layout
+  title={titleText}
+  description="Maine dual-license operators can now deduct Schedule III medical expenses under Section 162 while keeping 280E compliance for adult-use. The April 28, 2026 DOJ Final Order opens a 60-day expedited DEA registration window closing June 27, 2026 — here's how to structure the apportionment."
+  heroImage="/images/heroes/maine-cannabis-schedule-iii-dual-license-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+article { max-width: 720px; margin: 0 auto; }
+.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+.subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+.last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
+section { margin-bottom: 2rem; }
+section h2 { margin-top: 0; padding-top: 1rem; }
+section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-background); }
+section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+details { margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 600; }
+summary:hover { color: var(--color-primary); }
+.timeline-item { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; margin-bottom: 0.75rem; align-items: baseline; }
+.timeline-date { font-weight: 600; color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Dual-License Cannabis 280E: Schedule III Apportionment Guide</h1>
+    <p class="subtitle">How Maine operators with both a medical and an adult-use license can reclaim ordinary business deductions on the Schedule III side while the adult-use rescheduling hearing plays out</p>
+    <p class="last-updated">Published: June 7, 2026 — last updated June 7, 2026</p>
+  </div>
+
+  <section>
+    <h2>Overview</h2>
+    <p>For the first time since IRC Section 280E was enacted in 1982, the federal tax treatment of state-licensed medical cannabis is in real flux. On April 28, 2026, the U.S. Department of Justice issued a Final Order placing marijuana subject to a state medical marijuana license in Schedule III of the Controlled Substances Act. For Maine operators who hold both a medical license (caregiver storefront, registered caregiver, or licensed medical dispensary) and an adult-use license from the Office of Cannabis Policy, the change creates an immediate, documentable tax-planning opportunity — and an immediate compliance obligation.</p>
+    <p>This guide is written for the operator, controller, or outside CPA who has a dual-license Maine cannabis business and needs to understand: (1) what the April 28 order actually changed, (2) what is still on Schedule I and still subject to 280E, (3) how to apportion shared expenses between the two license types, (4) the June 27, 2026 expedited DEA registration deadline, and (5) how the broader June 29 – July 15 DEA rescheduling hearing could shift the answer again. This is technical B2B content; the goal is to give you the framework your tax advisor will need to act on the new law.</p>
+  </section>
+
+  <section class="fact-box">
+    <h2>Schedule III for Medical — At a Glance</h2>
+    <table aria-label="Maine dual-license Schedule III facts">
+      <tbody>
+        <tr><td><strong>Triggering Authority</strong></td><td>U.S. DOJ Final Order, AG Order No. 6754-2026</td></tr>
+        <tr><td><strong>Published</strong></td><td>91 Federal Register 22714 (April 28, 2026)</td></tr>
+        <tr><td><strong>Effective Date</strong></td><td>April 28, 2026 (date of Federal Register publication)</td></tr>
+        <tr><td><strong>What Moved to Schedule III</strong></td><td>(1) Marijuana in an FDA-approved drug product, and (2) marijuana subject to a state-issued medical marijuana license</td></tr>
+        <tr><td><strong>Federal Tax Effect (Medical)</strong></td><td>Section 162 ordinary business deductions now apply; 280E no longer binds the medical side</td></tr>
+        <tr><td><strong>Federal Tax Effect (Adult-Use)</strong></td><td>Schedule I — 280E still applies in full until the broader DEA rescheduling is finalized</td></tr>
+        <tr><td><strong>Expedited DEA Reg Window</strong></td><td>Open April 28, 2026 — closes June 27, 2026 (60 days post-publication)</td></tr>
+        <tr><td><strong>Broader Rescheduling Hearing</strong></td><td>June 29, 2026 – July 15, 2026, DEA HQ Arlington, VA (AG Order 6753-2026)</td></tr>
+        <tr><td><strong>State Tax Effect (Maine)</strong></td><td>Unchanged — Maine has permitted ordinary state-level deductions since 2018 (24 M.R.S. §5122)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <Callout title="Read the Federal Register, not the marketing" type="warning">
+    The Schedule III reclassification is a Final Order under CSA Section 811(d)(1), not the formal rulemaking track. It is binding on DEA and federal prosecutors the moment it was published (April 28, 2026). It is also limited: it covers only the two categories named in the order. If you handle cannabis that is not in an FDA-approved drug product and not subject to a state medical marijuana license — i.e., the adult-use side of your books — that material remains Schedule I and remains trapped in 280E. The dual-license apportionment problem is therefore not solved by Schedule III; it is solved alongside Schedule III, for the medical side only.
+  </Callout>
+
+  <section>
+    <h2>What the April 28, 2026 Final Order Actually Did</h2>
+    <p>The Acting Attorney General's authority to place drugs in Schedule III derives from Section 811(d)(1) of the Controlled Substances Act, which Congress enacted to let the executive branch bring domestic scheduling into compliance with the 1961 Single Convention on Narcotic Drugs without a full notice-and-comment rulemaking. The April 23, 2026 announcement and the April 28, 2026 Federal Register publication together moved two distinct categories of marijuana to Schedule III:</p>
+    <ol>
+      <li><strong>Marijuana in an FDA-approved drug product</strong> — currently a narrow set (the only FDA-approved cannabis-derived product is Epidiolex and a handful of Marinol-class synthetics). This category does not directly affect Maine operators.</li>
+      <li><strong>Marijuana subject to a state-issued medical marijuana license</strong> — this is the operative category for Maine. A "state medical marijuana license" under the order is read broadly: it includes caregivers, caregiver storefronts, medical dispensaries, and any other entity registered with the Maine Office of Cannabis Policy to manufacture, distribute, or dispense cannabis for medical use.</li>
+    </ol>
+    <p>For tax purposes, the operative consequence is that 280E — which by its terms applies to trafficking in Schedule I or Schedule II controlled substances — no longer attaches to income and expenses from the Schedule III medical side. The IRS does not have authority to disallow ordinary business deductions on income from a substance that is not Schedule I or II. Standard Section 162 deductions (rent, payroll, marketing, software, insurance, professional fees) are once again available for the medical books.</p>
+    <p>The order also opened a new expedited DEA registration pathway under 21 CFR Part 1301. State medical licensees can apply for DEA registration as manufacturers, distributors, and/or dispensers. Applicants who file within 60 days of publication — by June 27, 2026 — receive priority six-month review and may continue operating under their state-issued license during the application pendency. After the 60-day window, applications are processed under the standard pathway with no statutory bridge from state to federal authority.</p>
+  </section>
+
+  <section>
+    <h2>What Did Not Change</h2>
+    <p>Three things are important not to overread:</p>
+    <ul>
+      <li><strong>Adult-use is still Schedule I.</strong> The April 28 order does not move recreational marijuana. The 280E trap is still fully closed around your adult-use books until the broader rescheduling concludes. Maine's combined medical + adult-use market is the only one in the country where medical out-weighs adult-use ($280M vs. $217M in 2023 per the OCP 2025 annual report), which is why the dual-license apportionment problem is uniquely large here.</li>
+      <li><strong>Bankruptcy and tax collections are still federally restricted.</strong> IRC Section 280E removes ordinary deductions; the underlying federal illegality under the Controlled Substances Act for Schedule I substances continues to create banking, R&D credit, and bankruptcy hurdles for the adult-use side.</li>
+      <li><strong>State tax treatment is unchanged.</strong> Maine has permitted ordinary business deductions on state returns since 2018 (24 M.R.S. §5122, the "income subtraction modification"). You were already getting the deduction on the state side; the April 28 order unlocks the federal side for the medical component only.</li>
+    </ul>
+  </section>
+
+  <section class="fact-box">
+    <h2>The Dual-License Tax Map</h2>
+    <table aria-label="Federal vs state tax treatment by license type">
+      <thead>
+        <tr><th>Income / Expense</th><th>Federal Treatment (Pre-4/28/2026)</th><th>Federal Treatment (Post-4/28/2026, Medical)</th><th>Federal Treatment (Adult-Use, Unchanged)</th><th>Maine State Treatment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Medical caregiver sales</td><td>280E trapped</td><td><strong>Section 162 ordinary deduction</strong></td><td>N/A</td><td>Ordinary deduction (since 2018)</td></tr>
+        <tr><td>Medical dispensary sales</td><td>280E trapped</td><td><strong>Section 162 ordinary deduction</strong></td><td>N/A</td><td>Ordinary deduction</td></tr>
+        <tr><td>Adult-use retail sales</td><td>280E trapped</td><td>280E trapped</td><td>280E trapped</td><td>Ordinary deduction</td></tr>
+        <tr><td>Shared rent, payroll, insurance</td><td>Allocable COGS only</td><td>Apportion: medical = 162, adult-use = 280E</td><td>Stays in 280E</td><td>Fully deductible to medical</td></tr>
+        <tr><td>CBD-only product (FDA-approved)</td><td>Already 162 deductible</td><td>162 deductible</td><td>162 deductible</td><td>Ordinary deduction</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Apportionment Framework</h2>
+    <p>For a dual-license operator, the question is no longer "is any of this deductible?" — it is "how do I split shared overhead between the medical books, which are now 162-eligible, and the adult-use books, which are still 280E-trapped?" The federal case law, IRS guidance, and Maine practice all support a documented, consistently-applied allocation methodology. The four that matter:</p>
+
+    <h3>1. Revenue Allocation</h3>
+    <p>Allocating shared expenses by the revenue share of each license type is the simplest and most common methodology. If your medical channel is 35% of total revenue for the period, 35% of shared overhead is allocated to the medical side. Strength: easy to compute, easy to defend. Weakness: revenue mix can shift seasonally, so a single annual ratio may not match the period you are trying to allocate.</p>
+
+    <h3>2. Square Footage Allocation</h3>
+    <p>Allocating rent, utilities, and facility overhead by the square footage dedicated to medical vs. adult-use activity is the cleanest methodology where the operations are physically separate. A common implementation: a separate dispensary room for medical patients, a separate check-in desk, separate inventory storage. Strength: audit-defensible. Weakness: a single shared back office, shared HVAC, and shared point-of-sale hardware can blur the lines.</p>
+
+    <h3>3. Employee Time Allocation</h3>
+    <p>Allocating payroll, benefits, and training by employee-reported time across the two channels. Strength: most accurate for labor. Weakness: requires time-tracking discipline, which most small operators do not have; an estimate methodology with annual reconciliation is acceptable if consistently applied.</p>
+
+    <h3>4. Headcount or Transaction Count</h3>
+    <p>Allocating POS-related overhead, customer acquisition cost, and loyalty program expense by the number of transactions (or unique patients/customers) in each channel. Strength: clean for marketing and POS-software expenses. Weakness: not appropriate for rent or insurance.</p>
+
+    <p>Most Maine dual-license operators use a blended methodology: square footage for facility overhead, employee time for payroll, revenue share for everything else. The methodology must be in writing, signed by a controller or CPA, applied consistently across all reporting periods, and updated when operations change materially. A methodology that changes year to year without explanation is the audit trigger that produces the worst-case outcome.</p>
+  </section>
+
+  <section>
+    <h2>The June 27, 2026 Deadline You Cannot Miss</h2>
+    <p>The expedited DEA registration window opened with Federal Register publication on April 28, 2026, and closes 60 days later — June 27, 2026. Operators who file their 21 CFR Part 1301 application within the window receive:</p>
+    <ul>
+      <li>Priority six-month review. DEA is directed by the Final Order to process all 60-day applications within six months.</li>
+      <li>Statutory authority to operate under the state-issued license during the application pendency. New 21 CFR 1301.13(k) explicitly allows applicants who file within 60 days to engage in manufacture, distribution, and dispensing in conformity with the state license while DEA reviews.</li>
+      <li>A federal registration that survives suspension of the underlying state license. The order provides that federal registration automatically suspends if the state license is suspended, revoked, or expires — meaning the federal authorization tracks state authorization rather than replacing it.</li>
+    </ul>
+    <p>For a dual-license operator with a Schedule III medical component, filing within the window is essentially a no-regret action. The application is straightforward (state license, fingerprints, $244 three-year registration fee for a dispenser, similar to a standard DEA practitioner registration). The downside of missing it is small — standard applications are still accepted — but the upside of having a priority-track federal registration and the statutory bridge during review is large, particularly if you handle products at the FDA-approved boundary or sell across state lines.</p>
+  </section>
+
+  <section>
+    <h2>Watching the June 29 – July 15 Rescheduling Hearing</h2>
+    <p>Separately, the DEA will hold a formal administrative hearing beginning June 29, 2026 at the DEA Hearing Facility in Arlington, Virginia, on the proposed rule to transfer <em>all</em> marijuana from Schedule I to Schedule III. The hearing must conclude no later than July 15, 2026. The Acting Attorney General designated an Administrative Law Judge on June 22, 2026, and the hearing was originally scheduled to begin December 2, 2024 before being withdrawn and restarted under the December 18, 2025 Executive Order 14370.</p>
+    <p>What the hearing can produce: a recommended decision from the ALJ, a final DEA order, and eventually a Federal Register publication that moves adult-use cannabis to Schedule III. What the hearing cannot produce on its own: a Schedule III designation for adult-use. That requires a final rule. The realistic timeline from hearing conclusion to a final rule ranges from late 2026 (if the ALJ issues a clean recommended decision and the DEA adopts it) to 2027 or 2028 (if there are post-hearing comments, additional proceedings, or a challenge).</p>
+    <p>For dual-license operators, the strategic question is: do you build a tax structure that works if adult-use is still Schedule I in 2027, or do you pre-build for the post-rescheduling world? The right answer is the former. The April 28 medical-only Schedule III order is locked in and unambiguous; the broader rescheduling is a conditional that may or may not land on your planning horizon. Build for the schedule you have, not the schedule you hope for.</p>
+  </section>
+
+  <Callout title="A note on professional advice" type="info">
+    This guide is a technical framework, not legal or tax advice. Dual-license apportionment is one of the most fact-intensive areas of cannabis tax; a methodology that works for a 4,000-sq-ft vertically integrated operator with separate storefront rooms will not work for a caregiver running both licenses out of the same checkout counter. Engage a CPA with active cannabis tax experience in Maine before you file your next 1120 or 1065. The cost of a methodology memo is rounding error against the federal tax exposure on the adult-use side.
+  </Callout>
+
+  <section>
+    <h2>Action Items for Maine Dual-License Operators</h2>
+    <div class="timeline-item"><span class="timeline-date">Now (June 7, 2026)</span><span>Inventory your license types, square footage per license, employee counts per license, and revenue mix for the trailing 12 months. This is the data set your CPA needs to draft an apportionment methodology.</span></div>
+    <div class="timeline-item"><span class="timeline-date">This week</span><span>File your 21 CFR Part 1301 expedited DEA registration application if you have any Schedule III medical activity. The 60-day window closes June 27, 2026.</span></div>
+    <div class="timeline-item"><span class="timeline-date">Q3 2026</span><span>Document your apportionment methodology in writing. Adopt it prospectively, apply it to the medical side of every 2026 financial statement, and keep the methodology unchanged through year-end.</span></div>
+    <div class="timeline-item"><span class="timeline-date">Year-end 2026</span><span>Reconcile actuals to your methodology. If revenue mix shifted by more than 5 percentage points from your planning assumption, update the methodology and document the change.</span></div>
+    <div class="timeline-item"><span class="timeline-date">Q1 2027</span><span>Watch the broader rescheduling rule. If a final rule moves adult-use to Schedule III, the apportionment problem collapses; until then, treat the medical/Schedule III line as the bright one and keep 280E compliance on the adult-use side.</span></div>
+  </section>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>The April 28, 2026 DOJ Final Order moved state-licensed medical marijuana to Schedule III. For Maine dual-license operators, ordinary Section 162 business deductions are now available for the medical component of operations.</li>
+      <li>Adult-use remains on Schedule I. The 280E trap is still fully closed around your adult-use books. The Schedule III reclassification does not solve the adult-use problem; it solves the medical-side problem only.</li>
+      <li>The dual-license apportionment framework — square footage for facility, employee time for labor, revenue share for everything else — is the cleanest implementation. The methodology must be in writing and applied consistently.</li>
+      <li>The expedited DEA registration window closes June 27, 2026. Filing within 60 days gets priority review and statutory authority to operate under your state license during processing.</li>
+      <li>The June 29 – July 15, 2026 DEA rescheduling hearing is procedural. Do not pre-build a tax structure on the assumption that adult-use moves to Schedule III in 2026.</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <div class="disclaimer">
+    This content is for informational purposes only and does not constitute legal, tax, or business advice. Engage a CPA with active cannabis tax experience in Maine and a tax attorney before filing a dual-license methodology. The Maine Dispensary Guide is not a law firm.
+  </div>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+</Layout>
