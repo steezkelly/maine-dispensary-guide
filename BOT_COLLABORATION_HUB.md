@@ -4766,3 +4766,56 @@ The audit methodology needs to include `packages/` in scope. The shared UI packa
 - **Net broken-internal-links fixed**: 197 (190 from src + 7 from packages/public)
 - **Typecheck**: 0 errors / 0 warnings / 189 hints throughout
 
+
+## 📋 SPRINT 73o: Image perf — 50MB → 31MB hero pipeline + WebP fallback (Jun 6, 2026 EDT)
+
+**[HERMES] Jun 6, 2026 EDT — Continuing the bug/optimization hunt**
+
+### Trigger
+After the Sprint 73n cleanup, Steve asked to "continue finding bugs and optimizations/opportunities for us to clean up." Round 1 of the new pass: image SEO/performance audit.
+
+### What I checked
+- Image inventory: 172 hero jpgs (50MB total, avg 295KB), 11 infographic jpgs (1.9MB), 1 test file
+- No image optimization pipeline existed (`sharp` was available as Astro transitive dep but not used)
+- No `<picture>` element anywhere, no WebP, no srcset
+- All heroes served as raw `<img src=...>` with width/height but no responsive sizes
+- Found scripts/image/{fal-image-gen,image-audit,image-pipeline}.cjs (all about *generating* images, none about optimizing)
+
+### Real findings
+1. **All 172 hero JPEGs were q90+ originals** — 49.6MB total, avg 295KB, max 688KB
+2. **No WebP variants** — missed bandwidth savings of ~70% for modern browsers
+3. **No `<picture>` element** — even if WebPs existed, browsers wouldn't fetch them
+4. **No image optimization at build or run time** — the existing scripts only generate, never compress
+5. **2 pages had inline hero images** bypassing Layout.astro's picture wrap
+
+### What I did
+- Wrote `apps/maine-cannabis/scripts/image/compress-heroes.cjs` (90 lines)
+  - Re-compresses all 172 jpg to mozjpeg q=80 progressive
+  - Generates WebP q=80 alongside
+  - Idempotent (skips _staging/), --dry-run, --skip-webp flags
+  - Uses `sharp` (already available via Astro's dep tree, no new package)
+- Ran for real: 49.6MB → 16.6MB (jpg) + 13.7MB (webp) = 30.3MB on disk
+  - On the wire for WebP-capable browsers: ~14MB (72% reduction)
+- Patched Layout.astro to use `<picture>` with WebP `<source>` + jpg `<img>` fallback
+- Patched 2 inline-hero pages to use the same pattern
+
+### Why this is a "reversible" change per the reframe
+- WebPs are a parallel asset class — if a browser fails, the jpg `<img>` is the natural fallback
+- Removing the WebPs + reverting Layout.astro = full undo in <60s
+- The 172 re-compressed jpgs replace the originals; reverting means restoring from git (or re-running the AI generation pipeline that originally created them at q90+)
+
+### Typecheck
+0 errors / 0 warnings / 191 hints (was 189; +2 are the `<picture>`/`<source>` tag warnings from the astro checker). Hints only.
+
+### What this round did NOT do (next-round candidates)
+1. **Infographics dir** (1.9MB → ~0.8MB with same compression) — lower priority, only 11 files
+2. **Mobile-size srcset** — generate 640w/1024w/1920w variants so mobile doesn't fetch desktop-resolution
+3. **AVIF** — next-gen format, 30% smaller than WebP, but Safari <16 falls back to WebP anyway (no harm done)
+4. **Drop the jpg altogether** — if we're confident ≥99% of users have WebP-capable browsers (true since 2020), WebP-only with proper fallback would save another 16.6MB on disk
+
+### File count
+- 4 source files: Layout.astro, compress-heroes.cjs (new), 2 inline-hero pages
+- 172 jpg (re-compressed in place)
+- 172 webp (new)
+- Total: 348 files committed
+
