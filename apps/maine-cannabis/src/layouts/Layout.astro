@@ -80,6 +80,10 @@ const seoDescription = truncateMetaDescription(description);
 const { url: socialImage, mimeType: socialImageType } = resolveSocialImage(heroImage, siteUrl);
 const heroImageDims = getHeroImageDimensions(heroImage);
 const heroImageWebp = heroImage?.replace(/\.jpg$/i, '.webp');
+const heroImageAvif = heroImage?.replace(/\.jpg$/i, '.avif');
+const heroImageMobile = heroImage?.replace(/\.jpg$/i, '-640w.jpg');
+const heroImageMobileWebp = heroImage?.replace(/\.jpg$/i, '-640w.webp');
+const heroImageMobileAvif = heroImage?.replace(/\.jpg$/i, '-640w.avif');
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
@@ -237,7 +241,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
       {isGuide ? (
         <div class="guide-layout">
           <div class="guide-content">
-            {heroImage && <div class="guide-hero"><picture><source srcset={heroImageWebp} type="image/webp" /><img src={heroImage} alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
+            {heroImage && <div class="guide-hero"><picture><source type="image/avif" srcset={`${heroImageAvif} 1x, ${heroImageMobileAvif} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><source type="image/webp" srcset={`${heroImageWebp} 1x, ${heroImageMobileWebp} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><img src={heroImage} srcset={`${heroImage} 1x, ${heroImageMobile} 640w`} sizes="(max-width: 640px) 640px, 1280px" alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
             <slot />
             {article && (
               <div class="article-meta">

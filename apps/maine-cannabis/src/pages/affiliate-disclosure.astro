@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Affiliate Disclosure"
+  description="How Maine Dispensary Guide uses affiliate links and earns commissions. Our editorial independence policy, FTC compliance, and a list of current affiliate partners."
+  heroImage="/images/heroes/about.jpg"
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "Legal" }}
+>
+  <style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
+    section { margin-bottom: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+    p, li { line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .partner-list { background: var(--color-background, #f4f1e4); border-left: 4px solid var(--color-accent, #588157); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .partner-list h3 { font-family: var(--font-serif); margin: 0 0 0.75rem 0; font-size: 1.1rem; }
+    .partner-list p { margin: 0; }
+  </style>
+
+  <article class="legal-page">
+    <h1>Affiliate Disclosure</h1>
+    <p class="last-updated">Last Updated: June 7, 2026</p>
+
+    <section>
+      <h2>1. Our Commitment to Transparency</h2>
+      <p>In accordance with the Federal Trade Commission's (FTC) 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), Maine Dispensary Guide discloses every material connection between our editorial team and the products, services, or companies we recommend. This page explains what those relationships are, how they affect (and do not affect) the content you read, and where you can verify our recommendations yourself.</p>
+    </section>
+
+    <section>
+      <h2>2. How Affiliate Links Work</h2>
+      <p>Some of the links on mainedispensaryguide.com are "affiliate links." If you click one of these links and subsequently make a purchase, sign up for a service, or complete another qualifying action, Maine Dispensary Guide may receive a small commission from the partner at no additional cost to you.</p>
+      <p>Affiliate commissions help fund the research, writing, and ongoing maintenance of our Maine cannabis guides. They are one of several revenue streams that keep this site free for entrepreneurs, founders, and operators building cannabis businesses in Maine.</p>
+    </section>
+
+    <section>
+      <h2>3. Editorial Independence</h2>
+      <p>Our editorial recommendations are made independently of any affiliate relationship. A product or service either earns a recommendation on its merits for Maine cannabis operators, or it does not. In practice, this means:</p>
+      <ul>
+        <li><strong>We do not accept payment to write a review.</strong> Sponsored content, if any, is always clearly labeled "Sponsored Recommendation" at the top of the section.</li>
+        <li><strong>We do not let commission rates change which product we recommend.</strong> If a higher-commission alternative is technically worse for a Maine operator, we recommend the better option and accept the lower (or zero) commission.</li>
+        <li><strong>We disclose the relationship before you click.</strong> Inline disclosure appears on every page where affiliate links are present, using the standardized text: "Maine Dispensary Guide earns an affiliate commission when you make a purchase through the links below. Our editorial recommendations are independent of these partnerships."</li>
+        <li><strong>We mark every affiliate link with <code>rel="sponsored"</code></strong> in the underlying HTML, which is the technical signal Google uses to identify paid placements.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Current Affiliate Partners</h2>
+      <p>As of the date above, Maine Dispensary Guide has active affiliate relationships with the following companies. We update this list whenever a relationship begins or ends.</p>
+
+      <div class="partner-list">
+        <h3>ILGM (I Love Growing Marijuana)</h3>
+        <p>Seed bank. We earn a 20% commission on qualifying seed orders placed through our referral link. Recommended in our cannabis seed and home grow guides for Maine operators who source genetics outside the state-licensed tracking system.</p>
+      </div>
+
+      <p>If a future partnership is added that materially affects the recommendations on this site, we will update this disclosure and revise the inline disclosures on the affected pages.</p>
+    </section>
+
+    <section>
+      <h2>5. What We Never Do</h2>
+      <ul>
+        <li><strong>We do not sell Maine cannabis directly.</strong> Cannabis remains a Schedule I substance under federal law, and we do not engage in the interstate sale or shipment of cannabis products. Our affiliate relationships are limited to ancillary products and services (seeds, equipment, software, services) that operators may need.</li>
+        <li><strong>We do not accept compensation for favorable review placement in our city guides.</strong> Dispensary listings on <code>/find-a-dispensary</code> and the city-specific guide pages are organized by geographic relevance and editorial coverage, not by payment.</li>
+        <li><strong>We do not share your personal data with affiliate partners for their own marketing.</strong> Click tracking is anonymized at the network layer and used only to compute commissions and to attribute sales to the correct content.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. Material Connections Beyond Affiliate Commissions</h2>
+      <p>Maine Dispensary Guide is operated by Steve Kelly, a Maine-based cannabis industry founder. From time to time, Steve may have a personal, professional, or financial relationship with a company, lawyer, or service provider mentioned in our guides. When that relationship is material to a recommendation, it is disclosed in the relevant article or on the specific provider's profile page. The most recent example of such a relationship is noted on the <a href="/about/our-team">Our Team</a> page.</p>
+    </section>
+
+    <section>
+      <h2>7. Your Right to Verify</h2>
+      <p>If you want to verify that a link is an affiliate link before clicking, hover over the link in your browser. Affiliate links contain query parameters such as <code>?aff=</code>, <code>?ref=</code>, or <code>?via=</code> that identify the referrer. You can also disable affiliate cookies in your browser settings or use a privacy-focused browser extension if you prefer to keep your clicks untracked. Doing so does not change the price you pay, but it will mean the operator does not know you arrived from our site.</p>
+    </section>
+
+    <section>
+      <h2>8. Reporting Concerns</h2>
+      <p>If you believe a recommendation on this site violates this disclosure policy, or if you spot an affiliate relationship that is not disclosed on this page, please email <a href="mailto:admin@mainedispensaryguide.com">admin@mainedispensaryguide.com</a> with the subject line "Disclosure Concern." We investigate every report and will update this page or the affected article within five business days.</p>
+    </section>
+
+    <section>
+      <h2>9. Changes to This Disclosure</h2>
+      <p>We update this disclosure whenever a new affiliate relationship begins, an existing one ends, or our editorial process changes in a way that affects how we recommend products. The "Last Updated" date at the top of this page reflects the most recent revision. Material changes are also announced on the homepage for at least 30 days.</p>
+    </section>
+
+    <section>
+      <h2>10. Contact</h2>
+      <p>For questions about this disclosure, affiliate partnerships, or editorial independence, contact <a href="mailto:admin@mainedispensaryguide.com">admin@mainedispensaryguide.com</a>. For all other matters, see our <a href="/contact">Contact page</a>.</p>
+    </section>
+  </article>
+</Layout>
