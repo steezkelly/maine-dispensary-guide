@@ -1,0 +1,129 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cultivation & Horticulture Reviewer",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Cannabis Science"
+};
+const topics = ["terpenes", "selection", "indica-sativa-myth", "consumer-guide"];
+
+const faqItems = [
+  { question: "Does indica vs. sativa predict how a strain will feel?", answer: "No — at least not in the way most consumers have been taught. The indica/sativa distinction is a botanical classification based on plant morphology (short and bushy vs. tall and narrow), not on chemical composition. The chemical composition — specifically the cannabinoid and terpene profile — is what actually drives effect, and that profile varies more within each category than between them. Modern research (Piomelli & Russo 2016; Smith et al. 2022) increasingly recommends selecting cannabis by its chemical profile, not by the strain name on the jar." },
+  { question: "What&rsquo;s the right way to select cannabis at a Maine dispensary?", answer: "Five steps, in priority order. First, identify the effect you are looking for (relaxation, focus, creativity, sleep, pain relief). Second, ask the budtender which products have terpene panels available. Third, request the COA for the top 2-3 candidates. Fourth, focus on the top three terpenes by percentage and look for a profile that matches your target effect. Fifth, treat the strain name as a brand label, not a chemical guarantee. A budtender at a knowledgeable Maine dispensary can walk you through this in 2-3 minutes." },
+  { question: "What&rsquo;s a good terpene profile for relaxation and sleep?", answer: "Three general patterns, with caveats. The myrcene-dominant pattern (myrcene above 0.5% as the top terpene) is the most common relaxation profile; the sedative folklore is preclinical-only, but the correlation with relaxation is real in user reports. The linalool-dominant pattern (linalool above 0.3% as a top-three terpene) has the strongest anxiolytic mechanism, useful for anxiety-driven insomnia. The high-caryophyllene + myrcene pattern (β-caryophyllene above 0.3% with myrcene above 0.4%) is the most evidence-based for pain-related sleep disruption. The full answer is in the body of the article." },
+  { question: "What&rsquo;s a good terpene profile for focus and creativity?", answer: "Two patterns. The limonene-dominant pattern (limonene above 0.4% as the top terpene) has the strongest clinical evidence for any positive cognitive effect, with the 2024 Johns Hopkins trial showing limonene reduces THC-induced anxiety. The α-pinene + limonene pattern (α-pinene above 0.1% with limonene above 0.3%) has the most theoretical basis for counteracting THC-induced short-term memory impairment, though the human evidence is still preclinical. The terpinolene-dominant pattern (terpinolene above 0.3%) is more variable — user reports are mixed, and the cultivar-level variability is high." },
+  { question: "What if my dispensary doesn&rsquo;t publish terpene data?", answer: "You have three options. First, ask the budtender to read you the COA for any candidate product; the OCP requires that the COA be available on request. Second, switch dispensaries; the operators that publish terpene data (Theory Wellness, HIGHLY Cannaco, select caregiver network brands) are usually the ones that also have invested in storage and handling, so the published terpene number is more likely to match what is in the jar. Third, rely on the budtender&rsquo;s recommendation and trust your own response to the product over time; the most reliable signal is your own experience with the same product across multiple purchases." }
+];
+---
+<Layout title="Buying Cannabis by Effect, Not by Strain Name: A Terpene-Based Selection Framework" description="The indica vs. sativa distinction is folk taxonomy, not chemistry. A modern, evidence-based framework for selecting Maine cannabis by your target effect, using the top three terpenes from the COA." article={article} topics={topics} heroImage="/images/heroes/buying-cannabis-by-effect-2026.jpg">
+
+<article>
+  <div class="article-header">
+    <h1>Buying Cannabis by Effect, Not by Strain Name: A Terpene-Based Selection Framework</h1>
+    <p class="byline">By Thalia Greene · Reviewed by Margaret Finch · June 6, 2026</p>
+    <p class="subtitle">The indica vs. sativa distinction is folk taxonomy, not chemistry. A modern, evidence-based framework for selecting Maine cannabis by your target effect, using the top three terpenes from the COA.</p>
+  </div>
+
+  <Callout title="Companion Article" type="note">
+    This is Article 4 of the terpene guides pillar. For background on what the six most common terpenes are, see <a href="/blog/cannabis-terpenes-explained-maine-2026">Article 1: Cannabis Terpenes Explained</a>. For how to read the terpene panel on a COA, see <a href="/blog/how-to-read-maine-cannabis-coa-terpenes-2026">Article 2: How to Read a Maine Cannabis COA for Terpenes</a>. For why storage and handling matter, see <a href="/blog/terpene-preservation-drying-curing-2026">Article 3: Terpene Preservation During Drying and Curing</a>. This article puts it all together in a selection framework.
+  </Callout>
+
+  <section>
+    <h2>Why strain names fail as a selection signal</h2>
+
+    <p>The strain name on the jar is a marketing artifact, not a chemical specification. The same name can refer to different cultivars grown by different cultivators, with substantially different chemical profiles. The same cultivar grown by the same cultivator in different conditions can have substantially different profiles. And the same cultivar harvested from a different room or even a different week can vary by 30-50% in dominant terpene percentages.</p>
+
+    <p>There are three reasons this happens. First, naming is not regulated. A cultivator can call any plant any name; the OCP does not require a link between the strain name on the label and a specific genetic lineage. Second, the same name gets applied across different breeders and phenotypes. "Blue Dream" from one cultivator is not the same plant as "Blue Dream" from another, but both jars are labeled identically. Third, even within a single cultivator's lineup, the same strain name can refer to different phenotypes as the cultivator rotates seed stock or selects for different characteristics.</p>
+
+    <p>The published research makes this point clearly. Smith et al. (2022) sampled over 100,000 cannabis cultivars and found that the within-category variation in terpene and cannabinoid profiles is much larger than the between-category variation. An "indica" cultivar is, on average, slightly more likely to be myrcene-dominant; a "sativa" cultivar is, on average, slightly more likely to be limonene- or terpinolene-dominant. But the averages are misleading because the standard deviations overlap substantially. Two cultivars with the same name on the jar can be at opposite ends of the effect spectrum.</p>
+  </section>
+
+  <section>
+    <h2>The selection framework, in five steps</h2>
+
+    <p>Here is the framework. It assumes you have access to a Maine dispensary that will let you look at COAs (which is any licensed dispensary, per OCP rules) and that you have a target effect in mind.</p>
+
+    <p><strong>Step 1: Identify your target effect.</strong> Not "I want an indica" or "I want the strongest thing you have." A specific effect: relaxation, focus, creativity, sleep, pain relief, anxiety reduction, social energy. The more specific the target, the better the chemistry-based framework works.</p>
+
+    <p><strong>Step 2: Identify the terpene profile pattern that matches.</strong> The next section of this article maps the major effect targets to their best-evidence terpene profile patterns. Use those as your starting point, not as a hard rule.</p>
+
+    <p><strong>Step 3: Ask the budtender for products with terpene panels.</strong> Not every Maine dispensary publishes terpene data, but most will pull the COA on request. The budtender at any licensed Maine store is required (by OCP rule) to make the most recent COA available to consumers. The budtender who is also a student of terpene chemistry will recognize what you are asking for and steer you to the right products; the budtender who isn't will hand you a COA and you'll have to do the interpretation yourself.</p>
+
+    <p><strong>Step 4: Read the top three terpenes on the COA.</strong> For each candidate product, look at the top three terpenes by percentage on the COA. Compare them to the pattern in the next section. If two of the top three match the pattern, that's a strong signal. If only one matches, consider it a coin flip and trust other factors (price, freshness, budtender recommendation).</p>
+
+    <p><strong>Step 5: Track your own response over time.</strong> The chemical profile is the best objective signal we have, but it is not a guarantee. Your own response to a product across multiple purchases is the most reliable signal. Keep a simple log: product name, dominant terpene profile, your response, the dose. Over 3-4 purchases of the same product, you will have a clear read on whether the chemical profile is predicting your experience.</p>
+  </section>
+
+  <section>
+    <h2>Effect → terpene profile mapping</h2>
+
+    <p>The framework below is the current best-evidence mapping. Each pattern lists the dominant terpene(s) and the evidence basis. None of these are guarantees, and individual response varies, but the patterns reflect what the published research and the user-reported data converge on.</p>
+
+    <h3>Relaxation and stress relief</h3>
+    <p><strong>Pattern A (most common): myrcene-dominant</strong> — myrcene above 0.5% as the top terpene, often paired with β-caryophyllene at 0.2-0.4%. The most common relaxation profile in commercial Maine flower. The sedative mechanism is preclinical (LaVigne et al. 2021) and the folk claim that "myrcene causes couch-lock above 0.5%" is pharmacologically indefensible at inhaled doses, but the user-reported correlation with relaxation is robust.</p>
+
+    <p><strong>Pattern B (anxiety-driven): linalool-rich</strong> — linalool above 0.3% as a top-three terpene, often with myrcene as the dominant. The most solid anxiolytic mechanism of any terpene (Harada et al. 2018) via the same GABAergic pathway as benzodiazepines. Best for anxiety-driven relaxation rather than physical relaxation.</p>
+
+    <h3>Sleep</h3>
+    <p><strong>Pattern: myrcene + β-caryophyllene + caryophyllene-dominant</strong> — β-caryophyllene above 0.3% paired with myrcene above 0.4% is the most evidence-based for pain-related sleep disruption, because β-caryophyllene's CB2 activity addresses the pain pathway while myrcene addresses the relaxation pathway. For anxiety-driven insomnia, the linalool-rich pattern is more appropriate.</p>
+
+    <h3>Focus and daytime clarity</h3>
+    <p><strong>Pattern A (most evidence): limonene-dominant</strong> — limonene above 0.4% as the top terpene. The 2024 Johns Hopkins trial is the strongest clinical evidence for any terpene, showing 15mg d-limonene + 30mg THC reduced anxiety vs. 30mg THC alone. For focus, the lower-anxiety profile translates to better task engagement.</p>
+
+    <p><strong>Pattern B (theoretical): α-pinene + limonene</strong> — α-pinene above 0.1% paired with limonene above 0.3%. The Russo 2011 hypothesis is that α-pinene's AChE inhibition might counteract THC-induced short-term memory impairment. The human evidence is preclinical-only, but the theoretical basis is solid.</p>
+
+    <h3>Creativity and social engagement</h3>
+    <p><strong>Pattern: limonene + terpinolene</strong> — limonene above 0.3% with terpinolene above 0.2% as a top-three terpene. The limonene addresses the anxiety component of creative and social situations, and the terpinolene is associated (in user reports) with the "head high" of creative engagement. Cultivar variability is high in terpinolene-dominant flower; user reports are mixed.</p>
+
+    <h3>Pain relief</h3>
+    <p><strong>Pattern: β-caryophyllene + myrcene</strong> — β-caryophyllene above 0.3% as a top-three terpene, ideally paired with myrcene above 0.4%. β-Caryophyllene's CB2 activity is the most mechanistically direct pain pathway among the terpenes. The myrcene adds the relaxation component that makes the pain relief feel less effortful.</p>
+
+    <h3>Anxiety reduction (without sedation)</h3>
+    <p><strong>Pattern: limonene + linalool</strong> — limonene above 0.3% as a top-three terpene with linalool above 0.2%. This is the most anxiety-targeted combination without the heavy sedation of the myrcene-dominant patterns. The 2024 Johns Hopkins evidence is directly applicable.</p>
+  </section>
+
+  <section>
+    <h2>What to do when the data isn't there</h2>
+
+    <p>Most Maine dispensaries do not publish terpene data, and most Maine cultivators do not pay for terpene testing. The framework above assumes you have access to terpene data, and for a significant share of Maine dispensary visits, you will not.</p>
+
+    <p>In that case, the fallback is the budtender's recommendation, calibrated by your own experience. A budtender who has tried the product personally and can describe the effect in specific terms ("this one is good for sleep, that one is more daytime") is more reliable than a budtender who falls back on strain-name generalities. The budtender who describes the effect in terms of mood, energy, and physical sensation — rather than in terms of "indica" or "sativa" — is the budtender who is reading the chemical profile, even if they don't have the COA in front of them.</p>
+
+    <p>When you do find a product that works for you, the most important follow-up is to ask the budtender for the cultivator name. The cultivator that produces the right chemical profile for you is the cultivator to return to, even when the strain name changes. Cultivator-level consistency in storage, handling, and cure practices is the long-term signal that matters more than any single COA.</p>
+  </section>
+
+  <section>
+    <h2>The role of the dispensary</h2>
+
+    <p>The dispensary is the layer that most affects whether this framework works in practice. A dispensary that publishes terpene data, trains budtenders to read COAs, and rotates inventory quickly is a dispensary where the chemical profile is the right selection signal. A dispensary that does none of those things is a dispensary where the framework degrades to a coin flip, and you are better off going with whichever budtender seems to know the most about the product.</p>
+
+    <p>The Maine dispensaries that invest most heavily in this kind of consumer education are the ones that are also investing in their own competitive position. The Theory Wellness and HIGHLY Cannaco of the Maine market are recognizable partly because their staff can read you a terpene profile off the COA and translate it into effect predictions. When you find a dispensary that does this consistently, that is the dispensary to build a relationship with. The framework above works best with that relationship, and the relationship is itself a kind of terpene-based selection — selecting the right retail partner rather than the right product.</p>
+  </section>
+
+  <Callout title="Key Takeaway" type="note">
+    The strain name is a brand label. The chemical profile is the selection signal. The dispensary is the layer that determines whether the chemical profile is available to you at the point of purchase. A modern, evidence-based approach to cannabis selection in Maine is: identify the target effect, ask for the COA, focus on the top three terpenes, and find a dispensary that makes this easy. Over time, your own response data — across multiple purchases of the same product — is the most reliable signal of all.
+  </Callout>
+
+  <section class="related-guides">
+    <h2>Related guides from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/cannabis-terpenes-explained-maine-2026">Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common</a> — Article 1 of the terpene pillar</li>
+      <li><a href="/blog/how-to-read-maine-cannabis-coa-terpenes-2026">How to Read a Maine Cannabis COA for Terpenes</a> — Article 2 of the terpene pillar</li>
+      <li><a href="/blog/terpene-preservation-drying-curing-2026">Terpene Preservation During Drying and Curing</a> — Article 3 of the terpene pillar</li>
+      <li><a href="/blog/best-maine-dispensaries-2026">Best dispensaries in Maine 2026</a> — the operators that publish terpene data and train budtenders to read COAs</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <p class="byline-end"><em>Thalia Greene is the Cultivation & Horticulture Reviewer for Maine Dispensary Guide. Margaret Finch reviewed this article for editorial accuracy. The effect-to-terpene mappings in this article are based on the published primary literature as of June 2026; the field is active and the specific evidence basis for each pattern is documented in the body of the article.</em></p>
+
+</article>
+
+</Layout>

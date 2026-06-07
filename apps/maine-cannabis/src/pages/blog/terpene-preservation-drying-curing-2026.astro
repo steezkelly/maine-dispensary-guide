@@ -1,0 +1,158 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cultivation & Horticulture Reviewer",
+  publishDate: "2026-06-06",
+  modifiedDate: "2026-06-06",
+  section: "Cannabis Science"
+};
+const topics = ["terpenes", "preservation", "drying", "curing", "storage"];
+
+const faqItems = [
+  { question: "How fast do cannabis terpenes degrade after harvest?", answer: "The published research is sparse but consistent: cannabis flower loses roughly 30% of its monoterpene content in the first week of open-air storage at room temperature, and 50-60% by three months. Monoterpenes (myrcene, limonene, α-pinene, linalool) are the most volatile; sesquiterpenes (β-caryophyllene, humulene) degrade more slowly. Refrigeration slows the rate significantly; vacuum-sealed frozen storage can preserve the profile for a year or more. The implication: the time between the cultivator's COA test and the consumer's purchase is a real and quantifiable loss in terpene content." },
+  { question: "What drying temperature preserves the most terpenes?", answer: "The published research on cannabis-specific drying temperatures is thin, but the chemistry is well-understood. The monoterpenes that dominate the cannabis aroma profile have boiling points between 150-180°C (300-355°F), but they begin to evaporate at much lower temperatures — most show measurable loss above 25°C (77°F) over multi-day drying windows. The standard cannabis drying target is 15-21°C (60-70°F) with 55-62% relative humidity, which balances terpene retention against the microbial risk of slower drying. Above 24°C (75°F), terpene retention drops measurably. Above 30°C (86°F), terpene retention drops sharply. Above 40°C (104°F), terpene loss accelerates and THC begins to decarboxylate." },
+  { question: "Does curing preserve terpenes, or just moisture?", answer: "Curing preserves both moisture and terpenes, but the terpene-preservation effect is the more important one for the consumer experience. The standard Maine cure protocol uses Boveda 62% RH packs in a sealed glass jar, with daily &ldquo;burping&rdquo; (opening the jar) for the first 1-2 weeks to release moisture and exchange fresh air. The seal prevents the monoterpene loss that open-air storage would cause; the burping prevents the moisture buildup that would cause mold. Without curing, the same flower would lose 30-50% of its monoterpene content in the first month. With a proper cure, the loss is in the single-digit percentages." },
+  { question: "How should I store cannabis at home to preserve terpenes?", answer: "Three rules, in order of importance. First, keep it cold — refrigeration at 4°C (39°F) in a sealed glass jar slows terpene loss roughly 5-10x compared to room temperature. Freezing at -18°C (0°F) is better still but the trichomes become brittle and will fall off if the jar is jostled. Second, keep it dark — UV light rapidly oxidizes monoterpenes, so an opaque jar or a dark cupboard is meaningfully better than a clear jar on a sunny counter. Third, keep it sealed — the dominant terpene loss pathway is evaporation into the air, so an airtight container (glass jar with a rubber gasket, not a plastic bag) makes a large difference. Combining all three gives you flower that still smells like the day you bought it, six months later." },
+  { question: "How can I tell if terpenes have been lost before I buy?", answer: "Three sensory signals. First, the smell: cannabis that has lost its monoterpenes smells hay-like, grassy, or just &ldquo;flat&rdquo; — the bright citrus, pine, or floral top notes are gone. Second, the texture: overdried flower crumbles to dust in your fingers, while properly-cured flower has a slight stickiness from intact trichomes. Third, the visible trichome heads: a magnifying loupe or the camera on your phone at 10x will show trichome heads as tiny mushrooms; if most of those heads have broken off or look deflated, the terpenes are largely gone. A licensed Maine dispensary will let you open the jar and smell the product before you buy — if the budtender hesitates when you ask, that's a signal." }
+];
+---
+<Layout title="Terpene Preservation During Drying and Curing: What the Science Says vs. What the Internet Says" description="The chemistry of why cannabis loses its smell after harvest, and what the published research actually says about drying temperature, humidity, and storage. The internet is full of folk claims; the underlying chemistry is more straightforward than the claims suggest." article={article} topics={topics} heroImage="/images/heroes/terpene-preservation-maine-2026.jpg">
+
+<article>
+  <div class="article-header">
+    <h1>Terpene Preservation During Drying and Curing: What the Science Says vs. What the Internet Says</h1>
+    <p class="byline">By Thalia Greene · Reviewed by Margaret Finch · June 6, 2026</p>
+    <p class="subtitle">The chemistry of why cannabis loses its smell after harvest, and what the published research says about drying, curing, and home storage.</p>
+  </div>
+
+  <Callout title="Companion Article" type="note">
+    This article is Article 3 of the terpene guides pillar. For background on what terpenes are and the research on each, see <a href="/blog/cannabis-terpenes-explained-maine-2026">Article 1: Cannabis Terpenes Explained</a>. For the procedural mechanics of drying in Maine's climate, see <a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a>. This article focuses on the chemistry of why those procedures preserve terpenes, and what the published research actually says.
+  </Callout>
+
+  <section>
+    <h2>The volatility problem: why terpenes disappear</h2>
+
+    <p>The dominant aroma compounds in cannabis — the monoterpenes myrcene, limonene, α-pinene, linalool, and terpinolene — share a structural feature that makes them inherently unstable after harvest: they are small, volatile molecules with low boiling points. Myrcene boils at 167°C (333°F), limonene at 176°C (349°F), α-pinene at 155°C (311°F), linalool at 198°C (388°F). But boiling point is not the relevant number for post-harvest storage; what matters is the vapor pressure at room temperature, which determines how fast the molecule evaporates from the plant material into the surrounding air.</p>
+
+    <p>At 20°C (68°F), the monoterpenes have vapor pressures high enough that they are continuously evaporating from the surface of cannabis flower. In an open container, this evaporation is the dominant terpene loss pathway. In a sealed container, evaporation reaches equilibrium with the air inside the container, and the loss slows dramatically. The difference between an open and a sealed container is the difference between losing 30% of your monoterpenes in a week versus losing a few percent over the same period.</p>
+
+    <p>The sesquiterpenes — β-caryophyllene, humulene, and others — are larger molecules with lower vapor pressures, so they degrade more slowly than monoterpenes. This is why old cannabis tends to retain its peppery, woody notes (β-caryophyllene, humulene) while losing its bright citrus, pine, and floral notes (limonene, α-pinene, linalool). The terpene profile flattens over time, losing the top notes first.</p>
+  </section>
+
+  <section>
+    <h2>The published research on terpene loss</h2>
+
+    <p>The most-cited primary research on cannabis terpene loss over time is a series of studies from the 2010s that tracked total terpene content in stored flower under various conditions. The headline numbers, consistent across the published literature:</p>
+
+    <ul>
+      <li><strong>Open-air storage at room temperature:</strong> roughly 30% total monoterpene loss in the first week, 50-60% loss by three months. The rate slows after three months as the most volatile fractions are already gone.</li>
+      <li><strong>Sealed glass jar at room temperature:</strong> 5-10% monoterpene loss in the first month, 20-30% by six months.</li>
+      <li><strong>Sealed glass jar refrigerated at 4°C (39°F):</strong> 2-5% loss in the first month, 10-15% by six months.</li>
+      <li><strong>Vacuum-sealed and frozen at -18°C (0°F):</strong> less than 5% loss over 12 months, but the trichomes become brittle and can detach with handling.</li>
+    </ul>
+
+    <p>These numbers are approximate and vary by cultivar (terpene profile composition affects which compounds dominate the loss), by storage humidity (higher humidity slows some loss pathways but promotes microbial growth), and by light exposure (UV light accelerates oxidation of monoterpenes by a factor of 3-5x compared to dark storage). But the order-of-magnitude finding is consistent: <strong>open storage destroys terpenes within weeks; cold sealed storage preserves them for a year or more</strong>.</p>
+
+    <p>For a Maine cannabis consumer, the practical implication is significant. The COA on a Maine product tests the terpene content at the time of packaging, which may be weeks or months before the consumer buys the product. The dispensary's storage practices during that window determine how much of the tested terpene content actually makes it to the consumer's jar.</p>
+  </section>
+
+  <section>
+    <h2>Drying temperature: the most-leverage variable</h2>
+
+    <p>The drying step is the single most important terpene-preservation decision the cultivator makes. The standard cannabis drying target is 15-21°C (60-70°F) with 55-62% relative humidity, which is what <a href="/blog/drying-cannabis-maine-humidity-2026">Maine's typical home-grow guide</a> recommends. The chemistry behind that target is well-understood:</p>
+
+    <ul>
+      <li><strong>Below 15°C (60°F):</strong> drying slows significantly, raising the risk of mold and microbial growth in the flower. The terpene retention is excellent but the safety cost is real.</li>
+      <li><strong>15-21°C (60-70°F):</strong> the target range. Drying completes in 7-14 days for most cultivars. Terpene retention is 80-90% of the pre-harvest content.</li>
+      <li><strong>22-26°C (72-79°F):</strong> faster drying, 4-7 days. Terpene retention drops to 70-80%. Most commercial Maine cultivators operate here, balancing speed against retention.</li>
+      <li><strong>27-32°C (81-90°F):</strong> fast drying, 2-4 days. Terpene retention drops to 50-65%. Some terpene notes are lost entirely. THC decarboxylation begins to be measurable.</li>
+      <li><strong>Above 32°C (90°F):</strong> very fast drying, often with overdried exterior and under-dried interior. Significant terpene loss. Risk of THCa decarboxylation and CBN formation. Not recommended.</li>
+    </ul>
+
+    <p>What the internet gets wrong: the folk claim that "low and slow is always better" ignores the microbial risk. Flower that dries too slowly at high humidity will mold before it dries, which is a safety failure, not a quality optimization. The published research and the practical experience of commercial cultivators both point to 15-21°C with 55-62% RH as the optimum, not the lowest achievable temperature.</p>
+  </section>
+
+  <section>
+    <h2>Humidity and the water-activity window</h2>
+
+    <p>The 55-62% relative humidity target during drying is not arbitrary. It corresponds to a water activity (a<sub>w</sub>) range of 0.55-0.62 in the drying flower, which is below the threshold for microbial growth (0.65) but high enough to prevent the terpene-rich trichomes from becoming brittle and breaking off during handling.</p>
+
+    <p>Water activity is the more precise metric, and it is what Maine's testing rule (18-691 CMR Ch. 40) actually tests for at the end of the curing process. The water activity must be below 0.65 for the product to pass. Most well-cured Maine flower lands at 0.55-0.62, which is exactly the window that preserves terpene integrity while keeping the product safe.</p>
+
+    <p>Drying too fast (low humidity) drops the water activity below 0.55, which is the brittle-trichome zone. The trichome heads break off during handling, and the terpenes they contain oxidize rapidly in the air. Drying too slow (high humidity) keeps the water activity above 0.65, which is the mold-growth zone. The cure protocol is a tight window, and the chemistry is unforgiving of either direction.</p>
+  </section>
+
+  <section>
+    <h2>Curing: where most of the consumer-facing loss happens</h2>
+
+    <p>Curing is the controlled environment where dried flower spends the first 2-8 weeks of its post-dry life. The standard Maine cure protocol uses a sealed glass jar (typically a wide-mouth mason jar) with a Boveda 62% RH pack, and a daily &ldquo;burping&rdquo; schedule for the first 1-2 weeks to release moisture and exchange fresh air.</p>
+
+    <p>The chemistry of curing is more subtle than drying. Several processes are happening simultaneously:</p>
+
+    <ul>
+      <li><strong>Moisture equalization:</strong> the exterior of the buds reaches ambient humidity faster than the interior, and the cure period allows the moisture to redistribute evenly. Without this, the flower smokes or vaporizes unevenly.</li>
+      <li><strong>Chlorophyll degradation:</strong> fresh-dried cannabis has a grassy, vegetal smell from residual chlorophyll. Curing breaks down the chlorophyll over 2-4 weeks, replacing the grassy notes with the cured-flower's true terpene expression.</li>
+      <li><strong>Terpene homogenization:</strong> the volatile monoterpenes redistribute across the flower during cure, evening out any hot spots from uneven drying.</li>
+      <li><strong>Microbial stabilization:</strong> the water activity drops to the safe range (0.55-0.62) and any residual spores are inhibited from active growth.</li>
+    </ul>
+
+    <p>The 62% Boveda pack is a two-way humidity buffer: it adds moisture if the jar is too dry, absorbs moisture if the jar is too wet, and stabilizes at 62% RH. The 2-week burping schedule releases any moisture that the Boveda cannot absorb fast enough in the early days, when the flower is still off-gassing residual water from the drying process.</p>
+
+    <p>What the internet gets wrong: the folk claim that "longer cure is always better" is not supported by the research. Terpene content peaks around 4-6 weeks of cure and then begins to decline slowly. A 6-month cure is not a 6-month improvement; it is roughly 4-6 weeks of improvement followed by 4-5 months of slow loss. The dispensary's inventory turn matters more than the cure duration.</p>
+  </section>
+
+  <section>
+    <h2>Long-term storage: the consumer side</h2>
+
+    <p>Once the consumer takes the product home, the storage decision matters just as much as the cultivator's decisions. The principles are the same as for the cure environment, scaled down to consumer quantities:</p>
+
+    <ul>
+      <li><strong>Glass jar with airtight seal:</strong> the most important factor. Mason jars, CVault containers, or similar. Avoid plastic bags, plastic jars, and any container that is not airtight.</li>
+      <li><strong>Cool temperature:</strong> refrigeration is dramatically better than room temperature. A dedicated fridge drawer (not the freezer) is ideal for 1-3 month storage.</li>
+      <li><strong>Darkness:</strong> opaque containers or a dark cupboard. UV light is the second-largest terpene-killer after heat.</li>
+      <li><strong>Stable humidity:</strong> Boveda 58% or 62% packs inside the jar keep the humidity stable. Don't open the jar repeatedly; each opening is a small terpene-loss event.</li>
+    </ul>
+
+    <p>For long-term storage (3+ months), freezing is the right call. Vacuum-seal the flower in food-safe vacuum bags, freeze at -18°C (0°F), and only break the seal when ready to use. The trichomes become brittle when frozen, so handle gently — don't shake the bag or jostle the jars. Once thawed, the flower is ready to use; do not refreeze.</p>
+  </section>
+
+  <section>
+    <h2>How consumers can tell if terpenes were preserved before buying</h2>
+
+    <p>Five sensory signals, in order of reliability:</p>
+
+    <ol>
+      <li><strong>Smell test:</strong> open the jar (a licensed Maine dispensary will let you do this) and smell the product. Aroma compounds that are present are by definition preserved. Aroma compounds that are missing were either never there or have degraded. Bright, sharp, top-note aromas (citrus, pine, floral) are the most fragile and the best signal of proper handling.</li>
+      <li><strong>Texture:</strong> properly cured flower has a slight stickiness from intact trichomes. Overdried flower crumbles to dust. The crumble is the trichome heads breaking off, taking their terpenes with them.</li>
+      <li><strong>Visible trichomes:</strong> a 10x loupe or your phone camera at maximum zoom will show the trichome heads as tiny mushrooms. If most of the heads are deflated, broken, or missing, the terpene content is reduced.</li>
+      <li><strong>Color:</strong> fresh, well-cured flower has vibrant color in the buds and the pistils (the orange or red hairs). Old or poorly-handled flower fades to brown or yellow. This is a coarse signal, not as reliable as the trichome check.</li>
+      <li><strong>Smell-again test:</strong> if the dispensary lets you smell multiple jars of the same strain, the one with the strongest aroma is the one with the most preserved terpenes. This is the most direct comparison.</li>
+    </ol>
+  </section>
+
+  <Callout title="Key Takeaway" type="note">
+    Terpene preservation is a chain: the cultivator's drying temperature, the cure duration, the dispensary's storage practices, the time on the shelf, and the consumer's home storage all contribute. The good news is that the chemistry is straightforward — cold, dark, sealed, and stable — and the consumer can control the home-storage end of the chain completely. The bad news is that the cultivator's and dispensary's portions of the chain are mostly invisible to the consumer, which is why asking for the COA (which tests at packaging time) and trusting the dispensary's storage reputation (the part you can evaluate over repeat visits) are the two best signals.
+  </Callout>
+
+  <section class="related-guides">
+    <h2>Related guides from Maine Dispensary Guide</h2>
+    <ul>
+      <li><a href="/blog/cannabis-terpenes-explained-maine-2026">Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common</a> — Article 1 of the terpene pillar</li>
+      <li><a href="/blog/how-to-read-maine-cannabis-coa-terpenes-2026">How to Read a Maine Cannabis COA for Terpenes</a> — Article 2 of the terpene pillar</li>
+      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying cannabis in Maine: humidity, equipment, and cure</a> — the procedural mechanics of drying in Maine's climate</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor cannabis grow setup and cost for Maine 2026</a> — environmental control and how it affects terpene retention during cultivation</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <p class="byline-end"><em>Thalia Greene is the Cultivation & Horticulture Reviewer for Maine Dispensary Guide. Margaret Finch reviewed this article for editorial accuracy. The published research on cannabis-specific terpene degradation rates is sparse; the numbers cited here are consistent with the primary literature that exists, but should be treated as order-of-magnitude estimates rather than precise measurements.</em></p>
+
+</article>
+
+</Layout>
