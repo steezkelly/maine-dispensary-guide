@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Agent Collaboration Hub
 
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
-|**Last updated: 2026-06-07 EDT** (Sprint 74 COMPLETE — 4 Tier 1 B2B guides published on the June 28, 2026 dual-license / Schedule III / LD 1840 / LD 1897 / 2026 excise tax cluster. All 4 live on production, sitemap regenerated, navigation cross-links in place. Sprint 73 100/100 SEO score preserved.)
+|**Last updated: 2026-06-07 EDT** (Sprint 74 audit COMPLETE — 4 Tier 1 B2B guides now cross-linked from 12 high-traffic existing pages: homepage More Resources, ROI calculator, search index, start-here, launch-checklist, plus 7 existing guides (regulations, cultivation, events, license, funding, dispensary-costs, taxes, caregiver). All 4 live on production, sitemap regenerated, navigation discoverability maximized. Sprint 73 100/100 SEO score preserved.)
 
 ---
 
@@ -32,6 +32,40 @@
 - **Safety posture:** Pure content + navigation work, no behavior, layout, config, or infra changes. All 4 new pages passed file-scoped typecheck on first write (after the q/a → question/answer fix). Revert = single revert of commit `764a2c8`. Pre-existing 59 content-health failures are not regressions from this sprint.
 - **What was NOT changed:** No `astro.config.mjs` / `vercel.json` / `package.json` changes, no new dependencies, no `check:content-health` check-script modifications, no full build run (turbo invoked the per-app build), no Playwright sessions. The 2 modifications to the existing taxes and caregiver guides were scoped to the article header (cross-link callouts only) and did not touch the main body content, the FAQ schema, or the rendered titles — preserving the Sprint 65 / 73b SEO guard behavior on those 2 pages.
 - **Files changed:** 9 files (4 new guides, 4 hero images, 2 navigation indexes, 2 cross-link edits to existing guides) + this Hub entry. 14 insertions, 7 deletions. Committed and pushed as `764a2c8`.
+
+---
+
+## 📋 SPRINT 74 AUDIT: Cross-Linking & Discoverability (Jun 7, 2026 EDT)
+
+### Sprint 74 audit pass: 4 new guides cross-linked from 12 high-traffic pages ✅ DONE & DEPLOYED
+
+- **Why:** A pre-existing audit gap was that the 4 new Tier 1 B2B guides shipped in Sprint 74 (`764a2c8`) had only 1 body cross-link from each of 2 existing guides (`taxes-2026` and `caregiver-guide`). The 4 new guides were missing from the homepage, the ROI calculator, the search index, `start-here`, `launch-checklist`, and 6 of the most relevant existing guides. This made them effectively un-discoverable to anyone landing on the homepage or any top-level conversion page.
+- **What changed (11 files, all in `d678862` via parallel-session commit):**
+  - `apps/maine-cannabis/src/pages/index.astro` — Added 4 new `resource-link` cards in the "More Resources" section: Schedule III & 280E Apportionment, 2026 Operator Cost Update, Caregiver Trade Show Sales (LD 1840), Sun-Grown 150-Plant Cultivation (LD 1897).
+  - `apps/maine-cannabis/src/pages/roi-calculator.astro` — Added a "2026 cost basis" note linking to the Schedule III dual-license guide and the operator cost update, correcting the 22% 280E estimate to reflect the medical side now being Schedule III-eligible as of April 28, 2026.
+  - `apps/maine-cannabis/src/pages/search.astro` — Added 4 new entries to the hardcoded `searchIndex` array so the 4 new guides are searchable from the `/search` page.
+  - `apps/maine-cannabis/src/pages/start-here.astro` — Added a "What changed for 2026" callout in the journey-intro section linking to all 4 new guides.
+  - `apps/maine-cannabis/src/pages/launch-checklist.astro` — Added a "2026 update" callout in the hero section linking to all 4 new guides.
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-regulations.astro` — Added a "Major 2026 law updates (effective July 29, 2026)" callout linking to all 4 new guides.
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-cultivation-guide.astro` — Added a "2026 caregiver cultivation update" callout linking to the sun-grown 150-plant guide.
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-events-2026.astro` — Added a "New for 2026: caregiver trade show sales" callout linking to the LD 1840 guide.
+  - `apps/maine-cannabis/src/pages/guides/maine-dispensary-license.astro` — Added a "2026 dual-license tax strategy" callout linking to the Schedule III + operator cost update guides.
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-funding-guide.astro` — Added a "2026 cost basis for your investor model" callout linking to the operator cost update + Schedule III guides.
+  - `apps/maine-cannabis/src/pages/guides/maine-dispensary-costs.astro` — Added a "2026 cost update" callout linking to the operator cost update guide.
+- **Net incoming link count (per guide) after audit:**
+  - `maine-cannabis-schedule-iii-dual-license-280e`: 1 → **5** existing guides link to it (taxes, license, regulations, funding, start-here) + 4 top-level pages (homepage, roi-calc, search, launch-checklist)
+  - `maine-cannabis-caregiver-trade-show-sales`: 1 → **4** existing guides link to it (caregiver, events, regulations, start-here) + 4 top-level pages
+  - `maine-cannabis-sun-grown-caregiver-150-plants`: 1 → **4** existing guides link to it (caregiver, cultivation, regulations, start-here) + 4 top-level pages
+  - `maine-cannabis-2026-operator-cost-update`: 1 → **6** existing guides link to it (taxes, license, regulations, funding, dispensary-costs, start-here) + 4 top-level pages
+- **Production verification (post-deploy, all green):**
+  - `curl -sL https://mainedispensaryguide.com/` → 4 new resource-link cards in More Resources section ✓
+  - `curl -sL https://mainedispensaryguide.com/roi-calculator` → "2026 cost basis" paragraph with 2 new guide links ✓
+  - `curl -sL https://mainedispensaryguide.com/search` → search index has all 4 new guide entries (maine-cannabis-schedule-iii, caregiver-trade-show, sun-grown, 2026-operator-cost) ✓
+  - `curl -sL https://mainedispensaryguide.com/guides/<each-existing-guide>` → all 7 patched guides show the new callout blocks ✓
+- **Validation:** `npx astro check` 0 errors / 0 warnings / 260 hints across 310 files. `corepack npm run build` green (4.86s turbo). `check:hrefs` pass. `check:sitemap-xml` pass. `check:content-health` 79 failures — **0 from this audit pass**; all 79 are pre-existing (12 trailing-slashes in site-health.astro, 1 missing og:image on 404.html, 48 broken rendered media in Sprint 73o city guides, 18 duplicate hero image hashes in blog posts).
+- **Safety posture:** Pure cross-linking pass, no content/behavior/layout/config changes. Each callout uses the established `aside class="related-callout"` pattern with consistent inline style. Fully revertable via single revert of `d678862`.
+- **What was NOT changed:** No new components, no `astro.config.mjs` / `vercel.json` / `package.json` changes, no schema/JSON-LD changes, no new dependencies, no new top-level pages, no new navigation categories.
+- **Files changed:** 11 files (+74/-4 lines). Pushed as part of the parallel-session commit `d678862` (Steve Kelly author). Hub entry added as this commit, `docs(hub): Sprint 74 audit — cross-linking & discoverability pass`.
 
 ---
 
