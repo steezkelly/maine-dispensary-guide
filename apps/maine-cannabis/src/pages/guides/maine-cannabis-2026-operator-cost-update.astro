@@ -1,0 +1,172 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Margaret Finch", authorTitle: "Finance & Taxation Analyst", authorId: "margaret-finch", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "Compliance & Legal" };
+const topics = ["finance", "compliance", "tax", "operations"];
+const titleText = "Maine Cannabis 2026 Operator Cost Update: Quarterly Excise Tax & Metrc Contract";
+
+const faqItems = [
+  { question: "When does the new quarterly cannabis excise tax payment schedule start in Maine?", answer: "The new quarterly payment cadence for the adult-use cannabis excise tax starts with the 2026 tax year. P.L. 2025, ch. 388 (the supplemental budget, LD 210) made the change to 28-B M.R.S. §1501 and §1502; the effective date was January 1, 2026. Cultivation facilities now pay the excise tax on a quarterly cadence (April 30, July 31, October 31, and January 31 for the preceding quarter) rather than the prior monthly schedule. LD 1654 (P.L. 2025, ch. 504), effective July 29, 2026, adds a 30-day grace period for missed payments before interest and penalties begin to accrue." },
+  { question: "What is the new excise tax base for adult-use cannabis in Maine?", answer: "Effective January 1, 2026, the adult-use cannabis excise tax moved from a per-ounce weight-based tax to 10% of the average wholesale price of adult-use cannabis sold by a cultivation facility licensee to other licensees. The wholesale-price base is set by rule by the Office of Cannabis Policy using a rolling 90-day average of reported wholesale transactions. The change is part of P.L. 2025, ch. 388 (LD 210), the 2026 supplemental budget. Edibles, pre-rolls, and other manufactured products continue to be taxed at the wholesale-price base of the underlying flower or trim, with no separate excise tier." },
+  { question: "How much will the OCP Metrc contract price increase cost my cannabis business in 2026?", answer: "The OCP's new 5-year contract with Metrc took effect February 4, 2026. The price increases were negotiated with a delay to the May 1, 2026 effective date. The new prices are: monthly user fee $45 (up from $40, +12.5%); package tag $0.26 (up from $0.25, +4.0%); individual plant tag $0.46 (up from $0.45, +2.2%); 5-plant batch tag $2.30 (up from $2.25); 10-plant batch tag $4.60 (up from $4.50); 25-plant batch tag $11.50 (up from $11.25); 50-plant batch tag $23.00 (up from $22.50). For a mid-size cultivation facility running 5,000 plants per year on individual tags, the annual tag cost rises by $50; for a 50,000-plant operation, the rise is $500 per year. The monthly user fee change is the bigger number for most operators." },
+  { question: "What is the LD 1654 (P.L. 2025, ch. 504) grace period for missed excise tax payments?", answer: "LD 1654, effective July 29, 2026, amends 36 M.R.S. §4924 and adds new subsections to 36 M.R.S. §4921 and §4923 to provide a 30-day grace period for adult-use cultivation excise tax payments before the Maine Revenue Services late-payment interest and penalties begin to accrue. The grace period applies to the quarterly payments due under the post-2026 schedule. The grace period is administrative relief — it is not a waiver of the underlying tax. MRS retains the right to assess interest and penalties on any unpaid balance after the 30-day grace window." },
+  { question: "Are there any Maine cannabis excise tax exemptions I should know about?", answer: "Yes. Two important ones effective for the 2026 tax year. First, sales or transfers of adult-use cannabis between cultivation facilities and products manufacturing facilities are exempt from the excise tax under amended 36 M.R.S. §4923(7) (added by P.L. 2025, ch. 504, LD 1654). Second, the 20% sales tax on hemp and hemp products containing THC imposed by P.L. 2025, ch. 388 (LD 210) is a separate tax from the cannabis excise tax and is collected at the retail register, not at the wholesale transfer. The change in percentage transferred from the adult-use cannabis sales tax and excise tax to the Adult Use Cannabis Public Health and Safety and Municipal Opt-in Fund moved from 12% to 6% under the same 2026 budget bill." },
+  { question: "Will the federal Schedule III reclassification affect Maine excise tax compliance?", answer: "No. The state excise tax is levied on the cultivation facility, not on the federal scheduling of the product. The April 28, 2026 DOJ Final Order that moved state-licensed medical cannabis to Schedule III has no effect on the adult-use excise tax base, rate, or payment schedule. The state excise tax, the state sales tax, the municipal opt-in transfer, and the Metrc contract pricing are all state-level instruments, unchanged by the federal action. The Schedule III move affects federal income tax deductibility for the medical side of the operation, not the cultivation excise tax." }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+  }))
+});
+---
+
+<Layout
+  title={titleText}
+  description="Maine cannabis operator cost update for 2026: quarterly adult-use excise tax payments, 10% wholesale-price base, 30-day grace period under LD 1654, and the May 1 Metrc price increase. Cash flow planning for cultivation facilities."
+  heroImage="/images/heroes/maine-cannabis-2026-cost-update-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+article { max-width: 720px; margin: 0 auto; }
+.article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+.subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+.last-updated { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; }
+section { margin-bottom: 2rem; }
+section h2 { margin-top: 0; padding-top: 1rem; }
+section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+.disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-background); }
+section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+.answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+details { margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(88, 129, 87, 0.05); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 600; }
+summary:hover { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis 2026 Operator Cost Update: Quarterly Excise Tax & Metrc Contract</h1>
+    <p class="subtitle">Three concurrent cost changes for Maine cannabis operators in 2026 — the new quarterly excise tax schedule, the wholesale-price tax base, and the Metrc price increase — and how to model the cash flow impact</p>
+    <p class="last-updated">Published: June 7, 2026 — last updated June 7, 2026</p>
+  </div>
+
+  <section>
+    <h2>Overview</h2>
+    <p>For Maine cannabis operators, 2026 is a year of overlapping cost changes that show up in the same monthly cash flow statement but come from different sources. The cultivation excise tax moved to a quarterly payment cadence and a wholesale-price base effective January 1, 2026. The OCP's new contract with Metrc took effect February 4, 2026, with price increases that landed May 1, 2026. A 30-day administrative grace period for missed excise tax payments — under LD 1654 (P.L. 2025, ch. 504) — takes effect July 29, 2026. None of these changes are large in isolation, but together they shift the working capital profile of a typical cultivation facility and require an update to operator cash flow models, tax calendars, and compliance checklists.</p>
+    <p>This guide walks through each change, the underlying statutory or contractual authority, the dollar impact for a representative mid-size Maine cultivation facility, and the operational steps to update bookkeeping and Metrc workflows before the next quarterly deadline.</p>
+  </section>
+
+  <section class="fact-box">
+    <h2>2026 Maine Cannabis Cost Calendar</h2>
+    <table aria-label="Maine cannabis 2026 cost calendar">
+      <thead>
+        <tr><th>Effective Date</th><th>Change</th><th>Source</th><th>Operator Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>January 1, 2026</td><td>Adult-use excise tax moves to 10% of average wholesale price; quarterly payment schedule</td><td>P.L. 2025, ch. 388 (LD 210)</td><td>Update tax calendar; recalculate per-pound equivalent; revise cash flow forecast</td></tr>
+        <tr><td>January 1, 2026</td><td>Municipal opt-in transfer reduced from 12% to 6% of sales tax + excise</td><td>P.L. 2025, ch. 388 (LD 210)</td><td>Inform municipal partners of revised transfer amount</td></tr>
+        <tr><td>January 1, 2026</td><td>20% sales tax on THC hemp products takes effect</td><td>P.L. 2025, ch. 388 (LD 210)</td><td>Update POS configuration for hemp product sales</td></tr>
+        <tr><td>February 4, 2026</td><td>New OCP-Metrc 5-year contract takes effect</td><td>OCP-Metrc contract</td><td>Continue current Metrc user fees</td></tr>
+        <tr><td>May 1, 2026</td><td>Metrc price increase: monthly user fee +$5, all tag prices +$0.01</td><td>OCP-Metrc contract</td><td>Update Metrc budget; consider batch tag conversion to capture savings</td></tr>
+        <tr><td>July 29, 2026</td><td>LD 1654 30-day grace period for missed excise tax payments</td><td>P.L. 2025, ch. 504 (LD 1654)</td><td>Update internal payment calendar with 30-day buffer; document grace period use</td></tr>
+        <tr><td>Quarterly (2026)</td><td>Excise tax payments due April 30, July 31, October 31, January 31</td><td>28-B M.R.S. §1501-1502</td><td>Mark calendar; reconcile wholesale sales for the prior quarter</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The New Excise Tax Base and Cadence</h2>
+    <p>Effective January 1, 2026, the adult-use cannabis excise tax is calculated as 10% of the average wholesale price of adult-use cannabis sold by a cultivation facility licensee to other licensees. The wholesale-price base replaces the prior per-pound weight-based tax ($335/lb for flower, $94/lb for trim). The change was made in P.L. 2025, ch. 388 (LD 210), the 2026 supplemental budget bill, and the OCP has rule-making authority to set the methodology for the 90-day rolling average.</p>
+    <p>The practical effect for a cultivation facility: the excise tax is now a function of the wholesale price you actually realize, not a fixed rate per pound. A cultivator selling at a 20% premium for premium flower pays more excise; a cultivator selling at a discount for budget ounces pays less. The total tax base for the industry should be roughly revenue-neutral at the average wholesale price of mid-2025, but the variability by operator is real.</p>
+    <p>Quarterly payments: the prior monthly payment cadence is replaced with quarterly payments due April 30, July 31, October 31, and January 31 for the preceding calendar quarter. The cash flow implication is a larger single payment every three months; the bookkeeping implication is a 90-day reconciliation window for the wholesale-price base rather than a 30-day window. The OCP's reporting requirements are unchanged — the METRC tag data still drives the manifest reconciliation, and the wholesale invoices still drive the price-based calculation.</p>
+  </section>
+
+  <Callout title="Estimate the per-pound equivalent for your operation" type="info">
+    At a representative $1,500/lb wholesale price for indoor flower, the new 10% excise tax is $150/lb — well below the prior $335/lb fixed rate. At a $1,000/lb price for outdoor flower, the new excise is $100/lb, close to the prior effective rate for budget ounces. The break-even wholesale price (where new excise equals prior excise) is approximately $3,350/lb — well above the actual market. The structural effect is a tax cut for the bulk of the cultivation market, financed by the 14% retail sales tax increase that took effect at the same time.
+  </Callout>
+
+  <section>
+    <h2>The Metrc Price Increase (May 1, 2026)</h2>
+    <p>The OCP signed a new 5-year contract with Metrc, LLC for the state's adult-use cannabis inventory tracking system, effective February 4, 2026. The price increases were negotiated with a delay to give operators time to plan; they take effect on May 1, 2026. The new price list:</p>
+    <table aria-label="OCP Metrc price list 2026">
+      <thead>
+        <tr><th>Item</th><th>Prior Price (2019–2025)</th><th>New Price (May 1, 2026)</th><th>% Increase</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Monthly user fee</td><td>$40.00</td><td>$45.00</td><td>+12.5%</td></tr>
+        <tr><td>Package tag</td><td>$0.25</td><td>$0.26</td><td>+4.0%</td></tr>
+        <tr><td>Individual plant tag</td><td>$0.45</td><td>$0.46</td><td>+2.2%</td></tr>
+        <tr><td>5-plant batch tag</td><td>$2.25</td><td>$2.30</td><td>+2.2%</td></tr>
+        <tr><td>10-plant batch tag</td><td>$4.50</td><td>$4.60</td><td>+2.2%</td></tr>
+        <tr><td>25-plant batch tag</td><td>$11.25</td><td>$11.50</td><td>+2.2%</td></tr>
+        <tr><td>50-plant batch tag</td><td>$22.50</td><td>$23.00</td><td>+2.2%</td></tr>
+      </tbody>
+    </table>
+    <p>For a single-store retail licensee with one cultivation license, the annual user fee change is $60 (one user, $5/month × 12). The tag cost change depends on volume. A small cultivator producing 1,000 plants per year on individual tags sees a $10 annual increase; a mid-size cultivator producing 25,000 plants on 50-plant batch tags sees a $250 annual increase. Across the industry, the price increase is in the low single-digit millions — modest per operator, meaningful in aggregate, and a factor in why OCP and Metrc emphasize that over the prior 7-year contract the increase is 2.2-12.5% while cumulative inflation was 29%.</p>
+    <p>The new contract also adds functionality: Metrc is building a feature that helps licensees determine which mandatory lab tests are still required for a given package at any given stage. The OCP frames this as a compliance-burden reduction; licensees should expect to use it.</p>
+  </section>
+
+  <section>
+    <h2>LD 1654: The 30-Day Grace Period (Effective July 29, 2026)</h2>
+    <p>LD 1654, signed January 11, 2026 as P.L. 2025, ch. 504, adds a 30-day grace period for adult-use cultivation excise tax payments before Maine Revenue Services late-payment interest and penalties begin to accrue. The amendment to 36 M.R.S. §4924 (and the related additions to §4921 and §4923) takes effect July 29, 2026 — the same general effective date as the other 2026 cannabis legislation.</p>
+    <p>The grace period is administrative relief, not a waiver. The underlying tax liability is unchanged; the 30-day window simply defers the assessment of interest and penalties. For a cultivation facility that occasionally misses a quarterly deadline because of an METRC reconciliation dispute or a wholesale-invoice audit, the grace period eliminates the immediate cash penalty and gives time to resolve the underlying issue.</p>
+    <p>For the 2026 tax year, the grace period is forward-looking from July 29, 2026. The Q1 2026 payment (due April 30, 2026) and Q2 2026 payment (due July 31, 2026) are not eligible for the grace period; Q3 2026 (due October 31, 2026) and Q4 2026 (due January 31, 2027) are. Operators with a tight Q3 cash position should plan to use the grace period as a safety valve rather than a routine delay.</p>
+  </section>
+
+  <section>
+    <h2>Cash Flow Modeling for a Mid-Size Maine Cultivation Facility</h2>
+    <p>The three changes combine into a measurable but not dramatic shift in operating cost. A representative mid-size Maine cultivation facility — 10,000 sq ft canopy, 4 harvests per year, 8,000 plants per year, $1.2M annual wholesale revenue, three Metrc users — sees the following 2026 cost changes:</p>
+    <ul>
+      <li><strong>Metrc user fees:</strong> 3 users × $5/month increase × 12 months = $180 annual increase.</li>
+      <li><strong>Metrc plant tags:</strong> 8,000 plants per year on 50-plant batch tags = 160 batch tags × $0.50 increase = $80 annual increase. Conversion to 50-plant batch tags from individual tags is already the default at this scale.</li>
+      <li><strong>Excise tax on wholesale revenue:</strong> $1.2M × 10% = $120,000 annual excise tax, paid in four installments of $30,000 each. The prior monthly schedule averaged $10,000 per month, so quarterly cash flow has a larger single outflow and a longer stretch of in-period cash retention.</li>
+      <li><strong>Working capital adjustment:</strong> The change from monthly to quarterly excise tax payments is, in effect, an interest-free 60-day loan from the State of Maine to the cultivation facility. For an $1.2M-revenue operation, the carry is roughly $20,000 in additional working capital at any given point in the quarter. For larger operators, the carry scales linearly.</li>
+    </ul>
+    <p>The cash flow gain from the quarterly cadence is partially offset by the increased tag cost and the eventual use of the 30-day grace period. For most operators, the net 2026 change is mildly positive on a working capital basis and slightly negative on a compliance-cost basis. The bigger story is the 10% wholesale-price base — the tax is now proportional to actual realized revenue, which is more volatile than the prior fixed per-pound rate.</p>
+  </section>
+
+  <Callout title="Update your internal tax calendar" type="warning">
+    The April 30, 2026 first quarterly payment under the new schedule is the highest-risk transition. A cultivation facility that paid monthly under the prior schedule may have a stale payment workflow that defaults to a monthly cycle. Confirm that your accounting system is configured to generate the quarterly liability, that your METRC reconciliation is current to the end of Q1 (March 31, 2026), and that the bank authorization for the $30,000 (or larger) transfer is in place by April 25, 2026. The 30-day grace period does not apply to the first two 2026 payments; missing the April 30 deadline is a real penalty event.
+  </Callout>
+
+  <section>
+    <h2>What Stays Unchanged</h2>
+    <p>Three things the 2026 cost changes do not affect:</p>
+    <ul>
+      <li><strong>The state retail sales tax.</strong> The 5.5% state sales tax on cannabis and 8% on edibles remain unchanged. The retail sales tax is collected at the dispensary register, not at the cultivation facility.</li>
+      <li><strong>Local cannabis taxes.</strong> Maine has no local cannabis excise tax; municipalities receive their share through the 6% Adult Use Cannabis Public Health and Safety and Municipal Opt-in Fund transfer, which is reduced from 12% under the 2026 budget.</li>
+      <li><strong>METRC functionality for the medical side.</strong> The Metrc contract covers the OCP adult-use program. The medical caregiver program uses a separate paper-manifest system; LD 1840 amendments do not change that.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>The adult-use cannabis excise tax is now 10% of the average wholesale price, paid quarterly, effective January 1, 2026, under P.L. 2025, ch. 388 (LD 210).</li>
+      <li>The Metrc price increase took effect May 1, 2026: monthly user fee +$5 (to $45), package tag +$0.01, individual plant tag +$0.01, and proportionally for batch tags. The user-fee change is the bigger line item for most operators.</li>
+      <li>The 30-day grace period under LD 1654 (P.L. 2025, ch. 504) takes effect July 29, 2026, and applies to the Q3 2026 payment (October 31) and onward.</li>
+      <li>For most mid-size Maine cultivation facilities, the net 2026 effect is a working capital gain from the quarterly cadence (an interest-free deferral of the excise tax out of pocket) partially offset by the higher Metrc costs and the more volatile excise tax base.</li>
+      <li>Action items: update the internal tax calendar, recalculate the per-pound excise tax equivalent, budget the new Metrc fees, and confirm the Q1 2026 quarterly payment is wired by April 30, 2026.</li>
+    </ul>
+  </section>
+
+  <Faq items={faqItems} />
+
+  <div class="disclaimer">
+    This content is for informational purposes only and does not constitute legal, tax, or business advice. Confirm current excise tax rates, payment due dates, and Metrc fees with the Maine Office of Cannabis Policy and Maine Revenue Services before making operational decisions. The Maine Dispensary Guide is not a CPA firm.
+  </div>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+</Layout>
