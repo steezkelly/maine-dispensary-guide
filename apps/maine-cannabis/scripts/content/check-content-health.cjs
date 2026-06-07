@@ -385,19 +385,27 @@ function checkCSSBuildWarnings() {
 // avoidable 3XX redirects and crawl noise.
 function checkTrailingSlashInternalLinks() {
   const results = [];
-  const quotedInternalRouteRe = /["'](\/[^"'?]+\/)(?=[#']|["'])/g;
+  const quotedInternalRouteRe = /["'](\/[^\"'?]+\/)(?=[#']|["'])/g;
+  // JS code that uses path strings inside .includes() / .test() / RegExp()
+  // is a false-positive source for the regex above. Skip lines whose
+  // content contains a JS string-method call on the path literal.
+  const jsContextRe = /\.(?:includes|test|match|exec|search|indexOf)\s*\(|\bnew\s+RegExp\s*\(|\/\//;
   const skipPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
   walk(ROOT).forEach(file => {
     const text = fs.readFileSync(file, 'utf8');
+    const lines = text.split(/\r?\n/);
     let m;
     while ((m = quotedInternalRouteRe.exec(text)) !== null) {
       const href = m[1];
       if (href === '/' || skipPrefixes.some(prefix => href.startsWith(prefix))) continue;
       const lastSegment = href.replace(/\/$/, '').split('/').pop() || '';
       if (path.extname(lastSegment)) continue;
-      const rel = path.relative(ROOT, file);
+      // Skip lines that are JS code, not link hrefs.
       const lineNum = text.slice(0, m.index).split(/\r?\n/).length;
+      const line = lines[lineNum - 1] || '';
+      if (jsContextRe.test(line)) continue;
+      const rel = path.relative(ROOT, file);
       results.push(`${rel}:${lineNum}: trailing-slash internal route string → ${href}`);
     }
   });
