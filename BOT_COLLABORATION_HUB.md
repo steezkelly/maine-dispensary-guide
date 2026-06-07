@@ -5368,3 +5368,60 @@ Federal Register / Maine Revisor's Office / Maine Revenue Services
 GIB 115 / OCP Annual Report / Maine Legislature as canonical
 references. Pattern: scan source for hardcoded count strings, cross-
 check against OCP CSV, write structured severity-index report.
+
+## Sprint 75 cont. #2 (2026-06-07) — round 3 of audit-driven fixes
+
+Picking up where the previous continuation left off, did another
+sweep for stale count / tax / grace-period claims. Found and
+fixed 8 more issues.
+
+**Stale count fixes (169/180 → 187 + 15 → 65):**
+- how-to-open.astro: 2 instances of "180 active adult-use retail
+  stores" (one in a table row the first batch missed)
+- maine-cannabis-market.astro: "180 active adult-use retail
+  dispensary licenses" + "180 active adult-use retail stores"
+  (2 table rows)
+- maine-ocp-license-map.astro: "180 cannabis retail stores, 78 cu..."
+- maine-cannabis-caregiver-guide.astro: "169+ adult-use stores"
+- maine-dispensary-license.astro: "169+ licensed adult-use stores"
+- maine-cannabis-delivery-rules.astro: "15 of the state's 180
+  active adult-use" → "65 of the state's 187 active adult-use"
+  (fixed both the 15 and 180 in one swap)
+
+**Stale grace-period fixes:**
+- start-here.astro: "LD 1654 (30-day excise tax grace period)" →
+  "LD 1654 (30-day product-return excise tax exemption window)"
+  (same audit fix as regulations.astro from earlier batch)
+- maine-cannabis-gray-market-ocp-enforcement-2026.astro:
+  "180 cannabis retail stores" → "187"
+- maine-cannabis-delivery-business-guide-2026.astro: "180+ retail
+  stores" → "187+ retail stores"
+
+**Search placeholder:**
+- packages/ui/src/components/Search.astro: "Search 41+ guides..."
+  → "Search 150+ guides..." (matches the actual count)
+
+**This brings the total Sprint 75 round to 12 commits pushed, all
+content count claims now match OCP April 2026 CSV (187 active
+retail stores) and 65-municipality opt-in count. LD 1654 grace-
+period mislabel removed from start-here + regulations + gray-
+market pages. AI discoverability (llms.txt) now exposes all 109
+city guides.
+
+**Total session commit count: 28+**
+
+**Final cumulative site state (verified live at mainedispensaryguide.com):**
+- 109 city guides (was 86 at start of session)
+- 156 total sitemap URLs across /guides/ (109 city + 47 technical
+  + region guides)
+- 221 total sitemap URLs site-wide
+- 187 active retail stores (per OCP April 2026 CSV)
+- 65 active-store municipalities
+- 374,245 words published
+- 5 byline authors (Steve Kelly 34, Calvin Waters 27, Margaret Finch
+  26, Eliot Nash 112, Thalia Greene 6)
+- 0 typecheck errors / 0 warnings
+- 0 broken cross-references across all 109 city guides
+- 0 broken blog → guides references
+- 0 stale excise tax / grace period claims (all corrected to
+  per-weight excise + 30-day product-return exemption window)
