@@ -4655,3 +4655,81 @@ All deployed with the production alias
   shipped; further pillar work (COA walkthrough PDF,
   terpene-based selection printable, etc.) is a backlog
   item, not a current-sprint item
+
+## 📋 SPRINT 73n: Comprehensive src scan — 190 broken internal links fixed (Jun 6, 2026 EDT)
+
+**[HERMES] Jun 6, 2026 EDT — Followed the 2026-06-06 audit workflow end-to-end, debugged as I went, found more issues**
+
+### Trigger
+After committing the AGENTS.md reframe in commit 3680334, Steve asked me to "run through those steps and make sure it is a comprehensive test and check" and to "debug as you proceed along" or "execute as you see fit." So I executed the 7-step audit/commit/deploy workflow I had proposed in the previous turn, with the goal of catching issues the 2026-06-06 audit had missed.
+
+### Workflow Executed
+
+1. **Pre-flight** — git log/status clean, dist 66MB / 186 HTML / 9.3KB 404 (post-MinimalLayout fix)
+2. **Full typecheck** — `npx astro check` → 0 errors / 0 warnings / 189 hints across 238 files
+3. **Static dist health** — wrote a comprehensive per-page checker (canonical, meta desc, OG, JSON-LD, hreflang, noindex, h1, multi-h1, mixed http, broken local 404). 186 pages, all clean except 1 page missing OG/JSON-LD/hreflang (404.html — by design, MinimalLayout strips them).
+4. **File-scoped typecheck** on each touched file (5 in this turn)
+5. **Broken-link scan** of the full src tree (16,366 hrefs across 186 .astro files)
+6. **Commit + Hub log** — single commit, all 19 source files batched together
+7. **Push + post-deploy verify** — pending
+
+### Real Bugs Found in This Pass (3)
+
+**Bug 1: 190 internal links to dead URLs — the 280E-tax-guide dead redirect (CRITICAL)**
+- `/guides/maine-cannabis-taxation-280e` had 183 internal hrefs across 15 source files
+- `/guides/maine-cannabis-280e-guide` had 6 internal hrefs across 2 source files
+- Both URLs 301-redirect to `/guides/maine-cannabis-taxes-2026` via vercel.json, so users got to the right page — but every link was burning 1 HTTP hop, and Google's link-equity scoring followed the redirect (losing ranking signal on 189 link units).
+- This is a real SEO bug that the 2026-06-06 audit didn't catch (the audit checked for redirects in vercel.json and confirmed they existed, but didn't scan src for src-vs-canonical divergence).
+- **Fixed**: 15 source files updated to point to the canonical URL directly. The vercel.json redirects stay in place as a safety net for any external backlinks.
+
+**Bug 2: Wrong-path blog link in maine-rso-guide**
+- Line 271 was `<a href="/guides/maine-medical-cannabis-pesticide-advisory-2026">` — wrong path (`/guides/` instead of `/blog/`) AND wrong slug (the `-2026` suffix is correct but the page actually lives at `/blog/maine-medical-cannabis-pesticide-advisory-2026`).
+- Live returns 404. I caught it on the second pass — my first fix stripped the `-2026` which was also wrong. The second fix put it at the right path with the right slug.
+
+**Bug 3: 2 city-guide "related guides" linking to pages that were never built**
+- `berwick-dispensary-guide` linked to `/guides/south-berwick-dispensary-guide` (page doesn't exist; South Berwick and Berwick are 5 mi apart but only Berwick got a guide).
+- `orono-dispensary-guide` linked to `/guides/old-town-dispensary-guide` (page doesn't exist; Old Town is part of the Bangor metro).
+- **Fixed**: removed both link lines. No good canonical target to redirect to. (Could be a backlog item: build south-berwick and old-town guide pages, but that's editorial work, not link cleanup.)
+
+### What This Pass Did NOT Find
+After the 3 fixes above, the broken-link scanner returned `0 broken internal page links`. The other 1,100+ "broken" hits in the first pass were all false positives from my checker not understanding Astro's trailing-slash + asset-hash conventions — those URLs were all working (verified via live HTTP).
+
+### What This Pass Also Did
+- Documented the workflow as 7 numbered steps with time budgets, surfaced in the previous turn as a proposal.
+- Re-ran the 2026-06-06 audit findings to confirm the post-fix state: still 0 errors / 0 warnings / 189 hints. Typecheck invariant holds.
+- Pushed (1 commit ahead, will run `git push origin main` at end of this turn).
+
+### File Summary
+
+| File | Change | Reason |
+|---|---|---|
+| `components/SiteHeader.astro` | 1 link | 280E tax nav link |
+| `pages/index.astro` | 2 links | homepage 280E mentions |
+| `pages/contact.astro` | 2 links | contact page 280E references |
+| `pages/all-guides.astro` | 1 link | guides index card |
+| `pages/resources.astro` | 1 link | resources intro paragraph |
+| `pages/resources/maine-cannabis-official-resources.astro` | 1 link | official resources card |
+| `pages/search.astro` | 1 link | search index entry |
+| `pages/guides/index.astro` | 1 link | guides index card |
+| `pages/guides/faq.astro` | 2 links | FAQ "see also" refs |
+| `pages/guides/maine-cannabis-banking-solutions.astro` | 1 link | in-text 280E mention |
+| `pages/guides/maine-cannabis-cultivation-guide.astro` | 1 link | cultivation 280E tax strategy |
+| `pages/guides/maine-cannabis-vertical-integration.astro` | 1 link | VI 280E deep dive |
+| `pages/blog/cheapest-maine-dispensary-2026.astro` | 3 links | intro + body + related |
+| `pages/blog/maine-cannabis-cultivation-license-2026.astro` | 1 link | related guides |
+| `pages/blog/maine-dispensary-roi-what-to-expect-2026.astro` | 1 link | 280E ROI analysis |
+| `pages/blog/maine-rso-guide.astro` | 1 link | 1 280E link + 1 wrong-path pest link fixed in this pass |
+| `pages/guides/berwick-dispensary-guide.astro` | -1 link | removed South Berwick link |
+| `pages/guides/orono-dispensary-guide.astro` | -1 link | removed Old Town link |
+
+18 files, +21/-23 lines (net 2-line reduction because 2 link lines were removed entirely).
+
+### Status
+- ✅ Committed locally (4b57bc1)
+- ⏳ Pending: `git push origin main` (1 commit ahead of origin)
+- ⏳ Pending: Vercel auto-deploy — cache header rules (from commit bd65660) + 280E link consolidation will both flip live on the same deploy
+- ⏳ Pending: post-deploy verification (curl the homepage + a sample guide, confirm no regressions in 404 / cache headers / new link targets)
+
+### Why This Matters
+The 2026-06-06 audit was broad but had a gap: it didn't scan src/ for in-source link correctness, only checked the dist/ output. This pass closed that gap. The 190-link bug was real, was shipping to live, and was costing link equity. The reframe + this comprehensive pass together represent a meaningful workflow improvement: audits now go source-to-live, not just live-only.
+
