@@ -21,8 +21,8 @@ const faqPageJsonLd = JSON.stringify({
   "@type": "FAQPage",
   "mainEntity": faqItems.map(item => ({
     "@type": "Question",
-    "name": item.q,
-    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    "name": item.question,
+    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
   }))
 });
 ---
