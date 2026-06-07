@@ -23,11 +23,20 @@
  *   1  parse error in changed .astro file (fast pass failed)
  *   2  astro check error in changed file (slow pass failed)
  *   3  tool/env error (esbuild missing, not in a git repo, etc.)
+ *   4  smoke-200: a built page returns non-200 against the live site
+ *
+ * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
+ * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
+ * fails the push if any return non-200. Catches the "build green but
+ * specific page 404s/500s" failure mode that build-time checks can't see.
+ * Runs ~5s against the live site. Skippable with --skip-smoke-200 for
+ * offline runs.
  *
  * Usage:
  *   node scripts/git/pre-push-verify.cjs           # checks staged + working tree
  *   node scripts/git/pre-push-verify.cjs --ref=<ref>  # checks commits <ref>..HEAD
  *   node scripts/git/pre-push-verify.cjs --fast-only  # skip slow pass
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-200  # skip live-site smoke
  */
 
 const { execSync, spawnSync } = require('child_process');
@@ -218,6 +227,39 @@ function slowAstroCheck(files) {
     return { ok: false };
 }
 
+function smoke200Check() {
+    // Pass 3: hit every published page on the live site, fail on any non-200.
+    // Wraps apps/maine-cannabis/scripts/build/smoke-200.cjs (Sprint 77
+    // observability). Catches the "build green but specific page 404s" mode.
+    // Sprint 78: wire-up.
+    const smokeScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'smoke-200.cjs');
+    if (!fs.existsSync(smokeScript)) {
+        log('warn', `smoke-200.cjs not found at ${smokeScript} — skipping`);
+        return { ok: true };
+    }
+
+    const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL || 'https://mainedispensaryguide.com';
+    log('info', `smoke-200 against ${base}…`);
+
+    const res = spawnSync('node', [smokeScript], {
+        env: { ...process.env, MDG_BASE: base },
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 120_000,
+    });
+
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    // Echo the last 5 lines so the agent sees what failed.
+    const tail = out.split('\n').slice(-5).join('\n');
+    if (res.status === 0) {
+        log('ok', 'smoke-200: all pages 200');
+        return { ok: true };
+    }
+    log('err', `smoke-200: at least one page returned non-200 — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
@@ -248,6 +290,13 @@ function main() {
 
     const slow = slowAstroCheck(files);
     if (!slow.ok) process.exit(2);
+
+    if (!args.includes('--skip-smoke-200')) {
+        const smoke = smoke200Check();
+        if (!smoke.ok) process.exit(4);
+    } else {
+        log('info', 'smoke-200 skipped (--skip-smoke-200)');
+    }
 
     log('ok', 'pre-push verify: clean. Proceed with push.');
     process.exit(0);
