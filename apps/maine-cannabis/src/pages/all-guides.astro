@@ -150,7 +150,12 @@ const categories = [
       { title: "Fairfield Dispensary Guide", href: "/guides/fairfield-dispensary-guide" },
       { title: "Greenville Dispensary Guide", href: "/guides/greenville-dispensary-guide" },
       { title: "Guilford Dispensary Guide", href: "/guides/guilford-dispensary-guide" },
-      { title: "Solon Dispensary Guide", href: "/guides/solon-dispensary-guide" }
+      { title: "Solon Dispensary Guide", href: "/guides/solon-dispensary-guide" },
+      { title: "Baring Plantation Dispensary Guide", href: "/guides/baring-dispensary-guide" },
+      { title: "Chelsea Dispensary Guide", href: "/guides/chelsea-dispensary-guide" },
+      { title: "Rome Dispensary Guide", href: "/guides/rome-dispensary-guide" },
+      { title: "Somerville Dispensary Guide", href: "/guides/somerville-dispensary-guide" },
+      { title: "Winslow Dispensary Guide", href: "/guides/winslow-dispensary-guide" }
     ]
   },
   {
@@ -175,8 +180,8 @@ const totalGuides = categories.reduce((sum, cat) => sum + cat.guides.length, 0);
 ---
 
 <Layout 
-  title="Maine Cannabis Resource Library — 100+ Expert Guides" 
-  description="Complete index of 100+ technical guides for Maine cannabis operators. Business licensing, compliance, Schedule III dual-license taxation, caregiver trade show sales, sun-grown 150-plant outdoor cultivation, city guides, and operational resources."
+  title="Maine Cannabis Resource Library — 150+ Expert Guides" 
+  description="Complete index of 150+ technical guides for Maine cannabis operators. Business licensing, compliance, Schedule III dual-license taxation, caregiver trade show sales, sun-grown 150-plant outdoor cultivation, city guides, and operational resources."
   heroImage="/images/heroes/all-guides.jpg"
   article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-01-05", modifiedDate: "2026-05-14", section: "Reference" }}
 >
@@ -353,7 +358,7 @@ const totalGuides = categories.reduce((sum, cat) => sum + cat.guides.length, 0);
 
   <section class="library-intro">
     <p>This library covers every phase of the Maine cannabis business lifecycle — from navigating the Maine Office of Cannabis Policy (OCP) application process and securing municipal authorization, to day-to-day operations including Metrc inventory tracking, compliance reporting, and staff management.</p>
-    <p>City and town guides provide granular market analysis for 40+ Maine municipalities, from Portland's competitive landscape to underserved opportunities in rural towns with no dispensaries. Technical guides address specific operational challenges including POS system selection, banking access, 280E tax strategy, edibles manufacturing, and delivery logistics.</p>
+    <p>City and town guides provide granular market analysis for 109 Maine municipalities, from Portland's competitive landscape to underserved opportunities in rural towns with no dispensaries. Technical guides address specific operational challenges including POS system selection, banking access, 280E tax strategy, edibles manufacturing, and delivery logistics.</p>
     <p>New to Maine cannabis? Start with our <a href="/launch-checklist">2026 Launch Checklist</a> — a step-by-step roadmap from entity formation to your first day of sales — or browse the <a href="/start-here">Start Here</a> page for a visual phase-by-phase timeline.</p>
   </section>
 
@@ -371,7 +376,7 @@ const totalGuides = categories.reduce((sum, cat) => sum + cat.guides.length, 0);
         </ul>
         {cat.name === "City & Regional Guides" && (
           <div class="view-all">
-            <a href="/guides">See all 40+ town & regional guides →</a>
+            <a href="/guides">See all 109 town & regional guides →</a>
           </div>
         )}
         {cat.name === "Additional Technical Guides" && (

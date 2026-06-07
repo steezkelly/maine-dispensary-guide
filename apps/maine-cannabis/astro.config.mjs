@@ -11,7 +11,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Pages with Layout noindex={true} should stay out of the public sitemap.
-const noindexPathPrefixes = ['/download/', '/experiments', '/search', '/admin/'];
+const noindexPathPrefixes = ['/experiments', '/search', '/admin/'];
 const site = 'https://mainedispensaryguide.com';
 
 function listAstroPages(dir) {
