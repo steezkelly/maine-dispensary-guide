@@ -17,16 +17,6 @@ const faqItems = [
   { question: "Did the 2026 budget change the transfer to the Adult Use Cannabis Public Health and Safety and Municipal Opt-in Fund?", answer: "Yes. P.L. 2025, ch. 388 (LD 210) reduced the percentage transferred from the adult-use cannabis sales tax and excise tax to the Adult Use Cannabis Public Health and Safety and Municipal Opt-in Fund from 12% to 6% effective January 1, 2026. This reduces the share of cannabis tax revenue directed to municipal opt-in reimbursements and public health programming, with the corresponding increase in revenue retained for the General Fund. The municipal opt-in reimbursement program ($20,000 per opted-in municipality within three years of opt-in) continues but the funding source is now the smaller 6% allocation." },
   { question: "Will the federal Schedule III reclassification affect Maine excise tax compliance?", answer: "No. The state excise tax is levied on the cultivation facility on the sale or transfer of adult-use cannabis, not on the federal scheduling of the product. The April 28, 2026 DOJ Final Order that moved state-licensed medical cannabis to Schedule III has no effect on the adult-use excise tax base, rate, or payment schedule. The state excise tax, the state retail sales tax, the municipal opt-in transfer, and the Metrc contract pricing are all state-level instruments, unchanged by the federal action. The Schedule III move affects federal income tax deductibility for the medical side of a dual-license operation, not the cultivation excise tax." }
 ];
-
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(item => ({
-    "@type": "Question",
-    "name": item.question,
-    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
-  }))
-});
 ---
 
 <Layout
@@ -188,5 +178,4 @@ summary:hover { color: var(--color-primary); }
     This content is for informational purposes only and does not constitute legal, tax, or business advice. Confirm current excise tax rates, payment due dates, and Metrc fees with the Maine Office of Cannabis Policy and Maine Revenue Services before making operational decisions. Primary sources: 36 M.R.S. §4923 as amended by P.L. 2025, ch. 388, Pt. F, §3 (effective 1/1/2026); 36 M.R.S. §4923(7) as added by P.L. 2025, ch. 504 (effective 7/29/2026); Maine Revenue Services General Information Bulletin 115 (October 17, 2025); OCP-Metrc contract letter (January 29, 2026). The Maine Dispensary Guide is not a CPA firm.
   </div>
 </article>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 </Layout>

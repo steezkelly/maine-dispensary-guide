@@ -15,16 +15,6 @@ const faqItems = [
   { question: "Does the June 29, 2026 DEA hearing change anything for adult-use?", answer: "Not immediately. The hearing (AG Order No. 6753-2026, 91 FR 22778) is the formal administrative proceeding on the proposed rescheduling of all marijuana from Schedule I to Schedule III. It begins June 29, 2026 at the DEA Hearing Facility in Arlington, Virginia, and must conclude no later than July 15, 2026. The hearing is procedural — the final rescheduling rule for adult-use comes after the ALJ issues a recommended decision, then a final DEA order, then publication in the Federal Register. Operators should not assume a specific date for adult-use Schedule III; build a tax strategy that works whether the broader rescheduling lands in late 2026, 2027, or later." },
   { question: "Can a Maine operator keep one legal entity for both license types?", answer: "Yes. Schedule III is determined at the product level, not the entity level, so a single LLC can hold both a caregiver or medical dispensary license and an adult-use retail license. The apportionment work is the same: keep separate books, separate Metrc tag streams where feasible, separate inventory accounts, and a written allocation policy. That said, many sophisticated operators use a holding-company structure with a medical LLC and an adult-use LLC for risk and banking isolation. Either approach works for tax purposes; the entity choice should be driven by your banker, your insurer, and your litigation posture, not by the tax code." }
 ];
-
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(item => ({
-    "@type": "Question",
-    "name": item.question,
-    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
-  }))
-});
 ---
 
 <Layout
@@ -195,5 +185,4 @@ summary:hover { color: var(--color-primary); }
     This content is for informational purposes only and does not constitute legal, tax, or business advice. Engage a CPA with active cannabis tax experience in Maine and a tax attorney before filing a dual-license methodology. The Maine Dispensary Guide is not a law firm.
   </div>
 </article>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 </Layout>

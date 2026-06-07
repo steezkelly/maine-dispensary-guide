@@ -16,16 +16,6 @@ const faqItems = [
   { question: "Are caregiver events the same as adult-use events?", answer: "No. The amendment applies only to medical cannabis sales by registered caregivers at industry events. Adult-use retail licensees do not have an analogous statutory authority to sell at a temporary event venue under 28-B M.R.S. (the Cannabis Legalization Act); adult-use sales must occur at the licensed premises. Medical patients attending a caregiver event should bring their registry identification card; sales to non-patients remain prohibited, and a caregiver who sells or transfers medical cannabis to a non-patient is subject to revocation and potential criminal referral under 22 M.R.S. §2423-A(5)." },
   { question: "Can a caregiver charge a different price at a trade show?", answer: "Yes, but with care. The amendment permits sales at the event; it does not impose price controls. A caregiver may offer event-only pricing, a show special, or a bundled product package, provided each unit of product sold still meets the labeling and tracking rules. Discounts that would otherwise run afoul of OCP marketing rules (such as a 'two-for' that could be construed as a free sample to a non-qualifying individual) should be structured so that the qualifying patient is verified and the discount is applied at the point of sale, not in the form of free product." }
 ];
-
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(item => ({
-    "@type": "Question",
-    "name": item.question,
-    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
-  }))
-});
 ---
 
 <Layout
@@ -156,5 +146,4 @@ summary:hover { color: var(--color-primary); }
     This content is for informational purposes only and does not constitute legal, tax, or business advice. The OCP has not yet published trade-show-specific guidance under amended §2423-A(2)(O); confirm with the OCP and your attorney before your first event. The Maine Dispensary Guide is not a law firm.
   </div>
 </article>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 </Layout>

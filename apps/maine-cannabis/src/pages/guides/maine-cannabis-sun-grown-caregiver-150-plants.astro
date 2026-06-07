@@ -16,16 +16,6 @@ const faqItems = [
   { question: "How does the sun-grown option interact with caregiver retail sales?", answer: "A sun-grown caregiver is still a caregiver under the Maine Medical Use of Cannabis Act, with all the same patient-facing rights and obligations. The 150-plant annual limit applies to mature cannabis plants in flower. A sun-grown caregiver can sell harvested product to registered qualifying patients through the same channels every caregiver uses: the registered premises, delivery, private arrangement, and (after July 29, 2026) at trade shows and industry events under LD 1840. The annual gross sales figure for a fully-utilized sun-grown caregiver is materially higher than for a 30-plant base caregiver; OCP's reporting and tax requirements are unchanged." },
   { question: "What security and reporting requirements apply to a 150-plant outdoor cultivation site?", answer: "Amended 22 M.R.S. §2423-A(3)(B) requires an outdoor cultivation area to include 'reasonable precautions to prevent unauthorized access, such as a gated perimeter, fencing, locked gates, or natural barriers combined with signage.' The statute gives the caregiver discretion on the specific perimeter security, but the OCP has inspection authority and may require upgrades if the site is not reasonably secured. The caregiver must still report plant counts in Metrc, may not cultivate immature plants by canopy if cultivating mature plants by plant count (and vice versa), and remains subject to the 8-plant limit per registered qualifying patient under the standard caregiver rule." }
 ];
-
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(item => ({
-    "@type": "Question",
-    "name": item.question,
-    "acceptedAnswer": { "@type": "Answer", "text": item.answer }
-  }))
-});
 ---
 
 <Layout
@@ -153,5 +143,4 @@ summary:hover { color: var(--color-primary); }
     This content is for informational purposes only and does not constitute legal, tax, or business advice. The OCP has not yet published sun-grown-specific registration guidance under amended §2423-A(2)(B-1); confirm with the OCP and your attorney before relying on the new tier for the 2026 growing season. The Maine Dispensary Guide is not a law firm.
   </div>
 </article>
-<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
 </Layout>
