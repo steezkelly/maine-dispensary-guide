@@ -4819,3 +4819,17 @@ After the Sprint 73n cleanup, Steve asked to "continue finding bugs and optimiza
 - 172 webp (new)
 - Total: 348 files committed
 
+
+## Sprint 73p: Multi-round audit (Jun 6, 2026 EDT)
+
+7 rounds: image, link, schema, perf, a11y, sitemap.
+
+Sprint 73o (commit 48b639a): 50MB to 31MB hero image pipeline + WebP fallback (348 files)
+Sprint 73p (commit caf6685): 3 a11y heading-skip fixes
+
+Flagged for user decision (not applied):
+- White on --color-accent #588157 = 4.48:1 fails WCAG AA by 0.02
+- Top-level affiliate disclosure page missing (only inline in posts)
+
+Cumulative Sprint 73n + 73o + 73p: 197 broken links, 50MB to 31MB images, 3 a11y fixes, 0/0/191 throughout.
+
