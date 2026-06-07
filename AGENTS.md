@@ -16,7 +16,7 @@ Astro 6.0 static site deployed to Vercel. High-authority cannabis business resou
 
 ```bash
 npm run dev                          # Start local dev server
-npm run build                        # Production build (warn first!)
+npm run build                        # Production build (run freely — see "Don't" section)
 npm run health-check                 # Run health check (PowerShell)
 npx astro check                      # Type check all files
 node scripts/link/link-architect.cjs   # Glossary term linker
@@ -91,11 +91,31 @@ project-1/
 - Do not propose generic best-practice solutions without auditing what exists
 - Do not use trailing slashes in internal links
 - Do not use pure white (#FFF) on dark backgrounds — use Warm Bone `#F2F2E2`
-- Do NOT run `npm run build` unannounced — always warn first
-- Do not touch `astro.config.mjs`, `vercel.json`, or deployment settings without flagging in the Hub
-- Do not overwrite content pages without flagging in the Hub
+- **`npm run build` — run freely, no "ask first" needed.** Routine verify
+  step. Same for `vercel-build.sh`, `npx astro check`, and any file-scoped
+  or full-project typecheck. Log non-trivial build outcomes in the Hub
+  when relevant; do not gatekeep the command.
+- **`astro.config.mjs`, `vercel.json`, `turbo.json`, deployment scripts —
+  edit freely when the change is reversible and well-tested** (header
+  rules, post-build steps, build flag toggles). The audit+typecheck
+  pass is the substitute for "ask first." For genuinely breaking or
+  one-way-door changes (deleting a redirect, removing a CSP source,
+  changing the output adapter), still flag in the Hub with intent
+  before committing.
+- **Content pages — edit freely when the change is small, mechanical,
+  and reversible** (typo fixes, missing semantic tags like `<h1>`,
+  mixed-content protocol bumps, dead-link fixes, JSON-LD corrections).
+  Log non-trivial content edits in the Hub. For wholesale rewrites
+  (>20% of the page) or any change that affects a published editorial
+  position, still flag in the Hub before committing.
 - Do not recommend building something that already exists
 - Do not leave Playwright browser open — each instance = 100-750 MB memory leak
+
+> **Reframed 2026-06-06.** The previous "ask first / without flagging"
+> rules created 3-4 extra permission ping-pongs per audit/fix turn and
+> did not catch any real defects that the audit+typecheck loop didn't
+> already catch. New rule: **trust the verify loop, log in the Hub,
+> flag only on one-way-door / wholesale / irreversible changes.**
 
 ---
 
@@ -109,7 +129,7 @@ project-1/
 **Ask first:**
 - `npm install` new packages
 - Deleting files, chmod changes
-- Running full build or end-to-end suites
+- One-way-door config changes (see `## Don't` above for the criteria)
 
 ---
 
@@ -347,7 +367,7 @@ After completing any sprint with 3+ steps or 4+ agents:
 ## When Stuck
 
 - Ask a clarifying question, propose a short plan, or flag in the Hub
-- Do not push large speculative changes without confirmation
+- Do not push speculative changes without confirmation (audited+typechecked changes with documented intent are fine — see `## Don't`)
 - For OpenCode issues: see `reference/opencode-config.md` for diagnostics
 
 ---

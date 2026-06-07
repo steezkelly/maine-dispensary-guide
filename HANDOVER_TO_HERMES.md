@@ -273,9 +273,9 @@ cat link-outreach.md
 | File | Purpose |
 |------|---------|
 | `reference/reference.md` | Tool documentation (scripts, APIs, integrations) |
-| `astro.config.mjs` | Astro configuration (do NOT modify without flagging) |
-| `turbo.json` | Build pipeline (do NOT modify without flagging) |
-| `vercel.json` | Vercel config, CSP headers, www→non-www redirect |
+| `astro.config.mjs` | Astro configuration (edit freely for reversible changes; flag one-way-door changes) |
+| `turbo.json` | Build pipeline (edit freely for reversible changes; flag one-way-door changes) |
+| `vercel.json` | Vercel config, CSP headers, www→non-www redirect (edit freely for reversible changes; flag one-way-door changes) |
 
 ### For Maintenance
 | File | Purpose |
@@ -389,9 +389,26 @@ project-1/
 
 ## 12. WHAT NOT TO DO
 
-- **Do NOT** modify `astro.config.mjs` without flagging in Hub
-- **Do NOT** modify `vercel.json` without flagging in Hub
-- **Do NOT** run `npm run build` unannounced — always warn first
+> **Reframed 2026-06-06.** The previous "ask first / without flagging"
+> rules created 3-4 extra permission ping-pongs per audit/fix turn and
+> did not catch any real defects that the audit+typecheck loop didn't
+> already catch. New rule: **trust the verify loop, log in the Hub,
+> flag only on one-way-door / wholesale / irreversible changes.**
+
+- **`npm run build` — run freely, no "ask first" needed.** Routine verify
+  step. Same for `vercel-build.sh`, `npx astro check`, and any file-scoped
+  or full-project typecheck.
+- **`astro.config.mjs`, `vercel.json`, `turbo.json`, deployment scripts —
+  edit freely when the change is reversible and well-tested.** The
+  audit+typecheck pass is the substitute for "ask first." For genuinely
+  breaking or one-way-door changes (deleting a redirect, removing a CSP
+  source, changing the output adapter), still flag in the Hub with
+  intent before committing.
+- **Content pages — edit freely when the change is small, mechanical,
+  and reversible** (typo fixes, missing semantic tags, mixed-content
+  protocol bumps, dead-link fixes, JSON-LD corrections). For wholesale
+  rewrites (>20% of the page) or changes to a published editorial
+  position, still flag in the Hub before committing.
 - **Do NOT** propose or build state-specific hubs for states other than Maine
 - **Do NOT** use trailing slashes in internal links
 - **Do NOT** use pure white (#FFF) on dark backgrounds
