@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Medway, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Medway has 1 licensed adult-use cannabis storefront, Budz Emporium, on Medway Rd, plus access to the broader Penobscot County retail network. The storefront is licensed for both recreational (21+) and medical sales."}},{"@type":"Question","name":"Can I buy recreational cannabis in Medway, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Medway permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Medway dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Medway is competitive for a remote Penobscot County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax."}},{"@type":"Question","name":"What is Medway Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Medway is a Penobscot County town of approximately 1,300 year-round residents along Interstate 95 in the Penobscot River valley, between Bangor and the Katahdin region. The town is a common gateway stop for outdoor recreation visitors heading to Baxter State Park and the North Maine Woods."}}]});
+---
+<Layout title="Medway, ME Dispensary Guide — Penobscot County 2026" description="Medway, Maine dispensary guide. 1 adult-use storefront: Budz Emporium on Medway Rd. 2026 consumer guide for the I-95 Katahdin gateway." heroImage="/images/heroes/medway-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}section{margin-bottom:2.5rem}section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}section h3{font-size:1.15rem;margin-top:1.5rem}ul,ol{padding-left:1.5rem}li{margin-bottom:0.5rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background);font-weight:600}section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Medway, ME Dispensary Guide — Penobscot County 2026</h1>
+    <p class="subtitle">One I-95 storefront in the Katahdin gateway — Budz Emporium</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Medway Cannabis Quick Facts</h2>
+    <table aria-label="Medway cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — Medway permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (see table below)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,300 year-round</td></tr>
+        <tr><td><strong>Region</strong></td><td>Penobscot River valley / Katahdin gateway</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Medway Dispensary Overview</h2>
+    <p>Medway is a small town along Interstate 95 in the Penobscot River valley, between Bangor and the Katahdin region. The town's adult-use retail market is a single storefront (Budz Emporium) on Medway Rd that serves as a convenient stop for travelers heading to Baxter State Park, the North Maine Woods, and the Katahdin region. The in-town storefront eliminates the need to detour into Millinocket or Bangor for a stop.</p>
+    <p>Budz Emporium is a Maine-grown multi-store brand that runs a full menu including flower, pre-rolls, edibles, vapes, and concentrates at rural pricing. The location makes it a practical rest stop on the long I-95 haul north.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Medway</h2>
+    <p>The table below lists the licensed adult-use storefront currently operating in Medway. Hours, menus, and pricing change frequently — always verify directly with the operator before making the drive.</p>
+    <table aria-label="Licensed dispensaries in Medway, Maine">
+      <thead>
+        <tr><th scope="col">Operator</th><th scope="col">Address</th><th scope="col">Website</th></tr>
+      </thead>
+      <tbody>
+      <tr><td>Budz Emporium</td><td>1995 Medway Rd</td><td>https://budzemporium.com/</td></tr>
+      </tbody>
+    </table>
+    <p>All storefronts are licensed by the Maine Office of Cannabis Policy (OCP) for both adult-use and medical sales. Medical patients pay only the 5.5% state sales tax; adult-use customers pay the 10% state excise plus 5.5% sales tax on top of sticker price.</p>
+  </section>
+
+  <section>
+    <h2>What to Expect on a First Visit</h2>
+    <p>If you are 21 or older with a valid government-issued photo ID (Maine driver's license, out-of-state ID, or passport), you can walk into any adult-use dispensary in Medway and purchase. The process is the same as buying alcohol — ID check at the door, browse the menu, transact at the counter, and walk out with a sealed exit bag.</p>
+    <p>First-time visitors should expect a brief intake — the budtender will ask if you have used cannabis before, what effects you are looking for, and whether you have any preferences on format (flower, edible, vape, concentrate). Medway's location as a highway stop means budtenders are used to serving travelers passing through.</p>
+    <p>For medical patients, bring your Maine medical cannabis card (or a valid out-of-state card if your state has a reciprocity agreement with Maine). Medical patients have access to higher-dose products and pay only the 5.5% state sales tax — a meaningful discount on larger purchases.</p>
+  </section>
+
+  <section>
+    <h2>Pricing in Medway</h2>
+    <p>Pricing at Medway dispensaries is competitive for a remote Penobscot County market, with the usual seasonal and competitive variation. As of mid-2026:</p>
+    <ul>
+      <li><strong>Flower (eighth, 3.5g):</strong> $30-50, premium indoor can run higher</li>
+      <li><strong>Pre-rolls (single 1g):</strong> $12-18, multi-packs $25-50</li>
+      <li><strong>Edibles (100mg THC pack):</strong> $20-35, depending on format and brand</li>
+      <li><strong>Distillate cartridges (1g):</strong> $35-50</li>
+      <li><strong>Concentrates (1g):</strong> $40-80, depending on quality and format</li>
+    </ul>
+    <p>Medical patients save the 10% state excise — a meaningful discount on larger purchases. Adult-use customers should ask about first-time buyer promotions, birthday discounts, and weekday specials, which are common in this market.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Clusters</h2>
+    <p>Medway is on the I-95 corridor in northern Penobscot County. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
+    <ul>
+      <li><a href="/docs/millinocket-dispensary-guide">Millinocket dispensary guide</a> (~15 mi north on I-95)</li>
+      <li><a href="/guides/lincoln-dispensary-guide">Lincoln dispensary guide</a> (~30 mi south on I-95)</li>
+      <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> (~70 mi south, the nearest big-city market)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: `Are there cannabis dispensaries in Medway, Maine?`, answer: `Yes. Medway has 1 licensed adult-use cannabis storefront, Budz Emporium, on Medway Rd, plus access to the broader Penobscot County retail network. The storefront is licensed for both recreational (21+) and medical sales.` },
+      { question: `Can I buy recreational cannabis in Medway, Maine?`, answer: `Yes. Medway permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase.` },
+      { question: `What should I expect to pay at a Medway dispensary?`, answer: `Pricing in Medway is competitive for a remote Penobscot County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax.` },
+      { question: `What is Medway Maine known for?`, answer: `Medway is a Penobscot County town of approximately 1,300 year-round residents along Interstate 95 in the Penobscot River valley, between Bangor and the Katahdin region. The town is a common gateway stop for outdoor recreation visitors heading to Baxter State Park and the North Maine Woods.` }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — full list of OCP-licensed municipalities</li>
+      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a> — how to open a dispensary in Penobscot County</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — adult-use excise and medical savings explained</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational and educational purposes only and does not constitute legal, business, or purchasing advice. Operator details, addresses, and licensing data are sourced from the Maine Office of Cannabis Policy public licensee database. Hours, menus, and pricing change frequently — call ahead before visiting.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
+</Layout>

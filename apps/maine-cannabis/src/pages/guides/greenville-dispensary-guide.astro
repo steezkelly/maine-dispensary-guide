@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Greenville, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Greenville has 1 licensed adult-use cannabis storefront, Nova Farms Maine, on Rockwood Rd, plus access to the broader Piscataquis County retail network. The storefront is licensed for both recreational (21+) and medical sales."}},{"@type":"Question","name":"Can I buy recreational cannabis in Greenville, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Greenville permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Greenville dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Greenville is competitive for a remote Moosehead Lake market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% sales tax."}},{"@type":"Question","name":"What is Greenville Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Greenville is the gateway to Moosehead Lake, the largest mountain lake in New England, in Piscataquis County. The town has a year-round population of approximately 1,500 and swells with outdoor recreation visitors during summer and foliage season."}}]});
+---
+<Layout title="Greenville, ME Dispensary Guide — Moosehead Lake / Piscataquis County 2026" description="Greenville, Maine dispensary guide. 1 adult-use storefront: Nova Farms Maine on Rockwood Rd. 2026 consumer guide for the Moosehead Lake gateway." heroImage="/images/heroes/greenville-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}section{margin-bottom:2.5rem}section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}section h3{font-size:1.15rem;margin-top:1.5rem}ul,ol{padding-left:1.5rem}li{margin-bottom:0.5rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background);font-weight:600}section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Greenville, ME Dispensary Guide — Moosehead Lake / Piscataquis County 2026</h1>
+    <p class="subtitle">One Moosehead Lake storefront on Rockwood Rd — Nova Farms Maine</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Greenville Cannabis Quick Facts</h2>
+    <table aria-label="Greenville cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — Greenville permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (see table below)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,500 year-round</td></tr>
+        <tr><td><strong>Region</strong></td><td>Moosehead Lake / Piscataquis County highlands</td></tr>
+        <tr><td><strong>County</strong></td><td>Piscataquis</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Greenville Dispensary Overview</h2>
+    <p>Greenville is the southern gateway to Moosehead Lake, the largest mountain lake in New England, and the only incorporated retail cannabis storefront in the immediate Moosehead region. The town sits at the end of Route 6/15 and serves a 50+ mile catchment that includes Rockwood, Kokadjo, and the Lily Bay area. For outdoor recreation visitors — hikers, anglers, and snowmobilers — the in-town storefront eliminates the need to drive to Bangor or Skowhegan.</p>
+    <p>Nova Farms Maine operates the local storefront on Rockwood Rd (the road that heads north along the east shore of Moosehead toward Rockwood). The store carries a full menu including house-grown flower, pre-rolls, edibles, vapes, and concentrates. As one of the larger Maine MSO brands, Nova Farms also runs a cultivation facility elsewhere in the state, so the menu rotates with harvest.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Greenville</h2>
+    <p>The table below lists the licensed adult-use storefront currently operating in Greenville. Hours, menus, and pricing change frequently — always verify directly with the operator before making the drive.</p>
+    <table aria-label="Licensed dispensaries in Greenville, Maine">
+      <thead>
+        <tr><th scope="col">Operator</th><th scope="col">Address</th><th scope="col">Website</th></tr>
+      </thead>
+      <tbody>
+      <tr><td>Nova Farms Maine LLC</td><td>22 Rockwood Rd</td><td>(not listed)</td></tr>
+      </tbody>
+    </table>
+    <p>All storefronts are licensed by the Maine Office of Cannabis Policy (OCP) for both adult-use and medical sales. Medical patients pay only the 5.5% state sales tax; adult-use customers pay the 10% state excise plus 5.5% sales tax on top of sticker price.</p>
+  </section>
+
+  <section>
+    <h2>What to Expect on a First Visit</h2>
+    <p>If you are 21 or older with a valid government-issued photo ID (Maine driver's license, out-of-state ID, or passport), you can walk into any adult-use dispensary in Greenville and purchase. The process is the same as buying alcohol — ID check at the door, browse the menu, transact at the counter, and walk out with a sealed exit bag.</p>
+    <p>First-time visitors should expect a brief intake — the budtender will ask if you have used cannabis before, what effects you are looking for, and whether you have any preferences on format (flower, edible, vape, concentrate). Greenville's location as a destination market means budtenders are used to serving out-of-state visitors and can flag the key differences between Maine's tax structure and what visitors pay in their home states.</p>
+    <p>For medical patients, bring your Maine medical cannabis card (or a valid out-of-state card if your state has a reciprocity agreement with Maine). Medical patients have access to higher-dose products and pay only the 5.5% state sales tax — a meaningful discount on larger purchases.</p>
+  </section>
+
+  <section>
+    <h2>Pricing in Greenville</h2>
+    <p>Pricing at Greenville dispensaries is competitive for a remote mountain-lake market, with the usual seasonal and competitive variation. As of mid-2026:</p>
+    <ul>
+      <li><strong>Flower (eighth, 3.5g):</strong> $30-50, premium indoor can run higher</li>
+      <li><strong>Pre-rolls (single 1g):</strong> $12-18, multi-packs $25-50</li>
+      <li><strong>Edibles (100mg THC pack):</strong> $20-35, depending on format and brand</li>
+      <li><strong>Distillate cartridges (1g):</strong> $35-50</li>
+      <li><strong>Concentrates (1g):</strong> $40-80, depending on quality and format</li>
+    </ul>
+    <p>Medical patients save the 10% state excise — a meaningful discount on larger purchases. Adult-use customers should ask about first-time buyer promotions, birthday discounts, and weekday specials, which are common in this market.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Clusters</h2>
+    <p>Greenville is the retail anchor for the Moosehead region. If you do not find what you want at the in-town store, these nearby markets are within a reasonable drive:</p>
+    <ul>
+      <li><a href="/guides/guilford-dispensary-guide">Guilford dispensary guide</a> (~30 mi south on Route 15)</li>
+      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a> (~60 mi south)</li>
+      <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> (~80 mi southeast, the nearest big-city market)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: `Are there cannabis dispensaries in Greenville, Maine?`, answer: `Yes. Greenville has 1 licensed adult-use cannabis storefront, Nova Farms Maine, on Rockwood Rd, plus access to the broader Piscataquis County retail network. The storefront is licensed for both recreational (21+) and medical sales.` },
+      { question: `Can I buy recreational cannabis in Greenville, Maine?`, answer: `Yes. Greenville permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase.` },
+      { question: `What should I expect to pay at a Greenville dispensary?`, answer: `Pricing in Greenville is competitive for a remote Moosehead Lake market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax.` },
+      { question: `What is Greenville Maine known for?`, answer: `Greenville is the gateway to Moosehead Lake, the largest mountain lake in New England, in Piscataquis County. The town has a year-round population of approximately 1,500 and swells with outdoor recreation visitors during summer and foliage season.` }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — full list of OCP-licensed municipalities</li>
+      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a> — how to open a dispensary in Piscataquis County</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — adult-use excise and medical savings explained</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational and educational purposes only and does not constitute legal, business, or purchasing advice. Operator details, addresses, and licensing data are sourced from the Maine Office of Cannabis Policy public licensee database. Hours, menus, and pricing change frequently — call ahead before visiting.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
+</Layout>

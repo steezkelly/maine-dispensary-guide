@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Guilford, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Guilford has 1 licensed adult-use cannabis storefront, Greenlife Guilford, on Hudson Ave, plus access to the broader Piscataquis County retail network. The storefront is licensed for both recreational (21+) and medical sales."}},{"@type":"Question","name":"Can I buy recreational cannabis in Guilford, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Guilford permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Guilford dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Guilford tracks the rural Piscataquis County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax."}},{"@type":"Question","name":"What is Guilford Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Guilford is a Piscataquis County town of approximately 1,500 residents along the Piscataquis River. The town is part of the central Maine highlands region and has a history as a paper-mill town on the river."}}]});
+---
+<Layout title="Guilford, ME Dispensary Guide — Piscataquis County 2026" description="Guilford, Maine dispensary guide. 1 adult-use storefront: Greenlife Guilford on Hudson Ave. 2026 consumer guide for the Piscataquis River valley." heroImage="/images/heroes/guilford-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}section{margin-bottom:2.5rem}section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}section h3{font-size:1.15rem;margin-top:1.5rem}ul,ol{padding-left:1.5rem}li{margin-bottom:0.5rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background);font-weight:600}section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Guilford, ME Dispensary Guide — Piscataquis County 2026</h1>
+    <p class="subtitle">One storefront on Hudson Ave in the Piscataquis River valley — Greenlife Guilford</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Guilford Cannabis Quick Facts</h2>
+    <table aria-label="Guilford cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — Guilford permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (see table below)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~1,500 year-round</td></tr>
+        <tr><td><strong>Region</strong></td><td>Piscataquis River valley / central Maine highlands</td></tr>
+        <tr><td><strong>County</strong></td><td>Piscataquis</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Guilford Dispensary Overview</h2>
+    <p>Guilford is a small Piscataquis River town in the central Maine highlands, along Route 15 between Dover-Foxcroft and Greenville. The town's adult-use retail market is a single storefront (Greenlife Guilford) on Hudson Ave that serves a wide central-Maine catchment that includes Dover-Foxcroft, Sangerville, and the upper Piscataquis valley. Guilford's compact retail footprint reflects its rural character, but the in-town operator gives locals and travelers a convenient stop without driving to Bangor or Skowhegan.</p>
+    <p>Greenlife is a Maine-grown multi-store brand with a focus on consistent quality across its locations. The Guilford storefront carries a full menu — flower, pre-rolls, edibles, vapes, concentrates, and topicals — at rural pricing.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Guilford</h2>
+    <p>The table below lists the licensed adult-use storefront currently operating in Guilford. Hours, menus, and pricing change frequently — always verify directly with the operator before making the drive.</p>
+    <table aria-label="Licensed dispensaries in Guilford, Maine">
+      <thead>
+        <tr><th scope="col">Operator</th><th scope="col">Address</th><th scope="col">Website</th></tr>
+      </thead>
+      <tbody>
+      <tr><td>Greenlife Guilford</td><td>6 Hudson Ave</td><td>(not listed)</td></tr>
+      </tbody>
+    </table>
+    <p>All storefronts are licensed by the Maine Office of Cannabis Policy (OCP) for both adult-use and medical sales. Medical patients pay only the 5.5% state sales tax; adult-use customers pay the 10% state excise plus 5.5% sales tax on top of sticker price.</p>
+  </section>
+
+  <section>
+    <h2>What to Expect on a First Visit</h2>
+    <p>If you are 21 or older with a valid government-issued photo ID (Maine driver's license, out-of-state ID, or passport), you can walk into any adult-use dispensary in Guilford and purchase. The process is the same as buying alcohol — ID check at the door, browse the menu, transact at the counter, and walk out with a sealed exit bag.</p>
+    <p>First-time visitors should expect a brief intake — the budtender will ask if you have used cannabis before, what effects you are looking for, and whether you have any preferences on format (flower, edible, vape, concentrate). Guilford's operator is used to serving a mix of locals and travelers and offers a low-pressure, educational counter experience.</p>
+    <p>For medical patients, bring your Maine medical cannabis card (or a valid out-of-state card if your state has a reciprocity agreement with Maine). Medical patients have access to higher-dose products and pay only the 5.5% state sales tax — a meaningful discount on larger purchases.</p>
+  </section>
+
+  <section>
+    <h2>Pricing in Guilford</h2>
+    <p>Pricing at Guilford dispensaries tracks the rural Piscataquis County market, with the usual seasonal and competitive variation. As of mid-2026:</p>
+    <ul>
+      <li><strong>Flower (eighth, 3.5g):</strong> $30-50, premium indoor can run higher</li>
+      <li><strong>Pre-rolls (single 1g):</strong> $12-18, multi-packs $25-50</li>
+      <li><strong>Edibles (100mg THC pack):</strong> $20-35, depending on format and brand</li>
+      <li><strong>Distillate cartridges (1g):</strong> $35-50</li>
+      <li><strong>Concentrates (1g):</strong> $40-80, depending on quality and format</li>
+    </ul>
+    <p>Medical patients save the 10% state excise — a meaningful discount on larger purchases. Adult-use customers should ask about first-time buyer promotions, birthday discounts, and weekday specials, which are common in this market.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Clusters</h2>
+    <p>Guilford is on the Route 15 corridor between Dover-Foxcroft and Greenville. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
+    <ul>
+      <li><a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft dispensary guide</a> (~8 mi east on Route 15)</li>
+      <li><a href="/guides/greenville-dispensary-guide">Greenville dispensary guide</a> (~30 mi north on Route 15)</li>
+      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a> (~35 mi southwest)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: `Are there cannabis dispensaries in Guilford, Maine?`, answer: `Yes. Guilford has 1 licensed adult-use cannabis storefront, Greenlife Guilford, on Hudson Ave, plus access to the broader Piscataquis County retail network. The storefront is licensed for both recreational (21+) and medical sales.` },
+      { question: `Can I buy recreational cannabis in Guilford, Maine?`, answer: `Yes. Guilford permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase.` },
+      { question: `What should I expect to pay at a Guilford dispensary?`, answer: `Pricing in Guilford tracks the rural Piscataquis County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax.` },
+      { question: `What is Guilford Maine known for?`, answer: `Guilford is a Piscataquis County town of approximately 1,500 residents along the Piscataquis River. The town is part of the central Maine highlands region and has a history as a paper-mill town on the river.` }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — full list of OCP-licensed municipalities</li>
+      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a> — how to open a dispensary in Piscataquis County</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — adult-use excise and medical savings explained</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational and educational purposes only and does not constitute legal, business, or purchasing advice. Operator details, addresses, and licensing data are sourced from the Maine Office of Cannabis Policy public licensee database. Hours, menus, and pricing change frequently — call ahead before visiting.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
+</Layout>

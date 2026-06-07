@@ -1,0 +1,111 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
+const topics = ["city", "market"];
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Columbia, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Columbia has 2 licensed adult-use cannabis storefronts on US-1, both serving the Downeast region. The storefronts are licensed for both recreational (21+) and medical sales."}},{"@type":"Question","name":"Can I buy recreational cannabis in Columbia, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Columbia permits adult-use cannabis retail and both storefronts in town are licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Columbia dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Columbia tracks the rural Washington County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% sales tax."}},{"@type":"Question","name":"What is Columbia Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Columbia is a small town in Washington County on US Route 1 in the Downeast region, just north of Harrington. The town has a year-round population of approximately 450 and serves as a stop along the coastal Route 1 corridor between Ellsworth and Machias."}}]});
+---
+<Layout title="Columbia, ME Dispensary Guide — Washington County / Downeast 2026" description="Columbia, Maine dispensary guide. 2 adult-use storefronts on US-1: Columbia Recreational Marijuana and Stoned Leprechaun. 2026 consumer guide for the Downeast corridor." heroImage="/images/heroes/columbia-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}section{margin-bottom:2.5rem}section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}section h3{font-size:1.15rem;margin-top:1.5rem}ul,ol{padding-left:1.5rem}li{margin-bottom:0.5rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background);font-weight:600}section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Columbia, ME Dispensary Guide — Washington County / Downeast 2026</h1>
+    <p class="subtitle">Two Route 1 storefronts in the Downeast corridor — Columbia Recreational Marijuana and Stoned Leprechaun</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Columbia Cannabis Quick Facts</h2>
+    <table aria-label="Columbia cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>Yes — Columbia permits adult-use retail</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 confirmed (see table below)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~450 year-round</td></tr>
+        <tr><td><strong>Region</strong></td><td>Downeast / Washington County</td></tr>
+        <tr><td><strong>County</strong></td><td>Washington</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Columbia Dispensary Overview</h2>
+    <p>Columbia is a small Downeast town on US Route 1 in Washington County, between the blueberry barrens of the interior and the coastal fishing villages of the outer peninsula. With two adult-use storefronts on the same highway, Columbia is one of the better-stocked rural stops on the Route 1 corridor between Ellsworth and Machias. The town draws steady traffic from blueberry rakers in late summer and from snowmobilers and ice fishermen in winter.</p>
+    <p>Both storefronts sit directly on US-1 with adequate parking. Together they cover the full adult-use and medical menu spectrum — flower, pre-rolls, edibles, vapes, and concentrates — making Columbia a practical one-stop for Downeast visitors and locals.</p>
+  </section>
+
+  <section>
+    <h2>Dispensaries in Columbia</h2>
+    <p>The table below lists the licensed adult-use storefronts currently operating in Columbia. Hours, menus, and pricing change frequently — always verify directly with the operator before making the drive.</p>
+    <table aria-label="Licensed dispensaries in Columbia, Maine">
+      <thead>
+        <tr><th scope="col">Operator</th><th scope="col">Address</th><th scope="col">Website</th></tr>
+      </thead>
+      <tbody>
+      <tr><td>Columbia Recreational Marijuana</td><td>265 US-1</td><td>(not listed)</td></tr>
+      <tr><td>Stoned Leprechaun, LLC</td><td>188 Unit 2, US 1</td><td>(not listed)</td></tr>
+      </tbody>
+    </table>
+    <p>All storefronts are licensed by the Maine Office of Cannabis Policy (OCP) for both adult-use and medical sales. Medical patients pay only the 5.5% state sales tax; adult-use customers pay the 10% state excise plus 5.5% sales tax on top of sticker price.</p>
+  </section>
+
+  <section>
+    <h2>What to Expect on a First Visit</h2>
+    <p>If you are 21 or older with a valid government-issued photo ID (Maine driver's license, out-of-state ID, or passport), you can walk into any adult-use dispensary in Columbia and purchase. The process is the same as buying alcohol — ID check at the door, browse the menu, transact at the counter, and walk out with a sealed exit bag.</p>
+    <p>First-time visitors should expect a brief intake — the budtender will ask if you have used cannabis before, what effects you are looking for, and whether you have any preferences on format (flower, edible, vape, concentrate). Columbia's storefronts see steady Route 1 traffic and are accustomed to serving out-of-state visitors and seasonal workers.</p>
+    <p>For medical patients, bring your Maine medical cannabis card (or a valid out-of-state card if your state has a reciprocity agreement with Maine). Medical patients have access to higher-dose products and pay only the 5.5% state sales tax — a meaningful discount on larger purchases.</p>
+  </section>
+
+  <section>
+    <h2>Pricing in Columbia</h2>
+    <p>Pricing at Columbia dispensaries tracks the rural Washington County market, with the usual seasonal and competitive variation. As of mid-2026:</p>
+    <ul>
+      <li><strong>Flower (eighth, 3.5g):</strong> $30-50, premium indoor can run higher</li>
+      <li><strong>Pre-rolls (single 1g):</strong> $12-18, multi-packs $25-50</li>
+      <li><strong>Edibles (100mg THC pack):</strong> $20-35, depending on format and brand</li>
+      <li><strong>Distillate cartridges (1g):</strong> $35-50</li>
+      <li><strong>Concentrates (1g):</strong> $40-80, depending on quality and format</li>
+    </ul>
+    <p>Medical patients save the 10% state excise — a meaningful discount on larger purchases. Adult-use customers should ask about first-time buyer promotions, birthday discounts, and weekday specials, which are common in this market.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Clusters</h2>
+    <p>Columbia is well-positioned along Route 1. If you do not find what you want at the in-town stores, these nearby markets are a short drive:</p>
+    <ul>
+      <li><a href="/guides/calais-dispensary-guide">Calais dispensary guide</a> (~40 mi northeast, on the Canadian border)</li>
+      <li><a href="/guides/machias-dispensary-guide">Machias dispensary guide</a> (~30 mi southwest)</li>
+      <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> (~50 mi west, the nearest larger market)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: `Are there cannabis dispensaries in Columbia, Maine?`, answer: `Yes. Columbia has 2 licensed adult-use cannabis storefronts on US-1, both serving the Downeast region. The storefronts are licensed for both recreational (21+) and medical sales.` },
+      { question: `Can I buy recreational cannabis in Columbia, Maine?`, answer: `Yes. Columbia permits adult-use cannabis retail and both storefronts in town are licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase.` },
+      { question: `What should I expect to pay at a Columbia dispensary?`, answer: `Pricing in Columbia tracks the rural Washington County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% sales tax.` },
+      { question: `What is Columbia Maine known for?`, answer: `Columbia is a small town in Washington County on US Route 1 in the Downeast region, just north of Harrington. The town has a year-round population of approximately 450 and serves as a stop along the coastal Route 1 corridor between Ellsworth and Machias.` }
+    ]} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — full list of OCP-licensed municipalities</li>
+      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a> — how to open a dispensary in Washington County</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — adult-use excise and medical savings explained</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational and educational purposes only and does not constitute legal, business, or purchasing advice. Operator details, addresses, and licensing data are sourced from the Maine Office of Cannabis Policy public licensee database. Hours, menus, and pricing change frequently — call ahead before visiting.</em></p>
+  </section>
+</article>
+<script type="application/ld+json" set:html={faqPageJsonLd}></script>
+</Layout>
