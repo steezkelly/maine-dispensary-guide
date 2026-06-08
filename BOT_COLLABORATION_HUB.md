@@ -5571,3 +5571,66 @@ The 3-pass gate is no longer "we think it works" — it's been proven to catch b
 - **Safety posture:** All changes are reversible via single revert. `astro.config.mjs` change is the riskiest (touches the sitemap generator), but it's a 7-line addition that strictly *adds* filtering, never loosens it. The two orphan-`<article>` deletions were verified by re-checking that each file now has exactly 1 `<article>` open + 1 `</article>` close + 1 H1. The redirect-URL rewrites target the destination's actual root or pricing page.
 - **What was NOT changed:** No new pages, no new components, no `vercel.json` / `package.json` / `turbo.json` edits, no JSON-LD schema changes, no image asset changes, no new dependencies.
 - **Files changed:** 10 application files (1 sitemap config, 8 content pages, 1 download page) + auto-regenerated `MISSION_CONTROL.md` + `public/status.json` + `scripts/content/.content-health-baseline.json`. 38 insertions, 29 deletions. Pushed as `2eaeba3`.
+
+
+### Sprint 81 wave 2: 20 city guides + 7 blog orphans + 1 stale modifiedDate ✅ DEPLOYED
+- **Why:** Picked up where Sprint 81 wave 1 left off. Re-scanned the link graph using both
+  static regex (limitations: doesn't traverse data-driven rendering) AND rendered HTML
+  (accurate but requires a build). Static analysis flagged 42 orphans + 44 single-incoming;
+  rendered HTML showed the real picture (0 orphans, 6 single-incoming). The discrepancy was
+  because Astro renders links via \`{array.map(item => <a href={item.url}>)}\` patterns that
+  regex doesn't catch. Three real, fixable issues emerged from the cross-check.
+- **What changed (3 files, 1 commit `4676197`):**
+  - `apps/maine-cannabis/src/pages/find-a-dispensary.astro` — added 20 city guides to the
+    \`guideRegions\` data array that were missing: bucksport, carrabassett-valley, detroit,
+    eliot, fairfield, hallowell, lebanon, manchester, mechanic-falls, milo, newry, northport,
+    oxford, poland, southwest-harbor, thomaston, turner, warren, wiscasset, woolwich. Each
+    added to the correct region (Downeast, Southern, Central, Midcoast) based on actual Maine
+    geography with proper mapUrl, summary, and display name. **Build broke first time** on
+    missing comma + indent on the prior last entry (the \`}\` needed to be \`},\`); fixed with
+    3 surgical patches across 4 region insertions. Build now green; rendered hrefs: 89 → 109.
+  - `apps/maine-cannabis/src/pages/index.astro` — added a new 'From the Blog' section right
+    after 'What's New' on the homepage. New \`recentPosts\` array of 7 June 2026 blog posts;
+    renders in the same \`new-grid\` \`new-card\` pattern (no new CSS). Each post now has 2+
+    incoming links (was 1 each from a sibling). Added a 'View all 35 articles →' link to
+    \`/blog\` for the remaining discovery gap.
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-real-estate.astro` — bumped stale
+    \`modifiedDate: '2026-03-20'\` → \`'2026-06-08'\`. This page was missed in the Sprint 79
+    stale-date refresh (78 of 79 pages got bumped; this one slipped).
+- **Issues that turned out to be false positives (caught by rendering-aware analysis):**
+  - **42 'orphan' pages** in my static regex scan — all false positives. Real graph is 0 orphans.
+    Reason: my regex matched \`href="/..."\` but missed Astro's data-driven rendering
+    (\`{posts.map(...)}\`, \`{guideRegions.map(...)}\`, etc.). Re-analysis on rendered HTML showed
+    the link graph is healthy.
+  - **44 'single-incoming' pages** — actually only 6 in the rendered HTML (all 6 from
+    find-a-dispensary cross-links to city guides). Ahrefs's report of 14 likely includes
+    guides that I just made redundant (the 20 added to find-a-dispensary + the 7 added to
+    homepage will resolve most of them on next crawl).
+- **Re-confirmed not addressed (low value / pre-existing):**
+  - **73 long titles** (>60 chars in Layout prop): blog post titles. Ahrefs flagged as drift
+    (Sprint 74/80 edits); not errors. Natural long-tail SEO. Title truncation in SERP is normal.
+  - **20 long descriptions** (>200 chars): similar — natural for substantive guides.
+  - **2 duplicate hero images** (terpene-preservation + buying-cannabis share byte-identical
+    jpg/avif/webp): pre-existing baseline. Tried to fix by replacing with terpene-guide content
+    but that just creates a new 2-way share; reverted. Real fix needs image regeneration,
+    not a code change. 18 content-health failures remain at baseline.
+- **Verification:**
+  - \`npx astro check\`: 0 errors / 0 warnings / 315 hints across 289 files
+  - \`npm run build\`: green, 4.78s
+  - \`check:sitemap-xml\`: pass (220 URLs)
+  - \`check:content-health-regression\`: no regressions; baseline unchanged
+  - \`check:content-health\`: 18 failures (all duplicate-hero, all pre-existing)
+  - Rendered HTML scan: 0 orphans, 6 single-incoming (all from find-a-dispensary)
+  - \`smoke-200\`: 220/220 ok
+  - \`pre-push-verify\`: clean
+  - \`git push origin main\`: succeeded \`cf8d7e4..4676197\`
+  - \`submit-indexnow.cjs\`: 220 URLs submitted
+- **Safety posture:** Pure content + cross-linking changes, no behavior/layout/config changes.
+  find-a-dispensary addition is mechanical + reversible. The 'From the Blog' section uses the
+  exact same \`new-card\` CSS classes and \`new-grid\` pattern as the existing 'What's New'
+  section — no new styles, no new components. The modifiedDate bump is metadata only.
+- **What was NOT changed:** No new pages, no new components, no astro.config.mjs/vercel.json
+  changes, no schema/JSON-LD changes, no new dependencies. The 2 other modified files
+  observed in git status (package.json, package-lock.json) were from a parallel session
+  that added googleapis; I deliberately did NOT commit those.
+- **Files changed:** 3 content files. 167 insertions, 9 deletions. Pushed as \`4676197\`.
