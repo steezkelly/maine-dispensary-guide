@@ -63,6 +63,18 @@ const recentGuides = [
   { title: "How to Open a Dispensary in Maine", href: "/blog/maine-dispensary-how-to-open", date: "March 28, 2026", badge: "Guide" },
 ];
 
+// Recent blog posts (June 2026 batch) — pulled from blog/index.astro
+// Linked from the homepage to give these posts >1 incoming internal link.
+const recentPosts = [
+  { title: "Maine's Cannabis 'Gray Market' Is Growing", href: "/blog/maine-cannabis-gray-market-ocp-enforcement-2026", date: "June 6, 2026", badge: "Policy" },
+  { title: "Buying Cannabis by Effect: A Terpene Framework", href: "/blog/buying-cannabis-by-effect-2026", date: "June 6, 2026", badge: "Consumer" },
+  { title: "Maine Dispensary Gift Cards: 2026 Buyer's Guide", href: "/blog/maine-dispensary-gift-cards", date: "June 5, 2026", badge: "Consumer" },
+  { title: "How to Get a Budtender Job in Maine", href: "/blog/maine-cannabis-budtender-careers", date: "June 5, 2026", badge: "Careers" },
+  { title: "Cannabis-Friendly Maine: 2026 Travel Guide", href: "/blog/cannabis-friendly-maine-travel", date: "June 5, 2026", badge: "Travel" },
+  { title: "Portland Maine Cannabis Rules 2026", href: "/blog/portland-maine-cannabis-rules-2026", date: "April 15, 2026", badge: "Local" },
+  { title: "Maine Cannabis Social Equity Program Guide", href: "/blog/maine-cannabis-social-equity-program-2026", date: "May 13, 2026", badge: "Policy" },
+];
+
 const journeySteps = [
   { num: "01", title: "Get the Launch Checklist", desc: "Download the step-by-step checklist used by Portland and Bangor applicants — covers OCP forms, municipal filings, and lease contingencies.", href: "/launch-checklist" },
   { num: "02", title: "Understand Licensing", desc: `Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and ${siteStats.activeAdultUseMunicipalities - 2} other opt-in towns have different timelines — know yours.`, href: "/guides/maine-dispensary-license" },
@@ -2076,6 +2088,32 @@ const journeySteps = [
             <span class="new-date">{guide.date}</span>
           </a>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       RECENT FROM THE BLOG
+       — gives the June 2026 blog batch >1 incoming internal link
+       — matches the same "new-card" pattern as the guides grid above
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="whats-new blog-recent" aria-labelledby="blog-recent-heading">
+    <div class="new-inner">
+      <div class="new-header">
+        <h2 id="blog-recent-heading">From the Blog</h2>
+        <p class="new-subtitle">Recent analysis and consumer guides from the Maine cannabis desk.</p>
+      </div>
+      <div class="new-grid">
+        {recentPosts.map(post => (
+          <a href={post.href} class="new-card">
+            <span class="new-badge">{post.badge}</span>
+            <span class="new-title">{post.title}</span>
+            <span class="new-date">{post.date}</span>
+          </a>
+        ))}
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="/blog" class="new-view-all">View all 35 articles →</a>
       </div>
     </div>
   </section>
