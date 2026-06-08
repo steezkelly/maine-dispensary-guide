@@ -5,11 +5,13 @@ import Leaf from '@network/ui/Leaf';
 import Faq from '../components/Faq.astro';
 import LeadFormTracker from '../components/LeadFormTracker.astro';
 import siteConfig from '../data/site-config.json';
+import { getSiteStats } from '../lib/site-stats';
+const siteStats = getSiteStats();
 
 const homepageFaqs = [
   { question: "How long does it take to get a Maine cannabis dispensary license?", answer: "Plan for 5-7 months under normal processing conditions. Municipal endorsement alone takes 6-12 weeks. OCP requests for additional information can add another 4-8 weeks. See the full licensing guide: /guides/maine-dispensary-license/" },
   { question: "How much does it cost to open a Maine dispensary?", answer: "Most Maine dispensaries need $360K-$1M to open. This includes licensing fees ($3,000-$10,000), buildout ($150K-$500K), initial inventory ($50K-$100K), and working capital ($50K-$100K). See detailed breakdown: /guides/maine-dispensary-costs/" },
-  { question: "Which Maine towns allow cannabis dispensaries?", answer: "As of mid-2026, 65 Maine cities and towns host at least one active OCP-licensed adult-use dispensary, and we publish consumer guides for all of them plus surrounding catchment markets — 109 city guides total. See the full opt-in list: /guides/maine-cannabis-opt-in-tracker/ and browse all guides: /guides/" },
+  { question: "Which Maine towns allow cannabis dispensaries?", answer: `As of mid-2026, ${siteStats.activeAdultUseMunicipalities} Maine cities and towns host at least one active OCP-licensed adult-use dispensary, and we publish consumer guides for all of them plus surrounding catchment markets — 109 city guides total. See the full opt-in list: /guides/maine-cannabis-opt-in-tracker/ and browse all guides: /guides/` },
   { question: "What are the school buffer requirements for Maine dispensaries?", answer: "The state default is 1,000 feet, measured property line to property line. However, municipalities may reduce this to 500 feet through local ordinance. Portland and Bangor have adopted the 500 ft buffer. Check your specific municipality: /guides/maine-cannabis-school-buffer/" },
   { question: "How many city guides does Maine Dispensary Guide have?", answer: "We publish 109 city guides covering every active OCP-licensed retail market in Maine, from Portland and Bangor down to single-storefront towns like Solon and Stratton. Each guide lists every licensed storefront, addresses, 2026 pricing, and tax info. Browse the full index: /guides/" },
   { question: "Do I need a medical card to buy cannabis in Maine?", answer: "No. Any adult 21+ with a valid government-issued photo ID can buy recreational (adult-use) cannabis at any Maine dispensary. Medical patients get a 10% excise-tax discount, access to higher-dose products, and a few other perks — see the Maine taxes guide: /guides/maine-cannabis-taxes-2026/" }
@@ -38,8 +40,8 @@ const faqPageJsonLd = JSON.stringify({
 });
 
 const stats = [
-  { label: "Annual Sales", value: "$246M" },
-  { label: "Active Stores", value: "187" },
+  { label: "Annual Sales", value: siteStats.totalMarketValueAdultUse },
+  { label: "Active Stores", value: String(siteStats.activeAdultUseRetailStores) },
   { label: "Price/Gram", value: "$6.62" }
 ];
 
@@ -64,7 +66,7 @@ const recentGuides = [
 const journeySteps = [
   { num: "01", title: "Get the Launch Checklist", desc: "Download the step-by-step checklist used by Portland and Bangor applicants — covers OCP forms, municipal filings, and lease contingencies.", href: "/launch-checklist" },
   { num: "02", title: "Understand Licensing", desc: "Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and 39 other towns have different timelines — know yours.", href: "/guides/maine-dispensary-license" },
-  { num: "03", title: "Run the Numbers", desc: "Most Maine dispensaries need $360K–$1M to open. Model your startup costs against the state's $246M adult-use market.", href: "/roi-calculator" },
+  { num: "03", title: "Run the Numbers", desc: `Most Maine dispensaries need $360K–$1M to open. Model your startup costs against the state's ${siteStats.totalMarketValueAdultUse} adult-use market.`, href: "/roi-calculator" },
   { num: "04", title: "Find Your Location", desc: "Zoning rules, 500-ft school buffers, commercial lease negotiation in Portland, Bangor, or a smaller opt-in town like Waterville.", href: "/guides/maine-cannabis-real-estate" },
 ];
 ---
@@ -1855,15 +1857,15 @@ const journeySteps = [
 
         <div class="overview-aside">
           <div class="aside-card">
-            <span class="aside-stat">$246M</span>
+            <span class="aside-stat">{siteStats.totalMarketValueAdultUse}</span>
             <span class="aside-label">Adult-use sales in 2025</span>
           </div>
           <div class="aside-card">
-            <span class="aside-stat">187</span>
+            <span class="aside-stat">{siteStats.activeAdultUseRetailStores}</span>
             <span class="aside-label">Active stores statewide</span>
           </div>
           <div class="aside-card highlight">
-            <span class="aside-stat">65</span>
+            <span class="aside-stat">{siteStats.activeAdultUseMunicipalities}</span>
             <span class="aside-label">Opt-in municipalities with active retail</span>
           </div>
           <p class="aside-note">
@@ -2019,7 +2021,7 @@ const journeySteps = [
         <span class="section-eyebrow">Municipal Guides</span>
         <h2 id="geo-heading">Explore by Location</h2>
         <p class="geo-subtitle">
-          Maine has 65 cities and towns with at least one active OCP-licensed adult-use retail store, and we publish city guides for all of them plus 44 surrounding catchment markets — 109 city guides total. Each has its own zoning rules, local fees, and competitive landscape.
+          Maine has {siteStats.activeAdultUseMunicipalities} cities and towns with at least one active OCP-licensed adult-use retail store, and we publish city guides for all of them plus 44 surrounding catchment markets — 109 city guides total. Each has its own zoning rules, local fees, and competitive landscape.
         </p>
       </div>
 
@@ -2194,7 +2196,7 @@ const journeySteps = [
 
         <div class="dive-card">
           <h3>Competitive Density</h3>
-          <p>With 187 active stores statewide, Maine has meaningful competition in some markets and genuine gaps in others. The Augusta-Waterville corridor has fewer dispensaries per capita than Portland. Some rural towns have no dispensary at all despite being in opt-in municipalities, creating opportunity for early movers willing to build customer habits in underserved areas.</p>
+          <p>With {siteStats.activeAdultUseRetailStores} active stores statewide, Maine has meaningful competition in some markets and genuine gaps in others. The Augusta-Waterville corridor has fewer dispensaries per capita than Portland. Some rural towns have no dispensary at all despite being in opt-in municipalities, creating opportunity for early movers willing to build customer habits in underserved areas.</p>
         </div>
       </div>
     </div>
