@@ -51,16 +51,16 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 9 reusable components (see below)
+│   ├── components/               # 10 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 48 technical guides + index
 │       ├── founders/             # 3 founder story pages + index
 │       ├── resources/            # Vendor directory + education/official resource hubs
 │       ├── admin/                # Admin pages (noindex)
-│       ├── blog/                 # Blog posts (6 articles)
+│       ├── blog/                 # 35 blog posts
 │       └── about/                # Team and author pages
-├── scripts/                      # 23 CLI tools (search, link-architect, health checks)
+├── scripts/                      # 43 CLI tools (search, link-architect, health checks)
 ├── .githooks/                    # Pre-push verify hook (esbuild + astro check)
 ├── reference/                    # Technical docs and config guides
 ├── public/                       # Favicons, OG images
@@ -69,7 +69,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Multi-agent communication log (READ FIRST)
 ```
 
-**Components:** `Breadcrumbs`, `Callout`, `Faq`, `GuideSidebar`, `Leaf`, `NextStep`, `PineTree`, `RelatedArticles`, `Search`
+**Components:** `Breadcrumbs`, `Callout`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`
 
 ---
 
