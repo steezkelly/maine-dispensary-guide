@@ -294,6 +294,14 @@ function checkOGImageDimensions() {
         const ogImageMatch = text.match(ogImageRe);
         const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
 
+        // Noindex pages (admin, experiments, gated funnels) don't need OG image
+        // meta tags — they're not shared on social and search engines ignore them.
+        // Skip them to keep the check focused on real public pages.
+        const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
+        const robotsMatch = text.match(robotsRe);
+        const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
+        if (robots.includes('noindex')) return;
+
         // Find og:image:width / height
         const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
         const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-07T21:45:13.821Z",
+  "generated": "2026-06-08T00:39:11.598Z",
   "status": "warn",
   "pages": {
     "htmlCount": 224,
@@ -7,11 +7,10 @@
   },
   "contentHealth": {
     "hasBaseline": true,
-    "baselineTotal": 23,
-    "currentTotal": 23,
+    "baselineTotal": 22,
+    "currentTotal": 22,
     "failures": {
       "noindex pages in sitemap": 4,
-      "OG image dimensions": 1,
       "duplicate hero image content": 18
     },
     "regressions": []
@@ -22,8 +21,8 @@
     "samples": []
   },
   "git": {
-    "lastCommit": "e5c90ff",
-    "uncommittedCount": 27,
+    "lastCommit": "bd02510",
+    "uncommittedCount": 3,
     "branch": "main"
   },
   "hub": {
@@ -54,7 +53,7 @@
     {
       "name": "content-health baseline present",
       "pass": true,
-      "detail": "baseline=23 current=23"
+      "detail": "baseline=22 current=22"
     },
     {
       "name": "no content-health regressions",
@@ -70,18 +69,30 @@
     {
       "name": "git working tree",
       "pass": true,
-      "detail": "27 uncommitted files (branch: main)",
-      "severity": "warn"
+      "detail": "3 uncommitted files (branch: main)",
+      "severity": "ok"
     },
     {
       "name": "Hub header claim matches reality",
       "pass": true,
       "detail": "100/100 (A)"
+    },
+    {
+      "name": "OCP stats roster freshness",
+      "pass": true,
+      "detail": "roster is 68 days old (as of 2026-04-01, 107 stores) — consider refreshing",
+      "severity": "warn"
+    },
+    {
+      "name": "llms.txt freshness",
+      "pass": true,
+      "detail": "221 URLs as of 2026-06-08",
+      "severity": "ok"
     }
   ],
   "summary": {
-    "total": 8,
-    "passed": 8,
+    "total": 10,
+    "passed": 10,
     "failed": 0,
     "warnings": 1
   }

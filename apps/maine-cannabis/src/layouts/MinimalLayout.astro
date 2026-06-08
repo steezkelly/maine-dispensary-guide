@@ -23,7 +23,7 @@
  */
 import '../styles/index.css';
 import siteConfig from '../data/site-config.json';
-import { buildFullTitle, truncateMetaDescription } from '../lib/seo';
+import { buildFullTitle, truncateMetaDescription, resolveSocialImage } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -33,6 +33,7 @@ interface Props {
 const { title, description = 'Page not found.' } = Astro.props;
 const fullTitle = buildFullTitle(title, siteConfig.siteName);
 const seoDescription = truncateMetaDescription(description);
+const { url: socialImage, mimeType: socialImageType } = resolveSocialImage(undefined, siteConfig.siteUrl);
 ---
 <!doctype html>
 <html lang="en">
@@ -45,6 +46,21 @@ const seoDescription = truncateMetaDescription(description);
     <meta name="description" content={seoDescription} />
     <meta name="robots" content="noindex" />
     <link rel="canonical" href={Astro.url} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:url" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    <meta property="og:image:type" content={socialImageType} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={seoDescription} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:site" content="@MaineDispensary" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
