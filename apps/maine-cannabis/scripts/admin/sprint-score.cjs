@@ -220,6 +220,52 @@ function checkBrokenAssetRefs() {
   return { checked, broken, samples: brokenSamples };
 }
 
+function siteStatsFreshness() {
+    // Sprint 78: ensure site-stats.json is refreshed against OCP data regularly.
+    // Warns if currentOcpLicenseeRoster.asOf is older than 90 days, which
+    // means refresh-site-stats.cjs hasn't been run in a quarter. Drift beyond
+    // that window is a hard fail.
+    const p = path.join(REPO, 'apps', 'maine-cannabis', 'src', 'data', 'site-stats.json');
+    if (!fs.existsSync(p)) {
+        return { exists: false, ageDays: null, asOf: null };
+    }
+    let parsed;
+    try { parsed = JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return { exists: true, parseError: true }; }
+    const roster = parsed.currentOcpLicenseeRoster;
+    if (!roster?.asOf) {
+        return { exists: true, hasRoster: false };
+    }
+    const asOf = new Date(roster.asOf);
+    const ageDays = Math.floor((Date.now() - asOf.getTime()) / (1000 * 60 * 60 * 24));
+    return { exists: true, hasRoster: true, ageDays, asOf: roster.asOf, auRetailStores: roster.auRetailStores };
+}
+
+function llmsFreshness() {
+    // Sprint 79: ensure llms.txt URL count matches sitemap-0.xml. Catches the
+    // case where new guides were added to the sitemap but llms.txt wasn't
+    // regenerated, so AI crawlers see a stale index.
+    const llmsPath = path.join(REPO, 'apps', 'maine-cannabis', 'public', 'llms.txt');
+    const sitemapPath = path.join(REPO, 'apps', 'maine-cannabis', 'dist', 'sitemap-0.xml');
+    if (!fs.existsSync(llmsPath)) {
+        return { exists: false };
+    }
+    let content;
+    try { content = fs.readFileSync(llmsPath, 'utf8'); } catch { return { exists: true, parseError: true }; }
+    const m = content.match(/Last regenerated: (\d{4}-\d{2}-\d{2}) from (\d+) sitemap URLs/);
+    if (!m) {
+        return { exists: true, hasStamp: false };
+    }
+    const lastRegen = m[1];
+    const storedUrlCount = parseInt(m[2], 10);
+    const ageDays = Math.floor((Date.now() - new Date(lastRegen).getTime()) / (1000 * 60 * 60 * 24));
+    let liveUrlCount = null;
+    if (fs.existsSync(sitemapPath)) {
+        const sitemap = fs.readFileSync(sitemapPath, 'utf8');
+        liveUrlCount = (sitemap.match(/<loc>/g) || []).length;
+    }
+    return { exists: true, hasStamp: true, lastRegen, ageDays, storedUrlCount, liveUrlCount };
+}
+
 function main() {
   const pages = countHtmlPages();
   const sitemapUrls = countSitemapUrls();
@@ -228,6 +274,8 @@ function main() {
   const ch = contentHealthDelta();
   const git = gitState();
   const assets = checkBrokenAssetRefs();
+  const statsFresh = siteStatsFreshness();
+  const llmsFresh = llmsFreshness();
 
   const checks = [];
   // 1. Build output present
@@ -291,6 +339,58 @@ function main() {
     name: 'Hub header claim matches reality',
     pass: hubConsistent,
     detail: hubDetail + (hubConsistent ? '' : ' (mismatch: regressions or broken refs present)'),
+  });
+  // 9. OCP stats roster freshness (Sprint 78: OCP refresh tracking)
+  let statsPass = true;
+  let statsDetail = 'missing site-stats.json';
+  let statsSeverity = 'warn';
+  if (statsFresh.exists && !statsFresh.parseError) {
+      if (!statsFresh.hasRoster) {
+          statsDetail = 'no currentOcpLicenseeRoster in site-stats.json';
+          statsSeverity = 'warn';
+      } else if (statsFresh.ageDays > 90) {
+          statsPass = false;
+          statsDetail = `roster is ${statsFresh.ageDays} days old (as of ${statsFresh.asOf}) — run scripts/ocp/refresh-site-stats.cjs`;
+          statsSeverity = 'fail';
+      } else if (statsFresh.ageDays > 30) {
+          statsDetail = `roster is ${statsFresh.ageDays} days old (as of ${statsFresh.asOf}, ${statsFresh.auRetailStores} stores) — consider refreshing`;
+          statsSeverity = 'warn';
+      } else {
+          statsDetail = `roster is ${statsFresh.ageDays} days old (as of ${statsFresh.asOf}, ${statsFresh.auRetailStores} stores)`;
+          statsSeverity = 'ok';
+      }
+  }
+  checks.push({
+      name: 'OCP stats roster freshness',
+      pass: statsPass,
+      detail: statsDetail,
+      severity: statsSeverity,
+  });
+  // 10. llms.txt freshness (Sprint 79: AI-corpus index drift detection)
+  let llmsPass = true;
+  let llmsDetail = 'missing llms.txt';
+  let llmsSeverity = 'warn';
+  if (llmsFresh.exists && !llmsFresh.parseError) {
+      if (!llmsFresh.hasStamp) {
+          llmsDetail = 'no "Last regenerated" stamp — run scripts/admin/regenerate-llms.cjs';
+          llmsSeverity = 'warn';
+      } else if (llmsFresh.liveUrlCount !== null && llmsFresh.storedUrlCount !== llmsFresh.liveUrlCount) {
+          llmsPass = false;
+          llmsDetail = `stored ${llmsFresh.storedUrlCount} URLs, sitemap has ${llmsFresh.liveUrlCount} — re-run regenerate-llms.cjs`;
+          llmsSeverity = 'fail';
+      } else if (llmsFresh.ageDays > 14) {
+          llmsDetail = `${llmsFresh.storedUrlCount} URLs as of ${llmsFresh.lastRegen} (${llmsFresh.ageDays} days ago) — consider regenerating`;
+          llmsSeverity = 'warn';
+      } else {
+          llmsDetail = `${llmsFresh.storedUrlCount} URLs as of ${llmsFresh.lastRegen}`;
+          llmsSeverity = 'ok';
+      }
+  }
+  checks.push({
+      name: 'llms.txt freshness',
+      pass: llmsPass,
+      detail: llmsDetail,
+      severity: llmsSeverity,
   });
 
   const failed = checks.filter(c => !c.pass).length;
