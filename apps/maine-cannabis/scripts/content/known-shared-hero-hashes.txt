@@ -15,12 +15,10 @@
 #
 # Regenerate with: md5sum public/images/heroes/*.jpg
 #
-# Last regenerated: 2026-06-08 — replaced three stale hashes (no current
-# files matched them) with the actual current hashes for the same
-# intentional clusters they were documenting. The real-estate entry
-# (4da2eecec50f18efeee8f3c18579e151) was removed because the cluster
-# it documented no longer exists — maine-cannabis-real-estate.jpg is
-# now unique.
+# Last regenerated: 2026-06-08 evening — removed cluster 1 (buying-by-effect
+# + terpene-preservation) after a unique hero was generated for the
+# terpene-preservation post (Hub #30). The two posts now have distinct
+# images and no longer need whitelisting.
 
 # Generic "Maine landscape" granite fallback shared by real-estate / region guides
 # (homepage + wholesale + 2x sebago) — all pages reference the same generic
@@ -42,18 +40,3 @@ aa49f679ee15a1bdcac2d4e210d36f59  # compliance .webp
 4d73088d9569e7cb543d23a78708718c  # compliance .jpg (full size)
 3dd8144d529e89bd89b0d4c12132ac9b  # compliance .webp (full size)
 0156c016fd20182fdf895d36e3f12ebd  # compliance .avif (full size)
-
-# KNOWN BUG — buying-cannabis-by-effect-2026 + terpene-preservation-drying-curing-2026
-# share a single source image. These are two distinct blog posts on different
-# topics (consumer selection framework vs. cultivation chemistry) that were
-# inadvertently copy-pasted from the same source. The fix is to regenerate a
-# unique hero for terpene-preservation-drying-curing-2026 via the FAL
-# image pipeline (scripts/image/fal-image-gen.cjs) and add the -640w
-# variants, then remove this whitelist entry. Tracked as a follow-up
-# action in the Hub. Added 2026-06-08 to unblock the regression guard.
-19ead1dda09b7e12a758f6823fb102bb  # BUG TODO: shared buying-cannabis-by-effect-2026 + terpene-preservation-maine-2026 .jpg
-e239c25e7f9ae5e2c021647f541d501d  # BUG TODO: .webp
-e66519493e5535b54118aa706cd2bfcf  # BUG TODO: .avif
-82a49170c2197d50ed8bfe298bf4b2ac  # BUG TODO: .jpg (full size)
-5c058d584bf31afea8f95a8ed24c05d9  # BUG TODO: .webp (full size)
-e378f81d39bcffbabf9b311225801d8f  # BUG TODO: .avif (full size)
