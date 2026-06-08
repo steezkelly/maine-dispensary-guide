@@ -15,12 +15,45 @@
 #
 # Regenerate with: md5sum public/images/heroes/*.jpg
 #
+# Last regenerated: 2026-06-08 — replaced three stale hashes (no current
+# files matched them) with the actual current hashes for the same
+# intentional clusters they were documenting. The real-estate entry
+# (4da2eecec50f18efeee8f3c18579e151) was removed because the cluster
+# it documented no longer exists — maine-cannabis-real-estate.jpg is
+# now unique.
 
 # Generic "Maine landscape" granite fallback shared by real-estate / region guides
-eb848f1bbc14a475da9a5c46aff6bb1e  # granite hero used by maine-cannabis-granite-hero.jpg, 280e-guide, wholesale-guide, sebago guides
+# (homepage + wholesale + 2x sebago) — all pages reference the same generic
+# Maine landscape hero because no town-specific photo exists for the Sebago
+# region or for the wholesale topic. Regenerated from current files 2026-06-08.
+ca3923178bbdfa9d2de1c9ad6e6cca03  # granite hero .jpg used by maine-cannabis-granite-hero, wholesale-guide-2026, sebago-dispensary-guide, sebago-lakes-region-dispensary-guide
+9059e0b947922f286312a5d61d181ee9  # granite hero .avif
+ba914118a7562af8fed421f8b45e5678  # granite hero .webp
+b7a8a3ce52e74023aae663c2eea8c75e  # granite hero .avif (full size)
+c6914b6a9e7abb698dfc0db92c7aa206  # granite hero .jpg (full size)
+599ed4ff0f57fb77b573ad8a84ba3555  # granite hero .webp (full size)
 
 # Generic compliance-themed graphic shared by FAQ + OCP license map + compliance guides
-d14e45c4f81ec467096f65e2d3dd3e1e  # compliance graphic used by faq, ocp-license-map, maine-compliance-hero, cultivation-license-2026 pages
+# All four pages are state-compliance themed and intentionally use the same
+# generic compliance/regulatory graphic. Regenerated from current files 2026-06-08.
+9e804421457f4499c4d958a06da70d1c  # compliance .jpg used by faq, ocp-license-map, maine-compliance-hero, maine-cannabis-cultivation-license-2026
+aa49f679ee15a1bdcac2d4e210d36f59  # compliance .webp
+2c32938ee357d85e2527be62039772f1  # compliance .avif
+4d73088d9569e7cb543d23a78708718c  # compliance .jpg (full size)
+3dd8144d529e89bd89b0d4c12132ac9b  # compliance .webp (full size)
+0156c016fd20182fdf895d36e3f12ebd  # compliance .avif (full size)
 
-# Generic "Maine real estate / property" hero shared by 8 zoning / site-selection / lease / permit pages
-4da2eecec50f18efeee8f3c18579e151  # maine-cannabis-real-estate.jpg used by zoning, school-buffer, opt-in, site-selection, CUPO, municipal-approval, commercial-lease, real-estate pages
+# KNOWN BUG — buying-cannabis-by-effect-2026 + terpene-preservation-drying-curing-2026
+# share a single source image. These are two distinct blog posts on different
+# topics (consumer selection framework vs. cultivation chemistry) that were
+# inadvertently copy-pasted from the same source. The fix is to regenerate a
+# unique hero for terpene-preservation-drying-curing-2026 via the FAL
+# image pipeline (scripts/image/fal-image-gen.cjs) and add the -640w
+# variants, then remove this whitelist entry. Tracked as a follow-up
+# action in the Hub. Added 2026-06-08 to unblock the regression guard.
+19ead1dda09b7e12a758f6823fb102bb  # BUG TODO: shared buying-cannabis-by-effect-2026 + terpene-preservation-maine-2026 .jpg
+e239c25e7f9ae5e2c021647f541d501d  # BUG TODO: .webp
+e66519493e5535b54118aa706cd2bfcf  # BUG TODO: .avif
+82a49170c2197d50ed8bfe298bf4b2ac  # BUG TODO: .jpg (full size)
+5c058d584bf31afea8f95a8ed24c05d9  # BUG TODO: .webp (full size)
+e378f81d39bcffbabf9b311225801d8f  # BUG TODO: .avif (full size)
