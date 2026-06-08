@@ -5511,3 +5511,22 @@ city guides.
 - **Replaces / supersedes:** `scripts/git/delta-typecheck.cjs` (DEPRECATED — hardcoded Windows path, never wired). The pre-push-verify.cjs script is a strict superset of what delta-typecheck tried to do, plus the esbuild fast pass.
 - **Files changed in this entry:** 5 new files (`pre-push-verify.cjs`, `install-hooks.cjs`, `.githooks/pre-push`, `.githooks/post-checkout`, this Hub section) + 5 edited (`package.json` × 2, `AGENTS.md` × 2, `SCRIPTS.md`, `BOT_COLLABORATION_HUB.md`). All uncommitted at end of session — to be reviewed and committed in a single chore commit.
 
+### Sprint 78: Pass 3 (live-site smoke-200) wired into pre-push gate, plus 7d8bebb-class transient Vercel ERROR ✅ DONE
+
+- **What changed (4 files):**
+  - `scripts/git/pre-push-verify.cjs` — added Pass 3: `node apps/maine-cannabis/scripts/build/smoke-200.cjs` against `MDG_BASE` (default mainedispensaryguide.com). Exit 4 on any non-200. New flags: `--fast-only` (skip 2+3), `--skip-smoke-200` (skip 3 only), `--ref=<ref>` (diff against that ref).
+  - `.githooks/pre-push` — added Pass 3 invocation (no `--fast-only`, so all 3 passes run on every push).
+  - `package.json` (root) + `apps/maine-cannabis/package.json` — added `verify:pre-push:fast` script.
+  - `MDG_AGENT_HANDBOOK.md` — added "Validated failure modes" section with empirical red→green evidence.
+- **7d8bebb transient ERROR:** the previous amend bundled in 10 untracked Sprint 77 files including `apps/maine-cannabis/src/lib/page-stats.ts` referenced by `404.astro`'s `import '../lib/page-stats'` (via an earlier in-progress refactor that the amend picked up). Build error: `Could not resolve '../lib/page-stats' from 'src/pages/404.astro'`. **Fixed in df6be27** which included both the page and the new lib. **Lesson (now in handbook):** `git commit --amend` picks up ALL currently-staged + unstaged working-tree changes, not just the commit you wanted to amend. If you need to amend a message, stash uncommitted changes first. The pre-push gate does NOT catch this class (Vercel build errors); Vercel's own build does.
+- **First all-3-passes-green push on a real push (d1720ab):** esbuild parsed 6 changed .astro files clean, astro check 0 errors, smoke-200 against https://mainedispensaryguide.com returned 223 ok / 0 redirects / 0 broken in 4.5s. Push succeeded, Vercel landed d1720ab as READY.
+
+### Gate validation evidence (empirical red→green, 2026-06-07)
+
+The 3-pass gate is no longer "we think it works" — it's been proven to catch both real failure classes. Trust the evidence, not the design:
+
+- **Pass 1 (esbuild parse) — broken-state test:** injected `@@@` into `apps/maine-cannabis/src/pages/find-a-dispensary.astro` on the Peru block's `summary` line. Gate output: `✗ apps/maine-cannabis/src/pages/find-a-dispensary.astro — ✘ [ERROR] Expected "}" but found "@"` then `✗ 1 .astro file(s) failed parse check — push blocked.` Exit code **1**. Same class (`,` vs `}` in object literal array) as the 2026-06-07 Sprint 75 cascade. `git checkout` of the file → all 3 passes green, exit 0.
+- **Pass 3 (smoke-200) — DNS-fail test:** `MDG_BASE=https://this-domain-does-not-exist-12345.example.com node scripts/git/pre-push-verify.cjs` → `✗ smoke-200: at least one page returned non-200 — push blocked.` with `getaddrinfo ENOTFOUND` for sample routes. Exit code 1.
+- **Pass 3 (smoke-200) — 404 test:** `MDG_BASE=https://example.com node apps/maine-cannabis/scripts/build/smoke-200.cjs` → `1 ok, 0 redirects, 222 broken (3.5s)`. Exit code 1.
+- **What the gate does NOT catch:** Vercel build errors caused by missing imports (the 7d8bebb class). The gate's Pass 3 tests the **live site**, not the local dist/, so it can only catch post-deploy breakage (build went green but a specific page 404s in prod). Vercel's own build pipeline catches the build-error class.
+
