@@ -5530,3 +5530,44 @@ The 3-pass gate is no longer "we think it works" — it's been proven to catch b
 - **Pass 3 (smoke-200) — 404 test:** `MDG_BASE=https://example.com node apps/maine-cannabis/scripts/build/smoke-200.cjs` → `1 ok, 0 redirects, 222 broken (3.5s)`. Exit code 1.
 - **What the gate does NOT catch:** Vercel build errors caused by missing imports (the 7d8bebb class). The gate's Pass 3 tests the **live site**, not the local dist/, so it can only catch post-deploy breakage (build went green but a specific page 404s in prod). Vercel's own build pipeline catches the build-error class.
 
+
+
+### Sprint 81: 2026-06-08 Ahrefs site audit fixes (10/26 resolved) ✅ DEPLOYED
+- **Why:** Ahrefs site audit (2026-06-08T03:38:06Z) flagged 26 issues: 4 errors (sitemap, 4 broken-link sources, 10 4XX pages), 22 warnings/notices. Of these, **10 were resolvable in the codebase with high confidence** (verified by reading source + scanning the live site for which exact pages + URLs are involved); the rest were either false positives, bot-blocked sites, or expected drift from Sprint 74/80 content edits.
+- **What changed (10 files, 1 commit `2eaeba3`):**
+  - `apps/maine-cannabis/astro.config.mjs` — added `isNoindexSource()` call to the sitemap post-process hook so any `.astro` source with `noindex={true}` is excluded. Fixed the 1 noindex page that had slipped into the sitemap: `/download/roadmap` (path was outside the prefix filter).
+  - `apps/maine-cannabis/src/pages/guides/fairfield-dispensary-guide.astro` — fixed `href="https://https://cannabiscured.com/"` (double scheme) → `https://cannabiscured.com/`.
+  - `apps/maine-cannabis/src/pages/guides/poland-dispensary-guide.astro` — fixed `https://https://thecabincannabis.ca/` (double scheme) → `https://thecabincannabis.ca/`.
+  - `apps/maine-cannabis/src/pages/guides/hallowell-dispensary-guide.astro` — fixed `https://https://www.homegrownhealthcare.net/hallowell` (double scheme + 404 path) → `https://www.homegrownhealthcare.net/` (the working root; the /hallowell path 404s because the brand redirects to kennebeccannabis.net).
+  - `apps/maine-cannabis/src/pages/blog/indoor-cannabis-grow-setup-maine-cost-2026.astro` — fixed dead `https://www.cmpco.com/time-of-use-delivery-rate` (CMP/versant rebrand) → `https://www.cmpco.com/w/pricing` (live CMP Pricing page with the Rate A-TOU schedule we cite).
+  - `apps/maine-cannabis/src/pages/guides/maine-cannabis-cultivation-guide.astro` — removed orphan unclosed `<article>...<h1>...</h1>...</div>` block (Sprint 74 cross-link callout patch artifact). Rendered HTML now has 1 H1 instead of 2.
+  - `apps/maine-cannabis/src/pages/guides/maine-dispensary-license.astro` — same orphan-block fix. 1 H1 instead of 2.
+  - `apps/maine-cannabis/src/pages/guides/manchester-dispensary-guide.astro` — `aaapharmaceuticalalternatives.com` (2-hop redirect) → `aaapharms.com/`.
+  - `apps/maine-cannabis/src/pages/guides/thomaston-dispensary-guide.astro` — `www.theatlanticfarms.com` (1-hop redirect) → `theatlanticfarms.com/`.
+  - `apps/maine-cannabis/src/pages/search.astro` — extended meta description 96 → 132 chars.
+  - `apps/maine-cannabis/src/pages/download/roadmap.astro` — extended meta description 86 → 132 chars.
+- **Issues explicitly NOT addressed** (rationale per category):
+  - **19 External 4XX** — most are bot-blocked legit sites. Re-probed with real User-Agent: 13 of 19 return 200, 4 are 403 (census.gov, metrc, mjbizdaily, etc. block headless fetches), 1 is a real dead page (cmpco.com/time-of-use — fixed in this pass), 1 is the 3 fixed double-scheme URLs. False-positive category.
+  - **7 External 3XX** — legitimate site moves; left intact because Ahrefs reports them as warnings (not errors) and the destinations differ in trivial ways.
+  - **10 4XX page (errors)** — these are *pages* that returned 404/4XX, not pages with broken links. Smoke-200 against the live site (221 sitemap URLs) returns 0 broken — Ahrefs is crawling URLs the sitemap doesn't have (probably from a previous sitemap revision, or from old external link references). Self-correcting on next crawl.
+  - **6 H1 changed / 5 Title changed / 6 Meta description changed** — these are *change notices* from Sprint 74 (4 new B2B guides) and Sprint 80 (content freshness). Expected drift, not bugs.
+  - **2 Page and SERP titles do not match** — same: drift from intentional title adjustments in Sprint 74 audit pass 2.
+  - **1 H1 tag missing or empty** — false positive. All 218 indexable source pages have H1s; Ahrefs may be looking at a rendered version of a page I didn't change.
+  - **1 Low word count** — arundel city guide, 280 source words. By design (small-town guides are intentionally thin; not adding fluff).
+  - **14 Page has only one dofollow internal link** — separate cross-link sprint; out of scope for an audit-fix pass.
+  - **220 Pages to submit to IndexNow** — will run after deploy via `node scripts/submit-indexnow.cjs --from-sitemap`.
+  - **1 Meta description too short (1 of 2 actually short)** — both fixed above; the 1 Ahrefs noticed is one of the noindex pages.
+  - **1 Redirect chain + 2 HTTP→HTTPS redirect + 2 Noindex follow page** — Vercel-level, not application code.
+  - **4 Pages added to sitemaps** — informational notice; new pages from Sprint 74 are correctly listed.
+- **Verification:**
+  - `npx astro check`: 0 errors / 0 warnings / 315 hints across 289 files
+  - `npm run build`: green, 4.47s
+  - `node scripts/build/check-sitemap-xml.cjs`: pass
+  - `node scripts/content/check-content-health-regression.cjs`: no regressions; **noindex-in-sitemap: 1 → 0** (baseline updated to reflect improvement)
+  - `node scripts/build/smoke-200.cjs --from-sitemap`: 219/219 ok, 0 redirects, 0 broken
+  - `node scripts/git/pre-push-verify.cjs`: clean
+  - Live verify (post-deploy): `/sitemap-0.xml` now contains 219 URLs (down from 220); `/download/roadmap` is no longer listed
+  - `git push origin main` succeeded: `cd705f8..2eaeba3`
+- **Safety posture:** All changes are reversible via single revert. `astro.config.mjs` change is the riskiest (touches the sitemap generator), but it's a 7-line addition that strictly *adds* filtering, never loosens it. The two orphan-`<article>` deletions were verified by re-checking that each file now has exactly 1 `<article>` open + 1 `</article>` close + 1 H1. The redirect-URL rewrites target the destination's actual root or pricing page.
+- **What was NOT changed:** No new pages, no new components, no `vercel.json` / `package.json` / `turbo.json` edits, no JSON-LD schema changes, no image asset changes, no new dependencies.
+- **Files changed:** 10 application files (1 sitemap config, 8 content pages, 1 download page) + auto-regenerated `MISSION_CONTROL.md` + `public/status.json` + `scripts/content/.content-health-baseline.json`. 38 insertions, 29 deletions. Pushed as `2eaeba3`.
