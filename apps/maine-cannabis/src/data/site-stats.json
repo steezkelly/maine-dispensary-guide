@@ -6,11 +6,13 @@
     "auMunicipalities": 49,
     "caregiverStorefronts": 134,
     "asOf": "2026-04-01",
-    "source": "OCP Adult-Use Establishments CSV",
+    "source": "OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py",
     "note": "Deduped DBA+city counts. 187 is the 2025 Annual Report count of all 343 active AU establishments (retail + cultivator + mfg + testing); 107 is the deduped Store-type count from the OCP licensee-search CSV."
   },
   "totalMarketValueAdultUse": "$246M+",
   "mainePopulation": 1400000,
   "fiscalYearLastUpdated": "2025-12-31",
-  "dataSource": "OCP 2025 Annual Report (Dec 31, 2025)"
+  "dataSource": "OCP 2025 Annual Report (Dec 31, 2025 data) and OCP 2025 MMCP Annual Report",
+  "nextRefresh": "Monthly when OCP publishes new data; run `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs`",
+  "notes": "Single source of truth for stat-card numbers across the site (404.html, index.astro, market.astro, etc.). Run `node scripts/ocp/refresh-site-stats.cjs` after each monthly OCP update to refresh these values. Update all consumers at once."
 }

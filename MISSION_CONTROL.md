@@ -1,66 +1,81 @@
-# 🛰️ Mission Control: Maine Dispensary Guide
+# Mission Control: Maine Dispensary Guide
 
-> **Sprint 77 update (2026-06-07):** This dashboard was 40 days stale
-> (last generated 2026-04-28). Refreshed to reflect actual current
-> state. The numbers below now come from the same source of truth
-> as the build-time `/status.json` (auto-refreshed on every build)
-> and `BOT_COLLABORATION_HUB.md` (sprint log).
+> **Auto-generated (Sprint 79):** this dashboard is built from real data on every regeneration, not hand-edited. Source: sprint-score output + filesystem + git log. For the canonical machine-readable view, see `/status.json`.
+>
+> Last regenerated: 2026-06-08 00:47 UTC
 
-For a **machine-readable** view that updates on every build, see
+For a machine-readable view that updates on every build, see
 `https://mainedispensaryguide.com/status.json` or run locally:
 `node apps/maine-cannabis/scripts/admin/sprint-score.cjs`.
 
 ---
 
-## 🚦 System Status (last verified 2026-06-07 17:35 EDT)
-| Component | Status | Last Checked |
-| :--- | :--- | :--- |
-| **Production Site** | [LIVE](https://mainedispensaryguide.com) | 2026-06-07 17:35 |
-| **DNS Resolution** | ✅ Active | 2026-06-07 17:35 |
-| **SSL Certificate** | ✅ Active | 2026-06-07 17:35 |
-| **224-page HEAD smoke** | ✅ 223 ok, 0 broken (4.9s) | 2026-06-07 17:35 |
-| **GitHub Backup** | ✅ Synced (main branch) | 2026-06-07 17:35 |
+## System Status (last verified 2026-06-08)
+
+- Production site: [LIVE](https://mainedispensaryguide.com)
+- Sprint-Score: WARN (10/10 (1 warnings))
+- 224-page HEAD smoke: 224 html / 221 sitemap URLs
+- Last commit: `b60d74f` — fix(seo): add proper OG/Twitter meta tags to MinimalLayout (404 + gated pages) (2026-06-07, branch: main)
+- IndexNow last: 2026-06-07T21:37:20.815Z — 200 — ? URLs
+- OCP stats last refresh: 2026-06-08 — stored 187 → live 107 (drift -80)
 
 ---
 
-## 📊 Content Intelligence (current as of 2026-06-07)
-| Metric | Value | Goal | Source |
-| :--- | :--- | :--- | :--- |
-| **Total Pages** | 224 html | n/a | dist/ |
-| **Sitemap URLs** | 221 | n/a | dist/sitemap-0.xml |
-| **City Guides** | 109 | 109 (complete) | filesystem |
-| **Technical Guides** | 48 | 50+ | filesystem |
-| **Blog Posts** | 34 | 35+ | filesystem |
-| **Total Authority Guides** | 150+ | 50+ ✅ | `all-guides.astro` |
-| **GEO-Optimized Pages** | 224 | 224 ✅ | dist/ |
-| **GA4 Form Conversion Tracking** | ✅ Active (5 forms) | — | Sprint 77 |
-| **Content-Health Baseline** | 23 known failures | 0 | check-content-health-regression.cjs |
-| **Average Word Count** | 1,673 | 1,500 ✅ | site-health.astro |
+## Content Intelligence (current as of 2026-06-08)
+
+- Total pages (dist/): 224
+- Sitemap URLs: 221
+- Guide pages: 157
+- Blog posts: 35
+- Last commit: b60d74f — fix(seo): add proper OG/Twitter meta tags to MinimalLayout (404 + gated pages)
 
 ---
 
-## 🛠️ Maintenance & Efficiencies
-- [x] **Lead Gen:** All 5 forms instrumented with GA4 `lead_capture` events (Sprint 77). ✅
-- [x] **/status.json endpoint:** Build-time health snapshot, machine-readable (Sprint 77). ✅
-- [x] **CI regression detection:** 3 new build steps fail-fast on content-health drift (Sprint 76). ✅
-- [x] **Email dashboard 404:** Fixed; serves at `/admin/email-dashboard/` (Sprint 76). ✅
-- [x] **404 city count:** 40+ → 109+ (Sprint 77). ✅
-- [x] **IndexNow submission log:** `/data/indexnow-log.jsonl` (Sprint 77). ✅
-- [x] **224-page HEAD smoke:** `scripts/build/smoke-200.cjs` (Sprint 77). ✅
-- [x] **Stale roadmap drafts:** Archived 6 files to `docs/archive/2026-04-roadmap-drafts/` (Sprint 77). ✅
-- [ ] **GSC data ingestion:** Daily clicks/impressions export to `data/gsc-history.jsonl`. (Sprint 78+)
-- [ ] **Form completion dashboard panel:** GA4 exploration for `lead_capture` event. (Sprint 78+)
-- [ ] **OCP-driven site-stats.json:** Replace hardcoded "187 active dispensaries" with auto-updated JSON. (Sprint 78+)
-- [x] **National Scaling:** Out of scope per `PROJECT_DNA.md` — Maine only. Removed from roadmap.
+## Health Checks (current run)
+
+- OK dist/ exists: 224 html pages
+- OK sitemap-0.xml present: 221 URLs
+- OK sitemap ↔ html page count: sitemap=221 html=224 delta=3
+- OK content-health baseline present: baseline=22 current=22
+- OK no content-health regressions: no regressions
+- OK broken image refs: 1396 refs checked, 0 broken
+- OK git working tree: 5 uncommitted files (branch: main)
+- OK Hub header claim matches reality: 100/100 (A)
+- ! OCP stats roster freshness: roster is 68 days old (as of 2026-04-01, 107 stores) — consider refreshing
+- OK llms.txt freshness: 221 URLs as of 2026-06-08
 
 ---
 
-## 🤖 Bot Collaboration Sync (current as of 2026-06-07)
-- **Hub as source of truth:** `BOT_COLLABORATION_HUB.md` (372K+, 354 status symbols).
-- **Active agents (in parallel):** OpenCode (content), Claude Code (orchestration), Gemini CLI (infrastructure), Hermes (audit/orchestration), Codex.
-- **Coordination mechanism:** AGENTS.md permissions + `parallel-session-coordination` skill + pre-push verify hook.
-- **Score:** 100/100 (A) — verified by `sprint-score.cjs` (8/8 checks pass, 0 failed).
+## Maintenance & Efficiencies
+
+Sprint 76-78:
+- [x] CI regression detection (3 build steps, Sprint 76)
+- [x] Email dashboard 404 fix (Sprint 76)
+- [x] 5 forms instrumented with GA4 lead_capture (Sprint 77)
+- [x] /status.json endpoint (Sprint 77)
+- [x] 404 city count 40+ to 109+ (Sprint 77)
+- [x] IndexNow submission log JSONL (Sprint 77)
+- [x] 224-page HEAD smoke (Sprint 77)
+- [x] 6 stale roadmap drafts archived (Sprint 77)
+- [x] Pre-push Pass 3 smoke-200 (Sprint 78)
+- [x] site-stats.json source-of-truth (Sprint 78)
+- [x] OCP refresh automation + JSONL audit (Sprint 78)
+- [x] 9th-10th sprint-score checks (OCP + llms freshness) (Sprint 78)
+- [x] llms.txt + llms-full.txt regenerated from sitemap (Sprint 79)
+- [x] MISSION_CONTROL.md auto-generated from build-time data (Sprint 79)
+- [x] Proper OG/Twitter meta tags on MinimalLayout (Sprint 79)
+
+Pending:
+- [ ] GSC data ingestion (Sprint 80+)
+- [ ] Form completion dashboard panel (Sprint 80+, needs 7+ days of GA4 data)
 
 ---
 
-*Generated by Hermes on 2026-06-07 EDT (Sprint 77 observability pass). For the canonical source, see `/status.json`.*
+## Bot Collaboration Sync (current as of 2026-06-08)
+
+- Hub as source of truth: BOT_COLLABORATION_HUB.md
+- Score: 10/10 — verified by sprint-score.cjs
+
+---
+
+*Generated by scripts/admin/build-mission-control.cjs on 2026-06-08 00:47 UTC. For the canonical source, see /status.json.*
