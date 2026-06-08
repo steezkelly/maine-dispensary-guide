@@ -1,7 +1,7 @@
 # Maine Dispensary Guide — Orphaned Tasks Report
-**Generated:** 2026-04-20
-**Last Sprint:** Sprint 46 (e777288 — Apr 19, 2026)
-**Project Score:** 100/100 (A)
+**Generated:** 2026-04-20 (last refreshed: 2026-06-07)
+**Last Sprint:** Sprint 80 (cd705f8 — Jun 7, 2026)
+**Project Score:** 11/11 sprint-score, 223/223 smoke-200, 0 data-integrity failures
 
 ---
 
@@ -31,7 +31,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 ## ✅ VERIFIED COMPLETED ITEMS
 
 1. **Score 100/100 (A)** — Achieved Apr 19
-2. **0 TypeScript errors** — After Sprint 46 fix
+2. **0 TypeScript errors** — After Sprint 46 fix (still passing in Sprint 80)
 3. **86 images generated** — 75 heroes + 12 infographics, 0 orphaned
 4. **fal.ai integration** — Working, API key stored
 5. **Internal linking** — 0 orphans (Apr 12 sprint)
