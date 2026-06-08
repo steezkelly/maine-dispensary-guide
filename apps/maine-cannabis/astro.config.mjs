@@ -144,8 +144,13 @@ export default defineConfig({
               if (noindexPathPrefixes.some(p => pathname.startsWith(p))) {
                 continue;
               }
-              // Try to extract metadata from .astro source file
+              // Also exclude pages whose source has `noindex={true}` (e.g. /download/roadmap)
+              // The prefix check above misses these because they live outside the prefixed dirs.
               const srcPath = urlToSrcPath(loc, 'https://mainedispensaryguide.com', pagesDir);
+              if (srcPath && isNoindexSource(srcPath, pathname)) {
+                continue;
+              }
+              // Try to extract metadata from .astro source file
               const { lastmod, image } = srcPath ? extractMeta(srcPath) : {};
               // Always include the URL — metadata is optional
               let entry = `<url><loc>${escapeXml(loc)}</loc>`;
