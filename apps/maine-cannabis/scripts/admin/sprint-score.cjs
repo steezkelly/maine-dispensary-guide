@@ -266,6 +266,35 @@ function llmsFreshness() {
     return { exists: true, hasStamp: true, lastRegen, ageDays, storedUrlCount, liveUrlCount };
 }
 
+function dataIntegrityCheck() {
+    // Sprint 80 (post-parallel-race audit): cross-reference filesystem stats
+    // against the docs that claim to reflect them. Catches the
+    // "AGENTS.md says 47 guides, reality is 157" failure mode before the
+    // doc goes another sprint. Runs scripts/admin/data-integrity-check.cjs.
+    const script = path.join(REPO, 'scripts', 'admin', 'data-integrity-check.cjs');
+    if (!fs.existsSync(script)) {
+        return { pass: true, detail: 'data-integrity-check.cjs not present (skipped)', severity: 'ok' };
+    }
+    try {
+        const out = execSync(`node "${script}" --check`, { cwd: REPO, encoding: 'utf8' });
+        const driftMatch = out.match(/DRIFT[\s\S]+?\n([\s\S]+?)(?:\n\n|\nWARNINGS|$)/);
+        const warnMatch = out.match(/WARNINGS[\s\S]+?\n\n([\s\S]+?)(?:\n\n|$)/);
+        const driftCount = driftMatch ? (driftMatch[1].match(/❌/g) || []).length : 0;
+        const warnCount = warnMatch ? (warnMatch[1].match(/⚠️/g) || []).length : 0;
+        return {
+            pass: driftCount === 0,
+            detail: driftCount > 0
+                ? `${driftCount} doc drift(s) — run data-integrity-check.cjs to see claims vs reality`
+                : (warnCount > 0 ? `${warnCount} stale-doc warning(s) (non-fatal)` : 'all docs match reality'),
+            driftCount,
+            warnCount,
+            severity: driftCount > 0 ? 'high' : (warnCount > 0 ? 'warn' : 'ok'),
+        };
+    } catch (e) {
+        return { pass: false, detail: `data-integrity-check.cjs failed: ${e.message.slice(0, 200)}`, severity: 'high' };
+    }
+}
+
 function main() {
   const pages = countHtmlPages();
   const sitemapUrls = countSitemapUrls();
@@ -276,6 +305,7 @@ function main() {
   const assets = checkBrokenAssetRefs();
   const statsFresh = siteStatsFreshness();
   const llmsFresh = llmsFreshness();
+  const integrity = dataIntegrityCheck();
 
   const checks = [];
   // 1. Build output present
@@ -387,10 +417,17 @@ function main() {
       }
   }
   checks.push({
-      name: 'llms.txt freshness',
-      pass: llmsPass,
-      detail: llmsDetail,
-      severity: llmsSeverity,
+    name: 'llms.txt freshness',
+    pass: llmsPass,
+    detail: llmsDetail,
+    severity: llmsSeverity,
+  });
+  // 11. Data integrity (Sprint 80: AGENTS.md vs reality)
+  checks.push({
+    name: 'Data integrity (docs match filesystem)',
+    pass: integrity.pass,
+    detail: integrity.detail,
+    severity: integrity.severity,
   });
 
   const failed = checks.filter(c => !c.pass).length;
