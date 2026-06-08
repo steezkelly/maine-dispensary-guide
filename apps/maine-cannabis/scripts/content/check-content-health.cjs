@@ -613,6 +613,41 @@ function checkDuplicateHeroImages() {
 }
 
 // ─── Run all checks ───────────────────────────────────────────────────────────
+// ─── Check 13: duplicate FAQPage JSON-LD ─────────────────────────────────────
+//
+// A page that has both an inline `<script type="application/ld+json">` with
+// `@type: FAQPage` AND a `<Faq />` component (which auto-injects the same
+// schema) ends up with two identical blocks in dist/. Wastes bytes and may
+// confuse Google structured-data parsers. Catches the regression that
+// shipped in 116 pages before Sprint 80.
+function checkDuplicateFaqPageSchema() {
+  const results = [];
+  if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
+  function walk(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) {
+        if (p.includes('/_astro') || p.includes('/admin/')) continue;
+        walk(p);
+      } else if (e.isFile() && p.endsWith('.html')) {
+        const text = fs.readFileSync(p, 'utf8');
+        // Count FAQPage blocks. Use a non-greedy match for each `<script>`
+        // containing a FAQPage JSON-LD.
+        const scriptRe = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+        let count = 0;
+        for (const m of text.matchAll(scriptRe)) {
+          if (/"@type"\s*:\s*"FAQPage"/.test(m[1])) count++;
+        }
+        if (count > 1) {
+          results.push(p.replace(DIST, '').replace(/^\//, ''));
+        }
+      }
+    }
+  }
+  walk(DIST);
+  return results;
+}
+
 const CHECKS = [
   { name: 'bare href="#" links', fn: checkHrefHash },
   { name: 'malformed frontmatter', fn: checkFrontmatter },
@@ -629,6 +664,7 @@ const CHECKS = [
   { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
   { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
   { name: 'duplicate hero image content', fn: checkDuplicateHeroImages },
+  { name: 'duplicate FAQPage JSON-LD', fn: checkDuplicateFaqPageSchema },
 ];
 
 let totalFailures = 0;

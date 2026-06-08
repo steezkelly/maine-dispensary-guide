@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 47 guide pages (14 city + 33 technical), technical compliance maps, B2B lead-gen tools.
+Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 157 guide pages (109 city + 48 technical), 35 blog posts, 224 dist HTML pages. Technical compliance maps, B2B lead-gen tools.
 
 **SCOPE: Maine Only** — Do NOT propose or build state-specific hubs for other states.
 
@@ -52,7 +52,7 @@ project-1/
 │   ├── components/               # 9 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
-│       ├── guides/               # 14 city guides + 33 technical guides + index
+│       ├── guides/               # 109 city guides + 48 technical guides + index
 │       ├── founders/             # 3 founder story pages + index
 │       ├── resources/            # Vendor directory + education/official resource hubs
 │       ├── admin/                # Admin pages (noindex)
