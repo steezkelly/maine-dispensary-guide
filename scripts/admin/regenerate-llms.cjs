@@ -32,10 +32,12 @@ async function main() {
     else if (!groups.guides.includes(url)) { /* skip unknown */ }
   }
 
+  const regenDate = new Date().toISOString().split('T')[0];
   const lines = [
     '# Maine Dispensary Guide — Agent Discoverability Index',
     '# https://mainedispensaryguide.com',
     '# For AI agents and crawlers. See /robots.txt for crawl-directive.',
+    `# Last regenerated: ${regenDate} from ${urls.length} sitemap URLs`,
     '',
     '## Homepage',
     '- [Maine Dispensary Guide](https://mainedispensaryguide.com) — Cannabis business resource hub for Maine operators',
