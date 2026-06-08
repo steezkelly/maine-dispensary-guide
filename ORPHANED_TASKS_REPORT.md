@@ -12,7 +12,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 | Item | Previous Status | Current Status | Action |
 |------|----------------|----------------|--------|
 | Sub-75 readability pages | PENDING | ✅ **RESOLVED** | All expanded (see below) |
-| project-status.md | OUTDATED | ⚠️ NEEDS UPDATE | Last updated Apr 18 |
+| project-status.md | OUTDATED | ✅ **RETIRED 2026-06-07** | File removed (was 47 days stale, no consumers) |
 
 ### Sub-75 Pages — ACTUALLY ALL EXPANDED ✅
 
@@ -171,7 +171,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 
 ### Next Sprint
 4. **Convert PDF Magnet** — Style and integrate Founders Bible PDF
-5. **Update project-status.md** — Sync with current state
+5. ~~**Update project-status.md**~~ — **RETIRED 2026-06-07**; file removed (47 days stale, no consumers)
 
 ### Future
 6. **Continue outreach expansion** — Scale after initial responses

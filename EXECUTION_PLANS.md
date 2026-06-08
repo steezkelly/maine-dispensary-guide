@@ -151,40 +151,20 @@ The Founders Bible exists as markdown but has not been converted to a styled PDF
 
 ---
 
-## PLAN 4: project-status.md Sync
+## ~~PLAN 4: project-status.md Sync~~ (RETIRED 2026-06-07)
 
-**File:** `reference/project-status.md` (currently shows Apr 18 data)
-**Agent Type:** fixer (bounded, documentation update)
+**File:** ~~`reference/project-status.md`~~ — **file removed** (47 days stale, no consumers, no automated consumers could fail; superseded by `BOT_COLLABORATION_HUB.md` + `PROJECT_STATE.md` + auto-regen `MISSION_CONTROL.md`)
 
-### Context
-`project-status.md` still shows old data. Needs update to reflect current Sprint 46 state.
+### Why retired
 
-### Steps
-
-1. **Read current state** from these sources:
-   - `BOT_COLLABORATION_HUB.md` (lines 1-50 for latest sprint)
-   - `git log --oneline -10` (last commits)
-   - Build verification (pages count)
-
-2. **Update `project-status.md`** with:
-   - Date: "Last updated by: OpenCode — April 20, 2026"
-   - Pages live: 79+ (was 73)
-   - Score: 100/100 (A) ✅
-   - Sub-75 pages: ALL EXPANDED (list them with word counts)
-   - GSC: "User action required — log in to verify"
-   - Domain warm-up: "In progress (not started)"
-   - PDF Magnet: "Conversion in progress"
-   - Known gaps: Update list
-
-3. **Commit changes** (after user approval)
+- The file was last touched Apr 20, 2026 — 47 days stale when this turn started
+- It contained Windows-specific paths (`C:\Users\Steve\EmailPipeline\`) that no longer apply
+- No code, no script, no data-integrity check consumed it
+- Its role is now covered by: `BOT_COLLABORATION_HUB.md` (sprint-by-sprint log), `PROJECT_STATE.md` (state of systems), and auto-regenerated `MISSION_CONTROL.md` (live site metrics).
 
 ### Success Criteria
-- `project-status.md` reflects current state
-- Date shows April 20, 2026
-- All metrics are accurate
-
-### Verification
-- Read file and confirm all fields updated
+- [x] File removed
+- [x] References cleaned up in AGENTS.md, ORPHANED_TASKS_REPORT.md, HANDOVER_TO_HERMES.md
 
 ---
 

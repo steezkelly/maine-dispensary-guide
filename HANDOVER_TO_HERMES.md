@@ -258,7 +258,6 @@ cat link-outreach.md
 |------|---------|
 | `AGENTS.md` | **READ FIRST** — Commands, Do/Don't, conventions |
 | `BOT_COLLABORATION_HUB.md` | Full project history and sprint log (1,700+ lines) |
-| `reference/project-status.md` | Live metrics, scores, content inventory |
 | `reference/workflows.md` | Pre-flight, end-of-sprint, Windows patterns |
 
 ### For Content
@@ -426,8 +425,7 @@ project-1/
 6. **Copy OpenCode config** — `~/.config/opencode/` from Windows
 7. **Verify build** — `npm run build`
 8. **Typecheck** — `npx astro check`
-9. **Read reference/project-status.md** — understand current metrics
-10. **Review pending items** — Section 6 above
+9. **Review pending items** — Section 6 above
 
 ---
 

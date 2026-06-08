@@ -287,7 +287,6 @@ task(description="Review homepage redesign", prompt="Compare screenshot of / aft
 - [ ] Diff is small and focused — summarize what changed and why
 - [ ] No excessive logs or comments left in code
 - [ ] `BOT_COLLABORATION_HUB.md` updated with decision log
-- [ ] `reference/project-status.md` updated if metrics changed
 
 ---
 
@@ -304,7 +303,6 @@ task(description="Review homepage redesign", prompt="Compare screenshot of / aft
 | File | Purpose |
 |------|---------|
 | `BOT_COLLABORATION_HUB.md` | Multi-agent communication log (read first) |
-| `reference/project-status.md` | Live SEO scores, content quality, known gaps |
 | `reference/workflows.md` | Pre-flight, end-of-sprint, Windows patterns |
 | `reference/opencode-config.md` | Council config, fallbacks, plugin features, diagnostics |
 | `reference/self-improving.md` | Memory system, triggers, memory files |
