@@ -65,7 +65,7 @@ const recentGuides = [
 
 const journeySteps = [
   { num: "01", title: "Get the Launch Checklist", desc: "Download the step-by-step checklist used by Portland and Bangor applicants — covers OCP forms, municipal filings, and lease contingencies.", href: "/launch-checklist" },
-  { num: "02", title: "Understand Licensing", desc: "Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and 39 other towns have different timelines — know yours.", href: "/guides/maine-dispensary-license" },
+  { num: "02", title: "Understand Licensing", desc: `Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and ${siteStats.activeAdultUseMunicipalities - 2} other opt-in towns have different timelines — know yours.`, href: "/guides/maine-dispensary-license" },
   { num: "03", title: "Run the Numbers", desc: `Most Maine dispensaries need $360K–$1M to open. Model your startup costs against the state's ${siteStats.totalMarketValueAdultUse} adult-use market.`, href: "/roi-calculator" },
   { num: "04", title: "Find Your Location", desc: "Zoning rules, 500-ft school buffers, commercial lease negotiation in Portland, Bangor, or a smaller opt-in town like Waterville.", href: "/guides/maine-cannabis-real-estate" },
 ];
@@ -75,7 +75,7 @@ const journeySteps = [
   title="How to Open a Maine Dispensary in 2026 — Step-by-Step Guide"
   description="Everything you need to open a Maine cannabis dispensary: licensing timeline, startup costs ($360K–$1M), location zoning, and OCP application steps. Start here."
   heroImage="/images/heroes/maine-cannabis-granite-hero.jpg"
-  article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-01", modifiedDate: "2026-04-21", section: "Home" }}
+  article={{ author: "Steve Kelly", authorTitle: "Founder & Publisher", authorId: "steve-kelly", publishDate: "2026-01-01", modifiedDate: "2026-06-07", section: "Home" }}
 >
 
   <style>
@@ -2154,7 +2154,7 @@ const journeySteps = [
       <div class="detail-stage">
         <h3>Stage 2: Understand Licensing</h3>
         <p>Maine requires an OCP Adult-Use Retail License before you can sell cannabis products. The application process has multiple rounds: initial submission, municipal endorsement, background checks, and final OCP review. Timeline from submission to license approval typically runs five to seven months, assuming no request for additional information.</p>
-        <p>Municipal endorsement is a separate process handled at the town level. Not all Maine municipalities have opted in to allow cannabis retail. As of early 2026, 41 municipalities have opted in, but many have not. Portland, Lewiston, Bangor, Augusta, South Portland, and Biddeford are among the largest markets with active retail licensing. Some towns have caps on the number of licenses they will issue, which creates urgency for early applicants.</p>
+        <p>Municipal endorsement is a separate process handled at the town level. Not all Maine municipalities have opted in to allow cannabis retail. As of mid-2026, {siteStats.activeAdultUseMunicipalities} Maine municipalities host at least one active OCP-licensed adult-use retail store, but many more have not. Portland, Lewiston, Bangor, Augusta, South Portland, and Biddeford are among the largest markets with active retail licensing. Some towns have caps on the number of licenses they will issue, which creates urgency for early applicants.</p>
         <p>The OCP publishes fee schedules and application timelines on its website. Review these before you begin. Application fees run $800 to $1,500 depending on license type. There are also annual renewal fees. Budget for both.</p>
       </div>
 
