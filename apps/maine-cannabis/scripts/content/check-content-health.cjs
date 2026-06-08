@@ -67,11 +67,15 @@ function checkNoindexInSitemap() {
     return ['sitemap-0.xml not found — run build first'];
   }
   const xml = fs.readFileSync(SITEMAP, 'utf8');
-  // Pages that should NOT be in sitemap (noindex pages)
+  // Pages that should NOT be in sitemap (noindex pages).
+  // /admin/, /experiments/, /link-dashboard — already excluded via
+  // sitemap-config.json noindexPathPrefixes. The /download/* lead-magnet
+  // pages are intentionally indexable (they have indexable copy and a
+  // lead-magnet form) — only /download/roadmap is noindex={true} on the
+  // page itself. Other download pages are marketing surfaces and should
+  // be crawled.
   const noindexPages = [
-    '/admin/', '/experiments/', '/link-dashboard',
-    '/download/founders-bible', '/download/roadmap',
-    '/download/metrc-reconciliation-checklist', '/download/compliance-self-assessment',
+    '/download/roadmap',
   ];
   noindexPages.forEach(p => {
     if (xml.includes(`<loc>https://mainedispensaryguide.com${p}`)) {

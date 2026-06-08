@@ -25,7 +25,7 @@
 - **Guides Index:** `/guides/` — 5 categories (Business, Compliance, Cities, Operations, Market).
 - **City Guides:** **109** Maine cities/towns (Portland, Bangor, Lewiston, Augusta, Auburn, Biddeford, Brunswick, Saco, Scarborough, Sanford, Waterville, Westbrook, South Portland, Old Orchard Beach, Kittery, + 94 small towns).
 - **Technical Guides:** **48** deep-dives (280E Taxes, Metrc, Staff Licensing, Real Estate, etc.).
-- **Blog:** 34 posts (Tier 1 + Tier 2 keywords).
+- **Blog:** 35 posts (Tier 1 + Tier 2 keywords).
 - **Total pages:** 224 html (221 in sitemap; 3 admin/download/404 are intentionally noindex).
 - **Sitemap:** `/sitemap-index.xml` (auto-generated, 221 URLs).
 - **Live health snapshot:** `/status.json` (auto-refreshed on every build).
