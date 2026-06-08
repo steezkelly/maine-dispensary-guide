@@ -58,6 +58,32 @@ or `--skip-smoke-200` to skip pass 3 only).
 
 Reinstall on a fresh clone: `npm run hooks:install`.
 
+### Validated failure modes (2026-06-07)
+
+The gate was empirically proven to catch both real failure classes
+on this repo. Don't trust the design — trust the evidence:
+
+- **Pass 1 (esbuild parse)** — broken-state test: injected
+  `@@@` into `apps/maine-cannabis/src/pages/find-a-dispensary.astro`
+  on the `summary` line of the Peru block. Gate output:
+  `✗ apps/maine-cannabis/src/pages/find-a-dispensary.astro — ✘ [ERROR] Expected "}" but found "@"`
+  then `✗ 1 .astro file(s) failed parse check — push blocked.`
+  Exit code **1**. `git checkout` of the file → all 3 passes
+  green, exit 0. This is the same `},` → `}` class that
+  produced the 2026-06-07 Sprint 75 cascade.
+- **Pass 3 (smoke-200)** — DNS-fail test:
+  `MDG_BASE=https://this-domain-does-not-exist-12345.example.com node scripts/git/pre-push-verify.cjs`
+  → `✗ smoke-200: at least one page returned non-200 — push blocked.`
+  with `getaddrinfo ENOTFOUND` for sample routes. 404 test
+  (against `example.com`, which has no MDG pages):
+  `1 ok, 0 redirects, 222 broken`, exit 1.
+
+What the gate does **not** catch: Vercel build errors caused by
+a missing import (the 7d8bebb class). Vercel's own build pipeline
+catches those — the gate only blocks the post-deploy breakage
+class. See "Sprint 78 wire-up" entry in the Hub for the
+incident.
+
 ## CI gate (Sprint 76)
 
 `.github/workflows/ci.yml` runs on every push to main:
@@ -166,5 +192,6 @@ MDG_BASE=https://mainedispensaryguide.com node apps/maine-cannabis/scripts/build
 node scripts/git/sprint-handoff.cjs   # generate Hub entry from git history
 ```
 
-Last updated: 2026-06-07. Edit when the next agent discovers
+Last updated: 2026-06-07 (gate validation evidence added).
+Edit when the next agent discovers
 something every future agent needs to know.
