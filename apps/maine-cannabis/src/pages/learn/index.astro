@@ -1,0 +1,239 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-06-09",
+  modifiedDate: "2026-06-09",
+  section: "Consumer Guide"
+};
+const topics = ["consumer", "education", "basics"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What should I expect on my first visit to a Maine dispensary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bring a valid government-issued ID showing you are 21 or older. Adult-use dispensaries do not require a medical card. You will enter a secure reception area, show your ID, and then browse a retail floor. Budtenders can guide you through the menu. Payment is cash or debit — most dispensaries do not accept credit cards. Your purchase is bagged in opaque, child-resistant packaging before you leave."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read THC labels on Maine cannabis products?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine requires every product to carry a label showing total THC content. For flower, the label shows THC percentage — most Maine flower ranges from 18% to 28%. For edibles, the label shows milligrams of THC per serving and per package. A single serving in Maine is capped at 10mg THC. Packages may contain up to 100mg total (10 servings). Always check the serving size before consuming."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between indica and sativa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Indica strains are traditionally associated with relaxing, body-focused effects, while sativas are linked to more uplifting, energetic effects. Many modern products are hybrids. Research suggests terpene profiles — not just indica/sativa labels — actually determine effects. Maine dispensaries list both THC percentage and dominant terpenes on their menus. Try a small amount of any new strain first to see how it affects you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much cannabis can I possess in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Adults 21 and older may possess up to 2.5 ounces of cannabis flower in public. At home, you may store up to 5 ounces. You may also possess up to 10 grams of cannabis concentrate, included within the 2.5-ounce public total. Medical patients with a valid MMMP card may possess larger amounts as authorized by their provider."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I legally consume cannabis in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You may legally consume cannabis on private property with the property owner's permission. Public consumption is illegal in all Maine municipalities, including sidewalks, parks, parking lots, and state parks. There are no licensed consumption lounges in Maine as of 2026. If you are visiting, confirm with your hotel, inn, or rental host that cannabis consumption is permitted on the premises before using any product."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does cannabis delivery work in Maine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine licensed dispensaries and registered caregivers may deliver cannabis to customers within the state. Delivery is available in most municipalities that have opted into adult-use or medical cannabis. You must show ID at delivery and the driver cannot leave packages unattended. Delivery hours are generally 8 AM to 9 PM. Some rural areas have limited delivery coverage. If you cannot find delivery in your area, check for nearby caregivers who serve your town."
+      }
+    }
+  ]
+});
+---
+
+<Layout
+  title="Cannabis in Maine: A Consumer's Guide"
+  description="Everything you need to know about buying and using cannabis in Maine — first dispensary visit, THC labels, edibles, possession limits, delivery rules, and finding a caregiver."
+  heroImage="/images/heroes/homepage.jpg"
+  article={article}
+  topics={topics}
+  isHub={true}
+>
+<style>
+  article { max-width: 800px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  section h2 { font-size: 1.625rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.75rem; line-height: 1.5; }
+  p { line-height: 1.7; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2.5rem 0; }
+  .topic-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; padding: 1.5rem; }
+  .topic-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--color-primary); }
+  .topic-card p { font-size: 0.9rem; color: var(--color-text-light); line-height: 1.5; margin-bottom: 0.75rem; }
+  .topic-card a { color: var(--color-accent); font-weight: 600; text-decoration: none; }
+  .topic-card a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Cannabis in Maine: A Consumer's Guide</h1>
+    <p class="subtitle">Everything you need to know about buying, using, and enjoying cannabis in Maine — written for real people, not compliance officers</p>
+    <p class="last-updated">Last updated: June 9, 2026</p>
+  </div>
+
+  <section>
+    <h2>Your First Dispensary Visit</h2>
+    <p>Walking into a Maine dispensary for the first time can feel overwhelming. Here is what you need to know so it goes smoothly.</p>
+    <p>First, you need a valid government-issued ID showing you are 21 or older. A driver's license, passport, or state ID all work. Maine does not require a medical cannabis card to buy from adult-use (recreational) dispensaries. If you have a medical card from another state, it is not valid in Maine — you would need a Maine MMMP card.</p>
+    <p>The typical dispensary visit goes like this: you enter a secure reception area where a staff member checks your ID. Once verified, you enter the retail floor. A budtender — think of them as a knowledgeable guide — can walk you through the menu. You can browse flower jars, pre-rolls, edibles, concentrates, and topicals. Most dispensaries display products in glass cases or clear jars so you can see what you are buying.</p>
+    <p>Payment is cash or debit. Most Maine dispensaries do not accept credit cards because of federal banking restrictions. Some have ATMs on site. Your purchase goes into opaque, child-resistant packaging — you will not walk out with a visible cannabis bag.</p>
+    <p class="answer-capsule"><strong>Pro tip:</strong> If you are nervous, go during a quiet time — weekday mornings or early afternoons. Budtenders at Maine dispensaries are generally patient and happy to help first-time customers. Tell them it is your first visit and they will slow down and explain everything.</p>
+  </section>
+
+  <section>
+    <h2>Reading THC Labels</h2>
+    <p>Maine cannabis labels give you two important numbers: THC percentage (for flower and concentrates) or THC milligrams (for edibles).</p>
+    <table>
+      <thead>
+        <tr><th>Product Type</th><th>What the Label Shows</th><th>Typical Range</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Flower (bud)</td><td>THC percentage</td><td>18% – 28%</td></tr>
+        <tr><td>Pre-rolls</td><td>THC percentage of the flower inside</td><td>15% – 25%</td></tr>
+        <tr><td>Edibles</td><td>mg THC per serving + per package</td><td>10mg per serving / up to 100mg per package</td></tr>
+        <tr><td>Concentrates</td><td>THC percentage</td><td>60% – 90%</td></tr>
+        <tr><td>Tinctures/Oils</td><td>mg THC per dropper or dose</td><td>5 – 50mg per dose</td></tr>
+      </tbody>
+    </table>
+    <p>A higher THC percentage does not always mean a better experience. Many consumers prefer balanced products with moderate THC and diverse terpene profiles. If you are new, start with flower at the lower end of the range (18-20%) and see how it affects you before trying higher-potency products.</p>
+  </section>
+
+  <section>
+    <h2>Indica, Sativa, and CBD Basics</h2>
+    <p>Maine dispensaries organize their menus around three categories: indica, sativa, and hybrid. Here is what they mean in plain language.</p>
+    <ul>
+      <li><strong>Indica</strong> — Traditionally associated with relaxing, body-focused effects. Many people reach for indicas in the evening for unwinding, sleep support, or watching a movie. Think: "in-da-couch."</li>
+      <li><strong>Sativa</strong> — Traditionally linked to more uplifting, energetic effects. Consumers often choose sativas for daytime use, social activities, creative projects, or outdoor adventures. Think: "sativa = stimulating."</li>
+      <li><strong>Hybrid</strong> — A mix of indica and sativa genetics. Most modern cannabis is hybrid. Dispensaries usually note whether a hybrid leans one direction or the other.</li>
+      <li><strong>CBD</strong> — A non-psychoactive cannabinoid found in cannabis and hemp. CBD does not get you high, but many people use it for relaxation, mild discomfort, and general wellness. Maine dispensaries carry CBD-dominant products alongside THC products, as well as balanced (1:1) products with equal parts THC and CBD.</li>
+    </ul>
+    <p>Important: the indica/sativa distinction is a simplified framework. Actual effects depend heavily on the specific strain's terpene profile and your individual body chemistry. What relaxes one person might energize another. Start low, go slow, and pay attention to how each product makes you feel.</p>
+  </section>
+
+  <section>
+    <h2>Edible Dosing: Start Low, Go Slow</h2>
+    <p>Edibles hit differently than inhaled cannabis. The effects take longer to start — 30 to 90 minutes — and they last much longer, often 4 to 8 hours. This delay is why first-time edible consumers frequently overconsume.</p>
+    <p><strong>For a first-time edible user:</strong> start with 2.5mg to 5mg of THC. That is a quarter to half of a single serving (Maine caps single servings at 10mg). Wait at least 90 minutes before considering another dose. If you feel nothing after 90 minutes, try another 2.5mg. Do not take a second full serving.</p>
+    <p>For a deeper safety guide, see <a href="/guides/maine-cannabis-edibles-compliance">How to Dose Edibles Safely</a> in our edibles compliance guide — written for consumers, not operators.</p>
+  </section>
+
+  <section>
+    <h2>What Is 420?</h2>
+    <p>April 20 — universally known as 420 — is cannabis culture's biggest annual event. In Maine, 420 has grown from informal gatherings into organized festivals, vendor markets, and community events across the state.</p>
+    <p>The origins are debated — some trace it to a group of California high school students in the 1970s who met at 4:20 PM to search for a legendary cannabis patch. Whatever the origin, 420 is now recognized globally as a day of cannabis celebration.</p>
+    <p>For Maine's 2026 420 events and cannabis-friendly festivals, see <a href="/learn/cannabis-events-2026">Maine Cannabis Events 2026: 420 Festivals & Public Gatherings</a>.</p>
+  </section>
+
+  <section>
+    <h2>Possession Limits</h2>
+    <p>Maine law sets clear possession limits for adults 21 and older. Know them before you buy.</p>
+    <ul>
+      <li><strong>In public:</strong> Up to 2.5 ounces of cannabis flower, with up to 10 grams of cannabis concentrate included within that total.</li>
+      <li><strong>At home:</strong> Up to 5 ounces of cannabis flower total.</li>
+      <li><strong>Cultivation:</strong> You may grow up to 6 mature plants, 12 immature plants, and an unlimited number of seedlings per person for personal use.</li>
+      <li><strong>Medical patients</strong> with a valid MMMP card may possess larger amounts as authorized by their provider and may grow up to 6 mature plants, 12 immature plants, and an unlimited number of seedlings.</li>
+    </ul>
+    <p>Exceeding these limits can result in fines or, at certain thresholds, criminal charges. If you buy a large quantity, transport it directly home in a sealed, opaque bag and keep it in a secure location.</p>
+  </section>
+
+  <section>
+    <h2>Where You Can Consume</h2>
+    <p>This is the single most important rule for new cannabis consumers in Maine: <strong>you can only consume cannabis on private property with the owner's permission.</strong></p>
+    <p>Public consumption is illegal everywhere in Maine. That means no smoking or vaping on sidewalks, in parks, on beaches, in parking lots, on hiking trails, in cars (moving or parked), or at state parks. Acadia National Park is federal land — cannabis is illegal there regardless of Maine law.</p>
+    <p>If you are a Maine resident, consume at home. If you are visiting, confirm with your hotel, inn, Airbnb host, or campground that cannabis consumption is allowed on the premises. Some properties specifically advertise as 420-friendly. <strong>Never consume in a hotel room without explicit permission</strong> — many hotels charge substantial cleaning fees for cannabis use.</p>
+    <p>Maine does not currently have any licensed consumption lounges. Legislation to allow them has been proposed but has not passed as of 2026.</p>
+  </section>
+
+  <section>
+    <h2>Delivery Rules</h2>
+    <p>Maine allows cannabis delivery from both licensed adult-use dispensaries and registered medical caregivers. Delivery is a convenient option if you do not live near a dispensary or prefer not to visit in person.</p>
+    <ul>
+      <li><strong>Who delivers:</strong> Licensed dispensaries and registered caregivers with delivery authorization from the OCP.</li>
+      <li><strong>Where delivery is available:</strong> Most municipalities that have opted into adult-use or medical cannabis. Some rural areas have limited coverage.</li>
+      <li><strong>What you need:</strong> A valid ID. The driver checks your ID at the door and cannot leave packages unattended.</li>
+      <li><strong>When delivery happens:</strong> Typically between 8 AM and 9 PM. Some services offer scheduled windows.</li>
+      <li><strong>Medical delivery:</strong> Caregivers may deliver to registered patients. Some caregivers offer delivery to patients who cannot easily visit a dispensary.</li>
+    </ul>
+    <p>If you cannot find delivery in your area, check for nearby caregivers. See our <a href="/guides/maine-cannabis-caregiver-guide">Caregiver Guide</a> for help finding one.</p>
+  </section>
+
+  <section>
+    <h2>How to Find a Caregiver</h2>
+    <p>If you are a Maine medical cannabis patient, a registered caregiver can be a better option than a dispensary. Caregivers are individual cultivators or providers registered with the Maine Medical Use of Cannabis Program (MMMP) who grow and provide cannabis to their registered patients.</p>
+    <p>Caregivers often offer more personalized service, higher-quality craft flower, and competitive pricing compared to larger dispensaries. Many patients form long-term relationships with their caregivers.</p>
+    <p>To find a caregiver: ask at your local dispensary for recommendations, check the OCP's online caregiver registry, search for "Maine cannabis caregiver" near your town, or ask in Maine cannabis community groups online. For a full breakdown of how caregivers work, what it costs, and whether a caregiver is right for you, read our <a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Guide</a>.</p>
+  </section>
+
+  <div class="topic-grid">
+    <div class="topic-card">
+      <h3>420 & Public Events</h3>
+      <p>Festivals, gatherings, and what to expect at Maine's 2026 cannabis events.</p>
+      <a href="/learn/cannabis-events-2026">Explore events →</a>
+    </div>
+    <div class="topic-card">
+      <h3>Market Data & Prices</h3>
+      <p>What Maine's $513M cannabis market means for consumers and pricing.</p>
+      <a href="/market-stats">See market stats →</a>
+    </div>
+    <div class="topic-card">
+      <h3>Edibles & Dosing</h3>
+      <p>How to dose edibles safely and what you need to know before eating a cannabis product.</p>
+      <a href="/guides/maine-cannabis-edibles-compliance">Read the guide →</a>
+    </div>
+    <div class="topic-card">
+      <h3>Caregivers & Medical</h3>
+      <p>What a caregiver does, how to find one, and whether it is right for you.</p>
+      <a href="/guides/maine-cannabis-caregiver-guide">Find a caregiver →</a>
+    </div>
+  </div>
+
+  <section class="further-reading">
+    <h2>More Consumer Resources</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-events-2026">Industry Events & Regulatory Updates (for operators)</a></li>
+      <li><a href="/market-stats">Maine Cannabis Market Stats 2026</a></li>
+      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Cannabis Edibles Compliance Guide</a></li>
+      <li><a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Program Guide</a></li>
+    </ul>
+  </section>
+</article>
+</Layout>

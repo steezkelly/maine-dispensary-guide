@@ -1,0 +1,145 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-06-09",
+  modifiedDate: "2026-06-09",
+  section: "Consumer Guide"
+};
+const topics = ["events", "420", "festivals", "consumer"];
+
+const articleJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Maine Cannabis Events 2026: 420 Festivals & Public Gatherings",
+  "description": "Consumer-friendly guide to 420 celebrations, cannabis-friendly festivals, and community gatherings across Maine in 2026 — what to expect and how to attend safely.",
+  "author": {
+    "@type": "Person",
+    "name": "Steve Kelly"
+  },
+  "datePublished": "2026-06-09",
+  "dateModified": "2026-06-09"
+});
+---
+
+<Layout
+  title="Maine Cannabis Events 2026: 420 Festivals & Public Gatherings"
+  description="Consumer guide to 420 celebrations, cannabis-friendly festivals, seasonal events, and community gatherings across Maine in 2026 — what to expect and how to attend safely."
+  heroImage="/images/heroes/maine-cannabis-events-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  p { line-height: 1.7; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.75rem; line-height: 1.5; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-primary); }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .event-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .event-item:last-child { border-bottom: none; }
+  .event-item h3 { margin-bottom: 0.25rem; }
+  .event-date { color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .event-item p { margin: 0; line-height: 1.5; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 3rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis Events 2026: 420 Festivals & Public Gatherings</h1>
+    <p class="subtitle">What to expect at cannabis-friendly events across Maine this year — from 420 celebrations to seasonal festivals</p>
+    <p class="last-updated">Last updated: June 9, 2026</p>
+  </div>
+
+  <section>
+    <h2>420 in Maine 2026</h2>
+    <p>April 20 — 420 — is cannabis culture's biggest day of the year, and Maine celebrates in style. Across the state, dispensaries run special promotions, caregivers and brands set up pop-up markets, and community gatherings bring cannabis enthusiasts together. Unlike some states where 420 is primarily commercial, Maine's celebrations lean into the state's craft cannabis identity: small-batch flower, local growers, and the community-first ethos that defines Maine's cannabis culture.</p>
+    <p>What to expect at 420 events in Maine:</p>
+    <ul>
+      <li><strong>Vendor markets</strong> — Local caregivers and product brands set up tables with flower, edibles, concentrates, and accessories available for purchase.</li>
+      <li><strong>Educational talks</strong> — Sessions on cultivation, dosing, terpenes, and Maine's cannabis laws. These are usually free and open to all.</li>
+      <li><strong>Music and socializing</strong> — Live music, food trucks, and community hangout spaces. Many events have a festival atmosphere.</li>
+      <li><strong>Exclusive deals</strong> — Limited-edition products, 420-themed merchandise, and discounts from dispensaries and brands.</li>
+    </ul>
+    <p><strong>Important:</strong> Public consumption of cannabis remains illegal in Maine, even at 420 events. Most events are held on private property where consumption may be permitted at the organizer's discretion. Check the specific event's rules before attending.</p>
+  </section>
+
+  <section>
+    <h2>Public Cannabis-Friendly Events</h2>
+    <p>Beyond 420, several recurring events across Maine welcome cannabis enthusiasts. These range from farmers market-style gatherings to educational expos and seasonal festivals.</p>
+
+    <div class="event-item">
+      <h3>Maine Cannabis Convention</h3>
+      <p class="event-date">Spring & Fall 2026 | Portland</p>
+      <p>Maine's largest cannabis gathering brings together growers, product makers, retailers, and consumers under one roof. The convention features vendor exhibits, product sampling (subject to local rules), educational seminars, and networking sessions. Tickets typically range from $15–$30 for general admission.</p>
+    </div>
+
+    <div class="event-item">
+      <h3>Southern Maine Cannabis Market</h3>
+      <p class="event-date">Monthly, April–October | Southern Maine</p>
+      <p>A rotating outdoor market featuring Maine caregivers, craft cannabis vendors, and small-batch product makers. Think of it as a farmers market for cannabis. Admission is usually free and the atmosphere is relaxed and community-focused. Locations vary month to month.</p>
+    </div>
+
+    <div class="event-item">
+      <h3>Harvest Festival Weekends</h3>
+      <p class="event-date">September–October 2026 | Various locations</p>
+      <p>Several Maine cannabis organizations host harvest-season celebrations that tie into the state's fall tourism season. These events often combine cannabis education with Maine's broader agricultural and outdoor traditions — think pumpkin patches with a cannabis twist.</p>
+    </div>
+
+    <div class="event-item">
+      <h3>NECANN Maine</h3>
+      <p class="event-date">Annual, date TBD | Portland area</p>
+      <p>The New England Cannabis Convention's Maine edition brings regional vendors, policy speakers, and cannabis enthusiasts together for a weekend expo. NECANN events across New England draw thousands of attendees and are a reliable barometer of where the industry is headed.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Seasonal Events</h2>
+    <p>Maine's cannabis event calendar follows the seasons. Knowing the rhythm helps you plan which events to attend.</p>
+    <ul>
+      <li><strong>Spring (March–May)</strong> — 420 dominates April. Spring also brings the first outdoor vendor markets as the weather warms. Educational events and compliance workshops are common as new regulations take effect.</li>
+      <li><strong>Summer (June–August)</strong> — Peak event season. Outdoor markets run weekly or monthly. Music festivals with cannabis-affiliated vendors appear across the state. Tourism in Portland, Bar Harbor, and the lakes region drives larger crowds.</li>
+      <li><strong>Fall (September–October)</strong> — Harvest-themed events at farms and dispensaries. October brings the OCP Industry Summit (operator-focused) and consumer-friendly harvest festivals. The best time for seasonal product releases.</li>
+      <li><strong>Winter (November–February)</strong> — Quiet season for consumer events. Indoor vendor markets pop up around the holidays. Social media and dispensary newsletters are the best way to find winter gatherings.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What to Expect at a Consumer Event</h2>
+    <p>If you have never been to a cannabis-friendly event in Maine, here is a quick primer on how they work.</p>
+    <ul>
+      <li><strong>Bring your ID.</strong> All events require proof you are 21 or older. Some medical-only events accept MMMP cards.</li>
+      <li><strong>Cash is still king.</strong> Most vendor tables operate on cash. Some larger events have ATMs, but bringing cash is more reliable.</li>
+      <li><strong>No consumption without permission.</strong> Even at cannabis events, public consumption is only legal if the organizer has secured the property for that purpose. Many events have designated consumption areas. Ask at the entrance.</li>
+      <li><strong>Bring a bag.</strong> You will likely walk away with products, samples, or swag. An opaque bag keeps your purchase discreet and follows Maine's packaging rules.</li>
+      <li><strong>Pace yourself.</strong> If you sample products at an event, remember that edibles take 30–90 minutes to kick in and effects last longer than smoking. Plan your transportation accordingly — never drive under the influence.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Operator Events vs. Consumer Events</h2>
+    <p>Maine has two distinct event tracks: industry events for licensees and operators, and consumer events for the general public. This guide focuses on consumer events — 420 festivals, markets, and community gatherings.</p>
+    <p>If you are a cannabis business operator looking for regulatory meetings, trade shows, and compliance workshops, see our <a href="/guides/maine-cannabis-events-2026">Industry Events & Regulatory Guide</a> for the full operator-facing calendar, including OCP stakeholder meetings, legislative hearings, and industry association gatherings.</p>
+  </section>
+
+  <section class="disclaimer">
+    <p><strong>Legal reminder:</strong> Maine law prohibits public consumption of cannabis. Even at 420 events and festivals, consumption is only legal in designated areas that the organizer has secured on private property. Driving under the influence of cannabis is illegal and carries the same penalties as alcohol-impaired driving. Keep all cannabis products in sealed, child-resistant packaging when traveling to or from events.</p>
+  </section>
+</article>
+</Layout>

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import Faq from '../components/Faq.astro';
+import Callout from '../components/Callout.astro';
 import LeadFormTracker from '../components/LeadFormTracker.astro';
 import siteConfig from '../data/site-config.json';
 import { getSiteStats } from '../lib/site-stats';
@@ -2266,6 +2267,15 @@ const journeySteps = [
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CONSUMER CALLOUT — For Consumers
+  ═══════════════════════════════════════════════════════════════ -->
+  <section style="max-width: var(--max-width); margin: 0 auto var(--space-2xl); padding: 0 var(--space-md);">
+    <Callout type="tip" title="For Consumers">
+      <p>New to Maine cannabis? Our <a href="/learn">Consumer Guide</a> covers everything from your first dispensary visit and reading THC labels to safe edible dosing, 420 events, and understanding Maine's possession limits. <a href="/learn"><strong>Start here →</strong></a></p>
+    </Callout>
   </section>
 
   <section class="resource-hubs" aria-labelledby="resource-hubs-heading">
