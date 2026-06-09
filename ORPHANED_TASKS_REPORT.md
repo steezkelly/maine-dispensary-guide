@@ -60,11 +60,12 @@ Items previously flagged as "pending" were audited for current accuracy:
 - **Root cause: the service account was created but was never added as a user on the GA4 property or the GSC site.** The key is correct, the APIs are correct, the scope is correct (`analytics.readonly` + `webmasters.readonly`) — but Google refuses to return anything because the service account email has no role on the target resources.
 
 **What to do:**
-1. **One-time, ~5 min in Google UI:**
-   - GSC: open `https://search.google.com/search-console` → Settings → Users and permissions → Add user → `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com` with **Full** or **Restricted** permission.
-   - GA4: open the GA4 property for `G-614GHG67ZQ` → Admin → Property access management → Add user → same email, **Viewer** role.
-2. After granting, re-run `node scripts/_diag-gsc-ga4-list.cjs` — it should now return the property + site. Capture results and update this item.
-3. Then check the Coverage / Pages report and update the Apr 9 numbers with real current data.
+1. **You can't add a service account to GSC or GA4 via the web UI — Google rejects `*.iam.gserviceaccount.com` addresses with "user not found" by design.** Service accounts can only be used via the API. The GSC property for MDG is owned by `stevekelly622@gmail.com` (personal Gmail). Two real paths:
+   - **Path A (fastest, ~10 min):** Verify the GSC property as a **Domain property** (`sc-domain:mainedispensaryguide.com`) via a DNS TXT record in Porkbun, then the service account can query it via API using `webmasters.readonly` scope. (If the property is currently URL-prefix-only, it can only be queried by the human owner — no service-account access at all.)
+   - **Path B (slower):** Generate an OAuth refresh token for `stevekelly622@gmail.com` and store it next to the SA key, switch the script from SA auth to OAuth user auth.
+2. For GA4 (`G-614GHG67ZQ`): same constraint. The service account needs to be granted a role on the GA4 property *somewhere* — but the only "somewhere" is the GCP project, not the GA4 web UI. If `maine-dispensary-guide` is the GCP project that owns the GA4 property's data stream, the SA already has the right IAM role; if not, the GA4 property was created under a different GCP project. **Quickest sanity check:** in https://analytics.google.com → Admin → Property column → "Property details", look for the GCP project number — it should match the project that owns the SA (`project_id: maine-dispensary-guide` in the JSON key).
+3. After either path, re-run `node scripts/_diag-gsc-ga4-list.cjs` — it should now return the property + site. Capture results and update this item.
+4. Then check the Coverage / Pages report and update the Apr 9 numbers with real current data.
 
 **Verification script location:** `scripts/_diag-gsc-ga4-list.cjs` (45 lines, no dependencies beyond `googleapis` already in `package-lock.json`). Run with:
 ```bash
