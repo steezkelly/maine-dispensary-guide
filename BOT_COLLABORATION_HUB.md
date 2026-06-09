@@ -1790,7 +1790,7 @@ The site's identity evolves from "Maine cannabis dispensary guide" to:
 ### Status: All HIGH tasks complete
 - Orphan pages: 0
 - External links: Added to 40 guide pages (2-6 per page)
-- Analytics: GA4 `G-HJ3VDBKXH6` active, Vercel Analytics built-in
+- Analytics: GA4 `G-614GHG67ZQ` active, Vercel Analytics built-in
 - FAQ schema: Portland + Bangor guides have `<details>` + JSON-LD FAQPage
 - Color contrast: Nav hover fixed (was 2.4:1, now 4.5:1)
 - Identical links: Verified clean on find-a-dispensary, launch-checklist, directory, taxation-280e, westbrook
@@ -3842,7 +3842,7 @@ Added contextual external links to all guide pages and activated GA4 analytics.
 
 ### Analytics Setup
 - Vercel Analytics + Speed Insights: Already built-in via `@vercel/analytics/astro` (no config needed)
-- GA4: Activated with measurement ID `G-HJ3VDBKXH6` in Layout.astro
+- GA4: Activated with measurement ID `G-614GHG67ZQ` in Layout.astro
 
 ### External Links Added
 - **40 guide pages** now have **2-6 contextual external links** each

@@ -36,7 +36,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 4. **fal.ai integration** — Working, API key stored
 5. **Internal linking** — 0 orphans (Apr 12 sprint)
 6. **External links** — 0 broken links (47 unique URLs across 135 instances)
-7. **GA4 Analytics** — Active (`G-HJ3VDBKXH6`)
+7. **GA4 Analytics** — Active (`G-614GHG67ZQ`)
 8. **Purelymail DNS** — Configured (Apr 19)
 9. **Tag system** — Added to Layout
 10. **Psilocybin post** — noindex removed (council unanimous)
@@ -45,19 +45,31 @@ Items previously flagged as "pending" were audited for current accuracy:
 
 ## 🔴 ACTIVE PENDING ITEMS
 
-### 1. GSC Indexing Status — UNKNOWN (Requires User Login)
+### 1. GSC Indexing Status — UNKNOWN (Service-account gap, 2026-06-08)
 
 **Last known data (Apr 9):**
 - 42 pages marked "Discovered - currently not indexed"
 - 5 pages indexed
 - Root cause was thin content (now resolved)
 
-**Current state:** Unknown — requires Google Search Console login to verify
+**Current state (Sprint 78, 2026-06-08 diagnostic):**
+- Ran `scripts/_diag-gsc-ga4-list.cjs` with `GOOGLE_APPLICATION_CREDENTIALS=/home/steve/.hermes/secrets/gcp-mdg-reader.json`
+- Service account: `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com` — **authenticated successfully**
+- GA4 properties visible: **0** (account empty)
+- GSC sites visible: **0** (site list empty)
+- **Root cause: the service account was created but was never added as a user on the GA4 property or the GSC site.** The key is correct, the APIs are correct, the scope is correct (`analytics.readonly` + `webmasters.readonly`) — but Google refuses to return anything because the service account email has no role on the target resources.
 
 **What to do:**
-- User needs to log into GSC and check Coverage report
-- Run URL Inspection for key pages to request indexing
-- Pages with thin content have been expanded
+1. **One-time, ~5 min in Google UI:**
+   - GSC: open `https://search.google.com/search-console` → Settings → Users and permissions → Add user → `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com` with **Full** or **Restricted** permission.
+   - GA4: open the GA4 property for `G-614GHG67ZQ` → Admin → Property access management → Add user → same email, **Viewer** role.
+2. After granting, re-run `node scripts/_diag-gsc-ga4-list.cjs` — it should now return the property + site. Capture results and update this item.
+3. Then check the Coverage / Pages report and update the Apr 9 numbers with real current data.
+
+**Verification script location:** `scripts/_diag-gsc-ga4-list.cjs` (45 lines, no dependencies beyond `googleapis` already in `package-lock.json`). Run with:
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=/home/steve/.hermes/secrets/gcp-mdg-reader.json node scripts/_diag-gsc-ga4-list.cjs
+```
 
 ---
 
@@ -165,7 +177,7 @@ Items previously flagged as "pending" were audited for current accuracy:
 ## 📋 RECOMMENDED SPRINT PRIORITIES
 
 ### Immediate (This Week)
-1. **Verify GSC indexing** — User action required
+1. **Verify GSC indexing** — One-time UI grant to `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com` on GSC + GA4, then re-run `scripts/_diag-gsc-ga4-list.cjs` to capture real coverage data (see item #1 above for step-by-step)
 2. **Start domain warm-up** — Send 5/day initial emails
 3. **Begin Tier 1 outreach** — Mainebiz, Ganjapreneur
 
