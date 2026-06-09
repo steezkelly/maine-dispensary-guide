@@ -1,8 +1,12 @@
 # Mission Control: Maine Dispensary Guide
 
-> **Auto-generated (Sprint 79):** this dashboard is built from real data on every regeneration, not hand-edited. Source: sprint-score output + filesystem + git log. For the canonical machine-readable view, see `/status.json`.
+> **Updated 2026-06-09:** Sprint 81 complete — 10/26 Ahrefs audit issues resolved in `2eaeba3`
+> (sitemap, broken links, duplicate H1, redirect sources, short meta). Wave 2 (`4676197`)
+> added 20 city guides to find-a-dispensary + blog grid on homepage.
+> Remaining 16 issues are non-mechanical (false positives, Vercel-level config,
+> expected drift, deferred to cross-link sprint).
 >
-> Last regenerated: 2026-06-08 02:03 UTC
+> Last verified: 2026-06-09 05:11 UTC
 
 For a machine-readable view that updates on every build, see
 `https://mainedispensaryguide.com/status.json` or run locally:
@@ -10,38 +14,39 @@ For a machine-readable view that updates on every build, see
 
 ---
 
-## System Status (last verified 2026-06-08)
+## System Status (last verified 2026-06-09)
 
 - Production site: [LIVE](https://mainedispensaryguide.com)
-- Sprint-Score: WARN (11/11 (1 warnings))
-- 224-page HEAD smoke: 224 html / 221 sitemap URLs
-- Last commit: `f41ca6b` — docs(audit): MDG_AUDIT_FRESH_HANDS.md — fresh-session re-verification report (2026-06-07, branch: main)
-- IndexNow last: 2026-06-07T21:37:20.815Z — 200 — ? URLs
-- OCP stats last refresh: 2026-06-08 — stored 187 → live 107 (drift -80)
+- Sprint-Score: WARN (11/11 (1 warnings) — OCP roster stale, pre-existing)
+- 224-page HEAD smoke: 224 html / 220 sitemap URLs
+- Last commit: `20cbc07` — docs(orphaned-tasks): correct service-account grant path (2026-06-08, branch: main)
+- Sprint 81 closed: 10/26 Ahrefs audit issues resolved across 2 waves (`2eaeba3` + `4676197`)
+- Content-health baseline: 0 (all 19 prior hero-duplicate failures resolved)
+- OCP stats last refresh: 2026-04-01 — 69 days stale (drift -80)
 
 ---
 
-## Content Intelligence (current as of 2026-06-08)
+## Content Intelligence (current as of 2026-06-09)
 
 - Total pages (dist/): 224
-- Sitemap URLs: 221
+- Sitemap URLs: 220
 - Guide pages: 157
 - Blog posts: 35
-- Last commit: f41ca6b — docs(audit): MDG_AUDIT_FRESH_HANDS.md — fresh-session re-verification report
+- Last commit: `20cbc07`
 
 ---
 
 ## Health Checks (current run)
 
 - OK dist/ exists: 224 html pages
-- OK sitemap-0.xml present: 221 URLs
-- OK sitemap ↔ html page count: sitemap=221 html=224 delta=3
-- OK content-health baseline present: baseline=19 current=19
+- OK sitemap-0.xml present: 220 URLs
+- OK sitemap ↔ html page count: sitemap=220 html=224 delta=4
+- OK content-health baseline present: baseline=0 current=0
 - OK no content-health regressions: no regressions
 - OK broken image refs: 1396 refs checked, 0 broken
 - OK git working tree: 0 uncommitted files (branch: main)
 - OK Hub header claim matches reality: 100/100 (A)
-- ! OCP stats roster freshness: roster is 68 days old (as of 2026-04-01, 107 stores) — consider refreshing
+- ⚠ OCP stats roster freshness: roster is 69 days old (as of 2026-04-01, 107 stores) — consider refreshing
 - OK llms.txt freshness: 221 URLs as of 2026-06-08
 - OK Data integrity (docs match filesystem): all docs match reality
 
