@@ -5634,4 +5634,82 @@ The 3-pass gate is no longer "we think it works" — it's been proven to catch b
   changes, no schema/JSON-LD changes, no new dependencies. The 2 other modified files
   observed in git status (package.json, package-lock.json) were from a parallel session
   that added googleapis; I deliberately did NOT commit those.
-- **Files changed:** 3 content files. 167 insertions, 9 deletions. Pushed as \`4676197\`.
+- **Files changed:** 3 content files. 167 insertions, 9 deletions. Pushed as `4676197`.
+
+---
+
+## 📋 SPRINT: GA4 + GSC verification deep-dive (Sprint 78, 2026-06-08)
+**[HERMES] 2026-06-08 — autonomous, 1 turn**
+
+### Context
+You asked whether the GA4 and GSC hookup was finished. First-pass answer said
+"no, never done" — wrong. Deep-dive found both are fully wired live; sprint
+fixed real defects found along the way.
+
+### What I found (deep-dive, not first-pass)
+
+**Live (verified by curl on 5 pages and dist/ inspection):**
+- `gtag/js?id=G-614GHG67ZQ` loads on every page
+- `gtag('config', G-614GHG67ZQ)` fires
+- `<meta name="google-site-verification" content="kxuboyfrGyvC1jEBEVl15CyxvUMDQTy-iWUrtps2XyY">` in head
+- `<meta name="msvalidate.01" content="F79201CCB2812011C9EB1EA042399CD3">` (Bing) in head
+- Vercel Analytics + Speed Insights via `@vercel/analytics/astro`
+- CSP allows googletagmanager.com + google-analytics.com
+- All 5 actual Formspree lead forms have LeadFormTracker wired in: homepage
+  newsletter, /resources referral, /download-checklist, /newsletter,
+  /download/founders-bible. Sprint 77 audit was correct on this.
+
+**Bugs found and fixed:**
+
+1. **Stray `</script>`** in `apps/maine-cannabis/src/layouts/Layout.astro:217` —
+   leftover from the Sprint 76 `define:vars` refactor. Removed. Build now has
+   exactly one gtag loader + one config call, both for G-614GHG67ZQ.
+
+2. **3 stale `G-HJ3VDBKXH6` doc references** in
+   `ORPHANED_TASKS_REPORT.md:39` and `BOT_COLLABORATION_HUB.md:1793, 3845` —
+   all from April 2026 when GA4 was first activated. The ID was changed in
+   source on or before 2026-05-12 [fd8229b] but never propagated to those
+   three summary lines. Corrected to `G-614GHG67ZQ`. Grep confirms 0
+   remaining stale refs in the repo.
+
+3. **Service-account permission gap** — the `_diag-gsc-ga4-list.cjs` script
+   authenticates fine but sees 0 GA4 properties and 0 GSC sites because
+   `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com` was
+   never granted a role on either resource. Documented the 5-min UI fix in
+   `ORPHANED_TASKS_REPORT.md` item #1.
+
+**False positive retracted:** My first-pass audit claim that LeadFormTracker
+was missing on `/launch-checklist` and `/contact` was wrong — neither page
+has a `<form>` element. They're FAQ/checklist/info pages. Sprint closed on
+this without code change; full inventory captured in the Hub commit message.
+
+### Commits
+- `e97fb28` fix(layout): drop orphan `</script>` after GA4 block; add GSC/GA4
+  diag script
+- `8c45ecc` docs: correct 3 stale G-HJ3VDBKXH6 refs to G-614GHG67ZQ;
+  document GSC diag
+
+### Build / verify
+- `npm run build`: green, 5.66s, all pages rebuilt
+- `npx astro check`: 0 errors
+- `node scripts/_diag-gsc-ga4-list.cjs`: runs end-to-end, authenticates with
+  the service account, returns 0 properties and 0 sites (expected, until
+  the UI grant is done)
+
+### What still needs you (one-time, ~5 min)
+1. GSC → Settings → Users and permissions → Add user
+   `mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com`
+   with **Full** or **Restricted** permission.
+2. GA4 (for `G-614GHG67ZQ`) → Admin → Property access management → Add user
+   same email, **Viewer** role.
+3. Re-run `node scripts/_diag-gsc-ga4-list.cjs` to capture the real
+   property + site list.
+4. From there, can pull Pages / Coverage data into the Hub and update the
+   Apr 9 "42 not indexed, 5 indexed" numbers with current truth.
+
+### Files changed
+- `apps/maine-cannabis/src/layouts/Layout.astro` — 2 lines deleted
+- `scripts/_diag-gsc-ga4-list.cjs` — 45 lines added
+- `BOT_COLLABORATION_HUB.md` — 4 lines changed
+- `ORPHANED_TASKS_REPORT.md` — 20 lines changed
+
