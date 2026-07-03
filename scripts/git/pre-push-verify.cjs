@@ -24,6 +24,7 @@
  *   2  astro check error in changed file (slow pass failed)
  *   3  tool/env error (esbuild missing, not in a git repo, etc.)
  *   4  smoke-200: a built page returns non-200 against the live site
+ *   5  smoke-img-200: a page references an image that 404s
  *
  * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
  * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
@@ -32,11 +33,23 @@
  * Runs ~5s against the live site. Skippable with --skip-smoke-200 for
  * offline runs.
  *
+ * Pass 4 (smoke-img-200) was added on 2026-07-02. It walks every rendered
+ * HTML file in dist/, extracts every <img src>, <source srcset>,
+ * <link rel="preload" as="image" href>, and <meta property="og:image"
+ * content> reference, HEADs each same-origin URL against MDG_BASE, and
+ * fails the push if any return non-200. Catches the "shipped with a
+ * broken hero/OG image" bug class — see the 2026-07-02 /learn/ consumer
+ * hub regression (heroImage pointed at a 404 path; build green, smoke-200
+ * green, but the social-share preview was a 404 image and the browser
+ * was preloading a 404). Runs ~30s against the live site. Skippable with
+ * --skip-smoke-img-200 for offline runs.
+ *
  * Usage:
- *   node scripts/git/pre-push-verify.cjs           # checks staged + working tree
- *   node scripts/git/pre-push-verify.cjs --ref=<ref>  # checks commits <ref>..HEAD
- *   node scripts/git/pre-push-verify.cjs --fast-only  # skip slow pass
- *   node scripts/git/pre-push-verify.cjs --skip-smoke-200  # skip live-site smoke
+ *   node scripts/git/pre-push-verify.cjs                  # all passes
+ *   node scripts/git/pre-push-verify.cjs --ref=<ref>     # checks commits <ref>..HEAD
+ *   node scripts/git/pre-push-verify.cjs --fast-only     # skip slow pass + smokes
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-200     # skip live-site page smoke
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200 # skip live-site image smoke
  */
 
 const { execSync, spawnSync } = require('child_process');
@@ -260,6 +273,42 @@ function smoke200Check() {
     return { ok: false };
 }
 
+function smokeImg200Check() {
+    // Pass 4: walk every rendered HTML in dist/, extract every image
+    // reference (img src, source srcset, link rel=preload as=image,
+    // meta property=og:image), HEAD each same-origin URL against
+    // MDG_BASE, fail on any non-200. Catches the "shipped with a broken
+    // hero/OG image" bug class that smoke-200 misses (image requests
+    // are client-side, so the page renders 200 even when the image 404s).
+    // Added 2026-07-02 after the /learn/ consumer hub regression.
+    const smokeScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'smoke-img-200.cjs');
+    if (!fs.existsSync(smokeScript)) {
+        log('warn', `smoke-img-200.cjs not found at ${smokeScript} — skipping`);
+        return { ok: true };
+    }
+
+    const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL || 'https://mainedispensaryguide.com';
+    log('info', `smoke-img-200 against ${base}…`);
+
+    const res = spawnSync('node', [smokeScript], {
+        env: { ...process.env, MDG_BASE: base },
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 180_000,
+    });
+
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    // Echo the last 12 lines so the agent sees the broken refs.
+    const tail = out.split('\n').slice(-12).join('\n');
+    if (res.status === 0) {
+        log('ok', 'smoke-img-200: all image refs 200');
+        return { ok: true };
+    }
+    log('err', `smoke-img-200: at least one image ref returned non-200 — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
@@ -296,6 +345,13 @@ function main() {
         if (!smoke.ok) process.exit(4);
     } else {
         log('info', 'smoke-200 skipped (--skip-smoke-200)');
+    }
+
+    if (!args.includes('--skip-smoke-img-200')) {
+        const smokeImg = smokeImg200Check();
+        if (!smokeImg.ok) process.exit(5);
+    } else {
+        log('info', 'smoke-img-200 skipped (--skip-smoke-img-200)');
     }
 
     log('ok', 'pre-push verify: clean. Proceed with push.');
