@@ -2,13 +2,16 @@
 /**
  * check-docs-vs-code.cjs
  *
- * Lint that catches the "docs claim 6 checks but CI runs 3" class. Scans
- * the AGENTS.md, MDG_AGENT_HANDBOOK.md, PROJECT_STATE.md, and Hub for
- * any check name that's mentioned as "runs in CI" or "runs in pre-push"
- * but isn't actually wired in either the pre-push gate or the CI workflow.
+ * Lint that catches the "docs claim 6 checks but CI runs 3" class.
+ * Scans the AGENTS.md, MDG_AGENT_HANDBOOK.md, PROJECT_STATE.md,
+ * senior review, and YMYL intent docs for any check name that's
+ * mentioned as "runs in CI" or "runs in pre-push" but isn't actually
+ * wired in either the pre-push gate or the CI workflow. Historical
+ * docs (the Hub, passthroughs) are excluded because they describe
+ * what was done in past sprints, not what runs today.
  *
  * Usage:
- *   node scripts/content/check-docs-vs-code.cjs
+ *   node scripts/check/docs-vs-code.cjs
  *
  * Exit codes:
  *   0  no docs-vs-code drift
@@ -33,15 +36,17 @@ const REPO = path.resolve(__dirname, '..', '..');
 const PRE_PUSH = path.join(REPO, 'scripts/git/pre-push-verify.cjs');
 const CI = path.join(REPO, '.github/workflows/ci.yml');
 
-// Canonical list of checks that should be wired in the pre-push gate
+// Canonical list of checks that are wired in the pre-push gate
 // or CI workflow. Defined here, not in the docs — the docs are what
-// we're linting.
+// we're linting. Only includes checks with a real, active wiring;
+// the standalone test scripts (e.g. `check:content-health:test`)
+// and historical filenames (e.g. `check-content-health-regression.cjs`
+// — the file's old name, before Phase B moved it to scripts/check/)
+// are intentionally excluded.
 const CANONICAL_CHECKS = [
   { name: 'check:hrefs', label: 'hrefs / malformed-hrefs' },
-  { name: 'check-content-health-regression.cjs', label: 'content-health regression' },
   { name: 'check:content-health', label: 'content-health' },
-  { name: 'check:content-health:regression', label: 'content-health regression (npm)' },
-  { name: 'check:content-health:test', label: 'content-health test' },
+  { name: 'check:content-health:regression', label: 'content-health regression' },
   { name: 'check:build-warnings', label: 'build-warnings' },
   { name: 'check:sitemap-xml', label: 'sitemap-xml' },
   { name: 'check:sitemap-postprocess', label: 'sitemap-postprocess' },
