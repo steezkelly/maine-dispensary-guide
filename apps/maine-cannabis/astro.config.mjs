@@ -12,27 +12,6 @@ import { fileURLToPath } from 'node:url';
 
 // Pages with Layout noindex={true} should stay out of the public sitemap.
 const noindexPathPrefixes = ['/experiments', '/search', '/admin/'];
-const site = 'https://mainedispensaryguide.com';
-
-function listAstroPages(dir) {
-  const entries = [];
-  for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      entries.push(...listAstroPages(fullPath));
-    } else if (item.isFile() && item.name.endsWith('.astro')) {
-      entries.push(fullPath);
-    }
-  }
-  return entries;
-}
-
-function routeFromSrcPath(srcPath, pagesDir) {
-  const rel = path.relative(pagesDir, srcPath).replace(/\\/g, '/');
-  let route = '/' + rel.replace(/\.astro$/, '');
-  route = route.replace(/\/index$/, '') || '/';
-  return route;
-}
 
 function isNoindexSource(srcPath, route) {
   if (route === '/404') return true;
@@ -55,7 +34,7 @@ function escapeXml(value) {
 // /guides -> guides/index.astro
 // /guides/portland -> guides/portland.astro
 // / -> index.astro
-function urlToSrcPath(loc, site, pagesDir) {
+function urlToSrcPath(loc, pagesDir) {
   try {
     const u = new URL(loc);
     let pathname = u.pathname.replace(/\/$/, '') || '/';
@@ -78,6 +57,12 @@ function urlToSrcPath(loc, site, pagesDir) {
 
 // Extract lastmod + image from frontmatter of an .astro file.
 // Frontmatter in .astro is a JS module, not pure YAML — parse it with regex.
+// lastmod precedence: article.modifiedDate > article.publishDate > source-file mtime.
+// Falling back to mtime ensures even pages without an `article` prop (homepage,
+// about, contact, etc.) get a real lastmod signal in the sitemap — Google
+// uses this for crawl prioritization. Without it, 25 of 222 sitemap URLs
+// were missing lastmod, and Googlebot was forced to guess (it picks the
+// build date, not the actual content update date).
 function extractMeta(srcPath) {
   if (!srcPath || !fs.existsSync(srcPath)) return {};
   const raw = fs.readFileSync(srcPath, 'utf8');
@@ -94,9 +79,16 @@ function extractMeta(srcPath) {
     const pubMatch = articleBody.match(/publishDate\s*:\s*["']([^"']+)["']/);
     lastmod = modMatch ? modMatch[1] : (pubMatch ? pubMatch[1] : null);
   }
+  // Fall back to source file mtime. Format as YYYY-MM-DD (sitemap standard).
+  if (!lastmod) {
+    try {
+      const stat = fs.statSync(srcPath);
+      lastmod = stat.mtime.toISOString().slice(0, 10);
+    } catch {}
+  }
   if (heroImageMatch) {
     const img = heroImageMatch[1];
-    image = img.startsWith('http') ? img : site + img;
+    image = img.startsWith('http') ? img : 'https://mainedispensaryguide.com' + img;
   }
   return { lastmod, image };
 }
@@ -125,7 +117,7 @@ export default defineConfig({
     {
       name: 'sitemap-postprocess',
       hooks: {
-        'astro:build:done': async ({ dir, pages }) => {
+        'astro:build:done': async ({ dir }) => {
           const sitemapPath = path.join(fileURLToPath(dir), 'sitemap-0.xml');
           if (!fs.existsSync(sitemapPath)) return;
 
@@ -146,7 +138,7 @@ export default defineConfig({
               }
               // Also exclude pages whose source has `noindex={true}` (e.g. /download/roadmap)
               // The prefix check above misses these because they live outside the prefixed dirs.
-              const srcPath = urlToSrcPath(loc, 'https://mainedispensaryguide.com', pagesDir);
+              const srcPath = urlToSrcPath(loc, pagesDir);
               if (srcPath && isNoindexSource(srcPath, pathname)) {
                 continue;
               }

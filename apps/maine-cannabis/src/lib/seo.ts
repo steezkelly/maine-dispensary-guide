@@ -36,7 +36,27 @@ export function buildFullTitle(title: string, siteName: string): string {
   const brandedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
   if (brandedTitle.length <= MAX_SEO_TITLE_LENGTH) return brandedTitle;
   if (title.length > MAX_SEO_TITLE_LENGTH) {
-    return title.slice(0, MAX_SEO_TITLE_LENGTH - 1).replace(/\s+\S*$/, '');
+    // Truncate to one char under the limit, then strip the trailing partial
+    // word AND any trailing punctuation/em-dash that would otherwise leave
+    // the title mid-sentence (e.g. "Maine Home Grow Guide 2026 — Plant Limits,"
+    // would render truncated to "...Plant Limits," — visibly broken).
+    // Sprint 80 fix: also strip trailing ",", ";", ":", "—", "-" and the
+    // common English connector words that would otherwise leave a sentence
+    // visibly incomplete (and, or, the, for, to, of, a, an, in, with, on).
+    const CONNECTORS = /^(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from|is|are|was|were|be|been)$/i;
+    let result = title.slice(0, MAX_SEO_TITLE_LENGTH - 1).replace(/\s+\S*$/, '');
+    // After dropping the partial word, the result may end with a connector.
+    // Strip it (and any preceding whitespace) up to 3 times to catch
+    // chains like "...for the" → "...for the" → "...for" → "...".
+    for (let i = 0; i < 3; i++) {
+      const trailing = result.match(/(\s+\S+)$/);
+      if (trailing && CONNECTORS.test(trailing[1].trim())) {
+        result = result.slice(0, result.length - trailing[1].length);
+      } else {
+        break;
+      }
+    }
+    return result.replace(/[,;:\u2014\-–\s]+$/, '');
   }
   return title;
 }

@@ -155,7 +155,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={seoDescription} />
-    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:type" content={isHub || !article ? "website" : "article"} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:url" content={socialImage} />
