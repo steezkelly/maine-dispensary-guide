@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
-const appRoot = path.resolve(__dirname, '../..');
+const appRoot = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis');
 const guidesDir = path.join(appRoot, 'src/pages/guides');
 const directoryPage = path.join(appRoot, 'src/pages/find-a-dispensary.astro');
 

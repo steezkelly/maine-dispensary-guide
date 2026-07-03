@@ -6,7 +6,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 
-const script = path.resolve(__dirname, 'check-content-health.cjs');
+const script = path.resolve(__dirname, 'content-health.cjs');
 
 function makePages(files) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'content-health-'));

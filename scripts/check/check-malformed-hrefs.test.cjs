@@ -6,7 +6,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 
-const script = path.resolve(__dirname, 'check-malformed-hrefs.cjs');
+const script = path.resolve(__dirname, 'malformed-hrefs.cjs');
 
 function runCheck(root) {
   return spawnSync(process.execPath, [script], {
