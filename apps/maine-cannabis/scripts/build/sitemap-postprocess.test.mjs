@@ -24,6 +24,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   NOINDEX_PATH_PREFIXES,
   buildUrlEntry,
@@ -33,6 +34,11 @@ import {
   postprocessSitemap,
   urlToSrcPath,
 } from './sitemap-postprocess.mjs';
+
+// ES modules don't have __dirname; derive it from import.meta.url so the
+// integration tests can resolve dist/sitemap-0.xml relative to the repo
+// root regardless of cwd.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let pass = 0;
 let fail = 0;
@@ -122,14 +128,14 @@ test('urlToSrcPath: /maps to index.astro', () => {
   }
 });
 
-test('urlToSrcPath: /guides/maine-cannabis-license maps to direct file', () => {
+test('urlToSrcPath: /guides/maine-cannabis-caregiver-guide maps to direct file', () => {
   const pagesDir = path.resolve(process.cwd(), 'src/pages');
   const result = urlToSrcPath(
-    'https://example.com/guides/maine-cannabis-license',
+    'https://example.com/guides/maine-cannabis-caregiver-guide',
     pagesDir,
   );
   if (result !== null) {
-    assert.equal(result, path.join(pagesDir, 'guides/maine-cannabis-license.astro'));
+    assert.equal(result, path.join(pagesDir, 'guides/maine-cannabis-caregiver-guide.astro'));
   }
 });
 
@@ -312,7 +318,12 @@ test('postprocessSitemapFile: real dist/sitemap-0.xml has 222 URLs, all with <la
   // This is the canary. If this fails, the dead-code cascade has
   // struck again — the sitemap is silently truncated to a small
   // number of URLs.
-  const sitemapPath = path.resolve(process.cwd(), 'dist/sitemap-0.xml');
+  // The build outputs dist/ at the repo root, not the workspace. So we
+  // resolve from __dirname (apps/maine-cannabis/scripts/build) up two
+  // levels to the repo root. This makes the test cwd-independent —
+  // it works whether invoked from the repo root via `node` or from
+  // the workspace via `npm --workspace run`.
+  const sitemapPath = path.resolve(__dirname, '..', '..', '..', 'dist', 'sitemap-0.xml');
   if (!fs.existsSync(sitemapPath)) {
     console.log('      (skipped: dist/sitemap-0.xml not found — run `npm run build` first)');
     return;
@@ -371,7 +382,7 @@ test('postprocessSitemapFile: real sitemap has <image:image> for pages with hero
   // The home page should have an image entry. The /learn page was
   // specifically fixed in 2026-07-02 to use maine-cannabis-granite-hero
   // and should also have an image. We sample 3 known hero pages.
-  const sitemapPath = path.resolve(process.cwd(), 'dist/sitemap-0.xml');
+  const sitemapPath = path.resolve(__dirname, '..', '..', '..', 'dist', 'sitemap-0.xml');
   if (!fs.existsSync(sitemapPath)) return;
   const content = fs.readFileSync(sitemapPath, 'utf8');
   for (const url of [
