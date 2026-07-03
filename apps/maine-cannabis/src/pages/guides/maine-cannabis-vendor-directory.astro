@@ -28,6 +28,74 @@ const vendorFaqs = [
 ];
 const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I find cannabis-friendly vendors in Maine?","acceptedAnswer":{"@type":"Answer","text":"This vendor directory provides verified contacts for attorneys, CPAs, security firms, and consultants with Maine cannabis experience. You can also ask other operators for recommendations or contact the Maine Cannabis Industry Association for referrals."}},{"@type":"Question","name":"Why do I need a cannabis-specialized CPA?","acceptedAnswer":{"@type":"Answer","text":"Standard accountants may not understand IRC Section 280E, which prohibits cannabis businesses from deducting normal business expenses at the federal level. A cannabis-specialized CPA knows how to maximize your state deductions and navigate the unique tax situation of cannabis operators."}},{"@type":"Question","name":"What vendors are essential for opening a Maine dispensary?","acceptedAnswer":{"@type":"Answer","text":"Essential vendors include: a cannabis-experienced attorney for licensing, a CPA familiar with 280E, a security company that understands OCP camera requirements, a Metrc-integrated POS system, and a licensed testing lab for product compliance."}}]});
 
+// Sprint 81 SEO cleanup: ItemList schema for named vendors. Improves the
+// chance Google surfaces the vendor directory in product/service queries
+// from operators searching for vetted Maine cannabis vendors.
+const vendorListJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Maine Cannabis Vendors — Directory of Named Service Providers",
+  "description": "Verified Maine cannabis industry vendors named on Maine Dispensary Guide, including licensing attorneys, cannabis-specialized CPAs, Metrc-integrated POS providers, and security vendors.",
+  "itemListOrder": "https://schema.org/ItemListUnordered",
+  "numberOfItems": 5,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "LegalService",
+        "name": "Preti, Flaherty, Beliveau and Pachios (Cannabis Practice Group)",
+        "description": "Maine cannabis licensing and regulatory counsel. Active cannabis practice group covering OCP applications, municipal authorization, and license condition negotiations.",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": "Flowhub",
+        "description": "Cannabis point-of-sale and inventory platform. Metrc-integrated for Maine cannabis operators.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": "Cova",
+        "description": "Cannabis point-of-sale with strong inventory management features. Metrc-integrated for Maine compliance.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": "Dutchie",
+        "description": "Cannabis e-commerce and POS platform with online ordering for pickup and delivery.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": "MJ Platform",
+        "description": "Cannabis ERP with multi-location support, often used by vertically integrated operators expanding across Maine.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web"
+      }
+    }
+  ]
+});
+
 ---
 <Layout title="Maine Cannabis Vendor Directory" description="Verified Maine cannabis vendor directory. Connect with licensed lawyers, CPAs, security firms, and consultants for your dispensary project." heroImage="/images/heroes/maine-cannabis-vendor-directory.jpg" article={article} topics={topics}>
 
@@ -147,6 +215,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
 </style>
 <article>
+  <script type="application/ld+json" set:html={vendorListJsonLd} />
   <div class="article-header">
     <h1>Maine Cannabis Vendor Directory</h1>
     <p class="subtitle">Who you need on your team to open a Maine dispensary</p>
@@ -323,8 +392,8 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <p><em>This directory is informational. Vendor listings change. Verify current licensing and references before hiring.</em></p>
   </section>
 
+  <Faq faqs={vendorFaqs} />
+
 </article>
 
 </Layout>
-
-<Faq faqs={vendorFaqs} />
