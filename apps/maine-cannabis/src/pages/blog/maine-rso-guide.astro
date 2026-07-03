@@ -11,7 +11,15 @@ const article = {
   authorTitle: "Cultivation & Horticulture Reviewer",
   publishDate: "2026-06-05",
   modifiedDate: "2026-06-05",
-  section: "Medical & Wellness"
+  section: "Medical & Wellness",
+  // Sprint 83 — propagate reviewer to JSON-LD Article graph so Google's
+  // "double E-E-A-T" pattern (author + reviewer) is in structured data,
+  // not just visible in the byline.
+  reviewer: complianceReviewer ? {
+    name: complianceReviewer.name,
+    jobTitle: complianceReviewer.role,
+    id: complianceReviewer.id,
+  } : undefined,
 };
 const topics = ["rso", "medical", "concentrates"];
 

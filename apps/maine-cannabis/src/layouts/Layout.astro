@@ -36,7 +36,7 @@ import {
   getHeroImageDimensions,
   type Breadcrumb,
 } from '../lib/seo';
-import { buildJsonLdGraph } from '../lib/json-ld';
+import { buildJsonLdGraph, type AuthorMeta } from '../lib/json-ld';
 
 interface ArticleData {
   author?: string;
@@ -45,6 +45,13 @@ interface ArticleData {
   publishDate?: string;
   modifiedDate?: string;
   section?: string;
+  /**
+   * Optional reviewer/medical reviewer. When provided, emits a second
+   * `@type:Person` node in the JSON-LD Article graph (attached via
+   * `reviewedBy`) — the "double E-E-A-T" pattern Google prefers for YMYL
+   * pages per the 2024-2026 Quality Rater Guidelines.
+   */
+  reviewer?: AuthorMeta;
 }
 
 interface Props {
@@ -92,6 +99,8 @@ const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadc
 
 // JSON-LD — single @graph with Organization + WebSite (+ Article if content).
 // Sprint 73b unified 3 separate <script> tags into one graph.
+// Sprint 83: optionally attaches a reviewer Person to the Article via
+// the `reviewedBy` property when the page frontmatter declares one.
 const jsonLdGraph = noindex ? null : buildJsonLdGraph(
   {
     siteName: siteConfig.siteName,
@@ -111,6 +120,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
         heroImage,
         topics,
         pageUrl: Astro.url.href,
+        reviewer: article.reviewer,
       }
     : undefined,
 );

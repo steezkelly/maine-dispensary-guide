@@ -3,13 +3,22 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 import authors from '../../data/authors.json';
+const complianceReviewer = authors.find(a => a.id === 'margaret-finch');
 const article = {
   author: "Thalia Greene",
   authorId: "thalia-greene",
   authorTitle: "Cultivation & Horticulture Reviewer",
   publishDate: "2026-06-06",
   modifiedDate: "2026-06-06",
-  section: "Cannabis Science"
+  section: "Cannabis Science",
+  // Sprint 83 — propagate reviewer to JSON-LD Article graph so Google's
+  // "double E-E-A-T" pattern (author + reviewer) is in structured data,
+  // not just visible in the byline.
+  reviewer: complianceReviewer ? {
+    name: complianceReviewer.name,
+    jobTitle: complianceReviewer.role,
+    id: complianceReviewer.id,
+  } : undefined,
 };
 const topics = ["terpenes", "cannabis-science", "consumer-guide"];
 
