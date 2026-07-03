@@ -244,10 +244,10 @@ function slowAstroCheck(files) {
 
 function smoke200Check() {
     // Pass 3: hit every published page on the live site, fail on any non-200.
-    // Wraps apps/maine-cannabis/scripts/build/smoke-200.cjs (Sprint 77
+    // Wraps scripts/check/smoke-200.cjs (Sprint 77
     // observability). Catches the "build green but specific page 404s" mode.
     // Sprint 78: wire-up.
-    const smokeScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'smoke-200.cjs');
+    const smokeScript = path.join(REPO_ROOT, 'scripts', 'check', 'smoke-200.cjs');
     if (!fs.existsSync(smokeScript)) {
         log('warn', `smoke-200.cjs not found at ${smokeScript} — skipping`);
         return { ok: true };
@@ -283,7 +283,7 @@ function smokeImg200Check() {
     // hero/OG image" bug class that smoke-200 misses (image requests
     // are client-side, so the page renders 200 even when the image 404s).
     // Added 2026-07-02 after the /learn/ consumer hub regression.
-    const smokeScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'smoke-img-200.cjs');
+    const smokeScript = path.join(REPO_ROOT, 'scripts', 'check', 'smoke-img-200.cjs');
     if (!fs.existsSync(smokeScript)) {
         log('warn', `smoke-img-200.cjs not found at ${smokeScript} — skipping`);
         return { ok: true };

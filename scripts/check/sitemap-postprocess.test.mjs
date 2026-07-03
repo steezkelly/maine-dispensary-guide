@@ -1,6 +1,6 @@
 // scripts/build/sitemap-postprocess.test.mjs
 //
-// Unit + integration tests for scripts/build/sitemap-postprocess.mjs.
+// Unit + integration tests for scripts/check/sitemap-postprocess.mjs.
 //
 // The integration test reads the real dist/sitemap-0.xml that the build
 // pipeline produces and asserts structural invariants. This catches the
@@ -318,12 +318,11 @@ test('postprocessSitemapFile: real dist/sitemap-0.xml has 222 URLs, all with <la
   // This is the canary. If this fails, the dead-code cascade has
   // struck again — the sitemap is silently truncated to a small
   // number of URLs.
-  // The build outputs dist/ at the repo root, not the workspace. So we
-  // resolve from __dirname (apps/maine-cannabis/scripts/build) up two
-  // levels to the repo root. This makes the test cwd-independent —
-  // it works whether invoked from the repo root via `node` or from
-  // the workspace via `npm --workspace run`.
-  const sitemapPath = path.resolve(__dirname, '..', '..', '..', 'dist', 'sitemap-0.xml');
+  // Resolve from __dirname (scripts/check) up two levels to the repo
+  // root, where the build writes dist/. This makes the test cwd-
+  // independent — it works whether invoked from the repo root via
+  // `node` or from the workspace via `npm --workspace run`.
+  const sitemapPath = path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml');
   if (!fs.existsSync(sitemapPath)) {
     console.log('      (skipped: dist/sitemap-0.xml not found — run `npm run build` first)');
     return;
@@ -382,7 +381,7 @@ test('postprocessSitemapFile: real sitemap has <image:image> for pages with hero
   // The home page should have an image entry. The /learn page was
   // specifically fixed in 2026-07-02 to use maine-cannabis-granite-hero
   // and should also have an image. We sample 3 known hero pages.
-  const sitemapPath = path.resolve(__dirname, '..', '..', '..', 'dist', 'sitemap-0.xml');
+  const sitemapPath = path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml');
   if (!fs.existsSync(sitemapPath)) return;
   const content = fs.readFileSync(sitemapPath, 'utf8');
   for (const url of [

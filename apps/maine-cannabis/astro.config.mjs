@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import {
   NOINDEX_PATH_PREFIXES,
   postprocessSitemapFile,
-} from './scripts/build/sitemap-postprocess.mjs';
+} from '../../scripts/check/sitemap-postprocess.mjs';
 
 // Pages with Layout noindex={true} should stay out of the public sitemap.
 const noindexPathPrefixes = NOINDEX_PATH_PREFIXES;

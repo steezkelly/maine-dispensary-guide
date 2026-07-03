@@ -13,12 +13,12 @@
  * every PR. Regression-detecting catches NEW failures without blocking
  * the existing backlog.
  *
- * Baseline file: apps/maine-cannabis/scripts/content/.content-health-baseline.json
+ * Baseline file: scripts/check/.content-health-baseline.json
  * Format: { "checkName": failureCount, ... }
  *
  * Usage:
- *   node ./scripts/content/check-content-health-regression.cjs
- *   CI usage: `node ./scripts/content/check-content-health-regression.cjs`
+ *   node ./scripts/check/content-health-regression.cjs
+ *   CI usage: `node ./scripts/check/content-health-regression.cjs`
  *     (non-zero exit on regression; zero exit on improvement or no change)
  */
 
