@@ -557,11 +557,202 @@ function checkSitemapXmlEntities() {
   const xml = fs.readFileSync(SITEMAP, 'utf8');
   const invalid = [...xml.matchAll(/&(?![a-zA-Z0-9#]+;)/g)];
   if (invalid.length === 0) return [];
-
   const positions = invalid.slice(0, 5).map(m => m.index);
   const sample = positions.length ? ` (sample positions: ${positions.join(', ')})` : '';
   const more = invalid.length > 5 ? ` (+${invalid.length - 5} more)` : '';
   return [`sitemap-0.xml contains ${invalid.length} unescaped '&' entity violation${invalid.length > 1 ? 's' : ''}${sample}${more}`];
+}
+
+// ─── Check 19: meta description uniqueness ──────────────────────────────────
+//
+// Catches duplicate meta descriptions across pages. Each page should have
+// a unique description — duplicates dilute the page's value in search
+// snippets and signal low content diversity to Google. The 2026-07-02
+// senior SEO sweep confirmed 0 duplicates; this check prevents regressions.
+function checkMetaDescriptionUniqueness() {
+  const results = [];
+  if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
+  const files = htmlFiles(DIST);
+  const seen = new Map(); // desc -> first file
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    // Use only double-quote form to avoid apostrophe collisions in content
+    // (e.g. "Maine's best..." would otherwise match only "Maine" because
+    // the regex character class [^"']+ stops at the apostrophe).
+    const m = text.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
+    if (!m) continue;
+    const desc = m[1].trim();
+    if (!desc) continue;
+    if (seen.has(desc)) {
+      const rel1 = '/' + path.relative(DIST, seen.get(desc)).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+      const rel2 = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+      if (results.length < 5) results.push(`duplicate description on ${rel2} (also on ${rel1})`);
+    } else {
+      seen.set(desc, file);
+    }
+  }
+  return results;
+}
+
+// ─── Check 18: sitemap lastmod coverage ────────────────────────────────────
+//
+// Catches the "sitemap URL emitted without a <lastmod> child" bug. Google's
+// crawl prioritization uses <lastmod>; missing it means Googlebot guesses
+// (it picks the build date, not the actual content update). The 2026-07-02
+// senior SEO sweep found 25 of 222 URLs missing lastmod (every page
+// without an `article={...}` frontmatter prop). The fix in astro.config.mjs
+// falls back to source-file mtime when no article-modifiedDate exists;
+// this check prevents regressions.
+function checkSitemapLastmod() {
+  const results = [];
+  if (!fs.existsSync(SITEMAP)) return ['sitemap-0.xml not found — run build first'];
+  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const matches = [...xml.matchAll(/<loc>([^<]+)<\/loc>(<lastmod>([^<]+)<\/lastmod>)?/g)];
+  let missing = 0;
+  for (const m of matches) {
+    const url = m[1];
+    if (!m[2]) { missing++; if (results.length < 5) results.push(`no <lastmod>: ${url}`); }
+  }
+  if (missing > 0 && results.length === 0) results.push(`${missing} URLs missing <lastmod>`);
+  return results;
+}
+
+// ─── Check 17: orphan pages (no inbound internal link) ─────────────────────
+//
+// Catches public, indexed pages that have zero inbound links from any
+// other page on the site. Such pages don't get PageRank flow, are crawled
+// less efficiently by Googlebot, and don't surface in user navigation.
+//
+// The 2026-07-02 senior SEO sweep found 30+ real orphans (mostly smaller
+// city guides and a handful of blog posts). The full link-building fix
+// is a content-sprint decision (requires Hub sign-off — touching the
+// homepage and 30+ guide pages). This check makes the problem
+// non-regressing: future PRs that add a new page without linking to it
+// from at least one other page will be caught.
+function checkOrphanPages() {
+  const results = [];
+  // Resolve PAGES_DIR relative to this script's location so the check
+  // works from any cwd, matching the rest of the checks in this file.
+  const PAGES_DIR = path.resolve(__dirname, '../../src/pages');
+  if (!fs.existsSync(PAGES_DIR)) return ['pages/ not found'];
+  // Routes that are intentionally noindex and don't need inbound links.
+  const NOINDEX_PATHS = new Set([
+    '/404', '/admin', '/experiments', '/search', '/download/roadmap',
+  ]);
+  function isNoindex(file) {
+    try {
+      return /noindex\s*=\s*\{\s*true\s*\}/.test(fs.readFileSync(file, 'utf8'));
+    } catch { return false; }
+  }
+  function listAstroFilesRecursive(dir, out = []) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name === 'admin' || entry.name === 'api' || entry.name === 'node_modules') continue;
+        listAstroFilesRecursive(full, out);
+      } else if (entry.isFile() && entry.name.endsWith('.astro')) {
+        out.push(full);
+      }
+    }
+    return out;
+  }
+  function findInboundLink(needle, excludeFile) {
+    // Match both `href="/path"`, `href='/path'`, and `href: "/path"` forms.
+    // The needle is the route (e.g. "guides/lebanon-dispensary-guide").
+    const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
+    const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
+    const all = listAstroFilesRecursive(path.resolve(__dirname, '../../src'));
+    for (const f of all) {
+      if (f === excludeFile) continue;
+      let text;
+      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
+      if (re1.test(text) || re2.test(text)) return f;
+    }
+    return '';
+  }
+  const files = listAstroFilesRecursive(PAGES_DIR);
+  for (const f of files) {
+    if (isNoindex(f)) continue;
+    const relRaw = path.relative(PAGES_DIR, f).replace(/\\/g, '/').replace(/\.astro$/, '');
+    // Map `path/to/index` → `path/to` (Astro's index.astro = parent route).
+    const rel = '/' + (relRaw === 'index' ? '' : relRaw.replace(/\/index$/, ''));
+    if (rel === '/') continue;
+    const normalized = rel.replace(/\/$/, '') || '/';
+    if (NOINDEX_PATHS.has(normalized)) continue;
+    const needle = rel.replace(/^\//, '');
+    const found = findInboundLink(needle, f);
+    if (!found) {
+      results.push(`${normalized}: no inbound link from any other page`);
+    }
+  }
+  return results;
+}
+
+// ─── Check 16: og:type matches page role ───────────────────────────────────
+//
+// Catches hub pages (homepage, /about, /all-guides, /blog, /guides, /learn)
+// that emit og:type=article instead of og:type=website. Article type is
+// only correct for single-content pages; hub/index pages should be
+// `website`. The 2026-07-02 QA sweep found 4 hub pages emitting
+// `og:type=article`. Hub pages are identified by Layout.astro's
+// isHub={true} prop or by being one of the canonical hub routes below.
+function checkOgTypeMatchesRole() {
+  const results = [];
+  if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
+  // Routes that are always hub pages regardless of isHub prop.
+  const HUB_ROUTES = new Set([
+    '/', '/about', '/blog', '/all-guides', '/guides', '/learn', '/glossary',
+    '/find-a-dispensary', '/resources', '/directory', '/blog/index',
+  ]);
+  const files = htmlFiles(DIST);
+  for (const file of files) {
+    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+    if (!HUB_ROUTES.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    const m = text.match(/<meta\s+property=["']og:type["']\s+content=["']([^"']+)["']/i);
+    if (m && m[1] !== 'website') {
+      results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
+    }
+  }
+  return results;
+}
+
+// ─── Check 15: title not truncated mid-sentence ────────────────────────────
+//
+// Catches the "60-char guard cut a title at a word/punctuation boundary and
+// left it visibly broken" class — the Sprint 74 audit pass 2 found 4 such
+// cases in the new B2B guides, but the same audit didn't run across the 47
+// existing tech guides, 35 blog posts, and 109 city guides. A 2026-07-02 QA
+// sweep found 13 more (see docs/SENIOR_REVIEW_2026-07-02.md). The fix lives
+// in lib/seo.ts buildFullTitle; this check makes the fix non-regressing.
+function checkTitleTruncation() {
+  const results = [];
+  if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
+  // Pages whose titles legitimately end with digits, abbreviations, or
+  // short names that would otherwise look "truncated" to the regex.
+  // These pages are reviewed and excluded manually.
+  const ALLOWLIST = new Set([
+    '/404', // 404 page
+  ]);
+  // Trailing punctuation/em-dash that should never appear in a complete title.
+  const TRAILING_PUNCT = /[,;:\u2014\-–]$/;
+  // Trailing connector words that would leave a sentence visibly incomplete.
+  const TRAILING_CONNECTOR = /\s+(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from)$/i;
+  const files = htmlFiles(DIST);
+  for (const file of files) {
+    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+    if (ALLOWLIST.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
+    if (!title) continue;
+    if (TRAILING_PUNCT.test(title)) {
+      results.push(`${rel}: title ends with trailing punctuation → ${title}`);
+    } else if (TRAILING_CONNECTOR.test(title)) {
+      results.push(`${rel}: title ends with connector word → ${title}`);
+    }
+  }
+  return results;
 }
 
 // ─── Check 14: duplicate hero image content (MD5 sweep) ─────────────────────
@@ -669,6 +860,11 @@ const CHECKS = [
   { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
   { name: 'duplicate hero image content', fn: checkDuplicateHeroImages },
   { name: 'duplicate FAQPage JSON-LD', fn: checkDuplicateFaqPageSchema },
+  { name: 'title not truncated mid-sentence', fn: checkTitleTruncation },
+  { name: 'og:type matches page role', fn: checkOgTypeMatchesRole },
+  { name: 'orphan pages (no inbound link)', fn: checkOrphanPages },
+  { name: 'sitemap lastmod coverage', fn: checkSitemapLastmod },
+  { name: 'meta description uniqueness', fn: checkMetaDescriptionUniqueness },
 ];
 
 let totalFailures = 0;
