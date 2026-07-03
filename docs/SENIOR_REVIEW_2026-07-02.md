@@ -157,9 +157,10 @@ unmaintainable.
   `RelatedArticles.astro`.
 
 This is the same refactor the README alludes to in
-`TECHNOLOGY_REPORT.md` ("Headless CMS Integration" — though
-that's overkill for the current scale; a JSON-backed in-repo
-system is the right first step before any CMS).
+`docs/archive/2026-07-stale/TECHNOLOGY_REPORT.md`
+("Headless CMS Integration" — though that's overkill for the
+current scale; a JSON-backed in-repo system is the right first
+step before any CMS).
 
 ### Recommendations
 - **P1** Build a `data/guides.json` (or one-file-per-guide in

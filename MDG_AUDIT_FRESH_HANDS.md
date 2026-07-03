@@ -1,7 +1,7 @@
 # MDG Audit — Fresh Hands (2026-06-07)
 
 **Author:** Evening-session independent verification pass
-**Scope:** Battle 2 of EVENING_BATTLE_PLAN.md — independent re-verification of Sprint 76-80 claims
+**Scope:** Battle 2 of `docs/archive/2026-07-stale/EVENING_BATTLE_PLAN.md` — independent re-verification of Sprint 76-80 claims
 **Status:** ⚠️ **1 of 5 claims FAILED independent verification** (with one material error of my own — see Battle 2A correction)
 
 **Important correction (2026-06-08, mid-session):** My first pass of this report claimed Battle 2A failed because the `LeadFormTracker.astro` component "doesn't exist." This was wrong. The component DOES exist — it was added in Sprint 77, after I initially read the file system. I missed it on my first `ls` and should have cross-checked against the Hub before declaring something missing. The corrected Battle 2A finding is below. Apologies for the false negative.

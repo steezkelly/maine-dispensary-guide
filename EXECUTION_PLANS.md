@@ -55,7 +55,7 @@ Purelymail DNS is configured but no emails have been sent. Domain needs warm-up 
 
 ## PLAN 2: External Partnerships Outreach — Tier 1 Media
 
-**File:** `link-outreach.md` (full strategy), `OUTREACH_CAMPAIGN.md` (templates)
+**File:** `link-outreach.md` (full strategy), `docs/archive/2026-07-stale/OUTREACH_CAMPAIGN.md` (templates)
 **Agent Type:** fixer (bounded, outreach prep)
 
 ### Context

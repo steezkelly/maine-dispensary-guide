@@ -97,7 +97,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/home/steve/.hermes/secrets/gcp-mdg-reader.json n
 
 **What exists:**
 - Strategy document: `link-outreach.md` (complete)
-- Outreach templates: `OUTREACH_CAMPAIGN.md` (ready to use)
+- Outreach templates: `docs/archive/2026-07-stale/OUTREACH_CAMPAIGN.md` (ready to use)
 - Tracking table in `link-outreach.md` — all empty
 
 **What's missing:**
@@ -157,7 +157,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/home/steve/.hermes/secrets/gcp-mdg-reader.json n
 **What to do:**
 - Start using @mainedispensaryguide.com for all outreach
 - Set up email signature with domain
-- Configure email templates from `OUTREACH_CAMPAIGN.md`
+- Configure email templates from `docs/archive/2026-07-stale/OUTREACH_CAMPAIGN.md`
 
 ---
 
@@ -197,7 +197,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/home/steve/.hermes/secrets/gcp-mdg-reader.json n
 | File | Purpose |
 |------|---------|
 | `link-outreach.md` | External link/partnership strategy + tracking |
-| `OUTREACH_CAMPAIGN.md` | Email templates for outreach |
+| `docs/archive/2026-07-stale/OUTREACH_CAMPAIGN.md` | Email templates for outreach |
 | `docs/archive/2026-04-roadmap-drafts/ROADMAP_FOUNDERS_BIBLE.md` | PDF magnet source content |
 | `setup_purelymail_dns.ps1` | Email domain configuration |
 | `BOT_COLLABORATION_HUB.md` | Full sprint history |

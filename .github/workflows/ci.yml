@@ -56,11 +56,32 @@ jobs:
 
       - name: Check content health regression (no new failures vs baseline)
         run: |
-          node apps/maine-cannabis/scripts/content/check-content-health-regression.cjs
+          npm --workspace @network/maine-cannabis run check:content-health:regression
 
       - name: Check build warnings (post-build CSS/HTML warnings)
         run: |
           npm --workspace @network/maine-cannabis run check:build-warnings
+
+      # Sprint 80 wiring: the sitemap postprocessor unit + integration test.
+      # Catches the "dead-code cascade" failure mode (e.g. a const removal
+      # collapsing the sitemap from 222 URLs to 7) and the "noindex check
+      # broke" collapse (force-everything-noindex drops to 0 URLs). Both
+      # silent in build/CI otherwise — the build goes green and the live
+      # site is broken until a human notices. See
+      # apps/maine-cannabis/scripts/build/sitemap-postprocess.test.mjs.
+      - name: Check sitemap postprocessor (unit + integration)
+        run: |
+          npm --workspace @network/maine-cannabis run check:sitemap-postprocess
+
+      # Sprint 80 wiring: catch the "docs claim 6 checks but CI runs 3"
+      # class. The senior review flagged that the docs claimed 6 checks
+      # but CI was only running 3 of them — drift went uncaught for at
+      # least one sprint. This lint scans AGENTS.md, MDG_AGENT_HANDBOOK.md,
+      # PROJECT_STATE.md, and the senior review for "check:X runs" claims
+      # and asserts each X is wired in CI or the pre-push gate.
+      - name: Check docs-vs-code (no docs/code drift in verify surface)
+        run: |
+          npm --workspace @network/maine-cannabis run check:docs-vs-code
 
   deploy-preview:
     name: Deploy Preview

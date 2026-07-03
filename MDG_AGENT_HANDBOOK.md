@@ -114,7 +114,7 @@ incident.
 2. `npm run build` (turbo monorepo build)
 3. `check:hrefs` (cheap malformed-href pre-build)
 4. `check:build-warnings` (post-build CSS/HTML warning scan)
-5. `check:content-health-regression` (14 invariants vs baseline)
+5. `check:content-health:regression` (14 invariants vs baseline)
 6. `check:sitemap-xml` (sitemap XML entity/format validation)
 7. Smoke tests (Playwright, if configured)
 
