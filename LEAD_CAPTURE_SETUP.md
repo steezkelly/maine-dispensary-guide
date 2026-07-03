@@ -1,15 +1,16 @@
 # Lead Capture Setup Guide
 
-## 📋 STATUS: MONETIZATION PLANNED — Not Yet Implemented
+## 📋 STATUS: LIVE — 5 Forms Instrumented with GA4 (Updated 2026-07-02)
 
-**Date:** April 5, 2026  
-**User Decision:** Wants to implement lead capture monetization but not ready to commit to full framework yet.
+**Original date:** April 5, 2026 (planned, not yet implemented)
+**Last verified:** 2026-07-02 (5 lead capture forms live and instrumented with GA4 lead_capture events per Sprint 77)
 
-**Forms are READY** (enhanced with stage/interest fields) but backend setup is on hold.
-
-**Stack Decision Pending:**
-- Formspree + Zapier + Google Sheets (free tier possible)
-- OR wait until revenue justifies paid tools
+The lead capture stack is now live. All 5 forms use the Formspree endpoint
+`https://formspree.io/f/xvgzlowz` and emit `gtag('event', 'lead_capture', { form_name, page_path, stage, interest, service })`
+when submitted. The forms route to the Formspree backend (Steve handles delivery
+via Formspree's notification system); the GA4 dashboard shows conversion
+volume per form once 7+ days of traffic accumulate. See `BOT_COLLABORATION_HUB.md`
+Sprint 77 entry for the full instrument list and verification details.
 
 ---
 

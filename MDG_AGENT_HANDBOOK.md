@@ -16,9 +16,32 @@ business resources. Lives at https://mainedispensaryguide.com.
   `packages/` has shared layouts/ui/design-system; `scripts/`
   is workspace-wide tooling. All paths in the Hub are
   relative-to-`apps/maine-cannabis/` even when they say `src/...`.
-- **Stack**: Astro 6.0, Tailwind via shared design tokens, Vercel
-  adapter, Formspree for lead capture, GA4 + Vercel Analytics,
-  ImageKit hero pipeline, Playwright for browser automation.
+- **Stack**: Astro 6.0, CSS variables (no Tailwind, no design-token framework —
+  the visual system is "Heritage Authority" with Fraunces/Jakarta typography,
+  warm bone #F2F2E2 / deep spruce #061A1B), Vercel adapter (static output),
+  Formspree for lead capture (ID `xvgzlowz`), GA4 (`G-614GHG67ZQ`) + Vercel
+  Analytics + Speed Insights, local hero images in
+  `apps/maine-cannabis/public/images/heroes/` (3-format variants per asset:
+  .jpg + .webp + .avif + -640w mobile variants), Playwright for browser
+  automation (CI-only, not installed on local Linux-mint per
+  `HANDOVER_ADDENDUM_LINUX_MINT.md`).
+- **Verify loop**: 4-pass pre-push gate
+  (`scripts/git/pre-push-verify.cjs`):
+  1. esbuild parse on changed `.astro` frontmatter (~1s)
+  2. `npx astro check` filtered to changed files (~5-15s)
+  3. `apps/maine-cannabis/scripts/build/smoke-200.cjs` against
+     `MDG_BASE` (default: live site) — 225 pages, fails on any non-200
+  4. `apps/maine-cannabis/scripts/build/smoke-img-200.cjs` against
+     `MDG_BASE` — 1213 image refs (img/src, source/srcset, preload as=image,
+     meta og:image), fails on any non-200. Added 2026-07-02 after the
+     `/learn/` consumer hub shipped with a broken hero image.
+- **Content health gate**: 19-check sweep via
+  `apps/maine-cannabis/scripts/content/check-content-health.cjs`. The
+  regression detector (`check-content-health-regression.cjs`) compares
+  current results to `.content-health-baseline.json` and fails on any
+  increase. New pages added without inbound links, hub pages emitting
+  `og:type=article`, titles truncated mid-sentence by the 60-char
+  guard, and sitemap URLs missing `<lastmod>` are all caught.
 
 ## Vercel ↔ GitHub integration
 

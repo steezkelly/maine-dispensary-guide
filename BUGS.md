@@ -3,6 +3,15 @@
 **Tester:** OpenCode (Playwright MCP)
 **Severity Scale:** Critical / High / Medium / Low / Cosmetic
 
+> **Maintenance note (2026-07-02):** This file is a snapshot of bugs found in
+> April 2026 and is now all-FIXED. Subsequent bug fixes (Sprint 75 build-breaker,
+> the /learn/ broken-hero regression, the 20 title truncations fixed by
+> `apps/maine-cannabis/src/lib/seo.ts`, the 8 hub-page og:type mismatches, the
+> 25 sitemap lastmod gaps, the 4 orphan city guides) are recorded in
+> `BOT_COLLABORATION_HUB.md` and the regression baseline
+> `apps/maine-cannabis/scripts/content/.content-health-baseline.json`. New bugs
+> found in CI or content sweeps should be appended to the Hub, not this file.
+
 ---
 
 ## 1. CSP Error — Background Texture Blocked
