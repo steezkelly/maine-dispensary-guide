@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const inputPath = process.argv[2] || process.env.SITEMAP_PATH || process.env.CONTENT_HEALTH_SITEMAP;
-const repoRoot = path.resolve(__dirname, '../../../..');
+const repoRoot = path.resolve(__dirname, '..', '..');
 const fallbackPath = path.join(repoRoot, 'dist/sitemap-0.xml');
 const sitemapPath = inputPath || fallbackPath;
 

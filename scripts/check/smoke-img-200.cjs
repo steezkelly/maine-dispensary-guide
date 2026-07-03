@@ -35,7 +35,7 @@ const path = require('node:path');
 const https = require('node:https');
 const http = require('node:http');
 
-const REPO = path.resolve(__dirname, '..', '..', '..', '..');
+const REPO = path.resolve(__dirname, '..', '..');
 const DIST = path.join(REPO, 'dist');
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
 const CONCURRENCY = parseInt(process.env.SMOKE_CONCURRENCY || '8', 10);

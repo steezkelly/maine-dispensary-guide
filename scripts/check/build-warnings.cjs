@@ -3,7 +3,7 @@ const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const projectRoot = path.resolve(__dirname, '../..');
+const projectRoot = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis');
 const vercelOutput = path.join(projectRoot, '.vercel');
 
 // Astro/Vercel can leave generated output behind; remove it so this check is repeatable.

@@ -26,7 +26,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const REPO = process.cwd();
+// Resolve repo root from this script's location (scripts/check/) up two
+// levels. This makes the lint cwd-independent — it works whether invoked
+// from the repo root via `node` or from the workspace via `npm --workspace run`.
+const REPO = path.resolve(__dirname, '..', '..');
 const PRE_PUSH = path.join(REPO, 'scripts/git/pre-push-verify.cjs');
 const CI = path.join(REPO, '.github/workflows/ci.yml');
 

@@ -2,7 +2,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const root = path.resolve(process.env.HREF_CHECK_ROOT || path.resolve(__dirname, '../../src/pages'));
+// HREF_CHECK_ROOT overrides the page root for ad-hoc runs. Default
+// resolves from this script's location (scripts/check/) up two levels to
+// the repo root, then into apps/maine-cannabis/src/pages. This makes
+// the default cwd-independent — the script works whether invoked from
+// the repo root via `node` or from the workspace via `npm --workspace run`.
+const root = path.resolve(process.env.HREF_CHECK_ROOT || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages'));
 const badHrefPattern = /href=["']\\1["']?\)?/g;
 const placeholderHrefPattern = /href\s*=\s*(['"])#\1/g;
 const nonProductionPageDirs = new Set(['admin', 'experiments']);

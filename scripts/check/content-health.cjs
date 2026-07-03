@@ -12,11 +12,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const DEFAULT_ROOT = path.resolve(__dirname, '../../src/pages');
+const DEFAULT_ROOT = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
-const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '../../../../dist/sitemap-0.xml'));
-const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '../../../../dist'));
-const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '../../public'));
+const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml'));
+const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'dist'));
+const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'public'));
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
 // ─── Check 1: no href="#" ───────────────────────────────────────────────────
@@ -633,7 +633,7 @@ function checkOrphanPages() {
   const results = [];
   // Resolve PAGES_DIR relative to this script's location so the check
   // works from any cwd, matching the rest of the checks in this file.
-  const PAGES_DIR = path.resolve(__dirname, '../../src/pages');
+  const PAGES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
   if (!fs.existsSync(PAGES_DIR)) return ['pages/ not found'];
   // Routes that are intentionally noindex and don't need inbound links.
   const NOINDEX_PATHS = new Set([
