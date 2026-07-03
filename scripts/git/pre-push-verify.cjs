@@ -25,6 +25,8 @@
  *   3  tool/env error (esbuild missing, not in a git repo, etc.)
  *   4  smoke-200: a built page returns non-200 against the live site
  *   5  smoke-img-200: a page references an image that 404s
+ *   6  sitemap-postprocess: a sitemap unit/integration assertion fails
+ *   7  docs-vs-code: a doc claims a check runs that isn't wired in CI or the pre-push gate
  *
  * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
  * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
@@ -309,6 +311,69 @@ function smokeImg200Check() {
     return { ok: false };
 }
 
+function sitemapPostprocessCheck() {
+    // Pass 5: run the sitemap postprocessor unit + integration tests
+    // against the real dist/sitemap-0.xml. Catches the "dead-code
+    // cascade" failure mode (a tiny change to astro.config.mjs
+    // collapsing the sitemap from 222 URLs to 7) and the
+    // "noindex check broke" failure mode (force-everything-noindex
+    // collapse to 0 URLs). Both are silent — the build goes green,
+    // the gate goes green, and the live site is broken until
+    // someone notices. Added 2026-07-02 after the dead-code
+    // cascade was caught manually.
+    const testScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'sitemap-postprocess.test.mjs');
+    if (!fs.existsSync(testScript)) {
+        log('warn', `sitemap-postprocess.test.mjs not found at ${testScript} — skipping`);
+        return { ok: true };
+    }
+    log('info', `sitemap-postprocess…`);
+    const res = spawnSync('node', [testScript], {
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 60_000,
+    });
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    // Echo the tail so the agent sees which assertions failed.
+    const tail = out.split('\n').slice(-15).join('\n');
+    if (res.status === 0) {
+        log('ok', 'sitemap-postprocess: all assertions pass');
+        return { ok: true };
+    }
+    log('err', `sitemap-postprocess: at least one assertion failed — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
+function docsVsCodeCheck() {
+    // Pass 6: assert that the AGENTS.md / handbook / project state docs
+    // mention only checks that actually run in CI or the pre-push gate.
+    // Catches the "docs claim 6 checks but CI runs 3" class that the
+    // senior review flagged in 2026-07-02 (the docs claimed 6 checks
+    // but CI only ran 3 of them — drift went uncaught for at least one
+    // sprint). The check:docs-vs-code script is in apps/maine-cannabis/
+    // scripts/content/ and is also wired into CI directly.
+    const lintScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'content', 'check-docs-vs-code.cjs');
+    if (!fs.existsSync(lintScript)) {
+        log('warn', `check-docs-vs-code.cjs not found at ${lintScript} — skipping`);
+        return { ok: true };
+    }
+    log('info', `docs-vs-code…`);
+    const res = spawnSync('node', [lintScript], {
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 30_000,
+    });
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    const tail = out.split('\n').slice(-15).join('\n');
+    if (res.status === 0) {
+        log('ok', 'docs-vs-code: no drift');
+        return { ok: true };
+    }
+    log('err', `docs-vs-code: drift detected — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
@@ -352,6 +417,20 @@ function main() {
         if (!smokeImg.ok) process.exit(5);
     } else {
         log('info', 'smoke-img-200 skipped (--skip-smoke-img-200)');
+    }
+
+    if (!args.includes('--skip-sitemap-postprocess')) {
+        const smChk = sitemapPostprocessCheck();
+        if (!smChk.ok) process.exit(6);
+    } else {
+        log('info', 'sitemap-postprocess skipped (--skip-sitemap-postprocess)');
+    }
+
+    if (!args.includes('--skip-docs-vs-code')) {
+        const dvc = docsVsCodeCheck();
+        if (!dvc.ok) process.exit(7);
+    } else {
+        log('info', 'docs-vs-code skipped (--skip-docs-vs-code)');
     }
 
     log('ok', 'pre-push verify: clean. Proceed with push.');
