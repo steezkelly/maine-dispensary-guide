@@ -15,7 +15,7 @@ const path = require('node:path');
 const DEFAULT_ROOT = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
 const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml'));
-const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'dist'));
+const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist', 'client'));
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'public'));
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
@@ -843,7 +843,7 @@ function checkDuplicateFaqPageSchema() {
   return results;
 }
 
-// ─── Check 19: YMYL reviewer-byline coverage ─────────────────────────────
+// ─── Check 20: YMYL reviewer-byline coverage ─────────────────────────────
 // Sprint 83: Every YMYL blog post must declare a reviewer in frontmatter.
 // Source-level check — does not require a build.
 //
@@ -853,8 +853,6 @@ function checkDuplicateFaqPageSchema() {
 // bounded and stable (YMYL review is content-team-driven, not
 // algorithmic). Adding a new YMYL page requires updating this list.
 const YMYL_BLOG_PAGES = [
-  // Pages with explicit medical/effect claims — sourced from
-  // docs/audit/2026-07-03-sprint-83-ymyl-audit.md
   'blog/maine-rso-guide.astro',
   'blog/buying-cannabis-by-effect-2026.astro',
   'blog/cannabis-terpenes-explained-maine-2026.astro',
@@ -922,7 +920,82 @@ const CHECKS = [
   { name: 'sitemap lastmod coverage', fn: checkSitemapLastmod },
   { name: 'meta description uniqueness', fn: checkMetaDescriptionUniqueness },
   { name: 'YMYL reviewer-byline coverage', fn: checkYMYLReviewerCoverage },
+  { name: 'body-internal-link minimum (Sprint 84)', fn: checkBodyInternalLinkMinimum },
 ];
+
+// ─── Check 21: body-internal-link minimum ──────────────────────────────
+// Sprint 84: ensures every guide has at least N body-contextual internal
+// links. The RelatedArticles sidebar already provides 50+ links per page,
+// but those are siloed in the sidebar. This check catches the case where
+// the BODY has zero contextual links — a known SEO signal of orphan-thin
+// content. A real failure example: 2 city guides (Auburn, Kittery) had
+// 0 body-internal links before Sprint 84's linkifier ran.
+//
+// Built-output check (requires dist/). Uses the rendered HTML (not source)
+// because the body of an Astro page is the post-render tree, and the
+// related-articles sidebar lives in a different DOM scope (a sibling
+// <aside>), so the two surfaces are measured independently.
+//
+// MIN_BODY_INTERNAL_LINKS = 3 (excluding self-references). Pages that
+// fail this check either need: (a) more body content with contextual
+// references, (b) hand-curated sibling links, or (c) the linkifier
+// re-run with additional rules.
+function checkBodyInternalLinkMinimum() {
+  const results = [];
+  if (!fs.existsSync(DIST)) {
+    return ['dist/ not found — run build first'];
+  }
+  // Walk every HTML file in dist/ and count unique internal hrefs
+  // within the rendered <main> content area. We include the main
+  // area (not just <article>) so that the new "City-by-City Coverage"
+  // block (which lives outside the article but inside <main>) is counted.
+  // The sidebar is also inside <main> via Layout.astro, so we exclude
+  // the related-articles <aside> from the count to avoid double-counting
+  // the sidebar's links.
+  const MIN_BODY_INTERNAL_LINKS = 3;
+  // Only enforce on guide pages and blog posts — not on utility pages
+  // like /about, /contact, /download, /resources, /affiliate-disclosure,
+  // etc. which legitimately have minimal body content. The check is
+  // designed to catch orphan-thin content on the high-value surfaces
+  // that drive organic traffic, not to force every page to be a guide.
+  const SCOPE_RE = /\/(guides|blog|learn)\//;
+  function walk(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) {
+        if (p.includes('/_astro') || p.includes('/admin/')) continue;
+        walk(p);
+      } else if (e.isFile() && p.endsWith('.html')) {
+        // Scope: only guide and blog pages (not /about, /download, etc.)
+        const relPath = p.replace(DIST, '').replace(/^\//, '').replace(/index\.html$/, '');
+        if (!SCOPE_RE.test('/' + relPath + '/')) continue;
+        const text = fs.readFileSync(p, 'utf8');
+        // Extract <main>...</main> body
+        const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/);
+        if (!mainMatch) continue;
+        // Remove the related-articles sidebar so we only count
+        // body-contextual links, not sidebar-generated ones.
+        const mainNoSidebar = mainMatch[1].replace(
+          /<aside class="related-articles[\s\S]*?<\/aside>/g,
+          ''
+        );
+        // Get all unique internal hrefs (path only, no fragment).
+        const hrefs = new Set();
+        for (const m of mainNoSidebar.matchAll(/href="(\/[^"#?]+)"/g)) {
+          hrefs.add(m[1]);
+        }
+        // Exclude self-reference (the page linking to itself).
+        const pagePath = p.replace(DIST, '').replace(/index\.html$/, '').replace(/\/$/, '');
+        hrefs.delete(pagePath);
+        if (hrefs.size < MIN_BODY_INTERNAL_LINKS) {
+          results.push(p.replace(DIST, '').replace(/^\//, ''));
+        }
+      }
+    }
+  }
+  walk(DIST);
+  return results;
+}
 
 let totalFailures = 0;
 let totalWarnings = 0;

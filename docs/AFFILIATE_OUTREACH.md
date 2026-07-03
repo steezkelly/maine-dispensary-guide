@@ -56,7 +56,7 @@ Below is a base pitch that works for every vendor. Customize the bracketed field
 
 Hi [VENDOR PARTNER / REFERRAL TEAM],
 
-I'm Steve Kelly, publisher of **Maine Dispensary Guide** (mainedispensaryguide.com) — an independent, editorial site covering cannabis licensing, retail operations, banking, insurance, and POS/ERP software in Maine. We publish 222 indexed pages, all medically and legally reviewed, with 19/19 content-health checks green.
+I'm Steve Kelly, publisher of **Maine Dispensary Guide** (mainedispensaryguide.com) — an independent, editorial site covering cannabis licensing, retail operations, banking, insurance, and POS/ERP software in Maine. We publish 222 indexed pages, all medically and legally reviewed.
 
 I noticed you have a [referral / partner] program for publishers and would like to apply.
 
@@ -87,11 +87,12 @@ mainedispensaryguide.com
 ## Per-vendor customization notes
 
 ### 1. Flowhub — tier 1 — apply first
-- **Program URL:** https://www.flowhub.com/referral (existing customer referral — up to $2,000)
-- **Non-customer path:** I don't currently run a Maine dispensary, so the customer-referral form doesn't directly fit. The vendor-directory guide names Flowhub as a top option. Lead with: "I publish content that names Flowhub as a recommended vendor; I want to be able to route Maine B2B leads to you with proper attribution."
-- **Contact:** the referral page has a form; if no fit, ask for the partnerships email via the main site's contact form.
+- **Program URL:** https://www.flowhub.com/partner-referral-terms (Partner Referral Program, terms last updated Jan 2026)
+- **Customer-facing page (not your path):** https://www.flowhub.com/referral — that form is for existing Flowhub customers referring other operators. You're a publisher, not a customer.
+- **Program email:** hello@flowhub.com (per the Partner Referral Program T&Cs page — this is the contact Flowhub explicitly lists for partnership inquiries).
 - **Expected reply time:** 2-5 business days.
-- **Customization note:** replace "[VENDOR]" with Flowhub; mention they have a published program (signals you've done your homework).
+- **Payout mechanism:** up to $2,000 per converted referral, paid after the referred account signs a 12-month Flowhub contract and pays two months. Per the T&Cs, referred customer also receives a 50% implementation-fee discount. The lead-side cost is real (12-month commitment required) — frame this in the email as "qualifying Maine dispensaries who sign a Flowhub contract" rather than an open-ended per-lead fee.
+- **Customization note:** mention the published Partner Referral Program by name and the January 2026 T&Cs update — signals you've done your homework.
 
 ### 2. Dutchie — tier 1 — apply first
 - **Program URLs:**
