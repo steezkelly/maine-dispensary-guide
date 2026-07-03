@@ -306,7 +306,8 @@ function generateReport(type, filesystem, pageScan, baseDir, pagesDir) {
     for (const file of astroFiles) {
       const content = fs.readFileSync(file, 'utf-8');
       const figureRegex = /<figure[^>]*class=["'][^"']*infographic[^"']*["'][^>]*>[\s\S]*?<img[^>]*src=["']?\/images\/infographics\/([^"']+\.jpg)["']?/gi;
-      while (figureRegex.exec(content) !== null) {
+      let match;
+      while ((match = figureRegex.exec(content)) !== null) {
         figureEmbeddedCount++;
       }
     }
@@ -317,13 +318,15 @@ function generateReport(type, filesystem, pageScan, baseDir, pagesDir) {
     for (const file of astroFiles) {
       const content = fs.readFileSync(file, 'utf-8');
       const jsonLdRegex = /"image"\s*:\s*\[?\s*"([^"]*\/images\/infographics\/[^"]+\.jpg)"/gi;
-      while (jsonLdRegex.exec(content) !== null) {
+      let match;
+      while ((match = jsonLdRegex.exec(content)) !== null) {
         jsonLdCount++;
       }
     }
     console.log(`  Referenced in JSON-LD schema: ${jsonLdCount}`);
 
     const referencedSlugs = new Set(infographicRefs.keys());
+    const actuallyReferenced = infographicFiles.filter(f => referencedSlugs.has(f.slug));
 
     const orphaned = infographicFiles.filter(f => !referencedSlugs.has(f.slug));
     if (orphaned.length > 0) {
