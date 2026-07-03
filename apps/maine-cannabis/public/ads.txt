@@ -1,0 +1,24 @@
+# ads.txt — Maine Dispensary Guide
+# Authorized Digital Sellers (https://iabtechlab.com/ads-txt/)
+#
+# Google AdSense line. Format:
+#   google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# The pub- ID will be issued by Google when the AdSense account is
+# approved. Replace pub-XXXXXXXXXXXXXXXX with the real publisher ID
+# once you have it. The current placeholder keeps the file valid
+# (parseable, correctly formatted) so AdSense can crawl and verify it
+# during onboarding, even before the real ID is in.
+#
+# To get your pub- ID:
+#   1. Sign in to https://www.google.com/adsense
+#   2. Settings → Account → "Publisher ID" (looks like pub-12345678901234567)
+#   3. Replace the placeholder below with the real value
+#   4. Commit + redeploy
+#
+# Verification:
+#   curl -sI https://mainedispensaryguide.com/ads.txt
+#   should return 200 (not 404).
+#
+# Status: active (publisher ID 4930219889179618 issued 2026-07-03)
+google.com, pub-4930219889179618, DIRECT, f08c47fec0942fa0
