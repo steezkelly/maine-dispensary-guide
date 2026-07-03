@@ -739,6 +739,19 @@ function checkTitleTruncation() {
   const TRAILING_PUNCT = /[,;:\u2014\-–]$/;
   // Trailing connector words that would leave a sentence visibly incomplete.
   const TRAILING_CONNECTOR = /\s+(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from)$/i;
+  // Single-word fragment after the last em-dash — a common truncation
+  // pattern where buildFullTitle cuts after the first word past the
+  // separator (e.g. "Maine Indoor Guide 2026 — Tent" instead of
+  // "Maine Indoor Guide 2026 — Tent Setup and Equipment"). The legit
+  // pattern is a 2+ word phrase ("Step-by-Step Guide",
+  // "150+ Expert Guides", "City-by-City"); single words almost
+  // always indicate a cut.
+  //
+  // Pattern: em-dash + whitespace + then either (a) a single word
+  // ≤ 15 chars, or (b) a hyphenated compound that's also ≤ 15 chars
+  // total. We count whitespace-separated tokens to distinguish
+  // "City-by-City" (3 words with hyphens) from "Which" (1 word).
+  const SINGLE_WORD_DASH_SUFFIX = /\u2014\s+([^\u2014]+)$/;
   const files = htmlFiles(DIST);
   for (const file of files) {
     const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
@@ -750,7 +763,20 @@ function checkTitleTruncation() {
       results.push(`${rel}: title ends with trailing punctuation → ${title}`);
     } else if (TRAILING_CONNECTOR.test(title)) {
       results.push(`${rel}: title ends with connector word → ${title}`);
-    }
+    } else {
+        const m = title.match(SINGLE_WORD_DASH_SUFFIX);
+        if (m) {
+          const suffix = m[1].trim();
+          // Tokenize by both whitespace and hyphens. "City-by-City" is
+          // 3 words, "Which" is 1, "Plant Limits" is 2. We flag only
+          // single-token suffixes as truncation candidates — a 2+ token
+          // suffix is a full phrase regardless of total length.
+          const tokens = suffix.split(/[\s-]+/).filter(Boolean);
+          if (tokens.length === 1 && !/^(?:Guide|Guides|Resources?|Library|Hub|Update|Overview|Summary|Review|List|Index|Handbook|Toolkit|FAQ|FAQs)$/i.test(suffix)) {
+            results.push(`${rel}: title ends with single-word fragment after em-dash → ${title}`);
+          }
+        }
+      }
   }
   return results;
 }
