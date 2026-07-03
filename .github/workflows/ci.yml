@@ -43,6 +43,25 @@ jobs:
         run: |
           npm --workspace @network/maine-cannabis run check:sitemap-xml -- ../../dist/sitemap-0.xml
 
+      # Sprint 80 wiring: add the cheap content-quality checks to CI so they
+      # actually run. Previously they were only run by hand at sprint close
+      # (per the senior review's Section 6 "operational debt" finding).
+      # Each check exits non-zero on failure, which fails the build.
+      - name: Check for malformed hrefs
+        run: npm --workspace @network/maine-cannabis run check:hrefs
+
+      - name: Check content health (14 invariants)
+        run: |
+          npm --workspace @network/maine-cannabis run check:content-health
+
+      - name: Check content health regression (no new failures vs baseline)
+        run: |
+          node apps/maine-cannabis/scripts/content/check-content-health-regression.cjs
+
+      - name: Check build warnings (post-build CSS/HTML warnings)
+        run: |
+          npm --workspace @network/maine-cannabis run check:build-warnings
+
   deploy-preview:
     name: Deploy Preview
     needs: build
