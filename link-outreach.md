@@ -755,3 +755,44 @@ mainedispensaryguide.com
 ---
 
 *Last updated: 2026-04-20 EDT*
+
+---
+
+## Guest Post Exchange Tracking (added 2026-07-03)
+
+The "guest post exchange" idea is already covered by **Template A: Guest Column Pitch (Media)** above and the Tier 2 "GEO Link Exchanges" outreach (NJ / FL / MI / MA dispensary guides). What was missing is a dedicated tracker for the *swap* side of that — "they wrote on our site, we wrote on theirs" pairs.
+
+### Why track exchanges separately
+
+A guest post on Mainebiz is one row in the main tracking table. A **mutual** guest post is two rows that need to stay linked. If we publish their post but they don't publish ours (or vice versa), that's an asymmetric backlink we should notice.
+
+### Tracker
+
+| # | Partner site | Their post on OUR site (URL) | Our post on THEIR site (URL) | Date pair started | Date live (both) | Symmetric? | Notes |
+|---|--------------|------------------------------|------------------------------|-------------------|-----------------|------------|-------|
+| 1 | _none yet_   |                              |                              |                   |                 |            |       |
+| 2 |              |                              |                              |                   |                 |            |       |
+| 3 |              |                              |                              |                   |                 |            |       |
+
+**"Symmetric?" column** = both posts live + both contain a contextual link to the partner (not a footer link, not a "thanks to" boilerplate — a real in-content link in the body).
+
+### How to keep tabs without manual work
+
+The cheapest workable pattern is a quarterly check (10 min):
+
+1. Open Search Console → Links → "External Links" → sort by date
+2. For each new referring domain, check if a reciprocal link exists on our site
+3. If yes: row goes in the table above with "Symmetric? ✓"
+4. If no: either they didn't honor the deal, or we owe them a post — flag in the main Tracking table
+
+That catches the "they published, we never did" asymmetry in one search.
+
+### What we don't need
+
+- A SaaS tool (Ahrefs / SEMrush) — overkill for the volume we do
+- A spreadsheet dedicated solely to this — the table above is fine
+- Per-post UTM tracking — Google's rel attributes are the signal that matters, not our outbound UTM
+
+### When to start filling this in
+
+Only when the first guest post swap actually happens. Right now the table is empty because no exchanges are live. The first time someone says "we'll write on your site if you write on ours" — that's the trigger.
