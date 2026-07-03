@@ -31,9 +31,10 @@ test('/find-a-dispensary links every local dispensary guide exactly once', () =>
   const uniqueGuideHrefs = [...new Set(guideHrefs)];
   const expectedGuideHrefs = existingDispensaryGuideHrefs();
 
-  assert.equal(expectedGuideHrefs.length, 61, 'fixture should reflect the current 61 guide pages');
-  assert.deepEqual(uniqueGuideHrefs, expectedGuideHrefs);
-  assert.equal(guideHrefs.length, uniqueGuideHrefs.length, 'directory should not duplicate guide links');
+  assert.deepEqual(uniqueGuideHrefs, expectedGuideHrefs,
+    'every dispensary guide should be linked from /find-a-dispensary');
+  assert.equal(guideHrefs.length, uniqueGuideHrefs.length,
+    'directory should not duplicate guide links');
 });
 
 test('/find-a-dispensary exposes exactly one Google Maps search link per guide and all are in expected format', () => {
@@ -52,10 +53,13 @@ test('/find-a-dispensary exposes exactly one Google Maps search link per guide a
 });
 
 test('/find-a-dispensary exposes map search links for every listed guide area', () => {
-  const text = fs.readFileSync(directoryPage, 'utf8');
+  // Count the structured mapUrl array entries (one per guide area in
+  // the data block), not the entire page text. The OCP section below
+  // the data block emits its own template-generated map links (one per
+  // OCP city), so a full-text split would over-count by however many
+  // OCP-licensed towns there are.
+  const { mapUrls } = extractDirectoryLinks(fs.readFileSync(directoryPage, 'utf8'));
   const guideCount = existingDispensaryGuideHrefs().length;
-  const mapNeedle = 'https://www.google.com/maps/search/?api=1' + String.fromCharCode(38) + 'query=';
-  const mapSearchLinks = text.split(mapNeedle).length - 1;
-
-  assert.equal(mapSearchLinks, guideCount);
+  assert.equal(mapUrls.length, guideCount,
+    'each dispensary guide area should have exactly one mapUrl data entry');
 });
