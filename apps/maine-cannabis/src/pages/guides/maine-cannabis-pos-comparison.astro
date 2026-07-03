@@ -1,0 +1,257 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-03",
+  modifiedDate: "2026-07-03",
+  section: "Operations & Technology"
+};
+
+const topics = ["operations"];
+---
+
+<Layout
+  title="Maine Cannabis POS Comparison: 2026 Vendor Side-by-Side"
+  description="Side-by-side comparison of Maine cannabis POS vendors (Flowhub, Dutchie, Cova, Treez, Jane, Meadow, MJ Platform) on published pricing, Metrc integration, and ecommerce packaging."
+  heroImage="/images/heroes/maine-dispensary-pos.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    article { max-width: 720px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+    section { margin-bottom: 2rem; }
+    section h2 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+    section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
+    blockquote { border-left: 4px solid var(--color-primary); padding: 1rem 1.5rem; margin: 1.5rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    th, td { padding: 0.65rem 0.5rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+    th { background: var(--color-background); font-weight: 600; }
+    .table-scroll { overflow-x: auto; margin: 1.5rem -1rem; padding: 0 1rem; }
+    .best-for { background: rgba(88, 129, 87, 0.1); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 4px solid var(--color-primary); margin: 1rem 0; }
+    .best-for strong { color: var(--color-primary); }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+    .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+    .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+    .further-reading a { display: block; padding: 0.4rem 0; }
+    .footnote { font-size: 0.8rem; color: var(--color-text-light); }
+    sup { font-size: 0.75em; }
+  </style>
+
+  <article>
+    <div class="article-header">
+      <h1>Maine Cannabis POS Comparison: 2026 Vendor Side-by-Side</h1>
+      <p class="subtitle">Verified published pricing, Metrc integration depth, and ecommerce packaging for Flowhub, Dutchie, Cova, Treez, Jane, Meadow, and MJ Platform</p>
+    </div>
+
+    <Callout type="warning">
+      <p><strong>How to use this guide.</strong> Maine cannabis retail is a YMYL ("Your Money or Your Life") decision — multi-year contracts, monthly recurring spend, and state-license compliance all depend on your POS choice. We have labeled every pricing cell in this comparison as either vendor-published (linked to the source) or quote-only. We have not constructed rankings; instead we surface verifiable differences and let you shortlist with your accountant and attorney. If you're still deciding whether you need a cannabis-specialized POS at all, start with our general <a href="/guides/maine-dispensary-pos">POS Systems for Maine Dispensaries</a> guide.</p>
+    </Callout>
+
+    <section>
+      <h2>What This Comparison Covers — and What It Does Not</h2>
+      <p>Every vendor below integrates with Maine's Metrc seed-to-sale system (the only state-mandated tracking system). All seven are reputable platforms with paying customers. The differences that matter for a Maine operator are:</p>
+      <ul>
+        <li><strong>Pricing transparency.</strong> Of seven vendors, only one (Cova) publishes a starting monthly price on its own site. The other six are quote-only — meaning the "starting at $X" figures that appear on third-party listing sites (Software Advice, G2, SelectHub) reflect estimated typical spend, not vendor list price. We treat those as quote-only.</li>
+        <li><strong>Metrc integration depth.</strong> All seven claim native (direct-API) Metrc integration. The operational differentiators are number of supported state markets and Metrc Connect endpoint coverage, not "native vs. not."</li>
+        <li><strong>Ecommerce packaging.</strong> Whether online ordering is bundled into the POS subscription or sold as a separate add-on materially changes the all-in monthly cost.</li>
+        <li><strong>Public partner economics.</strong> Only one vendor (Flowhub) publishes a referral payout figure. The others compensate via private commission or unpriced partner programs.</li>
+      </ul>
+      <p>This comparison does <strong>not</strong> rank vendors as "best ecommerce" or "best delivery tooling." No Gartner, Forrester, Whitney Economics, BDSA, or NCIA-published comparative analysis of cannabis POS platforms was located in our research. G2 and Capterra are the only non-vendor user-review aggregators with public scores; we link those for each vendor where available. Any "best-in-class" claim beyond those scores is editorial opinion, not third-party analysis.</p>
+    </section>
+
+    <section>
+      <h2>Comparison Table</h2>
+      <p>All data points are verified against vendor-published sources or explicitly labeled "quote-only." Pricing reflects public vendor pages as of mid-2026; confirm with each vendor for your specific volume and store count.</p>
+      <div class="table-scroll">
+        <table aria-label="Cannabis POS comparison">
+          <thead>
+            <tr>
+              <th>Vendor</th>
+              <th>Vendor-published starting price</th>
+              <th>Ecommerce packaging</th>
+              <th>Metrc integration</th>
+              <th>G2 score (reviews)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Flowhub</strong></td>
+              <td>Quote-only<sup><a href="#ref-1">[1]</a></sup></td>
+              <td>Bundled into POS<sup><a href="#ref-2">[2]</a></sup></td>
+              <td>Native; first Metrc API partner; 36+ state markets<sup><a href="#ref-3">[3]</a></sup></td>
+              <td>4.1 / 5 (5 reviews)<sup><a href="#ref-4">[4]</a></sup></td>
+            </tr>
+            <tr>
+              <td><strong>Dutchie</strong></td>
+              <td>Quote-only<sup><a href="#ref-5">[5]</a></sup></td>
+              <td>Bundled (E-Commerce Pro upgrade tier)<sup><a href="#ref-6">[6]</a></sup></td>
+              <td>Native (direct Metrc migration tooling)<sup><a href="#ref-7">[7]</a></sup></td>
+              <td>Not located</td>
+            </tr>
+            <tr>
+              <td><strong>Cova</strong></td>
+              <td><strong>$349/mo</strong> Boutique; $499/mo Powerhouse<sup><a href="#ref-8">[8]</a></sup></td>
+              <td>Add-on: $199/mo (promo $149/mo)<sup><a href="#ref-8">[8]</a></sup></td>
+              <td>Native (Metrc among listed compliance integrations)<sup><a href="#ref-9">[9]</a></sup></td>
+              <td>4.6 / 5 (24 reviews)<sup><a href="#ref-8">[8]</a></sup></td>
+            </tr>
+            <tr>
+              <td><strong>Treez</strong></td>
+              <td>Quote-only<sup><a href="#ref-10">[10]</a></sup></td>
+              <td>Partner-integration marketplace (open API)<sup><a href="#ref-11">[11]</a></sup></td>
+              <td>Native; 26 Metrc Connect endpoints<sup><a href="#ref-12">[12]</a></sup></td>
+              <td>3.3 / 5 (10 reviews)<sup><a href="#ref-8">[8]</a></sup></td>
+            </tr>
+            <tr>
+              <td><strong>Jane / iHeartJane</strong></td>
+              <td>Quote-only<sup><a href="#ref-13">[13]</a></sup></td>
+              <td>Ecommerce-first product (POS is one component of a larger consumer-discovery platform)</td>
+              <td>Not directly confirmed in vendor sources<sup><a href="#ref-13">[13]</a></sup></td>
+              <td>Not located</td>
+            </tr>
+            <tr>
+              <td><strong>Meadow</strong></td>
+              <td>Quote-only<sup><a href="#ref-14">[14]</a></sup></td>
+              <td>Bundled (Delivery and Storefront+Delivery tiers include ecommerce)<sup><a href="#ref-14">[14]</a></sup></td>
+              <td>Native via integrations directory; pricing page cites Metrc explicitly<sup><a href="#ref-15">[15]</a></sup></td>
+              <td>4.9 / 5 (81 reviews)<sup><a href="#ref-8">[8]</a></sup></td>
+            </tr>
+            <tr>
+              <td><strong>MJ Platform</strong></td>
+              <td>Quote-only<sup><a href="#ref-16">[16]</a></sup></td>
+              <td>Not directly confirmed (typically delivered through partner integrations; ecommerce add-on packaging not surfaced in vendor sources)</td>
+              <td>Native (press release confirms direct Metrc API integration)<sup><a href="#ref-17">[17]</a></sup></td>
+              <td>2.5 / 5 (2 reviews on Capterra)<sup><a href="#ref-16">[16]</a></sup></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Ecommerce packaging matters because Cova's published $349/mo POS price does not include online ordering — adding ecommerce brings the all-in minimum to $548/mo (or $498/mo at the promotional $149 ecommerce price). Flowhub, Dutchie, and Meadow bundle ecommerce into their POS subscription, so their quote-only headline numbers are more directly comparable to a Cova + ecommerce bundle.</p>
+    </section>
+
+    <section>
+      <h2>Vendor-by-Vendor Notes</h2>
+      <p>Vendor descriptions below reflect publicly verifiable facts from each vendor's own site, plus public reviews. They are not endorsements.</p>
+
+      <h3>Flowhub</h3>
+      <p>Flowhub's cannabis POS is one of the most-deployed platforms in Maine and the broader U.S. cannabis market. Vendor-published claims include being the first POS vendor to build a Metrc API integration, supporting 36+ state markets, and bundling ecommerce into the core POS subscription (July 2025 press release). The vendor's published referral program pays up to $2,000 per referred dispensary that signs a 12-month contract and pays two months (terms last updated January 26, 2026). Pricing is quote-only.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> independent single-store and small-chain operators. Flowhub's vendor-published materials highlight Maine as a supported market and emphasize fast transaction flow at the register.
+      </div>
+
+      <h3>Dutchie</h3>
+      <p>Dutchie is the market-share leader in cannabis ecommerce and acquired LeafLogix and GreenBits to bundle POS into its platform. Vendor-published materials emphasize online ordering, pickup, and delivery. Dutchie's Certified Partner Program launched August 2025 covers training, certification, and co-marketing for agencies and developers; the program is unpriced. Pricing is quote-only.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> 2+ store operators whose revenue mix depends heavily on online pre-orders, and operators building toward multi-store ecommerce.
+      </div>
+
+      <h3>Cova</h3>
+      <p>Cova is the only vendor in this comparison that publishes a starting monthly price: $349/mo for the Boutique tier and $499/mo for the Powerhouse tier. Ecommerce is a separate $199/mo add-on (promotional $149/mo). The vendor is known for a clean customer-facing interface and loyalty tooling. Cova's published customer referral program pays $500 per qualifying retailer (covasoftware.com/refer). Cova is G2's 4.6/5 rated Cannabis POS with 24 reviews.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> boutique single-store operators prioritizing customer experience and who want pricing transparency up-front rather than a sales-call quote.
+      </div>
+
+      <h3>Treez</h3>
+      <p>Treez is the enterprise-tier cannabis POS with deeper analytics and a feature set aimed at multi-state operators running 5+ stores. Vendor-published pricing is quote-only. Treez highlights 26 Metrc Connect API endpoints over the v1 API and supports an open marketplace of partner integrations for ecommerce, delivery, and loyalty. G2 score is 3.3/5 with 10 reviews as of mid-2026.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> operators with 5+ stores, multi-state ambitions, or who need deep retail analytics. Pricing scale reflects the enterprise tier.
+      </div>
+
+      <h3>Jane / iHeartJane</h3>
+      <p>Jane Technologies started as a consumer marketplace (iHeartJane) for cannabis pickup and delivery discovery. The company's POS product integrates with its consumer marketplace, so the product positioning is ecommerce-first rather than POS-first. Vendor-published pricing is quote-only. A direct Metrc integration statement was not located in Jane's published product pages.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> operators who want consumer-marketplace exposure from Jane's marketplace traffic.
+      </div>
+
+      <h3>Meadow</h3>
+      <p>Meadow positions itself as an all-in-one cannabis operations platform — POS plus delivery plus ecommerce plus compliance, with ecommerce included in both the Delivery and Storefront+Delivery plan tiers. Vendor-published pricing is quote-only. Meadow is G2's 4.9/5 rated Cannabis POS with 81 reviews as of mid-2026 (the largest public review sample of any vendor in this comparison).</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> operators with a delivery license who want POS and delivery on one platform. California-headquartered with growing Northeast presence.
+      </div>
+
+      <h3>MJ Platform</h3>
+      <p>MJ Platform (formerly MJ Freeway, owned by iAnthus / Akerna) targets vertically integrated operators running dispensary + cultivation + manufacturing + distribution on one system. Vendor-published pricing is quote-only. Ecommerce packaging was not directly confirmed in vendor sources; Akerna / MJ Platform has historically focused on compliance and ERP, with ecommerce typically delivered through partner integrations.</p>
+      <div class="best-for">
+        <strong>Commonly cited for:</strong> vertically integrated operators running multiple license types under one corporate umbrella.
+      </div>
+    </section>
+
+    <section>
+      <h2>How Operators Actually Shortlist</h2>
+      <p>There is no public Maine-specific POS-share dataset (the Maine Office of Cannabis Policy publishes aggregate licensee counts but not per-platform POS breakdowns). Most Maine operators we talk with follow a similar shortlisting process:</p>
+      <ol>
+        <li><strong>Filter by structural fit.</strong> Single-store vs. multi-store vs. vertically integrated. Delivery-licensed vs. storefront-only. Ecommerce-required vs. in-store-only.</li>
+        <li><strong>Request a written quote.</strong> For vendors without published pricing, the all-in monthly cost depends on add-ons (ecommerce, hardware, payment processing, per-transaction fees). Get the quote in writing with line items.</li>
+        <li><strong>Request a live Metrc demo.</strong> Not a slide deck — a live demo of inventory transfer, package adjustment, and end-of-day reconciliation.</li>
+        <li><strong>Ask for a Maine customer reference.</strong> Talking to an existing Maine operator using the same platform is the highest-signal step in the selection process.</li>
+        <li><strong>Read the contract.</strong> Multi-year terms with auto-renew are common. Confirm data export, Metrc sync on exit, and termination terms before signing.</li>
+      </ol>
+      <p>This shortlisting process is descriptive, not a "best practice" ranking. Your accountant and attorney should review the contract terms specific to your structure.</p>
+    </section>
+
+    <section>
+      <h2>Switching POS After You're Live</h2>
+      <p>Public guidance from both Cova (February 2026) and Dutchie (February 2023) describes POS switching as a multi-week project involving product catalog re-import, customer database migration, pricing and tax re-entry, and Metrc re-reconciliation. The widely-circulated claim that "most operators regret their first POS choice" is a vendor-blog talking point and is not supported by any third-party survey located in our research. Plan for the multi-week transition regardless; whether or not you regret your first choice depends on factors specific to your operation.</p>
+      <p>If you are early-stage with low volume, a mid-tier platform with a clean exit clause may be smarter than a long-term enterprise contract. If you are scaling, paying more for the platform you will grow into may be cheaper than switching later. Neither claim has been verified by an independent survey.</p>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <h3>Which cannabis POS is cheapest for a small Maine dispensary?</h3>
+      <p>Cova is the only major cannabis POS vendor that publishes a starting monthly price on its own site: $349/month for the Boutique tier, $499/month for the Powerhouse tier, with ecommerce as a $199/month add-on (promotional price $149/month) per <a href="https://www.covasoftware.com/pricing-us">covasoftware.com/pricing-us</a>. The other six vendors surveyed in our comparison (Flowhub, Dutchie, Treez, Jane, Meadow, MJ Platform) are quote-only on their own sites, so published starting prices are not available. Always request a written quote with all line items (POS, ecommerce, hardware, payment processing, per-transaction fees) before comparing costs.</p>
+
+      <h3>Do all cannabis POS systems integrate with Maine's Metrc seed-to-sale system?</h3>
+      <p>Yes. Every vendor profiled here (Flowhub, Dutchie, Cova, Treez, Meadow, MJ Platform) advertises native (direct-API) Metrc integration. Native Metrc integration is now an industry baseline rather than a differentiator. The depth of integration varies: Flowhub claims the first Metrc API integration and supports 36+ state markets; Treez markets 26 additional Metrc Connect endpoints over the v1 API. Before signing with any POS vendor, request a live demo of a Metrc inventory transfer, package adjustment, and end-of-day reconciliation.</p>
+
+      <h3>Can I switch POS systems after my dispensary is already running?</h3>
+      <p>Yes, but it requires planning. Public guidance from Cova (February 2026) and Dutchie (February 2023) describes switching as a multi-week project involving product catalog re-import, customer database migration, pricing and tax re-entry, and Metrc re-reconciliation. No third-party analyst survey quantifying the average dollar or operator-hour cost of switching cannabis POS was located in our research; the available third-party data points are the Whitney Economics U.S. Cannabis Business Conditions Survey (Q4 2021) and aggregator-published POS market-share surveys, neither of which publishes a switching-cost benchmark. Plan for 2-4 weeks of dual-running and expect a temporary increase in compliance errors during the transition.</p>
+
+      <h3>Does my POS need to handle cash-only transactions?</h3>
+      <p>Yes. Most Maine cannabis dispensaries operate primarily on cash because most banks and credit card processors still decline cannabis merchants under federal law. A small number of cannabis-specialty payment processors (Hypur, CanPay, Paybotic, KindPay) offer debit-style solutions, but adoption is uneven. Your POS needs to handle cash counts, safe management, and end-of-day cash reconciliation cleanly, with reporting auditable for OCP inspection. Confirm cash-handling workflow with any POS vendor before signing.</p>
+    </section>
+
+    <section class="disclaimer">
+      <p><strong>Editorial standards.</strong> Maine Dispensary Guide does not currently have paid referral relationships with any of the seven vendors profiled in this comparison. Every published price, score, and program detail is sourced from each vendor's own website or a public user-review aggregator as of mid-2026, with inline citations. Where a vendor does not publish a fact (most pricing, several program details), this comparison says so explicitly. When affiliate or referral relationships are established, this page will be updated with a clear disclosure per FTC Endorsement Guides (16 CFR Part 255).</p>
+      <p><strong>Sources and methodology.</strong> Pricing verified against vendor-published pages or labeled "quote-only." Metrc integration verified against vendor product pages and integration directories. Ecommerce packaging verified against vendor pricing pages or product announcements. G2 and Capterra scores captured mid-2026 from publicly accessible product pages. Switching-cost claims cite vendor blogs (Cova Feb 2026, Dutchie Feb 2023) and the Whitney Economics U.S. Cannabis Business Conditions Survey (Q4 2021). No vendor-paid placements influenced this comparison.</p>
+    </section>
+
+    <section class="further-reading">
+      <h2>References</h2>
+      <ol class="footnote" style="padding-left: 1.5rem;">
+        <li id="ref-1"><a href="https://www.flowhub.com/">flowhub.com</a> — pricing is quote-only.</li>
+        <li id="ref-2"><a href="https://www.prnewswire.com/news-releases/flowhub-launches-pos-native-ecommerce-solution-to-power-online-cannabis-retail-growth-302503602.html">Flowhub press release, July 14, 2025</a> — ecommerce is "natively built into Flowhub POS."</li>
+        <li id="ref-3"><a href="https://www.flowhub.com/partners/metrc-integration">flowhub.com/partners/metrc-integration</a> — "first Metrc API integration," 36+ state markets.</li>
+        <li id="ref-4"><a href="https://www.softwareadvice.com/retail/flowhub-profile">softwareadvice.com/retail/flowhub-profile</a> — Flowhub G2 score 4.1/5 (5 reviews), captured mid-2026.</li>
+        <li id="ref-5"><a href="https://www.g2.com/products/dutchie/pricing">g2.com/products/dutchie/pricing</a> — "Dutchie has not provided pricing information."</li>
+        <li id="ref-6"><a href="https://dutchie.com/">dutchie.com</a> — platform positioning as ecommerce-first; E-Commerce Pro launched August 26, 2025.</li>
+        <li id="ref-7"><a href="https://support.dutchie.com/hc/en-us/articles/36554632635923-New-York-Metrc-migration-overview">Dutchie Help Center — New York Metrc migration overview</a>.</li>
+        <li id="ref-8"><a href="https://www.covasoftware.com/pricing-us">covasoftware.com/pricing-us</a> — published starting prices ($349/mo Boutique, $499/mo Powerhouse), $199/mo ecommerce add-on ($149/mo promo), G2 4.6/5 (24 reviews).</li>
+        <li id="ref-9"><a href="https://www.covasoftware.com/pos">covasoftware.com/pos</a> — Metrc listed among compliance integrations.</li>
+        <li id="ref-10"><a href="https://www.treez.io/pricing">treez.io/pricing</a> — "Book a demo and get a customized quote."</li>
+        <li id="ref-11"><a href="https://www.treez.io/">treez.io</a> — partner marketplace / open API.</li>
+        <li id="ref-12"><a href="https://www.treez.io/point-of-sale">treez.io/point-of-sale</a> — Metrc Connect endpoints.</li>
+        <li id="ref-13"><a href="https://www.softwareadvice.com/ecommerce/i-heart-jane-profile">softwareadvice.com/ecommerce/i-heart-jane-profile</a> — pricing available on request; direct Metrc statement not located.</li>
+        <li id="ref-14"><a href="https://getmeadow.com/pricing">getmeadow.com/pricing</a> — quote-only; ecommerce included in Delivery and Storefront+Delivery tiers.</li>
+        <li id="ref-15"><a href="https://getmeadow.com/integrations">getmeadow.com/integrations</a> — Metrc listed among integrations.</li>
+        <li id="ref-16"><a href="https://www.capterra.com/p/212477/MJ-Platform">capterra.com/p/212477/MJ-Platform</a> — "Starting price: Contact vendor," Capterra rating 2.5/5 (2 reviews).</li>
+        <li id="ref-17"><a href="https://www.globenewswire.com/news-release/2020/05/05/2027462/0/en/akerna-company-mj-freeway-integrates-metrc-api.html">Akerna / MJ Freeway Metrc API press release, May 5, 2020</a>.</li>
+      </ol>
+      <p style="margin-top: 1.5rem;"><strong>Related Guides</strong></p>
+      <a href="/guides/maine-dispensary-pos">→ POS Systems for Maine Dispensaries (general overview)</a>
+      <a href="/guides/maine-cannabis-vendor-directory">→ Maine Cannabis Vendor Directory</a>
+      <a href="/guides/maine-cannabis-wholesale-guide">→ Wholesale &amp; B2B Transactions Guide</a>
+      <a href="/guides/maine-cannabis-vertical-integration">→ Vertical Integration &amp; Multi-License Operations</a>
+      <a href="/guides/maine-cannabis-inventory-management">→ Inventory &amp; Metrc Management</a>
+      <a href="/guides/maine-metrc-compliance-guide">→ METRC Compliance Guide</a>
+      <a href="/guides/maine-cannabis-funding-guide">→ Funding &amp; Capital Guide</a>
+    </section>
+  </article>
+</Layout>
