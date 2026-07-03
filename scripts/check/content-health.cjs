@@ -662,7 +662,7 @@ function checkOrphanPages() {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
     const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
-    const all = listAstroFilesRecursive(path.resolve(__dirname, '../../src'));
+    const all = listAstroFilesRecursive(path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src'));
     for (const f of all) {
       if (f === excludeFile) continue;
       let text;
