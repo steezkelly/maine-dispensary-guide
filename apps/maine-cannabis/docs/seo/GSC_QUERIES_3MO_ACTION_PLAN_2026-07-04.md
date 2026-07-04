@@ -523,3 +523,63 @@ Used the user's OOB-requested parallel research. Critical finding: the existing 
   - Use `content-health.cjs` as the primary verify (it's the fastest and catches most issues)
   - Skip `smoke-200` and `smoke-img-200` against production unless a change specifically affected rendered output
   - The build was 17.85-55.16s in this session; the bottleneck was the smoke checks against production URLs, not the build itself
+
+
+## Round 102 — Verify pattern + CSS fix (2026-07-04)
+
+Commit `a85fcd8a` — caught and fixed a CSS syntax error in the dose calculator. The error was caused by the previous commit's `<style>` patch leaving a stray `<style>` opening tag. Esbuild's CSS minifier reported `Unexpected "<"` at col 143.
+
+What was wrong:
+
+```
+<style>
+  .image-source { ... }
+<style>     <!-- this was supposed to be the same style block but became a second open tag -->
+  article { ... }
+  ... rest of styles ...
+</style>
+```
+
+The result was nested `<style>...<style>...<content>...</style>` which esbuild rejects.
+
+The fix collapses the two intended `<style>` blocks into a single block. CSS rules preserved. No content changes.
+
+## Round 103 — Optimal verify pattern discovered (2026-07-04)
+
+The user flagged that my verify cycles were taking 3+ minutes and lagging the 16GB host. Investigation showed the project has a blessed pre-push gate (`scripts/git/pre-push-verify.cjs`) that runs all the right checks with the right flags.
+
+**Optimal verify command for this host:**
+
+```bash
+node scripts/git/pre-push-verify.cjs \
+  --skip-smoke-200 --skip-smoke-img-200 \
+  --skip-sitemap-postprocess --skip-docs-vs-code
+```
+
+- `--fast-only` flag can be added for sub-second parse-only check
+- The smoke checks (smoke-200, smoke-img-200) hit production URLs and are slow + bandwidth-hungry
+- The sitemap-postprocess and docs-vs-code checks are quick but optional in fast iteration
+
+**Benchmarks:**
+
+| Approach | Time | Notes |
+|---|---|---|
+| `pre-push-verify.cjs --fast-only` | 0.11s | esbuild parse only on changed files |
+| `pre-push-verify.cjs` (no smoke/sitemap) | ~40s | esbuild + filtered astro check |
+| `pre-push-verify.cjs` (full) | 5-15s + smoke time | Full pass including smoke-200 (~30s) |
+| `npx astro check` (unfiltered, full project) | ~3min | The slow approach I was using — DO NOT USE |
+| `npm run build` (full) | ~17-50s | Acceptable for end-of-sprint, not per-commit |
+| `node scripts/check/content-health.cjs` | ~20s | Content + structural quality |
+| `node scripts/check/content-health-regression.cjs` | 0.07s | Regression vs baseline |
+
+**Always use `pre-push-verify.cjs --skip-smoke-200 --skip-smoke-img-200 --skip-sitemap-postprocess --skip-docs-vs-code` for iteration. Run the full pre-push-verify (with all checks) before pushing.**
+
+## Round 104 — User feedback on verify cycles (2026-07-04)
+
+The user explicitly noted that other agents complete verification in ~17 seconds while my approach took 3+ minutes and lagged the host. Two root causes:
+
+1. **Wrong approach:** I was running the full unfiltered `npx astro check` (which checks all 286 files regardless of what changed). The blessed pre-push-verify uses esbuild parse-only on changed files followed by filtered `astro check` — both of which are dramatically faster.
+
+2. **Too many verify cycles:** I was running the full verify after each commit. The right pattern is one final verify before push, not after every commit.
+
+Future sessions should follow the optimal pattern above.
