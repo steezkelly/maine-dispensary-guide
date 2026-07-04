@@ -1,0 +1,220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cannabis Science Writer",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "Learn"
+};
+
+const topics = ["consumer-guide", "consumption-methods", "wellness"];
+
+const topicalFaqs = [
+  { question: "What is a cannabis topical?", answer: "A cannabis topical is a product applied to the skin — balms, salves, lotions, creams, transdermal patches, bath salts, and massage oils — that contains cannabinoids such as THC, CBD, or both. Topicals are designed for localized application and typically do not produce a psychoactive effect unless the formulation is a transdermal patch specifically engineered to reach the bloodstream." },
+  { question: "Do Maine cannabis topicals have the same THC limit as edibles?", answer: "No. The 10mg-per-serving and 200mg-per-package THC caps in Title 28-B §703(1)(F) apply specifically to edible cannabis products. Maine topicals are subject to the general labeling requirements of Title 28-B §701 (including instructions on route of administration and ingredient disclosure) but not the per-serving THC cap that edibles have. Always check the product label and the operator's COA for total THC content per container." },
+  { question: "Can a cannabis topical get you high?", answer: "Standard non-transdermal topicals (balms, salves, lotions, creams, bath products) typically do NOT produce a psychoactive effect because the cannabinoids don't reach the bloodstream in significant amounts. Transdermal patches are engineered to penetrate the skin barrier and enter the bloodstream — those CAN produce systemic effects including psychoactivity, depending on THC content." },
+  { question: "What do people use cannabis topicals for?", answer: "Reported uses include localized muscle soreness, joint discomfort, post-exercise recovery, skin inflammation, eczema-prone skin, and tension headaches. Per Healthline and the Arthritis Foundation, CBD-dominant topicals have the strongest published evidence base for arthritis-related joint discomfort, though clinical trials are limited and individual results vary." },
+  { question: "How quickly do cannabis topicals work?", answer: "Most users report feeling topical effects within 15–30 minutes of application, with peak effect at 1–2 hours, lasting 2–4 hours per application. Transdermal patches work over a longer sustained release (often 8–24 hours, depending on the patch). Individual results vary by product formulation, skin permeability, and body chemistry." },
+  { question: "What's the difference between a CBD topical and a THC topical?", answer: "THC topicals contain the psychoactive cannabinoid THC (typically combined with CBD and minor cannabinoids in a full-spectrum blend). CBD topicals are non-psychoactive and most commonly cited for anti-inflammatory and recovery applications. Full-spectrum blends containing both THC and CBD are common and may offer an \"entourage effect\" — the theory that cannabinoids work better together than isolated." },
+  { question: "Are cannabis topicals safe for pets?", answer: "Cannabis topicals can be problematic around pets. Even non-psychoactive products contain cannabinoids that, if licked off a pet's paw or fur, can be absorbed through their digestive system and cause toxicity. The Pet Poison Helpline classifies THC-containing topicals as potentially toxic to dogs and cats. Store topicals like any cannabis product — in a closed container your pet cannot access." },
+  { question: "Will a cannabis topical make me fail a drug test?", answer: "Standard non-transdermal topicals are highly unlikely to trigger a positive THC drug test, because the cannabinoids don't reach the bloodstream in significant amounts. Transdermal patches are engineered to deliver cannabinoids into the bloodstream and CAN trigger positive drug tests. If you are subject to drug testing for employment or other reasons, even small THC doses from patches can register. CBD-only topicals are the safest choice for drug-test-sensitive consumers." },
+  { question: "How do I choose a topical at a Maine dispensary?", answer: "1) Identify your goal: localized muscle/joint soreness, skin inflammation, or sleep-related relaxation. 2) Decide THC:CBD ratio — CBD-only for daytime use, balanced for evening, THC-forward for stronger local effect. 3) Check the carrier — coconut oil and shea butter are common bases that determine skin feel. 4) Look at added ingredients — arnica, menthol, camphor, capsaicin, and essential oils augment the effect. 5) Verify the OCP license number on the label." },
+  { question: "Do cannabis topicals expire?", answer: "Yes. Most topicals have a 12–24 month shelf life depending on the carrier and added preservatives. Check for a recommended-use or expiration date on the label (required per Title 28-B §701(1)(J)(3)). Store in a cool, dry place away from direct sunlight. Discard if the product develops an off smell, color change, or mold." }
+];
+---
+
+<Layout title="Cannabis Topicals & CBD Skin Products — Maine Guide (2026)" description="Maine cannabis topicals guide. Balms, lotions, transdermal patches, and CBD skin products. How topicals work, Maine's Title 28-B §701 labeling rules (no per-serving THC cap like edibles), and buyer selection criteria." heroImage="/images/heroes/cannabis-topicals-maine.jpg" article={article} topics={topics}>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-accent); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Cannabis Topicals &amp; CBD Skin Products — Maine Guide</h1>
+    <p class="subtitle">Balms, salves, lotions, transdermal patches: how cannabis topicals work in Maine</p>
+  </div>
+
+  <div class="verification">
+    <strong>Last verified:</strong> July 4, 2026. Maine statute citations confirmed against the Title 28-B statutory text (<a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec701.html" target="_blank" rel="noopener noreferrer">§701</a>, <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">§703</a>) and OCP guidance. Title 28-B §703(1)(F)'s 10mg-per-serving THC cap applies specifically to <em>edible</em> cannabis products; topicals are not subject to that cap. Always verify topical ingredients and mg-per-container with the operator and request the batch COA before use.
+  </div>
+
+  <section class="fact-box">
+    <h2>Cannabis Topicals at a Glance</h2>
+    <table aria-label="Cannabis topical product key facts">
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Product types</strong></td><td>Balms, salves, lotions, creams, massage oils, bath salts, transdermal patches, intimate lubricants</td></tr>
+        <tr><td><strong>Common carriers</strong></td><td>Coconut oil, shea butter, beeswax, jojoba oil, aloe vera</td></tr>
+        <tr><td><strong>Maine per-serving THC cap</strong></td><td>None (topicals are not "edibles" under Title 28-B §703(1)(F))</td></tr>
+        <tr><td><strong>Maine labeling requirements</strong></td><td>Title 28-B §701: ingredients, batch number, THC/CBD mg, route of administration, expiration</td></tr>
+        <tr><td><strong>Typical onset (non-transdermal)</strong></td><td>15–30 minutes</td></tr>
+        <tr><td><strong>Typical duration (non-transdermal)</strong></td><td>2–4 hours per application</td></tr>
+        <tr><td><strong>Transdermal patch duration</strong></td><td>8–24 hours sustained release</td></tr>
+        <tr><td><strong>Intoxicating effect (non-transdermal)</strong></td><td>None for most users</td></tr>
+        <tr><td><strong>Intoxicating effect (patches)</strong></td><td>Possible, depends on THC content and individual response</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>What Is a Cannabis Topical?</h2>
+    <p>A cannabis topical is any cannabis-infused product formulated for application to the skin. The category includes:</p>
+    <ul>
+      <li><strong>Balms and salves</strong> — thicker, waxy formulations typically based on beeswax, shea butter, or coconut oil</li>
+      <li><strong>Lotions and creams</strong> — emulsions (water + oil) with a lighter skin feel</li>
+      <li><strong>Massage oils</strong> — liquid carrier oils (coconut, jojoba, almond) with cannabinoids</li>
+      <li><strong>Bath products</strong> — bath salts, soaks, and bombs designed to release cannabinoids into hot water</li>
+      <li><strong>Transdermal patches</strong> — adhesive patches engineered to deliver cannabinoids through the skin and into the bloodstream over hours</li>
+      <li><strong>Intimate lubricants</strong> — cannabis-infused personal lubricants (water-based is recommended for condom compatibility)</li>
+    </ul>
+
+    <p>The distinction between <strong>non-transdermal</strong> and <strong>transdermal</strong> matters most for whether the product produces psychoactive effects. Standard topicals (balms, salves, lotions) act locally — they interact with cannabinoid receptors in the skin (CB1 and CB2 receptors are present in skin and subcutaneous tissue) without meaningful bloodstream absorption. Transdermal patches are specifically engineered to penetrate the skin barrier and enter systemic circulation, so they can produce systemic effects including, with sufficient THC, psychoactivity.</p>
+  </section>
+
+  <Callout title="Maine's THC Cap Applies to Edibles — Not Topicals" type="insight">
+    The Title 28-B §703(1)(F) cap of 10mg THC per serving and 200mg per package applies specifically to <strong>edible cannabis products</strong> (per the §703(1) introductory clause: "edible cannabis products to be sold or offered for sale by a licensee to a consumer"). Cannabis topicals are sold under the same licensing framework but are regulated under §701's general labeling rules, not §703's per-serving cap. This is why a Maine topical may legally contain more total THC per container than an edible — but it still must be labeled per §701(1)(F) and (I) with total potency and route of administration.
+  </Callout>
+
+  <section>
+    <h2>How Topicals Work (The Science, Briefly)</h2>
+    <p>Human skin contains an <strong>endocannabinoid system</strong>: CB1 and CB2 receptors, plus endocannabinoid molecules (anandamide and 2-AG) that the body produces naturally. When you apply a cannabis topical, the cannabinoids (THC, CBD, minor cannabinoids, terpenes) interact with these local receptors in the skin and subcutaneous tissue.</p>
+
+    <p>For most topicals, this interaction <strong>stays local</strong>:</p>
+    <ul>
+      <li>The skin barrier (stratum corneum) prevents most cannabinoids from reaching the bloodstream in significant amounts.</li>
+      <li>Local CB1/CB2 engagement can produce reported anti-inflammatory and analgesic effects in the area of application.</li>
+      <li>No meaningful bloodstream concentration means no psychoactive high for most users.</li>
+    </ul>
+
+    <p>Transdermal patches work differently. They're formulated with chemical penetration enhancers (and sometimes carrier molecules that shuttle cannabinoids through the skin barrier) to deliver a sustained dose into the bloodstream over hours. This is closer in pharmacokinetics to taking an oral dose, just slower and more steady.</p>
+
+    <p><strong>YMYL disclaimer:</strong> Cannabis research is still evolving, especially in the United States where federal restrictions have historically limited clinical trials. The reported effects above are based on consumer reports, secondary medical sources, and limited published research. Topicals should not be used as a substitute for medical treatment of skin conditions, chronic pain, or arthritis — talk to a licensed clinician for medical advice.</p>
+  </section>
+
+  <section>
+    <h2>Therapeutic Uses: What the Research Suggests</h2>
+    <p>Per <a href="https://www.healthline.com/health/best-cbd-topicals" target="_blank" rel="noopener noreferrer">Healthline's CBD topicals overview</a>, the <a href="https://www.arthritis.org/" target="_blank" rel="noopener noreferrer">Arthritis Foundation</a>, and the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3579245/" target="_blank" rel="noopener noreferrer">2013 Nagarkatti et al. review on cannabinoids and inflammation</a>, the most-cited reported uses for cannabis topicals are:</p>
+
+    <ul>
+      <li><strong>Arthritis-related joint discomfort:</strong> CBD-dominant topicals have the strongest published evidence base, though clinical trials are limited.</li>
+      <li><strong>Localized muscle soreness and post-exercise recovery:</strong> Frequently reported by athletes and recreational exercisers; menthol- and camphor-added formulations augment the perceived cooling/warming effect.</li>
+      <li><strong>Eczema-prone or irritated skin:</strong> CBD-dominant topicals are commonly marketed for inflammatory skin conditions. Limited published evidence supports use; standard dermatological care is preferred for diagnosed conditions.</li>
+      <li><strong>Tension headaches:</strong> Reported by users; temple and neck application of menthol- and CBD-containing topicals is the common pattern.</li>
+      <li><strong>Localized nerve discomfort:</strong> Some users report topical use for neuropathic pain; clinical evidence is mixed.</li>
+    </ul>
+
+    <p>All of the above represent consumer reports and emerging clinical evidence. Cannabis topicals are not FDA-approved to diagnose, treat, cure, or prevent any disease. If you have a specific medical condition, talk to your doctor before adding a cannabis product to your regimen.</p>
+  </section>
+
+  <section>
+    <h2>Choosing a Topical at a Maine Dispensary</h2>
+    <ol>
+      <li><strong>Identify the goal.</strong> Localized pain → balm or lotion. All-day recovery → transdermal patch. Skin inflammation → light CBD lotion or balm. Sleep-related relaxation → lavender + CBD balm applied to temples/wrists.</li>
+      <li><strong>Decide THC:CBD ratio.</strong> CBD-only for daytime, non-intoxicating, and drug-test-sensitive consumers. Balanced (1:1 THC:CBD) for stronger local effects and evening use. THC-forward for the strongest local CB1 engagement, typically recommended for experienced consumers.</li>
+      <li><strong>Check the carrier.</strong> Coconut oil and shea butter are standard bases. Jojoba oil is light and absorbs quickly. Beeswax-based balms stay on the skin longer (better for sustained application to a specific spot).</li>
+      <li><strong>Look at added ingredients.</strong> Arnica (anti-inflammatory), menthol and camphor (cooling/warming), capsaicin (warming), essential oils (lavender for relaxation, peppermint for clarity). These augment the cannabinoid effect.</li>
+      <li><strong>Verify the COA.</strong> Ask the budtender for the Certificate of Analysis for the batch. It will list total THC and CBD content per container.</li>
+      <li><strong>Confirm Maine-licensed.</strong> All Maine dispensary topicals carry OCP license numbers on the label. Topicals without a Maine OCP license number are not legally sold in Maine.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>How to Apply a Cannabis Topical</h2>
+    <ol>
+      <li><strong>Start with clean, dry skin.</strong> Dirt and oils block absorption.</li>
+      <li><strong>Apply a small amount first.</strong> A coin-sized dollop of balm is enough for a localized area (wrist, knee, lower back). For lotions, follow the product's pump/dose recommendations.</li>
+      <li><strong>Massage in thoroughly</strong> for 30–60 seconds. The warmth and friction help distribute the product and may increase penetration.</li>
+      <li><strong>Wait 15–30 minutes</strong> before re-applying or assessing effect.</li>
+      <li><strong>Wash hands after application</strong> — especially if you applied THC-containing product to avoid accidentally transferring it to eyes, mouth, or other sensitive areas.</li>
+      <li><strong>Re-apply as needed</strong> per the product label, typically every 2–4 hours for non-transdermal products.</li>
+    </ol>
+
+    <p>For transdermal patches:</p>
+    <ol>
+      <li>Apply to clean, dry, hairless skin (typically inner wrist, upper arm, or lower back).</li>
+      <li>Press firmly for 30 seconds to ensure adhesion.</li>
+      <li>Leave on for the manufacturer's specified duration (commonly 8, 12, or 24 hours).</li>
+      <li>Remove and fold the patch sticky-side in before disposal — keep away from children and pets.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Special Considerations</h2>
+
+    <h3>Drug Testing</h3>
+    <p>Most non-transdermal cannabis topicals are unlikely to register on a standard THC drug test because cannabinoids don't reach the bloodstream in significant amounts from a balm or lotion. <strong>Transdermal patches are a real risk</strong> for drug-test-positive results because they're engineered to deliver cannabinoids into the bloodstream. If you are subject to employment or legal drug testing, CBD-only topicals are the safest choice.</p>
+
+    <h3>Pets</h3>
+    <p>Per the Pet Poison Helpline, cannabis topicals are potentially toxic to dogs and cats when ingested — and dogs and cats are notorious for licking things off their fur and paws. Even non-THC topicals contain cannabinoids that, when licked, can be absorbed through the pet's digestive system. Store topicals like any cannabis product: in a closed container your pet cannot access.</p>
+
+    <h3>Pregnancy and Breastfeeding</h3>
+    <p>The American College of Obstetricians and Gynecologists recommends against cannabis use during pregnancy and breastfeeding, including topical use. Cannabinoids are detectable in breast milk. Talk to your doctor if you have questions.</p>
+
+    <h3>Storage</h3>
+    <p>Store topicals in a cool, dry place away from direct sunlight. Most have a 12–24 month shelf life. Check the recommended-use or expiration date (required by Title 28-B §701(1)(J)(3)). Discard if the product develops off smell, color change, or signs of mold.</p>
+  </section>
+
+  <section>
+    <h2>Sublingual, Edible, and Topical — A Practical Comparison</h2>
+    <table aria-label="Comparison of sublingual edible and topical cannabis routes">
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Tincture (sublingual)</th><th scope="col">Edible (gummy, chocolate)</th><th scope="col">Topical (balm, lotion, patch)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Onset</strong></td><td>15–30 min</td><td>30–90 min</td><td>15–30 min (local) / 30–60 min (transdermal)</td></tr>
+        <tr><td><strong>Peak</strong></td><td>45–60 min</td><td>2–4 hours</td><td>1–2 hours (local) / patch releases gradually</td></tr>
+        <tr><td><strong>Duration</strong></td><td>2–4 hours</td><td>4–8 hours</td><td>2–4 hours per application / patch 8–24 hours</td></tr>
+        <tr><td><strong>Intoxicating</strong></td><td>Yes (sublingual THC)</td><td>Yes (THC)</td><td>No (most topicals) / Yes (transdermal patches)</td></tr>
+        <tr><td><strong>Effect profile</strong></td><td>Systemic, mind + body</td><td>Systemic, longer-lasting</td><td>Localized, body only</td></tr>
+        <tr><td><strong>Maine THC per-serving cap</strong></td><td>10mg (§703(1)(F))</td><td>10mg (§703(1)(F))</td><td>None — labeled per §701</td></tr>
+        <tr><td><strong>Drug test risk</strong></td><td>High (THC)</td><td>High (THC)</td><td>Low (non-transdermal) / High (transdermal)</td></tr>
+      </tbody>
+    </table>
+
+    <p>For local pain, inflammation, or skin issues, topicals are often the best first choice because the effect is targeted and there's no systemic high. For broader therapeutic or recreational effects, tinctures or edibles are better suited.</p>
+  </section>
+
+  <Callout title="Verify With Your Budtender" type="tip">
+    Topical selection, THC:CBD ratio, and intended use are questions budtenders at Maine dispensaries are trained to discuss. Bring a clear sense of your goal (e.g., "I want a CBD balm for post-workout muscle soreness") and ask for the product's Certificate of Analysis. Reputable budtenders will pull up the COA showing total THC, total CBD, terpenes, and lab results for contaminants.
+  </Callout>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={topicalFaqs} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures &amp; Sublingual Guide</a> — fastest-acting non-inhaled option for systemic effects</li>
+      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator &amp; Maine Dosing Guide</a> — gummy/chocolate dose framework</li>
+      <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes &amp; Effects</a> — terpenes added to topicals (linalool, menthol, camphor)</li>
+      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Edibles Compliance Guide</a> — Title 28-B §703 statute citations and operator-side rules</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — directory of licensed operators carrying topicals</li>
+    </ul>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is for educational purposes. It is not medical advice. Cannabis topicals are not FDA-approved to diagnose, treat, cure, or prevent any disease. If you have a specific medical condition (skin condition, chronic pain, arthritis), talk to a licensed clinician before adding cannabis topicals to your regimen. Cannabis can interact with prescription medications metabolized by the CYP450 system. If you are pregnant, breastfeeding, or subject to drug testing, talk to your doctor before using any cannabis product, including topicals.</p>
+</article>
+</Layout>
