@@ -250,3 +250,45 @@ Remaining work beyond this continuation:
 Notes:
 - Vercel deploy lag observed (R106 content showed pre-R106 right after push). Same pattern may apply to R107, R108, R109, R110, R111 — re-verify in next session before claiming confirmed-live.
 - Pattern for new guides documented and working: write `.astro`, generate image (mmx), create 6 variants (convert + avifenc), commit, push. Skip inline `<script type="application/ld+json">` — Layout doesn't pick it up.
+
+
+## Continuation 3 — YMYL rounds 112-113 (this turn)
+
+**Commits added:**
+- `00b30856` — fix(seo): YMYL round 112 — insurance page factual callout + duplicate section
+- `13dc7ca7` — fix(seo): YMYL round 113 — add session/chapter to uncited LD 104 and LD 1847 in VI guide
+
+### Round 112 — Insurance page fact-corrected
+
+Spotted the remaining Round 107 cleanup gap and one factual regression:
+
+1. **Surety Bond vs Insurance Callout** was misleadingly worded: "OCP does not require general insurance..." — that contradicts the rest of the page (line 204: "General liability, product liability, workers comp, and property insurance are required for your OCP license") and would mislead a new operator into skipping commercial GL coverage that's actually required by some municipalities (Portland confirmed). Replaced with the faithful description: Title 28-B §702-A proof-of-financial-capacity framework (cash/line of credit/surety bond), separate municipal GL requirement (Portland per ordinance), direct link to OCP Applications & Forms page.
+
+2. **Duplicate "Cost-Saving Strategies" section** — round 107 had caught one of two duplicates but missed this one. Removed the second occurrence (byte-for-byte duplicate including identical <ul> bullets). Now exactly one "Cost-Saving Strategies" h2.
+
+3. **article.modifiedDate advanced to 2026-07-04** — round 112 itself; for the standard "Last verified" YMYL audit-traceability signal.
+
+### Round 113 — Bill citation hygiene on vertical-integration page
+
+The VI guide mentioned "Legislative debates (LD 104, LD 1847) reflect ongoing tension..." without session/year context. Verified both bills:
+- **LD 104 (132nd, 2025-26)**: "An Act to Protect the Health of Medical Cannabis Patients and Streamline the Mandatory Testing of Cannabis" — relevant to caregiver/VI balance via testing burden
+- **LD 1847 (131st, 2023-24)**: medical Metrc tracking bill (verified in round 107)
+
+Both occurrences on the page now link to the bill record with session attached, so a verifying reader cannot accidentally check LD 104 in 130th Legislature (which is a student-concussion bill, not cannabis-related).
+
+### End of this turn
+
+13 YMYL corrections total across all 3 continuation sessions of the day:
+- R106-107: Houlton + Presque Isle + metrc + insurance structural + statute fixes
+- R108-109: New tinctures + topicals consumer guides
+- R110: Windham operator data + Wells opt-in reversal (the largest single fix)
+- R111: Dover-Foxcroft cross-ref propagation
+- R112: Insurance page factual callout + duplicate section
+- R113: VI guide bill citation hygiene
+
+Stopping condition met. Operator-facing audit queue is now in good shape. Remaining work is:
+- LOW: GSC measurement (needs export)
+- LOW: "Last verified" badge rollout across session-built pages
+- OPTIONAL: 4 town guides with "Unclear" status (already honestly hedged, not actively wrong)
+
+The YMYL skill (`software-development/cannabis-content-ymyl-audit`) has been validated across 13 fixes and remains accurate. The verify pattern (`pre-push-verify.cjs --skip-smoke* --skip-sitemap-postprocess --skip-docs-vs-code`) remains the fastest correct path.
