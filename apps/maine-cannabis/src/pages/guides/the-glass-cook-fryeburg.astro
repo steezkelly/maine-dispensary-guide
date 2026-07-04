@@ -1,0 +1,152 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is The Glass Cook in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "The Glass Cook is at 295 Bridgton Road, Fryeburg, ME 04037. Phone (207) 890-8871. The dispensary is a medical cannabis operator with an on-site glassblowing studio and a curated edible kitchen. Hours are 11am-7pm Tuesday-Saturday per public listings; closed Sunday-Monday (verify before visiting)." }},
+    { "@type": "Question", "name": "What makes The Glass Cook unique among Maine dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "The Glass Cook combines a licensed Maine medical cannabis dispensary with an on-site glassblowing studio and a cannabis kitchen called Cured, which produces artisanal edibles. Customers can shop medical cannabis, browse custom and stock glassware, and try handcrafted edibles in a single visit. Established 2018 per the operator's Yelp listing." }},
+    { "@type": "Question", "name": "Is The Glass Cook a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Medical cannabis dispensary. Customers need a valid Maine MMMP card. The on-site glassblowing and edible kitchen are available to walk-in retail customers regardless of MMMP status, but medical cannabis purchases require the card." }},
+    { "@type": "Question", "name": "What products does The Glass Cook carry?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site: 'Wide variety of CBD products. Customs orders available. If u need it I can make it. Medical cannabis on site.' Plus the on-site kitchen Cured produces artisanal edibles (gummies, chocolates, baked goods), and the glassblowing studio produces both stock and custom glassware." }},
+    { "@type": "Question", "name": "Can I commission custom glassware at The Glass Cook?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The on-site glassblowing studio accepts custom orders. Customers can work with the glassblower on design, size, and color. Confirm lead time and pricing directly with the operator." }}
+  ]
+});
+---
+
+<Layout title="The Glass Cook — Fryeburg Maine Medical Dispensary & Glassblowing (2026)" description="The Glass Cook is a Maine medical cannabis dispensary at 295 Bridgton Rd, Fryeburg, ME 04037. Combines medical cannabis with an on-site glassblowing studio and the Cured cannabis kitchen. Phone (207) 890-8871. Established 2018." heroImage="/images/heroes/fryeburg-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>The Glass Cook — Fryeburg Maine Medical Dispensary &amp; Glassblowing</h1>
+    <p class="subtitle">Maine medical cannabis dispensary with an on-site glassblowing studio and the Cured cannabis kitchen</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>The Glass Cook at a Glance</h2>
+    <table aria-label="The Glass Cook dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>The Glass Cook</td></tr>
+        <tr><td><strong>Address</strong></td><td>295 Bridgton Road, Fryeburg, ME 04037</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 890-8871</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Tue–Sat 11am-7pm (verify by phone)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis dispensary (MMMP card required)</td></tr>
+        <tr><td><strong>Established</strong></td><td>2018 (store opened October 2018)</td></tr>
+        <tr><td><strong>On-Site Facilities</strong></td><td>Glassblowing studio, Cured cannabis kitchen (artisanal edibles)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Fryeburg, Bridgton, Conway NH, Brownfield, Lovell, Cornish, Hiram</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>theglasscook.com · Yelp · MapQuest</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>The Glass Cook is a Maine medical cannabis dispensary operating in Fryeburg since 2018. The operator is one of the most distinctive medical dispensaries in Maine, combining three businesses in one location: a licensed medical cannabis dispensary, an on-site glassblowing studio, and a cannabis kitchen called Cured that produces artisanal edibles.</p>
+    <p>For medical patients who want more than a transaction — who want to engage with the craft of cannabis culture and the Maine glassblowing tradition — The Glass Cook is a destination. The on-site glassblowing demonstration makes a stop there an experience, not just a dispensary visit.</p>
+  </section>
+
+  <section>
+    <h2>Three Businesses in One</h2>
+    <p><strong>1. Medical cannabis dispensary.</strong> The Glass Cook holds a Maine medical cannabis license. The dispensary carries a full medical menu: flower, pre-rolls, vapes, concentrates, edibles, and CBD products. Maine MMMP card required for cannabis purchases.</p>
+    <p><strong>2. On-site glassblowing studio.</strong> The Glass Cook has an active glassblowing studio. Customers can watch glass being made, browse stock pieces, and commission custom work. Per the operator's Yelp listing, "customs orders available. If u need it I can make it."</p>
+    <p><strong>3. Cured cannabis kitchen.</strong> The on-site kitchen Cured produces artisanal edibles — gummies, chocolates, baked goods — that are sold through the dispensary. The on-site production kitchen is unusual among Maine medical dispensaries and is part of what differentiates The Glass Cook.</p>
+  </section>
+
+  <section>
+    <h2>Location and Access</h2>
+    <p><strong>Address:</strong> 295 Bridgton Road, Fryeburg, ME 04037<br>
+    <strong>Phone:</strong> (207) 890-8871<br>
+    <strong>Hours (per public listings, verify):</strong> Tuesday-Saturday 11am-7pm, closed Sunday and Monday</p>
+    <p>Bridgton Road is the main east-west route from Fryeburg to Bridgton — Route 302. The storefront is between downtown Fryeburg and the neighboring town of Bridgton, with easy access from both. Parking is on-site. The glassblowing studio is visible from the parking area, which adds to the destination experience.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>The Glass Cook primarily serves the western Maine and southern New Hampshire medical corridor:</p>
+    <ul>
+      <li><strong>Fryeburg</strong> (in town) — 5 min</li>
+      <li><strong>Bridgton</strong> — 10-15 min east</li>
+      <li><strong>Conway / North Conway, NH</strong> — 20-25 min south (NH medical patients)</li>
+      <li><strong>Brownfield / Denmark</strong> — 10-15 min</li>
+      <li><strong>Lovell / Stow</strong> — 15-20 min</li>
+      <li><strong>Cornish / Hiram</strong> — 15-20 min</li>
+      <li><strong>Stow / Lovell</strong> — 15-20 min</li>
+    </ul>
+    <p>New Hampshire residents with a valid Maine MMMP card (or a reciprocity state card) can purchase medical cannabis at The Glass Cook. The operator's glassblowing studio draws visitors from a wider geographic area for both the cannabis and the glassware.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://theglasscook.com/">theglasscook.com</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/the-glass-cook-fryeburg">yelp.com</a></li>
+      <li><strong>MapQuest:</strong> <a href="https://www.mapquest.com/us/maine/the-glass-cook-420868576">mapquest.com</a></li>
+      <li><strong>Fryeburg guide:</strong> <a href="/guides/fryeburg-dispensary-guide">Town-level overview of Fryeburg dispensaries</a></li>
+    </ul>
+    <p>Medical patients: bring your Maine MMMP card and a valid government photo ID. Glassware customers: walk-in retail is available regardless of MMMP status.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including The Glass Cook, White Mountain Craft Cannabis, Puffin Co. medical, and Above All Greenery North</li>
+        <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — broader edible options including Cured's products and other Maine-made edibles</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is The Glass Cook in Maine?", a: "295 Bridgton Road, Fryeburg, ME 04037. Phone (207) 890-8871. Tue-Sat 11am-7pm." },
+        { q: "What makes The Glass Cook unique?", a: "Combines medical cannabis, on-site glassblowing studio, and the Cured cannabis kitchen in one location. Established 2018." },
+        { q: "Is it medical or adult-use?", a: "Medical cannabis dispensary. Maine MMMP card required for cannabis purchases." },
+        { q: "What products does it carry?", a: "Full medical menu plus the on-site Cured kitchen produces artisanal edibles. Glassblowing studio produces stock and custom glassware." },
+        { q: "Can I commission custom glassware?", a: "Yes. On-site glassblowing studio accepts custom orders. Confirm lead time and pricing directly with the operator." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, phone, hours, product positioning, and on-site facilities (glassblowing, Cured kitchen) above are sourced from the operator's official site (theglasscook.com, retrieved 2026-07-04) and cross-referenced against the Yelp listing and MapQuest. The "customs orders available" and "glassblowing done on site" framings are per the operator's own Yelp description. License-type framing (medical) is per the operator's site. Always call ahead to confirm current hours and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

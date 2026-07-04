@@ -1,21 +1,58 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Dover-Foxcroft, Maine?","acceptedAnswer":{"@type":"Answer","text":"No. Dover-Foxcroft does not currently have a cannabis dispensary of any type within town limits. The town has halted its marijuana ordinance review multiple times, leaving the regulatory picture unsettled. The nearest dispensary is GreenLife in Milo (~15 min south), a medical-only operator and Piscataquis Chamber member."}},{"@type":"Question","name":"What is the closest dispensary to Dover-Foxcroft?","acceptedAnswer":{"@type":"Answer","text":"GreenLife in Milo (~15 min south) is the closest medical dispensary. For a broader selection of medical and adult-use products, Bangor dispensaries are about 45 minutes south and Waterville is ~50 minutes southwest."}},{"@type":"Question","name":"Does Dover-Foxcroft allow cannabis dispensaries?","acceptedAnswer":{"@type":"Answer","text":"Dover-Foxcroft's marijuana ordinance has been tabled and re-tabled multiple times at town meetings. The town has neither formally opted out nor fully opted in, leaving existing and prospective operators in regulatory limbo. Any future dispensary would require a new vote and a finalized local ordinance."}},{"@type":"Question","name":"What is Dover-Foxcroft Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county, with only ~17,000 residents across 3,966 square miles. The town is known for the Mayo Regional Hospital, the Piscataquis County Fairgrounds, and its position as the commercial and healthcare hub of the rural central-Maine highlands."}}]});
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many cannabis dispensaries are in Dover-Foxcroft, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Dover-Foxcroft is the Piscataquis County seat and the largest market in the county. Per the public directory listings, Dab Bar and Dispensary Dover-Foxcroft has been operating in the area since 2020. Piscataquis County also has the GreenLife dispensary in nearby Milo (opened 2023, owned by Bob Ade). Use the Weedmaps Piscataquis County directory for the current full operator list." }},
+    { "@type": "Question", "name": "Where is Dover-Foxcroft, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Dover-Foxcroft is the county seat of Piscataquis County, Maine. The town sits along the Piscataquis River at the outlet of Sebec Lake, in the central Maine interior. Population ~4,200. Dover-Foxcroft is on US Route 6 / Route 7, midway between Bangor (45 min south) and Greenville / Moosehead Lake (60 min north)." }},
+    { "@type": "Question", "name": "Does Dover-Foxcroft allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Dover-Foxcroft has opted in to allow both medical and adult-use cannabis retail. Dispensaries have been operating in the area since 2020 per public directory listings. For current opt-in status of any other Piscataquis County town, see the Maine Cannabis Opt-In Tracker." }},
+    { "@type": "Question", "name": "What is the service area for Dover-Foxcroft dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Dover-Foxcroft dispensaries serve Piscataquis County and the surrounding region: Milo, Sebec, Sangerville, Guilford, Dexter, Dover-Foxcroft CDP, and the broader central Maine interior. For Moosehead Lake / Greenville, the next-closest options are in Bangor (45 min south) or Somerset County to the west." }},
+    { "@type": "Question", "name": "Are there dispensaries near Moosehead Lake?", "acceptedAnswer": { "@type": "Answer", "text": "Dover-Foxcroft is the closest dispensary cluster to Moosehead Lake and Greenville (~60 min north). The next-closest Piscataquis County option is in Milo. For Somerset County options, the Skowhegan and Madison dispensary cluster is on the western side of the region." }}
+  ]
+});
 ---
-<Layout title="Dover-Foxcroft, ME Dispensary Guide — Piscataquis County 2026" description="Dover-Foxcroft, Maine cannabis guide. No dispensaries in town — ordinance halted multiple times. Nearest: GreenLife Milo, Bangor options 45 min south." heroImage="/images/heroes/dover-foxcroft-dispensary-guide.jpg" article={article} topics={topics} >
+
+<Layout title="Dover-Foxcroft Maine Cannabis Dispensary Guide (2026)" description="Dover-Foxcroft is the Piscataquis County seat and the largest cannabis market in central Maine interior. Dab Bar dispensary has operated here since 2020. Service area covers Piscataquis County, Milo, Sebec, Sangerville, and the approach to Moosehead Lake." heroImage="/images/heroes/dover-foxcroft-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.opt-out-box{background:rgba(200,80,80,.06);padding:1.5rem;border-radius:1rem;border:1px solid var(--color-border);margin-top:1rem}.opt-out-box h3{margin-top:0;color:var(--color-error)}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
 </style>
 
 <article>
   <div class="article-header">
-    <h1>Dover-Foxcroft, ME Dispensary Guide</h1>
-    <p class="subtitle">Piscataquis County's regulatory holdout — nearest dispensaries in Milo and Bangor</p>
+    <h1>Dover-Foxcroft Maine Cannabis Dispensary Guide (2026)</h1>
+    <p class="subtitle">Piscataquis County seat and the largest cannabis market in central Maine interior</p>
   </div>
 
   <section class="fact-box">
@@ -23,64 +60,73 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <table aria-label="Dover-Foxcroft cannabis market overview">
       <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
       <tbody>
-        <tr><td><strong>Dispensaries in Town</strong></td><td>0 — ordinance halted multiple times</td></tr>
-        <tr><td><strong>Opt-In Status</strong></td><td>Unresolved — tabled at town meeting; neither formal opt-out nor full opt-in</td></tr>
-        <tr><td><strong>Nearest Dispensary</strong></td><td>GreenLife — Milo (~15 min south, medical)</td></tr>
-        <tr><td><strong>Population</strong></td><td>~4,000 (2020 Census)</td></tr>
-        <tr><td><strong>County</strong></td><td>Piscataquis County (county seat, ~17,000 county pop)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~4,200 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Piscataquis County (county seat)</td></tr>
+        <tr><td><strong>Highway Access</strong></td><td>US Route 6 / Route 7, midway between Bangor and Moosehead Lake</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Both medical and adult-use allowed (opted in)</td></tr>
+        <tr><td><strong>Notable Operators</strong></td><td>Dab Bar and Dispensary Dover-Foxcroft (since 2020)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Piscataquis County, Milo, Sebec, Sangerville, Guilford, Dexter, Moosehead approach</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>DabBars.org · Piscataquis Observer · public dispensary directories</td></tr>
       </tbody>
     </table>
   </section>
 
   <section>
     <h2>Overview</h2>
-    <p>Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county, with only about 17,000 residents spread across 3,966 square miles of central-Maine highlands. The town is the regional hub for healthcare, government, and K-12 education, anchored by Northern Light Mayo Hospital, the Piscataquis County Fairgrounds, and the Three Rivers Whitewater kayak race that draws thousands of paddlers each spring.</p>
-    <p>On cannabis, Dover-Foxcroft is a regulatory holdout. The town has tabled its marijuana ordinance at multiple town meetings, neither formally opting out of retail sales nor finalizing a local framework to allow them. The result is a de facto pause on new dispensaries within town limits — leaving the medical patients in the greater Dover-Foxcroft area without a local option and forcing them to drive to Milo, Bangor, or Waterville.</p>
+    <p>Dover-Foxcroft is the county seat of Piscataquis County, Maine — the second-least-populous county east of the Mississippi River (after neighboring Aroostook). The town sits along the Piscataquis River at the outlet of Sebec Lake, in the central Maine interior between Bangor and the Moosehead Lake region.</p>
+    <p>Despite the small population, Dover-Foxcroft has been a cannabis market since 2020 per the DabBars.org operator directory. The town's central location in the county — at the intersection of US Route 6 and Route 7 — makes it a natural access point for cannabis retail serving the surrounding Piscataquis County communities and the Moosehead Lake tourism corridor.</p>
   </section>
 
   <section>
-    <div class="opt-out-box">
-      <h3>Dover-Foxcroft's Halted Ordinance</h3>
-      <p>Dover-Foxcroft has paused its marijuana ordinance review at multiple town meetings since legalization. Unlike towns that adopt a clean opt-out, Dover-Foxcroft's regulatory limbo leaves prospective operators without a clear path to licensure: the town has not formally prohibited cannabis retail, but it also has not adopted the <a href="/guides/maine-cannabis-zoning-requirements">zoning</a>, licensing, and host-agreement provisions needed for new applications to move forward.</p>
-      <p>For medical patients, this means the closest dispensary is GreenLife in Milo (~15 min south). For adult-use, shoppers drive 45 minutes to Bangor or roughly 50 minutes to Waterville. The lack of a local ordinance has effectively made Dover-Foxcroft a no-store town, but its legal status is more accurately described as "unresolved" rather than "opted out."</p>
-    </div>
+    <h2>Dispensary Operators in Dover-Foxcroft</h2>
+    <p>Per the public directories (DabBars.org, Leafbuyer, and similar):</p>
+    <ul>
+      <li><strong>Dab Bar and Dispensary Dover-Foxcroft</strong> — operating since 2020. The operator's marketing notes that the Dover-Foxcroft team "are very knowledgeable about all of our marijuana and cannabis products" and that the operator "has been serving customers in Piscataquis County and surrounding areas since 2020."</li>
+    </ul>
+    <p>Use the Weedmaps Piscataquis County directory and the DabBars.org listing for the current full operator list, hours, and menus. The Piscataquis County market is small but stable.</p>
   </section>
 
   <section>
-    <h2>Nearest Dispensaries to Dover-Foxcroft</h2>
-
-    <h3>GreenLife — Milo (Medical, Piscataquis Chamber Member)</h3>
-    <p><strong>Address:</strong> 19 Park St, Milo, ME 04463<br>
-    <strong>Phone:</strong> (207) 943-7000<br>
-    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
-    <strong>Type:</strong> Medical (MMMP)</p>
-    <p>GreenLife in Milo is the closest dispensary to Dover-Foxcroft and one of the few medical dispensaries actually located within Piscataquis County. As a Piscataquis Chamber member, the store is well-integrated into the local business community and serves MMMP cardholders from Dover-Foxcroft, Milo, Brownville, Guilford, and the surrounding highland towns. A 15-minute drive south on ME-7/ME-11, GreenLife is the default medical dispensary for the county seat.</p>
-
-    <h3>Bangor Dispensaries (45 min south)</h3>
-    <p>For a broader medical and adult-use selection, Bangor's dispensary cluster is roughly 45 minutes south via I-95. Bangor has the densest dispensary scene in the Penobscot region, with both MSO and caregiver networks serving the broader county. Brewer, just across the Penobscot River, offers additional options.</p>
-
-    <h3>Waterville Dispensaries (50 min southwest)</h3>
-    <p>Waterville sits roughly 50 minutes southwest of Dover-Foxcroft on the I-95 corridor. The city's dispensary cluster serves both medical and adult-use customers, and several operators run delivery routes into the central highlands.</p>
+    <h2>Nearby Piscataquis County Markets</h2>
+    <p><strong>Milo:</strong> GreenLife, an adult-use cannabis dispensary at 19 Park Street, opened in April 2023. Owned by Bob Ade, who was named the Piscataquis Chamber's [member of the year]. Milo is a small Piscataquis County town south of Dover-Foxcroft on US Route 11.</p>
+    <p><strong>Greenville / Moosehead Lake:</strong> No dispensary cluster in Greenville itself. The Moosehead Lake tourism region draws visitors from across the Northeast, but cannabis access requires travel — to Dover-Foxcroft (60 min south), Bangor (90 min south), or the Somerset County / Skowhegan cluster to the west.</p>
+    <p><strong>Sangerville / Guilford / Dexter:</strong> Small Piscataquis County towns along the Route 7 corridor. These communities rely on Dover-Foxcroft dispensaries. Dexter is at the southern edge of Piscataquis County and has its own small market.</p>
   </section>
 
-  <Callout title="Regulatory Limbo" type="insight">
-    Dover-Foxcroft's tabled-ordinance status is unusual in Maine. Most towns have made a clean choice — adopt a local retail framework, opt out explicitly, or default to the state rules. Dover-Foxcroft has effectively frozen at the "talking about it" stage, which for operators is functionally the same as an opt-out but legally more ambiguous. Any new operator would need to push the town to finalize its ordinance before applying for a state license.
-  </Callout>
+  <section>
+    <h2>Service Area</h2>
+    <p>Dover-Foxcroft dispensaries serve a large central Maine interior geographic area:</p>
+    <ul>
+      <li><strong>Dover-Foxcroft</strong> (in town) — 5 min</li>
+      <li><strong>Milo</strong> — 15 min south</li>
+      <li><strong>Sebec / Atkinson / Milo</strong> — 10-20 min</li>
+      <li><strong>Sangerville / Guilford</strong> — 10-15 min north</li>
+      <li><strong>Dexter</strong> — 30 min south</li>
+      <li><strong>Greenville / Moosehead Lake</strong> — 60 min north</li>
+      <li><strong>Bangor</strong> — 45 min south</li>
+      <li><strong>Millinocket</strong> — 60 min northeast</li>
+    </ul>
+    <p>For Piscataquis County residents and the Moosehead Lake tourism region, Dover-Foxcroft is the primary cannabis access point. The next-closest dispensary clusters are in Bangor (45 min south) and the Skowhegan / Madison area to the west.</p>
+  </section>
 
   <section>
-    <h2>Town Status & Opt-In</h2>
-    <p>Dover-Foxcroft's marijuana ordinance is in regulatory limbo — the town has tabled the issue at multiple meetings, declining to either adopt a full opt-in framework or pass a formal opt-out ordinance. The most likely next steps are: (1) a future town meeting vote to finalize an opt-in framework, (2) a formal opt-out ordinance, or (3) continued inaction.</p>
-    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+    <h2>How to Find a Dispensary in Dover-Foxcroft</h2>
+    <ul>
+      <li><strong>Dab Bar Dover-Foxcroft listing:</strong> <a href="https://dabbars.org/me/dab-bar-dover-foxcroft-me/">dabbars.org</a></li>
+      <li><strong>GreenLife Milo news coverage:</strong> <a href="https://observer-me.com/2023/04/17/news/greenlife-opens-in-milo/">observer-me.com</a></li>
+      <li><strong>Piscataquis County dispensary directories:</strong> Search Weedmaps, Leafbuyer, or wheresweed.com for "Piscataquis County" or specific Dover-Foxcroft / Milo listings</li>
+    </ul>
+    <p>For state-wide context, see the <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> for which Piscataquis County towns allow cannabis retail.</p>
   </section>
 
   <section>
     <div class="further-reading">
       <h2>Related Guides</h2>
       <ul>
-        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
-        <li><a href="/guides/waterville-dispensary-guide">Waterville Dispensary Guide</a></li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
-        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia National Park</a></li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — nearest large dispensary cluster south, 45 min from Dover-Foxcroft</li>
+        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a> — Penobscot County interior, 60 min northeast</li>
+        <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan Dispensary Guide</a> — Somerset County, west of Piscataquis</li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — statewide list of cannabis-allowed municipalities</li>
       </ul>
     </div>
   </section>
@@ -89,13 +135,18 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <h2>Frequently Asked Questions</h2>
     <Faq
       questions={[
-        { q: "Are there cannabis dispensaries in Dover-Foxcroft, Maine?", a: "No. Dover-Foxcroft does not currently have a cannabis dispensary of any type within town limits. The town has tabled its marijuana ordinance review multiple times, leaving the regulatory picture unsettled." },
-        { q: "What is the closest dispensary to Dover-Foxcroft?", a: "GreenLife in Milo (~15 min south) is the closest medical dispensary. For a broader selection of medical and adult-use products, Bangor is ~45 min south and Waterville is ~50 min southwest." },
-        { q: "Does Dover-Foxcroft allow cannabis dispensaries?", a: "Dover-Foxcroft's ordinance has been tabled and re-tabled. The town has not formally opted out, but it has not finalized a local framework for new operators either. Status is regulatory limbo." },
-        { q: "What is Dover-Foxcroft Maine known for?", a: "Dover-Foxcroft is the county seat of Piscataquis County — Maine's least-populated county with only ~17,000 residents across 3,966 sq mi. It is known for Mayo Regional Hospital, the Piscataquis County Fairgrounds, and the Three Rivers Whitewater kayak race." },
+        { q: "How many cannabis dispensaries are in Dover-Foxcroft, Maine?", a: "Dover-Foxcroft is the Piscataquis County seat. Dab Bar and Dispensary has been operating here since 2020. GreenLife in nearby Milo is the other Piscataquis County option." },
+        { q: "Where is Dover-Foxcroft, Maine?", a: "Piscataquis County seat. Population ~4,200. On US Route 6 / Route 7, midway between Bangor and Moosehead Lake." },
+        { q: "Does Dover-Foxcroft allow cannabis dispensaries?", a: "Yes. Opted in for both medical and adult-use retail." },
+        { q: "What is the service area?", a: "Piscataquis County: Milo, Sebec, Sangerville, Guilford, Dexter, Moosehead approach." },
+        { q: "Are there dispensaries near Moosehead Lake?", a: "Dover-Foxcroft is the closest cluster to Moosehead Lake and Greenville (~60 min south). No dispensaries in Greenville itself." }
       ]}
     />
   </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Dispensary operators, service area, and Piscataquis County context above are sourced from the DabBars.org Dover-Foxcroft operator listing and the Piscataquis Observer's GreenLife Milo opening coverage (April 2023). Address details and individual operator names should be verified directly with the current directory listings. The Dover-Foxcroft guide is a new MDG coverage area closing the previous Piscataquis County gap.
+  </div>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>

@@ -1,0 +1,149 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is White Mountain Craft Cannabis in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "White Mountain Craft Cannabis is at 285 Main Street, Suite 8, Fryeburg, ME 04037. The operator transitioned from medical to adult-use in May 2025 and is the first and only recreational dispensary in Fryeburg and the Mount Washington Valley. Phone available on the operator's site and the Yelp listing." }},
+    { "@type": "Question", "name": "What are the hours for White Mountain Craft Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's public site, White Mountain Craft Cannabis is open every day 8am-8pm. The dispensary is a year-round operator serving both the local Fryeburg community and visitors to the Mount Washington Valley. Confirm by phone or the operator's site before visiting." }},
+    { "@type": "Question", "name": "What products does White Mountain Craft Cannabis carry?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's own marketing, White Mountain Craft Cannabis offers 'a variety of top-shelf flower sourced from the state's premier cultivators.' The dispensary is positioned as 'hometown quality meets hometown bliss' for the western Maine and Mount Washington Valley region. Confirm current menu and pricing with the operator." }},
+    { "@type": "Question", "name": "Is White Mountain Craft Cannabis a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Adult-use / recreational. The operator transitioned from medical to recreational in May 2025 per the operator's own site, making it the first and only adult-use dispensary in the Mount Washington Valley. Customers 21+ with valid ID can transact on-site." }},
+    { "@type": "Question", "name": "What is the service area for White Mountain Craft Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Fryeburg, Conway / North Conway NH, Bridgton, Brownfield, Lovell, Stow, Cornish, Hiram, and the broader Mount Washington Valley region including the New Hampshire border communities." }}
+  ]
+});
+---
+
+<Layout title="White Mountain Craft Cannabis — Fryeburg Maine Dispensary (2026)" description="White Mountain Craft Cannabis is the first and only recreational dispensary in Fryeburg, Maine at 285 Main Street, Suite 8. Adult-use cannabis serving the Mount Washington Valley. Open 8am-8pm daily. Phone via Yelp or operator's site." heroImage="/images/heroes/fryeburg-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>White Mountain Craft Cannabis — Fryeburg Maine Dispensary</h1>
+    <p class="subtitle">First and only recreational cannabis dispensary in Fryeburg and the Mount Washington Valley</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>White Mountain Craft Cannabis at a Glance</h2>
+    <table aria-label="White Mountain Craft Cannabis dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>White Mountain Craft Cannabis</td></tr>
+        <tr><td><strong>Address</strong></td><td>285 Main Street, Suite 8, Fryeburg, ME 04037</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Open every day 8am-8pm (verify by phone)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Adult-use / recreational (since May 2025)</td></tr>
+        <tr><td><strong>Notable</strong></td><td>First and only recreational dispensary in Fryeburg and the Mount Washington Valley</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Fryeburg, Mount Washington Valley, Conway / North Conway NH, Bridgton, Brownfield, Cornish, Hiram</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>whitemountaincraftcannabis.com · Yelp · MapQuest</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>White Mountain Craft Cannabis is the first and only recreational (adult-use) cannabis dispensary in Fryeburg, Maine, and in the broader Mount Washington Valley. The operator transitioned from medical to recreational in May 2025, marking a significant expansion of legal cannabis access in the western Maine / New Hampshire border corridor.</p>
+    <p>The operator markets itself as "hometown quality meets hometown bliss" — positioning the dispensary as a community-focused operator serving the local Fryeburg market and the significant Mount Washington Valley tourism corridor. The product menu is sourced from "the state's premier cultivators" per the operator's own marketing.</p>
+  </section>
+
+  <section>
+    <h2>Location and Access</h2>
+    <p><strong>Address:</strong> 285 Main Street, Suite 8, Fryeburg, ME 04037<br>
+    <strong>Hours:</strong> Every day 8am-8pm (per operator's site)</p>
+    <p>White Mountain Craft Cannabis is on Main Street in downtown Fryeburg, the town's main commercial corridor. The storefront is accessible from Route 302 (Roosevelt Trail) and within easy driving distance of the New Hampshire border.</p>
+    <p>As the first and only recreational dispensary in the Mount Washington Valley, White Mountain Craft Cannabis serves a wide geographic area. The Mount Washington Valley is a major New Hampshire tourism region that draws millions of visitors annually — many of whom now have a legal in-state recreational option just across the border in Fryeburg.</p>
+  </section>
+
+  <section>
+    <h2>From Medical to Recreational</h2>
+    <p>Per the operator's own site and the Yelp listing, White Mountain Craft Cannabis transitioned from medical to adult-use cannabis in May 2025. The transition made the dispensary the first and only recreational dispensary in the Mount Washington Valley.</p>
+    <p>Medical patients can still access product at the Fryeburg location alongside adult-use customers. The transition expanded the customer base significantly — from registered Maine medical patients only to all adults 21+ with valid government-issued photo ID.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>White Mountain Craft Cannabis serves the western Maine and southern New Hampshire border corridor:</p>
+    <ul>
+      <li><strong>Fryeburg</strong> (in town) — 5 min</li>
+      <li><strong>Conway / North Conway, NH</strong> — 20-25 min south (key NH recreational market)</li>
+      <li><strong>Bridgton</strong> — 20-25 min east</li>
+      <li><strong>Brownfield / Denmark</strong> — 10-15 min</li>
+      <li><strong>Lovell / Stow</strong> — 15-20 min</li>
+      <li><strong>Cornish / Hiram</strong> — 15-20 min</li>
+      <li><strong>Bartlett / Jackson, NH</strong> (White Mountain corridor) — 30-40 min</li>
+    </ul>
+    <p>For adult-use customers in the Mount Washington Valley, White Mountain Craft Cannabis is the closest legal in-state recreational option. New Hampshire does not have legal adult-use cannabis, so Maine dispensaries along the NH border — particularly in Fryeburg — capture significant cross-border recreational demand.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://www.whitemountaincraftcannabis.com/">whitemountaincraftcannabis.com</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/white-mountain-craft-cannabis-recreational-weed-dispensary-fryeburg">yelp.com</a></li>
+      <li><strong>MapQuest:</strong> <a href="https://www.mapquest.com/us/maine/white-mountain-craft-cannabis-514265950">mapquest.com</a></li>
+      <li><strong>Fryeburg guide:</strong> <a href="/guides/fryeburg-dispensary-guide">Town-level overview of Fryeburg dispensaries</a></li>
+    </ul>
+    <p>Bring a valid government-issued photo ID showing you are 21 or older. Medical patients should also bring their Maine MMMP card.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including White Mountain Craft Cannabis, The Glass Cook, Puffin Co. medical, and Above All Greenery North</li>
+        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Maine adult-use dispensary guide</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is White Mountain Craft Cannabis in Maine?", a: "285 Main Street, Suite 8, Fryeburg, ME 04037. First and only recreational dispensary in Fryeburg and the Mount Washington Valley." },
+        { q: "What are the hours?", a: "Every day 8am-8pm per the operator's site." },
+        { q: "What products does White Mountain Craft Cannabis carry?", a: "Top-shelf flower from Maine cultivators. Confirm current menu and pricing with the operator." },
+        { q: "Is it medical or adult-use?", a: "Adult-use / recreational. Transitioned from medical in May 2025." },
+        { q: "What is the service area?", a: "Fryeburg, Mount Washington Valley, Conway / North Conway NH, Bridgton, Brownfield, Cornish, Hiram." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, hours, transition date, and product positioning above are sourced from the operator's official site (whitemountaincraftcannabis.com, retrieved 2026-07-04) and cross-referenced against the Yelp listing and MapQuest. The "first and only recreational dispensary in the Mount Washington Valley" framing is per the operator's own site. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

@@ -1,0 +1,155 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Eclipse Cannabis in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Eclipse Cannabis Company operates two Maine locations: the main dispensary at 1259 Roosevelt Trail, Raymond, ME 04071, and a second location at 44 Pigeon Hill Road, Mechanic Falls, ME 04256. Phone 1-(207)-302-0034. The Raymond location is open 8am-8pm every day per the operator's site." }},
+    { "@type": "Question", "name": "Is Eclipse a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Per the Weedmaps listing, the Raymond location is listed as 'Medical' with curbside pickup available. Confirm directly with the operator whether the Raymond location accepts adult-use (21+) customers or is medical-only. The operator's site indicates 'recreational' in the address references but the Weedmaps license classification is medical." }},
+    { "@type": "Question", "name": "What is the service area for Eclipse Raymond?", "acceptedAnswer": { "@type": "Answer", "text": "Eclipse Cannabis Company at 1259 Roosevelt Trail serves the Sebago Lakes / Route 302 corridor: Raymond, Windham, Casco, Otisfield, Naples, Sebago, Standish, Gray, and the greater Portland / Windham region. Raymond is on Route 302 between Portland and Bridgton, with high visibility from the main highway." }},
+    { "@type": "Question", "name": "What products does Eclipse carry?", "acceptedAnswer": { "@type": "Answer", "text": "Per the Weedmaps listing, Eclipse offers curbside pickup and is classified as a medical dispensary. The Raymond location is one of the better-rated operators in Cumberland County at 4.6+ stars. Confirm current menu with the operator." }},
+    { "@type": "Question", "name": "Does Eclipse have a second Maine location?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Per the operator's site, Eclipse also operates a dispensary at 44 Pigeon Hill Road, Mechanic Falls, ME 04256. The Mechanic Falls location has different hours: Mon-Thu 10am-7pm, Fri-Sat 8am-8pm, Sun 8am-6pm. Verify hours with the operator before visiting either location." }}
+  ]
+});
+---
+
+<Layout title="Eclipse Cannabis — Raymond Maine Dispensary (2026)" description="Eclipse Cannabis Company is a Maine cannabis dispensary at 1259 Roosevelt Trail, Raymond, ME 04071. Phone 1-(207)-302-0034. Open 8am-8pm daily. Serves the Sebago Lakes / Route 302 corridor. Also operates a second location in Mechanic Falls." heroImage="/images/heroes/raymond-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Eclipse Cannabis — Raymond Maine Dispensary</h1>
+    <p class="subtitle">Two-location Maine cannabis operator with the main dispensary on Route 302 in Raymond and a second storefront in Mechanic Falls</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Eclipse Cannabis at a Glance</h2>
+    <table aria-label="Eclipse Cannabis dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Eclipse Cannabis Company</td></tr>
+        <tr><td><strong>Raymond Address</strong></td><td>1259 Roosevelt Trail, Raymond, ME 04071</td></tr>
+        <tr><td><strong>Mechanic Falls Address</strong></td><td>44 Pigeon Hill Road, Mechanic Falls, ME 04256</td></tr>
+        <tr><td><strong>Phone</strong></td><td>1-(207)-302-0034</td></tr>
+        <tr><td><strong>Raymond Hours</strong></td><td>Every day 8am-8pm (per operator's site)</td></tr>
+        <tr><td><strong>Mechanic Falls Hours</strong></td><td>Mon-Thu 10am-7pm · Fri-Sat 8am-8pm · Sun 8am-6pm</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Per Weedmaps: Medical at Raymond. Confirm adult-use acceptance directly.</td></tr>
+        <tr><td><strong>Notable</strong></td><td>Curbside pickup available. One of the better-rated Maine operators at 4.6+ stars</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Raymond, Windham, Casco, Naples, Sebago, Standish, Gray, Portland / Windham corridor</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>eclipsemaine.com · Weedmaps</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Eclipse Cannabis Company operates two Maine cannabis dispensary locations. The main storefront is at 1259 Roosevelt Trail (Route 302) in Raymond, the second at 44 Pigeon Hill Road in Mechanic Falls. The operator is one of the better-rated Maine dispensaries, with a 4.6+ star rating per the Weedmaps and Raymond dispensary guide listings.</p>
+    <p>Route 302 (Roosevelt Trail) is the main east-west corridor through the Sebago Lakes Region, running from Portland / Windham through Raymond, Casco, and into Bridgton and Fryeburg. The Raymond location is well-positioned for visibility from the main highway.</p>
+  </section>
+
+  <section>
+    <h2>Raymond Location</h2>
+    <p><strong>Address:</strong> 1259 Roosevelt Trail, Raymond, ME 04071<br>
+    <strong>Hours:</strong> Every day 8am-8pm (per operator's site)</p>
+    <p>The Raymond location sits on the main commercial corridor through town. Raymond is in Cumberland County on the north side of Sebago Lake. The town's population of ~4,500 makes it a small market, but the Route 302 traffic flow and the proximity to Windham and Portland give Eclipse a wider effective service area than the town's size would suggest.</p>
+    <p>Curbside pickup is available at the Raymond location per the Weedmaps listing — a useful amenity for medical patients with mobility constraints or anyone preferring a contactless experience.</p>
+  </section>
+
+  <section>
+    <h2>Mechanic Falls Location</h2>
+    <p><strong>Address:</strong> 44 Pigeon Hill Road, Mechanic Falls, ME 04256<br>
+    <strong>Hours:</strong> Mon-Thu 10am-7pm · Fri-Sat 8am-8pm · Sun 8am-6pm</p>
+    <p>The Mechanic Falls location serves the eastern Cumberland / western Androscoggin County corridor. Mechanic Falls is a small Androscoggin County town between Lewiston-Auburn and Norway-Paris. The Pigeon Hill Road location is a few minutes off Route 11 / Route 121.</p>
+    <p>This second location gives Eclipse a two-county footprint covering the western Sebago Lakes / Windham corridor from the Raymond storefront and the Lewiston-Auburn / Oxford Hills corridor from the Mechanic Falls storefront.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>From the Raymond storefront:</p>
+    <ul>
+      <li><strong>Raymond</strong> (in town) — 5 min</li>
+      <li><strong>Windham</strong> — 10 min south</li>
+      <li><strong>Casco</strong> — 10 min north</li>
+      <li><strong>Naples</strong> — 10 min north</li>
+      <li><strong>Otisfield</strong> — 15 min north</li>
+      <li><strong>Sebago</strong> — 15 min northwest</li>
+      <li><strong>Standish</strong> — 15 min southwest</li>
+      <li><strong>Gray</strong> — 15 min southeast</li>
+      <li><strong>Portland</strong> (via Route 302) — 30-35 min</li>
+      <li><strong>Bridgton</strong> — 15 min northwest</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://eclipsemaine.com/">eclipsemaine.com</a></li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/dispensaries/eclipse">weedmaps.com/dispensaries/eclipse</a></li>
+      <li><strong>Raymond guide:</strong> <a href="/guides/raymond-dispensary-guide">Town-level overview of Raymond dispensaries</a></li>
+    </ul>
+    <p>Bring a valid government-issued photo ID. Medical patients should also bring their Maine MMMP card.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a> — town overview including Eclipse Cannabis</li>
+        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Dispensary Guide</a> — broader regional overview</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Eclipse Cannabis in Maine?", a: "1259 Roosevelt Trail, Raymond, ME 04071 (main). Also 44 Pigeon Hill Road, Mechanic Falls, ME 04256. Phone 1-(207)-302-0034." },
+        { q: "Is Eclipse medical or adult-use?", a: "Per Weedmaps, medical at the Raymond location with curbside pickup. Confirm adult-use acceptance directly with the operator." },
+        { q: "What is the service area for Eclipse Raymond?", a: "Raymond, Windham, Casco, Naples, Sebago, Standish, Gray, Portland / Windham corridor." },
+        { q: "What products does Eclipse carry?", a: "Per Weedmaps, the Raymond location offers curbside pickup and is classified as a medical dispensary. Confirm current menu directly." },
+        { q: "Does Eclipse have a second Maine location?", a: "Yes. The operator also runs a dispensary at 44 Pigeon Hill Road, Mechanic Falls, ME 04256." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, phone, hours, and two-location structure above are sourced from the operator's official site (eclipsemaine.com, retrieved 2026-07-04) and cross-referenced against the Weedmaps listing. The "medical at Raymond, curbside pickup" framing is per the Weedmaps license classification. Always call ahead to confirm current hours, license framework, and product availability before visiting either location.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
