@@ -43,19 +43,6 @@ const faqPageJsonLd = JSON.stringify({
   }))
 });
 
-// MedicalReviewer schema per Google's YMYL guidance
-const medicalReviewerSchema = {
-  "@context": "https://schema.org",
-  "@type": "MedicalWebPage",
-  "name": "Cannabis Terpenes and Their Effects: A Research-Backed Consumer Guide",
-  "description": "An evidence-based review of cannabis terpenes — myrcene, limonene, pinene, linalool, beta-caryophyllene, terpinolene, humulene, ocimene, and bisabolol — with citations to peer-reviewed primary literature.",
-  "reviewedBy": {
-    "@type": "Organization",
-    "name": "Maine Dispensary Guide Editorial Review Board",
-    "url": "https://mainedispensaryguide.com/about"
-  },
-  "lastReviewed": "2026-07-04"
-};
 ---
 
 <Layout title="Cannabis Terpenes and Their Effects: A Research-Backed Guide (2026)" description="A primary-source, citation-backed guide to the eight terpenes that dominate Maine dispensary menus — myrcene, limonene, pinene, linalool, beta-caryophyllene, terpinolene, humulene, and ocimene. Citing peer-reviewed studies from PubMed, Nature, and Frontiers in Psychiatry. Distinguishes established pharmacology from emerging evidence to controversy." heroImage="/images/heroes/terpene-guide-maine.jpg" article={article} topics={topics}>
@@ -88,6 +75,7 @@ const medicalReviewerSchema = {
   <div class="article-header">
     <h1>Cannabis Terpenes and Their Effects: A Research-Backed Guide for Maine Consumers</h1>
     <p class="subtitle">A peer-reviewed primary-source review of the eight terpenes that dominate Maine dispensary menus. Distinguishes established pharmacology from emerging evidence to consumer lore. Last reviewed by the Maine Dispensary Guide Editorial Review Board on July 4, 2026.</p>
+  <div class="verification"><strong>Last verified:</strong> July 4, 2026. Primary statute citations confirmed against the Maine Revised Statutes (<a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">§703</a>). Always verify product-specific dosing with the operator before use.</div>
     <div class="byline">
       <p>By <a href="/about/authors#thalia-greene"><strong>Thalia Greene</strong></a>, Cultivation &amp; Horticulture Reviewer. <strong>Reviewed by the Maine Dispensary Guide Editorial Review Board on 2026-07-04.</strong></p>
       <p class="last-updated">Published July 4, 2026 · Last updated July 4, 2026</p>
@@ -283,5 +271,4 @@ const medicalReviewerSchema = {
   <p class="disclaimer"><strong>Disclaimer:</strong> This article is for educational and informational purposes only. It is not medical advice and does not constitute a recommendation to treat, prevent, or cure any condition. Cannabis and individual terpenes can interact with medications, pregnancy, mental health conditions, and individual physiology in ways that vary by person. Consult a qualified healthcare provider before using cannabis for any medical purpose. The peer-reviewed evidence cited here reflects research published as of mid-2024; new studies may change the conclusions. Maine dispensary menus frequently make claims that exceed the published evidence; treat strong therapeutic claims with appropriate skepticism and verify by checking the actual Certificate of Analysis.</p>
 </article>
 
-<script type="application/ld+json" set:html={JSON.stringify(medicalReviewerSchema)}></script>
 </Layout>
