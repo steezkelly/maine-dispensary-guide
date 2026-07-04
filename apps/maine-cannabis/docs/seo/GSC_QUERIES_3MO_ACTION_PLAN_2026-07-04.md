@@ -392,3 +392,71 @@ The most important lessons from this session:
 2. **Local news sources > public dispensary directories** for municipal opt-in and policy status.
 3. **Hedge directory-sourced claims** with "per [directory] + confirm directly with the operator" — the Eclipse pattern.
 
+
+
+## Rounds 96-98 — YMYL accuracy improvements + skill capture (continued 2026-07-04)
+
+Following the round-94 / 95 Caribou corrections, an audit pass found similar directory-only sourcing issues in the round-4 / 6 Northern Maine guides.
+
+### Round 96 — Dexter + Milo primary-source accuracy (commit `ccb90e70`)
+
+- **Dexter guide:** replaced partial "Johnson Rd" address with full "50 Johnson Road, Dexter, ME 04930" per puffersplace.com; added phone (207) 270-1064; replaced Yelp hours with operator-site hours (Mon-Thu 9am-7pm, Fri-Sat 9am-8pm, Sun 9am-5pm); expanded 10-town hand-curated service area to the operator's actual 33-town catchment per puffersplace.com.
+- **Milo guide:** added GreenLife phone (207) 943-9005 per the Piscataquis Chamber of Commerce listing.
+
+### Round 98 — Dover-Foxcroft YMYL correction (commit `286db878`)
+
+The dabbars.org domain that I cited as the primary source for "Dab Bar operating since 2020" is now a parked GoDaddy placeholder. medicalmarijuanadispensaries.co returns 0 dispensary results for Dover-Foxcroft, ME 04426. Yelp's 2026 Dover-Foxcroft search doesn't list "Dab Bar." Three independent directories disagree.
+
+What this commit fixes:
+- Removes the unverifiable "Dab Bar operating since 2020" claim
+- Honestly acknowledges the conflicting directory evidence
+- Anchors the Piscataquis County cannabis corridor to verifiable operators: GreenLife in Milo, Puffers Place in Dexter, Hazy Moose in Howland
+- Updates FAQ and JSON-LD to reflect the uncertainty
+- Provides a clear path for readers to verify current local status (Piscataquis Chamber or City of Dover-Foxcroft)
+
+### YMYL audit pattern captured as a skill (this turn)
+
+The 5 YMYL corrections in one session (Caribou guide + Opt-In Tracker + Dover-Foxcroft guide + Dexter + Milo) revealed a recurring discipline: when directories contradict each other or are inconsistent with the operator's own web presence, the right answer is to acknowledge uncertainty rather than pick the most convenient directory.
+
+This pattern is now captured in a new skill:
+
+**`~/.hermes/skills/software-development/cannabis-content-ymyl-audit/SKILL.md`** (~17k chars)
+
+The skill documents:
+- The directory-vs-primary-source failure mode
+- A 6-step audit procedure (find directory citations, verify operator's own site, cross-check municipal policy with local news, check OCP list, re-write or hedge, verify patches)
+- Three real examples from this session (Caribou, Dover-Foxcroft, Dexter)
+- Seven common pitfalls (cited from real errors)
+- A verification checklist for new cannabis operator pages
+- Cross-linked siblings: requesting-code-review, systematic-debugging, hermes-agent-skill-authoring, skill-authoring-house-style
+- Spot-check list for the next audit: Presque Isle, Houlton, Fort Fairfield (Aroostook per the spot-check instruction)
+
+Skill validation passes house-style + bundled authoring checks:
+- Frontmatter starts with `---`, closes with `
+---
+`, YAML parses
+- name = `cannabis-content-ymyl-audit` (lowercase, hyphens, ≤64 chars)
+- description = 593 chars, starts with "Use when"
+- size = 17,435 chars (target 8-15k, max 100k)
+- All required sections present (Overview, When to Use, Common Pitfalls, Verification Checklist)
+- "Don't Load For" section present
+- Verified-state block at top of body with date and re-verify command
+- No embedded secrets
+
+The skill is a class-of-work pattern (not a one-session task), so it passes the level-of-abstraction test. Future agents doing cannabis content can load it to apply the same discipline that surfaced 5 YMYL errors in this session.
+
+### Pattern captured in memory
+
+Updated `~/.hermes/memories/MEMORY.md` with: "5 YMYL corrections shipped in one session. Pattern: public dispensary directories are NOT authoritative for operator count / license framework / opt-in status — operator's own site + local news sources are. New skill `software-development/cannabis-content-ymyl-audit` captures the discipline."
+
+### Verification (rounds 96-98 combined)
+
+- `npx astro check --minimumSeverity error`: 0 errors / 285 files (unchanged from rounds 89-95)
+- `npm run build`: consistent 17-21s, no warnings
+- `content-health.cjs`: 0 failures, 0 warnings, all 19 checks pass
+- Skill file: 17,435 chars, all house-style + bundled authoring checks pass
+- Memory: updated with YMYL correction summary and new skill reference
+
+### Goal status (final)
+
+The user's stated goal — "Continue with the brand page triage on the remaining identified gaps. Northern Maine Coverage is important to do as well. Finally, find thin content pages and expand upon them" — is complete on all three axes. The remaining value of the session came from the YMYL audit pattern, which surfaced 5 corrections across 4 commits and is now captured as a reusable skill.
