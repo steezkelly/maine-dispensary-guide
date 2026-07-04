@@ -1,0 +1,221 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cannabis Science Writer",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "Learn"
+};
+
+const topics = ["dosing", "consumer-guide"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the standard cannabis edible dose in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Maine law caps cannabis-infused edible products at 10mg THC per serving and 200mg per package, per Maine Revised Statutes Title 28-B §703(1)(F). A typical single-serving edible sold in Maine dispensaries contains 5-10mg THC. A standard beginner dose per Leafly's edible dosing guide is 2.5-5mg THC." }},
+    { "@type": "Question", "name": "How long does it take for a cannabis edible to take effect?", "acceptedAnswer": { "@type": "Answer", "text": "Per Leafly's edible dosing guide and Quick Med Cards' edible dosage calculator, onset is typically 30-90 minutes when ingested orally, with full effect at 2-3 hours. Peak effect can last 4-8 hours depending on dose and individual metabolism. Do not re-dose before 90 minutes minimum; many guides recommend waiting 2 hours." }},
+    { "@type": "Question", "name": "What happens if I take too much THC in an edible?", "acceptedAnswer": { "@type": "Answer", "text": "Per Leafly, overconsumption symptoms include anxiety, paranoia, rapid heart rate, nausea, and disorientation. These effects are uncomfortable but not life-threatening for adults. Stay hydrated, find a calm environment, use CBD to counteract THC effects, and remember the symptoms will pass. If symptoms are severe or you have a pre-existing heart condition, contact a medical professional." }},
+    { "@type": "Question", "name": "How do I calculate my starting THC dose?", "acceptedAnswer": { "@type": "Answer", "text": "Start with 2.5-5mg THC if you have no recent edible experience, per Leafly's dosing chart. If you have low tolerance but some experience, start with 5-10mg. Experienced edible consumers with high tolerance may start at 15-25mg. Maine's per-serving cap is 10mg, so anything stronger than that is a multi-serving product. Wait 90+ minutes before consuming more." }},
+    { "@type": "Question", "name": "Can I split a Maine 10mg edible in half?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Maine dispensaries commonly sell 10mg gummies or chocolates that can be split to deliver a 5mg dose. Physically cutting a gummy in half is straightforward; cutting a chocolate bar along scored lines is cleaner. Splitting is the standard beginner approach per Leafly and Quick Med Cards." }},
+    { "@type": "Question", "name": "What is the difference between THC dose and CBD dose?", "acceptedAnswer": { "@type": "Answer", "text": "THC is the psychoactive cannabinoid that produces the 'high'; CBD is non-psychoactive and may counteract some THC effects. Per Leafly, a balanced edible (e.g., 5mg THC + 5mg CBD) is often easier for beginners than a high-THC edible. Many Maine dispensaries carry CBD-only edibles for consumers who want therapeutic effects without the high." }}
+  ]
+});
+---
+
+<Layout title="Cannabis Edible Dose Calculator & Maine Dosing Guide (2026)" description="Maine-cannabis edible dose guide based on Leafly's primary dosing chart. Maine caps THC per serving at 10mg. Beginner dose 2.5-5mg; standard 5-10mg; experienced 15-25mg. Includes calculator framework, onset times, and overconsumption management." heroImage="/images/heroes/cannabis-edible-dose-calculator-maine.jpg" article={article} topics={topics} >
+<style>
+  .image-source { font-size: 0.75rem; color: var(--color-text-light); font-style: italic; margin-top: -1rem; margin-bottom: 1.5rem; }
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+  .dose-calc { background: rgba(13, 78, 80, 0.06); padding: 1.5rem 1.75rem; border-radius: 1rem; margin: 1.5rem 0; }
+  .dose-calc h3 { margin-top: 0; }
+  .dose-calc .calc-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(13, 78, 80, 0.1); }
+  .dose-calc .calc-row:last-child { border-bottom: 0; }
+  .dose-calc .calc-label { color: var(--color-text-light); }
+  .dose-calc .calc-value { font-weight: 600; color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Cannabis Edible Dose Calculator &amp; Maine Dosing Guide (2026)</h1>
+    <p class="subtitle">Primary-source-backed dose chart for Maine consumers. Maine law caps THC per serving at 10mg; this guide covers beginner to experienced dose ranges, onset times, and overconsumption management.</p>
+  </div>
+  <p class="image-source">Image: AI-generated illustration of cannabis edible products on a Maine kitchen counter, generated for this guide. Not a photograph of actual products.</p>
+
+  <section class="fact-box">
+    <h2>Quick Reference: Maine Edible Dose Chart</h2>
+    <table aria-label="Maine cannabis edible dose chart by experience level">
+      <thead><tr><th scope="col">Experience</th><th scope="col">Starting Dose</th><th scope="col">Effect Onset</th><th scope="col">Peak Effect</th><th scope="col">Total Duration</th></tr></thead>
+      <tbody>
+        <tr><td><strong>First-time / no recent use</strong></td><td>2.5mg THC</td><td>60-90 min</td><td>3-4 hours</td><td>6-8 hours</td></tr>
+        <tr><td><strong>Beginner (some experience, low tolerance)</strong></td><td>5mg THC</td><td>45-75 min</td><td>3-4 hours</td><td>6-8 hours</td></tr>
+        <tr><td><strong>Standard consumer (regular use, moderate tolerance)</strong></td><td>10mg THC</td><td>30-60 min</td><td>2-3 hours</td><td>4-6 hours</td></tr>
+        <tr><td><strong>Experienced (high tolerance, frequent use)</strong></td><td>15-25mg THC</td><td>30-45 min</td><td>2-3 hours</td><td>4-6 hours</td></tr>
+        <tr><td><strong>Very high tolerance (medical / daily consumers)</strong></td><td>25-50mg THC</td><td>20-30 min</td><td>1.5-2 hours</td><td>3-5 hours</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Maine legal cap:</strong> 10mg THC per single serving, per Maine OCP regulation. Multi-serving products are clearly labeled with serving size and total THC.</p>
+  </section>
+
+  <section class="dose-calc">
+    <h3>Your Personal Dose Calculator</h3>
+    <p>Use this framework to find your starting dose based on your current relationship with cannabis:</p>
+    <div class="calc-row">
+      <span class="calc-label">No edible use in the past 6 months</span>
+      <span class="calc-value">Start with 2.5mg</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">No edible use in the past 2 months</span>
+      <span class="calc-value">Start with 2.5-5mg</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">Occasional edible use (a few times per year)</span>
+      <span class="calc-value">Start with 5mg</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">Monthly edible use</span>
+      <span class="calc-value">Start with 5-10mg</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">Weekly edible use</span>
+      <span class="calc-value">Start with 10mg (Maine single-serving cap)</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">Daily or near-daily edible use</span>
+      <span class="calc-value">Start with 15-25mg</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">First-time edible use ever</span>
+      <span class="calc-value">Start with 2.5mg; consider 5mg CBD alongside</span>
+    </div>
+    <p style="font-size:0.875rem;color:var(--color-text-light);margin-top:1rem;margin-bottom:0;"><strong>Note:</strong> This is a starting-dose framework, not a recommendation. Individual response varies by body chemistry, recent food intake, sleep, stress, and other factors. Always wait at least 90 minutes before re-dosing.</p>
+  </section>
+
+  <section>
+    <h2>How to Find Your Dose in Practice</h2>
+    <ol>
+      <li><strong>Start with the lowest dose above for your experience level.</strong> Per Leafly's edible dosing chart, the "less is more" principle applies — you can always take more, you can never take less.</li>
+      <li><strong>Eat a small snack first.</strong> THC is fat-soluble. Having some food (especially with healthy fats) in your stomach helps absorption and reduces nausea risk for new users.</li>
+      <li><strong>Wait 90 minutes minimum before any re-dose.</strong> Per Quick Med Cards and Leafly, full onset can take 90-120 minutes. Re-dosing too early is the #1 cause of overconsumption.</li>
+      <li><strong>Track what worked.</strong> Note the dose, product type (gummy vs chocolate vs beverage), and your subjective effect at 1h, 2h, 4h. Personal response varies significantly — your 5mg experience is your baseline for next time.</li>
+      <li><strong>Build up slowly.</strong> If 2.5mg was comfortable, try 5mg next session. If 5mg was comfortable, try 10mg next time. Most Maine dispensaries sell 10mg single-serving products that can be split.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Onset Times: Why "I Don't Feel It" Often Means "Wait Longer"</h2>
+    <p>The most common edible mistake is re-dosing too early. Per the Leafly dosing chart and the Quick Med Cards calculator, onset times vary significantly by:</p>
+    <ul>
+      <li><strong>Empty stomach:</strong> 15-30 min onset (faster but harder on the body for new users)</li>
+      <li><strong>Light snack:</strong> 30-60 min onset (typical)</li>
+      <li><strong>Full meal:</strong> 60-120 min onset (slower but more sustained)</li>
+      <li><strong>Edible format:</strong> Gummies and baked goods typically slower (60-90 min) than sublingual tinctures or beverages (15-30 min)</li>
+    </ul>
+    <p>Many first-time users expect edible effects to feel like inhaled cannabis (immediate, peak in 15 min). The edible onset is genuinely slower. If you don't feel anything at 30 minutes, the right answer is to wait, not to take more.</p>
+  </section>
+
+  <section>
+    <h2>Maine-Specific Edible Rules</h2>
+    <p>Per the Maine OCP regulations (cross-referenced against the existing MDG edibles compliance guide and mainecannabis.org state law summary), and citing Title 28-B §703(1)(F) of the Maine Revised Statutes (the primary statutory source for Maine cannabis edible rules):</p>
+    <ul>
+      <li><strong>Per-serving THC cap: 10mg.</strong> Per Maine Revised Statutes Title 28-B §703(1)(F): "May not contain more than 10 milligrams of THC per serving of the product."</li>
+      <li><strong>Per-package THC cap: 200mg</strong> for solid edibles, per Title 28-B §703(1)(F): "May not contain more than 200 milligrams of THC per package of the product." Multi-serving packages must be clearly divided into 10mg servings.</li>
+      <li><strong>Allowable variance:</strong> 10% per Title 28-B §703(1)(F-1), with a floor of 0.6mg and ceiling of 5mg variance from labeled potency.</li>
+      <li><strong>Lab testing required.</strong> All edibles must pass Maine OCP testing for potency, microbials, pesticides, and heavy metals (covered in the MDG product testing guide).</li>
+      <li><strong>Child-resistant packaging required.</strong> Per Title 22 §2429-A and Maine OCP packaging rules: child-resistant, tamper-evident, opaque. Edibles must not resemble commercially available candy (no cartoon characters, no imitation of mainstream brands).</li>
+      <li><strong>Universal symbol required.</strong> Per Title 28-B §703(1)(D): each serving must be stamped or embossed with the universal THC symbol. Per PL 2025 c. 390, gummies are exempt from individual stamping/blister packaging requirements.</li>
+      <li><strong>Shape restrictions.</strong> Per Title 28-B §703(1)(E): edibles may not be manufactured in the distinct shape of a human, animal, or fruit.</li>
+      <li><strong>Nutritional fact panel.</strong> Per Title 28-B §701(1)(K): edible cannabis products must display a nutritional fact panel.</li>
+    </ul>
+    <p>These rules are enforced by the OCP. Edibles sold in licensed Maine dispensaries are required to comply with the per-serving 10mg and per-package 200mg caps.</p>
+  </section>
+
+  <section>
+    <h2>Overconsumption: What to Do If You Took Too Much</h2>
+    <p>Per Leafly's edible dosing guide, overconsumption symptoms include:</p>
+    <ul>
+      <li><strong>Anxiety, paranoia, panic</strong> — most common, especially in new users</li>
+      <li><strong>Rapid heart rate, elevated blood pressure</strong> — uncomfortable but typically not dangerous for healthy adults</li>
+      <li><strong>Nausea, vomiting</strong> — more common at very high doses (>25mg for low-tolerance users)</li>
+      <li><strong>Dizziness, disorientation</strong> — common; sit or lie down</li>
+      <li><strong>Panic about the experience itself</strong> — common at high doses; reassurance that the effects will pass is helpful</li>
+    </ul>
+    <p>What to do:</p>
+    <ul>
+      <li><strong>Stay hydrated.</strong> Water, juice, or electrolyte drinks.</li>
+      <li><strong>Find a calm environment.</strong> Quiet room, comfortable seating, soothing music.</li>
+      <li><strong>Use CBD.</strong> Per Leafly, CBD can counteract some THC effects. A CBD tincture or high-CBD flower can help take the edge off.</li>
+      <li><strong>Sleep it off.</strong> If you can, sleeping is often the fastest way through. Effects typically fade in 4-8 hours.</li>
+      <li><strong>Black pepper.</strong> Some consumers and budtenders report that smelling or chewing black peppercorns helps with THC-induced anxiety (per Leafly).</li>
+      <li><strong>Contact a medical professional</strong> if symptoms are severe, you have a pre-existing heart condition, or you suspect accidental ingestion by a child or pet.</li>
+    </ul>
+    <p>Overconsumption is uncomfortable but not life-threatening for healthy adults. The experience will pass.</p>
+  </section>
+
+  <section>
+    <h2>Special Considerations</h2>
+    <h3>For medical patients</h3>
+    <p>Medical cannabis patients using edibles for symptom management often work with their certifying provider to find the optimal dose. Per the MDG caregiver guide, medical patients may need higher doses than recreational users, especially for chronic pain or sleep indications. The MDG product testing guide explains how to read the Certificate of Analysis (COA) for the specific product's cannabinoid content.</p>
+    <h3>For older adults</h3>
+    <p>Older adults may have lower tolerance and slower metabolism. Starting at 2.5mg and titrating up slowly is especially important. Drug interactions with prescription medications are a real concern; consult your physician.</p>
+    <h3>For pregnant or breastfeeding</h3>
+    <p>Per Maine OCP and CDC guidance, cannabis use during pregnancy or breastfeeding is not recommended, regardless of dose. THC passes to the fetus and through breast milk.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/blog/best-maine-edibles-2026">Best Maine Edibles 2026</a> — operator reviews and product recommendations for Maine consumers</li>
+        <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Cannabis Edibles Compliance</a> — operator-facing compliance guide for Maine edible producers</li>
+        <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes and Their Effects</a> — research-grade review of terpenes and the entourage effect</li>
+        <li><a href="/guides/maine-cannabis-product-testing-guide">Maine Cannabis Product Testing Guide</a> — how to read Certificates of Analysis (COAs)</li>
+        <li><a href="/find-a-dispensary">Find a Dispensary in Maine</a> — dispensary finder</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "What is the standard cannabis edible dose in Maine?", a: "Maine law caps cannabis-infused edibles at 10mg THC per serving and 200mg per package, per Title 28-B §703(1)(F). A typical single-serving edible sold in Maine contains 5-10mg. A standard beginner dose per Leafly is 2.5-5mg." },
+        { q: "How long does it take for a cannabis edible to take effect?", a: "30-90 minutes for onset, 2-3 hours for full effect, 4-8 hours total duration. Do not re-dose before 90 minutes minimum." },
+        { q: "What happens if I take too much THC in an edible?", a: "Symptoms include anxiety, paranoia, rapid heart rate, nausea, disorientation. These are uncomfortable but not life-threatening for adults. Stay hydrated, find calm, use CBD, sleep it off." },
+        { q: "How do I calculate my starting THC dose?", a: "Start with 2.5-5mg if no recent experience, 5-10mg if moderate tolerance, 15-25mg if experienced. Maine's per-serving cap is 10mg. Wait 90+ minutes before re-dosing." },
+        { q: "Can I split a Maine 10mg edible in half?", a: "Yes. Maine dispensaries commonly sell 10mg gummies or chocolates that can be split for a 5mg dose. This is the standard beginner approach." },
+        { q: "What is the difference between THC dose and CBD dose?", a: "THC is psychoactive and produces the 'high'; CBD is non-psychoactive and may counteract some THC effects. Balanced edibles (e.g., 5mg THC + 5mg CBD) are easier for beginners." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Maine 10mg per-serving cap and 200mg per-package cap sourced directly from Maine Revised Statutes Title 28-B §703(1)(F) (the primary statutory source), cross-referenced against the Maine OCP packaging guidance document and mainecannabis.org state law summary. The Title 28-B §701(1)(K) nutritional fact panel requirement, Title 22 §2429-A packaging rules, and Title 28-B §703(1)(D) universal symbol requirement are cited from the same primary statutory source. Dosing chart and onset times sourced from Leafly's edible dosing guide (the cannabis industry's primary-source dosing reference). Beginner dose and overconsumption guidance from Leafly and Quick Med Cards' edible dosage calculator. Special-considerations sections reference CDC and Maine OCP public health guidance. Always start with the lowest dose for your experience level and wait at least 90 minutes before re-dosing.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only and does not constitute medical advice. Cannabis affects individuals differently. Consult a qualified healthcare professional before using cannabis, particularly if you are pregnant, breastfeeding, taking medications, or have a pre-existing health condition. Maine cannabis products sold at licensed dispensaries comply with Maine OCP regulations. Verify any specific product's dose and content directly with the dispensary or by reading the product's Certificate of Analysis (COA).</p>
+</article>
+</Layout>
