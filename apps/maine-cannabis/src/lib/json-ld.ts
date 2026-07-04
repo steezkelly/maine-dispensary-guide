@@ -19,8 +19,15 @@ export interface AuthorMeta {
   id?: string | undefined;
   /** Short bio paragraph (1-2 sentences) */
   description?: string | undefined;
-  /** Photo URL (relative or absolute). If null, schema `image` is omitted. */
-  image?: string | null | undefined;
+  /**
+   * Photo URL (relative or absolute). If null, schema `image` is omitted.
+   * Accepts either:
+   *   - A plain string URL (legacy)
+   *   - A Schema.org ImageObject shape (preferred for absolute URLs + dims)
+   *     e.g. { url, width, height, caption }
+   * The builder normalizes either into a single `image` URL on the Person node.
+   */
+  image?: string | null | { url: string; width?: number; height?: number; caption?: string } | undefined;
   /** Array of sameAs URLs (LinkedIn, Twitter, etc). Empty array = omit field. */
   sameAs?: string[] | undefined;
   /** Array of topics the author has expertise in. Empty array = omit field. */
@@ -33,6 +40,21 @@ export interface ArticleMeta {
   author?: string;
   authorTitle?: string;
   authorId?: string;
+  /**
+   * Author description to attach to the Article's Person node. Populated
+   * by the Layout author lookup; not required in frontmatter.
+   */
+  authorDescription?: string;
+  /**
+   * Photo URL or ImageObject to attach as the Person's `image`. The
+   * Layout populates this from authors.json (plain URL string).
+   */
+  authorPhoto?: string | null | { url: string; width?: number; height?: number; caption?: string };
+  /**
+   * `knowsAbout` array for the author Person node. The Layout populates
+   * this from authors.json.
+   */
+  authorKnowsAbout?: string[];
   publishDate?: string;
   modifiedDate?: string;
   section?: string;
@@ -41,8 +63,8 @@ export interface ArticleMeta {
   pageUrl: string;
   /**
    * Optional reviewer/medical reviewer Person. When provided, emits as a
-   * second `@type:Person` node in the Article graph, attached via the
-   * `reviewedBy` property. Doubles the E-E-A-T signal for YMYL pages.
+   * second `@type:Person` node in the Article graph, attached via
+   * the `reviewedBy` property. Doubles the E-E-A-T signal for YMYL pages.
    * Per Google's 2024-2026 Quality Rater Guidelines on "double E-E-A-T":
    * YMYL content with both an author AND a named reviewer is preferred.
    */
@@ -124,6 +146,14 @@ export function buildJsonLdGraph(
   const graph: GraphNode[] = [organization, website];
 
   if (article) {
+    // Resolve the article's primary author's full profile (description, photo,
+    // knowsAbout) by merging article.* fields with the values passed through from
+    // the Layout's authors.json lookup. This avoids requiring every page to
+    // duplicate photo + expertise data in frontmatter.
+    const authorDescription = article.authorDescription;
+    const authorImage = article.authorPhoto;
+    const authorKnowsAbout = article.authorKnowsAbout;
+
     const author = buildPersonNode(siteUrl, article.authorId
       ? {
           // article.author is optional in the schema interface; fall back to
@@ -133,9 +163,9 @@ export function buildJsonLdGraph(
           name: article.author || siteName,
           jobTitle: article.authorTitle,
           id: article.authorId,
-          // Future: lookup description/image/sameAs/knowsAbout from authors.json
-          // when the Article frontmatter exposes them. For now, only jobTitle
-          // + name + id are guaranteed; other fields are skipped.
+          description: authorDescription,
+          image: authorImage ?? null,
+          knowsAbout: authorKnowsAbout,
         }
       : { name: article.author || siteName });
 
@@ -196,6 +226,17 @@ export function buildJsonLdGraph(
 function buildPersonNode(siteUrl: string, meta: AuthorMeta): GraphNode {
   const { name, jobTitle, id, description, image, sameAs, knowsAbout } = meta;
 
+  // Schema.org/Person.image is a URL string (or ImageObject). Accept either:
+  //   - plain string URL (legacy form)
+  //   - ImageObject shape with .url (the new layout-populated form)
+  // Normalize to a single absolute URL so Google's Rich Results tester accepts it.
+  let imageUrl: string | undefined;
+  if (typeof image === 'string' && image.length > 0) {
+    imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+  } else if (image && typeof image === 'object' && image.url) {
+    imageUrl = image.url.startsWith('http') ? image.url : `${siteUrl}${image.url}`;
+  }
+
   const person: GraphNode = {
     '@type': 'Person',
     '@id': id ? `${siteUrl}/about/authors#${id}` : undefined,
@@ -203,7 +244,7 @@ function buildPersonNode(siteUrl: string, meta: AuthorMeta): GraphNode {
     url: id ? `${siteUrl}/about/authors#${id}` : undefined,
     jobTitle,
     description: description || undefined,
-    image: image || undefined,
+    image: imageUrl,
     sameAs: sameAs && sameAs.length > 0 ? sameAs : undefined,
     knowsAbout: knowsAbout && knowsAbout.length > 0 ? knowsAbout : undefined,
   };
