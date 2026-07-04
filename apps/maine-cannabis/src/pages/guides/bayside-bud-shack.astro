@@ -1,0 +1,156 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Bayside Bud Shack in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Bayside Bud Shack is at 1369 Atlantic Highway, Northport (some sources list the address as Lincolnville, ME 04849 — the storefront sits near the Northport / Lincolnville town line on US Route 1). Phone available on the operator's site. Hours are typically 10am-6pm daily with shorter Sunday hours." }},
+    { "@type": "Question", "name": "Is Bayside Bud Shack a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Bayside Bud Shack operates both medical and adult-use menus. The operator maintains separate Medical and Recreational menus on Leafly. Confirm the current license framework with the operator before visiting." }},
+    { "@type": "Question", "name": "Does Bayside Bud Shack offer online ordering?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The operator supports online pre-order for in-store pickup. Browse the menu at baysidebudshack.com or via the operator's Leafly listing." }},
+    { "@type": "Question", "name": "What products does Bayside Bud Shack carry?", "acceptedAnswer": { "@type": "Answer", "text": "Bayside Bud Shack carries a full Maine dispensary menu: flower, pre-rolls, vapes, concentrates, edibles, and accessories. The operator also stocks CBD products. Confirm current inventory directly." }},
+    { "@type": "Question", "name": "Where is Northport, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Northport is a small coastal town in Waldo County on US Route 1 between Belfast and Lincolnville. It sits on the western shore of Penobscot Bay. The Northport / Lincolnville area is a popular Midcoast Maine tourism corridor." }}
+  ]
+});
+---
+
+<Layout title="Bayside Bud Shack — Northport Maine Dispensary (2026)" description="Bayside Bud Shack is a Maine cannabis dispensary at 1369 Atlantic Highway, Northport, ME 04849 (Lincolnville mailing address, Northport / Lincolnville town line). Medical and adult-use menus. Midcoast Maine location on US Route 1." heroImage="/images/heroes/northport-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Bayside Bud Shack — Northport Maine Dispensary</h1>
+    <p class="subtitle">Midcoast Maine cannabis dispensary on US Route 1, serving Northport, Lincolnville, Belfast, and the Penobscot Bay corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Bayside Bud Shack at a Glance</h2>
+    <table aria-label="Bayside Bud Shack dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Bayside Bud Shack</td></tr>
+        <tr><td><strong>Address</strong></td><td>1369 Atlantic Highway, Northport / Lincolnville, ME 04849</td></tr>
+        <tr><td><strong>Phone</strong></td><td>Listed on operator's site and Leafly</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical + Adult-Use (dual menu)</td></tr>
+        <tr><td><strong>Hours (verify by phone)</strong></td><td>Generally 10am-6pm daily, shorter Sunday hours</td></tr>
+        <tr><td><strong>Products</strong></td><td>Flower, pre-rolls, vapes, concentrates, edibles, CBD</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Northport, Lincolnville, Belfast, Searsport, Camden, Rockland</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>baysidebudshack.com · Yelp · MapQuest · Leafly</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Bayside Bud Shack is a Midcoast Maine cannabis dispensary on US Route 1 in Northport. The storefront sits near the Northport / Lincolnville town line — the mailing address is Lincolnville, ME 04849, but the storefront and primary location are referenced as Northport. Either way, the address is 1369 Atlantic Highway.</p>
+    <p>The operator runs a dual-menu dispensary with separate Medical and Recreational menus available through Leafly and the operator's own site. Online pre-order for in-store pickup is supported, which is useful for the Midcoast tourism corridor that sees significant summer traffic.</p>
+  </section>
+
+  <section>
+    <h2>Location and Access</h2>
+    <p><strong>Address:</strong> 1369 Atlantic Highway, Northport / Lincolnville, ME 04849<br>
+    <strong>Hours (verify by phone):</strong> Generally 10am-6pm daily, with shorter Sunday hours. The Yelp listing and operator's site have the current schedule.</p>
+    <p>Northport is a small coastal town in Waldo County, Maine, on the western shore of Penobscot Bay. The town sits between Belfast (to the north) and Lincolnville (to the south) on US Route 1. The Northport / Lincolnville corridor is a popular Midcoast tourism region with significant summer seasonal traffic from Boston, Portland, and inland Maine visitors.</p>
+    <p>Parking is on-site at the storefront. Public transit is limited in this corridor — most visitors drive.</p>
+  </section>
+
+  <section>
+    <h2>Online Ordering and Menu</h2>
+    <p>Bayside Bud Shack supports online pre-order for in-store pickup. The operator maintains:</p>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://baysidebudshack.com/">baysidebudshack.com</a></li>
+      <li><strong>Leafly listings:</strong> Separate Medical and Recreational menus available on Leafly</li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/bayside-bud-shack-northport-2">yelp.com/biz/bayside-bud-shack-northport-2</a></li>
+    </ul>
+    <p>Verify current menu and pricing directly with the operator before visiting — the menu rotates with each cultivation cycle.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>Bayside Bud Shack serves the Midcoast Maine corridor:</p>
+    <ul>
+      <li><strong>Northport</strong> (in town) — 5 min</li>
+      <li><strong>Lincolnville</strong> (in town) — 5 min</li>
+      <li><strong>Belfast</strong> — 10-15 min north</li>
+      <li><strong>Searsport</strong> — 20 min north</li>
+      <li><strong>Camden</strong> — 20-25 min south</li>
+      <li><strong>Rockland</strong> — 30-35 min south</li>
+      <li><strong>Camden Hills State Park</strong> — 15-20 min</li>
+      <li><strong>Acadia National Park</strong> (via Route 1) — 1.5-2 hours</li>
+    </ul>
+    <p>The Midcoast Maine corridor sees significant summer tourism. Visitors to Camden Hills State Park, the Camden Snow Bowl, and the Penobscot Bay region often find Bayside Bud Shack a convenient stop on US Route 1.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://baysidebudshack.com/">baysidebudshack.com</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/bayside-bud-shack-northport-2">yelp.com/biz/bayside-bud-shack-northport-2</a></li>
+      <li><strong>MapQuest listing:</strong> mapquest.com/us/maine/bayside-bud-shack-532371013</li>
+    </ul>
+    <p>Bring a valid government-issued photo ID showing you are 21 or older. Medical patients should also bring their Maine MMMP card.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/northport-dispensary-guide">Northport Dispensary Guide</a> — town-level overview</li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a> — nearby Waldo County operator</li>
+        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Maine Midcoast / Down East dispensary guide</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Bayside Bud Shack in Maine?", a: "1369 Atlantic Highway, Northport / Lincolnville, ME 04849 (the storefront sits near the Northport / Lincolnville town line on US Route 1)." },
+        { q: "Is Bayside Bud Shack a medical or adult-use dispensary?", a: "Both. The operator maintains separate Medical and Recreational menus on Leafly." },
+        { q: "Does Bayside Bud Shack offer online ordering?", a: "Yes — online pre-order for in-store pickup is supported via the operator's site and Leafly." },
+        { q: "What products does Bayside Bud Shack carry?", a: "Flower, pre-rolls, vapes, concentrates, edibles, CBD. Menu rotates with each cultivation cycle." },
+        { q: "Where is Northport, Maine?", a: "A small coastal town in Waldo County on US Route 1 between Belfast and Lincolnville, on the western shore of Penobscot Bay." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, hours, and product categories above are sourced from the operator's official site (baysidebudshack.com, retrieved 2026-07-04) and cross-referenced against the Yelp listing and MapQuest. The Northport / Lincolnville town-line detail is per MapQuest and Yelp. License-type framing (medical + adult-use) is per the operator's dual-menu listing. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

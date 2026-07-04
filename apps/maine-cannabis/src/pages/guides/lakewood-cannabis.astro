@@ -1,0 +1,135 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Lakewood Cannabis in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Lakewood Cannabis operates two Maine stores: Standish and Madison. The Standish location is on the operator's service area for central and southern Maine. Madison is in Somerset County. Both share the same phone and brand. Confirm addresses and hours with the operator." }},
+    { "@type": "Question", "name": "Is Lakewood Cannabis a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, Lakewood Cannabis is a 'premier medical marijuana provider.' Confirm directly with the operator whether adult-use (21+) customers can transact on-site at any location." }},
+    { "@type": "Question", "name": "What is the Inhale Zen product line?", "acceptedAnswer": { "@type": "Answer", "text": "Inhale Zen is Lakewood Cannabis's house brand, specializing in 'old school' / heirloom / heritage cannabis strains. The operator cultivates these strains in-house and offers them under the Inhale Zen label at both store locations." }},
+    { "@type": "Question", "name": "How do I verify Lakewood Cannabis hours and pricing?", "acceptedAnswer": { "@type": "Answer", "text": "Check lakewood-cannabis.com or the Weedmaps listing for current hours and menu. Verify by phone before visiting." }}
+  ]
+});
+---
+
+<Layout title="Lakewood Cannabis — Standish and Madison Maine (2026)" description="Lakewood Cannabis operates two Maine dispensary locations (Standish and Madison), home of the Inhale Zen heritage-strain product line. Serves central and southern Maine with medical cannabis." heroImage="/images/heroes/standish-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Lakewood Cannabis — Standish and Madison Maine</h1>
+    <p class="subtitle">Two-store Maine medical cannabis operator with the Inhale Zen heritage-strain product line</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Lakewood Cannabis at a Glance</h2>
+    <table aria-label="Lakewood Cannabis dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Lakewood Cannabis</td></tr>
+        <tr><td><strong>Locations</strong></td><td>Standish, ME and Madison, ME</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis dispensary (per operator's site)</td></tr>
+        <tr><td><strong>House Brand</strong></td><td>Inhale Zen (heritage / heirloom / old-school strains)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Central and southern Maine</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>lakewood-cannabis.com · Weedmaps</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Lakewood Cannabis operates two Maine medical cannabis storefronts — one in Standish, one in Madison — and is the home of the Inhale Zen product line. The Inhale Zen brand specializes in "old school," heirloom, and heritage cannabis strains, positioning the operator in the craft / nostalgia segment of the Maine medical market.</p>
+    <p>The operator markets itself as "knowledge, consistency, and service," emphasizing the heritage-strain focus as a differentiator from operators that chase the newest genetics. The two-store footprint covers central Maine (Madison / Somerset County) and southern Maine (Standish / Cumberland County), with each location carrying a distinct menu tailored to the local market.</p>
+  </section>
+
+  <section>
+    <h2>Locations</h2>
+    <p><strong>Standish:</strong> Standish is a Cumberland County town on Route 25 between Windham and Gorham. The Lakewood Cannabis Standish location serves the greater Portland / Windham / Sebago Lakes region.</p>
+    <p><strong>Madison:</strong> Madison is in Somerset County along the Kennebec River. The Lakewood Cannabis Madison location serves the central Maine corridor including Skowhegan, Waterville, and the surrounding Somerset County communities.</p>
+    <p>Both locations carry the Inhale Zen house brand, but each has distinct menu options per the operator's site. Confirm addresses and hours with the operator before visiting.</p>
+  </section>
+
+  <section>
+    <h2>The Inhale Zen Product Line</h2>
+    <p>Inhale Zen is Lakewood Cannabis's in-house brand, focused on heritage / heirloom / "old school" cannabis strains. The brand markets itself around:</p>
+    <ul>
+      <li><strong>Heirloom genetics</strong> — older, time-tested cultivars rather than the latest cross-breeds</li>
+      <li><strong>Craft cultivation</strong> — small-batch, hands-on growing</li>
+      <li><strong>Consistency</strong> — same strain profile batch over batch, the way landrace and heirloom genetics are supposed to express</li>
+    </ul>
+    <p>For medical patients who specifically prefer classic cultivars over modern hybrids, the Inhale Zen line offers a curated selection that distinguishes Lakewood Cannabis from operators that lean into the latest designer genetics.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://lakewood-cannabis.com/">lakewood-cannabis.com</a></li>
+      <li><strong>Standish store page:</strong> <a href="https://lakewood-cannabis.com/standish-store/">lakewood-cannabis.com/standish-store</a></li>
+      <li><strong>Weedmaps:</strong> <a href="https://weedmaps.com/dispensaries/lakewood-cannabis-2">weedmaps.com/dispensaries/lakewood-cannabis-2</a></li>
+      <li><strong>Standish guide:</strong> <a href="/guides/standish-dispensary-guide">Town-level overview of Standish dispensaries</a></li>
+    </ul>
+    <p>Bring your Maine MMMP card and a valid government photo ID.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/standish-dispensary-guide">Standish Dispensary Guide</a> — town overview</li>
+        <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — how to get an MMMP card</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Lakewood Cannabis in Maine?", a: "Two locations: Standish, ME and Madison, ME. Both share the same brand and house line." },
+        { q: "Is Lakewood Cannabis a medical or adult-use dispensary?", a: "Per the operator's site, a 'premier medical marijuana provider.' Confirm directly for adult-use acceptance." },
+        { q: "What is the Inhale Zen product line?", a: "Lakewood Cannabis's in-house brand focused on heirloom, heritage, and 'old school' cannabis strains." },
+        { q: "How do I verify Lakewood Cannabis hours and pricing?", a: "Check lakewood-cannabis.com or the Weedmaps listing. Call ahead before visiting." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Location count, house brand, and positioning above are sourced from the operator's official site (lakewood-cannabis.com, retrieved 2026-07-04) and the Weedmaps listing. License-type framing (medical) is per the operator's public statement. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

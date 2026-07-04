@@ -1,0 +1,159 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is 420 Mules in Bar Harbor, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is a Maine medical cannabis delivery service operating in the Bar Harbor area. The operator is licensed under Maine's medical cannabis program and serves registered patients in the Mount Desert Island region. Contact the operator directly for current service area and ordering." }},
+    { "@type": "Question", "name": "Where is 420 Mules located?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is based in Bar Harbor, ME 04609. As a medical cannabis delivery service, the operator does not maintain a public storefront — the customer base is served through delivery to registered patients. Confirm pickup / delivery options with the operator." }},
+    { "@type": "Question", "name": "Is 420 Mules a medical or adult-use operator?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is a medical cannabis delivery service operating under Maine's medical cannabis program. Customers must be registered Maine medical marijuana patients (or hold a valid out-of-state card from a reciprocity state) to place orders." }},
+    { "@type": "Question", "name": "How do I order from 420 Mules?", "acceptedAnswer": { "@type": "Answer", "text": "Contact 420 Mules directly through the operator's website (420mules.com) or via the Weedmaps listing to place an order. Medical delivery in Maine is governed by caregiver and courier licensing rules — the operator will confirm whether your address falls within their service radius." }},
+    { "@type": "Question", "name": "What is the service area for 420 Mules?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules delivers to medical patients in the Bar Harbor / Mount Desert Island region on the Maine coast. Confirm current service radius and minimum order requirements with the operator." }}
+  ]
+});
+---
+
+<Layout title="420 Mules — Bar Harbor Maine Medical Cannabis Delivery (2026)" description="420 Mules is a Maine medical cannabis delivery service operating in the Bar Harbor / Mount Desert Island area. Serves registered Maine medical patients. Per the operator's site, the service is patient-focused on the Maine coast." heroImage="/images/heroes/bar-harbor-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>420 Mules — Bar Harbor Maine Medical Cannabis Delivery</h1>
+    <p class="subtitle">Mount Desert Island medical cannabis delivery service serving registered Maine patients on the Maine coast</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>420 Mules at a Glance</h2>
+    <table aria-label="420 Mules dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>420 Mules</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Bar Harbor / Mount Desert Island, Maine</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis delivery (no public storefront)</td></tr>
+        <tr><td><strong>Hours (verify by phone)</strong></td><td>Generally 9am-9pm daily per the operator's public listing</td></tr>
+        <tr><td><strong>Order Method</strong></td><td>Direct contact via 420mules.com or Weedmaps</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Bar Harbor, Mount Desert Island, surrounding Hancock County</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>420mules.com · Weedmaps · Yelp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>420 Mules is a Maine medical cannabis delivery service operating in the Bar Harbor / Mount Desert Island region. Unlike the storefront dispensaries that dominate the rest of Maine's cannabis market, 420 Mules focuses on the medical delivery model — bringing registered patients their medicine rather than operating a walk-in retail location.</p>
+    <p>This model is particularly well-suited to the Mount Desert Island region. Bar Harbor is small, the surrounding towns are sparsely populated, and Acadia National Park draws millions of summer visitors — but the registered medical patient base is dispersed across a wide geographic area. Medical delivery bridges that gap for patients who need regular access to their medicine without driving to a physical storefront.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>420 Mules serves the Mount Desert Island region and surrounding Hancock County. The primary service area includes:</p>
+    <ul>
+      <li><strong>Bar Harbor</strong> (operator's home base)</li>
+      <li><strong>Mount Desert Island</strong> — including Bar Harbor, Northeast Harbor, Southwest Harbor, Tremont</li>
+      <li><strong>Trenton</strong></li>
+      <li><strong>Ellsworth</strong> (mainland Hancock County)</li>
+      <li><strong>Lamoine</strong></li>
+      <li><strong>Sullivan</strong></li>
+      <li><strong>Gouldsboro / Winter Harbor</strong></li>
+    </ul>
+    <p>Confirm the current service radius with the operator before placing an order. Maine's medical delivery rules require the patient to be a registered MMMP cardholder and the operator to hold appropriate caregiver or courier licensing.</p>
+  </section>
+
+  <section>
+    <h2>How to Order</h2>
+    <p>420 Mules accepts orders through:</p>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://www.420mules.com/">420mules.com</a></li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/deliveries/420-mules">weedmaps.com/deliveries/420-mules</a></li>
+      <li><strong>Direct contact:</strong> Phone available on the operator's site</li>
+    </ul>
+    <p>As a medical delivery service, 420 Mules requires the customer to be a registered Maine MMMP cardholder. Out-of-state medical patients from a reciprocity state should call ahead to confirm acceptance. The operator may also carry branded merchandise (shirts and sweatshirts) for sale on the website.</p>
+  </section>
+
+  <section>
+    <h2>Why a Delivery Model on Mount Desert Island</h2>
+    <p>The Mount Desert Island region — home to Bar Harbor, Acadia National Park, and the surrounding coastal communities — has specific characteristics that favor the medical delivery model:</p>
+    <ul>
+      <li><strong>Geographic dispersion.</strong> Year-round population is small but spread across multiple towns and unorganized townships. A central storefront would be inconvenient for many patients.</li>
+      <li><strong>Seasonal population swings.</strong> Summer tourism brings tens of thousands of visitors, but they are transient. The medical patient base is the year-round residents.</li>
+      <li><strong>Limited retail cannabis zoning.</strong> Several Mount Desert Island towns have either opted out of cannabis retail or have restrictive local zoning that limits storefront dispensary operations.</li>
+      <li><strong>Patient preference.</strong> For medical patients managing chronic conditions, home delivery reduces mobility barriers and provides predictable service.</li>
+    </ul>
+    <p>Operators like 420 Mules are well-positioned to serve this market as Maine's medical cannabis program continues to grow.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Order</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://www.420mules.com/">420mules.com</a></li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/deliveries/420-mules">weedmaps.com/deliveries/420-mules</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/420-mules-bar-harbor-2">yelp.com/biz/420-mules-bar-harbor-2</a></li>
+      <li><strong>Bar Harbor guide:</strong> <a href="/guides/bar-harbor-dispensary-guide">Town-level overview of Bar Harbor dispensaries</a></li>
+    </ul>
+    <p>Bring your Maine MMMP card and a valid government photo ID. Confirm current service radius, delivery fees, and minimum order requirements before placing an order.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a> — town-level overview of Mount Desert Island cannabis market</li>
+        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Midcoast and Down East dispensary guide for tourists and residents</li>
+        <li><a href="/blog/maine-medical-patient-delivery-services-2026">Maine Medical Patient Delivery Services 2026</a> — broader overview of Maine's medical delivery framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "What is 420 Mules in Bar Harbor, Maine?", a: "A Maine medical cannabis delivery service serving registered patients in the Mount Desert Island region." },
+        { q: "Where is 420 Mules located?", a: "Bar Harbor, ME 04609. As a medical delivery service, the operator does not maintain a public storefront." },
+        { q: "Is 420 Mules a medical or adult-use operator?", a: "Medical cannabis delivery. Customers must be registered Maine medical patients (or hold a valid out-of-state card from a reciprocity state)." },
+        { q: "How do I order from 420 Mules?", a: "Contact via 420mules.com or Weedmaps. Confirm service radius and minimum order with the operator." },
+        { q: "What is the service area for 420 Mules?", a: "Bar Harbor / Mount Desert Island and surrounding Hancock County. Confirm current radius with the operator." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Service area, hours, and licensing framework above are sourced from the operator's official site (420mules.com, retrieved 2026-07-04) and cross-referenced against the Weedmaps and Yelp listings. The "medical delivery, no public storefront" framing is per the operator's own site. Confirm current service radius, delivery fees, and product availability directly with the operator before placing an order.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Service area, hours, and product availability can change. Always verify details directly with the operator before placing an order.</p>
+</article>
+</Layout>

@@ -1,0 +1,151 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Above All Greenery in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Above All Greenery North (Fryeburg) is at 48 Fair Street, Unit 4, Fryeburg, ME 04037. The original Above All Greenery dispensary is in West Newfield, ME. Both are operated by the same company. Phone and hours vary by location — call ahead to confirm." }},
+    { "@type": "Question", "name": "Is Above All Greenery a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Above All Greenery is registered as a Maine medical cannabis dispensary. Customers must have a valid Maine MMMP card. Confirm directly with the operator whether adult-use (21+) customers can transact on-site at any location." }},
+    { "@type": "Question", "name": "Does Above All Greenery grow its own cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Per the operator's website, all Above All Greenery cannabis products are grown in-house, ensuring they are pesticide-free, natural, and rigorously tested by state-accredited labs. The company built a large indoor cultivation operation in 2020." }},
+    { "@type": "Question", "name": "What products does Above All Greenery carry?", "acceptedAnswer": { "@type": "Answer", "text": "Above All Greenery carries medical-grade cannabis flower, pre-rolls, and other in-house-grown products. Confirm current inventory with the operator — the menu rotates with each cultivation cycle." }},
+    { "@type": "Question", "name": "How do I verify Above All Greenery's current hours and pricing?", "acceptedAnswer": { "@type": "Answer", "text": "Call the operator or check aboveallgreenery.net for the current schedule. Hours listed publicly as of mid-2026 for the Fryeburg location: Mon closed, Tue-Fri 10am-6pm, Sat 10am-5pm, Sun 9am-5pm. Verify before visiting." }}
+  ]
+});
+---
+
+<Layout title="Above All Greenery — Fryeburg Maine Medical Dispensary (2026)" description="Above All Greenery North is a Maine medical cannabis dispensary at 48 Fair St, Unit 4, Fryeburg, ME 04037. In-house cultivation, pesticide-free product, state-accredited lab testing. Part of a multi-location Maine medical operator." heroImage="/images/heroes/fryeburg-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Above All Greenery — Maine Medical Cannabis Dispensary</h1>
+    <p class="subtitle">Fryeburg and West Newfield locations; in-house cultivation with pesticide-free flower and state-accredited lab testing</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Above All Greenery at a Glance</h2>
+    <table aria-label="Above All Greenery dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Above All Greenery (AAG)</td></tr>
+        <tr><td><strong>North Location (Fryeburg)</strong></td><td>48 Fair Street, Unit 4, Fryeburg, ME 04037</td></tr>
+        <tr><td><strong>Original Location</strong></td><td>West Newfield, ME</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis dispensary (MMMP card required)</td></tr>
+        <tr><td><strong>Cultivation</strong></td><td>In-house indoor operation built 2020</td></tr>
+        <tr><td><strong>Product Standard</strong></td><td>Pesticide-free, lab-tested by state-accredited labs</td></tr>
+        <tr><td><strong>Hours (Fryeburg, as of mid-2026)</strong></td><td>Mon closed · Tue–Fri 10am–6pm · Sat 10am–5pm · Sun 9am–5pm (verify by phone)</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>aboveallgreenery.net · Maine Dispensary Guide Fryeburg guide</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Above All Greenery is a Maine medical cannabis operator that built a large and sophisticated indoor cultivation operation in 2020 and now distributes through at least two storefront locations. The original dispensary is in West Newfield, ME. The Fryeburg location, marketed as Above All Greenery North, extends the same quality and care commitment to the western Maine corridor along Route 302.</p>
+    <p>All cannabis sold at Above All Greenery is grown in-house. The operator markets this as a quality differentiator: pesticide-free product, single-source supply chain, and state-accredited lab testing on every batch. For medical patients who prioritize clean, consistent, traceable medicine, this is the operator's primary value proposition.</p>
+  </section>
+
+  <section>
+    <h2>Fryeburg (Above All Greenery North)</h2>
+    <p><strong>Address:</strong> 48 Fair Street, Unit 4, Fryeburg, ME 04037<br>
+    <strong>Hours (verify before visiting):</strong> Monday closed · Tuesday–Friday 10am–6pm · Saturday 10am–5pm · Sunday 9am–5pm</p>
+    <p>The Fryeburg location serves the western Maine medical community, including Fryeburg proper, Conway / North Conway NH (just across the border), Brownfield, Denmark, Lovell, and Stow. NH residents with a valid Maine medical card (or a reciprocity state card) can purchase at the Fryeburg location. The dispensary is also a short drive from the White Mountain National Forest corridor.</p>
+  </section>
+
+  <section>
+    <h2>Product Standard</h2>
+    <p>Above All Greenery's product standard is built around three commitments:</p>
+    <ul>
+      <li><strong>In-house cultivation.</strong> Every product on the menu comes from the operator's own indoor grow. There is no white-labeling or third-party sourcing.</li>
+      <li><strong>Pesticide-free cultivation.</strong> The operator's site explicitly states products are "pesticide-free and natural." Maine requires pesticide testing on the regulatory panel; Above All Greenery's commitment is to keep that panel clean rather than just meet the threshold.</li>
+      <li><strong>State-accredited lab testing.</strong> All products are tested by OCP-certified Maine labs. The four OCP-licensed testing labs in Maine are CATLab (Eliot), MCR Labs (Gardiner), Nelson Analytical (Kennebunk), and Nova Analytic Labs (Windham).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>The Fryeburg location serves the western Maine and southern New Hampshire medical corridor:</p>
+    <ul>
+      <li><strong>Fryeburg</strong> (in town) — 5 min</li>
+      <li><strong>Conway / North Conway, NH</strong> — 20-25 min south</li>
+      <li><strong>Brownfield / Denmark</strong> — 10-15 min</li>
+      <li><strong>Lovell / Stow</strong> — 15-20 min</li>
+      <li><strong>Cornish / Hiram</strong> — 15-20 min</li>
+      <li><strong>Bridgton</strong> — 15-20 min east</li>
+    </ul>
+    <p>Patients closer to Portland, Biddeford, or the southern Maine corridor should check the operator's West Newfield location or other Maine medical dispensaries for a closer option.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://aboveallgreenery.net/">aboveallgreenery.net</a></li>
+      <li><strong>Fryeburg guide:</strong> <a href="/guides/fryeburg-dispensary-guide">Town-level overview of Fryeburg dispensaries</a></li>
+    </ul>
+    <p>Bring your Maine MMMP card and a valid government photo ID. Out-of-state medical patients from a reciprocity state should call ahead to confirm acceptance.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including White Mountain Craft Cannabis, The Glass Cook, Puffin Co. medical, and Above All Greenery North</li>
+        <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — how to get an MMMP card</li>
+        <li><a href="/guides/great-atlantic-puffin-company">The Great Atlantic Puffin Company</a> — neighboring Fryeburg / Bridgton operator</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Above All Greenery in Maine?", a: "Above All Greenery North in Fryeburg at 48 Fair St, Unit 4. The original Above All Greenery is in West Newfield, ME. Both are operated by the same company." },
+        { q: "Is Above All Greenery a medical or adult-use dispensary?", a: "Medical cannabis dispensary. Maine MMMP card required for on-site purchases." },
+        { q: "Does Above All Greenery grow its own cannabis?", a: "Yes. All products are grown in-house in a large indoor cultivation facility built in 2020. Products are pesticide-free and tested by state-accredited labs." },
+        { q: "What products does Above All Greenery carry?", a: "Medical-grade cannabis flower, pre-rolls, and other in-house-grown products. Menu rotates with each cultivation cycle." },
+        { q: "How do I verify Above All Greenery's current hours and pricing?", a: "Call the operator or check aboveallgreenery.net. Hours listed publicly for the Fryeburg location: Mon closed, Tue-Fri 10am-6pm, Sat 10am-5pm, Sun 9am-5pm." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, hours, and cultivation practices above are sourced from the operator's official site (aboveallgreenery.net, retrieved 2026-07-04) and cross-referenced against the Fryeburg dispensary guide. The "pesticide-free, in-house, lab-tested" framing is per the operator's own marketing. License-type framing (medical) reflects the public registration; confirm directly with the operator before visiting if you are an adult-use customer. Always call ahead to confirm current hours, pricing, and product availability.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
