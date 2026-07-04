@@ -3,11 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-06-05", section: "City Guides" };
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-07-04", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Houlton, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Houlton has dispensaries including Lifted Cannabis Maine and Vargas Farm. The town passed a new medical marijuana ordinance in September 2024 to formalize its regulatory framework for cannabis operators."}},{"@type":"Question","name":"What is the closest dispensary to the New Brunswick border at Houlton?","acceptedAnswer":{"@type":"Answer","text":"Houlton is the closest Maine dispensary cluster to the New Brunswick border at Woodstock–Houlton. Lifted Cannabis Maine and Vargas Farm are both within the town and serve U.S. and Canadian cross-border visitors and the surrounding Aroostook County communities."}},{"@type":"Question","name":"Does Houlton allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Houlton's adult-use retail framework is limited; the town has focused on medical marijuana regulation, passing a new medical marijuana ordinance in September 2024. For full adult-use menus, Presque Isle is ~60 mi north on I-95."}},{"@type":"Question","name":"What is Houlton Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Houlton is the seat of Aroostook County, the largest U.S. county east of the Mississippi. The town has about 6,000 residents and sits on the U.S.–Canada border opposite Woodstock, New Brunswick. Houlton is known for the annual Houlton Agricultural Fair, the New England Sky Blueberry Festival, its historic Market Square downtown, and as the last Maine stop on I-95 before the Canadian border."}}]});
+const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Houlton, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Houlton has two medical dispensaries: Lifted Cannabis Maine (32 Access Rd) and Vargas Farm (28 Airport Dr). The town passed a new medical marijuana ordinance on September 24, 2024 to formalize its regulatory framework for cannabis operators, per The County."}},{"@type":"Question","name":"What is the closest dispensary to the New Brunswick border at Houlton?","acceptedAnswer":{"@type":"Answer","text":"Houlton is the closest Maine dispensary cluster to the New Brunswick border at Woodstock–Houlton. Lifted Cannabis Maine and Vargas Farm are both within the town and serve U.S. and Canadian cross-border visitors and the surrounding Aroostook County communities."}},{"@type":"Question","name":"Does Houlton allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Houlton voters rejected recreational cannabis sales in 2017. The dispensaries currently operating in Houlton are medical-only per their operator sites (liftedmaine.com, Vargas Farm social listings). For full adult-use menus, Presque Isle is ~60 mi north on I-95."}},{"@type":"Question","name":"What is Houlton Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Houlton is the seat of Aroostook County, the largest U.S. county east of the Mississippi. The town has about 6,000 residents and sits on the U.S.–Canada border opposite Woodstock, New Brunswick. Houlton is known for the annual Houlton Agricultural Fair, the New England Sky Blueberry Festival, its historic Market Square downtown, and as the last Maine stop on I-95 before the Canadian border."}}]});
 ---
-<Layout title="Houlton Maine Dispensary Guide — Lifted Cannabis & Vargas Farm (2026)" description="Houlton, Maine dispensary guide. Lifted Cannabis Maine, Vargas Farm — Aroostook's border county seat, new medical ordinance Sept 2024." heroImage="/images/heroes/houlton-dispensary-guide.jpg" article={article} topics={topics} >
+<Layout title="Houlton Maine Dispensary Guide — Lifted Cannabis & Vargas Farm (2026)" description="Houlton, Maine dispensary guide. Lifted Cannabis Maine (32 Access Rd), Vargas Farm (28 Airport Dr) — Aroostook's border county seat. Operator data verified July 2026." heroImage="/images/heroes/houlton-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
   article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
 </style>
@@ -24,9 +24,9 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
       <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
       <tbody>
         <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
-        <tr><td><strong>Recreational Legal</strong></td><td>Limited — see note</td></tr>
-        <tr><td><strong>Dispensaries in Town</strong></td><td>2 confirmed (Lifted Cannabis Maine, Vargas Farm)</td></tr>
-        <tr><td><strong>New Local Ordinance</strong></td><td>Medical marijuana ordinance passed September 2024</td></tr>
+        <tr><td><strong>Recreational Legal</strong></td><td>No — voters rejected retail sales in 2017 (per The County)</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>2 medical (Lifted Cannabis Maine, Vargas Farm) — per operator sites</td></tr>
+        <tr><td><strong>Local Ordinance</strong></td><td>Medical marijuana ordinance passed Sept 24, 2024, 5–1 vote (per The County)</td></tr>
         <tr><td><strong>Population</strong></td><td>~6,000 (2020 Census)</td></tr>
         <tr><td><strong>County</strong></td><td>Aroostook County (county seat)</td></tr>
         <tr><td><strong>Position</strong></td><td>I-95 terminus, opposite Woodstock, New Brunswick, Canada</td></tr>
@@ -38,29 +38,29 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <h2>Dispensaries in Houlton</h2>
 
     <h3>Lifted Cannabis Maine</h3>
-    <p><strong>Address:</strong> 78 North St, Houlton, ME 04730<br>
-    <strong>Phone:</strong> (207) 532-4444<br>
-    <strong>Hours:</strong> Mon-Sat 10am-7pm, Sun 11am-5pm<br>
-    <strong>Type:</strong> Medical (MMMP) and adult-use product line</p>
-    <p>Lifted Cannabis Maine is one of Houlton's two storefronts, operating a medical dispensary with an adult-use product line. The store serves MMMP cardholders across southern Aroostook County and is the closest dispensary to the I-95 terminus at the New Brunswick border. For travelers heading north from Bangor or points south, Lifted Cannabis is the natural final stop before the international crossing.</p>
+    <p><strong>Address:</strong> 32 Access Road, Houlton, ME 04730 (per liftedmaine.com/about)<br>
+    <strong>Phone:</strong> (207) 554-6420 (per liftedmaine.com contact section)<br>
+    <strong>Hours:</strong> 8am–6pm daily (per liftedmaine.com/about)<br>
+    <strong>Type:</strong> Medical only — the operator's site states "Medical Card Required, No Adult Use/Recreational." <a href="https://www.liftedmaine.com/about" target="_blank" rel="noopener noreferrer">Verify directly with the operator</a>.</p>
+    <p>Established in 2021, Lifted Cannabis Maine has positioned itself as a medical dispensary focused on "high quality, effective and affordable solutions for patients from Maine and beyond." Located on Houlton's Access Road near I-95, the store serves MMMP cardholders across southern Aroostook County and is the closest dispensary to the I-95 terminus at the New Brunswick border. For travelers heading north from Bangor or points south, Lifted is the natural final stop before the international crossing.</p>
 
     <h3>Vargas Farm</h3>
-    <p><strong>Address:</strong> 35 Military St, Houlton, ME 04730<br>
-    <strong>Phone:</strong> (207) 532-7000<br>
-    <strong>Hours:</strong> Mon-Sat 10am-6pm<br>
-    <strong>Type:</strong> Medical (MMMP) and adult-use</p>
-    <p>Vargas Farm operates a medical and adult-use dispensary in downtown Houlton. The store carries an in-house cultivation line and partner brands, and has built a strong local reputation with MMMP patients in the Houlton, Hodgdon, Linneus, and New Limerick area. Vargas Farm's cultivation operation gives the store a vertical-integration angle that helps differentiate it from Lifted.</p>
+    <p><strong>Address:</strong> 28 Airport Drive, Houlton, ME 04730 (per Vargas Farm Facebook page and Yelp listing)<br>
+    <strong>Phone:</strong> (207) 405-5256 (per Vargas Farm contact information)<br>
+    <strong>Hours:</strong> Call ahead to confirm — hours not consistently published across operator sources<br>
+    <strong>Type:</strong> Medical only — listed as a Medical Cannabis Dispensary on Facebook and as a Medical Cannabis Referral on Yelp.</p>
+    <p>Vargas Farm operates a medical dispensary on Airport Drive in Houlton, anchored by a family cultivation operation. The store carries an in-house product line (Alignable lists "marijuana edibles, tinctures, and a variety of strains for medical use"). Mitchell Vargas runs the operation and the dispensary has built a local reputation with MMMP patients in the Houlton, Hodgdon, Linneus, and New Limerick area.</p>
   </section>
 
-  <Callout title="September 2024 Medical Ordinance" type="insight">
-    Houlton passed a new medical marijuana ordinance in September 2024 to formalize the regulatory framework for cannabis operators in town. The new rules address licensing, <a href="/guides/maine-cannabis-zoning-requirements">zoning</a>, host agreements, and operational standards — bringing Houlton into line with the more mature medical dispensary markets in the rest of the state and giving existing operators a clear regulatory foundation.
+  <Callout title="September 2024 Medical Ordinance (verified: The County + WAGM)" type="insight">
+    On September 24, 2024, the Houlton Town Council voted 5–1 to pass a new medical marijuana ordinance, formalizing the regulatory framework for the town's cannabis operators following a state Office of Cannabis Policy rule change. <a href="https://thecounty.me/2024/09/24/business-news/houlton-passes-new-medical-marijuana-ordinance/" target="_blank" rel="noopener noreferrer">The County covered the vote</a>, and <a href="https://www.wagmtv.com/2024/09/25/houlton-council-passes-new-ordinance-regarding-medical-marijuana-stores/" target="_blank" rel="noopener noreferrer">WAGM-TV reported it 6–1</a>. The new rules address licensing, <a href="/guides/maine-cannabis-zoning-requirements">zoning</a>, host agreements, and operational standards — bringing Houlton into line with more mature medical markets and giving existing operators a clear regulatory foundation. Council debate noted that <strong>residents had voted in 2017 to reject recreational sales</strong>, so Houlton remains a medical-only retail environment.
   </Callout>
 
   <section>
     <h2>Houlton's Market Context</h2>
     <p>Houlton is the southernmost stop on I-95 in Maine and the seat of Aroostook County — the largest U.S. county east of the Mississippi. The town sits on the international border opposite Woodstock, New Brunswick, and the Houlton–Woodstock border crossing is a major node for cross-border traffic. For cannabis, the border location gives Houlton a distinctive mix: year-round Aroostook County patients, I-95 travelers, and cross-border visitors from New Brunswick.</p>
-    <p>The town's dispensary scene is medically focused, with Lifted Cannabis Maine and Vargas Farm both serving MMMP cardholders. The September 2024 medical marijuana ordinance formalized the regulatory picture and gave existing operators a stable foundation; recreational availability remains limited, with shoppers typically traveling to Presque Isle (~60 mi north on I-95) for the closest full adult-use market.</p>
-    <p>For operators, Houlton functions as the I-95 anchor for southern Aroostook, the medical hub for the border region, and a logical secondary market for Bangor-headquartered operators expanding their delivery range. The two-store market is functional for the local population, and any new entry would need to differentiate on product mix, brand, or specialty services rather than location alone.</p>
+    <p>Houlton's retail framework is <strong>medical only</strong>. Per the <a href="https://thecounty.me/2024/08/27/business-news/houlton-introduces-new-marijuana-ordinance/" target="_blank" rel="noopener noreferrer">August 2024 The County reporting</a>, residents voted in 2017 to not allow recreational sales, and the September 2024 ordinance reinforced that posture. Lifted Cannabis Maine and Vargas Farm both serve MMMP cardholders and both describe themselves as medical-only on their operator pages. For shoppers seeking a full adult-use menu, Presque Isle is ~60 mi north on I-95.</p>
+    <p>For operators, Houlton functions as the I-95 anchor for southern Aroostook and the medical hub for the border region. Any operator considering a Houlton expansion should note the voter posture — adult-use retail is not currently on the table per the public record.</p>
   </section>
 
   <section>
@@ -80,9 +80,9 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     <h2>Frequently Asked Questions</h2>
     <Faq
       questions={[
-        { q: "Are there cannabis dispensaries in Houlton, Maine?", a: "Yes. Houlton has dispensaries including Lifted Cannabis Maine (78 North St) and Vargas Farm (35 Military St). The town passed a new medical marijuana ordinance in September 2024 to formalize the regulatory framework." },
+        { q: "Are there cannabis dispensaries in Houlton, Maine?", a: "Yes. Houlton has two medical dispensaries: Lifted Cannabis Maine (32 Access Rd, (207) 554-6420) and Vargas Farm (28 Airport Dr, (207) 405-5256). The town council passed a new medical marijuana ordinance on September 24, 2024 to formalize the regulatory framework." },
         { q: "What is the closest dispensary to the New Brunswick border at Houlton?", a: "Lifted Cannabis Maine and Vargas Farm are both within Houlton, the closest Maine dispensary cluster to the Woodstock–Houlton New Brunswick border crossing." },
-        { q: "Does Houlton allow recreational cannabis?", a: "Houlton's adult-use retail is limited; the town has focused on medical marijuana, passing a new medical ordinance in September 2024. For full adult-use menus, Presque Isle is ~60 mi north on I-95." },
+        { q: "Does Houlton allow recreational cannabis?", a: "No. Houlton voters rejected recreational cannabis sales in 2017 and the dispensaries currently operating in town are medical-only per their operator sites. For full adult-use menus, Presque Isle is ~60 mi north on I-95." },
         { q: "What is Houlton Maine known for?", a: "Houlton is the seat of Aroostook County, the largest U.S. county east of the Mississippi. The town has ~6,000 residents, sits on the U.S.–Canada border opposite Woodstock, New Brunswick, and is known for the Houlton Agricultural Fair, the Sky Blueberry Festival, and its historic Market Square downtown." },
       ]}
     />
