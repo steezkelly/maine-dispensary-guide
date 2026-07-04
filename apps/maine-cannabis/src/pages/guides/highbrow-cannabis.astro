@@ -1,0 +1,190 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Highbrow cannabis in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Highbrow is a multi-location Maine cannabis operator with 7 storefronts: Topsham (medical), Bath medical, Bath adult-use, Augusta (adult use), Rockland (adult use), Manchester (adult use), and Portland (adult use). Phone (207) 356-9377. Contact: contact@highbrowmaine.com." }},
+    { "@type": "Question", "name": "How many Highbrow locations are in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, Highbrow has 7 locations: 2 medical (Topsham, Bath) and 5 adult-use (Bath, Augusta, Rockland, Manchester, Portland). Established 2017." }},
+    { "@type": "Question", "name": "What is Highbrow's product mix?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, Highbrow curates top-quality cannabis products and accessories. They partner with Maine craft growers including Hazy Hill, Rugged Roots, and Paul's Boutique for flower, plus house-made concentrates and edibles. They use a classification system (Uplifted, Balanced, Relaxed) to help customers shop by intended effect." }},
+    { "@type": "Question", "name": "What are the Highbrow Rockland hours?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, the Rockland location (696 Main Street) is open 7:00am-10:00pm Monday through Sunday. Confirm by phone or the operator's site before visiting." }},
+    { "@type": "Question", "name": "What is the service area for Highbrow Rockland?", "acceptedAnswer": { "@type": "Answer", "text": "The Rockland location serves Knox County's Midcoast region: Rockland, Camden, Rockport, Thomaston, Warren, and the broader Penobscot Bay corridor. The Rockland dispensary is the only Highbrow in the Midcoast, with the next-closest location in Augusta (75 min southwest) or Portland (90 min southwest)." }}
+  ]
+});
+---
+
+<Layout title="Highbrow Cannabis — Maine's Multi-Location Operator (2026)" description="Highbrow is a Maine cannabis operator with 7 storefronts (2 medical + 5 adult-use) — Topsham, Bath (med), Bath (AU), Augusta, Rockland, Manchester, Portland. Established 2017. Phone (207) 356-9377. Maine craft growers and a classification system that simplifies shopping." heroImage="/images/heroes/rockland-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Highbrow Cannabis — Maine's Multi-Location Operator</h1>
+    <p class="subtitle">"A Classy Joint" — 7 Maine storefronts established 2017, partnering with Maine craft growers and a customer-facing classification system</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Highbrow at a Glance</h2>
+    <table aria-label="Highbrow Cannabis dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Highbrow ("A Classy Joint")</td></tr>
+        <tr><td><strong>Established</strong></td><td>2017</td></tr>
+        <tr><td><strong>Maine Locations</strong></td><td>7 (2 medical + 5 adult-use)</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 356-9377</td></tr>
+        <tr><td><strong>Email</strong></td><td>contact@highbrowmaine.com</td></tr>
+        <tr><td><strong>Product Mix</strong></td><td>Maine craft growers (Hazy Hill, Rugged Roots, Paul's Boutique) + house-made concentrates and edibles</td></tr>
+        <tr><td><strong>Classification</strong></td><td>Uplifted / Balanced / Relaxed — by intended effect</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>highbrowmaine.com · Weedmaps · Yelp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Highbrow is a multi-location Maine cannabis operator that has grown to 7 storefronts statewide since establishing in 2017. The operator brands itself as "A Classy Joint" and "Made in Maine," with a focus on curated product selection and a customer-friendly classification system that simplifies shopping by intended effect rather than requiring strain-name expertise.</p>
+    <p>Per the operator's own site, Highbrow partners with Maine craft growers including Hazy Hill, Rugged Roots, and Paul's Boutique for flower, plus produces house-made concentrates and edibles. Their Rockland location at 696 Main Street is one of three active dispensaries in Knox County's Midcoast hub.</p>
+  </section>
+
+  <section>
+    <h2>Seven Maine Locations</h2>
+    <p>Per the operator's site, Highbrow operates the following 7 Maine storefronts:</p>
+    <table aria-label="Highbrow locations table">
+      <thead><tr><th>Location</th><th>Type</th><th>Address</th><th>Hours</th></tr></thead>
+      <tbody>
+        <tr><td>Topsham</td><td>Medical</td><td>55 Topsham Fair Mall Rd</td><td>Mon-Sun 8am-8pm</td></tr>
+        <tr><td>Bath (Medical)</td><td>Medical</td><td>141 Leeman Highway</td><td>Mon-Sun 11am-7pm</td></tr>
+        <tr><td>Bath (Adult Use)</td><td>Adult-Use</td><td>137 Leeman Highway</td><td>Mon-Sun 7am-10pm</td></tr>
+        <tr><td>Augusta</td><td>Adult-Use</td><td>292 State Street</td><td>Mon-Sun 8am-8pm</td></tr>
+        <tr><td>Rockland</td><td>Adult-Use</td><td>696 Main Street</td><td>Mon-Sun 7am-10pm</td></tr>
+        <tr><td>Manchester</td><td>Adult-Use</td><td>767 Western Ave</td><td>Mon-Sun 8am-8pm</td></tr>
+        <tr><td>Portland</td><td>Adult-Use</td><td>605 Congress Street</td><td>Mon-Sun 9am-10pm</td></tr>
+      </tbody>
+    </table>
+    <p>The split between medical and adult-use locations reflects Maine's dual-license framework. Topsham and Bath (medical) serve registered Maine MMMP cardholders; the other five locations serve 21+ adult-use customers with valid government-issued photo ID.</p>
+  </section>
+
+  <section>
+    <h2>Product Strategy</h2>
+    <p>Per the operator's site, Highbrow curates top-quality cannabis products and accessories from Maine craft growers. The operator's product partners include:</p>
+    <ul>
+      <li><strong>Hazy Hill</strong> — Maine craft cultivator</li>
+      <li><strong>Rugged Roots</strong> — MOFGA-certified organic flower (Maine Organic Farmers and Gardeners Association)</li>
+      <li><strong>Paul's Boutique</strong> — Maine craft cultivator</li>
+    </ul>
+    <p>Highbrow also produces house-made concentrates and edibles, supplementing partner cultivator flower with in-house value-add products. This is a more selective approach than carrying every cultivator's product — Highbrow positions itself as a curated retailer rather than a volume player.</p>
+  </section>
+
+  <section>
+    <h2>The "Uplifted / Balanced / Relaxed" Classification</h2>
+    <p>One of Highbrow's distinctive customer-experience choices is a three-category effect-based classification:</p>
+    <ul>
+      <li><strong>Uplifted</strong> — energizing, daytime, social</li>
+      <li><strong>Balanced</strong> — middle-of-the-road, functional, all-purpose</li>
+      <li><strong>Relaxed</strong> — calming, evening, body-focused</li>
+    </ul>
+    <p>Products are tagged by effect category rather than (or in addition to) traditional indica/sativa/hybrid naming. This makes the menu more accessible to first-time buyers and tourists who don't know the Maine-specific strain landscape.</p>
+  </section>
+
+  <section>
+    <h2>Rockland Location (Midcoast Hub)</h2>
+    <p><strong>Address:</strong> 696 Main Street, Rockland, ME 04841<br>
+    <strong>Phone:</strong> (207) 356-9377<br>
+    <strong>Hours:</strong> Mon-Sun 7am-10pm<br>
+    <strong>Type:</strong> Adult-Use</p>
+    <p>The Rockland location is the only Highbrow in the Midcoast region. It anchors Rockland's Main Street cannabis corridor alongside Scrimshaw and Botany. For Knox County customers and visitors to Camden, Rockport, and the Penobscot Bay area, this is the closest Highbrow storefront.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>From the Rockland location:</p>
+    <ul>
+      <li><strong>Rockland</strong> (in town) — 5 min</li>
+      <li><strong>Camden</strong> — 15 min north</li>
+      <li><strong>Rockport</strong> — 10 min north</li>
+      <li><strong>Thomaston</strong> — 15 min south</li>
+      <li><strong>Warren</strong> — 20 min west</li>
+      <li><strong>Belfast</strong> — 35 min north</li>
+      <li><strong>Belfast Botany</strong> (Botany's medical storefront) — 35 min north</li>
+      <li><strong>Augusta Highbrow</strong> — 75 min southwest (next-closest Highbrow for Midcoast customers)</li>
+    </ul>
+    <p>For Knox County visitors from southern Maine, the Portland Highbrow is the next-closest after Augusta — 90 min southwest of Rockland. For coastal Maine, the chain of seven locations makes Highbrow a recognizable brand across the state's most populated corridors.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://www.highbrowmaine.com/">highbrowmaine.com</a></li>
+      <li><strong>Locations page:</strong> <a href="https://www.highbrowmaine.com/locations">highbrowmaine.com/locations</a></li>
+      <li><strong>Phone:</strong> (207) 356-9377</li>
+      <li><strong>Email:</strong> contact@highbrowmaine.com</li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/dispensaries/highbrow-1">weedmaps.com/dispensaries/highbrow-1</a></li>
+      <li><strong>Rockland guide:</strong> <a href="/guides/rockland-dispensary-guide">Town-level overview of Rockland dispensaries</a></li>
+    </ul>
+    <p>Adult-use customers: bring a valid government-issued photo ID showing you are 21 or older. Medical patients: bring your Maine MMMP card and a valid photo ID.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a> — town overview including Highbrow, Scrimshaw, and Botany on Main Street</li>
+        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a> — nearest options for Camden (no dispensaries in Camden itself)</li>
+        <li><a href="/guides/portland-maine-cannabis">Portland Cannabis Guide</a> — Highbrow's flagship adult-use location</li>
+        <li><a href="/guides/augusta-dispensary-guide">Augusta Dispensary Guide</a> — Highbrow's Augusta adult-use location</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Highbrow cannabis in Maine?", a: "7 locations: Topsham (medical), Bath medical, Bath adult-use, Augusta, Rockland, Manchester, Portland. Phone (207) 356-9377." },
+        { q: "How many Highbrow locations are in Maine?", a: "7: 2 medical (Topsham, Bath) and 5 adult-use (Bath, Augusta, Rockland, Manchester, Portland). Established 2017." },
+        { q: "What is Highbrow's product mix?", a: "Maine craft growers including Hazy Hill, Rugged Roots, and Paul's Boutique. House-made concentrates and edibles. Uplifted/Balanced/Relaxed classification." },
+        { q: "What are the Highbrow Rockland hours?", a: "Mon-Sun 7am-10pm at 696 Main Street." },
+        { q: "What is the service area for Highbrow Rockland?", a: "Knox County Midcoast: Rockland, Camden, Rockport, Thomaston, Warren, and the broader Penobscot Bay corridor." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, hours, location count, and product partner list above are sourced from the operator's official site (highbrowmaine.com, retrieved 2026-07-04) and cross-referenced against the Weedmaps listing. The "Uplifted/Balanced/Relaxed" classification framing is per the operator's positioning. Always call ahead or check the operator's site to confirm current hours and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

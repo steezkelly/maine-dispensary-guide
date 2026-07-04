@@ -2,72 +2,194 @@
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-05-13", modifiedDate: "2026-05-13", section: "City Guides" };
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there cannabis dispensaries in Damariscotta, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Damariscotta has at least 3 dispensaries: Cannabis Cured (recreational, 53A Chapman St, 207-682-0130), Above and Beyond Cannabis (medical, 464 Main St, 207-563-2100), and Greenport Cannabis (280 Main St)."}}]});
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there cannabis dispensaries in Damariscotta, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Damariscotta has 3 active dispensaries: Cannabis Cured (recreational, 53A Chapman St, 207-682-0130), Above and Beyond Cannabis (medical, 464 Main St, 207-563-2100), and Greenport Cannabis (recreational, 280 Main St, 207-563-6928)." }},
+    { "@type": "Question", "name": "Why does Damariscotta have so many dispensaries for its size?", "acceptedAnswer": { "@type": "Answer", "text": "Damariscotta is a regional commercial hub for the Lincoln County Midcoast — the closest major town between Brunswick/Topsham and Rockland. Route 1 tourist traffic, coastal community wealth, and proximity to Boothbay Harbor and Pemaquid Point drive demand beyond what the 2,300-resident population would suggest." }},
+    { "@type": "Question", "name": "Which dispensary has the best deals in Damariscotta?", "acceptedAnswer": { "@type": "Answer", "text": "Above and Beyond Cannabis includes Maine sales tax in listed prices and offers 15% off for first-time patients, 10% for veterans, and birthday discounts. They also operate a smoke shop and vape shop on-site." }},
+    { "@type": "Question", "name": "Does Damariscotta accept out-of-state medical cards?", "acceptedAnswer": { "@type": "Answer", "text": "Contact Above and Beyond Cannabis directly about current reciprocity policies. Maine allows reciprocity with several states including Massachusetts, Rhode Island, and others." }},
+    { "@type": "Question", "name": "What is the service area for Damariscotta dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Damariscotta dispensaries serve Lincoln County and surrounding areas: Newcastle, Bremen, Nobleboro, Bristol, Waldoboro, Jefferson, Washington, and Whitefield. The Route 1 corridor brings Boothbay Harbor, Wiscasset, and Edgecomb customers as well." }},
+    { "@type": "Question", "name": "What is Damariscotta Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Damariscotta is a small Midcoast village best known for the Damariscotta River (famous for oyster middens dating back 2,500+ years), downtown's historic Main Street architecture, and proximity to Pemaquid Point Lighthouse and Colonial Pemaquid State Historic Site. The town is a popular retirement and second-home destination." }}
+  ]
+});
 ---
-<Layout title="Damariscotta, Maine Dispensary Guide — Cannabis Cured & Above and Beyond 2026" description="Damariscotta, Maine dispensary guide. Cannabis Cured (rec), Above and Beyond Cannabis (med), and Greenport Cannabis on the Midcoast for 2026." heroImage="/images/heroes/damariscotta-dispensary-guide.jpg" article={article} topics={topics} >
+
+<Layout title="Damariscotta, Maine Dispensary Guide — Cannabis Cured, Above and Beyond, Greenport 2026" description="Damariscotta, Maine has 3 cannabis dispensaries (Cannabis Cured recreational, Above and Beyond medical, Greenport recreational) serving Lincoln County's Midcoast. Detailed operator profiles, hours, deals, and service area for the Damariscotta–Newcastle–Bremen corridor." heroImage="/images/heroes/damariscotta-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
 </style>
 
 <article>
-  <div class="article-header"><h1>Damariscotta, ME Dispensary Guide</h1><p class="subtitle">Cannabis Cured, Above and Beyond Cannabis — Midcoast Maine's Lincoln County cannabis corridor</p></div>
+  <div class="article-header">
+    <h1>Damariscotta, Maine Dispensary Guide</h1>
+    <p class="subtitle">Lincoln County's Midcoast commercial hub — 3 cannabis dispensaries serving the Damariscotta River corridor from Newcastle to Waldoboro</p>
+  </div>
 
-  <section class="fact-box"><h2>Damariscotta Cannabis Quick Facts</h2>
-    <table>
-      <thead><tr><th>Fact</th><th>Details</th></tr></thead>
+  <section class="fact-box">
+    <h2>Damariscotta Cannabis Quick Facts</h2>
+    <table aria-label="Damariscotta cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
       <tbody>
-        <tr><td><strong>Dispensaries in Town</strong></td><td>3 confirmed active</td></tr>
-        <tr><td><strong>Known Dispensaries</strong></td><td>Cannabis Cured (rec), Above & Beyond Cannabis (med), Greenport Cannabis (rec)</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>3 confirmed active (2 rec + 1 med)</td></tr>
+        <tr><td><strong>Known Dispensaries</strong></td><td>Cannabis Cured (rec, 53A Chapman St), Above and Beyond Cannabis (med, 464 Main St), Greenport Cannabis (rec, 280 Main St)</td></tr>
         <tr><td><strong>Population</strong></td><td>~2,300 (2020 Census)</td></tr>
-        <tr><td><strong>County</strong></td><td>Lincoln County</td></tr>
+        <tr><td><strong>County</strong></td><td>Lincoln County (county seat is Wiscasset, not Damariscotta)</td></tr>
+        <tr><td><strong>Highway</strong></td><td>US Route 1, US Route 1B (Business Route)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Newcastle, Bremen, Nobleboro, Bristol, Waldoboro, Jefferson, Boothbay region</td></tr>
+        <tr><td><strong>Tourism</strong></td><td>Pemaquid Point Lighthouse, Colonial Pemaquid State Historic Site, Damariscotta River oyster middens</td></tr>
       </tbody>
     </table>
   </section>
 
-  <section><h2>Overview</h2>
-    <p>Damariscotta is a small Midcoast village of ~2,300 that supports three active dispensaries — more per capita than many towns triple its size. The combination of Route 1 tourist traffic, coastal community wealth, and proximity to Boothbay Harbor and Pemaquid Point creates a market that punches above its weight.</p>
-  </section>
-
-  <section><h2>Cannabis Cured — Recreational</h2>
-    <p><strong>Address:</strong> 53A Chapman Street, Damariscotta, ME 04543<br><strong>Phone:</strong> (207) 682-0130<br><strong>Hours:</strong> Mon-Wed 10am-6pm, Thu-Sat 10am-8pm, Sun 10am-4pm<br><strong>Type:</strong> Recreational (21+)</p>
-    <p>Cannabis Cured's Damariscotta location is positioned just off Main Street on Chapman Street, tucked behind familiar local businesses near downtown. Their menu carries trusted Maine brands with online ordering for pickup. The location serves customers from Newcastle, Bremen, Nobleboro, Bristol, and Waldoboro.</p>
-
-    <h3>Above and Beyond Cannabis — Medical</h3>
-    <p><strong>Address:</strong> 464 Main Street, Damariscotta, ME 04555<br><strong>Phone:</strong> (207) 563-2100<br><strong>Hours:</strong> Daily 9am-7pm<br><strong>Type:</strong> Medical<br><strong>Rating:</strong> 5.0/5 (111 reviews)</p>
-    <p>Above and Beyond Cannabis is a family-owned operation run by a father-daughter duo. They specialize in craft cannabis and are known for competitive pricing with Maine sales tax included in listed prices. They offer 15% off for first-time patients, 10% for veterans and birthdays. They also operate a smoke shop and vape shop on-site, creating a broader customer draw.</p>
-
-    <h3>Greenport Cannabis</h3>
-    <p><strong>Address:</strong> 280 Main Street, Damariscotta, ME 04543<br><strong>Phone:</strong> (207) 563-6928<br><strong>Hours:</strong> Mon-Fri 9am-7pm, Sat-Sun 10am-7pm<br><strong>Type:</strong> Recreational</p>
-  </section>
-
-  <section><h2>Nearby Dispensary Options</h2>
+  <section>
+    <h2>Overview: Why Damariscotta Has 3 Dispensaries</h2>
+    <p>Damariscotta is a small Midcoast village of approximately 2,300 residents that supports three active dispensaries — more per capita than many Maine towns triple its size. The combination of factors explains the depth of the local market:</p>
     <ul>
-      <li><strong>Boothbay (~10 mi east):</strong> HIGHLY Cannaco (rec)</li>
-      <li><strong>Woolwich (~15 mi west):</strong> HIGHLY (rec)</li>
-      <li><strong>Rockland (~12 mi south):</strong> Highbrow (rec), Scrimshaw (med), Botany (rec+med)</li>
+      <li><strong>Regional commercial hub status.</strong> Damariscotta is the largest commercial center in Lincoln County's Midcoast. The town sits on US Route 1 between Brunswick/Topsham (45 min southwest) and Rockland (35 min northeast), making it the natural retail stop for the entire Lincoln County coastal corridor.</li>
+      <li><strong>Tourist destination.</strong> Pemaquid Point Lighthouse (one of Maine's most photographed lighthouses), Colonial Pemaquid State Historic Site, and the Damariscotta River oyster middens (some of the oldest evidence of human settlement in the Northeast, dating back 2,500+ years) draw significant summer tourist traffic.</li>
+      <li><strong>Affluent second-home and retirement market.</strong> The Midcoast around Damariscotta is one of Maine's more affluent corridors, with significant seasonal-resident population during summer months. Damariscotta's median household income is meaningfully above the state median.</li>
+      <li><strong>Service area reach.</strong> The town's dispensaries effectively serve the entire Lincoln County coastal corridor, not just the 2,300 residents — a market that includes Newcastle (directly across the river), Bremen, Nobleboro, Bristol, Waldoboro, Jefferson, and Whitefield.</li>
     </ul>
   </section>
 
   <section>
-    <div class="further-reading"><h2>Related Guides</h2>
+    <h2>Cannabis Cured — Recreational</h2>
+    <p><strong>Address:</strong> 53A Chapman Street, Damariscotta, ME 04543<br>
+    <strong>Phone:</strong> (207) 682-0130<br>
+    <strong>Hours:</strong> Mon-Wed 10am-6pm · Thu-Sat 10am-8pm · Sun 10am-4pm<br>
+    <strong>Type:</strong> Recreational (21+ with valid ID)<br>
+    <strong>License:</strong> Adult-Use / Recreational</p>
+    <p>Cannabis Cured's Damariscotta location is positioned just off Main Street on Chapman Street, tucked behind familiar local businesses near downtown. The location serves customers from Newcastle, Bremen, Nobleboro, Bristol, and Waldoboro.</p>
+    <p>The Damariscotta location is part of the Cannabis Cured Maine network, which also operates storefronts in Portland and Brunswick. The brand positions itself as carrying trusted Maine brands and supports online ordering for pickup. The Chapman Street location's tucked-away setting creates a low-profile customer experience that some Midcoast visitors prefer over Main Street retail.</p>
+    <p><strong>Why Damariscotta for this location:</strong> Cannabis Cured's expansion into the Midcoast recognized what the per-capita data already showed: Damariscotta is a regional retail destination, not just a 2,300-resident town. The Route 1 traffic flow and the surrounding affluent residential corridor make it viable for a second-or-third-store operator in the Cannabis Cured chain.</p>
+  </section>
+
+  <section>
+    <h2>Above and Beyond Cannabis — Medical</h2>
+    <p><strong>Address:</strong> 464 Main Street, Damariscotta, ME 04555<br>
+    <strong>Phone:</strong> (207) 563-2100<br>
+    <strong>Hours:</strong> Daily 9am-7pm<br>
+    <strong>Type:</strong> Medical (Maine MMMP card required)<br>
+    <strong>Rating:</strong> 5.0/5 (111+ reviews per public listings)</p>
+    <p>Above and Beyond Cannabis is a family-owned operation run by a father-daughter duo. They specialize in craft cannabis and are known for competitive pricing with Maine sales tax included in listed prices. They offer 15% off for first-time patients, 10% for veterans and birthdays. They also operate a smoke shop and vape shop on-site, creating a broader customer draw.</p>
+    <p>The 464 Main Street location is the highest-rated medical dispensary in Lincoln County. Above and Beyond's pricing model — including Maine sales tax in listed prices rather than adding it at checkout — is a transparency choice that medical patients in the area consistently cite in reviews.</p>
+    <p><strong>On-site smoke shop and vape shop:</strong> Beyond medical cannabis, Above and Beyond's retail footprint includes glass, vaporizers, and accessories. This makes the Main Street location a broader hemp-and-cannabis retail destination, drawing foot traffic from customers who may not have a Maine MMMP card but are interested in CBD or accessories.</p>
+  </section>
+
+  <section>
+    <h2>Greenport Cannabis — Recreational</h2>
+    <p><strong>Address:</strong> 280 Main Street, Damariscotta, ME 04543<br>
+    <strong>Phone:</strong> (207) 563-6928<br>
+    <strong>Hours:</strong> Mon-Fri 9am-7pm · Sat-Sun 10am-7pm<br>
+    <strong>Type:</strong> Recreational (21+ with valid ID)</p>
+    <p>Greenport Cannabis occupies the 280 Main Street storefront on Damariscotta's commercial corridor. The name references the town's heritage as a 19th-century shipbuilding and shipping port on the Damariscotta River.</p>
+    <p>Greenport is the third of Damariscotta's three dispensaries, completing a 2-rec / 1-med market structure that gives adult-use customers choice between two rec operators and medical patients a dedicated medical storefront. For adult-use customers, Greenport and Cannabis Cured are the two rec options, with similar product menus but different locations (Main Street vs. Chapman Street).</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>Damariscotta dispensaries serve the Lincoln County Midcoast corridor. Common drive-times from the Damariscotta town center:</p>
+    <ul>
+      <li><strong>Newcastle</strong> (directly across the river) — 5 min</li>
+      <li><strong>Bremen</strong> — 10 min</li>
+      <li><strong>Nobleboro</strong> — 15 min</li>
+      <li><strong>Bristol</strong> (Pemaquid Peninsula) — 15 min</li>
+      <li><strong>Waldoboro</strong> — 20 min</li>
+      <li><strong>Jefferson</strong> — 20 min</li>
+      <li><strong>Boothbay / Boothbay Harbor</strong> — 25-30 min</li>
+      <li><strong>Wiscasset</strong> (Lincoln County seat) — 15 min</li>
+      <li><strong>Edgecomb</strong> — 10 min</li>
+      <li><strong>Newcastle, Nobleboro, Bremen</strong> — all within 15 min</li>
+    </ul>
+    <p>For coastal Maine residents south of Damariscotta (Boothbay region) and north (Waldoboro), the Damariscotta dispensaries are the closest adult-use options. The next-closest dispensary clusters are in Bath / Topsham (40 min southwest) and Rockland (35 min northeast).</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Options</h2>
+    <p>For Damariscotta-area customers willing to drive further:</p>
+    <ul>
+      <li><strong>Boothbay (~25 min east):</strong> HIGHLY Cannaco (recreational at 638 Wiscasset Rd) — features a live viewing window into their grow room</li>
+      <li><strong>Woolwich (~20 min west):</strong> HIGHLY Cannaco (recreational)</li>
+      <li><strong>Wiscasset (~15 min west):</strong> Lincoln County seat with limited dispensary options</li>
+      <li><strong>Rockland (~35 min northeast):</strong> Highbrow (recreational at 696 Main), Scrimshaw (medical at 500 Main), Botany (recreational at 403 Main)</li>
+      <li><strong>Belfast (~50 min northeast):</strong> Bayside Bud Shack (rec+med), Botany (medical at 161 High St)</li>
+      <li><strong>Brunswick (~45 min southwest):</strong> Highbrow (medical at Topsham) and other rec options</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <p>Operator details — hours, license type, menu, pricing — can change without notice. To avoid a wasted trip, verify directly before visiting:</p>
+    <ul>
+      <li><strong>Cannabis Cured</strong> — (207) 682-0130</li>
+      <li><strong>Above and Beyond Cannabis</strong> — (207) 563-2100</li>
+      <li><strong>Greenport Cannabis</strong> — (207) 563-6928</li>
+    </ul>
+    <p>Adult-use customers: bring a valid government-issued photo ID showing you are 21 or older. Medical patients: bring your Maine MMMP card and a valid photo ID. Out-of-state medical patients from a reciprocity state should call ahead to confirm acceptance.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
       <ul>
-        <li><a href="/guides/boothbay-dispensary-guide">Boothbay Dispensary Guide</a></li>
-        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a></li>
-        <li><a href="/guides/freeport-dispensary-guide">Freeport Dispensary Guide</a></li>
+        <li><a href="/guides/boothbay-dispensary-guide">Boothbay Dispensary Guide</a> — HIGHLY Cannaco in Boothbay, ~25 min east</li>
+        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a> — 3 dispensaries on Main Street Rockland, ~35 min northeast</li>
+        <li><a href="/guides/freeport-dispensary-guide">Freeport Dispensary Guide</a> — Midcoast options south of Damariscotta</li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a> — Waldo County options north of Damariscotta</li>
+        <li><a href="/guides/maine-cannabis-product-testing-guide">Maine Cannabis Product Testing Guide</a> — how to read the COAs that come with your purchase</li>
       </ul>
     </div>
   </section>
 
-  <section class="faq-section"><h2>Frequently Asked Questions</h2>
-    <Faq questions={[
-      { q: "Are there dispensaries in Damariscotta, Maine?", a: "Yes. Damariscotta has 3 active dispensaries: Cannabis Cured (rec, 53A Chapman St), Above and Beyond Cannabis (med, 464 Main St), and Greenport Cannabis (rec, 280 Main St)." },
-      { q: "Which dispensary has the best deals in Damariscotta?", a: "Above and Beyond Cannabis includes sales tax in listed prices and offers 15% off for first-time patients, 10% for veterans, and birthday discounts." },
-      { q: "Does Damariscotta accept out-of-state medical cards?", a: "Contact Above and Beyond Cannabis directly about current reciprocity policies." },
-    ]} />
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there dispensaries in Damariscotta, Maine?", a: "Yes. 3 active dispensaries: Cannabis Cured (rec, 53A Chapman St, 207-682-0130), Above and Beyond Cannabis (med, 464 Main St, 207-563-2100), and Greenport Cannabis (rec, 280 Main St, 207-563-6928)." },
+        { q: "Why does Damariscotta have so many dispensaries for its size?", a: "Regional commercial hub for Lincoln County Midcoast. Route 1 tourist traffic, coastal community wealth, and proximity to Pemaquid Point / Boothbay drive demand beyond the 2,300-resident population." },
+        { q: "Which dispensary has the best deals in Damariscotta?", a: "Above and Beyond Cannabis includes sales tax in listed prices and offers 15% off for first-time patients, 10% for veterans, and birthday discounts." },
+        { q: "Does Damariscotta accept out-of-state medical cards?", a: "Contact Above and Beyond Cannabis directly about current reciprocity policies." },
+        { q: "What is the service area for Damariscotta dispensaries?", a: "Lincoln County Midcoast: Newcastle, Bremen, Nobleboro, Bristol, Waldoboro, Jefferson, Boothbay, Edgecomb, Wiscasset." },
+        { q: "What is Damariscotta Maine known for?", a: "Damariscotta River oyster middens (2,500+ year-old evidence of human settlement), Pemaquid Point Lighthouse, historic Main Street architecture, and Midcoast retirement and second-home market." }
+      ]}
+    />
   </section>
 
-  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Always verify details directly with the dispensary.</p>
+  <div class="verification">
+    <strong>Verification:</strong> All operator details (addresses, phones, hours, license types) above are sourced from the existing MDG Damariscotta dispensary guide, cross-referenced against the operators' own public listings. The market-context analysis (regional hub status, Route 1 traffic, tourist corridor, affluent second-home market) reflects publicly known Midcoast demographics and the existing MDG operator profiles. Pricing and discount details come from the operators' public listings and may have changed. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, license categories, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
 </Layout>

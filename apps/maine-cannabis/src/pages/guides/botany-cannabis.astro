@@ -1,0 +1,167 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Botany cannabis in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Botany is a Midcoast Maine cannabis operator with two locations: recreational at 403 Main Street, Rockland, ME 04841 and medical at 161 High Street, Belfast, ME. Phone (207) 701-4747. The Rockland rec location is the flagship." }},
+    { "@type": "Question", "name": "Is Botany a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Both, with the licenses separated by location. The Rockland storefront is recreational (21+ with valid ID). The Belfast location at 161 High Street is medical (Maine MMMP card required). Confirm current license framework directly with the operator." }},
+    { "@type": "Question", "name": "How does Botany classify products?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's positioning, Botany uses a five-category feeling system — Up, Relaxed, Focused, Social, Balanced — to help customers choose by intended effect rather than strain name. This is similar to the Uplifted/Balanced/Relaxed framework used by other Maine operators, prioritizing shopper experience over traditional indica/sativa/hybrid labeling." }},
+    { "@type": "Question", "name": "What is the service area for Botany Rockland?", "acceptedAnswer": { "@type": "Answer", "text": "The Rockland location serves Knox County's Midcoast region: Rockland, Camden, Rockport, Thomaston, Warren, and the broader Penobscot Bay corridor. Botany's Belfast location covers the Waldo County and northern Penobscot Bay area." }},
+    { "@type": "Question", "name": "What is Botany's position in the Rockland cannabis market?", "acceptedAnswer": { "@type": "Answer", "text": "Botany is one of three active cannabis dispensaries on Main Street Rockland, alongside Highbrow and Scrimshaw. All three serve Knox County's Midcoast market. Botany's positioning as 'the bees knees' per the operator's Facebook page emphasizes approachability and quality selection." }}
+  ]
+});
+---
+
+<Layout title="Botany Cannabis — Rockland Maine Dispensary (2026)" description="Botany is a Midcoast Maine cannabis operator with two locations: recreational at 403 Main St, Rockland, ME and medical at 161 High St, Belfast, ME. Phone (207) 701-4747. Five-category effect-based classification system." heroImage="/images/heroes/rockland-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Botany Cannabis — Rockland Maine Dispensary</h1>
+    <p class="subtitle">Midcoast Maine cannabis operator with recreational in Rockland and medical in Belfast — "the bees knees" of Midcoast cannabis</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Botany at a Glance</h2>
+    <table aria-label="Botany Cannabis dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Botany (Botany Maine)</td></tr>
+        <tr><td><strong>Rockland Address</strong></td><td>403 Main Street, Rockland, ME 04841 (recreational)</td></tr>
+        <tr><td><strong>Belfast Address</strong></td><td>161 High Street, Belfast, ME (medical)</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 701-4747</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Recreational at Rockland · Medical at Belfast</td></tr>
+        <tr><td><strong>Classification</strong></td><td>Five-category feeling system (Up / Relaxed / Focused / Social / Balanced)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Rockland rec + Belfast medical; Knox and Waldo Counties, Penobscot Bay corridor</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>botanymaine.com · Facebook · Yelp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Botany is a Midcoast Maine cannabis operator with two storefronts in Knox and Waldo Counties. The operator's positioning is approachable — per the Facebook page, "Botany is a retail store located in Rockland, Maine. It's the bees knees" — combined with a sophisticated five-category effect-based classification system that helps customers shop by intended experience rather than strain-name expertise.</p>
+    <p>Botany's dual-location footprint (Rockland rec, Belfast medical) gives the operator a presence on both sides of the Midcoast cannabis market, with the Rockland location serving Knox County's tourist-heavy Penobscot Bay corridor and the Belfast location serving the Waldo County and Penobscot Bay north shore.</p>
+  </section>
+
+  <section>
+    <h2>Rockland Location (Recreational)</h2>
+    <p><strong>Address:</strong> 403 Main Street, Rockland, ME 04841<br>
+    <strong>Phone:</strong> (207) 701-4747<br>
+    <strong>Type:</strong> Recreational (21+ with valid ID)</p>
+    <p>The Rockland location is Botany's flagship and the most-visited of the two storefronts. It sits in the heart of Rockland's Main Street corridor, the same block as Highbrow (696 Main) and Scrimshaw (500 Main). The three Midcoast dispensaries on Main Street make Rockland's downtown unusually concentrated for a small Maine city.</p>
+    <p>Per the operator's positioning, the Rockland location uses the five-category classification system (Up, Relaxed, Focused, Social, Balanced) to help customers choose by intended effect rather than strain name — a shopper-friendly approach that simplifies the menu for first-time buyers and tourists.</p>
+  </section>
+
+  <section>
+    <h2>Belfast Location (Medical)</h2>
+    <p><strong>Address:</strong> 161 High Street, Belfast, ME<br>
+    <strong>Type:</strong> Medical (Maine MMMP card required)</p>
+    <p>Botany's Belfast medical storefront serves registered Maine medical cannabis patients from Belfast, Searsport, Winterport, Frankfort, Monroe, and the broader Waldo County community. Per the operator's licensing model, the Belfast location is medical-only — adult-use customers should use the Rockland location or visit one of the other Waldo County dispensaries (Bayside Bud Shack in Northport, Greenport Cannabis in Damariscotta).</p>
+  </section>
+
+  <section>
+    <h2>Five-Category Classification System</h2>
+    <p>Botany's signature customer-experience choice is a five-category effect-based classification:</p>
+    <ul>
+      <li><strong>Up</strong> — energizing, daytime, social, productive</li>
+      <li><strong>Relaxed</strong> — calming, evening, body-focused</li>
+      <li><strong>Focused</strong> — clear-headed, task-oriented, creative</li>
+      <li><strong>Social</strong> — conversational, group-friendly, lower-anxiety</li>
+      <li><strong>Balanced</strong> — middle-of-the-road, functional, all-purpose</li>
+    </ul>
+    <p>This framework is similar to the Uplifted/Balanced/Relaxed system used by Highbrow and other Maine operators, prioritizing shopper experience over the more technical indica/sativa/hybrid labeling. For Midcoast visitors unfamiliar with the Maine strain landscape, this approach lowers the barrier to entry.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>From the Rockland location:</p>
+    <ul>
+      <li><strong>Rockland</strong> (in town) — 5 min</li>
+      <li><strong>Camden</strong> — 15 min north</li>
+      <li><strong>Rockport</strong> — 10 min north</li>
+      <li><strong>Thomaston</strong> — 15 min south</li>
+      <li><strong>Warren</strong> — 20 min west</li>
+      <li><strong>Belfast</strong> — 35 min north (and where the Botany medical store is located)</li>
+    </ul>
+    <p>For Knox County visitors from southern Maine, Botany Rockland is the only Maine Midcoast location in the operator's network — the next Botany storefront is in Belfast (35 min north).</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://botanymaine.com/">botanymaine.com</a></li>
+      <li><strong>Phone:</strong> (207) 701-4747</li>
+      <li><strong>Facebook:</strong> <a href="https://www.facebook.com/botanymaine/">facebook.com/botanymaine</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/botany-rockland">yelp.com/biz/botany-rockland</a></li>
+      <li><strong>Rockland guide:</strong> <a href="/guides/rockland-dispensary-guide">Town-level overview of Rockland dispensaries</a></li>
+    </ul>
+    <p>Adult-use customers: bring a valid government-issued photo ID showing you are 21 or older. Medical patients: bring your Maine MMMP card and a valid photo ID.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a> — town overview including Botany, Highbrow, and Scrimshaw on Main Street</li>
+        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a> — nearest options for Camden (no dispensaries in Camden itself)</li>
+        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a> — Botany's Belfast medical location is one of several Waldo County options</li>
+        <li><a href="/guides/highbrow-cannabis">Highbrow Cannabis</a> — Botany's Main Street neighbor at 696 Main</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Botany cannabis in Maine?", a: "403 Main Street, Rockland, ME 04841 (recreational) and 161 High Street, Belfast, ME (medical). Phone (207) 701-4747." },
+        { q: "Is Botany a medical or adult-use dispensary?", a: "Both, by location. Rockland is recreational, Belfast is medical." },
+        { q: "How does Botany classify products?", a: "Five-category feeling system: Up, Relaxed, Focused, Social, Balanced." },
+        { q: "What is the service area for Botany Rockland?", a: "Knox County Midcoast: Rockland, Camden, Rockport, Thomaston, Warren, and the broader Penobscot Bay corridor." },
+        { q: "What is Botany's position in the Rockland market?", a: "One of three active cannabis dispensaries on Main Street Rockland, alongside Highbrow and Scrimshaw." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Addresses, phone, and license framework above are sourced from the operator's site (botanymaine.com, retrieved 2026-07-04) and the operator's Facebook page. The "five-category effect-based classification" framing is per the operator's positioning. License-type framing (Rockland rec, Belfast medical) is per the existing MDG Rockland guide. Always call ahead to confirm current hours, menu, and license framework before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
