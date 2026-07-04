@@ -1,0 +1,173 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is Founding Farmers dispensary in Limerick, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Founding Farmers is a Maine cannabis dispensary located at 16 Main Street, Limerick, ME 04048. Established in 2021, the store carries flower, edibles, extracts, prerolls, vapes, topicals, drinks, and glassware. As of the operator's public site (ffmaine.com) Founding Farmers offers both in-store pickup and delivery. The store's stated phone is (207) 315-5259 and email is foundingfarmers207@icloud.com." }},
+    { "@type": "Question", "name": "What are the hours at Founding Farmers Limerick?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's website (ffmaine.com, retrieved 2026-07-04): Sunday through Wednesday 11AM-7PM, Thursday through Saturday 10AM-8PM. Hours change seasonally and around holidays; call (207) 315-5259 to confirm before visiting." }},
+    { "@type": "Question", "name": "Does Founding Farmers offer adult-use, medical, or both?", "acceptedAnswer": { "@type": "Answer", "text": "The operator's public website lists both pickup and delivery menus spanning flower, edibles, extracts, prerolls, vapes, topicals, drinks, and glass — categories consistent with both adult-use and medical patient offerings. Confirm your patient or 21+ status when ordering. Limerick has not been confirmed on Maine's adult-use opt-in list, so on-site sales are governed by the operator's license category and local rules; call ahead if you are an adult-use customer." }},
+    { "@type": "Question", "name": "Where is Founding Farmers located?", "acceptedAnswer": { "@type": "Answer", "text": "16 Main Street, Limerick, ME 04048. The store sits in central Limerick, a small York County town of about 3,200 residents roughly 35 miles west of Portland and 18 miles east of Bridgton. Surrounding communities served include Limington, Parsonsfield, Hiram, Cornish, Newfield, and Shapleigh." }},
+    { "@type": "Question", "name": "How do I verify Founding Farmers' current product menu and pricing?", "acceptedAnswer": { "@type": "Answer", "text": "The operator's official online menu is hosted at ffmaine.com (shop section). Third-party pickup and delivery listings on Weedmaps (weedmaps.com/dispensaries/founding-farmers) also surface the current menu. Phone: (207) 315-5259. Maine Dispensary Guide does not inventory the menu in real time and recommends verifying directly with the operator before visiting." }}
+  ]
+});
+---
+
+<Layout title="Founding Farmers Dispensary — Limerick, Maine (2026)" description="Founding Farmers is a cannabis dispensary at 16 Main St, Limerick, ME 04048. Established 2021, with pickup and delivery, full flower/edibles/concentrate menu, and York County's rural western corridor service area." heroImage="/images/heroes/limerick-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Founding Farmers Dispensary — Limerick, Maine</h1>
+    <p class="subtitle">Maine cannabis dispensary at 16 Main Street, Limerick — established 2021, serving York County's western rural corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Founding Farmers at a Glance</h2>
+    <table aria-label="Founding Farmers dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Founding Farmers</td></tr>
+        <tr><td><strong>Address</strong></td><td>16 Main Street, Limerick, ME 04048</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 315-5259</td></tr>
+        <tr><td><strong>Email</strong></td><td>foundingfarmers207@icloud.com</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Sun–Wed 11AM–7PM · Thu–Sat 10AM–8PM (verify by phone)</td></tr>
+        <tr><td><strong>Established</strong></td><td>2021</td></tr>
+        <tr><td><strong>Services</strong></td><td>In-store pickup · Delivery</td></tr>
+        <tr><td><strong>Product Categories</strong></td><td>Flower, Edibles, Extracts, Pre-rolls, Vapes, Topicals, Drinks, Glass</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Limerick, Limington, Parsonsfield, Hiram, Cornish, Newfield, Shapleigh, and western York County</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>ffmaine.com · Weedmaps · MapQuest · Yelp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Founding Farmers is the only dispensary currently operating in the town of Limerick, Maine. Established in 2021, the store sits on Main Street in central Limerick and serves as a regional access point for medical patients and adult-use customers across the rural western York County corridor — including Limington, Parsonsfield, Hiram, Cornish, Newfield, and Shapleigh.</p>
+    <p>The store's public menu spans the full cannabis product range: flower, edibles, extracts, pre-rolls, vapes, topicals, drinks, and glassware accessories. Founding Farmers advertises both in-store pickup and delivery through its own website and third-party platforms.</p>
+  </section>
+
+  <section>
+    <h2>Location, Hours, and Access</h2>
+    <p><strong>Address:</strong> 16 Main Street, Limerick, ME 04048<br>
+    <strong>Phone:</strong> (207) 315-5259<br>
+    <strong>Hours (per operator website, July 2026):</strong> Sunday through Wednesday 11AM to 7PM; Thursday through Saturday 10AM to 8PM.</p>
+    <p>Limerick is a small town of roughly 3,200 residents in York County, located about 35 miles west of Portland and 18 miles east of Bridgton. The store's central Main Street location makes it accessible from the surrounding rural communities, several of which do not have their own dispensaries. Visitors from the Bridgton and Fryeburg areas find Founding Farmers a reasonable drive via Route 5 / Route 11.</p>
+    <p>Founding Farmers operates primarily out of a single storefront; there is no second Maine location at the time of this writing. If a second location opens, it will most likely be referenced first on the operator's official site.</p>
+  </section>
+
+  <section>
+    <h2>Product Menu</h2>
+    <p>Founding Farmers carries a full Maine dispensary menu organized into eight categories on their public site:</p>
+    <ul>
+      <li><strong>Flower</strong> — fresh whole-bud cannabis in multiple cultivars</li>
+      <li><strong>Edibles</strong> — gummies, chocolates, and other infused products</li>
+      <li><strong>Extracts / Concentrates</strong> — solvent and solventless options</li>
+      <li><strong>Pre-rolls</strong> — single joints and multi-packs</li>
+      <li><strong>Vapes / Cartridges</strong> — 510-thread carts and all-in-one disposables</li>
+      <li><strong>Topicals / Tinctures</strong> — non-inhalable formats</li>
+      <li><strong>Drinks</strong> — cannabis-infused beverages</li>
+      <li><strong>Glass</strong> — pipes, rigs, and accessories</li>
+    </ul>
+    <p>The operator's site highlights brands including Method Maine flower (marketed as "Mineral salts combined with organic inputs, pesticide and mold free") and Kind Farms edibles, among others. Live menu and pricing should be confirmed directly with the operator before visiting, as inventory rotates.</p>
+  </section>
+
+  <section>
+    <h2>Pickup and Delivery</h2>
+    <p>Founding Farmers offers both in-store pickup and delivery. Pickup orders can be placed through the operator's website (ffmaine.com) or via Weedmaps. Delivery availability and radius should be confirmed by phone — delivery rules in Maine are license-category-specific and may vary based on whether the customer is a registered medical patient or an adult-use customer.</p>
+  </section>
+
+  <section>
+    <h2>York County Service Area</h2>
+    <p>Founding Farmers is the nearest dispensary for several small western York County towns that have no local options of their own. A non-exhaustive list of communities the store serves:</p>
+    <ul>
+      <li><strong>Limerick</strong> (in town)</li>
+      <li><strong>Limington</strong> — ~6 miles east, no dispensary</li>
+      <li><strong>Parsonsfield</strong> — ~7 miles west, no dispensary</li>
+      <li><strong>Hiram</strong> — ~10 miles north, no dispensary</li>
+      <li><strong>Cornish</strong> — ~10 miles northeast, no dispensary</li>
+      <li><strong>Newfield</strong> — ~10 miles southwest, no dispensary</li>
+      <li><strong>Shapleigh</strong> — ~10 miles south, no dispensary</li>
+      <li><strong>Waterboro / Lyman</strong> — 12–15 miles southeast</li>
+    </ul>
+    <p>For adult-use customers closer to Portland, Biddeford, Saco, or Old Orchard Beach, additional dispensaries exist in those larger commercial centers. For adult-use customers further west, Bridgton and Fryeburg dispensaries are closer.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <p>Operator details — hours, product availability, delivery radius, and accepted license categories — can change without notice. To avoid a wasted trip, verify directly before visiting:</p>
+    <ul>
+      <li><strong>Phone:</strong> (207) 315-5259</li>
+      <li><strong>Email:</strong> foundingfarmers207@icloud.com</li>
+      <li><strong>Official site:</strong> <a href="https://ffmaine.com/">ffmaine.com</a></li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/dispensaries/founding-farmers">weedmaps.com/dispensaries/founding-farmers</a></li>
+      <li><strong>MapQuest listing:</strong> mapquest.com/us/maine/founding-farmers-800201734</li>
+    </ul>
+    <p>If you have a Maine medical cannabis card or a valid out-of-state card from a reciprocity state, mention your patient status when ordering. Adult-use customers should bring a valid government photo ID showing they are 21 or older.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a> — town-level overview of Limerick's cannabis market</li>
+        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a> — nearest adult-use option, ~18 miles east</li>
+        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — additional western Maine options</li>
+        <li><a href="/guides/buxton-dispensary-guide">Buxton Dispensary Guide</a> — Hidden Greens medical dispensary, southeast</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "What is Founding Farmers dispensary in Limerick, Maine?", a: "A cannabis dispensary at 16 Main Street, Limerick, ME 04048, established in 2021. The store offers flower, edibles, extracts, prerolls, vapes, topicals, drinks, and glass, with both pickup and delivery. Phone: (207) 315-5259." },
+        { q: "What are the hours at Founding Farmers Limerick?", a: "Per the operator's website (ffmaine.com): Sunday–Wednesday 11AM–7PM; Thursday–Saturday 10AM–8PM. Call (207) 315-5259 to confirm before visiting." },
+        { q: "Does Founding Farmers offer adult-use, medical, or both?", a: "The operator's public menu spans categories consistent with both adult-use and medical offerings. Confirm your patient or 21+ status when ordering. Limerick has not been confirmed on Maine's adult-use opt-in list, so on-site sales are governed by the operator's license category and local rules." },
+        { q: "Where is Founding Farmers located?", a: "16 Main Street, Limerick, ME 04048. Central Limerick in western York County, roughly 35 miles west of Portland and 18 miles east of Bridgton." },
+        { q: "How do I verify the current menu and pricing?", a: "Check ffmaine.com (shop section) or the Weedmaps listing, or call (207) 315-5259. Maine Dispensary Guide does not inventory the menu in real time — verify directly with the operator." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, phone, hours, and product categories above are sourced from the operator's own website (ffmaine.com, retrieved 2026-07-04) and cross-referenced against the Weedmaps listing and MapQuest. The store's pickup-and-delivery model is consistent across sources. Limerick's adult-use opt-in status is unconfirmed as of publication — if you are an adult-use customer, call ahead to confirm you can transact on-site. Always verify hours and inventory directly before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, product availability, and license categories can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

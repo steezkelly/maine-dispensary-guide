@@ -174,3 +174,98 @@ Total page-2 landmine impression haul covered by these edits: ~1,200+ impression
 - Did not edit `dispensary bridgton maine` body to add Great Atlantic Puffin Co. (already present). Title + subtitle carry the brand name now.
 - Limerick: Founding Farmers brand mentioned only in subtitle. Body already covered it. Sprint 87 will add a Founding Farmers brand page (384 imp across 3 queries).
 - Ogunquit, Bar Harbor, and Bar Harbor "420 mules" (27+22 imp): brand-page gaps. Sprint 87.
+
+
+## Sprint 86 — Top-3 Zero-CTR Title Surgery (executed 2026-07-04)
+
+### Edits made
+
+| File | Edit | Query captured |
+|---|---|---|
+| `blog/maine-cannabis-budtender-careers.astro` | Added first FAQ entry matching the exact query phrasing: "What regulator do you need for a cannabis worker in Maine?" with concrete OCP / DOL / MHRC answer citing 90-day Responsible Vendor training. | what regulator you need for cannabis worker |
+
+### Content gap identified (NOT auto-built — flagged for user decision)
+
+| Query | Impressions | Gap |
+|---|---:|---|
+| founding farmers | 49 | No dedicated page. Referenced in Limerick guide but no standalone. Flagged for user — see Sprint 87. |
+| founding farmers limerick maine | 272 | Same gap. Highest single impression haul in the data file. |
+| founding farmers limerick | 63 | Same gap. |
+
+User decision (2026-07-04): Build standalone page. Implemented in Sprint 87.
+
+---
+
+## Sprint 87 — Brand-Page Gap (executed 2026-07-04)
+
+### New page
+
+Created `guides/founding-farmers-dispensary.astro` — standalone operator guide for Founding Farmers, the only dispensary operating in Limerick, ME. Catches the 384 combined GSC impressions across three "founding farmers" query variants.
+
+### Content approach
+
+- All factual claims sourced from the operator's own website (ffmaine.com, retrieved 2026-07-04) and cross-referenced against Weedmaps + MapQuest.
+- Includes verification badge with explicit "verify directly" instructions.
+- Conservative framing where I had limited primary-source data (Limerick adult-use opt-in status flagged as unconfirmed).
+- Hero image reuses existing Limerick hero (no brand-specific image on disk).
+
+### Internal-link additions
+
+- `find-a-dispensary.astro`: added "Founding Farmers (Limerick)" entry as an operator-level listing in the directory's region grouping.
+- `guides/limerick-dispensary-guide.astro`: added Founding Farmers operator page to Related Guides.
+
+### Verification
+
+- `npx astro check --minimumSeverity error`: 0 errors / 267 files (was 266 before the new page)
+- `MDG_BASE=… node scripts/check/smoke-200.cjs`: 226 ok, 0 redirects, 0 broken (this is the production route count; the new page will appear on next deploy)
+- Live site code for new URL: 404 (expected — production dist has not been rebuilt yet; deploys via Vercel on push to main)
+
+### YMYL caveats
+
+- Listed hours, phone, address verbatim from ffmaine.com.
+- Did NOT claim "medical-only" or "adult-use-only" since the operator's own menu is segmented across both.
+- Did NOT invent product counts, pricing, or rating values.
+- Verification footer explicitly tells readers to verify before visiting.
+
+---
+
+## Sprint 88 — B2B / YMYL Title Surgery (executed 2026-07-04)
+
+### Edits made
+
+| File | Edit | Query captured |
+|---|---|---|
+| `guides/maine-dispensary-license.astro` | Title + H1 rewritten as "Cannabis Business Licensing in Maine: OCP Application Guide (2026)". Description rewritten to cover cultivation/manufacturing/testing license types too. | cannabis business licensing in maine, how to open a dispensary in maine |
+| `guides/maine-metrc-compliance-guide.astro` | Title rewritten as "Metrc Maine: Seed-to-Sale Tracking for Cannabis Operators (2026)" — exact-query match for both `metrc maine` and `maine metrc`. | metrc maine, maine metrc |
+| `pages/roi-calculator.astro` | Title rewritten as "Dispensary ROI: Maine Cannabis Profitability Calculator (2026)" — leading keyword match for `dispensary roi`. | dispensary roi |
+| `blog/maine-cannabis-cultivation-license-2026.astro` | Title + H1 rewritten to include "Maine Medical Marijuana Cultivation License Requirements 2026" verbatim. | maine medical marijuana cultivation license requirements 2026 |
+| `blog/maine-dispensary-how-to-open.astro` | Already covered in Sprint 85 (rewrote as "How to Start a Dispensary in Maine"). | how to start a dispensary in maine, how to open a dispensary in maine |
+
+### B2B gaps remaining (not auto-built)
+
+| Query | Impressions | Status |
+|---|---:|---|
+| cannabis web design maine | 71 | Vendor page. Existing `maine-cannabis-vendor-directory.astro` is the right surface. Needs a "Web Design" subsection if any vendor is publishing for it. |
+| cannabis industry training maine | 34 | No dedicated page. Existing `maine-cannabis-staffing-licensing.astro` covers the regulatory side but not "industry training" as a service. |
+| cannabis marketing agency maine | 33 | Vendor directory surface, same as web design. |
+| iic card | 42 | Surface: `maine-cannabis-staffing-licensing.astro`. Page mentions IIC/AIC cards but doesn't lead with that phrase in title. |
+| cannabis workers permit | 5 | Same page; covered indirectly by FAQ entry added in Sprint 86. |
+| adult only weed camp in maine | 29 | No clear page. Niche tail. |
+
+These five gaps add up to 184 more impressions — material, but lower-priority than the brand-page work already shipped. Recommend a focused Sprint 89 if any of them prove sticky in next GSC export.
+
+---
+
+## Verification summary (Sprints 85-88 combined)
+
+- esbuild parse on 14 modified frontmatters: 0 errors
+- `npx astro check --minimumSeverity error`: 0 errors, 267 files
+- `MDG_BASE=https://mainedispensaryguide.com node scripts/check/smoke-200.cjs`: 226 ok / 0 redirects / 0 broken
+- `node scripts/check/sitemap-postprocess.test.mjs`: 31 passed / 0 failed
+- `node scripts/check/content-health-regression.cjs`: 0 regressions
+
+Total page-2 / page-3 / top-3 zero-CTR / brand-gap impression haul addressed: ~2,000+ impressions across 25+ queries.
+
+Notes:
+- Pre-push hook skipped per memory's low-memory fallback (CI runs the full 8-step suite on GitHub runner with a real dist/).
+- Docs-vs-code lint script is referenced in skill docs but doesn't exist on disk (known gap, not blocking).
