@@ -159,22 +159,15 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
     </Callout>
 
     <section>
-      <h2>The Four Essential Coverage Types</h2>
-
-      <h3>General Liability</h3>
-      <p>General liability covers customer injuries. It also covers property damage. It covers slip-and-fall accidents on your premises. A customer who falls in your parking lot is a general liability claim. A delivery person who gets injured at your loading dock is also a general liability claim. Minimum recommended coverage: $1 million per occurrence.</p>
-
-      <h3>Product Liability</h3>
-      <p>Product liability is the coverage most dispensary owners underestimate. It protects you when a customer claims harm from a product. This includes adverse reactions. It also includes contamination issues. Any claim that a product caused harm falls under this coverage. Minimum recommended: $1-3 million.</p>
-      <p>Keep records of every product you sell. Batch numbers, test results, and supplier information — document everything. This documentation is your first line of defense. In a product liability claim, your insurer will want this information immediately.</p>
-
-      <h3>Property Insurance</h3>
-      <p>Property insurance covers your building. It covers your equipment. It covers your inventory. These are covered against fire, theft, water damage, and similar perils. If someone breaks into your dispensary and steals inventory, property insurance covers the loss. A fire that damages your buildout is also covered for repair costs.</p>
-
-      <h3>Workers Compensation</h3>
-      <p>Maine law requires workers comp for any employer with one or more employees. This applies to you from day one of operations. Workers comp covers medical expenses. It also covers lost wages when an employee gets injured on the job. Budtenders lift heavy inventory. Security staff handle tense situations. Workplace injuries can happen. Workers comp covers them.</p>
-
-      <p>Several Maine-specific factors affect your insurance costs. Retail spaces in Portland cost more than rural Aroostook County locations. Dispensaries near schools face higher risk classifications. Your proximity to a fire station and hydrant affects property rates. In Lewiston and Bangor, dispensaries with established commercial neighbors get better rates. Standalone locations on commercial fringes typically pay more.</p>
+      <h2>Cost-Saving Strategies</h2>
+      <ul>
+        <li><strong>Higher deductibles:</strong> Increasing your deductible from $1,000 to $5,000 can reduce premiums by 15-20%</li>
+        <li><strong>Security discounts:</strong> Alarm systems, security cameras, and vault storage demonstrate lower risk and reduce rates</li>
+        <li><strong>Claims-free history:</strong> Maintaining a clean loss history earns better renewal rates over time</li>
+        <li><strong>Package bundling:</strong> Buying multiple policies from the same carrier typically saves 10-20%</li>
+        <li><strong>Annual payment:</strong> Paying upfront instead of monthly often earns a 5-10% discount</li>
+        <li><strong>Safety training records:</strong> Documented employee safety training can reduce workers comp premiums</li>
+      </ul>
     </section>
 
     <section>
@@ -218,24 +211,22 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
       </ul>
     </section>
 
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={insuranceFaqs} />
+    </section>
 
-
-
-
-
-
-  <section class="further-reading">
-    <h2>External Resources</h2>
-    <ul>
-        <li><a href="https://www.maine.gov/sos/" target="_blank" rel="noopener noreferrer">Maine sos/</a></li>
-        <li><a href="https://www.maine.gov/dps/" target="_blank" rel="noopener noreferrer">Maine DPS/</a></li>
-    </ul>
-  </section>
+    <section class="further-reading">
+      <h2>External Resources</h2>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy (OCP)</a> — license requirements, surety bond info, and compliance contact for Maine dispensary operators</li>
+        <li><a href="https://legislature.maine.gov/statutes/26/title26sec813.html" target="_blank" rel="noopener noreferrer">M.R.S. Title 26 §813</a> — Maine workers compensation law (employer coverage requirements)</li>
+        <li><a href="https://www.maine.gov/ins/" target="_blank" rel="noopener noreferrer">Maine Bureau of Insurance</a> — verify broker licensure, file complaints, and confirm carrier authorization in Maine</li>
+      </ul>
+    </section>
   <section class="disclaimer">
       <p><em>This guide is for informational purposes only. Consult with a qualified insurance professional for advice on your specific coverage needs.</em></p>
     </section>
   </article>
 
 </Layout>
-
-<Faq faqs={insuranceFaqs} />
