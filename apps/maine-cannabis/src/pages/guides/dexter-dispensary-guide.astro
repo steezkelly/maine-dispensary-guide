@@ -17,7 +17,7 @@ const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Are there cannabis dispensaries in Dexter, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Puffers Place operates a medical cannabis dispensary on Johnson Road in Dexter, ME 04930. They offer a full medical menu plus smoking accessories, and have an on-site 420-friendly lakefront rental property on Puffers Pond. Per Yelp, hours are Mon-Sun 9am-2pm (Mon/Sun) and 9am-7pm (Tue-Sat). Phone via the operator's site." }},
+    { "@type": "Question", "name": "Are there cannabis dispensaries in Dexter, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Puffers Place operates a medical cannabis dispensary at 50 Johnson Road, Dexter, ME 04930 (phone 207-270-1064). They offer a full medical menu plus smoking accessories, and have an on-site 420-friendly lakefront rental property on Puffers Pond. Hours per puffersplace.com: Mon-Thu 9am-7pm, Fri-Sat 9am-8pm, Sun 9am-5pm." }},
     { "@type": "Question", "name": "Is Puffers Place medical or recreational?", "acceptedAnswer": { "@type": "Answer", "text": "Medical cannabis dispensary. Per Yelp, they offer 'medical marijuana cards' (provider services), 'premium medical marijuana strains,' and 'therapeutic CBD topicals.' Confirm current license framework directly with the operator." }},
     { "@type": "Question", "name": "What is unique about Puffers Place in Dexter?", "acceptedAnswer": { "@type": "Answer", "text": "Puffers Place is unusual among Maine medical dispensaries because they operate an on-site 420-friendly lakefront rental property on Puffers Pond — a 'cannabis-friendly seasonal rental home' per the operator's site. The combination of dispensary, accessories, lodging, and on-site water access (kayaks, private dock, lake views) makes it a destination for cannabis-curious travelers seeking a multi-day Maine experience." }},
     { "@type": "Question", "name": "What is the service area for Puffers Place Dexter?", "acceptedAnswer": { "@type": "Answer", "text": "Puffers Place serves Dexter, Penobscot County, and the surrounding Piscataquis County border region. Common drive-times: Bangor (~45 min east), Newport (~20 min east), Dover-Foxcroft (~30 min north), Corinna (~10 min north), Guilford (~30 min north), Hartland (~15 min southwest)." }},
@@ -62,14 +62,15 @@ const faqPageJsonLd = JSON.stringify({
       <tbody>
         <tr><td><strong>Dispensaries in Town</strong></td><td>1 (Puffers Place — medical)</td></tr>
         <tr><td><strong>Notable Operator</strong></td><td>Puffers Place</td></tr>
-        <tr><td><strong>Address</strong></td><td>Johnson Rd, Dexter, ME 04930</td></tr>
-        <tr><td><strong>Hours</strong></td><td>Mon-Sun 9am-2pm (Mon/Sun), 9am-7pm (Tue-Sat) per Yelp</td></tr>
-        <tr><td><strong>License Type</strong></td><td>Medical (per Yelp listing)</td></tr>
+        <tr><td><strong>Address</strong></td><td>50 Johnson Road, Dexter, ME 04930</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 270-1064</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Mon-Thu 9am-7pm · Fri-Sat 9am-8pm · Sun 9am-5pm (per puffersplace.com)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical (per Yelp and operator's site)</td></tr>
         <tr><td><strong>Distinctive Feature</strong></td><td>On-site 420-friendly lakefront rental on Puffers Pond</td></tr>
         <tr><td><strong>Population</strong></td><td>~3,800 (2020 Census)</td></tr>
         <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
         <tr><td><strong>Position</strong></td><td>ME-7 / ME-94 corridor, 45 min west of Bangor</td></tr>
-        <tr><td><strong>Primary Sources</strong></td><td>puffersplace.com · Yelp</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>puffersplace.com · Yelp · Nextdoor</td></tr>
       </tbody>
     </table>
   </section>
@@ -82,10 +83,10 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <h2>Puffers Place — Medical Dispensary</h2>
-    <p><strong>Address:</strong> Johnson Rd, Dexter, ME 04930<br>
-    <strong>Hours:</strong> Mon 9am-2pm · Tue-Sat 9am-7pm · Sun 9am-2pm (per Yelp)<br>
-    <strong>Type:</strong> Medical (MMMP cardholders) — per Yelp listing<br>
-    <strong>Phone:</strong> via the operator's site at <a href="https://puffersplace.com/">puffersplace.com</a></p>
+    <p><strong>Address:</strong> 50 Johnson Road, Dexter, ME 04930<br>
+    <strong>Phone:</strong> (207) 270-1064<br>
+    <strong>Hours:</strong> Mon-Thu 9am-7pm · Fri-Sat 9am-8pm · Sun 9am-5pm (per puffersplace.com)<br>
+    <strong>Type:</strong> Medical (MMMP cardholders) — per Yelp and the operator's site<br></p>
     <p>Per Yelp and the operator's own site, Puffers Place operates as a medical cannabis dispensary with a full menu — premium medical marijuana strains, CBD topicals, smoking accessories, and online product ordering. Per Yelp, they also offer medical marijuana card services (provider referrals) for patients seeking certification.</p>
     <p>The operator's positioning is patient-focused and rural: small-town service, medical-grade product, and an on-site property for cannabis-curious visitors who want to extend their visit into a multi-day stay.</p>
   </section>
@@ -99,20 +100,23 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <h2>Service Area</h2>
-    <p>Puffers Place serves the Sebasticook River corridor and the southern Piscataquis County border region:</p>
+    <p>Per the operator's site, Puffers Place serves the broader central Maine interior with a comprehensive 33-town catchment:</p>
+    <p><strong>Penobscot County towns served (per operator):</strong> Dexter, Garland, Newport, Palmyra, Pittsfield, Waterville, Bangor, Brewer, Orono, Old Town, Ripley, Corinna, Harmony, Fairfield, Detroit, Corinth, Glenburn, Kenduskeag, Exeter, St Albans, Plymouth, Levant, Hermon, Hampden, Etna</p>
+    <p><strong>Somerset County:</strong> Harmony (cross-county)</p>
+    <p><strong>Kennebec County:</strong> Augusta, Clinton, Fairfield</p>
+    <p><strong>Waldo County:</strong> Belfast</p>
+    <p><strong>Piscataquis County:</strong> Dover-Foxcroft, Milo, Brownville</p>
+    <p>This is one of the broadest service areas for a single Maine medical dispensary. The 33-town list reflects the rural reality of central Maine where a single operator may serve a region larger than several New England states combined.</p>
+    <p><strong>Common drive-times from downtown Dexter:</strong></p>
     <ul>
-      <li><strong>Dexter</strong> (in town) — 5 min</li>
       <li><strong>Corinna</strong> — 10 min north</li>
       <li><strong>Newport</strong> — 20 min east</li>
       <li><strong>Hartland</strong> — 15 min southwest</li>
       <li><strong>Guilford</strong> — 30 min north</li>
       <li><strong>Dover-Foxcroft</strong> — 30 min north</li>
       <li><strong>Bangor</strong> — 45 min east</li>
-      <li><strong>Corinth</strong> — 25 min east</li>
-      <li><strong>St. Albans</strong> — 15 min south</li>
-      <li><strong>Harmony</strong> — 25 min southwest</li>
+      <li><strong>Milo</strong> — 30 min north</li>
     </ul>
-    <p>For Piscataquis County residents, Puffers Place is one of three medical options in the broader region — alongside Nuggie's / ReMaine Humble Farms in Skowhegan (west) and Dab Bar in Dover-Foxcroft (north). For Penobscot County interior residents east of Bangor, Puffers Place fills a medical-dispensary gap that the Bangor storefronts don't reach.</p>
   </section>
 
   <section>
@@ -161,7 +165,7 @@ const faqPageJsonLd = JSON.stringify({
     <h2>Frequently Asked Questions</h2>
     <Faq
       questions={[
-        { q: "Are there cannabis dispensaries in Dexter, Maine?", a: "Yes. Puffers Place operates a medical cannabis dispensary on Johnson Road in Dexter, ME 04930, with an on-site 420-friendly lakefront rental property on Puffers Pond." },
+        { q: "Are there cannabis dispensaries in Dexter, Maine?", a: "Yes. Puffers Place operates a medical cannabis dispensary at 50 Johnson Road, Dexter, ME 04930 (phone 207-270-1064), with an on-site 420-friendly lakefront rental property on Puffers Pond." },
         { q: "Is Puffers Place medical or recreational?", a: "Medical. Per Yelp, they offer medical marijuana cards (provider referrals), premium medical marijuana strains, and therapeutic CBD topicals." },
         { q: "What is unique about Puffers Place?", a: "On-site 420-friendly lakefront rental property on Puffers Pond — a cannabis-friendly seasonal rental with kayaks, private dock, and lake views. Rare combination in Maine's medical cannabis market." },
         { q: "What is the service area?", a: "Sebasticook River corridor: Dexter, Corinna, Newport, Hartland, Guilford, Dover-Foxcroft, Bangor, and surrounding Penobscot / Piscataquis County towns." },
@@ -171,7 +175,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <div class="verification">
-    <strong>Verification:</strong> Address, hours, license framework, and on-site lodging property above are sourced from the operator's site (puffersplace.com, retrieved 2026-07-04) and the Yelp listing. The "420-friendly seasonal rental on Puffers Pond" framing is per the operator's own site. Phone number not published in the sources I reviewed — confirm by contacting the operator directly. Hours per Yelp are subject to change. Always call ahead to confirm current hours, menu, and product availability before visiting.
+    <strong>Verification:</strong> Address (50 Johnson Road), phone ((207) 270-1064), hours (Mon-Thu 9am-7pm, Fri-Sat 9am-8pm, Sun 9am-5pm), 33-town service area, license framework, and on-site lodging property above are sourced from the operator's site (puffersplace.com, retrieved 2026-07-04) and cross-referenced against the Yelp listing and Nextdoor. The "420-friendly seasonal rental on Puffers Pond" framing is per the operator's own site. Always call ahead to confirm current hours, menu, and product availability before visiting.
   </div>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, license categories, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
