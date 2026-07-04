@@ -1,4 +1,5 @@
-# MDG Session Passdown — 2026-07-04 (session end)
+# MDG Session Passdown — 2026-07-04 (session end, with continuation notes)
+
 
 ## State at session close
 - Branch: `main`
@@ -114,3 +115,86 @@ The dose calculator + terpene article cover two of the three priority consumer-p
 
 ---
 End of session.
+
+
+---
+
+## Continuation session — same date, YMYL audit round 106-109
+
+**Commits added (in chronological order):**
+- `d9223ad6` — fix(seo): YMYL round 106 — correct wrong operator facts in Houlton, Presque Isle, Opt-In Tracker
+- `de46abc4` — fix(seo): YMYL round 107 — correct LD 1847 session, dedupe insurance page, repair broken Faq
+- `3905573a` — feat(guide): cannabis tinctures and sublingual use Maine guide
+- `3ab06d3a` — feat(guide): cannabis topicals and CBD skin products Maine guide
+
+### Round 106 YMYL corrections
+
+**Houlton guide** (`/guides/houlton-dispensary-guide.astro`):
+- Lifted Cannabis Maine: "78 North St / (207) 532-4444 / adult-use product line" → corrected to "32 Access Rd / (207) 554-6420 / 8am-6pm daily / medical only" via `liftedmaine.com/about`
+- Vargas Farm: "35 Military St" / wrong phone → "28 Airport Dr / (207) 405-5256 / medical only" via Vargas Farm FB + Yelp
+- Sept 2024 Houlton ordinance callout: added The County + WAGM-TV primary sources
+
+**Presque Isle guide** (`/guides/presque-isle-dispensary-guide.astro`):
+- Full Bloom Cannabis: "483 Main St" → "445 Main St" / "(207) 760-7586" / adult-use/recreational via `fullbloomcannabis.com`
+- Royal Leaf Apothecary: correct address but wrong phone (corrected to 561-7667), adult-use only per `royalleafpot.com`
+- Richardson Remedies: removed fabricated "9 Bog Rd" → "Bog Road (no house number publicly listed)"
+- March 2026 moratorium callout: added The County + WAGM-TV primary sources
+- Related-link fix: removed stale "Caribou — 5 dispensaries" (contradicts session 1's correct count of 2 medical)
+
+**Opt-In Tracker** (`/guides/maine-cannabis-opt-in-tracker.astro`):
+- Presque Isle row: "1 dispensary" → "2 (Full Bloom, Royal Leaf) per The County" + Mar 2026 moratorium source
+- Houlton row: added "2021 (medical); recreational rejected by voters 2017" to status column + Sept 24 2024 ordinance source
+
+### Round 107 statute + structural fixes
+
+**maine-metrc-compliance-guide.astro**:
+- 5 references to `LD 1847 (2026)` corrected to `LD 1847 (131st Legislature, 2023)` per primary-source verification at `legislature.maine.gov/legis/bills/display_ps.asp?LD=1847&snum=131`
+- Added Primary Source callout linking to the 131st session bill record (SP 748, "An Act to Institute Testing and Tracking of Medical Use Cannabis")
+
+**maine-cannabis-business-insurance.astro**:
+- Removed duplicate "Four Essential Coverage Types" section
+- Moved `<Faq faqs={insuranceFaqs} />` from after `</Layout>` into proper FAQ section inside `<article>`
+- Replaced bare-bones external resources (was "Maine sos/" and "Maine DPS/" links with no context) with three primary-source links: Maine OCP, M.R.S. Title 26 §813, Maine Bureau of Insurance
+
+### Bill verifications (operator-facing audit)
+
+| Bill | Cited in | Verdict |
+|---|---|---|
+| `LD 1840` (132nd, SP 723) | regulations + caregiver trade-show | TRUE — "Amend Maine Medical Use of Cannabis Act" — P.L. 2025, ch. 512 |
+| `LD 1654` (132nd) | regulations | TRUE — "Exempt Sales/Transfers of Adult Use Cannabis from Excise Tax" — P.L. 2025, ch. 504 |
+| `LD 1897` (132nd) | regulations | TRUE — "Outdoor Cultivation" — P.L. 2025, ch. 514 |
+| `LD 1847` (131st, SP 748) | metrc-compliance | corrected session — was wrongly dated 2026; bill IS medical-Metrc tracking |
+| `HP 1367` ≡ `LD 1846` (130th) | edibles-compliance | TRUE — Variance bill, chaptered 558, signed Apr 4, 2022 |
+| `PL 2025, c. 390` | edibles-compliance | TRUE — §703(1)(D) amendment for gummies exempt from stamping |
+| `Title 28-B §703(1)(F)` | edibles-compliance | TRUE — 10mg/serving, 200mg/package, 10% variance; last amended PL 2023 c. 396 §19 |
+| `Title 28-B §105` | metrc-compliance | TRUE — Tracking system statute |
+| `Title 28-B §601` | dispensary-license | TRUE — Testing program statute |
+
+### Tinctures guide (3905573a)
+
+Closes the Passdown-flagged tincture/sublingual consumption-method gap. Sublingual vs swallowed vs edible vs inhalation comparison; step-by-step administration; §703(1)(F) explicitly applies to tinctures too (10mg/serving); 8 FAQs. Editorial: Thalia Greene. 6 image variants via mmx.
+
+### Topicals guide (3ab06d3a)
+
+Closes the Passdown-flagged topicals gap. Critical YMYL distinction: §703(1)(F)'s 10mg cap applies to EDIBLES specifically, not topicals. Topicals regulated under §701 general labeling only. Non-transdermal vs transdermal mechanism. Drug-testing risk profiles. Pet safety + pregnancy. 10 FAQs.
+
+## Remaining queue
+
+**HIGH:**
+1. Other Aroostook Opt-In Tracker "Opted Out" rows — generic "voted to prohibit" notes without primary sources. Audit against OCP open-data list.
+2. Other operator-facing statute pages (`maine-cannabis-regulations`, `maine-dispensary-license`, `maine-cannabis-cultivation-guide`) — spot-checked this session, all cited bills verified correct.
+
+**MEDIUM:**
+3. "Since 2020" / "operating since YYYY" claims on Wells, Windham town guides — per YMYL skill pitfall #3, drop or source these.
+4. `maine-cannabis-business-insurance` could still use expansion (cost-saving options, broker vetting).
+
+**LOW:**
+5. Pull next GSC export to measure round 85-88 work + rounds 106-109.
+6. Add "Last verified" indicator to all session-built pages with verification badges.
+
+## Notes for next session
+
+- Vercel deploy lag: round 106 content I verified via `web_extract` right after the push still showed pre-R106 content. Re-verify in next session before claiming deploy confirmed.
+- The Layout component (`apps/maine-cannabis/src/layouts/Layout.astro`) emits a unified @graph JSON-LD but does NOT auto-emit FAQPage JSON-LD. FAQ sections render visible HTML via the Faq component, but the frontmatter `const faqPageJsonLd = ...` declarations are dead code unless injected manually.
+- Pattern for new guides: write the page, generate image (mmx), create 6 variants (convert + avifenc), commit, push.
+- Memory section in MEMORY.md is at 4,693/2,200 chars (over capacity) — may need to compact before next session.
