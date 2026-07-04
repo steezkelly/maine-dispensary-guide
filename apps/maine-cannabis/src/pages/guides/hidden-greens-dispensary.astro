@@ -1,0 +1,167 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Hidden Greens in Buxton, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens is at 370 Narragansett Trail, Buxton, ME 04093. Phone (207) 298-9111. Hours vary by day but the dispensary is open seven days a week with extended evening hours most nights." }},
+    { "@type": "Question", "name": "Is Hidden Greens a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens is registered as a Maine medical cannabis dispensary, serving patients with a valid Maine medical marijuana program (MMMP) card. Confirm directly with the dispensary for current licensing status and whether adult-use (21+) customers can transact on-site." }},
+    { "@type": "Question", "name": "Does Hidden Greens have other Maine locations?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens operates as a multi-location medical cannabis operator in Maine. The Buxton location on Narragansett Trail is their flagship. Confirm with the operator for the current list of additional storefronts and caregiver sites." }},
+    { "@type": "Question", "name": "What products does Hidden Greens carry?", "acceptedAnswer": { "@type": "Answer", "text": "Hidden Greens offers medical-grade flower, pre-rolls, edibles, vapes, topicals, and concentrates sourced from their in-house cultivation. Product menu rotates weekly and varies by location. Call (207) 298-9111 or check their menu online for current availability." }},
+    { "@type": "Question", "name": "Do I need a Maine medical marijuana card to shop at Hidden Greens?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens operates as a medical dispensary. You must have a valid Maine MMMP card. Out-of-state medical patients with a card from a Maine reciprocity state should call ahead to confirm acceptance. Adult-use (21+) customers should verify licensing directly before visiting." }}
+  ]
+});
+---
+
+<Layout title="Hidden Greens Buxton Maine — Medical Cannabis Dispensary (2026)" description="Looking for Hidden Greens in Buxton, Maine? The medical cannabis dispensary is at 370 Narragansett Trail, Buxton, ME 04093. Phone (207) 298-9111. Multi-location Maine medical operator with flower, edibles, vapes, and concentrates." heroImage="/images/heroes/buxton-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Hidden Greens Buxton Maine — Medical Cannabis Dispensary</h1>
+    <p class="subtitle">Maine medical cannabis operator at 370 Narragansett Trail, Buxton, ME — multi-location dispensary serving southern Maine patients</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Hidden Greens Buxton at a Glance</h2>
+    <table aria-label="Hidden Greens Buxton dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Hidden Greens</td></tr>
+        <tr><td><strong>Address</strong></td><td>370 Narragansett Trail, Buxton, ME 04093</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 298-9111</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Open 7 days/week, generally 9am-9pm with shorter closing some evenings (verify by phone)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis dispensary (MMMP card required)</td></tr>
+        <tr><td><strong>Products</strong></td><td>Flower, pre-rolls, edibles, vapes, topicals, concentrates</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Buxton, Gorham, Standish, Hollis, Saco, and southern Maine corridor</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>hiddengreens.com · Yelp · Google Business Profile</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Hidden Greens is a Maine medical cannabis dispensary operating the Buxton storefront at 370 Narragansett Trail. The company operates as a multi-location medical operator across Maine, with the Buxton location serving as the flagship along the southern Maine corridor between Gorham, Saco, and Standish.</p>
+    <p>Hidden Greens markets itself as a quality-focused operator that treats clean, tested product as a baseline rather than a marketing angle — a positioning aimed at medical patients who depend on consistent, accurately labeled medicine. The Buxton storefront carries flower, pre-rolls, edibles, vapes, topicals, and concentrates sourced from in-house cultivation.</p>
+  </section>
+
+  <section>
+    <h2>Location, Hours, and Access</h2>
+    <p><strong>Address:</strong> 370 Narragansett Trail, Buxton, ME 04093<br>
+    <strong>Phone:</strong> (207) 298-9111</p>
+    <p>Buxton is a small York County town of roughly 8,300 residents, situated between Gorham, Standish, Hollis, and Saco. The Narragansett Trail (Route 202 / Route 112) corridor is one of southern Maine's main east-west connectors, giving Hidden Greens direct access from Portland (~25 min), Saco/Biddeford (~15-20 min), and the Sebago Lakes region (~20 min north).</p>
+    <p>Hours per the operator's public listings: open seven days a week, with most days running 9am to 8pm or 9pm. Some weeknights close earlier. Call (207) 298-9111 to confirm current hours before visiting.</p>
+  </section>
+
+  <section>
+    <h2>Medical vs. Adult-Use</h2>
+    <p>Hidden Greens operates as a <strong>medical cannabis dispensary</strong>. Customers must hold a valid Maine medical marijuana program (MMMP) card to make on-site purchases. Out-of-state medical patients with cards from reciprocity states (Massachusetts, Rhode Island, and others) should call ahead to confirm the dispensary's current reciprocity acceptance.</p>
+    <p>Adult-use (21+) customers may not be able to transact on-site. Some Maine medical dispensaries have added adult-use endorsements under the dual-license framework, but the licensing mix varies by operator. Confirm directly with Hidden Greens before visiting if you are an adult-use customer without an MMMP card.</p>
+  </section>
+
+  <section>
+    <h2>Product Menu</h2>
+    <p>Hidden Greens carries a full Maine medical dispensary menu:</p>
+    <ul>
+      <li><strong>Flower</strong> — multiple cultivars, indoor and greenhouse options</li>
+      <li><strong>Pre-rolls</strong> — single joints and multi-packs</li>
+      <li><strong>Edibles</strong> — gummies, chocolates, and infused products</li>
+      <li><strong>Vapes / Cartridges</strong> — 510-thread carts and disposables</li>
+      <li><strong>Topicals</strong> — non-inhalable medical formats</li>
+      <li><strong>Concentrates</strong> — solvent and solventless extracts</li>
+    </ul>
+    <p>Product menu rotates weekly. Live inventory and pricing should be confirmed directly with the operator before visiting, as availability varies with each cultivation cycle.</p>
+  </section>
+
+  <section>
+    <h2>Southern Maine Service Area</h2>
+    <p>Hidden Greens' Buxton location serves patients from across southern Maine's medical community. Common drive-times:</p>
+    <ul>
+      <li><strong>Buxton</strong> (in town) — 5 min</li>
+      <li><strong>Gorham</strong> — 10-15 min</li>
+      <li><strong>Standish</strong> — 10-15 min</li>
+      <li><strong>Hollis</strong> — 10 min</li>
+      <li><strong>Saco / Biddeford</strong> — 15-20 min</li>
+      <li><strong>Portland</strong> — 25 min</li>
+      <li><strong>Sebago Lakes region</strong> — 20-25 min north</li>
+      <li><strong>Westbrook</strong> — 15-20 min</li>
+    </ul>
+    <p>For patients closer to Portland, Biddeford, or Saco, additional medical dispensaries operate in those larger commercial centers. For patients north of Buxton, Hidden Greens' other Maine locations may be closer depending on the patient's address.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <p>Operator details — hours, MMMP reciprocity acceptance, product availability, and pricing — can change without notice. To avoid a wasted trip, verify directly before visiting:</p>
+    <ul>
+      <li><strong>Phone:</strong> (207) 298-9111</li>
+      <li><strong>Official site:</strong> <a href="https://hiddengreens.com/">hiddengreens.com</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/hidden-greens-buxton">yelp.com/biz/hidden-greens-buxton</a></li>
+      <li><strong>Buxton guide:</strong> <a href="/guides/buxton-dispensary-guide">Town-level overview</a> covering all dispensaries in Buxton</li>
+    </ul>
+    <p>Bring your Maine MMMP card and a valid government photo ID. Out-of-state medical patients should call ahead to confirm reciprocity acceptance before driving.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/buxton-dispensary-guide">Buxton Dispensary Guide</a> — town-level overview of Buxton's cannabis market</li>
+        <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — how to get an MMMP card</li>
+        <li><a href="/guides/founding-farmers-dispensary">Founding Farmers (Limerick)</a> — another Maine medical operator with multi-town service area</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Hidden Greens in Buxton, Maine?", a: "370 Narragansett Trail, Buxton, ME 04093. Phone (207) 298-9111. Open seven days a week." },
+        { q: "Is Hidden Greens a medical or adult-use dispensary?", a: "Medical cannabis dispensary. An MMMP card is required for on-site purchases. Call ahead for adult-use / reciprocity acceptance." },
+        { q: "Does Hidden Greens have other Maine locations?", a: "Yes — multi-location medical operator. The Buxton location is the flagship. Confirm the current list of additional storefronts with the operator." },
+        { q: "What products does Hidden Greens carry?", a: "Flower, pre-rolls, edibles, vapes, topicals, and concentrates. Menu rotates weekly. Confirm current availability directly." },
+        { q: "Do I need a Maine medical marijuana card to shop at Hidden Greens?", a: "Yes. Valid Maine MMMP card required. Out-of-state medical patients should call ahead to confirm reciprocity acceptance." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, phone, hours, and operator profile above are sourced from the operator's official website (hiddengreens.com, retrieved 2026-07-04) and cross-referenced against the Yelp listing and public business directories. License-type framing (medical vs. adult-use) reflects the public registration; confirm directly with the operator before visiting if you are an adult-use customer. Hours vary by day — call (207) 298-9111 to confirm before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, license categories, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

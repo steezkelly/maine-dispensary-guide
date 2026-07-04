@@ -35,9 +35,9 @@ const vendorListJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "ItemList",
   "name": "Maine Cannabis Vendors — Directory of Named Service Providers",
-  "description": "Verified Maine cannabis industry vendors named on Maine Dispensary Guide, including licensing attorneys, cannabis-specialized CPAs, Metrc-integrated POS providers, and security vendors.",
+  "description": "Verified Maine cannabis industry vendors named on Maine Dispensary Guide, including OCP-licensed testing laboratories, licensing attorneys, cannabis-specialized CPAs, Metrc-integrated POS providers, and security vendors.",
   "itemListOrder": "https://schema.org/ItemListUnordered",
-  "numberOfItems": 5,
+  "numberOfItems": 9,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -53,6 +53,59 @@ const vendorListJsonLd = JSON.stringify({
       "@type": "ListItem",
       "position": 2,
       "item": {
+        "@type": "LegalService",
+        "name": "Verrill (Cannabis Industry Group)",
+        "description": "Maine-based full-service law firm with a cannabis practice covering licensing, regulatory compliance, hemp-derived CBD, and THC variants. Operates across New England.",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "DiagnosticLab",
+        "name": "CATLab",
+        "description": "OCP- and CDC-certified cannabis testing laboratory in Eliot, Maine. ISO 17025 accredited. Full Maine panel: potency, microbials, pesticides, heavy metals, residual solvents. Free sample pickup in southern Maine.",
+        "address": "19 Levesque Drive, Eliot, ME 03903",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "DiagnosticLab",
+        "name": "MCR Labs (Maine)",
+        "description": "OCP-certified cannabis testing laboratory in Gardiner, Maine. ISO 17025 accredited. Maintains one of the largest public non-dispensary testing datasets on the East Coast via The Cannabis Review.",
+        "address": "11 Technology Drive, Gardiner, ME 04345",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "DiagnosticLab",
+        "name": "Nelson Analytical / Tested Labs",
+        "description": "OCP-certified cannabis testing laboratory in Kennebunk, Maine. One of the first two adult-use testing labs licensed in Maine. Brings environmental and pharmaceutical analytical heritage to cannabis testing.",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "item": {
+        "@type": "DiagnosticLab",
+        "name": "Nova Analytic Labs",
+        "description": "OCP-certified cannabis testing laboratory in Windham, Maine. First Maine lab to gain full certification for the state-mandated pesticide panel. Offers the largest cannabinoid panel in Maine (100+ cannabinoids).",
+        "address": "16 Whites Bridge Road, Windham, ME 04062",
+        "areaServed": { "@type": "State", "name": "Maine" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "item": {
         "@type": "SoftwareApplication",
         "name": "Flowhub",
         "description": "Cannabis point-of-sale and inventory platform. Metrc-integrated for Maine cannabis operators.",
@@ -62,7 +115,7 @@ const vendorListJsonLd = JSON.stringify({
     },
     {
       "@type": "ListItem",
-      "position": 3,
+      "position": 8,
       "item": {
         "@type": "SoftwareApplication",
         "name": "Cova",
@@ -73,24 +126,13 @@ const vendorListJsonLd = JSON.stringify({
     },
     {
       "@type": "ListItem",
-      "position": 4,
+      "position": 9,
       "item": {
         "@type": "SoftwareApplication",
         "name": "Dutchie",
         "description": "Cannabis e-commerce and POS platform with online ordering for pickup and delivery.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, iOS, Android"
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 5,
-      "item": {
-        "@type": "SoftwareApplication",
-        "name": "MJ Platform",
-        "description": "Cannabis ERP with multi-location support, often used by vertically integrated operators expanding across Maine.",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web"
       }
     }
   ]
@@ -264,8 +306,38 @@ const vendorListJsonLd = JSON.stringify({
   <section>
     <h2>Testing Labs</h2>
     <p>Every product must test before sale. You need a relationship with an OCP-licensed lab. Tests check potency, microbials, pesticides, and heavy metals.</p>
-    <p>Four labs operate in Maine. Some operators also use labs in nearby states. All testing must meet Maine standards regardless of lab location.</p>
-    <p>Costs run $50-300 per sample. Cultivators pay for cultivation testing. Dispensaries pay for any products they transfer or rework. Budget $500-2,000 monthly depending on volume.</p>
+    <p>Maine has four OCP- and CDC-certified cannabis testing laboratories. These are the only labs authorized to issue Certificates of Analysis for products sold in the Maine adult-use or medical markets. Lab selection matters — turnaround time, failure rate, and customer service vary across the four. Most operators maintain relationships with at least two so they have a backup when results are disputed or a primary lab hits capacity.</p>
+
+    <h3>CATLab (Eliot, ME)</h3>
+    <p><strong>Address:</strong> 19 Levesque Drive, Eliot, ME 03903 · <strong>Website:</strong> <a href="https://catlabllc.com/">catlabllc.com</a></p>
+    <p>CATLab is a southern Maine cannabis testing laboratory serving both the medical and adult-use markets. Operator-owned and ISO 17025 accredited. Offers free sample pickup within their service area and reports a 5-7 business day standard turnaround. Covers flower, concentrates, edibles, and infused products for the full Maine panel (potency, microbials, pesticides, heavy metals, residual solvents).</p>
+
+    <h3>MCR Labs (Gardiner, ME)</h3>
+    <p><strong>Address:</strong> 11 Technology Drive, Gardiner, ME 04345 · <strong>Website:</strong> <a href="https://me.mcrlabs.com/">me.mcrlabs.com</a></p>
+    <p>MCR Labs opened its Maine location in Gardiner in 2022 after a decade operating out of Framingham, Massachusetts. Publishes one of the largest public non-dispensary testing datasets on the East Coast through The Cannabis Review® — operators and patients can look up COAs for specific batches without needing an account. Strong reputation for cannabinoid profiling and terpene analysis in addition to the regulatory panel.</p>
+
+    <h3>Nelson Analytical / Tested Labs (Kennebunk, ME)</h3>
+    <p><strong>Address:</strong> Kennebunk, ME · <strong>Website:</strong> <a href="https://www.nelsonanalytical.com/">nelsonanalytical.com</a></p>
+    <p>Nelson Analytical operates its cannabis testing subsidiary (Tested Labs) out of Kennebunk. One of the first two adult-use testing labs licensed in Maine (alongside Nova Analytic Labs), Nelson Analytical brings decades of environmental and pharmaceutical analytical experience to the cannabis panel. Strong choice for operators looking for a lab with broad analytical heritage beyond cannabis.</p>
+
+    <h3>Nova Analytic Labs (Windham, ME)</h3>
+    <p><strong>Address:</strong> 16 Whites Bridge Road, Windham, ME 04062 · <strong>Website:</strong> <a href="https://testnovalabs.com/">testnovalabs.com</a></p>
+    <p>Nova Analytic Labs was the first Maine lab to gain full certification for testing the state-mandated pesticide panel. ISO 17025 accredited and OCP-certified. Offers the largest cannabinoid panel in Maine (100+ cannabinoids including minor cannabinoids like CBG, CBN, CBC) in addition to the required regulatory testing. Centrally located in Windham with sample pickup available across the state.</p>
+
+    <h3>Choosing Between the Four</h3>
+    <p>Selection criteria for most operators:</p>
+    <ul>
+      <li><strong>Turnaround time:</strong> 5-10 business days standard, 2-3 days rush at 2-3x cost. Critical for inventory planning.</li>
+      <li><strong>Failure rate:</strong> Ask other operators. A 15% failure rate means roughly one in seven batches rejected.</li>
+      <li><strong>Geographic coverage:</strong> CATLab covers southern Maine best; Nova and MCR have statewide pickup; Nelson covers the York County corridor.</li>
+      <li><strong>Panel depth:</strong> Nova leads on cannabinoid count; MCR leads on public data access; CATLab and Nelson are full-panel generalists.</li>
+    </ul>
+
+    <h3>Costs and Budget</h3>
+    <p>Per-sample costs run $50-300 depending on the panel. Cultivators pay for cultivation testing. Dispensaries pay for any products they transfer or rework. A typical Maine dispensary budgets $2,000-10,000 monthly for testing, depending on volume and product mix. Volume discounts typically kick in at 20+ samples per month with a single lab.</p>
+
+    <h3>Companion Resource</h3>
+    <p>For the full regulatory framework — what gets tested, how to read a COA, what happens on failed tests, and OCP inspection enforcement — see our <a href="/guides/maine-cannabis-product-testing-guide">Maine Cannabis Product Testing Guide</a>.</p>
   </section>
 
   <section>
