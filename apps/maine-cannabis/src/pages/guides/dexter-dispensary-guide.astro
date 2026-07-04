@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there cannabis dispensaries in Dexter, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Puffers Place operates a medical cannabis dispensary on Johnson Road in Dexter, ME 04930. They offer a full medical menu plus smoking accessories, and have an on-site 420-friendly lakefront rental property on Puffers Pond. Per Yelp, hours are Mon-Sun 9am-2pm (Mon/Sun) and 9am-7pm (Tue-Sat). Phone via the operator's site." }},
+    { "@type": "Question", "name": "Is Puffers Place medical or recreational?", "acceptedAnswer": { "@type": "Answer", "text": "Medical cannabis dispensary. Per Yelp, they offer 'medical marijuana cards' (provider services), 'premium medical marijuana strains,' and 'therapeutic CBD topicals.' Confirm current license framework directly with the operator." }},
+    { "@type": "Question", "name": "What is unique about Puffers Place in Dexter?", "acceptedAnswer": { "@type": "Answer", "text": "Puffers Place is unusual among Maine medical dispensaries because they operate an on-site 420-friendly lakefront rental property on Puffers Pond — a 'cannabis-friendly seasonal rental home' per the operator's site. The combination of dispensary, accessories, lodging, and on-site water access (kayaks, private dock, lake views) makes it a destination for cannabis-curious travelers seeking a multi-day Maine experience." }},
+    { "@type": "Question", "name": "What is the service area for Puffers Place Dexter?", "acceptedAnswer": { "@type": "Answer", "text": "Puffers Place serves Dexter, Penobscot County, and the surrounding Piscataquis County border region. Common drive-times: Bangor (~45 min east), Newport (~20 min east), Dover-Foxcroft (~30 min north), Corinna (~10 min north), Guilford (~30 min north), Hartland (~15 min southwest)." }},
+    { "@type": "Question", "name": "What is Dexter Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Dexter is a small Penobscot County town of approximately 3,800 residents, situated between Bangor (45 min east) and Dover-Foxcroft (30 min north). The town is known for its historic woolen mill complex on the Sebasticook River (now mostly closed but a notable architectural site), its lakes (Lake Wassookeag, Puffers Pond), and its position at the junction of ME-7 and ME-94." }}
+  ]
+});
+---
+
+<Layout title="Dexter Maine Cannabis Dispensary Guide — Puffers Place (2026)" description="Dexter, Maine has 1 cannabis dispensary: Puffers Place, a medical dispensary on Johnson Road with an on-site 420-friendly lakefront rental property on Puffers Pond. Hours: Mon-Sun 9am-2pm (Mon/Sun), 9am-7pm (Tue-Sat). Serves Penobscot County's Sebasticook River corridor." heroImage="/images/heroes/dexter-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Dexter Maine Cannabis Dispensary Guide</h1>
+    <p class="subtitle">Puffers Place — Penobscot County's Sebasticook River medical dispensary with an on-site 420-friendly lakefront rental</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Dexter at a Glance</h2>
+    <table aria-label="Dexter cannabis market overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 (Puffers Place — medical)</td></tr>
+        <tr><td><strong>Notable Operator</strong></td><td>Puffers Place</td></tr>
+        <tr><td><strong>Address</strong></td><td>Johnson Rd, Dexter, ME 04930</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Mon-Sun 9am-2pm (Mon/Sun), 9am-7pm (Tue-Sat) per Yelp</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical (per Yelp listing)</td></tr>
+        <tr><td><strong>Distinctive Feature</strong></td><td>On-site 420-friendly lakefront rental on Puffers Pond</td></tr>
+        <tr><td><strong>Population</strong></td><td>~3,800 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Penobscot County</td></tr>
+        <tr><td><strong>Position</strong></td><td>ME-7 / ME-94 corridor, 45 min west of Bangor</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>puffersplace.com · Yelp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Dexter is a small Penobscot County town of approximately 3,800 residents, situated between Bangor (45 min east) and Dover-Foxcroft (30 min north). The town sits at the junction of ME-7 and ME-94, and historically was a manufacturing and textile center anchored by the Dexter woolen mill complex. Today, the town's economy combines small-business retail, lakes-region recreation (Lake Wassookeag, Puffers Pond, Sebasticook River), and a steady commuter population that works in Bangor and the surrounding region.</p>
+    <p>Dexter has one cannabis dispensary — Puffers Place, a medical operator that distinguishes itself with an on-site 420-friendly lakefront rental property on Puffers Pond. The combination of dispensary plus lodging is unusual among Maine medical operators and positions Puffers Place as a destination for cannabis-curious travelers seeking a multi-day Maine experience rather than a transactional purchase.</p>
+  </section>
+
+  <section>
+    <h2>Puffers Place — Medical Dispensary</h2>
+    <p><strong>Address:</strong> Johnson Rd, Dexter, ME 04930<br>
+    <strong>Hours:</strong> Mon 9am-2pm · Tue-Sat 9am-7pm · Sun 9am-2pm (per Yelp)<br>
+    <strong>Type:</strong> Medical (MMMP cardholders) — per Yelp listing<br>
+    <strong>Phone:</strong> via the operator's site at <a href="https://puffersplace.com/">puffersplace.com</a></p>
+    <p>Per Yelp and the operator's own site, Puffers Place operates as a medical cannabis dispensary with a full menu — premium medical marijuana strains, CBD topicals, smoking accessories, and online product ordering. Per Yelp, they also offer medical marijuana card services (provider referrals) for patients seeking certification.</p>
+    <p>The operator's positioning is patient-focused and rural: small-town service, medical-grade product, and an on-site property for cannabis-curious visitors who want to extend their visit into a multi-day stay.</p>
+  </section>
+
+  <section>
+    <h2>The Puffers Pond Lodge — 420-Friendly Lodging</h2>
+    <p>Per the operator's site, Puffers Place operates a "cannabis-friendly seasonal rental home" on Puffers Pond — a lakefront property with kayaks, a private dock, and lake views. The Lodge is positioned for "families or small groups seeking rest, privacy, and relaxation in nature" with explicit 420-friendly accommodations.</p>
+    <p>This combination — dispensary + on-site 420-friendly lodging — is rare in Maine's medical cannabis market. Most operators are retail-only. Puffers Place's lodging property adds a destination-stay element that draws visitors from outside the immediate Dexter area. For Maine cannabis tourists who want to combine dispensary shopping with a quiet lakefront stay, Puffers Place is one of the few operators offering both.</p>
+    <p>Note: the lodging property is a separate booking from the dispensary. Confirm availability, rates, and any current policy updates directly with the operator.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>Puffers Place serves the Sebasticook River corridor and the southern Piscataquis County border region:</p>
+    <ul>
+      <li><strong>Dexter</strong> (in town) — 5 min</li>
+      <li><strong>Corinna</strong> — 10 min north</li>
+      <li><strong>Newport</strong> — 20 min east</li>
+      <li><strong>Hartland</strong> — 15 min southwest</li>
+      <li><strong>Guilford</strong> — 30 min north</li>
+      <li><strong>Dover-Foxcroft</strong> — 30 min north</li>
+      <li><strong>Bangor</strong> — 45 min east</li>
+      <li><strong>Corinth</strong> — 25 min east</li>
+      <li><strong>St. Albans</strong> — 15 min south</li>
+      <li><strong>Harmony</strong> — 25 min southwest</li>
+    </ul>
+    <p>For Piscataquis County residents, Puffers Place is one of three medical options in the broader region — alongside Nuggie's / ReMaine Humble Farms in Skowhegan (west) and Dab Bar in Dover-Foxcroft (north). For Penobscot County interior residents east of Bangor, Puffers Place fills a medical-dispensary gap that the Bangor storefronts don't reach.</p>
+  </section>
+
+  <section>
+    <h2>About Dexter</h2>
+    <p>Dexter's historical identity is shaped by the Dexter woolen mill complex, which operated from the 1840s until 1977. The mill site on the Sebasticook River is one of Maine's most architecturally significant industrial ruins — a brick-and-granite complex that has been the subject of multiple preservation studies. While the mill itself is closed, the surrounding mill-worker housing and the town's downtown layout still reflect the mid-19th-century mill-town pattern.</p>
+    <p>Today, Dexter's economy combines small-business retail, light manufacturing, agriculture, and a substantial commuter population that drives to Bangor for work. The town's lakes — Lake Wassookeag, Puffers Pond, and the Sebasticook River — provide recreational opportunities for both residents and summer visitors. Population has been modestly declining (Dexter lost roughly 2-3% of its population between 2010 and 2020), typical of small rural Maine mill towns.</p>
+    <p>For the cannabis market, Dexter is significant as the southern anchor of the Piscataquis County interior dispensary cluster. Puffers Place's on-site lodging property makes it a destination rather than a transit stop, attracting visitors who might otherwise skip the town entirely.</p>
+  </section>
+
+  <section>
+    <h2>Nearby Dispensary Options</h2>
+    <ul>
+      <li><strong>Newport (~20 min east):</strong> Gram's Five & Dime (rec + med), Karma Cannabis, Brothers Cannabis</li>
+      <li><strong>Dover-Foxcroft (~30 min north):</strong> Dab Bar and Dispensary (since 2020)</li>
+      <li><strong>Milo (~30 min north):</strong> GreenLife Recreational Dispensary (since April 2023)</li>
+      <li><strong>Bangor (~45 min east):</strong> Multiple dispensary options including Curaleaf and others</li>
+      <li><strong>Skowhegan (~45 min southwest):</strong> Nuggie's Cannabis, ReMaine Humble Farms, Terp Valley Farms delivery</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://puffersplace.com/">puffersplace.com</a></li>
+      <li><strong>The Lodge rental info:</strong> <a href="https://puffersplace.com/The-Lodge/">puffersplace.com/The-Lodge</a></li>
+      <li><strong>Menu:</strong> <a href="https://puffersplace.com/Menu/">puffersplace.com/Menu</a></li>
+      <li><strong>Yelp listing:</strong> <a href="https://www.yelp.com/biz/puffers-place-dexter">yelp.com/biz/puffers-place-dexter</a></li>
+    </ul>
+    <p>Medical patients: bring your Maine MMMP card and a valid government-issued photo ID. For lodging bookings, contact the operator directly.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/newport-dispensary-guide">Newport Dispensary Guide</a> — Gram's Five & Dime and other Sebasticook River corridor dispensaries, 20 min east</li>
+        <li><a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft Dispensary Guide</a> — Piscataquis County seat, 30 min north</li>
+        <li><a href="/guides/milo-dispensary-guide">Milo Dispensary Guide</a> — GreenLife at 19 Park St, 30 min north</li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — Penobscot County seat, 45 min east</li>
+        <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan Dispensary Guide</a> — Somerset County medical market, 45 min southwest</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Dexter, Maine?", a: "Yes. Puffers Place operates a medical cannabis dispensary on Johnson Road in Dexter, ME 04930, with an on-site 420-friendly lakefront rental property on Puffers Pond." },
+        { q: "Is Puffers Place medical or recreational?", a: "Medical. Per Yelp, they offer medical marijuana cards (provider referrals), premium medical marijuana strains, and therapeutic CBD topicals." },
+        { q: "What is unique about Puffers Place?", a: "On-site 420-friendly lakefront rental property on Puffers Pond — a cannabis-friendly seasonal rental with kayaks, private dock, and lake views. Rare combination in Maine's medical cannabis market." },
+        { q: "What is the service area?", a: "Sebasticook River corridor: Dexter, Corinna, Newport, Hartland, Guilford, Dover-Foxcroft, Bangor, and surrounding Penobscot / Piscataquis County towns." },
+        { q: "What is Dexter Maine known for?", a: "Historic woolen mill complex (closed 1977), Lake Wassookeag and Puffers Pond, Sebasticook River, ME-7 / ME-94 corridor, 45 min west of Bangor." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, hours, license framework, and on-site lodging property above are sourced from the operator's site (puffersplace.com, retrieved 2026-07-04) and the Yelp listing. The "420-friendly seasonal rental on Puffers Pond" framing is per the operator's own site. Phone number not published in the sources I reviewed — confirm by contacting the operator directly. Hours per Yelp are subject to change. Always call ahead to confirm current hours, menu, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, license categories, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
