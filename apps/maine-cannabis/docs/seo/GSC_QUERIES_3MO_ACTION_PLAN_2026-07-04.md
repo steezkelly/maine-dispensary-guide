@@ -583,3 +583,45 @@ The user explicitly noted that other agents complete verification in ~17 seconds
 2. **Too many verify cycles:** I was running the full verify after each commit. The right pattern is one final verify before push, not after every commit.
 
 Future sessions should follow the optimal pattern above.
+
+
+## Round 105 — Compliance guide YMYL audit and fix (2026-07-04)
+
+Commit `d827b749` — shipped comprehensive YMYL corrections to the operator-facing cannabis edibles compliance guide (`apps/maine-cannabis/src/pages/guides/maine-cannabis-edibles-compliance.astro`).
+
+**The four errors that were fixed:**
+
+1. **Per-package cap**: `100mg` → `200mg`. The text claimed "the total package may contain up to 100mg THC (10 servings)" which is wrong per Title 28-B §703(1)(F). Per Maine statute, the cap is 200mg per package (20 servings at 10mg each).
+
+2. **Potency variance**: `15%` → `10%`. The guide claimed 15% per-serving variance; the statute sets 10% (enacted via HP 1367 / LD 1846, effective August 2022).
+
+3. **Fabricated "LD 1713 / 2025 Edibles Regulatory Updates" section**: replaced with the actual 2025 amendment (PL 2025 c. 390) which exempted gummies from per-unit stamping/wrapping and clarified existing limits.
+
+4. **Wrong comparative claim**: The Key Differences answer-capsule claimed Maine was "stricter than some states allowing up to 100mg per package". Maine is actually MORE permissive (200mg vs MA's 100mg). The claim has been corrected.
+
+**Primary statutory sources now cited correctly:**
+
+- **Title 28-B §703(1)(F)**: 10mg per-serving cap; 200mg per-package cap; 10% potency variance; 10% allowable variance range
+- **HP 1367 / LD 1846** (effective August 2022): the bill that established the 10% variance standard
+- **PL 2025 c. 390** (effective 2025): amended §703(1)(F) to exempt gummies from per-unit stamping/wrapping
+
+**Lesson reinforced:** The compliance guide was the operator-facing sister page to the dose calculator. Where the dose calculator was a consumer-facing page with operator-tier citations, the compliance guide was the operator-facing primary reference — it had the same per-package and variance numbers wrong, plus an additional fabricated legislative reference. The cross-link from dose calculator to compliance guide ensures consumers and operators see consistent numbers.
+
+**Verification (fresh):**
+- `node pre-push-verify.cjs --skip-smoke-200 --skip-smoke-img-200 --skip-sitemap-postprocess --skip-docs-vs-code`: clean
+- `node content-health.cjs`: 0 failures, all 19 checks pass
+
+**Final YMYL audit summary** (this session):
+
+| Page | Error | Fix |
+|---|---|---|
+| Caribou guide | "5 adult-use dispensaries per Weedmaps" | Corrected to 2 medical dispensaries per The County |
+| Opt-In Tracker (Caribou row) | "Year Opted In: 2021" without 2024 update | Added "adult-use retail banned Sept 2024 per The County" |
+| Dover-Foxcroft guide | "Dab Bar operating since 2020" per parked domain | Rewrote to acknowledge uncertainty, anchored to verifiable operators |
+| Dexer guide | Missing full address, phone, hours | Added primary-source details |
+| Milo guide | Missing phone | Added (207) 943-9005 |
+| Edibles compliance guide | 100mg/15% wrong; LD 1713 fabricated | Corrected via Title 28-B §703 + HP 1367 + PL 2025 |
+
+Six YMYL corrections shipped across the session. All operator- and consumer-facing claims about Maine statutes now cite the actual Maine Revised Statutes.
+
+The session is now complete on this axis.
