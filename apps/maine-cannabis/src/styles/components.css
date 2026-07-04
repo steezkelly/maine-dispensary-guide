@@ -560,3 +560,123 @@ footer .disclaimer {
     transition: none;
   }
 }
+
+/* =============================================================================
+ * Article author footer — E-E-A-T trust block rendered below each article
+ * body. Surfaces the author byline + role + bio + credentials + (when
+ * present) a "Reviewed by" line pointing to a second named reviewer. Anchor
+ * ID is `author-{slug}` so cross-page links via /about/authors#{slug}
+ * navigate directly to the matching footer.
+ * =========================================================================== */
+.article-author-footer {
+  margin: 3rem auto 0;
+  max-width: 900px;
+  padding: 0 1rem;
+}
+
+.article-author-footer .author-footer-card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e0d8c8);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(13, 78, 80, 0.04);
+}
+
+.author-footer-photo {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+}
+
+.author-footer-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.author-footer-name {
+  margin: 0 0 0.125rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  color: var(--color-primary);
+}
+.author-footer-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.author-footer-name a:hover {
+  text-decoration: underline;
+}
+
+.author-footer-role {
+  margin: 0 0 0.625rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.author-footer-bio {
+  margin: 0 0 0.625rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+.author-footer-credentials {
+  margin: 0 0 0.625rem 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+.author-footer-credentials li {
+  background: rgba(88, 129, 87, 0.1);
+  color: var(--color-primary);
+  padding: 0.2rem 0.625rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.author-footer-reviewer {
+  margin: 0.75rem 0;
+  padding: 0.625rem 0.875rem;
+  background: rgba(13, 78, 80, 0.05);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.author-footer-link {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+}
+.author-footer-link a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.author-footer-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .article-author-footer .author-footer-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .author-footer-credentials {
+    justify-content: center;
+  }
+}

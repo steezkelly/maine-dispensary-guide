@@ -46,6 +46,7 @@ const authors = authorsData as Array<{
   description?: string;
   photo?: string;
   knowsAbout?: string[];
+  credentials?: string[];
 }>;
 
 interface ArticleData {
@@ -263,6 +264,27 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
               <a href="/download-checklist" class="btn-cta">Download PDF Checklist &rarr;</a>
             </div>
             <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
+            {authorRecord && (
+              <aside class="article-author-footer" id={`author-${authorRecord.id}`}>
+                <div class="author-footer-card">
+                  <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
+                  <div class="author-footer-meta">
+                    <p class="author-footer-name"><a href={`/about/authors#${authorRecord.id}`}>{authorRecord.name}</a></p>
+                    <p class="author-footer-role">{authorRecord.role}</p>
+                    <p class="author-footer-bio">{authorRecord.description ?? authorRecord.bio}</p>
+                    {authorRecord.credentials && authorRecord.credentials.length > 0 && (
+                      <ul class="author-footer-credentials">
+                        {authorRecord.credentials.map(c => <li>{c}</li>)}
+                      </ul>
+                    )}
+                    {reviewerRecord && (
+                      <p class="author-footer-reviewer"><strong>Reviewed by:</strong> <a href={`/about/authors#${reviewerRecord.id}`}>{reviewerRecord.name}</a>, {reviewerRecord.role}. See the <a href="/about/authors">editorial review process</a> for how this review is conducted.</p>
+                    )}
+                    <p class="author-footer-link"><a href={`/about/authors#${authorRecord.id}`}>View this author's profile, prior work, and expertise →</a></p>
+                  </div>
+                </div>
+              </aside>
+            )}
           </div>
           <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar currentPath={Astro.url.pathname} currentTopics={topics} /></aside>
         </div>
@@ -286,6 +308,27 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
                 </span>
               )}
             </div>
+          )}
+          {article && authorRecord && (
+            <aside class="article-author-footer" id={`author-${authorRecord.id}`}>
+              <div class="author-footer-card">
+                <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
+                <div class="author-footer-meta">
+                  <p class="author-footer-name"><a href={`/about/authors#${authorRecord.id}`}>{authorRecord.name}</a></p>
+                  <p class="author-footer-role">{authorRecord.role}</p>
+                  <p class="author-footer-bio">{authorRecord.description ?? authorRecord.bio}</p>
+                  {authorRecord.credentials && authorRecord.credentials.length > 0 && (
+                    <ul class="author-footer-credentials">
+                      {authorRecord.credentials.map(c => <li>{c}</li>)}
+                    </ul>
+                  )}
+                  {reviewerRecord && (
+                    <p class="author-footer-reviewer"><strong>Reviewed by:</strong> <a href={`/about/authors#${reviewerRecord.id}`}>{reviewerRecord.name}</a>, {reviewerRecord.role}. See the <a href="/about/authors">editorial review process</a> for how this review is conducted.</p>
+                  )}
+                  <p class="author-footer-link"><a href={`/about/authors#${authorRecord.id}`}>View this author's profile, prior work, and expertise →</a></p>
+                </div>
+              </div>
+            </aside>
           )}
         </>
       )}
