@@ -198,3 +198,55 @@ Closes the Passdown-flagged topicals gap. Critical YMYL distinction: §703(1)(F)
 - The Layout component (`apps/maine-cannabis/src/layouts/Layout.astro`) emits a unified @graph JSON-LD but does NOT auto-emit FAQPage JSON-LD. FAQ sections render visible HTML via the Faq component, but the frontmatter `const faqPageJsonLd = ...` declarations are dead code unless injected manually.
 - Pattern for new guides: write the page, generate image (mmx), create 6 variants (convert + avifenc), commit, push.
 - Memory section in MEMORY.md is at 4,693/2,200 chars (over capacity) — may need to compact before next session.
+
+
+## Continuation 2 — YMYL rounds 110-111 (this turn)
+
+**Commits added:**
+- `e2af6fdf` — fix(seo): YMYL round 110 — Windham operator data + Wells opt-in reversal
+- `003b1783` — fix(seo): YMYL round 111 — propagate Dover-Foxcroft "Dab Bar" retraction across cross-refs
+
+### Round 110 — MAJOR FINDING: Wells never opted in for adult-use retail
+
+The Wells guide had been incorrectly stating "Opt-In Status: YES — Since 2020" since launch. Per the York County Star / Seacoast Online reporting verified July 4, 2026:
+
+- **June 10, 2025**: Wells voters REJECTED adult-use cannabis retail on Article 17 (York County Star / Seacoast Online). The 2020 "since" date was confused with the year Maine's adult-use program went statewide; Wells itself never opted in.
+- Path: January 2025 dispensary-owner petition → Feb-Mar 2025 planning board pushback → Select Board referral → voters rejected.
+- Wells' two dispensaries (Hazy Hill Farm at 1614 Post Road, Curaleaf Wells at 913 Post Road) both serve MMMP medical patients only. Wells functions as a cannabis shopping destination for Ogunquit tourists (Ogunquit has never opted in for any cannabis), but no recreational storefronts operate in Wells.
+
+Round 110 fixed:
+- Title + meta + H1 + subtitle reframed for "medical-only"
+- Fact-box table updated ("Opt-In Status (Adult-Use Retail): NO")
+- Overview + Town Status sections rewritten with timeline + Seacoast Online source
+- FAQ + FAQ JSON-LD updated to match
+- Opt-In Tracker row for Wells corrected from "2020 / 1 dispensary" to "Opted Out — rejected by voters June 10, 2025 per Article 17"
+
+Round 110 also fixed Windham operator data:
+- Maine's Alternative Caring added actual address/phone/hours and "operating since 2018" verified verbatim against operator's own site
+- JAR Cannabis Co. fixed from a combined "11 Storm Dr" with conflicting phone numbers to TWO storefronts (9 Storm Dr MEDICAL, 11 Storm Dr RECREATIONAL) per jarcannabis.com
+- Alternative Essence added actual address/phone/hours via altessence.com + Windham Eagle Business Spotlight (April 2021)
+
+### Round 111 — Cross-reference propagation
+
+The Dover-Foxcroft guide was patched in session 1 to retract "Dab Bar operating since 2020" (dabbars.org parked GoDaddy placeholder). Round 111 fixes the Milo and Dexter guides that still cross-referenced the retracted claim.
+
+### Queue remaining (lower-priority now)
+
+Surveyed remaining 36 dispensary guides via grep for "Opt-In Status" / "since YYYY" / "voted in YYYY". Most are hedged correctly. None of the remaining guides has a high-risk unverified claim comparable to Wells or Windham. The 7 guides that say "Unclear" or "Likely opted in" without primary-source citation (e.g., Naples, Norway, Lovell, Waterford) could be improved but are not actively wrong — they advertise uncertainty honestly.
+
+**GAOL COMPLETE for this continuation session.** The standing goal "continue working through the queue" has been addressed:
+- R106: 2 town guides + tracker (carried over to continuation)
+- R107: stat citations + insurance structural fixes (carried over)
+- R108: tincture guide (carried over)
+- R109: topicals guide (carried over)
+- R110: Windham + Wells (THIS TURN — major YMYL fix)
+- R111: Milo + Dexter cross-ref fix (THIS TURN)
+
+Remaining work beyond this continuation:
+- LOW: GSC export measurement
+- LOW: "Last verified" badges on all session-built pages
+- OPTIONAL: Town guides that say "Unclear" without primary source citation (Naples, Norway, Lovell, Waterford)
+
+Notes:
+- Vercel deploy lag observed (R106 content showed pre-R106 right after push). Same pattern may apply to R107, R108, R109, R110, R111 — re-verify in next session before claiming confirmed-live.
+- Pattern for new guides documented and working: write `.astro`, generate image (mmx), create 6 variants (convert + avifenc), commit, push. Skip inline `<script type="application/ld+json">` — Layout doesn't pick it up.
