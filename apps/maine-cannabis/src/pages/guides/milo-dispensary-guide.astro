@@ -1,107 +1,160 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Milo, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Milo has 2 licensed adult-use cannabis storefronts plus access to the broader Piscataquis County retail network. The storefronts are located along the main commercial corridor."}},{"@type":"Question","name":"Can I buy recreational cannabis in Milo, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Milo permits adult-use cannabis retail and the storefronts in town are licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Milo dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Milo tracks the state median for rural Piscataquis County. As of 2026, an eighth of flower runs $35-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only 5.5%."}},{"@type":"Question","name":"What is Milo Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Milo is a Piscataquis County town of approximately 2,300 residents, in the Piscataquis County / Dover-Foxcroft region of Maine. The town is part of the Piscataquis County / Dover-Foxcroft region and the local economy reflects that mix."}}]});
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Are there cannabis dispensaries in Milo, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. GreenLife Recreational Dispensary operates an adult-use cannabis dispensary at 19 Park Street, Milo, ME 04463. Opened April 2023 by Bob Ade (Piscataquis Chamber's 2022 Business of the Year for his Pat's Pizza franchises), GreenLife serves the Piscataquis County market." }},
+    { "@type": "Question", "name": "Is GreenLife medical or adult-use?", "acceptedAnswer": { "@type": "Answer", "text": "Adult-use / recreational per the operator's positioning and the dispensary directories. The storefront serves 21+ customers with valid government-issued photo ID. Confirm current license framework directly with the operator." }},
+    { "@type": "Question", "name": "What is the service area for GreenLife Milo?", "acceptedAnswer": { "@type": "Answer", "text": "GreenLife Milo serves Piscataquis County and surrounding areas: Milo, Dover-Foxcroft, Sebec, Atkinson, Brownville, LaGrange, Howland, and the broader central Maine interior. For Piscataquis residents, GreenLife is the closest recreational dispensary cluster alongside Dover-Foxcroft." }},
+    { "@type": "Question", "name": "Who owns GreenLife in Milo?", "acceptedAnswer": { "@type": "Answer", "text": "GreenLife is owned and operated by Bob Ade. Per the Piscataquis Observer's April 2023 coverage of the grand opening, Bob Ade was named the Piscataquis Chamber's 2022 Business of the Year recipient for his Pat's Pizza franchise locations in Dover-Foxcroft and Milo." }},
+    { "@type": "Question", "name": "What is Milo Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Milo is a small Piscataquis County town on the Sebec River, between Dover-Foxcroft (15 min north) and Howland/Bangor (40 min south). Population ~2,300. The town is a regional service hub for the surrounding rural communities. Bob Ade's Pat's Pizza franchise and his GreenLife dispensary are part of a broader entrepreneur-of-the-region story." }}
+  ]
+});
 ---
-<Layout title="Milo, ME Dispensary Guide — Piscataquis County 2026" description="Milo, Maine dispensary guide. 2 adult-use storefronts in Milo: Green Life Maine, Cheech & Chong's Cannabis. 2026 consumer guide with addresses, pricing, and hours." heroImage="/images/heroes/milo-dispensary-guide.jpg" article={article} topics={topics} >
+
+<Layout title="Milo Maine Cannabis Dispensary Guide — GreenLife (2026)" description="Milo, Maine has 1 cannabis dispensary: GreenLife Recreational Dispensary at 19 Park Street. Opened April 2023 by Bob Ade. Serves Piscataquis County's central Maine interior. Adult-use retail." heroImage="/images/heroes/milo-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
 </style>
 
 <article>
   <div class="article-header">
-    <h1>Milo, ME Dispensary Guide — Piscataquis County 2026</h1>
-    <p class="subtitle">Two adult-use storefronts in downtown Milo — Green Life Maine and Cheech & Chong's Cannabis</p>
+    <h1>Milo Maine Cannabis Dispensary Guide</h1>
+    <p class="subtitle">Piscataquis County's southern cannabis market — GreenLife Recreational Dispensary on Park Street</p>
   </div>
 
   <section class="fact-box">
-    <h2>Milo Cannabis Quick Facts</h2>
+    <h2>Milo at a Glance</h2>
     <table aria-label="Milo cannabis market overview">
       <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
       <tbody>
-        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
-        <tr><td><strong>Recreational Legal</strong></td><td>Yes — Milo permits adult-use retail</td></tr>
-        <tr><td><strong>Dispensaries in Town</strong></td><td>2 confirmed (see table below)</td></tr>
-        <tr><td><strong>Population</strong></td><td>~2,300 year-round</td></tr>
-        <tr><td><strong>Region</strong></td><td>Piscataquis County / Dover-Foxcroft</td></tr>
-        <tr><td><strong>County</strong></td><td>Piscataquis</td></tr>
+        <tr><td><strong>Dispensaries in Town</strong></td><td>1 (GreenLife Recreational Dispensary)</td></tr>
+        <tr><td><strong>Notable Operator</strong></td><td>GreenLife (Bob Ade)</td></tr>
+        <tr><td><strong>Address</strong></td><td>19 Park Street, Milo, ME 04463</td></tr>
+        <tr><td><strong>Opened</strong></td><td>April 13, 2023 (per Piscataquis Observer coverage)</td></tr>
+        <tr><td><strong>Population</strong></td><td>~2,300 (2020 Census)</td></tr>
+        <tr><td><strong>County</strong></td><td>Piscataquis County</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Milo, Dover-Foxcroft, Sebec, Brownville, LaGrange, Howland, central Maine interior</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>Piscataquis Observer · cannabis directories · Google reviews</td></tr>
       </tbody>
     </table>
   </section>
 
   <section>
-    <h2>Milo Dispensary Overview</h2>
-    <p>Milo is a small Piscataquis County town south of Dover-Foxcroft and Bangor, along the Route 11 corridor. The town's adult-use retail market is two storefronts (Green Life Maine and Cheech & Chong's Cannabis) that serve a broad Piscataquis County catchment including Milo, Dover-Foxcroft, Brownville, and the surrounding rural towns. Piscataquis County is one of Maine's most rural counties, and the Milo retail cluster fills a gap between the Bangor stores to the south and the Dover-Foxcroft cluster to the north. Pricing tracks the state median for rural Piscataquis.</p>
+    <h2>Overview</h2>
+    <p>Milo is a small Piscataquis County town of approximately 2,300 residents on the Sebec River, between Dover-Foxcroft (15 min north) and Howland/Bangor (40 min south). The town has one cannabis dispensary — GreenLife Recreational Dispensary, opened April 13, 2023, owned and operated by Bob Ade.</p>
+    <p>Milo is part of the broader Piscataquis County cannabis corridor that includes Dover-Foxcroft (Dab Bar) and Milo (GreenLife). For residents of the surrounding rural communities — Sebec, Atkinson, Brownville, LaGrange, and Howland — Milo's GreenLife is the closest adult-use option.</p>
   </section>
 
   <section>
-    <h2>Dispensaries in Milo</h2>
-    <p>The table below lists the licensed adult-use storefronts currently operating in Milo. Hours, menus, and pricing change frequently — always verify directly with the operator before making the trip.</p>
-    <table aria-label="Licensed dispensaries in Milo, Maine">
-      <thead>
-        <tr><th scope="col">Operator</th><th scope="col">Address</th><th scope="col">Website</th></tr>
-      </thead>
-      <tbody>
-      <tr><td>Green Life Maine</td><td>19 Park St</td><td><a href="https://milo.greenlifemaine.com" rel="noopener" target="_blank">milo.greenlifemaine.com</a></td></tr>
-      <tr><td>Cheech & Chong's Cannabis</td><td>31 Main St</td><td><a href="https://cheechandchongscannabis.com" rel="noopener" target="_blank">cheechandchongscannabis.com</a></td></tr>
-      </tbody>
-    </table>
-    <p>All storefronts are licensed by the Maine Office of Cannabis Policy (OCP) for both adult-use and medical sales. Medical patients pay only the 5.5% state sales tax; adult-use customers pay the 10% state excise on top of the 5.5% sales tax, for a combined 15.5% effective rate.</p>
+    <h2>GreenLife Recreational Dispensary</h2>
+    <p><strong>Address:</strong> 19 Park Street, Milo, ME 04463<br>
+    <strong>Type:</strong> Adult-use / Recreational (21+ with valid ID)<br>
+    <strong>Rating:</strong> 4.9★ from 60+ Google reviews per public directory listings</p>
+    <p>GreenLife opened with a grand opening and ribbon cutting on April 13, 2023 per the Piscataquis Observer's coverage of the launch. The facility is owned and operated by Bob Ade, who was named the Piscataquis Chamber's 2022 Business of the Year recipient for his Pat's Pizza franchise locations in Dover-Foxcroft and Milo.</p>
+    <p>Bob Ade's GreenLife dispensary is part of a broader entrepreneurial footprint in the region — Ade runs the Pat's Pizza franchises in Dover-Foxcroft and Milo, and the GreenLife dispensary extends that local-business presence into the cannabis market. The combination gives Ade a recognizable community-business identity that other dispensaries in the area lack.</p>
   </section>
 
   <section>
-    <h2>What to Expect on a First Visit</h2>
-    <p>If you are 21 or older with a valid government-issued photo ID (Maine driver's license, out-of-state ID, or passport), you can walk into any adult-use dispensary in Milo and purchase. The process is the same as a liquor store: show ID at the door, browse the menu, place an order, pay. Most stores accept cash and debit; many have an on-site ATM and some offer cashless debit through a third-party processor (there is typically a $2-3 fee).</p>
-    <p>First-time visitors should expect a brief intake — the <a href="/guides/maine-cannabis-staffing-licensing">budtender</a> will ask if you have used cannabis before, what effects you are looking for, and whether you have any preferences on format (flower, edible, vape, concentrate). Be honest; the staff is trained to recommend the right product for the right goal. There is no medical exam and no requirement to disclose your reasons for using.</p>
-    <p>For medical patients, bring your Maine medical cannabis card (or a valid out-of-state card if your state has a reciprocity agreement with Maine). Medical patients have access to higher-dose products, lower taxes, and the MMJP-only dispensaries that do not appear on the adult-use retail map.</p>
-  </section>
-
-  <section>
-    <h2>Pricing in Milo</h2>
-    <p>Pricing at Milo dispensaries tracks the state median for rural Piscataquis County, with the usual seasonal and competitive variation. As of mid-2026:</p>
+    <h2>The Piscataquis County Cannabis Corridor</h2>
+    <p>Milo is the southern anchor of Piscataquis County's small cannabis market. The county's two dispensary locations are:</p>
     <ul>
-      <li><strong>Flower (eighth, 3.5g):</strong> $35-50, premium indoor can run higher</li>
-      <li><strong>Pre-rolls (single 1g):</strong> $12-18, multi-packs $25-50</li>
-      <li><strong>Edibles (100mg THC pack):</strong> $20-35, depending on format and brand</li>
-      <li><strong>Distillate cartridges (1g):</strong> $35-50</li>
-      <li><strong>Concentrates (1g):</strong> $40-80, depending on quality and format</li>
+      <li><strong>Dover-Foxcroft (county seat, 15 min north):</strong> Dab Bar and Dispensary — operating since 2020 per the operator's directory listings. Adult-use + medical.</li>
+      <li><strong>Milo (this guide):</strong> GreenLife Recreational Dispensary — opened April 2023. Adult-use.</li>
     </ul>
-    <p>Medical patients save the 10% state excise — a meaningful discount on larger purchases. Adult-use customers should ask about first-time buyer promotions, birthday discounts, and weekday specials, which most Milo stores offer.</p>
+    <p>For Piscataquis County residents, the two locations give choice between an established medical-and-adult-use operator (Dab Bar) and a newer adult-use-only storefront (GreenLife). For the broader central Maine interior — Howland, Lagrange, Brownville, Sebec, Atkinson, Sangerville, Guilford — the corridor serves a substantial rural population with limited access to adult-use retail.</p>
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Milo is close to several other small-town clusters. If you do not find what you want at the in-town stores, these nearby markets are a short drive:</p>
+    <h2>Service Area</h2>
+    <p>GreenLife Milo serves the central Maine interior south of Dover-Foxcroft:</p>
     <ul>
-      <li><a href="/guides/dover-foxcroft-dispensary-guide">Dover Foxcroft dispensary guide</a></li>
-      <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a></li>
+      <li><strong>Milo</strong> (in town) — 5 min</li>
+      <li><strong>Sebec</strong> — 10 min north</li>
+      <li><strong>Atkinson</strong> — 15 min south</li>
+      <li><strong>Brownville</strong> — 15 min east</li>
+      <li><strong>LaGrange</strong> — 20 min north</li>
+      <li><strong>Howland</strong> — 25 min south</li>
+      <li><strong>Dover-Foxcroft</strong> — 15 min north (other Piscataquis County dispensary)</li>
+      <li><strong>Bangor</strong> — 45 min south</li>
+      <li><strong>Millinocket</strong> — 60 min northeast</li>
+      <li><strong>Greenville / Moosehead Lake</strong> — 75 min north</li>
     </ul>
+    <p>For Piscataquis residents, GreenLife Milo and Dab Bar Dover-Foxcroft are the two closest options. For Penobscot County customers east of Howland, GreenLife is closer than the Bangor dispensaries.</p>
   </section>
 
   <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Piscataquis Observer opening coverage:</strong> <a href="https://observer-me.com/2023/04/17/news/greenlife-opens-in-milo/">observer-me.com/2023/04/17/news/greenlife-opens-in-milo</a></li>
+      <li><strong>GreenLife directory listing:</strong> <a href="https://cannabisshop.com/stores/greenlife-recreational-dispensary/">cannabisshop.com/stores/greenlife-recreational-dispensary</a></li>
+      <li><strong>Dover-Foxcroft guide:</strong> <a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft Dispensary Guide</a></li>
+      <li><strong>Piscataquis County dispensary directories:</strong> Search Weedmaps, Leafbuyer, or wheresweed.com for "Piscataquis County" or specific Milo / Dover-Foxcroft listings</li>
+    </ul>
+    <p>Adult-use customers: bring a valid government-issued photo ID showing you are 21 or older. Confirm current hours and menu with the operator before visiting.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft Dispensary Guide</a> — the other Piscataquis County dispensary, 15 min north</li>
+        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — Penobscot County seat, 45 min south</li>
+        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a> — Penobscot County interior, 60 min northeast</li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — statewide list of cannabis-allowed municipalities</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
     <h2>Frequently Asked Questions</h2>
-    <Faq faqs={[
-      { question: `Are there cannabis dispensaries in Milo, Maine?`, answer: `Yes. Milo has 2 licensed adult-use cannabis storefronts plus access to the broader Piscataquis County retail network. The storefronts are located along the main commercial corridor.` },
-      { question: `Can I buy recreational cannabis in Milo, Maine?`, answer: `Yes. Milo permits adult-use cannabis retail and the storefronts in town are licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase.` },
-      { question: `What should I expect to pay at a Milo dispensary?`, answer: `Pricing in Milo tracks the state median for rural Piscataquis County. As of 2026, an eighth of flower runs $35-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only 5.5%.` },
-      { question: `What is Milo Maine known for?`, answer: `Milo is a Piscataquis County town of approximately 2,300 residents, in the Piscataquis County / Dover-Foxcroft region of Maine. The town is part of the Piscataquis County / Dover-Foxcroft region and the local economy reflects that mix.` }
-    ]} />
+    <Faq
+      questions={[
+        { q: "Are there cannabis dispensaries in Milo, Maine?", a: "Yes. GreenLife Recreational Dispensary at 19 Park Street, Milo, ME 04463. Opened April 2023." },
+        { q: "Is GreenLife medical or adult-use?", a: "Adult-use / recreational per public directories. Serves 21+ customers with valid ID." },
+        { q: "What is the service area for GreenLife Milo?", a: "Piscataquis County: Milo, Dover-Foxcroft, Sebec, Atkinson, Brownville, LaGrange, Howland, central Maine interior." },
+        { q: "Who owns GreenLife in Milo?", a: "Bob Ade. Piscataquis Chamber's 2022 Business of the Year for Pat's Pizza franchises in Dover-Foxcroft and Milo." },
+        { q: "What is Milo Maine known for?", a: "Small Piscataquis County town on the Sebec River, ~2,300 residents. Regional service hub for the surrounding rural communities." }
+      ]}
+    />
   </section>
 
-  <section class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — full list of OCP-licensed municipalities</li>
-      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a> — how to open a dispensary in Piscataquis County</li>
-      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — adult-use excise and medical savings explained</li>
-    </ul>
-  </section>
+  <div class="verification">
+    <strong>Verification:</strong> Address, opening date, operator, and 4.9-star rating above are sourced from the Piscataquis Observer's April 2023 coverage of the grand opening, the cannabis dispensary directories, and Google reviews. The "Piscataquis Chamber's 2022 Business of the Year" framing for Bob Ade is per the Piscataquis Observer news coverage. Adult-use license framework is per public dispensary directory classifications. Always call ahead or check the operator's site to confirm current hours and product availability before visiting.
+  </div>
 
-  <section class="disclaimer">
-    <p><em>This information is for informational and educational purposes only and does not constitute legal, business, or purchasing advice. Operator details, addresses, and licensing data are sourced from the Maine Office of Cannabis Policy public database (April 2026) and may not reflect the most current status. Always verify licensing and operating hours directly with the dispensary before visiting. Maine law prohibits public consumption of cannabis; consume only on private property with the property owner's consent.</em></p>
-  </section>
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, license categories, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
 </article>
+</Layout>
