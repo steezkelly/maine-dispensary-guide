@@ -1,0 +1,218 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  authorTitle: "Cannabis Science Writer",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "Learn"
+};
+
+const topics = ["dosing", "consumer-guide", "consumption-methods"];
+
+const tinctureFaqs = [
+  { question: "What is a cannabis tincture and how does it work?", answer: "A cannabis tincture is a liquid cannabis extract (THC, CBD, or both) suspended in a carrier oil or alcohol. When placed under the tongue (sublingual), the active compounds absorb through the mucous membranes directly into the bloodstream, typically producing effects in 15-30 minutes. When swallowed, it works like an edible with onset in 30-90 minutes." },
+  { question: "Is sublingual cannabis faster than edibles?", answer: "Yes. Sublingual absorption bypasses the digestive system and first-pass liver metabolism, so active compounds reach the bloodstream faster than swallowed edibles. This typically produces onset in 15-30 minutes (vs 30-90 minutes for edibles) and shorter, more controllable duration (2-4 hours vs 4-8 hours)." },
+  { question: "What is the legal THC limit per serving for Maine tinctures?", answer: "Maine Revised Statutes Title 28-B §703(1)(F) caps THC at 10mg per serving for all cannabis products sold to a consumer, including tinctures. Multi-serving containers may contain up to 200mg total THC, with each individual serving capped at 10mg and a 10% allowable variance. Verify your specific tincture's labeled serving size with the operator before use." },
+  { question: "How do I take a cannabis tincture sublingually?", answer: "1) Shake the bottle to mix the active compounds with the carrier oil. 2) Use the dropper to measure one serving per the package label. 3) Place the drops under your tongue. 4) Hold for 60-90 seconds without swallowing to allow sublingual absorption. 5) After 60-90 seconds, swallow any remaining liquid. Do not eat or drink for a few minutes before or after to maximize absorption." },
+  { question: "Are cannabis tinctures good for beginners?", answer: "Tinctures are one of the better consumption methods for beginners because they offer precise dose control via a calibrated dropper and shorter, more controllable duration than edibles. A starting dose of 2.5-5mg THC is standard. New users can take one dose, wait 20-30 minutes, then titrate up in small increments if needed." },
+  { question: "What is the difference between a THC tincture and a CBD tincture?", answer: "THC tinctures contain the psychoactive cannabinoid THC (sometimes blended with CBD) and will produce a high. CBD tinctures contain little or no THC and are non-psychoactive. Many Maine dispensaries sell blends with various THC:CBD ratios: high-THC, balanced (e.g., 5mg THC + 5mg CBD), or CBD-forward (e.g., 25mg CBD + 2.5mg THC)." }
+];
+
+---
+
+<Layout title="Cannabis Tinctures & Sublingual Guide — Maine (2026)" description="Maine cannabis tincture consumer guide. How sublingual THC/CBD tinctures work, dosing, onset times, Maine legal limits (10mg per serving per Title 28-B §703(1)(F)), and beginner tips." heroImage="/images/heroes/cannabis-tinctures-sublingual-maine.jpg" article={article} topics={topics}>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-accent); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Cannabis Tinctures &amp; Sublingual Use — Maine Guide</h1>
+    <p class="subtitle">Sublingual THC and CBD tinctures: how they work, dosing, and Maine's legal limits</p>
+  </div>
+
+  <div class="verification">
+    <strong>Last verified:</strong> July 4, 2026. Maine statute citations confirmed against <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">legislature.maine.gov/statutes/28-b/title28-Bsec703.html</a>. Product-specific dosing always verify with the operator's labeled serving size — Maine operators independently determine their serving-size labeling within statutory bounds.
+  </div>
+
+  <section class="fact-box">
+    <h2>Cannabis Tinctures at a Glance</h2>
+    <table aria-label="Cannabis tincture consumption method key facts">
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Consumption method</strong></td><td>Sublingual (under the tongue) or swallowed</td></tr>
+        <tr><td><strong>Onset (sublingual)</strong></td><td>15–30 minutes</td></tr>
+        <tr><td><strong>Onset (swallowed)</strong></td><td>30–90 minutes (edible-like)</td></tr>
+        <tr><td><strong>Duration (sublingual)</strong></td><td>2–4 hours</td></tr>
+        <tr><td><strong>Duration (swallowed)</strong></td><td>4–8 hours</td></tr>
+        <tr><td><strong>Maine per-serving cap</strong></td><td>10mg THC per Title 28-B §703(1)(F)</td></tr>
+        <tr><td><strong>Maine per-package cap</strong></td><td>200mg THC per Title 28-B §703(1)(F)</td></tr>
+        <tr><td><strong>Common ratios</strong></td><td>THC-only, balanced 1:1 THC:CBD, CBD-forward, full-spectrum</td></tr>
+        <tr><td><strong>Common carriers</strong></td><td>MCT coconut oil, olive oil, hemp seed oil, alcohol</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>What Is a Cannabis Tincture?</h2>
+    <p>A cannabis tincture is a liquid preparation of cannabis extract dissolved in a carrier — most commonly <strong>MCT coconut oil</strong>, but also olive oil, hemp seed oil, or alcohol. Tinctures are sold in small bottles (typically 15ml, 30ml, or 60ml) with a calibrated glass dropper that delivers a measured dose, usually 0.5ml or 1ml per squeeze.</p>
+
+    <p>Tinctures differ from other Maine cannabis products in two ways that matter for consumers:</p>
+    <ol>
+      <li><strong>Precision of dose.</strong> A dropper delivers the same volume every time, which makes it easier to measure small or split doses than with a gummy or chocolate.</li>
+      <li><strong>Route of administration.</strong> Tinctures can be used <em>sublingually</em> (held under the tongue) for faster, more controllable effect, or <em>swallowed</em> in which case the onset resembles an edible.</li>
+    </ol>
+
+    <p>Maine dispensaries commonly carry tinctures in three formulations:</p>
+    <ul>
+      <li><strong>THC-only</strong> — produces psychoactive effect; the most common formulation for recreational consumers.</li>
+      <li><strong>Balanced 1:1 THC:CBD</strong> — produces a moderated psychoactive effect (CBD may temper some of THC's intensity); common among medical patients.</li>
+      <li><strong>CBD-forward (e.g., 25:1 CBD:THC)</strong> — minimal psychoactive effect; commonly used by medical patients and consumers seeking therapeutic benefit without intoxication.</li>
+    </ul>
+  </section>
+
+  <Callout title="Maine's Statutory Limits Apply to Tinctures" type="insight">
+    Cannabis tinctures sold by Maine dispensaries are subject to the same serving caps as edibles: <strong>no more than 10mg THC per serving and no more than 200mg per package, with a 10% allowable variance</strong>, per <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Maine Revised Statutes Title 28-B §703(1)(F)</a>. If you find a tincture exceeding these limits in a licensed dispensary, the operator is noncompliant — report to the Maine OCP.
+  </Callout>
+
+  <section>
+    <h2>How Sublingual Use Works</h2>
+    <p>When you place cannabis tincture drops under your tongue and hold them there for 60–90 seconds, the active compounds absorb through the mucous membranes of your mouth directly into the bloodstream. This is called <strong>sublingual absorption</strong>. Because the compounds bypass the digestive system and the liver's first-pass metabolism, they reach the bloodstream faster than swallowed products and produce a more controllable effect.</p>
+
+    <h3>The Physiology in Plain Terms</h3>
+    <ul>
+      <li><strong>Sublingual route:</strong> cannabinoids absorb through the floor of the mouth into capillaries → bloodstream → brain. Onset in 15–30 minutes. Effect feels relatively quick and clear; duration 2–4 hours.</li>
+      <li><strong>Oral route (swallowed):</strong> cannabinoids pass to the stomach → small intestine → liver (where THC is metabolized to 11-hydroxy-THC, a more potent metabolite) → bloodstream. Onset in 30–90 minutes. Effect feels heavier and longer; duration 4–8 hours.</li>
+    </ul>
+
+    <p>Most Maine dispensary budtenders will steer beginners toward the sublingual method because it's more forgiving: faster feedback on dose, shorter duration, easier to add an increment if the first dose was too small.</p>
+  </section>
+
+  <section>
+    <h2>Step-by-Step: Sublingual Tincture Use</h2>
+    <ol>
+      <li><strong>Shake the bottle.</strong> THC/CBD and carrier oil can separate during storage. A 5-second shake re-suspends the active compounds.</li>
+      <li><strong>Measure with the dropper.</strong> Squeeze the bulb, dip into the bottle, release to draw up one serving (typically 0.5ml or 1ml — confirm on the label).</li>
+      <li><strong>Place the drops under your tongue.</strong> Lift your tongue, dispense the dose, lower your tongue.</li>
+      <li><strong>Hold for 60–90 seconds.</strong> Do not swallow, talk, or drink. The cannabinoids are absorbing through the sublingual mucosa. You can breathe through your nose normally.</li>
+      <li><strong>Swallow the remaining liquid.</strong> Whatever's left after 60–90 seconds now behaves like an edible dose (slower additional onset, longer duration). Most beginners swallow at this step.</li>
+      <li><strong>Wait.</strong> Don't redose before 30 minutes if going pure-sublingual, or before 90 minutes if swallowing. The peak effect from sublingual is typically 45–60 minutes after administration.</li>
+      <li><strong>Avoid food and drink</strong> for 5–10 minutes before and after to maximize absorption. Coffee or orange juice can interfere with sublingual uptake.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Tincture Dosing: A Practical Framework</h2>
+    <p>Dosing depends on your tolerance, body chemistry, the formulation, and whether you took it sublingually or swallowed it. The framework below is a starting point — adjust based on your actual response.</p>
+
+    <h3>THC Tincture Starting Doses</h3>
+    <table aria-label="Recommended tincture starting doses by experience">
+      <thead><tr><th scope="col">Experience level</th><th scope="col">Starting dose</th><th scope="col">Wait before re-dose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>First-time or low-tolerance</strong></td><td>1–2.5mg THC</td><td>2 hours</td></tr>
+        <tr><td><strong>Some cannabis experience, no recent tincture use</strong></td><td>2.5–5mg THC</td><td>90 minutes</td></tr>
+        <tr><td><strong>Regular cannabis consumer, low tincture experience</strong></td><td>5–10mg THC</td><td>60 minutes</td></tr>
+        <tr><td><strong>Experienced high-tolerance consumer</strong></td><td>10–25mg THC (multi-serving)</td><td>45 minutes</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Reading the Dropper</h3>
+    <p>A 1ml dropper is the most common. To translate volume to mg, check the bottle label for "mg per ml" or "mg per serving." A typical 30ml bottle containing 600mg THC provides 20mg THC per ml — so a 0.5ml half-dropper delivers 10mg. Lower-potency tinctures (e.g., 300mg per 30ml bottle) deliver 5mg per 0.5ml half-dropper.</p>
+    <p>Always confirm the <strong>mg per ml</strong> on the product label before your first use. Calling the dispensary or asking the budtender is the fastest way to get a verified answer specific to that batch.</p>
+  </section>
+
+  <section>
+    <h2>Sublingual vs Swallowed vs Edible</h2>
+    <table aria-label="Comparison of sublingual swallowed and edible cannabis consumption methods">
+      <thead><tr><th scope="col">Method</th><th scope="col">Onset</th><th scope="col">Peak</th><th scope="col">Duration</th><th scope="col">Best for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tincture, sublingual</strong></td><td>15–30 min</td><td>45–60 min</td><td>2–4 hours</td><td>Beginners, daytime, precise dose control, fast feedback</td></tr>
+        <tr><td><strong>Tincture, swallowed</strong></td><td>30–90 min</td><td>2–3 hours</td><td>4–8 hours</td><td>Longer effect, lower liver-burden once dose is established</td></tr>
+        <tr><td><strong>Edible (gummy, chocolate)</strong></td><td>30–90 min</td><td>2–4 hours</td><td>4–8 hours</td><td>Discreet, familiar format, slower onset tolerance</td></tr>
+        <tr><td><strong>Inhalation (flower, vape)</strong></td><td>1–5 min</td><td>15–30 min</td><td>1–3 hours</td><td>Acute symptom relief, immediate onset, titration</td></tr>
+      </tbody>
+    </table>
+
+    <p>For most Maine adult-use and medical consumers who want a non-inhaled, controlled-dose experience, <strong>sublingual tinctures are the most consistent delivery method</strong>. They combine dose precision (calibrated dropper) with route-of-administration flexibility (sublingual for fast, swallow for slow).</p>
+  </section>
+
+  <section>
+    <h2>Therapeutic Uses and What the Research Suggests</h2>
+    <p>Cannabis research is still evolving, especially in the United States where federal restrictions have limited clinical trials. Tinctures are commonly used for several reported therapeutic goals, with the following being the most-cited in current literature and consumer reports:</p>
+    <ul>
+      <li><strong>Chronic pain:</strong> THC and CBD both interact with the endocannabinoid system; balanced THC:CBD tinctures are commonly reported as helpful for chronic-pain consumers, though clinical trial evidence is mixed.</li>
+      <li><strong>Sleep onset:</strong> CBD-forward and sedating-terpene tinctures (with linalool, myrcene) are commonly used as sleep aids. Per Leafly and similar secondary sources, CBD may help sleep-onset latency, while long-term THC use can suppress REM sleep.</li>
+      <li><strong>Anxiety:</strong> Reported effects vary by dose — low THC often feels anxiolytic, higher THC can amplify anxiety. CBD-dominant tinctures are most commonly cited for anxiety without intoxication.</li>
+      <li><strong>Neuropathic pain and chemotherapy-induced nausea:</strong> Strongest clinical evidence base. Per <a href="https://www.healthline.com/health/cannabis-tincture" target="_blank" rel="noopener noreferrer">Healthline's cannabis tincture overview</a> and similar secondary medical sources, sublingual cannabis has been studied for these indications, though FDA-approved cannabinoid medicines (dronabinol, nabilone, CBD) remain the standard of care in conventional medicine.</li>
+    </ul>
+    <p><strong>YMYL disclosure:</strong> Cannabis is a YMYL topic (health-affecting). The above summarizes consumer reports and secondary medical sources — it is not a substitute for medical advice from a licensed clinician, particularly if you take other medications. Cannabis can interact with blood thinners, anti-seizure medications, sedatives, and other drugs metabolized by the CYP450 system. Talk to your doctor before starting a cannabis regimen if you take prescription medications.</p>
+  </section>
+
+  <section>
+    <h2>Choosing a Tincture at a Maine Dispensary</h2>
+    <ol>
+      <li><strong>Decide THC:CBD ratio.</strong> CBD-forward for daytime and anxiety management without intoxication; balanced for pain and sleep; THC-only for recreational effect.</li>
+      <li><strong>Check the total mg per bottle and per ml.</strong> This is your dose calibration math — confirm with the budtender if it's not on the label.</li>
+      <li><strong>Look at the carrier.</strong> MCT coconut oil is standard. Alcohol-based tinctures (rare in Maine dispensaries) absorb slightly faster but taste harsher.</li>
+      <li><strong>Check the terpene profile if listed.</strong> Linalool, myrcene, terpinolene are commonly associated with sedative effect; limonene and pinene with alert effect.</li>
+      <li><strong>Verify Maine-licensed product.</strong> All Maine dispensary tinctures carry OCP license numbers on the label. If a tincture doesn't have one, it's not legal in Maine.</li>
+      <li><strong>Start low.</strong> 2.5–5mg THC is the standard beginner dose. Don't over-buy before you know how you react to a particular formulation.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Storage and Shelf Life</h2>
+    <ul>
+      <li>Store tinctures in a cool, dark place (a kitchen cabinet is fine; the refrigerator extends shelf life).</li>
+      <li>Most tinctures have a 12–24 month shelf life when stored properly. Check the label for the manufacturer's "best by" date.</li>
+      <li>Keep the bottle tightly closed — exposure to air accelerates oxidation of THC to CBN (a mildly sedating cannabinoid, less psychoactive).</li>
+      <li>Keep out of reach of children and pets. Tincture bottles can look like ordinary supplement bottles.</li>
+    </ul>
+  </section>
+
+  <Callout title="Verify With Your Budtender or Operator" type="tip">
+    Product-specific dosing, terpene profiles, and mg-per-ml calculations vary by brand and batch. The fastest way to get verified data on the tincture in front of you is to ask the dispensary budtender, who has the Certificate of Analysis (COA) for that specific batch.
+  </Callout>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={tinctureFaqs} />
+  </section>
+
+  <section class="further-reading">
+    <h2>Related Guides</h2>
+    <ul>
+      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator &amp; Maine Dosing Guide</a> — dose framework for gummies, chocolates, beverages</li>
+      <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes &amp; Effects</a> — what linalool, myrcene, and other terpenes mean for tincture selection</li>
+      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Edibles Compliance Guide</a> — Title 28-B §703 statute citations and operator-side rules</li>
+      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — directory of licensed operators carrying tinctures</li>
+      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a> — market context for the consumer-facing products categories</li>
+    </ul>
+  </section>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> This guide is for educational purposes. It is not medical advice. Cannabis can interact with prescription medications — talk to a licensed clinician before adding cannabis to any health regimen. Maine dispensary tincture products are subject to the same Title 28-B §703 caps as edibles: 10mg THC per serving, 200mg per package. Always verify the labeled serving size and mg-per-ml with the operator before use.</p>
+</article>
+</Layout>
