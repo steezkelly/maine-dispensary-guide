@@ -292,3 +292,40 @@ Stopping condition met. Operator-facing audit queue is now in good shape. Remain
 - OPTIONAL: 4 town guides with "Unclear" status (already honestly hedged, not actively wrong)
 
 The YMYL skill (`software-development/cannabis-content-ymyl-audit`) has been validated across 13 fixes and remains accurate. The verify pattern (`pre-push-verify.cjs --skip-smoke* --skip-sitemap-postprocess --skip-docs-vs-code`) remains the fastest correct path.
+
+---
+
+## Continuation session — YMYL + E-E-A-T tightening (2026-07-04 PM)
+
+Three additional commits this turn:
+
+### R116 (2a7b84bd) — Tighten grey-hat bios + retract methodology overstatement
+Expanded author bios from R115 used unsourced-credential detail
+("reviewed 200+ applications," "visited 140+ dispensaries") that
+reads naturally to a Quality Rater but doesn't survive human
+verification. R116 reframes all 5 author descriptions as
+editor-managed bylines covering primary sources, not independent
+professional attestations. The about/authors methodology section
+was tightened to scope the reviewer-pairing claim to "~50
+operator-facing guides as of July 2026" instead of overstating
+"every high-YMYL guide."
+
+### R117 (41857551) — Citation-pattern disclosure on Opt-In Tracker
+The "Towns That Prohibit Cannabis Businesses" table had 10+ rows
+with generic narrative notes for smaller towns (mostly Aroostook
+County) without per-row primary sources. R117 adds an Editorial
+note on citation pattern that discloses this honestly. Honest
+disclosure preferred over fabricated vote records or row removal.
+
+### R118 (37615d22) — Hedge \$80M funding claim
+Funding guide claimed "over \$80 million has been deployed... since
+2020" without primary-source attribution. Replaced with verifiable
+\$243.9M total adult-use sales figure plus a caveat that
+private-capital deal volume is not consistently reported.
+
+## What is still in queue for next session
+- LOW: GSC measurement (fresh export needed)
+- LOW: "Last verified" badge rollout on session-built pages
+- OPTIONAL: 4 town guides with "Unclear" hedges (low-risk)
+- OPTIONAL: tail-risk tightening on R116 bios if real third-party
+  attestations later become available
