@@ -1,0 +1,161 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is Just Baked Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Just Baked Maine is at 115 West Broadway, Unit 2B, Lincoln, ME 04457. Phone (207) 403-9160. The dispensary is in downtown Lincoln, Penobscot County, on the I-95 / ME-6 corridor in interior Maine." }},
+    { "@type": "Question", "name": "Is Just Baked a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Just Baked is an adult-use / recreational cannabis shop, per the operator's own site. Customers must be 21 or older with valid ID. The operator is owned by Square One Natural Relief." }},
+    { "@type": "Question", "name": "What does Just Baked Maine specialize in?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, Just Baked is the only full-service adult-use cannabis shop in the Lincoln area. The operator is family-owned and small, and the menu emphasizes a 'higher quality alternative to your standard gummies and cookies' — handcrafted, commercial-grade edibles, plus flower, pre-rolls, vapes, and CBD." }},
+    { "@type": "Question", "name": "What are Just Baked's hours?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's site, Just Baked is open Monday through Saturday 10am-6pm and Sunday 10am-4pm. Confirm by phone before visiting." }},
+    { "@type": "Question", "name": "What is the service area for Just Baked?", "acceptedAnswer": { "@type": "Answer", "text": "Just Baked serves Lincoln, Lee, Winn, Mattawamkeag, and the I-95 / ME-6 corridor in interior Penobscot County. Bangor is about 50 miles south. Millinocket is about 40 miles north. The dispensary is the only full-service adult-use cannabis shop in the Lincoln area." }}
+  ]
+});
+---
+
+<Layout title="Just Baked Maine — Lincoln Cannabis Dispensary (2026)" description="Just Baked Maine is a family-owned adult-use cannabis dispensary at 115 West Broadway, Unit 2B, Lincoln, ME 04457. Phone (207) 403-9160. The only full-service adult-use shop in the Lincoln area. Handcrafted edibles and full flower menu." heroImage="/images/heroes/lincoln-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Just Baked Maine — Lincoln Cannabis Dispensary</h1>
+    <p class="subtitle">Family-owned adult-use cannabis shop in downtown Lincoln, Maine — the only full-service dispensary in the interior Penobscot County I-95 corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Just Baked at a Glance</h2>
+    <table aria-label="Just Baked Maine dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>Just Baked Maine (owned by Square One Natural Relief)</td></tr>
+        <tr><td><strong>Address</strong></td><td>115 West Broadway, Unit 2B, Lincoln, ME 04457</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 403-9160</td></tr>
+        <tr><td><strong>Email</strong></td><td>support@squareonenaturalrelief.com</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Mon–Sat 10am–6pm · Sun 10am–4pm (verify by phone)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Adult-use / recreational (21+)</td></tr>
+        <tr><td><strong>Products</strong></td><td>Flower, pre-rolls, handcrafted edibles, vapes, CBD</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Lincoln, Lee, Winn, Mattawamkeag, Penobscot County interior</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>justbakedmaine.com · Facebook</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>Just Baked Maine is a family-owned adult-use cannabis dispensary in downtown Lincoln, on the I-95 / ME-6 corridor in interior Penobscot County. Per the operator's own site, Just Baked is the only full-service adult-use cannabis shop in the Lincoln area — an important geographic distinction for residents and travelers in northern Maine who would otherwise have to drive to Bangor or Millinocket for legal cannabis.</p>
+    <p>The operator is Square One Natural Relief (the parent company's email domain). The dispensary markets itself as a small-but-mighty operator emphasizing handcrafted, commercial-grade edibles as a quality differentiator from mass-market competitors.</p>
+  </section>
+
+  <section>
+    <h2>Lincoln Location</h2>
+    <p><strong>Address:</strong> 115 West Broadway, Unit 2B, Lincoln, ME 04457<br>
+    <strong>Phone:</strong> (207) 403-9160<br>
+    <strong>Hours:</strong> Monday through Saturday 10am-6pm · Sunday 10am-4pm</p>
+    <p>Lincoln is a small Penobscot County town of approximately 5,200 residents in northern Maine. The town sits on the I-95 / ME-6 corridor — a key north-south route through northern Maine. West Broadway is the main commercial corridor in downtown Lincoln, with restaurants, retail, and other small businesses in the surrounding blocks.</p>
+    <p>Parking is available on-site and in nearby public lots. The dispensary is a short drive from I-95 exit 229 (Lincoln / East Millinocket).</p>
+  </section>
+
+  <section>
+    <h2>Product Specialization</h2>
+    <p>Per the operator's own site, Just Baked carries:</p>
+    <ul>
+      <li><strong>Flower</strong> — multiple cultivars, indoor and outdoor</li>
+      <li><strong>Pre-rolls</strong> — single joints and multi-packs</li>
+      <li><strong>Handcrafted edibles</strong> — the operator's signature category, marketed as "a higher quality alternative to your standard gummies and cookies"</li>
+      <li><strong>Vapes / Cartridges</strong> — 510-thread carts and disposables</li>
+      <li><strong>CBD products</strong> — broad-spectrum and isolate formats</li>
+    </ul>
+    <p>Confirm current menu, pricing, and product availability with the operator before visiting — the menu rotates with each cultivation cycle.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>Just Baked serves the I-95 / ME-6 corridor in interior Penobscot County:</p>
+    <ul>
+      <li><strong>Lincoln</strong> (in town) — 5 min</li>
+      <li><strong>Lee / Winn</strong> — 10-15 min</li>
+      <li><strong>Mattawamkeag</strong> — 15 min</li>
+      <li><strong>Howland / Enfield</strong> — 25-30 min south</li>
+      <li><strong>Millinocket</strong> — 40 min north</li>
+      <li><strong>Bangor</strong> — 50 min south</li>
+      <li><strong>Houlton</strong> — 90 min north</li>
+    </ul>
+    <p>Just Baked is the only full-service adult-use cannabis shop in the Lincoln area, making it a critical access point for residents of interior Penobscot County and travelers on the I-95 corridor. The next-closest adult-use options are in Bangor (50 min south) and Millinocket (40 min north) for any products Just Baked does not carry.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Official site:</strong> <a href="https://www.justbakedmaine.com/">justbakedmaine.com</a></li>
+      <li><strong>Facebook:</strong> <a href="https://facebook.com/JustBakedMaine">facebook.com/JustBakedMaine</a></li>
+      <li><strong>Phone:</strong> (207) 403-9160</li>
+      <li><strong>Email:</strong> support@squareonenaturalrelief.com</li>
+      <li><strong>Lincoln guide:</strong> <a href="/guides/lincoln-dispensary-guide">Town-level overview of Lincoln dispensaries</a></li>
+    </ul>
+    <p>Bring a valid government-issued photo ID showing you are 21 or older.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/lincoln-dispensary-guide">Lincoln Dispensary Guide</a> — town overview including Just Baked, Blazin Trailz, Brothers Cannabis, and Experience Cannabis</li>
+        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a> — nearby I-95 operator</li>
+        <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — broader edible options across the state</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is Just Baked Maine?", a: "115 West Broadway, Unit 2B, Lincoln, ME 04457. Phone (207) 403-9160." },
+        { q: "Is Just Baked a medical or adult-use dispensary?", a: "Adult-use / recreational. 21+ with valid ID. Owned by Square One Natural Relief." },
+        { q: "What does Just Baked specialize in?", a: "The only full-service adult-use cannabis shop in the Lincoln area, with a focus on handcrafted, commercial-grade edibles." },
+        { q: "What are Just Baked's hours?", a: "Mon-Sat 10am-6pm, Sun 10am-4pm. Confirm by phone." },
+        { q: "What is the service area?", a: "Lincoln, Lee, Winn, Mattawamkeag, and the I-95 / ME-6 corridor in interior Penobscot County." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, phone, hours, product positioning, and operator ownership above are sourced from the operator's official site (justbakedmaine.com, retrieved 2026-07-04) and the operator's Facebook page. The "only full-service adult-use cannabis shop in the Lincoln area" framing is per the operator's own marketing. The parent company email domain (squareonenaturalrelief.com) is from the operator's site. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>

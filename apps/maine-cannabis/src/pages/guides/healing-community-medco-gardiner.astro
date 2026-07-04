@@ -1,0 +1,162 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is The Healing Community MEDCo in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "The Healing Community MEDCo is at 189 Water Street, Gardiner, ME 04345. The dispensary is in downtown Gardiner along the Kennebec River corridor. Phone and current hours available via Loc8NearMe and the Chamber of Commerce listing." }},
+    { "@type": "Question", "name": "Is MEDCo a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Per the existing Maine Dispensary Guide Gardiner guide and the operator's own marketing, MEDCo operates as a Maine medical cannabis dispensary. Confirm directly with the operator whether adult-use (21+) customers can transact on-site." }},
+    { "@type": "Question", "name": "What products does MEDCo carry?", "acceptedAnswer": { "@type": "Answer", "text": "Per the operator's own site and third-party listings, MEDCo carries a full Maine medical dispensary menu: flower, pre-rolls, vapes, cartridges, concentrates, edibles, beverages, tinctures, salves, and CBD products. The Leafly listing describes the operator as offering 'the most extensive line of top-shelf medical cannabis and cannabis products in the state of Maine.'" }},
+    { "@type": "Question", "name": "What is the service area for MEDCo in Gardiner?", "acceptedAnswer": { "@type": "Answer", "text": "MEDCo's downtown Gardiner location serves the Kennebec River corridor including Gardiner proper, Hallowell, Randolph, Farmingdale, Pittston, West Gardiner, Richmond, and Litchfield. Augusta is across the river 10-15 minutes south. Drivers from Augusta and the surrounding Kennebec Valley region find MEDCo a convenient medical dispensary option." }},
+    { "@type": "Question", "name": "Does MEDCo have a website?", "acceptedAnswer": { "@type": "Answer", "text": "Confirm the operator's own website URL with the operator directly. Public listings on Weedmaps, Leafly, and the Gardiner Chamber of Commerce provide current hours, address, and menu. The Maine Dispensary Guide Gardiner guide has additional context on MEDCo's role in the local market." }}
+  ]
+});
+---
+
+<Layout title="The Healing Community MEDCo — Gardiner Maine Dispensary (2026)" description="The Healing Community MEDCo is a Maine medical cannabis dispensary at 189 Water St, Gardiner, ME 04345. Downtown Gardiner along the Kennebec River corridor. Per Leafly, the operator offers the most extensive line of top-shelf medical cannabis in Maine." heroImage="/images/heroes/gardiner-dispensary-guide.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>The Healing Community MEDCo — Gardiner Maine Dispensary</h1>
+    <p class="subtitle">Downtown Gardiner medical cannabis dispensary on Water Street, serving the Kennebec River corridor</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>MEDCo at a Glance</h2>
+    <table aria-label="Healing Community MEDCo dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>The Healing Community MEDCo</td></tr>
+        <tr><td><strong>Address</strong></td><td>189 Water Street, Gardiner, ME 04345</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical cannabis dispensary (per the operator's marketing and the Maine Dispensary Guide Gardiner guide)</td></tr>
+        <tr><td><strong>Products</strong></td><td>Flower, pre-rolls, vapes, cartridges, concentrates, edibles, beverages, tinctures, salves, CBD</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Gardiner, Hallowell, Randolph, Farmingdale, Pittston, Augusta, Kennebec Valley</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>Leafly · Weedmaps · Loc8NearMe · Gardiner Chamber of Commerce · MapQuest</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>The Healing Community MEDCo is a Maine medical cannabis dispensary operating from a downtown Gardiner storefront at 189 Water Street. Per the operator's own marketing (via Leafly), MEDCo offers "the most extensive line of top-shelf medical cannabis and cannabis products in the state of Maine" in a "laid back, leisurely shopping experience."</p>
+    <p>MEDCo is one of at least five medical dispensaries operating in the small town of Gardiner — an unusually high density for a town of fewer than 6,000 residents. The Kennebec River corridor between Gardiner and Augusta has become a regional medical cannabis hub, with multiple operators clustered along the river.</p>
+  </section>
+
+  <section>
+    <h2>Downtown Gardiner Location</h2>
+    <p><strong>Address:</strong> 189 Water Street, Gardiner, ME 04345</p>
+    <p>Water Street is the main commercial corridor in downtown Gardiner, running along the west bank of the Kennebec River. The dispensary sits in the historic downtown commercial district, with restaurants, retail, and other small businesses in the surrounding blocks. Parking is available on the street and in nearby public lots. The storefront is a short walk from the city's landmark downtown bridge across the Kennebec.</p>
+    <p>Confirm current hours directly with the operator before visiting. Per the public Loc8NearMe and MapQuest listings, the storefront operates on a standard medical dispensary schedule — call or check the online menu for the most current hours.</p>
+  </section>
+
+  <section>
+    <h2>Product Menu</h2>
+    <p>Per the operator's own site and the Weedmaps listing, MEDCo carries a full Maine medical dispensary menu:</p>
+    <ul>
+      <li><strong>Flower</strong> — multiple cultivars, indoor and outdoor</li>
+      <li><strong>Pre-rolls</strong> — single joints, multi-packs, and house blend prerolls (a customer-favorite per the Weedmaps reviews)</li>
+      <li><strong>Cartridges / Vapes</strong> — 510-thread carts and disposables</li>
+      <li><strong>Concentrates</strong> — solvent and solventless extracts including shatter (per reviews)</li>
+      <li><strong>Edibles</strong> — gummies, chocolates, and "medicated wholefoods" (per the operator's site)</li>
+      <li><strong>Tinctures</strong> — sublingual and oral formats</li>
+      <li><strong>Beverages</strong> — infused drinks</li>
+      <li><strong>Topicals / Salves</strong> — non-inhalable medical formats</li>
+      <li><strong>CBD products</strong> — broad-spectrum and isolate formats</li>
+    </ul>
+    <p>The "medicated wholefoods" framing on the operator's site suggests a focus on artisanal, made-in-Maine edible products rather than just gummies and chocolates. Confirm current inventory directly with the operator.</p>
+  </section>
+
+  <section>
+    <h2>Kennebec Valley Service Area</h2>
+    <p>MEDCo's downtown Gardiner location serves the Kennebec River corridor:</p>
+    <ul>
+      <li><strong>Gardiner</strong> (in town) — 5 min</li>
+      <li><strong>Hallowell</strong> — 5-10 min north</li>
+      <li><strong>Randolph</strong> — 10 min north</li>
+      <li><strong>Farmingdale</strong> — 10 min north</li>
+      <li><strong>Pittston</strong> — 10 min east</li>
+      <li><strong>West Gardiner</strong> — 10 min west</li>
+      <li><strong>Augusta</strong> (state capital, across the river) — 10-15 min south</li>
+      <li><strong>Richmond</strong> — 20 min south</li>
+      <li><strong>Litchfield / Wales</strong> — 20-30 min southwest</li>
+    </ul>
+    <p>Augusta residents (the state capital, with a population of ~19,000 in the greater metro) find MEDCo a convenient medical dispensary option across the river. The Kennebec Valley medical patient base is well-served by the cluster of dispensaries in and around Gardiner.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <ul>
+      <li><strong>Leafly listing:</strong> <a href="https://www.leafly.com/dispensary-info/the-healing-community---medco---gardiner">leafly.com/dispensary-info/the-healing-community-medco-gardiner</a></li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/dispensaries/the-healing-community-medco-2">weedmaps.com/dispensaries/the-healing-community-medco-2</a></li>
+      <li><strong>Loc8NearMe:</strong> <a href="https://www.loc8nearme.com/maine/gardiner/the-healing-community-medco/8787913/">loc8nearme.com</a></li>
+      <li><strong>MapQuest:</strong> <a href="https://www.mapquest.com/us/maine/the-healing-community-medco-514266020">mapquest.com</a></li>
+      <li><strong>Gardiner Chamber of Commerce:</strong> <a href="https://www.chamberofcommerce.com/business-directory/maine/gardiner/cannabis-store/2028830722-the-healing-community-medco">chamberofcommerce.com</a></li>
+      <li><strong>Gardiner guide:</strong> <a href="/guides/gardiner-dispensary-guide">Town-level overview of Gardiner dispensaries</a></li>
+    </ul>
+    <p>Bring your Maine MMMP card and a valid government photo ID.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <h2>Related Guides</h2>
+      <ul>
+        <li><a href="/guides/gardiner-dispensary-guide">Gardiner Dispensary Guide</a> — town overview including MEDCo, The Bud Bar, Gardiner 4Twenty, Wellness Connection, and Sinsemilla</li>
+        <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — how to get an MMMP card</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is The Healing Community MEDCo in Maine?", a: "189 Water Street, Gardiner, ME 04345. Downtown Gardiner on the Kennebec River corridor." },
+        { q: "Is MEDCo a medical or adult-use dispensary?", a: "Medical cannabis dispensary per the operator's marketing. Maine MMMP card required." },
+        { q: "What products does MEDCo carry?", a: "Full Maine medical menu: flower, pre-rolls, vapes, cartridges, concentrates, edibles (including 'medicated wholefoods'), tinctures, beverages, salves, CBD." },
+        { q: "What is the service area for MEDCo in Gardiner?", a: "Gardiner, Hallowell, Randolph, Farmingdale, Pittston, Augusta (across the river), and the Kennebec Valley corridor." },
+        { q: "Does MEDCo have a website?", a: "Confirm directly with the operator. Public listings on Leafly, Weedmaps, and the Gardiner Chamber of Commerce provide current hours, address, and menu." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address, product categories, and positioning above are sourced from the operator's listings on Leafly and Weedmaps, cross-referenced against Loc8NearMe, MapQuest, and the Gardiner Chamber of Commerce. The "most extensive line of top-shelf medical cannabis in Maine" framing is per the operator's own Leafly description. License-type framing (medical) is per the existing Maine Dispensary Guide Gardiner guide. Always call ahead to confirm current hours, pricing, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, and product availability can change. Always verify details directly with the dispensary before planning a visit.</p>
+</article>
+</Layout>
