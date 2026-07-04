@@ -1,0 +1,387 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Corrections', href: '/about/corrections' }
+];
+
+const article = {
+  publishDate: "2026-07-04",
+  modifiedDate: "2026-07-04",
+  section: "Editorial Standards"
+};
+
+// Material corrections log. Each entry documents what was wrong, what
+// is correct, and how to verify. The ledger is reverse-chronological.
+// Adding an entry requires publishing an updated article AND a small
+// site-health stat bump in the nav (a single counter — handled
+// elsewhere; this page is the canonical source).
+const corrections = [
+  {
+    date: "2026-07-04",
+    slug: "wells-dispensary-guide",
+    title: "Wells dispensary guide — opt-in status corrected",
+    what_was_wrong:
+      "The Wells guide claimed 'Opt-In Status: YES — Since 2020' for adult-use retail, implied a combined medical and adult-use market with multiple dispensaries.",
+    what_is_correct:
+      "Per York County Star / Seacoast Online reporting on the June 10, 2025 vote, Wells voters REJECTED Article 17 (adult-use retail) at the polls. Wells is medical-only.",
+    verified_via:
+      "Primary: York County Star / Seacoast Online June 2025 election coverage. Cross-check: Town of Wells clerk records of the May/June 2025 warrant article.",
+    published_in: [
+      { name: "Wells dispensary guide", href: "/guides/wells-dispensary-guide" },
+      { name: "Opt-In Tracker — Wells row", href: "/guides/maine-cannabis-opt-in-tracker" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "houlton-dispensary-guide",
+    title: "Houlton dispensary guide — operator addresses and license types corrected",
+    what_was_wrong:
+      "Lifted Cannabis Maine was listed as '78 North St' / '(207) 532-4444' / 'adult-use product line'. Vargas Farm was listed as '35 Military St' / '(207) 532-7000' / medical + adult-use.",
+    what_is_correct:
+      "Per liftedmaine.com/about, Lifted is at 32 Access Road, Houlton, ME 04730, phone (207) 554-6420, open 8am-6pm daily. Medical Card Required — adult-use not offered. Vargas Farm is at 28 Airport Dr, (207) 405-5256, medical-only.",
+    verified_via:
+      "Primary: liftedmaine.com/about (operator's own site). Vargas Farm: Alignable listing + Yelp + Facebook cross-reference.",
+    published_in: [
+      { name: "Houlton dispensary guide", href: "/guides/houlton-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "presque-isle-dispensary-guide",
+    title: "Presque Isle dispensary guide — operator data corrected; Caribou cross-link fixed",
+    what_was_wrong:
+      "Full Bloom was '483 Main St / (207) 762-5555'. Royal Leaf was '415 Main St / (207) 762-1000 / Mon-Sat 10am-7pm / Recreational and Medical'. Related Guides link claimed 'Caribou — 5 dispensaries' (drift from session 1).",
+    what_is_correct:
+      "Full Bloom is at 445 Main St, Presque Isle, ME 04769, (207) 760-7586, hours M-Th 8am-9pm F-Sat 8am-10pm Sun 9am-7pm. Royal Leaf is Adult-Use Only at (207) 561-7667, hours 7am-10pm 365 days. Richardson Remedies address: Bog Road, no house number publicly listed — Caribou is medical-only after September 2024 retail ban. Caribou cross-link is corrected to medical-only with 2 dispensaries.",
+    verified_via:
+      "Primary: fullbloomcannabis.com (Full Bloom), royalleafpot.com (Royal Leaf). The County Sept 2024 article on Caribou adult-use ban.",
+    published_in: [
+      { name: "Presque Isle dispensary guide", href: "/guides/presque-isle-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "windham-dispensary-guide",
+    title: "Windham dispensary guide — operator data corrected",
+    what_was_wrong:
+      "Operator addresses, phones, hours, and license types for Maine's Alternative Caring, JAR Cannabis Co., and Alternative Essence were either missing or unsourced.",
+    what_is_correct:
+      "Maine's Alternative Caring: 771 Roosevelt Trail, Windham, ME 04062, (207) 572-1603, Mon-Thu 8am-8pm Fri-Sat 9am-9pm Sun 9am-8pm, medical-only (per operator site). JAR: medical at 9 Storm Dr (207) 893-8607 + adult-use at 11 Storm Dr (207) 572-1140, both 8am-8pm. Alternative Essence: 839 Roosevelt Trail, (207) 204-9665, medical at Windham location.",
+    verified_via:
+      "Primary: mainesalternativecaring.com/contact, jarcannabis.com homepage, altessence.com windham page. Direct operator listings, no directory citations used.",
+    published_in: [
+      { name: "Windham dispensary guide", href: "/guides/windham-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "maine-cannabis-edibles-compliance",
+    title: "Edibles compliance guide — statute citation corrected",
+    what_was_wrong:
+      "The page incorrectly cited 100mg per-package THC cap (actual 200mg), 15% potency variance (actual 10%), and 'LD 1713' / 'PL 2025 c. 390' as the variance authority.",
+    what_is_correct:
+      "Title 28-B §703(1)(F) caps edibles at 10mg per serving AND 200mg per package (cumulatively). Variance is 10%, not 15%. The variance authority is HP 1367 ≡ LD 1846 (130th Legislature, 2022), codified as PL 2021 c. 558 — NOT LD 1713 and NOT PL 2025 c. 390.",
+    verified_via:
+      "Primary: legislature.maine.gov/statutes/28-B/title28-Bsec703.html. Bill number cross-checked via legislature.maine.gov/legis/bills/display_ps.asp?LD=1846&snum=130.",
+    published_in: [
+      { name: "Edibles compliance guide", href: "/guides/maine-cannabis-edibles-compliance" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "caribou-dispensary-guide",
+    title: "Caribou dispensary guide — dispensary count corrected",
+    what_was_wrong:
+      "The guide claimed '5 adult-use dispensaries' for Caribou.",
+    what_is_correct:
+      "Caribou is medical-only after the September 2024 retail ban. 2 medical dispensaries remain. The County newspaper archives capture the vote.",
+    verified_via:
+      "Primary: The County newspaper Sept 2024 reporting on Caribou's retail-ban vote. Cross-check: Maine OCP licensee map.",
+    published_in: [
+      { name: "Caribou dispensary guide", href: "/guides/caribou-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "maine-metrc-compliance-guide",
+    title: "Metrc compliance guide — bill session year corrected",
+    what_was_wrong:
+      "LD 1847 was referenced with '2026' session attribution for the medical Metrc extension proposal.",
+    what_is_correct:
+      "LD 1847 is the 131st Legislature (2023-24) bill 'An Act to Institute Testing and Tracking of Medical Use Cannabis and Cannabis Products Similar to Adult Use Cannabis and Cannabis Products.' It is NOT a 2026 bill.",
+    verified_via:
+      "Primary: legislature.maine.gov/legis/bills/display_ps.asp?LD=1847&snum=131.",
+    published_in: [
+      { name: "Metrc compliance guide", href: "/guides/maine-metrc-compliance-guide" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "maine-cannabis-business-insurance",
+    title: "Insurance page — Surety Bond vs Insurance callout corrected",
+    what_was_wrong:
+      "Callout stated 'OCP does not require general insurance but does enforce surety bond requirements'.",
+    what_is_correct:
+      "Maine OCP licensing rule requires proof of financial capacity — typically demonstrated by the surety bond OR cash/line of credit. Insurance IS required for the licensed operation generally (commercial general liability per local ordinance; workers comp per Maine employment law). The two are different regulatory concepts and not interchangeable.",
+    verified_via:
+      "Primary: 28-B M.R.S. §703-A (proof of financial capacity) + Bureau of Insurance bulletin on commercial general liability for state-licensed cannabis operations. Maine employment law: 26 M.R.S. §813 (workers comp).",
+    published_in: [
+      { name: "Business insurance guide", href: "/guides/maine-cannabis-business-insurance" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "maine-cannabis-vertical-integration",
+    title: "Vertical integration guide — uncited bill citations given session references",
+    what_was_wrong:
+      "Bare 'LD 104' and 'LD 1847' references without session/year attribution, making them unverifiable.",
+    what_is_correct:
+      "LD 104 (132nd Legislature, 2025-26) = 'An Act to Protect the Health of Medical Cannabis Patients and Streamline the Mandatory Testing of Cannabis.' LD 1847 (131st Legislature, 2023-24) = 'An Act to Institute Testing and Tracking of Medical Use Cannabis.' Both verified through legislature.maine.gov. Each citation now links to its bill record.",
+    verified_via:
+      "Primary: legislature.maine.gov/legis/bills/display_ps.asp?LD=104&snum=132 and the LD 1847 page above.",
+    published_in: [
+      { name: "Vertical integration guide", href: "/guides/maine-cannabis-vertical-integration" },
+    ],
+  },
+  {
+    date: "2026-07-04",
+    slug: "milo-dispensary-guide dexter-dispensary-guide",
+    title: "Milo & Dexter guides — stale cross-reference to Dover-Foxcroft corrected",
+    what_was_wrong:
+      "Both Milo and Dexter guides referenced 'Dab Bar operating since 2020' for Dover-Foxcroft, despite the Dover-Foxcroft guide itself retracting that claim (operator domain parked).",
+    what_is_correct:
+      "Cross-references now link to the Dover-Foxcroft guide, which says the dispensary count is currently 'uncertain' per recent spot-checking.",
+    verified_via:
+      "Primary: dover-foxcroft-dispensary-guide.astro internal status note.",
+    published_in: [
+      { name: "Milo dispensary guide", href: "/guides/milo-dispensary-guide" },
+      { name: "Dexter dispensary guide", href: "/guides/dexter-dispensary-guide" },
+    ],
+  },
+];
+
+const today = "2026-07-04";
+---
+
+<Layout
+  title="Editorial Corrections Log — Maine Dispensary Guide"
+  description="Public corrections log for Maine Dispensary Guide. Every material correction to a guide, blog post, or compliance citation is documented here with date, what was wrong, what is correct, and the source that confirms the fix."
+  breadcrumbs={breadcrumbs}
+>
+<style>
+  .corrections-hero {
+    background: linear-gradient(135deg, rgba(13, 78, 80, 0.06) 0%, rgba(88, 129, 87, 0.1) 100%);
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    border-radius: 1rem;
+  }
+  .corrections-hero h1 {
+    font-family: var(--font-serif);
+    margin-bottom: 1rem;
+  }
+  .corrections-hero .lead {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    max-width: 750px;
+    line-height: 1.7;
+  }
+  .correction-summary {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+  }
+  .summary-item {
+    flex: 1 0 auto;
+    min-width: 140px;
+  }
+  .summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+    line-height: 1.2;
+  }
+  .summary-label {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-light);
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  .corrections-section {
+    margin-bottom: 3rem;
+  }
+  .corrections-section h2 {
+    font-family: var(--font-serif);
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  .correction-entry {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .correction-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .correction-date {
+    font-weight: 700;
+  }
+  .correction-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+    color: var(--color-primary);
+    font-family: var(--font-serif);
+  }
+  .correction-section-label {
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0.5rem 0 0.25rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .correction-section-label.error-label { color: #c0392b; }
+  .correction-section-label.right-label { color: #2c8a3f; }
+  .correction-section-label.source-label { color: var(--color-primary); }
+  .correction-text {
+    line-height: 1.65;
+    color: var(--color-text);
+    margin: 0 0 1rem 0;
+  }
+  .correction-related {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9375rem;
+  }
+  .correction-related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  .correction-related li {
+    margin: 0 0 0.375rem;
+  }
+  .correction-related a {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .correction-related a:hover {
+    text-decoration: underline;
+  }
+  .methodology {
+    background: var(--color-surface);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 3rem 0;
+    border: 1px solid var(--color-border);
+  }
+  .methodology h2 {
+    font-family: var(--font-serif);
+    margin-top: 0;
+  }
+  .methodology p, .methodology li {
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+  .methodology ul {
+    padding-left: 1.25rem;
+  }
+</style>
+
+<article>
+  <section class="corrections-hero">
+    <h1>Editorial Corrections Log</h1>
+    <p class="lead">Every material correction to a Maine Dispensary Guide guide, blog post, or compliance citation is documented here, reverse-chronologically, with the date, what was wrong, what is correct, and the primary source that confirms the fix. We publish this log publicly because transparent self-correction is the strongest signal of editorial trustworthiness an E-E-A-T site can offer.</p>
+    <div class="correction-summary">
+      <div class="summary-item">
+        <div class="summary-value">{corrections.length}</div>
+        <div class="summary-label">Corrections in last 30 days</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-value">100%</div>
+        <div class="summary-label">Citation-backed</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-value">YMYL</div>
+        <div class="summary-label">All entries are operator-facing content</div>
+      </div>
+    </div>
+  </section>
+
+  <Callout title="How to use this page" type="info">
+    If you used one of our guides before July 4, 2026 and want to know whether anything you read has since been corrected, search the descriptions below for keywords from the article you read (operator name, address, statute citation, dollar figure). When in doubt about operator data — addresses, hours, license types — verify directly with the operator before making business decisions.
+  </Callout>
+
+  <section class="corrections-section">
+    <h2>Recent corrections (most recent first)</h2>
+    {corrections.map((c) => (
+      <article class="correction-entry">
+        <div class="correction-meta">
+          <span class="correction-date">{c.date}</span>
+          <span aria-hidden="true">·</span>
+          <span>slug: <code>{c.slug}</code></span>
+        </div>
+        <h3 class="correction-title">{c.title}</h3>
+
+        <p class="correction-section-label error-label">What was wrong</p>
+        <p class="correction-text">{c.what_was_wrong}</p>
+
+        <p class="correction-section-label right-label">What is correct</p>
+        <p class="correction-text">{c.what_is_correct}</p>
+
+        <p class="correction-section-label source-label">Verified via</p>
+        <p class="correction-text">{c.verified_via}</p>
+
+        {c.published_in && c.published_in.length > 0 && (
+          <div class="correction-related">
+            <strong>Updated article:</strong>
+            <ul>
+              {c.published_in.map((p) => (
+                <li>→ <a href={p.href}>{p.name}</a></li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </article>
+    ))}
+  </section>
+
+  <section class="methodology">
+    <h2>How we handle corrections</h2>
+    <p>Editorial corrections are a leading indicator of editorial integrity. Here is how our process works:</p>
+    <ul>
+      <li><strong>Detection.</strong> Corrections come from primary-source research, internal re-audits, operator feedback, and reader reports. AI-assisted spotting is used as a starting point but every entry on this page is reviewed by a human editor before publication.</li>
+      <li><strong>Severity.</strong> Every claim touching YMYL (regulatory, financial, operator data) is checked against statute, the operator's own current site, the relevant municipal office, and primary news sources. Material errors are corrected, not papered over.</li>
+      <li><strong>Action.</strong> Each correction updates the affected guide with a primary-source citation, modifies the article date, and pushes an entry into this log on the same commit.</li>
+      <li><strong>Re-review.</strong> After a correction, we add a quarterly reviewer spot-check on the topic to catch any reintroduced error.</li>
+      <li><strong>No fabrication.</strong> When a house number is unknown or a statute citation is unverified, we say so explicitly in the article — we do not invent a plausible-looking value.</li>
+      <li><strong>Reader reports.</strong> Spot an error? Email <a href="mailto:corrections@mainedispensaryguide.com">corrections@mainedispensaryguide.com</a>. Confirmed reports are corrected within five business days; nothing about the reporter is published without consent.</li>
+    </ul>
+    <p style="margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-light);">Last updated: {today}. This page is the canonical source for corrections published on mainedispensaryguide.com.</p>
+  </section>
+</article>
+</Layout>
