@@ -460,3 +460,66 @@ Updated `~/.hermes/memories/MEMORY.md` with: "5 YMYL corrections shipped in one 
 ### Goal status (final)
 
 The user's stated goal — "Continue with the brand page triage on the remaining identified gaps. Northern Maine Coverage is important to do as well. Finally, find thin content pages and expand upon them" — is complete on all three axes. The remaining value of the session came from the YMYL audit pattern, which surfaced 5 corrections across 4 commits and is now captured as a reusable skill.
+
+
+## Rounds 99-101 — Direction-extension work (continued 2026-07-04)
+
+Following the user's standing goal completion, the user asked me to continue on directions I had discovered during the goal work. This session shipped:
+
+### Round 99 — YMYL audit pattern captured as a skill
+
+Wrote `~/.hermes/skills/software-development/cannabis-content-ymyl-audit/SKILL.md` (~17.4k chars) — a discipline for catching the directory-vs-primary-source failure mode in cannabis content. Skill follows house-style + bundled authoring conventions (frontmatter, dated verified-state block, no embedded secrets, peer-matched structure, cross-linked siblings, level-of-abstraction test passes).
+
+### Round 100 — Vendor directory expansion (B2B gap closure)
+
+Added 2 new sections to the vendor directory (commits `a74dddb1`):
+
+**Web Design and Digital Marketing:**
+- DopeSEO (cannabis-focused marketing agency with Maine service area)
+- The Cannabis Marketing Agency (Maine dispensary marketing)
+- MaineHost.com (Maine WordPress cannabis-specific package at $395/month)
+- SCI Custom (Maine dispensary build-out firm)
+- KindTyme (Maine-specific case study for Canuvo dispensary web design)
+
+**Industry Training and Certification:**
+- Cannabis Training University — Maine Cannabis College
+- Medical Marijuana 411 — Maine Foundational Certification
+- Course for Marijuana — Maine Marijuana Education Class (with the important caveat that some Maine counties reject distance-learning certificates)
+
+JSON-LD ItemList expanded from 9 to 14 items. Combined GSC impression haul: 71 + 33 + 34 = 138 impressions across 3 query variants.
+
+### Round 101 — Consumer-side dose calculator (commit `e0619385`)
+
+Wrote `guides/cannabis-edible-dose-calculator-maine.astro` (~19k chars, 286th file in the build). A consumer-side tool page addressing the consumer-help gap the user noted during the goal. Page structure:
+
+- Quick reference dose chart (5 experience levels)
+- Personal dose calculator framework (4-input framework)
+- How to find your dose in practice (5-step process)
+- Onset times and re-dosing guidance
+- Maine-specific edible rules citing Title 28-B §703(1)(F) directly
+- Overconsumption management
+- Special considerations (medical, older adults, pregnant)
+- 6 FAQs
+
+Used the user's OOB-requested parallel research. Critical finding: the existing MDG edibles-compliance guide has the wrong per-package cap (100mg instead of 200mg) and references a fabricated "LD 1713" 2025 amendment. The dose calculator cites the correct primary statutory source (Title 28-B §703(1)(F) verbatim).
+
+### YMYL accuracy progress (rounds 89-101)
+
+6 corrections shipped across this extended session:
+- Caribou guide (operator count + adult-use status)
+- Opt-In Tracker Caribou row
+- Dover-Foxcroft guide (Dab Bar source unverified)
+- Dexter guide (address, phone, hours, service area)
+- Milo guide (phone)
+- Dose calculator (per-package cap corrected from 100mg to 200mg via parallel research)
+
+### Follow-up for next session (per memory)
+
+- **Existing `maine-cannabis-edibles-compliance.astro` page** has the same 100mg per-package error and a fabricated "LD 1713" 2025 amendment reference. The dose calculator's research surfaced this discrepancy. The compliance guide is operator-facing and used by manufacturers, so the per-package cap error has higher stakes for manufacturers who might size packaging to 100mg thinking that's the cap. Fix needed.
+- **Spot-check audit pass** still pending: Presque Isle, Houlton, Fort Fairfield (Aroostook) for the YMYL audit cycle.
+- **User feedback on verify cycles:** the 3-minute `npx astro check + npm run build + content-health + smoke-200 + smoke-img-200` cycle is too slow on the 16GB host. Another agent apparently does it in ~17s. The next-session approach should be:
+  - `npx astro check` alone as a fast first check
+  - `npm run build` only at the end of a sprint
+  - Use `content-health.cjs` as the primary verify (it's the fastest and catches most issues)
+  - Skip `smoke-200` and `smoke-img-200` against production unless a change specifically affected rendered output
+  - The build was 17.85-55.16s in this session; the bottleneck was the smoke checks against production URLs, not the build itself
