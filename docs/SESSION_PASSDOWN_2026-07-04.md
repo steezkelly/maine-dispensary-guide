@@ -541,3 +541,76 @@ Image pipeline: 6 variants of the editorial hero (1280x720 + 640x360 in jpg/webp
 - OPTIONAL — Next consumer-side gap to fill: "how-to-read-Maine-COA" is DONE. Remaining gaps from operator hand-off: microdosing for anxiety 101, first-time Maine dispensary buyer guide (partially covered in learn/index.astro), out-of-state patient reciprocity.
 
 This session is hereby closed.
+
+
+---
+
+## Continuation 6 — Internal link audit + R125 orphan reduction (2026-07-04 late session)
+
+**Commit:** `92be7dea` — fix(seo): R125 — internal-link audit + 50-file orphan reduction (55 → 16 orphans)
+
+**Final head:** 92be7dea (pushed to origin/main, confirmed-live via curl after ~5min Vercel deploy lag)
+
+### What was done
+
+Per operator request to focus first on internal linking quality. Ran a Python audit script over all 252 .astro files in apps/maine-cannabis/src/pages/ that extracted title, section, and all internal href targets (both HTML `<a href>` and JSON `"href":` and unquoted `href:` forms — the passdown-flagged find-a-dispensary JSON-href bug was real).
+
+### Initial state (uncorrected audit)
+
+- 252 .astro files
+- 55 pages with zero in-body internal inbound links ("orphans")
+- 28 of those were town guides with hand-rolled Related Guides sections that pointed OUT to peers but had no peer pointing back IN
+- 7 blog orphans (gray-market, social-equity, etc.)
+- 4 download orphans + 3 founders orphans (different surface areas)
+- 13 misc utility page orphans
+
+### Audit script bug discovered
+
+The original audit regex only caught HTML `href="..."` form. It missed JSON-array `href: "..."` and unquoted `href:` forms. **This was the same bug the passdown had flagged for find-a-dispensary.** Updated the regex to catch all three forms. Re-ran audit:
+- Total orphans with corrected regex: 55 → 26 (immediately, before any patching)
+
+### R125 patches applied
+
+**W1: 28 town-guide orphans closed (HIGH impact, 50+ files patched)**
+Co-citation analysis identified each orphan's 3 geographic peers (towns that reference the same neighbors the orphan references). Each peer got a Related Guides entry pointing back to the orphan. 44 peer guides patched across saco, biddeford, kennebunk, limington, parsonsfield, skowhegan, dover-foxcroft, norway, belfast, rockland, damariscotta, berwick, waterville, fairfield, etc.
+
+**W2: find-a-dispensary Related Guides section added (MEDIUM impact)**
+The consumer-funnel page had 0 in-body outbound links. Now links to /learn consumer hub, /guides/maine-cannabis-opt-in-tracker, top 3 town guides by population, the new COA walkthrough guide, and /about/corrections.
+
+**W4: Consumer-Facing Resources section added to guides/index.astro (MEDIUM impact)**
+The operator-facing guide catalog now links to the 5 consumer guides + /learn hub so operator-facing browsing surfaces the consumer side.
+
+**Plus: 4 operator-facing guides (faq, pos-comparison, waste-management, workers-comp-insurance) got Related Guides sections, and pos-comparison got an inbound link from maine-cannabis-inventory-management (natural peer pairing).**
+
+### Final results
+
+| Metric | Before | After |
+|---|---|---|
+| Total orphans | 55 | 16 |
+| Town-guide orphans | 28 | 0 |
+| Audit bug | JSON-form missed | Fixed |
+
+### Remaining 16 orphans (by design, not bugs)
+
+- 404, admin, all-guides, index, privacy, roi-calculator, search, site-health: utility pages linked only from persistent chrome (header/footer/nav)
+- download/* and download-checklist: gated resources (W7 — needs operator decision: are these free or gated?)
+- founders/*: separate "Founder Stories" surface area
+
+### Carry-forward queue (next session)
+
+- W3: migrate 108 hand-rolled Related Guides sections to the RelatedArticles component (architectural refactor)
+- W5: contextual /learn link from each town guide Overview
+- W6: add /about/authors to consumer guide Further Reading
+- W7: clarify download/ cluster status with operator
+
+### End of session
+
+Total session-end state:
+- 28 YMYL corrections R106-R124 (per prior passdown continuations)
+- 18 YMYL corrections R106-R124 (per prior passdown)
+- 3 new consumer guides (tinctures, topicals, COA walkthrough)
+- 1 link-building strategy + outreach tracker doc
+- 1 internal-link audit doc
+- R125: 50 files patched, 55 → 16 orphans, audit script bug fixed
+
+Head: `92be7dea`. Working tree clean (only AFFILIATE_OUTREACH.md dirty per passdown instruction).
