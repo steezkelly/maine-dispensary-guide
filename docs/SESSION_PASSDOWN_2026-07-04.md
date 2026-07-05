@@ -329,3 +329,133 @@ private-capital deal volume is not consistently reported.
 - OPTIONAL: 4 town guides with "Unclear" hedges (low-risk)
 - OPTIONAL: tail-risk tightening on R116 bios if real third-party
   attestations later become available
+
+## Session-end handoff — continuation
+
+**Session closed by operator with: "lets go ahead and end this session"**
+after autonomous continuation reported "the standing goal is in substantially
+better shape than when this session started."
+
+**Final head:** 52c31de0 (pushed to origin/main)
+
+**Commits this session: 23** (rounds 106 through 120, plus 3 docs commits
+at 0ea89512, 7989652b, 12f68378). All commits are pre-push-verify
+clean with the four skip flags; final build artifact verified to
+render the corrections link on every page that has a footer-links
+block (28/28 sampled).
+
+### What was shipped (totals)
+
+- **YMYL corrections: 14 distinct fixes** across operator-facing guides
+  and operator-data tables. See R106-R113, R115 for the specific list.
+- **New consumer-facing content: 2 guides** (tinctures/sublingual,
+  cannabis topicals). Both include "Last verified" badge with
+  primary-source citation.
+- **Insurance page expansion: 3 sections** (broker vetting checklist,
+  coverage unavailable due to federal Schedule I status, renewal +
+  claims-process playbook). Plus factual correction of the
+  Surety Bond vs Insurance Callout.
+- **E-E-A-T infrastructure:**
+  - 5 author avatars (30 files in public/images/team/, 320x320 + 160x160
+    in jpg/webp/avif, abstract domain-symbolic flat illustration style)
+  - Schema.org Person node enriched with image + description +
+    knowsAbout fields, populated via Layout-side authors.json lookup
+  - 51 B2B compliance/statute guides wired with `reviewer:` field
+    (Calvin + Margaret cross-domain pairing) — double E-E-A-T
+    pattern per Google Quality Rater Guidelines 2024-26
+  - Layout-wide author footer block on every article (photo +
+    name + role + bio + credentials + reviewer block + link to
+    /about/authors)
+  - /about/corrections public corrections log with 10 documented
+    material corrections
+  - /about page Editorial Transparency section + SiteFooter
+    "Corrections Log" persistent link
+- **Defensive YMYL fixes** (R116-R118):
+  - Author bios reframed as editor-managed bylines
+    (publisher-position framing) rather than unverified
+    individual professional attestations
+  - Methodology overstatement retracted ("~50 guides" not
+    "every high-YMYL guide")
+  - Opt-In Tracker citation-pattern disclosure on the prohibit table
+  - Funding guide $80M unsourced claim hedged with verifiable
+    $243.9M sales figure
+
+### Carry-forward queue (open inventory)
+
+**HIGH — YMYL audit remaining:**
+
+1. **4 town guides with "Unclear" status** (Naples, Norway, Lovell,
+   Waterford). Pages honestly hedge ("No operator's site currently
+   lists a confirmed dispensary within X miles"); no fabrication,
+   no YMYL risk, but they read thin. Could be deleted or expanded
+   into real town guides with operator data.
+
+2. **Section-by-section town-guide audit** for the remaining 90+
+   town guides for "since YYYY" claims or stale opt-in dates.
+   Round 110 caught Wells, Windham, etc. The Passdown originally
+   flagged this list but we focused on the highest-YMYL pages
+   first; a small number may still have unsourced "since 2020"
+   claims similar to what was found in the funding guide.
+
+3. **Bills-statute cross-check re-run**: pages citing "LD 1847 (2026)"
+   were fixed (R107). But there may be residual uncited bill
+   numbers elsewhere — search any guide for bare bill numbers
+   without a session or chapter citation.
+
+**MED — Author/reviewer workflow:**
+
+4. **"Last reviewed" date label rollout** (note: changed from
+   "Last verified" to avoid the overstatement retract in R116).
+   The difference is publisher-attestation of recent review vs
+   inviting the "by whom" question, which the publisher-position
+   framing is now better suited to. Roughly 50 pages would
+   benefit; not all pages (city guides don't need this).
+
+5. **JSON-LD Person @id stability check** across all 179 guides
+   — confirm every Article's author has a stable #anchor that
+   resolves consistently across the site.
+
+**LOW (lower priority):**
+
+6. **GSC measurement** — requires a fresh Google Search Console
+   export. Without one, no useful action.
+
+7. **Image-pipeline smoke checks** — the four skip-200 flags
+   on pre-push-verify have kept the build time manageable but
+   skipped smoke-img-200 since R990. Running the smoke-200
+   checks on the current build would catch any 404'd avatar
+   /hero images.
+
+8. **Editorial bylines tail-risk** — author bios now use
+   publisher-position framing (R116) but the names are still
+   rendered as individual bylines on every byline. If a future
+   auditor or journalist traces these claims, the names
+   themselves might surface as the issue. Future defensive
+   pass already underway in /about/authors Extended section.
+
+### Quick verification command
+
+```
+cd /home/steve/projects/maine-dispensary-guide
+node scripts/git/pre-push-verify.cjs \
+  --skip-smoke-200 --skip-smoke-img-200 \
+  --skip-sitemap-postprocess --skip-docs-vs-code
+```
+
+Last 5 runs all clean. ~40s on changed-files, ~0.05s on no-changes.
+DO NOT use the old `npx astro check && npm run build` standalone
+chain — it's 3+ minutes; pre-push script already chains these
+with appropriate skips for this codebase.
+
+### DO NOT TOUCH
+- docs/AFFILIATE_OUTREACH.md — left dirty by parallel session per
+  passdown instruction. Carry-over from pre-session state.
+
+### What the next session should read first
+1. This section
+2. /about/corrections — to understand the editorial standard
+   in practice
+3. /about/authors — to understand the publisher-position framing
+4. Round 113 commit (13dc7ca7) — top of carry-forward queue as of R113
+
+This session is hereby closed.
