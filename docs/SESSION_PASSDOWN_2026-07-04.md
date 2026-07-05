@@ -458,4 +458,86 @@ with appropriate skips for this codebase.
 3. /about/authors — to understand the publisher-position framing
 4. Round 113 commit (13dc7ca7) — top of carry-forward queue as of R113
 
+---
+
+## Continuation 5 — YMYL rounds 121-124 + new consumer guide (2026-07-04 late session)
+
+**Commits added (chronological):**
+- `96ebbb55` — fix(seo): YMYL round 121 — primary-source links for 3 'since YYYY' operator claims
+- `5c6cd000` — fix(seo): YMYL round 122 — correct 2 fabricated/wrong bill citations
+- `f7a83e59` — fix(seo): YMYL round 123 — replace speculative opt-in hedging with primary-source framing on 4 'Unclear' town guides
+- `ff31d912` — feat(guide): how-to-read cannabis COA (Certificate of Analysis) Maine consumer walkthrough
+
+**Final head:** ff31d912 (pushed to origin/main, confirmed-live via curl after ~5 min Vercel lag — all 14 corrections + new COA guide rendering)
+
+### R121 — 'since YYYY' operator claims given inline primary-source citations
+
+Three town guides cited operator-founding dates without primary-source attribution:
+- Bridgton — "Canuvo, established in Maine since 2011" — linked to canuvo.org/about-us (Glenn Peterson founded 2011 as one of Maine's 8 original medical-license holders)
+- Denmark — "Prohibited by ordinance since 2017" — linked to denmarkmaine.org PDF (March 28, 2017 adoption)
+- Limerick — "Founding Farmers has operated at 16 Main Street since 2021" — linked to ffmaine.com About (Founded 2021)
+
+Each claim was factually correct but the citation itself wasn't linked. YMYL failure mode is unsourced specific-date claims, not wrong dates.
+
+### R122 — Two fabricated/wrong bill citations closed
+
+**Bug 1** (`indoor-cannabis-grow-setup-maine-cost-2026.astro`):
+> "Maine Title 28-B (LD 555, adult-use cannabis) governs personal home cultivation"
+
+**Reality:** LD 555 (131st Legislature, 2023, P.L. 2023 c. 220) is "An Act to Increase the Number of Mature Plants Allowed for the Home Cultivation of Cannabis" — a specific amendment, not "the adult-use act." Title 28-B itself is the codification of the 2016 Question 1 ballot initiative (the Cannabis Legalization Act), implemented via P.L. 2017 c. 409. Fixed attribution. Same post also added session to LD 799 (128th, 2017) citation.
+
+**Bug 2** (`maine-cannabis-gray-market-ocp-enforcement-2026.astro` FAQ):
+> "The 2024 legislation (LD 1995) modestly tightened the [caregiver] framework"
+
+**Reality:** LD 1995 (131st, SP 820) is "An Act to Bolster Maine's Workforce and Economy by Increasing Assistance for Parents Pursuing Education and Employment and by Indexing Unemployment Benefits to the Unemployment Rate" — **Ought Not to Pass, died in committee January 30, 2024, never enacted.** A completely fabricated bill attribution. Fixed: the actual 2023-24 caregiver framework tightening was P.L. 2023 c. 365 ("An Act to Sustain the Medical Use of Cannabis Program") plus P.L. 2023 c. 679 (LD 40, "An Act to Protect Liberty and Advance Justice...").
+
+### R123 — Four 'Unclear' town guides get primary-source framing
+
+Naples, Norway, Lovell, Waterford all used speculative hedging ("Likely opted in", "probably not opted in", "Unclear"). All four are absent from MDG's 35-town opt-in list AND its 10-town opted-out list — they sit in the documentation gap. Speculative framing invited "on what basis?" and the honest answer was "we guessed."
+
+**Fix:** Unified factual framing: "Not documented — absent from MDG Opt-In Tracker (April 2026)." Body text points readers to OCP municipal authorization list as the definitive source, links directly to OCP opt-in notification form, and cites Title 28-B §201 as the statutory basis for the opt-in requirement.
+
+**Bonus fix on Naples:** Removed the B2B-framed "Naples Opportunity" section (replaced with consumer-facing "Where Naples Residents Currently Access Cannabis") and renamed "Naples Town Context for Operators" to "Naples Town Context" with operator-location framing stripped while preserving demographic data. Closes the operator-flagged HIGH queue item.
+
+### R124 — New consumer guide: how-to-read cannabis COA
+
+Closes the operator-flagged HIGH consumer-side gap (passdown's "consumer-side gaps as underweighted": how-to-read-COA walkthrough was #1 priority).
+
+Maine dispensaries are required to provide COAs for every batch sold (Title 28-B §601 testing program), but no existing guide walked consumers through how to actually read one. New buyers faced a document with ~30 fields and no frame for interpretation.
+
+**What the guide covers:**
+1. What a COA is and the legal basis (Title 28-B §601 + §703(1)(F))
+2. Where to find the COA (QR code on package, operator site, OCP lookup)
+3. Section-by-section walkthrough: header/batch ID → cannabinoid panel → terpene panel → 5 contaminant panels → Pass/Fail/ND/NT decoding
+4. Total THC vs Δ9-THC (the 0.877 conversion factor)
+5. Maine's 10% allowable variance and how to spot noncompliance
+6. Cross-referencing batch numbers (the relabeling-fraud check)
+7. Red flags: missing QR, hidden COAs, "Fail" results
+8. Reporting channels (OCP, dispensary, certifying physician)
+
+Plus: learn/index.astro consumer hub updated with 4 new resource links (COA walkthrough, tinctures guide, topicals guide, dose calculator) — closes the carry-forward's "consumer-side depth beyond B2B" gap. **10 FAQ items, all statute-cited, all reviewer-paired (Calvin Waters).**
+
+Image pipeline: 6 variants of the editorial hero (1280x720 + 640x360 in jpg/webp/avif), mmx-generated.
+
+### End of session
+
+**Total session-end state:**
+- 4 commits today (R121-R124)
+- 18 YMYL corrections total across R106-R120 (passdown #1) + R121-R124 (this turn)
+- 3 new consumer-facing guides total (tinctures + topicals in R108/R109, COA walkthrough in R124)
+- 1 corrections log updated with 14 documented material corrections
+- Head: `ff31d912`, clean working tree (only AFFILIATE_OUTREACH.md dirty, per passdown instruction)
+
+**Verified live:** all 14 corrections + new COA guide confirmed via curl 2026-07-04 ~22:00 EDT. Vercel deploy lag this session was ~5 min — every push was followed by a 3-5 min wait before web_extract/curl showed fresh content.
+
+**Remaining open queue (carry into next session):**
+- HIGH — GSC measurement (needs fresh export, no action possible without it)
+- HIGH — Finalize JSON-LD Person @id stability across 179 guides (machine-checkable)
+- MED — "Last reviewed" label rollout (not "Last verified" per R116) on ~50 pages
+- MED — Tail-risk tightening on R116 author bios if real third-party attestations later become available
+- LOW — Pull next GSC export when available
+- LOW — Smoke-200 image checks
+- OPTIONAL — Naples/Norway/Lovell/Waterford — re-verify OCP status quarterly via OCP opt-in notification form
+- OPTIONAL — Next consumer-side gap to fill: "how-to-read-Maine-COA" is DONE. Remaining gaps from operator hand-off: microdosing for anxiety 101, first-time Maine dispensary buyer guide (partially covered in learn/index.astro), out-of-state patient reciprocity.
+
 This session is hereby closed.
