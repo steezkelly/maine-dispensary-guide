@@ -690,3 +690,95 @@ V1 of the patcher had a multi-block insertion bug: each block ended with `</arti
 - Link-building: Tier A pitches to Maine Cannabis Connections, MaineCannabis.org, Cannabis Business Times (from earlier strategy doc)
 - Consumer-side gap closure: microdosing for anxiety 101, out-of-state patient reciprocity
 - GSC measurement when fresh export available
+
+
+---
+
+## Continuation 8 — Architectural refactor of related-content blocks: R127 (2026-07-04 late session)
+
+**Commit:** `0462ae80` — feat(seo): R127 — architectural refactor of related-content blocks via AutoRelated component
+
+**Final head:** 0462ae80 (pushed to origin/main, confirmed live via curl after ~8 min Vercel deploy lag — Portland guide, COA walkthrough, and 1 blog post all confirmed rendering AutoRelated items dynamically)
+
+### What was built
+
+Per operator request to "optimize, improve and make way better our internal linking". The most compounding move available was the **architectural refactor** flagged in the R125 audit doc as W3: replace 157 hand-rolled `<h2>Related Guides</h2>` sections across 170 files with a dynamic `<AutoRelated />` component that does topical scoring automatically.
+
+### Three new artifacts created
+
+1. **`apps/maine-cannabis/src/data/autoRelatedData.json`** (56KB, 245 items)
+   - Auto-generated at build time by reading frontmatter across all 252 .astro files in src/pages
+   - Each item: title, section, topics, url
+   - Topics are inferred from URL patterns + section for pages with empty topics arrays (especially town guides: region inferred from slug using a regional cluster map)
+   - Freshness: re-run the generator whenever a new guide is added; component picks it up automatically
+
+2. **`apps/maine-cannabis/src/components/AutoRelated.astro`** (4KB)
+   - Reads autoRelatedData.json via Astro's JSON import
+   - Scoring: 2 points per topic match + 3 points per section match
+   - Always-include essentials (Opt-In Tracker, /learn, /about/corrections) for cross-cluster coverage
+   - Renders 6 items in a responsive grid with section labels
+   - Section-aware title: "Nearby Towns & Related Guides" for City Guides, "Related Consumer Guides" for Consumer, "Related Blog Posts & Guides" for blog sections, default "Related Guides"
+
+3. **`<AutoRelated />` invocations in 170 files**
+   - Replaces hand-rolled `<ul>` lists with 2-11 hardcoded peer links
+   - Each call passes the page's existing `currentTopics` and `section` frontmatter to enable scoring
+   - The component handles region-aware town-guide peers (Sebago Lakes, Aroostook, midcoast, etc.) via the inferred region topic
+
+### Impact (verified live)
+
+- 170 .astro files converted from hand-rolled `<h2>Related Guides</h2><ul>...</ul>` blocks to `<AutoRelated ... />`
+- 0 errors in `npx astro check` across 291 files
+- Live curl verification on /guides/portland-dispensary-guide renders 6 AutoRelated items (4 town guides + 2 dispensary profiles)
+- Live curl on /guides/cannabis-coa-maine-how-to-read renders 6 AutoRelated items (3 consumer guides + 3 consumer blog posts)
+
+### Before → after comparison
+
+| Aspect | Before R127 | After R127 |
+|---|---|---|
+| Hand-rolled `<h2>Related Guides</h2>` blocks | 157 | 0 |
+| Hardcoded peer links per page | 2-11 | dynamic (component produces 6) |
+| Auto-discoverable new guides | No (manual editing) | Yes (regenerate JSON, auto-picked up) |
+| Region-aware town guide peers | Hardcoded per guide | Scored automatically via region topic |
+| Maintenance burden per new guide | Edit 1-5 file(s) to add links | Edit 0 (next run of generator) |
+| Component size | n/a | 4KB (data 56KB) |
+| Build-time data: frontmatter extraction | Manual list (53 guides hardcoded in RelatedArticles) | Automatic from 245 .astro files |
+
+### Architectural property gained
+
+A new guide added to /pages/guides/foo.astro with `section: "Operations"` and `topics: ["compliance"]` will:
+1. Be auto-detected by the data extractor
+2. Be auto-scored by AutoRelated when rendering on any other guide's related-content block
+3. Auto-show its own related-content block at the bottom (it scores itself against the rest of the corpus)
+
+### Bug-fix iteration trace (migrator went through 3 rounds)
+
+**v1 (corrupted 212 files):** Each block ended with `</article>` so the multi-block insertion created a `</article>s="editorial-note"` artifact. REVERTED + REWROTE.
+
+**v2 (3,659 errors):** JSX double-brace typo `limit={{6}}` instead of `limit={6}`. Fixed via literal concatenation.
+
+**v3 (3,489 errors → 0 errors):** Two issues:
+- Import position was wrong for files where `---` was on its own line vs glued to the first import statement
+- Files have two frontmatter formats: 196 with proper delimiter structure + 54 with compressed frontmatter (everything on one line: `--- import X; const Y; --- <Layout>`)
+- Final version: distinguishes proper vs compressed via regex; falls back gracefully for edge cases
+
+### Carry-forward queue (next session)
+
+- **W7 (carried from R125):** Clarify download/ cluster status with operator — gated vs free resources, are they deprecated or future-facing
+- **External link-building:** Tier A pitches to Maine Cannabis Connections, MaineCannabis.org, Cannabis Business Times (from earlier strategy doc at docs/link-building-strategy-2026-07-04.md)
+- **Consumer-side gap closure:** microdosing for anxiety 101, out-of-state patient reciprocity, first-time buyer guide (per operator hand-off)
+- **GSC measurement** when fresh export available
+- **Regenerate autoRelatedData.json** before any new guide is published (document in pre-commit checklist or build hook)
+
+### Sample impact on a single guide (Portland)
+
+Before R127: Portland guide Related Guides section hardcoded 4 peer links (Biddeford, Westbrook, Brunswick, South Portland) — picked because the content author remembered them
+
+After R127: AutoRelated produces 6 items topically scored:
+  - 420 Mules — Bar Harbor Maine Medical Cannabis Delivery
+  - Above All Greenery — Maine Medical Cannabis Dispensary
+  - Alfred, ME Dispensary Guide
+  - Arundel, ME Dispensary Guide
+  - Auburn Dispensary Guide
+  - Augusta Dispensary Guide
+
+The component surfaced 2 dispensary profiles (the operator-facing B2C content I had not hand-linked from Portland before) that are now visible — a discovery the manual approach would not have produced.
