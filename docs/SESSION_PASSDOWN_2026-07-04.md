@@ -614,3 +614,79 @@ Total session-end state:
 - R125: 50 files patched, 55 → 16 orphans, audit script bug fixed
 
 Head: `92be7dea`. Working tree clean (only AFFILIATE_OUTREACH.md dirty per passdown instruction).
+
+
+---
+
+## Continuation 7 — Internal link audit deepening: R126 E-E-A-T + consumer-hub contextual links (2026-07-04 late session)
+
+**Commit:** `a7150ed9` — fix(seo): R126 — E-E-A-T + consumer-hub contextual links across 213 files
+
+**Final head:** a7150ed9 (pushed to origin/main, confirmed-live via curl after ~9min Vercel deploy lag — portland, bucksport, cannabis-friendly-maine-travel, maine-cannabis-cultivation-guide all show all 3 R126 blocks)
+
+### What was done
+
+Per operator request to continue the internal-link audit. The R125 round identified several remaining weaknesses (W3 architectural, W5 contextual /learn, W6 /about/authors, W7 download cluster). This round addresses W5, W6, and W6b as the highest-leverage remaining items. W3 and W7 deferred to carry-forward (architectural refactor / operator decision respectively).
+
+### Audit pre-state (R126 starting baseline)
+
+- 0/111 town guides link to /learn consumer hub
+- 0/70 operator guides link to /about/authors (E-E-A-T author hub)
+- 1/70 operator guides link to /about/corrections (the unique E-E-A-T asset)
+- 0/35 blog posts link to /learn
+- 0/5 consumer guides link to /about/corrections or /about/authors
+- Cluster edges: guides→about = 1, blog→about = 7, blog→learn = 0, guides→learn = 0
+
+### R126 patches applied (213 files)
+
+**Three contextual blocks, single batch patcher, all inserted before the file's `</article>` closing tag:**
+
+1. **Editorial note block** (all guides + town guides + blog posts): "Every material correction to this page is documented in our public Editorial Corrections Log with the primary source that confirms the fix." Links to /about/corrections.
+
+2. **About the authors block** (all guides + town guides + blog posts): "This guide is published under a publisher-managed editorial byline with reviewer attribution." Links to /about/authors and /about.
+
+3. **First time buying cannabis in Maine? callout** (town guides + blog posts only): contextual aside pointing to /learn. Operator guides skip this because they're B2B.
+
+### Patch methodology + bug fix mid-flight
+
+V1 of the patcher had a multi-block insertion bug: each block ended with `</article>`, so inserting block1 introduced a fake `</article>` into the file. Subsequent insertions anchored on the fake `</article>`, producing 212 files with `</article>s="editorial-note"` corruption. I reverted all 212, rewrote the patcher to concat block contents into a single string and insert once before the real `</article>`, and re-ran. Corruption check after v2: 0 corrupted files.
+
+### Impact metrics
+
+| Link target | Before R126 | After R126 |
+|---|---|---|
+| /about/corrections | 1 page | 218 pages |
+| /about/authors | 0 pages | 216 pages |
+| /learn | 11 pages | 150 pages |
+
+| Cluster edge | Before R126 | After R126 |
+|---|---|---|
+| guides → about | 1 | 358 |
+| guides → (root) | 10 | 189 |
+| blog → about | 7 | 68 |
+| blog → (root) | 25 | 50 |
+
+| Coverage | Before R126 | After R126 |
+|---|---|---|
+| Town guides linking to /learn | 0/111 | 111/111 (100%) |
+| Operator guides linking to /about/corrections | 1/70 | 65/70 (~93%, 5 are index pages) |
+| Operator guides linking to /about/authors | 0/70 | 63/70 (~90%) |
+| Blog posts linking to /learn | 0/35 | 34/35 (97%) |
+
+### Total orphan count
+
+16 orphans, unchanged from R125. R126's edits are outbound (adding contextual links TO /about/corrections, /about/authors, /learn), not inbound. The 16 remaining orphans are by design — utility pages linked only from persistent chrome (header/footer/nav).
+
+### Verified
+
+- npx astro check: 0 errors across 290 files
+- Live curl spot-check (portland, bucksport, cannabis-friendly-maine-travel, maine-cannabis-cultivation-guide): all 3 R126 blocks rendering
+- Working tree clean, commit a7150ed9 pushed to origin/main
+
+### Carry-forward queue (next session)
+
+- W3: migrate 108 hand-rolled Related Guides sections to RelatedArticles component (architectural refactor, ~3 hours)
+- W7: clarify download/ cluster status with operator (gated vs. free resources)
+- Link-building: Tier A pitches to Maine Cannabis Connections, MaineCannabis.org, Cannabis Business Times (from earlier strategy doc)
+- Consumer-side gap closure: microdosing for anxiety 101, out-of-state patient reciprocity
+- GSC measurement when fresh export available
