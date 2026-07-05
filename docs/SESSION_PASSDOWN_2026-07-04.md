@@ -782,3 +782,89 @@ After R127: AutoRelated produces 6 items topically scored:
   - Augusta Dispensary Guide
 
 The component surfaced 2 dispensary profiles (the operator-facing B2C content I had not hand-linked from Portland before) that are now visible — a discovery the manual approach would not have produced.
+
+
+---
+
+## Continuation 9 — AutoRelated coverage completion: R128 (2026-07-04 late session)
+
+**Commits:** `ae4ffafc` (R128 extension) + `1fa654c0` (R128 followup — fixed import position bug)
+
+**Final head:** 1fa654c0 (pushed to origin/main, confirmed live via curl after ~10 min Vercel deploy lag)
+
+### What was done
+
+Per the in-flight task to close R127's known gaps. R127's migrator skipped
+files that didn't have a hand-rolled Related Guides section in the exact
+pattern it expected. R128's 2-round migration extended coverage to those
+remaining files.
+
+### R128 Round 1 (commit `ae4ffafc`)
+
+Migrated 48 guides + blog posts that had been skipped. Each file:
+- Inserts `<AutoRelated currentPath=... currentTopics={[...]} section="..." limit={6} />` before `</article>`
+- Adds `import AutoRelated from '../components/AutoRelated.astro';` to line 1
+
+Bug discovered when running `npx astro build` post-R128:
+**ReferenceError: AutoRelated is not defined** on compressed-frontmatter files.
+Astro silently bundled fine in `astro check` but failed at prerender time.
+
+Root cause: my patcher appended the import statement to the END of line 1,
+AFTER the existing `const article = {...}; const topics = [...]` declarations.
+Astro's bundler only resolves imports at the START of the frontmatter line.
+The import was syntactically valid but unreachable to the bundler.
+
+### R128 Round 2 — Import position fix (commit `1fa654c0`)
+
+For 35 affected files:
+- Removed the misplaced `import AutoRelated from '...';` from its end-of-line position
+- Re-inserted it at the START of line 1, immediately after the `--- ` opener
+
+Verification:
+- `npx astro check`: 0 errors across 291 files
+- `npx astro build`: **completes successfully**, no `AutoRelated is not defined` errors
+
+### Live verification (curl after ~10 min Vercel deploy)
+
+10 sampled pages checked, all rendering 6 AutoRelated items each:
+- /guides/maine-cannabis-vertical-integration: 6
+- /guides/maine-cannabis-regulations: 6
+- /guides/maine-dispensary-license: 6
+- /guides/maine-dispensary-pos: 6 (URL was maine-cannabis-pos in test, corrected)
+- /guides/maine-cannabis-taxes-2026: 6
+- /guides/maine-cannabis-product-testing-guide: 6
+- /guides/maine-cannabis-cultivation-guide: 6
+- /blog/maine-cannabis-delivery-business-guide-2026: 6
+- /guides/maine-cannabis-caregiver-guide: 6
+- /guides/maine-cannabis-business-insurance: 6
+
+The 2 operator guides originally flagged as "0 items rendering" after R127
+(vertical-integration, regulations) now render 6 each. The full migration
+gap is closed.
+
+### Final state
+
+Total AutoRelated invocations across the site:
+- R127: 170 files migrated
+- R128 round 1: 48 additional files
+- R128 round 2: 35 of those fixed for proper import position (the other 13 either had compressed frontmatter that already worked, or were proper frontmatter files)
+- **TOTAL: 215+ files now have working <AutoRelated /> invocations**
+
+### Persistence recommendations (next session)
+
+1. **Compressed-frontmatter rule:** the codebase has 54 files where the entire
+   frontmatter is on line 1 (no newlines between --- and ---). For these files,
+   all `import` statements must be at the START of line 1 (before any
+   `const article = {};` or `export const` declarations) to be bundled
+   correctly. Document this in skill_house_style.md if you want this
+   enforced going forward.
+
+2. **Build vs check:** `astro check` and `astro build` have different
+   visibility into bundler errors. `astro check` only does TypeScript
+   validation; `astro build` does the actual prerender compilation. Always
+   run `astro build` before pushing a touched-frontmatter change.
+
+3. **Future AutoRelated additions:** new guides should follow the new
+   pattern: `--- import AutoRelated from '...'; import ... ; const ... ; ---`
+   with all imports BEFORE constants/exports. Frontmatter helpers in the
+   codebase should enforce this going forward.
