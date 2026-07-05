@@ -321,7 +321,7 @@ function sitemapPostprocessCheck() {
     // the gate goes green, and the live site is broken until
     // someone notices. Added 2026-07-02 after the dead-code
     // cascade was caught manually.
-    const testScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'build', 'sitemap-postprocess.test.mjs');
+    const testScript = path.join(REPO_ROOT, 'scripts', 'check', 'sitemap-postprocess.test.mjs');
     if (!fs.existsSync(testScript)) {
         log('warn', `sitemap-postprocess.test.mjs not found at ${testScript} — skipping`);
         return { ok: true };
@@ -350,11 +350,17 @@ function docsVsCodeCheck() {
     // Catches the "docs claim 6 checks but CI runs 3" class that the
     // senior review flagged in 2026-07-02 (the docs claimed 6 checks
     // but CI only ran 3 of them — drift went uncaught for at least one
-    // sprint). The check:docs-vs-code script is in apps/maine-cannabis/
-    // scripts/content/ and is also wired into CI directly.
-    const lintScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'content', 'check-docs-vs-code.cjs');
+    // sprint). The check:docs-vs-code script is at scripts/check/
+    // (root) and is also wired into CI directly.
+    //
+    // Historical note: this code path previously referenced
+    // apps/maine-cannabis/scripts/content/check-docs-vs-code.cjs — a
+    // file that does not exist (the actual script is at the root
+    // scripts/check/ path). That stale reference silently bypassed the
+    // lint on every push from 2026-07-03 onward until caught here.
+    const lintScript = path.join(REPO_ROOT, 'scripts', 'check', 'docs-vs-code.cjs');
     if (!fs.existsSync(lintScript)) {
-        log('warn', `check-docs-vs-code.cjs not found at ${lintScript} — skipping`);
+        log('warn', `docs-vs-code.cjs not found at ${lintScript} — skipping`);
         return { ok: true };
     }
     log('info', `docs-vs-code…`);
@@ -370,6 +376,45 @@ function docsVsCodeCheck() {
         return { ok: true };
     }
     log('err', `docs-vs-code: drift detected — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
+function compressedFrontmatterCheck() {
+    // Pass 7: assert that every .astro file using <AutoRelated /> has its
+    // `import AutoRelated from '...';` statement INSIDE the file's
+    // frontmatter (between the opening and closing `---` fences).
+    //
+    // Catches the R128 bug class (2026-07-04): R127's first migration
+    // appended `import AutoRelated` to the END of compressed-frontmatter
+    // lines that began with `---`. Astro's bundler only resolves imports
+    // that appear early in the frontmatter statement list — when the
+    // import lands at the end (after const/let/export), the build silently
+    // produces an empty <aside class="auto-related"> with no related-guide
+    // items. 35 files were affected; fixup commit was 1fa654c0.
+    //
+    // This lint runs over all .astro files in apps/maine-cannabis/src/pages
+    // and reports any file where <AutoRelated> is used but the import is
+    // outside the frontmatter block. Cheap (no Astro invocation, no build,
+    // no network) and cwd-independent.
+    const lintScript = path.join(REPO_ROOT, 'scripts', 'check', 'check-compressed-frontmatter.cjs');
+    if (!fs.existsSync(lintScript)) {
+        log('warn', `check-compressed-frontmatter.cjs not found at ${lintScript} — skipping`);
+        return { ok: true };
+    }
+    log('info', `compressed-frontmatter check (Pass 7)…`);
+    const res = spawnSync('node', [lintScript], {
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 30_000,
+    });
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    const tail = out.split('\n').slice(-15).join('\n');
+    if (res.status === 0) {
+        log('ok', 'compressed-frontmatter: all AutoRelated imports inside frontmatter');
+        return { ok: true };
+    }
+    log('err', `compressed-frontmatter: at least one .astro file has a misplaced import — push blocked.`);
     if (tail) console.log(tail);
     return { ok: false };
 }
@@ -394,6 +439,29 @@ function main() {
     log('info', `changed files: ${files.length}`);
     files.forEach(f => log('info', `  ${f}`));
     console.log();
+
+    // Inreach pass 2026-07-05: if any changed file is an .astro page,
+    // auto-regenerate autoRelatedData.json before the verify runs. The
+    // regenerated data file is restaged so the commit captures the
+    // fresh data (the alternative — silently shipping stale data when
+    // a new guide is added — was the failure mode that motivated this).
+    const astroPageFiles = files.filter(f => f.includes('apps/maine-cannabis/src/pages/') && ASTRO_FILE_RE.test(f));
+    if (astroPageFiles.length > 0) {
+        log('info', `autoRelated: ${astroPageFiles.length} .astro page file(s) changed — regenerating data file…`);
+        const regenScript = path.join(REPO_ROOT, 'scripts', 'data', 'regen-auto-related.cjs');
+        if (fs.existsSync(regenScript)) {
+            const regen = spawnSync('node', [regenScript], { encoding: 'utf8', cwd: REPO_ROOT, timeout: 60_000 });
+            const tail = ((regen.stdout || '') + (regen.stderr || '')).trim().split('\n').slice(-3).join('\n');
+            if (regen.status === 0) {
+                log('ok', `autoRelated: data file regenerated. ${tail}`);
+                // Stage the regenerated data file if it's part of the repo
+                try { git('git add apps/maine-cannabis/src/data/autoRelatedData.json'); } catch {}
+            } else {
+                log('warn', `autoRelated: regen script failed (exit ${regen.status}) — verify continues.`);
+                if (tail) console.log(tail);
+            }
+        }
+    }
 
     const fast = fastParseCheck(files);
     if (!fast.ok) process.exit(1);
@@ -431,6 +499,13 @@ function main() {
         if (!dvc.ok) process.exit(7);
     } else {
         log('info', 'docs-vs-code skipped (--skip-docs-vs-code)');
+    }
+
+    if (!args.includes('--skip-compressed-frontmatter')) {
+        const cf = compressedFrontmatterCheck();
+        if (!cf.ok) process.exit(8);
+    } else {
+        log('info', 'compressed-frontmatter skipped (--skip-compressed-frontmatter)');
     }
 
     log('ok', 'pre-push verify: clean. Proceed with push.');

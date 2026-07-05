@@ -39,6 +39,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Regenerate autoRelatedData.json after the Astro project is built so
+      # the AutoRelated component picks up any new guides added since the
+      # last regen. The script is cheap (parses frontmatter only, no network)
+      # and exits non-zero if the data file is stale — the build step then
+      # fails the CI run instead of silently shipping stale related-content
+      # data. Added 2026-07-05 alongside the check:compressed-frontmatter
+      # gate that catches the R128 bug class.
+      - name: Regenerate autoRelatedData.json
+        run: |
+          npm --workspace @network/maine-cannabis run data:auto-related
+
       - name: Validate sitemap XML encoding
         run: |
           npm --workspace @network/maine-cannabis run check:sitemap-xml -- ../../dist/sitemap-0.xml
@@ -90,6 +101,17 @@ jobs:
       - name: Check docs-vs-code (no docs/code drift in verify surface)
         run: |
           npm --workspace @network/maine-cannabis run check:docs-vs-code
+
+      # Inreach pass 2026-07-05: lint that catches the R128 bug class
+      # (2026-07-04) — files using <AutoRelated /> without the
+      # `import AutoRelated` statement inside their frontmatter block.
+      # Astro's bundler only resolves imports inside the frontmatter,
+      # and the broken state silently produces an empty <aside> with
+      # no related-guide items. Cheap (no Astro invocation, no build,
+      # no network) and cwd-independent.
+      - name: Check compressed-frontmatter (R128 bug class)
+        run: |
+          npm --workspace @network/maine-cannabis run check:compressed-frontmatter
 
   deploy-preview:
     name: Deploy Preview

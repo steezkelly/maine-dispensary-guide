@@ -50,6 +50,8 @@ const CANONICAL_CHECKS = [
   { name: 'check:build-warnings', label: 'build-warnings' },
   { name: 'check:sitemap-xml', label: 'sitemap-xml' },
   { name: 'check:sitemap-postprocess', label: 'sitemap-postprocess' },
+  { name: 'check:compressed-frontmatter', label: 'compressed-frontmatter (R128 bug class)' },
+  { name: 'data:auto-related', label: 'autoRelatedData.json regeneration' },
   { name: 'smoke-200', label: 'smoke-200' },
   { name: 'smoke-img-200', label: 'smoke-img-200' },
   { name: 'pre-push', label: 'pre-push gate (esbuild + astro check)' },
