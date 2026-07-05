@@ -1,0 +1,460 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PineTree from '@network/ui/PineTree';
+import LeadFormTracker from '../../components/LeadFormTracker.astro';
+
+const pageTitle = "Free Maine First-Timer's Field Guide | Your First Dispensary Visit, Explained";
+const pageDescription = "A free 9-page field guide for first-time Maine cannabis buyers — what to bring, day-of flow at the dispensary, how to choose a product, payment and taxes, and the eight first-time mistakes to avoid. Written by the Maine Dispensary Guide editorial team.";
+const pdfUrl = "/downloads/maine-first-timer-field-guide.pdf";
+const formName = "first_timer_field_guide";
+
+const article = { publishDate: "2026-07-05", modifiedDate: "2026-07-05" };
+
+const success = Astro.url.searchParams.get('success') === 'true';
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  noindex={false}
+>
+  <style>
+
+  :global(body > *:not(.landing-page):not(script)) {
+    display: none;
+  }
+
+  .landing-page {
+    min-height: 100vh;
+    background: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+  }
+
+  .hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    margin: 1.5rem 0 1rem;
+    color: var(--color-text);
+    font-family: var(--font-serif);
+  }
+
+  .hero .subtitle {
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--color-text-light);
+    margin: 0 auto 1.5rem;
+    max-width: 540px;
+  }
+
+  .hero .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+  }
+
+  .hero .hero-meta strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .preview-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(13, 78, 80, 0.04);
+  }
+
+  .preview-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    margin: 0 0 1rem;
+    color: var(--color-text);
+  }
+
+  .preview-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+  }
+
+  .preview-list li {
+    padding: 0.4rem 0;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--color-text);
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .preview-list li::before {
+    content: "✓";
+    color: var(--color-primary);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .capture-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    margin: 2rem auto;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(13, 78, 80, 0.06);
+  }
+
+  .capture-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    margin: 0 0 0.5rem;
+    text-align: center;
+    color: var(--color-text);
+  }
+
+  .capture-section .age-gate {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .capture-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .form-group input[type="email"] {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: white;
+    color: var(--color-text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .form-group input[type="email"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+  }
+
+  .age-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+
+  .age-checkbox input[type="checkbox"] {
+    margin-top: 0.2rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+    accent-color: var(--color-primary);
+  }
+
+  .cta-button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .cta-button:hover:not(:disabled) {
+    background: var(--color-primary-dark, #436b43);
+    transform: translateY(-1px);
+  }
+
+  .cta-button:disabled {
+    background: var(--color-text-light);
+    cursor: not-allowed;
+  }
+
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+  }
+
+  .trust-row span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .or-download {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .or-download a {
+    color: var(--color-text-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .success-card {
+    background: linear-gradient(135deg, rgba(88, 129, 87, 0.08), rgba(13, 78, 80, 0.04));
+    border: 1px solid var(--color-primary);
+    border-radius: 1rem;
+    padding: 2.5rem 1.5rem;
+    margin: 2rem auto;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .success-icon {
+    color: var(--color-primary);
+    margin: 0 auto 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  .success-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    margin: 0 0 1rem;
+    color: var(--color-text);
+  }
+
+  .success-card .direct-download {
+    margin-top: 1rem;
+  }
+
+  .success-card .direct-download a {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .social-proof {
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 480px;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .proof-text {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+
+  .disclosure {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin: 2rem auto;
+    max-width: 640px;
+    width: 100%;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-light);
+  }
+
+  .disclosure strong {
+    color: var(--color-text);
+  }
+
+  .landing-footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-light);
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .landing-footer a {
+    color: var(--color-text-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 480px) {
+    .landing-page { padding: 1rem 1rem; }
+    .hero { padding: 1.5rem 0.5rem 1rem; }
+    .capture-section { padding: 1.5rem 1rem; }
+  }
+  </style>
+
+  <PineTree />
+
+  <div class="landing-page">
+    <section class="hero">
+      <span class="hero-badge">Free PDF · 9 pages · Maine-specific</span>
+      <h1>Maine First-Timer's Field Guide</h1>
+      <p class="subtitle">Your first dispensary visit, explained. What to bring, day-of flow, how to choose a product, payment and taxes, and the eight first-time mistakes to avoid.</p>
+      <div class="hero-meta">
+        <span><strong>By</strong> Eliot Nash</span>
+        <span><strong>Reviewed by</strong> Calvin Waters</span>
+        <span><strong>Updated</strong> 2026-07-05</span>
+      </div>
+    </section>
+
+    <div class="preview-card">
+      <h3>What's inside:</h3>
+      <ul class="preview-list">
+        <li>15-minute pre-visit prep (store selection, format, budget, hours)</li>
+        <li>Day-of flow at the dispensary (reception, ID check, budtender consult, register)</li>
+        <li>Product selection — inhaled vs edible vs tincture for first-timers</li>
+        <li>The eight first-time mistakes that ruin good experiences</li>
+        <li>Maine rules cheat sheet (possession, public consumption, taxes, reciprocity)</li>
+        <li>After-visit tracking template (so you know what works for you)</li>
+        <li>Eight FAQs on payment, ID, consumption, and out-of-state cards</li>
+        <li>Full Maine primary-source citations on every page</li>
+      </ul>
+    </div>
+
+    {success ? (
+      <div class="success-card">
+        <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <h3>Check your inbox — your Field Guide is on its way.</h3>
+        <p>If it doesn't arrive in a few minutes, check spam or use the direct download below.</p>
+        <div class="direct-download">
+          <a href={pdfUrl} target="_blank" rel="noopener">Download the PDF directly</a>
+        </div>
+      </div>
+    ) : (
+      <section class="capture-section">
+        <h2>Send me the free PDF</h2>
+        <p class="age-gate">For adults 21 and older only.</p>
+        <form
+          id="lead-form"
+          action="https://formspree.io/f/xvgzlowz"
+          method="POST"
+          class="capture-form"
+        >
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="jane@example.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <label class="age-checkbox">
+            <input type="checkbox" name="age_confirmed" value="yes" required />
+            <span>I am 21 or older and a resident of or visitor to a state where cannabis is legal.</span>
+          </label>
+
+          <input type="hidden" name="_subject" value="First-Timer Field Guide Download Request" />
+          <input type="hidden" name="magnet" value="first-timer-field-guide" />
+          <input type="hidden" name="_redirect" value="/download/first-timer-field-guide?success=true" />
+
+          <button type="submit" class="cta-button">
+            Send me the free PDF
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="trust-row">
+          <span>🔒 No spam — one email per quarter of editorial</span>
+          <span>📄 Unsubscribe any time</span>
+        </div>
+
+        <div class="or-download">
+          <a href={pdfUrl} target="_blank" rel="noopener">Or download directly without signing up</a>
+        </div>
+      </section>
+    )}
+
+    <section class="social-proof">
+      <p class="proof-text">Written by the Maine Dispensary Guide editorial team. Every claim is anchored to a primary source — Maine Revised Statutes Title 28-B, Maine OCP guidance, and peer-reviewed research.</p>
+    </section>
+
+    <div class="disclosure">
+      <strong>Disclosure.</strong> This guide is informational and does not constitute medical, legal, or purchasing advice. Cannabis has not been evaluated by the FDA. Consult a licensed healthcare provider before using cannabis, especially if you are pregnant, nursing, taking medications, or have a medical condition. Do not drive or operate machinery under the influence of cannabis. Public consumption is illegal in Maine. Acadia National Park and all federal land prohibit cannabis regardless of state law. Keep all cannabis products in child-resistant packaging, locked, and out of reach of children and pets. Maine imposes a 5.5% state sales tax and a 14% adult-use excise tax (effective 2026). For the editorial corrections log, see <a href="/about/corrections" style="text-decoration:underline">mainedispensaryguide.com/about/corrections</a>.
+    </div>
+
+    <footer class="landing-footer">
+      <p>&copy; 2026 Maine Dispensary Guide · <a href="/">mainedispensaryguide.com</a> · <a href="/affiliate-disclosure">Affiliate Disclosure</a> · <a href="/privacy">Privacy</a></p>
+      <p style="margin-top: 0.5rem;">Written by Eliot Nash. Reviewed by Calvin Waters, Licensing &amp; Compliance Analyst.</p>
+    </footer>
+  </div>
+
+  <LeadFormTracker formSelector=".capture-form" formName={formName} />
+</Layout>
