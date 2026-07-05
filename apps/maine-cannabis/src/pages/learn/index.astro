@@ -1,4 +1,4 @@
----
+--- import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
@@ -240,5 +240,5 @@ const faqPageJsonLd = JSON.stringify({
       <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator — Maine</a> — interactive dose calculator with the 10mg/200mg/10% variance rules built in</li>
     </ul>
   </section>
-</article>
+<AutoRelated currentPath="/learn" currentTopics={['consumer', 'education', 'basics']} section="Consumer Guide" limit={6} /></article>
 </Layout>
