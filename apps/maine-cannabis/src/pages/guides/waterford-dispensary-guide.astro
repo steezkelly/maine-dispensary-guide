@@ -17,7 +17,7 @@ const faqPageJsonLd = JSON.stringify({
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "Are there any cannabis dispensaries in Waterford, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Waterford has no cannabis dispensaries operating within town limits. The town is served by dispensaries in surrounding communities, particularly Oxford (Coastal Roots), Poland (slowsfarm), and Auburn (Friend Jen and Co)." }},
-    { "@type": "Question", "name": "Does Waterford allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford's opt-in status is unclear and not definitively confirmed in available records. The town appears to not have active dispensaries, but the absence of confirmed opt-in/out documentation means the status warrants direct verification with the town." }},
+    { "@type": "Question", "name": "Does Waterford allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford is not documented as opted in on the MDG Opt-In Tracker or the OCP municipal authorization list as of April 2026. Verify directly with the Waterford town office before assuming either direction." }},
     { "@type": "Question", "name": "Where do Waterford residents buy legal cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford residents are served by dispensaries in surrounding Oxford County towns: Coastal Roots in Oxford, slowsfarm in Poland, Friend Jen and Co in Auburn, and others in the greater Oxford area." }},
     { "@type": "Question", "name": "What is Waterford Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Waterford is a small Oxford County town of approximately 1,500 residents in western Maine, characterized by rural landscapes, farmland, and proximity to the Waterford Flat area. It is one of the smaller towns in the region without a documented cannabis retail presence." }}
   ]
@@ -57,7 +57,7 @@ const faqPageJsonLd = JSON.stringify({
       <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
       <tbody>
         <tr><td><strong>Dispensaries in Town</strong></td><td>0 — None confirmed operating in Waterford</td></tr>
-        <tr><td><strong>Opt-In Status</strong></td><td>Unclear — verify with town before assuming</td></tr>
+        <tr><td><strong>Opt-In Status</strong></td><td>Not documented — absent from MDG Opt-In Tracker (April 2026)</td></tr>
         <tr><td><strong>Nearest Dispensaries</strong></td><td>Oxford (~15 min), Poland (~15 min), Auburn (~25 min)</td></tr>
         <tr><td><strong>Population</strong></td><td>~1,500</td></tr>
         <tr><td><strong>County</strong></td><td>Oxford County</td></tr>
@@ -91,9 +91,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <h2>Town Status & Opt-In</h2>
-    <p>Waterford's municipal opt-in status for cannabis retail is not definitively confirmed in available records. Unlike towns with clearly documented opt-in or opt-out decisions, Waterford's status appears to be undocumented in the standard OCP and municipal tracker resources.</p>
-    <p>Residents and operators should verify directly with the Waterford town office before assuming the regulatory status in either direction.</p>
-    <p>For current opt-in status and any municipal changes, refer to our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a>.</p>
+    <p>Waterford is not documented as opted in on the <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> as of April 2026. The OCP maintains a public municipal authorization list; towns not on that list have not taken the formal opt-in action required under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec201.html" target="_blank" rel="noopener noreferrer">Title 28-B §201</a>. Waterford's status could mean the town has not opted in, or has opted in but not been recorded — verify directly with the Waterford town office and the OCP. The OCP's <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">municipal opt-in notification form</a> is the definitive source.</p>
   </section>
 
   <section>
@@ -113,7 +111,7 @@ const faqPageJsonLd = JSON.stringify({
     <Faq
       questions={[
         { q: "Are there any cannabis dispensaries in Waterford, Maine?", a: "No. Waterford has no confirmed cannabis dispensaries operating within town limits. Residents are served by dispensaries in surrounding communities: Coastal Roots (Oxford), slowsfarm (Poland), and Friend Jen and Co (Auburn)." },
-        { q: "Does Waterford allow cannabis dispensaries?", a: "Waterford's opt-in status is not definitively documented. The absence of confirmed records means status should be verified directly with the town office before making business or visit decisions." },
+        { q: "Does Waterford allow cannabis dispensaries?", a: "Waterford is not documented as opted in on the MDG Opt-In Tracker or the OCP municipal authorization list as of April 2026. Verify directly with the town office before assuming either direction." },
         { q: "Where do Waterford residents buy legal cannabis?", a: "Waterford residents are served by dispensaries in Oxford County: Coastal Roots in Oxford, slowsfarm in Poland, and others in Auburn — all within 15-25 minutes." },
         { q: "What is Waterford Maine known for?", a: "Waterford is a small Oxford County town of ~1,500 residents in western Maine, characterized by rural landscapes and farmland. No confirmed cannabis dispensaries in town." }
       ]}
