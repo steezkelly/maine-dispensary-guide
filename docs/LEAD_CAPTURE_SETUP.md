@@ -1,121 +1,112 @@
-# Lead-Magnet Autoresponder Setup (Formspree)
+# Lead-Magnet Autoresponder Setup (agent-managed SMTP)
 
 The Maine First-Timer's Field Guide PDF is gated by the form at
-`/download/first-timer-field-guide`. The form currently POSTs to
-Formspree endpoint `xvgzlowz`. To send the PDF to the user
-automatically when they submit, configure Formspree's autoresponder
-in their dashboard. This is a 5-minute one-time task.
+`/download/first-timer-field-guide`. The form posts to the
+agent-managed serverless endpoint at `/api/lead-capture`, which
+sends a PDF-bearing autoresponder email through purelymail SMTP.
 
-## Step 1: Sign in to Formspree
+The 4 other lead-capture forms on the site (download-checklist,
+compliance-self-assessment, founders-bible, metrc-reconciliation-checklist,
+roadmap) continue to POST to Formspree xvgzlowz. This doc covers
+the new endpoint only.
 
-Go to https://formspree.io/forms and sign in with the credentials
-that have access to form `xvgzlowz`.
+## Operator activation (5 minutes, one-time)
 
-## Step 2: Open the form settings
+In Vercel project settings, set these 4 environment variables:
 
-Click the form to open its dashboard. Navigate to **Settings** →
-**Autoresponse** (or "Send a confirmation email" depending on the
-Formspree UI version).
+| Variable | Example value | Notes |
+|---|---|---|
+| `PURELYMAIL_SMTP_USER` | `leads@mainedispensaryguide.com` | purelymail SMTP username |
+| `PURELYMAIL_SMTP_PASS` | (purelymail app password) | Use purelymail app password, not your main account password |
+| `MDG_FROM_ADDRESS` | `leads@mainedispensaryguide.com` | Defaults to this if not set |
+| `MDG_REPLY_TO` | `hello@mainedispensaryguide.com` | Defaults to this if not set |
 
-## Step 3: Configure the autoresponder
+Optionally:
+- `MDG_TEST_MODE=1` — enables a GET endpoint that returns the magnet
+  registry for inspection. **Do not set in production.**
 
-Set:
+## Without the env vars set
 
-- **Trigger:** "Always" (or "On successful submission")
-- **From name:** "Maine Dispensary Guide"
-- **From email:** your preferred From address (e.g.,
-  `leads@mainedispensaryguide.com` if you've configured it via
-  purelymail or your domain registrar)
-- **Reply-to:** `hello@mainedispensaryguide.com`
-- **Subject:** "Your Maine First-Timer's Field Guide is inside"
-- **Body (plain text or HTML):**
+The endpoint returns 500 with a clear error message. The
+client-side JS on the landing page catches this and shows an alert:
+"Sorry — we couldn't process your request right now. Please email
+hello@mainedispensaryguide.com for the PDF." No data loss.
 
-  > Thanks for downloading the Maine First-Timer's Field Guide.
-  >
-  > The PDF is attached. Here's what you'll find inside:
-  >
-  >   1. 15-minute pre-visit prep
-  >   2. Day-of flow at the dispensary
-  >   3. Product selection — what to actually buy
-  >   4. Eight first-time mistakes to avoid
-  >   5. After-visit tracking template
-  >   6. Maine rules cheat sheet (printable)
-  >   7. FAQ
-  >   8. Resources + corrections log
-  >
-  > If you're new to Maine cannabis, the natural next step is the
-  > full guide on our site:
-  >   https://mainedispensaryguide.com/guides/first-time-maine-dispensary-buyer
-  >
-  > And if you want to keep learning, our Consumer Hub covers
-  > microdosing, reciprocity, tinctures, COA reading, and more:
-  >   https://mainedispensaryguide.com/learn
-  >
-  > Cannabis is a YMYL topic — please consult a Maine-licensed
-  > healthcare provider for personal guidance. Every claim in this
-  > guide is anchored to a primary source, documented in our
-  > editorial corrections log:
-  >   https://mainedispensaryguide.com/about/corrections
-  >
-  > — The Maine Dispensary Guide editorial team
+## Testing the live endpoint
 
-- **Attachment:** upload
-  `apps/maine-cannabis/public/downloads/maine-first-timer-field-guide.pdf`
-  (also at the same path in the deployed site:
-  https://mainedispensaryguide.com/downloads/maine-first-timer-field-guide.pdf)
+After setting the env vars and triggering a deploy, test with:
 
-## Step 4: Save and test
+```bash
+# Should return 200 + JSON {ok: true, lead_id: "..."}
+curl -sX POST 'https://mainedispensaryguide.com/api/lead-capture' \
+  -H "Content-Type: application/json" \
+  -d '{"email":"your-test@example.com","age_confirmed":true,"magnet":"first-timer-field-guide"}'
+```
 
-Save the autoresponder. Submit the form once with a test email
-(your own address is fine). Verify:
-1. You receive the email within a few minutes.
-2. The PDF is attached and openable.
-3. The link to the full guide on the MDG site works.
-4. The browser redirects to `/download/first-timer-field-guide?success=true`
-   and shows the success card.
+Verify the autoresponder email arrived in your inbox within a
+minute. The PDF should be attached.
 
-## Step 5: Track conversion in GA4 (optional but recommended)
+## Architecture
 
-Formspree's autoresponder does not automatically fire a `generate_lead`
-GA4 event. The existing LeadFormTracker component handles this
-client-side: when the form posts to Formspree and the browser
-navigates to the success URL, the success page (which has the
-?success=true param) does not currently fire an event. If you want
-conversion tracking, either:
-  - Add a small inline script to the success page that fires
-    `gtag('event', 'generate_lead', {magnet: 'first-timer-field-guide'})`
-    when `?success=true` is in the URL.
-  - Use Formspee's webhook + GA4 Measurement Protocol to fire
-    the event server-side.
+```
+User submits form at /download/first-timer-field-guide
+   ↓
+Client-side JS intercepts, POSTs as JSON to /api/lead-capture
+   ↓
+apps/maine-cannabis/src/pages/api/lead-capture.ts (Vercel function)
+   ↓
+Validates email + age-gate + magnet slug allowlist
+   ↓
+Generates lead_id (crypto.randomUUID())
+   ↓
+Sends email via nodemailer + smtp.purelymail.com:465
+   ↓
+Logs lead (JSON line to stdout + ./.vercel/leads.jsonl)
+   ↓
+Returns {ok: true, lead_id, ga4_event} to client
+   ↓
+Client fires gtag('event', 'generate_lead', {...})
+   ↓
+Client redirects to /download/first-timer-field-guide?success=true
+```
 
-For now, the funnel works (PDFs go out) but conversion attribution
-is implicit. Mark this as a follow-up.
+## Adding new magnets
 
-## Why not a custom SMTP endpoint?
+Edit `apps/maine-cannabis/src/pages/api/lead-capture.ts`, find
+the `MAGNETS` const, add a new entry:
 
-The MDG site uses Astro with `output: 'static'` (apps/maine-cannabis/
-astro.config.mjs). This configuration does NOT deploy `prerender = false`
-Astro endpoints as Vercel functions. So `src/pages/api/lead-capture.ts`
-exists in the repo but is dormant — Vercel serves the static build
-and ignores the SSR endpoint. A custom SMTP autoresponder would
-require either:
-  - Migrating the site to `output: 'hybrid'` (per-route SSR), or
-  - Adding a separate Vercel `functions/` directory, or
-  - Using Vercel Edge Functions
+```typescript
+'pos-comparison-2026': {
+  name: 'Maine Cannabis POS Comparison 2026',
+  pdfPath: '/downloads/maine-cannabis-pos-comparison.pdf',
+  softPitch: 'Looking for the right cannabis POS for your Maine dispensary? Our full comparison is at /guides/maine-cannabis-pos-comparison.',
+  recommendedCtaUrl: '/guides/maine-cannabis-pos-comparison',
+},
+```
 
-Both are larger architectural changes than the operator's 5-minute
-Formspree setup. The custom endpoint is kept in the repo for the day
-when MDG migrates to a hybrid build.
+Drop the PDF at `apps/maine-cannabis/public/downloads/<slug>.pdf`
+and the endpoint handles the rest — no code changes elsewhere.
 
 ## Related files
 
+- `apps/maine-cannabis/src/pages/api/lead-capture.ts` — the endpoint
+  (715 lines, includes magnet registry, email template, validation,
+  rate limiting, idempotency, GA4 event payload)
 - `apps/maine-cannabis/src/pages/download/first-timer-field-guide.astro`
-  — the landing page (form posts to Formspree)
+  — the landing page (form + client-side JS interception)
 - `apps/maine-cannabis/public/downloads/maine-first-timer-field-guide.pdf`
-  — the PDF that Formspree attaches
+  — the PDF that gets attached
 - `scripts/build/generate-first-timer-pdf.py` — re-generate the PDF
-  from the first-time buyer guide content
-- `apps/maine-cannabis/src/pages/api/lead-capture.ts` — dormant custom
-  autoresponder endpoint (not deployed under current `output: 'static'`)
-- `/tmp/lead-magnet-research-2026-07-05.md` — research brief on the
-  funnel strategy
+- `vercel.json` — the route config that exposes /api/lead-capture
+  to Vercel's edge
+- `/tmp/lead-magnet-research-2026-07-05.md` — research brief
+
+## The other 4 lead-capture forms (Formspree)
+
+If you prefer to keep the 4 operator-facing PDFs (download-checklist,
+compliance-self-assessment, founders-bible, metrc-reconciliation-checklist,
+roadmap) on Formspree for simplicity, no action needed. Formspree
+already creates submission records; configure the autoresponder in
+the Formspree dashboard for each if you want PDF delivery on those
+too. Future PDFs that should go through the new endpoint (e.g. a
+second consumer-facing magnet) just need a new entry in `MAGNETS`.
