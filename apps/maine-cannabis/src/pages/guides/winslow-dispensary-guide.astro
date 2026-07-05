@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Winslow is on the I-95 corridor in central Maine. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/waterville-dispensary-guide">Waterville dispensary guide</a> (~3 mi east on the Kennebec River bridge)</li>
-      <li><a href="/guides/augusta-dispensary-guide">Augusta dispensary guide</a> (~25 mi south)</li>
-      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a> (~12 mi north on US-201)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/winslow-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -238,16 +239,7 @@ const faqPageSchema = {
   </section>
 
   <div class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia National Park: A 2026 Visitor's Guide</a></li>
-      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries in 2026: 12 Stores Worth the Drive</a></li>
-      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a></li>
-      <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a></li>
-      <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Dispensary Guide</a></li>
-      <li><a href="/guides/maine-cannabis-events-2026">Maine Cannabis Events 2026</a></li>
-      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations</a></li>
-    </ul>
+    <AutoRelated currentPath="/blog/cannabis-friendly-maine-travel" currentTopics={['travel', 'tourism', 'lifestyle']} section="Lifestyle & Travel" limit={6} />
   </div>
 
   <section class="faq-section">

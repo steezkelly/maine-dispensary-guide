@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -154,39 +155,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Markets to Compare</h2>
-    <table aria-label="Nearby western Maine cannabis retail markets">
-      <thead>
-        <tr>
-          <th scope="col">Market</th>
-          <th scope="col">Dispensaries</th>
-          <th scope="col">Strategic position</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Bridgton</td><td>3+</td><td>Primary lakes-region cluster; competitive but proven demand.</td></tr>
-        <tr><td>Casco</td><td>2</td><td>Route 302 visibility; relevant to Sebago Lake traffic.</td></tr>
-        <tr><td>Windham</td><td>4-5</td><td>Greater Portland edge market with stronger year-round commercial traffic.</td></tr>
-        <tr><td>Naples / Sebago / Raymond / Standish</td><td>0-1 each</td><td>Cover as no-active-store towns and point readers to nearby licensed options.</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <div class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
-      <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a></li>
-      <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
-      <li><a href="/guides/naples-dispensary-guide">Naples Dispensary Guide</a></li>
-      <li><a href="/guides/harrison-dispensary-guide">Harrison Dispensary Guide</a></li>
-      <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a></li>
-      <li><a href="/guides/standish-dispensary-guide">Standish Dispensary Guide</a></li>
-      <li><a href="/guides/sebago-dispensary-guide">Sebago Dispensary Guide</a></li>
-      <li><a href="/guides/gray-dispensary-guide">Gray Dispensary Guide</a></li>
-      <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
-      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
-    </ul>
+    <AutoRelated currentPath="/guides/western-maine-lakes-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </div>
 
   <section>

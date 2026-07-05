@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
 
@@ -352,13 +353,7 @@ Shift Supervisor:  _________________ Date: _______
     </div>
 
     <section class="related-guides">
-      <h2>Related Compliance Resources</h2>
-      <ul>
-        <li><a href="/guides/maine-metrc-compliance-guide">Maine METRC Compliance Guide</a> — Full seed-to-sale tracking requirements and METRC workflow</li>
-        <li><a href="/download/compliance-self-assessment">Maine Dispensary Compliance Self-Assessment</a> — 8-domain audit preparation checklist</li>
-        <li><a href="/guides/maine-cannabis-inventory-management">Maine Cannabis Inventory Management</a> — Best practices for stock control and ordering</li>
-        <li><a href="/guides/maine-dispensary-security">Maine Dispensary Security Requirements</a> — OCP facility security specifications</li>
-      </ul>
+      <AutoRelated currentPath="/download/metrc-reconciliation-checklist" currentTopics={[]} limit={6} />
     </section>
   </article>
 </Layout>

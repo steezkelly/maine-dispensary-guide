@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -71,13 +72,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </Callout>
 
   <section>
-    <h2>Nearby Dispensary Options</h2>
-    <ul>
-      <li><strong>Lewiston–Auburn (~10 mi northwest):</strong> Multiple dispensaries including Friend Jen and Co, Green Mile operators</li>
-      <li><strong>Brunswick (~15 mi south):</strong> Stone Coast Cannabis, Northern Belle Holistic</li>
-      <li><strong>Topsham (~15 mi south):</strong> Several options along the I-295 corridor</li>
-      <li><strong>Bath (~15 mi southwest):</strong> Highbrow and other operators</li>
-    </ul>
+    <AutoRelated currentPath="/guides/lisbon-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

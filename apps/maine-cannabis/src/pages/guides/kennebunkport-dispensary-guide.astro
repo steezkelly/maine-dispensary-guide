@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -105,15 +106,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/york-dispensary-guide">York Dispensary Guide</a></li>
-        <li><a href="/guides/kennebunk-dispensary-guide">Kennebunk Dispensary Guide</a></li>
-        <li><a href="/guides/wells-dispensary-guide">Wells Dispensary Guide</a></li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
-        <li><a href="/guides/eliot-dispensary-guide">Eliot Dispensary Guide</a></li>
-        <li><a href="/guides/ogunquit-dispensary-guide">Ogunquit Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/kennebunkport-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

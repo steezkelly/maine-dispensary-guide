@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -73,13 +74,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Bucksport is within the broader regional retail market:</p>
-    <ul>
-      <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a></li>
-      <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a></li>
-      <li><a href="/guides/orono-dispensary-guide">Orono dispensary guide</a></li>
-    </ul>
+    <AutoRelated currentPath="/guides/bucksport-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -145,13 +146,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/presque-isle-dispensary-guide">Presque Isle Dispensary Guide</a> — closest adult-use market to Caribou, 15-20 min south</li>
-        <li><a href="/guides/houlton-dispensary-guide">Houlton Dispensary Guide</a> — Aroostook county seat, 60 min south, medical only</li>
-        <li><a href="/guides/lifted-cannabis-maine">Lifted Cannabis Maine</a> — Houlton medical operator serving the southern St. John Valley</li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — statewide list of cannabis-allowed municipalities</li>
-      </ul>
+      <AutoRelated currentPath="/guides/caribou-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

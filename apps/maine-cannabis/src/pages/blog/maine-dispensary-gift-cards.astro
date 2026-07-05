@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -295,15 +296,7 @@ const faqPageSchema = {
   </section>
 
   <div class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries in 2026: 12 Stores Worth the Drive</a></li>
-      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Dispensary in Maine 2026</a></li>
-      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a></li>
-      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a></li>
-      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
-      <li><a href="/find-a-dispensary">Find a Dispensary in Maine</a></li>
-    </ul>
+    <AutoRelated currentPath="/blog/maine-dispensary-gift-cards" currentTopics={['gift-cards', 'consumer-guide', 'best-of']} section="Consumer Guide" limit={6} />
   </div>
 
   <section class="faq-section">

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -136,12 +137,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including White Mountain Craft Cannabis, The Glass Cook, and other Fryeburg storefronts</li>
-        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a> — town overview including adult-use rec operators on Portland Road</li>
-        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a> — nearby York County medical operator</li>
-      </ul>
+      <AutoRelated currentPath="/guides/great-atlantic-puffin-company" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

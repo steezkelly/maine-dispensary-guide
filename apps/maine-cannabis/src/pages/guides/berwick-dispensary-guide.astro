@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -106,14 +107,7 @@ const faqPageJsonLd = JSON.stringify({
     </section>
 
     <section>
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/kittery-dispensary-guide">Kittery</a> — 20 mi southeast, NH border market</li>
-        <li><a href="/guides/sanford-dispensary-guide">Sanford</a> — 15 mi north, York County interior</li>
-        <li><a href="/blog/best-maine-dispensaries-2026">Best Maine dispensaries 2026</a></li>
-        <li><a href="/guides/eliot-dispensary-guide">Eliot Dispensary Guide</a></li>
-        <li><a href="/guides/lebanon-dispensary-guide">Lebanon Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/berwick-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </section>
 
     <section>

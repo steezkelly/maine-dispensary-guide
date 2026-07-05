@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -101,14 +102,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section>
-    <h2>Nearby Dispensary Options</h2>
-    <p>For Limerick residents looking for more variety or adult-use options:</p>
-    <ul>
-      <li><strong>Bridgton (~18 mi east):</strong> Sweet Dirt Cannabis, Canuvo, Maine Only — all recreational</li>
-      <li><strong>Fryeburg (~20 mi north):</strong> The Glass Cook (recreational + glassblowing studio), Above All Greenery (medical)</li>
-      <li><strong>Buxton (~12 mi south):</strong> Hidden Greens (medical at 370 Narragansett Trail)</li>
-      <li><strong>Portland (~35 mi southeast):</strong> 15+ dispensaries spanning all product types and price points</li>
-    </ul>
+    <AutoRelated currentPath="/guides/limerick-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

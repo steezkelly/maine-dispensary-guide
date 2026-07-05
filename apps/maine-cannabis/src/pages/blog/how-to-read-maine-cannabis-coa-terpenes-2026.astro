@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -148,13 +149,7 @@ const faqItems = [
   </Callout>
 
   <section class="related-guides">
-    <h2>Related guides from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/blog/cannabis-terpenes-explained-maine-2026">Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common</a> — Article 1 of the terpene pillar</li>
-      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying cannabis in Maine: humidity, equipment, and cure</a> — covers terpene preservation during drying and curing (Article 3 of the pillar)</li>
-      <li><a href="/blog/best-live-rosin-maine">Best live rosin in Maine</a> — the concentrate format that most directly preserves the original terpene profile of the flower</li>
-      <li><a href="/guides/maine-ocp-license-map">Maine OCP license map and municipality directory</a> — find licensed testing facilities and dispensaries near you</li>
-    </ul>
+    <AutoRelated currentPath="/blog/how-to-read-maine-cannabis-coa-terpenes-2026" currentTopics={['terpenes', 'coa', 'compliance', 'consumer-guide']} section="Cannabis Science" limit={6} />
   </section>
 
   <Faq items={faqItems} />

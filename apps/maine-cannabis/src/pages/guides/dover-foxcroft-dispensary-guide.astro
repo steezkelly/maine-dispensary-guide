@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -120,18 +121,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/milo-dispensary-guide">Milo Dispensary Guide</a> — Piscataquis County interior (GreenLife at 19 Park St), 15 min south of Dover-Foxcroft</li>
-        <li><a href="/guides/dexter-dispensary-guide">Dexter Dispensary Guide</a> — Penobscot County interior (Puffers Place medical + lakefront rental on Puffers Pond), 30 min south of Dover-Foxcroft</li>
-        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — Penobscot County seat, 45 min south</li>
-        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a> — Penobscot County interior, 60 min northeast</li>
-        <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan Dispensary Guide</a> — Somerset County, west of Piscataquis</li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> — statewide list of cannabis-allowed municipalities</li>
-        <li><a href="/guides/baring-dispensary-guide">Baring Dispensary Guide</a></li>
-        <li><a href="/guides/fairfield-dispensary-guide">Fairfield Dispensary Guide</a></li>
-        <li><a href="/guides/medway-dispensary-guide">Medway Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/dover-foxcroft-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -136,16 +137,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section>
-    <h2>Nearby Dispensary Options</h2>
-    <p>For Damariscotta-area customers willing to drive further:</p>
-    <ul>
-      <li><strong>Boothbay (~25 min east):</strong> HIGHLY Cannaco (recreational at 638 Wiscasset Rd) — features a live viewing window into their grow room</li>
-      <li><strong>Woolwich (~20 min west):</strong> HIGHLY Cannaco (recreational)</li>
-      <li><strong>Wiscasset (~15 min west):</strong> Lincoln County seat with limited dispensary options</li>
-      <li><strong>Rockland (~35 min northeast):</strong> Highbrow (recreational at 696 Main), Scrimshaw (medical at 500 Main), Botany (recreational at 403 Main)</li>
-      <li><strong>Belfast (~50 min northeast):</strong> Bayside Bud Shack (rec+med), Botany (medical at 161 High St)</li>
-      <li><strong>Brunswick (~45 min southwest):</strong> Highbrow (medical at Topsham) and other rec options</li>
-    </ul>
+    <AutoRelated currentPath="/guides/damariscotta-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

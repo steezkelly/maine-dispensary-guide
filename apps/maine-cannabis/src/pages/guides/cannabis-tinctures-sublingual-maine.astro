@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -204,14 +205,7 @@ const tinctureFaqs = [
   </section>
 
   <section class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator &amp; Maine Dosing Guide</a> — dose framework for gummies, chocolates, beverages</li>
-      <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes &amp; Effects</a> — what linalool, myrcene, and other terpenes mean for tincture selection</li>
-      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Edibles Compliance Guide</a> — Title 28-B §703 statute citations and operator-side rules</li>
-      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — directory of licensed operators carrying tinctures</li>
-      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a> — market context for the consumer-facing products categories</li>
-    </ul>
+    <AutoRelated currentPath="/guides/cannabis-tinctures-sublingual-maine" currentTopics={['dosing', 'consumer-guide', 'consumption-methods']} section="Learn" limit={6} />
   </section>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> This guide is for educational purposes. It is not medical advice. Cannabis can interact with prescription medications — talk to a licensed clinician before adding cannabis to any health regimen. Maine dispensary tincture products are subject to the same Title 28-B §703 caps as edibles: 10mg THC per serving, 200mg per package. Always verify the labeled serving size and mg-per-ml with the operator before use.</p>

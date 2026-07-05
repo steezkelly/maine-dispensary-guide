@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -206,14 +207,7 @@ const topicalFaqs = [
   </section>
 
   <section class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures &amp; Sublingual Guide</a> — fastest-acting non-inhaled option for systemic effects</li>
-      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator &amp; Maine Dosing Guide</a> — gummy/chocolate dose framework</li>
-      <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes &amp; Effects</a> — terpenes added to topicals (linalool, menthol, camphor)</li>
-      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Edibles Compliance Guide</a> — Title 28-B §703 statute citations and operator-side rules</li>
-      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — directory of licensed operators carrying topicals</li>
-    </ul>
+    <AutoRelated currentPath="/guides/cannabis-topicals-maine" currentTopics={['consumer-guide', 'consumption-methods', 'wellness']} section="Learn" limit={6} />
   </section>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> This guide is for educational purposes. It is not medical advice. Cannabis topicals are not FDA-approved to diagnose, treat, cure, or prevent any disease. If you have a specific medical condition (skin condition, chronic pain, arthritis), talk to a licensed clinician before adding cannabis topicals to your regimen. Cannabis can interact with prescription medications metabolized by the CYP450 system. If you are pregnant, breastfeeding, or subject to drug testing, talk to your doctor before using any cannabis product, including topicals.</p>

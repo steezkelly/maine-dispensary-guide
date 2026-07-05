@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -287,14 +288,7 @@ const faqPageJsonLd = JSON.stringify({
     </section>
 
     <section class="related-guides">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/blog/maine-dispensary-how-to-open">How to Open a Maine Dispensary in 2026</a> — Step-by-step licensing process from municipal approval to opening day</li>
-        <li><a href="/blog/maine-cannabis-microbusiness-license-2026">Maine Microbusiness License Guide</a> — Lower-capital licensing option for social equity applicants</li>
-        <li><a href="/guides/maine-dispensary-license">Maine Dispensary License Requirements</a> — Full compliance checklist for adult-use dispensaries</li>
-        <li><a href="/guides/maine-cannabis-funding-guide">Maine Cannabis Funding Guide</a> — Capital sources and investor expectations for Maine operators</li>
-        <li><a href="/guides/maine-cannabis-real-estate">Maine Cannabis Real Estate</a> — Finding compliant locations and negotiating cannabis-friendly leases</li>
-      </ul>
+      <AutoRelated currentPath="/blog/maine-cannabis-social-equity-program-2026" currentTopics={['social-equity', 'licensing', 'policy', 'start-here']} section="Policy & Legislation" limit={6} />
     </section>
 
     <div class="content-verification">

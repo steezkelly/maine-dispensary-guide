@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -45,13 +46,7 @@ const faqPageJsonLd = JSON.stringify({"@context": "https://schema.org", "@type":
     <p>Botany is a Midcoast-focused operator with recreational storefront on Main Street, Rockland and medical operation in Belfast (161 High St). Their five-category feeling system (Up, Relaxed, Focused, Social, Balanced) helps customers choose by intended effect rather than strain name.</p>
   </section>
 
-  <section><h2>Nearby Dispensary Options</h2>
-    <ul>
-      <li><strong>Camden (~5 mi north):</strong> No dispensaries in Camden — Rockland is the nearest option</li>
-      <li><strong>Belfast (~8 mi south):</strong> Stones Throw Cannabis (medical), Botany (medical, 161 High St)</li>
-      <li><strong>Damariscotta (~12 mi northeast):</strong> Cannabis Cured (rec), Above & Beyond Cannabis (med)</li>
-      <li><strong>Bath (~17 mi west):</strong> Highbrow (rec + med), Sinsemilla (rec)</li>
-    </ul>
+  <section><AutoRelated currentPath="/guides/rockland-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -68,12 +69,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Options</h2>
-    <ul>
-      <li><strong>Waterville (~25 mi south):</strong> Cannabis Haven, AstroTerf (medical and recreational)</li>
-      <li><strong>Lewiston–Auburn (~35 mi southwest):</strong> Multiple dispensaries spanning medical and recreational markets</li>
-      <li><strong>Bridgton (~25 mi southeast):</strong> Sweet Dirt Cannabis, Canuvo (recreational)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/farmington-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

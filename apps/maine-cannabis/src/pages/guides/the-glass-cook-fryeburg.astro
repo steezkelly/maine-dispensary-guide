@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -123,11 +124,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including The Glass Cook, White Mountain Craft Cannabis, Puffin Co. medical, and Above All Greenery North</li>
-        <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — broader edible options including Cured's products and other Maine-made edibles</li>
-      </ul>
+      <AutoRelated currentPath="/guides/the-glass-cook-fryeburg" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

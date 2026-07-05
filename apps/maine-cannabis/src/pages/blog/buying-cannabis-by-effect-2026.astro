@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -120,13 +121,7 @@ const faqItems = [
   </Callout>
 
   <section class="related-guides">
-    <h2>Related guides from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/blog/cannabis-terpenes-explained-maine-2026">Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common</a> — Article 1 of the terpene pillar</li>
-      <li><a href="/blog/how-to-read-maine-cannabis-coa-terpenes-2026">How to Read a Maine Cannabis COA for Terpenes</a> — Article 2 of the terpene pillar</li>
-      <li><a href="/blog/terpene-preservation-drying-curing-2026">Terpene Preservation During Drying and Curing</a> — Article 3 of the terpene pillar</li>
-      <li><a href="/blog/best-maine-dispensaries-2026">Best dispensaries in Maine 2026</a> — the operators that publish terpene data and train budtenders to read COAs</li>
-    </ul>
+    <AutoRelated currentPath="/blog/buying-cannabis-by-effect-2026" currentTopics={['terpenes', 'selection', 'indica-sativa-myth', 'consumer-guide']} section="Cannabis Science" limit={6} />
   </section>
 
   <Faq items={faqItems} />

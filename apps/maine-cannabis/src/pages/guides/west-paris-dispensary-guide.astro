@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>West Paris is on the Route 26 corridor in the western Maine foothills. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/bethel-dispensary-guide">Bethel dispensary guide</a> (~10 mi north on Route 26)</li>
-      <li><a href="/guides/norway-dispensary-guide">Norway dispensary guide</a> (~10 mi southeast)</li>
-      <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg dispensary guide</a> (~25 mi southwest)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/west-paris-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

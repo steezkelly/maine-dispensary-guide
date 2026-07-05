@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -127,14 +128,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section>
-    <h2>Nearby Dispensary Options</h2>
-    <ul>
-      <li><strong>Newport (~20 min east):</strong> Gram's Five & Dime (rec + med), Karma Cannabis, Brothers Cannabis</li>
-      <li><strong>Dover-Foxcroft (~30 min north):</strong> See <a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft guide</a> — dispensary count is "uncertain" as of mid-2026 per primary-source spot-check (the earlier MDG guide's "Dab Bar operating since 2020" claim came from a now-parked dabbars.org placeholder and was retracted; verify directly with the Piscataquis County Chamber before traveling).</li>
-      <li><strong>Milo (~30 min north):</strong> GreenLife Recreational Dispensary (opened April 2023 per Piscataquis Observer)</li>
-      <li><strong>Bangor (~45 min east):</strong> Multiple dispensary options including Curaleaf and others</li>
-      <li><strong>Skowhegan (~45 min southwest):</strong> Nuggie's Cannabis, ReMaine Humble Farms, Terp Valley Farms delivery</li>
-    </ul>
+    <AutoRelated currentPath="/guides/dexter-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

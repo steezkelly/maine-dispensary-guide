@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -188,14 +189,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/blog/best-maine-edibles-2026">Best Maine Edibles 2026</a> — operator reviews and product recommendations for Maine consumers</li>
-        <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Cannabis Edibles Compliance</a> — operator-facing compliance guide for Maine edible producers</li>
-        <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes and Their Effects</a> — research-grade review of terpenes and the entourage effect</li>
-        <li><a href="/guides/maine-cannabis-product-testing-guide">Maine Cannabis Product Testing Guide</a> — how to read Certificates of Analysis (COAs)</li>
-        <li><a href="/find-a-dispensary">Find a Dispensary in Maine</a> — dispensary finder</li>
-      </ul>
+      <AutoRelated currentPath="/guides/cannabis-edible-dose-calculator-maine" currentTopics={['dosing', 'consumer-guide']} section="Learn" limit={6} />
     </div>
   </section>
 

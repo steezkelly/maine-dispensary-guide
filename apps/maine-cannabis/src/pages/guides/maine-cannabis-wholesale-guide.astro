@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import authors from '../../data/authors.json';
@@ -472,12 +473,7 @@ const topics = ["business", "wholesale", "cultivation", "operations"];
     </section>
 
     <section>
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/blog/maine-cannabis-cultivation-license-2026">Maine Cannabis Cultivation License Guide</a> — Licensing requirements, tiers, and the path from application to harvest</li>
-        <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">Cannabis Delivery Business in Maine</a> — How delivery operators source product and serve opt-out municipalities</li>
-        <li><a href="/guides/maine-dispensary-license">Dispensary License Guide</a> — Opening a retail cannabis store in Maine</li>
-      </ul>
+      <AutoRelated currentPath="/guides/maine-cannabis-wholesale-guide" currentTopics={['business', 'wholesale', 'cultivation', 'operations']} section="Business & Operations" limit={6} />
     </section>
 
     <section class="further-reading">

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -119,17 +120,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/white-mountain-craft-cannabis">White Mountain Craft Cannabis</a> — full operator profile (Fryeburg, Mount Washington Valley)</li>
-        <li><a href="/guides/the-glass-cook-fryeburg">The Glass Cook</a> — full operator profile (Fryeburg, medical + glassblowing)</li>
-        <li><a href="/guides/great-atlantic-puffin-company">Great Atlantic Puffin Co.</a> — full operator profile (medical Fryeburg + adult-use Bridgton)</li>
-        <li><a href="/guides/above-all-greenery-dispensary">Above All Greenery (Fryeburg)</a> — in-house-cultivation medical operator</li>
-        <li><a href="/guides/limerick-dispensary-guide">Limerick Dispensary Guide</a></li>
-        <li><a href="/guides/bridgton-dispensary-guide">Bridgton Dispensary Guide</a></li>
-        <li><a href="/guides/brownfield-dispensary-guide">Brownfield Dispensary Guide</a></li>
-        <li><a href="/guides/baldwin-dispensary-guide">Baldwin Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/fryeburg-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

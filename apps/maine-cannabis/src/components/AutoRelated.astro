@@ -1,0 +1,141 @@
+---
+/**
+ * AutoRelated — dynamic related-content block.
+ *
+ * Replaces hand-rolled <ul> Related Guides sections across town guides,
+ * blog posts, and operator/consumer guides.
+ *
+ * Scoring:
+ *  - 2 points per topic match
+ *  - 3 points per section match (e.g., "City Guides" → other "City Guides")
+ *  - For town guides, region-topic match acts as geographic-peer signal
+ *
+ * Data: src/data/autoRelatedData.json is auto-generated at build time from
+ * the routes directory. The component does no manual maintenance.
+ */
+import autoRelatedData from '../data/autoRelatedData.json';
+
+interface Props {
+  currentPath: string;
+  currentTopics: string[];
+  section?: string;
+  limit?: number;  // default 5
+}
+
+const { currentPath, currentTopics = [], section = '', limit = 5 } = Astro.props;
+
+const ALL_ITEMS = autoRelatedData.items as Array<{
+  title: string;
+  section: string;
+  topics: string[];
+  url: string;
+}>;
+
+// Always-include essentials (cross-cluster bridges)
+const ESSENTIAL_URLS = [
+  '/guides/maine-cannabis-opt-in-tracker',
+  '/learn',
+  '/about/corrections',
+];
+
+function scoreItem(item: typeof ALL_ITEMS[number]): number {
+  if (item.url === currentPath) return -1;
+  let score = 0;
+  for (const topic of item.topics) {
+    if (currentTopics.includes(topic)) score += 2;
+  }
+  if (item.section && section && item.section === section) score += 3;
+  return score;
+}
+
+const scored = ALL_ITEMS
+  .map(item => ({ item, score: scoreItem(item) }))
+  .filter(x => x.score > 0)
+  .sort((a, b) => b.score - a.score);
+
+const top = scored.slice(0, limit).map(x => x.item);
+
+// Add 1-2 essentials that aren't already in the top results
+const topUrls = new Set(top.map(x => x.url));
+const missingEssentials = ALL_ITEMS.filter(i => ESSENTIAL_URLS.includes(i.url) && !topUrls.has(i.url));
+const finalItems = [
+  ...top,
+  ...missingEssentials.slice(0, Math.min(2, Math.max(0, limit - top.length)))
+];
+
+const sectionTitle = section === 'City Guides' ? 'Nearby Towns & Related Guides' :
+                    section === 'Consumer Guide' || section === 'Consumer' || section === 'Learn' ? 'Related Consumer Guides' :
+                    section?.toLowerCase().includes('blog') ? 'Related Blog Posts & Guides' :
+                    'Related Guides';
+---
+
+<aside class="auto-related" aria-label={sectionTitle}>
+  <h2>{sectionTitle}</h2>
+  <ul class="auto-related-list">
+    {finalItems.map(item => (
+      <li>
+        <a href={item.url}>
+          <span class="auto-related-title">{item.title}</span>
+          <span class="auto-related-section">{item.section}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<style>
+  .auto-related {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(88, 129, 87, 0.05);
+    border-radius: 1rem;
+  }
+  .auto-related h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0 0 1.25rem;
+  }
+  .auto-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+  .auto-related-list li {
+    margin: 0;
+  }
+  .auto-related-list a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface, white);
+    border: 1px solid var(--color-border, #e2e2e0);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .auto-related-list a:hover {
+    border-color: var(--color-primary, #588b58);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(13, 78, 80, 0.06);
+  }
+  .auto-related-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text, #1a1a1a);
+    line-height: 1.4;
+  }
+  .auto-related-section {
+    font-size: 0.75rem;
+    color: var(--color-text-light, #6b6b6b);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  @media (max-width: 600px) {
+    .auto-related-list { grid-template-columns: 1fr; }
+  }
+</style>

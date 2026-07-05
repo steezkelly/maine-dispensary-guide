@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -231,14 +232,7 @@ const coaFaqs = [
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes & Effects — Maine Guide</a></li>
-        <li><a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures & Sublingual Use — Maine Guide</a></li>
-        <li><a href="/guides/cannabis-topicals-maine">Cannabis Topicals & CBD Skin Products — Maine Guide</a></li>
-        <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator — Maine</a></li>
-        <li><a href="/guides/maine-cannabis-edibles-compliance">Cannabis Edibles Compliance — Maine Operator Guide</a></li>
-      </ul>
+      <AutoRelated currentPath="/guides/cannabis-coa-maine-how-to-read" currentTopics={['consumer-guide', 'cannabis-science', 'lab-testing', 'dosing']} section="Learn" limit={6} />
     </div>
   </section>
 

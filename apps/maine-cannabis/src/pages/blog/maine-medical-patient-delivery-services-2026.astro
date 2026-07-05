@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -437,14 +438,7 @@ const faqPageJsonLd = JSON.stringify({
     </section>
 
     <section class="related-guides">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Program Guide</a> — Complete guide to becoming a registered caregiver, plant limits, and patient relationships</li>
-        <li><a href="/guides/maine-cannabis-delivery-rules">Cannabis Delivery Rules in Maine</a> — OCP requirements for licensed delivery operations, vehicle security, and manifest documentation</li>
-        <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">How to Start a Cannabis Delivery Business in Maine</a> — Business licensing, costs, and market opportunity for delivery entrepreneurs</li>
-        <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a> — Full OCP regulatory framework for Maine cannabis businesses</li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Municipal Opt-In Tracker</a> — See which Maine towns allow dispensaries and which have opted out, affecting delivery access</li>
-      </ul>
+      <AutoRelated currentPath="/blog/maine-medical-patient-delivery-services-2026" currentTopics={['medical', 'operations', 'compliance']} section="Medical Cannabis" limit={6} />
     </section>
 
     <div class="content-verification">

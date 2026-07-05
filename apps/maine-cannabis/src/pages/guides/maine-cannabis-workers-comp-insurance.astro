@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -228,13 +229,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/maine-cannabis-business-insurance">Maine Cannabis Business Insurance</a> — general liability, product liability, cyber</li>
-      <li><a href="/guides/maine-cannabis-staffing-licensing">Maine Cannabis Staff Licensing (IIC/AIC)</a> — employee license requirements</li>
-      <li><a href="/guides/maine-cannabis-hiring">Maine Cannabis Hiring & Staffing</a> — building your team</li>
-      <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations</a> — full OCP framework</li>
-    </ul>
+    <AutoRelated currentPath="/guides/maine-cannabis-workers-comp-insurance" currentTopics={['finance']} section="Operations & Technology" limit={6} />
   </section>
   
   <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>

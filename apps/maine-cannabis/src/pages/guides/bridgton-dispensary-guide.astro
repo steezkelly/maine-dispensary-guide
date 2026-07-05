@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 
@@ -155,14 +156,7 @@ const faqPageJsonLd = JSON.stringify({
     <p>The seasonal multiplier is significant. Lakes Region communities see population increases of 30-50% during summer months when seasonal residents arrive and tourists visit. A well-positioned operator captures both the consistent year-round base and the seasonal surge — a dual revenue stream that single-market towns cannot match.</p>
 
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/great-atlantic-puffin-company">Great Atlantic Puffin Co.</a> — full operator profile (adult-use Bridgton + medical Fryeburg)</li>
-        <li><a href="/guides/maine-cannabis-delivery-rules">Maine Cannabis Delivery Rules</a></li>
-        <li><a href="/guides/maine-cannabis-zoning-requirements">Zoning Requirements in Maine</a></li>
-        <li><a href="/guides/windham-dispensary-guide">Windham Dispensary Guide</a></li>
-        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Guide</a></li>
-      </ul>
+      <AutoRelated currentPath="/guides/bridgton-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

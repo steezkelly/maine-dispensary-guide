@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -72,15 +73,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/420-mules-bar-harbor">420 Mules (Bar Harbor)</a> — Mount Desert Island medical cannabis delivery service</li>
-        <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a></li>
-        <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a></li>
-        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
-        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
-        <li><a href="/guides/southwest-harbor-dispensary-guide">Southwest Harbor Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/bar-harbor-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

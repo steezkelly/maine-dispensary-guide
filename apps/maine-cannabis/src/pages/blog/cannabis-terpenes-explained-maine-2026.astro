@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -163,13 +164,7 @@ const faqItems = [
   </Callout>
 
   <section class="related-guides">
-    <h2>Related guides from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying cannabis in Maine: humidity, equipment, and cure</a> — covers terpene preservation during the drying and curing process</li>
-      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide 2026</a> — covers cultivar selection and the basics of growing for terpene expression</li>
-      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor cannabis grow setup and cost for Maine 2026</a> — covers environmental control and how it affects terpene retention</li>
-      <li><a href="/blog/best-live-rosin-maine">Best live rosin in Maine</a> — the concentrate format that most directly preserves the original terpene profile of the flower</li>
-    </ul>
+    <AutoRelated currentPath="/blog/cannabis-terpenes-explained-maine-2026" currentTopics={['terpenes', 'cannabis-science', 'consumer-guide']} section="Cannabis Science" limit={6} />
   </section>
 
   <Faq items={faqItems} />

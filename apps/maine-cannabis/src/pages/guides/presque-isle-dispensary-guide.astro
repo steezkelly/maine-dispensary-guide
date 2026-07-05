@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -70,15 +71,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/caribou-dispensary-guide">Caribou Dispensary Guide</a> — medical-only market, 2 dispensaries per The County</li>
-        <li><a href="/guides/houlton-dispensary-guide">Houlton Dispensary Guide</a></li>
-        <li><a href="/guides/calais-dispensary-guide">Calais Dispensary Guide</a></li>
-        <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a></li>
-        <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
-        <li><a href="/guides/baring-dispensary-guide">Baring Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/presque-isle-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

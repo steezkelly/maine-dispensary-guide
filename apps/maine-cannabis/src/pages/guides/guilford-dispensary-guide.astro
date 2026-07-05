@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Guilford is on the Route 15 corridor between Dover-Foxcroft and Greenville. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/dover-foxcroft-dispensary-guide">Dover-Foxcroft dispensary guide</a> (~8 mi east on Route 15)</li>
-      <li><a href="/guides/greenville-dispensary-guide">Greenville dispensary guide</a> (~30 mi north on Route 15)</li>
-      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a> (~35 mi southwest)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/guilford-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

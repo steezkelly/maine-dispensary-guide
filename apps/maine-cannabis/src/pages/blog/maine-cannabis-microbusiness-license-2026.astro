@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import authors from '../../data/authors.json';
@@ -622,17 +623,7 @@ const topics = ["licensing", "microbusiness", "small-business"];
     </Callout>
 
     <section>
-      <h2>Related Guides</h2>
-      <p>If you're exploring the microbusiness license path, you'll likely want information about related topics and alternative approaches.</p>
-      
-      <div class="related-guides">
-        <ul>
-          <li><a href="/guides/maine-cannabis-cultivation-guide">Cannabis Cultivation Guide</a> — Complete operations guide for Maine cannabis cultivators including methods, facility setup, and harvest protocols for all tier levels</li>
-          <li><a href="/guides/maine-dispensary-license">Dispensary License Guide</a> — OCP licensing requirements and application process for dispensary operators seeking retail authorization</li>
-          <li><a href="/guides/maine-cannabis-funding-guide">Cannabis Business Funding</a> — Financing options for Maine cannabis businesses including SBA loans, private investors, and alternative lending</li>
-          <li><a href="/guides/maine-cannabis-real-estate">Cultivation Real Estate</a> — Finding and evaluating properties for cannabis cultivation operations including zoning considerations and facility requirements</li>
-          <li><a href="/guides/maine-dispensary-costs">Business Cost Breakdown</a> — Detailed cost analysis for opening and operating a cannabis business in Maine across all license types</li>
-        </ul>
+      <AutoRelated currentPath="/blog/maine-cannabis-microbusiness-license-2026" currentTopics={['licensing', 'microbusiness', 'small-business']} section="Licensing" limit={6} />
       </div>
     </section>
 

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -75,12 +76,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Turner is within the broader regional retail market:</p>
-    <ul>
-      <li><a href="/guides/lewiston-dispensary-guide">Lewiston dispensary guide</a></li>
-      <li><a href="/guides/auburn-dispensary-guide">Auburn dispensary guide</a></li>
-    </ul>
+    <AutoRelated currentPath="/guides/turner-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

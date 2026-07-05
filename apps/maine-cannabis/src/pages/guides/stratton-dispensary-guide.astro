@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Stratton is the western Maine mountains' retail anchor. If you do not find what you want at the in-town store, these nearby markets are within a reasonable drive:</p>
-    <ul>
-      <li><a href="/guides/farmington-dispensary-guide">Farmington dispensary guide</a> (~30 mi east on Route 16)</li>
-      <li><a href="/guides/carrabassett-valley-dispensary-guide">Carrabassett Valley dispensary guide</a> (~15 mi north)</li>
-      <li>Kingfield (no dispensary in town yet — nearest options in surrounding towns) (~8 mi east)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/stratton-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -94,12 +95,7 @@ const faqPageJsonLd = JSON.stringify({
     </section>
 
     <section>
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/brunswick-dispensary-guide">Brunswick dispensary guide</a> — 8 mi north, 2 adult-use stores, larger market</li>
-        <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> — northern Maine hub, 6 adult-use stores in metro</li>
-        <li><a href="/blog/best-maine-dispensaries-2026">Best Maine dispensaries 2026</a> — region-by-region picks</li>
-      </ul>
+      <AutoRelated currentPath="/guides/bath-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </section>
 
     <section>

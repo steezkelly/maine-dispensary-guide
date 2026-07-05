@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -82,15 +83,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a></li>
-        <li><a href="/guides/brownfield-dispensary-guide">Brownfield Dispensary Guide</a></li>
-        <li><a href="/guides/farmington-dispensary-guide">Farmington Dispensary Guide</a></li>
-        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
-        <li><a href="/guides/lovell-dispensary-guide">Lovell Dispensary Guide</a></li>
-        <li><a href="/guides/newry-dispensary-guide">Newry Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/bethel-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

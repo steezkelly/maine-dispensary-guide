@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -135,13 +136,7 @@ const faqItems = [
   </Callout>
 
   <section class="related-guides">
-    <h2>Related guides from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/guides/maine-dispensary-license">Maine dispensary license application guide</a></li>
-      <li><a href="/guides/maine-ocp-license-map">Maine OCP license map and municipality directory</a></li>
-      <li><a href="/guides/maine-cannabis-opt-in-tracker">Maine cannabis opt-in tracker: {activeMunicipalities} municipalities</a></li>
-      <li><a href="/guides/maine-cannabis-taxes-2026">Maine cannabis taxes 2026: adult-use, medical, and 280E</a></li>
-    </ul>
+    <AutoRelated currentPath="/blog/maine-cannabis-gray-market-ocp-enforcement-2026" currentTopics={['policy', 'compliance', 'enforcement', 'gray-market']} section="Policy & Enforcement" limit={6} />
   </section>
 
   <Faq items={faqItems} />

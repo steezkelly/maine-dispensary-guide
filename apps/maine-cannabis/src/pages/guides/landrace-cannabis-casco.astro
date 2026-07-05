@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -125,13 +126,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/casco-dispensary-guide">Casco Dispensary Guide</a> — town overview including Landrace Cannabis and Blue Lobster</li>
-        <li><a href="/guides/naples-dispensary-guide">Naples Dispensary Guide</a> — nearby Sebago Lakes town</li>
-        <li><a href="/guides/raymond-dispensary-guide">Raymond Dispensary Guide</a> — neighboring Route 302 operator</li>
-        <li><a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region Dispensary Guide</a> — broader regional overview</li>
-      </ul>
+      <AutoRelated currentPath="/guides/landrace-cannabis-casco" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

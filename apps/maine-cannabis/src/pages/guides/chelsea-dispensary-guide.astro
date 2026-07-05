@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Chelsea is part of the greater Augusta metro area. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/augusta-dispensary-guide">Augusta dispensary guide</a> (~5 mi north)</li>
-      <li><a href="/guides/gardiner-dispensary-guide">Gardiner dispensary guide</a> (~10 mi south)</li>
-      <li><a href="/guides/hallowell-dispensary-guide">Hallowell dispensary guide</a> (~7 mi north)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/chelsea-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

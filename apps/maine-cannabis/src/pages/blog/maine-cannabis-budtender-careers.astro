@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -284,15 +285,7 @@ const faqPageSchema = {
   </section>
 
   <div class="further-reading">
-    <h2>Related Guides</h2>
-    <ul>
-      <li><a href="/guides/maine-dispensary-hiring">Maine Dispensary Hiring Guide</a></li>
-      <li><a href="/guides/maine-cannabis-staffing-licensing">Maine Cannabis Staffing & Licensing</a></li>
-      <li><a href="/blog/maine-dispensary-roi-what-to-expect-2026">Maine Dispensary ROI: What to Expect in 2026</a></li>
-      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License</a></li>
-      <li><a href="/guides/maine-dispensary-costs">Maine Dispensary Costs</a></li>
-      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries in 2026</a></li>
-    </ul>
+    <AutoRelated currentPath="/blog/maine-cannabis-budtender-careers" currentTopics={['careers', 'budtender', 'hiring']} section="Careers" limit={6} />
   </div>
 
   <section class="faq-section">

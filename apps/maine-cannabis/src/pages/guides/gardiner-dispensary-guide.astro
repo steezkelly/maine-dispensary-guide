@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -84,13 +85,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/healing-community-medco-gardiner">The Healing Community MEDCo</a> — full operator profile (Gardiner, Kennebec Valley)</li>
-        <li><a href="/guides/augusta-dispensary-guide">Augusta Dispensary Guide</a></li>
-        <li><a href="/guides/lisbon-dispensary-guide">Lisbon Dispensary Guide</a></li>
-        <li><a href="/guides/westbrook-dispensary-guide">Westbrook Dispensary Guide</a></li>
-      </ul>
+      <AutoRelated currentPath="/guides/gardiner-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

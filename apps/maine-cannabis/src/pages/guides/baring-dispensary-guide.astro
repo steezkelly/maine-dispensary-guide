@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Baring Plantation is at the eastern edge of the Route 1 corridor. If you do not find what you want at the in-town store, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/calais-dispensary-guide">Calais dispensary guide</a> (~5 mi north on US-1)</li>
-      <li><a href="/guides/columbia-dispensary-guide">Columbia dispensary guide</a> (~25 mi southwest on US-1)</li>
-      <li><a href="/guides/machias-dispensary-guide">Machias dispensary guide</a> (~55 mi southwest)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/baring-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

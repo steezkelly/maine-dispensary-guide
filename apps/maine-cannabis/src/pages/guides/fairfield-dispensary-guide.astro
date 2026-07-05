@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -73,13 +74,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Fairfield is within the broader regional retail market:</p>
-    <ul>
-      <li><a href="/guides/waterville-dispensary-guide">Waterville dispensary guide</a></li>
-      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a></li>
-      <li><a href="/guides/detroit-dispensary-guide">Detroit dispensary guide</a></li>
-    </ul>
+    <AutoRelated currentPath="/guides/fairfield-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

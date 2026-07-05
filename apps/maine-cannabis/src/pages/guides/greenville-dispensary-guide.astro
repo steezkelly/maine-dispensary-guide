@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,13 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Greenville is the retail anchor for the Moosehead region. If you do not find what you want at the in-town store, these nearby markets are within a reasonable drive:</p>
-    <ul>
-      <li><a href="/guides/guilford-dispensary-guide">Guilford dispensary guide</a> (~30 mi south on Route 15)</li>
-      <li><a href="/guides/skowhegan-dispensary-guide">Skowhegan dispensary guide</a> (~60 mi south)</li>
-      <li><a href="/guides/bangor-dispensary-guide">Bangor dispensary guide</a> (~80 mi southeast, the nearest big-city market)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/greenville-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

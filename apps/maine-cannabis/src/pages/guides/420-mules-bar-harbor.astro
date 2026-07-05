@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -129,12 +130,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a> — town-level overview of Mount Desert Island cannabis market</li>
-        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Midcoast and Down East dispensary guide for tourists and residents</li>
-        <li><a href="/blog/maine-medical-patient-delivery-services-2026">Maine Medical Patient Delivery Services 2026</a> — broader overview of Maine's medical delivery framework</li>
-      </ul>
+      <AutoRelated currentPath="/guides/420-mules-bar-harbor" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

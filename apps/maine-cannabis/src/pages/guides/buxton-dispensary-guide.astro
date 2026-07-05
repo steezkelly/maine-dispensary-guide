@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -104,15 +105,7 @@ const topics = ["city", "market"];
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/hidden-greens-dispensary">Hidden Greens Buxton — full operator profile</a></li>
-        <li><a href="/guides/biddeford-dispensary-guide">Biddeford Dispensary Guide</a></li>
-        <li><a href="/guides/saco-dispensary-guide">Saco Dispensary Guide</a></li>
-        <li><a href="/guides/limington-dispensary-guide">Limington Dispensary Guide</a></li>
-        <li><a href="/guides/biddeford-dispensary-guide">Hollis Dispensary Guide</a></li>
-        <li><a href="/guides/hollis-dispensary-guide">Hollis Dispensary Guide</a></li>
-    </ul>
+      <AutoRelated currentPath="/guides/buxton-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -75,13 +76,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Columbia is well-positioned along Route 1. If you do not find what you want at the in-town stores, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/calais-dispensary-guide">Calais dispensary guide</a> (~40 mi northeast, on the Canadian border)</li>
-      <li><a href="/guides/machias-dispensary-guide">Machias dispensary guide</a> (~30 mi southwest)</li>
-      <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> (~50 mi west, the nearest larger market)</li>
-    </ul>
+    <AutoRelated currentPath="/guides/columbia-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

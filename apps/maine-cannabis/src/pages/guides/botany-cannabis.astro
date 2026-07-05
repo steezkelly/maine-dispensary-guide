@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -135,13 +136,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/rockland-dispensary-guide">Rockland Dispensary Guide</a> — town overview including Botany, Highbrow, and Scrimshaw on Main Street</li>
-        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a> — nearest options for Camden (no dispensaries in Camden itself)</li>
-        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a> — Botany's Belfast medical location is one of several Waldo County options</li>
-        <li><a href="/guides/highbrow-cannabis">Highbrow Cannabis</a> — Botany's Main Street neighbor at 696 Main</li>
-      </ul>
+      <AutoRelated currentPath="/guides/botany-cannabis" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

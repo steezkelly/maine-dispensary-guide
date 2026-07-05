@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -120,11 +121,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/fryeburg-dispensary-guide">Fryeburg Dispensary Guide</a> — town overview including White Mountain Craft Cannabis, The Glass Cook, Puffin Co. medical, and Above All Greenery North</li>
-        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Maine adult-use dispensary guide</li>
-      </ul>
+      <AutoRelated currentPath="/guides/white-mountain-craft-cannabis" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

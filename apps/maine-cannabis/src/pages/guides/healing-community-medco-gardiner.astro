@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -133,11 +134,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/gardiner-dispensary-guide">Gardiner Dispensary Guide</a> — town overview including MEDCo, The Bud Bar, Gardiner 4Twenty, Wellness Connection, and Sinsemilla</li>
-        <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — how to get an MMMP card</li>
-      </ul>
+      <AutoRelated currentPath="/guides/healing-community-medco-gardiner" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

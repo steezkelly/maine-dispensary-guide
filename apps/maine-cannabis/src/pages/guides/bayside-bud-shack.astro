@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -126,12 +127,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/northport-dispensary-guide">Northport Dispensary Guide</a> — town-level overview</li>
-        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a> — nearby Waldo County operator</li>
-        <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia</a> — Maine Midcoast / Down East dispensary guide</li>
-      </ul>
+      <AutoRelated currentPath="/guides/bayside-bud-shack" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

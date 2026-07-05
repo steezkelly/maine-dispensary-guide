@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -131,12 +132,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/lincoln-dispensary-guide">Lincoln Dispensary Guide</a> — town overview including Just Baked, Blazin Trailz, Brothers Cannabis, and Experience Cannabis</li>
-        <li><a href="/guides/millinocket-dispensary-guide">Millinocket Dispensary Guide</a> — nearby I-95 operator</li>
-        <li><a href="/blog/best-maine-edibles-2026">Best Edibles in Maine 2026</a> — broader edible options across the state</li>
-      </ul>
+      <AutoRelated currentPath="/guides/just-baked-maine-lincoln" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 

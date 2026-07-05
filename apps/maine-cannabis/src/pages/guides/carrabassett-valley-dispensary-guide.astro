@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -74,11 +75,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
   </section>
 
   <section>
-    <h2>Nearby Dispensary Clusters</h2>
-    <p>Carrabassett Valley is close to several other small-town clusters. If you do not find what you want at the in-town stores, these nearby markets are a short drive:</p>
-    <ul>
-      <li><a href="/guides/farmington-dispensary-guide">Farmington dispensary guide</a></li>
-    </ul>
+    <AutoRelated currentPath="/guides/carrabassett-valley-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
   </section>
 
   <section>

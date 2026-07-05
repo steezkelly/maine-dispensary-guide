@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -252,16 +253,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section class="further-reading">
-    <h2>Related resources for Maine consumers</h2>
-    <ul>
-      <li><a href="/blog/cannabis-terpenes-explained-maine-2026">Cannabis Terpenes Explained: A Maine Consumer's Guide to the Six Most Common</a> — operator/consumer overview of the dominant terpenes on Maine menus</li>
-      <li><a href="/guides/maine-cannabis-product-testing-guide">Maine Cannabis Product Testing Guide</a> — how to read a Certificate of Analysis (COA)</li>
-      <li><a href="/blog/how-to-read-maine-cannabis-coa-terpenes-2026">How to Read a Maine Cannabis COA and Terpenes</a> — practical COA-reading walkthrough</li>
-      <li><a href="/guides/maine-cannabis-vendor-directory">Maine Cannabis Vendor Directory</a> — the four OCP-licensed testing labs (CATLab, MCR Labs, Nelson Analytical, Nova Analytic Labs)</li>
-      <li><a href="/blog/best-live-rosin-maine">Best Rosin in Maine 2026</a> — solventless concentrates with full terpene preservation</li>
-      <li><a href="/blog/best-maine-edibles-2026">Are Edibles Legal in Maine?</a> — full legality + dosing + COA context for edible products</li>
-      <li><a href="/learn">Consumer Guide hub</a> — first-visit prep, possession limits, where you can consume</li>
-    </ul>
+    <AutoRelated currentPath="/guides/cannabis-terpenes-effects-maine" currentTopics={['terpenes', 'consumer-guide', 'science']} section="Consumer Guide" limit={6} />
   </section>
 
   <section class="faq-section">

@@ -1,4 +1,5 @@
 ---
+import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -58,12 +59,7 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 
   <section>
     <div class="further-reading">
-      <h2>Related Guides</h2>
-      <ul>
-        <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a></li>
-        <li><a href="/guides/belfast-dispensary-guide">Belfast Dispensary Guide</a></li>
-        <li><a href="/guides/damariscotta-dispensary-guide">Damariscotta Dispensary Guide</a></li>
-      </ul>
+      <AutoRelated currentPath="/guides/boothbay-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
     </div>
   </section>
 
