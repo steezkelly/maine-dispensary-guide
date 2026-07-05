@@ -1,0 +1,154 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-05",
+  modifiedDate: "2026-07-05",
+  section: "Learn"
+};
+
+const topics = ["medical-cannabis", "consumer-guide", "reciprocity", "visiting-patient"];
+
+const reciprocityFaqs = [
+  { question: "Can I buy medical cannabis in Maine with an out-of-state medical card?", answer: "Yes, if your home state is on the Maine Office of Cannabis Policy (OCP) approved visiting-patients list. As of June 6, 2019, Maine no longer requires visiting patients to obtain certification from a Maine-based medical provider or to designate a Maine caregiver — you can present your home-state registry identification card (or equivalent documentation) at any Maine registered dispensary. The full list of approved states is maintained by OCP and is subject to revision." },
+  { question: "Which states does Maine accept medical cannabis cards from?", answer: "As of mid-2026, the OCP-approved visiting-patients list includes 28 states plus Washington DC: Alaska, Arizona, Arkansas, California, Connecticut, Florida, Hawaii, Illinois, Iowa, Maryland, Massachusetts, Michigan, Minnesota, Missouri, Montana, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Dakota, Oklahoma, Oregon, Rhode Island, Utah, Virginia, Vermont, Washington, and Washington DC. This list is subject to change; verify with OCP before traveling. The list does NOT include every state with a medical cannabis program — states must affirmatively authorize their residents to use their credentials out-of-state." },
+  { question: "How much medical cannabis can a visiting patient purchase in Maine?", answer: "A qualifying visiting patient may purchase up to 2.5 ounces of a combination of medical cannabis and cannabis products every 15 days while visiting Maine. This is the same per-15-day limit that applies to Maine medical patients under Title 22 §2425. Visiting patients should also verify that their home-state law does not impose a stricter limit on out-of-state purchases." },
+  { question: "Can a visiting patient buy from adult-use dispensaries too?", answer: "No — Maine visiting patient reciprocity is a medical-program benefit. To purchase at a Maine adult-use (recreational) dispensary, you need a valid government-issued photo ID showing you are 21 or older; an out-of-state medical card is not required. Maine adult-use dispensaries typically have different product selections, different dose caps, and a 14% retail excise tax on top of the 5.5% state sales tax. Visiting medical patients usually find the medical dispensaries offer better value (no adult-use excise tax) and higher-dose products." },
+  { question: "What documentation does a visiting patient need to bring?", answer: "You need (1) your state-issued medical cannabis registry identification card (or equivalent certification document), (2) a valid government-issued photo ID (driver's license or passport) from your home state, and (3) the ability to verify your home state authorizes out-of-state use. Some Maine dispensaries will also ask for a secondary contact number or a caregiver designation form. OCP and registered dispensaries may refuse service if credentials are suspect or insufficient." },
+  { question: "Do caregivers from other states have reciprocity in Maine?", answer: "No. Maine's reciprocity statute (Title 22 §2423-D) applies to visiting qualifying patients only, not to out-of-state caregivers. An out-of-state caregiver cannot purchase or transport cannabis in Maine on behalf of their home-state patient. If a visiting patient needs caregiver services in Maine, they must designate a Maine-registered caregiver through the standard process." },
+  { question: "What about adult-use reciprocity — can a non-resident buy at adult-use stores?", answer: "Yes. Maine's adult-use (Title 28-B) program permits any adult 21 or older with a valid government-issued photo ID to purchase cannabis from licensed adult-use stores, regardless of state of residence. There is no residency requirement for adult-use purchases. The same 2.5 oz possession limit applies (Title 28-B §1501). Maine does not impose a state-specific non-resident tax or registration — the 14% retail excise and 5.5% sales tax apply equally to residents and non-residents." },
+  { question: "Can I bring Maine cannabis home across state lines?", answer: "No. Transporting cannabis across state lines — including from Maine to a state with a legal medical program — is a federal crime under the Controlled Substances Act, regardless of state law. Some states have explicit 'reciprocity' or 'do not transport' statutes that make this clear at the state level as well. Maine-licensed dispensaries will advise against transporting any purchased cannabis out of state." },
+];
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Guides', href: '/all-guides' },
+  { label: 'Maine Out-of-State Patient Reciprocity', href: '/guides/maine-out-of-state-patient-reciprocity' },
+];
+---
+
+<Layout title="Out-of-State Medical Cannabis Patients in Maine: Reciprocity Guide (2026)" description="A primary-source-reviewed guide for out-of-state medical cannabis patients visiting Maine — the 28-state approved list, what to bring, 2.5 oz / 15-day purchase limit, and how Maine reciprocity compares to the adult-use (recreational) program." heroImage="/images/heroes/maine-out-of-state-patient-reciprocity-2026.jpg" article={article} topics={topics} breadcrumbs={breadcrumbs}>
+
+<article class="guide">
+  <header class="article-header">
+    <h1>Out-of-State Medical Cannabis Patients in Maine: A Reciprocity Guide (2026)</h1>
+    <p class="subtitle">If you hold a valid medical cannabis card from one of 28 states (plus DC), you can legally purchase medical cannabis at Maine registered dispensaries. Here is exactly what that means, what to bring, and how the limits work.</p>
+    <div class="byline">
+      <p><strong>By {article.author}.</strong> Reviewed by {article.reviewer.name}, {article.reviewer.jobTitle}. Published {article.publishDate}.</p>
+    </div>
+  </header>
+
+  <Callout title="Editorial standard" type="info">
+    Every claim in this guide is anchored to a primary source — the OCP visiting-patients page, Maine Revised Statutes Title 22 chapter 558-C, or Title 28-B for the adult-use program. The OCP list is subject to revision; verify your state's status directly with OCP before traveling. This guide is informational and does not constitute legal advice.
+  </Callout>
+
+  <section class="intro">
+    <h2>Who this guide is for</h2>
+    <p>You hold a valid medical cannabis card or certification from another US state, and you want to know whether you can use it to purchase medical cannabis while visiting Maine. The short answer is yes, with two conditions: (1) your home state must be on the Maine OCP approved visiting-patients list, and (2) your home state must authorize its residents to use their medical credentials out-of-state. The long answer, including the 28-state list, the 2.5 oz / 15-day limit, what to bring, and the difference between medical and adult-use dispensaries, follows below.</p>
+  </section>
+
+  <section>
+    <h2>1. The 28-state approved list</h2>
+    <p>Maine's Office of Cannabis Policy (OCP) maintains the canonical list of states whose medical cannabis credentials are accepted for use at Maine registered dispensaries. The current list, as published by OCP, includes 28 states plus Washington DC:</p>
+
+    <p>Alaska, Arizona, Arkansas, California, Connecticut, Florida, Hawaii, Illinois, Iowa, Maryland, Massachusetts, Michigan, Minnesota, Missouri, Montana, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Dakota, Oklahoma, Oregon, Rhode Island, Utah, Virginia, Vermont, Washington, and Washington DC.</p>
+
+    <p>The OCP list is "subject to revision" and has changed over time as states add or remove out-of-state authorization. The list is shorter than the total set of US states with medical cannabis programs because reciprocity requires BOTH states to opt in — Maine must accept out-of-state credentials, AND the patient's home state must affirmatively authorize its residents to use their credentials in another state. Several states with established medical programs have not authorized out-of-state use. (<a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients">OCP Visiting Patients page</a>, accessed 2026-07-05.)</p>
+
+    <Callout title="Verify your state before you travel" type="warning">
+      This list reflects OCP's published approvals as of 2026-07-05. States can be added or removed without notice. Verify your specific state's status directly on the OCP visiting-patients page (linked above) before planning a Maine trip around the assumption of reciprocity. If your state is not on the list, you can still purchase at Maine adult-use dispensaries as long as you are 21 or older with valid photo ID — but you'll pay adult-use prices and taxes.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>2. The legal basis: Title 22 §2423-D and PL 2019 ch. 209</h2>
+    <p>The statutory authority for Maine's medical cannabis reciprocity is <strong>Title 22 §2423-D</strong>, enacted by PL 2019, ch. 209 (LD 538). The 2019 statute made Maine's reciprocity genuinely reciprocal — before 2019, a visiting patient had to obtain certification from a Maine-based medical provider AND designate a Maine caregiver or dispensary, which was effectively impossible for short visits.</p>
+
+    <p>Title 22 §2423-D authorizes a visiting qualifying patient from another jurisdiction (one whose medical cannabis program OCP recognizes) to engage in the conduct authorized for a Maine qualifying patient — including purchasing at registered dispensaries — as long as the visiting patient possesses a valid medical cannabis certification from their home jurisdiction and a government-issued photo ID. The statute explicitly prohibits cultivation by visiting patients.</p>
+
+    <p>The statute was further amended by PL 2025, ch. 390 (the biennial budget bill) to update program administration references; the substantive visiting-patient rights are unchanged. (<a href="https://www.mainelegislature.org/legis/statutes/22/title22sec2423-D.html">Title 22 §2423-D</a>; <a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients">OCP Visiting Patients page</a>.)</p>
+  </section>
+
+  <section>
+    <h2>3. What to bring</h2>
+    <p>Visiting Maine dispensaries are required to verify your home-state medical cannabis credentials before selling to you. To make that process go smoothly:</p>
+
+    <ol>
+      <li><strong>Your state-issued medical cannabis patient credential.</strong> For most states this is a registry identification card or equivalent certification document. Some states issue digital cards (e.g., via an app); bring the digital copy on your phone AND a printed backup.</li>
+      <li><strong>Valid government-issued photo ID from your home state.</strong> Driver's license or passport. A Maine ID will not work — OCP requires the ID to be from the same jurisdiction as your medical credential.</li>
+      <li><strong>Proof of your home state's authorization.</strong> Some dispensaries will ask you to confirm your home state allows out-of-state use; the OCP-approved list is the verification source.</li>
+      <li><strong>Optional: a contact for your home-state caregiver or certifying provider.</strong> Maine dispensaries may ask for this for recordkeeping purposes.</li>
+    </ol>
+
+    <Callout title="What you should NOT bring" type="warning">
+      Do not transport cannabis across state lines into or out of Maine — that is a federal crime under the Controlled Substances Act regardless of either state's law. Do not bring cannabis on a plane, train, or bus crossing state lines (federal jurisdiction applies). Maine dispensaries will advise against transporting any purchased cannabis out of state, and OCP's guidance is explicit on this point.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>4. The 2.5 oz / 15-day purchase limit</h2>
+    <p>Under Title 22 §2425 and OCP guidance, a qualifying visiting patient may purchase up to <strong>2.5 ounces of a combination of medical cannabis and cannabis products every 15 days</strong> while visiting Maine. This is the same per-15-day limit that applies to Maine-resident medical patients.</p>
+
+    <p>The 2.5 oz is a combined total — flower, edibles, concentrates, and other products all count against it. Note that the OCP guidance also flags that "the cannabis and cannabis products available to patients in Maine may differ substantially from those products available and authorized for use in the visiting patient's state of residence." Product form, concentration, CBD minimum, and THC maximum allowable content are all governed by Maine's medical program rules, not the visiting patient's home state. (<a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients">OCP Visiting Patients page</a>.)</p>
+  </section>
+
+  <section>
+    <h2>5. Medical dispensaries vs adult-use dispensaries in Maine</h2>
+    <p>Maine operates two parallel retail systems, and the choice matters for visiting patients:</p>
+
+    <table aria-label="Maine medical vs adult-use dispensary comparison">
+      <thead>
+        <tr><th>Feature</th><th>Medical dispensary</th><th>Adult-use dispensary</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Who can buy</td><td>Maine medical card + visiting patient from approved state</td><td>Any adult 21+ with valid photo ID</td></tr>
+        <tr><td>Edible dose cap (per serving)</td><td>Per operator (medical program does not impose the §703(1)(F) cap)</td><td>10 mg THC (Title 28-B §703(1)(F))</td></tr>
+        <tr><td>Edible package cap</td><td>Per operator (often 100–250 mg THC/package)</td><td>200 mg THC (Title 28-B §703(1)(F))</td></tr>
+        <tr><td>Sales tax</td><td>5.5% Maine sales tax only</td><td>5.5% Maine sales tax + 14% adult-use excise tax (effective 2026)</td></tr>
+        <tr><td>Product range</td><td>Often higher-dose, RSO, full-spectrum; caregiver products</td><td>Standardized retail formats, broad selection, mass-market brands</td></tr>
+        <tr><td>Inventory tracking</td><td>METRC, medical program rules</td><td>METRC, adult-use program rules</td></tr>
+      </tbody>
+    </table>
+
+    <p>For visiting medical patients, the math generally favors medical dispensaries: no adult-use excise (saves 14%), higher-dose products per package, and access to caregiver and full-spectrum products the adult-use channel doesn't carry. The trade-off is selection — adult-use stores have larger footprints and more variety at standard doses.</p>
+  </section>
+
+  <section>
+    <h2>6. Caregivers, cultivation, and out-of-state transport</h2>
+    <p>Three things to be clear about, because the limits are commonly misunderstood:</p>
+
+    <ul>
+      <li><strong>Out-of-state caregivers do not have reciprocity.</strong> Title 22 §2423-D applies to visiting patients only. Your home-state caregiver cannot purchase or transport cannabis in Maine on your behalf. If you need caregiver services during a Maine visit, you must designate a Maine-registered caregiver through the standard process.</li>
+      <li><strong>Visiting patients cannot cultivate.</strong> The 2.5 oz / 15-day purchase limit is your only source of medical cannabis in Maine. Title 22 §2423-D explicitly prohibits cultivation by visiting patients.</li>
+      <li><strong>Do not transport Maine cannabis out of state.</strong> Even though your home state may have a legal medical program, transporting cannabis across state lines is a federal crime. The OCP guidance is explicit on this point. Plan to consume what you purchase within Maine.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>7. Frequently asked questions</h2>
+    <Faq items={reciprocityFaqs} />
+  </section>
+
+  <section class="related-content">
+    <h2>Continue reading</h2>
+    <ul>
+      <li><a href="/guides/maine-cannabis-caregiver-guide">Maine Cannabis Caregiver Program Guide</a> — Maine's caregiver program, including the 2025 caregiver trade-show sales law (LD 1840) and the 150-plant caregiver cultivation expansion (LD 1897).</li>
+      <li><a href="/guides/cannabis-microdosing-anxiety-maine">Cannabis Microdosing for Anxiety — Maine Guide</a> — research-anchored guide to low-dose cannabis for anxiety, including the Maine regulatory frame and a 14-day titration protocol.</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — how Maine's 14% adult-use retail excise tax and 5.5% sales tax stack for both medical and adult-use buyers.</li>
+      <li><a href="/learn">Maine Dispensary Guide Consumer Hub</a> — all consumer-facing guides in one place, including the COA walkthrough, tincture guide, and edible dose calculator.</li>
+      <li><a href="/about/corrections">Editorial Corrections Log</a> — every material correction to MDG content, documented with primary-source verification.</li>
+    </ul>
+  </section>
+
+  <AutoRelated currentPath="/guides/maine-out-of-state-patient-reciprocity" currentTopics={['medical-cannabis', 'consumer-guide', 'reciprocity', 'visiting-patient']} section="Learn" limit={6} />
+
+</article>
+
+</Layout>
