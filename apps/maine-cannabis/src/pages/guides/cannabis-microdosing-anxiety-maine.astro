@@ -1,0 +1,177 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Thalia Greene",
+  authorId: "thalia-greene",
+  reviewer: { name: "Calvin Waters", jobTitle: "Licensing & Compliance Analyst", id: "calvin-waters" },
+  authorTitle: "Cannabis Science Writer",
+  publishDate: "2026-07-05",
+  modifiedDate: "2026-07-05",
+  section: "Learn"
+};
+
+const topics = ["dosing", "anxiety", "microdosing", "consumer-guide"];
+
+const microdoseFaqs = [
+  { question: "What does 'microdosing cannabis' mean?", answer: "Microdosing means taking a sub-psychoactive or near-sub-psychoactive dose — typically 1 to 5 mg THC per dose, taken one to three times per day — with the goal of producing a therapeutic effect without a noticeable 'high.' The phrase is borrowed from psychedelic microdosing protocols but is well established in clinical cannabis practice; Dr. Dustin Sulak, an osteopathic physician based in Manchester and Falmouth, Maine, has published the most widely cited clinical protocol." },
+  { question: "Is cannabis microdosing legal in Maine?", answer: "Yes. Maine's adult-use cannabis program (Title 28-B) and medical cannabis program (Title 22 ch. 558-C) both permit low-dose cannabis use. Maine does not impose a separate legal floor on dose — the 10 mg/serving and 200 mg/package caps in Title 28-B §703(1)(F) are maximums, not minimums. Buyers 21+ with valid photo ID may purchase cannabis at any licensed adult-use dispensary; medical patients with a Maine medical card may purchase at registered dispensaries." },
+  { question: "How much THC should a beginner take for anxiety?", answer: "If you have not used cannabis for anxiety before, the conservative clinical starting point is 1 to 2.5 mg THC per dose, taken once daily for two to three days before evaluating effect. Dr. Dustin Sulak's published protocol starts at 1 mg THC two to three times daily, increasing to 2 mg if needed, with most patients falling in a 1 to 5 mg daily window. Do not drive or operate machinery until you know how you respond. This is informational only — consult a Maine-licensed healthcare provider for personal guidance." },
+  { question: "What does the research actually say about cannabis and anxiety?", answer: "Two peer-reviewed findings anchor the field: (1) Cannabidiol (CBD), the non-psychoactive cannabinoid, has been shown in a 2011 double-blind randomized controlled trial to reduce simulated public-speaking anxiety in treatment-naïve social phobia patients at a 600 mg single dose (Bergamaschi et al., Neuropsychopharmacology 2011;36:1219–1226). (2) THC shows a biphasic dose-response: low doses may produce subjective relief, but higher doses consistently increase anxiety and panic (NIDA Cannabis Research Report). This biphasic finding is the clinical rationale for microdosing THC specifically — the goal is to remain on the low-dose side of the curve. No published randomized controlled trial has tested cannabis microdosing (1–5 mg THC) specifically for generalized anxiety disorder in human subjects." },
+  { question: "What is the best product type for microdosing in Maine dispensaries?", answer: "Tinctures (sublingual) are the easiest format to titrate precisely because they use a calibrated dropper and absorb through the mouth's mucous membranes in 15–30 minutes — fast enough to evaluate effect, short enough to adjust dose within a day. Maine adult-use dispensaries commonly stock 2.5 mg/ml THC tinctures and balanced THC:CBD tinctures in 1:1, 5:1, and 10:1 ratios. Low-dose gummies (1 mg, 2.5 mg, or 5 mg per piece) are widely available and offer more precise per-piece dose than tinctures but longer onset (60–120 minutes)." },
+  { question: "Should I use THC, CBD, or a combination?", answer: "CBD alone (without THC) has the strongest evidence base for anxiety at present, anchored by the Bergamaschi 2011 and Crippa 2011 neuroimaging studies. Pure THC carries the biphasic risk: low doses may help, higher doses reliably worsen anxiety. Many clinicians and dispensary staff in Maine recommend balanced THC:CBD ratios (e.g., 5 mg CBD + 2.5 mg THC, or 10 mg CBD + 2.5 mg THC) for first-time anxiety users because the CBD may buffer THC's anxiogenic effects at higher doses. There is no published head-to-head RCT comparing THC-only vs. CBD-only vs. balanced products for generalized anxiety — choice should be individualized with a healthcare provider." },
+  { question: "Is anxiety a qualifying condition for a Maine medical cannabis card?", answer: "Maine's medical cannabis program (Title 22 ch. 558-C) uses a provider-discretion model rather than a closed list of qualifying conditions. A Maine-licensed medical provider can certify a patient for medical cannabis if the provider determines cannabis is clinically appropriate for the patient's condition and documents the basis. Anxiety, PTSD, chronic pain, and many other conditions have been certified this way. Patients seeking certification should consult a Maine-licensed provider — most adult-use dispensaries can refer patients to certifying clinicians. The Office of Cannabis Policy (OCP) does not endorse cannabis as a treatment for any specific medical condition; OCP's role is product safety and program administration." },
+  { question: "How long does it take for a microdose to work?", answer: "Onset depends on the consumption method. Sublingual tincture: 15–30 minutes. Inhaled (vaporizer): 5–10 minutes, but inhaled dosing is harder to titrate to sub-psychoactive levels and is not generally recommended for first-time microdosers. Edible (gummy, capsule, lozenge): 60–120 minutes. For first-time anxiety use, sublingual tincture or low-dose edible is the preferred format because the onset is predictable and short enough to allow same-day titration." },
+  { question: "Can microdosing cause a positive drug test?", answer: "Yes. Even sub-psychoactive THC doses can produce positive urine drug tests, particularly with regular daily use. CBD-only products are generally safer for drug-test purposes, but CBD products containing trace THC (most full-spectrum CBD products) can also produce positive tests over time. If you are subject to workplace or other drug testing, consult the testing entity and your employer before starting any cannabis product." },
+];
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Guides', href: '/all-guides' },
+  { label: 'Cannabis Microdosing for Anxiety in Maine', href: '/guides/cannabis-microdosing-anxiety-maine' },
+];
+---
+
+<Layout title="Cannabis Microdosing for Anxiety: A Maine Consumer's Guide" description="A primary-source-reviewed guide to microdosing cannabis for anxiety in Maine — what the research shows, Maine OCP dose caps, medical program provider-discretion model, and a step-by-step titration protocol anchored on Dr. Dustin Sulak's 1 mg starting point." heroImage="/images/heroes/cannabis-microdosing-anxiety-maine-2026.jpg" article={article} topics={topics} breadcrumbs={breadcrumbs}>
+
+<article class="guide">
+  <header class="article-header">
+    <h1>Cannabis Microdosing for Anxiety: A Maine Consumer's Guide</h1>
+    <p class="subtitle">A primary-source-reviewed walkthrough of low-dose THC and CBD for anxiety — what the research shows, the Maine regulatory frame, and how to titrate at a Maine dispensary.</p>
+    <div class="byline">
+      <p><strong>By {article.author}.</strong> Reviewed by {article.reviewer.name}, {article.reviewer.jobTitle}. Published {article.publishDate}.</p>
+    </div>
+  </header>
+
+  <Callout title="Editorial standard" type="info">
+    This guide is part of the Maine Dispensary Guide editorial corpus. Every clinical claim is anchored to a primary source with publication date. Anxiety is a health topic — readers should consult a Maine-licensed healthcare provider for personal guidance. The Maine Office of Cannabis Policy regulates product safety; OCP does not endorse cannabis as a treatment for any specific medical condition, including anxiety.
+  </Callout>
+
+  <section class="intro">
+    <h2>What this guide covers</h2>
+    <p>If you've searched for "cannabis for anxiety" and walked away more confused than when you started, you're not alone. The consumer cannabis space is full of product marketing with very little protocol detail, and the medical research literature is dense and frequently contradictory. This guide is built to be the opposite: research-anchored, Maine-specific, dose-focused, and explicit about where the evidence stops.</p>
+
+    <p>Three things set this guide apart from most consumer content on the same topic:</p>
+
+    <ol>
+      <li><strong>Every clinical claim cites a primary source with publication date.</strong> Where the evidence is thin, we say so.</li>
+      <li><strong>The Maine regulatory frame is built in, not bolted on.</strong> Maine OCP's dose caps, the medical program's provider-discretion model, and what's actually stocked at Maine dispensaries are integrated throughout — not added as a footnote.</li>
+      <li><strong>The biphasic dose-response finding is the load-bearing clinical principle.</strong> More is not better with THC and anxiety. The clinical rationale for microdosing is specifically to stay on the low-dose side of a curve where higher doses reliably worsen anxiety.</li>
+    </ol>
+
+    <p>This guide is for adult Maine residents and visitors 21+ who are considering low-dose cannabis for anxiety symptoms. It is not a substitute for medical advice. If you are currently taking prescription anxiety medication, are pregnant or breastfeeding, have a personal or family history of psychosis, or have a substance use disorder, consult a healthcare provider before using cannabis.</p>
+  </section>
+
+  <section>
+    <h2>1. What microdosing cannabis means</h2>
+    <p>The term "microdosing" describes taking a sub-psychoactive or near-sub-psychoactive dose of a psychoactive substance with the goal of producing a therapeutic effect without a noticeable "high." It was borrowed from psychedelic microdosing research in the mid-2010s and applied to cannabis.</p>
+
+    <p>For THC specifically, the standard working definition in the clinical literature is <strong>1 to 5 mg per dose, taken one to three times daily</strong>. Dr. Dustin Sulak, an osteopathic physician and the founder of Integr8 Health in Manchester and Falmouth, Maine, published the most widely cited clinical protocol: start at 1 mg THC two to three times daily, increase to 2 mg per dose if needed, with most patients falling in a 1 to 5 mg total daily window. (Sulak, "A physician's perspective on optimal cannabis dosing," <em>Leafly</em>, February 26, 2018; Healer.com, accessed 2026-07-05.)</p>
+
+    <p>For CBD, "microdose" is less well-defined because CBD is non-psychoactive. The most-cited clinical evidence for CBD and anxiety uses a single 600 mg oral dose (Bergamaschi et al., 2011), which is far above the 5–25 mg commonly found in retail CBD tinctures and gummies. CBD microdosing at retail doses has not been tested in randomized controlled trials for anxiety.</p>
+
+    <Callout title="Why low doses, specifically?" type="info">
+      THC has a <strong>biphasic dose-response</strong> on anxiety: low doses may produce subjective relief, but higher doses consistently increase anxiety, panic, and negative mood. This finding has been replicated across multiple study designs. The clinical rationale for microdosing THC is specifically to stay on the low-dose side of that curve. The National Institute on Drug Abuse (NIDA) summarizes the dose-response as: "cannabis use can cause anxiety, fear, panic, and paranoia, particularly at higher doses." (NIDA Cannabis Research Report, continuously updated.)
+    </Callout>
+  </section>
+
+  <section>
+    <h2>2. What the research actually says — and what it doesn't</h2>
+
+    <h3>CBD for anxiety: the strongest evidence</h3>
+    <p>The best-evidenced finding in this space is that <strong>CBD reduces acute anxiety in social phobia patients</strong>. The canonical study is a 2011 double-blind randomized controlled trial by Bergamaschi et al.: treatment-naïve social phobia patients who received a single 600 mg oral dose of CBD before a simulated public-speaking test showed significantly reduced anxiety, cognitive impairment, and discomfort compared to placebo. (Bergamaschi MM et al., "Cannabidiol Reduces the Anxiety Induced by Simulated Public Speaking in Treatment-Naïve Social Phobia Patients," <em>Neuropsychopharmacology</em> 2011;36:1219–1226.)</p>
+
+    <p>A companion 2011 neuroimaging study by Crippa et al. found that CBD modulated brain activity in regions implicated in generalized social anxiety disorder (amygdala, parahippocampal gyrus), providing a candidate neural mechanism. (Crippa JA et al., <em>J Psychopharmacol</em> 2011;25(1):121–130, PMID 20829306.)</p>
+
+    <h3>THC for anxiety: biphasic and dose-dependent</h3>
+    <p>For THC specifically, the dose-response relationship is the critical clinical fact. Verywell Mind's medically reviewed article on THC and anxiety (reviewed by Daniel B. Block, MD; updated February 5, 2026) summarizes it as: "low doses of THC may produce a subjective sense of anxiety relief… however, higher doses tend to increase negative mood." NIDA's federal summary is consistent: "cannabis use can cause anxiety, fear, panic, and paranoia."</p>
+
+    <p>One indirect line of evidence: a 2014 study by Cameron et al. found that 4 mg of nabilone (a synthetic THC analog) improved PTSD-associated insomnia, nightmares, and chronic pain in a population of incarcerated individuals. (Cameron C et al., "Nabilone for the treatment of PTSD," 2014, PMC4165471.) This is the closest direct evidence that low-milligram THC-class compounds can help anxiety-spectrum symptoms, but the evidence is for a synthetic cannabinoid, not whole-plant cannabis, and the population is PTSD-specific, not generalized anxiety.</p>
+
+    <h3>What the research does <em>not</em> say</h3>
+    <p><strong>No published randomized controlled trial has tested whole-plant cannabis microdosing (1–5 mg THC) specifically for generalized anxiety disorder in human subjects.</strong> The Yang et al. 2026 UCSD national survey reported that approximately 9.4% of U.S. adults (about 24.1 million people) have microdosed cannabis, and that the most-cited reason for cannabis microdosing was medical, including anxiety. The survey is cross-sectional and the authors explicitly note it "cannot determine whether microdosing influences mental health outcomes or whether people experiencing mental health challenges are more likely to try microdosing." (Yang K, Leas E, et al., "Prevalence and Reasons for Microdosing Cannabis, Psilocybin, LSD, and MDMA Among US Adults," <em>American Journal of Preventive Medicine</em>, May 4, 2026.)</p>
+
+    <p>This citation gap is itself important: if you're choosing to microdose for anxiety, you are doing so based on a small evidence base (mostly indirect and on CBD rather than THC). That is a reasonable personal choice, but it should be an informed one. Talk to a healthcare provider.</p>
+  </section>
+
+  <section>
+    <h2>3. The Maine regulatory frame</h2>
+
+    <h3>Adult-use dose caps (Title 28-B §703(1)(F))</h3>
+    <p>Maine's adult-use edible cannabis products are capped at <strong>10 mg THC per serving and 200 mg per package</strong>, with a 10% allowable variance (and a hard floor of 0.6 mg and ceiling of 5 mg on the variance). This is the current statutory ceiling — as amended by PL 2023, c. 396, §19. (Title 28-B §703(1)(F); legislature.maine.gov.)</p>
+
+    <Callout title="A correction from earlier MDG content" type="warning">
+      Some earlier Maine Dispensary Guide pages described the adult-use cap as "5 mg per serving / 100 mg per package." That was the pre-2023 cap. The current cap, as of the 2023 amendment, is 10 mg per serving / 200 mg per package. This guide has been corrected against Title 28-B §703(1)(F) as of 2026-07-05. See the corrections log at <a href="/about/corrections">/about/corrections</a>.
+    </Callout>
+
+    <h3>Possession and purchase limits (Title 28-B §1501)</h3>
+    <p>An adult 21 or older may possess up to 2.5 ounces of cannabis or 2.5 ounces of a combination of cannabis and cannabis concentrate that includes no more than 10 grams of cannabis concentrate. Purchase limits from a cannabis store mirror possession limits. (Title 28-B §1501, as amended PL 2023 c. 396.)</p>
+
+    <h3>The medical cannabis program: provider-discretion model</h3>
+    <p>Maine's medical cannabis program is governed by Title 22 chapter 558-C and 18-691 CMR chapter 2 (the Maine Medical Use of Marijuana Program Rule). It uses a <strong>provider-discretion model</strong> rather than a closed list of qualifying conditions. A Maine-licensed medical provider can certify a patient for medical cannabis if the provider determines cannabis is clinically appropriate for the patient's condition and documents the basis.</p>
+
+    <p>This means anxiety <em>can</em> be the clinical basis for medical cannabis certification in Maine if a Maine-licensed provider documents clinical appropriateness — anxiety does not need to be on a pre-approved list. Patients seeking certification can consult any Maine-licensed provider; many adult-use dispensaries maintain referral lists of certifying clinicians. The Office of Cannabis Policy (OCP) administers the program but does not endorse cannabis as a treatment for any specific medical condition.</p>
+  </section>
+
+  <section>
+    <h2>4. A 14-day titration protocol for Maine dispensary buyers</h2>
+    <p>This protocol is adapted from Dr. Dustin Sulak's published 1 mg starting point and Project CBD's "Start Low, Go Slow" dosing guide. It assumes a beginner with no recent cannabis experience, choosing a sublingual tincture or low-dose edible at a Maine adult-use dispensary. <strong>Consult a healthcare provider for personal guidance, especially if you take prescription medication.</strong></p>
+
+    <h3>Days 1–3: Establish baseline (1 mg THC, once daily)</h3>
+    <p>Buy a low-dose product: a 2.5 mg/ml tincture (use a half-dropper for ~1.25 mg), or a 2.5 mg gummy cut in half, or a 1 mg gummy/mint. Take one dose in the evening (so any sedation is welcome, not disruptive). Record how you feel at 30 minutes, 2 hours, and the next morning. Do not increase the dose yet.</p>
+
+    <h3>Days 4–7: Titrate up if needed (2.5 mg THC, once or twice daily)</h3>
+    <p>If days 1–3 produced no noticeable anxiety relief and no significant side effects (no anxiety spike, no heart racing, no paranoia, no next-day fogginess), increase to 2.5 mg per dose, once daily. If after 3 more days the effect is still too subtle, move to twice daily (morning and evening), keeping doses at least 6 hours apart.</p>
+
+    <h3>Days 8–14: Find your dose (up to 5 mg THC, up to twice daily)</h3>
+    <p>If 2.5 mg twice daily is producing the desired effect without side effects, stay there. If not, titrate up to 5 mg per dose. The therapeutic window for most users falls between 1 and 5 mg total daily, with a small subset benefiting from up to 10 mg. <strong>Do not exceed 10 mg per dose</strong> — this is the per-serving cap under Maine law and also the dose at which the biphasic risk begins to dominate for most users.</p>
+
+    <Callout title="Stop and seek medical guidance if you experience:" type="warning">
+      Racing heart, chest tightness, severe anxiety or panic, dissociation, hallucinations, or persistent vomiting after a dose. These are signs you have exceeded your therapeutic window. Hydrate, find a calm environment, and consider CBD-only products for next-dose experimentation. If symptoms are severe or persistent, contact a healthcare provider.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>5. Product formats commonly used for microdosing in Maine</h2>
+
+    <h3>Tinctures (sublingual) — the easiest titration</h3>
+    <p>A 30 mL tincture bottle at 2.5 mg/ml gives you 75 mg of THC total in a precise dropper-measured format. Most Maine adult-use dispensaries stock at least one 1:1, 5:1, or 10:1 (CBD:THC) tincture at low concentration. Sublingual onset is 15–30 minutes; duration is 2–4 hours. For daytime functional use, a low-dose balanced tincture is generally the easiest product to titrate precisely.</p>
+
+    <p>For the dose-calculator math behind a Maine tincture bottle, see <a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures & Sublingual Use — Maine Guide</a>.</p>
+
+    <h3>Low-dose gummies and mints — predictable per-piece dose</h3>
+    <p>2.5 mg gummies in 10- or 20-count packages are widely available at Maine adult-use dispensaries. For a true 1 mg dose, a 2.5 mg gummy cut in half is a practical approach, though the cut is imprecise. Onset is 60–120 minutes; duration is 4–8 hours, so daytime use requires planning.</p>
+
+    <h3>CBD-only products — the lowest-risk starting point</h3>
+    <p>Full-spectrum CBD-only tinctures and capsules (containing less than 0.3% THC by dry weight, meeting the federal hemp definition) are widely available at Maine dispensaries and licensed CBD retailers. The Bergamaschi 2011 evidence is for a 600 mg single dose, far above typical retail CBD product strength (15–50 mg per dose), so retail CBD products may produce only a modest effect for anxiety. Pure CBD carries a much lower biphasic risk than THC.</p>
+
+    <Callout title="COA literacy is part of safe microdosing" type="info">
+      Before buying any cannabis product for anxiety dosing, read the Certificate of Analysis (COA) — both to verify the THC and CBD content matches the label and to confirm the product passed required testing for pesticides, heavy metals, microbial contaminants, and residual solvents. Maine dispensaries are required to make COAs available; the operator or budtender can direct you to one. For a walkthrough, see <a href="/guides/cannabis-coa-maine-how-to-read">How to Read a Cannabis COA in Maine</a>.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>6. Frequently asked questions</h2>
+    <Faq items={microdoseFaqs} />
+  </section>
+
+  <section class="related-content">
+    <h2>Continue reading</h2>
+    <ul>
+      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator — Maine</a> — interactive dose calculator with Maine's 10 mg/serving and 200 mg/package caps built in.</li>
+      <li><a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures & Sublingual Use — Maine Guide</a> — dosing, onset times, and the 10 mg/serving cap for tinctures.</li>
+      <li><a href="/guides/cannabis-terpenes-effects-maine">Cannabis Terpenes & Their Effects — Maine Guide</a> — how terpene profile shapes the subjective effect of low-dose cannabis.</li>
+      <li><a href="/guides/cannabis-coa-maine-how-to-read">How to Read a Cannabis COA in Maine</a> — verify the dose and safety of any product before you buy.</li>
+      <li><a href="/learn">Maine Dispensary Guide Consumer Hub</a> — all consumer-facing guides in one place.</li>
+      <li><a href="/about/corrections">Editorial Corrections Log</a> — every material correction to MDG content, including the 2026-07-05 dose-cap correction this guide documents.</li>
+    </ul>
+  </section>
+
+  <AutoRelated currentPath="/guides/cannabis-microdosing-anxiety-maine" currentTopics={['dosing', 'anxiety', 'microdosing', 'consumer-guide']} section="Learn" limit={6} />
+
+</article>
+
+</Layout>
