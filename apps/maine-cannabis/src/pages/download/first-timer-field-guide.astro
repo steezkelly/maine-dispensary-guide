@@ -397,7 +397,7 @@ const success = Astro.url.searchParams.get('success') === 'true';
         <h2>Send me the free PDF</h2>
         <form
           id="lead-form"
-          action="https://formspree.io/f/xvgzlowz"
+          action="/api/lead-capture"
           method="POST"
           class="capture-form"
         >
@@ -418,9 +418,8 @@ const success = Astro.url.searchParams.get('success') === 'true';
             <span>I am 21 or older and a resident of or visitor to a state where cannabis is legal.</span>
           </label>
 
-          <input type="hidden" name="_subject" value="First-Timer Field Guide Download Request" />
           <input type="hidden" name="magnet" value="first-timer-field-guide" />
-          <input type="hidden" name="_redirect" value="/download/first-timer-field-guide?success=true" />
+          <input type="hidden" name="source_page" value="/download/first-timer-field-guide" />
 
           <button type="submit" class="cta-button">
             Send me the free PDF
@@ -430,6 +429,58 @@ const success = Astro.url.searchParams.get('success') === 'true';
           </button>
         </form>
 
+      <script is:inline>
+        // Intercept the form submit, POST to /api/lead-capture as JSON,
+        // and redirect to ?success=true on a successful response.
+        // Wires the lead into the agent-managed autoresponder pipeline
+        // (apps/maine-cannabis/src/pages/api/lead-capture.ts) which sends
+        // a PDF-bearing autoresponder via purelymail SMTP.
+        (function() {
+          var form = document.getElementById('lead-form');
+          if (!form) return;
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var btn = form.querySelector('button[type=submit]');
+            if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+            var data = {};
+            for (var i = 0; i < form.elements.length; i++) {
+              var el = form.elements[i];
+              if (!el.name) continue;
+              if (el.type === 'checkbox') {
+                data[el.name] = el.checked;
+              } else if (el.type === 'submit' || el.type === 'button') {
+                continue;
+              } else {
+                data[el.name] = el.value;
+              }
+            }
+            try {
+              var r = await fetch('/api/lead-capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data)
+              });
+              var body = await r.json().catch(function() { return {}; });
+              if (r.ok && body.ok) {
+                if (window.gtag) {
+                  window.gtag('event', 'generate_lead', {
+                    magnet: data.magnet || 'unknown',
+                    source_page: data.source_page || location.pathname,
+                    method: 'email'
+                  });
+                }
+                window.location.href = '/download/first-timer-field-guide?success=true';
+              } else {
+                if (btn) { btn.disabled = false; btn.textContent = 'Send me the free PDF'; }
+                alert("Sorry — we couldn't process your request right now. Please email hello@mainedispensaryguide.com for the PDF.");
+              }
+            } catch (err) {
+              if (btn) { btn.disabled = false; btn.textContent = 'Send me the free PDF'; }
+              alert('Network error. Please email hello@mainedispensaryguide.com for the PDF.');
+            }
+          });
+        })();
+      </script>
         <div class="trust-row">
           <span>🔒 No spam — one email per quarter of editorial</span>
           <span>📄 Unsubscribe any time</span>
