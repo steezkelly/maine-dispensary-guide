@@ -42,21 +42,52 @@ it's the biggest known issue with the funnel. Symptoms:
   correctly contains the routes
 - `vercel.json` at repo root has both routes in `routes[]`
 
-The Astro+Vercel adapter writes routes to `.vercel/output/config.json`
-ONLY when `output: "server"`. The site uses `output: "static"`, so the
-adapter skips that step. The routes I added to `vercel.json` are
-correct in shape but Vercel's edge config isn't picking them up for some
-reason — likely a project-level setting (maybe "Static-only deployment"
-is checked in Vercel project settings) or a build-output mismatch.
+**Root cause (verified 2026-07-05 via `vercel project inspect` and
+`vercel deploy --dry`):** the project's Framework Preset is set to
+**"Other"** instead of "Astro". Vercel auto-detected no Astro from the
+repo (monorepo layout, no Astro framework marker in the right place)
+and defaulted to a generic static-build expectation:
 
-Until this is fixed, the lead-magnet PDF autoresponder IS NOT live.
-The form on /download/first-timer-field-guide gracefully falls back to
-"please email hello@mainedispensaryguide.com" UX when the fetch fails.
-No data loss.
+- Build Command: `npm run vercel-build` (default — but actual build
+  uses `bash vercel-build.sh`)
+- Output Directory: `public` if it exists or `.` (default — but
+  actual build outputs to `apps/maine-cannabis/dist`)
+- Node.js Version: 24.x (default — but the lead-capture endpoint is
+  set to `nodejs22.x`)
 
-**To unblock the funnel without fixing the routing issue:** configure
-the Formspree autoresponder directly per the steps in the alternative
-flow below.
+With framework="Other", Vercel:
+- Runs the build script anyway (works because `vercel-build.sh` builds
+  with the @astrojs/vercel adapter)
+- Skips the Astro framework integration (which would normally
+  register prerender=false endpoints as Vercel functions)
+- Does NOT honor the `routes[]` block in `vercel.json` because it
+  treats the project as static-only
+
+**Fix:** in Vercel project settings → General → Build & Development
+Settings, change Framework Preset to **"Astro"**, and verify:
+
+- Build Command: `bash vercel-build.sh`
+- Output Directory: `apps/maine-cannabis/dist`
+- Node.js Version: `22.x`
+- Install Command: leave default
+
+After saving, push a noop commit or the next natural commit. Vercel
+will rebuild with the Astro framework integration and register both
+`/api/lead-capture` and `/api/indexnow-key`.
+
+Until the fix is applied, the form on `/download/first-timer-field-guide`
+gracefully falls back to "please email hello@mainedispensaryguide.com"
+UX when the fetch fails. No data loss.
+
+**Verification after fix:**
+```bash
+curl -sI https://mainedispensaryguide.com/api/lead-capture
+# Expect: HTTP/2 200 with Content-Type: application/json
+# (not 404)
+```
+
+If that returns 200, the operator can proceed with setting the 4
+SMTP env vars per the section above.
 
 ## Testing the live endpoint
 
