@@ -3,7 +3,21 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-06-09 EDT (B2B cluster audit + next-cluster outlines committed)**
+|**Last updated: 2026-07-06 EDT (lead-magnet funnel unblock — Formspree revert)**
+
+## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
+
+- **Why:** The `/api/lead-capture` and `/api/indexnow-key` serverless endpoints were 404ing on production due to a Vercel-side routing incompatibility (`output: 'static'` + Framework=Astro silently drops `/api/*` routes; see `docs/SESSION_PASSDOWN_2026-07-06.md` Issue #1 for the full diagnostic trail). All 5 MDG lead-magnet forms needed a working capture path.
+- **What changed (3 files, 1 commit):**
+  - `apps/maine-cannabis/src/pages/download/first-timer-field-guide.astro` — form action flipped from `/api/lead-capture` to `https://formspree.io/f/xvgzlowz`; ~50-line JS interceptor (fetch + JSON POST + `generate_lead` event + alert fallback) removed; Formspree `_subject` + `_next` hidden inputs added so `_next` redirects to `?success=true` natively without client-side JS. Now matches the existing pattern used by `download-checklist`, `founders-bible`, `compliance-self-assessment`, `roadmap`.
+  - `apps/maine-cannabis/src/components/LeadFormTracker.astro` — docblock rewritten. The prior note described a two-track design (4 forms fire `lead_capture`, 1 form fires `generate_lead`); now all 5 forms fire `lead_capture` on submit-intent, restoring the GA4 dashboard convention dating from Sprint 76.
+  - `docs/LEAD_CAPTURE_SETUP.md` — rewritten end-to-end. Formspree is now the canonical activation path (5 min in the Formspree dashboard to upload the PDF + enable the autoresponder). The dormant `/api/lead-capture.ts` endpoint stays in the repo with full re-enable instructions for the day someone flips `output: 'static'` → `output: 'hybrid'` or hires Vercel support.
+- **Verification:** `npx astro check` 0 errors (362 files), `npm run build` clean (22s), pre-push fast gate green (2 changed files parsed clean), autoRelated data regenerated (256 items). Live HTML `dist/.../first-timer-field-guide/index.html` contains exactly 1 `formspree.io` reference and 0 `api/lead-capture` references.
+- **What needs Steve (one-time, 5 min):** in the Formspree dashboard for `xvgzlowz`, configure the autoresponder with attachment = `public/downloads/maine-first-timer-field-guide.pdf` and subject `Your Maine First-Timer's Field Guide is here`. Until then the success screen + direct-download link still work; only the email autoresponder is missing.
+- **Issue #3 from SESSION_PASSDOWN_2026-07-06 (no Vercel env vars)** is now moot — Formspree is fully external, zero env vars needed.
+- **Issue #2 (LEAD_CAPTURE_SETUP.md stale)** is closed by this commit.
+
+---
 
 ## 📋 SPRINT 74 B2B CLUSTER EXPANSION: Cross-Link Audit + Next-Cluster Outlines (Jun 9, 2026 EDT)
 

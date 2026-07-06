@@ -1,170 +1,129 @@
-# Lead-Magnet Autoresponder Setup (agent-managed SMTP)
+# Lead-Magnet Funnel — current setup
 
-The Maine First-Timer's Field Guide PDF is gated by the form at
-`/download/first-timer-field-guide`. The form posts to the
-agent-managed serverless endpoint at `/api/lead-capture`, which
-sends a PDF-bearing autoresponder email through purelymail SMTP.
+**Last updated:** 2026-07-06 (after revert to Formspree)
 
-The 4 other lead-capture forms on the site (download-checklist,
-compliance-self-assessment, founders-bible, metrc-reconciliation-checklist,
-roadmap) continue to POST to Formspree xvgzlowz. This doc covers
-the new endpoint only.
+**Current state:** All 5 lead-capture forms on the site POST to
+**Formspree** at `https://formspree.io/f/xvgzlowz` — including the
+new `Maine First-Timer's Field Guide` landing page at
+`/download/first-timer-field-guide`. The page returns the PDF via
+Formspree's autoresponder with the field-guide PDF attached.
 
-## Operator activation (5 minutes, one-time)
+This is the original pre-2026-07-04 design and works today with
+**no configuration required**. No Vercel env vars, no SMTP creds,
+no functions-runtime tuning. The form, the autoresponder, and the
+lead dashboard all live in Formspree.
 
-In Vercel project settings, set these 4 environment variables:
+## Operator setup (5 minutes, one-time, Formspree dashboard)
 
-| Variable | Example value | Notes |
-|---|---|---|
-| `PURELYMAIL_SMTP_USER` | `leads@mainedispensaryguide.com` | purelymail SMTP username |
-| `PURELYMAIL_SMTP_PASS` | (purelymail app password) | Use purelymail app password, not your main account password |
-| `MDG_FROM_ADDRESS` | `leads@mainedispensaryguide.com` | Defaults to this if not set |
-| `MDG_REPLY_TO` | `hello@mainedispensaryguide.com` | Defaults to this if not set |
+1. Confirm the form exists at
+   `https://formspree.io/f/xvgzlowz` — should already be there from
+   the earlier 4 forms (download-checklist, compliance-self-assessment,
+   founders-bible, roadmap).
+2. In the Formspree dashboard for that form, configure an
+   **autoresponder email** that:
+   - subject: `Your Maine First-Timer's Field Guide is here`
+   - body: a short welcome + the link to the direct PDF
+     (`https://mainedispensaryguide.com/downloads/maine-first-timer-field-guide.pdf`)
+   - **attachment:** upload
+     `public/downloads/maine-first-timer-field-guide.pdf`
+3. Test by submitting the form on
+   `/download/first-timer-field-guide` once.
 
-Optionally:
-- `MDG_TEST_MODE=1` — enables a GET endpoint that returns the magnet
-  registry for inspection. **Do not set in production.**
+If the autoresponder is not configured in Formspree, the user still
+sees the success screen (Formspree redirects to `?success=true`) but
+won't get the email until the autoresponder is set up. The direct
+download link always works as a backup.
 
-## Without the env vars set
+## Where the form lives in code
 
-The endpoint returns 500 with a clear error message. The
-client-side JS on the landing page catches this and shows an alert:
-"Sorry — we couldn't process your request right now. Please email
-hello@mainedispensaryguide.com for the PDF." No data loss.
-
-## If `/api/lead-capture` returns 404
-
-This is a Vercel-routing problem, not a code problem. As of 2026-07-05
-it's the biggest known issue with the funnel. Symptoms:
-- `curl -sI https://mainedispensaryguide.com/api/lead-capture` → 404
-- `curl -sI https://mainedispensaryguide.com/api/indexnow-key` → 404
-- Local Vercel build output (apps/maine-cannabis/.vercel/output/config.json)
-  correctly contains the routes
-- `vercel.json` at repo root has both routes in `routes[]`
-
-**Root cause (verified 2026-07-05 via `vercel project inspect` and
-`vercel deploy --dry`):** the project's Framework Preset is set to
-**"Other"** instead of "Astro". Vercel auto-detected no Astro from the
-repo (monorepo layout, no Astro framework marker in the right place)
-and defaulted to a generic static-build expectation:
-
-- Build Command: `npm run vercel-build` (default — but actual build
-  uses `bash vercel-build.sh`)
-- Output Directory: `public` if it exists or `.` (default — but
-  actual build outputs to `apps/maine-cannabis/dist`)
-- Node.js Version: 24.x (default — but the lead-capture endpoint is
-  set to `nodejs22.x`)
-
-With framework="Other", Vercel:
-- Runs the build script anyway (works because `vercel-build.sh` builds
-  with the @astrojs/vercel adapter)
-- Skips the Astro framework integration (which would normally
-  register prerender=false endpoints as Vercel functions)
-- Does NOT honor the `routes[]` block in `vercel.json` because it
-  treats the project as static-only
-
-**Fix:** in Vercel project settings → General → Build & Development
-Settings, change Framework Preset to **"Astro"**, and verify:
-
-- Build Command: `bash vercel-build.sh`
-- Output Directory: `apps/maine-cannabis/dist`
-- Node.js Version: `22.x`
-- Install Command: leave default
-
-After saving, push a noop commit or the next natural commit. Vercel
-will rebuild with the Astro framework integration and register both
-`/api/lead-capture` and `/api/indexnow-key`.
-
-Until the fix is applied, the form on `/download/first-timer-field-guide`
-gracefully falls back to "please email hello@mainedispensaryguide.com"
-UX when the fetch fails. No data loss.
-
-**Verification after fix:**
-```bash
-curl -sI https://mainedispensaryguide.com/api/lead-capture
-# Expect: HTTP/2 200 with Content-Type: application/json
-# (not 404)
-```
-
-If that returns 200, the operator can proceed with setting the 4
-SMTP env vars per the section above.
-
-## Testing the live endpoint
-
-After setting the env vars and triggering a deploy, test with:
-
-```bash
-# Should return 200 + JSON {ok: true, lead_id: "..."}
-curl -sX POST 'https://mainedispensaryguide.com/api/lead-capture' \
-  -H "Content-Type: application/json" \
-  -d '{"email":"your-test@example.com","age_confirmed":true,"magnet":"first-timer-field-guide"}'
-```
-
-Verify the autoresponder email arrived in your inbox within a
-minute. The PDF should be attached.
-
-## Architecture
-
-```
-User submits form at /download/first-timer-field-guide
-   ↓
-Client-side JS intercepts, POSTs as JSON to /api/lead-capture
-   ↓
-apps/maine-cannabis/src/pages/api/lead-capture.ts (Vercel function)
-   ↓
-Validates email + age-gate + magnet slug allowlist
-   ↓
-Generates lead_id (crypto.randomUUID())
-   ↓
-Sends email via nodemailer + smtp.purelymail.com:465
-   ↓
-Logs lead (JSON line to stdout + ./.vercel/leads.jsonl)
-   ↓
-Returns {ok: true, lead_id, ga4_event} to client
-   ↓
-Client fires gtag('event', 'generate_lead', {...})
-   ↓
-Client redirects to /download/first-timer-field-guide?success=true
-```
-
-## Adding new magnets
-
-Edit `apps/maine-cannabis/src/pages/api/lead-capture.ts`, find
-the `MAGNETS` const, add a new entry:
-
-```typescript
-'pos-comparison-2026': {
-  name: 'Maine Cannabis POS Comparison 2026',
-  pdfPath: '/downloads/maine-cannabis-pos-comparison.pdf',
-  softPitch: 'Looking for the right cannabis POS for your Maine dispensary? Our full comparison is at /guides/maine-cannabis-pos-comparison.',
-  recommendedCtaUrl: '/guides/maine-cannabis-pos-comparison',
-},
-```
-
-Drop the PDF at `apps/maine-cannabis/public/downloads/<slug>.pdf`
-and the endpoint handles the rest — no code changes elsewhere.
-
-## Related files
-
-- `apps/maine-cannabis/src/pages/api/lead-capture.ts` — the endpoint
-  (715 lines, includes magnet registry, email template, validation,
-  rate limiting, idempotency, GA4 event payload)
 - `apps/maine-cannabis/src/pages/download/first-timer-field-guide.astro`
-  — the landing page (form + client-side JS interception)
-- `apps/maine-cannabis/public/downloads/maine-first-timer-field-guide.pdf`
-  — the PDF that gets attached
-- `scripts/build/generate-first-timer-pdf.py` — re-generate the PDF
-- `vercel.json` — the route config that exposes /api/lead-capture
-  to Vercel's edge
-- `/tmp/lead-magnet-research-2026-07-05.md` — research brief
+  — the landing page, contains the `<form action="https://formspree.io/f/xvgzlowz" method="POST">`
+- `apps/maine-cannabis/src/components/LeadFormTracker.astro` — fires
+  the `lead_capture` GA4 event on submit-intent
+- `apps/maine-cannabis/src/pages/download-checklist.astro`,
+  `compliance-self-assessment.astro`, `founders-bible.astro`,
+  `roadmap.astro` — the other 4 Formspree-backed forms (unchanged)
 
-## The other 4 lead-capture forms (Formspree)
+## Why we reverted from the custom `/api/lead-capture` endpoint
 
-If you prefer to keep the 4 operator-facing PDFs (download-checklist,
-compliance-self-assessment, founders-bible, metrc-reconciliation-checklist,
-roadmap) on Formspree for simplicity, no action needed. Formspree
-already creates submission records; configure the autoresponder in
-the Formspree dashboard for each if you want PDF delivery on those
-too. Future PDFs that should go through the new endpoint (e.g. a
-second consumer-facing magnet) just need a new entry in `MAGNETS`.
+See `docs/SESSION_PASSDOWN_2026-07-06.md` Issue #1 for the full
+diagnostic trail. TL;DR:
 
+- The custom endpoint was wired and the local build correctly
+  emitted `apps/maine-cannabis/.vercel/output/config.json` with
+  `/api/lead-capture → _render`.
+- Vercel deployed only the static pages; the `_render.func` was
+  never registered as a route. Result: 404 on every call to
+  `/api/lead-capture` and `/api/indexnow-key`.
+- The Astro+Vercel adapter with `output: 'static'` does not emit
+  API routes in `config.json` (verified at
+  `node_modules/@astrojs/vercel/dist/index.js:338-340`). Vercel's
+  `vercel.json` `routes[]` block was silently overridden by the
+  Astro framework integration.
+- Three paths forward were identified (see SESSION_PASSDOWN issue
+  #1 for full text): Formspree revert (chosen, 5 min), `output: hybrid`
+  flip (untested blast radius), or Vercel support (days). Formspree
+  was selected for zero architecture risk and same end-user behavior.
+
+## Re-enabling the custom `/api/lead-capture` endpoint (future)
+
+The dormant endpoint at `apps/maine-cannabis/src/pages/api/lead-capture.ts`
+(716 lines) is fully wired and tested against the local build. To
+re-enable in production:
+
+1. **Option A (lowest risk):** flip `astro.config.mjs` from
+   `output: 'static'` to `output: 'hybrid'`, mark all existing pages
+   as `export const prerender = true`, then re-deploy. The
+   `api/lead-capture.ts` endpoint will pick up SSR mode automatically.
+   Risk: every existing page needs `prerender: true` declared in
+   frontmatter OR the build will SSR them all (slow + may break
+   `<head>` scripts that depend on build-time). Test thoroughly.
+
+2. **Option B:** investigate Vercel-side: contact Vercel support
+   with the deployment ID + framework config + the expected
+   `config.json` vs actual. Ask why `_render.func` is not registered.
+   May take days of back-and-forth.
+
+3. **Option C:** use Vercel's "infrastructure as code"
+   (`vercel.json` only, no Framework Preset) — set
+   `framework: null` and provide explicit `buildCommand`,
+   `outputDirectory`, `functions` block. May break the Astro
+   static-build pipeline elsewhere.
+
+Once any option works, also set these 4 env vars in Vercel:
+
+| Variable | Example value |
+|---|---|
+| `PURELYMAIL_SMTP_USER` | `leads@mainedispensaryguide.com` |
+| `PURELYMAIL_SMTP_PASS` | (purelymail app password) |
+| `MDG_FROM_ADDRESS` | `leads@mainedispensaryguide.com` |
+| `MDG_REPLY_TO` | `hello@mainedispensaryguide.com` |
+
+The endpoint reads them and uses purelymail SMTP to send the PDF
+autoresponder. Without env vars it returns 500 with a clear error.
+
+## Testing the live Formspree flow
+
+```bash
+# Should redirect to /download/first-timer-field-guide?success=true
+curl -sI -X POST 'https://formspree.io/f/xvgzlowz' \
+  -H "Content-Type: application/json" \
+  -d '{"email":"your-test@example.com","age_confirmed":"yes","magnet":"first-timer-field-guide","source_page":"/download/first-timer-field-guide"}'
+
+# Then check the Formspree dashboard for the new submission
+```
+
+The `?success=true` redirect from Formspree's `_next` hidden input
+shows the "Check your inbox" card on the landing page without any
+client-side JS.
+
+## What changed in this commit
+
+- `apps/maine-cannabis/src/pages/download/first-timer-field-guide.astro`
+  form action flipped from `/api/lead-capture` to
+  `https://formspree.io/f/xvgzlowz`; JS interceptor removed;
+  Formspree `_subject` + `_next` hidden inputs added.
+- `apps/maine-cannabis/src/components/LeadFormTracker.astro`
+  docblock updated to reflect single-track Formspree flow.
+- This doc rewritten to make Formspree the canonical activation
+  path and `/api/lead-capture` the optional future enhancement.

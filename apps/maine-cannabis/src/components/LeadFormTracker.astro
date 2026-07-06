@@ -49,35 +49,27 @@
  * audit. Prior state: 5 Formspree forms, 0 GA4 conversion events.
  *
  * --------------------------------------------------------------------------
- * Note on 2026-07-05 split: TWO different "lead captured" events
+ * Note on 2026-07-06: all 5 lead forms now use Formspree
  * --------------------------------------------------------------------------
- * After the lead-capture endpoint wiring (apps/maine-cannabis/src/pages/
- * api/lead-capture.ts + vercel.json route), the /download/first-timer-
- * field-guide landing page intercepts its form submit, POSTs JSON to
- * /api/lead-capture, and fires the GA4-recommended `generate_lead` event
- * on a successful 200 response — NOT `lead_capture`. The other 4
- * Formspree-backed forms continue to use this component and fire
- * `lead_capture` on submit-intent (Formspree doesn't have a webhook hook
- * that would let us fire `generate_lead` on server-side confirmation).
+ * After the /api/lead-capture endpoint was found unreachable on Vercel
+ * (static-output + Framework=Astro silently drops /api/* routes; see
+ * docs/LEAD_CAPTURE_SETUP.md "Issue history" for the diagnostic trail),
+ * the /download/first-timer-field-guide page was reverted to Formspree
+ * (https://formspree.io/f/xvgzlowz) — same endpoint as the other 4 lead
+ * forms. The custom /api/lead-capture.ts endpoint remains in the repo
+ * for future re-enablement (the dormant code is intact, it just isn't
+ * reachable from production until the Vercel-side routing issue is
+ * resolved or `astro.config.mjs` flips from `output: 'static'` to
+ * `output: 'hybrid'`).
  *
- * In GA4, this means:
- *   - lead_capture (intentionally counted on submit-intent): all 5 lead
- *     forms. Slight over-count if Formspree later rejects, but matches
- *     the existing dashboard convention dating from Sprint 76.
- *   - generate_lead (recommended, only fired by first-timer-field-guide):
- *     semantically more accurate (server-confirmed) but only 1 of 5 forms
- *     uses it today.
+ * All 5 lead forms now fire `lead_capture` on submit-intent (the
+ * GA4 dashboard convention dating from Sprint 76). If/when the custom
+ * endpoint is re-enabled, the page should fire `generate_lead` on the
+ * 200-response path and document the divergence again here.
  *
- * The intent is to migrate the other 4 Formspree forms to the same
- * /api/lead-capture pattern over time, at which point all 5 lead forms
- * would fire `generate_lead`. Until then, treat `lead_capture` as the
- * historical/back-compat event and `generate_lead` as the new standard.
- *
- * If you're instrumenting a NEW form: prefer the /api/lead-capture
- * flow with `generate_lead`. If Formspree remains the right tool for
- * the form (e.g. operator-facing forms where dashboard access matters
- * more than conversion accuracy), use this LeadFormTracker component
- * with `lead_capture`.
+ * If you're instrumenting a NEW form: use this LeadFormTracker component
+ * with `lead_capture` for Formspree flows. If `generate_lead` is wanted,
+ * re-enable the /api/lead-capture path per docs/LEAD_CAPTURE_SETUP.md.
  */
 
 interface Props {
