@@ -39,23 +39,22 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Tier 1.3: assert Astro SSR function bundle was emitted in a shape
-      # Vercel can recognize. The .vercel/output/ directory is what the
-      # @astrojs/vercel adapter writes for SSR routes; if .vc-config.json
-      # is missing inside functions/_render.func/, the build silently
-      # has no serverless function registered and /api/* routes will
-      # 404 in production. This step fails the build before that
-      # situation ever ships. Watch for regression: if a future dep
-      # bump or adapter downgrade changes the output shape, this check
-      # surfaces it instead of letting the regression arrive in prod.
-      - name: Assert Astro SSR function bundle (functions/_render.func/.vc-config.json)
+      # Asserts the build is pure static (no SSR function bundle).
+      # The previous check asserted the OPPOSITE shape (functions/_render.func/.vc-config.json
+      # MUST exist) — that was correct when /api/lead-capture and /api/indexnow-key were SSR
+      # routes, but both endpoints were retired 2026-07-06 (commits bb2b864f + 48a0459d) and the
+      # site is now pure output:'static'. The old check fired a CI-main failure on every push
+      # since 2026-07-06 (8 in a row). Replaced with the inverse assertion: if a functions/
+      # directory exists, that means an SSR route was added without an SSR-function-bundle
+      # check being re-added — fail and flag it. This is the new expected shape.
+      - name: Assert pure-static build (no SSR functions emitted)
         run: |
-          if [ ! -f apps/maine-cannabis/.vercel/output/functions/_render.func/.vc-config.json ]; then
-            echo "::error::Astro SSR function bundle not found at apps/maine-cannabis/.vercel/output/functions/_render.func/.vc-config.json"
-            echo "The @astrojs/vercel adapter did not emit a Vercel-shape serverless function."
-            echo "Either the adapter version was downgraded below the production-tested v11,"
-            echo "or output: 'static' is missing a route with prerender = false."
-            echo "Tip: see docs/MODERNIZATION_PLAN_2026-07-06.md Tier 1.3."
+          if [ -d apps/maine-cannabis/.vercel/output/functions ]; then
+            echo "::error::Unexpected SSR function bundle at apps/maine-cannabis/.vercel/output/functions/"
+            echo "The site is configured as output:'static' and should not emit a serverless function."
+            echo "If a new SSR route was added intentionally, re-enable the SSR-function-bundle assertion"
+            echo "(see .github/workflows/ci.yml for the previous version) and update AGENTS.md."
+            ls -la apps/maine-cannabis/.vercel/output/functions/
             exit 1
           fi
 

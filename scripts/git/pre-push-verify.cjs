@@ -32,8 +32,10 @@
  * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
  * fails the push if any return non-200. Catches the "build green but
  * specific page 404s/500s" failure mode that build-time checks can't see.
- * Runs ~5s against the live site. Skippable with --skip-smoke-200 for
- * offline runs.
+ * Runs ~5s against the live site. OPT-IN ONLY as of 2026-07-13 (Sprint 78 verify-bloat
+ * cleanup) — use --with-smoke to run. Default is OFF because iterating locally should not
+ * hammer production URLs; run the full --with-smoke before pushing if the change touched
+ * rendered output.
  *
  * Pass 4 (smoke-img-200) was added on 2026-07-02. It walks every rendered
  * HTML file in dist/, extracts every <img src>, <source srcset>,
@@ -43,15 +45,20 @@
  * broken hero/OG image" bug class — see the 2026-07-02 /learn/ consumer
  * hub regression (heroImage pointed at a 404 path; build green, smoke-200
  * green, but the social-share preview was a 404 image and the browser
- * was preloading a 404). Runs ~30s against the live site. Skippable with
- * --skip-smoke-img-200 for offline runs.
+ * was preloading a 404). Runs ~30s against the live site. OPT-IN ONLY as
+ * of 2026-07-13 — bundled with smoke-200 behind --with-smoke.
  *
  * Usage:
- *   node scripts/git/pre-push-verify.cjs                  # all passes
- *   node scripts/git/pre-push-verify.cjs --ref=<ref>     # checks commits <ref>..HEAD
- *   node scripts/git/pre-push-verify.cjs --fast-only     # skip slow pass + smokes
- *   node scripts/git/pre-push-verify.cjs --skip-smoke-200     # skip live-site page smoke
- *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200 # skip live-site image smoke
+ *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter
+ *   node scripts/git/pre-push-verify.cjs --with-smoke           # add smoke-200 + smoke-img-200 against production
+ *   node scripts/git/pre-push-verify.cjs --ref=<ref>            # checks commits <ref>..HEAD
+ *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-200       # legacy: still works, see below
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200   # legacy: still works
+ *
+ * Legacy flag note: --skip-smoke-200 / --skip-smoke-img-200 are deprecated. They still
+ * work for callers that pass them, but smoke checks now default OFF; --with-smoke is
+ * the canonical opt-in.
  */
 
 const { execSync, spawnSync } = require('child_process');
@@ -473,18 +480,28 @@ function main() {
     const slow = slowAstroCheck(files);
     if (!slow.ok) process.exit(2);
 
-    if (!args.includes('--skip-smoke-200')) {
+    // Smoke checks default OFF — they hit production URLs and were
+    // documented as slow + bandwidth-hungry (GSC_QUERIES_3MO_ACTION_PLAN_2026-07-04.md,
+    // Round 103). Iterate-fast uses default; pre-push uses --with-smoke to opt in.
+    if (args.includes('--with-smoke')) {
         const smoke = smoke200Check();
         if (!smoke.ok) process.exit(4);
-    } else {
-        log('info', 'smoke-200 skipped (--skip-smoke-200)');
-    }
-
-    if (!args.includes('--skip-smoke-img-200')) {
         const smokeImg = smokeImg200Check();
         if (!smokeImg.ok) process.exit(5);
+    } else if (args.includes('--skip-smoke-200') || args.includes('--skip-smoke-img-200')) {
+        // Back-compat: old --skip-* flags still work but emit a deprecation note.
+        log('info', '--skip-smoke-* flags are deprecated; smoke checks now default OFF. Use --with-smoke to enable.');
+        if (!args.includes('--skip-smoke-200')) {
+            const smoke = smoke200Check();
+            if (!smoke.ok) process.exit(4);
+        }
+        if (!args.includes('--skip-smoke-img-200')) {
+            const smokeImg = smokeImg200Check();
+            if (!smokeImg.ok) process.exit(5);
+        }
     } else {
-        log('info', 'smoke-img-200 skipped (--skip-smoke-img-200)');
+        log('info', 'smoke-200 skipped (default; pass --with-smoke to enable production smoke)');
+        log('info', 'smoke-img-200 skipped (default; pass --with-smoke to enable production smoke)');
     }
 
     if (!args.includes('--skip-sitemap-postprocess')) {

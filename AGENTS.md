@@ -18,18 +18,37 @@ Astro 6.0 static site deployed to Vercel. High-authority cannabis business resou
 npm run dev                          # Start local dev server
 npm run build                        # Production build (run freely — see "Don't" section)
 npm run health-check                 # Run health check (PowerShell)
-npx astro check                      # Type check all files
+npx astro check                      # Type check all files (NOT for iteration — use verify:iterate)
 node scripts/link/link-architect.cjs   # Glossary term linker
 node scripts/search/brave-search.cjs "q"    # Primary web search
 node scripts/search/wikipedia-search.cjs "q"  # Research (free, no key)
-node scripts/git/pre-push-verify.cjs          # Run pre-push verify gate (esbuild + astro check)
-node scripts/git/pre-push-verify.cjs --fast-only   # Fast pass only (esbuild parse, ~1s)
 node scripts/git/install-hooks.cjs            # Install pre-push hook (one-time per clone)
 node scripts/git/sprint-handoff.cjs   # Generate Hub entry from git history
 node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
 
-**File-scoped validation (prefer these over full build):**
+### Verify cycle (canonical, as of 2026-07-13)
+
+The right verify pattern is one canonical command per stage, not "run all the things":
+
+```bash
+# ITERATION — fast, no network. Use between every commit.
+npm run verify:iterate               # esbuild parse + filtered astro check + sitemap-postprocess + docs-vs-code + compressed-frontmatter
+                                     # (~10-15s, no production URL hits)
+npm run verify:iterate -- --fast-only  # sub-second parse-only check (during a single edit session)
+
+# PUSH / DEPLOY — full verify including production smoke. Use before pushing.
+npm run verify:push                  # adds smoke-200 + smoke-img-200 against production
+                                     # (~30-45s, hits https://mainedispensaryguide.com)
+```
+
+**Rules:**
+- Do **NOT** run `npx astro check` directly — it does a full unfiltered project check (~3min) instead of the changed-files filter that `verify:iterate` uses. Use `verify:iterate` instead.
+- Do **NOT** run smoke checks during iteration. They hit production URLs and add 30+s for no iteration value. Run them once before pushing.
+- Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of sprint, or once before deploy if `verify:push` smoke passes.
+- The pre-push hook (`.githooks/pre-push`) runs `verify:push` automatically on `git push`. If it fails, that means `verify:push` failed locally — fix and re-push.
+
+**File-scoped validation (use for one-off checks, not iteration):**
 ```bash
 npx astro check src/pages/guides/example.astro   # Type check single file
 ```

@@ -12,7 +12,9 @@
     "typecheck": "turbo run typecheck",
     "health-check": "turbo run health-check",
     "ci-check": "turbo run ci-check",
-    "verify:pre-push": "node scripts/git/pre-push-verify.cjs",
+    "verify:iterate": "node scripts/git/pre-push-verify.cjs",
+    "verify:push": "node scripts/git/pre-push-verify.cjs --with-smoke",
+    "verify:pre-push": "node scripts/git/pre-push-verify.cjs --with-smoke",
     "verify:pre-push:fast": "node scripts/git/pre-push-verify.cjs --fast-only",
     "hooks:install": "node scripts/git/install-hooks.cjs"
   },
