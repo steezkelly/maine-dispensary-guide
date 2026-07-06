@@ -6175,3 +6175,41 @@ this without code change; full inventory captured in the Hub commit message.
   moving the highest-trust blog posts out of position — may need
   content consolidation (merge blog -> guide + redirect) for the
   3 persistent misroutes. Decision flag for Steve.
+
+### Sprint 78f: Keyword gap analysis + Maine conditional license guide
+
+- **Why:** Sprint 78d/78e closed the measurement loop and shipped
+  targeted fixes. The next question was "what do operators search
+  that we don't cover?" Answered by a comprehensive gap analysis
+  using free tools only.
+- **What shipped:**
+  - **docs/seo/MDG_KEYWORD_GAP_ANALYSIS_2026-07-06.md (NEW, 13KB):**
+    13 buyer-intent query categories cross-referenced against MDG's
+    184 /guides/ + 35 /blog/ = 219 cannabis pages. Free tools used:
+    Google SERPs, PAA boxes, AlsoAsked (3 free queries), CannAspire,
+    Flowhub, Press Herald, OCP, MaineCannabis.org. 3 in-band gaps
+    identified:
+        GAP 1: "Maine cannabis conditional license" (high volume, PAA, zero coverage) - SHIPPED
+        GAP 2: "Maine cannabis business for sale" (high volume, zero coverage, affiliate-funnel) - deferred
+        GAP 3: "Maine cannabis store transfer ownership" (high volume, zero coverage, regulatory) - deferred
+  - **/guides/maine-cannabis-conditional-license.astro (NEW, 350+ lines):**
+    Closes GAP 1 (highest-priority PAA gap). Title: "Maine Cannabis
+    Conditional License: What It Is, How to Get One, and What Comes
+    Next (2026)". Sections: definition, 3-step process overview, what
+    OCP reviews, 90-day review window, Conditional vs Local vs Active
+    authority table, common denial reasons, post-issuance Local
+    Authorization process, FAQ (10 Q&As matching PAA phrasing
+    exactly). 1 FAQPage schema + 10 Question entries.
+  - **/guides/maine-dispensary-license.astro:** added 3-step process
+    callout at top linking to new conditional license guide
+  - **/start-here.astro:** added new "Conditional License" CTA button
+- **Verified:**
+  - pre-push-verify: all 7 gates green
+  - Cold-cache build: 256 pages, 34.78s
+  - Built HTML: 10 FAQPage Questions rendered, 1 link from start-here,
+    2 links from license guide
+- **Mnemosyne:** Sprint 78f state-of-record.
+- **Status of gaps:**
+  - GAP 1: shipped (Sprint 78f)
+  - GAP 2 + GAP 3: documented, not yet shipped. 1.5-2 hr each.
+  - Sprint 78g candidates: 2 new guides + 1 affiliate CTA wiring
