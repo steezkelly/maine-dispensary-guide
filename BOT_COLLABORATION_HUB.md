@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (lead-magnet funnel unblock — Formspree revert)**
+|**Last updated: 2026-07-06 EDT (lead-magnet funnel unblock + COA hero image fix)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -16,6 +16,13 @@
 - **What needs Steve (one-time, 5 min):** in the Formspree dashboard for `xvgzlowz`, configure the autoresponder with attachment = `public/downloads/maine-first-timer-field-guide.pdf` and subject `Your Maine First-Timer's Field Guide is here`. Until then the success screen + direct-download link still work; only the email autoresponder is missing.
 - **Issue #3 from SESSION_PASSDOWN_2026-07-06 (no Vercel env vars)** is now moot — Formspree is fully external, zero env vars needed.
 - **Issue #2 (LEAD_CAPTURE_SETUP.md stale)** is closed by this commit.
+
+### COA hero image fix (`cff15405`) — 6 broken image refs closed
+
+- **Why:** Carry-forward #3 from SESSION_PASSDOWN_OUT_2026-07-04 — `smoke-img-200` reported 6 × 404 on `/images/heroes/cannabis-coa-maine-how-to-read.{jpg,webp,avif,-640w.*}`. Root cause: `Layout.astro:101-105` derives the 5 responsive variants by simple string-replace of `.jpg → -640w.jpg / .webp / .avif` etc. The COA image was originally uploaded with dimension-suffix filenames (`-1280x720.*`, `-640x360.*`) instead of the Layout's expected width-suffix (`-640w.*`, no suffix for desktop), so all 6 srcset URLs 404'd.
+- **What changed (1 commit, 6 files):** `git mv` rename to match Layout convention. No content change; git tracks it as 6 renames with 100% similarity.
+- **Verification:** npx astro check 0 errors, npm run build clean (17.75s), live curl confirms all 6 variants return HTTP/2 200 on `mainedispensaryguide.com`, smoke-img-200 now reports 0 broken refs for the COA page.
+- **Defensive note:** any future hero upload MUST use `{name}.jpg` + `{name}.webp` + `{name}.avif` + `{name}-640w.{jpg,webp,avif}` convention OR be uploaded via the same utility that uploaded the COA image (which needs updating to match Layout's expectations). Worth a follow-up to grep for any other dimension-suffix survivors, though none surfaced in smoke-img-200.
 
 ---
 
