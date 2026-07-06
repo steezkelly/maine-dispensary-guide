@@ -1,12 +1,17 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
-import LeadFormTracker from '../../components/LeadFormTracker.astro';
+import LeadMailtoForm from '../../components/LeadMailtoForm.astro';
 
 const pageTitle = "The Maine Cannabis Founders Bible | Free Download";
 const pageDescription = "The comprehensive 10-page roadmap for opening your Maine cannabis business — from licensing to financing, written by operators who have done it.";
 
-const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
+const pdfUrl = "/pdfs/founders-bible-2026.pdf";
+const leadTo = "hello@mainedispensaryguide.com";
+const leadSubject = "Founders Bible request: {email}";
+const leadBody = "Hi — please send me the Maine Cannabis Founders Bible PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/founders-bible";
+
+const article = { publishDate: "2026-06-06", modifiedDate: "2026-07-13" };
 
 ---
 
@@ -349,11 +354,14 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
           </p>
         </div>
 
-        <form
-          id="lead-form"
-          action="https://formspree.io/f/xvgzlowz"
-          method="POST"
-          class="capture-form"
+        <LeadMailtoForm
+          formId="founders-bible-lead-form"
+          leadTo={leadTo}
+          leadSubject={leadSubject}
+          leadBody={leadBody}
+          formName="founders_bible"
+          successPath="/download/founders-bible?success=true"
+          trackFields={['stage']}
         >
           <div class="form-group">
             <label for="name">Your Name</label>
@@ -400,19 +408,16 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
             </select>
           </div>
 
-          <input type="hidden" name="_subject" value="Founders Bible Download Request" />
-          <input type="hidden" name="_redirect" value="/download/founders-bible?success=true" />
-
           <button type="submit" class="cta-button">
             Download Free — Enter Your Email
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
-        </form>
+        </LeadMailtoForm>
 
         <div class="or-download">
-          <a href="/download/founders-bible" target="_blank" rel="noopener">Or download now without subscribing</a>
+          <a href={pdfUrl} target="_blank" rel="noopener">Or download now without subscribing</a>
         </div>
       </div>
     </section>
@@ -425,14 +430,13 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
       <p>© 2026 Maine Dispensary Guide</p>
     </footer>
   </div>
-
-  <LeadFormTracker formSelector=".capture-form" formName="founders_bible" />
 </Layout>
 
 <script is:inline>
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('success') === 'true') {
     document.getElementById('form-success').style.display = 'block';
-    document.getElementById('lead-form').style.display = 'none';
+    var form = document.getElementById('founders-bible-lead-form');
+    if (form) form.style.display = 'none';
   }
 </script>

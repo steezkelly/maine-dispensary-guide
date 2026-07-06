@@ -1,0 +1,197 @@
+---
+/**
+ * LeadMailtoForm.astro
+ *
+ * Reusable mailto:-based lead-capture form. Replaces the Formspree-backed
+ * `<form action="https://formspree.io/f/xvgzlowz" method="POST">` pattern on
+ * MDG's PDF-gate pages. The free Formspree tier does not deliver PDF
+ * attachments as autoresponders (Plus-only feature), and the manual reply
+ * operator workflow already exists for the first-timer funnel — so this
+ * component standardizes that workflow across all three PDF gates.
+ *
+ * Usage:
+ *
+ *   <LeadMailtoForm
+ *     formId="founders-bible-lead-form"
+ *     leadTo="hello@mainedispensaryguide.com"
+ *     leadSubject="Founders Bible request: {email}"
+ *     leadBody={"Hi — please send me the Founders Bible PDF.\n\nName: {name}\nEmail: {email}\nStage: {stage}\nSource page: /download/founders-bible"}
+ *     formName="founders_bible"
+ *     successPath="/download/founders-bible?success=true"
+ *   >
+ *     <div class="form-group">
+ *       <label for="fb-name">Your Name</label>
+ *       <input type="text" id="fb-name" name="name" required placeholder="Jane Smith" autocomplete="name" />
+ *     </div>
+ *     <div class="form-group">
+ *       <label for="fb-email">Email Address</label>
+ *       <input type="email" id="fb-email" name="email" required placeholder="jane@example.com" autocomplete="email" />
+ *     </div>
+ *     <div class="form-group">
+ *       <label for="fb-stage">What stage are you at?</label>
+ *       <select id="fb-stage" name="stage" required>
+ *         <option value="">Select one...</option>
+ *         <option value="researching">Researching — just exploring</option>
+ *         <option value="applying">Applying — have my LLC, working on license</option>
+ *         <option value="operating">Already Operating — looking to grow</option>
+ *       </select>
+ *     </div>
+ *     <button type="submit" class="cta-button">Download Free — Enter Your Email</button>
+ *   </LeadMailtoForm>
+ *
+ * Props:
+ *   formId         REQUIRED. The `<form id>` (and JS lookup key). Must be unique per page.
+ *   leadTo         REQUIRED. The recipient address. For MDG lead gates: hello@mainedispensaryguide.com
+ *                  (Purelymail catch-all routes to steezkelly@purelymail.com).
+ *   leadSubject    REQUIRED. mailto: subject line template. Use {email}, {name}, etc. as placeholders
+ *                  matching the field names submitted.
+ *   leadBody       REQUIRED. mailto: body template. Same placeholder convention.
+ *                  Newlines are preserved; URL-encoded by the runtime.
+ *   formName       REQUIRED. snake_case event label. Emitted as `lead_capture.form_name` in GA4.
+ *                  Keep stable — GA4 reports pivot on this string.
+ *   successPath    REQUIRED. Path to redirect to after the user has submitted (e.g. /download/x?success=true).
+ *                  The success card on the page is responsible for reading this param and showing the
+ *                  "check your inbox" message.
+ *   trackFields    OPTIONAL. Field names whose values are included in the GA4 event.
+ *                  Defaults to ['stage', 'interest', 'service'] — the same as LeadFormTracker.astro.
+ *
+ * How it works:
+ *   - On `submit`, preventDefault and read all named fields from the form.
+ *   - Build a mailto: URL with the templates from props, interpolating submitted field values.
+ *   - Fire `gtag('event', 'lead_capture', { form_name, page_path, ...tracked fields })` BEFORE
+ *     navigating. This preserves GA4 attribution that we had via Formspree + LeadFormTracker.
+ *   - Navigate to the mailto: URL (opens the user's mail client pre-populated).
+ *   - After 800ms, navigate to successPath so the success card renders even if the OS doesn't
+ *     open a mail client (matches first-timer-field-guide behavior).
+ *
+ * Why mailto: + GA4 inline (not Formspree):
+ *   - Formspree free tier (Aloha) does NOT send autoresponders with attachments. Plus tier
+ *     (~$15/mo) is required for the file-delivery feature. Steve opted for the manual-reply
+ *     operator workflow on 2026-07-13.
+ *   - mailto: is zero third-party, zero SSR surface area, no Vercel env vars. Reuses the
+ *     existing operator workflow that already serves /download/first-timer-field-guide.
+ *   - GA4 attribution is preserved via the inline gtag() call — no observability loss.
+ *
+ * Sprint 78 lead-funnel architecture simplification: 3 Formspree (newsletter x2, service-referral)
+ * + 3 mailto (PDF gates). This component is the shared abstraction for the mailto: side.
+ */
+
+interface Props {
+  formId: string;
+  leadTo: string;
+  leadSubject: string;
+  leadBody: string;
+  formName: string;
+  successPath: string;
+  trackFields?: string[];
+}
+
+const {
+  formId,
+  leadTo,
+  leadSubject,
+  leadBody,
+  formName,
+  successPath,
+  trackFields = ['stage', 'interest', 'service'],
+} = Astro.props;
+---
+
+<form
+  id={formId}
+  class="lead-mailto-form"
+  data-lead-to={leadTo}
+  data-lead-subject={leadSubject}
+  data-lead-body={leadBody}
+  data-form-name={formName}
+  data-success-path={successPath}
+  data-track-fields={trackFields.join(',')}
+>
+  <slot />
+</form>
+
+<script is:inline define:vars={{ formId }}>
+  // Inline IIFE — matches the first-timer-field-guide pattern. Reads the form
+  // attributes set by LeadMailtoForm.astro (data-lead-to, data-lead-subject,
+  // data-lead-body, data-form-name, data-success-path, data-track-fields) and
+  // wires the submit handler.
+  (function () {
+    var form = document.getElementById(formId);
+    if (!form) return;
+
+    function escape(value) {
+      // Read field value safely (selects, inputs, textareas). Returns '' for missing.
+      if (value == null) return '';
+      return String(value);
+    }
+
+    function fireGA4(form, formName, trackFields) {
+      try {
+        if (typeof window.gtag !== 'function') return;
+        var payload = {
+          form_name: formName,
+          page_path: window.location.pathname,
+        };
+        trackFields.forEach(function (name) {
+          try {
+            var el = form.elements.namedItem(name);
+            if (el && 'value' in el && el.value) {
+              payload[name] = el.value;
+            }
+          } catch (_) {}
+        });
+        window.gtag('event', 'lead_capture', payload);
+      } catch (_) {
+        // Tracking must never break the actual form submit.
+      }
+    }
+
+    function buildMailto(to, subjectTpl, bodyTpl, values) {
+      function interpolate(s) {
+        return s.replace(/\{([a-zA-Z0-9_-]+)\}/g, function (_m, key) {
+          return values[key] != null ? values[key] : '';
+        });
+      }
+      return 'mailto:' + encodeURIComponent(to)
+        + '?subject=' + encodeURIComponent(interpolate(subjectTpl))
+        + '&body=' + encodeURIComponent(interpolate(bodyTpl));
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var to = form.getAttribute('data-lead-to') || '';
+      var subjectTpl = form.getAttribute('data-lead-subject') || '';
+      var bodyTpl = form.getAttribute('data-lead-body') || '';
+      var formName = form.getAttribute('data-form-name') || '';
+      var successPath = form.getAttribute('data-success-path') || '';
+      var trackFields = (form.getAttribute('data-track-fields') || '').split(',').filter(Boolean);
+
+      // Collect all named field values for both mailto interpolation and GA4.
+      var values = {};
+      try {
+        var elements = form.elements;
+        for (var i = 0; i < elements.length; i++) {
+          var el = elements[i];
+          if (!el.name) continue;
+          values[el.name] = escape(el.value);
+        }
+      } catch (_) {}
+
+      // Require at least the email field — same as Formspree's email-required contract.
+      if (!values.email) {
+        return;
+      }
+
+      fireGA4(form, formName, trackFields);
+      window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
+
+      // After the OS opens the mail client, redirect to the success card so the page
+      // state matches the post-submit UX. Same 800ms delay as first-timer-field-guide.
+      setTimeout(function () {
+        if (successPath) {
+          window.location.href = successPath;
+        }
+      }, 800);
+    });
+  })();
+</script>

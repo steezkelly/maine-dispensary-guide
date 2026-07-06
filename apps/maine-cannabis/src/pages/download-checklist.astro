@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import PineTree from '@network/ui/PineTree';
-import LeadFormTracker from '../components/LeadFormTracker.astro';
+import LeadMailtoForm from '../components/LeadMailtoForm.astro';
 
 const roadmapFeatures = [
   { 
@@ -301,7 +301,15 @@ const roadmapFeatures = [
         <h1>Your Professional Roadmap to the Maine Market</h1>
         <p class="lead">Stop guessing at regulations. Download the definitive, 40-page founder's guide to launching and scaling a Maine cannabis dispensary.</p>
         
-        <form class="lead-capture-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+        <LeadMailtoForm
+          formId="download-checklist-lead-form"
+          leadTo="hello@mainedispensaryguide.com"
+          leadSubject="Roadmap request: {email}"
+          leadBody={"Hi — please send me the Maine Dispensary Roadmap PDF.\n\nName: {name}\nEmail: {email}\nStage: {stage}\nInterest: {interest}\nSource page: /download-checklist"}
+          formName="download_checklist"
+          successPath="/download-checklist?success=true"
+          trackFields={['stage', 'interest']}
+        >
           <div class="input-stack">
             <label for="lead-name" class="sr-only">Your Name</label>
             <input type="text" id="lead-name" name="name" placeholder="Your Name" required />
@@ -326,7 +334,17 @@ const roadmapFeatures = [
             <button type="submit" class="btn-primary">Send Me the Roadmap &rarr;</button>
           </div>
           <p class="form-disclaimer">Join 500+ Maine entrepreneurs. 100% Privacy. Zero Spam.</p>
-        </form>
+        </LeadMailtoForm>
+
+        <div id="download-checklist-success" class="form-success" style="display: none;">
+          <h3>Check your inbox — your Roadmap is on its way!</h3>
+          <p>If it doesn't arrive in a few minutes, check spam.</p>
+          <p>
+            While you wait, the
+            <a href="/launch-checklist">interactive 2026 Launch Checklist</a>
+            is also live on the site.
+          </p>
+        </div>
       </div>
       
       <div class="hero-visual">
@@ -392,5 +410,18 @@ const roadmapFeatures = [
     <p>Authored by industry experts. Updated for 2026 Maine OCP Statutes.</p>
   </section>
 
-  <LeadFormTracker formSelector=".lead-capture-form" formName="download_checklist" />
 </Layout>
+
+<script is:inline>
+  // mailto: post-submit success card. The LeadMailtoForm component redirects
+  // to ?success=true after the user submits; render the form differently so
+  // the user sees "check your inbox" instead of the empty form.
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('success') !== 'true') return;
+    var form = document.getElementById('download-checklist-lead-form');
+    if (form) form.style.display = 'none';
+    var card = document.getElementById('download-checklist-success');
+    if (card) card.style.display = 'block';
+  })();
+</script>
