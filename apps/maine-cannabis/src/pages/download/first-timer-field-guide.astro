@@ -1,14 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
-import LeadFormTracker from '../../components/LeadFormTracker.astro';
 
 const pageTitle = "Free Maine First-Timer's Field Guide | Your First Dispensary Visit, Explained";
 const pageDescription = "A free 9-page field guide for first-time Maine cannabis buyers — what to bring, day-of flow at the dispensary, how to choose a product, payment and taxes, and the eight first-time mistakes to avoid. Written by the Maine Dispensary Guide editorial team.";
 const pdfUrl = "/downloads/maine-first-timer-field-guide.pdf";
-const formName = "first_timer_field_guide";
+const leadTo = "hello@mainedispensaryguide.com";
+const leadSubject = "Field Guide request: {email}";
+const leadBody = "Hi — please send me the Maine First-Timer's Field Guide PDF.\n\nMy email: {email}\nSource page: /download/first-timer-field-guide";
 
-const article = { publishDate: "2026-07-05", modifiedDate: "2026-07-05" };
+const article = { publishDate: "2026-07-05", modifiedDate: "2026-07-06" };
 
 const success = Astro.url.searchParams.get('success') === 'true';
 ---
@@ -397,9 +398,10 @@ const success = Astro.url.searchParams.get('success') === 'true';
         <h2>Send me the free PDF</h2>
         <form
           id="lead-form"
-          action="https://formspree.io/f/xvgzlowz"
-          method="POST"
           class="capture-form"
+          data-lead-to={leadTo}
+          data-lead-subject={leadSubject}
+          data-lead-body={leadBody}
         >
           <div class="form-group">
             <label for="email">Email address</label>
@@ -418,11 +420,6 @@ const success = Astro.url.searchParams.get('success') === 'true';
             <span>I am 21 or older and a resident of or visitor to a state where cannabis is legal.</span>
           </label>
 
-          <input type="hidden" name="magnet" value="first-timer-field-guide" />
-          <input type="hidden" name="source_page" value="/download/first-timer-field-guide" />
-          <input type="hidden" name="_subject" value="New lead: First-Timer Field Guide" />
-          <input type="hidden" name="_next" value="https://mainedispensaryguide.com/download/first-timer-field-guide?success=true" />
-
           <button type="submit" class="cta-button">
             Send me the free PDF
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -430,8 +427,37 @@ const success = Astro.url.searchParams.get('success') === 'true';
             </svg>
           </button>
         </form>
+        <script is:inline>
+          // Build a mailto: URL from the submitted email + the form's
+          // pre-baked subject/body templates, then navigate the browser
+          // to the user's email client with that URL. The user-agent
+          // opens the OS-default mail program pre-populated; clicking
+          // send delivers the lead's address to hello@mainedispensaryguide.com
+          // (already routed to the operator's steezkelly@purelymail.com inbox
+          // via Purelymail catch-all). See LEAD_CAPTURE_SETUP.md for the flow.
+          (function () {
+            var form = document.getElementById('lead-form');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var email = (form.elements.namedItem('email') || {}).value || '';
+              if (!email) return;
+              var to = form.getAttribute('data-lead-to') || '';
+              var subjectTpl = form.getAttribute('data-lead-subject') || '';
+              var bodyTpl = form.getAttribute('data-lead-body') || '';
+              var interpolate = function (s) { return s.replace(/\{email\}/g, email); };
+              var url = 'mailto:' + encodeURIComponent(to)
+                + '?subject=' + encodeURIComponent(interpolate(subjectTpl))
+                + '&body=' + encodeURIComponent(interpolate(bodyTpl));
+              window.location.href = url;
+              setTimeout(function () {
+                window.location.href = '/download/first-timer-field-guide?success=true';
+              }, 800);
+            });
+          })();
+        </script>
         <div class="trust-row">
-          <span>🔒 No spam — one email per quarter of editorial</span>
+          <span>🔒 No spam — your email only goes to the Maine Dispensary Guide editor</span>
           <span>📄 Unsubscribe any time</span>
         </div>
 
@@ -454,6 +480,4 @@ const success = Astro.url.searchParams.get('success') === 'true';
       <p style="margin-top: 0.5rem;">Written by Eliot Nash. Reviewed by Calvin Waters, Licensing &amp; Compliance Analyst.</p>
     </footer>
   </div>
-
-  <LeadFormTracker formSelector=".capture-form" formName={formName} />
 </Layout>
