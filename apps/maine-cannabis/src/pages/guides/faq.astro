@@ -1,22 +1,178 @@
---- import Layout from '../../layouts/Layout.astro';
-import AutoRelated from '../../components/AutoRelated.astro'; import FaqSchema from '../../components/Faq.astro'; const article = { author: "Eliot Nash", authorId: "eliot-nash", reviewer: { name: "Calvin Waters", jobTitle: "Licensing & Compliance Analyst", id: "calvin-waters" }, publishDate: "2026-04-20", modifiedDate: "2026-06-07", section: "Resources" }; const licensingFaqs = [
-  { question: "How long does Maine cannabis licensing take?", answer: "OCP processes complete applications in 60-120 days, but municipal authorization can add 3-9 months. Portland, Lewiston, and Augusta have different timelines. Build 9-18 months from application to opening into your business plan. See: /guides/maine-dispensary-license/" }, { question: "What does the OCP licensing application cost in Maine?", answer: "Adult-use retail license application fee is $500, with annual renewal at $2,500. Municipal fees vary from $0 to $5,000 annually depending on the town. Total first-year licensing costs range from $1,500 to $8,000 depending on location. See: /guides/maine-dispensary-license/" }, { question: "How do I get a cannabis dispensary license in Maine?", answer: "Apply through the Maine Office of Cannabis Policy (OCP). You need a Conditional License first (30-60 days), then Local Authorization from your town, then Active Licensure after final inspection. Full process: /guides/maine-dispensary-license/" }, { question: "How much does a Maine cannabis license cost?", answer: "Application fees range from $500 (Tier 1 cultivation) to $5,000 (Tier 4). Annual renewal fees are $1,000-$10,000 depending on tier. See full fee schedule: /guides/maine-dispensary-costs/" }, { question: "How long does the Maine licensing process take?", answer: "Typically 6-12 months from application to opening. Conditional licensure takes 30-60 days, local authorization 1-3 months, and buildout/inspection 2-4 months. For a visual timeline of the full process, see our <a href=\"/blog/maine-dispensary-how-to-open/\">step-by-step guide to opening a dispensary in Maine</a>." }, { question: "What is the IIC/AIC requirement in Maine?", answer: "Every officer needs an Authorized Individual Card (AIC). Every employee needs an Individual Identification Card (IIC). Both require background checks through the OCP." }, { question: "Can I operate a cannabis business alone in Maine?", answer: "Technically yes, but it's not recommended. The OCP and 280E tax rules make solo operation extremely difficult. Most successful operators have a team covering operations, compliance, and business development." } ]; const zoningFaqs = [ { question: "Which Maine towns allow cannabis dispensaries?", answer: "About 30 towns have opted in to adult-use retail. Check the complete list: /guides/maine-cannabis-opt-in-tracker/" },{ question: "How far from schools can a dispensary be located?", answer: "Maine requires a 1,000ft buffer (or town-reduced 300ft) from schools. The OCP measures from your primary entrance to the school's primary entrance — not property line to property line." }, { question: "Does medical marijuana authorization mean adult-use is allowed?", answer: "No. Many towns allow medical but not adult-use retail. Always check the specific land-use ordinance for 'Retail Storefront' authorization." }, { question: "What zoning requirements apply to Maine dispensaries?", answer: "Requirements vary by municipality. Common requirements include: distance from schools/churches, parking minimums, signage restrictions, and operating hour limits. See: /guides/maine-cannabis-real-estate/" } ]; const taxFaqs = [
-  { question: "What is IRS 280E and how does it affect Maine dispensaries?", answer: "IRC Section 280E prohibits cannabis businesses from deducting ordinary business expenses at the federal level. You pay tax on gross profit, not net income. Effective tax rate is 65-75% versus 21% for normal businesses. Maine partially offsets this with state income subtraction modifications. See: /guides/maine-cannabis-taxes-2026/" },
+---
+import Layout from '../../layouts/Layout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  reviewer: { name: "Calvin Waters", jobTitle: "Licensing & Compliance Analyst", id: "calvin-waters" },
+  publishDate: "2026-04-20",
+  modifiedDate: "2026-07-13",
+  section: "Resources"
+};
+
+// Buyer-intent FAQ category. Added 2026-07-13 (Sprint 78d) to capture
+// the top-converting GSC queries from /learn+ GSC searchanalytics:
+//   "how to open a dispensary in maine"  (36 imp, pos 22.2)
+//   "how to start a dispensary in maine"  (33 imp, pos 15.8)
+//   "how much does it cost to open a dispensary"  (3 imp, pos 6.7)
+//   "cannabis workers permit"  (3 imp, pos 51.2)
+//   "cannabis business licensing in maine"  (43 imp, pos 24.5)
+// All answers link out to the deeper guides so the FAQ captures
+// search traffic at the question-query layer and routes to deep content.
+const gettingStartedFaqs = [
+  {
+    question: "How to open a dispensary in Maine",
+    answer: "Opening a dispensary in Maine is a 4–9 month process across 6 phases: (1) form a Maine LLC or corporation, (2) secure a commercially-zoned location in an opted-in municipality, (3) obtain written municipal authorization, (4) submit your complete OCP conditional license application, (5) pass the pre-licensing facility inspection, and (6) receive your license and begin operations. The Maine Office of Cannabis Policy (OCP) processes complete applications in 60–120 days. Most of the timeline is municipal approval (4–12 weeks) and OCP review, not the OCP application itself. For the step-by-step visual plan, see our <a href=\"/launch-checklist\">launch checklist</a> or the dedicated <a href=\"/guides/maine-dispensary-license\">licensing guide</a>."
+  },
+  {
+    question: "How to start a cannabis business in Maine",
+    answer: "Starting a cannabis business in Maine requires choosing the right license type (Cannabis Store for adult-use retail, Medical Dispensary for medical-only, plus cultivation/manufacturing/courier tiers), forming a Maine business entity, securing a location in an opted-in municipality with the proper zoning and 500-foot buffer from schools, demonstrating $50,000 in liquid assets or a business line of credit, and submitting a complete OCP application package. The full timeline from entity formation to first sale is typically 4–9 months for retail operations. See the full <a href=\"/guides/maine-dispensary-license\">licensing process</a> or the <a href=\"/guides/maine-dispensary-business-plan\">business plan guide</a>."
+  },
+  {
+    question: "How much does it cost to open a dispensary in Maine",
+    answer: "Total startup costs for a Maine dispensary typically run $300,000–$700,000. The breakdown: state licensing ($500 application + $2,500 annual renewal), municipal fees ($0–$5,000 depending on town), location build-out ($150,000–$400,000), security systems ($25,000–$50,000), initial inventory ($50,000–$100,000), POS and technology ($10,000–$20,000), and 12–18 months of working capital ($150,000–$300,000). You must demonstrate at least $50,000 in liquid assets or a business line of credit as part of your OCP application. See the full <a href=\"/guides/maine-dispensary-costs\">cost breakdown</a> with operator-sourced numbers."
+  },
+  {
+    question: "Cannabis workers permit in Maine",
+    answer: "Maine does not use the term 'cannabis workers permit' — the equivalent is the Individual Identification Card (IIC) for any employee handling cannabis, and the Authorized Individual Card (AIC) for owners, officers, and anyone with a financial interest. Both require background checks through the Maine State Police. Employees must complete state-approved responsible vendor training within 90 days of hire. The OCP-issued badges must be displayed on-site. The actual cultivation/handling permit is part of the cannabis store license, not a separate employee document. See the <a href=\"/guides/maine-cannabis-staffing-licensing\">staffing and licensing guide</a>."
+  },
+  {
+    question: "Cannabis business licensing in Maine",
+    answer: "Maine issues seven cannabis license categories: Cannabis Store (adult-use retail, $2,500/year), Medical Dispensary ($500–$3,000/year based on revenue), Cultivation (Tier 1–4, $1,000–$10,000/year), Products Manufacturing ($2,500/year), Courier/delivery ($1,000/year), Testing Facility ($1,500–$3,000/year), and Micro-Business ($500/year). Most new operators pursue the Cannabis Store license first, then add endorsements. See the complete <a href=\"/guides/maine-dispensary-license\">license guide</a> with eligibility, application process, and fees."
+  }
+];
+
+const licensingFaqs = [
+  { question: "How long does Maine cannabis licensing take?", answer: "OCP processes complete applications in 60–120 days, but municipal authorization can add 3–9 months. Portland, Lewiston, and Augusta have different timelines. Build 9–18 months from application to opening into your business plan. See: /guides/maine-dispensary-license/" },
+  { question: "What does the OCP licensing application cost in Maine?", answer: "Adult-use retail license application fee is $500, with annual renewal at $2,500. Municipal fees vary from $0 to $5,000 annually depending on the town. Total first-year licensing costs range from $1,500 to $8,000 depending on location. See: /guides/maine-dispensary-license/" },
+  { question: "How do I get a cannabis dispensary license in Maine?", answer: "Apply through the Maine Office of Cannabis Policy (OCP). You need a Conditional License first (30–60 days), then Local Authorization from your town, then Active Licensure after final inspection. Full process: /guides/maine-dispensary-license/" },
+  { question: "How much does a Maine cannabis license cost?", answer: "Application fees range from $500 (Tier 1 cultivation) to $5,000 (Tier 4). Annual renewal fees are $1,000–$10,000 depending on tier. See full fee schedule: /guides/maine-dispensary-costs/" },
+  { question: "How long does the Maine licensing process take?", answer: "Typically 6–12 months from application to opening. Conditional licensure takes 30–60 days, local authorization 1–3 months, and buildout/inspection 2–4 months. For a visual timeline of the full process, see our <a href=\"/blog/maine-dispensary-how-to-open/\">step-by-step guide to opening a dispensary in Maine</a>." },
+  { question: "What is the IIC/AIC requirement in Maine?", answer: "Every officer needs an Authorized Individual Card (AIC). Every employee needs an Individual Identification Card (IIC). Both require background checks through the OCP." },
+  { question: "Can I operate a cannabis business alone in Maine?", answer: "Technically yes, but it's not recommended. The OCP and 280E tax rules make solo operation extremely difficult. Most successful operators have a team covering operations, compliance, and business development." }
+];
+
+const zoningFaqs = [
+  { question: "Which Maine towns allow cannabis dispensaries?", answer: "About 30 towns have opted in to adult-use retail. Check the complete list: /guides/maine-cannabis-opt-in-tracker/" },
+  { question: "How far from schools can a dispensary be located?", answer: "Maine requires a 1,000ft buffer (or town-reduced 300ft) from schools. The OCP measures from your primary entrance to the school's primary entrance — not property line to property line." },
+  { question: "Does medical marijuana authorization mean adult-use is allowed?", answer: "No. Many towns allow medical but not adult-use retail. Always check the specific land-use ordinance for 'Retail Storefront' authorization." },
+  { question: "What zoning requirements apply to Maine dispensaries?", answer: "Requirements vary by municipality. Common requirements include: distance from schools/churches, parking minimums, signage restrictions, and operating hour limits. See: /guides/maine-cannabis-real-estate/" }
+];
+
+const taxFaqs = [
+  { question: "What is IRS 280E and how does it affect Maine dispensaries?", answer: "IRC Section 280E prohibits cannabis businesses from deducting ordinary business expenses at the federal level. You pay tax on gross profit, not net income. Effective tax rate is 65–75% versus 21% for normal businesses. Maine partially offsets this with state income subtraction modifications. See: /guides/maine-cannabis-taxes-2026/" },
   { question: "What is Maine's cannabis income subtraction modification?", answer: "Maine allows cannabis businesses to subtract IRC 280E expenses from state taxable income, effectively restoring normal business deductions at the state level. This reduces effective state tax rate significantly but does not eliminate the federal 280E burden. See: /guides/maine-cannabis-taxes-2026/" },
   { question: "What taxes do Maine cannabis businesses pay?", answer: "Maine cannabis operators pay a per-pound cultivation excise tax (reduced to $223/lb for flower, $63/lb for trim, etc., effective January 1, 2026 under P.L. 2025, c. 388, Pt. F), plus a 14% retail sales tax on adult-use cannabis (up from 10% on the same date), plus the 5.5% state sales tax. Federal income tax applies with IRC §280E restrictions for the adult-use side; medical operators can reclaim ordinary deductions after the April 28, 2026 Schedule III reclassification. See: /guides/maine-cannabis-taxes-2026/" },
-  { question: "Can Maine cannabis businesses use traditional banks?", answer: "Most national banks avoid cannabis due to federal illegality. Maine credit unions are more flexible. Operators should maintain multiple banking relationships and keep 60-90 days operating reserves in case accounts close suddenly. See: /guides/maine-cannabis-banking-solutions/" },
-  { question: "How much does it cost to open a dispensary in Maine?", answer: "Startup costs range from $300,000-$500,000 for a basic retail operation in Maine. This includes licensing fees, security systems, buildout, inventory, and operating capital for the ramp-up period before reaching profitability. See: /guides/maine-dispensary-costs/" },
+  { question: "Can Maine cannabis businesses use traditional banks?", answer: "Most national banks avoid cannabis due to federal illegality. Maine credit unions are more flexible. Operators should maintain multiple banking relationships and keep 60–90 days operating reserves in case accounts close suddenly. See: /guides/maine-cannabis-banking-solutions/" },
+  { question: "How much does it cost to open a dispensary in Maine?", answer: "Startup costs range from $300,000–$500,000 for a basic retail operation in Maine. This includes licensing fees, security systems, buildout, inventory, and operating capital for the ramp-up period before reaching profitability. See: /guides/maine-dispensary-costs/" },
   { question: "Are there 280E workarounds for Maine operators?", answer: "Maine's income subtraction modification provides partial relief at the state level. The most effective federal strategy is maximizing Cost of Goods Sold through yield-based inventory costing. Work with a cannabis-specialized CPA to implement compliant COGS methodologies. See: /guides/maine-cannabis-taxes-2026/" }
-]; const operationsFaqs = [ { question: "What POS system should a Maine dispensary use?", answer: "Your POS must sync with Metrc in real-time. Popular options include Dutchie, Flowhub, and Blaze. Discrepancies over 1% between physical and digital inventory risk fines. See: /guides/maine-dispensary-pos/" }, { question: "What are Maine's cannabis delivery rules?", answer: "Maine allows licensed dispensaries to deliver with a separate courier license from the OCP. Drivers need OCP-issued badges, vehicles need GPS tracking. See: /guides/maine-cannabis-delivery-rules/" }, { question: "What security requirements apply to Maine dispensaries?", answer: "Requirements include: cameras at all entry/exit points, POS areas, vault, and storage. 90-day footage retention. Limited Access Area signage. Vault integrity. See: /guides/maine-dispensary-security/" }, { question: "How do I track inventory in a Maine dispensary?", answer: "All cannabis products must be tracked through Metrc seed-to-sale system. Weekly physical-to-digital inventory counts are essential for compliance. See: /guides/maine-cannabis-inventory-management/" }, { question: "What are Maine's cannabis marketing restrictions?", answer: "Maine restricts marketing that targets minors, makes health claims, or uses cartoon characters. All advertising must include age-gating. See: /guides/maine-cannabis-marketing-compliance/" } ]; const cityFaqs = [ { question: "Where can I open a dispensary in Portland, Maine?", answer: "Portland is Maine's largest cannabis market. Key areas: Congress Street, East Bayside, and the Peninsula. See: /guides/portland-dispensary-guide/" }, { question: "Is Bangor a good market for a cannabis dispensary?", answer: "Bangor serves eastern Maine with limited competition. Strong medical market transitioning to adult-use. See: /guides/bangor-dispensary-guide/" }, { question: "What about Lewiston-Auburn?", answer: "L-A is Maine's second-largest metro with growing demand. Franco-American heritage market, lower real estate costs than Portland. See: /guides/lewiston-dispensary-guide/" }, { question: "Are there opportunities in smaller Maine towns?", answer: "Yes. Brunswick, Biddeford, Sanford, and Scarborough all have opt-in status and underserved markets. See our city guides for details." } ]; const allFaqs = [...licensingFaqs,...zoningFaqs,...taxFaqs,...operationsFaqs,...cityFaqs];
---- <Layout title="Maine Cannabis FAQ — Licensing, Zoning, Tax & Operations" description="complete FAQ for Maine cannabis entrepreneurs. Licensing process, 280E tax, zoning rules, security requirements, and city-specific guidance." heroImage="/images/heroes/faq.jpg" article={article} > <style>
-.faq-intro { max-width: 700px; margin: 0 0 3rem; font-size: 1.125rem; color: var(--color-text-light); line-height: 1.7; }.faq-category { margin-bottom: 3rem; }.faq-category h2 { font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-primary); margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--color-primary); display: inline-block; }.faq-list { display: flex; flex-direction: column; gap: 0.75rem; }.faq-item { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; overflow: hidden; transition: border-color 0.2s; }.faq-item:hover { border-color: var(--color-primary); }.faq-item summary { padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: var(--color-text); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s; }.faq-item summary::-webkit-details-marker { display: none; }.faq-item summary::before { content: "◆"; color: var(--color-primary); font-size: 0.75rem; flex-shrink: 0; transition: transform 0.2s; }.faq-item[open] summary::before { content: "▼"; }.faq-item summary:hover { background: rgba(122, 154, 106, 0.05); }.faq-item p { padding: 0 1.5rem 1.25rem 2.5rem; color: var(--color-text-light); line-height: 1.7; margin: 0; }.faq-item p a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 2px; }.faq-item p a:hover { color: var(--color-accent); }.faq-cta { text-align: center; padding: 3rem 2rem; background: var(--color-surface); border-radius: 2rem; border: 1px solid var(--color-border); margin-top: 3rem; }.faq-cta h2 { font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-primary); margin-bottom: 1rem; }.faq-cta p { color: var(--color-text-light); max-width: 500px; margin: 0 auto 1.5rem; font-size: 1rem; }.cta-link { display: inline-block; background: var(--color-primary); color: white; padding: 0.875rem 1.75rem; border-radius: 2rem; font-weight: 600; text-decoration: none; transition: transform 0.15s, box-shadow 0.15s; }.cta-link:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(6, 26, 27, 0.2); } [data-theme="dark"].faq-item { background: var(--color-surface); } [data-theme="dark"].faq-item summary:hover { background: rgba(122, 154, 106, 0.1); } @media (max-width: 768px) {.faq-category h2 { font-size: 1.25rem; }.faq-item summary { padding: 1rem 1.25rem; font-size: 0.9375rem; }.faq-item p { padding: 0 1.25rem 1rem 2rem; font-size: 0.9375rem; } } 
+];
+
+const operationsFaqs = [
+  { question: "What POS system should a Maine dispensary use?", answer: "Your POS must sync with Metrc in real-time. Popular options include Dutchie, Flowhub, and Blaze. Discrepancies over 1% between physical and digital inventory risk fines. See: /guides/maine-dispensary-pos/" },
+  { question: "What are Maine's cannabis delivery rules?", answer: "Maine allows licensed dispensaries to deliver with a separate courier license from the OCP. Drivers need OCP-issued badges, vehicles need GPS tracking. See: /guides/maine-cannabis-delivery-rules/" },
+  { question: "What security requirements apply to Maine dispensaries?", answer: "Requirements include: cameras at all entry/exit points, POS areas, vault, and storage. 90-day footage retention. Limited Access Area signage. Vault integrity. See: /guides/maine-dispensary-security/" },
+  { question: "How do I track inventory in a Maine dispensary?", answer: "All cannabis products must be tracked through Metrc seed-to-sale system. Weekly physical-to-digital inventory counts are essential for compliance. See: /guides/maine-cannabis-inventory-management/" },
+  { question: "What are Maine's cannabis marketing restrictions?", answer: "Maine restricts marketing that targets minors, makes health claims, or uses cartoon characters. All advertising must include age-gating. See: /guides/maine-cannabis-marketing-compliance/" }
+];
+
+const cityFaqs = [
+  { question: "Where can I open a dispensary in Portland, Maine?", answer: "Portland is Maine's largest cannabis market. Key areas: Congress Street, East Bayside, and the Peninsula. See: /guides/portland-dispensary-guide/" },
+  { question: "Is Bangor a good market for a cannabis dispensary?", answer: "Bangor serves eastern Maine with limited competition. Strong medical market transitioning to adult-use. See: /guides/bangor-dispensary-guide/" },
+  { question: "What about Lewiston-Auburn?", answer: "L-A is Maine's second-largest metro with growing demand. Franco-American heritage market, lower real estate costs than Portland. See: /guides/lewiston-dispensary-guide/" },
+  { question: "Are there opportunities in smaller Maine towns?", answer: "Yes. Brunswick, Biddeford, Sanford, and Scarborough all have opt-in status and underserved markets. See our city guides for details." }
+];
+---
+
+<Layout
+  title="Maine Cannabis FAQ — Licensing, Zoning, Tax & Operations"
+  description="Complete FAQ for Maine cannabis entrepreneurs. Licensing process, 280E tax, zoning rules, security requirements, and city-specific guidance."
+  heroImage="/images/heroes/faq.jpg"
+  article={article}
+>
+<style>
+  .faq-intro { max-width: 700px; margin: 0 0 3rem; font-size: 1.125rem; color: var(--color-text-light); line-height: 1.7; }
+  .faq-category { margin-bottom: 3rem; }
+  .faq-category h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+  }
+  .faq-category .faq-context {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.25rem;
+    max-width: 720px;
+  }
+  .faq-cta { text-align: center; padding: 3rem 2rem; background: var(--color-surface); border-radius: 2rem; border: 1px solid var(--color-border); margin-top: 3rem; }
+  .faq-cta h2 { font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-primary); margin-bottom: 1rem; }
+  .faq-cta p { color: var(--color-text-light); max-width: 500px; margin: 0 auto 1.5rem; font-size: 1rem; }
+  .cta-link { display: inline-block; background: var(--color-primary); color: white; padding: 0.875rem 1.75rem; border-radius: 2rem; font-weight: 600; text-decoration: none; transition: transform 0.15s, box-shadow 0.15s; }
+  .cta-link:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(6, 26, 27, 0.2); }
+  [data-theme="dark"] .faq-cta { background: var(--color-surface); }
+  @media (max-width: 768px) {
+    .faq-category h2 { font-size: 1.25rem; }
+  }
 </style>
-<a href="/all-guides" class="cta-link">Browse All Guides →</a> </section>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis FAQ — Licensing, Zoning, Tax & Operations</h1>
+    <p class="subtitle">Frequently asked questions about opening and operating a cannabis business in Maine. Every answer links to the full guide.</p>
+  </div>
+
+  <p class="faq-intro">
+    This FAQ answers the most common questions we hear from prospective Maine cannabis operators — from licensing timelines and startup costs to 280E tax strategy and city-specific market context. Every question links to a deeper guide so you can dig into the details that matter for your operation.
+  </p>
+
+  <section class="faq-category">
+    <h2>Getting Started — Opening a Dispensary</h2>
+    <p class="faq-context">The questions operators ask first. Each answer links to the full guide for the step it covers.</p>
+    <Faq faqs={gettingStartedFaqs} />
+  </section>
+
+  <section class="faq-category">
+    <h2>Licensing</h2>
+    <Faq faqs={licensingFaqs} />
+  </section>
+
+  <section class="faq-category">
+    <h2>Zoning & Real Estate</h2>
+    <Faq faqs={zoningFaqs} />
+  </section>
+
+  <section class="faq-category">
+    <h2>Taxes & Banking</h2>
+    <Faq faqs={taxFaqs} />
+  </section>
+
+  <section class="faq-category">
+    <h2>Operations & Compliance</h2>
+    <Faq faqs={operationsFaqs} />
+  </section>
+
+  <section class="faq-category">
+    <h2>City-Specific Market Context</h2>
+    <Faq faqs={cityFaqs} />
+  </section>
+
+  <section class="faq-cta">
+    <h2>Ready to dig deeper?</h2>
+    <p>Browse our complete guide library for the full picture on licensing, costs, taxes, operations, and city-specific market dynamics.</p>
+    <a href="/all-guides" class="cta-link">Browse All Guides →</a>
+  </section>
 
   <section class="further-reading">
-    <AutoRelated currentPath="/guides/faq" currentTopics={[]} section="Resources" limit={6} />
+    <AutoRelated currentPath="/guides/faq" currentTopics={['licensing', 'compliance', 'operations']} section="Resources" limit={6} />
   </section>
 
   <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p>
+</article>
 </Layout>
