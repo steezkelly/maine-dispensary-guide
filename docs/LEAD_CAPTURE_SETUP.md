@@ -167,3 +167,4 @@ already creates submission records; configure the autoresponder in
 the Formspree dashboard for each if you want PDF delivery on those
 too. Future PDFs that should go through the new endpoint (e.g. a
 second consumer-facing magnet) just need a new entry in `MAGNETS`.
+
