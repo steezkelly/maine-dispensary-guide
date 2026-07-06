@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (third session — Tier 2.1 Path B shipped: 730-line SSR endpoint retired, mailto: form live)**
+|**Last updated: 2026-07-06 EDT (third session — Tier 1.2 Build & Deploy shape added to AGENTS.md)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -76,6 +76,16 @@
 
 ---
 
+
+
+## 📋 THIRD-SESSION TIER 1.2 AGENTS.md SHAPE SECTION (Jul 6, 2026 EDT) — `5ccdb7a0`
+
+- **What:** Added a "Build & Deploy shape" section to `AGENTS.md` covering what `npm run build` actually does, what Vercel actually serves, what env vars are set, which `/api/*` routes exist (none), which page owns the lead-funnel pattern, and how to read build output signals.
+- **Why (Tier 1.2 of modernization plan):** future agents won't re-discover the same operational facts this session paid 4 deploys and 2 production regressions to learn. The `vercel.json` `outputDirectory: "dist"` value + the `dist/` artifact at repo root both mislead; AGENTS.md now states what Vercel really reads from.
+- **Tier 1.1 deferred:** the "Copied clean output to ../../dist" step in `vercel-build.sh` is non-trivially load-bearing — the next 4 lines (sitemap-prettify, regen-llms, llms.txt copy, mission-control regen) all read from `dist/`. Renaming `dist/` (better cosmetic fix) or rewriting all 4 consumers (correct fix) is a separate commit; AGENTS.md documents the actual relationship in the meantime.
+- **Verified:** smoke-200 254/254 post-deploy. typecheck unchanged (still 360 files, 0 errors).
+
+---
 
 ## 📋 THIRD-SESSION LEAD-FUNNEL COLLAPSE (Jul 6, 2026 EDT) — `bb2b864f`
 
