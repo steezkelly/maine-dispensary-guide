@@ -49,7 +49,11 @@ const { URL } = require('node:url');
 
 const REPO_ROOT = path.join(__dirname, '..', '..', '..');
 const SITEMAP_URL = 'https://mainedispensaryguide.com/sitemap-0.xml';
-const SITE_URL = 'https://mainedispensaryguide.com';
+// GSC stores the property URL with a trailing slash (verified via sites.list 2026-07-13).
+// URL Inspection API does exact-match on siteUrl — without the trailing slash it returns
+// "You do not own this site, or the inspected URL is not part of this property." for
+// every URL even when permissions are correct. Hardcode the canonical form here.
+const SITE_URL = 'https://mainedispensaryguide.com/';
 const CACHE_PATH = path.join(__dirname, '..', '..', 'data', 'gsc-indexing-cache.json');
 const REPORT_DIR = path.join(__dirname, '..', '..', 'data');
 
@@ -118,6 +122,33 @@ async function inspectOne(sc, url) {
   return { url, status, verdict, coverage, lastCrawl, robotsTxt };
 }
 
+// Run inspections with bounded concurrency. GSC URL Inspection API is rate-limited at
+// ~600 req/min per project (10/sec). Concurrency 8 leaves headroom for transient retries.
+// For 251 URLs at avg 1.2s/req serialized = 5min. At concurrency 8 = ~40s.
+async function inspectAll(sc, urls, concurrency = 8) {
+  const results = new Array(urls.length);
+  let next = 0;
+  let completed = 0;
+  async function worker() {
+    while (true) {
+      const i = next++;
+      if (i >= urls.length) return;
+      const url = urls[i];
+      try {
+        results[i] = await inspectOne(sc, url);
+      } catch (e) {
+        results[i] = { url, status: 'ERROR', reason: e.message?.split('\n')[0] || String(e) };
+      }
+      completed++;
+      process.stdout.write(`  [${completed}/${urls.length}] ${url.replace(SITE_URL, '')}\r`);
+    }
+  }
+  const workers = Array.from({ length: concurrency }, () => worker());
+  await Promise.all(workers);
+  process.stdout.write('\n');
+  return results;
+}
+
 async function main() {
   // Resolve target URLs
   let urls;
@@ -183,20 +214,11 @@ async function main() {
   }
   logOk(`Site access verified: ${SITE_URL}`);
 
-  // Inspect each URL. GSC URL Inspection rate limit is ~600 req/min; for 251 URLs
-  // at ~100ms per call, this is ~25s. We serialize to stay well under the limit.
-  logInfo(`Inspecting ${urls.length} URL(s) (this takes ~${Math.round(urls.length * 0.1)}s)…\n`);
-  const results = [];
-  for (let i = 0; i < urls.length; i++) {
-    const url = urls[i];
-    process.stdout.write(`  [${i + 1}/${urls.length}] ${url.replace(SITE_URL, '')}\r`);
-    try {
-      results.push(await inspectOne(sc, url));
-    } catch (e) {
-      results.push({ url, status: 'ERROR', reason: e.message?.split('\n')[0] || String(e) });
-    }
-  }
-  process.stdout.write('\n');
+  // Inspect each URL. GSC URL Inspection rate limit is ~600 req/min; we use bounded
+  // concurrency (8 workers) to stay well under the limit while finishing in ~40s instead
+  // of ~5min for a serialized 251-URL run.
+  logInfo(`Inspecting ${urls.length} URL(s) (this takes ~${Math.round(urls.length * 1.2 / 8)}s)…\n`);
+  const results = await inspectAll(sc, urls, 8);
 
   // Persist
   const record = { timestamp: new Date().toISOString(), sourceUrl: SITE_URL, results };
