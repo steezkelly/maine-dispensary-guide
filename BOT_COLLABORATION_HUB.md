@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (third session — modernization plan shipped)**
+|**Last updated: 2026-07-06 EDT (third session — Tier 1.3 CI check shipped on top of modernization plan)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -64,6 +64,17 @@
 
 ---
 
+
+
+## 📋 THIRD-SESSION TIER 1.3 CI CHECK (Jul 6, 2026 EDT) — `cd82300d`
+
+- **What:** Added a post-build CI step to `.github/workflows/ci.yml` that fails the build if `apps/maine-cannabis/.vercel/output/functions/_render.func/.vc-config.json` is missing.
+- **Why (Tier 1.3 of modernization plan):** Catches the *next* time the deployment shape drifts, exactly the failure mode that cost 2 production regressions this session. Picking `.vc-config.json` as the assertion target because it's the canonical Vercel serverless function config file (stable invariant across adapter versions).
+- **Verified locally:** (a) current build passes the check (`.vc-config.json` exists); (b) negative test — moving the file exits 1 with diagnostic; (c) `npx astro check` 0 errors (362 files); (d) smoke-200 254/254 after push.
+- **Net effect:** any future dep bump, adapter downgrade, or config change that breaks the SSR function shape will fail at CI rather than at production.
+- **Docs only — no source code changes. No operator prereq.**
+
+---
 
 ## 📋 THIRD-SESSION MODERNIZATION PLAN (Jul 6, 2026 EDT) — `docs/MODERNIZATION_PLAN_2026-07-06.md`
 
