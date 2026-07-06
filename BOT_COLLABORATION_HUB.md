@@ -6070,3 +6070,42 @@ this without code change; full inventory captured in the Hub commit message.
 - **Mnemosyne:** action 5 state-of-record.
 - **Sprint 78d status:** actions 2, 4, 5, 6 shipped. Actions 3, 7, 8, 10
   remain deferred (architectural/non-agent work).
+
+### Sprint 78d (cont.): GSC misroute audit script + first baseline (action 6)
+
+- **Why:** Daily v2 analytics dump was flowing but the data was a
+  flat file, not actionable. Operators reading the JSONL had no
+  "here's what to fix" view. This script closes that loop.
+- **What shipped:**
+  - `apps/maine-cannabis/scripts/seo/gsc-misroute-audit.cjs` (273
+    lines): reads JSONL, dedupes by (query, page) using max-impressions,
+    computes top pages by impressions, misroutes where blog/home/learn
+    outranks /guides/, and CTR-loser page-1 ranks with 0 clicks.
+    Renders Markdown report (stdout or `--output=path`).
+  - `apps/maine-cannabis/data/audit-2026-07-06.md` (first baseline)
+  - NPM scripts: `seo:gsc-misroute-audit` (full), `seo:gsc-misroute-audit:week` (last 7d)
+- **First baseline findings (7-day window):**
+  - 246 unique queries, 1114 impressions, 4 clicks, 0.36% CTR
+  - 22 multi-page queries
+  - Top page: `/guides/fryeburg-dispensary-guide` (182 imp) — correctly
+    serving 31 Fryeburg-related queries
+  - 7 misroutes: blog-outranks-guide for buyer-intent queries. Top:
+    "cannabis business licensing in maine" (13 imp), "how to start
+    a dispensary in maine" (10 imp), "how to open a dispensary in
+    maine" (7 imp) — all partially addressed by Sprint 78d action 5
+    (license page title reopt) which is queued for Google's 2-4 week
+    re-crawl
+  - 10 CTR-loser cases: dominated by brand-disambiguation queries where
+    the brand's own site owns positions 1-3 (natural ceiling)
+- **Closes the 2026-05-12 HANDOVER loop** ("we have GSC data but
+  operators don't know what to do with it"). Re-run weekly, diff
+  the report to track which misroutes resolved.
+- **Verified:**
+  - node --check on script: pass (fixed 2 bugs in initial pass:
+    `main` needed `async` qualifier, days-filter label was hardcoded
+    to "last 1 day(s)" instead of using --days value)
+  - npm run verify:iterate: pass
+  - Script runs successfully with --days=7 and --output=path
+- **Mnemosyne:** action 6 state-of-record.
+- **Sprint 78d status:** actions 2, 4, 5, 6 shipped. Measurement loop
+  closed. Future misroutes will surface in the weekly audit.
