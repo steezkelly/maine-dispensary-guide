@@ -1,0 +1,227 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import Callout from '../../components/Callout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  publishDate: "2026-04-12",
+  modifiedDate: "2026-07-06",
+  section: "Business Essentials"
+};
+const topics = ["licensing", "compliance", "regulatory"];
+---
+
+<Layout
+  title="Maine Cannabis Conditional License: What It Is, How to Get One, and What Comes Next (2026)"
+  description="Maine cannabis conditional license: what it is, what you can and can't do at this stage, the 90-day OCP review window, and how it connects to Local Authorization and your Active license."
+  heroImage="/images/heroes/maine-license-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; padding-top: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis Conditional License: What It Is, How to Get One, and What Comes Next (2026)</h1>
+    <p class="subtitle">A Conditional License is the first license the OCP issues — it does not let you operate, but it lets you approach your town for the next step. Here is what it actually means, how the 90-day review window works, and what comes after.</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Conditional License at a Glance</h2>
+    <table aria-label="Maine cannabis conditional license key facts">
+      <tbody>
+        <tr><td><strong>Issued By</strong></td><td>Maine Office of Cannabis Policy (OCP)</td></tr>
+        <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. §207; OCP Rule Chapter 2</td></tr>
+        <tr><td><strong>What It Authorizes</strong></td><td>Seeking local authorization from the host municipality. Nothing else.</td></tr>
+        <tr><td><strong>What It Does NOT Authorize</strong></td><td>Possession, transfer, cultivation, testing, manufacturing, or sale of cannabis products</td></tr>
+        <tr><td><strong>Validity</strong></td><td>One year from issuance (non-renewable)</td></tr>
+        <tr><td><strong>OCP Review Window</strong></td><td>Up to 90 days from "application complete" determination</td></tr>
+        <tr><td><strong>Cost</strong></td><td>$500 application fee (per license type)</td></tr>
+        <tr><td><strong>Next Step After Issuance</strong></td><td>Local Authorization (municipal vote or council approval)</td></tr>
+        <tr><td><strong>Final Step</strong></td><td>Active License (after local approval + facility inspection)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview — Why Maine's Process Has Three Steps</h2>
+    <p class="answer-capsule">Maine splits the cannabis license into three separate issuances — Conditional, Local Authorization, and Active — so the OCP can vet you before the town invests time in your application, and the town can opt out of cannabis entirely before you sink money into a buildout. Conditional is the first of the three.</p>
+
+    <p>Maine's adult-use cannabis licensing system was designed by the legislature in 2019 to balance two competing interests: getting recreational dispensaries open quickly, and giving each Maine municipality an explicit veto over cannabis businesses in their borders. The 3-step process is the compromise.</p>
+
+    <p>Step 1 (Conditional) is the OCP's "we've reviewed your application and you are a legitimate operator with a real business plan, real capital, and a clean background." Once you have a Conditional License, the OCP is on record approving you to seek local authorization.</p>
+
+    <p>Step 2 (Local Authorization) is the town's "we agree to have a cannabis business at this address." Town councils, planning boards, or in some cases voters at a town meeting decide whether to allow cannabis in their community. About 82 Maine municipalities have opted in as of December 2025; many have not.</p>
+
+    <p>Step 3 (Active License) is the OCP's "your facility is built to code, your security and inventory systems are operational, and you can begin operations."</p>
+
+    <p>Conditional is the gate. Without it, you cannot approach a town. Local Authorization is the political hurdle. Active is the operational finish line.</p>
+  </section>
+
+  <Callout title="Conditional is a pre-approval, not a license to operate" type="info">
+    Maine operators often call the Conditional License a "pre-approval" because that's exactly what it is. You cannot possess, transfer, cultivate, manufacture, test, or sell cannabis at this stage. You can approach your municipality for local authorization, secure a location, order equipment, and complete buildout — but you cannot start operations. Many first-time applicants are surprised to learn their Conditional License does not let them open their doors.
+  </Callout>
+
+  <section>
+    <h2>What the OCP Reviews During Conditional</h2>
+    <p class="answer-capsule">The OCP evaluates your full application package during the Conditional review — eligibility, source of funds, beneficial ownership, security plan, and operating procedures. Anything missing or inconsistent triggers a deficiency notice or denial. Incomplete applications are the #1 reason Conditional is denied.</p>
+
+    <p>To issue a Conditional License, the OCP must complete a substantive review of:</p>
+
+    <h3>1. Applicant Eligibility</h3>
+    <p>All natural persons with a financial interest (10%+ economic interest, or any direct/indirect benefit) must be at least 21 years old, pass a criminal history record check, and be disclosed. The OCP scrutinizes the beneficial ownership disclosure heavily — undisclosed owners are the second most common reason for denial.</p>
+
+    <h3>2. Source of Funds</h3>
+    <p>The OCP requires traceable documentation of where every dollar came from. Personal and business bank statements for the prior 24 months, gift letters (with donor's bank statements), loan documents, investment agreements, and tax returns. Funds that appear suddenly without clear documentation of origin will trigger a denial — the OCP uses FinCEN Bank Secrecy Act guidance for cannabis business applications.</p>
+
+    <h3>3. Security Plan</h3>
+    <p>Surveillance camera specifications, alarm system details, vault integrity, access control measures, and standard operating procedures for security. The plan doesn't have to be implemented at Conditional stage — that comes at Active — but it has to be documented and consistent with OCP Rule Chapter 2.</p>
+
+    <h3>4. Operating Procedures (SOPs)</h3>
+    <p>Inventory management, sales, security, and compliance procedures. These are the policies you'll follow once you receive your Active License. The OCP reviews them at Conditional to confirm you've thought through the operational model.</p>
+
+    <h3>5. Floor Plan and Location</h3>
+    <p>The proposed facility's floor plan and physical address. Note: at the Conditional stage, you do NOT need to have secured a final location — but the OCP needs to know what kind of facility you intend to operate and that it will meet the buffer rules. The actual location confirmation comes after Local Authorization.</p>
+
+    <h3>6. Financial Viability</h3>
+    <p>$50,000 in liquid assets held in the business entity's name, OR a business line of credit or loan commitment of at least $50,000. This is a minimum threshold — most successful applicants demonstrate significantly more.</p>
+  </section>
+
+  <section>
+    <h2>The 90-Day OCP Review Window</h2>
+    <p class="answer-capsule">From the day the OCP determines your application is "complete" (all forms, attachments, and criminal history checks received), the OCP has up to 90 days to either issue or deny your Conditional License. In practice, complete applications take 60-120 days; incomplete applications stall until you respond to deficiency notices.</p>
+
+    <p>The 90-day clock starts running when the OCP sends you a "complete application" confirmation. Before that point, the OCP can keep asking for additional documents and the clock doesn't start. Once it starts, you have a defined window:</p>
+
+    <h3>What "complete" means</h3>
+    <p>All OCP application forms filled out, all required attachments uploaded, and criminal history record checks returned for all beneficial owners. Missing even one document means the OCP sends a deficiency notice and the clock doesn't start until you respond.</p>
+
+    <h3>What happens during the 90 days</h3>
+    <p>The OCP's review team evaluates the application against the six criteria above. They may ask clarifying questions (issued as deficiency notices) but cannot extend the 90 days for those clarifications. The clock keeps running.</p>
+
+    <h3>If issued</h3>
+    <p>You receive an email notification with your Conditional License PDF and a Local Authorization Form. The Conditional is valid for one year from issuance. You have one year to obtain Local Authorization or the Conditional expires and you must reapply.</p>
+
+    <h3>If denied</h3>
+    <p>The OCP sends a written explanation of the deficiencies. You have the right to appeal the denial to Maine Superior Court. The appeal process is detailed in our <a href="/guides/maine-cannabis-license-denied">License Denial Guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Conditional vs Local Authorization vs Active — What You Can and Can't Do at Each Stage</h2>
+    <p class="answer-capsule">Conditional authorizes municipal application, not operations. Local Authorization authorizes buildout. Active authorizes sales. Conflating these stages is a common mistake that costs applicants time and money.</p>
+
+    <table aria-label="What each license stage authorizes">
+      <thead>
+        <tr><th>Activity</th><th>Conditional</th><th>Local Authorization</th><th>Active</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Approach your municipality for local authorization</td><td>YES</td><td>—</td><td>—</td></tr>
+        <tr><td>Sign a commercial lease contingent on licensing</td><td>YES</td><td>YES</td><td>YES</td></tr>
+        <tr><td>Order equipment and fixtures</td><td>YES</td><td>YES</td><td>YES</td></tr>
+        <tr><td>Build out the facility (interior construction)</td><td>NO</td><td>YES</td><td>YES</td></tr>
+        <tr><td>Install security and surveillance systems</td><td>NO</td><td>YES</td><td>YES</td></tr>
+        <tr><td>Possess cannabis on premises</td><td>NO</td><td>NO</td><td>YES</td></tr>
+        <tr><td>Receive inventory from cultivator/manufacturer</td><td>NO</td><td>NO</td><td>YES</td></tr>
+        <tr><td>Make retail sales to customers</td><td>NO</td><td>NO</td><td>YES</td></tr>
+        <tr><td>Hire and train staff</td><td>YES (in advance)</td><td>YES</td><td>YES</td></tr>
+        <tr><td>Begin Metrc onboarding</td><td>NO</td><td>YES</td><td>YES</td></tr>
+      </tbody>
+    </table>
+
+    <p>The progression is: Conditional &rarr; Local Authorization &rarr; Active. You cannot skip stages. Attempting to operate with only a Conditional License is a state-law violation regardless of whether you have municipal approval.</p>
+  </section>
+
+  <section>
+    <h2>Common Reasons Conditional Is Denied</h2>
+    <p class="answer-capsule">The OCP issues Conditional Licenses for the majority of complete applications — but denials happen. Most denials are curable on resubmission, but each resubmission costs another $500 application fee and another 60-120 days of OCP review.</p>
+
+    <h3>1. Incomplete Application</h3>
+    <p>The single most common denial reason. Missing documents, unsigned forms, omitted beneficial owner disclosures, and unsigned source-of-funds attestations are all examples. The OCP's review team does not chase incomplete applications — they issue a deficiency notice or deny outright.</p>
+
+    <h3>2. Undisclosed Beneficial Ownership</h3>
+    <p>Any person with 10%+ economic interest must be listed. This includes silent partners, friends, family members, and investors with profit-sharing arrangements. Overlooking a beneficial owner is a serious compliance risk and a common denial trigger. If you're uncertain whether someone qualifies, disclose them anyway.</p>
+
+    <h3>3. Inadequate Source of Funds Documentation</h3>
+    <p>The OCP scrutinizes the origin of every dollar. Funds that appear suddenly in bank accounts without clear documentation of origin will trigger a denial. Gift letters must be signed by the donor and accompanied by the donor's own bank statements. Loans must be documented with terms and collateral.</p>
+
+    <h3>4. Criminal History</h3>
+    <p>Convictions related to drug trafficking, fraud, or financial crimes within the past 10 years are likely disqualifying for any beneficial owner. The OCP evaluates each case individually but applies a strict review to recent convictions.</p>
+
+    <h3>5. Municipality Has Not Opted In</h3>
+    <p>If you apply for a Conditional License for a location in a municipality that has not opted in to allow cannabis businesses, the OCP will deny. Always check the <a href="/guides/maine-cannabis-opt-in-tracker">Maine opt-in tracker</a> before applying to confirm your target municipality allows cannabis.</p>
+
+    <h3>6. Insufficient Financial Viability</h3>
+    <p>Failure to demonstrate $50,000 in liquid assets or a $50,000 line of credit will trigger denial. The OCP evaluates whether the applicant has sufficient capital to sustain operations through the ramp-up period before reaching profitability.</p>
+  </section>
+
+  <section>
+    <h2>After Conditional Is Issued — The Local Authorization Process</h2>
+    <p class="answer-capsule">Your Conditional License is valid for one year. During that year, you must obtain Local Authorization from your target municipality, complete buildout, pass inspection, and receive your Active License. The full timeline from Conditional to opening day is typically 6-12 months.</p>
+
+    <h3>Step 1: Approach Your Municipality</h3>
+    <p>Submit a local cannabis application to the town clerk or planning department. Required documents vary by town but typically include a site plan, operational description, security plan, community impact statement, and the Conditional License number from the OCP. Some towns require a public hearing, which adds 30-90 days to the timeline.</p>
+
+    <h3>Step 2: Sign a Lease Contingent on Active Licensure</h3>
+    <p>Most landlords require a "cannabis contingency clause" in the lease. The lease is signed but doesn't take effect until the OCP issues your Active License. This protects both you and the landlord — neither party is bound to a lease for a cannabis business that doesn't end up with a license.</p>
+
+    <h3>Step 3: Complete Buildout and Inspection</h3>
+    <p>Build out the facility per your OCP-approved plan, install security and surveillance systems, configure Metrc, and submit for OCP pre-licensing inspection. The inspector will verify your physical location matches the floor plan, that security infrastructure is operational, and that your SOPs are in place.</p>
+
+    <h3>Step 4: Receive Your Active License</h3>
+    <p>After the inspection passes, the OCP issues your Active License by mail and email. You may begin operations immediately. Your license is valid for one year from the date of issuance. For a complete step-by-step visual plan, see our <a href="/launch-checklist">Maine Dispensary Launch Checklist</a>.</p>
+  </section>
+
+  <Callout title="Conditional Licenses are not renewable" type="warning">
+    Your Conditional License is valid for one year and is non-renewable. If you don't obtain Local Authorization within 12 months, your Conditional expires. Reapplying means another $500 fee, another 60-120 day OCP review, and any updates to the law or your application that have happened in the interim. Treat the 12-month window as a hard deadline.
+  </Callout>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "What is a Maine cannabis conditional license?", answer: "A Conditional License is the first license the OCP issues to a cannabis establishment applicant. It authorizes the licensee to seek Local Authorization from the host municipality but does not authorize possession, transfer, cultivation, testing, manufacturing, or sale of cannabis. The license is valid for one year from issuance and is non-renewable." },
+      { question: "How long does it take to get a Maine conditional license?", answer: "The OCP has up to 90 days from the day your application is determined 'complete' to either issue or deny a Conditional License. In practice, complete applications take 60-120 days. Incomplete applications stall at the deficiency notice stage until you respond." },
+      { question: "How much does a Maine conditional license cost?", answer: "The application fee is $500 per license type (Cannabis Store, Cultivation, Products Manufacturing, etc.). Municipal fees are separate and range from $0 to $5,000 per year depending on the town. Conditional License issuance itself does not have an additional fee beyond the application fee." },
+      { question: "Can I operate a dispensary with a conditional license?", answer: "No. A Conditional License does not authorize any cannabis operations — not possession, not transfer, not cultivation, not sales. It only authorizes you to seek Local Authorization from your target municipality. Operating with only a Conditional License is a state-law violation." },
+      { question: "What comes first: conditional or local authorization?", answer: "Conditional first. The OCP issues the Conditional License based on its review of your application. Only after you have the Conditional can you approach your municipality for Local Authorization. The two cannot happen in parallel — you cannot ask the town to approve you before the OCP has reviewed you." },
+      { question: "Is a conditional license the same as a pre-approval?", answer: "Yes. Maine operators and cannabis attorneys commonly call the Conditional License a 'pre-approval' because that's exactly what it is. The OCP has reviewed your application, found it complete and acceptable, and is allowing you to proceed to the municipal stage. It is not a license to operate." },
+      { question: "How long is a Maine conditional license valid?", answer: "One year from the date of issuance. The license is non-renewable. If you do not obtain Local Authorization within 12 months, you must submit a new application and pay another $500 fee. The OCP's process is designed to move Conditional holders to Local Authorization within the year, not to leave applications in Conditional status indefinitely." },
+      { question: "What happens if my conditional license is denied?", answer: "The OCP sends a written explanation of the deficiencies. You have the right to appeal the denial to Maine Superior Court. The appeal must be filed within 30 days of the denial. Most denials are curable on resubmission, but each resubmission costs another $500 application fee and another 60-120 days of OCP review. See our License Denial Guide for the full appeal process." },
+      { question: "Can I apply for conditional in a town that has not opted in?", answer: "No. If your target municipality has not opted in to allow cannabis businesses, the OCP will deny your Conditional License application. Maine's cannabis framework is opt-in: municipalities must affirmatively vote to allow cannabis businesses within their borders. Always check the opt-in status of your target town before applying. The Maine OCP maintains a list of opt-in and opt-out communities." },
+      { question: "What is the difference between conditional and active license?", answer: "Conditional is the OCP's approval of your application; Active is the OCP's approval of your facility and operations. Conditional lets you approach the town and plan buildout. Active lets you actually open the doors and sell cannabis. The full progression is Conditional → Local Authorization → Active, and you must complete all three stages before operating." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Related Guides</h2>
+    <p>For the broader licensing process, see our <a href="/guides/maine-dispensary-license">complete licensing guide</a>. For startup costs and capital requirements, see <a href="/guides/maine-dispensary-costs">Maine dispensary startup costs</a>. For the full visual launch plan, see our <a href="/launch-checklist">launch checklist</a>. For what to do if your application is denied, see <a href="/guides/maine-cannabis-license-denied">License Denial Guide</a>. For buying or selling an existing dispensary, see <a href="/blog/maine-dispensary-business-for-sale">Maine dispensary businesses for sale</a> and <a href="/guides/maine-cannabis-business-transfer">Cannabis business transfer of ownership</a>.</p>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational purposes only and does not constitute legal advice. Maine's cannabis laws and licensing requirements are subject to change. Consult with a qualified Maine cannabis attorney before applying. For current information, visit the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a>.</em></p>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p>
+
+  <AutoRelated currentPath="/guides/maine-cannabis-conditional-license" currentTopics={['licensing', 'compliance', 'regulatory']} section="Business Essentials" limit={6} />
+</article>
+</Layout>
