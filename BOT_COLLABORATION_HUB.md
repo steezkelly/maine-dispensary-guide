@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (third session — Tier 1.3 CI check shipped on top of modernization plan)**
+|**Last updated: 2026-07-06 EDT (third session — Tier 2.1 Path B shipped: 730-line SSR endpoint retired, mailto: form live)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -73,6 +73,24 @@
 - **Verified locally:** (a) current build passes the check (`.vc-config.json` exists); (b) negative test — moving the file exits 1 with diagnostic; (c) `npx astro check` 0 errors (362 files); (d) smoke-200 254/254 after push.
 - **Net effect:** any future dep bump, adapter downgrade, or config change that breaks the SSR function shape will fail at CI rather than at production.
 - **Docs only — no source code changes. No operator prereq.**
+
+---
+
+
+## 📋 THIRD-SESSION LEAD-FUNNEL COLLAPSE (Jul 6, 2026 EDT) — `bb2b864f`
+
+- **What:** Removed the dormant 730-line SSR lead-capture surface in favor of a `mailto:` form. Implements Path B from `docs/MODERNIZATION_PLAN_2026-07-06.md` Tier 2.1, as authorized.
+- **Why:** Path A (activate the dormant endpoint) had empirically broken production twice in this session. Path B ships the in-session goal — leads reach Steve — without requiring Vercel SSR function deployment, Formspree, or env vars.
+- **Source changes (net -883 lines):**
+  - deleted `apps/maine-cannabis/src/pages/api/lead-capture.ts` (716 lines, nodemailer-heavy SMTP path)
+  - deleted `apps/maine-cannabis/src/pages/api/indexnow-key.ts` (15 lines)
+  - rewrote `apps/maine-cannabis/src/pages/download/first-timer-field-guide.astro` form to use `mailto:hello@mainedispensaryguide.com?...` via inline JS
+  - cleaned `vercel.json` route rewrites (the rewrites pointed at deleted endpoints)
+  - rewrote `docs/LEAD_CAPTURE_SETUP.md` to reflect mailto: as canonical
+- **Vercel-side cleanup:** 4 stale env vars removed from production (`PURELYMAIL_SMTP_USER`, `PURELYMAIL_SMTP_PASS`, `MDG_FROM_ADDRESS`, `MDG_REPLY_TO`). `vercel env list` returns 0 rows.
+- **Operational outcome:** users submit email → browser opens their mail client pre-filled with their email in body → user clicks Send → message arrives at `hello@mainedispensaryguide.com` → Purelymail catch-all routes to `steezkelly@purelymail.com` → Steve manually replies with the public PDF URL.
+- **Purelymail agent-side wiring preserved:** `~/.config/himalaya/config.toml` and `~/.config/maine-dispensary-guide/mdg.env` (mode 600) remain for `himalaya envelope list` / `template send`. Verified via himalaya test email earlier this session.
+- **Verified:** smoke-200 254/254 post-deploy; live curl confirms form has `data-lead-to="hello@mainedispensaryguide.com"` and `/api/lead-capture` correctly returns 404 (endpoint gone).
 
 ---
 
