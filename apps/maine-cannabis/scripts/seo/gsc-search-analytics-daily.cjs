@@ -25,11 +25,20 @@
  *   {
  *     "snapshotDate": "2026-07-06",   // date the row was written
  *     "query": "maine edibles laws",
+ *     "page": "https://mainedispensaryguide.com/guides/maine-cannabis-edibles-compliance/",
  *     "clicks": 1,
  *     "impressions": 106,
  *     "ctr": 0.0094,
  *     "position": 9.23
  *   }
+ *
+ * v2 (2026-07-13): added `page` dimension. Without page attribution we can't
+ * distinguish "FAQ page ranks for the right query" from "wrong page ranks
+ * for the query (cannibalization)". Enables Action 4 measurement and Action 3
+ * (microdosing-page audit).
+ *
+ * Note: this changes the JSONL schema. Existing analytics dumps from v1
+ * (no `page` field) are still valid — the field is just absent on older rows.
  *
  * Why this exists:
  *   The 2026-07-04 manual CSV export (175 rows, 17 clicks, 5062 impressions,
@@ -88,15 +97,21 @@ async function fetchAnalytics(sc) {
   // GSC searchanalytics.query returns search traffic data. We ask for top
   // ROW_LIMIT queries by impressions over the last `days` days, broken down by query.
   // rowLimit > 1000 is allowed but server caps at 25k max.
+  //
+  // Dimensions: ['query', 'page'] gives per-query URL attribution — tells us
+  // which page Google is routing each query to. Critical for diagnosing
+  // cannibalization (e.g. /guides/cannabis-microdosing-anxiety-maine ranking
+  // for "dispensary fryeburg maine" when /guides/fryeburg-dispensary-guide
+  // should rank instead). Without page dimension, query-level data is half-blind.
   const endDate = ymd(new Date());
   const startDate = ymd(new Date(Date.now() - days * 86400 * 1000));
-  logInfo(`Fetching searchanalytics: ${startDate} → ${endDate} (top ${ROW_LIMIT} queries by impressions)…`);
+  logInfo(`Fetching searchanalytics: ${startDate} → ${endDate} (top ${ROW_LIMIT} query+page pairs by impressions)…`);
   const res = await sc.searchanalytics.query({
     siteUrl: SITE_URL,
     requestBody: {
       startDate,
       endDate,
-      dimensions: ['query'],
+      dimensions: ['query', 'page'],
       rowLimit: ROW_LIMIT,
       // Order by impressions desc to capture the long-tail of "we're seen but not clicked"
       orderBy: [{ field: 'impressions', sortOrder: 'DESCENDING' }],
@@ -130,6 +145,7 @@ async function main() {
   const records = rows.map(r => ({
     snapshotDate,
     query: r.keys[0],
+    page: r.keys[1],  // second dimension = page URL (relative or absolute per GSC)
     clicks: r.clicks || 0,
     impressions: r.impressions || 0,
     ctr: r.ctr || 0,
