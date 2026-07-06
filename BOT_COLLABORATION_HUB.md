@@ -6130,3 +6130,48 @@ this without code change; full inventory captured in the Hub commit message.
 - **Next Monday 7am run:** 2026-07-13 07:00. Logs at
   /home/steve/.local/log/gsc-audit-weekly.log.
 - **Mnemosyne:** cron install state-of-record.
+
+### Sprint 78e: Costs guide title reopt + bar harbor interlink (gsc cycle)
+
+- **Why:** Sprint 78d shipped the measurement loop. 28d re-run of
+  the misroute audit (549 query+page rows, 3628 imp, 13 clicks,
+  0.36% CTR) surfaced 8 misroutes, 3 of which were buyer-intent
+  queries where blog posts still outrank the canonical guide.
+- **Sprint 78d reopt recap:** license page title reopt ("How to
+  Start a Dispensary in Maine: OCP Licensing Guide (2026)") did
+  not move the needle for "cannabis business licensing in maine"
+  (still 26 blog vs 16 guide, blog at pos 19.4 vs guide at 31.3).
+  Title-only fix isn't enough for the highest-trust blog posts.
+- **What shipped this sprint (3 actions):**
+  - **Action 1 — /guides/maine-dispensary-costs title reopt**
+    - Old: "Maine Dispensary Startup Costs (2026): What to Budget"
+    - New: "How to Open a Dispensary in Maine: Startup Costs (2026)"
+    - H1 mirrors. modifiedDate 2026-06-07 -> 2026-07-06.
+    - Targets 28d misroutes:
+        "how to open a dispensary in maine"  36 imp (pos 26.5)
+        "selling to dispensaries in maine"   8 imp (pos 65.0)
+  - **Action 2 — /blog/cannabis-friendly-maine-travel: Related
+    Guides section with 5 interlinks** (bar-harbor, portland,
+    ogunquit, kittery, find-a-dispensary). Targets 28d misroute:
+        "420 mules bar harbor"  23 imp (blog pos 9.7 vs guide 11.0)
+    - Originally had 0 internal links to MDG guides despite
+      mentioning "Bar Harbor dispensaries" 11 times.
+    - Why a section vs inline: FAQ component renders answers as
+      `<p>{f.answer}</p>` which strips HTML.
+  - **Action 3 — mdg-gsc-audit-weekly.sh: fix NODE_BIN path**
+    - Old: `NODE_BIN=/home/steve/.node_modules/.bin/node || /...` —
+      set NODE_BIN to a non-existent path; cron would have failed
+      silently at next Mon 7am run.
+    - New: explicit loop over candidates, falls back to `which node`.
+- **Verified:**
+  - pre-push-verify: all 7 gates green
+  - Cold-cache build: 256 pages, 37.14s
+  - Built HTML: costs page title renders correctly with new text
+  - Built HTML: travel blog has 1 new /guides/bar-harbor-dispensary-guide
+    link
+- **Mnemosyne:** Sprint 78e state-of-record.
+- **Sprint 78d/78e combined status:** actions 1-6 (78d) + 1-3 (78e)
+  shipped. Measurement loop is closed. Title-only fixes alone aren't
+  moving the highest-trust blog posts out of position — may need
+  content consolidation (merge blog -> guide + redirect) for the
+  3 persistent misroutes. Decision flag for Steve.
