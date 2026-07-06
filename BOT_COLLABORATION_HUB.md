@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (lead-magnet funnel unblock + COA hero image fix)**
+|**Last updated: 2026-07-06 EDT (second-session closeout passdown)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -23,6 +23,14 @@
 - **What changed (1 commit, 6 files):** `git mv` rename to match Layout convention. No content change; git tracks it as 6 renames with 100% similarity.
 - **Verification:** npx astro check 0 errors, npm run build clean (17.75s), live curl confirms all 6 variants return HTTP/2 200 on `mainedispensaryguide.com`, smoke-img-200 now reports 0 broken refs for the COA page.
 - **Defensive note:** any future hero upload MUST use `{name}.jpg` + `{name}.webp` + `{name}.avif` + `{name}-640w.{jpg,webp,avif}` convention OR be uploaded via the same utility that uploaded the COA image (which needs updating to match Layout's expectations). Worth a follow-up to grep for any other dimension-suffix survivors, though none surfaced in smoke-img-200.
+
+### Second-session closeout (`710d7a35`) — passdown doc shipped
+
+- **Why:** The first 2026-07-06 session closed with carry-forwards #1-#6 documented in `docs/SESSION_PASSDOWN_2026-07-06.md`. This second session continued the carry-forwards, shipping the two plumbing fixes (Formspree + image rename) above, then declined to auto-pilot the two remaining content-engineering carry-forwards (PDFs / town-cluster pages) and wrote a clean closeout passdown instead.
+- **What changed (1 commit):** `docs/SESSION_PASSDOWN_OUT_2026-07-06.md` written. Mirrors the structure of `SESSION_PASSDOWN_OUT_2026-07-04.md` — TL;DR table, what shipped, verifications, carry-forwards, architectural observations, lessons.
+- **Carry-forwards re-surfaced for next session:** W7 (operator-decision download-cluster), Formspree autoresponder config (5 min Steve-task), 3 lead-magnet PDFs (with Path-A-rewrite vs Path-B-pointer scope fork flagged for operator), 54+ town-cluster hub pages (multi-day content engineering), dormant `/api/lead-capture.ts` re-enable playbook (preserved in LEAD_CAPTURE_SETUP.md).
+- **Architectural observations worth surfacing:** (a) Layout.astro couples to a string-convention for hero-image variants — defensive measure is needed so future image uploads don't re-create the 6-404 bug; (b) Formspree is the project-of-record per AGENTS.md (custom `/api/lead-capture` was the deviation) — future lead-form work should default to Formspree; (c) pre-push hook blocks pushes on pre-existing image 404s even when no image ref changed in the diff — friction worth a future `--ignore-unrelated` flag.
+- **Lesson:** plumbing > new content for time-boxed sessions. Both shipped PRs were 30-min plumbing fixes that captured all the leverage in scope. The remaining carry-forwards (PDFs, town clusters) are content engineering that take 10× as long for 1/10th the immediate impact and warrant operator scope input first.
 
 ---
 
