@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (third session — vercel adapter v11 bump shipped, outputDirectory fix reverted twice, postmortem)**
+|**Last updated: 2026-07-06 EDT (third session — modernization plan shipped)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -65,6 +65,21 @@
 ---
 
 
+## 📋 THIRD-SESSION MODERNIZATION PLAN (Jul 6, 2026 EDT) — `docs/MODERNIZATION_PLAN_2026-07-06.md`
+
+- **What:** Comprehensive plan for modernizing MDG's infrastructure/architecture, with 5 sequenced tiers, each with green/red signals, rollback steps, and operator prereqs. Document is 14K chars / ~340 lines.
+- **Files:** `docs/MODERNIZATION_PLAN_2026-07-06.md` (NEW).
+- **Tier 0 (already done this session):** v11 adapter bump, Formspree funnel, COA image rename.
+- **Tier 1 (architectural clarity):** remove dead `Copied clean output to ../../dist` step from `vercel-build.sh`; document deployment layout in AGENTS.md; add CI step to detect `_render.func` artifact presence (catches future adapter mismatches).
+- **Tier 2 (operational hygiene):** decide between A (activate dormant endpoint) vs B (retire + Formspree); remove 4 stale Vercel env vars; migrate image variants from filename-string-convention to `<Image src=... />` Astro component.
+- **Tier 3 (YMYL durability):** YML staleness CI for 180d-old guides in legal/dosing/banking/compliance categories; corrections-log regression check; refresh Jan-2026-dated banking and marketing guides (operator time, not agent time).
+- **Tier 4 (strategic, deferred):** edge middleware for geo-personalization, consider CMS-managed footer, etc. Not in scope for any session this quarter.
+- **Sequencing recommendation:** Tier 1 PR first (1.1 + 1.2 + 1.3 in one commit) → Tier 2.2 (env var cleanup) → Tier 2.1 Option B (retire the 715-line dormant endpoint) → Tier 2.3 (image optimization, slowest of the wins) → Tier 3 (with operator oversight for content).
+- **Open decision for operator:** Tier 2.1 Option A vs B. Plan recommends Option B (retire), which removes a 730-line SSR surface in exchange for "use the Formspree flow we already shipped." Option A is multi-hour and was empirically demonstrated (this session, twice) to be non-obvious.
+
+---
+
+## 📋 SPRINT 74 B2B CLUSTER EXPANSION
 ## 📋 SPRINT 74 B2B CLUSTER EXPANSION: Cross-Link Audit + Next-Cluster Outlines (Jun 9, 2026 EDT)
 
 ### Sprint 74 B2B cross-link audit findings + 3 next-cluster outlines committed as `docs(plans)` ✅ DONE, AWAITING SPRINT 82 ACCEPTANCE
