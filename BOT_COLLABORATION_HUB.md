@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (second-session closeout passdown)**
+|**Last updated: 2026-07-06 EDT (third session — vercel adapter v11 bump shipped, outputDirectory fix reverted twice, postmortem)**
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
@@ -33,6 +33,37 @@
 - **Lesson:** plumbing > new content for time-boxed sessions. Both shipped PRs were 30-min plumbing fixes that captured all the leverage in scope. The remaining carry-forwards (PDFs, town clusters) are content engineering that take 10× as long for 1/10th the immediate impact and warrant operator scope input first.
 
 ---
+
+
+## 📋 THIRD-SESSION POSTMORTEM (Jul 6, 2026 EDT) — Vercel adapter v11 bump + vercel.json flip diagnosis
+
+### Bump commit `c1697430` — succeeded
+- `@astrojs/vercel` bumped from `^10.0.1` → `^11.0.2`. Installed via `npm install --workspace=apps/maine-cannabis --legacy-peer-deps`. Astro check 0 errors (362 files), npm run build clean, smoke-200 stayed 254/254 on production. **The bump is the only lasting work product from this session.**
+
+### vercel.json `outputDirectory` flip — REVERTED (`4255a618` → `2b8e2c9f`)
+- Tried flipping `vercel.json` from `"outputDirectory": "dist"` → `"outputDirectory": "apps/maine-cannabis/.vercel/output"`. Pushed, smoke regressed 254/254 → 0/254. Reverted in <3 min via `git revert HEAD && git push`. Smoke restored to 254/254.
+- **NEW EMPIRICAL FINDING:** the regression is structural to the `vercel.json` flip itself, NOT to the version transition. The same flip on v10 took down production in the second session; the same flip on v11 took down production in this session. The bump vs version is a red herring; the path is the problem.
+- **Most likely root cause:** Vercel's `@vercel/vc-build` writes its result to its own internal `/vercel/output` directory and the `outputDirectory` config in `vercel.json` does not actually point at the worktree's `.vercel/output/` — the deploy record shows `output: []` (empty artifact picked up). Either the path is wrong or Vercel does not honor monorepo-relative paths in this config field.
+
+### Three deploys in one session, two regressions
+- Two failed deploys (both the same `outputDirectory` flip tried twice — first on v10, second on v11), both detected via smoke-200 within ~75 seconds of build completion, both reverted within ~3 minutes.
+- Production has been continuously healthy (254/254) for the past 30+ minutes following the second revert. Smoke is currently green.
+
+### Carry-forwards from this session
+- **W7 download-cluster decision** — unchanged.
+- **Formspree autoresponder 5-min task** — unchanged (lead funnel Formspree work shipped but autoresponder attachment still unwired).
+- **3 lead-magnet PDFs** — unchanged (operator scope decision still pending Path-A vs Path-B).
+- **54+ town-cluster hub pages** — unchanged.
+- **Dormant `/api/lead-capture.ts` endpoint** — still 404. Prerequisite to any future retry: figure out the correct deployment-target path for Vercel's `@vercel/vc-build` for monorepo Astro SSR. Possible directions: (a) write a post-build step that flattens `.vercel/output/{static,functions}` into `dist/`; (b) ask Vercel support; (c) abandon Astro SSR for this site and use Vercel Edge Functions via a different adapter path.
+- **Vercel env vars** (`PURELYMAIL_SMTP_USER`, `PURELYMAIL_SMTP_PASS`, `MDG_FROM_ADDRESS`, `MDG_REPLY_TO`) — STILL present in production Vercel from the second-session failed activation. Harmless (no production code reads them) but worth removing once the dormant endpoint story is settled. `vercel env rm <name> production` per variable.
+- **Himalaya config** — still functional at `~/.config/himalaya/config.toml` (mode 600) and `~/.config/maine-dispensary-guide/mdg.env` (mode 600). Mail-send and receive paths verified end-to-end against `steezkelly@purelymail.com`. Use it as the manual-lead-funnel fallback if Formspree autoresponder stays unconfigured.
+
+### What this session taught about agenting rules
+- The "test, then push" approach I used in the second session was correct (smoke + commit + push, detect+revert) but I repeated the bad commit twice without consolidating the diagnostic. **Pattern:** when a vercel-side change causes a 254-route regression and revert fixes it, STOP and write the postmortem. Don't try the same change with new dependency versions hoping it'll work.
+- The successful bump proves: dependency bumps are safe in isolation; vercel.json config flips require operator review before any further attempt.
+
+---
+
 
 ## 📋 SPRINT 74 B2B CLUSTER EXPANSION: Cross-Link Audit + Next-Cluster Outlines (Jun 9, 2026 EDT)
 
