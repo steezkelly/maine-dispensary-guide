@@ -5936,3 +5936,26 @@ this without code change; full inventory captured in the Hub commit message.
   - `apps/maine-cannabis/package.json` — 2 new scripts
   - `apps/maine-cannabis/public/data/indexnow-log.jsonl` — 1 entry (IndexNow push log)
   - `package-lock.json` — `googleapis ^173.0.0` added
+
+### Sprint 78c (cont.): First successful GSC URL Inspection — 209/251 indexed
+
+- **Why:** The "42 not indexed" count flagged in HANDOVER_TO_HERMES.md (2026-05-12) had never been investigated. Service account credentials were already created but never added as a user in GSC, so all prior runs errored with "Service account does not have access." Steve added the user (Full permission) on 2026-07-06, unblocking the actual indexing check.
+- **Result of full 251-URL inspection:**
+  - 209 INDEXED (83%)
+  - 42 NEUTRAL (17%) — matches the HANDOVER count exactly; these are persistent, not recent drops
+  - 0 ERROR
+  - Run time: 3m34s at concurrency 8
+- **42 NEUTRAL splits into two groups:**
+  - **28 "URL is unknown to Google"** (never crawled): mostly newer guides (25 of 28) plus `/download/first-timer-field-guide` (the mailto-funnel landing page — expected, no inbound links). These will index once Google crawls. Fix: stronger internal links from high-traffic pages, sitemap ping after deploy.
+  - **14 "Crawled - currently not indexed"** (Google decided to skip): a content-quality question. URLs: 10 guides (auburn, lewiston, wells, maine-cannabis-market, business-insurance, extraction-licensing, municipal-opt-in-guide, product-testing-guide, vertical-integration, ...), 4 blog posts, about/authors. Need content review (likely thin content or duplicate-of-canonical).
+- **Two bugs fixed during this run:**
+  - **SITE_URL trailing slash.** GSC stores the property as `https://mainedispensaryguide.com/` (with slash). URL Inspection API does exact-match; without slash it returned "You do not own this site" for every URL even with Full permission. Verified via `sc.sites.list()` showing `{"siteUrl":"https://mainedispensaryguide.com/","permissionLevel":"siteFullUser"}`. Hardcoded the canonical form.
+  - **Concurrency 8.** Serial mode was 5+ min for 251 URLs at ~1.2s/req. With 8 workers, well under the 600 req/min GSC rate limit, finishes in ~3.5 min.
+- **`.gitignore`:** cache file (transient, regenerated every run) is ignored; dated reports are kept so future diffs can show "we ran this on date X, here was the state."
+- **Files:**
+  - `apps/maine-cannabis/scripts/seo/gsc-indexing-check.cjs` — trailing-slash fix + concurrency
+  - `apps/maine-cannabis/data/gsc-indexing-report-2026-07-06.json` — first real baseline (66 KB)
+  - `.gitignore` — ignore cache file
+- **Re-run command (24h cache, --refresh to bypass):**
+  `npm --workspace @network/maine-cannabis run seo:gsc-indexing`
+- **Mnemosyne:** baseline at index `cd2f8e4...` will be updated post-commit with the 209/42 split.
