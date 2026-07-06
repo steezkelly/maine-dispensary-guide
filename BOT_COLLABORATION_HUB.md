@@ -6213,3 +6213,41 @@ this without code change; full inventory captured in the Hub commit message.
   - GAP 1: shipped (Sprint 78f)
   - GAP 2 + GAP 3: documented, not yet shipped. 1.5-2 hr each.
   - Sprint 78g candidates: 2 new guides + 1 affiliate CTA wiring
+
+### Sprint 78g: Maine dispensary for sale blog post (GAP 2 closed)
+
+- **Why:** Closes GAP 2 from the keyword gap analysis. 420property.com,
+  BizQuest, and BizBuySell all rank for "maine cannabis business for
+  sale" queries; MDG had zero coverage of the buyer side. Operators
+  at scale-up phase search this before deciding buy-vs-build.
+- **What shipped (apps/maine-cannabis/src/pages/blog/maine-dispensary-business-for-sale.astro):**
+  - 39KB, ~700 lines, in the same shape as the ROI blog post
+  - 8 Q&As matching PAA phrasing exactly
+  - Pricing benchmarks table by market segment (1.3x-2.5x revenue)
+  - 12-item due diligence checklist (compliance, financial, legal,
+    real estate, regulatory)
+  - 4-phase acquisition timeline (LOI 3-6wk -> PA 4-8wk -> OCP
+    change of ownership 60-120 days -> close 4-8wk)
+  - Affiliate CTA to 420property.com Maine dispensary listings
+- **Internal linking:**
+  - /start-here.astro: new "Buying/Selling" CTA button next to
+    existing conditional license button
+  - /guides/maine-cannabis-conditional-license: "Related Guides"
+    section already linked forward in Sprint 78f; the target URL
+    resolves now that this post exists
+  - Cross-links to ROI calculator, costs guide, license guide,
+    business transfer guide (still pending)
+- **Verified:**
+  - pre-push-verify: all 7 gates green
+  - Cold-cache build: 256 pages, 32.35s
+  - Built HTML: 8 FAQPage Questions in JSON-LD, 1 interlink from
+    start-here, 1 from conditional-license guide
+- **Mnemosyne:** Sprint 78g state-of-record.
+- **Remaining from gap analysis:**
+  - GAP 3 (/guides/maine-cannabis-business-transfer) - deferred
+  - ROI blog post has stale stats and wrong conditional license fee.
+    Flagged for future refresh.
+- **Gap analysis status:**
+  - GAP 1 (conditional license): shipped Sprint 78f
+  - GAP 2 (business for sale): shipped Sprint 78g
+  - GAP 3 (transfer ownership): pending - 1.5 hr estimated
