@@ -32,6 +32,32 @@ client-side JS on the landing page catches this and shows an alert:
 "Sorry — we couldn't process your request right now. Please email
 hello@mainedispensaryguide.com for the PDF." No data loss.
 
+## If `/api/lead-capture` returns 404
+
+This is a Vercel-routing problem, not a code problem. As of 2026-07-05
+it's the biggest known issue with the funnel. Symptoms:
+- `curl -sI https://mainedispensaryguide.com/api/lead-capture` → 404
+- `curl -sI https://mainedispensaryguide.com/api/indexnow-key` → 404
+- Local Vercel build output (apps/maine-cannabis/.vercel/output/config.json)
+  correctly contains the routes
+- `vercel.json` at repo root has both routes in `routes[]`
+
+The Astro+Vercel adapter writes routes to `.vercel/output/config.json`
+ONLY when `output: "server"`. The site uses `output: "static"`, so the
+adapter skips that step. The routes I added to `vercel.json` are
+correct in shape but Vercel's edge config isn't picking them up for some
+reason — likely a project-level setting (maybe "Static-only deployment"
+is checked in Vercel project settings) or a build-output mismatch.
+
+Until this is fixed, the lead-magnet PDF autoresponder IS NOT live.
+The form on /download/first-timer-field-guide gracefully falls back to
+"please email hello@mainedispensaryguide.com" UX when the fetch fails.
+No data loss.
+
+**To unblock the funnel without fixing the routing issue:** configure
+the Formspree autoresponder directly per the steps in the alternative
+flow below.
+
 ## Testing the live endpoint
 
 After setting the env vars and triggering a deploy, test with:
