@@ -6109,3 +6109,24 @@ this without code change; full inventory captured in the Hub commit message.
 - **Mnemosyne:** action 6 state-of-record.
 - **Sprint 78d status:** actions 2, 4, 5, 6 shipped. Measurement loop
   closed. Future misroutes will surface in the weekly audit.
+
+### Sprint 78d (cont.): Cron installed for daily GSC + weekly audit
+
+- **Why:** The daily dump script and weekly audit were both committed
+  but had no automation. Crontab was empty before this commit.
+- **What shipped:**
+  - `/home/steve/.local/bin/mdg-gsc-daily.sh` — daily 6am GSC dump wrapper
+  - `/home/steve/.local/bin/mdg-gsc-audit-weekly.sh` — Mon 7am audit wrapper
+  - Crontab: `0 6 * * *` and `0 7 * * 1` (clean two-line entry)
+  - Verified: crond is active, /var/spool/cron/steve written, daily
+    wrapper test pulls 282 rows with exit 0
+- **Why wrapper scripts instead of inline cron commands:** keeps the
+  crontab clean and gives a single edit site per job. The wrapper
+  encapsulates the `cd $REPO && node script.cjs >> $LOG 2>&1` pattern
+  so a future change to e.g. log rotation happens in one file, not by
+  editing the crontab.
+- **Next 6am run:** 2026-07-07 06:00. Logs at
+  /home/steve/.local/log/gsc-daily.log.
+- **Next Monday 7am run:** 2026-07-13 07:00. Logs at
+  /home/steve/.local/log/gsc-audit-weekly.log.
+- **Mnemosyne:** cron install state-of-record.
