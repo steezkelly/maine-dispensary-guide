@@ -39,6 +39,26 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Tier 1.3: assert Astro SSR function bundle was emitted in a shape
+      # Vercel can recognize. The .vercel/output/ directory is what the
+      # @astrojs/vercel adapter writes for SSR routes; if .vc-config.json
+      # is missing inside functions/_render.func/, the build silently
+      # has no serverless function registered and /api/* routes will
+      # 404 in production. This step fails the build before that
+      # situation ever ships. Watch for regression: if a future dep
+      # bump or adapter downgrade changes the output shape, this check
+      # surfaces it instead of letting the regression arrive in prod.
+      - name: Assert Astro SSR function bundle (functions/_render.func/.vc-config.json)
+        run: |
+          if [ ! -f apps/maine-cannabis/.vercel/output/functions/_render.func/.vc-config.json ]; then
+            echo "::error::Astro SSR function bundle not found at apps/maine-cannabis/.vercel/output/functions/_render.func/.vc-config.json"
+            echo "The @astrojs/vercel adapter did not emit a Vercel-shape serverless function."
+            echo "Either the adapter version was downgraded below the production-tested v11,"
+            echo "or output: 'static' is missing a route with prerender = false."
+            echo "Tip: see docs/MODERNIZATION_PLAN_2026-07-06.md Tier 1.3."
+            exit 1
+          fi
+
       # Regenerate autoRelatedData.json after the Astro project is built so
       # the AutoRelated component picks up any new guides added since the
       # last regen. The script is cheap (parses frontmatter only, no network)
