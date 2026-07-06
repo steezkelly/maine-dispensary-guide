@@ -5959,3 +5959,41 @@ this without code change; full inventory captured in the Hub commit message.
 - **Re-run command (24h cache, --refresh to bypass):**
   `npm --workspace @network/maine-cannabis run seo:gsc-indexing`
 - **Mnemosyne:** baseline at index `cd2f8e4...` will be updated post-commit with the 209/42 split.
+
+### Sprint 78d: GSC Search Analytics baseline + daily dump script
+
+- **Why:** The 2026-07-06 indexing run revealed 209 INDEXED + 42 NEUTRAL. To answer "which work is highest leverage," we need Search Analytics (queries, clicks, impressions, CTR, position) — not just URL Inspection. The 2026-07-04 manual CSV export (175 rows, 17 clicks, 5062 impressions, 0% median CTR) was a one-shot. Built a daily dump to make this a continuous measurement stream.
+- **What shipped:**
+  - **`apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.cjs`** — pulls top 1000 queries by impressions for the last 7 days (default; pass `--days=N` to override). Appends JSONL rows to `data/gsc-search-analytics.jsonl`. Same creds as `gsc-indexing-check.cjs`.
+  - **Initial seed run:** 715 rows covering 7-day (246 rows) + 28-day (468 rows) windows back to 2026-06-08.
+  - **Bug fix:** `__dirname` path calculation was one level short; corrected.
+  - **Cron recommendation** (documented in script header, NOT installed yet):
+    ```
+    0 6 * * * cd /home/steve/projects/maine-dispensary-guide && \
+      node apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.cjs \
+      >> /home/steve/.local/log/gsc-daily.log 2>&1
+    ```
+  - **Default window 7 days, not 1 day** — GSC searchanalytics has 2-3 day data lag; yesterday-only queries return 0 rows.
+- **Strategic findings (from the 7-day + 28-day data dumps):**
+  - **17 total clicks across 5062 impressions, median CTR 0%**. Traffic is essentially zero despite page-1 positions on many queries.
+  - **Top impressions by intent segment:** city/town 2451 (108 queries), brand (dispensary names) 1937 (66 queries), legal/compliance 664 (68 queries).
+  - **33 queries at position 4-10 with 0% CTR.** Diagnosis (verified via live SERP for "founding farmers limerick maine"): NOT a title-tag bug — titles already mention the city. The 0 clicks are because the brand's own site + MapQuest + Facebook hold positions 1-3; MDG at position 5+ is below the fold. Backlink outreach could push us but is slow + low-ceiling for brand-disambiguation queries.
+  - **14 question-format queries** with 15-100+ impressions and 0% CTR: "how to open a dispensary in maine" (96 imp, pos 22.9), "are edibles legal in maine" (81 imp, pos 17.3), "how to start a dispensary in maine" (72 imp, pos 18.5). These need FAQ schema + direct Q-A content. Action deferred to a separate sprint.
+  - **Cannabis-microdosing-anxiety-maine page hijacks 30+ unrelated dispensary/city queries.** Cross-reference showed this page getting impressions for "dispensary fryeburg maine" (93 imp, pos 7.85), "maine cannabis banking" (19 imp, pos 17.95), "metrc maine" (43 imp), and 25+ others. Likely a topical-authority / internal-link-density problem. Audit deferred.
+- **Action 2 (internal-link fix for 28 unknown-to-Google pages) — REDUCED.**
+  - **Original plan:** add 3-5 internal links to each of 28 NEUTRAL pages to force Google crawl.
+  - **Investigation found:** 26 of 28 already have fresh `modifiedDate` (last few days), all 28 are in the sitemap with proper `<lastmod>` and `<image:image>` data. Adding random internal links wouldn't help — Google has the URLs, isn't crawling because it judges them not worth crawling. No cheap in-band fix.
+  - **Right escalation:** manual GSC "Inspect URL" + "Request Indexing" for each of the 28 pages (operator task, ~5 min each). NOT agent task.
+  - **Steve's part:** open GSC, paste each URL into the URL Inspection tool, click "Request Indexing." 28 URLs × 30s = ~15 min total. Then re-run `seo:gsc-indexing` in 30 days to measure which flipped.
+- **Deferred to future sprints:**
+  - Action 3: microdosing-page cannibalization audit
+  - Action 4: FAQ schema + Q-A content for buyer-intent queries
+  - Action 5: city guide cannibalization (109 city guides routing wrong)
+  - Action 7: new landing page for "best maine live rosin"
+  - Action 8: topical-map review for 109 city guides
+  - Action 10: backlink outreach for /learn/cannabis-events-2026
+- **Mnemosyne:** baseline at `33972d4d4dc91e53` (Sprint 78d) with full query breakdown + ranked action list. Indexing baseline at `c96e0773899aeb22`.
+- **Files changed:**
+  - `apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.cjs` — new (180 lines)
+  - `apps/maine-cannabis/data/gsc-search-analytics.jsonl` — 715 rows (28d + 7d historical seed)
+  - `apps/maine-cannabis/package.json` — `seo:gsc-search-analytics` + `:dry-run` scripts
