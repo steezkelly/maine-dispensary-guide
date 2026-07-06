@@ -1,5 +1,12 @@
 # MDG Session Passdown — 2026-07-06 (second session, closeout)
 
+> **⚠️ SUPERSEDED by `docs/SESSION_PASSDOWN_OUT_2026-07-06-third-session.md` (third session, same day).**
+> The Formspree flow described here was live for ~1.5 hours before
+> commit `bb2b864f` collapsed the lead funnel to a `mailto:` form. The
+> "Tier 1 — Operator action" Formspree autoresponder task is closed.
+> Keep this document as the historical record of what the second
+> session shipped, including the Formspree detour.
+
 ## TL;DR
 
 This is the **second 2026-07-06 session** — the continuation session that
@@ -8,7 +15,7 @@ funnel 404). Three commits, all on `main`, all pushed.
 
 | Commit | What | Status |
 |---|---|---|
-| `b2f9258c` | Formspree revert on `/download/first-timer-field-guide` form | ✅ Live |
+| `b2f9258c` | Formspree revert on `/download/first-timer-field-guide` form | ✅ Live (later superseded by `bb2b864f`) |
 | `cff15405` | Cannabis-COA hero image rename (fix 6 broken image refs) | ✅ Live |
 | `710d7a35` | Hub update for both fixes above | ✅ Live |
 

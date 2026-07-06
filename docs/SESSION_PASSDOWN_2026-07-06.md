@@ -1,5 +1,13 @@
 # MDG Session Passdown — 2026-07-06 (closing)
 
+> **⚠️ HISTORICAL RECORD only.** This doc captures the first 2026-07-06
+> session's state. Issue #1 (the `/api/lead-capture` 404) was resolved
+> later that same day by the third session, which collapsed the lead
+> funnel to a `mailto:` form (commits `bb2b864f` + `48a0459d`).
+> Updated closeouts for the second and third 2026-07-06 sessions live
+> at `docs/SESSION_PASSDOWN_OUT_2026-07-06.md` and
+> `docs/SESSION_PASSDOWN_OUT_2026-07-06-third-session.md`.
+
 ## TL;DR (read first)
 
 **Total session work:** 21 commits to `origin/main` over ~6.5 hours

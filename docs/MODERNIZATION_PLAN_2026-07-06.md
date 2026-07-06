@@ -207,7 +207,85 @@ Do NOT execute:
 
 ---
 
-## What this plan is NOT
+## 
+## Plan status update — 2026-07-06 (third session, end-of-day)
+
+This plan was authored mid-session on 2026-07-06 as a forward-looking
+proposal. By end of day, several tiers and recommendations landed. The
+sections above are preserved as the plan-of-record; this section notes
+what actually shipped.
+
+**Tier 0 (already shipped earlier this session):**
+- `c1697430` — `@astrojs/vercel` bumped from 10.0.7 → 11.0.2. ✅ shipped.
+- `b2f9258c` — Formspree funnel unblock shipped this commit. **Superseded
+  by `bb2b864f`** later this session when lead funnel was collapsed to
+  `mailto:`. Formspree is no longer in use.
+- `cff15405` — Cannabis-COA hero image rename. ✅ shipped.
+
+**Tier 1:**
+- **Tier 1.1 (delete dead `dist/` cp step) — DEFERRED, not abandoned.**
+  Reason in commit `5ccdb7a0`: the `Copied clean output to ../../dist`
+  step is non-trivially load-bearing — the next 4 lines of `vercel-build.sh`
+  (sitemap-prettify, regen-llms, llms.txt copy, MISSION_CONTROL regen)
+  all read from `dist/`. Renaming `dist/` to `build/` would be cosmetic
+  only; rewriting consumers is a separate future commit. AGENTS.md now
+  documents the actual relationship instead.
+- **Tier 1.2 (AGENTS.md "Build & Deploy shape" section) — ✅ shipped
+  in commit `5ccdb7a0`.** Wording was agent-authored in this session;
+  Steve review welcome.
+- **Tier 1.3 (CI step asserting `.vercel/output/functions/_render.func/.vc-config.json`) —
+  ✅ shipped in commit `cd82300d`.** Catches future deployment-shape
+  regressions at CI.
+
+**Tier 2:**
+- **Tier 2.1 Option B (retire dormant endpoint, ship mailto:) — ✅ shipped
+  in commit `bb2b864f`.** `apps/maine-cannabis/src/pages/api/lead-capture.ts`
+  (716 lines) and `apps/maine-cannabis/src/pages/api/indexnow-key.ts`
+  (15 lines) deleted. Net -883 lines. Form action flipped from
+  `https://formspree.io/f/xvgzlowz` to a client-side `mailto:` URL.
+  Formspree is no longer required to deliver leads.
+- **Tier 2.2 (remove 4 stale Vercel env vars) — ✅ shipped (out-of-band of
+  any commit, executed via `vercel env rm <name> production`).** Current
+  state: `vercel env list` returns 0 rows. Vars removed:
+  `PURELYMAIL_SMTP_USER`, `PURELYMAIL_SMTP_PASS`, `MDG_FROM_ADDRESS`,
+  `MDG_REPLY_TO`.
+- **Tier 2.3 (image variant migration to `<Image src=... />`) — UNSTARTED,
+  awaiting Steve authorization per the plan's Tier 2 marker.**
+  Estimated 4 hours. The site still has 6 hero-image variants in
+  `apps/maine-cannabis/public/images/heroes/` per Layout.astro's string-
+  convention derivation; the cff15405 commit renamed a small subset
+  but did not migrate the broader pattern.
+
+**Tier 3:**
+- **Tier 3.1 (YMYL staleness CI for 180d-old guides) — UNSTARTED,
+  awaiting Steve authorization. Estimated 1 hour.**
+- **Tier 3.2 (corrections-log regression CI) — UNSTARTED, awaiting
+  Steve authorization. Estimated 1 hour.**
+- **Tier 3.3 (refresh Jan-2026-dated banking & marketing guides) —
+  UNSTARTED, marked as operator-time-only by plan. Approx 6 hours.**
+
+**Tier 4:**
+- All sub-items unchanged. Strategic deferred, no quarter target.
+
+**Net session effects (2026-07-06, all three sessions combined):**
+- Production site: 254/254 routes 200, healthy.
+- SSR surface area in production: 0 lines (was 730).
+- Vercel env vars: 0 (was 4, removed).
+- Formspree dependency: removed (was active for 1.5 hours between
+  Formspree revert and Path B).
+- `@astrojs/vercel`: bumped to current major.
+- Tier 1.3 guard rail in place against future deployment-shape regressions.
+
+**Operator action items as of end of session:**
+- Wording review of AGENTS.md Tier 1.2 prose (Tier 1.2 shipped with
+  agent-authored text per the operator's "do the work you planned"
+  instruction).
+- Tier 2.3 / 3.1 / 3.2 / 3.3 signoffs if these are wanted next session.
+- W7 download-cluster operator decision (carried from 2026-07-04 passdown;
+  not addressed in any 2026-07-06 session).
+
+
+What this plan is NOT
 
 - Not a feature roadmap. No new CMS, no new endpoint, no user-visible change.
 - Not a content refresh. Tier 3.3 is the only content change.
