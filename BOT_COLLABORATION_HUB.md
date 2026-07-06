@@ -5915,3 +5915,24 @@ this without code change; full inventory captured in the Hub commit message.
   - `scripts/git/pre-push-verify.cjs` — 49 lines (default-skip + --with-smoke)
   - `package.json` — 4 lines (new scripts)
   - `AGENTS.md` — 27 lines (canonical verify cycle documented)
+
+### Sprint 78c: IndexNow push + GSC indexing-check script ✅ DONE (blocked on GSC creds)
+
+- **Why:** HANDOVER_TO_HERMES.md (2026-05-12) flagged "42 pages not indexed" in GSC as a manual-check item that had never been done. IndexNow last pushed 2026-06-07 (5 weeks ago, 221 URLs).
+- **What shipped:**
+  - **IndexNow push** — re-pushed the full sitemap to all 4 endpoints (Bing, Yandex, Seznam, Naver). 251 URLs submitted (was 221), HTTP 200. Log: `apps/maine-cannabis/public/data/indexnow-log.jsonl`. IndexNow does NOT include Google but helps long-tail discovery.
+  - **New: `gsc-indexing-check.cjs`** — runs GSC URL Inspection API on every URL in the sitemap, buckets results INDEXED / NOT_INDEXED / NEUTRAL / ERROR, archives per-URL results to `data/gsc-indexing-report-<date>.json` + caches for 24h. Package scripts: `seo:gsc-indexing` (full 251 URLs) + `seo:gsc-indexing:limit` (10 URLs, smoke test).
+  - **Graceful no-creds path** — exits 2 with setup instructions pointing at three cred paths (env var, `~/.hermes/secrets/gcp-mdg-reader.json`, `~/.config/maine-dispensary-guide/gcp-mdg-reader.json`).
+- **Blocker:** GSC creds. Service account needs `webmasters.readonly` scope + must be added as a user in GSC Settings → Users and permissions for `https://mainedispensaryguide.com`. Until Steve drops the JSON at one of the three paths, the script exits 2.
+- **Verified:**
+  - `npm run verify:iterate`: clean
+  - `check:docs-vs-code`: clean
+  - `node --check` on the script: pass
+  - No-creds path: exits 2 with setup instructions (confirmed)
+  - IndexNow: 251 URLs accepted (confirmed)
+- **Mnemosyne:** state-of-record at index `cd2f8e4...` (will read after this commit) with creds paths + workflow.
+- **Files changed:**
+  - `apps/maine-cannabis/scripts/seo/gsc-indexing-check.cjs` — new (250 lines)
+  - `apps/maine-cannabis/package.json` — 2 new scripts
+  - `apps/maine-cannabis/public/data/indexnow-log.jsonl` — 1 entry (IndexNow push log)
+  - `package-lock.json` — `googleapis ^173.0.0` added
