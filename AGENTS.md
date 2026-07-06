@@ -73,6 +73,35 @@ project-1/
 
 ---
 
+## Build & Deploy shape
+
+What `npm run build` actually does (verified 2026-07-06):
+
+1. `vercel-build.sh` symlinks the `@network/*` workspace packages into `apps/maine-cannabis/node_modules/`.
+2. Runs `apps/maine-cannabis/scripts/admin/sprint-score.cjs --write-public` to refresh `public/status.json`.
+3. `astro build` writes its full output to `apps/maine-cannabis/.vercel/output/`:
+   - `.vercel/output/static/` — every pre-rendered HTML page + assets.
+   - `.vercel/output/config.json` — Vercel Build Output API v3 routes manifest.
+   - `.vercel/output/functions/_render.func/` — Astro SSR function bundle (only present when at least one `.astro` route has `export const prerender = false`).
+4. The script ALSO copies `.vercel/output/static/*` to `dist/` at the repo root, then runs sitemap-prettify + llms.txt + MISSION_CONTROL.md regeneration against `dist/`. The `dist/` is a build artifact for those post-build steps; it is NOT what Vercel serves.
+
+What Vercel actually serves:
+
+- **Framework Preset** in the Vercel project is `Astro`. Vercel's Astro integration reads `apps/maine-cannabis/.vercel/output/` directly. It ignores `vercel.json`'s `outputDirectory: "dist"` and the repo-root `dist/`.
+- **Build Command** in the Vercel project is `bash vercel-build.sh`. (`vercel.json`'s `buildCommand` field is a second-source-of-truth but Vercel uses the project setting.)
+- **Vercel env vars**: production has zero. (Cleaned 2026-07-06.) Any future variable additions should be documented in `docs/MODERNIZATION_PLAN_2026-07-06.md`.
+
+**No SSR routes are currently in production** — both `apps/maine-cannabis/src/pages/api/lead-capture.ts` and `apps/maine-cannabis/src/pages/api/indexnow-key.ts` were retired 2026-07-06 (commits `bb2b864f` + `48a0459d`). The `/api/*` namespace is free for any future endpoint.
+
+**Lead-funnel pattern**: `/download/first-timer-field-guide` uses a client-side `mailto:` form (Formspree + the dormant SSR endpoint were both removed 2026-07-06). Submitting opens the user's mail client pre-filled to `hello@mainedispensaryguide.com`. Purelymail catch-all routes that address to `steezkelly@purelymail.com` (Steve's primary inbox). See `docs/LEAD_CAPTURE_SETUP.md` for the full operator-side flow.
+
+**Reading these signals**:
+- A `node_modules/@astrojs/vercel/dist/index.js` log line `Bundling function ../../../../dist/server/entry.mjs` followed by `Server built in N s` = SSR function bundle emitted.
+- `.vercel/output/functions/_render.func/.vc-config.json` present at the end of build = Vercel-shape serverless function emitted. CI step (`.github/workflows/ci.yml` "Assert Astro SSR function bundle") asserts this.
+- `dist/` having HTML files after build = `vercel-build.sh` ran successfully, even if Vercel never reads from there.
+
+---
+
 ## Do
 
 - Read `BOT_COLLABORATION_HUB.md` before starting any task
