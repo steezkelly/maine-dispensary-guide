@@ -6294,3 +6294,44 @@ this without code change; full inventory captured in the Hub commit message.
     title reopts, FAQ schema additions, and interlinks
   - Run seo:gsc-misroute-audit:week to see which misroutes
     resolved and which new patterns emerged
+
+### Sprint 78i: YMYL 'Last reviewed' E-E-A-T badge rollout (232/257 pages)
+
+- **Why:** Per the cannabis-content-ymyl-audit skill, every
+  operator-facing YMYL page should carry a 'Last reviewed' badge
+  with date and reviewer attribution. This is the rich-signals-
+  then-honesty two-phase pattern: badge is publisher-position (not
+  'independently verified' which the publisher cannot defend),
+  dated, and reviewer-attributed.
+- **What shipped:**
+  - 232 / 257 pages now carry the badge (90% coverage)
+  - Skipped: /about/corrections, /about/authors, /about/affiliate-disclosure
+    (these ARE the E-E-A-T artifacts; self-referential badge is
+    circular)
+  - 5 pages had the badge from prior work
+  - 215 pages gained the badge in this commit via two passes:
+      Pass 1: 211 pages matched the editorial-note regex
+      Pass 2: 4 special-cases (launch-checklist uses </Layout>,
+              market-stats/founders/*/resources lack editorial-note)
+- **Side fixes included:**
+  - Added legal-advice disclaimer to /blog/maine-dispensary-business-for-sale
+    (the 2 other new pages from Sprints 78f/78h already had it)
+  - Linked 28-B M.R.S. §207 to legislature.maine.gov in the
+    conditional license guide (statute citation as primary source
+    for legal claims)
+- **Reach audit (pre-commit, passed):**
+  - /about/corrections linked from persistent SiteFooter
+  - /about/authors linked from /about landing page
+  - E-E-A-T artifacts have persistent reach, not just cross-links
+- **Verified:**
+  - pre-push-verify: all 7 gates green across 230 changed files
+  - Cold-cache build: 257 pages, 32.07s
+- **Mnemosyne:** Sprint 78i state-of-record.
+- **YMYL audit status:**
+  - E-E-A-T compounding: corrections log + author hub + reviewer
+    pairing + visible footer = 4/4 artifacts in place
+  - Last-reviewed badge: 232/257 pages (90%)
+  - Primary source citations: OCP direct on all 3 new pages;
+    statute linked in conditional license guide
+  - "Last verified" anti-pattern: 0 occurrences in new pages
+  - Legal-advice disclaimers: 3/3 new pages have them
