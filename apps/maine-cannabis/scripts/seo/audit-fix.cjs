@@ -13,7 +13,7 @@
  *   node scripts/seo/audit-fix.cjs --format json           # JSON output
  */
 
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -142,15 +142,31 @@ function guideExists(guidePath, allFiles) {
 // ============================================================================
 
 function runSquirrelscan(url, format = 'json') {
+  // URL whitelist: only http(s) URLs. Defense against caller-supplied --url
+  // injection. Git's own ref handling rejects these as unknown refs.
+  if (typeof url !== 'string' || !/^https?:\/\/[^\s<>"']+$/.test(url)) {
+    return { success: false, error: `Invalid --url: ${url} (must be http(s) URL)` };
+  }
+  if (format !== 'json' && format !== 'text') {
+    return { success: false, error: `Invalid format: ${format} (must be 'json' or 'text')` };
+  }
   try {
-    const output = execSync(`npx squirrelscan audit ${url} --format ${format}`, {
+    // Use spawnSync (no shell) instead of execSync+template — array args
+    // are passed directly to npx, no shell metachar interpretation.
+    const result = spawnSync('npx', ['squirrelscan', 'audit', url, '--format', format], {
       encoding: 'utf8',
       timeout: 120000,
-      stdio: 'pipe',
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
-    return { success: true, data: output };
+    if (result.status !== 0) {
+      // execSync hides the distinction; spawnSync gives us explicit
+      // stdout/stderr/status so we can report the real error.
+      const errMsg = (result.stderr || result.stdout || result.error?.message || 'unknown error').split('\n')[0];
+      return { success: false, error: `squirrelscan exit ${result.status}: ${errMsg}` };
+    }
+    return { success: true, data: result.stdout };
   } catch (err) {
-    return { success: false, error: err.stdout || err.message };
+    return { success: false, error: err.message };
   }
 }
 
@@ -320,10 +336,16 @@ function applyMetaFix(filePath, issue, newValue) {
 }
 
 function applyLinkFix(filePath, oldLink, newLink) {
+  // Escape regex metacharacters in oldLink so values like "page?id=1" don't
+  // get treated as regex syntax (the prior code only escaped /, leaving
+  // . * ? [ ] ( ) etc. vulnerable). And sanitize the replacement string so
+  // $$ and $& don't trigger back-reference expansion.
+  const escapedOld = oldLink.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const safeReplacement = newLink.replace(/\$/g, '$$$$');
   const content = fs.readFileSync(filePath, 'utf8');
   const updated = content.replace(
-    new RegExp(`href=["']${oldLink.replace(/\//g, '\\/')}["']`, 'g'),
-    `href="${newLink}"`
+    new RegExp(`href=["']${escapedOld}["']`, 'g'),
+    `href="${safeReplacement}"`
   );
   fs.writeFileSync(filePath, updated);
 }
@@ -356,6 +378,12 @@ function main() {
       mode = args[i + 1];
       i++;
     } else if (args[i] === '--url' && args[i + 1]) {
+      // Validate at parse time so the bad value is rejected before any
+      // mode runs — even if the chosen mode doesn't call runSquirrelscan.
+      if (!/^https?:\/\/[^\s<>"']+$/.test(args[i + 1])) {
+        log(`Invalid --url: ${args[i + 1]} (must be http(s) URL)`);
+        process.exit(2);
+      }
       customUrl = args[i + 1];
       i++;
     } else if (args[i] === '--format' && args[i + 1]) {
@@ -522,11 +550,12 @@ Options:
       }
     }
 
-    // Exit code: 1 if fixes were applied, 0 otherwise
-    if (shouldApply && result.fixed.length > 0) {
-      process.exit(1);
-    }
-
+    // Exit code: 0 on success, 1 on fatal error (in the catch block).
+    // The old code exited 1 when fixes were applied, which broke CI
+    // pipelines that treated exit 1 as failure — applying fixes is the
+    // whole point of --apply, it's a success condition. The conditional
+    // exit was intentionally removed; the script now always exits 0
+    // on the happy path and 1 only on the error path below.
   } catch (err) {
     log(`Fatal error: ${err.message}`);
     if (outputFormat === 'json') {

@@ -95,6 +95,15 @@ function git(cmd) {
     return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf8', shell: true }).trim();
 }
 
+// Validate a git ref name. The set covers the realistic use cases —
+// branch names, commit SHAs, ref paths (refs/heads/main), and standard
+// git operators (HEAD~1, HEAD^2). Git itself does stricter validation per
+// ref kind, so this is a defense-in-depth filter on the shell-interpolated
+// input, not a replacement for git's checks.
+function isValidRef(s) {
+    return typeof s === 'string' && /^[a-zA-Z0-9._/^~:-]+$/.test(s);
+}
+
 function changedFiles(refArg) {
     // Three sources, deduped:
     //   a) commits in <ref>..HEAD (used when called as a real pre-push hook with the remote ref)
@@ -102,6 +111,9 @@ function changedFiles(refArg) {
     //   c) unstaged/uncommitted working-tree changes
     const all = new Set();
     if (refArg) {
+        // isValidRef already enforced at parse time; defensive recheck here
+        // guards against future callers that bypass main()'s CLI validation.
+        if (!isValidRef(refArg)) return all;
         try {
             git(`git diff --name-only ${refArg} HEAD`).split('\n').filter(Boolean).forEach(f => all.add(f));
         } catch (e) {
@@ -429,6 +441,11 @@ function compressedFrontmatterCheck() {
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
+    if (refArg && !isValidRef(refArg)) {
+        log('err', `Invalid --ref value (must match /^[a-zA-Z0-9._/^~:-]+$/): ${refArg}`);
+        process.exit(2);
+    }
+    
     const fastOnly = args.includes('--fast-only');
 
     log('info', `repo: ${REPO_ROOT}`);
