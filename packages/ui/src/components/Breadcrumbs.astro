@@ -102,7 +102,11 @@ const breadcrumbListSchema = !isHome ? {
 
   .separator {
     margin: 0 0.5rem;
-    color: #ccc;
+    /* Fix 2026-07-06 (visual-readability-polish.md issue #5): was hardcoded
+       #ccc which drifted loud in dark mode. Use the existing muted-text token
+       (4.7:1 on light, 9.2:1 on dark) so the separator reads the same
+       relative weight in both themes. */
+    color: var(--color-text-light);
     user-select: none;
   }
 

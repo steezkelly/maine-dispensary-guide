@@ -129,8 +129,11 @@
   border: none;
   cursor: pointer;
 }
+/* Fix 2026-07-06 (visual-readability-polish.md issue #1): white text on
+   --color-soft-green (#5F7E50) was 3.39:1, fails WCAG AA Normal.
+   Re-route the nav-link hover background to --color-primary (8.65:1 with white). */
 .nav-links a:hover, .nav-dropdown:hover .dropbtn {
-  background: var(--color-soft-green);
+  background: var(--color-primary);
   color: white;
 }
 [data-theme="dark"] .nav-links a,

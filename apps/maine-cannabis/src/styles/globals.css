@@ -76,6 +76,24 @@ body {
 .p11 { bottom: 40%; left: 2%; transform: rotate(30deg); }
 .p12 { top: 55%; left: 25%; transform: rotate(-45deg); }
 
+/* Fix 2026-07-06 (visual-readability-polish.md issue #6): at <960px the 12
+   absolutely-positioned ornaments clustered around the content column and
+   risked overlapping the H1, callouts, or CTA buttons. Keep the six
+   ornaments positioned along the page edges; hide the six closer to the
+   content centerline. Also dim intensity slightly to compete less with
+   the article at narrow widths. */
+@media (max-width: 960px) {
+  .bg-ornament { opacity: 0.04; }
+  .bg-ornament.p3,
+  .bg-ornament.p4,
+  .bg-ornament.p7,
+  .bg-ornament.p9,
+  .bg-ornament.p10,
+  .bg-ornament.p12 {
+    display: none;
+  }
+}
+
 /* === Typography === */
 h1, h2, h3, h4 { font-family: var(--font-serif); color: var(--color-primary); }
 

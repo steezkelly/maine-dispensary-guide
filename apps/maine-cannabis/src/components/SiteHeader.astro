@@ -69,7 +69,10 @@ const siteName = siteConfig.siteName;
         <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
         <div class="dropdown-content multi-column">
           <div class="topic-group">
-            <span class="topic-header">◆ Business Essentials</span>
+            {/* Fix 2026-07-06 (visual-readability-polish.md issue #10): wrap
+                each section-divider glyph in aria-hidden so screen readers
+                don't announce "black diamond" before each category name. */}
+            <span class="topic-header"><span aria-hidden="true">◆</span> Business Essentials</span>
             <a href="/guides/maine-dispensary-license">License Requirements</a>
             <a href="/guides/maine-dispensary-business-plan">Business Plan</a>
             <a href="/guides/maine-dispensary-costs">Startup Costs</a>
@@ -79,7 +82,7 @@ const siteName = siteConfig.siteName;
             <a href="/guides/maine-dispensary-hiring">Hiring & Staffing</a>
           </div>
           <div class="topic-group">
-            <span class="topic-header">◆ Compliance & Legal</span>
+            <span class="topic-header"><span aria-hidden="true">◆</span> Compliance & Legal</span>
             <a href="/guides/maine-cannabis-regulations">Regulations</a>
             <a href="/guides/maine-cannabis-taxes-2026">280E Taxation</a>
             <a href="/guides/maine-cannabis-banking-solutions">Banking Solutions</a>
@@ -88,7 +91,7 @@ const siteName = siteConfig.siteName;
             <a href="/guides/maine-cannabis-events-2026">Cannabis Events</a>
           </div>
           <div class="topic-group">
-            <span class="topic-header">◆ Operations & Technology</span>
+            <span class="topic-header"><span aria-hidden="true">◆</span> Operations & Technology</span>
             <a href="/guides/maine-dispensary-security">Security Requirements</a>
             <a href="/guides/maine-cannabis-inventory-management">Inventory & Metrc</a>
             <a href="/guides/maine-dispensary-pos">POS Systems</a>
@@ -97,14 +100,14 @@ const siteName = siteConfig.siteName;
             <a href="/guides/maine-cannabis-edibles-compliance">Edibles Compliance</a>
           </div>
           <div class="topic-group">
-            <span class="topic-header">◆ City & Regional Guides</span>
+            <span class="topic-header"><span aria-hidden="true">◆</span> City & Regional Guides</span>
             <a href="/guides/portland-dispensary-guide">Portland</a>
             <a href="/guides/lewiston-dispensary-guide">Lewiston</a>
             <a href="/guides/bangor-dispensary-guide">Bangor</a>
             <a href="/guides/augusta-dispensary-guide">Augusta</a>
             <a href="/guides/south-portland-dispensary-guide">South Portland</a>
             <a href="/guides/kittery-dispensary-guide">Kittery</a>
-            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Western Maine</span>
+            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;"><span aria-hidden="true">◆</span> Western Maine</span>
             <a href="/guides/fryeburg-dispensary-guide">Fryeburg</a>
             <a href="/guides/gray-dispensary-guide">Gray</a>
             <a href="/guides/porter-dispensary-guide">Porter</a>
@@ -112,7 +115,7 @@ const siteName = siteConfig.siteName;
             <a href="/guides/baldwin-dispensary-guide">Baldwin</a>
             <a href="/guides/naples-dispensary-guide">Naples</a>
             <a href="/guides/brownfield-dispensary-guide">Brownfield</a>
-            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Sebago Lakes Region</span>
+            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;"><span aria-hidden="true">◆</span> Sebago Lakes Region</span>
             <a href="/guides/sebago-lakes-region-dispensary-guide">Sebago Lakes Region</a>
             <a href="/guides/windham-dispensary-guide">Windham</a>
             <a href="/guides/bridgton-dispensary-guide">Bridgton</a>
@@ -120,13 +123,13 @@ const siteName = siteConfig.siteName;
             <a href="/guides/raymond-dispensary-guide">Raymond</a>
             <a href="/guides/standish-dispensary-guide">Standish</a>
             <a href="/guides/sebago-dispensary-guide">Sebago</a>
-            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Lower Saco Valley</span>
+            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;"><span aria-hidden="true">◆</span> Lower Saco Valley</span>
             <a href="/guides/limerick-dispensary-guide">Limerick</a>
             <a href="/guides/buxton-dispensary-guide">Buxton</a>
             <a href="/guides/limington-dispensary-guide">Limington</a>
             <a href="/guides/cornish-dispensary-guide">Cornish</a>
             <a href="/guides/parsonsfield-dispensary-guide">Parsonsfield</a>
-            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Southern Maine Coast</span>
+            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;"><span aria-hidden="true">◆</span> Southern Maine Coast</span>
             <a href="/guides/york-dispensary-guide">York</a>
             <a href="/guides/wells-dispensary-guide">Wells</a>
             <a href="/guides/ogunquit-dispensary-guide">Ogunquit</a>
@@ -134,12 +137,12 @@ const siteName = siteConfig.siteName;
             <a href="/guides/biddeford-dispensary-guide">Biddeford</a>
             <a href="/guides/saco-dispensary-guide">Saco</a>
             <a href="/guides/old-orchard-beach-dispensary-guide">Old Orchard Beach</a>
-            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;">◆ Waldo County</span>
+            <span class="topic-header" style="opacity:0.7;font-size:0.8rem;margin-top:0.5rem;"><span aria-hidden="true">◆</span> Waldo County</span>
             <a href="/guides/freedom-dispensary-guide">Freedom</a>
             <a href="/guides">All 40+ City Guides</a>
           </div>
           <div class="topic-group">
-            <span class="topic-header">◆ All Guides & Tools</span>
+            <span class="topic-header"><span aria-hidden="true">◆</span> All Guides & Tools</span>
             <a href="/all-guides">Full Resource Library</a>
             <a href="/launch-checklist">Launch Checklist</a>
             <a href="/start-here">Start Here Roadmap</a>
@@ -158,11 +161,11 @@ const siteName = siteConfig.siteName;
       <div class="nav-dropdown">
         <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾">Business Tools ▾</button>
         <div class="dropdown-content">
-          <a href="/roi-calculator">◆ ROI Calculator</a>
-          <a href="/market-stats">◆ Market Stats</a>
-          <a href="/glossary">◆ Technical Glossary</a>
-          <a href="/resources/maine-cannabis-official-resources">◆ Official Resources</a>
-          <a href="/resources/maine-cannabis-education">◆ Education & Training</a>
+          <a href="/roi-calculator"><span aria-hidden="true">◆</span> ROI Calculator</a>
+          <a href="/market-stats"><span aria-hidden="true">◆</span> Market Stats</a>
+          <a href="/glossary"><span aria-hidden="true">◆</span> Technical Glossary</a>
+          <a href="/resources/maine-cannabis-official-resources"><span aria-hidden="true">◆</span> Official Resources</a>
+          <a href="/resources/maine-cannabis-education"><span aria-hidden="true">◆</span> Education & Training</a>
         </div>
       </div>
       <a href="/resources">Vendor Directory</a>

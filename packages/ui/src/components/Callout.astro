@@ -7,11 +7,15 @@ interface Props {
 
 const { title, type = 'passion', level = 'h3' } = Astro.props;
 
+/* Fix 2026-07-06 (visual-readability-polish.md issue #2): tip and warning
+   previously shared the ◆ glyph — semantic collision on a YMYL regulatory
+   surface where the distinction matters most. Distinguish by geometric
+   family: open diamond ◇ = instructive/non-urgent, open triangle ◬ = heads-up. */
 const icons = {
   passion: '✦',
-  tip: '◆',
+  tip: '◇',
   success: '▲',
-  warning: '◆',
+  warning: '◬',
   info: '●'
 };
 
@@ -23,12 +27,17 @@ const accents = {
   info: 'var(--color-info, #4a7c9b)'
 };
 
+/* Fix 2026-07-06 (visual-readability-polish.md issue #4): was rgba(255,255,255,0.4)
+   which on bone (#F2F2E2) renders ~98% identical — operators couldn't distinguish
+   the callout container from the surrounding paragraphs. Step up to ~0.10 alpha
+   against the warm gradient so the container reads as a clear visual region
+   without overpowering the page rhythm. */
 const bgColor = {
-  passion: 'rgba(88, 129, 87, 0.08)',
-  tip: 'rgba(163, 177, 138, 0.12)',
-  success: 'rgba(13, 78, 80, 0.06)',
-  warning: 'rgba(180, 100, 60, 0.08)',
-  info: 'rgba(74, 124, 155, 0.08)'
+  passion: 'rgba(88, 129, 87, 0.10)',
+  tip: 'rgba(163, 177, 138, 0.18)',
+  success: 'rgba(13, 78, 80, 0.10)',
+  warning: 'rgba(180, 100, 60, 0.14)',
+  info: 'rgba(74, 124, 155, 0.14)'
 };
 ---
 
@@ -64,7 +73,7 @@ const bgColor = {
     bottom: 0;
     border-radius: 0 1rem 1rem 0;
     border: 1px solid var(--callout-accent);
-    opacity: 0.25;
+    opacity: 0.40;    /* Fix 2026-07-06 (visual-readability-polish.md issue #4): was 0.25 — bumped to give the container a defined right-side edge. */
     pointer-events: none;
   }
 
@@ -99,10 +108,14 @@ const bgColor = {
     margin-bottom: 0;
   }
 
+  /* Fix 2026-07-06 (visual-readability-polish.md issue #3): removed the
+     infinite alternate glow (box-shadow pulse every 2s). Read as
+     "loading" / "uncertain" / "live-update" on a YMYL regulatory surface —
+     undercut the editorial authority the design system projects.
+     Entrance animation stays. After: callouts sit calmly, content carries emphasis. */
   @media (prefers-reduced-motion: no-preference) {
     .callout {
-      animation: calloutReveal 0.5s ease-out,
-                 calloutGlow 2s ease-in-out 0.3s infinite alternate;
+      animation: calloutReveal 0.5s ease-out;
     }
   }
 
@@ -116,9 +129,5 @@ const bgColor = {
       transform: translateX(0);
     }
   }
-
-  @keyframes calloutGlow {
-    from { box-shadow: 0 2px 12px rgba(13, 78, 80, 0.06); }
-    to { box-shadow: 0 2px 20px rgba(88, 129, 87, 0.15); }
-  }
 </style>
+

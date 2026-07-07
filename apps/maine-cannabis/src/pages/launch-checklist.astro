@@ -174,9 +174,12 @@ const howToSchema = {
     margin-bottom: 4rem;
   }
 
+  /* Fix 2026-07-06 (visual-readability-polish.md issue #1): white text on
+     --color-soft-green (#5F7E50) was 3.39:1, fails WCAG AA Normal.
+     --color-primary gives 8.65:1 (AAA) with white. */
   .hero-badge {
     display: inline-block;
-    background: var(--color-soft-green);
+    background: var(--color-primary);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
@@ -444,8 +447,9 @@ const howToSchema = {
     margin-bottom: 2rem;
   }
 
+  /* Fix 2026-07-06 (visual-readability-polish.md issue #1): see .hero-badge. */
   .duration-badge {
-    background: var(--color-soft-green);
+    background: var(--color-primary);
     color: white;
     padding: 0.35rem 0.75rem;
     border-radius: 1rem;

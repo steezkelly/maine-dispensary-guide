@@ -35,6 +35,12 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 
 ---
 
+## Design System
+
+| Topic | Documentation |
+|-------|--------------|
+| Visual Readability Polish | `reference/visual-readability-polish.md` |
+
 ## Astro Framework
 
 | Topic | Documentation |
