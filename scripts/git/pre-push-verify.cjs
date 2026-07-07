@@ -438,6 +438,30 @@ function compressedFrontmatterCheck() {
     return { ok: false };
 }
 
+function killOrphanedTsServers() {
+  // `npx astro check` from apps/maine-cannabis spawns a TypeScript LSP
+  // (tsserver.js) that does not always exit cleanly when the parent shell
+  // wraps the call (npm run typecheck, npm run verify:pre-push). Each
+  // orphan holds ~2 GB resident; repeated verify runs leak RAM until the
+  // OS reclaims the pages.
+  //
+  // Run this after slowAstroCheck() so a successful pass leaves no
+  // children behind. pkill returns 1 if no matches were found, which is
+  // the desired outcome — swallow the error and log an info line.
+  try {
+    execSync('pkill -f tsserver.js', { stdio: 'ignore' });
+    log('info', 'cleaned up any orphaned tsserver.js LSP processes');
+  } catch (_) {
+    // exit code 1 from pkill means "no processes matched" — that's the
+    // happy path on a clean run. No log line; nothing to report.
+  }
+}
+
+// Belt-and-suspenders: if main() exits through an unexpected path
+// (uncaught exception, signal), the tsserver.js child is still reaped.
+process.on('SIGINT', () => { killOrphanedTsServers(); process.exit(130); });
+process.on('SIGTERM', () => { killOrphanedTsServers(); process.exit(143); });
+
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
@@ -495,6 +519,11 @@ function main() {
     }
 
     const slow = slowAstroCheck(files);
+    // Sweep any tsserver.js children that slowAstroCheck spawned but
+    // didn't reap — see killOrphanedTsServers() for the why. Cheap
+    // (~10 ms when nothing matches) and prevents the 2 GB-per-run RAM
+    // leak that the 2026-07-13 incident triggered.
+    killOrphanedTsServers();
     if (!slow.ok) process.exit(2);
 
     // Smoke checks default OFF — they hit production URLs and were
