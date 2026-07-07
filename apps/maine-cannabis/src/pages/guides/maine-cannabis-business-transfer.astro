@@ -1,0 +1,240 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import Callout from '../../components/Callout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  publishDate: "2026-04-12",
+  modifiedDate: "2026-07-06",
+  section: "Business Essentials"
+};
+const topics = ["licensing", "transactions", "regulatory"];
+---
+
+<Layout
+  title="Maine Cannabis Store Transfer of Ownership: OCP Process, Fees, and Pitfalls (2026)"
+  description="Maine cannabis transfer of ownership: when you need OCP's Post Active License Changes Application, the $500 fee, what the OCP reviews, and the 5 most common reasons transfers get denied or delayed."
+  heroImage="/images/heroes/maine-license-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; padding-top: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+  .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis Store Transfer of Ownership: OCP Process, Fees, and Pitfalls (2026)</h1>
+    <p class="subtitle">Selling or restructuring a Maine cannabis business? Here's what OCP requires when ownership interests change — and the five pitfalls that delay or deny most transfers.</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Transfer of Ownership at a Glance</h2>
+    <table aria-label="Maine cannabis transfer of ownership key facts">
+      <tbody>
+        <tr><td><strong>Governing Process</strong></td><td>Post Active License Changes Application</td></tr>
+        <tr><td><strong>OCP Form</strong></td><td>Submitted via the online licensing portal at maine.gov</td></tr>
+        <tr><td><strong>Application Fee</strong></td><td>$500 (Transfer of Ownership/Control fee)</td></tr>
+        <tr><td><strong>Typical OCP Review Time</strong></td><td>60–120 days from "application complete" determination</td></tr>
+        <tr><td><strong>Triggering Threshold</strong></td><td>Any change in beneficial ownership of 10% or more, including indirect economic interests</td></tr>
+        <tr><td><strong>Authorization Requirement</strong></td><td>OCP must approve the transfer before it is effective</td></tr>
+        <tr><td><strong>During Review Period</strong></td><td>Existing license remains active; the existing ownership continues to operate the business</td></tr>
+        <tr><td><strong>Municipal Re-Approval</strong></td><td>Required only if the transfer changes principals the municipality previously authorized</td></tr>
+        <tr><td><strong>2022 Legal Update</strong></td><td>Maine's residency requirement struck down (1st Circuit); out-of-state owners can hold Maine cannabis licenses</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview — When You Need OCP's Transfer Application</h2>
+    <p class="answer-capsule">Any change in beneficial ownership of 10% or more — including new investors, partner buyouts, partial sales, or full business acquisitions — requires the Post Active License Changes Application with the OCP. Operating with new owners before OCP approval is a state-law violation, regardless of how the deal was structured.</p>
+
+    <p>Maine's cannabis license is issued to a specific business entity, not to the individual owners personally. When the ownership of that entity changes, the OCP's review of who is operating the cannabis business changes too. Title 28-B §207 and OCP Rule Chapter 2 require the licensee to notify the OCP of any change in ownership interests, principals, financial instruments, or operational plan — and to obtain approval before the change becomes effective.</p>
+
+    <p>The threshold for triggering a transfer application is any change in beneficial ownership of 10% or more. A new investor taking a 15% equity stake requires a transfer application. A partner buying out another partner's 25% requires a transfer application. A full business acquisition where the new owner forms a new LLC and acquires all assets requires a transfer application for the underlying license. The 10% threshold is the same threshold OCP uses for new license beneficial ownership disclosures.</p>
+
+    <p>If the change is below 10% — say, a minor equity adjustment between existing principals with no change in who's in control — a transfer application is not required, but the OCP may still require a notification of the change in beneficial ownership. Always consult a cannabis attorney when in doubt.</p>
+  </section>
+
+  <Callout title="Operating with new owners before OCP approval is a state-law violation" type="warning">
+    The Post Active License Changes Application must be approved by OCP before the new owners can take operational control of the cannabis business. Until OCP approval, the previously authorized ownership continues to hold the license. Any operational decisions, financial transactions, or business activities conducted by the new owners before OCP approval are unauthorized — and the OCP can hold both the prior and incoming owners responsible for compliance violations during that period.
+  </Callout>
+
+  <section>
+    <h2>What Triggers a Transfer Application (and What Doesn't)</h2>
+    <p class="answer-capsule">The trigger is any change in beneficial ownership of 10% or more. Cosmetic changes to the operating agreement, internal restructuring between existing owners, or capital infusions that don't change ownership percentages don't typically require a transfer application — but they may require a separate notification.</p>
+
+    <h3>Triggers — These Require a Transfer Application</h3>
+    <ul>
+      <li>Sale of 10%+ of the business to a new owner (investor, partner, or full acquirer)</li>
+      <li>Partner buyout that changes who holds a 10%+ economic interest</li>
+      <li>Adding a new principal or removing an existing principal from the operating entity</li>
+      <li>Change in any person who has a direct or indirect economic interest of 10%+ in the cannabis business</li>
+      <li>Issuance of new equity to a new investor, regardless of percentage of new issuance</li>
+      <li>Transfer of the license from one entity to a new entity owned by the same or different principals (treated as a transfer because the licensee entity is changing)</li>
+      <li>Restructuring that changes who has management control, regardless of equity percentage</li>
+    </ul>
+
+    <h3>Does NOT Typically Trigger a Transfer Application</h3>
+    <ul>
+      <li>Internal equity adjustment between existing 10%+ owners (still requires OCP notification)</li>
+      <li>Change in officers who don't have 10%+ economic interest</li>
+      <li>Capital infusion that doesn't change the 10%+ ownership structure</li>
+      <li>Lease renewal, supplier changes, or operational restructuring that doesn't change ownership</li>
+      <li>Brand name change, marketing change, or other surface-level business changes</li>
+    </ul>
+
+    <h3>Edge Cases That Often Get Mis-Classified</h3>
+    <p>Some changes look cosmetic but actually meet the transfer trigger:</p>
+    <ul>
+      <li><strong>Family gifting of equity:</strong> If a 10%+ owner gifts their stake to a family member, that's a transfer requiring OCP approval. The recipient is a new beneficial owner.</li>
+      <li><strong>Loan conversion to equity:</strong> If a debt holder converts their loan to equity that gives them 10%+, that's a transfer. The OCP reviews the source of funds for the original loan as part of the application.</li>
+      <li><strong>Trust or estate transfers:</strong> If a 10%+ owner's equity passes to a trust or estate, that's a transfer. The OCP reviews the trust's beneficial owners and trustees.</li>
+      <li><strong>Spousal transfers:</strong> If a 10%+ owner transfers their stake to a spouse, that's a transfer. The OCP reviews the spouse as a new beneficial owner.</li>
+    </ul>
+
+    <p>These are the cases most likely to be missed by operators who think a "small change" doesn't require a transfer application. The cost of getting this wrong is a state-law violation, so when in doubt, consult a cannabis attorney before the change is made.</p>
+  </section>
+
+  <section>
+    <h2>The Post Active License Changes Application — Step by Step</h2>
+    <p class="answer-capsule">The transfer application follows the same substantive review as a new license application — beneficial ownership disclosure, background checks, source of funds documentation, and confirmation of municipal standing. The OCP's review period is 60-120 days from "application complete" determination, and the existing license remains active throughout the review.</p>
+
+    <h3>Step 1: Gather Updated Operating Documents</h3>
+    <p>Before you start the application, gather the proposed updated operating agreement (or bylaws, for corporations), the proposed new ownership structure, and any new financial instruments (loans, convertible notes, SAFE agreements). The OCP will want to see exactly how the new ownership is structured.</p>
+
+    <h3>Step 2: New Principal Attestations</h3>
+    <p>For each new principal who will hold 10%+ economic interest, the application requires:</p>
+    <ul>
+      <li>Adult Use Cannabis Establishment Principal Attestation form (signed and notarized)</li>
+      <li>Maine Revenue Services - Tax Disclosure form (proving tax compliance)</li>
+      <li>Individual Identification Card (IIC) for each new principal — must be active before the application is filed</li>
+      <li>Criminal history records check (Maine State Police and FBI) for each new principal</li>
+      <li>Source of funds documentation for the capital the new principal is contributing</li>
+    </ul>
+
+    <h3>Step 3: Submit the Application Online</h3>
+    <p>The application is filed through the OCP's online licensing portal at <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">maine.gov</a>. The system will prompt for each required form and attachment. After submission, you'll receive a confirmation email with a Notice of Application Fee and instructions for the next steps.</p>
+
+    <h3>Step 4: Pay the Transfer of Ownership/Control Fee</h3>
+    <p>The fee is $500, paid after the OCP confirms the application is administratively complete. The OCP cannot begin substantive review until the fee is received.</p>
+
+    <h3>Step 5: OCP Substantive Review (60-120 Days)</h3>
+    <p>The OCP's review team evaluates the application against the same criteria as a new license:</p>
+    <ul>
+      <li><strong>Beneficial ownership eligibility:</strong> Each new principal must be 21+, pass the criminal history check, and meet the OCP's character-and-fitness standard</li>
+      <li><strong>Source of funds:</strong> Every dollar the new principal is contributing must be traceable to documented origin. The OCP applies the same scrutiny as a new license application — undocumented funds trigger denial</li>
+      <li><strong>Municipal standing:</strong> The OCP verifies the cannabis business remains in good standing with the host municipality. If the transfer requires new municipal approval (e.g., new principals the town hasn't previously authorized), the OCP requires that approval first</li>
+      <li><strong>Compliance history:</strong> The OCP reviews the existing license's compliance record. Past citations, corrective action plans, or compliance issues are reviewed but don't automatically disqualify the transfer</li>
+    </ul>
+
+    <h3>Step 6: Approval and Operational Transition</h3>
+    <p>Once the OCP approves the transfer, the new ownership can take operational control. The OCP issues a confirmation letter with the new ownership structure. The license continues under the same license number with the new ownership of record.</p>
+
+    <p>If the OCP denies the transfer, the existing ownership structure remains in place. The denial is appealable to Maine Superior Court within 30 days of the written denial. See our <a href="/guides/maine-cannabis-license-denied">License Denial Guide</a> for the appeal process.</p>
+  </section>
+
+  <Callout title="The existing license stays active during the review" type="info">
+    During the OCP's 60-120 day review period, the existing license remains active. The current ownership continues to operate the business while the transfer is pending. This is important because it means operations don't need to pause during the application — but it also means the new owners cannot take operational control, sign contracts, or make business decisions on behalf of the cannabis business until OCP approval. Some buyers structure the closing date to coincide with the expected approval date; others operate under a transition-services agreement with the seller.
+  </Callout>
+
+  <section>
+    <h2>Source of Funds — The Most Common Reason for Delay or Denial</h2>
+    <p class="answer-capsule">The OCP's source-of-funds scrutiny is the #1 reason transfer applications stall or get denied. The same documentation requirements that apply to a new license apply here — every dollar the new principal is contributing must be traceable to documented origin.</p>
+
+    <h3>What You Need to Document</h3>
+    <p>For the capital the new principal is contributing to the cannabis business (whether buying out existing partners, investing in new equity, or acquiring the business), the OCP requires:</p>
+    <ul>
+      <li><strong>Bank statements:</strong> Personal and business bank statements for the prior 24 months, showing the accumulation of the capital being contributed</li>
+      <li><strong>Loan documents:</strong> If any portion of the capital is borrowed, the loan agreement showing terms, lender, and collateral</li>
+      <li><strong>Gift letters:</strong> If any portion is a gift from a family member or other donor, a signed gift letter plus the donor's bank statements showing their own accumulation of the gifted funds</li>
+      <li><strong>Investment agreements:</strong> If this is a multi-investor transaction, the full subscription documents and proof of each investor's source of funds</li>
+      <li><strong>Tax returns:</strong> For the prior two years, showing income or wealth consistent with the contributed capital</li>
+      <li><strong>Sale of prior business:</strong> If the capital is from a prior business sale, the sale documents and proof of the buyer's payment</li>
+    </ul>
+
+    <h3>What Triggers a Source-of-Funds Deficiency</h3>
+    <ul>
+      <li>Cash deposits without corresponding income documentation</li>
+      <li>Loans from non-institutional lenders without collateral documentation</li>
+      <li>Gifts where the donor's funds are also undocumented</li>
+      <li>Capital appearing in bank accounts suddenly before the transfer</li>
+      <li>Inconsistencies between the amount contributed and the principal's reported income</li>
+    </ul>
+
+    <h3>How to Avoid Source-of-Funds Issues</h3>
+    <p>Most source-of-funds problems are curable on resubmission, but each resubmission costs another 60-120 day OCP review. The best approach is to do the source-of-funds homework before you file:</p>
+    <ul>
+      <li>Engage a cannabis-specialist CPA early in the transaction</li>
+      <li>Have your CPA model the new principal's source of funds against their tax returns and bank statements before the application is filed</li>
+      <li>For complex funding structures (multi-investor, gift, loan conversion), consult a cannabis attorney for the right source-of-funds structure</li>
+      <li>Submit complete documentation on the first application — deficiency notices only extend the timeline</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5 Common Reasons Transfers Get Delayed or Denied</h2>
+    <p class="answer-capsule">Most transfer application denials are curable on resubmission, but each resubmission costs another $500 fee and another 60-120 day OCP review. The five most common pitfalls are all avoidable with proper diligence before the application is filed.</p>
+
+    <h3>1. Incomplete Source-of-Funds Documentation</h3>
+    <p>The single most common denial reason. Missing bank statements, unsigned gift letters, or undocumented source of a loan. The OCP cannot verify the funds' origin and denies the application pending resubmission with complete documentation.</p>
+
+    <h3>2. New Principal Background Check Issues</h3>
+    <p>A new principal with a recent disqualifying conviction (drug trafficking, fraud, or financial crimes within the past 10 years) will fail the criminal history records check. The OCP will deny the transfer and require a different ownership structure before the transfer can be approved.</p>
+
+    <h3>3. Undisclosed Beneficial Ownership</h3>
+    <p>If a new 10%+ owner has been operating the business informally before the application is filed, the OCP considers that a state-law violation. The transfer is denied, and the prior ownership may face compliance review for permitting an unauthorized person to operate.</p>
+
+    <h3>4. Municipal Re-Authorization Required But Not Obtained</h3>
+    <p>If the transfer brings in principals the municipality hasn't previously authorized, the OCP may require new municipal approval. Most Maine municipalities do not require re-authorization for an internal ownership transfer, but some do — particularly if the cannabis ordinance requires named principals as part of the local permit. Always check the municipal cannabis ordinance before filing the transfer application.</p>
+
+    <h3>5. Pending Compliance Issues at the Existing License</h3>
+    <p>If the existing license has unresolved citations, Metrc reconciliation issues, or pending enforcement actions, the OCP may delay the transfer until those are resolved. The transfer doesn't impose new compliance obligations, but the OCP will not approve a transfer that moves ownership away from an operator with active compliance problems.</p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={[
+      { question: "How much does it cost to transfer ownership of a Maine cannabis license?", answer: "The OCP's Post Active License Changes Application fee is $500. Most buyers retain a cannabis attorney to prepare the application — expect another $2,000-$5,000 in legal fees. CPA review of source-of-funds documentation adds another $1,000-$3,000 for non-trivial transactions. Total transaction costs for a transfer typically run $3,500-$8,500 in addition to the purchase price of the business." },
+      { question: "How long does the OCP take to approve a transfer of ownership?", answer: "The OCP's review period is typically 60-120 days from the date the OCP determines the application is administratively complete (all forms, attachments, and criminal history checks received; fee paid). Complete applications move faster; incomplete applications stall at the deficiency notice stage until the applicant responds. Plan for 3-4 months from application submission to OCP approval, with another 4-8 weeks for closing and operational transition." },
+      { question: "Can a non-Maine resident be a new owner of a Maine cannabis business?", answer: "Yes. The 2022 First Circuit Court of Appeals decision in Northeast Patients Group v. United Cannabis Patients and Caregivers of Maine struck down Maine's residency requirement. Out-of-state buyers must still form a Maine-registered business entity (LLC or corporation), pass the same background checks, and meet the same source-of-funds requirements as a new license applicant, but they do not need to be Maine residents." },
+      { question: "Do I need a new local authorization from the municipality?", answer: "Usually no, but check the municipal cannabis ordinance. Most Maine municipalities approved your original local permit for a specific ownership structure. If the new owners are different people than those originally authorized, some municipalities require re-authorization — particularly if the ordinance specifies named principals as part of the local permit. Always confirm with the municipal planning office before filing the OCP transfer application. If re-authorization is required and you don't get it, the OCP will deny the transfer." },
+      { question: "Can the cannabis business continue operating during the OCP transfer review?", answer: "Yes. The existing license remains active during the OCP's 60-120 day review. The current ownership continues to operate the business while the transfer is pending. The new owners cannot take operational control, sign contracts on behalf of the business, or exercise management authority until OCP approval is received. Most buyers structure the closing date to coincide with the expected approval, or use a transition-services agreement with the prior owners to bridge the gap." },
+      { question: "What happens if my transfer application is denied?", answer: "The existing ownership structure remains in place. The new owners cannot take operational control. The denial is appealable to Maine Superior Court within 30 days of the OCP's written denial. Most transfer denials are curable on resubmission once the underlying issue is resolved — for example, a denial based on incomplete source-of-funds documentation can be cured by providing the missing documents and resubmitting with the $500 fee. The OCP's denial letter will specify the deficiencies and the path to resubmission." },
+      { question: "What's the difference between a transfer of ownership and a change of principals?", answer: "A transfer of ownership changes the legal or beneficial ownership of the business entity holding the license — adding, removing, or substituting 10%+ owners. A change of principals adds or removes officers, directors, or managers who don't have a 10%+ economic interest. Both require OCP notification, but only ownership changes that meet the 10%+ threshold require the full $500 transfer application. Changes of principals below 10% may require a separate notification form with a smaller fee. Always consult a cannabis attorney when determining which form applies to your situation." },
+      { question: "Can I transfer a license from one entity to another I own?", answer: "Yes, but it's still treated as a transfer of ownership. The OCP reviews the new entity as if it were a new owner — same background checks, source of funds, and beneficial ownership disclosure. The $500 transfer fee applies. The most common reason operators transfer between their own entities is to restructure for tax planning, asset protection, or to bring in a new investor — each of which is a legitimate reason, but the OCP process is the same as a third-party transfer." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Related Guides</h2>
+    <p>For the broader licensing process, see our <a href="/guides/maine-dispensary-license">Maine Dispensary Licensing Guide</a>. For the first stage of the OCP process, see <a href="/guides/maine-cannabis-conditional-license">Maine Cannabis Conditional License Guide</a>. For finding an existing business to buy, see <a href="/blog/maine-dispensary-business-for-sale">Maine Dispensary for Sale</a>. For what to do if your application is denied, see <a href="/guides/maine-cannabis-license-denied">License Denial Guide</a>. For ROI modeling before any acquisition, see <a href="/blog/maine-dispensary-roi-what-to-expect-2026">Maine Dispensary ROI: 2026 Investment Expectations</a> and the <a href="/roi-calculator">ROI calculator</a>.</p>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This information is for informational purposes only and does not constitute legal advice. Maine's cannabis laws and licensing requirements are subject to change. Consult with a qualified Maine cannabis attorney before applying. For current information, visit the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a> and review the <a href="https://www.maine.gov/dafs/ocp/adult-use/application-process/active-change-instructions" target="_blank" rel="noopener noreferrer">Post Active License Changes Application Instructions</a>.</em></p>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p>
+
+  <AutoRelated currentPath="/guides/maine-cannabis-business-transfer" currentTopics={['licensing', 'transactions', 'regulatory']} section="Business Essentials" limit={6} />
+</article>
+</Layout>
