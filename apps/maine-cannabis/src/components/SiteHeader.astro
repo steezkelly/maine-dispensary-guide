@@ -180,12 +180,15 @@ const siteName = siteConfig.siteName;
   document.addEventListener('DOMContentLoaded', function() {
     const dropdownBtns = document.querySelectorAll('.nav-dropdown .dropbtn');
 
+    function closeAllDropdowns() {
+      document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
+      document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    }
+
     function toggleDropdown(btn) {
       const content = btn.nextElementSibling;
       const isShown = content.classList.contains('shown');
-      // Close all dropdowns
-      document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-      document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      closeAllDropdowns();
       // Open this one if it wasn't open
       if (!isShown) {
         content.classList.add('shown');
@@ -204,8 +207,7 @@ const siteName = siteConfig.siteName;
           toggleDropdown(btn);
         }
         if (e.key === 'Escape') {
-          document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-          document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+          closeAllDropdowns();
           btn.setAttribute('aria-expanded', 'false');
           btn.focus();
         }
@@ -215,8 +217,7 @@ const siteName = siteConfig.siteName;
     // Click outside closes dropdowns
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown .dropdown-content.shown').forEach(c => c.classList.remove('shown'));
-        document.querySelectorAll('.nav-dropdown .dropbtn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+        closeAllDropdowns();
       }
     });
 
