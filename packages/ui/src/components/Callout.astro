@@ -10,13 +10,20 @@ const { title, type = 'passion', level = 'h3' } = Astro.props;
 /* Fix 2026-07-06 (visual-readability-polish.md issue #2): tip and warning
    previously shared the ◆ glyph — semantic collision on a YMYL regulatory
    surface where the distinction matters most. Distinguish by geometric
-   family: open diamond ◇ = instructive/non-urgent, open triangle ◬ = heads-up. */
+   family: open diamond ◇ = instructive/non-urgent, open triangle ◬ = heads-up.
+   Also filled out the icon map for the 3 additional callout types the
+   corpus uses (insight/note/action) — they were rendering as empty
+   <span class="callout-icon"> in production because icons[type] was
+   undefined. Adds filled-diamond ◆, hollow-circle ◦, right-triangle ▸. */
 const icons = {
   passion: '✦',
   tip: '◇',
   success: '▲',
   warning: '◬',
-  info: '●'
+  info: '●',
+  insight: '◆',
+  note: '◦',
+  action: '▸'
 };
 
 const accents = {
@@ -24,7 +31,12 @@ const accents = {
   tip: 'var(--color-soft-green)',
   success: 'var(--color-primary)',
   warning: 'var(--color-warning, #b4643c)',
-  info: 'var(--color-info, #4a7c9b)'
+  info: 'var(--color-info, #4a7c9b)',
+  // New types (Sprint 78m): aligned to existing palette so the icon map
+  // fill-out doesn't strand them in undefined-accent / undefined-bg limbo.
+  insight: 'var(--color-accent)',     // mirrored with passion (editorial voice)
+  note: 'var(--color-primary)',       // deeper neutral
+  action: 'var(--color-accent)'       // CTA-like; same hue family as action-y emotion
 };
 
 /* Fix 2026-07-06 (visual-readability-polish.md issue #4): was rgba(255,255,255,0.4)
@@ -37,7 +49,11 @@ const bgColor = {
   tip: 'rgba(163, 177, 138, 0.18)',
   success: 'rgba(13, 78, 80, 0.10)',
   warning: 'rgba(180, 100, 60, 0.14)',
-  info: 'rgba(74, 124, 155, 0.14)'
+  info: 'rgba(74, 124, 155, 0.14)',
+  // New types (Sprint 78m): same accent → bgColor mapping family.
+  insight: 'rgba(88, 129, 87, 0.10)',  // matches passion — green tint
+  note: 'rgba(88, 129, 87, 0.06)',     // subdued variant of insight
+  action: 'rgba(13, 78, 80, 0.14)'     // matches success — primary spruce tint
 };
 ---
 
