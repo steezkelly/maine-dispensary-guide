@@ -6376,3 +6376,26 @@ this without code change; full inventory captured in the Hub commit message.
 - **Sprint 78 series status:** 11 sprints shipped (78a
   baseline through 78j refresh). Original goal + YMYL
   criterion + ROI accuracy fix all met.
+
+## 📋 FOURTH-SESSION POLISH (Jul 6, 2026 EDT) — Visual-readability layer on `sprint-78k-visual-readability-polish` branch
+
+- **Why:** The four 2026-07-06 sessions left visual-readability dark
+  spots unaddressed — the 78k-78n set was the only visible chip
+  already in main. This session shipped the rest.
+- **What shipped (11 commits on the `sprint-78k-visual-readability-polish` branch, NOT merged to main):**
+  - **78k** — 9 visual-readability fixes + 33K-char audit doc (`reference/visual-readability-polish.md`)
+  - **78l** — 3 broken heroImage paths × 6 variants retired (caught by `smoke-img-200`)
+  - **78m** — 3 missing Callout icons filled (`insight` / `note` / `action`)
+  - **78n** — 9 emoji-in-headings swept (`/directory` × 6 + `/founders` × 3) + 4 newsletter double-glyph items
+  - **78o** — duplicate `Point-of-Sale Systems` anchor on homepage `.ops-topics`
+  - **78p** — mega-menu `All 40+ City Guides` → `All 109`
+  - **78q** — homepage stats `44/15` → `109/65` (cached stale numbers from Sprint 47)
+  - **78q.1** — closed command-injection on `pre-push-verify.cjs` (line 116) + `audit-fix.cjs` (line 147) — these fixes were on disk uncommitted when session started; Sprint 78q.1 commits them with attribution
+  - **78s** — extracted `closeAllDropdowns()` helper in SiteHeader.astro mega-menu script (drift risk closed: same pattern LME has shipped as a bug multiple times)
+  - **78t** — durability: pre-push verify now self-cleans orphan tsserver.js LSPs (the 2 GB-per-run RAM leak Steve saw on 2026-07-13; the "Firefox hogging RAM" was actually 3 orphans, ~6 GB held). Added `killOrphanedTsServers()` helper + `process.on('SIGINT'/'SIGTERM')` handlers.
+- **Verification on close:** all 7 pre-push-verify gates green (esbuild + astro-check + smoke-200 + smoke-img-200 + sitemap-postprocess + docs-vs-code + compressed-frontmatter). `node --check pre-push-verify.cjs` OK. Orphan count post-run: 0. RAM after full verify: 4 GB / 10 GB free (vs ~6 GB at start).
+- **Branch tip:** `6940e2b6`. Working tree contains external noise from other agents (new pages, news briefs, sent-mail .eml files) plus my own autoRelatedData.json regen drift.
+- **Carry-forwards:** branch is not pushed or merged — operator decision required. Footer thin (7-link production footer vs. half-finished rich 4-column rewrite in working tree — I reverted the rich markup to avoid shipping a broken footer; needs design decision + CSS to complete). 54+ town-guide H1 templates inconsistent.
+- **Passdown doc:** `docs/SESSION_PASSDOWN_OUT_2026-07-06-fourth-session.md` (18K, full TL;DR + verification table + carry-forwards + architectural observations + lessons).
+- **Mnemosyne notes worth retaining:** (a) `mnx vision describe` for PNG screenshot fallback (already pinned); (b) memory notes are leads, not authoritative — three drift cases found this session; (c) memory-correlated fix that maps to incident response: 2026-07-13 RAM hog = orphan tsserver.js = now auto-cleaned.
+
