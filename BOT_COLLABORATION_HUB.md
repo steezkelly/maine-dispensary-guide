@@ -6251,3 +6251,46 @@ this without code change; full inventory captured in the Hub commit message.
   - GAP 1 (conditional license): shipped Sprint 78f
   - GAP 2 (business for sale): shipped Sprint 78g
   - GAP 3 (transfer ownership): pending - 1.5 hr estimated
+
+### Sprint 78h: Maine cannabis transfer of ownership guide (GAP 3 closed)
+
+- **Why:** Closes GAP 3 from the keyword gap analysis. OCP's
+  Post Active License Changes Application is the process for any
+  10%+ ownership change. CannAspire, MPP, and Covasoftware all
+  have pages on it. MDG had no standalone guide. The conditional
+  license guide (Sprint 78f) and business-for-sale blog (Sprint 78g)
+  both linked forward to this URL but it didn't exist.
+- **What shipped:**
+  - apps/maine-cannabis/src/pages/guides/maine-cannabis-business-transfer.astro
+    (26.5KB, ~340 lines) in the same shape as the conditional
+    license guide (Faq component, Callout blocks, AutoRelated,
+    "X at a Glance" fact-box table)
+  - 8 Q&As matching PAA phrasing
+  - Trigger matrix: 7 events that require a transfer, 5 that
+    do not, 4 edge cases operators commonly mis-classify
+  - 6-step process walkthrough
+  - Source of funds section (most common denial reason)
+  - 5 most common denial reasons with cure paths
+- **Internal linking — 3 previously-broken inbound links now resolve:**
+  - /start-here.astro: new "Transfer Ownership" CTA button
+  - /guides/maine-cannabis-conditional-license: Related Guides
+    section (link forward in Sprint 78f, now resolves)
+  - /blog/maine-dispensary-business-for-sale: Related Guides
+    section (link forward in Sprint 78g, now resolves)
+- **Verified:**
+  - pre-push-verify: all 7 gates green
+  - Cold-cache build: 257 pages, 36.94s
+  - Built HTML: 8 FAQPage Questions in JSON-LD
+  - Built HTML: 1 interlink from each of 3 source pages
+- **Mnemosyne:** Sprint 78h state-of-record.
+- **Keyword gap analysis COMPLETE — all 3 gaps shipped:**
+  - GAP 1 (conditional license): Sprint 78f
+  - GAP 2 (business for sale): Sprint 78g
+  - GAP 3 (transfer ownership): Sprint 78h
+- **Next actions flagged for future sprints:**
+  - ROI blog post refresh (stale stats: 179 vs 107 stores;
+    wrong conditional license fee $1k-$5k vs $500)
+  - 2-4 week re-crawl measurement of Sprint 78d/78e/78f/78g/78h
+    title reopts, FAQ schema additions, and interlinks
+  - Run seo:gsc-misroute-audit:week to see which misroutes
+    resolved and which new patterns emerged
