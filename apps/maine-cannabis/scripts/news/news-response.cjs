@@ -4,7 +4,7 @@
  * Automated news scanning, deduplication, scoring, and brief generation.
  */
 
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -74,10 +74,14 @@ function braveSearch(query, count = 10) {
     if (!API_KEY) {
       // Fallback to CLI
       try {
-        const output = execSync(`node "${path.join(__dirname, '..', 'search', 'brave-search.cjs')}" "${query}"`, {
-          encoding: 'utf8',
-          maxBuffer: 10 * 1024 * 1024
-        });
+        // Use spawnSync (no shell) with array args. execSync with template
+        // string + bash quoting is unsafe: query values containing $, `, or
+        // \ would have been shell-interpreted.
+        const result = spawnSync('node',
+          [path.join(__dirname, '..', 'search', 'brave-search.cjs'), query],
+          { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 }
+        );
+        const output = result.stdout || '';
         // Parse CLI output - simplified for fallback
         resolve([]);
       } catch (e) {

@@ -77,3 +77,15 @@ scripts/manifests/hero-test-ideogram.json
 
 # GSC indexing: cache is regenerated on every run (transient), keep dated reports only
 apps/maine-cannabis/data/gsc-indexing-cache.json
+
+# Local email pipeline artifacts (per-session sent-mail archive + tracking)
+# These are operational state, not source. The MDG email pipeline writes
+# .eml files for every send (test, voice check, outreach). They bloat
+# the working tree and contain PII (recipient addresses, message bodies).
+public/data/sent-mail/
+public/data/email-tracking.json
+data/email-tracking.json
+# Python bytecode (created by running Python scripts in pitches/)
+__pycache__/
+# Per-session outreach log (operational state, regenerated on each run)
+pitches/sent-log.json

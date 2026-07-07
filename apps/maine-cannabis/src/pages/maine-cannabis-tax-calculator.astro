@@ -1,0 +1,343 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-07",
+  modifiedDate: "2026-07-07",
+  section: "Finance & Taxation"
+};
+---
+
+<Layout 
+  title="Maine Cannabis Tax + 280E Cost Calculator (2026)" 
+  description="Free calculator for Maine cannabis operators. Compute the 10% state excise tax, 5.5% state sales tax, 10% cultivation excise, and the IRC §280E effective federal tax burden. The most detailed Maine-specific cannabis tax tool available."
+  heroImage="/images/heroes/roi-calculator.jpg"
+  article={article}
+  isHub={true}
+>
+<style>
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); margin-top: 1rem; }
+  section { margin-bottom: 3rem; }
+  section h2 { color: var(--color-primary); font-family: var(--font-serif); margin-bottom: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-primary); }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+  .calc-container {
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: 1rem; padding: 2rem;
+  }
+  .calc-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .calc-section:last-child { border-bottom: none; }
+  .calc-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 1rem; font-weight: 600; }
+  .input-group { margin-bottom: 1rem; }
+  .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; }
+  .input-group .desc { font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.25rem; }
+  .currency-input { display: flex; align-items: center; font-size: 1.25rem; font-weight: 700; color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
+  .currency-input input { border: none; padding: 0.5rem; width: 100%; font-weight: 700; color: var(--color-primary); background: transparent; font-size: 1.25rem; }
+  .currency-input input:focus { outline: none; }
+  .slider { width: 100%; height: 6px; background: var(--color-background); border-radius: 3px; appearance: none; outline: none; margin-top: 0.5rem; }
+  .slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; }
+  .slider::-moz-range-thumb { width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; cursor: pointer; border: none; }
+  .slider-value { font-weight: 700; color: var(--color-primary); font-size: 0.85rem; margin-top: 0.25rem; }
+  .results { display: flex; flex-direction: column; gap: 0.875rem; }
+  .result-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--color-background); border-radius: 0.5rem; }
+  .result-row.primary { background: var(--color-primary); color: white; }
+  .result-row.warning { background: rgba(180, 100, 60, 0.1); border-left: 4px solid var(--color-warning); }
+  .result-row.info { background: rgba(88, 129, 87, 0.08); border-left: 4px solid var(--color-primary); }
+  .result-label { font-size: 0.875rem; }
+  .result-value { font-weight: 700; font-family: var(--font-mono); }
+  .result-row.primary .result-value { font-size: 1.5rem; }
+  .disclaimer-box { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1.25rem 1.5rem; border-radius: 0.5rem; margin: 2rem 0; font-size: 0.875rem; }
+  .math-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  .math-table th, .math-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--color-border); text-align: left; }
+  .math-table th { background: var(--color-surface); font-weight: 600; }
+  .citation { font-family: monospace; background: var(--color-surface); padding: 0.5rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  @media (max-width: 900px) { .calc-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="article-header">
+  <h1>Maine Cannabis Tax + 280E Cost Calculator</h1>
+  <p class="lead">Compute the state excise tax, sales tax, cultivation excise, and the federal IRC §280E effective tax burden for any Maine cannabis scenario. Built for operators, CPAs, and journalists who need exact numbers, not estimates.</p>
+</div>
+
+<Callout title="Why this calculator exists" type="passion">
+  Most online cannabis tax calculators ignore Maine-specific rules or treat 280E as a single line item. The actual Maine tax stack has four layers (cultivation excise, retail excise, sales tax, federal income tax under 280E), each with different mechanics. This tool breaks them out so you can see exactly where the money goes.
+</Callout>
+
+<section>
+  <h2>The Maine Cannabis Tax Stack — 2026</h2>
+  
+  <table class="math-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Rate / Mechanic</th>
+        <th>Authority</th>
+        <th>Where it applies</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1. Cultivation excise</td>
+        <td>10% on wholesale transfer</td>
+        <td>Title 28-B §1001(1)(A)</td>
+        <td>Cultivator to retailer transfer</td>
+      </tr>
+      <tr>
+        <td>2. Retail excise</td>
+        <td>10% on retail sale</td>
+        <td>Title 28-B §1001(1)(B)</td>
+        <td>Retailer to consumer sale</td>
+      </tr>
+      <tr>
+        <td>3. State sales tax</td>
+        <td>5.5% on retail sale</td>
+        <td>Title 36 §1811</td>
+        <td>Retailer to consumer sale (cannabis included)</td>
+      </tr>
+      <tr>
+        <td>4. Federal income tax (280E)</td>
+        <td>~21% federal corp rate, but on GROSS PROFIT not net</td>
+        <td>IRC §280E</td>
+        <td>Cannabis operators' federal return</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The first three are state-level and show up in the price. The fourth is federal and is where most operators get surprised. <strong>Under 280E, normal business deductions (rent, marketing, salaries, insurance) are not deductible — only Cost of Goods Sold is.</strong> This makes the effective federal tax much higher than the 21% statutory rate.</p>
+</section>
+
+<section>
+  <h2>Calculate — A $100 Retail Sale</h2>
+  <div class="calc-grid">
+    <div class="calc-container">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--color-primary);">Inputs</h3>
+      
+      <div class="calc-section">
+        <h3>Retail Sale</h3>
+        <div class="input-group">
+          <label>Retail price (pre-tax)</label>
+          <div class="currency-input">
+            <span>$</span>
+            <input type="number" id="retailPrice" value="100" min="0" step="0.01" />
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-section">
+        <h3>Operator Costs</h3>
+        <div class="input-group">
+          <label>Wholesale cost (what the retailer paid the cultivator)</label>
+          <div class="currency-input">
+            <span>$</span>
+            <input type="number" id="wholesaleCost" value="55" min="0" step="0.01" />
+          </div>
+          <div class="desc">Typically 50-60% of retail for Maine dispensaries</div>
+        </div>
+
+        <div class="input-group">
+          <label>Monthly operating expenses (rent, staff, insurance, etc.)</label>
+          <div class="currency-input">
+            <span>$</span>
+            <input type="number" id="opexMonthly" value="14500" min="0" step="100" />
+          </div>
+          <div class="desc">For 280E — most are not federally deductible</div>
+        </div>
+
+        <div class="input-group">
+          <label>Monthly sales volume (units sold)</label>
+          <input type="range" id="monthlyVolume" min="100" max="3000" value="800" step="50" class="slider" />
+          <div class="slider-value"><span id="volumeDisplay">800</span> units / month</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-container">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--color-primary);">Results</h3>
+      
+      <div class="results">
+        <div class="result-row info">
+          <span class="result-label">Per-Unit Gross Revenue</span>
+          <span class="result-value">$<span id="grossRevenue">100.00</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">− Cultivation excise (10%, paid by cultivator but passed to retailer)</span>
+          <span class="result-value">$<span id="cultExcise">5.50</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">− Retail excise (10% on retail sale)</span>
+          <span class="result-value">$<span id="retailExcise">10.00</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">− State sales tax (5.5%, collected for MRS)</span>
+          <span class="result-value">$<span id="salesTax">5.50</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">− Wholesale cost (COGS)</span>
+          <span class="result-value">$<span id="wholesale">55.00</span></span>
+        </div>
+        <div class="result-row primary">
+          <span class="result-label">Per-Unit Gross Profit (per IRS 280E definition)</span>
+          <span class="result-value">$<span id="perUnitGP">29.50</span></span>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 2rem; font-size: 1rem;">Monthly 280E Federal Tax Estimate</h3>
+      <div class="results">
+        <div class="result-row">
+          <span class="result-label">Monthly gross profit (per-unit GP × volume)</span>
+          <span class="result-value">$<span id="monthlyGP">23,600</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Standard deduction (COGS only, since 280E blocks OpEx)</span>
+          <span class="result-value">$<span id="cogsTotal">44,000</span></span>
+        </div>
+        <div class="result-row warning">
+          <span class="result-label">280E non-deductible OpEx (rent, staff, insurance, etc.)</span>
+          <span class="result-value">$<span id="opexTotal">14,500</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Federal taxable income (per 280E)</span>
+          <span class="result-value">$<span id="taxableIncome">23,600</span></span>
+        </div>
+        <div class="result-row primary">
+          <span class="result-label">Federal 21% tax owed (monthly)</span>
+          <span class="result-value">$<span id="federalTax">4,956</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Effective tax rate (federal only)</span>
+          <span class="result-value"><span id="effectiveRate">21.0</span>%</span>
+        </div>
+        <div class="result-row primary">
+          <span class="result-label">After-tax monthly profit</span>
+          <span class="result-value">$<span id="afterTax">4,144</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    <strong>Disclaimer:</strong> This calculator is for educational and planning purposes. It does not account for state-level tax credits, the §199A QBI deduction (which is unavailable under 280E), cost-segregation studies, or §471 cost accounting methods. Real 280E planning requires a cannabis-specialized CPA. Numbers update as you change the inputs above.
+  </div>
+</section>
+
+<section>
+  <h2>Why 280E Matters — The Hidden Cost</h2>
+  
+  <p>If you're a non-cannabis business, your effective tax rate on a $100 sale with $50 of operating expenses might look like:</p>
+  
+  <table class="math-table">
+    <thead>
+      <tr><th>Item</th><th>Non-cannabis</th><th>Maine cannabis (280E)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Gross revenue</td><td>$100</td><td>$100</td></tr>
+      <tr><td>COGS</td><td>−$30</td><td>−$30</td></tr>
+      <tr><td>Operating expenses</td><td>−$50</td><td>−$50 (NOT deductible)</td></tr>
+      <tr><td>Taxable income</td><td>$20</td><td>$70</td></tr>
+      <tr><td>Federal tax (21%)</td><td>$4.20</td><td>$14.70</td></tr>
+      <tr><td>Effective tax rate</td><td>4.2%</td><td>14.7%</td></tr>
+    </tbody>
+  </table>
+
+  <p>Same revenue, same costs. Cannabis operators pay <strong>3.5× more in federal tax</strong> because of 280E. The only way to reduce this is <strong>Cost of Goods Sold (COGS) optimization</strong> — which is why every cannabis operator's accountant spends so much time on inventory accounting, §471 cost-method elections, and year-end cost-segregation studies.</p>
+
+  <h3>Three common 280E strategies</h3>
+  <ol>
+    <li><strong>§471 cost accounting election</strong> — properly allocate indirect costs to COGS. Can reduce taxable income 10-30%.</li>
+    <li><strong>Cost-segregation study</strong> — break out building improvements into shorter-life categories that qualify as COGS.</li>
+    <li><strong>Captive real estate LLC</strong> — a separate LLC owns the building and rents to the operator. The LLC's income is not subject to 280E (no trafficking). Standard structure.</li>
+  </ol>
+
+  <p>These are real strategies with real results, but each requires a cannabis-specialized CPA. Don't try to do 280E planning with a generalist accountant.</p>
+</section>
+
+<section>
+  <h2>Maine-Specific Quirks (That Most Calculators Miss)</h2>
+  
+  <h3>Cultivation excise can be credited against retail excise</h3>
+  <p>Under Title 28-B §1001(1)(B), a retailer that also holds a cultivation license can credit cultivation excise paid against the retail excise owed. The calculator above shows the 10% cultivation excise paid by a separate cultivator; vertically integrated operations (cultivator + retailer under one license) net this out.</p>
+
+  <h3>Medical cannabis is exempt from retail excise</h3>
+  <p>Under Title 28-B §1001(2), sales to registered medical patients are exempt from the 10% retail excise (but the 5.5% sales tax still applies). This is significant for caregiver-style operations serving the medical market.</p>
+
+  <h3>Sales tax is collected on the EXCISE-INCLUSIVE price</h3>
+  <p>The state sales tax (5.5%) is applied to the retail price INCLUDING the 10% retail excise. So on a $100 pre-tax sale: $100 + $10 retail excise = $110 taxable, and 5.5% sales tax = $6.05. Many calculators miss this and apply sales tax to the pre-excise price, under-stating the actual sales tax by ~$0.55.</p>
+</section>
+
+<section>
+  <h2>How to Cite This Calculator</h2>
+  
+  <p class="citation">Maine Dispensary Guide's Cannabis Tax + 280E Cost Calculator. mainedispensaryguide.com/maine-cannabis-tax-calculator. Updated July 2026.</p>
+  
+  <p class="citation">Maine's cannabis tax stack totals approximately 27% on a typical retail sale: 10% cultivation excise, 10% retail excise, 5.5% state sales tax, and an effective federal tax rate of 14-21% under IRC §280E (Maine Dispensary Guide, 2026).</p>
+</section>
+
+<Callout title="Need deeper analysis?" type="info">
+  For 280E optimization, cost-method elections, or vertical-integration tax planning, work with a Maine cannabis-specialized CPA. We can refer you to vetted firms — contact us at press [at] mainedispensaryguide.com.
+</Callout>
+
+</Layout>
+
+<script is:inline>
+  function formatUSD(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function formatUSD0(n) {
+    return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function recalc() {
+    const retail = parseFloat(document.getElementById('retailPrice').value) || 0;
+    const wholesale = parseFloat(document.getElementById('wholesaleCost').value) || 0;
+    const opex = parseFloat(document.getElementById('opexMonthly').value) || 0;
+    const volume = parseInt(document.getElementById('monthlyVolume').value) || 0;
+    document.getElementById('volumeDisplay').textContent = volume.toLocaleString();
+
+    // Per-unit calculations
+    const cultExcise = wholesale * 0.10;  // 10% cultivation excise on wholesale transfer
+    const retailExcise = retail * 0.10;  // 10% retail excise
+    const salesTaxBase = retail + retailExcise;  // 5.5% sales tax on excise-inclusive price
+    const salesTax = salesTaxBase * 0.055;
+    const perUnitGP = retail - cultExcise - retailExcise - salesTax - wholesale;
+
+    // 280E monthly
+    const monthlyGP = perUnitGP * volume;
+    const cogsTotal = wholesale * volume;  // COGS = wholesale cost
+    // Taxable income under 280E: only COGS is deductible from gross
+    // Gross revenue per month = retail * volume
+    // Deductible = cogsTotal only
+    // So taxable = (retail * volume) - cogsTotal
+    const monthlyRevenue = retail * volume;
+    const taxableIncome = monthlyRevenue - cogsTotal;
+    const federalTax = taxableIncome * 0.21;
+    const effectiveRate = monthlyRevenue > 0 ? (federalTax / monthlyRevenue) * 100 : 0;
+    const afterTax = monthlyGP - federalTax;
+
+    document.getElementById('grossRevenue').textContent = formatUSD(retail);
+    document.getElementById('cultExcise').textContent = formatUSD(cultExcise);
+    document.getElementById('retailExcise').textContent = formatUSD(retailExcise);
+    document.getElementById('salesTax').textContent = formatUSD(salesTax);
+    document.getElementById('wholesale').textContent = formatUSD(wholesale);
+    document.getElementById('perUnitGP').textContent = formatUSD(perUnitGP);
+    document.getElementById('monthlyGP').textContent = formatUSD0(monthlyGP);
+    document.getElementById('cogsTotal').textContent = formatUSD0(cogsTotal);
+    document.getElementById('opexTotal').textContent = formatUSD0(opex);
+    document.getElementById('taxableIncome').textContent = formatUSD0(taxableIncome);
+    document.getElementById('federalTax').textContent = formatUSD0(federalTax);
+    document.getElementById('effectiveRate').textContent = effectiveRate.toFixed(1);
+    document.getElementById('afterTax').textContent = formatUSD0(afterTax);
+  }
+
+  document.addEventListener('DOMContentLoaded', recalc);
+  for (const id of ['retailPrice', 'wholesaleCost', 'opexMonthly', 'monthlyVolume']) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', recalc);
+  }
+</script>

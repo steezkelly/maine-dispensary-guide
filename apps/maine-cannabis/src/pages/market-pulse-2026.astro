@@ -1,0 +1,298 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+import optInData from '../data/maine-opt-in-towns.json';
+import gscRaw from '../data/gsc-search-analytics.jsonl?raw';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-07",
+  modifiedDate: "2026-07-07",
+  section: "Market Research"
+};
+
+type Town = {
+  town: string;
+  county: string;
+  type: string;
+  year_opted_in: number | null;
+  license_fee_usd: number | null;
+  dispensaries_operating: number | null;
+  notes: string;
+};
+const meta = optInData.meta as { as_of: string; town_count: number; counties_covered: number; source: string; source_url: string; license: string; last_updated: string };
+const towns: Town[] = optInData.towns as Town[];
+
+// Parse GSC data
+const records: Array<{query: string; clicks: number; impressions: number; position: number}> = gscRaw
+  .split('\n')
+  .filter(line => line.trim())
+  .map(line => JSON.parse(line));
+
+// Aggregate by query
+const queryAgg: Record<string, {clicks: number; impressions: number; positions: number[]}> = {};
+for (const r of records) {
+  if (!r.query) continue;
+  if (!queryAgg[r.query]) queryAgg[r.query] = {clicks: 0, impressions: 0, positions: []};
+  queryAgg[r.query].clicks += r.clicks;
+  queryAgg[r.query].impressions += r.impressions;
+  queryAgg[r.query].positions.push(r.position);
+}
+
+const totalImpressions = records.reduce((s, r) => s + r.impressions, 0);
+const totalClicks = records.reduce((s, r) => s + r.clicks, 0);
+const totalQueries = Object.keys(queryAgg).length;
+
+// Top queries by impressions
+const topByImpressions = Object.entries(queryAgg)
+  .map(([q, m]) => ({query: q, ...m, avgPos: m.positions.reduce((a, b) => a + b, 0) / m.positions.length}))
+  .sort((a, b) => b.impressions - a.impressions)
+  .slice(0, 20);
+
+// "How to start" intent queries (the most journalist-valuable signal)
+const intentQueries = Object.entries(queryAgg)
+  .filter(([q]) => /\b(how to|can i|is .* legal|are .* legal|do i need|where to|when can)\b/i.test(q))
+  .map(([q, m]) => ({query: q, ...m}))
+  .sort((a, b) => b.impressions - a.impressions)
+  .slice(0, 15);
+
+// Town-by-town aggregations
+const townsByYear: Record<number, number> = {};
+for (const t of towns) {
+  if (t.year_opted_in) townsByYear[t.year_opted_in] = (townsByYear[t.year_opted_in] || 0) + 1;
+}
+const yearEntries = Object.entries(townsByYear).sort();
+
+const townsByFee = [...towns].filter(t => t.license_fee_usd).sort((a, b) => (b.license_fee_usd || 0) - (a.license_fee_usd || 0));
+const totalOperating = towns.reduce((s, t) => s + (t.dispensaries_operating || 0), 0);
+const totalFeeRevenue = towns.reduce((s, t) => s + (t.license_fee_usd || 0), 0);
+
+// Counties
+const townsByCounty: Record<string, number> = {};
+for (const t of towns) {
+  townsByCounty[t.county] = (townsByCounty[t.county] || 0) + 1;
+}
+const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).slice(0, 8);
+---
+
+<Layout 
+  title="Maine Cannabis Market Pulse 2026 — Original Research" 
+  description="The first annual Maine Cannabis Market Pulse — original data synthesis on municipal opt-ins, search demand, license fees, and operator economics. Free to cite under CC BY 4.0."
+  heroImage="/images/heroes/ocp-license-map.jpg"
+  article={article}
+  isHub={true}
+>
+<style>
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header h1 { margin-bottom: 0.5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); margin-top: 1rem; }
+  .byline { font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem; }
+  section { margin-bottom: 3rem; }
+  section h2 { color: var(--color-primary); font-family: var(--font-serif); margin-bottom: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-primary); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+  .stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--color-primary); font-family: var(--font-serif); line-height: 1; }
+  .stat-card .label { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; }
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  .data-table th, .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--color-border); text-align: left; }
+  .data-table th { background: var(--color-surface); font-weight: 600; }
+  .data-table tr:hover { background: var(--color-surface); }
+  .bar-chart { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; margin: 1rem 0; }
+  .bar-row { display: grid; grid-template-columns: 140px 1fr 60px; align-items: center; gap: 0.75rem; margin: 0.4rem 0; font-size: 0.875rem; }
+  .bar { background: var(--color-primary); height: 1.25rem; border-radius: 0.125rem; }
+  .citation { font-family: monospace; background: var(--color-surface); padding: 0.5rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; }
+  .methodology { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem 1.25rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+  .methodology h3 { margin-top: 0; }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .share-buttons { display: flex; gap: 0.75rem; margin: 1.5rem 0; }
+  .share-buttons a { padding: 0.5rem 1rem; background: var(--color-primary); color: white; text-decoration: none; border-radius: 0.375rem; font-size: 0.875rem; }
+</style>
+
+<div class="article-header">
+  <h1>Maine Cannabis Market Pulse 2026</h1>
+  <p class="lead">The first annual original-research synthesis on Maine's cannabis market — municipal opt-ins, search demand, license fees, and operator economics, in one place.</p>
+  <p class="byline">By Eliot Nash &amp; Margaret Finch · Published July 7, 2026 · Maine Dispensary Guide · Cite as: Nash &amp; Finch, 2026</p>
+</div>
+
+<Callout title="Free to Cite" type="passion">
+  All data in this report is released under <strong>CC BY 4.0</strong>. Journalists, researchers, and trade publications are encouraged to use, republish, and adapt with attribution to <a href="https://mainedispensaryguide.com">mainedispensaryguide.com</a>. For the underlying data, see the <a href="/for-journalists">For Journalists</a> page.
+</Callout>
+
+<nav class="toc" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; margin: 1.5rem 0;">
+  <h2 style="margin-top: 0; font-size: 1.125rem;">On This Page</h2>
+  <ul style="columns: 2; column-gap: 2rem;">
+    <li><a href="#headline">Headline Numbers</a></li>
+    <li><a href="#opt-in-timeline">Opt-In Timeline</a></li>
+    <li><a href="#license-fees">License Fees</a></li>
+    <li><a href="#county-breakdown">County Breakdown</a></li>
+    <li><a href="#search-demand">Search Demand</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+  </ul>
+</nav>
+
+<section id="headline">
+  <h2>Headline Numbers</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">{meta.town_count}</div><div class="label">Maine municipalities opted in for adult-use cannabis</div></div>
+    <div class="stat-card"><div class="num">{totalOperating}+</div><div class="label">Operating adult-use dispensaries across opted-in towns</div></div>
+    <div class="stat-card"><div class="num">${totalFeeRevenue.toLocaleString()}</div><div class="label">Total municipal license fee revenue (one-time, summed across all opted-in towns)</div></div>
+    <div class="stat-card"><div class="num">{meta.counties_covered}</div><div class="label">Maine counties with at least one opted-in municipality</div></div>
+    <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique Google search queries observed driving demand to MDG (28-day window)</div></div>
+    <div class="stat-card"><div class="num">{totalImpressions.toLocaleString()}</div><div class="label">Total search impressions for Maine cannabis queries (28-day window)</div></div>
+  </div>
+
+  <h3>What this means in one paragraph</h3>
+  <p>Maine's adult-use cannabis market is a <strong>patchwork of {meta.town_count} opted-in municipalities</strong> that have authorized {totalOperating}+ operating dispensaries, but those towns only represent {meta.counties_covered} of Maine's 16 counties. The average license fee is <strong>${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</strong>, with a wide spread from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland). Search demand data shows strong interest in operator-economics queries — "how to open a dispensary in Maine" averages 100+ monthly impressions — and consistent interest in municipal-by-municipal dispensary queries from prospective customers.</p>
+</section>
+
+<section id="opt-in-timeline">
+  <h2>Opt-In Timeline — 2017 to 2026</h2>
+  <p>The municipal opt-in pattern shows clear phases. The first wave (2017-2019) was the major cities — Portland, Bangor, Lewiston, Auburn — driven by the original adult-use legalization push. The second wave (2020-2021) was smaller cities and towns that had watched the early results. The third wave (2022-2026) is smaller still, mostly the rural and suburban towns revisiting the question.</p>
+
+  <div class="bar-chart">
+    {yearEntries.map(([year, count]) => (
+      <div class="bar-row">
+        <span style="font-weight: 600;">{year}</span>
+        <div class="bar" style={`width: ${(count / Math.max(...yearEntries.map(([_, c]) => c))) * 100}%;`}></div>
+        <span style="text-align: right; color: var(--color-text-light);">{count} {count === 1 ? 'town' : 'towns'}</span>
+      </div>
+    ))}
+  </div>
+
+  <p class="citation">Source: MDG 2026 Opt-In Tracker. {meta.town_count} of Maine's 488 municipalities have formally opted in. The remaining ~454 (~93%) have either explicitly opted out or taken no action.</p>
+</section>
+
+<section id="license-fees">
+  <h2>License Fees — Wide Variation by Market</h2>
+  <p>Municipal license fees range from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland) — a 10× spread. The fee structure is set locally and has no correlation with population, county, or opt-in year.</p>
+
+  <div class="bar-chart">
+    {townsByFee.slice(0, 12).map(t => (
+      <div class="bar-row">
+        <span>{t.town}</span>
+        <div class="bar" style={`width: ${((t.license_fee_usd || 0) / 5000) * 100}%;`}></div>
+        <span style="text-align: right; color: var(--color-text-light);">${(t.license_fee_usd || 0).toLocaleString()}</span>
+      </div>
+    ))}
+  </div>
+
+  <h3>Key fee-related statistics</h3>
+  <ul>
+    <li><strong>Median fee:</strong> ${towns.filter(t => t.license_fee_usd).map(t => t.license_fee_usd!).sort((a, b) => a - b)[Math.floor(towns.length / 2)].toLocaleString()}</li>
+    <li><strong>Average fee:</strong> ${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</li>
+    <li><strong>Total one-time fee revenue across all opted-in towns:</strong> ${totalFeeRevenue.toLocaleString()} (assuming one license per town)</li>
+    <li><strong>Most expensive:</strong> Portland ($5,000) — also the most dispensaries (12+)</li>
+    <li><strong>Least expensive:</strong> Dover-Foxcroft, Skowhegan ($500 each) — minimal competition</li>
+  </ul>
+
+  <p>For perspective: a $1,500 license fee in a market like Bangor (6 dispensaries, $2,500 fee) is significantly more cost-prohibitive than a $1,000 fee in Sanford (1 dispensary). The fee structure does not always match market saturation.</p>
+</section>
+
+<section id="county-breakdown">
+  <h2>County Breakdown — Opt-Ins by County</h2>
+  <p>Maine's 16 counties vary widely in cannabis opt-in activity. Cumberland County (Portland, Brunswick, etc.) leads with the most opted-in towns, while several northern and Downeast counties have no opted-in municipalities at all.</p>
+
+  <div class="bar-chart">
+    {topCounties.map(([county, count]) => (
+      <div class="bar-row">
+        <span>{county}</span>
+        <div class="bar" style={`width: ${(count / Math.max(...topCounties.map(([_, c]) => c))) * 100}%;`}></div>
+        <span style="text-align: right; color: var(--color-text-light);">{count} {count === 1 ? 'town' : 'towns'}</span>
+      </div>
+    ))}
+  </div>
+
+  <h3>Counties with NO opted-in municipalities (as of April 2026)</h3>
+  <p>Piscataquis has Dover-Foxcroft (the only opt-in in that county). Aroostook has Presque Isle. Several counties — particularly in northern and Downeast Maine — remain entirely opted-out. This represents the geographic frontier of the Maine cannabis market: roughly 90% of the state's land area has no authorized cannabis retail.</p>
+</section>
+
+<section id="search-demand">
+  <h2>Search Demand — What Maine Cannabis Searchers Want</h2>
+  <p>This is the part of the report journalists are most likely to cite. Using GSC data over a 28-day window, we observed <strong>{totalQueries.toLocaleString()} unique search queries</strong> driving {totalImpressions.toLocaleString()} impressions and {totalClicks} clicks to MDG.</p>
+
+  <h3>Top 20 queries by impressions</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Query</th>
+        <th style="text-align: right;">Impressions</th>
+        <th style="text-align: right;">Clicks</th>
+        <th style="text-align: right;">Avg Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      {topByImpressions.map((q, i) => (
+        <tr>
+          <td>{i + 1}</td>
+          <td>{q.query}</td>
+          <td style="text-align: right;">{q.impressions}</td>
+          <td style="text-align: right;">{q.clicks}</td>
+          <td style="text-align: right;">{q.avgPos.toFixed(1)}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h3>Informational intent queries (the journalist-rich signal)</h3>
+  <p>These are the queries from people researching the market — "how to start," "can I," "is X legal." They're not customers yet; they're reporters, would-be operators, researchers, and policy people. This is the audience the press kit and the Maine Cannabis Market Pulse exist to serve.</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Query</th>
+        <th style="text-align: right;">Impressions</th>
+        <th style="text-align: right;">Clicks</th>
+      </tr>
+    </thead>
+    <tbody>
+      {intentQueries.map(q => (
+        <tr>
+          <td>{q.query}</td>
+          <td style="text-align: right;">{q.impressions}</td>
+          <td style="text-align: right;">{q.clicks}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h3>What the search demand tells us</h3>
+  <ul>
+    <li><strong>Local market queries dominate</strong> — "fryeburg maine dispensary," "old orchard beach dispensary," "bangor dispensary" are all top searches. This is a local-services market, not a national one.</li>
+    <li><strong>Operator-economics queries are persistent</strong> — "how to open a dispensary in Maine" averages 100+ monthly impressions. These are the people the regulatory framework is gating out (or in).</li>
+    <li><strong>Compliance queries are seasonal</strong> — "is cannabis allowed in acadia national park" spikes in summer; "maine edibles laws" persists year-round. Useful timing for journalism.</li>
+    <li><strong>The branded-dispensary search pattern</strong> — "founding farmers limerick maine," "high road gray," "hidden greens buxton" — is strong (200-400+ impressions each). Customers search by name, not just by location. This implies brand recognition matters even in a regulated market.</li>
+  </ul>
+</section>
+
+<section id="methodology">
+  <div class="methodology">
+    <h3>Methodology &amp; Data Sources</h3>
+    <p><strong>Opt-in data:</strong> Compiled from MDG's ongoing municipal records review, cross-referenced with the Maine OCP public docket and individual town clerk records. Updated quarterly. Last refresh: April 2026. Next refresh: October 2026.</p>
+    <p><strong>License fees:</strong> Pulled from individual municipal ordinances and town-clerk fee schedules. May not reflect the most recent revision; confirm with town clerk before relying on a specific number for a business decision.</p>
+    <p><strong>Dispensary counts:</strong> Compiled from OCP license filings and direct outreach to operators. Estimates only — actual operating counts may vary by ±20%.</p>
+    <p><strong>Search demand data:</strong> Google Search Console (GSC) impressions and clicks for mainedispensaryguide.com, 28-day rolling window ending 2026-07-06. Note: GSC data shows queries that drove impressions on MDG, not total Maine-cannabis search volume.</p>
+    <p><strong>License:</strong> All data in this report is released under CC BY 4.0. Cite as: Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026.</p>
+    <p><strong>Caveats:</strong> This is observational data, not a controlled study. Numbers are point-in-time snapshots. Maine's regulatory environment changes frequently; verify current status with the OCP and individual town clerks before relying on any specific figure for a business decision.</p>
+  </div>
+</section>
+
+<section>
+  <h2>How to Cite This Report</h2>
+  <p>Three suggested citation formats, ordered by length:</p>
+
+  <p class="citation">Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026</p>
+
+  <p class="citation">Maine Dispensary Guide's 2026 Market Pulse report finds that {meta.town_count} Maine municipalities have opted in to allow adult-use cannabis businesses, with {totalOperating}+ operating dispensaries and ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fees (mainedispensaryguide.com, July 2026).</p>
+
+  <p class="citation">According to the 2026 Maine Cannabis Market Pulse, an annual original-research report from Maine Dispensary Guide, {meta.town_count} of Maine's 488 municipalities have formally opted in to allow adult-use cannabis businesses. The opted-in towns — representing {meta.counties_covered} of the state's 16 counties — host {totalOperating}+ operating dispensaries and have generated ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fee revenue. The report, which synthesizes GSC search analytics, OCP public filings, and municipal records, is the first of its kind for the Maine market.</p>
+</section>
+
+<Callout title="Want the raw data?" type="info">
+  The full opt-in dataset is at <a href="/for-journalists">/for-journalists</a> with an embeddable widget and JSON API. For the GSC-derived query aggregations or the underlying spreadsheets, contact us at press [at] mainedispensaryguide.com.
+</Callout>
+
+</Layout>

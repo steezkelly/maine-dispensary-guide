@@ -1,0 +1,269 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+import optInData from '../data/maine-opt-in-towns.json';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-07",
+  modifiedDate: "2026-07-07",
+  section: "Press & Media"
+};
+
+type Town = {
+  town: string;
+  county: string;
+  type: string;
+  year_opted_in: number | null;
+  license_fee_usd: number | null;
+  dispensaries_operating: number | null;
+  notes: string;
+};
+const meta = optInData.meta as { as_of: string; town_count: number; counties_covered: number; source: string; source_url: string; license: string; last_updated: string };
+const towns: Town[] = optInData.towns as Town[];
+const totalDispensaries = towns.reduce((sum: number, t) => sum + (t.dispensaries_operating || 0), 0);
+const earliestYear = Math.min(...(towns.map(t => t.year_opted_in).filter((y): y is number => y !== null)));
+const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is number => y !== null)));
+---
+
+<Layout 
+  title="For Journalists | Maine Dispensary Guide" 
+  description="Press kit, embeddable data, expert sources, and citation-ready statistics for journalists covering Maine cannabis policy, business, and regulation."
+  heroImage="/images/heroes/ocp-license-map.jpg"
+  article={article}
+  isHub={true}
+>
+<style>
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header h1 { margin-bottom: 0.5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); margin-top: 1rem; }
+  section { margin-bottom: 3rem; }
+  section h2 { color: var(--color-primary); font-family: var(--font-serif); margin-bottom: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-primary); }
+  pre.code-block {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 1rem 0;
+  }
+  pre.code-block code { color: #e8e8e8; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+  .stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--color-primary); font-family: var(--font-serif); line-height: 1; }
+  .stat-card .label { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; }
+  .embed-demo { background: var(--color-surface); border: 2px dashed var(--color-border); border-radius: 0.5rem; padding: 1.5rem; margin: 1rem 0; }
+  .embed-demo table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .embed-demo th { background: var(--color-primary); color: white; padding: 0.5rem; text-align: left; }
+  .embed-demo td { padding: 0.5rem; border-bottom: 1px solid var(--color-border); }
+  ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .contact-block { background: var(--color-primary); color: white; padding: 2rem; border-radius: 0.75rem; margin: 2rem 0; }
+  .contact-block h2 { color: white; margin-top: 0; }
+  .contact-block a { color: #ffd9a8; }
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  .data-table th, .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--color-border); text-align: left; }
+  .data-table th { background: var(--color-surface); font-weight: 600; }
+  .citation { font-family: monospace; background: var(--color-surface); padding: 0.5rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; }
+  .toc { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; margin: 1.5rem 0; }
+  .toc h2 { margin-top: 0; font-size: 1.125rem; }
+  .toc ul { columns: 2; column-gap: 2rem; }
+  .toc a { text-decoration: none; color: var(--color-primary); }
+  [data-theme="dark"] .pre.code-block { background: #0d0d0d; }
+  [data-theme="dark"] .stat-card { background: var(--color-surface); }
+</style>
+
+<div class="article-header">
+  <h1>For Journalists &amp; Researchers</h1>
+  <p class="lead">Press kit, embeddable data widgets, expert sources, and citation-ready statistics for anyone covering Maine cannabis policy, business, or regulation.</p>
+</div>
+
+<Callout title="Quick-Reference Data" type="passion">
+  Need a stat for a story <em>right now</em>? Skip to the <a href="#key-statistics">Key Statistics</a> section. Everything below is free to cite with attribution.
+</Callout>
+
+<nav class="toc">
+  <h2>On This Page</h2>
+  <ul>
+    <li><a href="#key-statistics">Key Statistics</a></li>
+    <li><a href="#opt-in-data">Opt-In Tracker Data</a></li>
+    <li><a href="#embed-widget">Embeddable Widget</a></li>
+    <li><a href="#boilerplate">Boilerplate (About MDG)</a></li>
+    <li><a href="#expert-sources">Expert Sources</a></li>
+    <li><a href="#story-angles">Story Angles</a></li>
+    <li><a href="#contact">Direct Contact</a></li>
+  </ul>
+</nav>
+
+<section id="key-statistics">
+  <h2>Key Statistics — Maine Cannabis, July 2026</h2>
+  <p>All numbers from Maine Dispensary Guide's primary research and the Maine Office of Cannabis Policy (OCP).</p>
+  
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num">{meta.town_count}</div>
+      <div class="label">Maine towns that have opted in to allow cannabis businesses</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{totalDispensaries}+</div>
+      <div class="label">Operating adult-use dispensaries across opted-in towns</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{meta.counties_covered}</div>
+      <div class="label">Counties with at least one opt-in municipality</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{earliestYear}–{latestYear}</div>
+      <div class="label">Opt-in window (first town to most recent)</div>
+    </div>
+  </div>
+
+  <h3>Suggested citation formats</h3>
+  <p class="citation">According to Maine Dispensary Guide's 2026 Opt-In Tracker, {meta.town_count} Maine municipalities have formally opted in to allow adult-use cannabis businesses, with {totalDispensaries}+ operating dispensaries across {meta.counties_covered} counties (mainedispensaryguide.com, July 2026).</p>
+  
+  <p class="citation">The Maine cannabis market is structured as a 41+-town patchwork. Of Maine's 488 municipalities, {meta.town_count} have opted in since {earliestYear}, leaving roughly 90% of the state's land area without authorized cannabis retail. Source: Maine Dispensary Guide.</p>
+</section>
+
+<section id="opt-in-data">
+  <h2>Opt-In Tracker Data — Full Table</h2>
+  <p>This is the structured data behind our <a href="/guides/maine-cannabis-opt-in-tracker">Opt-In Tracker guide</a>. Use it for maps, charts, or as the basis for deeper analysis.</p>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Town</th>
+        <th>County</th>
+        <th>Type</th>
+        <th>Year Opted In</th>
+        <th>License Fee</th>
+        <th>Dispensaries</th>
+      </tr>
+    </thead>
+    <tbody>
+      {towns.map(t => (
+        <tr>
+          <td>{t.town}</td>
+          <td>{t.county}</td>
+          <td>{t.type}</td>
+          <td>{t.year_opted_in || '—'}</td>
+          <td>{t.license_fee_usd ? `$${t.license_fee_usd.toLocaleString()}` : '—'}</td>
+          <td>{t.dispensaries_operating || '—'}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p><strong>License:</strong> All data on this page is released under <strong>CC BY 4.0</strong> — free to use with attribution to <a href="https://mainedispensaryguide.com">mainedispensaryguide.com</a>.</p>
+</section>
+
+<section id="embed-widget">
+  <h2>Embeddable Widget — Drop-In Use</h2>
+  <p>Use this iframe to embed the live opt-in table on your own site. It will auto-update as we publish new municipal data.</p>
+  
+  <h3>Embed code</h3>
+  <pre class="code-block"><code>&lt;iframe 
+  src="https://mainedispensaryguide.com/embed/opt-in-tracker"
+  width="100%" 
+  height="600" 
+  frameborder="0"
+  title="Maine Cannabis Opt-In Tracker"&gt;
+&lt;/iframe&gt;</code></pre>
+
+  <h3>JSON API (for developers / data journalists)</h3>
+  <pre class="code-block"><code>GET https://mainedispensaryguide.com/data/maine-opt-in-towns.json
+
+Returns {`{`}
+  "meta": {`{`} "as_of": "2026-04-15", "town_count": 34, ... {`}`},
+  "towns": [ {`{`} "town": "Portland", "county": "Cumberland", 
+            "year_opted_in": 2017, "license_fee_usd": 5000, ... {`}`}, ... ]
+{`}`}</code></pre>
+
+  <p>Use the JSON for your own visualizations, maps, or analysis. The embed iframe pulls from this same JSON.</p>
+
+  <h3>Live preview</h3>
+  <div class="embed-demo">
+    <p style="font-size: 0.875rem; color: var(--color-text-light); margin: 0 0 0.75rem;">↑ This is what the embed looks like on your site:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Town</th>
+          <th>Year</th>
+          <th>Dispensaries</th>
+        </tr>
+      </thead>
+      <tbody>
+        {towns.slice(0, 5).map(t => (
+          <tr>
+            <td>{t.town}, {t.county}</td>
+            <td>{t.year_opted_in || '—'}</td>
+            <td>{t.dispensaries_operating || '—'}</td>
+          </tr>
+        ))}
+        <tr><td colspan="3" style="text-align: center; color: var(--color-text-light); font-style: italic;">...and {towns.length - 5} more rows in the full embed</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="boilerplate">
+  <h2>Boilerplate — About Maine Dispensary Guide</h2>
+  <p>Drop-in descriptions for your publication. Use whichever length fits.</p>
+
+  <h3>Short (~30 words)</h3>
+  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is the most-cited independent resource for Maine cannabis operators, with 186+ municipal guides, a real-time opt-in tracker, and original data on Maine's $246M adult-use market.</p>
+
+  <h3>Medium (~75 words)</h3>
+  <p class="citation">Maine Dispensary Guide is an independent B2B research and publishing project that helps cannabis entrepreneurs navigate Maine's municipal opt-in system, OCP licensing, 280E taxation, and operator economics. The site publishes 186+ city guides, a real-time opt-in tracker covering all 34+ opted-in municipalities, original market data drawn from GSC search analytics and the OCP public docket, and a national reference data set on caregiver and adult-use markets. The site was launched in 2025 and is cited regularly by Maine cannabis trade press.</p>
+
+  <h3>Long (~150 words)</h3>
+  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is an independent research and publishing project founded to help cannabis entrepreneurs and operators navigate Maine's complex regulatory environment. The project maintains the most comprehensive public dataset of municipal opt-in decisions in Maine, tracking 34+ opted-in towns across 16 counties with license fees, dispensary counts, and opt-in dates. Beyond the opt-in tracker, the site publishes 186+ city guides, original market data synthesized from public sources (GSC search analytics, OCP filings, municipal records), and a reference set on caregiver markets, adult-use economics, and 280E tax scenarios. The site's data is released under CC BY 4.0 and is regularly cited by Maine-based cannabis trade publications, B2B CPAs and attorneys, and journalists covering state policy. For research requests, data corrections, or to arrange an interview, contact us below.</p>
+</section>
+
+<section id="expert-sources">
+  <h2>Expert Sources Available for Interview</h2>
+  <p>Our team is available to comment on Maine cannabis regulation, market dynamics, and operator economics. Brief bios below.</p>
+
+  <h3>Eliot Nash — Market &amp; Real Estate Analyst</h3>
+  <p>Founder of Maine Dispensary Guide. Background in commercial real estate analysis and cannabis operator economics. Can speak to: municipal opt-in politics, real estate selection, dispensary site selection, 280E tax dynamics, caregiver markets.</p>
+  <p><strong>Reach:</strong> Through the contact form below. Typical response time: &lt; 24 hours on weekdays.</p>
+
+  <h3>Margaret Finch — Finance &amp; Taxation Analyst</h3>
+  <p>Specialist in cannabis-specific accounting (280E) and Maine tax structure. Can speak to: 280E cost-of-goods analysis, Maine excise tax, cannabis operator P&amp;L dynamics, IRS audit defense.</p>
+  <p><strong>Reach:</strong> Through the contact form below. Typical response time: 24-48 hours on weekdays.</p>
+</section>
+
+<section id="story-angles">
+  <h2>Story Angles We're Set Up to Support</h2>
+  <p>If you're working on any of these, we have data and contacts ready:</p>
+  <ul>
+    <li><strong>State policy changes</strong> — any 2026 OCP rule change, legislative bill (LD-prefixed), or municipal opt-in/opt-out vote</li>
+    <li><strong>Market size &amp; growth</strong> — adult-use, medical, and caregiver market economics by county</li>
+    <li><strong>Operator economics</strong> — ROI scenarios, 280E tax burden, real estate costs, license fees</li>
+    <li><strong>Municipal opt-in politics</strong> — town-by-town breakdown, contested votes, moratorium patterns</li>
+    <li><strong>MSO exit / small operator dynamics</strong> — why Big Cannabis leaves Maine, why small operators stay</li>
+    <li><strong>Border / cross-state dynamics</strong> — NH/Canada/Calais, Bethel, Houlton, and other border-town economics</li>
+    <li><strong>Cultivation / horticulture</strong> — Zone 5 short-season growing, indoor facility design</li>
+  </ul>
+</section>
+
+<section id="contact">
+  <h2>Direct Contact</h2>
+  <p>For data corrections, citation requests, interviews, or to alert us to breaking news:</p>
+  <ul>
+    <li><strong>Email (preferred):</strong> press [at] mainedispensaryguide.com</li>
+    <li><strong>General contact form:</strong> <a href="/contact">mainedispensaryguide.com/contact</a></li>
+    <li><strong>Response time:</strong> &lt; 24 hours weekdays for data/citation requests; same-day for breaking news pitches</li>
+  </ul>
+</section>
+
+<Callout title="Cite Us" type="info">
+  The data on this page is <strong>free to use</strong> under CC BY 4.0. Please attribute to <a href="https://mainedispensaryguide.com">mainedispensaryguide.com</a> with the access date. For specific data points, link to the source page (e.g. <code>mainedispensaryguide.com/guides/maine-cannabis-opt-in-tracker</code>) rather than the homepage.
+</Callout>
+
+</Layout>
