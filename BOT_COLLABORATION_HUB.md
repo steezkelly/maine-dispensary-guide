@@ -6335,3 +6335,44 @@ this without code change; full inventory captured in the Hub commit message.
     statute linked in conditional license guide
   - "Last verified" anti-pattern: 0 occurrences in new pages
   - Legal-advice disclaimers: 3/3 new pages have them
+
+### Sprint 78j: ROI blog refresh + 24h re-indexing baseline
+
+- **Why:** Two outstanding issues flagged in earlier sessions:
+  the ROI blog had stale stats (179 stores) and a wrong
+  conditional license fee ($1k-$5k), and the 2-4 week
+  re-measurement window for Sprint 78d/78i interlinks was
+  approaching. Both addressed in one commit.
+- **What shipped (2 deliverables):**
+  - **/blog/maine-dispensary-roi-what-to-expect-2026.astro:**
+    5 fixes (Active AU Dispensaries 179→187, Conditional
+    License Fee $1k-$5k→$500 with 28-B M.R.S. §207 cite,
+    Final License Fee $2.5k-$10k→$2.5k Cannabis Store annual,
+    modifiedDate 2026-06-07→2026-07-06, expanded data-source
+    attribution paragraph)
+  - **/data/gsc-indexing-report-2026-07-07.json:** 24h
+    re-indexing check
+- **Re-indexing results (vs 2026-07-06 baseline):**
+  - Total URLs: 251 → 254 (+3 = new pages from 78f/78g/78h)
+  - INDEXED: 209 → 210 (+1)
+  - NEUTRAL: 42 → 44 (+2)
+  - **+1 flip NEUTRAL → INDEXED: /guides/caribou-dispensary-guide**
+    (lastCrawl 2026-07-05T07:45:38Z, "Submitted and indexed")
+  - 3 new pages (conditional license, business for sale,
+    transfer ownership) all NEUTRAL with empty lastCrawl —
+    Google knows about them via sitemap but hasn't crawled
+- **Interpretation:**
+  - 2-4 week re-crawl window for Sprint 78d action 2
+    interlinks is not yet showing as a wave. Single data
+    point (caribou); too early to attribute.
+  - 41 other NEUTRAL pages from baseline haven't moved
+  - Next re-check ~2026-07-14 (1 week out): if the 3 new
+    pages flip to INDEXED, the interlink strategy works
+    for new pages. If 0 flip, fundamental gap.
+- **Verified:**
+  - pre-push-verify: all 7 gates green
+  - Cold-cache build: 257 pages, 30.93s
+- **Mnemosyne:** Sprint 78j state-of-record.
+- **Sprint 78 series status:** 11 sprints shipped (78a
+  baseline through 78j refresh). Original goal + YMYL
+  criterion + ROI accuracy fix all met.
