@@ -126,8 +126,13 @@ function extractComponentsCount(file) {
 }
 
 const claims = {
+    // Single root AGENTS.md (commit 1fbf912f removed the apps/maine-cannabis/
+    // copy on 2026-07-02 to dedupe; the prior two-lookup pattern here died
+    // with that cleanup but the script was never updated. Dropping the
+    // dead lookup below prevents ENOENT when sprint-score wires the script
+    // up via apps/maine-cannabis/scripts/admin/ where APPS-resolved paths
+    // don't see the repo root's AGENTS.md under that name).
     'AGENTS.md': findDocClaim(path.join(REPO, 'AGENTS.md'), /(\d+)\s*guide\s*pages?\s*\(.*?\)/i),
-    'AGENTS.md (apps)': findDocClaim(path.join(APPS, 'AGENTS.md'), /(\d+)\s*guide\s*pages?\s*\(.*?\)/i),
 };
 
 const report = {
@@ -145,20 +150,14 @@ if (claims['AGENTS.md'] && parseInt(claims['AGENTS.md']) < actual.guides * 0.5) 
         severity: 'high',
     });
 }
-if (claims['AGENTS.md (apps)'] && parseInt(claims['AGENTS.md (apps)']) < actual.guides * 0.5) {
-    report.drift.push({
-        where: 'AGENTS.md (apps)',
-        claim: `${claims['AGENTS.md (apps)']} guide pages`,
-        reality: `${actual.guides} guide pages`,
-        severity: 'high',
-    });
-}
+
+// (Duplicate "AGENTS.md (apps)" lookup removed — that file was deleted in
+// commit 1fbf912f and any remaining references would fail with ENOENT.)
 
 // Blog count drift: catches "Blog posts (6 articles)" / "35 blog posts"
 // claims diverging from actual blog/ directory count.
 const blogClaims = {
     'AGENTS.md': extractBlogCount(path.join(REPO, 'AGENTS.md')),
-    'AGENTS.md (apps)': extractBlogCount(path.join(APPS, 'AGENTS.md')),
 };
 for (const [where, claim] of Object.entries(blogClaims)) {
     if (claim !== null && claim !== actual.blog) {
@@ -177,7 +176,6 @@ for (const [where, claim] of Object.entries(blogClaims)) {
 // missing real names — both files were updated in this commit.)
 const componentsClaims = {
     'AGENTS.md': extractComponentsCount(path.join(REPO, 'AGENTS.md')),
-    'AGENTS.md (apps)': extractComponentsCount(path.join(APPS, 'AGENTS.md')),
 };
 for (const [where, claim] of Object.entries(componentsClaims)) {
     if (claim !== null && claim !== actual.components) {
@@ -196,7 +194,6 @@ const todayCommits = parseInt(execSyncOrDefault('git log --oneline --since="24 h
 if (todayCommits > 5) {
     for (const [name, mtime] of Object.entries({
         'AGENTS.md': fs.statSync(path.join(REPO, 'AGENTS.md')).mtime,
-        'AGENTS.md (apps)': fs.statSync(path.join(APPS, 'AGENTS.md')).mtime,
         'PROJECT_STATE.md': fs.statSync(path.join(REPO, 'PROJECT_STATE.md')).mtime,
         'MDG_AGENT_HANDBOOK.md': fs.statSync(path.join(REPO, 'MDG_AGENT_HANDBOOK.md')).mtime,
     })) {
