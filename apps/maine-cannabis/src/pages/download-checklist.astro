@@ -5,34 +5,44 @@ import PineTree from '@network/ui/PineTree';
 import LeadMailtoForm from '../components/LeadMailtoForm.astro';
 
 const roadmapFeatures = [
-  { 
-    title: "The 4-Phase State Map", 
-    desc: "A detailed timeline from entity formation to final OCP inspection.",
-    icon: "🗺️"
+  {
+    title: "Phase 1. Entity + municipal pre-clearance",
+    desc: "Week-by-week checklist: Maine entity formation, municipal opt-in verification, 500-ft school buffer, surety bond pre-qualification.",
+    icon: "◆",
   },
-  { 
-    title: "Financial Integrity Prep", 
-    desc: "Exactly what Maine banks and credit unions look for in a founder.",
-    icon: "💰"
+  {
+    title: "Phase 2. OCP application",
+    desc: "The 80-150 page packet demystified: 9 sub-deliverables, conditional license mechanics, 60-120 day review clock.",
+    icon: "◆",
   },
-  { 
-    title: "Security Master List", 
-    desc: "Standard OCP-compliant hardware and surveillance protocols.",
-    icon: "🛡️"
+  {
+    title: "Phase 3. The 12-step operator's plan",
+    desc: "Personnel + badges, security infrastructure, Metrc integration, banking, insurance, vendor contracts — with parallel workstreams.",
+    icon: "◆",
   },
-  { 
-    title: "280E Tax Strategy", 
-    desc: "How to maximize COGS deductions and manage high tax burdens.",
-    icon: "⚖️"
-  }
+  {
+    title: "Phase 4. Pre-opening + activate",
+    desc: "Soft-open cadence, OCP inspection walkthrough, the 8 ongoing compliance obligations every Maine dispensary owes the state.",
+    icon: "◆",
+  },
+  {
+    title: "280E tax strategy with a Maine CPA",
+    desc: "§280E apportionment, management-entity structure (the one move that saves 20-40% federal tax), COGS maximization per Notice 2018-200.",
+    icon: "◆",
+  },
+  {
+    title: "Schedule III rescheduling implications",
+    desc: "April 28, 2026 federal Schedule III rule + PL 2025 ch. 512 dual-license apportionment framework for Maine operators.",
+    icon: "◆",
+  },
 ];
 ---
 
 <Layout 
   title="Free Maine Dispensary Roadmap" 
-  description="Free 40-page Founders Roadmap for launching a Maine cannabis dispensary. Licensing timeline, 280E strategy, security requirements, and financial benchmarks." 
+  description="Free 12-page Founders Roadmap for launching a Maine cannabis dispensary. Licensing timeline, 280E strategy, security requirements, and financial benchmarks."
   heroImage="/images/heroes/download-checklist.jpg"
-  article={{ author: "Eliot Nash", authorId: "eliot-nash", publishDate: "2026-01-05", modifiedDate: "2026-06-07", section: "Tools" }}
+  article={{ author: "Calvin Waters", authorId: "calvin-waters", publishDate: "2026-01-05", modifiedDate: "2026-07-08", section: "Tools" }}
 >
   <style>
 
@@ -299,7 +309,7 @@ const roadmapFeatures = [
       <div class="hero-text">
         <div class="hero-badge">Verified Founder Asset</div>
         <h1>Your Professional Roadmap to the Maine Market</h1>
-        <p class="lead">Stop guessing at regulations. Download the definitive, 40-page founder's guide to launching and scaling a Maine cannabis dispensary.</p>
+        <p class="lead">Stop guessing at regulations. Download the definitive 12-page founder's guide to launching and scaling a Maine cannabis dispensary — a primary-source-anchored roadmap from entity formation through pre-opening inspection.</p>
         
         <LeadMailtoForm
           formId="download-checklist-lead-form"
