@@ -122,7 +122,7 @@ function contentHealthDelta() {
   // get the same ❌  N issue(s) lines on the current state whether it matches
   // baseline or not.
   const checkScript = path.join(
-    REPO, 'apps', 'maine-cannabis', 'scripts', 'content', 'check-content-health.cjs',
+    REPO, 'scripts', 'check', 'content-health.cjs',
   );
   let out = '';
   try {

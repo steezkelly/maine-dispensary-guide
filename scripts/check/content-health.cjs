@@ -15,7 +15,7 @@ const path = require('node:path');
 const DEFAULT_ROOT = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
 const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml'));
-const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist', 'client'));
+const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist'));
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'public'));
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 

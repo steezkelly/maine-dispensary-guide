@@ -70,7 +70,7 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 12 reusable components (see below)
+│   ├── components/               # 13 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
@@ -88,7 +88,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Multi-agent communication log (READ FIRST)
 ```
 
-**Components** (12, `apps/maine-cannabis/src/components/`): `AutoRelated`, `Breadcrumbs`, `Callout`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `LeadMailtoForm`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`
+**Components** (13, `apps/maine-cannabis/src/components/`): `AutoRelated`, `Breadcrumbs`, `Callout`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `LeadMailtoForm`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `RegionHubShell`
 
 ---
 

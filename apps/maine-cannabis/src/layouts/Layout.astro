@@ -184,7 +184,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
 const BREADCRUMB_SECTION_LABELS: Record<string, string> = {
   'guides': 'Guides',
   'blog': 'Blog',
-  'learn': 'Consumer Guide',
+  'learn': "Consumer's Guide",
   'download': 'Free Downloads',
   'download-checklist': 'Maine Dispensary Roadmap',
   'founders-bible': 'Founders Bible',
@@ -198,34 +198,49 @@ const BREADCRUMB_SECTION_LABELS: Record<string, string> = {
   'glossary': 'Glossary',
   'market-stats': 'Market Stats',
   'admin': 'Admin',
+  'embed': 'Embeds',
+  'maine-cannabis-opt-in-tracker': 'Opt-In Tracker',
 };
 
+// Breadcrumb path segments that don't have index pages and shouldn't appear
+// as their own breadcrumb leaf in the chain. Each segment listed here is
+// either (a) a content path whose /<segment>/index.astro doesn't ship, or
+// (b) the dynamic /download/{id} family where the segment is part of the
+// canonical URL, not a parent section.
+const BREADCRUMB_SKIP_SEGMENTS = new Set([
+  'download',
+]);
+
 const titleCaseSlug = (slug: string): string =>
-  slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
 const breadcrumbPath = Astro.url.pathname.replace(/\/$/, '');
 const breadcrumbSegments = breadcrumbPath === ''
-  ? []
-  : breadcrumbPath.split('/').filter(Boolean);
+    ? []
+    : breadcrumbPath.split('/').filter(Boolean)
+        .reduce<string[]>((acc, seg) => {
+            if (acc.length === 0 && BREADCRUMB_SKIP_SEGMENTS.has(seg)) return [];
+            return [...acc, seg];
+        }, []);
 const breadcrumbListSchema = breadcrumbSegments.length > 0 && !noindex
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}` },
-        ...breadcrumbSegments.map((segment, index) => {
-          const cumulativePath = '/' + breadcrumbSegments.slice(0, index + 1).join('/');
-          const label = BREADCRUMB_SECTION_LABELS[segment] || titleCaseSlug(segment);
-          return {
-            '@type': 'ListItem',
-            position: index + 2,
-            name: label,
-            item: `${siteUrl}${cumulativePath}`,
-          };
-        }),
-      ],
-    }
-  : null;
+    ? {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}` },
+                ...breadcrumbSegments.map((segment, index) => {
+                    const cumulativePath = '/' + breadcrumbSegments.slice(0, index + 1).join('/');
+                    const label = BREADCRUMB_SECTION_LABELS[segment] || titleCaseSlug(segment);
+                    return {
+                        '@type': 'ListItem',
+                        position: index + 2,
+                        name: label,
+                        item: `${siteUrl}${cumulativePath}`,
+                    };
+                }),
+            ],
+        }
+    : null;
 const breadcrumbListJsonLd = breadcrumbListSchema
   ? JSON.stringify(breadcrumbListSchema)
   : null;
