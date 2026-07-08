@@ -7,7 +7,9 @@ The Maine Dispensary Guide runs two patterns for lead capture, split by use case
 | Pattern | Forms | Why |
 |---|---|---|
 | **Formspree** (`xvgzlowz`) | `/newsletter`, `/` (index inline newsletter), `/resources` (referral) | High-volume, low-friction signup UX. Free tier handles 50 submissions/month. GA4 `lead_capture` fires via `LeadFormTracker.astro`. |
-| **mailto:** (`hello@mainedispensaryguide.com`) | `/download-checklist`, `/download/founders-bible`, `/download/first-timer-field-guide` | PDF gates — Formspree free tier does NOT deliver PDF autoresponders (Plus-only feature). mailto: is zero third-party, zero SSR surface, no Vercel env vars. PDF autoresponder is replaced by Steve pasting the public PDF link in reply. |
+| **mailto:** (`hello@mainedispensaryguide.com`) | `/download-checklist` (Roadmap), `/download/founders-bible`, `/download/first-timer-field-guide` | PDF gates — Formspree free tier does NOT deliver PDF autoresponders (Plus-only feature). mailto: is zero third-party, zero SSR surface, no Vercel env vars. PDF autoresponder is replaced by Steve pasting the public PDF link in reply. |
+| **Direct link, no form** | `/download/metrc-reconciliation-checklist`, `/download/compliance-self-assessment` | Pre-2026-07-08 build path — these two operator-resource pages are pure direct-link downloads (`<a href="/downloads/...pdf" download>`). They capture **zero lead signal**. Intentional gap to close in a future funnel instrumentation sprint (see `/docs/research/lead-magnet-research-memo-2026-07-08.md` Stage 2). |
+| Pattern count summary | **3 Formspree + 3 mailto: + 2 no-form = 8 total lead-capable page variants** (5 distinct download pages + 3 Formspree pages) |
 
 Purelymail catch-all routes `mainedispensaryguide.com` (MX verified 2026-07-13) → `steezkelly@purelymail.com`. All leads — Formspree and mailto: — end up in the same operator inbox.
 

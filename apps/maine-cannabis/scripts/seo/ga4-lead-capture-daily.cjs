@@ -160,7 +160,10 @@ async function main() {
             { name: 'date' },
             { name: 'pagePath' },
             { name: 'eventName' },
-            { name: 'formId' },  // custom dimension if configured; omit-safely
+            // formId is a custom dimension that needs to be registered in the
+            // GA4 Admin UI under Events > Custom Definitions. Until registered,
+            // this script omits it to avoid 400 INVALID_ARGUMENT.
+            // { name: 'formId' },
         ],
         metrics: [
             { name: 'eventCount' },
@@ -211,7 +214,8 @@ async function main() {
         date: r.dimensionValues[0]?.value,
         page_path: r.dimensionValues[1]?.value,
         event_name: r.dimensionValues[2]?.value,
-        form_id: r.dimensionValues[3]?.value || null,
+        // form_id slot retained in output schema for forward compat with custom dimensions
+        form_id: null,
         event_count: parseInt(r.metricValues[0]?.value || '0'),
         sessions: parseInt(r.metricValues[1]?.value || '0'),
     }));
