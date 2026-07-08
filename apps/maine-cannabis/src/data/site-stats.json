@@ -1,18 +1,20 @@
 {
   "activeAdultUseRetailStores": 187,
+  "activeAdultUseRetailStoresSource": "OCP 2025 Annual Report (December 31, 2025): retail-store line of the 343 total active adult-use establishments (retail + cultivator + mfg + testing). Refreshed annually when the OCP publishes its annual report.",
   "activeAdultUseMunicipalities": 65,
+  "activeAdultUseMunicipalitiesSource": "OCP 2025 Annual Report; matches the AU retail license spread across 65 unique host municipalities. Refreshed annually.",
   "currentOcpLicenseeRoster": {
     "auRetailStores": 107,
     "auMunicipalities": 49,
-    "caregiverStorefronts": 134,
-    "asOf": "2026-04-01",
-    "source": "OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py",
-    "note": "Deduped DBA+city counts. 187 is the 2025 Annual Report count of all 343 active AU establishments (retail + cultivator + mfg + testing); 107 is the deduped Store-type count from the OCP licensee-search CSV."
+    "asOf": "2026-07-08",
+    "source": "OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py (live deduped Store-type count)",
+    "note": "Two parallel facts are intentional. The 187 figure on stat cards is the Annual-Report total of active AU retail-store establishments and is preserved as 'state of the market in 2025'. The 107 figure below is the live OCP licensee-search CSV deduped Store-type count for today, and is what /find-a-dispensary and the OCP-tracker use to drive per-city cards. These should NOT be conflated; both refresh on the schedule documented in nextRefresh."
   },
   "totalMarketValueAdultUse": "$246M+",
   "mainePopulation": 1400000,
   "fiscalYearLastUpdated": "2025-12-31",
-  "dataSource": "OCP 2025 Annual Report (Dec 31, 2025 data) and OCP 2025 MMCP Annual Report",
-  "nextRefresh": "Monthly when OCP publishes new data; run `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs`",
-  "notes": "Single source of truth for stat-card numbers across the site (404.html, index.astro, market.astro, etc.). Run `node scripts/ocp/refresh-site-stats.cjs` after each monthly OCP update to refresh these values. Update all consumers at once."
+  "dataSource": "OCP 2025 Annual Report (anchors stat-card facts) + OCP Adult-Use Establishments CSV fetched 2026-07-08 (anchors per-store live facts).",
+  "nextRefresh": "Annual-Report fields (top-level activeAdultUse*): refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields (currentOcpLicenseeRoster.*): monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.",
+  "notes": "Single source of truth for stat-card numbers across the site (404.html, index.astro, market.astro, etc.). Run `node scripts/ocp/refresh-site-stats.cjs` after each monthly OCP update to refresh these values. Update all consumers at once.",
+  "liveOcpRefreshedAt": "2026-07-08"
 }

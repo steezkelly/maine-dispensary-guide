@@ -16,7 +16,9 @@ import siteStats from '../data/site-stats.json';
 
 export interface SiteStats {
     activeAdultUseRetailStores: number;
+    activeAdultUseRetailStoresSource?: string;
     activeAdultUseMunicipalities: number;
+    activeAdultUseMunicipalitiesSource?: string;
     currentOcpLicenseeRoster?: {
         auRetailStores: number;
         auMunicipalities: number;
@@ -28,6 +30,7 @@ export interface SiteStats {
     totalMarketValueAdultUse: string;
     mainePopulation: number;
     fiscalYearLastUpdated: string;
+    liveOcpRefreshedAt?: string;
     dataSource: string;
     nextRefresh: string;
     notes: string;

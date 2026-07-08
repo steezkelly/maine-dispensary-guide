@@ -176,19 +176,32 @@ function main() {
         process.exit(0);
     }
 
-    // Write mode: update the JSON, append to history log
+    // Write mode: update the JSON, append to history log.
+    // The agent system intentionally separates Annual-Report-anchored stat-card
+    // facts (activeAdultUseRetailStores / activeAdultUseMunicipalities at the
+    // top level, anchored to the OCP 2025 Annual Report Dec 31 2025 figures)
+    // from the live OCP licensee-CSV counts (which move monthly). Live counts
+    // go into currentOcpLicenseeRoster.auRetailStores / auMunicipalities so
+    // both facts are preserved as parallel truths, not collapsed into one.
     const updated = {
         ...stored,
-        activeAdultUseRetailStores: live.auStores,
-        activeAdultUseMunicipalities: live.auMunicipalities,
-        fiscalYearLastUpdated: today,
-        nextRefresh: 'Monthly when OCP publishes new data; see scripts/ocp/fetch-ocp-towns.py',
-        dataSource: `OCP Adult-Use Establishments CSV fetched ${today}`,
+        currentOcpLicenseeRoster: {
+            ...(stored.currentOcpLicenseeRoster || {}),
+            auRetailStores: live.auStores,
+            auMunicipalities: live.auMunicipalities,
+            caregiverStorefronts: live.caregiverStorefronts,
+            asOf: today,
+            source: 'OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py (live deduped Store-type count)',
+            note: 'Two parallel facts are intentional. The 187 figure on stat cards is the Annual-Report total of active AU retail-store establishments and is preserved as \'state of the market in 2025\'. The 107 figure below is the live OCP licensee-search CSV deduped Store-type count for today, and is what /find-a-dispensary and the OCP-tracker use to drive per-city cards. These should NOT be conflated; both refresh on the schedule documented in nextRefresh.',
+        },
+        liveOcpRefreshedAt: today,
+        nextRefresh: 'Annual-Report fields (top-level activeAdultUse*): refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields (currentOcpLicenseeRoster.*): monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.',
+        dataSource: `OCP 2025 Annual Report (anchors stat-card facts) + OCP Adult-Use Establishments CSV fetched ${today} (anchors per-store live facts).`,
     };
     writeStats(updated);
     appendLog({ ...logEntry, status: 'written' });
 
-    log('ok', `site-stats.json updated (${storeDrift >= 0 ? '+' : ''}${storeDrift} stores, ${muniDrift >= 0 ? '+' : ''}${muniDrift} municipalities)`);
+    log('ok', `site-stats.json updated: live auRetailStores=${live.auStores} (was ${logEntry.storedAuStores}), auMunicipalities=${live.auMunicipalities} (was ${logEntry.storedMunis})`);
 
     if (storeDrift < 0) {
         log('warn', `live store count DROPPED by ${Math.abs(storeDrift)} — investigate before deploying`);
