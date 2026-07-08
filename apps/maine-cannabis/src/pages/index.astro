@@ -1457,31 +1457,8 @@ const journeySteps = [
     color: var(--color-primary);
   }
 
-  [data-theme="dark"] .market-intel,
-  [data-theme="dark"] .hub-card,
-  [data-theme="dark"] .new-card,
-  [data-theme="dark"] .journey-step {
-    background: rgba(10, 40, 41, 0.6);
-    border-color: rgba(61, 159, 151, 0.3);
-  }
-
-  [data-theme="dark"] .hub-card:hover,
-  [data-theme="dark"] .journey-step:hover {
-    background: rgba(10, 40, 41, 0.85);
-    border-color: rgba(61, 159, 151, 0.5);
-  }
-
-  [data-theme="dark"] .mission-lead {
-    color: var(--color-text);
-  }
-
-  [data-theme="dark"] .ops-topics .topic-tag {
-    background: var(--color-surface);
-  }
-
-  [data-theme="dark"] .ops-closing {
-    border-color: var(--color-border);
-  }
+  /* Global dark-mode card surface overrides live after the closing style
+     tag below — same is:global pattern as theme-2026.css. See comment there. */
 
   .journey-detail {
     padding: var(--space-xl) 0;
@@ -1700,6 +1677,47 @@ const journeySteps = [
   }
 
 </style>
+
+<style is:global>
+  /* Global dark-mode card surface overrides.
+     Loaded as is:global because Astro's per-component CSS scoping rewrites
+     `[data-theme="dark"] .hub-card` to
+     `[data-astro-cid-XXX][data-theme=dark] .hub-card[data-astro-cid-XXX]`,
+     which fails to match — the card's ancestor html carries data-theme but
+     NOT the data-astro-cid attribute, so the rewritten selector never
+     matches any element and the cascade falls back to the light-mode base
+     rule. Using `html[data-theme="dark"]` at global scope works because
+     html really does carry data-theme.
+
+     Same global-is:global pattern as theme-2026.css. */
+  html[data-theme="dark"] .hub-card,
+  html[data-theme="dark"] .new-card,
+  html[data-theme="dark"] .journey-step,
+  html[data-theme="dark"] .resource-link {
+    background: rgba(10, 40, 41, 0.85);
+    border-color: rgba(61, 159, 151, 0.4);
+  }
+  html[data-theme="dark"] .hub-card:hover,
+  html[data-theme="dark"] .journey-step:hover,
+  html[data-theme="dark"] .resource-link:hover {
+    background: rgba(10, 40, 41, 0.95);
+    border-color: rgba(61, 159, 151, 0.6);
+  }
+  html[data-theme="dark"] .market-intel {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+  html[data-theme="dark"] .mission-lead {
+    color: var(--color-text);
+  }
+  html[data-theme="dark"] .ops-topics .topic-tag {
+    background: var(--color-surface);
+  }
+  html[data-theme="dark"] .ops-closing {
+    border-color: var(--color-border);
+  }
+</style>
+
 <!-- ═══════════════════════════════════════════════════════════════
        HERO: Heritage Authority — Topographic + Dramatic Typography
   ═══════════════════════════════════════════════════════════════ -->
