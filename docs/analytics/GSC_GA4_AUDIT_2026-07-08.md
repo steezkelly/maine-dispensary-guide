@@ -16,6 +16,8 @@
 | Distinct pages with impressions | 100 |
 | Pages ranking page-1 (pos < 11) | 18 |
 
+> **Audit note (corrected 2026-07-08 by Sprint 78z subagent):** the originally-claimed "0% BreadcrumbList" and "59% FAQPage" coverage were off. Ground-truth audit against `dist/` showed 98% BreadcrumbList and 69% FAQPage at the time. The package `Breadcrumbs.astro` and `Faq.astro` already emitted JSON-LD; the gap was head-only. Sprint 78z still added value by emitting head-level JSON-LD (Google's primary parser location) on all pages. Future GSC audits: ground-truth `% {SchemaType}` against `dist/*.html` before assuming zero coverage — subagents will catch this if asked.
+
 **Five findings worth fixing in priority order:**
 
 ### 1. 89 of 100 pages have impressions but zero clicks (CTR-loser pattern)
