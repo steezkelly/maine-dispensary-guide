@@ -45,7 +45,10 @@ interface Props {
 }
 const { cluster, clusterFaqs = [], stageLabel } = Astro.props as Props;
 const resolvedStageLabel = stageLabel ?? (cluster.editorial_pilot ? 'Stage 2 pilot' : 'Stage 3 roll-out');
-const auditNote = cluster.editorial_pilot
+const hubIsShipped = (stageLabel ?? '').toLowerCase().includes('shipped') || (stageLabel ?? '').toLowerCase().includes('published');
+const auditNote = hubIsShipped
+  ? 'Stage 2 editorial body shipped 2026-07-08 — directory, primary-source registry, and verified editorial by Calvin Waters + Margaret Finch.'
+  : cluster.editorial_pilot
   ? 'Stage 1 foundation — Stage 2 editorial body lands on this hub next. The directory, primary-source registry, and verification badge below are live now.'
   : 'Stage 1 foundation stub — directory + verification live; the 2,000+ word editorial body ships in Stage 3 with the two pilot hubs already shipped.';
 
