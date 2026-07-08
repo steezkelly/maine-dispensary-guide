@@ -13,7 +13,19 @@ The Maine Dispensary Guide runs two patterns for lead capture, split by use case
 
 Purelymail catch-all routes `mainedispensaryguide.com` (MX verified 2026-07-13) → `steezkelly@purelymail.com`. All leads — Formspree and mailto: — end up in the same operator inbox.
 
-## mailto: funnel (PDF gates)
+## Operator-side evidence-of-trust gap (Stage 1 carry-forward)
+
+The 2026-07-08 lead-magnet research audit (`docs/research/lead-magnet-research-memo-2026-07-08.md`) surfaced a YMYL reputation risk that this SOP cannot fix and must call out:
+
+- `/download-checklist` advertises a "**40-page Maine Dispensary Roadmap**" — but no PDF on disk matches. The mailto: funnel is dead-ended: lead captured → Steve has no asset → Steve loses operator trust.
+- `maine-metrc-reconciliation-checklist.pdf` (1.3 KB) is a placeholder file but the page promises 24 checklist items + log sheets.
+- `maine-dispensary-compliance-self-assessment.pdf` (1.6 KB) is a placeholder file but the page promises 88 items across 8 domains + 3 SOP templates.
+
+**Stop-shipping rule:** until Stage 1 ships the real PDF assets, do not promote the affected pages in any external channel (backlink outreach, social, paid traffic). The 2026-07-07 backlink campaign did not link to these 3 dead-ending pages — that was fortunate. Future campaigns must audit the `/downloads/*` asset before linking.
+
+Session-prompt to fix this in a dedicated Stage 1 sprint: `docs/session-handoff-tokens/lead-magnet-stage1-prompt.md`.
+
+## Mailto: funnel (PDF gates)
 
 The 3 PDF-gate pages use the shared `LeadMailtoForm.astro` component. On submit:
 
