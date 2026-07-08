@@ -137,6 +137,18 @@ function main() {
         process.exit(1);
     }
 
+    // Anomaly sentinel: count what himalaya returned in-window so the operator
+    // can spot a Purelymail catch-all misroute before assuming "0 replies means
+    // 0 interest". If candidates_in_window > 0 and zero matched campaign
+    // recipients while the catch-all is misrouted, that's silently broken.
+    // Logged as a single trailing info line for easy `tail -n1` greppability.
+    const inboundOwnOutbox = inbound.filter(m => m.from === 'steve@mainedispensaryguide.com');
+    const inboundUnmatched = inbound.filter(m => {
+        const set = new Set([...campaignSet, ...sentSet].map(s => s.toLowerCase()));
+        return !set.has(m.from);
+    }).length;
+    const candidatesInWindow = inbound.length;
+
     // Update each campaign recipient's status
     const incomingByEmail = new Map();
     for (const m of inbound) {
@@ -145,7 +157,7 @@ function main() {
         incomingByEmail.set(m.from, list);
     }
 
-    let nPending = 0, nReplied = 0, nBounced = 0, nUnmatched = 0;
+    let nPending = 0, nReplied = 0, nBounced = 0;
     for (const r of campaign.recipients) {
         const matches = incomingByEmail.get(r.email.toLowerCase()) || [];
         if (matches.length > 0) {
@@ -199,13 +211,26 @@ function main() {
     fs.mkdirSync(path.dirname(SNAPSHOT_PATH), { recursive: true });
     fs.appendFileSync(SNAPSHOT_PATH, JSON.stringify(snapshot) + '\n');
     // Write back the campaign JSON with updated statuses so other tools see
-    // the latest reply state (single source of truth for the campaign).
-    fs.writeFileSync(CAMPAIGN_JSON, JSON.stringify(campaign, null, 2) + '\n');
+    // the latest reply state (single source of truth for the campaign). Atomic
+    // write-then-rename: same pattern as logSentEmail / send-outreach-pitches.py
+    // — defends against a process-kill between writeFileSync and close leaving
+    // truncated JSON, or against a concurrent reader seeing partial JSON.
+    const campaignTmp = CAMPAIGN_JSON + '.tmp';
+    fs.writeFileSync(campaignTmp, JSON.stringify(campaign, null, 2) + '\n');
+    fs.renameSync(campaignTmp, CAMPAIGN_JSON);
 
     if (args.has('--print')) {
         console.log(JSON.stringify(snapshot, null, 2));
     } else {
-        console.log(`[check-backlink-replies] OK — ${snapshot.totals.sent} sent | ${nReplied} replied | ${nBounced} bounced | ${nPending} pending | appended to ${path.basename(SNAPSHOT_PATH)}`);
+        // Anomaly sentinel line — always last so tail -n1 / grep is straightforward.
+        // Flags a catch-all misroute when there are inbound mail candidates that
+        // don't match the campaign recipient list (would be silently lost).
+        let flagAnomaly = '';
+        if (candidatesInWindow > 0 && (nReplied + nBounced) === 0 && candidatesInWindow > inboundOwnOutbox.length) {
+            flagAnomaly = ' (ANOMALY: candidates_in_window > 0 but 0 matched; verify Purelymail catch-all)';
+        }
+        console.log(`[check-backlink-replies] OK — ${snapshot.totals.sent} sent | ${nReplied} replied | ${nBounced} bounced | ${nPending} pending | appended to ${path.basename(SNAPSHOT_PATH)}${flagAnomaly}`);
+        console.log(`[check-backlink-replies]    candidates_in_window=${candidatesInWindow} inbound_own_outbox=${inboundOwnOutbox.length} inbound_unmatched_to_campaign=${inboundUnmatched}`);
     }
     process.exit(0);
 }
