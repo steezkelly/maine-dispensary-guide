@@ -1,57 +1,24 @@
 ---
-import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
-import Faq from '../../components/Faq.astro';
-import Callout from '../../components/Callout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import RegionHubShell from '../../components/RegionHubShell.astro';
 import clusterRegions from '../../data/cluster-regions.json';
 
 const cluster = clusterRegions.clusters.find((c) => c.slug === 'greater-portland-sebago-lakes-cannabis-guide');
-if (!cluster) {
-  throw new Error('cluster-regions.json: missing slug "greater-portland-sebago-lakes-cannabis-guide"');
-}
-
+if (!cluster) throw new Error('cluster-regions.json: missing slug "greater-portland-sebago-lakes-cannabis-guide"');
 const siblingClusters = clusterRegions.clusters.filter((c) => c.slug !== cluster.slug);
+const editorialStage = cluster.editorial_pilot ? 'Stage 2' : 'Stage 3';
+const clusterLabel = cluster.editorial_pilot ? 'Pilot cluster' : 'Roll-out cluster';
 
-const article = {
-  author: 'Calvin Waters',
-  authorId: 'calvin-waters',
-  publishDate: '2026-07-08',
-  modifiedDate: '2026-07-08',
-  section: 'Regional Guides',
-};
-
-const stage2Faqs = [
-  {
-    q: 'What counties does the ' + cluster.display_name + ' cannabis guide cover?',
-    a: 'Primary counties: ' + cluster.counties.join(', ') + '. The hub links to every published Maine Dispensary Guide for towns in this cluster.',
-  },
-  {
-    q: 'How many towns in the ' + cluster.display_name + ' cluster have a published Maine Dispensary Guide?',
-    a: 'This cluster carries ' + cluster.guide_count + ' guide references (towns + operator profiles). The directory below is the canonical list, sourced from the same registry as /find-a-dispensary.',
-  },
-  {
-    q: 'Is adult-use cannabis retail allowed in every town in the ' + cluster.display_name + ' cluster?',
-    a: "No. Retail access depends on each town's opt-in vote under Maine's adult-use program. Some towns host active stores; others are opt-out or medical-only. See each town's guide for local status.",
-  },
-  {
-    q: 'Where can I find pricing and menus for dispensaries in this region?',
-    a: "Use the map-search link on each town card for live location data, then verify hours and menus directly with the operator. Maine Dispensary Guide does not host live menus.",
-  },
-  {
-    q: 'When will this hub carry the full regional editorial body?',
-    a: 'Stage 1 (this page) shipped the directory + canonical registry on 2026-07-08. Stage 2 fills in the 2,000+ word editorial body with primary-source regional data (OCP roster, ACS Census, opt-in voting records, drive-time matrices). Pilot hubs are Greater Portland and Sebago Lakes, and Downeast, Acadia and Aroostook.',
-  },
+const clusterFaqs = [
+  { q: 'What counties does the ' + cluster.display_name + ' cannabis guide cover?', a: 'Primary counties: ' + cluster.counties.join(', ') + '. The hub links to every published Maine Dispensary Guide for towns in this cluster.' },
+  { q: 'How many towns in the ' + cluster.display_name + ' cluster have a published Maine Dispensary Guide?', a: 'This cluster carries ' + cluster.guide_count + ' guide references (towns + operator profiles). The directory below is the canonical list, sourced from the same registry as /find-a-dispensary.' },
+  { q: 'Is adult-use cannabis retail allowed in every town in the ' + cluster.display_name + ' cluster?', a: "No. Retail access depends on each town's opt-in vote under Maine's adult-use program. Some towns host active stores; others are opt-out or medical-only. See each town's guide for local status." },
+  { q: 'Where can I find pricing and menus for dispensaries in this region?', a: "Use the map-search link on each town card for live location data, then verify hours and menus directly with the operator. Maine Dispensary Guide does not host live menus." },
+  { q: 'When will this hub carry the full regional editorial body?', a: 'Stage 1 (this page) shipped the directory + canonical registry on 2026-07-08. Stage 2 fills in the 2,000+ word editorial body with primary-source regional data (OCP roster, ACS Census, opt-in voting records, drive-time matrices).' },
 ];
 
-const stage2FaqJsonLd = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: stage2Faqs.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-});
+const article = { author: 'Calvin Waters', authorId: 'calvin-waters', publishDate: '2026-07-08', modifiedDate: '2026-07-08', section: 'Regional Guides' };
 ---
 <Layout
   title={cluster.display_name + ' Cannabis Guide — Regional Hub (2026)'}
@@ -61,118 +28,19 @@ const stage2FaqJsonLd = JSON.stringify({
   topics={['region', 'hub', 'market']}
   breadcrumbs={[{ label: 'Guides', href: '/guides' }, { label: cluster.display_name, href: Astro.url.pathname }]}
 >
-<style>
-  article { max-width: 760px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  .stage1-badge { display: inline-block; background: var(--color-accent); color: var(--color-background); padding: 0.35rem 0.85rem; border-radius: 1.25rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-  .cluster-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
-  .cluster-chip { background: var(--color-surface); border: 1px solid var(--color-border); padding: 0.35rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; color: var(--color-text); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  .fact-box { background: linear-gradient(135deg, rgba(88, 129, 87, 0.08) 0%, rgba(163, 177, 138, 0.06) 100%); padding: 1.75rem; border-radius: 1rem; border: 1px solid var(--color-border); position: relative; overflow: hidden; }
-  .fact-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
-  .fact-box th, .fact-box td { padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  .fact-box th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .directory { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .directory .guide-card { background: var(--color-surface); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--color-border); }
-  .directory .guide-card h3 { margin: 0 0 0.5rem; font-family: var(--font-serif); font-size: 1.0625rem; color: var(--color-primary); }
-  .directory .guide-card p { margin: 0 0 0.85rem; font-size: 0.875rem; color: var(--color-text-light); line-height: 1.5; }
-  .guide-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .btn-guide, .btn-map { display: inline-flex; align-items: center; justify-content: center; min-height: 2.25rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 0.8125rem; }
-  .btn-guide { background: var(--color-primary); color: var(--color-background); }
-  .btn-map { border: 1px solid var(--color-primary); color: var(--color-primary); }
-  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-  .sibling-hub { background: var(--color-surface); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--color-border); }
-  .sibling-hub h3 { margin: 0 0 0.25rem; font-size: 1rem; font-family: var(--font-serif); }
-  .sibling-hub p { margin: 0; font-size: 0.8125rem; color: var(--color-text-light); }
-  [data-theme="dark"] .directory .guide-card, [data-theme="dark"] .sibling-hub { background: var(--color-surface); }
-</style>
-
-<article>
-  <div class="article-header">
-    <span class="stage1-badge">◆ Stage 1 Foundation</span>
-    <h1>{cluster.display_name} Cannabis Guide</h1>
-    <p class="subtitle">{cluster.lede}</p>
-    <div class="cluster-meta">
-      <span class="cluster-chip">{cluster.guide_count} guide references</span>
-      <span class="cluster-chip">{cluster.counties.length} counties</span>
-      {cluster.editorial_pilot && <span class="cluster-chip">Pilot hub — Stage 2</span>}
-    </div>
-  </div>
-
-  <Callout title="Stage 1 foundation stub" type="info">
-    <p style="margin: 0 0 0.5rem;">This page is the <strong>Stage 1 foundation</strong> for the {cluster.display_name} cannabis guide cluster. Stage 1 ships (1) the canonical registry below, (2) this directory layout, and (3) the verification trail. The full 2,000+ word editorial body + 5-FAQ FAQPage JSON-LD + primary-source citations are authored in <strong>Stage 2</strong> for the two pilot hubs (Greater Portland and Sebago Lakes, and Downeast, Acadia and Aroostook) and in Stage 3 for the remaining three clusters.</p>
-    <p style="margin: 0;">Cross-reference: <a href="/find-a-dispensary">/find-a-dispensary</a> now deep-links its region headings to the 5 hub pages, so this directory is reachable from every page in the same cluster.</p>
-  </Callout>
-
-  <section class="fact-box">
-    <h2>{cluster.display_name} — At a Glance</h2>
-    <table aria-label="Cluster overview">
-      <thead><tr><th scope="col">Field</th><th scope="col">Value</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Hub Slug</strong></td><td><code>/guides/{cluster.slug}</code></td></tr>
-        <tr><td><strong>Guide References</strong></td><td>{cluster.guide_count} (towns + operator profiles)</td></tr>
-        <tr><td><strong>Counties Covered</strong></td><td>{cluster.counties.join(', ')}</td></tr>
-        <tr><td><strong>Editorial Stage</strong></td><td>{cluster.editorial_pilot ? 'Stage 2 pilot' : 'Stage 3 roll-out'}</td></tr>
-        <tr><td><strong>Primary Source</strong></td><td><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV</a></td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Town directory — {cluster.display_name}</h2>
-    <p>Every guide reference below is part of the {cluster.display_name} cluster. Each card links to the published guide and a live map search.</p>
-    <div class="directory">
-      {cluster.guides.map((g) => (
-        <article class="guide-card">
-          <h3>{g.name}</h3>
-          <p>{g.summary}</p>
-          <div class="guide-actions">
-            <a href={g.href} class="btn-guide">Read guide</a>
-            <a href={g.mapUrl} class="btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <h2>Frequently asked questions</h2>
-    <Faq questions={stage2Faqs} />
-  </section>
-
-  <section>
-    <h2>Sibling regional hubs</h2>
-    <div class="directory">
-      {siblingClusters.map((sibling) => (
-        <article class="sibling-hub">
-          <h3><a href={sibling.hub_href}>{sibling.display_name}</a></h3>
-          <p>{sibling.guide_count} guides — {sibling.counties.join(', ')}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="further-reading">
-    <AutoRelated currentPath={'/guides/' + cluster.slug} currentTopics={['region', 'hub', 'market']} section="Regional Guides" limit={6} />
-  </section>
-
-  <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Stage 1 foundation stub registered <strong>2026-07-08</strong> against <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV</a> + Maine Dispensary Guide <a href="/guides/maine-cannabis-opt-in-tracker">Opt-In Tracker</a>. The Stage 2/3 editorial body is reviewed by <strong>Calvin Waters + Margaret Finch</strong> per the publisher-managed byline pattern (see <a href="/about/corrections">/about/corrections</a>). </span>
-    </div>
-  </section>
-
-  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This Stage 1 foundation stub is the navigation surface for the {cluster.display_name} cluster; the editorial body and 5-FAQ FAQPage JSON-LD land in Stage 2 (pilot hubs) and Stage 3 (remaining three). See <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">/about/authors</a> for the byline + reviewer pair responsible for the Stage 2/3 body content.</p>
+<article style="max-width: 760px; margin: 0 auto;">
+  <RegionHubShell cluster={cluster} clusterFaqs={clusterFaqs}>
+    <section style="margin-bottom: 2.5rem;">
+      <h2>{editorialStage} editorial body placeholder</h2>
+      <p>The 2,000+ word editorial body for the {cluster.display_name} cannabis guide cluster ships in {editorialStage} per <a href="/docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md">docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md</a>. {clusterLabel}. Author: {article.author}.</p>
+    </section>
+    {siblingClusters.map((sibling) => (
+      <article class="hub-sibling" slot="siblings">
+        <h3><a href={sibling.hub_href}>{sibling.display_name}</a></h3>
+        <p>{sibling.guide_count} guides — {sibling.counties.join(', ')}</p>
+      </article>
+    ))}
+    <AutoRelated slot="related" currentPath={'/guides/' + cluster.slug} currentTopics={['region', 'hub', 'market']} section="Regional Guides" limit={6} />
+  </RegionHubShell>
 </article>
-
-<script type="application/ld+json" set:html={stage2FaqJsonLd} is:inline></script>
 </Layout>
