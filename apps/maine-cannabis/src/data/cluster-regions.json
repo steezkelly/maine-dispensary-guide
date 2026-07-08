@@ -1,0 +1,895 @@
+{
+  "meta": {
+    "source": "Maine Dispensary Guide \u2014 town-cluster hub registry",
+    "as_of": "2026-07-08",
+    "last_updated": "2026-07-08",
+    "purpose": "Single source of truth for the 5 town-cluster hub pages. Both /find-a-dispensary and the 5 hub pages consume this file so the region/town lists never drift.",
+    "related_docs": [
+      "/home/steve/projects/maine-dispensary-guide/docs/TOWN_CLUSTER_RESEARCH_MEMO_2026-07-08.md"
+    ],
+    "total_clusters": 5,
+    "total_entries": 127,
+    "methodology": "Cluster definitions are the same 5 guideRegions[] in apps/maine-cannabis/src/pages/find-a-dispensary.astro. Each cluster carries its full guides[] list (deduped within cluster) so hub pages can render their town directory without re-parsing find-a-dispensary."
+  },
+  "clusters": [
+    {
+      "name": "Greater Portland and Sebago Lakes",
+      "display_name": "Greater Portland and Sebago Lakes",
+      "slug": "greater-portland-sebago-lakes-cannabis-guide",
+      "hub_href": "/guides/greater-portland-sebago-lakes-cannabis-guide",
+      "lede": "Hub for the Greater Portland metro, Sebago Lakes corridor, and west-of-Portland suburbs.",
+      "counties": [
+        "Cumberland",
+        "York (Sebago corridor overlap)"
+      ],
+      "key_towns": [
+        "Portland",
+        "South Portland",
+        "Westbrook",
+        "Scarborough",
+        "Windham"
+      ],
+      "guide_count": 18,
+      "editorial_pilot": true,
+      "guides": [
+        {
+          "name": "Portland",
+          "href": "/guides/portland-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Portland%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Portland."
+        },
+        {
+          "name": "South Portland",
+          "href": "/guides/south-portland-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=South%20Portland%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for South Portland."
+        },
+        {
+          "name": "Westbrook",
+          "href": "/guides/westbrook-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westbrook%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Westbrook."
+        },
+        {
+          "name": "Scarborough",
+          "href": "/guides/scarborough-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Scarborough%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Scarborough."
+        },
+        {
+          "name": "Windham",
+          "href": "/guides/windham-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Windham%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Windham."
+        },
+        {
+          "name": "Standish",
+          "href": "/guides/standish-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Standish%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Standish."
+        },
+        {
+          "name": "Raymond",
+          "href": "/guides/raymond-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Raymond%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Raymond."
+        },
+        {
+          "name": "Eclipse Cannabis Co. (Raymond)",
+          "href": "/guides/eclipse-cannabis-company",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Eclipse+Cannabis+Raymond+ME",
+          "summary": "Operator profile for Eclipse Cannabis Company, dual-location Maine operator with the main dispensary at 1259 Roosevelt Trail, Raymond, ME 04071."
+        },
+        {
+          "name": "Sebago",
+          "href": "/guides/sebago-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sebago%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Sebago."
+        },
+        {
+          "name": "Sebago Lakes Region",
+          "href": "/guides/sebago-lakes-region-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sebago%20Lakes%20Region%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Sebago Lakes Region."
+        },
+        {
+          "name": "Western Maine Lakes",
+          "href": "/guides/western-maine-lakes-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Western%20Maine%20Lakes%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Western Maine Lakes."
+        },
+        {
+          "name": "Gray",
+          "href": "/guides/gray-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Gray%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Gray."
+        },
+        {
+          "name": "Freeport",
+          "href": "/guides/freeport-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Freeport%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Freeport."
+        },
+        {
+          "name": "Casco",
+          "href": "/guides/casco-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Casco%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Casco."
+        },
+        {
+          "name": "Landrace Cannabis Co. (Casco)",
+          "href": "/guides/landrace-cannabis-casco",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Landrace+Cannabis+Casco+ME",
+          "summary": "Operator profile for Landrace Cannabis Co., adult-use dispensary at 325 Roosevelt Trail, Casco, ME 04015."
+        },
+        {
+          "name": "Naples",
+          "href": "/guides/naples-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Naples%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Naples."
+        },
+        {
+          "name": "Highbrow Cannabis (Windham)",
+          "href": "/guides/highbrow-cannabis",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Windham+ME+dispensary",
+          "summary": "Operator profile for Highbrow Cannabis (Windham), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        },
+        {
+          "name": "Lakewood Cannabis (Standish)",
+          "href": "/guides/lakewood-cannabis",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Standish+ME+dispensary",
+          "summary": "Operator profile for Lakewood Cannabis (Standish), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        }
+      ]
+    },
+    {
+      "name": "Southern Maine and York County",
+      "display_name": "Southern Maine and York County",
+      "slug": "southern-maine-york-county-cannabis-guide",
+      "hub_href": "/guides/southern-maine-york-county-cannabis-guide",
+      "lede": "Hub for the southern Maine coastline and York County inland communities.",
+      "counties": [
+        "York"
+      ],
+      "key_towns": [
+        "Biddeford",
+        "Saco",
+        "Sanford",
+        "Kennebunk",
+        "Kittery"
+      ],
+      "guide_count": 23,
+      "editorial_pilot": false,
+      "guides": [
+        {
+          "name": "Biddeford",
+          "href": "/guides/biddeford-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Biddeford%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Biddeford."
+        },
+        {
+          "name": "Saco",
+          "href": "/guides/saco-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Saco%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Saco."
+        },
+        {
+          "name": "Old Orchard Beach",
+          "href": "/guides/old-orchard-beach-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Old%20Orchard%20Beach%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Old Orchard Beach."
+        },
+        {
+          "name": "Sanford",
+          "href": "/guides/sanford-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sanford%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Sanford."
+        },
+        {
+          "name": "Kennebunk",
+          "href": "/guides/kennebunk-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Kennebunk%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Kennebunk."
+        },
+        {
+          "name": "Wells",
+          "href": "/guides/wells-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Wells%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Wells."
+        },
+        {
+          "name": "Ogunquit",
+          "href": "/guides/ogunquit-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ogunquit%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Ogunquit."
+        },
+        {
+          "name": "York",
+          "href": "/guides/york-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=York%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for York."
+        },
+        {
+          "name": "Kittery",
+          "href": "/guides/kittery-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Kittery%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Kittery."
+        },
+        {
+          "name": "Berwick",
+          "href": "/guides/berwick-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Berwick%2C%20ME%20dispensary",
+          "summary": "Three adult-use stores on the NH border serving the Dover-Rochester-Somersworth cross-state market."
+        },
+        {
+          "name": "Buxton",
+          "href": "/guides/buxton-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Buxton%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Buxton."
+        },
+        {
+          "name": "Limington",
+          "href": "/guides/limington-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Limington%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Limington."
+        },
+        {
+          "name": "Limerick",
+          "href": "/guides/limerick-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Limerick%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Limerick."
+        },
+        {
+          "name": "Founding Farmers (Limerick)",
+          "href": "/guides/founding-farmers-dispensary",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Founding+Farmers+Limerick+ME",
+          "summary": "Operator profile for Founding Farmers, the only dispensary currently operating in Limerick, ME."
+        },
+        {
+          "name": "Hidden Greens (Buxton)",
+          "href": "/guides/hidden-greens-dispensary",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hidden+Greens+Buxton+ME",
+          "summary": "Operator profile for Hidden Greens, a Maine medical cannabis dispensary at 370 Narragansett Trail, Buxton, ME 04093."
+        },
+        {
+          "name": "Alfred",
+          "href": "/guides/alfred-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Alfred%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Alfred."
+        },
+        {
+          "name": "Arundel",
+          "href": "/guides/arundel-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Arundel%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Arundel."
+        },
+        {
+          "name": "Kennebunkport",
+          "href": "/guides/kennebunkport-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Kennebunkport%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Kennebunkport."
+        },
+        {
+          "name": "Hollis",
+          "href": "/guides/hollis-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hollis%2C%20ME%20dispensary",
+          "summary": "Medical cannabis access, opt-in status, and nearby adult-use options for Hollis."
+        },
+        {
+          "name": "Lyman",
+          "href": "/guides/lyman-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lyman%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lyman."
+        },
+        {
+          "name": "Waterboro",
+          "href": "/guides/waterboro-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Waterboro%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Waterboro."
+        },
+        {
+          "name": "Eliot",
+          "href": "/guides/eliot-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Eliot%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Eliot, Maine."
+        },
+        {
+          "name": "Lebanon",
+          "href": "/guides/lebanon-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lebanon%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lebanon, Maine."
+        }
+      ]
+    },
+    {
+      "name": "Central and Western Maine",
+      "display_name": "Central and Western Maine",
+      "slug": "central-western-maine-cannabis-guide",
+      "hub_href": "/guides/central-western-maine-cannabis-guide",
+      "lede": "Hub for central Maine cities and the western mountain and lakes region.",
+      "counties": [
+        "Androscoggin",
+        "Kennebec",
+        "Somerset",
+        "Oxford",
+        "Franklin"
+      ],
+      "key_towns": [
+        "Lewiston",
+        "Auburn",
+        "Augusta",
+        "Waterville",
+        "Farmington"
+      ],
+      "guide_count": 38,
+      "editorial_pilot": false,
+      "guides": [
+        {
+          "name": "Auburn",
+          "href": "/guides/auburn-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Auburn%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Auburn."
+        },
+        {
+          "name": "Lewiston",
+          "href": "/guides/lewiston-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lewiston%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lewiston."
+        },
+        {
+          "name": "Augusta",
+          "href": "/guides/augusta-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Augusta%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Augusta."
+        },
+        {
+          "name": "Waterville",
+          "href": "/guides/waterville-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Waterville%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Waterville."
+        },
+        {
+          "name": "Gardiner",
+          "href": "/guides/gardiner-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Gardiner%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Gardiner."
+        },
+        {
+          "name": "Healing Community MEDCo (Gardiner)",
+          "href": "/guides/healing-community-medco-gardiner",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Healing+Community+MEDCo+Gardiner+ME",
+          "summary": "Operator profile for The Healing Community MEDCo, medical cannabis dispensary at 189 Water St, Gardiner, ME 04345."
+        },
+        {
+          "name": "Farmington",
+          "href": "/guides/farmington-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Farmington%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Farmington."
+        },
+        {
+          "name": "Bethel",
+          "href": "/guides/bethel-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bethel%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Bethel."
+        },
+        {
+          "name": "Bridgton",
+          "href": "/guides/bridgton-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bridgton%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Bridgton."
+        },
+        {
+          "name": "Fryeburg",
+          "href": "/guides/fryeburg-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fryeburg%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Fryeburg."
+        },
+        {
+          "name": "White Mountain Craft Cannabis (Fryeburg)",
+          "href": "/guides/white-mountain-craft-cannabis",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=White+Mountain+Craft+Cannabis+Fryeburg+ME",
+          "summary": "Operator profile for White Mountain Craft Cannabis, the first and only recreational dispensary in Fryeburg and the Mount Washington Valley."
+        },
+        {
+          "name": "The Glass Cook (Fryeburg)",
+          "href": "/guides/the-glass-cook-fryeburg",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=The+Glass+Cook+Fryeburg+ME",
+          "summary": "Operator profile for The Glass Cook, Maine medical cannabis dispensary with on-site glassblowing studio and the Cured cannabis kitchen in Fryeburg."
+        },
+        {
+          "name": "Brownfield",
+          "href": "/guides/brownfield-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brownfield%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Brownfield."
+        },
+        {
+          "name": "Baldwin",
+          "href": "/guides/baldwin-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Baldwin%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Baldwin."
+        },
+        {
+          "name": "Cornish",
+          "href": "/guides/cornish-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Cornish%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Cornish."
+        },
+        {
+          "name": "Hiram",
+          "href": "/guides/hiram-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hiram%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Hiram."
+        },
+        {
+          "name": "Parsonsfield",
+          "href": "/guides/parsonsfield-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Parsonsfield%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Parsonsfield."
+        },
+        {
+          "name": "Porter",
+          "href": "/guides/porter-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Porter%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Porter."
+        },
+        {
+          "name": "Harrison",
+          "href": "/guides/harrison-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harrison%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Harrison."
+        },
+        {
+          "name": "Denmark",
+          "href": "/guides/denmark-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Denmark%2C%20ME%20dispensary",
+          "summary": "Opt-out status, nearby Fryeburg access, and local cannabis context for Denmark."
+        },
+        {
+          "name": "Lovell",
+          "href": "/guides/lovell-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lovell%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lovell."
+        },
+        {
+          "name": "Norway",
+          "href": "/guides/norway-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Norway%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Norway."
+        },
+        {
+          "name": "Waterford",
+          "href": "/guides/waterford-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Waterford%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Waterford."
+        },
+        {
+          "name": "Peru",
+          "href": "/guides/peru-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Peru%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Peru, Maine."
+        },
+        {
+          "name": "West Paris",
+          "href": "/guides/west-paris-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=West%20Paris%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for West Paris, Maine."
+        },
+        {
+          "name": "Stratton",
+          "href": "/guides/stratton-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Stratton%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Stratton, Maine."
+        },
+        {
+          "name": "Carrabassett Valley",
+          "href": "/guides/carrabassett-valley-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Carrabassett%20Valley%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Carrabassett Valley, Maine."
+        },
+        {
+          "name": "Detroit",
+          "href": "/guides/detroit-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Detroit%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Detroit, Maine."
+        },
+        {
+          "name": "Fairfield",
+          "href": "/guides/fairfield-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fairfield%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Fairfield, Maine."
+        },
+        {
+          "name": "Hallowell",
+          "href": "/guides/hallowell-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hallowell%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Hallowell, Maine."
+        },
+        {
+          "name": "Manchester",
+          "href": "/guides/manchester-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Manchester%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Manchester, Maine."
+        },
+        {
+          "name": "Mechanic Falls",
+          "href": "/guides/mechanic-falls-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Mechanic%20Falls%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Mechanic Falls, Maine."
+        },
+        {
+          "name": "Newry",
+          "href": "/guides/newry-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Newry%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Newry, Maine."
+        },
+        {
+          "name": "Oxford",
+          "href": "/guides/oxford-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Oxford%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Oxford, Maine."
+        },
+        {
+          "name": "Poland",
+          "href": "/guides/poland-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Poland%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Poland, Maine."
+        },
+        {
+          "name": "Turner",
+          "href": "/guides/turner-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Turner%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Turner, Maine."
+        },
+        {
+          "name": "Great Atlantic Puffin Company (Fryeburg)",
+          "href": "/guides/great-atlantic-puffin-company",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fryeburg+ME+dispensary",
+          "summary": "Operator profile for Great Atlantic Puffin Company (Fryeburg), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        },
+        {
+          "name": "Above All Greenery (Fryeburg)",
+          "href": "/guides/above-all-greenery-dispensary",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fryeburg+ME+dispensary",
+          "summary": "Operator profile for Above All Greenery (Fryeburg), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        }
+      ]
+    },
+    {
+      "name": "Midcoast, Waldo and Northern Maine",
+      "display_name": "Midcoast, Waldo and Northern Maine",
+      "slug": "midcoast-waldo-northern-maine-cannabis-guide",
+      "hub_href": "/guides/midcoast-waldo-northern-maine-cannabis-guide",
+      "lede": "Hub for the Midcoast peninsula, Penobscot Bay, and the Bangor metro interior.",
+      "counties": [
+        "Sagadahoc",
+        "Lincoln",
+        "Knox",
+        "Waldo",
+        "Penobscot (Bangor metro)"
+      ],
+      "key_towns": [
+        "Brunswick",
+        "Bath",
+        "Belfast",
+        "Rockland",
+        "Bangor"
+      ],
+      "guide_count": 24,
+      "editorial_pilot": false,
+      "guides": [
+        {
+          "name": "Bath",
+          "href": "/guides/bath-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bath%2C%20ME%20dispensary",
+          "summary": "Brothers Cannabis and the midcoast retail market, with connections to the Brunswick-Bath-Topsham corridor."
+        },
+        {
+          "name": "Brunswick",
+          "href": "/guides/brunswick-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brunswick%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Brunswick."
+        },
+        {
+          "name": "Belfast",
+          "href": "/guides/belfast-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Belfast%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Belfast."
+        },
+        {
+          "name": "Boothbay",
+          "href": "/guides/boothbay-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Boothbay%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Boothbay."
+        },
+        {
+          "name": "Camden",
+          "href": "/guides/camden-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Camden%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Camden."
+        },
+        {
+          "name": "Damariscotta",
+          "href": "/guides/damariscotta-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Damariscotta%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Damariscotta."
+        },
+        {
+          "name": "Rockland",
+          "href": "/guides/rockland-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rockland%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Rockland."
+        },
+        {
+          "name": "Lisbon",
+          "href": "/guides/lisbon-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lisbon%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lisbon."
+        },
+        {
+          "name": "Freedom",
+          "href": "/guides/freedom-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Freedom%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Freedom."
+        },
+        {
+          "name": "Bangor",
+          "href": "/guides/bangor-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bangor%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Bangor."
+        },
+        {
+          "name": "Brewer",
+          "href": "/guides/brewer-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brewer%2C%20ME%20dispensary",
+          "summary": "Brothers Cannabis and the Bangor metro retail market across the Penobscot River."
+        },
+        {
+          "name": "Orono",
+          "href": "/guides/orono-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Orono%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Orono."
+        },
+        {
+          "name": "Newport",
+          "href": "/guides/newport-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Newport%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Newport."
+        },
+        {
+          "name": "Dexter",
+          "href": "/guides/dexter-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Dexter%2C%20ME%20dispensary",
+          "summary": "Penobscot County interior town with Puffers Place medical dispensary plus on-site 420-friendly lakefront rental on Puffers Pond. Sebasticook River corridor, 45 min west of Bangor."
+        },
+        {
+          "name": "Lincoln",
+          "href": "/guides/lincoln-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lincoln%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Lincoln."
+        },
+        {
+          "name": "Just Baked Maine (Lincoln)",
+          "href": "/guides/just-baked-maine-lincoln",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Just+Baked+Lincoln+ME",
+          "summary": "Operator profile for Just Baked Maine, family-owned adult-use dispensary at 115 West Broadway, Lincoln, ME 04457."
+        },
+        {
+          "name": "Millinocket",
+          "href": "/guides/millinocket-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Millinocket%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Millinocket."
+        },
+        {
+          "name": "Northport",
+          "href": "/guides/northport-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Northport%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Northport, Maine."
+        },
+        {
+          "name": "Thomaston",
+          "href": "/guides/thomaston-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Thomaston%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Thomaston, Maine."
+        },
+        {
+          "name": "Warren",
+          "href": "/guides/warren-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Warren%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Warren, Maine."
+        },
+        {
+          "name": "Wiscasset",
+          "href": "/guides/wiscasset-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Wiscasset%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Wiscasset, Maine."
+        },
+        {
+          "name": "Woolwich",
+          "href": "/guides/woolwich-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Woolwich%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Woolwich, Maine."
+        },
+        {
+          "name": "Bayside Bud Shack (Belfast)",
+          "href": "/guides/bayside-bud-shack",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Belfast+ME+dispensary",
+          "summary": "Operator profile for Bayside Bud Shack (Belfast), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        },
+        {
+          "name": "Botany Cannabis (Rockland)",
+          "href": "/guides/botany-cannabis",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rockland+ME+dispensary",
+          "summary": "Operator profile for Botany Cannabis (Rockland), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        }
+      ]
+    },
+    {
+      "name": "Downeast, Acadia and Aroostook",
+      "display_name": "Downeast, Acadia and Aroostook",
+      "slug": "downeast-acadia-aroostook-cannabis-guide",
+      "hub_href": "/guides/downeast-acadia-aroostook-cannabis-guide",
+      "lede": "Hub for coastal Downeast, Acadia-region tourism, and Aroostook County.",
+      "counties": [
+        "Hancock",
+        "Washington",
+        "Piscataquis",
+        "Aroostook"
+      ],
+      "key_towns": [
+        "Bar Harbor",
+        "Ellsworth",
+        "Presque Isle",
+        "Calais",
+        "Houlton"
+      ],
+      "guide_count": 24,
+      "editorial_pilot": true,
+      "guides": [
+        {
+          "name": "Bar Harbor",
+          "href": "/guides/bar-harbor-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bar%20Harbor%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Bar Harbor and the Mount Desert Island corridor."
+        },
+        {
+          "name": "Ellsworth",
+          "href": "/guides/ellsworth-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ellsworth%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Ellsworth, the gateway to Acadia."
+        },
+        {
+          "name": "Dover-Foxcroft",
+          "href": "/guides/dover-foxcroft-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Dover-Foxcroft%2C%20ME%20dispensary",
+          "summary": "Local dispensary access and market notes for Dover-Foxcroft and the Piscataquis highland region."
+        },
+        {
+          "name": "Skowhegan",
+          "href": "/guides/skowhegan-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Skowhegan%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Skowhegan and Somerset County."
+        },
+        {
+          "name": "Presque Isle",
+          "href": "/guides/presque-isle-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Presque+Isle%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Presque Isle and central Aroostook."
+        },
+        {
+          "name": "Caribou",
+          "href": "/guides/caribou-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Caribou%2C%20ME%20dispensary",
+          "summary": "Aroostook County's largest cannabis market with 5 dispensary locations. Serves the central Aroostook region and the St. John Valley."
+        },
+        {
+          "name": "Milo",
+          "href": "/guides/milo-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Milo%2C%20ME%20dispensary",
+          "summary": "Piscataquis County interior town with GreenLife Recreational Dispensary at 19 Park Street (opened April 2023). 15 min south of Dover-Foxcroft."
+        },
+        {
+          "name": "Houlton",
+          "href": "/guides/houlton-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Houlton%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Houlton and southern Aroostook."
+        },
+        {
+          "name": "Calais",
+          "href": "/guides/calais-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Calais%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Calais and the St. Croix Valley."
+        },
+        {
+          "name": "Machias",
+          "href": "/guides/machias-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Machias%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Machias and Washington County."
+        },
+        {
+          "name": "Chelsea",
+          "href": "/guides/chelsea-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Chelsea%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Chelsea, Maine."
+        },
+        {
+          "name": "Winslow",
+          "href": "/guides/winslow-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Winslow%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Winslow, Maine."
+        },
+        {
+          "name": "Solon",
+          "href": "/guides/solon-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Solon%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Solon, Maine."
+        },
+        {
+          "name": "Rome",
+          "href": "/guides/rome-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rome%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Rome, Maine."
+        },
+        {
+          "name": "Somerville",
+          "href": "/guides/somerville-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Somerville%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Somerville, Maine."
+        },
+        {
+          "name": "Columbia",
+          "href": "/guides/columbia-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Columbia%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Columbia, Maine."
+        },
+        {
+          "name": "Baring Plantation",
+          "href": "/guides/baring-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Baring%20Plantation%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Baring Plantation, Maine."
+        },
+        {
+          "name": "Guilford",
+          "href": "/guides/guilford-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Guilford%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Guilford, Maine."
+        },
+        {
+          "name": "Greenville",
+          "href": "/guides/greenville-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Greenville%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Greenville, Maine."
+        },
+        {
+          "name": "Medway",
+          "href": "/guides/medway-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Medway%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Medway, Maine."
+        },
+        {
+          "name": "Bucksport",
+          "href": "/guides/bucksport-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bucksport%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Bucksport, Maine."
+        },
+        {
+          "name": "Southwest Harbor",
+          "href": "/guides/southwest-harbor-dispensary-guide",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Southwest%20Harbor%2C%20ME%20dispensary",
+          "summary": "Local dispensary options, market notes, and operator context for Southwest Harbor, Maine."
+        },
+        {
+          "name": "Lifted Cannabis Maine (Houlton)",
+          "href": "/guides/lifted-cannabis-maine",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Houlton+ME+dispensary",
+          "summary": "Operator profile for Lifted Cannabis Maine (Houlton), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        },
+        {
+          "name": "420 Mules (Bar Harbor)",
+          "href": "/guides/420-mules-bar-harbor",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bar+Harbor+ME+dispensary",
+          "summary": "Operator profile for 420 Mules (Bar Harbor), Maine cannabis dispensary. See our detailed guide for hours, address, and product information."
+        }
+      ]
+    }
+  ]
+}

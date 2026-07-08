@@ -2,7 +2,16 @@
 import AutoRelated from '../components/AutoRelated.astro';
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import clusterRegions from '../data/cluster-regions.json';
 
+// hubByName: map cluster display_name -> hub_href from cluster-regions.json
+// so /find-a-dispensary can deep-link each region heading to the new Stage 1
+// hub stub. The hardcoded guideRegions[] below stays the rendered list of
+// town/operator cards; cluster-regions.json is the canonical registry that
+// both this page and the 5 hubs consume.
+const hubByName = Object.fromEntries(
+  clusterRegions.clusters.map((c) => [c.name, c.hub_href]),
+);
 const guideRegions = [
   {
     "name": "Greater Portland and Sebago Lakes",
@@ -985,7 +994,18 @@ const directoryJsonLd = {
   <div class="region-directory">
     {guideRegions.map((region) => (
       <section class="region-section" aria-labelledby={`region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
-        <h2 id={`region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{region.name}</h2>
+        <h2 id={`region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+          {hubByName[region.name] ? (
+            <a href={hubByName[region.name]} style="color: var(--color-primary); text-decoration: none;">{region.name} ◆</a>
+          ) : (
+            region.name
+          )}
+        </h2>
+        {hubByName[region.name] && (
+          <p style="margin: -0.75rem 0 1.25rem; font-size: 0.875rem; color: var(--color-text-light);">
+            Browse the <a href={hubByName[region.name]} style="color: var(--color-primary); text-decoration: underline;">{region.name} regional hub</a> for the canonical directory, opt-in county breakdown, and (in Stage 2/3) the 2,000+ word editorial body.
+          </p>
+        )}
         <div class="guide-grid">
           {region.guides.map((guide) => (
             <article class="guide-card">
