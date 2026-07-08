@@ -392,7 +392,7 @@ function checkCSSBuildWarnings() {
 }
 
 
-// ─── Check 10: trailing-slash internal links ──────────────────────────────────
+// ─── Check 10: trailing-slash internal links ───────────────────────────────
 // The site config uses trailingSlash: 'never'. Source links to /path/ create
 // avoidable 3XX redirects and crawl noise.
 function checkTrailingSlashInternalLinks() {
@@ -401,7 +401,7 @@ function checkTrailingSlashInternalLinks() {
   // JS code that uses path strings inside .includes() / .test() / RegExp()
   // is a false-positive source for the regex above. Skip lines whose
   // content contains a JS string-method call on the path literal.
-  const jsContextRe = /\.(?:includes|test|match|exec|search|indexOf)\s*\(|\bnew\s+RegExp\s*\(|\/\//;
+  const jsContextRe = /\.(?:includes|test|match|exec|search|indexOf|concat)\s*\(|new\s+RegExp\s*\(|`[^`]*\$\{|\/\//;
   const skipPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
   walk(ROOT).forEach(file => {
@@ -416,6 +416,16 @@ function checkTrailingSlashInternalLinks() {
       // Skip lines that are JS code, not link hrefs.
       const lineNum = text.slice(0, m.index).split(/\r?\n/).length;
       const line = lines[lineNum - 1] || '';
+      // Sprint 78ab: also skip JSX string-concat expressions like
+      // `currentPath={'/guides/' + cluster.slug}`. The static `/guides/` is
+      // part of a JS expression that produces `/guides/{slug}` at render-time —
+      // no trailing slash in the rendered output. Detect by:
+      //   - the line contains `<` (JSX element) AND
+      //   - the static part is followed by `+ ` (string concat) within the same attr
+      // Most general heuristic: if the line contains `+ cluster` or `+ slug` or `+ slug)`
+      // on the same logical line as our match, it's a JSX expression, not a route literal.
+      const jsxStringConcatExpr = /\{\s*['"`][^'"`]*['"`]\s*\+/;
+      if (jsxStringConcatExpr.test(line)) continue;
       if (jsContextRe.test(line)) continue;
       const rel = path.relative(ROOT, file);
       results.push(`${rel}:${lineNum}: trailing-slash internal route string → ${href}`);

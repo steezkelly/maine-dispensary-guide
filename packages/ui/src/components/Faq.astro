@@ -13,14 +13,21 @@ interface Props {
   faqs?: FAQItem[];
   items?: FAQItem[];
   questions?: ShortFAQItem[];
+  // Sprint 78ab: when `true`, suppress the auto-emitted FAQPage JSON-LD.
+  // Use this when a page emits its own `<script type="application/ld+json">`
+  // block in frontmatter to avoid duplicate schema. Before this flag,
+  // pages that combined `<Faq faqs={...} />` with `faqPageSchema` const +
+  // matching `<script>` produced two identical FAQPage scripts in dist/.
+  // Default `false` preserves backward-compat for callers that relied on
+  // the package to emit schema (107 pages).
+  withoutSchema?: boolean;
 }
 
-const { faqs, items, questions } = Astro.props;
+const { faqs, items, questions, withoutSchema = false } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a })) ?? [];
 
 const siteUrl = "https://mainedispensaryguide.com";
-
-const faqSchema = {
+const faqSchema = normalizedFaqs.length === 0 ? null : {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": normalizedFaqs.map(faq => ({
@@ -34,7 +41,7 @@ const faqSchema = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+{!withoutSchema && faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
 <div class="faq-schema-wrapper">
   <slot />
