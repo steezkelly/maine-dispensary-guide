@@ -13,17 +13,22 @@ The Maine Dispensary Guide runs two patterns for lead capture, split by use case
 
 Purelymail catch-all routes `mainedispensaryguide.com` (MX verified 2026-07-13) → `steezkelly@purelymail.com`. All leads — Formspree and mailto: — end up in the same operator inbox.
 
-## Operator-side evidence-of-trust gap (Stage 1 carry-forward)
+## Operator-side evidence-of-trust gap (Stage 1 RESOLVED 2026-07-08)
 
-The 2026-07-08 lead-magnet research audit (`docs/research/lead-magnet-research-memo-2026-07-08.md`) surfaced a YMYL reputation risk that this SOP cannot fix and must call out:
+The 2026-07-08 lead-magnet research audit (`docs/research/lead-magnet-research-memo-2026-07-08.md`) surfaced a YMYL reputation risk. **All three broken promises were fixed** by `scripts/build/generate-{roadmap,metrc-checklist,compliance-assessment}-pdf.py` and shipped in commit `1f20d199`:
 
-- `/download-checklist` advertises a "**40-page Maine Dispensary Roadmap**" — but no PDF on disk matches. The mailto: funnel is dead-ended: lead captured → Steve has no asset → Steve loses operator trust.
-- `maine-metrc-reconciliation-checklist.pdf` (1.3 KB) is a placeholder file but the page promises 24 checklist items + log sheets.
-- `maine-dispensary-compliance-self-assessment.pdf` (1.6 KB) is a placeholder file but the page promises 88 items across 8 domains + 3 SOP templates.
+- `/download-checklist` advertises a "12-page Maine Dispensary Roadmap" — `maine-dispensary-roadmap-2026.pdf` now exists with 11 pages of primary-source-anchored content (40-page promise was downscoped to 12 per the research memo's recommendation).
+- `maine-metrc-reconciliation-checklist.pdf` (was 1.3 KB stub) now ships with 24 numbered items across daily + weekly + monthly cadences.
+- `maine-dispensary-compliance-self-assessment.pdf` (was 1.6 KB stub) now ships with 88 items × 8 domains.
 
-**Stop-shipping rule:** until Stage 1 ships the real PDF assets, do not promote the affected pages in any external channel (backlink outreach, social, paid traffic). The 2026-07-07 backlink campaign did not link to these 3 dead-ending pages — that was fortunate. Future campaigns must audit the `/downloads/*` asset before linking.
+**Stop-shipping rule:** RESOLVED. The 2026-07-07 backlink campaign did not link to these pages — that was fortunate. **Today's external outreach can safely promote all 3 download pages.** Future campaigns must audit the `/downloads/*` asset before linking (a smoke-200 check on the PDF URL is the canonical guard).
 
-Session-prompt to fix this in a dedicated Stage 1 sprint: `docs/session-handoff-tokens/lead-magnet-stage1-prompt.md`.
+**Stage 2 carry-forward (NOT in `1f20d199`):**
+- Add `LeadMailtoForm` to `/download/metrc-reconciliation-checklist` and `/download/compliance-self-assessment` (currently no-form, zero lead capture per the gap analysis).
+- Remove "or download without subscribing" escape hatch on the 3 B2B pages.
+- Update docs to advertise the new author byline (Calvin Waters) on these pages.
+
+Toolchain: `python3 scripts/build/generate-{name}-pdf.py` regenerates each PDF from source. Build matches the existing first-timer PDF builder at `scripts/build/generate-first-timer-pdf.py`.
 
 ## Mailto: funnel (PDF gates)
 
