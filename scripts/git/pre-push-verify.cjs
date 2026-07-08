@@ -27,6 +27,10 @@
  *   5  smoke-img-200: a page references an image that 404s
  *   6  sitemap-postprocess: a sitemap unit/integration assertion fails
  *   7  docs-vs-code: a doc claims a check runs that isn't wired in CI or the pre-push gate
+ *   8  compressed-frontmatter: a .astro page imports AutoRelated outside its frontmatter fence
+ *   9  hero-image-naming: a hero/infographic file uses a Layout-incompatible suffix
+ *      (e.g. -1280x720.jpg) — the bug class closed by commit cff15405 on
+ *      2026-07-06. Re-introduction guard (Pass 9); see scripts/image/check-hero-naming.cjs.
  *
  * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
  * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
@@ -49,7 +53,7 @@
  * of 2026-07-13 — bundled with smoke-200 behind --with-smoke.
  *
  * Usage:
- *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter
+ *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
  *   node scripts/git/pre-push-verify.cjs --with-smoke           # add smoke-200 + smoke-img-200 against production
  *   node scripts/git/pre-push-verify.cjs --ref=<ref>            # checks commits <ref>..HEAD
  *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
@@ -438,6 +442,39 @@ function compressedFrontmatterCheck() {
     return { ok: false };
 }
 
+function heroImageNamingCheck() {
+    // Pass 9: assert that no hero/infographic file uses a Layout-incompatible
+    // suffix (e.g. -1280x720.jpg, -1280w.jpg). Layout.astro lines 101-105 derive
+    // the 5 srcset variants purely by string-replace of the trailing `.jpg`,
+    // so files with a dimension-suffix silently produce 404 srcset URLs that
+    // a build-time check can't catch.
+    //
+    // The 2026-07-06 COA bug (commit cff15405) was 6 broken srcset refs from a
+    // single dimension-suffix upload — this guard makes that class impossible
+    // to re-introduce via a plain `git add` upload. Catches the bad pattern at
+    // commit time, not at production-smoke time.
+    const lintScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'image', 'check-hero-naming.cjs');
+    if (!fs.existsSync(lintScript)) {
+        log('warn', `check-hero-naming.cjs not found at ${lintScript} — skipping`);
+        return { ok: true };
+    }
+    log('info', `hero-image-naming check (Pass 9)…`);
+    const res = spawnSync('node', [lintScript], {
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 30_000,
+    });
+    const out = ((res.stdout || '') + (res.stderr || '')).trim();
+    const tail = out.split('\n').slice(-15).join('\n');
+    if (res.status === 0) {
+        log('ok', 'hero-image-naming: no Layout-incompatible suffixes');
+        return { ok: true };
+    }
+    log('err', `hero-image-naming: at least one hero/infographic file uses a bad suffix — push blocked.`);
+    if (tail) console.log(tail);
+    return { ok: false };
+}
+
 function killOrphanedTsServers() {
   // `npx astro check` from apps/maine-cannabis spawns a TypeScript LSP
   // (tsserver.js) that does not always exit cleanly when the parent shell
@@ -569,6 +606,13 @@ function main() {
         if (!cf.ok) process.exit(8);
     } else {
         log('info', 'compressed-frontmatter skipped (--skip-compressed-frontmatter)');
+    }
+
+    if (!args.includes('--skip-hero-image-naming')) {
+        const hin = heroImageNamingCheck();
+        if (!hin.ok) process.exit(9);
+    } else {
+        log('info', 'hero-image-naming skipped (--skip-hero-image-naming)');
     }
 
     log('ok', 'pre-push verify: clean. Proceed with push.');

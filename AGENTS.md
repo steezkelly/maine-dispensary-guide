@@ -33,7 +33,7 @@ The right verify pattern is one canonical command per stage, not "run all the th
 
 ```bash
 # ITERATION — fast, no network. Use between every commit.
-npm run verify:iterate               # esbuild parse + filtered astro check + sitemap-postprocess + docs-vs-code + compressed-frontmatter
+npm run verify:iterate               # esbuild parse + filtered astro check + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
                                      # (~10-15s, no production URL hits)
 npm run verify:iterate -- --fast-only  # sub-second parse-only check (during a single edit session)
 
