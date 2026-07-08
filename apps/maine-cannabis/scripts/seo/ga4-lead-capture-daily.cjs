@@ -94,11 +94,31 @@ print(creds.token)
 `;
 
 function mintToken() {
-    // Run python with our venv; print the Bearer token on stdout
-    const py = process.env.PYTHON || 'python3';
-    const res = execSync(`"${py}" -c "${TOKEN_SCRIPT.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`,
-        { encoding: 'utf8', timeout: 30_000, shell: '/bin/bash' });
-    return res.trim().split('\n').pop().trim();
+    // Write the Python helper to a temp file and run it. Avoids the multi-layer
+    // bash-quoting problem with passing inline Python through `bash -lc` —
+    // newlines and double quotes get double-escaped and the resulting `python3 -c`
+    // payload becomes invalid Python. Single-file exec + read stdout.
+    const os = require('os');
+    const tmp = path.join(os.tmpdir(), `ga4-mint-${process.pid}-${Date.now()}.py`);
+    fs.writeFileSync(tmp, TOKEN_SCRIPT, { mode: 0o600 });
+    try {
+        // Prefer the Hermes shared venv (has google-auth installed for GSC +
+        // GA4). Fall back to system python3 (will surface a ModuleNotFoundError
+        // if the dependency isn't installed there; that's the operator signal
+        // to install it via `pip install google-auth` into the active env).
+        const py = process.env.PYTHON ||
+            (fs.existsSync('/home/steve/.local/share/hermes-cli-tools/venv/bin/python3')
+                ? '/home/steve/.local/share/hermes-cli-tools/venv/bin/python3'
+                : 'python3');
+        const res = execSync(`"${py}" "${tmp}"`, {
+            encoding: 'utf8',
+            timeout: 30_000,
+            shell: '/bin/bash',
+        });
+        return res.trim().split('\n').pop().trim();
+    } finally {
+        try { fs.unlinkSync(tmp); } catch { /* best-effort cleanup */ }
+    }
 }
 
 async function ga4Query(token, body) {
@@ -155,7 +175,10 @@ async function main() {
                 },
             },
         },
-        rowLimit: 5000,
+        // GA4 Data API v1beta: the correct field is `limit` (not `rowLimit`).
+        // GA4 returns 400 INVALID_ARGUMENT for `Unknown name "rowLimit"`.
+        // Field is optional; defaults to 10,000 rows.
+        limit: 5000,
     };
 
     let report;
