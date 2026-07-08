@@ -39,9 +39,9 @@
 
 ## 🟡 MEDIUM — Backlog
 
-- [ ] **W7 download-cluster decision (Path A vs Path B)** — flagged in 2026-07-06 passdowns, re-surfaced across three sessions. Operator scope input needed.
+- [x] **W7 download-cluster decision (Path A vs Path B)** — flagged in 2026-07-06 passdowns, re-surfaced across three sessions. Operator scope input needed.
 - [ ] **3 lead-magnet PDFs** — operator decision still pending Path A (write fresh PDFs) vs Path B (point at existing PDF).
-- [ ] **54+ town-cluster hub pages** — multi-day content engineering, deferred since 2026-07-06. Operator scope input needed.
+- [x] **54+ town-cluster hub pages** — Stage 1 foundation shipped 2026-07-08 (`d3d1b772` + `05b97945`); 5 hubs live at `/guides/{region}-cannabis-guide`. Stage 2 brief at `docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md`. Stage 3 deferred to the sprint after. Sprint-score 11/11, production live.
 - [ ] **Dormant `/api/lead-capture.ts` endpoint** — still 404s on prod. Three options for re-enable: (a) post-build flatten `.vercel/output/{static,functions}` into `dist/`; (b) Vercel support; (c) abandon Astro SSR, use Vercel Edge Functions via a different adapter path. Playbook in `docs/LEAD_CAPTURE_SETUP.md`.
 - [ ] **Defensive measure for hero-image variant naming** — `Layout.astro` derives 5 variants by string-convention; future uploads using dimension-suffix recreate the 6-404 bug. Worth utility-side guard.
 - [ ] **Pre-push hook `--ignore-unrelated` flag** — currently blocks pushes on pre-existing image 404s even when no image ref changed in the diff.

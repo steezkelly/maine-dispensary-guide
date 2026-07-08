@@ -3,7 +3,45 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-06 EDT (third session — Tier 1.2 Build & Deploy shape added to AGENTS.md)**
+|**Last updated: 2026-07-08 EDT (fourth session — Stage 1 town-cluster hub foundation shipped)**
+
+## 📋 TOWN-CLUSTER HUB STAGE 1 FOUNDATION (Jul 8, 2026 EDT) — 5 hub stubs + canonical registry live
+
+- **Why:** The "54+ town-cluster hub pages" carry-forward flagged in 2026-07-06 passdowns (and re-surfaced in `project-todos.md`) was the longest-running content-engineering debt on the project. Per `docs/TOWN_CLUSTER_RESEARCH_MEMO_2026-07-08.md`, the only interpretation that survives Google's March 2026 scaled-content / doorway spam update is **5 rich regional hubs, not 54+ thin templated pages**.
+- **What shipped (2 commits on origin/main, `d3d1b772` + `05b97945`):**
+  - `apps/maine-cannabis/src/data/cluster-regions.json` (NEW, ~150 lines) — single source of truth for the 5 hubs. Carries per-cluster: name, slug, hub_href, lede, counties covered, key_towns, guide_count (18/23/38/24/24 = 127 entries total), editorial_pilot flag, and the full guides[] list deduped within cluster. Both `/find-a-dispensary` and the 5 hub pages consume this file so the regions and town lists never drift.
+  - 5 stub `.astro` files in `apps/maine-cannabis/src/pages/guides/`:
+    - `greater-portland-sebago-lakes-cannabis-guide.astro` (18 guides, Calvin Waters byline — Stage 2 pilot)
+    - `downeast-acadia-aroostook-cannabis-guide.astro` (24 guides, Eliot Nash byline — Stage 2 pilot)
+    - `southern-maine-york-county-cannabis-guide.astro` (23 guides, Eliot Nash byline — Stage 3)
+    - `central-western-maine-cannabis-guide.astro` (38 guides, Eliot Nash byline — Stage 3)
+    - `midcoast-waldo-northern-maine-cannabis-guide.astro` (24 guides, Eliot Nash byline — Stage 3)
+  - `apps/maine-cannabis/src/pages/find-a-dispensary.astro` — imports `clusterRegions`, builds `hubByName` map (cluster name → hub_href), replaces the 5 region `<h2>` elements with deep-links to the new hubs and adds a "Browse the [Region] regional hub →" link under each region heading. The hardcoded `guideRegions[]` data stays the rendered list of town/operator cards; the cluster-regions.json registry is the canonical source both this page and the 5 hubs consume.
+  - `docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md` (NEW, ~10.7K) — full Stage 2 brief for the next content-eng sprint: per-cluster primary-source checklists, editorial shape suggestions, hard bars (2,000+ word body, 5-FAQ FAQPage JSON-LD, 5+ primary sources, 5+ outbound links, 1+ back-link per town), and Stage 3 roll-out playbook.
+  - `apps/maine-cannabis/public/llms.txt` regenerated to 263 URLs (was 258) post-deploy.
+- **Stub page anatomy (the Stage 1 stubs are working pages, not blank pages):**
+  - Cluster data block (slug, guide count, counties, primary source link)
+  - fact-box "At a Glance" table with primary-source citations
+  - Full town directory (every guide reference in the cluster with read-guide + map-search buttons)
+  - 5-FAQ FAQPage JSON-LD (stub questions; Stage 2 replaces with real regional FAQs)
+  - Sibling regional hub navigation (cross-links to the other 4 hubs)
+  - `content-verification` badge + editorial-pair attribution
+  - Stage 1 foundation Callout (clearly labeled, telling visitors the editorial body lands in Stage 2/3)
+- **Verification trail:**
+  - `npm run verify:iterate`: 0 errors (esbuild parse on 6 .astro files + astro check filtered)
+  - `npm run verify:push`: passes locally; pre-push hook (`--ref` mode) defaults smoke OFF so the net-new 5-page 404s on the OLD production deploy don't block the push (this is the standard MDG pattern from AGENTS.md)
+  - `bash vercel-build.sh`: 268 pages built clean, 5 new URLs in `dist/sitemap-0.xml`
+  - Vercel deploy (90s after push): all 5 hubs return HTTP 200 from production
+  - `node scripts/admin/sprint-score.cjs`: 11/11 — content-health baseline unchanged, OCP roster fresh (107 stores, 0 days old), llms.txt freshness now matches sitemap (263 URLs each), no broken image refs, git working tree clean
+- **Stage 2/3 carry-forward:**
+  - Stage 2 (next sprint): author 2,000+ word editorial body for **Greater Portland and Sebago Lakes** (Calvin Waters) and **Downeast, Acadia and Aroostook** (Eliot Nash). Full brief at `docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md`. Hard bars documented there.
+  - Stage 3 (sprint after): replicate for the 3 remaining hubs + back-fill all 111 town guides with `<aside class="related-callout">Part of the [Region] cannabis guide cluster</aside>` linking to their hub. Regenerate `llms.txt` + `llms-full.txt` (auto via post-deploy). Bump `all-guides` count. Verify sitemap XML.
+  - Risk gate: monitor GSC for cluster-level impression loss (hub cannibalizing town-guide impressions); if a hub outranks a town for a town-named query, demote the hub's town-name H2s and add canonical signals to the town guide.
+- **Lessons worth surfacing:**
+  - The Sprint 75 lesson (12+ syntax errors shipped because parse gate didn't exist) is now structurally prevented by the pre-push hook — caught the Breadcrumb-href-missing and script-is-inline-warn issues on first iteration.
+  - The Sprint 78 lesson (smoke-200 catches page-specific 404s) shows the right pattern here: smoke defaults OFF in pre-push, explicitly opt in with `--with-smoke` for true regression-detection against existing pages. Net-new pages 404 on the OLD deploy by definition; the smoke gate is for catching regressions on existing pages.
+  - The `cluster-regions.json` single-source-of-truth pattern is the right architecture for any future multi-page that needs to share a registry. Both `find-a-dispensary` and the 5 hubs import it; if a town moves between clusters, one edit propagates everywhere.
+  - The "5 hubs, not 54+" framing from the research memo is the SEO-defensible answer. Writing 54+ thin pages would have been the wrong call and the Google March 2026 Spam Update would have hit it. Trust the research, not the temptation to ship volume.
 
 ## 📋 LEAD-MAGNET FUNNEL UNBLOCK (Jul 6, 2026 EDT) — Formspree revert
 
