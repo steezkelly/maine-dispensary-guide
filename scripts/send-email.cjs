@@ -235,14 +235,21 @@ async function sendEmail({ to, subject, body, from = DEFAULT_FROM }) {
     }
   }
 
+  // BCC opt-in: set MDG_BCC_SELF=1 in env to BCC every send to
+  // steve@mainedispensaryguide.com. Off by default — auto-BCC of every
+  // campaign send flooded the inbox with self-copies during the 2026-07-07
+  // duplicate-send bug, drowning real replies in noise. Re-enable per-session
+  // when you actively want an archive in your own inbox.
   const mailOptions = {
     from,
     to,
     subject,
     text: body,
-    html: body.replace(/\n/g, '<br>'),
-    bcc: 'steve@mainedispensaryguide.com'
+    html: body.replace(/\n/g, '<br>')
   };
+  if (process.env.MDG_BCC_SELF === '1') {
+    mailOptions.bcc = 'steve@mainedispensaryguide.com';
+  }
 
   const result = await transporter.sendMail(mailOptions);
   return result;
@@ -254,7 +261,11 @@ function saveSentEmail({ to, subject, body, from, messageId }) {
     if (!fs.existsSync(SENT_MAIL_DIR)) {
       fs.mkdirSync(SENT_MAIL_DIR, { recursive: true });
     }
-    const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${messageId.replace(/[<>()]/g, '').substring(0, 16)}.eml`;
+    // Guard against undefined messageId — older nodemailer versions or a
+    // SMTP auth failure between send() and messageId assignment can leave
+    // it unset; writing "undefined" into a filename breaks archival reads.
+    const safeId = (messageId || 'no-msgid').replace(/[<>()]/g, '').substring(0, 16);
+    const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${safeId}.eml`;
     const eml = [
       `From: ${from}`,
       `To: ${to}`,
@@ -273,10 +284,30 @@ function saveSentEmail({ to, subject, body, from, messageId }) {
   }
 }
 
-// Auto-log sent email to tracking database
-function logSentEmail({ to, template, messageId }) {
+// Auto-log sent email to tracking database. Uses file lock + atomic
+// rename to defeat concurrent-process lost-update races (two simultaneous
+// send-email.cjs invocations would otherwise both read the same JSON,
+// both append, and the last writeFileSync would silently drop the other).
+const LOCK_DIR = path.join(path.dirname(TRACKING_FILE), '.email-tracking.lock');
+
+async function logSentEmail({ to, template, messageId }) {
+  // mkdir is atomic on POSIX: only one of N concurrent creators wins.
+  // Spin until we acquire, with a short sleep between attempts.
+  while (fs.existsSync(LOCK_DIR)) {
+    await new Promise(r => setTimeout(r, 25));
+  }
   try {
-    if (!fs.existsSync(TRACKING_FILE)) return;
+    fs.mkdirSync(LOCK_DIR);
+  } catch (err) {
+    // Another process grabbed it; spin.
+    return logSentEmail({ to, template, messageId });
+  }
+  try {
+    if (!fs.existsSync(TRACKING_FILE)) {
+      const dir = path.dirname(TRACKING_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(TRACKING_FILE, JSON.stringify({ emails: [], total_sent: 0, total_pending: 0 }, null, 2));
+    }
     const data = JSON.parse(fs.readFileSync(TRACKING_FILE, 'utf-8'));
     const match = to.match(/^(.+?)\s*<(.+)>$/);
     const name = match ? match[1].trim() : to;
@@ -296,10 +327,16 @@ function logSentEmail({ to, template, messageId }) {
     data.emails.push(entry);
     data.total_sent = data.emails.length;
     data.total_pending = data.emails.filter(e => e.response === 'pending').length;
-    fs.writeFileSync(TRACKING_FILE, JSON.stringify(data, null, 2));
+    // Write to temp file then rename — atomic on POSIX, prevents readers
+    // seeing partial JSON even if they don't take the lock.
+    const tmp = TRACKING_FILE + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+    fs.renameSync(tmp, TRACKING_FILE);
     console.log(`  ✓ Logged to tracking database`);
   } catch (err) {
     console.error(`  ⚠ Could not log to tracking: ${err.message}`);
+  } finally {
+    try { fs.rmdirSync(LOCK_DIR); } catch (_) { /* best-effort release */ }
   }
 }
 
@@ -403,7 +440,7 @@ Credentials:
     });
     console.log(`✓ Email sent successfully`);
     console.log(`  MessageId: ${result.messageId}`);
-    logSentEmail({ to: values.to, template: values.template, messageId: result.messageId });
+    logSentEmail({ to: values.to, template: values.template, messageId: result.messageId });  // fire-and-forget; safe because the function holds its own lock and writes atomically
     saveSentEmail({ to: values.to, subject, body, from: values.from, messageId: result.messageId });
     return result;
   } catch (error) {

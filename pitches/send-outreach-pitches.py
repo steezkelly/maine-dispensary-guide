@@ -93,15 +93,17 @@ def main():
     # never accidentally trigger sends. Use argparse for canonical handling.
     if '--help' in args or '-h' in args:
         print(__doc__ or '')
-        print("Usage: python3 send-outreach-pitches.py [--dry-run] [--id 1,2,3]")
+        print("Usage: python3 send-outreach-pitches.py [--dry-run] [--id 1,2,3] [--force-resend]")
         print()
         print("Options:")
-        print("  --dry-run       Show what would be sent without sending")
-        print("  --id N,M,...    Send only specific pitch IDs (comma-separated)")
-        print("  --help, -h      Show this help")
+        print("  --dry-run          Show what would be sent without sending")
+        print("  --id N,M,...       Send only specific pitch IDs (comma-separated)")
+        print("  --force-resend     Bypass the 60-minute dedup window")
+        print("  --help, -h         Show this help")
         return 0
 
     dry_run = '--dry-run' in args
+    force_resend = '--force-resend' in args
     id_filter = None
     for a in args:
         if a.startswith('--id='):
@@ -114,7 +116,9 @@ def main():
     pitches = parse_pitches()
     print(f"Parsed {len(pitches)} pitches from templates file.\n")
 
-    # Load existing log
+    # Load existing log (initial snapshot — but per-send dedup re-reads from
+    # disk below to defeat the race window where multiple parallel invocations
+    # of this script all start before any of them has written).
     if LOG_FILE.exists():
         try:
             log = json.loads(LOG_FILE.read_text())
@@ -127,6 +131,22 @@ def main():
     skipped_count = 0
     error_count = 0
 
+    def load_log_fresh():
+        """Re-read log from disk to defeat in-memory dedup races."""
+        if LOG_FILE.exists():
+            try:
+                return json.loads(LOG_FILE.read_text())
+            except Exception:
+                return []
+        return []
+
+    def save_log_atomic(log_data):
+        """Write-then-rename to prevent concurrent readers seeing partial JSON."""
+        import tempfile, os
+        tmp = LOG_FILE.with_suffix('.json.tmp')
+        tmp.write_text(json.dumps(log_data, indent=2))
+        os.replace(tmp, LOG_FILE)
+
     for pitch_id in sorted(pitches.keys(), key=int):
         if id_filter and pitch_id not in id_filter:
             continue
@@ -135,7 +155,7 @@ def main():
 
         print(f"--- #{pitch_id}: {target_name} ---")
         print(f"  Subject: {pitch['subject']}")
-        print(f"  To: {target_email or 'SKIP' + (' (' + skip_reason + ')' if skip_reason else '')}")
+        print(f"  To: {target_email or ('SKIP' + (' (' + skip_reason + ')' if skip_reason else ''))}")
 
         if not target_email:
             print(f"  → SKIPPED (no email on file)")
@@ -151,19 +171,22 @@ def main():
             continue
 
         # Idempotency guard: if this exact (target_email, subject) was sent
-        # within the last 60 minutes, skip to prevent duplicate-send
-        # (defends against --help/no-flag confusion, repeated verify runs,
-        # and any future re-invocation of this script).
+        # within the last 60 minutes, skip to prevent duplicate-send.
+        # CRITICAL: re-read log from disk every iteration to defeat the race
+        # window where multiple parallel invocations of this script all start
+        # before any of them has written their entry to the log.
+        fresh_log = load_log_fresh()
         recent_dup = next(
-            (entry for entry in log
+            (entry for entry in fresh_log
              if entry.get('target_email') == target_email
              and entry.get('subject') == pitch['subject']
              and entry.get('status') == 'sent'
              and (datetime.now(timezone.utc) - datetime.fromisoformat(entry['timestamp'])).total_seconds() < 3600),
             None
         )
-        if recent_dup and not dry_run:
+        if recent_dup and not dry_run and not force_resend:
             print(f"  → SKIPPED (already sent at {recent_dup['timestamp'][:19]}, msg_id {recent_dup.get('msg_id','-')[:30]}...)")
+            print(f"     pass --force-resend to bypass the 60-minute dedup window")
             skipped_count += 1
             log.append({
                 'pitch_id': pitch_id,
@@ -174,6 +197,8 @@ def main():
                 'timestamp': datetime.now(timezone.utc).isoformat(),
             })
             continue
+        if recent_dup and force_resend:
+            print(f"  → FORCE-RESEND (overriding dedup of {recent_dup.get('msg_id','-')[:30]}...)")
 
         if dry_run:
             print(f"  → DRY RUN (would send)")
@@ -192,6 +217,10 @@ def main():
                 'msg_id': result.get('msg_id'),
                 'timestamp': datetime.now(timezone.utc).isoformat(),
             })
+            # Write log atomically AFTER each successful send so concurrent
+            # script invocations see this entry before they send their own.
+            if not dry_run:
+                save_log_atomic(log)
         else:
             print(f"  ✗ FAILED: {result.get('stderr', result.get('stdout', 'unknown'))[:200]}")
             error_count += 1
@@ -203,15 +232,18 @@ def main():
                 'error': result.get('stderr', result.get('stdout', 'unknown'))[:500],
                 'timestamp': datetime.now(timezone.utc).isoformat(),
             })
+            if not dry_run:
+                save_log_atomic(log)
 
         # Rate limit to avoid looking like a bot — 10s between sends
         if pitch_id != sorted(pitches.keys(), key=int)[-1]:
             time.sleep(10)
 
-    # Save log
-    if not dry_run:
-        LOG_FILE.write_text(json.dumps(log, indent=2))
-        print(f"\nLog saved to {LOG_FILE}")
+    # Log is already saved atomically after each send; no end-of-loop write needed.
+    if dry_run:
+        print(f"\n(Dry run — no log written)")
+    else:
+        print(f"\nLog saved per-send to {LOG_FILE}")
 
     print(f"\n=== Summary ===")
     print(f"Sent: {sent_count}")
