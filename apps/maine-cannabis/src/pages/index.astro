@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
+import AnimatedBackdrop from '@network/ui/AnimatedBackdrop';
 import Faq from '../components/Faq.astro';
 import Callout from '../components/Callout.astro';
 import LeadFormTracker from '../components/LeadFormTracker.astro';
@@ -1703,6 +1704,9 @@ const journeySteps = [
        HERO: Heritage Authority — Topographic + Dramatic Typography
   ═══════════════════════════════════════════════════════════════ -->
   <section class="hero-manifesto" aria-labelledby="hero-heading">
+    <!-- Animated aurora + pine ridge + fireflies (behind topo) -->
+    <AnimatedBackdrop variant="hero" />
+
     <!-- Topographic background pattern -->
     <div class="topo-bg" aria-hidden="true">
       <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">

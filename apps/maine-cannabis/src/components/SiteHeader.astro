@@ -19,6 +19,7 @@
 
 import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
+import AnimatedBackdrop from '@network/ui/AnimatedBackdrop';
 import Search from '@network/ui/Search';
 import siteConfig from '../data/site-config.json';
 
@@ -27,6 +28,8 @@ const siteName = siteConfig.siteName;
 
 <header id="site-header" role="banner">
   <div id="progress-container"><div id="progress-bar"></div></div>
+  <!-- Animated aurora layer (subtle, behind nav) -->
+  <AnimatedBackdrop variant="subtle" intensity={0.35} class="site-header-backdrop" />
   <nav id="site-nav" aria-label="Main Navigation">
     <a href="/" class="logo" aria-label={`${siteName} Home`}>
       <div class="logo-icons">
@@ -232,3 +235,26 @@ const siteName = siteConfig.siteName;
     });
   });
 </script>
+
+<style>
+  /* Header backdrop — pinned to the header's box, behind the nav. */
+  #site-header {
+    position: sticky; /* matches Layout's #site-header */
+    overflow: hidden;
+  }
+  /* The :global pseudo-selector is needed because the AnimatedBackdrop emits
+     its own root class. Override position to fill the header instead of
+     stretching from the parent section. */
+  #site-header :global(.mdg-anim-backdrop--subtle) {
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+    z-index: 0 !important;
+    /* Aurora intensity already multiplied by 0.35 via intensity prop;
+       we add another 0.8 layer to keep header readable. */
+    opacity: 0.8;
+  }
+  /* Make sure the nav stays above the backdrop. */
+  #site-nav { position: relative; z-index: 2; }
+  #progress-container { position: relative; z-index: 3; }
+</style>
