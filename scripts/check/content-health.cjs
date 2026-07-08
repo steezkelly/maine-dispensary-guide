@@ -617,11 +617,23 @@ function checkSitemapLastmod() {
   const results = [];
   if (!fs.existsSync(SITEMAP)) return ['sitemap-0.xml not found — run build first'];
   const xml = fs.readFileSync(SITEMAP, 'utf8');
-  const matches = [...xml.matchAll(/<loc>([^<]+)<\/loc>(<lastmod>([^<]+)<\/lastmod>)?/g)];
+  // Match each <url>...</url> entry. Per-entry scan is more reliable than the
+  // old per-tag regex (which fails when whitespace falls between </loc> and
+  // <lastmod>; produced 5 false-positives on 2026-07-08 against a sitemap
+  // where every entry actually had a lastmod).
+  const entryRe = /<url>([\s\S]*?)<\/url>/g;
+  const entryLastmodRe = /<lastmod>([^<]+)<\/lastmod>/;
+  const entryLocRe = /<loc>([^<]+)<\/loc>/;
+  const matches = [...xml.matchAll(entryRe)];
   let missing = 0;
   for (const m of matches) {
-    const url = m[1];
-    if (!m[2]) { missing++; if (results.length < 5) results.push(`no <lastmod>: ${url}`); }
+    const block = m[1];
+    const url = (block.match(entryLocRe) || [])[1] || '';
+    const hasLastmod = entryLastmodRe.test(block);
+    if (!hasLastmod) {
+      missing++;
+      if (results.length < 5) results.push(`no <lastmod>: ${url}`);
+    }
   }
   if (missing > 0 && results.length === 0) results.push(`${missing} URLs missing <lastmod>`);
   return results;
