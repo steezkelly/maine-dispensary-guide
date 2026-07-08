@@ -139,8 +139,30 @@ async function main() {
     process.exit(1);
   }
   const base = MDG_BASE.replace(/\/+$/, '');
-  const htmlFiles = listHtmlFiles(DIST);
+  let htmlFiles = listHtmlFiles(DIST);
   console.log(`🖼️  smoke-img-200: scanning ${htmlFiles.length} HTML files × ${base} (concurrency=${CONCURRENCY}, skip-external=${SKIP_EXTERNAL})`);
+
+  // Operator-unrelated filter (env SMOKE_IMG_FILTER_PAGES):
+  // when set, only check image refs in dist pages whose relative path matches one
+  // of the comma-separated substrings (matches against path.relative(DIST, file)).
+  // Used by pre-push-verify.cjs --ignore-unrelated to skip pre-existing broken
+  // image refs that the current diff didn't touch. The trade-off: a still-broken
+  // image on a touched page WILL fail this check, which is the right behavior —
+  // the only refs being silenced are ones we're not responsible for right now.
+  const filterRaw = process.env.SMOKE_IMG_FILTER_PAGES;
+  if (filterRaw) {
+    const filters = filterRaw.split(',').map(s => s.trim()).filter(Boolean);
+    const before = htmlFiles.length;
+    htmlFiles = htmlFiles.filter(f => {
+      const rel = path.relative(DIST, f);
+      return filters.some(sub => rel.includes(sub));
+    });
+    if (htmlFiles.length === 0) {
+      console.error(`🖼️  smoke-img-200: SMOKE_IMG_FILTER_PAGES='${filterRaw}' matched 0 of ${before} HTML files — refusing to silently pass.`);
+      process.exit(2);
+    }
+    console.log(`   filter SMOKE_IMG_FILTER_PAGES='${filterRaw}' → ${htmlFiles.length} of ${before} HTML files`);
+  }
 
   // Collect every <img src> reference across all pages, deduped.
   const allRefs = new Map(); // ref -> { pages: Set, url }

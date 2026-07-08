@@ -55,6 +55,9 @@
  * Usage:
  *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
  *   node scripts/git/pre-push-verify.cjs --with-smoke           # add smoke-200 + smoke-img-200 against production
+ *   node scripts/git/pre-push-verify.cjs --with-smoke --ignore-unrelated
+ *                                                            # smoke-img-200 only checks pages touched by the current diff
+ *                                                              (use when pre-existing broken-image refs aren't your problem)
  *   node scripts/git/pre-push-verify.cjs --ref=<ref>            # checks commits <ref>..HEAD
  *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
  *   node scripts/git/pre-push-verify.cjs --skip-smoke-200       # legacy: still works, see below
@@ -298,7 +301,7 @@ function smoke200Check() {
     return { ok: false };
 }
 
-function smokeImg200Check() {
+function smokeImg200Check(args) {
     // Pass 4: walk every rendered HTML in dist/, extract every image
     // reference (img src, source srcset, link rel=preload as=image,
     // meta property=og:image), HEAD each same-origin URL against
@@ -313,10 +316,35 @@ function smokeImg200Check() {
     }
 
     const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL || 'https://mainedispensaryguide.com';
-    log('info', `smoke-img-200 against ${base}…`);
+    const ignoreUnrelated = (args || []).includes('--ignore-unrelated');
 
+    const env = { ...process.env, MDG_BASE: base };
+    if (ignoreUnrelated) {
+        // Derive a substring filter from the current diff: each Astro page that
+        // was changed in this push contributes its dist-relative URL to the
+        // filter list. Example: a change to apps/maine-cannabis/src/pages/
+        // guides/bangor-dispensary-guide.astro → 'guides/bangor-dispensary-guide'
+        // substring match against dist/guides/bangor-dispensary-guide/index.html.
+        const diffOut = git('git diff --name-only HEAD@{1} HEAD 2>/dev/null || git diff --name-only HEAD~1..HEAD 2>/dev/null || git diff --cached --name-only').split('\n').filter(Boolean);
+        const pageSubstrings = new Set();
+        for (const rel of diffOut) {
+            // apps/maine-cannabis/src/pages/guides/bangor-dispensary-guide.astro
+            //   → look for dist/guides/bangor-dispensary-guide/index.html
+            const pageMatch = rel.match(/(?:^|\/)pages\/(.+?)(?:\/index)?\.astro$/);
+            if (pageMatch) pageSubstrings.add(pageMatch[1]);
+        }
+        if (pageSubstrings.size > 0) {
+            const filter = [...pageSubstrings].join(',');
+            env.SMOKE_IMG_FILTER_PAGES = filter;
+            log('info', `smoke-img-200 --ignore-unrelated: filter SMOKE_IMG_FILTER_PAGES='${filter}' (${pageSubstrings.size} page(s) from diff)`);
+        } else {
+            log('info', 'smoke-img-200 --ignore-unrelated: no .astro page changes in diff — running full scan as fallback');
+        }
+    }
+
+    log('info', `smoke-img-200 against ${base}…`);
     const res = spawnSync('node', [smokeScript], {
-        env: { ...process.env, MDG_BASE: base },
+        env,
         encoding: 'utf8',
         cwd: REPO_ROOT,
         timeout: 180_000,
@@ -569,7 +597,7 @@ function main() {
     if (args.includes('--with-smoke')) {
         const smoke = smoke200Check();
         if (!smoke.ok) process.exit(4);
-        const smokeImg = smokeImg200Check();
+        const smokeImg = smokeImg200Check(args);
         if (!smokeImg.ok) process.exit(5);
     } else if (args.includes('--skip-smoke-200') || args.includes('--skip-smoke-img-200')) {
         // Back-compat: old --skip-* flags still work but emit a deprecation note.
@@ -579,7 +607,7 @@ function main() {
             if (!smoke.ok) process.exit(4);
         }
         if (!args.includes('--skip-smoke-img-200')) {
-            const smokeImg = smokeImg200Check();
+            const smokeImg = smokeImg200Check(args);
             if (!smokeImg.ok) process.exit(5);
         }
     } else {
