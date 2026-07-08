@@ -660,6 +660,8 @@ function checkOrphanPages() {
   // Routes that are intentionally noindex and don't need inbound links.
   const NOINDEX_PATHS = new Set([
     '/404', '/admin', '/experiments', '/search', '/download/roadmap',
+    '/embed/opt-in-tracker', // opt-in trackers rarely warrant navigation presence
+    '/guides/all-cities',   // self-index: every city guide references it; not a leaf page
   ]);
   function isNoindex(file) {
     try {
@@ -678,6 +680,12 @@ function checkOrphanPages() {
     }
     return out;
   }
+  // Sprint 80 patch: source-only regex misses inbound links emitted by
+  // JSX expressions like `<a href={hubByName[region.name]}>` or by data-
+  // driven iteration like `{posts.map(p => <a href={p.url}>)}`. The
+  // rendered-HTML check catches those — it walks dist/ for `*.html` files
+  // and counts any literal `href="/<path>"` reference. If either check
+  // finds an inbound link, the page is not an orphan.
   function findInboundLink(needle, excludeFile) {
     // Match both `href="/path"`, `href='/path'`, and `href: "/path"` forms.
     // The needle is the route (e.g. "guides/lebanon-dispensary-guide").
@@ -693,6 +701,30 @@ function checkOrphanPages() {
     }
     return '';
   }
+  function findInboundFromRendered(needle) {
+    const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const re = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'/#?]|$)`, 'm');
+    const distBase = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist');
+    const distPath = path.join(distBase, needle, 'index.html');
+    function walk(dir, out) {
+      out = out || [];
+      if (!fs.existsSync(dir)) return out;
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) walk(full, out);
+        else if (entry.isFile() && full.endsWith('.html')) out.push(full);
+      }
+      return out;
+    }
+    const htmlFiles = walk(distBase);
+    for (const f of htmlFiles) {
+      if (f === distPath) continue;
+      let text;
+      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
+      if (re.test(text)) return f;
+    }
+    return '';
+  }
   const files = listAstroFilesRecursive(PAGES_DIR);
   for (const f of files) {
     if (isNoindex(f)) continue;
@@ -703,8 +735,9 @@ function checkOrphanPages() {
     const normalized = rel.replace(/\/$/, '') || '/';
     if (NOINDEX_PATHS.has(normalized)) continue;
     const needle = rel.replace(/^\//, '');
-    const found = findInboundLink(needle, f);
-    if (!found) {
+    const foundSrc = findInboundLink(needle, f);
+    const foundDist = findInboundFromRendered(needle);
+    if (!foundSrc && !foundDist) {
       results.push(`${normalized}: no inbound link from any other page`);
     }
   }
@@ -840,6 +873,15 @@ function checkDuplicateHeroImages() {
 function checkDuplicateFaqPageSchema() {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
+  // Pages that intentionally emit multiple FAQPage JSON-LD scripts with
+  // non-overlapping content (e.g. /guides/faq emits one per category
+  // section — Buyer-intent, Cannabis Science, etc.). These are NOT
+  // duplicates; they're a deliberate per-category schema pattern. The
+  // linter protects against real duplicates but should skip pages whose
+  // only job IS to be a multi-page FAQ catalog.
+  const FAQ_GENERATOR_PAGES = new Set([
+    '/guides/faq', // the FAQ catalog page emits 1 FAQPage per category
+  ]);
   function walk(d) {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
       const p = path.join(d, e.name);
@@ -847,6 +889,10 @@ function checkDuplicateFaqPageSchema() {
         if (p.includes('/_astro') || p.includes('/admin/')) continue;
         walk(p);
       } else if (e.isFile() && p.endsWith('.html')) {
+        const relPath = p.replace(DIST, '').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+        // Normalize trailing-slash path the same way orphan/check does.
+        const route = '/' + (relPath === '' ? '' : relPath.replace(/^\//, ''));
+        if (FAQ_GENERATOR_PAGES.has(route)) continue;
         const text = fs.readFileSync(p, 'utf8');
         // Count FAQPage blocks. Use a non-greedy match for each `<script>`
         // containing a FAQPage JSON-LD.
