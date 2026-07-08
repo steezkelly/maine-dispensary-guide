@@ -16,14 +16,18 @@ interface Props {
   items?: FAQItem[];
   questions?: ShortFAQItem[];
   children?: any;
+  // Sprint 78ab: when `true`, suppress the package's auto-emitted FAQPage
+  // JSON-LD. Use this when the calling page composes its own
+  // `<script type="application/ld+json">` block to avoid duplicate schema.
+  withoutSchema?: boolean;
 }
 
-const { faqs, items, questions } = Astro.props;
+const { faqs, items, questions, withoutSchema } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a }));
 ---
 
 {normalizedFaqs ? (
-  <UiFaq faqs={normalizedFaqs}>
+  <UiFaq faqs={normalizedFaqs} withoutSchema={withoutSchema}>
     <slot />
   </UiFaq>
 ) : (
