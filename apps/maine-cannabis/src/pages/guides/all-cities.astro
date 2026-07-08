@@ -14,7 +14,6 @@
 //
 // Single frontmatter; never inline-edit — use tools instead.
 import fs from 'node:fs';
-import path from 'node:path';
 import Layout from '../../layouts/Layout.astro';
 import AutoRelated from '../../components/AutoRelated.astro';
 
@@ -108,7 +107,6 @@ const faqPageJsonLd = JSON.stringify({
 });
 
 const canonicalUrl = `${SITE_URL}/guides/all-cities`;
-const pageUrl = `${SITE_URL}/guides/all-cities`;
 ---
 
 <Layout title={title} description={description} canonicalOverride={canonicalUrl} heroImage="/images/heroes/maine-portland-harbor-hero.jpg" article={article} topics={topics}>
