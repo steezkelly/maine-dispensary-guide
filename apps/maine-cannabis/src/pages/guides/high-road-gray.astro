@@ -1,0 +1,165 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-08",
+  modifiedDate: "2026-07-08",
+  section: "City Guides"
+};
+
+const topics = ["city", "market"];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Where is High Road in Gray, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "High Road is at 21 Portland Road, Suite 7, Gray, ME 04039. The storefront sits on the main Portland Road corridor through Gray — the same commercial strip that carries Route 26 between Portland and the Sebago Lakes region. Phone: (207) 391-9420. Email: 207highroad@gmail.com." }},
+    { "@type": "Question", "name": "Is High Road a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Per the MDG Gray dispensary guide and the operator's Weedmaps listing, High Road operates as a Maine medical cannabis dispensary. A valid Maine MMMP card is required for in-store transactions. Adult-use (21+) service has not been confirmed; call (207) 391-9420 to confirm current licensing before visiting if you are not a registered patient." }},
+    { "@type": "Question", "name": "What is High Road's reputation in Gray?", "acceptedAnswer": { "@type": "Answer", "text": "Per the MDG Gray dispensary guide, High Road holds a perfect 5.0-star rating from 113 Weedmaps reviews as of 2026 — among the highest review counts of any medical dispensary in Cumberland County. The operator is also cited in the guide as a key part of Gray's existing two-store medical infrastructure alongside Token Cannabis Co." }},
+    { "@type": "Question", "name": "What are High Road Gray's hours?", "acceptedAnswer": { "@type": "Answer", "text": "Per the MDG Gray dispensary guide: open daily 10am onwards. The guide does not record a published closing time, so hours may extend into the evening. Call (207) 391-9420 to confirm the current day's opening and closing time before visiting." }},
+    { "@type": "Question", "name": "Who founded High Road in Gray?", "acceptedAnswer": { "@type": "Answer", "text": "Per the MDG Gray dispensary guide, High Road was founded by Robert Thibodeau and Eric Dudevoir. The guide credits their focus on quality and patient care with building the operator's strong local reputation. Confirm ownership details and license status directly with the operator." }}
+  ]
+});
+---
+
+<Layout title="High Road Gray Maine — Medical Cannabis Dispensary (2026)" description="High Road is a Maine medical cannabis dispensary at 21 Portland Rd Ste 7, Gray, ME 04039. Phone (207) 391-9420. 5.0-star rating from 113 reviews, founded by Robert Thibodeau and Eric Dudevoir. Open daily 10am onwards on the Portland Road corridor." heroImage="/images/heroes/high-road-gray.jpg" article={article} topics={topics} >
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
+  section { margin-bottom: 2.5rem; }
+  section h2, section h3 { margin-top: 1.5rem; }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; }
+  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+  .verification { background: rgba(13, 78, 80, 0.04); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
+  .verification strong { color: var(--color-primary); }
+  .pending-verification { background: rgba(241, 196, 15, 0.08); border: 1px dashed var(--color-accent); padding: 1rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; margin: 1.5rem 0; color: var(--color-text); }
+  .pending-verification strong { color: var(--color-accent); }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>High Road — Gray, Maine Medical Cannabis Dispensary</h1>
+    <p class="subtitle">Maine medical cannabis dispensary at 21 Portland Road, Suite 7, Gray — founded by Robert Thibodeau and Eric Dudevoir, 5.0-star rated on Weedmaps</p>
+  </div>
+  <p class="image-source" style="font-size:0.75rem;color:var(--color-text-light);font-style:italic;margin-top:-1rem;margin-bottom:1.5rem;">Image: AI-generated illustration of a Maine small-town dispensary storefront, generated for this guide. Not a photograph of the actual storefront.</p>
+
+  <section class="fact-box">
+    <h2>High Road at a Glance</h2>
+    <table aria-label="High Road Gray dispensary overview">
+      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operator</strong></td><td>High Road</td></tr>
+        <tr><td><strong>Address</strong></td><td>21 Portland Road, Suite 7, Gray, ME 04039</td></tr>
+        <tr><td><strong>Phone</strong></td><td>(207) 391-9420</td></tr>
+        <tr><td><strong>Email</strong></td><td>207highroad@gmail.com</td></tr>
+        <tr><td><strong>Hours</strong></td><td>Open daily 10am onwards (verify by phone)</td></tr>
+        <tr><td><strong>License Type</strong></td><td>Medical (per MDG Gray dispensary guide)</td></tr>
+        <tr><td><strong>Founders</strong></td><td>Robert Thibodeau, Eric Dudevoir</td></tr>
+        <tr><td><strong>Reputation</strong></td><td>5.0 stars from 113 Weedmaps reviews (per MDG Gray guide)</td></tr>
+        <tr><td><strong>Service Area</strong></td><td>Gray, Windham, Raymond, Cumberland, North Yarmouth, New Gloucester, and the Portland-Auburn corridor</td></tr>
+        <tr><td><strong>Primary Sources</strong></td><td>MDG Gray dispensary guide · Weedmaps</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Overview</h2>
+    <p>High Road is one of two medical cannabis dispensaries operating in Gray, Maine, alongside Token Cannabis Co. on Lewiston Road. The store sits at 21 Portland Road, Suite 7 — a small commercial plaza on the main Route 26 corridor through Gray. The MDG Gray dispensary guide credits the operator with a perfect 5.0-star rating from 113 Weedmaps reviews, making High Road one of the higher-rated medical dispensaries in Cumberland County by review volume.</p>
+    <p>The store was founded by Robert Thibodeau and Eric Dudevoir, who per the MDG guide have built a strong reputation around patient care and product quality. The two-store Gray medical infrastructure (High Road plus Token Cannabis Co.) has established Gray as a functional medical-cannabis destination on the Portland-Auburn commuter corridor, even though the town has not yet attracted any adult-use (recreational) operators.</p>
+  </section>
+
+  <section>
+    <h2>Location and Access</h2>
+    <p><strong>Address:</strong> 21 Portland Road, Suite 7, Gray, ME 04039<br>
+    <strong>Phone:</strong> (207) 391-9420<br>
+    <strong>Email:</strong> 207highroad@gmail.com<br>
+    <strong>Hours (per MDG Gray guide):</strong> Open daily 10am onwards.</p>
+    <p>Gray is a Cumberland County town of roughly 8,200 residents positioned on the I-95 / Route 26 corridor between Portland and Auburn. Portland Road is the main commercial strip through town — the same corridor that anchors much of Gray's retail activity. The suite-7 location is accessible from Route 26 and is convenient for commuters traveling between Portland and the Sebago Lakes region. The store's proximity to I-95 (Gray is roughly equidistant between Portland and Auburn) gives High Road a wider effective service area than the town's resident population would suggest.</p>
+  </section>
+
+  <section>
+    <h2>License and Product Information</h2>
+    <p>Per the MDG Gray dispensary guide, High Road is registered as a Maine medical cannabis dispensary. As of publication, the operator's menu categories, pricing, and cultivation sources are not separately documented in the MDG operator registry. The MDG guide does note that Gray has opted in to recreational cannabis but has not yet attracted an adult-use operator — a status that affects whether High Road's medical patients are also able to make adult-use purchases on-site.</p>
+    <p class="pending-verification"><strong>Pending verification:</strong> Field-level details that have not yet been confirmed against the operator's own primary source include: (a) detailed product categories (flower / edibles / concentrates / vapes / topicals), (b) closing time, (c) delivery availability, (d) any current promotional or discount programs for veterans, seniors, or first-time patients. Last research date: <strong>2026-07-08</strong>. Call (207) 391-9420 or email 207highroad@gmail.com for current details.</p>
+  </section>
+
+  <section>
+    <h2>Service Area</h2>
+    <p>From the Portland Road storefront, High Road serves the central Cumberland County / Portland-Auburn corridor:</p>
+    <ul>
+      <li><strong>Gray</strong> (in town) — 5 min</li>
+      <li><strong>Windham</strong> — 10 min south</li>
+      <li><strong>Raymond</strong> — 15 min northwest (via Route 302)</li>
+      <li><strong>Cumberland</strong> — 10 min southeast</li>
+      <li><strong>North Yarmouth</strong> — 10 min east</li>
+      <li><strong>New Gloucester</strong> — 12 min north</li>
+      <li><strong>Portland</strong> — 20 min south via I-95</li>
+      <li><strong>Auburn</strong> — 25 min north via I-95</li>
+    </ul>
+    <p>For adult-use customers who do not have a Maine MMMP card, the nearest recreational dispensaries are in Naples, Raymond (Eclipse Cannabis Company), or Portland — each 15–25 minutes from Gray. For other medical patients in towns without a local dispensary (Standish, Sebago, Otisfield, Poland), High Road is a reasonable drive from much of the western Cumberland / Sebago Lakes region.</p>
+  </section>
+
+  <section>
+    <h2>How to Verify Before You Go</h2>
+    <p>Operator details — hours, license status, product menu, and accepted payment — can change without notice. To avoid a wasted trip, verify directly before visiting:</p>
+    <ul>
+      <li><strong>Phone:</strong> (207) 391-9420</li>
+      <li><strong>Email:</strong> 207highroad@gmail.com</li>
+      <li><strong>Weedmaps listing:</strong> <a href="https://weedmaps.com/dispensaries/high-road">weedmaps.com/dispensaries/high-road</a> (verify the active URL with the operator)</li>
+      <li><strong>Gray guide:</strong> <a href="/guides/gray-dispensary-guide">Gray Dispensary Guide</a> — town-level overview of all Gray dispensaries including Token Cannabis Co.</li>
+    </ul>
+    <p>Medical patients: bring your Maine MMMP card and a valid photo ID. Out-of-state patients with a valid card from a Maine reciprocity state should call ahead to confirm acceptance. Adult-use (21+) customers should confirm that the operator is licensed for recreational transactions before visiting, as the MDG Gray guide's current data shows High Road as medical-only.</p>
+  </section>
+
+  <section>
+    <div class="further-reading">
+      <AutoRelated currentPath="/guides/high-road-gray" currentTopics={['city', 'market']} section="City Guides" limit={6} />
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq
+      questions={[
+        { q: "Where is High Road in Gray, Maine?", a: "21 Portland Road, Suite 7, Gray, ME 04039. On the main Route 26 corridor through Gray. Phone (207) 391-9420. Email 207highroad@gmail.com." },
+        { q: "Is High Road a medical or adult-use dispensary?", a: "Per the MDG Gray dispensary guide, High Road is registered as a medical cannabis dispensary. Maine MMMP card required. Call ahead to confirm current licensing." },
+        { q: "What is High Road's reputation in Gray?", a: "Per the MDG Gray guide, High Road holds a 5.0-star rating from 113 Weedmaps reviews — among the higher review counts in Cumberland County." },
+        { q: "What are High Road Gray's hours?", a: "Open daily 10am onwards per the MDG Gray guide. Closing time is not separately documented; call (207) 391-9420 to confirm." },
+        { q: "Who founded High Road?", a: "Robert Thibodeau and Eric Dudevoir, per the MDG Gray dispensary guide. Verify ownership details and current license status directly with the operator." }
+      ]}
+    />
+  </section>
+
+  <div class="verification">
+    <strong>Verification:</strong> Address (21 Portland Rd Ste 7), phone ((207) 391-9420), email (207highroad@gmail.com), hours (open daily 10am onwards), founder names (Robert Thibodeau, Eric Dudevoir), and Weedmaps rating (5.0 stars from 113 reviews) are sourced from the MDG Gray dispensary guide and the operator's Weedmaps listing as of 2026-07-08. License-type framing (medical) reflects the MDG guide's recorded status. Detailed product categories, closing time, and delivery availability are not yet verified against the operator's own primary source — see the Pending Verification block above. Call (207) 391-9420 to confirm current hours, license framework, and product availability before visiting.
+  </div>
+
+  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary status, hours, product availability, and license categories can change. Always verify details directly with the dispensary before planning a visit.</p>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-08</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p>
+  <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); font-size: 0.9375rem;"><strong>Find High Road on the <a href="/guides/gray-dispensary-guide" style="color: var(--color-primary); text-decoration: underline;">Gray dispensary guide</a></strong> for the town-level overview of all Gray cannabis operators.</p>
+</article>
+</Layout>

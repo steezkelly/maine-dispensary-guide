@@ -76,6 +76,16 @@ interface Props {
   noindex?: boolean;
   topics?: string[];
   tags?: string[];
+  /**
+   * Optional cross-page canonical. When set, the rendered `<link rel="canonical">`
+   * (and hreflang alternates) point at this URL instead of the page's own
+   * `Astro.url`. Use for cannibalized sibling pages that should consolidate
+   * ranking signals onto a stronger canonical sibling.
+   * Example: the Acadia tourism blog pair, where recreational-cannabis-near-acadia
+   * (149 imp pos 22) points up to cannabis-friendly-maine-travel (146 imp pos 13)
+   * as the canonical answer.
+   */
+  canonicalOverride?: string;
 }
 
 const {
@@ -88,7 +98,8 @@ const {
   breadcrumbs = [],
   noindex = false,
   topics = [],
-  tags = []
+  tags = [],
+  canonicalOverride
 } = Astro.props;
 
 // Site Metadata & State
@@ -161,6 +172,63 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
       }
     : undefined,
 );
+
+// ----------------------------------------------------------------------------
+// BreadcrumbList JSON-LD (Sprint 78z — GSC audit remediation)
+// Audit finding: 0% BreadcrumbList coverage; 18 page-1 ranking pages were
+// missing the schema. Emitting in <head> is the canonical Google guidance
+// (the package BodyBreadcrumbs component already emits a valid copy in
+// <main>; this <head> copy is the primary one Google parses for SERP
+// rich-result eligibility). Section-name map is the canonical MDG taxonomy.
+// ----------------------------------------------------------------------------
+const BREADCRUMB_SECTION_LABELS: Record<string, string> = {
+  'guides': 'Guides',
+  'blog': 'Blog',
+  'learn': 'Consumer Guide',
+  'download': 'Free Downloads',
+  'download-checklist': 'Maine Dispensary Roadmap',
+  'founders-bible': 'Founders Bible',
+  'directory': 'Find a Dispensary',
+  'resources': 'Resources',
+  'about': 'About',
+  'founders': 'Founders',
+  'contact': 'Contact',
+  'start-here': 'Start Here',
+  'roi-calculator': 'ROI Calculator',
+  'glossary': 'Glossary',
+  'market-stats': 'Market Stats',
+  'admin': 'Admin',
+};
+
+const titleCaseSlug = (slug: string): string =>
+  slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+const breadcrumbPath = Astro.url.pathname.replace(/\/$/, '');
+const breadcrumbSegments = breadcrumbPath === ''
+  ? []
+  : breadcrumbPath.split('/').filter(Boolean);
+const breadcrumbListSchema = breadcrumbSegments.length > 0 && !noindex
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}` },
+        ...breadcrumbSegments.map((segment, index) => {
+          const cumulativePath = '/' + breadcrumbSegments.slice(0, index + 1).join('/');
+          const label = BREADCRUMB_SECTION_LABELS[segment] || titleCaseSlug(segment);
+          return {
+            '@type': 'ListItem',
+            position: index + 2,
+            name: label,
+            item: `${siteUrl}${cumulativePath}`,
+          };
+        }),
+      ],
+    }
+  : null;
+const breadcrumbListJsonLd = breadcrumbListSchema
+  ? JSON.stringify(breadcrumbListSchema)
+  : null;
 ---
 
 <!doctype html>
@@ -177,8 +245,12 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
       article={article}
       noindex={noindex}
       canonicalUrl={Astro.url}
+      canonicalOverride={canonicalOverride}
       jsonLdGraph={jsonLdGraph}
     />
+    {breadcrumbListJsonLd && (
+      <script type="application/ld+json" set:html={breadcrumbListJsonLd} />
+    )}
     <slot name="head" />
 
     {/* BreadcrumbList is injected by packages/ui/src/components/Breadcrumbs.astro */}

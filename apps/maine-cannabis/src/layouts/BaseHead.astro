@@ -42,6 +42,15 @@ interface Props {
   article?: ArticleData;
   noindex: boolean;
   canonicalUrl: string | URL;
+  /**
+   * Optional override for the `<link rel="canonical">` tag and the
+   * `hreflang` alternates. When set, the page emits a cross-page canonical
+   * pointing at the override URL instead of its own `Astro.url`. Used by
+   * cannibalized sibling pages that should consolidate ranking signals
+   * onto a stronger canonical sibling (e.g. the Acadia tourism blog pair:
+   * recreational-cannabis-near-acadia → cannabis-friendly-maine-travel).
+   */
+  canonicalOverride?: string;
   jsonLdGraph: any;
 }
 
@@ -56,8 +65,11 @@ const {
   article,
   noindex,
   canonicalUrl,
+  canonicalOverride,
   jsonLdGraph,
 } = Astro.props;
+
+const canonicalHref = canonicalOverride ?? canonicalUrl;
 ---
 
 <meta charset="UTF-8" />
@@ -76,9 +88,9 @@ const {
 
 {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
 
-<link rel="canonical" href={canonicalUrl} />
-<link rel="alternate" hreflang="en-US" href={canonicalUrl} />
-<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+<link rel="canonical" href={canonicalHref} />
+<link rel="alternate" hreflang="en-US" href={canonicalHref} />
+<link rel="alternate" hreflang="x-default" href={canonicalHref} />
 {noindex && <meta name="robots" content="noindex" />}
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="manifest" href="/manifest.webmanifest" />
