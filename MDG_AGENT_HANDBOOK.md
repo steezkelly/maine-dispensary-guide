@@ -188,6 +188,42 @@ When 2-3 agents commit to main in parallel (current state):
    conflicts (e.g. two agents editing the same paragraph) are
    a human review.
 
+## Video production conventions
+
+When the operator requests a new video for the MDG site (site-tour, market-stats
+recap, future promotional content), follow the pro-workflow established 2026-07-09:
+
+1. **Read first:** `~/videos/.shared/motion-vocab.md` — paste the relevant tables
+   (easing / timing / transitions / anti-patterns) into the new project's
+   `STORYBOARD.md` as a "Motion vocabulary" appendix. Pick eases by feel, not
+   by GSAP name.
+2. **Plan beat timing:** in the storyboard phase, run
+   `node ~/videos/.shared/hold-time-calc.mjs <narration.txt>` to set the
+   minimum per-beat duration. Don't ship a data video with sub-1.5s hold per
+   data point — the user has flagged this twice.
+3. **Pre-render audit:** before every `npx hyperframes render`, run
+   `node ~/videos/.shared/pre-render-audit.mjs <project-dir>`. Fix every ERROR.
+   Warnings are advisory but review them.
+4. **Post-render verify:** run `npx hyperframes snapshot . --at "<beat-times>"`
+   to confirm each beat reads correctly in still frames.
+5. **Audio fallback:** if TTS deps (Kokoro / transformers) are missing locally,
+   use `mmx speech synthesize --text-file narration.txt --voice
+   English_expressive_narrator --speed 0.92 --subtitles --out narration.mp3
+   --quiet` instead of installing deps. The mmx-cli TTS voice is the
+   production voice for MDG videos.
+6. **Music:** `mmx music generate --instrumental --prompt "..."` for BGM. Match
+   the prompt to the brand mode (editorial-naturalist = warm fingerpicked
+   acoustic; 80s-jazz-newsroom = muted smooth jazz with Rhodes + sax).
+7. **Live assets:** videos render in `~/videos/<project>/` and deploy via
+   `cp <video>.mp4 apps/maine-cannabis/public/videos/<name>.mp4` followed
+   by `git commit && git push`. Vercel serves the file directly from
+   `public/videos/` with the standard `Cache-Control: public, s-maxage=3600,
+   stale-while-revalidate=86400` headers.
+
+The pro-workflow tooling was validated against the existing `mdg-site-tour`
+(30.4s) and `mdg-market-stats` (60s) projects — both pass the pre-render
+audit with 0 errors, 0 warnings. Findings: `~/videos/PRO_WORKFLOW_AUDIT_RESULTS.md`.
+
 ## Quick reference
 
 ```
