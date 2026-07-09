@@ -258,19 +258,26 @@ const journeySteps = [
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    color: var(--color-background);
+    /* Steve's brother flagged: button appeared transparent on the deep-spruce
+       hero, so the bone text floated without an anchor. Give it a SOLID bone
+       fill (same pattern as .btn-primary) so it reads as a real button.
+       In dark mode the hero gradient swaps to bright sage — bone on sage
+       would clash, so the is:global override below swaps to a dark-spruce
+       chip with cream text. */
+    color: var(--color-primary);
+    background: #F2F2E2;
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
-    font-weight: 600;
+    font-weight: 700;
     font-size: var(--text-sm);
     text-decoration: none;
-    border: 1px solid rgba(242,242,226,0.3);
-    transition: background 0.2s, border-color 0.2s;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
   }
 
   .btn-ghost:hover {
-    background: rgba(242,242,226,0.1);
-    border-color: rgba(242,242,226,0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    background: #FFFFFF;
   }
 
   .hero-secondary-cta {
@@ -278,13 +285,14 @@ const journeySteps = [
     margin-top: var(--space-sm);
     font-size: var(--text-sm);
     font-weight: 600;
-    color: rgba(242,242,226,0.7);
+    /* Same issue as .btn-ghost — hard-code bone, override per-mode below. */
+    color: #F2F2E2;
     text-decoration: none;
     transition: color 0.2s;
   }
 
   .hero-secondary-cta:hover {
-    color: rgba(242,242,226,0.95);
+    color: #FFFFFF;
   }
 
   .hero-visual {
@@ -772,12 +780,13 @@ const journeySteps = [
 
   .hub-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(209, 209, 193, 0.8);
+    border: 1px solid rgba(209, 209, 193, 1);
     border-radius: 1rem;
     padding: var(--space-lg) var(--space-md);
     text-decoration: none;
+    box-shadow: var(--elev-1-shadow);
     transition: all 0.35s cubic-bezier(0.2, 1, 0.2, 1);
     overflow: hidden;
   }
@@ -785,10 +794,8 @@ const journeySteps = [
   .hub-card:hover {
     transform: translateY(-6px);
     border-color: rgba(13, 78, 80, 0.3);
-    box-shadow:
-      0 4px 16px rgba(13, 78, 80, 0.08),
-      0 16px 48px rgba(13, 78, 80, 0.12);
-    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--elev-2-shadow);
+    background: rgba(255, 255, 255, 0.98);
   }
 
   .hub-card-inner {
@@ -1202,22 +1209,21 @@ const journeySteps = [
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(209, 209, 193, 0.8);
+    border: 1px solid rgba(209, 209, 193, 1);
     border-radius: 1rem;
     padding: var(--space-md) var(--space-lg);
     text-decoration: none;
+    box-shadow: var(--elev-1-shadow);
     transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
   }
 
   .journey-step:hover {
     border-color: rgba(13, 78, 80, 0.3);
     transform: translateX(8px);
-    box-shadow:
-      0 4px 16px rgba(13, 78, 80, 0.08),
-      0 12px 40px rgba(13, 78, 80, 0.1);
-    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--elev-2-shadow);
+    background: rgba(255, 255, 255, 0.98);
   }
 
   .step-num {
@@ -1640,12 +1646,13 @@ const journeySteps = [
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(209, 209, 193, 0.8);
+    border: 1px solid rgba(209, 209, 193, 1);
     border-radius: 1rem;
     padding: var(--space-md);
     text-decoration: none;
+    box-shadow: var(--elev-1-shadow);
     transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
     text-align: left;
   }
@@ -1653,7 +1660,7 @@ const journeySteps = [
   .resource-link:hover {
     border-color: rgba(13, 78, 80, 0.3);
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(13, 78, 80, 0.08);
+    box-shadow: var(--elev-2-shadow);
   }
 
   .resource-icon {
@@ -1715,6 +1722,52 @@ const journeySteps = [
   }
   html[data-theme="dark"] .ops-closing {
     border-color: var(--color-border);
+  }
+  /* Hero controls in dark mode: the hero gradient uses var(--color-primary)
+     which flips to bright sage in dark, but the bone-white text from the
+     light-mode rules sits on sage and fails WCAG. The theme-2026 link rule
+     ([data-theme] section a:not(.btn)) also sets color via cascade, so
+     the override uses a more specific selector (html+section+class) to
+     win at specificity 0,3,1 vs theme-2026's 0,2,2. */
+  /* Hero controls in light mode: theme-2026's link-color rule
+     ([data-theme] section a:not(.btn)) cascades to the ghost button and
+     secondary cta, painting them with --color-link (deep spruce) — same
+     color as the hero gradient. The link rule accumulates very high
+     specificity (0,~6,~3) via :not(.btn) chains, so to win we anchor the
+     override with a specific class on <a> AND !important for this known
+     hero-only override. */
+  html[data-theme="light"] section.hero-manifesto a.btn-ghost {
+    color: var(--color-primary) !important;
+    background: #F2F2E2 !important;
+    border: none !important;
+  }
+  html[data-theme="light"] section.hero-manifesto a.btn-ghost:hover {
+    background: #FFFFFF !important;
+  }
+  html[data-theme="light"] section.hero-manifesto a.hero-secondary-cta {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+  html[data-theme="light"] section.hero-manifesto a.hero-secondary-cta:hover {
+    color: #FFFFFF !important;
+  }
+  /* Dark mode: hero gradient flips to bright sage per theme-2026 token
+     swap, so bone white would clash. Use a dark-spruce chip with cream
+     text — same readability pattern as the light mode but inverted. */
+  html[data-theme="dark"] section.hero-manifesto a.btn-ghost {
+    color: #ECF3E4 !important;
+    background: rgba(14, 26, 20, 0.85) !important;
+    border: 1px solid rgba(236, 243, 228, 0.3) !important;
+  }
+  html[data-theme="dark"] section.hero-manifesto a.btn-ghost:hover {
+    color: #ECF3E4 !important;
+    background: rgba(14, 26, 20, 0.95) !important;
+    border-color: rgba(236, 243, 228, 0.5) !important;
+  }
+  html[data-theme="dark"] section.hero-manifesto a.hero-secondary-cta {
+    color: rgba(14, 26, 20, 0.85) !important;
+  }
+  html[data-theme="dark"] section.hero-manifesto a.hero-secondary-cta:hover {
+    color: var(--color-primary-dark) !important;
   }
 </style>
 

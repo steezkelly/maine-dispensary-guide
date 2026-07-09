@@ -237,24 +237,19 @@ const siteName = siteConfig.siteName;
 </script>
 
 <style>
-  /* Header backdrop — pinned to the header's box, behind the nav. */
-  #site-header {
-    position: sticky; /* matches Layout's #site-header */
-    overflow: hidden;
-  }
-  /* The :global pseudo-selector is needed because the AnimatedBackdrop emits
-     its own root class. Override position to fill the header instead of
-     stretching from the parent section. */
+  /* The AnimatedBackdrop is rendered inside the header but its component
+     uses position:absolute + inset:0 to fill its parent. Without scope
+     overrides the absolute fill would stretch from a non-header ancestor.
+     Pin the backdrop and nav/progress z-stack without clipping descendants
+     — `overflow: hidden` previously truncated the "Browse by Topic"
+     dropdown mega-menu at ~70px below the header. */
   #site-header :global(.mdg-anim-backdrop--subtle) {
     position: absolute !important;
     inset: 0 !important;
     height: 100% !important;
     z-index: 0 !important;
-    /* Aurora intensity already multiplied by 0.35 via intensity prop;
-       we add another 0.8 layer to keep header readable. */
     opacity: 0.8;
   }
-  /* Make sure the nav stays above the backdrop. */
   #site-nav { position: relative; z-index: 2; }
   #progress-container { position: relative; z-index: 3; }
 </style>
