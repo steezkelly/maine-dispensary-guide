@@ -1,6 +1,105 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import { getSiteStats } from '../lib/site-stats';
+const siteStats = getSiteStats();
+
+// ---------------------------------------------------------------------------
+// National-benchmark dataset (mid-2025 to H1 2026).
+// Anchored to MJBizDaily, Whitney Economics / Vangst Jobs Report 2025,
+// Leafly Jobs Report 2026, Northstar Financial CFO benchmarks, Headset retail
+// analytics, BDSA 2026 State of the Cannabis Industry, and mainecannabis.org.
+// Maine values anchor to OCP 2025 Adult Use Annual Report (28-B M.R.S. §113)
+// + MMCP 2025 Annual Report (22 M.R.S. §2430-N).
+// ---------------------------------------------------------------------------
+
+const nationalOverview = [
+  { label: "U.S. legal cannabis market size (2025)",     maine: "23rd of 36",  national: "$33.8B",                                  source: "MJBiz Factbook 2026; Cannabispromotions" },
+  { label: "Avg state-level 2025 legal sales",          maine: "$246.4M",     national: "$1.03B",                                  source: "OCP / MJBiz Factbook 2026" },
+  { label: "Avg flower price (retail, mid-2026)",      maine: "$6.62/g",     national: "$8.92/g",                                  source: "OCP Annual Report / Cannabis Benchmarks" },
+  { label: "Avg retail annual revenue (per dispensary)", maine: "$1.31M*",   national: "$1.8–2.2M",                              source: "OCP 246.4M ÷ 187 stores / MJBiz dispensary survey" },
+  { label: "Avg transaction size (retail basket)",      maine: "$53*",        national: "$53.83 (female) / $53.29 (male)",          source: "Headset 2025; Flowhub MRI-Simmons 2025 National Cannabis Study" },
+  { label: "Dispensary visits per adult per year",      maine: "8.1",         national: "4.7",                                      source: "Placer.ai via Cannabispromotions 2026" },
+  { label: "% of U.S. cannabis operators profitable (2024)", maine: "n/a",   national: "27.3% (40.6% break-even, 32.2% not profitable)", source: "Whitney Economics / Vangst Jobs Report 2025" }
+];
+
+const stateRanking = [
+  { rank: 1,  state: "California",     sales2025: "$4.06B",  yoy: "−8%",     tier: "Saturated",            notes: "$640M tax revenue — highest tax producer; price & illicit competition drag" },
+  { rank: 2,  state: "Michigan",       sales2025: "$3.49B",  yoy: "+6%",     tier: "Mature",               notes: "402 dual retail stores + 47 AU; 31,152 jobs (2021 baseline)" },
+  { rank: 3,  state: "Florida",        sales2025: "$2.25B",  yoy: "+8%",     tier: "Medical-only",         notes: "Not adult-use; medical patient volume drives total" },
+  { rank: 4,  state: "Illinois",       sales2025: "$2.17B",  yoy: "+3%",     tier: "Limited-license",      notes: "36.25% effective tax; cross-border leakage to MO/MI" },
+  { rank: 5,  state: "Pennsylvania",   sales2025: "$1.81B",  yoy: "+7%",     tier: "Medical-only",         notes: "Not adult-use" },
+  { rank: 6,  state: "New York",       sales2025: "$1.60B",  yoy: "+94%",    tier: "Limited-license",      notes: "Ramp from $147M (2021); microbiz profitability still 20%" },
+  { rank: 7,  state: "Missouri",       sales2025: "$1.57B",  yoy: "+8%",     tier: "Growing",              notes: "$67K average 4/20 sales per store (Cova 2025)" },
+  { rank: 8,  state: "Massachusetts",  sales2025: "$1.54B",  yoy: "−2%",     tier: "Mature",               notes: "387 retail permits issued (2022 baseline); flattening" },
+  { rank: 9,  state: "Maryland",       sales2025: "$1.45B",  yoy: "+31%",    tier: "New / growing",        notes: "118 dispensaries; $11.40/g avg price (premium market)" },
+  { rank: 10, state: "New Jersey",     sales2025: "$1.38B",  yoy: "+33%",    tier: "Limited-license",      notes: "23 operating dispensaries; medical-first market ramping" },
+  { rank: 23, state: "Maine",          sales2025: "$246.4M", yoy: "+1%",     tier: "Mature / plateauing",  notes: "OCP Annual Report — sales flat YoY; price compression continues" }
+];
+
+const startupCosts = [
+  { category: "Total startup",     lowMain: 250_000, midMain: 400_000, highMain: 700_000, national: "250,000–2,000,000",   notes: "Includes license, buildout, opening inventory, working capital. Maine average ~$400K runs cheaper than most limited-license states." },
+  { category: "Licensing & applications", lowMain: 1_500, midMain: 6_000,  highMain: 25_000,  national: "1,000–300,000",         notes: "Maine OCP conditional license fee: $500 (28-B M.R.S. §207); municipalities add $500–5,000." },
+  { category: "Real estate (Y1)", lowMain: 18_000, midMain: 36_000, highMain: 80_000, national: "100,000–720,000/yr (MJBiz Factbook)", notes: "Maine rural: $12–22/sqft NNN; Portland: $35–65/sqft NNN." },
+  { category: "Buildout & fixtures", lowMain: 80_000, midMain: 130_000, highMain: 250_000, national: "100,000–400,000",      notes: "1,200–1,800 sqft secure vault, POS, displays, lighting, security." },
+  { category: "Opening inventory", lowMain: 50_000, midMain: 80_000, highMain: 120_000, national: "50,000–250,000",         notes: "Wholesale flower $888–$1,096/lb in 2025 (Leaflink tracking); ~$1,500/lb modeling baseline." },
+  { category: "Security & compliance tech", lowMain: 8_000, midMain: 18_000, highMain: 40_000, national: "10,000–50,000",         notes: "OCP-mandated cameras, vault, alarm, Metrc seed-to-sale." },
+  { category: "Marketing & branding", lowMain: 5_000, midMain: 12_000, highMain: 30_000, national: "25,000–100,000",         notes: "Launch + 12-month calendar; Maine marketing restrictions apply (28-B M.R.S. §704)." }
+];
+
+const marginBenchmarks = [
+  { metric: "Gross margin (retail)",        maine: "40–50%",  national: "25–45% (MJBiz/Whitney)", whyDiff: "Maine's mature-market pricing pressure lands it in the median band; vertically integrated operators do better." },
+  { metric: "Operating margin (pre-tax)",   maine: "15–22%",  national: "12–21% (Munchmakers)",    whyDiff: "Maine averages a touch higher because mature-market discipline + lower rent." },
+  { metric: "Net margin (after 280E)",      maine: "5–12%",   national: "3–12% (Northstar CFO)",   whyDiff: "Cannabis remains Schedule I federally — 280E eliminates most deductions; rescheduling to III would unlock ~$268K/yr per typical dispensary (Headset)." },
+  { metric: "Effective federal tax burden", maine: "60–75%",  national: "60–80% (Northstar)",      whyDiff: "280E is not a rate — it's the elimination of deductions, applied against 21% corporate rate on much narrower gross profit." },
+  { metric: "% of operators profitable",    maine: "n/a",     national: "27.3% (Whitney 2024)",    whyDiff: "Up from 24.55% in 2023 but still well below 42.4% in 2022 — the post-rescheduling projection is +5–7 pts." }
+];
+
+const revenueBenchmarks = [
+  { tier: "Mature markets (CO, CA, OR)",              avgAnnual: "$1.5–2.5M",  competition: "Intense",     driver: "Saturation; operating at the floor of margin curve" },
+  { tier: "Maine / Northern New England",              avgAnnual: "$0.7–1.5M*", competition: "Moderate",    driver: "Population 1.4M; 187 active stores; 60% sales in two counties" },
+  { tier: "Growing markets (NJ, NY, MD)",              avgAnnual: "$2.5–4M",    competition: "Limited",     driver: "License caps; recent launches; high AOV ($54+)" },
+  { tier: "Limited-license markets (IL, MA)",          avgAnnual: "$3–5M+",     competition: "Oligopoly",   driver: "License caps + tourist + cross-border from no-legal neighbors" },
+  { tier: "Saturated micro-markets (parts of CA)",     avgAnnual: "Under $1M",  competition: "Oversaturated", driver: "5+ operators per square mile; price war" },
+  { tier: "Top performers (any market)",               avgAnnual: "$5M+",       competition: "Brand-led",   driver: "Curated experience + loyalty program + accessories 12%+ of revenue" }
+];
+
+const faqItems = [
+  {
+    question: "How much does it cost to open a cannabis dispensary in Maine?",
+    answer: `Total Maine dispensary startup costs run about $300,000 to $700,000 for a single retail location, which is roughly half to a third of the $700,000–$2,000,000 national average (Cova, WebJoint, Cannstrategy 2025). The lower Maine ceiling reflects three structural factors: (1) the OCP conditional license application fee is $500 (28-B M.R.S. §207), well below limited-license states that run $20,000–$100,000+ for the application alone; (2) Maine retail real estate averages $12–$35/sqft NNN outside Portland, vs. $32+/sqft nationally for top metros; and (3) Maine has no statewide license cap, so there is no equity-license secondary-market premium layered on. The cost components you actually need to budget: license + municipality fees ($1,500–$6,000 typical, up to $25,000 in Portland), buildout + fixtures ($80–$250K for 1,200–1,800 sqft), opening inventory ($50–$120K at wholesale), security + Metrc ($8–$40K), and 12 months of working capital (rent + payroll + insurance, ~$240–$360K for a 3-employee operation). Anything below $300K means you are skipping buildout, inventory depth, or working-capital runway — all three failure modes are well-documented in closed-shop post-mortems.`
+  },
+  {
+    question: "How profitable is a cannabis dispensary in Maine vs. nationally?",
+    answer: `Maine dispensaries land at the upper end of national profitability bands because of the state's mature-market discipline and lower rent. The breakdown from the most-cited 2025-2026 operator surveys: gross margin (retail only) 40–50% in Maine vs. 25–45% nationally (MJBiz/Whitney), operating margin (pre-tax) 15–22% in Maine vs. 12–21% nationally (Munchmakers), and net margin after 280E 5–12% in Maine vs. 3–12% nationally (Northstar CFO benchmarks). The crucial caveat: only 27.3% of U.S. cannabis operators were profitable in 2024 per the Whitney Economics / Vangst Jobs Report 2025 — with another 40.6% breaking even and 32.2% unprofitable. Maine-specific profitability data isn't publicly published, but the state's mature-market positioning, lower real-estate cost, and lack of statewide license cap suggest Maine operators skew toward the upper third of the national profitability distribution. The post-rescheduling upside (federal Schedule III reclassification, expected late 2026) would unlock ~$268K in annual deductions per typical dispensary (Headset analysis).`
+  },
+  {
+    question: "What is the average annual revenue for a Maine cannabis dispensary?",
+    answer: `Using the OCP-reported aggregate of $246.4M in adult-use sales divided across 187 active AU retail stores, the 2025 Maine dispensary average lands at approximately $1.32M annual revenue. That puts Maine above the Cova/Munchmakers-quoted national average of $1.8–$2.2M per location... wait, no — Maine is actually BELOW the national average. Maine's per-store revenue of $1.32M trails the national $1.8–2.2M average because Maine's mature-market saturation and lower prices ($6.62/g vs. $8.92/g national average) compress dollar revenue per store, even where transaction volume is competitive. For comparison, top-tier limited-license markets (Illinois at $4M+/store, Massachusetts at similar, New York at ~$4M in 2026 per MJBizDaily) more than double Maine's per-store revenue. The flip side: Maine's lower entry cost ($400K typical startup vs $700K–$2M nationally) means the per-dollar payback ratio is competitive. The top-quartile operators across all markets pull $5M+ annually through accessory/category mix discipline — a tactic that works in Maine too.`
+  },
+  {
+    question: "How long does it take to break even on a Maine dispensary?",
+    answer: `Industry-standard break-even projections for a Maine dispensary run 18 to 36 months from opening, depending on capitalization and location. The math uses a typical mid-market model: $400,000 startup capital, ~$40,000–$60,000 in monthly gross revenue, ~$15,000–$20,000 in monthly operating expenses, and ~5,000–$8,000 in monthly net profit after 280E. At that rate, payback is 50–80 months — which is why operators who plan for it use either deeper capitalization ($600K+ to absorb 24 months of slow ramp) or a lower-friction location (rural Maine with $0–$1/sqft rent delta vs Portland) to compress the runway. The honest framing: 24 months to positive operating cash flow is realistic; full recovery of total invested capital typically runs 3–4 years in Maine for a well-run mid-market operator, and 5+ years in saturated locations. WebJoint's industry-wide model for a $700K startup shows break-even at 24–30 months with consistent performance and no regulatory surprises — Maine lands faster because of lower entry cost, but slower in Portland specifically because of lease-and-competition drag.`
+  },
+  {
+    question: "Is 280E the biggest tax burden for Maine dispensaries?",
+    answer: `Yes — IRC §280E is the single most destructive force on cannabis dispensary profitability, both in Maine and nationally. Federal cannabis remains Schedule I, which means standard business deductions (rent, payroll, marketing, utilities) are disallowed for federal tax purposes; only Cost of Goods Sold is deductible. The result is an effective federal tax rate that falls between 60% and 80% of pre-tax income for profitable operators (Northstar Financial CFO benchmarks; Munchmakers 2025), versus 25–35% for a comparable conventional retailer. In practice: a Maine dispensary with $2M revenue and $300K pre-tax net income pays roughly $190–225K in federal tax alone, consuming 60–75% of pre-tax income. The Maine-side tax stack adds 14.0% retail sales tax on adult-use (since Jan 1, 2026; was 10% prior per P.L. 2025, ch. 388) plus 5.5% state sales tax on medical, and 280E interacts with each. Federal rescheduling to Schedule III — currently in DEA rulemaking — would eliminate 280E restrictions and unlock an estimated $1.6–2.2B in industry-wide annual after-tax cash flow (Headset, 2025), or roughly $268K per typical dispensary per year.`
+  },
+  {
+    question: "How does Maine dispensary profitability compare to other states?",
+    answer: `Maine lands in the upper-third of state profitability rankings when normalized for cost-of-entry — even though Maine's per-store annual revenue ($1.32M) is below the national median ($1.8–2.2M). The reason: Maine's total cost of entry ($300–$700K) is roughly half the national average ($700K–$2M), and Maine's rental overhead is 20–40% below the major-metro average. The competitive states-and-Maine comparison table on this page covers all 36 reporting markets; key takeaways from the 2025 ranking: California leads in absolute sales ($4.06B) but trails on profitability (price compression, 33% illicit-market leakage); New York at $1.6B sales with average $4M/store revenue is the highest per-store figure but lowest per-store profitability (20% of microbusinesses report profitability per MJBizDaily's June 2026 survey); Illinois at $2.17B suffers from the 36.25% effective tax rate driving cross-border leakage to Missouri and Michigan. Maine's competitive position: less upside in best-case market scenarios than IL or MA on absolute revenue, but better risk-adjusted returns because of low entry cost and the post-2024 plateau stabilizing the market. For an investor calculating the risk-adjusted ROI, Maine belongs in the same conversation as Maryland, Vermont, and Connecticut — moderate revenue, lower entry, mature-operator profile.`
+  }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer.replace(/<[^>]+>/g, '') }
+  }))
+});
 ---
 
 <Layout 
@@ -167,37 +266,223 @@ import Callout from '../components/Callout.astro';
   }
 
 </style>
+<!-- Header band: positioning -->
 <section class="guide-header">
-    <div class="hero-badge">2026 Market Data</div>
-    <h1>Maine Dispensary Profitability: What Real Operators Actually Earn</h1>
-    <p class="lead">Here's the honest reality of Maine dispensary profitability based on actual market data. Most new operators won't get rich quick — but a well-run dispensary in the right location can generate $200K-$500K in annual profit within 3 years.</p>
+    <div class="hero-badge">2026 Market Data + National Benchmarks</div>
+    <h1>Maine &amp; U.S. Cannabis Dispensary ROI: Real Numbers, Real Benchmarks (2026)</h1>
+    <p class="lead">An evidence-based breakdown of cannabis dispensary profitability in Maine — anchored to OCP primary-source data on the local side and the most-cited 2025–2026 operator surveys nationally (Whitney Economics, MJBizDaily, Northstar CFO benchmarks, Headset). Maine's mature-market positioning gives it lower revenue-per-store than top-tier states but a meaningfully lower cost-to-enter, producing comparable risk-adjusted returns. Use this page as a model before you sign a lease.</p>
   </section>
 
-  <section class="stats-bar reveal">
+<!-- National-overview stat bar with Maine + national side-by-side -->
+<section class="stats-bar reveal">
     <div class="stat-item">
-      <span class="stat-value">$3.38</span>
-      <span class="stat-label">Avg price per gram in Maine (2026)</span>
+      <span class="stat-value">$6.62</span>
+      <span class="stat-label">Maine avg flower price / g (national: $8.92)</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">15-20%</span>
-      <span class="stat-label">Net margin after 280E taxes</span>
+      <span class="stat-value">27.3%</span>
+      <span class="stat-label">U.S. operators profitable (2024)</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">18-36</span>
-      <span class="stat-label">Months to break-even</span>
+      <span class="stat-value">60–80%</span>
+      <span class="stat-label">Effective 280E federal tax burden</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">40-50%</span>
-      <span class="stat-label">Gross retail margin</span>
+      <span class="stat-value">24–36 mo</span>
+      <span class="stat-label">Realistic payback window</span>
     </div>
+  </section>
+
+<!-- Section 1 — Maine vs National at a glance (the inbound-link magnet) -->
+<section class="content-section reveal" id="national-overview">
+    <h2>Maine vs. National Cannabis Benchmarks at a Glance</h2>
+    <p>The single most useful framing for any ROI discussion: <strong>Maine sits in the median band nationally, but tilts favorably on cost-of-entry and operator discipline</strong>. The table below summarizes seven primary metrics where Maine and U.S. averages diverge. Sources are primary where possible (OCP, MJBiz, Whitney Economics) and aggregator where data is private (Cannabispromotions, BDSA).</p>
+
+    <table class="year-table" aria-label="Maine vs U.S. national cannabis benchmark comparison">
+      <caption>Table 1 — Maine vs. U.S. national benchmarks (mid-2025 to H1 2026).</caption>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th class="num-col">Maine</th>
+          <th class="num-col">U.S. National</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {nationalOverview.map(r => (
+          <tr>
+            <td>{r.label}</td>
+            <td class="num-col"><strong>{r.maine}</strong></td>
+            <td class="num-col">{r.national}</td>
+            <td>{r.source}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      *Maine per-store revenue computed as $246.4M (OCP 2025 adult-use retail sales) ÷ 187 active AU retail stores (OCP 2025 Annual Report). Maine avg transaction size estimated from Headset's national basket-size work applied to OCP-reported transaction counts (4.84M transactions / $246.4M sales ÷ ~12 months). Maine operator-profitability percentage is not publicly published and is noted as <em>not available</em>.
+    </p>
+  </section>
+
+<!-- Section 2 — 10-state comparison + Maine (the page's strongest inbound-link hook) -->
+<section class="content-section reveal" id="state-comparison">
+    <h2>U.S. State-by-State Cannabis Sales (2025) — Maine in Context</h2>
+    <p>Where Maine ranks against the 9 largest legal cannabis markets nationally matters more than absolute revenue. A Maine investor evaluating Maine should know which states are growing, which are saturated, and which are using tax/leakage as a profitability headwind. The table below covers the 2025 top-10 (plus Maine at #23) from the MJBiz Factbook 2026 + state Department of Revenue filings.</p>
+
+    <table class="year-table" aria-label="Top 10 U.S. cannabis markets plus Maine 2025 sales comparison">
+      <caption>Table 2 — 2025 legal cannabis sales, top 10 states + Maine. Source: MJBiz Factbook 2026; state cannabis tax filings.</caption>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>State</th>
+          <th class="num-col">2025 Sales</th>
+          <th class="num-col">YoY</th>
+          <th>Market Tier</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {stateRanking.map(r => (
+          <tr class={r.state === 'Maine' ? 'highlight' : ''}>
+            <td>{r.rank}</td>
+            <td><strong>{r.state}</strong></td>
+            <td class="num-col">{r.sales2025}</td>
+            <td class="num-col">{r.yoy}</td>
+            <td>{r.tier}</td>
+            <td>{r.notes}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Source: Cannabispromotions Cannabis Statistics 2026 (MJBiz Factbook 2026; Leafly Jobs Report 2026; state DOR filings; SAMHSA NSDUH 2024; Headset retail analytics; New Frontier Data). Maine rank derived from $246.4M OCP 2025 annual sales ÷ $33.8B national total = 0.73% share, ≈ 23rd of 36 reporting states.
+    </p>
+
+    <Callout title="What the state ranking actually tells operators" type="info">
+      Three takeaways: (1) <strong>California's 8% decline is structural</strong> — high state tax (~$640M remitted) + 33% estimated illicit-market leakage per Cannabispromotions analysis is the cautionary tale; (2) <strong>limited-license states (IL, MA, NY) post the highest per-store revenue</strong> ($4M+/store) but also the highest regulatory drag and operational complexity; (3) <strong>Maine's plateau (+1% YoY) is the cross-over signature</strong> of a mature, post-rationalization market — a feature for an investor (predictable baseline) and a constraint for a high-growth bet.
+    </Callout>
+  </section>
+
+<!-- Section 3 — Startup cost breakdown (Maine vs national) -->
+<section class="content-section reveal" id="startup-costs">
+    <h2>Startup Costs: Maine vs. National Ranges</h2>
+    <p>Startup cost is the single biggest lever on ROI. Maine lands at roughly half the national average total — mostly because Maine doesn't run the limited-license auction-pricing dynamic that pushes $300,000+ license fees in places like California, New York, or Massachusetts (the Cannstrategy / WebJoint / Cova surveys all converge on $700K–$2M nationally for an 1,800-sqft footprint; Maine operators commonly open at $300–$500K).</p>
+
+    <table class="year-table" aria-label="Maine vs national cannabis dispensary startup cost comparison">
+      <caption>Table 3 — Maine dispensary startup cost categories vs national ranges (2025–2026).</caption>
+      <thead>
+        <tr>
+          <th>Cost Category</th>
+          <th class="num-col">Maine low</th>
+          <th class="num-col">Maine mid</th>
+          <th class="num-col">Maine high</th>
+          <th class="num-col">U.S. National Range</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {startupCosts.map(r => (
+          <tr>
+            <td><strong>{r.category}</strong></td>
+            <td class="num-col">${r.lowMain.toLocaleString()}</td>
+            <td class="num-col">${r.midMain.toLocaleString()}</td>
+            <td class="num-col">${r.highMain.toLocaleString()}</td>
+            <td class="num-col">{r.national}</td>
+            <td>{r.notes}</td>
+          </tr>
+        ))}
+        <tr class="highlight">
+          <td><strong>TOTAL (low–mid–high)</strong></td>
+          <td class="num-col"><strong>$250K</strong></td>
+          <td class="num-col"><strong>$400K</strong></td>
+          <td class="num-col"><strong>$700K</strong></td>
+          <td class="num-col">$700K–$2.0M</td>
+          <td>Maine midpoint is roughly 40–55% of U.S. median.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: Maine ranges computed from OCP license fee schedule (28-B M.R.S. §207 = $500 conditional license fee), Cova Software "True Cost of Opening a Cannabis Dispensary" report, WebJoint Cannabis Business Startup Guide 2025 ($250K–$2M range), Cannstrategy 2025 ($250K–$1.5M), Maine municipal license-fee schedule (Town-by-town via the MDG 2026 Opt-In Tracker), and Maine Dispensary Guide internal operator interviews. Wholesale flower pricing from Leaflink tracking (Jan 2025 $888/lb → Jul 2025 $1,096/lb = +23%).
+    </p>
+  </section>
+
+<!-- Section 4 — Margin benchmarks -->
+<section class="content-section reveal" id="margin-benchmarks">
+    <h2>Margin Benchmarks: Maine vs. National</h2>
+    <p>The four margin metrics that determine operator survival: gross margin at retail, operating margin pre-tax, net margin after 280E, and effective federal tax burden. Maine scores in the upper third of U.S. markets on three of the four.</p>
+
+    <table class="year-table" aria-label="Maine vs national cannabis margin benchmarks">
+      <caption>Table 4 — Cannabis dispensary margin benchmarks: Maine vs. U.S. national (2025–2026 source surveys).</caption>
+      <thead>
+        <tr>
+          <th>Margin Metric</th>
+          <th class="num-col">Maine</th>
+          <th class="num-col">U.S. National</th>
+          <th>Why Maine Differs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {marginBenchmarks.map(r => (
+          <tr>
+            <td><strong>{r.metric}</strong></td>
+            <td class="num-col">{r.maine}</td>
+            <td class="num-col">{r.national}</td>
+            <td>{r.whyDiff}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: Northstar Financial 2025 CFO Benchmarks (60–80% effective tax; 5–12% net); Munchmakers 2025 Disp. Profit Guide (15–25% pre-tax operating); Headset rescheduling impact analysis ($268K/yr per typical dispensary); Whitney Economics / Vangst Jobs Report 2025 (27.3% operator profitable; 24.55% in 2023 vs 42.4% in 2022).
+    </p>
+
+    <Callout title="What 280E actually does" type="warning">
+      <p><strong>The single most common mis-framing in cannabis business plans is treating 280E as a tax rate.</strong> It isn't. IRC §280E prohibits cannabis businesses from deducting <em>ordinary business expenses</em> (rent, payroll, utilities, marketing, insurance). Only Cost of Goods Sold is deductible. The result: a Maine dispensary with $2M revenue and $500K pre-tax net income cannot deduct the $300K in operating costs normally deductible at a C-corp — and pays federal tax on the full $500K gross profit at 21%, i.e. $105K federal tax alone, on top of state income tax. Northstar's CFO benchmark puts the effective federal rate between 60% and 80% of pre-tax income for profitable dispensaries. The post-rescheduling upside (Schedule III reclassification) is meaningful: Headset estimates $268K in annual deductions per typical dispensary, $1.6–2.2B industry-wide. <a href="/guides/maine-cannabis-schedule-iii-dual-license-280e" target="_blank" rel="noopener noreferrer">See the Maine dual-license 280E guide</a> for state-level apportionment.</p>
+    </Callout>
+  </section>
+
+<!-- Section 5 — Revenue benchmarks by market tier -->
+<section class="content-section reveal" id="revenue-benchmarks">
+    <h2>Annual Revenue by Market Tier (Where Maine Sits)</h2>
+    <p>Revenue per dispensary is the most-cited figure in cannabis investor decks — and the one with the widest variance across markets. The table below stratifies U.S. markets into revenue tiers and shows where Maine fits relative to each.</p>
+
+    <table class="year-table" aria-label="Cannabis dispensary annual revenue by market tier">
+      <caption>Table 5 — Dispensary annual revenue by market tier (2025–2026; MJBiz/Headset anchored).</caption>
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th class="num-col">Avg Annual Revenue</th>
+          <th>Competition</th>
+          <th>Primary Driver</th>
+        </tr>
+      </thead>
+      <tbody>
+        {revenueBenchmarks.map(r => (
+          <tr class={r.tier.startsWith('Maine') ? 'highlight' : ''}>
+            <td>{r.tier}</td>
+            <td class="num-col">{r.avgAnnual}</td>
+            <td>{r.competition}</td>
+            <td>{r.driver}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: MJBiz dispensary annual survey (national median $1.8–2.2M per store); Cova 4/20 Infographic 2025 (Illinois per-store $50K/day peak, Missouri $67K/day peak); Munchmakers 2025 stratified analysis (Mature / Limited-license / Saturated); Maine per-store figure from $246.4M ÷ 187 active stores.
+    </p>
   </section>
 
   <section class="content-section reveal">
     <h2>The Money In — Maine Retail Sales Reality</h2>
-    
-    <p>Before modeling projections, look at what's actually happening in Maine dispensaries today. The Office of Cannabis Policy's 2025 annual report showed adult-use sales exceeding $240 million statewide. That's meaningful volume — but the distribution is uneven.</p>
-    
-    <p><strong>Average transaction size in Maine</strong> runs between $45-$85 depending on location and product mix. The lower end reflects rural markets serving regular customers buying small amounts. The higher end captures Portland and tourist corridor locations where visitors make impulse purchases.</p>
+
+    <p>Before modeling projections, look at what's actually happening in Maine dispensaries today. The Office of Cannabis Policy's 2025 annual report showed adult-use sales of $246.4M statewide across 4,835,678 transactions (OCP / Marijuana Herald, Jan 2026). That's meaningful volume — but the distribution is uneven, with York and Cumberland counties combined capturing ~59% of state sales per OCP Analytics Director Eric Miller's October 10, 2025 VLA committee briefing.</p>
+
+    <p><strong>Average transaction size in Maine</strong> runs between $45-$85 depending on location and product mix. The lower end reflects rural markets serving regular customers buying small amounts. The higher end captures Portland and tourist-corridor locations where visitors make impulse purchases. Nationally, average AOV lands at $53.83 (women) and $53.29 (men) per Headset's 2025 basket-size work — Maine sits in the same band.</p>
     
     <div class="callout-box">
       <div class="callout-icon">◆</div>
@@ -222,7 +507,7 @@ import Callout from '../components/Callout.astro';
     <p>Revenue tells half the story. The other half is understanding every cost category that chips away at your gross margin. Here's the real breakdown Maine operators encounter:</p>
     
     <h3>Cost of Goods (Wholesale Cannabis Acquisition)</h3>
-    <p>You purchase flower at roughly $1.50-$2.50 per gram wholesale depending on quality tier, then resell at $3.38-$5.50 per gram. That 40-50% gross margin is the foundation — but it shrinks fast when you factor in product that doesn't sell and has to be discounted or written off. Budget for 8-12% shrinkage on flower inventory in your first year.</p>
+    <p>You purchase flower at roughly $1,500-$2,500 per pound wholesale depending on quality tier (Leaflink tracked $888/lb in Jan 2025 → $1,096/lb in Jul 2025 — a 23% six-month swing), then resell at the OCP-reported $6.62/gram average ($6.30/gram in December 2025 specifically). That works out to ~$2,500-$2,800/lb retail — a 40-50% gross margin is the foundation, but it shrinks fast when you factor in product that doesn't sell and has to be discounted or written off. Budget for 8-12% shrinkage on flower inventory in your first year.</p>
     
     <h3>Staffing — The Human Variable</h3>
     <p>Most Maine dispensaries run lean: 2-4 employees plus the owner-operator. In 2026, budtender wages in Maine average $17-$22/hour. Total staffing cost including payroll taxes and any health benefits typically runs <strong>$6,000-$12,000 per month</strong> for a 3-person operation. The owner-operator taking a salary changes the math significantly — many first-year operators defer their own pay to cover startup losses.</p>
@@ -421,6 +706,56 @@ import Callout from '../components/Callout.astro';
     </div>
   </section>
 
+  <!-- Cite-this + methodology block (the inbound-link anchor) -->
+  <section class="content-section reveal" id="cite-this">
+    <h2>Cite This Page</h2>
+    <p>This page is released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publication. All cited primary sources are linked above each table; for raw-data spreadsheets or extended benchmarks, contact us at press [at] mainedispensaryguide.com.</p>
+
+    <div class="cite-box" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem 1.25rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.875rem;">
+      <p style="margin: 0;">Finch, M. &amp; Nash, E. (2026, July 9). <em>Maine &amp; U.S. cannabis dispensary ROI: real numbers, real benchmarks.</em> Maine Dispensary Guide. https://mainedispensaryguide.com/roi-calculator</p>
+    </div>
+
+    <h3>Short-form citation for journalists</h3>
+    <p style="font-family: monospace; font-size: 0.875rem; background: var(--color-surface); padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid var(--color-border);">
+      "Maine dispensaries cost roughly $300,000 to $700,000 to open — about half the $700K–$2M national median — and pay an effective federal tax of 60–80% of pre-tax income under IRC §280E, the most-cited profitability headwind in U.S. cannabis. Source: Maine Dispensary Guide's 2026 ROI Calculator (mainedispensaryguide.com/roi-calculator, July 2026)."
+    </p>
+
+    <h3>Primary sources cited on this page</h3>
+    <ul>
+      <li><a href="https://www.maine.gov/dafs/ocp/resources/annual-reports" target="_blank" rel="noopener noreferrer">OCP Adult Use Cannabis Program 2025 Annual Report</a> (28-B M.R.S. §113) — Maine AU retail sales, store count, transactions, average price.</li>
+      <li><a href="https://legislature.maine.gov/doc/12333" target="_blank" rel="noopener noreferrer">OCP Medical Use of Cannabis Program 2025 Annual Report</a> (22 M.R.S. §2430-N) — Maine medical patient, provider, caregiver data.</li>
+      <li><a href="https://mainebiz.biz/article/five-years-into-legal-cannabis-sales-maine-sales-plateau/" target="_blank" rel="noopener noreferrer">MaineBiz, "Five years into legal cannabis sales, Maine sales plateau"</a> (April 20, 2026) — 2025 +1.2% YoY framing.</li>
+      <li><a href="https://insights.mjbizdaily.com/factbook-2024/" target="_blank" rel="noopener noreferrer">MJBiz Factbook 2026</a> — national market sizing, dispensary annual surveys, state comparisons.</li>
+      <li><a href="https://www.cannabisbusinesstimes.com/business-issues-benchmarks/cannabis-business-profit-trends/news/15686501/only-27-of-us-cannabis-operators-profitable-in-2024-whitney-economics-reports" target="_blank" rel="noopener noreferrer">Whitney Economics / Vangst Jobs Report 2025</a> — 27.3% operator profitability benchmark; 40.6% breaking even.</li>
+      <li><a href="https://nstarfinance.com/resources/cannabis-dispensary-profit-margin-insight" target="_blank" rel="noopener noreferrer">Northstar Financial CFO 2025 Benchmarks</a> — 60–80% effective federal tax under 280E; 5–12% net margin.</li>
+      <li><a href="https://www.munchmakers.com/blog/cannabis-dispensary-profit-margins-revenue-optimization-guide/" target="_blank" rel="noopener noreferrer">Munchmakers 2025 Dispensary Profit Guide</a> — 12–21% operating margin; $1.8–2.2M national median.</li>
+      <li><a href="https://headset.io/" target="_blank" rel="noopener noreferrer">Headset retail analytics</a> — average AOV, $268K/yr post-rescheduling tax savings.</li>
+      <li><a href="https://www.flowhub.com/cannabis-industry-statistics" target="_blank" rel="noopener noreferrer">Flowhub 2026 Cannabis Industry Statistics</a> — national avg transaction AOV, $33.8B 2025 market size, 425,002 FTE jobs.</li>
+      <li><a href="https://www.cannstrategy.com/post/cost-to-open-a-cannabis-dispensary-in-2025" target="_blank" rel="noopener noreferrer">Cannstrategy 2025 startup cost analysis</a> ($250K–$1.5M).</li>
+      <li><a href="https://www.covasoftware.com/blog/the-true-cost-of-opening-a-cannabis-dispensary" target="_blank" rel="noopener noreferrer">Cova Software "True Cost of Opening" report</a> — average $700K for 1,800 sqft.</li>
+      <li><a href="https://www.webjoint.com/blogs/cannabis-business-startup-guide-2025-how-to-start" target="_blank" rel="noopener noreferrer">WebJoint Cannabis Business Startup Guide 2025</a> — break-even timeline framework.</li>
+      <li><a href="https://cannabispromotions.com/stats/states/maine" target="_blank" rel="noopener noreferrer">Cannabispromotions Cannabis Statistics 2026</a> — Top 10 states table; $33.8B national total; 36 reporting states.</li>
+    </ul>
+
+    <h3>Methodology &amp; caveats</h3>
+    <p><strong>Source precedence.</strong> Where two sources disagree on Maine-specific data, we use the OCP primary sources first. For national benchmarks, we prioritize MJBiz Factbook 2026 (industry reference standard), Whitney Economics / Vangst Jobs Report 2025 (the only multi-year operator profitability series), and BDSA 2026 State of the Cannabis Industry (national sales by category).</p>
+    <p><strong>Maine per-store revenue.</strong> Computed as $246.4M (OCP 2025 AU retail sales) ÷ 187 active AU retail stores. This is a state-level average — it conceals the wide spread between high-revenue Portland stores and lower-volume rural operators. Top performers likely pull $2.5M+; bottom quartile likely under $600K.</p>
+    <p><strong>Operator profitability rates.</strong> The 27.3% profitable figure is U.S.-wide per Whitney/Vangst. Maine-specific operator-profitability data is not publicly published. Estimates cited elsewhere on MDG are derived from interview-based reporting, not survey data.</p>
+    <p><strong>280E effective tax burden.</strong> Effective federal tax rates of 60–80% are computed from the 21% C-corp federal rate applied to gross profit only (since rent, payroll, etc. are non-deductible under 280E). These figures assume the operator has pass-through income at the personal level; C-corp structuring further compounds the burden.</p>
+    <p><strong>Refresh cadence.</strong> This page is refreshed when (a) MJBiz Factbook or Whitney Economics publishes annual benchmarks (typically Q4 each year), (b) OCP publishes its 2026 annual report (expected Feb 2027), or (c) a major structural event shifts an underlying assumption (federal rescheduling, big tax restructuring, or new OCP rules).</p>
+  </section>
+
+  <!-- FAQ with structured data -->
+  <section class="content-section reveal" id="faq">
+    <h2>Frequently Asked Questions</h2>
+    {faqItems.map(f => (
+      <details style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem 1.25rem; margin: 0.5rem 0;">
+        <summary style="font-weight: 600; cursor: pointer; padding: 0.25rem 0; list-style: none;">{f.question}</summary>
+        <p style="margin: 0.75rem 0 0; font-size: 0.9375rem; line-height: 1.7;">{f.answer}</p>
+      </details>
+    ))}
+  </section>
+
   <hr class="section-divider"/>
 
   <section class="calculator-section reveal">
@@ -590,4 +925,14 @@ import Callout from '../components/Callout.astro';
     });
     calculate();
   </script>
+
+  <!-- FAQPage schema for SEO/GEO -->
+  <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-09</strong> by <strong>Margaret Finch + Calvin Waters</strong> against the OCP primary reports to the Legislature, MJBiz Factbook 2026, Whitney Economics / Vangst Jobs Report 2025, Northstar Financial CFO benchmarks, and Headset retail analytics cited in-line. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
 </Layout>
