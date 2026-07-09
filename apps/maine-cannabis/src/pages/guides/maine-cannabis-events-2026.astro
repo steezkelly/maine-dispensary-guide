@@ -22,19 +22,11 @@ const eventFaqs = [
   { question: "Where can I network with other Maine cannabis operators?", answer: "The densest Maine cannabis operator networking happens at MCIA monthly Portland meetings, OCP quarterly stakeholder meetings in Augusta, the OCP Annual Industry Summit each October, and the spring/summer regional MCCA roundtables. For consumer-facing 420-curious networking, the Maine Cannabis Expo and NECANN draw the largest crowds. For adjacent industries (real estate, security, packaging, compliance consulting), the OCP compliance workshop each July in Portland draws the strongest B2B mix." },
   { question: "Can I attend cannabis events online in Maine?", answer: "Some — not all. OCP stakeholder meetings have offered virtual attendance since 2022; legislative hearings (cannabis caucus, public comment) are streamed live on the Maine Legislature's YouTube channel. Industry association events are mostly in-person. Trade shows and expos are in-person only due to product showcase requirements. Compliance seminars and METRC training are fully online with self-paced modules, and budtender certification programs run both online and in-person cohorts. For 2026, expect virtual attendance to remain standard for OCP public meetings and to expand selectively for MCIA events based on member demand." }
 ];
-
-const faqPageJsonLd = JSON.stringify({
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity": eventFaqs.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": { "@type": "Answer", "text": f.answer.replace(/<[^>]+>/g, "") }
-  }))
-});
 ---
 
-<script type="application/ld+json" set:html={faqPageJsonLd} />
+<!-- FAQPage JSON-LD is emitted by the <Faq /> component below via @network/ui/Faq.
+     No inline script here (Sprint 78f: removed duplicated schema to avoid the
+     duplicate-FAQPage check finding content-health regression on this page). -->
 
 <Layout title="Maine Cannabis Events 2026: OCP Calendar & Industry Meetups" description="Maine cannabis events 2026 — OCP stakeholder meetings, MCIA/MCCA gatherings, NECANN, cannabis expos, and LD 1840 caregiver trade shows. Dates, locations, registration." heroImage="/images/heroes/maine-cannabis-events-2026.jpg" article={article} topics={topics}>
   <style>
