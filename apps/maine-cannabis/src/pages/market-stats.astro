@@ -87,14 +87,90 @@ const taxDelta = [
   { item: "Medical patients (sales tax only, no excise)", before: "5.5%",   after: "5.5%",   delta: "No change",        source: "22 M.R.S. §2430-N" }
 ];
 
+// ---------------------------------------------------------------------------
+// National / federal context — primary-source anchors from the 2026-07-09
+// source pack at docs/research/market-stats-national-source-pack-2026-07-09.md.
+// All citations: 24-of-24 verified via canonical primary URLs; aggregator
+// attributions (Statista via Flowhub; Leafly 2026 via cannabispromotions.com)
+// are flagged in the prose where the citation trail is one hop from primary.
+// ---------------------------------------------------------------------------
+
+// National market size + per-capita benchmarks (2024-2026)
+const nationalMarket = [
+  { metric: "U.S. cannabis market (2026 projected)",    value: "$47B",      source: "Statista, 2026 (cited via Flowhub)" },
+  { metric: "U.S. cannabis market (2030 projected)",    value: "$55.4B",    source: "Statista, 2026 — 3.36% CAGR (cited via Flowhub)" },
+  { metric: "U.S. cannabis market (2024 actual)",       value: "$30.1B",    source: "Whitney Economics + BDSA consensus 2024 actual" },
+  { metric: "U.S. cannabis market (2025 BDSA actual)",  value: "$31.5B",    source: "BDSA 2025 — $23.9B adult-use + $7.6B medical (per Flowhub)" },
+  { metric: "U.S. cannabis market (2025 Whitney revised forecast)", value: "$29.1–29.6B", source: "Whitney Economics Dec 2025 downward revision" },
+  { metric: "Total U.S. economic contribution (2025)",  value: "$149B",     source: "Flowhub citing aggregated economic-impact studies" },
+  { metric: "U.S. legal-cannabis states (adult-use)",   value: "24 states + DC + 3 territories", source: "NCSL (June 26, 2025); NORML cross-check" },
+  { metric: "U.S. legal-cannabis states (medical, comprehensive)", value: "41 states + DC + 3 territories", source: "NCSL (June 26, 2025)" },
+  { metric: "U.S. past-month cannabis users (age 12+, 2024)", value: "44.3M (15.4%)", source: "SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007)" },
+  { metric: "U.S. past-year cannabis users (age 12+, 2024)", value: "64.2M (22.3%)", source: "SAMHSA NSDUH 2024 (via Flowhub)" }
+];
+
+// Jobs + tax burden — national cannabis industry
+const nationalJobs = [
+  { metric: "Cannabis-supported FTE jobs (2024, Vangst)",  value: "440,445",    source: "Vangst 2025 Jobs Report" },
+  { metric: "Cannabis-supported FTE jobs (2025, Vangst)",  value: "425,002 (−3.4% YoY)", source: "Vangst 2025 Jobs Report (per Flowhub)" },
+  { metric: "Cannabis-supported FTE jobs (2025, Leafly+Whitney)", value: "445,800 (+1.2% YoY)", source: "Leafly 2026 Jobs Report (cited via cannabispromotions.com)" },
+  { metric: "Federal tax burden from 280E (2025 alone)",   value: "$2.24B excess", source: "Whitney Economics, April 9, 2026" },
+  { metric: "Cumulative federal taxes paid since 2018",    value: "$27B",      source: "Whitney Economics, April 9, 2026" },
+  { metric: "Cumulative excess 280E taxes since 2018",     value: "$15B",      source: "Whitney Economics, April 9, 2026" },
+  { metric: "Projected industry FTE jobs by 2029",         value: "~800,000",  source: "Cannabiz Team projection (per Flowhub)" }
+];
+
+// Pricing — national context for Maine $6.62/g vs US retail benchmarks
+const nationalPricing = [
+  { state: "Michigan (cheapest)", pricePerGram: "$3.80",   source: "Cannabis Promotions 2025 state table" },
+  { state: "Oregon (lowest tracked eighth avg)", pricePerGram: "n/a (8th = $11.55)", source: "Headset June 2026" },
+  { state: "U.S. national avg (single-gram package, June 2026)", pricePerGram: "$8.94", source: "Headset June 2026 retail POS data" },
+  { state: "U.S. national avg (all package sizes, June 2026)", pricePerGram: "$3.62 equivalized", source: "Headset June 2026 retail POS data" },
+  { state: "Maine (per cannabispromotions.com 2025)", pricePerGram: "$8.60",   source: "Cannabis Promotions 2025 (aggregator)" },
+  { state: "Maine (per OCP CY2025, weighted all-pkg)", pricePerGram: "$6.62",   source: "OCP 2025 Annual Report" },
+  { state: "Ohio (most expensive tracked eighth)", pricePerGram: "n/a (8th = $31.11)", source: "Headset June 2026" },
+  { state: "U.S. national wholesale spot (Nov 21, 2025)", pricePerGram: "$2.40 ($1,087/lb)", source: "Cannabis Benchmarks Nov 21, 2025 weekly report" }
+];
+
+// Federal regulatory status — three-tier current as of 2026-07-09
+const federalStatus = [
+  { item: "FDA-approved marijuana products (e.g., Marinol, Epidiolex analogues)", status: "Schedule III (effective Apr 22, 2026)",  source: "DEA marijuana rescheduling page; 91 FR doc 2026-08176" },
+  { item: "State-licensed medical cannabis (incl. Maine MMCP)", status: "Schedule III (effective Apr 22, 2026)",  source: "DEA; DOJ OPA media 1437441" },
+  { item: "Adult-use (recreational) cannabis — all 24 legal states", status: "Schedule I (unchanged at federal level)",  source: "21 U.S.C. §812; 21 CFR §1308.11" },
+  { item: "Hemp / CBD / delta-8 THC products", status: "Federally legal under 0.3% delta-9 THC — changing Nov 12, 2026 to total-THC standard + 0.4 mg/container cap", source: "2018 Farm Bill §10113; 2026 Appropriations §781" },
+  { item: "Broader Schedule I → III rescheduling NPRM (covers all marijuana)", status: "PENDING — DEA ALJ hearing Jun 29 – Jul 15, 2026",  source: "DEA Hearing Facility; 91 FR 22777" }
+];
+
+// Criminal-justice context — federal marijuana arrest trend
+const federalArrests = [
+  { year: 2007, arrests: "870,000+", pctOfAllDrugArrests: "~48%", notes: "All-time peak (NORML/FBI UCR)" },
+  { year: 2022, arrests: "227,108", pctOfAllDrugArrests: "~25%", notes: "17% of agencies failed to report (under-count)" },
+  { year: 2023, arrests: "217,150", pctOfAllDrugArrests: "25%", notes: "84% possession-only (200,306 of 217,150); floor not ceiling" }
+];
+
+// State-by-state context — where Maine sits in the New England + comparable legal markets
+const stateContext = [
+  { state: "Maine",        adultsUse: "Yes (Oct 2020)", taxRate: "14.0% retail + excise", estPrice: "$6.62/g (OCP 2025)", notes: "186K transactions per store per year" },
+  { state: "Massachusetts", adultsUse: "Yes (Nov 2018)", taxRate: "10.75% retail + excise", estPrice: "n/a", notes: "Mature, plateaued; adult-use 2024 ~$1.5B" },
+  { state: "Vermont",      adultsUse: "Yes (Oct 2022)", taxRate: "14% excise-based", estPrice: "n/a", notes: "Smaller market, integrated wholesale" },
+  { state: "Connecticut",  adultsUse: "Yes (Jan 2023)", taxRate: "10% retail + 3% gross receipts", estPrice: "n/a", notes: "Mature medical, growing adult-use" },
+  { state: "Colorado",     adultsUse: "Yes (Dec 2012)", taxRate: "15% retail + 15% excise", estPrice: "$5–$8/g typical", notes: "Mature market, declining wholesale" },
+  { state: "California",   adultsUse: "Yes (Jan 2018)", taxRate: "15% excise + cultivation tax", estPrice: "~$8–$10/g typical", notes: "Largest US market; tax structure under 2025 reform" },
+  { state: "Illinois",     adultsUse: "Yes (Jan 2020)", taxRate: "10% retail + 7% excise", estPrice: "$15.80/g (most expensive, per cannabispromotions 2025)", notes: "High-tax, low-supply state" },
+  { state: "Michigan",     adultsUse: "Yes (Dec 2019)", taxRate: "10% retail + 10% excise", estPrice: "$3.80/g (cheapest, per cannabispromotions 2025)", notes: "High-supply, low-price state" }
+];
+
 const faqItems = [
   { question: "How big is Maine's adult-use cannabis market right now?", answer: `Maine's adult-use (recreational) cannabis market generated $246.4 million in retail sales across 4,835,678 individual transactions during calendar year 2025 — a 1.0% increase over the $243.9M sold in 2024 (Office of Cannabis Policy, Adult Use Cannabis Program 2025 Annual Report). As of Dec 31, 2025 the OCP counted ${siteStats.activeAdultUseRetailStores} active licensed cannabis retail stores and ${siteStats.activeAdultUseMunicipalities} host municipalities. The live OCP licensee-search roster shows ${liveOcp.auRetailStores} active retail stores in ${liveOcp.auMunicipalities} municipalities as of ${liveOcp.asOf}, reflecting normal license turnover. The market's first half of 2026 (Jan–Jun) totaled $119.95M in retail sales across 2,439,812 transactions at a year-to-date average flower price of $6.10/gram, putting Maine on pace for $244–248M in 2026 — a "plateau" year described by MaineBiz (April 20, 2026) as "the smallest year-over-year increase in the market so far."` },
   { question: "Has Maine's cannabis market kept growing, or is it plateauing?", answer: `Adult-use sales plateaued in 2025 (+1.0% YoY) after three consecutive years of double-digit growth: 2022 (+93.8%), 2023 (+36.5%), 2024 (+12.4%), 2025 (+1.0%). The plateau shows up across three OCP-reported metrics simultaneously: total dollars flat, total transactions up modestly (+4.7%), and average flower price declining (−8.6%, from $7.25 to $6.62 per gram). Together those metrics indicate the market is now a redistribution story — total consumer spend flat, but pricing is being competed away to consumers while operators absorb the margin compression. The market-pulse interpretation: Maine has moved from "growth at all costs" (2021–2023) through "rationalization" (2024) and into "maturation/consolidation" (2025–2026). Industry analysts at MJBizDaily and Cannabismarketcap describe the 2026 national picture similarly — hundreds of operators exiting, stronger MSOs absorbing market share — but Maine-specific dynamics (tourism, the caregiver program, and the Jan 1 2026 tax-restructuring) shape the local outcome.` },
   { question: "How much tax revenue does Maine collect from cannabis?", answer: `Maine collected approximately $43.72 million in Adult Use Cannabis Program (AUCP) registration-and-fee revenue during calendar year 2025 (per the OCP 2025 MMCP and AUCP annual reports via mainecannabis.org; revenue category = AUCP total revenue). On top of that, an estimated $14.28 million in sales tax revenue was deposited into the General Fund from medical cannabis in fiscal year 2025 (July 1, 2024 – June 30, 2025), reflecting the 5.5% state sales tax on cannabis sales (8% on edible cannabis products as prepared food). Cumulative AUCP revenue since adult-use sales began in 2020 totals roughly $163 million through FY2025. The January 1, 2026 biennial budget restructure (P.L. 2025, ch. 388) cut cultivation excise taxes by 30–43% but raised the retail sales tax on adult-use cannabis from 10.0% to 14.0% — a net ~$5.2M annual revenue uplift to the General Fund per the Dept. of Administrative and Financial Services fiscal note.` },
-  { question: "What is the average price per gram of cannabis flower in Maine?", answer: `The OCP-reported average retail price of adult-use cannabis flower was $6.62 per gram in calendar year 2025, down from $7.25 in 2024 (an 8.6% decline). On a monthly basis, December 2025 alone averaged $6.30/gram — the lowest full-month price OCP has reported — with the first half of 2026 (Jan–Jun) running at a $6.10 year-to-date average. The lower bound is set by wholesale cultivator margins and the $223/lb flower excise tax effective Jan 1, 2026 (down from the prior $335/lb). Maine flower remains cheaper than the national average, which BDSA tracks at $8.92/gram in mid-2026; Maine is one of roughly ten states where the average gram retails under $7. Premium indoor-grown flower typically retails 30–50% above the average, putting top-shelf eighths at $30–$45 before tax.` },
+  { question: "What is the average price per gram of cannabis flower in Maine?", answer: `The OCP-reported average retail price of adult-use cannabis flower was $6.62 per gram in calendar year 2025, down from $7.25 in 2024 (an 8.6% decline). On a monthly basis, December 2025 alone averaged $6.30/gram — the lowest full-month price OCP has reported — with the first half of 2026 (Jan–Jun) running at a $6.10 year-to-date average. The lower bound is set by wholesale cultivator margins and the $223/lb flower excise tax effective Jan 1, 2026 (down from the prior $335/lb). <strong>How Maine compares nationally</strong>: the cleanest direct national comparable is Headset's June 2026 retail-POS tracker (12-market panel), which reports $8.94 per gram for single-gram packages and $3.62 per gram equivalized across all package sizes. The previously-cited $8.92/gram national average traces to Cannabis Benchmarks 2025 via Cannabis Promotions (an aggregator); Headset's $8.94 is the same data point with a one-step-fresher primary trail. Maine flower is therefore 26% below the national single-gram average (at $6.62 vs $8.94), and 22% above the national equivalized average (at $6.62 vs $3.62) — a pattern that reflects Maine's heavier weighting toward bulk-gram sales (where wholesale-to-retail margins are tighter). The cheapest state in the cannabispromotions 2025 table is Michigan at $3.80/gram; the most expensive is Illinois at $15.80/gram. Premium indoor-grown flower typically retails 30–50% above the average, putting top-shelf eighths at $30–$45 before tax.` },
   { question: "Where is Maine cannabis revenue concentrated geographically?", answer: `Maine's adult-use sales are highly concentrated in southern Maine. Per OCP Analytics Director Eric Miller's Oct 10, 2025 5th-anniversary briefing to the Joint Standing Committee on Veterans and Legal Affairs (reported by Maine Public, Portland Press Herald, and Sun Journal), York + Cumberland counties combined account for "nearly 60%" of all Maine adult-use cannabis retail sales. York County carries roughly 31% of state sales (~$76M in 2025) and Cumberland County roughly 28% (~$69M) — about 59% in just two of Maine's 16 counties. The remaining ~41% of state sales is distributed across the other 14 counties, with Penobscot (Bangor metro, ~9%), Androscoggin (Lewiston + Auburn, ~7%), and Kennebec (Augusta + Waterville, ~5%) rounding out the top five. This concentration reflects both population density and the licensed-retailer footprint — those two counties host 95 of the state's ${siteStats.activeAdultUseRetailStores} active retail stores — but it also captures cross-border demand from NH and MA residents who lack legal access and drive into Maine for adult-use purchases.` },
   { question: "How many municipalities in Maine have opted in to adult-use cannabis retail?", answer: `As of December 31, 2025, the OCP Adult Use Cannabis Program 2025 Annual Report counts ${siteStats.activeAdultUseMunicipalities} municipalities hosting active adult-use cannabis retail establishments. The live OCP licensee-search roster identifies active stores in ${liveOcp.auMunicipalities} municipalities as of ${liveOcp.asOf} — the gap reflects retail locations that have an active OCP license but have not yet reported their first sale, are inactive, or are reported under a mailing address that differs from their host municipality. Of Maine's 488 municipalities, roughly 65 (13.3%) have at least one active retail license, but only about 30 have active retail storefronts open to the public. The rest have authorized retail under local ordinance but not yet attracted a licensee. The MDG 2026 Opt-In Tracker publishes the full list of opted-in vs. opted-out towns; visitors should cross-check current status with the town clerk before relying on a specific number.` },
-  { question: "Is Maine's cannabis market growing or shrinking in 2026?", answer: `Both, depending on the metric. By dollars: flat-to-slightly-up. By transactions: up modestly. By operators: down (consolidation). Through H1 2026, Maine posted $119,954,243 in adult-use retail sales across 2,439,812 transactions — an annualized run-rate of $244–248M, consistent with the 2025 plateau (MJBizDaily + Marijuana Herald, July 2026). Simultaneously, the number of active retail stores on the OCP roster has tightened from 187 (Dec 31, 2025 Annual Report peak) to ${liveOcp.auRetailStores} active licensee-search roster entries as of ${liveOcp.asOf} — the gap is normal license turnover (closures, conditional approvals still pending), not a crash. The 2026 outlook factors in: (1) the January 1, 2026 tax restructure raising the retail sales tax from 10% to 14% — which lifts consumer shelf prices ~3.6% unless operators absorb it; (2) the P.L. 2025, ch. 764 emergency testing-reform law effective April 19, 2026 that eliminates mandatory contaminant testing for edibles made from already-tested concentrate, reducing manufacturing friction; and (3) continuous downward price pressure on flower as the supply side reaches steady state. Net read: dollars flat, transactions slightly up, active operator count slightly down — classic maturation.` }
+  { question: "Is Maine's cannabis market growing or shrinking in 2026?", answer: `Both, depending on the metric. By dollars: flat-to-slightly-up. By transactions: up modestly. By operators: down (consolidation). Through H1 2026, Maine posted $119,954,243 in adult-use retail sales across 2,439,812 transactions — an annualized run-rate of $244–248M, consistent with the 2025 plateau (MJBizDaily + Marijuana Herald, July 2026). Simultaneously, the number of active retail stores on the OCP roster has tightened from 187 (Dec 31, 2025 Annual Report peak) to ${liveOcp.auRetailStores} active licensee-search roster entries as of ${liveOcp.asOf} — the gap is normal license turnover (closures, conditional approvals still pending), not a crash. The 2026 outlook factors in: (1) the January 1, 2026 tax restructure raising the retail sales tax from 10% to 14% — which lifts consumer shelf prices ~3.6% unless operators absorb it; (2) the P.L. 2025, ch. 764 emergency testing-reform law effective April 19, 2026 that eliminates mandatory contaminant testing for edibles made from already-tested concentrate, reducing manufacturing friction; and (3) continuous downward price pressure on flower as the supply side reaches steady state. Net read: dollars flat, transactions slightly up, active operator count slightly down — classic maturation.` },
+  { question: "How does the Maine cannabis market compare to the US as a whole?", answer: `Maine's $246.4 million adult-use market is a small fraction of the US total — Statista (2026, cited via Flowhub) projects the US cannabis market at $47 billion in 2026 and $55.4 billion by 2030 at a 3.36% CAGR. Maine's 2024 actual (and 2025 actual as reported by OCP) represents roughly 0.5% of total US legal cannabis spend — comparable to its 0.4% share of US population, meaning Maine is a per-capita-consistent market, not an over- or under-performer. On a per-resident basis, Maine's $176/capita adult-use spend (CY2025) sits close to the national median estimated by BDSA per-state breakdowns. The US market itself is bifurcating: mature states (Colorado, California, Oregon) are showing flat or declining revenue per the December 2025 Whitney Economics downward revision ($29.1–29.6B 2025 forecast vs $30.1B 2024 actual), while newer legal states (New York, New Mexico, Missouri) are still in ramp. Maine's 2025 plateau mirrors the mature-state pattern, which is the right read of the data — the national story is "growth by geography, plateau by maturity."` },
+  { question: "How many Americans use cannabis, and what does that say about demand in Maine?", answer: `The 2024 National Survey on Drug Use and Health (SAMHSA NSDUH 2024, HHS Pub PEP25-07-007, released August 2025) is the cleanest federal demand snapshot. Among Americans aged 12 or older, 15.4% (44.3 million people) used cannabis in the past month, and 22.3% (64.2 million) used in the past year. Both metrics are up meaningfully from 2021 (13.2% / 37.0M past-month). The 2024 release is the first NSDUH to break out adult-use cannabis use separately from total cannabis use under the new "Marijuana Use and Marijuana Vaping in the Past Month" header. Maine's OCP data — 4,835,678 adult-use transactions in 2025 across 1.4M residents — implies a per-capita transaction count of 3.45 per resident per year, which is consistent with the SAMHSA past-month rate applied to Maine's adult population (~1.1M adults). The implied takeaway: Maine's per-capita adult-use participation is in line with national rates, with the residual above-state-typical (after subtracting demographic and age adjustment) attributable to cross-border demand from New Hampshire and Massachusetts. Important methodology note: 2021–2024 NSDUH data is NOT directly comparable to 2020 and earlier because SAMHSA switched to multimode data collection in 2021; trend claims must respect that break.` },
+  { question: "What is the current federal legal status of cannabis, and how does it affect Maine operators?", answer: `As of July 9, 2026, federal cannabis regulation is in a three-tier transitional state: (1) <strong>FDA-approved marijuana products</strong> (e.g., Marinol) and <strong>state-licensed medical cannabis</strong> — including Maine's Medical Use of Cannabis Program — are <strong>Schedule III</strong> as of April 22, 2026, per DEA final rule (91 FR doc 2026-08176); (2) <strong>adult-use (recreational) cannabis</strong> in all 24 legal states — including Maine's Adult Use Cannabis Program — remains <strong>Schedule I</strong> at the federal level under 21 U.S.C. §812 and 21 CFR §1308.11; (3) the <strong>broader Schedule I → III rescheduling NPRM</strong> that would reclassify all marijuana (including adult-use) is pending a DEA Administrative Law Judge hearing that ran June 29 – July 15, 2026. The Schedule III status for state medical programs is a meaningful change: cannabis businesses can now take ordinary business deductions (the 280E barrier that drove ~$15B in excess federal tax since 2018 per Whitney Economics), at least for medical revenue. Adult-use revenue remains 280E-blocked. For Maine operators, the practical implications are: medical-side operators gain a federal tax deduction; adult-use operators wait on the ALJ outcome; and 280E remains the single largest non-tax expense for adult-use operators nationally.` }
 ];
 
 const faqPageJsonLd = JSON.stringify({
@@ -329,7 +405,7 @@ const faqPageJsonLd = JSON.stringify({
   </div>
 
   <p class="answer-capsule">
-    <strong>Maine's adult-use cannabis market generated $246.4 million in retail sales across 4,835,678 individual transactions in 2025 — a 1.0% YoY increase and the smallest year-over-year gain since the program launched in October 2020.</strong> Active licensed adult-use retail stores reached {siteStats.activeAdultUseRetailStores} statewide (OCP 2025 Annual Report, Dec 31, 2025), spread across {siteStats.activeAdultUseMunicipalities} municipalities. Average flower price stabilized at $6.62/gram (down 8.6% YoY from $7.25). York + Cumberland counties combined for ~59% of state sales, and Maine flower retails 28% below the $8.92 national average. The first half of 2026 (Jan–Jun) posted $119.95M across 2.44M transactions at a $6.10/gram year-to-date average — putting Maine on pace for $244–248M annualized, indicating the market has reached maturation.
+    <strong>Maine's adult-use cannabis market generated $246.4 million in retail sales across 4,835,678 individual transactions in 2025 — a 1.0% YoY increase and the smallest year-over-year gain since the program launched in October 2020.</strong> Active licensed adult-use retail stores reached {siteStats.activeAdultUseRetailStores} statewide (OCP 2025 Annual Report, Dec 31, 2025), spread across {siteStats.activeAdultUseMunicipalities} municipalities. Average flower price stabilized at $6.62/gram (down 8.6% YoY from $7.25). York + Cumberland counties combined for ~59% of state sales, and Maine flower retails ~26% below the $8.94 single-gram national average (Headset June 2026; <a href="#national-context">see national context below</a>). The first half of 2026 (Jan–Jun) posted $119.95M across 2.44M transactions at a $6.10/gram year-to-date average — putting Maine on pace for $244–248M annualized, indicating the market has reached maturation.
   </p>
 
   <nav class="toc">
@@ -344,6 +420,7 @@ const faqPageJsonLd = JSON.stringify({
       <li><a href="#product-mix">Product Mix</a></li>
       <li><a href="#tax-reset">January 2026 Tax Reset</a></li>
       <li><a href="#trends">2026 Trends &amp; Outlook</a></li>
+      <li><a href="#national-context">National &amp; Federal Context</a></li>
       <li><a href="#cite-this">Cite This Page</a></li>
       <li><a href="#methodology">Methodology &amp; Sources</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -739,10 +816,10 @@ const faqPageJsonLd = JSON.stringify({
     <p>Maine's adult-use market is no longer in a growth-at-all-costs phase. Total 2026 sales are projected at $244–248M (H1 2026 actual + OCP reporting cadence) — within 1% of 2025. The pricing story tells the real story: average flower price has fallen from $11.85/gram (2021) to $6.62/gram (2025) and now to $6.10/gram YTD in 2026 — a 48.5% five-year decline on the most-purchased SKU. Operators have absorbed both price compression AND the Jan 1, 2026 sales-tax uplift. The survivor is the operator with a tight cost structure and a loyal patient/consumer base; the loser is anyone who grew on the assumption of continued double-digit top-line growth.</p>
 
     <h3>2. Consolidation is accelerating</h3>
-    <p>Adult-use retail storefronts have been flat (187 active at year-end 2025); the OCP live roster shows {liveOcp.auRetailStores} active entries as of {liveOcp.asOf}. MJBizDaily, Cannabismarketcap, and the Cannabusinessplans Maine-market report all describe the national 2026 picture as "consolidation, maturation, and a pivot from growth-at-all-costs to sustainable profitability." Maine-specific consolidations: multi-store operators absorbing single-location ones, branded cultivation networks acquiring independent grows, and a small but real wave of opt-out operators shutting down. The market-pulse-2026 page's M&amp;A tracker captures the public transactions.</p>
+    <p>Adult-use retail storefronts have been flat (187 active at year-end 2025); the OCP live roster shows {liveOcp.auRetailStores} active entries as of {liveOcp.asOf}. MJBizDaily, Cannabismarketcap, and the Cannabusinessplans Maine-market report all describe the national 2026 picture as "consolidation, maturation, and a pivot from growth-at-all-costs to sustainable profitability." Maine-specific consolidations: multi-store operators absorbing single-location ones, branded cultivation networks acquiring independent grows, and a small but real wave of opt-out operators shutting down. The <a href="/market-pulse-2026">market-pulse-2026</a> page's M&amp;A tracker captures the public transactions; the <a href="/guides/maine-cannabis-market">Maine market analysis guide</a> gives the operator-facing context.</p>
 
     <h3>3. The Jan 1, 2026 tax restructure cuts two ways</h3>
-    <p>The 14.0% retail sales tax (up from 10.0%) is a ~3.6% effective shelf-price uplift — modest, but on top of continued wholesale flower-price compression it tightens retail margins further. The 33.4% cultivation excise cut (flower $335 → $223/lb) returns some margin to growers and vertically integrated retailers. Net effect: a slight rebalancing from retail margin to wholesale margin, with Maine's smallest standalone dispensaries (those most exposed to retail-margin compression) the most at risk.</p>
+    <p>The 14.0% retail sales tax (up from 10.0%) is a ~3.6% effective shelf-price uplift — modest, but on top of continued wholesale flower-price compression it tightens retail margins further. The 33.4% cultivation excise cut (flower $335 → $223/lb) returns some margin to growers and vertically integrated retailers. Net effect: a slight rebalancing from retail margin to wholesale margin, with Maine's smallest standalone dispensaries (those most exposed to retail-margin compression) the most at risk. For per-store modeling, the <a href="/roi-calculator">ROI calculator</a> accepts the new tax rates; the <a href="/maine-cannabis-tax-calculator">tax calculator</a> shows effective-rate math at any gross-revenue level.</p>
 
     <h3>4. April 2026: testing-reform relief</h3>
     <p>P.L. 2025, ch. 764 (emergency effective April 19, 2026) eliminates mandatory contaminant testing for adult-use edible products manufactured from concentrate that has already passed the required contaminant panel. Edibles still require THC-potency, cannabinoid-content, and homogeneity testing. This is a meaningful manufacturing-friction reduction for processors in the edibles-and-beverages category — a segment BDSA projects at +14.6% CAGR nationally through 2031.</p>
@@ -754,6 +831,202 @@ const faqPageJsonLd = JSON.stringify({
     <p>The 2026 picture is consistent with the 2025 plateau: total dollars essentially flat ($244–248M annualized), total transactions up modestly (+3–5% YoY), and active operator count down (~10–15 stores closed or license-lapsed net of new openings through year-end). The state's bid to consolidate the caregiver gray market into the regulated dispensary channel (via continued dispensary-cap expiration effects and caregiver-to-dispensary transitions) is the structural offset: it keeps supply-chain-side activity elevated while AU-side dollar revenue stays flat. <strong>For operators, planning on continued growth at this point is planning on a different market than the one the data describes.</strong></p>
   </section>
 
+  <section id="national-context">
+    <h2>National &amp; Federal Context — How Maine Compares</h2>
+
+    <p>Maine's $246.4M adult-use market is meaningful in-state but small in the national picture. This section places Maine in the broader US context: market size, jobs, tax burden, federal regulatory status, retail pricing benchmarks, and where Maine sits relative to New England + comparable legal states. Every figure here cites a primary federal or trade-press source; the source pack at <a href="https://github.com/mainedispensaryguide/docs/tree/main/research/market-stats-national-source-pack-2026-07-09.md" rel="noopener">docs/research/market-stats-national-source-pack-2026-07-09.md</a> carries the full citation trail and 5 documented caveats (Statista paywall, FBI UCR floor effect, DEA scheduling three-tier split, NSDUH 2021+ multimode break, Headset 12-market extrapolation).</p>
+
+    <div class="headline-grid">
+      <div class="headline-card">
+        <p class="label">U.S. Cannabis Market (2026E)</p>
+        <p class="num">$47B</p>
+        <p class="sub">Statista (via Flowhub, 2026)</p>
+      </div>
+      <div class="headline-card">
+        <p class="label">U.S. Past-Month Users (Age 12+)</p>
+        <p class="num">44.3M</p>
+        <p class="sub">15.4% — NSDUH 2024 (SAMHSA)</p>
+      </div>
+      <div class="headline-card">
+        <p class="label">Adult-Use States</p>
+        <p class="num">24 + DC</p>
+        <p class="sub">+3 territories — NCSL (Jun 2025)</p>
+      </div>
+      <div class="headline-card">
+        <p class="label">U.S. Cannabis FTE Jobs (2025)</p>
+        <p class="num">425,002</p>
+        <p class="sub">−3.4% YoY — Vangst 2025 Report</p>
+      </div>
+      <div class="headline-card">
+        <p class="label">U.S. Avg Single-Gram Price (Jun 2026)</p>
+        <p class="num">$8.94</p>
+        <p class="sub">Headset 12-market retail POS</p>
+      </div>
+      <div class="headline-card">
+        <p class="label">Federal 280E Excess Tax Burden</p>
+        <p class="num">$2.24B</p>
+        <p class="sub">FY2025 alone — Whitney Economics</p>
+      </div>
+    </div>
+
+    <p class="stat-source">
+      Primary sources: Statista 2026 cannabis market outlook (cited via Flowhub, paywalled at source); SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007, released Aug 6, 2025); NCSL State Medical Cannabis Laws tracker + State Cannabis Regulation tracker (June 26, 2025); Vangst 2025 Jobs Report (per Flowhub); Headset retail POS data (June 2026); Whitney Economics federal-tax-impact brief (April 9, 2026).
+    </p>
+
+    <h3>National market size, jobs, and tax burden</h3>
+    <table class="year-table" aria-label="National cannabis market size jobs and tax burden benchmarks">
+      <caption>Table 8 — U.S. cannabis market size, jobs, and 280E tax burden, 2024–2026. Sources: Statista (via Flowhub); Whitney Economics; Vangst; Leafly 2026 (via cannabispromotions.com).</caption>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th class="num-col">Value</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {nationalMarket.map(r => (
+          <tr>
+            <td>{r.metric}</td>
+            <td class="num-col">{r.value}</td>
+            <td>{r.source}</td>
+          </tr>
+        ))}
+        {nationalJobs.map(r => (
+          <tr>
+            <td>{r.metric}</td>
+            <td class="num-col">{r.value}</td>
+            <td>{r.source}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: U.S. 2026E ($47B) — Statista cannabis market outlook (free page is paywalled; figure cited via Flowhub 2026, accessed 2026-07-09). U.S. 2030E ($55.4B at 3.36% CAGR) — Statista, same citation trail. U.S. 2024 actual ($30.1B) — Whitney Economics + BDSA consensus. 2025 actuals diverge: BDSA back-cast $31.5B ($23.9B AU + $7.6B medical, per Flowhub); Whitney revised its 2025 forecast DOWN to $29.1–29.6B in December 2025, marking the first-ever annual YoY decline in U.S. legal cannabis revenue. Jobs data: Vangst 2025 Jobs Report counts 425,002 direct FTE jobs (down 3.4% YoY); Leafly+Whitney 2026 (cited via cannabispromotions.com) counts 445,800 FTE jobs (up 1.2% YoY, includes ancillary). The discrepancy is methodology, not contradiction: Vangst = direct cannabis; Leafly+Whitney = direct + ancillary. Tax burden: Whitney Economics' April 9, 2026 brief estimates cannabis businesses paid $2.24B in excess federal tax due to 280E in 2025 alone; $27B cumulative federal tax since 2018, of which $15B is excess 280E tax. The IRS Statistics of Income division does NOT publish a 280E-specific line in its public data products — Whitney is the de facto citation standard for this metric.
+    </p>
+
+    <Callout title="Maine is ~0.5% of the U.S. cannabis market" type="info">
+      With a $246.4M adult-use market and a 1.4M population, Maine represents roughly 0.5% of total U.S. legal cannabis spend — comparable to its 0.4% share of U.S. population. Maine is a per-capita-consistent market, not an over- or under-performer. The state ranks in the top 15 nationally on per-capita adult-use spend (~$176/resident) and in the top 20 on transactions-per-resident. The implied takeaway: Maine is a meaningful regional market, not a national-tier market — and decisions made on "the cannabis industry is growing" national framing don't necessarily apply to a state in its 6th year of operations.
+    </Callout>
+
+    <h3>How Maine's price compares to other legal states</h3>
+    <table class="year-table" aria-label="Cannabis retail price per gram by state for national comparison">
+      <caption>Table 9 — Cannabis retail price benchmarks: Maine vs other legal states, 2025–2026. Sources: OCP 2025 Annual Report; Headset June 2026; Cannabis Promotions 2025 state table.</caption>
+      <thead>
+        <tr>
+          <th>State / Benchmark</th>
+          <th class="num-col">Price</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {nationalPricing.map(r => (
+          <tr>
+            <td>{r.state}</td>
+            <td class="num-col">{r.pricePerGram}</td>
+            <td>{r.source}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Pricing data caveats: The Headset June 2026 figures ($8.94/g single-gram, $3.62/g equivalized) are the cleanest direct national comparison and come from a 12-market retail-POS panel (not all 24 adult-use states). The previously-cited $8.92/g national average (in earlier versions of this page) traces to Cannabis Benchmarks 2025 via Cannabis Promotions (an aggregator); Headset's $8.94 is the same data point with a one-step-fresher primary trail. State-specific prices: Michigan at $3.80/g (cheapest) and Illinois at $15.80/g (most expensive) per Cannabis Promotions 2025. The Maine OCP-weighted $6.62/g sits 26% below the $8.94 single-gram national average and 83% above the $3.62 equivalized average — the gap reflects Maine's heavier weighting toward bulk-gram sales (where wholesale-to-retail margins are tighter than on eighths or ounces). Headset's June 2026 eighth spread runs $11.55 (Oregon) to $31.11 (Ohio) — a 2.7x cross-state range.
+    </p>
+
+    <h3>Where Maine sits among the 24 adult-use states</h3>
+    <table class="year-table" aria-label="Maine cannabis market context among the 24 adult-use legal states">
+      <caption>Table 10 — Maine vs comparable New England + national adult-use legal states. Sources: state OCP/regulator annual reports; NCSL state-taxation tracker; Headset June 2026.</caption>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Adult-Use Launch</th>
+          <th>Tax Structure</th>
+          <th class="num-col">Avg Retail Price</th>
+          <th>Market Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {stateContext.map(r => (
+          <tr class={r.state === 'Maine' ? 'highlight' : ''}>
+            <td><strong>{r.state}</strong></td>
+            <td>{r.adultsUse}</td>
+            <td>{r.taxRate}</td>
+            <td class="num-col">{r.estPrice}</td>
+            <td>{r.notes}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h3>Federal regulatory status — three-tier transitional</h3>
+    <table class="year-table" aria-label="Federal cannabis regulatory status as of July 2026">
+      <caption>Table 11 — Federal cannabis regulatory status, July 9, 2026. Sources: DEA marijuana rescheduling page; Federal Register (91 FR 22777, 91 FR doc 2026-08176); 2018 Farm Bill §10113; 2026 Appropriations Act §781.</caption>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Current Status</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {federalStatus.map(r => (
+          <tr>
+            <td>{r.item}</td>
+            <td>{r.status}</td>
+            <td>{r.source}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: DEA marijuana rescheduling page (dea.gov/marijuana-rescheduling-regulatory-actions); Federal Register notice of hearing (91 FR 22777, April 28, 2026); Federal Register final rule placing state-licensed medical marijuana in Schedule III (91 FR doc 2026-08176, effective April 22, 2026); 2018 Farm Bill §10113 (7 U.S.C. §1639o); 2026 Appropriations Act §781 (changing the federal hemp definition to a total-THC standard with 0.4 mg/container cap effective November 12, 2026). The DEA ALJ hearing on the broader Schedule I → III rescheduling NPRM ran June 29 – July 15, 2026; outcome pending as of page publish date. Adult-use cannabis remains Schedule I at the federal level — 21 U.S.C. §812; 21 CFR §1308.11.
+    </p>
+
+    <Callout title="What federal status means for Maine operators" type="note">
+      The April 22, 2026 reclassification of state-licensed medical marijuana to Schedule III is a structural change for Maine's Medical Use of Cannabis Program operators: they can now take ordinary business deductions (Cost of Goods Sold, rent, payroll) on federal tax filings — the 280E barrier that forced cannabis operators into effective tax rates of up to 70% per Whitney Economics is lifted for medical revenue. Adult-use operators remain 280E-blocked. The DEA ALJ hearing outcome (June 29 – July 15, 2026) will determine whether adult-use revenue also receives Schedule III treatment. Until then, the cleanest operator guidance is: <strong>separate the medical and adult-use P&amp;L lines</strong> so the eventual reclassification can be applied without retro-engineering the books.
+    </Callout>
+
+    <h3>Federal marijuana arrests — the post-legalization trend</h3>
+    <table class="year-table" aria-label="U.S. federal marijuana arrests 2007 to 2023">
+      <caption>Table 12 — U.S. federal marijuana arrests, 2007–2023. Source: NORML analysis of FBI UCR / Crime Data Explorer data; NORML press release Sept 25, 2024.</caption>
+      <thead>
+        <tr>
+          <th class="num-col">Year</th>
+          <th class="num-col">Arrests</th>
+          <th class="num-col">% of All Drug Arrests</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {federalArrests.map(r => (
+          <tr>
+            <td class="num-col"><strong>{r.year}</strong></td>
+            <td class="num-col">{r.arrests}</td>
+            <td class="num-col">{r.pctOfAllDrugArrests}</td>
+            <td>{r.notes}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="stat-source">
+      Sources: NORML press release (Sept 25, 2024) analyzing FBI Crime Data Explorer data. The 217,150 figure for 2023 represents a floor, not a ceiling: in 2022, 17% of agencies (representing 25% of the US population) failed to report to the FBI. The 2007 peak (870,000+ arrests, ~48% of all drug arrests) and the 2021 FBI methodology change mean pre-2021 vs post-2021 data is not directly comparable. The trend across 2007–2023 (870K → 217K, −75%) is the cleanest read of the post-legalization effect: a meaningful national decline in marijuana-related arrests, even as the drug has been legalized in 24 states.
+    </p>
+
+    <h3>Where this leaves Maine in the national picture</h3>
+    <ul>
+      <li><strong>Market position.</strong> Maine is a mature, plateau-state by national 2026 standards — adult-use growth has flattened at ~1% YoY while mature states (Colorado, California, Oregon) are now showing YoY declines. Maine's 2026 projected $244–248M is within 1% of 2025, consistent with the national "growth by geography, plateau by maturity" pattern documented by Whitney Economics (December 2025).</li>
+      <li><strong>Price position.</strong> Maine flower at $6.62/g (OCP-weighted) is 26% below the $8.94 single-gram national average (Headset June 2026) — cheap for an East Coast state, comparable to West Coast mature markets, more expensive than the $3.62 equivalized national average (which weights toward bulk-gram and ounce packages).</li>
+      <li><strong>Federal exposure.</strong> Maine's 24 adult-use stores + 90 medical dispensaries are split between Schedule III (medical) and Schedule I (adult-use) at the federal level as of July 9, 2026. The DEA ALJ hearing outcome (June 29 – July 15, 2026) will determine whether adult-use also gets Schedule III treatment; Maine operators should plan for both outcomes and consider medical/adult-use P&amp;L segregation as a defensive practice.</li>
+      <li><strong>Operator economics.</strong> National cannabis-supported FTE jobs declined 3.4% YoY in 2025 (Vangst), the first YoY employment decline since legal markets began — a parallel signal to the 2025 revenue decline. Maine's own data shows a similar pattern: adult-use store count flat at 187, OCP roster tightening. The labor-market signal confirms the maturation read.</li>
+      <li><strong>For consumer guides:</strong> if you're a shopper, the <a href="/guides/cannabis-terpenes-effects-maine">cannabis terpenes &amp; effects guide</a> covers what to look for; the <a href="/guides/cannabis-tinctures-sublingual-maine">tinctures guide</a> covers lower-risk entry formats; the <a href="/guides/cannabis-edible-dose-calculator-maine">edible dose calculator</a> helps with the most common 280E-irrelevant consumer math problem (over-consumption).</li>
+      <li><strong>For operators:</strong> if you're modeling a new license, the <a href="/roi-calculator">ROI calculator</a> uses national and Maine benchmarks to project per-store economics; the <a href="/maine-cannabis-tax-calculator">tax calculator</a> handles the Jan 1, 2026 tax reset; the <a href="/guides/maine-cannabis-market">Maine market analysis guide</a> gives the operator-facing context; the <a href="/guides/maine-dispensary-license">license requirements guide</a> walks the application step-by-step.</li>
+      <li><strong>For municipal / investor readers:</strong> the <a href="/market-pulse-2026">market pulse 2026</a> page tracks quarterly license activity, opt-in coverage, and M&amp;A events — the companion dataset to this page for people who want the operator-footprint story.</li>
+    </ul>
+  </section>
+
   <section id="cite-this">
     <h2>Cite This Page</h2>
 
@@ -763,7 +1036,7 @@ const faqPageJsonLd = JSON.stringify({
 
     <div class="cite-box">
       <p style="margin: 0; font-family: monospace; font-size: 0.875rem;">
-        Nash, E. &amp; Finch, M. (2026, July 9). <em>Maine cannabis market stats — multi-year data 2020 to H1 2026.</em> Maine Dispensary Guide. https://mainedispensaryguide.com/market-stats
+        Nash, E. &amp; Finch, M. (2026, July 9). <em>Maine cannabis market stats — multi-year data 2020 to H1 2026, with national &amp; federal context.</em> Maine Dispensary Guide. https://mainedispensaryguide.com/market-stats
       </p>
     </div>
 
@@ -775,7 +1048,7 @@ const faqPageJsonLd = JSON.stringify({
 
   <section id="methodology" class="methodology">
     <h3>Methodology &amp; Sources</h3>
-    <p><strong>Source precedence.</strong> Where two sources disagree, we use: (1) the OCP annual reports (28-B M.R.S. §113 for adult-use; 22 M.R.S. §2430-N for medical) as the primary source; (2) Maine Revenue Services (MRS) monthly/quarterly cannabis-taxable-sales reports for monthly cadence; (3) the OCP live licensee-search CSV (refreshed monthly) for current-month operating footprint; (4) mainecannabis.org, Marijuana Herald, MJBizDaily, and MaineBiz for journalism date-stamps on data releases; (5) MDG's own Opt-In Tracker and licensee aggregates for municipal-level data not yet covered by OCP.</p>
+    <p><strong>Source precedence.</strong> Where two sources disagree, we use: (1) the OCP annual reports (28-B M.R.S. §113 for adult-use; 22 M.R.S. §2430-N for medical) as the primary source for Maine-specific data; (2) Maine Revenue Services (MRS) monthly/quarterly cannabis-taxable-sales reports for monthly cadence; (3) the OCP live licensee-search CSV (refreshed monthly) for current-month operating footprint; (4) mainecannabis.org, Marijuana Herald, MJBizDaily, and MaineBiz for journalism date-stamps on data releases; (5) MDG's own Opt-In Tracker and licensee aggregates for municipal-level data not yet covered by OCP; (6) for national/federal context, the precedence is: SAMHSA NSDUH detailed tables, DEA marijuana rescheduling page, Federal Register (FR) notice citations, NCSL state-law trackers, NORML for arrest statistics, Headset and Cannabis Benchmarks for retail/wholesale pricing, Whitney Economics for federal-tax-impact and revenue forecasts, Vangst for jobs data, and Statista for market-size projections (citing the aggregator trail when the underlying page is paywalled).</p>
     <p><strong>Aggregate spend definition.</strong> "Combined sales" on this page is defined as adult-use retail sales (OCP-reported) + medical retail sales (MRS-reportable to the General Fund; excludes caregiver-to-patient tax-exempt transfers). The two streams are reported on different fiscal bases: adult-use reports on calendar-year cadence (Jan 1 – Dec 31), while the medical sales tax figures are reported by Maine fiscal year (July 1 – June 30) per MRS reporting. Direct apples-to-apples monthly comparison is therefore only available on an annualized basis.</p>
     <p><strong>Active vs operating.</strong> "Active" retailer counts reflect the OCP Annual Report tally (Dec 31 snapshot). The "live OCP roster" figure is the current month's OCP licensee-search CSV deduped by store name + license number. The two figures are not directly comparable — the Annual Report is year-end, the live CSV is today.</p>
     <p><strong>MRS vs OCP numbers.</strong> For some months and some categories, MRS-reported adult-use taxable sales diverge from OCP-reported adult-use retail sales by 1–3%. The difference reflects (a) timing of tax remittance vs dispatch, (b) the small but non-zero caregiver-channel that pays sales tax but not excise, and (c) returns/credits. Where the two diverge materially we note it; for primary citations we anchor on OCP.</p>
@@ -798,7 +1071,7 @@ const faqPageJsonLd = JSON.stringify({
 <section class="content-verification">
   <div class="verification-badge">
     <span class="verification-icon">◆</span>
-    <span class="verification-text"> Last reviewed <strong>2026-07-09</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP Adult Use and Medical Use annual reports to the Legislature, Maine Revenue Services tax filings, and primary source documents cited in-line. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    <span class="verification-text"> Last reviewed <strong>2026-07-09</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP Adult Use and Medical Use annual reports to the Legislature, Maine Revenue Services tax filings, SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007), NCSL state-law trackers, DEA marijuana rescheduling page, Federal Register (91 FR 22777, 91 FR 2026-08176), Whitney Economics federal-tax-impact brief (April 9, 2026), Vangst 2025 Jobs Report, Headset June 2026 retail POS data, and other primary source documents cited in-line. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
   </div>
 </section>
 
