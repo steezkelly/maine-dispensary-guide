@@ -462,6 +462,89 @@ const journeySteps = [
     height: 40px;
   }
 
+  /* =============================================================
+     VIDEO TOUR STRIP — featured media below the editorial hero
+     ============================================================= */
+  .video-tour-strip {
+    background: var(--color-primary-dark, #143027);
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--color-accent, #5F7E50);
+    border-bottom: 1px solid var(--color-accent, #5F7E50);
+  }
+  .video-tour-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    background: #0A2A6E; /* fallback while poster loads */
+    overflow: hidden;
+  }
+  .video-tour-element {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .video-tour-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, transparent 0%, rgba(20, 48, 39, 0.85) 100%);
+    color: var(--color-background, #F4F1E4);
+    font-family: var(--font-serif, 'Fraunces', serif);
+    pointer-events: none;
+  }
+  .video-tour-overlay > * {
+    pointer-events: auto;
+  }
+  .video-tour-label {
+    font-size: 14px;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    opacity: 0.9;
+  }
+  .video-tour-cta {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--color-accent, #5F7E50);
+    color: var(--color-background, #F4F1E4);
+    text-decoration: none;
+    border-radius: 6px;
+    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: background 0.2s ease;
+  }
+  .video-tour-cta:hover {
+    background: var(--color-primary, #1F4D3A);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .video-tour-element {
+      display: none;
+    }
+    .video-tour-container {
+      background: var(--color-background, #F4F1E4);
+    }
+    .video-tour-container::before {
+      content: "Video tour disabled by your motion preferences. Browse the guides:";
+      display: block;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--color-text, #0E1A14);
+      font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+      font-size: 14px;
+    }
+  }
+
   /* ─────────────────────────────────────────────────────────────────
      MARKET INTEL — Stats Strip
   ───────────────────────────────────────────────────────────────── */
@@ -727,7 +810,7 @@ const journeySteps = [
   }
 
   /* ─────────────────────────────────────────────────────────────────
-     OPERATIONS EXCELLENCE — Full Width Text
+     OPERATIONS EXCELLENCE — 2-col layout (text + infographic)
   ───────────────────────────────────────────────────────────────── */
   .operations-excellence {
     padding: var(--space-2xl) 0;
@@ -736,22 +819,116 @@ const journeySteps = [
   }
 
   .ops-inner {
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 0 var(--space-md);
   }
 
   .ops-header {
     margin-bottom: var(--space-lg);
+    text-align: left;
   }
 
   .ops-header h2 {
     font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
-    margin: 0;
+    margin: 0 0 var(--space-xs) 0;
   }
 
   .ops-header h2::before {
     display: none;
+  }
+
+  .ops-lede {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .ops-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .ops-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ops-modules {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .ops-module {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 0;
+    transition: border-color 0.2s var(--ease-out);
+  }
+  .ops-module[open] {
+    border-color: var(--color-primary);
+  }
+  .ops-module summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-foreground);
+    list-style: none;
+  }
+  .ops-module summary::-webkit-details-marker { display: none; }
+  .ops-module summary::after {
+    content: "+";
+    margin-left: auto;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    font-weight: 400;
+    transition: transform 0.2s var(--ease-out);
+  }
+  .ops-module[open] summary::after {
+    content: "−";
+  }
+  .mod-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-background);
+    border-radius: 0.25rem;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .mod-head {
+    flex: 1;
+  }
+  .mod-body {
+    padding: 0 1.25rem 1rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .mod-body p {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    margin: 0.75rem 0 0;
+  }
+  .mod-body p a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .ops-content {
@@ -797,17 +974,33 @@ const journeySteps = [
     color: var(--color-text) !important;
     padding-top: var(--space-sm);
     border-top: 1px solid var(--color-border);
+    margin: 0;
   }
 
-  .ops-decoration {
-    position: absolute;
-    right: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 200px;
-    height: 200px;
-    opacity: 0.4;
-    pointer-events: none;
+  .ops-infographic {
+    margin: 0;
+    position: sticky;
+    top: var(--space-md);
+  }
+  .ops-infographic img {
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--color-border);
+  }
+  [data-theme="dark"] .ops-infographic img {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (max-width: 880px) {
+    .ops-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+    .ops-infographic {
+      position: static;
+      max-width: 480px;
+      margin: 0 auto;
+    }
   }
 
   /* ─────────────────────────────────────────────────────────────────
@@ -1985,6 +2178,29 @@ const journeySteps = [
     </div>
   </section>
 
+  <!-- Video tour strip — featured-media below the editorial hero.
+       Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out
+       in CSS above. Poster is the LCP candidate. -->
+  <section class="video-tour-strip" aria-label="30-second site tour">
+    <div class="video-tour-container">
+      <video
+        class="video-tour-element"
+        src="/videos/site-tour.mp4"
+        poster="/videos/site-tour.poster.jpg"
+        autoplay
+        muted
+        playsinline
+        loop
+        preload="metadata"
+        aria-hidden="true"
+      ></video>
+      <div class="video-tour-overlay">
+        <span class="video-tour-label">30-second site tour</span>
+        <a href="/guides/" class="video-tour-cta">Browse all 109 guides →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════════════════════════════════════════════════════════
        MARKET BAR: Refined stats strip
   ═══════════════════════════════════════════════════════════════ -->
@@ -2096,42 +2312,62 @@ const journeySteps = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       OPERATIONAL EXCELLENCE: Full-width with offset content
+       OPERATIONAL EXCELLENCE: 2-col layout (text + infographic)
   ═══════════════════════════════════════════════════════════════ -->
   <section class="operations-excellence" aria-labelledby="ops-heading">
     <div class="ops-inner">
       <div class="ops-header">
         <span class="section-eyebrow">Day-to-Day Reality</span>
         <h2 id="ops-heading">What It Takes to Run One</h2>
+        <p class="ops-lede">A license is the starting line. The work that decides whether you make it past year two is the daily operations rhythm — inventory, compliance, and customer insight, all running in parallel. Here's what actually consumes an operator's day, in three modules, with the costs the licensing guides don't show you.</p>
       </div>
 
-      <div class="ops-content">
-        <p>
-          Getting a license is just the start. The actual work of running a dispensary — managing inventory, staying compliant with OCP security rules, training staff who can actually explain the difference between a sativa and an indica — is where most operators discover whether they chose the right business.
-        </p>
-        <p>
-          Maine customers, especially in the Portland metro area and mid-coast college towns, care about craft and transparency. They ask questions about cultivation methods. They read menu listings before they visit. The shops that do the work on staff training — that treat budtenders as product experts rather than cashiers — tend to build real loyalty.
-        </p>
+      <div class="ops-grid">
+        <div class="ops-text">
+          <div class="ops-modules">
+            <details class="ops-module" open>
+              <summary><span class="mod-num">01</span><span class="mod-head">Inventory — METRC seed-to-sale</span></summary>
+              <div class="mod-body">
+                <p>Every plant is tagged at planting. Every transfer between cultivation, manufacturing, and retail is logged in <a href="/guides/maine-metrc-compliance-guide">METRC</a> within the required window. Missed tags compound into the citations an OCP inspector will find: warning → $1,000–$10,000 fine → license suspension. Day-2 cost: $2,500–$5,000 annual METRC setup plus $0.45 per plant tag, $0.25 per package tag.</p>
+              </div>
+            </details>
 
-        <div class="ops-topics">
-          <a href="/guides/maine-dispensary-pos" class="topic-tag">Point-of-Sale Systems</a>
-          <a href="/guides/maine-cannabis-taxes-2026" class="topic-tag">280E Tax Strategy</a>
-          <a href="/launch-checklist" class="topic-tag">Launch Checklist</a>
+            <details class="ops-module">
+              <summary><span class="mod-num">02</span><span class="mod-head">Compliance — OCP communications + 280E tax</span></summary>
+              <div class="mod-body">
+                <p>Quarterly OCP reports, annual renewals, and the <a href="/guides/maine-cannabis-taxes-2026">280E tax burden</a> that disallows ordinary business deductions. Combined with Maine's 5.5% state sales tax, the effective tax rate "can approach 70%" (Whitney Economics, April 2026). The Jan 1, 2026 tax restructure (P.L. 2025 ch. 388) means operators now need separate medical / adult-use P&amp;L. Day-2 cost: $5,000–$25,000/yr cannabis-specialized CPA.</p>
+              </div>
+            </details>
+
+            <details class="ops-module">
+              <summary><span class="mod-num">03</span><span class="mod-head">Customer insight — budtender training</span></summary>
+              <div class="mod-body">
+                <p>Maine customers — especially in Portland metro and mid-coast college towns — ask about cultivation method, terpene profile, and COAs before they buy. Operators who keep budtender turnover low (industry: 40–60%/yr) invest in weekly product training and paid certification pathways. The "cashier mindset" — budtenders as checkout clerks rather than product experts — is the most common reason a quality-focused shop loses its repeat customers.</p>
+              </div>
+            </details>
+          </div>
+
+          <p class="ops-closing">
+            <strong>Operators who survive past year two share three habits:</strong> meticulous record-keeping, proactive OCP communication, and a genuine interest in what their customers want. The infographic below visualizes the same three modules — keep it open while you read the linked guides.
+          </p>
+
+          <div class="ops-topics">
+            <a href="/guides/maine-metrc-compliance-guide" class="topic-tag">METRC &amp; Inventory</a>
+            <a href="/guides/maine-cannabis-taxes-2026" class="topic-tag">280E Tax Strategy</a>
+            <a href="/guides/maine-dispensary-staffing-licensing" class="topic-tag">Staffing &amp; Budtender Licensing</a>
+            <a href="/launch-checklist" class="topic-tag">Launch Checklist</a>
+          </div>
         </div>
 
-        <p class="ops-closing">
-          The operators who survive past year two tend to share certain habits: meticulous record-keeping, proactive communication with OCP, and a genuine interest in what their customers want. The ones who do not make it tend to have ignored one or more of those three.
-        </p>
+        <figure class="infographic ops-infographic" aria-label="Pop-laboratory style infographic showing the 3 daily operations that define year-2 Maine cannabis retail survivors: inventory/METRC, compliance/280E, and customer insight. Hero stat: $2.24B federal 280E excess tax in 2025.">
+          <picture>
+            <source type="image/avif" srcset="/images/infographics/day-to-day-reality.avif 1x, /images/infographics/day-to-day-reality-640w.avif 640w" sizes="(max-width: 720px) 720px, 720px" />
+            <source type="image/webp" srcset="/images/infographics/day-to-day-reality.webp 1x, /images/infographics/day-to-day-reality-640w.webp 640w" sizes="(max-width: 720px) 720px, 720px" />
+            <img src="/images/infographics/day-to-day-reality.jpg" srcset="/images/infographics/day-to-day-reality.jpg 1x, /images/infographics/day-to-day-reality-640w.jpg 640w" sizes="(max-width: 720px) 720px, 720px" alt="Infographic: the 3 daily operations that define year-2 Maine cannabis retail survivors. Hero stat: $2.24B federal 280E excess tax in 2025 (Whitney Economics). Modules: 1) Inventory — METRC seed-to-sale tracking, $2,500-$5,000 annual setup. 2) Compliance — OCP communications + 280E tax, $5,000-$25,000/yr cannabis CPA. 3) Customer insight — budtender training, 40-60% annual budtender turnover." width="720" height="1280" loading="lazy" />
+          </picture>
+          <figcaption>The 3 daily operations that define year-2 survivors — Maine cannabis retail daily workflow. Source: OCP MMCP 2025 Annual Report + MDG operator survey, July 2026.</figcaption>
+        </figure>
       </div>
-    </div>
-
-    <!-- Decorative element -->
-    <div class="ops-decoration" aria-hidden="true">
-      <svg viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="50" r="48" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.1"/>
-        <circle cx="50" cy="50" r="35" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.15"/>
-        <circle cx="50" cy="50" r="20" stroke="var(--color-primary)" stroke-width="0.5" opacity="0.2"/>
-      </svg>
     </div>
   </section>
 
