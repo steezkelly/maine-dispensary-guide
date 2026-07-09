@@ -388,6 +388,42 @@ const faqPageJsonLd = JSON.stringify({
   .bar { background: var(--color-primary); height: 1.125rem; border-radius: 0.125rem; }
   .bar-row span:last-child { text-align: right; color: var(--color-text-light); }
 
+  /* =============================================================
+     PAGE VIDEO — inline illustration on data pages
+     ============================================================= */
+  .page-video {
+    margin: 32px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0A2A6E; /* cobalt — matches the video's first frame */
+  }
+  .page-video video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .page-video figcaption {
+    font-size: 13px;
+    color: var(--color-text-light, #4A5A4F);
+    text-align: center;
+    margin-top: 12px;
+    padding: 0 8px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-video video {
+      display: none;
+    }
+    .page-video::before {
+      content: "Animation disabled — view the market-stats page directly for the data.";
+      display: block;
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--color-text-light, #4A5A4F);
+      font-size: 14px;
+    }
+  }
+
   @media (max-width: 720px) {
     .headline-grid { grid-template-columns: repeat(2, 1fr); }
     .year-table { font-size: 0.8125rem; }
@@ -506,6 +542,20 @@ const faqPageJsonLd = JSON.stringify({
     <h2>Adult-Use Sales, 2020 – H1 2026 — A Five-Year Arc</h2>
 
     <p>Adult-use (recreational) cannabis sales launched in Maine on October 9, 2020. The first five full calendar years of the program show three distinct phases: <strong>launch ramp</strong> (2021), <strong>double-digit growth</strong> (2022–2024), and <strong>maturation/plateau</strong> (2025). The 2026 half-year data continues the plateau.</p>
+
+    <figure class="page-video">
+      <video
+        src="/videos/market-stats.mp4"
+        poster="/videos/market-stats.poster.jpg"
+        autoplay
+        muted
+        playsinline
+        loop
+        preload="metadata"
+        controls
+      ></video>
+      <figcaption>Live 35-second summary of the 2025 OCP data — sales, transactions, stores, tax revenue, and the H1 2026 forecast. Muted by default; click the speaker icon to unmute.</figcaption>
+    </figure>
 
     <table class="year-table" aria-label="Maine adult-use cannabis retail sales 2020 to first half 2026">
       <caption>Table 1 — Maine adult-use cannabis retail sales, 2020–H1 2026. Adult-use retail launched October 9, 2020.</caption>
