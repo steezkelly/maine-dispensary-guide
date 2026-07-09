@@ -2276,59 +2276,78 @@ const journeySteps = [
 
             <!-- Reference markers (not links — geographic context only) -->
             <g class="geo-ref" aria-label="Reference locations">
-              <circle cx="578.5" cy="125.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-              <text x="588" y="129" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Presque Isle</text>
+              <g>
+                <title>Presque Isle, Aroostook County — northern Maine regional reference. Not yet an OCP adult-use retail market.</title>
+                <circle cx="578.5" cy="125.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
+                <text x="588" y="129" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Presque Isle</text>
+              </g>
 
-              <circle cx="546.3" cy="406.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-              <text x="556" y="410" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Bar Harbor</text>
+              <g>
+                <title>Bar Harbor, Hancock County — Acadia-region reference. Tourism-driven; no OCP adult-use retailers yet.</title>
+                <circle cx="546.3" cy="406.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
+                <text x="556" y="410" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Bar Harbor</text>
+              </g>
 
-              <circle cx="710.9" cy="308.6" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-              <text x="720" y="312" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Calais</text>
+              <g>
+                <title>Calais, Washington County — eastern-border reference. No OCP adult-use retailers in current OCP roster.</title>
+                <circle cx="710.9" cy="308.6" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
+                <text x="720" y="312" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Calais</text>
+              </g>
             </g>
 
             <!-- Active retail city markers — clickable, positioned by real lat/lon
                  All positions projected from real lat/lon via the same transform
-                 as the state outline (above), so they sit on the actual map. -->
+                 as the state outline (above), so they sit on the actual map.
+                 Per-marker <title> + aria-label supply city-specific hover
+                 tooltips and screen-reader labels (replacing the generic SVG-level
+                 "Active adult-use cannabis retail municipalities in Maine" text). -->
             <g class="geo-cities-svg">
               <!-- Portland (43.66, -70.26) -> (177.5, 496.3) -->
-              <a href="/guides/portland-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/portland-dispensary-guide" class="geo-city-anchor" aria-label="Portland, Cumberland County — Maine's largest adult-use cannabis market, 12+ OCP-licensed retailers. Portland dispensary guide.">
+                <title>Portland, Cumberland County — Maine's largest adult-use cannabis market, 12+ OCP-licensed retailers. Portland dispensary guide.</title>
                 <circle cx="177.5" cy="496.3" r="9" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2.5"/>
                 <circle cx="177.5" cy="496.3" r="14" fill="none" stroke="var(--color-accent)" stroke-width="1" opacity="0.4"/>
                 <text x="177.5" y="484" text-anchor="middle" font-size="13" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Portland</text>
               </a>
 
               <!-- South Portland (43.64, -70.26) -> (177.5, 498.8) — slightly south -->
-              <a href="/guides/south-portland-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/south-portland-dispensary-guide" class="geo-city-anchor" aria-label="South Portland, Cumberland County — adjacent to Portland metro adult-use market. South Portland dispensary guide.">
+                <title>South Portland, Cumberland County — adjacent to Portland metro adult-use market. South Portland dispensary guide.</title>
                 <circle cx="195" cy="503" r="5" fill="var(--color-accent)" fill-opacity="0.85" stroke="var(--color-background)" stroke-width="1.5"/>
                 <text x="208" y="506" text-anchor="start" font-size="10" font-weight="600" fill="var(--color-foreground)" fill-opacity="0.85" font-family="var(--font-sans, system-ui)">S. Portland</text>
               </a>
 
               <!-- Biddeford (43.49, -70.45) -> (143.5, 517.2) -->
-              <a href="/guides/biddeford-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/biddeford-dispensary-guide" class="geo-city-anchor" aria-label="Biddeford, York County — York County's 2nd-busiest adult-use retail market, growth-corridor location. Biddeford dispensary guide.">
+                <title>Biddeford, York County — York County's 2nd-busiest adult-use retail market, growth-corridor location. Biddeford dispensary guide.</title>
                 <circle cx="143.5" cy="517.2" r="7" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
                 <text x="143.5" y="538" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Biddeford</text>
               </a>
 
               <!-- Lewiston (44.10, -70.21) -> (186.5, 442.3) -->
-              <a href="/guides/lewiston-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/lewiston-dispensary-guide" class="geo-city-anchor" aria-label="Lewiston, Androscoggin County — 2nd-largest Maine adult-use market, value-positioned. Lewiston dispensary guide.">
+                <title>Lewiston, Androscoggin County — 2nd-largest Maine adult-use market, value-positioned. Lewiston dispensary guide.</title>
                 <circle cx="186.5" cy="442.3" r="8" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
                 <text x="186.5" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Lewiston</text>
               </a>
 
               <!-- Auburn (44.10, -70.23) -> (182.9, 442.3) — adjacent to Lewiston -->
-              <a href="/guides/auburn-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/auburn-dispensary-guide" class="geo-city-anchor" aria-label="Auburn, Androscoggin County — adjacent to Lewiston (Androscoggin County twin cities). Auburn dispensary guide.">
+                <title>Auburn, Androscoggin County — adjacent to Lewiston (Androscoggin County twin cities). Auburn dispensary guide.</title>
                 <circle cx="205" cy="448" r="5" fill="var(--color-accent)" fill-opacity="0.85" stroke="var(--color-background)" stroke-width="1.5"/>
                 <text x="215" y="452" text-anchor="start" font-size="10" font-weight="600" fill="var(--color-foreground)" fill-opacity="0.85" font-family="var(--font-sans, system-ui)">Auburn</text>
               </a>
 
               <!-- Augusta (44.31, -69.77) -> (265.2, 416.6) -->
-              <a href="/guides/augusta-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/augusta-dispensary-guide" class="geo-city-anchor" aria-label="Augusta, Kennebec County — state capital, 8+ OCP-licensed adult-use retailers. Augusta dispensary guide.">
+                <title>Augusta, Kennebec County — state capital, 8+ OCP-licensed adult-use retailers. Augusta dispensary guide.</title>
                 <circle cx="265.2" cy="416.6" r="8" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
                 <text x="265.2" y="404" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Augusta</text>
               </a>
 
               <!-- Bangor (44.80, -68.77) -> (444.2, 356.4) -->
-              <a href="/guides/bangor-dispensary-guide" class="geo-city-anchor">
+              <a href="/guides/bangor-dispensary-guide" class="geo-city-anchor" aria-label="Bangor, Penobscot County — central Maine adult-use hub, 4-mile exclusive zone. Largest market north of Augusta. Bangor dispensary guide.">
+                <title>Bangor, Penobscot County — central Maine adult-use hub, 4-mile exclusive zone. Largest market north of Augusta. Bangor dispensary guide.</title>
                 <circle cx="444.2" cy="356.4" r="9" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2.5"/>
                 <circle cx="444.2" cy="356.4" r="14" fill="none" stroke="var(--color-accent)" stroke-width="1" opacity="0.4"/>
                 <text x="444.2" y="344" text-anchor="middle" font-size="13" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Bangor</text>
