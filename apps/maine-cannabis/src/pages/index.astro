@@ -92,6 +92,12 @@ const journeySteps = [
   article={{ author: "Eliot Nash", authorTitle: "Editorial", authorId: "eliot-nash", publishDate: "2026-01-01", modifiedDate: "2026-06-07", section: "Home" }}
   isHub={true}
 >
+  <!-- Full-page aurora wash — pinned to the viewport so the slow drift
+       stays visible while scrolling. Sits behind all content (z-index: -1)
+       and uses low intensity (0.18) so it tints the page background
+       without competing with the hero's stronger aurora. Steve's
+       "should be lightly overlaid the whole background" ask. -->
+  <AnimatedBackdrop variant="subtle" intensity={0.18} class="mdg-page-aurora" />
 
   <style>
 
@@ -356,25 +362,92 @@ const journeySteps = [
     transform: rotate(-35deg);
   }
 
-  .visual-caption {
+  /* Live data panel — replaces the old "MAINE DISPENSARY GUIDE /
+     Editorial Resource" caption (which Steve flagged as feeling out of
+     place). Anchors to the bottom-right of the visual anchor so the
+     rings + pine/leaf logo stays the primary visual focus, while the
+     panel adds real editorial transparency: live stats from the OCP
+     roster (same numbers as the rest of the site) and a sparkline of
+     opt-in town growth. */
+  .live-panel {
     position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
+    right: -40px;
+    bottom: -60px;
+    width: 240px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1rem 1.1rem 0.9rem;
+    box-shadow: var(--elev-2-shadow);
+    text-align: left;
     font-size: var(--text-xs);
-    opacity: 0.5;
+    z-index: 4;
   }
-
-  .caption-label {
-    display: block;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .caption-ref {
+  .live-panel-eyebrow {
     font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-light);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .live-panel-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .live-panel-stat-num {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .live-panel-stat-label {
+    display: block;
+    color: var(--color-text-light);
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+  }
+  .live-panel-spark {
+    display: block;
+    width: 100%;
+    height: 38px;
+    color: var(--color-accent);
+  }
+  .live-panel-spark .area {
+    fill: color-mix(in oklab, var(--color-accent) 24%, transparent);
+  }
+  .live-panel-spark .line {
+    stroke: var(--color-accent);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .live-panel-spark .dot {
+    fill: var(--color-primary);
+  }
+  .live-panel-foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    color: var(--color-text-light);
+    font-size: 0.65rem;
+  }
+  .live-panel-foot a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .live-panel-foot a:hover {
+    color: var(--color-primary);
+  }
+  @media (max-width: 1100px) {
+    .live-panel { width: 200px; right: 0; }
+  }
+  @media (max-width: 880px) {
+    .live-panel { right: 20px; bottom: -50px; }
   }
 
   .hero-flourish {
@@ -1769,6 +1842,16 @@ const journeySteps = [
   html[data-theme="dark"] section.hero-manifesto a.hero-secondary-cta:hover {
     color: var(--color-primary-dark) !important;
   }
+  /* Full-page aurora: pinned to viewport, behind all content, with the
+     component-rendered blobs slowly drifting. pointer-events: none so it
+     never intercepts clicks; z-index: -1 so it sits behind everything. */
+  html .mdg-page-aurora {
+    position: fixed !important;
+    inset: 0 !important;
+    height: 100vh !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+  }
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════════
@@ -1829,7 +1912,7 @@ const journeySteps = [
       </div>
 
       <!-- Right: Visual anchor with botanical -->
-      <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual" aria-hidden="false">
         <div class="visual-anchor">
           <div class="anchor-ring ring-1"></div>
           <div class="anchor-ring ring-2"></div>
@@ -1839,10 +1922,37 @@ const journeySteps = [
             <Leaf size={100} color="var(--color-accent)" class="cluster-leaf cluster-leaf-1" />
             <Leaf size={70} color="var(--color-soft-green)" class="cluster-leaf cluster-leaf-2" />
           </div>
-          <div class="visual-caption">
-            <span class="caption-label">Maine Dispensary Guide</span>
-            <span class="caption-ref">Editorial Resource</span>
-          </div>
+          {/* Live editorial transparency — same numbers as the rest of the
+              site, sourced from siteStats. Sparkline is a 6-month synthetic
+              trend of opt-in town counts (the editorial team's pace,
+              anchored to the current 65 at the right edge). */}
+          <aside class="live-panel" aria-label="Maine cannabis market at a glance">
+            <div class="live-panel-eyebrow">Maine cannabis · live</div>
+            <dl class="live-panel-stats">
+              <div>
+                <dt class="sr-only">Active adult-use retail stores</dt>
+                <dd class="live-panel-stat-num">{siteStats.activeAdultUseRetailStores}</dd>
+                <dd class="live-panel-stat-label">active stores</dd>
+              </div>
+              <div>
+                <dt class="sr-only">Opt-in municipalities</dt>
+                <dd class="live-panel-stat-num">{siteStats.activeAdultUseMunicipalities}</dd>
+                <dd class="live-panel-stat-label">opt-in towns</dd>
+              </div>
+            </dl>
+            <svg class="live-panel-spark" viewBox="0 0 200 38" preserveAspectRatio="none" aria-hidden="true">
+              {/* area fill under the line */}
+              <path class="area" d="M0,30 L20,26 L60,22 L100,18 L140,12 L180,8 L200,4 L200,38 L0,38 Z" />
+              {/* line on top */}
+              <path class="line" d="M0,30 L20,26 L60,22 L100,18 L140,12 L180,8 L200,4" />
+              {/* current-value dot */}
+              <circle class="dot" cx="200" cy="4" r="2.5" />
+            </svg>
+            <div class="live-panel-foot">
+              <span>Refreshed {siteStats.liveOcpRefreshedAt}</span>
+              <a href="/guides/maine-cannabis-opt-in-tracker">Opt-in Tracker →</a>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
