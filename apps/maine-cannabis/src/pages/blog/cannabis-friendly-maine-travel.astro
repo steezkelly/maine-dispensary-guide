@@ -2,7 +2,6 @@
 import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
-import Faq from '../../components/Faq.astro';
 import authors from '../../data/authors.json';
 const editorialAuthor = authors.find(a => a.id === 'steve-kelly');
 const complianceReviewer = authors.find(a => a.id === 'eliot-nash');
@@ -10,24 +9,29 @@ const article = {
   author: "Calvin Waters", authorId: "calvin-waters",
   authorTitle: "Founder & Publisher",
   publishDate: "2026-06-05",
-  modifiedDate: "2026-07-08",
+  modifiedDate: "2026-07-09",
   section: "Lifestyle & Travel"
 };
 const topics = ["travel", "tourism", "lifestyle"];
 
-// FAQPage JSON-LD: non-overlapping with the Acadia-specific page.
-// The Acadia page owns the "is cannabis allowed in Acadia" / "MDI dispensaries" /
-// "Maine-to-Canada ferry" questions; this page owns the general cannabis-tourism
-// questions: airport security, hotel/inn rules, where you can use it statewide,
-// possession limits, and seasonality. Together the two pages cover the
-// cannabis-tourist query set without cannibalizing each other.
+// FAQPage JSON-LD — 12 questions, scope: cannabis-tourist query set.
+// The Acadia-specific page owns the "is cannabis allowed in Acadia" /
+// "MDI dispensaries" / "Maine-to-Canada ferry" questions; this page owns
+// the general cannabis-tourism questions plus the regional / seasonal
+// queries Google shows in PAA under "Maine cannabis travel."
 const faqItems = [
-  { question: "Is Maine cannabis-friendly for tourists?", answer: "Yes and no. Maine is friendly to 21+ tourists who want to buy legal cannabis — adult-use dispensaries are widespread, and the state actively markets to the 4 million annual Acadia visitors and the leaf-peeping season crowd. Where Maine falls short is consumption: the state has no licensed consumption lounges (the bill keeps stalling in the legislature), and the only legal place to consume is private property. That means you can buy, but you have to plan where you're going to use it. This guide covers both sides: where to buy, where to stay, and the cross-border rules that catch first-time visitors." },
-  { question: "Where can I smoke weed legally in Maine?", answer: "Three places are clearly legal: your own home, a private rental that explicitly allows smoking (verify before booking), and the private outdoor space of a friend or family member with their permission. Public consumption is illegal in every Maine municipality, every Maine state park, and every federal property. Many Airbnb and VRBO listings now filter by 'smoking allowed' — that's the most reliable way to find a 420-friendly rental. The High'D Away Lodge in Carthage and Camp Laughing Grass in Harrison are the two dedicated cannabis-friendly lodging properties in Maine." },
-  { question: "Can I fly into Maine with cannabis?", answer: "You can fly into Maine with cannabis if you are flying domestically (e.g. from another adult-use state) and following the TSA rule, which is that cannabis under 3.4 oz in a carry-on is screened like any other legal substance. TSA does not search for personal-use cannabis and reports violations to local law enforcement only when the amount exceeds the state limit or appears to be for distribution. The TSA rule does not authorize possession of cannabis at the airport — that depends on the airport's own policy. The Portland International Jetport follows Maine state law, which permits possession of up to 2.5 oz, but consumption inside the terminal is prohibited. The rule is: sealed, in your carry-on, and do not consume at the airport. International flights are a hard prohibition under federal aviation law." },
-  { question: "Can I smoke cannabis in a Maine hotel room?", answer: "Almost always no. The vast majority of Maine hotels, motels, inns, and B&Bs are non-smoking properties, and cannabis smoke is treated as smoking under standard hotel policies. Most Maine hotel smoking policies apply to cannabis the same as cigarettes, and most properties charge a $250-500 cleaning fee for any smoke odor detected in a non-smoking room. The exception is a small number of cannabis-friendly rentals (mostly Airbnb and VRBO with the smoking-allowed filter) and the two dedicated cannabis-friendly lodging properties in the state. The safest practice: confirm the property's policy in writing before booking, and assume the default is no smoking of any kind." },
-  { question: "What are the possession limits for adults in Maine?", answer: "Maine's adult-use possession limits under Title 28-B are 2.5 ounces of flower, 5 grams of concentrate, and 100 mg of edible THC per transaction. Out-of-state visitors can purchase up to those limits at any licensed adult-use dispensary, but transport between states is a federal issue. Medical cardholders (MMMP) have separate, often higher limits and the additional 5.5% medical sales-tax exemption at medical-licensed dispensaries. The 2.5 oz / 5 g / 100 mg limits apply to what you can carry on your person or in a vehicle; the dispensary's transaction limit is the same. Keep the purchase in the original sealed packaging during transport." },
-  { question: "What is the best time of year for cannabis tourism in Maine?", answer: "Two windows dominate. Peak summer (mid-June through Labor Day) is when the 4 million Acadia visitors arrive, Bar Harbor dispensaries extend their hours, and Sebago Lakes / Western Maine campgrounds fill up. This is the easiest time to find outdoor 420-friendly lodging but also the most expensive. Fall leaf-peeping season (mid-September through mid-October) is the second wave — cooler weather, fewer crowds, and the dispensary deal rotations often include harvest-themed specials. Winter is the quietest season: many seasonal lodging properties close, but year-round dispensaries and the Sebago / Western Maine ski-town cluster remain active." }
+  { question: "Is cannabis tourism legal in Maine?", answer: "Yes. Maine is one of the friendliest adult-use states in the country for cannabis tourists. Any adult 21 or older with a valid government photo ID can purchase up to 2.5 ounces of flower, 5 grams of concentrate, and 100mg of edible THC per transaction at any licensed adult-use dispensary. Out-of-state IDs are accepted the same as Maine IDs. You can consume cannabis on private property with the owner's permission, out of public view. You cannot consume in any public space, on any federal land (Acadia National Park, the Appalachian Trail, Baxter State Park), or in any Maine state park." },
+  { question: "Are there 420-friendly campgrounds in Maine?", answer: "Yes — two dedicated cannabis-friendly lodging properties book out months in advance for summer: Camp Laughing Grass in Harrison (open since 2018, on Long Lake / Brandy Pond) and the High'D Away Lodge in Carthage (adults-only, May–October). Beyond those, many Airbnb and VRBO listings in the Sebago Lakes, Portland, and Down East corridors filter by \"smoking allowed,\" and several campgrounds in the lakes region are cannabis-tolerant without advertising it. Maine state park campgrounds do NOT permit cannabis — even on private sites inside state parks — and Baxter State Park is the strictest, with full search protocols for possession." },
+  { question: "Can tourists buy cannabis at Maine dispensaries?", answer: "Yes. Any adult 21 or older with valid photo ID (driver's license, passport, state ID, military ID) can buy at any Maine adult-use dispensary. Vertical or temporary IDs may require a second form of ID. You do NOT need to be a Maine resident. Medical cardholders from other states are not eligible for Maine's medical program, but they can buy at adult-use stores. The first-time-patient discount is 15–25% at most operators — sign up for the email or text list at the register and the code usually arrives within minutes." },
+  { question: "Is Maine cannabis cheaper than Massachusetts?", answer: "Maine is consistently 10–20% cheaper than Massachusetts for the same product tier. Average adult-use eighths of mid-shelf flower in Maine run $30–45 before discounts vs. $40–55 across most of Massachusetts; 100mg edible packages run $20–35 in Maine vs. $25–45 in Mass. Combined with Maine's 10% adult-use excise tax vs. Massachusetts' 17–20% effective rate, a Portland dispensary stop typically saves a Massachusetts-bound tourist 25–35% on the same cart before the cross-border transport risk. Note: it's illegal to transport cannabis across state lines even between legal states — the savings are for consumption in Maine only." },
+  { question: "What is the possession limit for adults in Maine?", answer: "Maine's adult-use possession limits under Title 28-B are 2.5 ounces of flower, 5 grams of concentrate, and 100mg of edible THC per transaction. These are also the personal possession limits — what you can carry on your person or in a vehicle. The dispensary's transaction limit is the same, so there is no bulk purchase advantage at the counter. Medical cardholders (MMMP) have separate, often higher limits and the additional 5.5% medical sales-tax exemption at medical-licensed dispensaries. Keep the purchase in the original sealed packaging during transport." },
+  { question: "Are there cannabis consumption lounges in Maine?", answer: "No — and this is the single biggest friction point in Maine's cannabis tourism market. There are no licensed consumption lounges anywhere in Maine, unlike Massachusetts (where Worcester and a handful of other cities now allow social-consumption licenses), Colorado, Nevada, or New York. A bill to allow them has been introduced in the Maine legislature multiple times since 2021 and keeps stalling. The only legal place to consume is private property, with the owner's permission, out of public view. This is why 420-friendly Airbnb/VRBO listings and the dedicated cannabis campgrounds in Maine are so important to the tourism market." },
+  { question: "Can I fly into Maine with cannabis?", answer: "You can fly into Maine with cannabis if you are flying domestically from another adult-use state and following the TSA rule: cannabis under 3.4 oz in a carry-on is screened like any other legal substance. TSA does not search for personal-use cannabis and reports violations to local law enforcement only when the amount exceeds the state limit or appears to be for distribution. The rule does NOT authorize possession at the airport — that depends on the airport's own policy. Portland International Jetport follows Maine state law (possession OK up to 2.5 oz), but consumption inside the terminal is prohibited. International flights are a hard federal prohibition. The rule: sealed, in your carry-on, do not consume at the airport." },
+  { question: "Can I smoke cannabis in a Maine hotel room?", answer: "Almost always no. The vast majority of Maine hotels, motels, inns, and B&Bs are non-smoking properties, and cannabis smoke is treated as smoking under standard hotel policies. Most charge a $250–500 cleaning fee if smoke odor is detected in a non-smoking room. The exception is a small number of cannabis-friendly Airbnb/VRBO listings and the two dedicated cannabis-friendly lodging properties in the state (Camp Laughing Grass, High'D Away Lodge). The safest practice: confirm the property's policy in writing before booking, and assume the default is no smoking of any kind." },
+  { question: "When is the best time of year for cannabis tourism in Maine?", answer: "Two windows dominate. Peak summer (mid-June through Labor Day) is when the 4 million Acadia visitors arrive, Bar Harbor dispensaries extend their hours, and Sebago Lakes / Western Maine campgrounds fill up. Easiest time to find outdoor 420-friendly lodging but also the most expensive. Fall leaf-peeping season (mid-September through mid-October) is the second wave — cooler weather, fewer crowds, dispensaries often run harvest-themed specials. Winter is the quietest season: most seasonal lodging closes, but year-round dispensaries and the Sebago / Western Maine ski-town cluster remain active. The Maine cannabis events calendar (OCP stakeholder meetings, MCIA gatherings, cannabis expos) clusters in Q1–Q2." },
+  { question: "Where can I consume cannabis in Acadia National Park?", answer: "Nowhere — Acadia is entirely federal land under National Park Service jurisdiction, and federal law prohibits cannabis possession regardless of state legalization. The NPS issues citations for cannabis possession in the park, and the penalties are federal-misdemeanor level. The plan that works for almost every Acadia visitor: book a 420-friendly VRBO or Airbnb in Bar Harbor / Trenton / Lamoine, stop in Trenton at Snare Creek Farms (599 Bar Harbor Rd) or in Bar Harbor at The Meristem (33 Main St) or 420 Mules (224 Main St), and consume back at your rental out of public view. Maine state law does not apply on federal land; federal law does." },
+  { question: "Can I bring cannabis from Maine to New Hampshire, Vermont, or Massachusetts?", answer: "Technically no — cannabis transport between states is a federal crime regardless of state legalization, even between two adult-use states. Practically, the question is enforcement risk: New Hampshire State Police run cannabis interdiction stops on I-95 south of Portsmouth during summer, and out-of-state cannabis that exceeds NH personal possession limits gets confiscated even if legally purchased in Maine. Vermont and Massachusetts have reciprocity for Maine adult-use purchases on paper, but the practical advice is the same: sealed, in the trunk, don't consume in the vehicle, and don't cross state lines with cannabis if you can avoid it." },
+  { question: "What is the best dispensary cluster in Maine for a first-time visitor?", answer: "For a first-time visitor, the strongest cluster is Greater Portland — six walkable dispensaries from Portland through South Portland and Cape Elizabeth including SeaWeed Co., The Joint, Schedule 1, Cannabis Cured Portland, and the Grass Roots Portland / South Portland pair. Strong menu depth, online ordering with curbside pickup, and budtender staff that walk first-timers through the products without rushing. The Acadia cluster (420 Mules, The Meristem, Snare Creek Farms in Trenton) is the second-best for the 4 million annual park visitors. The Sebago Lakes cluster (Camp Laughing Grass area) is the most 420-tolerant lodging-wise but is a 60–90 minute drive from Portland." }
 ];
 
 const faqPageSchema = {
@@ -44,17 +48,17 @@ const faqPageSchema = {
 <script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
 
 <Layout 
-  title="Cannabis-Friendly Maine: 2026 Travel Guide for the 420-Curious"
-  description="Where to stay, where to consume, and how to enjoy cannabis legally in Maine — Acadia, Portland, lakes region, plus cross-border rules."
+  title="Maine Cannabis Travel Guide 2026: Where to Stay, Buy & Use"
+  description="Maine cannabis travel guide for 2026 — where to stay, where to buy, and where to legally consume. Acadia, Portland, Sebago Lakes, Aroostook."
   heroImage="/images/heroes/cannabis-friendly-maine-travel.jpg"
   article={article}
   topics={topics}
 >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
+  article { max-width: 760px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
-  section { margin-bottom: 3rem; }
+  section { margin-bottom: 3rem; scroll-margin-top: 80px; }
   section h2, section h3 { margin-top: 1.5rem; color: var(--color-primary); font-family: var(--font-serif); }
   section h2:first-child { margin-top: 0; }
   table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
@@ -67,8 +71,11 @@ const faqPageSchema = {
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
   .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
-  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2.5rem; }
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0.5rem 0 0; }
+  .fact-box th { font-size: 0.9rem; }
+  .fact-box td { font-size: 0.95rem; }
   .answer-capsule { background: rgba(88, 129, 87, 0.08); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
   .answer-capsule strong { color: var(--color-primary); }
   blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
@@ -79,46 +86,87 @@ const faqPageSchema = {
   .faq-section h2 { font-family: var(--font-serif); color: var(--color-primary); }
   .itinerary { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
   .itinerary h3 { margin-top: 0; color: var(--color-primary); font-family: var(--font-serif); }
+  .toc { background: rgba(88, 129, 87, 0.04); border: 1px solid rgba(88, 129, 87, 0.18); padding: 1.25rem 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0 2.5rem; font-size: 0.95rem; }
+  .toc h2 { margin: 0 0 0.75rem; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-text-light); font-family: var(--font-body, sans-serif); }
+  .toc ol { margin: 0; padding-left: 1.5rem; column-count: 2; column-gap: 2rem; }
+  .toc li { margin-bottom: 0.35rem; break-inside: avoid; }
+  .toc a { color: var(--color-primary); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  @media (max-width: 640px) { .toc ol { column-count: 1; } }
 </style>
 
 <article>
   <div class="article-header">
-    <h1>Cannabis-Friendly Maine: A 2026 Travel Guide</h1>
-    <p class="subtitle">Where to stay, where to consume, and how to enjoy Maine without breaking any laws</p>
+    <h1>Maine Cannabis Travel Guide: Where to Stay, Buy & Use It</h1>
+    <p class="subtitle">The 2026 field-tested version — Acadia, Portland, Sebago Lakes, and the cross-border rules that catch first-time visitors</p>
     <div class="byline">
       <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Founder &amp; Publisher. <strong>Reviewed by <a href="/about/authors#eliot-nash">Eliot Nash</a>, Market &amp; Real Estate Analyst.</strong></p>
-      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+      <p class="last-updated">Published June 5, 2026 · Last updated July 9, 2026</p>
     </div>
   </div>
 
   <section class="intro">
     <p>Acadia National Park draws roughly 4 million visitors a year. Most of them arrive in Bar Harbor in July, drive the Park Loop Road, eat lobster, and leave without ever realizing that Mount Desert Island has three working dispensaries. They don't know about the Sebago Lakes campground that's been 420-friendly since 2018, or the Western Maine cannabis farm-stay scene, or the late-October harvest events that pull leaf-peepers into the southern foothills.</p>
-    <p>Maine is one of the most cannabis-friendly states in the country for <em>buying</em> — adult-use dispensaries are widespread, prices are competitive, and the operator pool has matured to a point where quality is consistently solid. But Maine is also one of the more restrictive states for <em>consuming</em>. There are no licensed consumption lounges. Public consumption is illegal in every municipality. Federal land, state parks, and most lodging properties prohibit it. The 420-curious traveler who treats Maine like Massachusetts or Colorado is going to have a bad time.</p>
+    <p>Maine is one of the most cannabis-friendly states in the country for <em>buying</em> — adult-use dispensaries are widespread, prices are competitive (typically 10–20% below Massachusetts), and the operator pool has matured to a point where quality is consistently solid. But Maine is also one of the more restrictive states for <em>consuming</em>. There are no licensed consumption lounges. Public consumption is illegal in every municipality. Federal land, state parks, and most lodging properties prohibit it. The 420-curious traveler who treats Maine like Massachusetts or Colorado is going to have a bad time.</p>
     <p>This guide is the field-tested version. It covers where to buy across the four main tourism regions, where to stay if you want to consume, where you absolutely cannot consume, the cross-border traps that catch New Brunswick visitors, and three working itineraries — Acadia week, Portland weekend, lakes-region long-weekend — that you can actually execute.</p>
   </section>
+
+  <section class="fact-box" aria-label="Maine cannabis travel quick facts">
+    <h2>Maine Cannabis Travel Quick Facts</h2>
+    <table>
+      <tbody>
+        <tr><th scope="row">Adult-use legal</th><td>Yes — since October 2020 (Title 28-B)</td></tr>
+        <tr><th scope="row">Minimum purchase age</th><td>21+ with valid government photo ID (driver's license, passport, state ID, military ID)</td></tr>
+        <tr><th scope="row">Out-of-state visitors</th><td>Welcome — purchase limits are the same as residents</td></tr>
+        <tr><th scope="row">Possession limit</th><td>2.5 oz flower · 5 g concentrate · 100 mg edible THC per transaction</td></tr>
+        <tr><th scope="row">Adult-use excise tax</th><td>10% (replaced the 15% adult-use tax rate Jan 1, 2026)</td></tr>
+        <tr><th scope="row">Consumption lounges</th><td>None — bill has stalled in the legislature since 2021</td></tr>
+        <tr><th scope="row">Consumption allowed</th><td>Private property only, with owner permission, out of public view</td></tr>
+        <tr><th scope="row">Federal land</th><td>Acadia NP, Baxter State Park, White Mountain NF — cannabis prohibited</td></tr>
+        <tr><th scope="row">Maine state parks</th><td>Cannabis prohibited on all state park land</td></tr>
+        <tr><th scope="row">Cross-state transport</th><td>Federal crime — do not transport between states</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h2>On this page</h2>
+    <ol>
+      <li><a href="#regions">The four cannabis tourism regions</a></li>
+      <li><a href="#lodging">Where to stay — 420-friendly lodging</a></li>
+      <li><a href="#consume">Where you can &amp; cannot consume</a></li>
+      <li><a href="#border">Cross-border rules (Canada &amp; Lower 48)</a></li>
+      <li><a href="#itineraries">Three working itineraries</a></li>
+      <li><a href="#seasonality">Seasonality — when to come</a></li>
+      <li><a href="#pack">What to pack (and what not to)</a></li>
+      <li><a href="#pairings">Cannabis-adjacent travel stack</a></li>
+      <li><a href="#etiquette">Dispensary etiquette for first-timers</a></li>
+      <li><a href="#faq">Frequently asked questions</a></li>
+    </ol>
+  </nav>
 
   <Callout title="The Consumption Lounge Problem" type="insight">
     Maine has no licensed cannabis consumption lounges, unlike Massachusetts (where Worcester and a handful of other cities now allow social-consumption licenses), Colorado, Nevada, or New York. A bill to allow them has been introduced in the Maine legislature multiple times since 2021 and keeps stalling. For now, the only legal place to consume cannabis in Maine is on private property, with the property owner's permission, out of public view. This is the single biggest friction point in Maine's cannabis tourism market, and it shows up in every visitor survey the Office of Cannabis Policy has published.
   </Callout>
 
-  <section>
+  <section id="regions">
     <h2>The Maine Cannabis Tourism Map in 2026</h2>
     <p>Maine is not a single market for cannabis tourism — it's four overlapping regions, each with its own dispensary density, lodging patterns, and seasonality. The map matters because the operator that makes sense for a Portland weekend is the wrong operator for an Acadia week.</p>
 
-    <h3>Greater Portland and Southern Coast</h3>
-    <p>Compact, walkable dispensary cluster from Portland through South Portland, Scarborough, and Cape Elizabeth. The strongest retail experience in Maine — SeaWeed Co., The Joint, Schedule 1, Cannabis Cured Portland, and the Grass Roots Portland/South Portland pair. This is the easiest region for a 420-curious traveler because the dispensaries are dense, the menus are deep, and most operators offer online ordering with curbside pickup. Lodging is hotel-heavy; Old Port has a dozen boutique properties, all of which prohibit smoking. The Portland Cannabis Friendly Airbnb scene is the workaround.</p>
+    <h3 id="portland">Greater Portland and Southern Coast</h3>
+    <p>Compact, walkable dispensary cluster from Portland through South Portland, Scarborough, and Cape Elizabeth. The strongest retail experience in Maine — <a href="/guides/portland-dispensary-guide">SeaWeed Co., The Joint, Schedule 1, Cannabis Cured Portland</a>, and the Grass Roots Portland / South Portland pair. This is the easiest region for a 420-curious traveler because the dispensaries are dense, the menus are deep, and most operators offer online ordering with curbside pickup. Lodging is hotel-heavy; Old Port has a dozen boutique properties, all of which prohibit smoking. The Portland Cannabis Friendly Airbnb scene is the workaround. Portland's adult-use prices are the cleanest benchmark for the rest of the state: $30–45 for a mid-shelf eighth before discounts.</p>
 
-    <h3>Acadia and the Down East Coast</h3>
-    <p>Three dispensaries on Mount Desert Island — 420 Mules (224 Main St, Bar Harbor), The Meristem (33 Main St, Bar Harbor), and Snare Creek Farms (Trenton, just over the mainland bridge). The Meristem operates as both medical and adult-use, which is useful for patients; 420 Mules is rec-only with a tourist-friendly retail floor. Snare Creek is the practical first stop for drivers coming from Ellsworth, since it sits on the highway before the bridge. In Ellsworth, Curaleaf and the Maine Organic Therapy cluster handle medical patients, and Curaleaf's Ellsworth location is the closest large-format adult-use store to Acadia at about 25 minutes west. The Bar Harbor lodging market is inn-heavy and most inns prohibit indoor smoking, so plan accordingly.</p>
+    <h3 id="acadia">Acadia and the Down East Coast</h3>
+    <p>Three dispensaries on Mount Desert Island — <a href="/guides/bar-harbor-dispensary-guide">420 Mules (224 Main St, Bar Harbor), The Meristem (33 Main St, Bar Harbor)</a>, and Snare Creek Farms (Trenton, just over the mainland bridge). The Meristem operates as both medical and adult-use, which is useful for patients; 420 Mules is rec-only with a tourist-friendly retail floor. Snare Creek is the practical first stop for drivers coming from Ellsworth, since it sits on the highway before the bridge. In Ellsworth, Curaleaf and the Maine Organic Therapy cluster handle medical patients, and Curaleaf's Ellsworth location is the closest large-format adult-use store to Acadia at about 25 minutes west. The Bar Harbor lodging market is inn-heavy and most inns prohibit indoor smoking, so plan accordingly. The HTR Acadia is one of the few Bar Harbor-area campgrounds that explicitly allows 420-friendly use at the campsite.</p>
 
-    <h3>Sebago Lakes and Western Maine</h3>
-    <p>The 420-friendliest region in Maine. Bridgton, Harrison, Naples, Sebago, and the lakes corridor host Camp Laughing Grass (Harrison, since 2018), The Hideaway (Norway and Bridgton), and Maine Only Cannabis (Bridgton and Hollis). White Mountain Craft Cannabis (Fryeburg) was the first recreational dispensary in western Maine. Bridgton, Harrison, and Denmark are towns that have either opted in or have a grandfathered retail ordinance, so the dispensary density is unusually high for a rural region. The Glacial Erratic in Bridgton and the Songo River Queen II paddlewheel in Naples are the two classic day-trip activities that pair naturally with a dispensary stop.</p>
+    <h3 id="sebago">Sebago Lakes and Western Maine</h3>
+    <p>The 420-friendliest region in Maine. Bridgton, Harrison, Naples, Sebago, and the lakes corridor host Camp Laughing Grass (Harrison, since 2018), The Hideaway (Norway and Bridgton), and Maine Only Cannabis (Bridgton and Hollis). White Mountain Craft Cannabis (Fryeburg) was the first recreational dispensary in western Maine. Bridgton, Harrison, and Denmark are towns that have either opted in or have a grandfathered retail ordinance, so the dispensary density is unusually high for a rural region. The Glacial Erratic in Bridgton and the Songo River Queen II paddlewheel in Naples are the two classic day-trip activities that pair naturally with a dispensary stop. The Sunday River / Bethel ski-town cluster carries a smaller but growing cannabis-and-skiing culture through winter.</p>
 
-    <h3>Northern Maine, Aroostook, and Katahdin</h3>
+    <h3 id="aroostook">Northern Maine, Aroostook, and Katahdin</h3>
     <p>The frontier. Aroostook is Maine's largest county east of the Mississippi and has roughly 67,000 residents spread across 6,672 square miles. Dispensary density is low, but operators like Full Bloom Cannabis (Presque Isle, with a second location in Caribou), Royal Leaf Apothecary (Presque Isle), and Lifted Cannabis Maine (Houlton) are well-stocked. The Katahdin region — Millinocket, Patten, Baxter State Park — is the entry point for the Appalachian Trail's northern terminus, and the nearest dispensary to the trail is roughly 30 minutes east of the park gate. Winter tourism here is snowmobile-heavy; summer is hiking, fall is leaf-peeping. The Aroostook moratorium on new marijuana businesses passed in March 2026 and is in effect, so the operator pool in Presque Isle is essentially frozen for the rest of the year.</p>
   </section>
 
-  <section>
+  <section id="lodging">
     <h2>Where to Stay: 420-Friendly Lodging in Maine</h2>
     <p>The lodging question is the most common pain point for cannabis tourists in Maine. Maine's hotel and inn market is overwhelmingly non-smoking, and most properties enforce it strictly. The 420-friendly options fall into three categories: dedicated cannabis-friendly properties, Airbnb/VRBO with explicit "smoking allowed" filters, and rental-by-owner where you've confirmed the policy in writing before booking.</p>
 
@@ -132,7 +180,7 @@ const faqPageSchema = {
     <p>Maine state parks and state-owned campgrounds prohibit cannabis consumption on park property, even though the surrounding land may be legal. Baxter State Park, which manages the Mount Katahdin trailheads, is the strictest — possession and consumption are both prohibited, and the park's remote search protocols are not for the cannabis-curious. Private campgrounds are a different story; most small campgrounds outside the state park system do not enforce, and many of the 420-friendly campgrounds in the Sebago Lakes corridor are private. Confirm with the campground before booking; do not assume.</p>
   </section>
 
-  <section>
+  <section id="consume">
     <h2>Where You Can and Cannot Consume</h2>
     <p>The short version: you can consume on private property, with the property owner's permission, out of public view. You cannot consume in any public space, on any federal or state-owned land, in any vehicle, or in any rental that prohibits it. The longer version is worth reading carefully because the legal penalties escalate fast and the line between "private" and "public" is often thinner than visitors expect.</p>
 
@@ -149,7 +197,7 @@ const faqPageSchema = {
       <li><strong>Federal land</strong> — Acadia National Park, the White Mountain National Forest, the Appalachian Trail corridor in Maine, Baxter State Park, all national wildlife refuges. The simplest rule: any land managed by the National Park Service, U.S. Forest Service, or U.S. Fish &amp; Wildlife Service is federal jurisdiction, and cannabis possession is a federal violation.</li>
       <li><strong>State parks and state-owned land</strong> — Maine state parks, Maine state-owned boat launches, public rest areas, state highways and rights-of-way.</li>
       <li><strong>Public spaces</strong> — sidewalks, downtown streets, public parks, town commons, beaches, parking lots (including dispensary parking lots, which are private property but routinely enforced).</li>
-      <li><strong>Hotels, motels, inns, B&amp;Bs</strong> — virtually all prohibit indoor smoking, and most charge a cleaning fee of $250-500 if detected.</li>
+      <li><strong>Hotels, motels, inns, B&amp;Bs</strong> — virtually all prohibit indoor smoking, and most charge a cleaning fee of $250–500 if detected.</li>
       <li><strong>Vehicles</strong> — possession in a vehicle is legal if sealed and stored out of reach (trunk or locked compartment), but consumption in a vehicle is a DUI-equivalent traffic violation with the same penalties.</li>
       <li><strong>Casinos, bars, restaurants</strong> — indoor smoking laws apply. Maine's 2021 indoor smoking ban includes cannabis.</li>
     </ul>
@@ -159,12 +207,12 @@ const faqPageSchema = {
     You can buy cannabis legally in Bar Harbor. You can transport it in a sealed container to your lodging. You cannot consume it on any federal land, which includes all of Acadia National Park — the Park Loop Road, Sand Beach, Jordan Pond, Cadillac Mountain, every trailhead, every parking lot, every picnic area. Maine state law does not apply on federal land; federal law does. The NPS issues citations for cannabis possession, and the penalties are federal-misdemeanor level. Plan your consumption around your lodging, not your sightseeing schedule.
   </Callout>
 
-  <section>
+  <section id="border">
     <h2>Cross-Border Rules: Canada and the Lower 48</h2>
     <p>Maine shares land borders with two Canadian provinces (New Brunswick and Quebec) and is within a day's drive of fourteen other states. The cross-border rules are the single most under-discussed topic in Maine cannabis tourism, and the penalties for getting it wrong are federal-misdemeanor or worse.</p>
 
     <h3>Canada: Don't Bring It</h3>
-    <p>Cannabis is fully legal in Canada, but the U.S.–Canada border is U.S. federal jurisdiction, and federal law prohibits cannabis importation regardless of state legalization. The Canada Border Services Agency (entering Canada) and U.S. Customs and Border Protection (entering the U.S.) both enforce this. The two main crossings — Calais/St. Stephen (ME/NB) and Houlton/Woodstock (ME/NB) — see roughly 4 million crossings a year combined, and CBP regularly issues federal citations for cannabis possession at the border, even when the cannabis was legally purchased in Maine. The reverse is also true: bringing Canadian cannabis into Maine is a federal crime. The rule is: leave all cannabis on the side of the border where you bought it, every time, no exceptions.</p>
+    <p>Cannabis is fully legal in Canada, but the U.S.–Canada border is U.S. federal jurisdiction, and federal law prohibits cannabis importation regardless of state legalization. The Canada Border Services Agency (entering Canada) and U.S. Customs and Border Protection (entering the U.S.) both enforce this. The two main crossings — Calais/St. Stephen (ME/NB) and Houlton/Woodstock (ME/NB) — see roughly 4 million crossings a year combined, and CBP regularly issues federal citations for cannabis possession at the border, even when the cannabis was legally purchased in Maine. The reverse is also true: bringing Canadian cannabis into Maine is a federal crime. The rule is: leave all cannabis on the side of the border where you bought it, every time, no exceptions. The full Canada border rules (including the personal-use exception Canada allows at the border for citizens) are outside the scope of Maine tourism, but the U.S. position is unambiguous.</p>
 
     <h3>New Hampshire, Vermont, Massachusetts</h3>
     <p>All three border states have legalized adult-use cannabis, but the transport rules vary. New Hampshire allows up to ¾ ounce of flower and 5 grams of concentrate for personal possession, but transport in a vehicle requires sealed storage. Vermont's rules are similar. Massachusetts has reciprocity for Maine adult-use purchases, but the practical advice is the same: sealed, in the trunk, and don't consume in the vehicle. The New Hampshire border in particular is heavily enforced — NH State Police run cannabis interdiction stops on I-95 south of Portsmouth during the summer tourism season, and out-of-state cannabis that exceeds NH personal possession limits gets confiscated even if it was legally purchased in Maine.</p>
@@ -173,17 +221,17 @@ const faqPageSchema = {
     <p>Adult-use possession limits in Maine are 2.5 ounces of flower, 5 grams of concentrate, and 100mg of edible THC per transaction. Transporting more than the personal limit without a state manifest (which only licensees have) is a civil violation. The practical guidance: keep your purchase sealed in the dispensary bag, store it in the trunk or a locked compartment out of driver reach, and do not consume in the vehicle. The dispensary exit is not the place to break open a pre-roll; the parking lots are private property but routinely patrolled, and an open container in a vehicle is a stop-and-cite situation.</p>
   </section>
 
-  <section>
+  <section id="itineraries">
     <h2>Three Itineraries That Actually Work</h2>
 
     <div class="itinerary">
       <h3>Itinerary 1: Portland Weekend (2 nights)</h3>
-      <p>Friday evening: arrive in Portland, check into a 420-friendly Airbnb in the East End or West End neighborhoods (Old Port inns are smoke-free, and the in-room cleaning fee for a single joint is a $400 mistake). Walk to a dispensary in the Old Port — SeaWeed Co. is the most reliable for first-timers, with a long menu and a staff that walks you through the products without rushing. Order ahead online for pickup; the Portland queues on Friday and Saturday can be 20-40 minutes. Saturday: morning at the Portland Farmers' Market, afternoon at Allagash or Bunker Brewing (cannabis-forward brewery culture is real in Portland — many of the city's breweries have explicitly 420-tolerant outdoor seating), dispensary stop for the evening, dinner at one of the city's cannabis-adjacent restaurants (ask locals — this is a low-key thing, not advertised). Sunday: drive up to Sebago or Bridgton for the day, stop at a lakes-region dispensary on the way back to I-95, fly home.</p>
+      <p>Friday evening: arrive in Portland, check into a 420-friendly Airbnb in the East End or West End neighborhoods (Old Port inns are smoke-free, and the in-room cleaning fee for a single joint is a $400 mistake). Walk to a dispensary in the Old Port — SeaWeed Co. is the most reliable for first-timers, with a long menu and a staff that walks you through the products without rushing. Order ahead online for pickup; the Portland queues on Friday and Saturday can be 20–40 minutes. Saturday: morning at the Portland Farmers' Market, afternoon at Allagash or Bunker Brewing (cannabis-forward brewery culture is real in Portland — many of the city's breweries have explicitly 420-tolerant outdoor seating), dispensary stop for the evening, dinner at one of the city's cannabis-adjacent restaurants (ask locals — this is a low-key thing, not advertised). Sunday: drive up to Sebago or Bridgton for the day, stop at a lakes-region dispensary on the way back to I-95, fly home.</p>
     </div>
 
     <div class="itinerary">
-      <h3>Itinerary 2: Acadia Week (5-7 nights)</h3>
-      <p>The Acadia trip is a 5-7 night stay, and the cannabis logistics need to be planned before you arrive. Book a 420-friendly VRBO or Airbnb in the Bar Harbor / Trenton / Lamoine area — the inventory is tight in summer and the no-smoking inns will charge cleaning fees if you consume indoors. Day 1: drive to Ellsworth, stop at Curaleaf or Maine Organic Therapy for the week's supply. Day 2-3: Acadia NP hiking, with the understanding that no consumption happens inside the park. Evenings: return to the rental, consume on the private deck or porch, plan the next day. Day 4: take a half-day drive to the Blue Hill peninsula, visit the Deer Isle cannabis farm scene, drive the scenic loop. Day 5: Trenton / Lamoine / Schoodic Point — the quiet side of Acadia, with Snare Creek Farms on the way out. Day 6-7: return south via Bangor (Firestorm Bangor for a final dispensary stop) and I-95.</p>
+      <h3>Itinerary 2: Acadia Week (5–7 nights)</h3>
+      <p>The Acadia trip is a 5–7 night stay, and the cannabis logistics need to be planned before you arrive. Book a 420-friendly VRBO or Airbnb in the Bar Harbor / Trenton / Lamoine area — the inventory is tight in summer and the no-smoking inns will charge cleaning fees if you consume indoors. Day 1: drive to Ellsworth, stop at Curaleaf or Maine Organic Therapy for the week's supply. Day 2–3: Acadia NP hiking, with the understanding that no consumption happens inside the park. Evenings: return to the rental, consume on the private deck or porch, plan the next day. Day 4: take a half-day drive to the Blue Hill peninsula, visit the Deer Isle cannabis farm scene, drive the scenic loop. Day 5: Trenton / Lamoine / Schoodic Point — the quiet side of Acadia, with Snare Creek Farms on the way out. Day 6–7: return south via Bangor (Firestorm Bangor for a final dispensary stop) and I-95. The full <a href="/blog/recreational-cannabis-near-acadia">Acadia-region dispensary roundup</a> covers operator hours and inventory by town.</p>
     </div>
 
     <div class="itinerary">
@@ -192,9 +240,9 @@ const faqPageSchema = {
     </div>
   </section>
 
-  <section>
+  <section id="seasonality">
     <h2>Seasonality: When to Come for Cannabis Tourism</h2>
-    <p>Maine is a four-season cannabis destination, but the season matters more than in most other legal states. Winter brings ski-town cannabis culture (Sunday River, Sugarloaf) and the fewest crowds; spring mud season is the slowest window; summer is peak everything; fall is the second peak and arguably the most beautiful time to be in Maine.</p>
+    <p>Maine is a four-season cannabis destination, but the season matters more than in most other legal states. Winter brings ski-town cannabis culture (Sunday River, Sugarloaf) and the fewest crowds; spring mud season is the slowest window; summer is peak everything; fall is the second peak and arguably the most beautiful time to be in Maine. The <a href="/guides/maine-cannabis-events-2026">Maine cannabis events 2026 calendar</a> is the cleanest reference for off-season operator gatherings, OCP stakeholder meetings, and Maine Cannabis Industry Association sessions — useful if you want to plan a trip around an event rather than a weather window.</p>
 
     <h3>Summer (mid-June through Labor Day)</h3>
     <p>Peak season. Acadia's 4 million annual visitors concentrate in these 10 weeks. Bar Harbor dispensaries extend hours, sometimes to 11pm. Sebago Lakes campgrounds fill by 11am on Fridays. The 420-friendly lodging inventory tightens, and Airbnb prices in the lakes region double. The upside: every operator is at full staff, every menu is full, and dispensary social media is at its most active with deal rotations. The downside: queues, traffic, and the summer humidity that turns flower storage into a real concern (ask for fresh harvest dates; humidity packs help).</p>
@@ -203,16 +251,16 @@ const faqPageSchema = {
     <p>Underrated. The leaf-peeping season crowds the western mountains and the lakes region but leaves Acadia and the coast relatively quiet after Columbus Day. Dispensaries often run harvest-themed deals, fresh outdoor flower hits menus, and the operator vibe is more relaxed. The High'D Away Lodge closes mid-October; Camp Laughing Grass closes around the same time. Indoor 420-friendly Airbnb inventory is the play in fall.</p>
 
     <h3>Winter and Spring</h3>
-    <p>The quiet seasons. Most 420-friendly outdoor lodging is closed. Year-round dispensaries are active but with smaller menus (some operators scale back fresh inventory in the slower months). The ski-town cluster (Bridgton, Bethel, Sunday River area) is the active region — a small but growing cannabis-and-skiing culture, with Sunday River and Sugarloaf both within an hour of multiple dispensaries. Spring mud season (April-mid-May) is the deepest low; most seasonal lodging is still closed, and dispensary hours may be reduced.</p>
+    <p>The quiet seasons. Most 420-friendly outdoor lodging is closed. Year-round dispensaries are active but with smaller menus (some operators scale back fresh inventory in the slower months). The ski-town cluster (Bridgton, Bethel, Sunday River area) is the active region — a small but growing cannabis-and-skiing culture, with Sunday River and Sugarloaf both within an hour of multiple dispensaries. Spring mud season (April–mid-May) is the deepest low; most seasonal lodging is still closed, and dispensary hours may be reduced.</p>
   </section>
 
-  <section>
+  <section id="pack">
     <h2>What to Pack (and What Not To)</h2>
     <p>Maine dispensaries are well-stocked and the operators expect tourists, so you don't need to bring much. A few practical items make the trip smoother:</p>
 
     <ul>
       <li><strong>Government photo ID.</strong> Maine dispensaries require a valid, unexpired photo ID. Passport, driver's license, state ID card, or military ID. Out-of-state IDs are accepted; vertical (temporary) IDs may require a second form.</li>
-      <li><strong>Cash.</strong> Most Maine dispensaries accept debit cards through a PIN-based system, but cash avoids the occasional declined-card situation. There is usually an ATM on-site; the dispensing fee is typically $2-3.</li>
+      <li><strong>Cash.</strong> Most Maine dispensaries accept debit cards through a PIN-based system, but cash avoids the occasional declined-card situation. There is usually an ATM on-site; the dispensing fee is typically $2–3.</li>
       <li><strong>Storage.</strong> Glass jars with humidity packs for flower; original sealed packaging for cartridges and edibles. Maine's summer humidity will dry out flower in hours if it's not in a sealed container, and dispensaries will usually include a humidity pack with the bag.</li>
       <li><strong>Transport container.</strong> A small lockable case or smell-proof bag for the vehicle. Not required by law, but it's polite to the rental car company and to fellow travelers.</li>
     </ul>
@@ -220,7 +268,7 @@ const faqPageSchema = {
     <p>What <em>not</em> to bring: cannabis from a non-Maine dispensary if you're crossing state lines (transport between states is a federal issue even with valid state purchases), any cannabis in unlabeled or open containers, and any product that exceeds the Maine personal possession limits.</p>
   </section>
 
-  <section>
+  <section id="pairings">
     <h2>The Cannabis-Adjacent Maine Travel Stack</h2>
     <p>Maine's cannabis tourism market is layered on top of a much larger outdoor recreation, food, and craft-beverage economy. The most rewarding trips pair cannabis with one or more of the other Maine staples, and the operators across these industries are increasingly cross-promoting.</p>
 
@@ -234,16 +282,16 @@ const faqPageSchema = {
     <p>Maine's craft beer, cider, and spirits scene is large and well-distributed, and the cross-promotion with cannabis is happening organically rather than through formal partnerships. The state's 2021 indoor smoking ban includes cannabis in the same category as cigarettes, so the dispensary-and-brewery pairing is limited to outdoor seating. Allagash Brewing, Bunker Brewing, and Austin Street Brewery in Portland all have outdoor beer gardens where the 420-tolerant culture is alive; Sebago Brewing has the same in the lakes region. Do not consume on the brewery premises — the indoor smoking ban applies — but outdoor seating after a dispensary stop is the unofficial Maine weekend ritual.</p>
   </section>
 
-  <section>
+  <section id="etiquette">
     <h2>Dispensary Etiquette for First-Timers</h2>
     <p>Maine dispensary staff are unusually well-trained, and most operators emphasize the consultative sales model — the budtender will ask what you're looking for, walk you through the menu, and recommend products based on effect rather than strain name. A few first-timer norms make the experience smoother:</p>
 
     <ul>
       <li><strong>Have your ID out when you walk in.</strong> Maine dispensaries check ID at the door and again at the register. Some operators will turn you away if you have to dig for your wallet.</li>
-      <li><strong>Don't be afraid to say you don't know.</strong> "I want something for sleep, low-THC, edible form, $30 budget" is a great brief. The budtender will narrow the menu to 2-3 options.</li>
+      <li><strong>Don't be afraid to say you don't know.</strong> "I want something for sleep, low-THC, edible form, $30 budget" is a great brief. The budtender will narrow the menu to 2–3 options.</li>
       <li><strong>The strain name is less important than the chemotype.</strong> "Indica-leaning" or "sativa-leaning" is more reliable than the cultivar name, which varies wildly by operator and grower. The budtender will explain the chemotype if you ask.</li>
       <li><strong>Ask about the deal rotation.</strong> Maine dispensaries rotate weekly specials, and a $20 eighth one week can be $40 the next. Asking saves money.</li>
-      <li><strong>First-time-patient discount</strong> — most operators offer 15-25% off the first purchase. Sign up for the email or text list at the register; the discount usually arrives as a code.</li>
+      <li><strong>First-time-patient discount</strong> — most operators offer 15–25% off the first purchase. Sign up for the email or text list at the register; the discount usually arrives as a code.</li>
     </ul>
   </section>
 
@@ -251,7 +299,7 @@ const faqPageSchema = {
     <AutoRelated currentPath="/blog/cannabis-friendly-maine-travel" currentTopics={['travel', 'tourism', 'lifestyle']} section="Lifestyle & Travel" limit={6} />
   </div>
 
-  <section class="faq-section">
+  <section class="faq-section" id="faq">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-list">
       {faqItems.map(f => (
@@ -273,18 +321,19 @@ const faqPageSchema = {
       <li><a href="/guides/ogunquit-dispensary-guide">Ogunquit dispensary guide</a> — beach-town dispensaries between Portland and Kittery.</li>
       <li><a href="/guides/kittery-dispensary-guide">Kittery dispensary guide</a> — southern Maine dispensaries, first stop from New Hampshire.</li>
       <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> — Downeast mainland dispensaries, 25 minutes west of Acadia.</li>
-      <li><a href="/guides/downeast-acadia-aroostook-cannabis-guide">Downeast, Acadia & Aroostook cannabis guide</a> — regional cluster covering Bar Harbor, Trenton, Ellsworth, and the rest of the Down East corridor.</li>
+      <li><a href="/guides/downeast-acadia-aroostook-cannabis-guide">Downeast, Acadia &amp; Aroostook cannabis guide</a> — regional cluster covering Bar Harbor, Trenton, Ellsworth, and the rest of the Down East corridor.</li>
+      <li><a href="/guides/maine-cannabis-events-2026">Maine Cannabis Events 2026</a> — OCP stakeholder meetings, MCIA gatherings, cannabis expos, and caregiver trade shows across Maine.</li>
       <li><a href="/learn">Consumer's Guide</a> — first-dispensary-visit prep, THC label reading, possession limits, and caregiver guidance for any Maine resident or visitor.</li>
       <li><a href="/find-a-dispensary">Browse all Maine dispensaries by town →</a></li>
     </ul>
   </section>
 
-  <p class="disclaimer"><strong>Disclaimer:</strong> Cannabis laws and consumption rules change frequently. The information in this guide reflects Maine and federal law as of June 2026. Always verify current rules with the Maine Office of Cannabis Policy (maine.gov/dafs/ocp) before traveling, and confirm consumption policies with any lodging property before booking. Nothing in this guide is legal advice.</p>
+  <p class="disclaimer"><strong>Disclaimer:</strong> Cannabis laws and consumption rules change frequently. The information in this guide reflects Maine and federal law as of July 2026. Always verify current rules with the Maine Office of Cannabis Policy (maine.gov/dafs/ocp) before traveling, and confirm consumption policies with any lodging property before booking. Nothing in this guide is legal advice.</p>
 
     <section class="content-verification">
     <div class="verification-badge">
       <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-08</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-09</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
     </div>
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
