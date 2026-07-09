@@ -6,12 +6,14 @@
 |------|------|----------|------------|--------|
 | `site-tour.mp4` | 4.8 MB | 30.4s | 1920×1080 | H.264 + AAC |
 | `site-tour.poster.jpg` | 199 KB | — | 1920×1080 | JPEG q=80 |
-| `market-stats.mp4` | 7.3 MB | 35.0s | 1920×1080 | H.264 + AAC |
+| `market-stats.mp4` | 12 MB | 60.0s | 1920×1080 | H.264 + AAC |
 | `market-stats.poster.jpg` | 49 KB | — | 1920×1080 | JPEG q=80 |
 
-Total raw: 12.4 MB. Gzip-compressed Vercel serving reduces to ~3.5 MB transferred.
+Total raw: 17.0 MB. Gzip-compressed Vercel serving reduces to ~5 MB transferred.
 
 The `market-stats.poster.jpg` is 49 KB because the channel-ident frame is dominated by solid black and a sparse text overlay — JPEG compresses this very efficiently. This is correct, not a bug; vision verification confirmed the frame is the intended moment.
+
+**`market-stats.mp4` was originally 35s; extended to 60s on 2026-07-09 to give text-heavy beats more reading time. The 7-beat structure is preserved; each beat got +1-3s of hold time. Narration regenerated at 0.92x speed to fill the new duration. See SCRIPT.md for the extended version.**
 
 ## LCP strategy
 
