@@ -65,16 +65,20 @@ const recentGuides = [
   { title: "Maine Cannabis Market Overview", href: "/guides/maine-cannabis-market", date: "June 7, 2026", badge: "Updated" },
 ];
 
-// Recent blog posts (June 2026 batch) — pulled from blog/index.astro
+// Recent blog posts — newest first by actual modifiedDate (July 2026 batch).
 // Linked from the homepage to give these posts >1 incoming internal link.
+// Includes the 2026-07-08 editorial refresh (Acadia federal-land + Maine travel
+// guide), the 2026-07-06 buyer/operator pair (dispensary-for-sale + ROI), and a
+// mix of 2026-06 consumer/operator guides.
 const recentPosts = [
-  { title: "Maine's Cannabis 'Gray Market' Is Growing", href: "/blog/maine-cannabis-gray-market-ocp-enforcement-2026", date: "June 6, 2026", badge: "Policy" },
-  { title: "Buying Cannabis by Effect: A Terpene Framework", href: "/blog/buying-cannabis-by-effect-2026", date: "June 6, 2026", badge: "Consumer" },
-  { title: "Maine Dispensary Gift Cards: 2026 Buyer's Guide", href: "/blog/maine-dispensary-gift-cards", date: "June 5, 2026", badge: "Consumer" },
-  { title: "How to Get a Budtender Job in Maine", href: "/blog/maine-cannabis-budtender-careers", date: "June 5, 2026", badge: "Careers" },
-  { title: "Cannabis-Friendly Maine: 2026 Travel Guide", href: "/blog/cannabis-friendly-maine-travel", date: "June 5, 2026", badge: "Travel" },
-  { title: "Portland Maine Cannabis Rules 2026", href: "/blog/portland-maine-cannabis-rules-2026", date: "April 15, 2026", badge: "Local" },
-  { title: "Maine Cannabis Social Equity Program Guide", href: "/blog/maine-cannabis-social-equity-program-2026", date: "May 13, 2026", badge: "Policy" },
+  { title: "Recreational Cannabis Near Acadia: 2026 Federal Land & Gateway Guide", href: "/blog/recreational-cannabis-near-acadia", date: "July 8, 2026", badge: "Consumer" },
+  { title: "Cannabis-Friendly Maine: 2026 Travel Guide for the 420-Curious", href: "/blog/cannabis-friendly-maine-travel", date: "July 8, 2026", badge: "Travel" },
+  { title: "Maine Dispensary for Sale: How to Find, Buy, and Close a Cannabis Business (2026)", href: "/blog/maine-dispensary-business-for-sale", date: "July 6, 2026", badge: "Operator" },
+  { title: "Maine Dispensary ROI: 2026 Investment Expectations", href: "/blog/maine-dispensary-roi-what-to-expect-2026", date: "July 6, 2026", badge: "Finance" },
+  { title: "Maine's Cannabis 'Gray Market' Is Growing Because the Regulators Can't Keep Up", href: "/blog/maine-cannabis-gray-market-ocp-enforcement-2026", date: "June 6, 2026", badge: "Policy" },
+  { title: "Maine Issues First-Ever Medical Cannabis Patient Advisory After Unsafe Pesticide Levels Found in Concentrates", href: "/blog/maine-medical-cannabis-pesticide-advisory-2026", date: "June 7, 2026", badge: "Medical" },
+  { title: "How to Get a Budtender Job in Maine: 2026 Career Guide", href: "/blog/maine-cannabis-budtender-careers", date: "June 5, 2026", badge: "Careers" },
+  { title: "Maine Psilocybin Legality 2026 — Decriminalization Status & What Operators Must Know", href: "/blog/maine-psilocybin-2026-guide", date: "June 7, 2026", badge: "Policy" },
 ];
 
 const journeySteps = [
@@ -92,6 +96,13 @@ const journeySteps = [
   article={{ author: "Eliot Nash", authorTitle: "Editorial", authorId: "eliot-nash", publishDate: "2026-01-01", modifiedDate: "2026-06-07", section: "Home" }}
   isHub={true}
 >
+  {/* LCP preload hint for the homepage video-tour-strip poster — the
+       video is muted-background and won't block LCP, but the poster
+       is the LCP candidate. Preload shaves ~100ms on first paint. */}
+  <Fragment slot="head">
+    <link rel="preload" as="image" href="/videos/site-tour.poster.jpg" fetchpriority="high" />
+  </Fragment>
+
   <!-- Full-page aurora wash — pinned to the viewport so the slow drift
        stays visible while scrolling. Sits behind all content (z-index: -1)
        and uses low intensity (0.18) so it tints the page background
@@ -1321,6 +1332,33 @@ const journeySteps = [
   }
   .geo-city-anchor text {
     pointer-events: none;
+  }
+
+  /* City label + reference-marker label theming for dark mode.
+     The SVG <text> elements have inline fill="var(--color-foreground)"
+     (city labels) or fill="var(--color-text-light)" (ref labels).
+     On dark backgrounds, --color-foreground is light and
+     --color-text-light is a faded gray-green that vanishes.
+     We add a small text-shadow halo so the labels read on both
+     the painterly map fill and on dark backgrounds. */
+  .geo-map text {
+    paint-order: stroke;
+    stroke: var(--color-background, #faf7f2);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  [data-theme="dark"] .geo-map text {
+    stroke: var(--color-background, #0f1411);
+    stroke-width: 4;
+  }
+  [data-theme="dark"] .geo-cities-svg text {
+    fill: #F4F1E4 !important;
+  }
+  [data-theme="dark"] .geo-ref text {
+    fill: #C8D4C4 !important;
+    fill-opacity: 1 !important;
+  }
   }
 
   .geo-cities {
