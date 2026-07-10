@@ -68,9 +68,8 @@ edge caching, browser-side blockers), not a missing script.
    gtag in the same browser that loads the dashboard.)
 4. Wait 30 seconds. The Realtime panel should show 1 active user
    on `/` (or `/index.html` — Vercel strips the extension).
-5. Navigate to a town guide. **Pick:** `/guides/portland-maine-dispensary-guide/`
-   (highest-impression page from the 2026-07-08 audit, reliable
-   traffic in production).
+5. Navigate to a town guide. **Pick:** `/guides/portland-dispensary-guide/`
+   (largest city in Maine, reliable traffic in production).
 6. Wait 30 seconds. Realtime should show a second active page on
    the new `page_path`.
 7. Navigate to a blog post. **Pick:** `/blog/recreational-cannabis-near-acadia/`
