@@ -88,7 +88,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Multi-agent communication log (READ FIRST)
 ```
 
-**Components** (13, `apps/maine-cannabis/src/components/`): `AutoRelated`, `Breadcrumbs`, `Callout`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `LeadMailtoForm`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `RegionHubShell`
+**Components** (14, `apps/maine-cannabis/src/components/`): `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `LeadMailtoForm`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `RegionHubShell`
 
 ---
 
@@ -112,7 +112,7 @@ What Vercel actually serves:
 
 **No SSR routes are currently in production** — both `apps/maine-cannabis/src/pages/api/lead-capture.ts` and `apps/maine-cannabis/src/pages/api/indexnow-key.ts` were retired 2026-07-06 (commits `bb2b864f` + `48a0459d`). The `/api/*` namespace is free for any future endpoint.
 
-**Lead-funnel pattern**: `/download/first-timer-field-guide` uses a client-side `mailto:` form (Formspree + the dormant SSR endpoint were both removed 2026-07-06). Submitting opens the user's mail client pre-filled to `hello@mainedispensaryguide.com`. Purelymail catch-all routes that address to `steezkelly@purelymail.com` (Steve's primary inbox). See `docs/LEAD_CAPTURE_SETUP.md` for the full operator-side flow.
+**Lead-funnel pattern**: `/download/first-timer-field-guide` uses a client-side `mailto:` form (Formspree + the dormant SSR endpoint were both removed 2026-07-06). Submitting opens the user's mail client pre-filled to `hello@mainedispensaryguide.com`. Purelymail routing on `mainedispensaryguide.com` delivers `hello@`, `admin@`, `support@`, and any otherwise-unhandled address to `steve@mainedispensaryguide.com` (operator inbox) — NOT to the previous `steezkelly@purelymail.com` catch-all, which is a separate user mailbox with its own (empty) inbox. Read leads via `mdg-mdg envelope list` (wrapper at `~/.local/bin/mdg-mdg` → `~/.config/himalaya/steve-mdg.toml`). See `docs/LEAD_CAPTURE_SETUP.md` for the full operator-side flow. Reroute decision: 2026-07-09.
 
 **Reading these signals**:
 - A `node_modules/@astrojs/vercel/dist/index.js` log line `Bundling function ../../../../dist/server/entry.mjs` followed by `Server built in N s` = SSR function bundle emitted.
@@ -433,6 +433,32 @@ After completing any sprint with 3+ steps or 4+ agents:
 | `reference/environment.md` | PowerShell patterns, Unix→PowerShell reference |
 | `reference/psmux-quickstart.md` | Multiplexer setup and usage |
 | `reference/reference.md` | External API docs, tool links |
+| `docs/agents/issue-tracker.md` | Where engineering-skills issues live |
+| `docs/agents/triage-labels.md` | Canonical triage labels used by this repo |
+| `docs/agents/domain.md` | Where `CONTEXT.md` / `docs/adr/` live |
+
+## Agent skills
+
+This repo participates in the Matt Pocock engineering-skills workflow.
+Config lives in `docs/agents/`; skill instructions look there first.
+
+### Issue tracker
+
+Local markdown under `.scratch/` in this repo — one issue file per ticket,
+gitignored because it is operational state, not source. External PRs from
+forks are NOT a triage surface (single-operator repo).
+See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical states, recorded as a `Status:` line on each issue file:
+`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
+See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context. One `CONTEXT.md` at the repo root + `docs/adr/` for past
+architectural decisions. See `docs/agents/domain.md`.
 
 ---
 
