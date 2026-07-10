@@ -1,0 +1,478 @@
+---
+/**
+ * /embed/roi-calculator — Embeddable iframe version of the ROI calculator.
+ *
+ * No Layout (full-page iframe-friendly markup). Inline styles. CC BY 4.0 footer
+ * with attribution to the reviewer pair. Mirrors the embed/opt-in-tracker.astro
+ * pattern already in production.
+ *
+ * URL parameter convention (locked 2026-07-09):
+ *   ?state=ME              — pre-select state; defaults to ME. Reserved values
+ *                            for future expansion: CA, CO, IL, MA, MI, NY, OR.
+ *   ?capital=400000        — pre-fill launch capital (USD)
+ *   ?customers=800         — pre-fill monthly customers
+ *   ?avgsale=65            — pre-fill average sale (USD)
+ *   ?opex=15000            — pre-fill monthly operating expenses (USD)
+ *   ?embedder=example.com  — optional embedder domain; logged for analytics,
+ *                            displayed in the footer attribution
+ *   ?hideheader=1          — embedders that render their own attribution header
+ *                            can set this to suppress ours. The footer
+ *                            "powered by" line stays.
+ *
+ * Attribution / licensing:
+ *   - CC BY 4.0 (Title + Author + Source + License = the four required elements)
+ *   - Reviewer byline + publication date rendered in the header
+ *   - Footer always links back to /roi-calculator on mainedispensaryguide.com
+ *
+ * Embedder policy:
+ *   - Non-Maine embedders are ALLOWED with attribution. No opt-in required
+ *     for use on industry / journalism / research sites.
+ *   - Cannabis-product sales pages are not allowed to embed (would imply
+ *     endorsement of the embedder's product line by MDG).
+ *   - For programmatic parent↔child state sync, postMessage events are
+ *     dispatched from the iframe on every calculate() call with shape:
+ *       { type: 'mdg-roi-update', payload: { capital, customers, ... } }
+ *
+ * Vercel headers note: this route is allowed to be iframed via a
+ * route-specific override in vercel.json that sets:
+ *   X-Frame-Options: SAMEORIGIN  (the global site-wide DENY would otherwise block us)
+ *   Content-Security-Policy: frame-ancestors 'self' https:  (covers all https embedders)
+ * The override MUST come before the wildcard `/(.*)` rule in vercel.json.
+ */
+
+// Default values mirror the source page calculator
+const DEFAULTS = {
+  capital:   400000,
+  customers: 800,
+  avgSale:   65,
+  opex:      15000,
+  state:     'ME',
+};
+
+// Whitelisted states for the per-state future-proofing. Only ME is wired up
+// today; others reserved for the 280E calculator roll-out when a state pack
+// ships. Including them in the whitelist now means embedders can pre-set
+// `?state=CA` without the page breaking — it just falls back to ME.
+const STATE_LABELS: Record<string, string> = {
+  ME: 'Maine',
+  CA: 'California',
+  CO: 'Colorado',
+  IL: 'Illinois',
+  MA: 'Massachusetts',
+  MI: 'Michigan',
+  NY: 'New York',
+  OR: 'Oregon',
+};
+
+// Whitelisted embedder domains (documentation, not enforcement). Real
+// enforcement is at the X-Frame-Options / CSP frame-ancestors level in
+// vercel.json — we currently allow all https origins.
+const EMBEDDER_DISPLAY_MAX = 32;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maine Cannabis Dispensary ROI Calculator — Embedded</title>
+  <meta name="description" content="Embeddable ROI calculator for Maine cannabis dispensaries. Authored by Margaret Finch + Eliot Nash (Maine Dispensary Guide). CC BY 4.0. Reviewed 2026-07-09." />
+  <meta name="author" content="Margaret Finch, Eliot Nash" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://mainedispensaryguide.com/roi-calculator" />
+
+  <!-- Open Graph for the embed itself (when shared, e.g. on social) -->
+  <meta property="og:title" content="Maine Cannabis Dispensary ROI Calculator" />
+  <meta property="og:description" content="Embeddable ROI calculator for Maine cannabis dispensaries — CC BY 4.0." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://mainedispensaryguide.com/roi-calculator" />
+  <meta property="article:author" content="Margaret Finch" />
+  <meta property="article:author" content="Eliot Nash" />
+  <meta property="article:published_time" content="2026-07-09" />
+  <meta property="article:modified_time" content="2026-07-09" />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "Maine Cannabis Dispensary ROI Calculator (Embedded)",
+    "isBasedOn": "https://mainedispensaryguide.com/roi-calculator",
+    "url": "https://mainedispensaryguide.com/embed/roi-calculator",
+    "datePublished": "2026-07-09",
+    "dateModified": "2026-07-09",
+    "inLanguage": "en",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "author": [
+      { "@type": "Person", "name": "Margaret Finch", "jobTitle": "Author", "affiliation": { "@type": "Organization", "name": "Maine Dispensary Guide" } },
+      { "@type": "Person", "name": "Eliot Nash",    "jobTitle": "Author", "affiliation": { "@type": "Organization", "name": "Maine Dispensary Guide" } }
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Maine Dispensary Guide",
+      "url": "https://mainedispensaryguide.com",
+      "logo": { "@type": "ImageObject", "url": "https://mainedispensaryguide.com/images/logo.png" }
+    },
+    "reviewedBy": [
+      { "@type": "Person", "name": "Margaret Finch" },
+      { "@type": "Person", "name": "Calvin Waters" }
+    ]
+  })} is:inline></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #faf8f4; color: #1a1a1a;
+      line-height: 1.5;
+    }
+    .embed-root { container-type: inline-size; padding: 1rem; }
+
+    /* Attribution header — required by CC BY 4.0 */
+    .attr-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      border-bottom: 2px solid #2d5f3f;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .attr-header .byline { font-size: 0.8125rem; color: #1a1a1a; }
+    .attr-header .byline strong { color: #2d5f3f; }
+    .attr-header .review { font-size: 0.6875rem; color: #666; text-align: right; }
+    .attr-header .review a { color: #2d5f3f; text-decoration: none; }
+    .attr-header .review a:hover { text-decoration: underline; }
+
+    /* Calculator — mirrors /roi-calculator source page */
+    h1 { margin: 0 0 1rem; font-size: 1.25rem; color: #2d5f3f; font-family: Georgia, 'Times New Roman', serif; }
+    h2 { margin: 1.25rem 0 0.625rem; font-size: 1rem; color: #2d5f3f; font-family: Georgia, 'Times New Roman', serif; }
+    h3 { margin: 1rem 0 0.5rem; font-size: 0.9375rem; color: #2d5f3f; }
+
+    .calc-grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @container (min-width: 540px) {
+      .calc-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @container (min-width: 820px) {
+      .calc-grid { grid-template-columns: 5fr 6fr; }
+    }
+
+    .input-section { background: white; border: 1px solid #d0c8b8; border-radius: 0.5rem; padding: 0.875rem; }
+    .input-section + .input-section { margin-top: 0.75rem; }
+    .input-group { margin-bottom: 0.625rem; }
+    .input-group:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .input-hint { font-size: 0.6875rem; color: #666; margin: 0.25rem 0 0; }
+    input[type="number"], input[type="range"] {
+      width: 100%; padding: 0.375rem 0.5rem; font-size: 0.875rem;
+      border: 1px solid #d0c8b8; border-radius: 0.375rem; background: white;
+    }
+    .currency-input { position: relative; }
+    .currency-input span { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); color: #666; font-size: 0.875rem; }
+    .currency-input input { padding-left: 1.25rem; }
+    .currency-input.small input { padding-left: 1.25rem; }
+
+    .slider-value { font-size: 0.75rem; color: #666; margin-top: 0.25rem; }
+
+    .results { display: flex; flex-direction: column; gap: 0.75rem; }
+    .result-card {
+      background: white; border: 1px solid #d0c8b8; border-radius: 0.5rem;
+      padding: 0.875rem;
+    }
+    .result-card.primary { background: #2d5f3f; color: white; border-color: #2d5f3f; }
+    .result-card.primary .result-label { color: rgba(255,255,255,0.85); }
+    .result-card .result-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #666; }
+    .result-card .result-value { display: block; font-family: Georgia, 'Times New Roman', serif; font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
+    .result-card .result-value.small { font-size: 1.125rem; }
+
+    .gauge { height: 0.5rem; background: rgba(255,255,255,0.2); border-radius: 0.25rem; overflow: hidden; margin-top: 0.5rem; }
+    .gauge-bar { height: 100%; background: #ffd9a8; width: 50%; transition: width 200ms, background 200ms; }
+    .gauge-markers { display: flex; justify-content: space-between; font-size: 0.625rem; margin-top: 0.25rem; opacity: 0.85; }
+
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .optimization-box { background: rgba(255, 217, 168, 0.2); border: 1px solid rgba(255, 217, 168, 0.5); border-radius: 0.5rem; padding: 0.75rem; font-size: 0.8125rem; }
+    .optimization-box h4 { margin: 0 0 0.375rem; font-size: 0.8125rem; }
+
+    /* Math steps */
+    .how-it-works { background: white; border: 1px solid #d0c8b8; border-radius: 0.5rem; padding: 0.875rem; margin-top: 0.75rem; }
+    .how-it-works h3 { margin-top: 0; }
+    .step { font-size: 0.8125rem; padding: 0.25rem 0; }
+    .step strong { color: #2d5f3f; }
+
+    /* State badge (top right of header — subtle) */
+    .state-badge {
+      display: inline-block; padding: 0.125rem 0.5rem; font-size: 0.6875rem;
+      background: rgba(45, 95, 63, 0.1); color: #2d5f3f; border-radius: 0.25rem;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      margin-left: 0.375rem; vertical-align: middle;
+    }
+
+    /* Footer — attribution + license. NEVER hidden by embedders. */
+    .embed-footer {
+      margin-top: 1rem; padding-top: 0.75rem;
+      border-top: 1px solid #d0c8b8;
+      font-size: 0.6875rem; color: #888; text-align: center;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .embed-footer a { color: #2d5f3f; text-decoration: none; }
+    .embed-footer a:hover { text-decoration: underline; }
+    .embed-footer .license { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .embed-footer .powered-by { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="embed-root">
+
+    <!-- ATTRIBUTION HEADER — required by CC BY 4.0 (Title + Author + Source + License).
+         Set ?hideheader=1 to suppress for embedders who render their own header.
+         The footer "powered by" line is always retained. -->
+    <header class="attr-header" id="attr-header">
+      <div class="byline">
+        <strong>Maine Cannabis Dispensary ROI Calculator</strong>
+        <span class="state-badge" id="state-badge">Maine</span>
+        <br />
+        By Margaret Finch &amp; Eliot Nash ·
+        Reviewed 2026-07-09 by Margaret Finch + Calvin Waters ·
+        Source: <a href="https://mainedispensaryguide.com/roi-calculator" target="_blank" rel="noopener noreferrer">mainedispensaryguide.com/roi-calculator</a>
+      </div>
+      <div class="review">
+        Last reviewed against the OCP 2025 Adult Use Annual Report (28-B M.R.S. §113) and the MJBiz Factbook 2026.
+        <br />
+        <a href="https://mainedispensaryguide.com/about/corrections" target="_blank" rel="noopener noreferrer">Corrections policy</a>
+      </div>
+    </header>
+
+    <div class="calc-grid">
+      <div>
+        <h2>Your Launch Fund</h2>
+        <div class="input-section">
+          <div class="input-group">
+            <label for="capital">How much money are you starting with?</label>
+            <div class="currency-input">
+              <span>$</span>
+              <input type="number" id="capital" step="50000" />
+            </div>
+            <p class="input-hint">Includes license, store design, first batch of product.</p>
+          </div>
+        </div>
+
+        <h2>Monthly Sales Estimate</h2>
+        <div class="input-section">
+          <div class="input-group">
+            <label for="customers">Estimated customers per month</label>
+            <input type="range" id="customers" min="100" max="5000" step="50" />
+            <div class="slider-value"><span id="customer-count">800</span> shoppers</div>
+          </div>
+          <div class="input-group">
+            <label for="avg-sale">Average customer spend</label>
+            <div class="currency-input small">
+              <span>$</span>
+              <input type="number" id="avg-sale" step="5" />
+            </div>
+            <p class="input-hint">Maine's typical range: $45–$85.</p>
+          </div>
+        </div>
+
+        <h2>Monthly Operating Costs (OPEX)</h2>
+        <div class="input-section">
+          <div class="input-group">
+            <label for="opex">Monthly bills (rent, payroll, power, insurance)</label>
+            <div class="currency-input small">
+              <span>$</span>
+              <input type="number" id="opex" step="500" />
+            </div>
+            <p class="input-hint">Total monthly operating expenses, excluding COGS.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="result-card primary" id="profit-card">
+          <span class="result-label">Monthly Net Profit</span>
+          <span class="result-value" id="monthly-profit">—</span>
+          <div class="gauge"><div id="gauge-bar" class="gauge-bar"></div></div>
+          <div class="gauge-markers"><span>Loss</span><span>Break-even</span><span>Growth</span></div>
+          <p class="input-hint" id="profit-status" style="color: rgba(255,255,255,0.85); margin-top: 0.5rem;">After COGS, 280E, and operating expenses.</p>
+        </div>
+        <div class="result-grid">
+          <div class="result-card">
+            <span class="result-label">Yearly Revenue</span>
+            <span class="result-value small" id="annual-revenue">—</span>
+          </div>
+          <div class="result-card">
+            <span class="result-label">Time to Pay Yourself Back</span>
+            <span class="result-value small" id="breakeven">—</span>
+          </div>
+        </div>
+        <div class="optimization-box">
+          <h4>What to Work On:</h4>
+          <p id="advice-text" style="margin: 0;">Adjust your numbers above.</p>
+        </div>
+
+        <div class="how-it-works">
+          <h3>How This Calculator Works</h3>
+          <div class="step"><strong>Revenue</strong> = Customers × Average Sale</div>
+          <div class="step"><strong>COGS</strong> = ~55% of revenue (wholesale product cost)</div>
+          <div class="step"><strong>280E Tax</strong> = ~22% of gross profit (federal cannabis tax burden)</div>
+          <div class="step"><strong>Net Profit</strong> = Gross Profit − 280E − Operating Expenses</div>
+          <p style="margin: 0.625rem 0 0; font-size: 0.75rem; color: #666;">
+            <strong>2026 cost basis:</strong> The 22% federal 280E estimate above reflects adult-use operations. As of April 28, 2026, the medical side of a dual-license operation is Schedule III-eligible.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="embed-footer">
+      <span class="powered-by">
+        Powered by <a href="https://mainedispensaryguide.com/roi-calculator" target="_blank" rel="noopener noreferrer">Maine Dispensary Guide</a>
+        <span id="embedder-tag" style="font-weight: 400;"></span>
+      </span>
+      <span class="license">CC BY 4.0 — title + author + source + license</span>
+    </footer>
+  </div>
+
+  <script is:inline>
+    // ------------------------------------------------------------------
+    // URL parameter parsing — locked convention (see file header comment).
+    // ------------------------------------------------------------------
+    const DEFAULTS = { capital: 400000, customers: 800, avgSale: 65, opex: 15000, state: 'ME' };
+    const STATE_LABELS = { ME: 'Maine', CA: 'California', CO: 'Colorado', IL: 'Illinois', MA: 'Massachusetts', MI: 'Michigan', NY: 'New York', OR: 'Oregon' };
+
+    function parseUrlParams() {
+      const p = new URLSearchParams(location.search);
+      const get = (k, d) => p.has(k) ? p.get(k) : d;
+      const num = (k, d) => {
+        const v = parseFloat(get(k, d));
+        return Number.isFinite(v) && v >= 0 ? v : d;
+      };
+      return {
+        capital:   num('capital',   DEFAULTS.capital),
+        customers: num('customers', DEFAULTS.customers),
+        avgSale:   num('avgsale',   DEFAULTS.avgSale),
+        opex:      num('opex',      DEFAULTS.opex),
+        state:     (get('state', DEFAULTS.state) || DEFAULTS.state).toUpperCase(),
+        embedder:  get('embedder', ''),
+        hideHeader: get('hideheader', '') === '1',
+      };
+    }
+
+    const params = parseUrlParams();
+
+    // Apply URL-param overrides to the input fields
+    const capital = document.getElementById('capital');
+    const customers = document.getElementById('customers');
+    const avgSale = document.getElementById('avg-sale');
+    const opex = document.getElementById('opex');
+    capital.value = params.capital;
+    customers.value = params.customers;
+    avgSale.value = params.avgSale;
+    opex.value = params.opex;
+
+    // State badge — show the selected state (falls back to ME if unrecognized)
+    const stateLabel = STATE_LABELS[params.state] || STATE_LABELS[DEFAULTS.state];
+    const stateBadge = document.getElementById('state-badge');
+    stateBadge.textContent = stateLabel;
+    if (!STATE_LABELS[params.state]) {
+      // Unknown state: warn quietly. State pack not shipped yet — fall back to ME math.
+      console.warn('[MDG embed] Unknown state "%s"; using Maine defaults until state pack ships.', params.state);
+    }
+
+    // Optional embedder attribution (visible if non-empty)
+    const embedderTag = document.getElementById('embedder-tag');
+    if (params.embedder) {
+      const safe = String(params.embedder).slice(0, 32).replace(/[^a-z0-9.-]/gi, '');
+      if (safe) embedderTag.textContent = ' · embedded on ' + safe;
+    }
+
+    // hideheader=1 — suppress attribution header only (footer stays per CC BY 4.0)
+    if (params.hideHeader) {
+      const hdr = document.getElementById('attr-header');
+      if (hdr) hdr.style.display = 'none';
+    }
+
+    // ------------------------------------------------------------------
+    // Calculator (mirror of /roi-calculator math)
+    // ------------------------------------------------------------------
+    const customerCountDisplay = document.getElementById('customer-count');
+    const profitDisplay = document.getElementById('monthly-profit');
+    const revenueDisplay = document.getElementById('annual-revenue');
+    const breakevenEl = document.getElementById('breakeven');
+    const adviceBox = document.querySelector('.optimization-box');
+    const adviceText = document.getElementById('advice-text');
+    const profitCard = document.getElementById('profit-card');
+    const gaugeBar = document.getElementById('gauge-bar');
+
+    const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+    function calculate() {
+      const c  = parseFloat(capital.value)   || 0;
+      const n  = parseInt(customers.value, 10);
+      const a  = parseFloat(avgSale.value)  || 0;
+      const o  = parseFloat(opex.value)      || 0;
+
+      customerCountDisplay.textContent = n;
+
+      const monthlyGross = n * a;
+      const annualRev    = monthlyGross * 12;
+      const cogs         = monthlyGross * 0.55;
+      const grossProfit  = monthlyGross - cogs;
+      const tax280e      = grossProfit * 0.22;
+      const netMonthly   = grossProfit - tax280e - o;
+      const monthsToBE   = netMonthly > 0 ? Math.ceil(c / netMonthly) : -1;
+
+      profitDisplay.textContent = fmt.format(netMonthly);
+      revenueDisplay.textContent = fmt.format(annualRev);
+
+      if (netMonthly <= 0) {
+        breakevenEl.textContent = 'Check advice';
+        profitCard.style.background = '#a13d3d';
+        gaugeBar.style.width = '15%';
+        gaugeBar.style.background = '#ffb3b3';
+        adviceText.innerHTML = 'Net loss at these numbers. To fix it: <strong>raise your average sale by $10–15</strong>, or <strong>find cheaper rent</strong> to lower OPEX. Or both.';
+      } else {
+        profitCard.style.background = '#2d5f3f';
+        gaugeBar.style.width = Math.min(100, 50 + (netMonthly / 1000)) + '%';
+        gaugeBar.style.background = '#ffd9a8';
+        breakevenEl.textContent = monthsToBE > 60 ? '5+ Years' : monthsToBE + ' Months';
+        adviceText.innerHTML = 'Numbers look workable. To accelerate payback: focus on <strong>repeat customers</strong> and <strong>increasing average spend per visit</strong>.';
+      }
+
+      // postMessage: tell the parent page every calculation update.
+      // Parent embeds can listen for this to keep their own UI in sync.
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'mdg-roi-update',
+            version: 1,
+            payload: {
+              capital: c, customers: n, avgSale: a, opex: o,
+              state: params.state,
+              monthlyNet: netMonthly,
+              annualRevenue: annualRev,
+              monthsToBreakeven: monthsToBE,
+            },
+          }, '*');
+        }
+      } catch (e) { /* cross-origin parent — silent */ }
+
+      // Reflect query string back so embedders can share a specific scenario
+      try {
+        const newQuery = new URLSearchParams({
+          capital: String(c), customers: String(n), avgsale: String(a), opex: String(o),
+          state: params.state,
+        });
+        if (params.embedder) newQuery.set('embedder', params.embedder);
+        history.replaceState(null, '', '?' + newQuery.toString());
+      } catch (e) { /* history API unavailable — silent */ }
+    }
+
+    ['capital','customers','avg-sale','opex'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculate);
+    });
+    document.addEventListener('DOMContentLoaded', calculate);
+    calculate();
+  </script>
+</body>
+</html>

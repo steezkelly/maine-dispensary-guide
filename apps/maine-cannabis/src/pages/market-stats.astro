@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import Faq from '../components/Faq.astro';
+import CiteThis from '../components/CiteThis.astro';
 import { getSiteStats } from '../lib/site-stats';
 const siteStats = getSiteStats();
 // site-stats.json guarantees currentOcpLicenseeRoster when activeAdultUseRetailStores is set;
@@ -1078,22 +1079,44 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section id="cite-this">
-    <h2>Cite This Page</h2>
-
-    <Callout title="Free to cite" type="passion">
-      All data and prose on this page are released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publications. The recommended citation format is below; for the underlying spreadsheets, contact <a href="/about/contact">us</a>.
-    </Callout>
-
-    <div class="cite-box">
-      <p style="margin: 0; font-family: monospace; font-size: 0.875rem;">
-        Nash, E. &amp; Finch, M. (2026, July 9). <em>Maine cannabis market stats — multi-year data 2020 to H1 2026, with national &amp; federal context.</em> Maine Dispensary Guide. https://mainedispensaryguide.com/market-stats
-      </p>
-    </div>
-
-    <h3>Short-form journalistic citation</h3>
-    <p style="font-family: monospace; font-size: 0.875rem; background: var(--color-surface); padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid var(--color-border);">
-      "Maine's adult-use cannabis market generated $246.4M across 4.84M transactions in 2025 — the fifth year of legal sales and a 1.0% YoY plateau — per OCP data released in January 2026 and reported by Maine Dispensary Guide's market-stats page (mainedispensaryguide.com/market-stats, July 2026)."
-    </p>
+    <CiteThis
+      slug="market-stats"
+      pageTitle="Maine cannabis market stats — multi-year data 2020 to H1 2026, with national &amp; federal context"
+      pageUrl="https://mainedispensaryguide.com/market-stats"
+      authors={["Nash, E.", "Finch, M."]}
+      publishDate="2026-07-09"
+      shortCitation={`"Maine's adult-use cannabis market generated $246.4M across 4.84M transactions in 2025 — the fifth year of legal sales and a 1.0% YoY plateau — per OCP data released in January 2026 and reported by Maine Dispensary Guide's market-stats page (mainedispensaryguide.com/market-stats, July 2026)."`}
+      note={`All data and prose on this page are released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publications. The recommended citation format is below; for the underlying spreadsheets, contact <a href="/contact">us</a>.`}
+      sections={[
+        { label: "Headline Numbers 2025",                  anchor: "headline-numbers" },
+        { label: "AU Sales 2020 – H1 2026",                 anchor: "multi-year" },
+        { label: "Active Licensed Establishments",          anchor: "establishments" },
+        { label: "Medical Program 2021 – 2025",             anchor: "medical-program" },
+        { label: "Regional & County Breakdown",            anchor: "regional" },
+        { label: "Tax Revenue Trajectory",                 anchor: "tax-revenue" },
+        { label: "Product Mix Dec 2025",                   anchor: "product-mix" },
+        { label: "January 2026 Tax Reset",                 anchor: "tax-reset" },
+        { label: "National & Federal Context",             anchor: "national-context" },
+      ]}
+      sources={[
+        { title: "OCP Adult Use Cannabis Program 2025 Annual Report", url: "https://www.maine.gov/dafs/ocp/resources/annual-reports", note: "28-B M.R.S. §113 — primary source for Maine adult-use retail sales, store count, transactions, average price." },
+        { title: "OCP Medical Use of Cannabis Program 2025 Annual Report", url: "https://legislature.maine.gov/doc/12333", note: "22 M.R.S. §2430-N — primary source for Maine medical patient, provider, caregiver data." },
+        { title: "Maine Revenue Services (MRS) Adult-Use Cannabis Taxable Sales", url: "https://www.maine.gov/revenue/" },
+        { title: "SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007)", url: "https://www.samhsa.gov/data/data-we-collect/nsduh-national-survey-drug-use-and-health", note: "U.S. cannabis demand baseline." },
+        { title: "NCSL State Medical Cannabis Laws + Adult-Use Cannabis Laws", url: "https://www.ncsl.org/civil-and-criminal-justice/state-medical-cannabis-laws", note: "State-law tracker." },
+        { title: "DEA Marijuana Rescheduling page", url: "https://www.dea.gov/drug-information/drug-scheduling", note: "Federal status of cannabis." },
+        { title: "Federal Register: 91 FR 22777 (DEA rescheduling NPRM)", url: "https://www.federalregister.gov/documents/2026/05/29/" },
+        { title: "Federal Register: 91 FR doc 2026-08176 (DEA marijuana Schedule III final rule, Apr 22 2026)", url: "https://www.federalregister.gov/" },
+        { title: "Whitney Economics federal-tax-impact brief (April 9, 2026)", url: "https://www.cannabisbusinesstimes.com/" },
+        { title: "Vangst 2025 Jobs Report", url: "https://www.vangst.com/" },
+        { title: "Headset June 2026 retail POS data (12-market panel)", url: "https://headset.io/" },
+        { title: "BDSA 2026 State of the Cannabis Industry", url: "https://bdsa.com/" },
+        { title: "Flowhub 2026 Cannabis Industry Statistics", url: "https://www.flowhub.com/cannabis-industry-statistics" },
+        { title: "Statista cannabis market outlook (paywalled)", url: "https://www.statista.com/outlook/io-mo/cannabis/united-states" },
+        { title: "NORML FBI Crime Data Explorer analysis (Sept 25, 2024)", url: "https://norml.org/marijuana/fact-sheets/" },
+        { title: "Maine Opt-In Tracker (MDG)", url: "/guides/maine-cannabis-opt-in-tracker" },
+      ]}
+    />
   </section>
 
   <section id="methodology" class="methodology">

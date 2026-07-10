@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import CiteThis from '../components/CiteThis.astro';
 import { getSiteStats } from '../lib/site-stats';
 const siteStats = getSiteStats();
 
@@ -707,37 +708,40 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <!-- Cite-this + methodology block (the inbound-link anchor) -->
-  <section class="content-section reveal" id="cite-this">
-    <h2>Cite This Page</h2>
-    <p>This page is released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publication. All cited primary sources are linked above each table; for raw-data spreadsheets or extended benchmarks, contact us at press [at] mainedispensaryguide.com.</p>
+  <CiteThis
+    slug="roi-calculator"
+    pageTitle="Maine &amp; U.S. cannabis dispensary ROI: real numbers, real benchmarks"
+    pageUrl="https://mainedispensaryguide.com/roi-calculator"
+    authors={["Finch, M.", "Nash, E."]}
+    publishDate="2026-07-09"
+    shortCitation={`"Maine dispensaries cost roughly $300,000 to $700,000 to open — about half the $700K–$2M national median — and pay an effective federal tax of 60–80% of pre-tax income under IRC §280E, the most-cited profitability headwind in U.S. cannabis. Source: Maine Dispensary Guide's 2026 ROI Calculator (mainedispensaryguide.com/roi-calculator, July 2026)."`}
+    sections={[
+      { label: "Maine vs. National Benchmarks",           anchor: "national-overview" },
+      { label: "U.S. State-by-State Sales (Maine in Context)", anchor: "state-comparison" },
+      { label: "Startup Costs: Maine vs. National",        anchor: "startup-costs" },
+      { label: "Margin Benchmarks: Maine vs. National",    anchor: "margin-benchmarks" },
+      { label: "Annual Revenue by Market Tier",            anchor: "revenue-benchmarks" },
+    ]}
+    sources={[
+      { title: "OCP Adult Use Cannabis Program 2025 Annual Report", url: "https://www.maine.gov/dafs/ocp/resources/annual-reports", note: "28-B M.R.S. §113 — Maine AU retail sales, store count, transactions, average price." },
+      { title: "OCP Medical Use of Cannabis Program 2025 Annual Report", url: "https://legislature.maine.gov/doc/12333", note: "22 M.R.S. §2430-N — Maine medical patient, provider, caregiver data." },
+      { title: `MaineBiz, "Five years into legal cannabis sales, Maine sales plateau"`, url: "https://mainebiz.biz/article/five-years-into-legal-cannabis-sales-maine-sales-plateau/", note: "April 20, 2026 — 2025 +1.2% YoY framing." },
+      { title: "MJBiz Factbook 2026", url: "https://insights.mjbizdaily.com/factbook-2024/", note: "national market sizing, dispensary annual surveys, state comparisons." },
+      { title: "Whitney Economics / Vangst Jobs Report 2025", url: "https://www.cannabisbusinesstimes.com/business-issues-benchmarks/cannabis-business-profit-trends/news/15686501/only-27-of-us-cannabis-operators-profitable-in-2024-whitney-economics-reports", note: "27.3% operator profitability benchmark; 40.6% breaking even." },
+      { title: "Northstar Financial CFO 2025 Benchmarks", url: "https://nstarfinance.com/resources/cannabis-dispensary-profit-margin-insight", note: "60–80% effective federal tax under 280E; 5–12% net margin." },
+      { title: "Munchmakers 2025 Dispensary Profit Guide", url: "https://www.munchmakers.com/blog/cannabis-dispensary-profit-margins-revenue-optimization-guide/", note: "12–21% operating margin; $1.8–2.2M national median." },
+      { title: "Headset retail analytics", url: "https://headset.io/", note: "average AOV, $268K/yr post-rescheduling tax savings." },
+      { title: "Flowhub 2026 Cannabis Industry Statistics", url: "https://www.flowhub.com/cannabis-industry-statistics", note: "national avg transaction AOV, $33.8B 2025 market size, 425,002 FTE jobs." },
+      { title: "Cannstrategy 2025 startup cost analysis", url: "https://www.cannstrategy.com/post/cost-to-open-a-cannabis-dispensary-in-2025", note: "$250K–$1.5M." },
+      { title: `Cova Software "True Cost of Opening" report`, url: "https://www.covasoftware.com/blog/the-true-cost-of-opening-a-cannabis-dispensary", note: "average $700K for 1,800 sqft." },
+      { title: "WebJoint Cannabis Business Startup Guide 2025", url: "https://www.webjoint.com/blogs/cannabis-business-startup-guide-2025-how-to-start", note: "break-even timeline framework." },
+      { title: "Cannabispromotions Cannabis Statistics 2026", url: "https://cannabispromotions.com/stats/states/maine", note: "Top 10 states table; $33.8B national total; 36 reporting states." },
+    ]}
+  />
 
-    <div class="cite-box" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem 1.25rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.875rem;">
-      <p style="margin: 0;">Finch, M. &amp; Nash, E. (2026, July 9). <em>Maine &amp; U.S. cannabis dispensary ROI: real numbers, real benchmarks.</em> Maine Dispensary Guide. https://mainedispensaryguide.com/roi-calculator</p>
-    </div>
-
-    <h3>Short-form citation for journalists</h3>
-    <p style="font-family: monospace; font-size: 0.875rem; background: var(--color-surface); padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid var(--color-border);">
-      "Maine dispensaries cost roughly $300,000 to $700,000 to open — about half the $700K–$2M national median — and pay an effective federal tax of 60–80% of pre-tax income under IRC §280E, the most-cited profitability headwind in U.S. cannabis. Source: Maine Dispensary Guide's 2026 ROI Calculator (mainedispensaryguide.com/roi-calculator, July 2026)."
-    </p>
-
-    <h3>Primary sources cited on this page</h3>
-    <ul>
-      <li><a href="https://www.maine.gov/dafs/ocp/resources/annual-reports" target="_blank" rel="noopener noreferrer">OCP Adult Use Cannabis Program 2025 Annual Report</a> (28-B M.R.S. §113) — Maine AU retail sales, store count, transactions, average price.</li>
-      <li><a href="https://legislature.maine.gov/doc/12333" target="_blank" rel="noopener noreferrer">OCP Medical Use of Cannabis Program 2025 Annual Report</a> (22 M.R.S. §2430-N) — Maine medical patient, provider, caregiver data.</li>
-      <li><a href="https://mainebiz.biz/article/five-years-into-legal-cannabis-sales-maine-sales-plateau/" target="_blank" rel="noopener noreferrer">MaineBiz, "Five years into legal cannabis sales, Maine sales plateau"</a> (April 20, 2026) — 2025 +1.2% YoY framing.</li>
-      <li><a href="https://insights.mjbizdaily.com/factbook-2024/" target="_blank" rel="noopener noreferrer">MJBiz Factbook 2026</a> — national market sizing, dispensary annual surveys, state comparisons.</li>
-      <li><a href="https://www.cannabisbusinesstimes.com/business-issues-benchmarks/cannabis-business-profit-trends/news/15686501/only-27-of-us-cannabis-operators-profitable-in-2024-whitney-economics-reports" target="_blank" rel="noopener noreferrer">Whitney Economics / Vangst Jobs Report 2025</a> — 27.3% operator profitability benchmark; 40.6% breaking even.</li>
-      <li><a href="https://nstarfinance.com/resources/cannabis-dispensary-profit-margin-insight" target="_blank" rel="noopener noreferrer">Northstar Financial CFO 2025 Benchmarks</a> — 60–80% effective federal tax under 280E; 5–12% net margin.</li>
-      <li><a href="https://www.munchmakers.com/blog/cannabis-dispensary-profit-margins-revenue-optimization-guide/" target="_blank" rel="noopener noreferrer">Munchmakers 2025 Dispensary Profit Guide</a> — 12–21% operating margin; $1.8–2.2M national median.</li>
-      <li><a href="https://headset.io/" target="_blank" rel="noopener noreferrer">Headset retail analytics</a> — average AOV, $268K/yr post-rescheduling tax savings.</li>
-      <li><a href="https://www.flowhub.com/cannabis-industry-statistics" target="_blank" rel="noopener noreferrer">Flowhub 2026 Cannabis Industry Statistics</a> — national avg transaction AOV, $33.8B 2025 market size, 425,002 FTE jobs.</li>
-      <li><a href="https://www.cannstrategy.com/post/cost-to-open-a-cannabis-dispensary-in-2025" target="_blank" rel="noopener noreferrer">Cannstrategy 2025 startup cost analysis</a> ($250K–$1.5M).</li>
-      <li><a href="https://www.covasoftware.com/blog/the-true-cost-of-opening-a-cannabis-dispensary" target="_blank" rel="noopener noreferrer">Cova Software "True Cost of Opening" report</a> — average $700K for 1,800 sqft.</li>
-      <li><a href="https://www.webjoint.com/blogs/cannabis-business-startup-guide-2025-how-to-start" target="_blank" rel="noopener noreferrer">WebJoint Cannabis Business Startup Guide 2025</a> — break-even timeline framework.</li>
-      <li><a href="https://cannabispromotions.com/stats/states/maine" target="_blank" rel="noopener noreferrer">Cannabispromotions Cannabis Statistics 2026</a> — Top 10 states table; $33.8B national total; 36 reporting states.</li>
-    </ul>
-
-    <h3>Methodology &amp; caveats</h3>
+  <!-- Methodology & caveats (kept inline — not part of the reusable CiteThis surface) -->
+  <section class="content-section reveal" id="methodology">
+    <h2>Methodology &amp; caveats</h2>
     <p><strong>Source precedence.</strong> Where two sources disagree on Maine-specific data, we use the OCP primary sources first. For national benchmarks, we prioritize MJBiz Factbook 2026 (industry reference standard), Whitney Economics / Vangst Jobs Report 2025 (the only multi-year operator profitability series), and BDSA 2026 State of the Cannabis Industry (national sales by category).</p>
     <p><strong>Maine per-store revenue.</strong> Computed as $246.4M (OCP 2025 AU retail sales) ÷ 187 active AU retail stores. This is a state-level average — it conceals the wide spread between high-revenue Portland stores and lower-volume rural operators. Top performers likely pull $2.5M+; bottom quartile likely under $600K.</p>
     <p><strong>Operator profitability rates.</strong> The 27.3% profitable figure is U.S.-wide per Whitney/Vangst. Maine-specific operator-profitability data is not publicly published. Estimates cited elsewhere on MDG are derived from interview-based reporting, not survey data.</p>

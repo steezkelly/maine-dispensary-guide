@@ -1,0 +1,192 @@
+---
+/**
+ * CiteThis.astro — Reusable "Cite This Page" block.
+ *
+ * Used by data / research pages (roi-calculator, market-stats, future pages)
+ * to give journalists, academics, and trade-publication writers a one-stop
+ * block of:
+ *   - APA / Chicago long-form citation
+ *   - Short-form journalistic citation (copy-paste quote)
+ *   - Plain-text copy-paste citation
+ *   - BibTeX entry
+ *   - Stable permalinks to each data section on the page
+ *   - Note about the upcoming DOI-style permalink at /cite/<slug>
+ *   - Optional list of primary sources cited on the page
+ *
+ * Replaces the duplicated inline Cite This Page blocks that lived directly
+ * in roi-calculator.astro (~lines 709-776) and market-stats.astro
+ * (~lines 1080-1134) before 2026-07-09.
+ *
+ * Props:
+ *   slug         string  — page slug used in /cite/<slug> permalink
+ *   pageTitle    string  — title as it should appear in the citation
+ *   pageUrl      string  — full canonical URL of the source page
+ *   authors      string[] — author surnames for citations, in display order
+ *   publishDate  string  — ISO date "YYYY-MM-DD" (used as published / reviewed)
+ *   shortCitation string — pre-formatted short citation for journalists
+ *   note         string? — optional extra paragraph before the citations
+ *   sections     Array<{label: string, anchor: string}>? — per-section permalinks
+ *   sources      Array<{title: string, url: string, note?: string}>? — primary sources
+ *
+ * Style note: relies on `.cite-box` CSS already in each page's <style>
+ * block (both market-stats.astro and roi-calculator.astro define it). For
+ * any new page that wants CiteThis, copy the `.cite-box` rule.
+ */
+
+interface SectionLink {
+  label: string;
+  anchor: string;
+}
+
+interface SourceLink {
+  title: string;
+  url: string;
+  note?: string;
+}
+
+interface Props {
+  slug: string;
+  pageTitle: string;
+  pageUrl: string;
+  authors: string[];
+  publishDate: string;
+  shortCitation: string;
+  note?: string;
+  sections?: SectionLink[];
+  sources?: SourceLink[];
+}
+
+const {
+  slug,
+  pageTitle,
+  pageUrl,
+  authors,
+  publishDate,
+  shortCitation,
+  note,
+  sections = [],
+  sources = [],
+} = Astro.props as Props;
+
+// ---- Citation string assembly --------------------------------------------
+// Authors may be passed as ["Finch, M.", "Nash, E."] (already formatted) or
+// as raw names. We assume they're already in citation order.
+const authorListApa = authors.join(' & ');
+const authorListPlain = authors.map(a => a.replace(/\.\s*$/, '')).join(', ');
+const authorListBib = authors
+  .map(a => a.replace(/^([A-Z][a-z]+),\s*([A-Z]\.)\s*$/, '$1, $2')) // normalize "Finch, M." → "Finch, M."
+  .join(' and ');
+
+const dateParts = publishDate.split('-'); // YYYY-MM-DD
+const year = dateParts[0];
+const monthShort = dateParts.length > 1
+  ? ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'][parseInt(dateParts[1], 10) - 1]
+  : '';
+const day = dateParts[2] || '';
+
+// BibTeX key — first author surname + year + slug
+const bibKey = `${authors[0].split(',')[0].toLowerCase().replace(/\s+/g, '')}${year}${slug.replace(/-/g, '')}`;
+
+// BibTeX title needs braces around it to preserve capitalization
+const bibTitle = `{${pageTitle}}`;
+
+// BibTeX author field — convert "Finch, M." to "Finch, Margaret" if we have a
+// known full-name lookup; fall back to surname+initial.
+const AUTHOR_FULLNAMES: Record<string, string> = {
+  'finch, m.':  'Finch, Margaret',
+  'finch, margaret': 'Finch, Margaret',
+  'nash, e.':   'Nash, Eliot',
+  'nash, eliot': 'Nash, Eliot',
+  'waters, c.': 'Waters, Calvin',
+  'waters, calvin': 'Waters, Calvin',
+};
+const bibAuthors = authors
+  .map(a => AUTHOR_FULLNAMES[a.toLowerCase().trim()] ?? a.replace(/^([A-Z][a-z]+),\s*([A-Z])\.\s*$/, '$1, $2'))
+  .join(' and ');
+
+// ---- Render --------------------------------------------------------------
+const sectionId = `cite-this-${slug}`;
+---
+
+<section class="content-section reveal" id="cite-this" data-cite-slug={slug}>
+  <h2>Cite This Page</h2>
+
+  {note ? (
+    <p set:html={note} />
+  ) : (
+    <p>
+      This page is released under <strong>CC BY 4.0</strong> for use in
+      journalism, academic research, and trade publication. All cited primary
+      sources are linked above each table; for raw-data spreadsheets or
+      extended benchmarks, contact us at
+      <a href="mailto:press@mainedispensaryguide.com">press@mainedispensaryguide.com</a>.
+    </p>
+  )}
+
+  <h3>APA / Chicago (long form)</h3>
+  <div class="cite-box">
+    <p style="margin: 0;">
+      {authorListApa} ({year}, {publishDate}). <em>{pageTitle}.</em> Maine
+      Dispensary Guide. <a href={pageUrl}>{pageUrl}</a>
+    </p>
+  </div>
+
+  <h3>Short-form citation for journalists</h3>
+  <p style="font-family: monospace; font-size: 0.875rem; background: var(--color-surface); padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid var(--color-border);">
+    {shortCitation}
+  </p>
+
+  <h3>Plain-text (copy-paste)</h3>
+  <div class="cite-box">
+    <p style="margin: 0;">
+      {authorListPlain}. {pageTitle}. Maine Dispensary Guide. Published {publishDate}.
+      Accessed [date]. {pageUrl}
+    </p>
+  </div>
+
+  <h3>BibTeX</h3>
+  <div class="cite-box">
+    <pre style="margin: 0; font-family: monospace; font-size: 0.8125rem; white-space: pre-wrap;"><code>{`@misc{${bibKey},
+  author  = {${bibAuthors}},
+  title   = {${bibTitle}},
+  year    = {${year}}${monthShort ? `,\n  month   = ${monthShort}` : ''}${day ? `,\n  day     = ${parseInt(day, 10)}` : ''},
+  url     = {${pageUrl}},
+  urldate = {[YYYY-MM-DD]},
+  note    = {Maine Dispensary Guide. Reviewed ${publishDate}}
+}`}</code></pre>
+  </div>
+
+  {sections.length > 0 && (
+    <>
+      <h3>Cite a specific section</h3>
+      <p>Each data section on this page has a stable permalink. Cite a section specifically when the data point comes from a single table:</p>
+      <ul style="font-family: monospace; font-size: 0.8125rem; line-height: 1.7;">
+        {sections.map(s => (
+          <li>
+            {s.label} — <a href={`${pageUrl}#${s.anchor}`}>{pageUrl}#{s.anchor}</a>
+          </li>
+        ))}
+      </ul>
+      <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+        For BibTeX or APA citation of a specific section, append the section anchor
+        to <code>{`https://mainedispensaryguide.com/cite/${slug}`}</code> — see the
+        DOI-style permalink page at that URL for the full citation bundle (copy
+        buttons, short-form for journalists, BibTeX).
+      </p>
+    </>
+  )}
+
+  {sources.length > 0 && (
+    <>
+      <h3>Primary sources cited on this page</h3>
+      <ul>
+        {sources.map(s => (
+          <li>
+            <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+            {s.note && <span> — {s.note}</span>}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</section>
