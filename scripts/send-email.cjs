@@ -164,6 +164,43 @@ Steve`
   }
 };
 
+// Dedup gate — read tracking file fresh from disk to defeat the in-memory
+// race window where multiple parallel invocations all see the same empty
+// snapshot (the 2026-07-07 bug class). If the same (recipient, subject)
+// pair was sent within the last 60 minutes, refuse unless --force-resend.
+const DEDUP_WINDOW_MS = 60 * 60 * 1000; // 60 minutes
+
+function loadTrackingFresh() {
+  if (!fs.existsSync(TRACKING_FILE)) return { emails: [], total_sent: 0, total_pending: 0 };
+  try {
+    return JSON.parse(fs.readFileSync(TRACKING_FILE, 'utf-8'));
+  } catch (err) {
+    return { emails: [], total_sent: 0, total_pending: 0 };
+  }
+}
+
+function isDuplicateSend(toAddr, subj) {
+  const data = loadTrackingFresh();
+  const now = Date.now();
+  return data.emails.find(entry => {
+    if (entry.status !== 'sent') return false;
+    if (entry.email !== toAddr) return false;
+    if (entry.subject !== subj) return false;
+    // entry.isoTimestamp (added 2026-07-10) is the precise send time. If
+    // absent (legacy entry), the entry is too old to matter — we skip it.
+    if (!entry.isoTimestamp) return false;
+    const sentAt = new Date(entry.isoTimestamp).getTime();
+    if (Number.isNaN(sentAt)) return false;
+    return (now - sentAt) < DEDUP_WINDOW_MS;
+  });
+}
+
+// Parse "Name <email@addr>" or just "email@addr" into email
+function extractEmail(addr) {
+  const match = addr.match(/<(.+?)>/);
+  return match ? match[1].trim() : addr.trim();
+}
+
 // Parse command line arguments
 function parseArgs(args) {
   const result = { values: {}, positionals: [] };
@@ -315,6 +352,7 @@ async function logSentEmail({ to, template, messageId }) {
     const entry = {
       id: data.emails.length + 1,
       date: new Date().toISOString().split('T')[0],
+      isoTimestamp: new Date().toISOString(),
       recipient: name,
       email: email,
       org: '',
@@ -362,6 +400,15 @@ Options:
   --vars <json>      Variables for template (JSON string)
   --from <text>      From address (default: Steve <steve@mainedispensaryguide.com>)
   --dry-run          Print email without sending
+  --force-resend     Bypass the 60-minute dedup window (escape hatch for legitimate re-sends)
+
+Dedup:
+  By default, send-email.cjs refuses to send if the same (recipient, subject)
+  pair was sent within the last 60 minutes. This prevents the 2026-07-07
+  class of over-send bug at the direct-CLI layer. Pass --force-resend to
+  bypass for legitimate re-sends (template update + re-send, operator override).
+  The dedup check consults ${TRACKING_FILE} — the same log that logSentEmail()
+  writes to on successful send.
 
 Credentials:
   Set one of:
@@ -380,6 +427,9 @@ Credentials:
 
   const parsed = parseArgs(args);
   const { values } = parsed;
+
+  // --force-resend: bypass dedup (escape hatch for legitimate re-sends)
+  const forceResend = values['force-resend'] === true;
 
   // Dry run mode
   if (values['dry-run']) {
@@ -408,6 +458,32 @@ Credentials:
   if (!values.to) {
     console.error('Error: --to is required');
     process.exit(1);
+  }
+
+  // Subject is needed for dedup — must compute it before checking
+  let dedupSubject;
+  if (values.template) {
+    if (!TEMPLATES[values.template]) {
+      console.error(`Error: Unknown template "${values.template}". Available: ${Object.keys(TEMPLATES).join(', ')}`);
+      process.exit(1);
+    }
+    dedupSubject = TEMPLATES[values.template].subject;
+  } else {
+    dedupSubject = values.subject;
+  }
+
+  // Dedup gate — read fresh from disk to defeat parallel-invocation race.
+  // Same shape as send-outreach-pitches.py:load_log_fresh().
+  const toEmail = extractEmail(values.to);
+  const dup = isDuplicateSend(toEmail, dedupSubject);
+  if (dup && !forceResend) {
+    console.error(`✗ Refusing to send: duplicate of recent send to ${toEmail} with subject "${dedupSubject}"`);
+    console.error(`  (sent within the last 60 minutes per ${TRACKING_FILE})`);
+    console.error(`  Pass --force-resend to bypass the dedup window for legitimate re-sends.`);
+    process.exit(1);
+  }
+  if (dup && forceResend) {
+    console.log(`⚠ --force-resend: overriding dedup of recent send to ${toEmail}`);
   }
 
   let subject, body;
