@@ -19,6 +19,7 @@
 
 import Layout from '../../layouts/Layout.astro';
 import citationsData from '../../data/citations.json';
+import { createHash } from 'node:crypto';
 
 interface SectionLink {
   label: string;
@@ -48,9 +49,12 @@ interface CitationPage {
 }
 
 const registry = citationsData as { pages: CitationPage[] };
-
 export function getStaticPaths() {
-  return registry.pages.map((p) => ({
+  // Re-import inside the function — Astro's getStaticPaths runs in a separate
+  // module-evaluation context and cannot see top-level frontmatter bindings.
+  // (See https://docs.astro.build/en/reference/routing-reference/#getstaticpaths)
+  const data = citationsData as { pages: CitationPage[] };
+  return data.pages.map((p) => ({
     params: { slug: p.slug },
     props: { page: p },
   }));
@@ -60,9 +64,8 @@ const { page } = Astro.props as { page: CitationPage };
 
 // short-hash suffix — sha256(page_url + publish_date) truncated to 6.
 // Astro runs on Node so crypto is available.
-const cryptoModule = await import('node:crypto');
 const hashInput = `${page.page_url}|${page.publish_date}`;
-const sha = cryptoModule.createHash('sha256').update(hashInput).digest('hex');
+const sha = createHash('sha256').update(hashInput).digest('hex');
 const shortHash = sha.slice(0, 6);
 
 // Year + month-short + day for BibTeX
