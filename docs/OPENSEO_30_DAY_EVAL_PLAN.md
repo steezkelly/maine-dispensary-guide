@@ -229,3 +229,27 @@ The MCP endpoint is `https://app.openseo.so/mcp` (or the self-hosted equivalent)
 - Money-page rewrite template: the `cannabis-friendly-maine-travel.astro` and `maine-cannabis-events-2026.astro` commits from 2026-07-09 (commits `2140c7a3` + `59dd6c52`)
 - Openseo MCP docs: https://openseo.so/docs/mcp
 - Openseo skills docs: https://openseo.so/docs/skills/setup
+
+
+## 2026-07-10 update (end-of-session closeout)
+
+**Shipped this session:**
+- Sprint 78g-1: `/guides/maine-dispensary-license` rewrite (commit `2764b7a3`) — 1,480/mo winnable volume at KD 0-11.
+- Sprint 78g-2: `/guides/maine-dispensary-costs` rewrite (commit `8c3185b6`) — 1,130/mo at KD 6-12.
+- Round-2 outreach contacts research (subagent `deleg_dc064e89`, 241s) — 27 verified contacts, 9/10 CANDIDATE, MaineCannabis.org DROPPED.
+- BOT_COLLABORATION_HUB carry-forward completed: 3 net-new URLs from commit `55ef7215` verified live in production (HTTP 200).
+- Parallel-cli verified installed + authenticated + live (`/home/steve/.local/bin/parallel-cli` v0.7.1, MDG org, $23.01 credit). Pulled Maine retail price data ($6.10/gram March 2026) via search + fetch. OCP primary source identified at `maine.gov/dafs/ocp/open-data/adult-use/retail-sales` (Power BI embed).
+
+**Eval bar status (target 2026-07-10 + 30 days → 2026-08-10):**
+
+| Criterion | Status | Evidence |
+|---|---|---|
+| 3+ money-page rewrites using openseo data | **2/3 done** | 78g-1 ✓ + 78g-2 ✓; 78g-3 (fryeburg) queued |
+| Measurable CTR delta on 1+ page | pending | Re-measure 2026-07-24 |
+| 1+ backlink opportunity found | **done in advance** | Round-2 contacts + templates + bounce fix shipped |
+| 1+ competitor gap closed | pending | Next-session work (MaineCannabis.org profile, Sprint 78h) |
+
+**Pending user decisions for next session:**
+1. Pick autonomous workstream from menu A/B/C/D/E.
+2. Greenlight 78g-3 (one-way-door 301 consolidation).
+3. Round-2 outreach send timing (recommend: hold until 2026-07-24 GSC read, then 2-3 Tier-1 sends max).
