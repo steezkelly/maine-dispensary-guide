@@ -3,7 +3,37 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-08 EDT (fifth session — Stage 2 town-cluster hubs + cross-link back-fill shipped)**
+|**Last updated: 2026-07-09 EDT (sixth session — CiteThis extraction + DOI-style permalinks + embeddable iframe shipped)**
+
+## 📋 CITE-THIS EXTRACTION + EMBEDDABLE IFRAME (Jul 9, 2026 EDT) — grill-me sprint closeout, commit `55ef7215`
+
+- **Why:** grill-me session 2026-07-09 confirmed the ROI calculator + market-stats must function as a **backlink magnet**. Citation blocks on both pages were 125 lines of duplicated inline markup with no DOI-style permalinks, and there was no embeddable iframe — external sites couldn't link to specific data points or embed the calculator without copy-pasting all the math.
+- **What shipped (1 commit on `origin/main`, all live):**
+  - `55ef7215 feat(cite): extract CiteThis component + add DOI-style /cite/<slug> permalinks` — 8 files, +1144 −47.
+  - `apps/maine-cannabis/src/components/CiteThis.astro` (NEW) — props-driven reusable component. Renders APA/Chicago + short-form journalistic + plain-text + BibTeX + section-anchor permalinks + primary sources list. Citation string assembly in frontmatter (server-side), HTML payload static.
+  - `apps/maine-cannabis/src/data/citations.json` (NEW, registry) — single source of truth for citable pages. Adding a new citable page = 1 entry, no code change. Currently 2 entries (roi-calculator + market-stats).
+  - `apps/maine-cannabis/src/pages/cite/[slug].astro` (NEW, dynamic route) — DOI-style permalinks at `/cite/<slug>`. Short-hash suffix = `sha256(page_url + publish_date)[:6]`. Copy-to-clipboard buttons. ScholarlyArticle JSON-LD.
+  - `apps/maine-cannabis/src/pages/embed/roi-calculator.astro` (NEW, 478 lines) — embeddable iframe version. No Layout, container queries for sizing, URL-param future-proofing (`?state=` whitelist with ME wired + 7 reserved states), attribution header (Title + Author + Source + License per CC BY 4.0), `?hideheader=1` opt-out (footer always retained), `postMessage` to parent on every calc update with `version: 1` schema field for future evolution, `history.replaceState` reflects scenario in URL.
+  - `vercel.json` — `/embed/(.*)` header override BEFORE wildcard `/(.*)`. Per Vercel docs (2026-06-16): more-specific source wins, so `/embed/(.*)` (length 12) replaces the global `X-Frame-Options: DENY` and CSP `frame-ancestors` with `X-Frame-Options: SAMEORIGIN` + CSP `frame-ancestors 'self' https:`. Confirmed via Vercel docs (https://vercel.com/docs/project-configuration/vercel-json#headers) that header rules with more-specific sources take precedence.
+  - `apps/maine-cannabis/src/pages/roi-calculator.astro` + `market-stats.astro` — replaced inline cite-this blocks with `<CiteThis .../>` invocation. Methodology blocks kept inline (not part of reusable surface).
+- **Verification trail:**
+  - `npm run verify:iterate`: 0 errors (esbuild parse on 9 .astro files + astro check filtered)
+  - `npm run verify:push`: smoke-200 + smoke-img-200 all 200 against `https://mainedispensaryguide.com`; sitemap-postprocess clean; docs-vs-code no drift; compressed-frontmatter pass; hero-image-naming pass. Exit code 0.
+  - Pre-push hook ran on `git push`: same gates, all clean. `8c3185b6..55ef7215 main -> main`.
+  - Net-new pages (`/cite/roi-calculator`, `/cite/market-stats`, `/embed/roi-calculator`) will 404 on the OLD production deploy until Vercel finishes the deploy (~90s post-push). Smoke gate skipped on pre-push by `--ref` mode because of this (standard MDG pattern from AGENTS.md). Verify live URLs in the next session.
+- **Parallel CLI pre-flight:** dispatched `parallel-cli research run` on iframe best-practices while building CiteThis (interaction_id `trun_6b41cd22a35e49f88b97dd760346617b`, completed in <60s). Returned canonical citations (MDN iframe, WHATWG HTML spec, Creative Commons attribution wiki, Google Search Central article schema, schema.org NewsArticle) that **validated** the design choices already made — did NOT redirect the implementation. Cost: ~free on the free tier (core processor).
+- **Stage 2 lesson paid out:** the cross-session staging discipline (stage your files, leave siblings) was applied correctly. Working tree shows OTHER agents' in-flight files unstaged (`LeadMailtoForm.astro`, `for-journalists.astro`, `market-pulse-2026.astro`, `maine-cannabis-tax-calculator.astro`, `.research/`, `parallel-research/`) — I did not touch them. AutoRelated data file regenerated and staged as part of this commit (271 → 273 items, capturing the 2 new cite routes + 1 new embed route).
+- **URL parameter contract (locked, future-proofing):**
+  - `?state=ME` — whitelisted; ME wired, CA/CO/IL/MA/MI/NY/OR reserved for state-pack roll-out
+  - `?capital=` / `?customers=` / `?avgsale=` / `?opex=` — pre-fill inputs
+  - `?embedder=example.com` — optional, sanitized (alnum + .-), max 32 chars, displayed in footer
+  - `?hideheader=1` — suppress attribution header (footer always retained per CC BY 4.0)
+- **Embedder policy (documented in the embed file header, not enforced in code):** non-Maine embedders allowed with attribution; cannabis-product sales pages NOT allowed (would imply endorsement). Trust-but-document for now — server-side referrer check is a future enhancement if abuse appears.
+- **Carry-forward for next agent:**
+  - Verify the 3 net-new URLs are live on production after the deploy completes (~90s post-push): `curl -I https://mainedispensaryguide.com/cite/roi-calculator`, same for `/cite/market-stats` and `/embed/roi-calculator`.
+  - Update `/for-journalists` page with the new `/cite/<slug>` permalink pattern + embed snippet. (Not done in this sprint — `/for-journalists` is mid-edit by another agent.)
+  - When the 280E calculator state-pack ships, add entries to `STATE_LABELS` in the embed + new entries to `citations.json`. URL contract stays stable.
+  - Optional: write a usage example page or README entry showing the canonical `<iframe>` snippet embedders should copy.
 
 ## 📋 TOWN-CLUSTER HUB STAGE 2 PILOT (Jul 8, 2026 EDT) — 2,700+ word editorial bodies shipped on 2 of 5 hubs
 
