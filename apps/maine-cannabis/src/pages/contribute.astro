@@ -1,0 +1,232 @@
+---
+/**
+ * /contribute — Editorial contributor guidelines for Maine Dispensary Guide
+ *
+ * Subtle inbound guest-post landing page. NOT linked from main nav. Discoverable
+ * via:
+ *   - /for-journalists ("Want to contribute? See our contributor guidelines")
+ *   - footer "Stay Connected" (small text link)
+ *   - robots.txt allow + sitemap entry (SEO-discoverable for journalists/researchers
+ *     searching "maine cannabis write for us" or "maine dispensary guide guest post")
+ *
+ * Purpose: inbound link-building via reciprocal-link guest posts. MDG publishes
+ * a contributor's bylined piece in exchange for a relevant reciprocal link from
+ * the contributor's domain. Editorial standards live in the middle of the page
+ * (NOT the headline) so the casual visitor doesn't immediately see "we'll trade
+ * you a link for a link" — that's tacky. Professional editorial framing first,
+ * reciprocity policy buried in the standards section.
+ *
+ * Design tokens: matches the for-journalists.astro pattern (--color-primary,
+ * --color-text-light, .stat-grid, .citation, .toc, .data-table).
+ */
+
+import Layout from '../layouts/Layout.astro';
+import Callout from '../components/Callout.astro';
+
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-10",
+  modifiedDate: "2026-07-10",
+  section: "Editorial"
+};
+---
+<Layout
+  title="Contributor Guidelines | Maine Dispensary Guide"
+  description="Editorial standards, submission process, and topic-fit guidelines for prospective contributors to Maine Dispensary Guide. Bylined research, operator interviews, and case studies from Maine cannabis practitioners."
+  heroImage="/images/heroes/ocp-license-map.jpg"
+  article={article}
+  isHub={true}
+>
+<style>
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .article-header h1 { margin-bottom: 0.5rem; }
+  .lead { font-size: 1.25rem; color: var(--color-text-light); margin-top: 1rem; }
+  section { margin-bottom: 3rem; }
+  section h2 { color: var(--color-primary); font-family: var(--font-serif); margin-bottom: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-primary); }
+  pre.code-block {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 1rem 0;
+  }
+  pre.code-block code { color: #e8e8e8; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+  .stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--color-primary); font-family: var(--font-serif); line-height: 1; }
+  .stat-card .label { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; }
+  ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .contact-block { background: var(--color-primary); color: white; padding: 2rem; border-radius: 0.75rem; margin: 2rem 0; }
+  .contact-block h2 { color: white; margin-top: 0; }
+  .contact-block a { color: #ffd9a8; }
+  .citation { font-family: monospace; background: var(--color-surface); padding: 0.5rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; }
+  .toc { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; margin: 1.5rem 0; }
+  .toc h2 { margin-top: 0; font-size: 1.125rem; }
+  .toc ul { columns: 1; }
+  .toc a { text-decoration: none; color: var(--color-primary); }
+  .submission-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0; }
+  .submission-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; }
+  .submission-card h3 { margin-top: 0; color: var(--color-primary); font-size: 1.05rem; }
+  .submission-card .word-count { font-size: 0.75rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem; }
+  .submission-card .turnaround { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; }
+  .policy-note { background: var(--color-surface-2); border-left: 3px solid var(--color-accent); padding: 1rem 1.25rem; border-radius: 0.25rem; margin: 1.5rem 0; }
+  .policy-note strong { color: var(--color-primary); }
+  [data-theme="dark"] .submission-card { background: var(--color-surface); }
+  [data-theme="dark"] .policy-note { background: var(--color-surface-2); }
+</style>
+
+<div class="article-header">
+  <h1>Contributor Guidelines</h1>
+  <p class="lead">Editorial standards, submission process, and topic-fit guidelines for prospective contributors. We publish bylined research, operator interviews, and case studies from Maine cannabis practitioners, researchers, and policy specialists.</p>
+</div>
+
+<Callout title="Who we're looking for" type="passion">
+  Maine-licensed operators (cultivators, manufacturers, retailers), CPAs and attorneys with cannabis practices, OCP compliance consultants, real estate brokers who've worked the Maine cannabis market, agricultural researchers with a Maine focus, and independent policy analysts. Bylined submissions only — we do not run anonymous or sponsored content.
+</Callout>
+
+<nav class="toc">
+  <h2>On This Page</h2>
+  <ul>
+    <li><a href="#audience">Audience &amp; Editorial Voice</a></li>
+    <li><a href="#what-we-publish">What We Publish</a></li>
+    <li><a href="#submission-formats">Submission Formats</a></li>
+    <li><a href="#editorial-process">Editorial Process</a></li>
+    <li><a href="#standards">Editorial Standards</a></li>
+    <li><a href="#attribution">Attribution &amp; Reciprocity</a></li>
+    <li><a href="#submit">Submit a Pitch</a></li>
+  </ul>
+</nav>
+
+<section id="audience">
+  <h2>Audience &amp; Editorial Voice</h2>
+  <p>Maine Dispensary Guide is read primarily by people building, investing in, or advising Maine cannabis businesses — current and prospective operators, their CPAs and attorneys, and the financial and real estate professionals who support them. About a quarter of our readers are journalists, policy researchers, and academic readers who cite our data in their own work.</p>
+  <p>Our editorial voice is first-person, direct, and specific. We name towns, statutes, and dollar figures. We write for someone who already knows what a cultivator license is and wants to know what their neighbor paid for theirs. We avoid generic business writing, motivational framing, and "what's next for the industry" speculation unless we have data backing the claim.</p>
+  <p>Contributors whose work reads like McKinsey output or cannabis-marketing copy will not be a fit. Work that reads like an experienced practitioner explaining something to a peer will.</p>
+</section>
+
+<section id="what-we-publish">
+  <h2>What We Publish</h2>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num">186+</div>
+      <div class="label">Municipal guides live on the site</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">34+</div>
+      <div class="label">Opted-in Maine municipalities tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">12</div>
+      <div class="label">Average monthly unique research citations</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">~70%</div>
+      <div class="label">Of our traffic is Maine-based operators and advisors</div>
+    </div>
+  </div>
+  <p>Contributor pieces slot into four buckets:</p>
+  <ul>
+    <li><strong>Operator case studies.</strong> A specific operator's experience with a Maine-specific problem: a contested municipal opt-in vote, a 280E audit, a real estate deal that fell through because of license transfer restrictions, a cultivation facility that survived a Zone 5 winter. We do not run promotional content dressed as case studies.</li>
+    <li><strong>Specialist explainers.</strong> Long-form technical pieces by CPAs, attorneys, compliance consultants, or real estate brokers with a Maine cannabis practice. The most useful contribution here is "the thing my clients get wrong because there's no public explainer of it."</li>
+    <li><strong>Original research.</strong> Data-driven pieces drawing on the contributor's proprietary data: a CPA firm publishing aggregated 280E cost-of-goods ratios across their Maine book, a security vendor publishing incident rates by town, a cultivation equipment supplier publishing energy-use benchmarks. We co-author with the contributor and the underlying data is reviewed before publication.</li>
+    <li><strong>Policy analysis.</strong> Independent analysis of pending OCP rule changes, legislative bills, or municipal ordinance drafts. We will publish critical analysis of the OCP's own data and positions if the analysis is grounded in primary sources.</li>
+  </ul>
+</section>
+
+<section id="submission-formats">
+  <h2>Submission Formats</h2>
+  <div class="submission-grid">
+    <div class="submission-card">
+      <h3>Operator Case Study</h3>
+      <p>A first-person account of a specific decision, dispute, or outcome. Names the operator, the town, the dollar figures, and what was learned.</p>
+      <div class="word-count">1,200–2,000 words</div>
+      <div class="turnaround">Decision in 5 business days</div>
+    </div>
+    <div class="submission-card">
+      <h3>Specialist Explainer</h3>
+      <p>Long-form technical piece written for a peer audience. Includes the legal/accounting/technical citations the audience needs to act on it.</p>
+      <div class="word-count">1,500–3,000 words</div>
+      <div class="turnaround">Decision in 7 business days</div>
+    </div>
+    <div class="submission-card">
+      <h3>Original Research</h3>
+      <p>Co-authored with the MDG editorial team. Contributor supplies data; we handle the analysis and write-up.</p>
+      <div class="word-count">2,000–4,000 words</div>
+      <div class="turnaround">Co-design before commitment</div>
+    </div>
+    <div class="submission-card">
+      <h3>Policy Analysis</h3>
+      <p>Analysis of a specific OCP rule, LD-prefixed bill, or municipal ordinance. Cites primary sources verbatim.</p>
+      <div class="word-count">1,000–2,000 words</div>
+      <div class="turnaround">Decision in 5 business days</div>
+    </div>
+  </div>
+</section>
+
+<section id="editorial-process">
+  <h2>Editorial Process</h2>
+  <ol>
+    <li><strong>Pitch first.</strong> Send a 3-5 sentence pitch to <code>editorial [at] mainedispensaryguide.com</code> with the working title, the bucket (case study / explainer / research / policy), and a one-line summary of what's new in your piece versus what's already published.</li>
+    <li><strong>Pitch review.</strong> We respond within 5 business days. A "no" usually means topic-fit or timing, not quality. We're happy to suggest a different angle or to publish on a different cadence.</li>
+    <li><strong>Draft.</strong> Submit as a Google Doc, Notion page, or Markdown file. Bylined pieces carry your byline and a one-paragraph bio with links you control (work, firm, LinkedIn).</li>
+    <li><strong>Editing.</strong> One or two editorial passes. We mark up structure, factual claims, and citation gaps; we do not rewrite your voice.</li>
+    <li><strong>Fact-check.</strong> For pieces that make specific dollar figures, statute citations, or operator claims, we verify against primary sources before publication.</li>
+    <li><strong>Publication.</strong> Live on the site with your byline. We promote it to our newsletter, the relevant city/regional guide pages, and our social channels.</li>
+  </ol>
+</section>
+
+<section id="standards">
+  <h2>Editorial Standards</h2>
+  <p>These are non-negotiable. Pieces that don't meet them will be returned for revision or declined.</p>
+  <ul>
+    <li><strong>Primary sources for every claim of fact.</strong> Statute citations include the section number (e.g., 28-B M.R.S. §703(1)(F)). Market figures cite the underlying OCP report or a specific filing. Operator case studies name the operator and the town.</li>
+    <li><strong>No undisclosed conflicts.</strong> If you sell a product or service that the piece mentions, we run a disclosure footnote naming the relationship. We do not run sponsored content in the editorial section.</li>
+    <li><strong>No AI-generated prose without disclosure and human editing.</strong> AI-assisted drafting is acceptable as long as every claim is verified by the human contributor and the byline reflects human authorship. Fully AI-generated pieces are declined.</li>
+    <li><strong>No competitor disparagement.</strong> We will publish critical analysis of competitors' claims, products, or business practices when it is grounded in evidence. We will not publish pieces whose primary purpose is to undermine a named competitor without an evidence basis.</li>
+    <li><strong>Correction policy.</strong> Pieces that ship with errors get a dated correction note appended. We do not silently edit. Contributors agree to publish corrections to their own work on the same terms.</li>
+    <li><strong>Right of reply.</strong> If a piece names a person, business, or product in a critical context, we offer a right of reply in the same publication. The reply runs alongside the original piece or in a clearly linked follow-up.</li>
+  </ul>
+</section>
+
+<section id="attribution">
+  <h2>Attribution, Bylines &amp; Reciprocal Linking</h2>
+  <p>Bylined pieces carry the contributor's name, headshot, and one-paragraph bio. The bio may include up to three outbound links: typically the contributor's professional site, the firm, and one additional reference (LinkedIn, a specific guide, etc.). We do not edit the bio or remove links after publication except by mutual agreement.</p>
+
+  <p>We do not charge contributors a publication fee, and we do not pay contributors a fee for bylined pieces. The compensation is the byline, the bio links, and the audience reach — typically 1,500 to 4,000 reads within the first 60 days for a substantive piece.</p>
+
+  <div class="policy-note">
+    <p><strong>Reciprocal linking policy.</strong> Bylined contributors are welcome — and encouraged — to link back to their published MDG piece from their own site, newsletter, and relevant resource pages. We see the byline and bio links as the primary reciprocal-link surface, not as a separately negotiated link exchange. Contributors do not pay for links, and we do not pay for inbound links. The editorial relationship stands on its own.</p>
+  </div>
+
+  <p>We do not publish "link exchange" pieces, do not accept payment for inclusion in editorial content, and do not guarantee a link in exchange for a contribution. Pieces are selected and edited on editorial grounds. The byline + bio links are the standard reciprocity — they go with every published piece, not as a deal.</p>
+</section>
+
+<section id="submit">
+  <h2>Submit a Pitch</h2>
+  <div class="contact-block">
+    <h2>Pitch us</h2>
+    <p>Email <strong>editorial [at] mainedispensaryguide.com</strong> with:</p>
+    <ul style="color: white; padding-left: 1.5rem;">
+      <li>Working title and bucket (case study / explainer / research / policy)</li>
+      <li>One-paragraph summary</li>
+      <li>Why this piece and why now (what's new vs. what's already published)</li>
+      <li>Your relevant background (firm, license type, years in market, publications)</li>
+      <li>Two or three links to your prior work</li>
+    </ul>
+    <p style="margin-top: 1.5rem;">We respond to every pitch within 5 business days. If you've published a piece with us before, send the new pitch directly to your editor.</p>
+  </div>
+
+  <Callout title="Before you pitch" type="info">
+    Read <a href="/for-journalists">/for-journalists</a> for our research data, citation formats, and the kind of primary-source material we can supply to support your piece. If your piece depends on data we have, mention that in your pitch — we can usually pre-stage the numbers.
+  </Callout>
+</section>
+
+</Layout>
