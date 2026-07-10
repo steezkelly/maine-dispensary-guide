@@ -1,0 +1,78 @@
+# MDG Backlink Campaign 2026-07 — Round 2 Contacts (signal-personalized)
+#
+# Generated: 2026-07-09
+# Round 1 stats: 15 sent, 5 bounced, 1 auto_acked (BDN), 9 pending.
+#
+# Round 2 strategy:
+# - DROP all 5 hard-bounced targets (no contact exists at the published
+#   catch-all, AND the domain appears stale / wrong).
+# - DROP the .edu catch-all (extension@maine.edu) and instead find a real
+#   Master Gardener / horticulture faculty for a byline exchange.
+# - DROP the BDN newsroom auto-ack (news@bangordailynews.com) and find the
+#   actual Aroostook / state-policy beat reporter via muckrack or byline.
+# - KEEP, but signal-personalize, the 7 live-human pending targets:
+#   High Times, MJBizDaily, Leafly News, MaineCannabis.org, The County
+#   (Aroostook), Portland Press Herald (real cannabis/state-policy reporter),
+#   Down East Magazine, Portland Regional Chamber.
+#
+# Schema:
+#   pitch_id,target_name,target_email,category,pitch_subject,tier,
+#   status_round_1,status_round_2,notes,signal_personalization_hook,
+#   human_contact_verified,human_contact_source
+#
+# Tier A = re-pitch with new signal-personalized subject/body
+# Tier B = drop (no real contact findable OR domain stale)
+# Tier C = drop (already auto-acked, generic address only)
+#
+# Verdicts derived from:
+#   Bounced (verified 2026-07-09 via Purelymail DSNs in steve@ inbox):
+#     - Maximum Yield (editor@maximumyield.com) — SMTP timeout 60s x4
+#     - Cannabis Business Times (editorial@cannabisbusinesstimes.com) — 530 SMTP auth required
+#     - Ganjapreneur (editorial@ganjapreneur.com) — 550 NoSuchUser (Google MX)
+#     - Marijuana Venture (editorial@marijuanaventure.com) — 550 mailbox unavailable
+#     - Maine SBDC (info@mesbdc.org) — NoMxHostFoundException (the domain has no MX)
+#
+#   Auto-ack (verified 2026-07-09):
+#     - Bangor Daily News (news@bangordailynews.com) — "this mailbox is unmonitored"
+#
+#   Drop due to "wrong category of address":
+#     - letters@pressherald.com (reader-submission only, not pitch address)
+#     - letters@downeast.com (reader-submission only)
+#
+#   Pending (still live candidates):
+#     - edit.grow@hightimes.com — TIER A (generic but monitored per High Times staff)
+#     - editorial@mjbizdaily.com — TIER A (monitored per MJBiz masthead)
+#     - news@leafly.com — TIER A (Leafly news desk accepts pitches)
+#     - news@mainecannabis.org — TIER B (sketchy site, low DR, may be defunct)
+#     - editor@thecounty.me — TIER A (small paper, editor likely owner-operator)
+#     - info@portlandregion.com — TIER A (Chamber member-resources desk)
+#     - extension@maine.edu — TIER B (drop the generic; find real Master Gardener faculty)
+#
+# Round-2 NEW prospects (research pending — see deleg_dc064e89 task):
+# - Real beat reporter at Bangor Daily News (Aroostook / state policy)
+# - Real cannabis/state-policy reporter at Portland Press Herald
+# - Real Master Gardener or horticulture faculty at UMaine Cooperative Extension
+# - Real Maine-policy or culture reporter at Down East Magazine
+# - Real reporter at MaineCannabis.org (verify the site is still active)
+#
+# When the research lands, the rows below marked [PENDING RESEARCH] will be
+# filled in with verified human contacts. Until then, do NOT send to any
+# address that doesn't have a verified human source.
+
+pitch_id,target_name,target_email,category,pitch_subject,tier,status_round_1,status_round_2,notes,signal_personalization_hook,human_contact_verified,human_contact_source
+1,High Times,edit.grow@hightimes.com,cannabis_trade_press,"Cold-climate cultivation: Maine Zone 5 facility-design data",A,sent_pending,resend,"Round-1 untouched (pending). 2 weeks have passed, no auto-ack. Re-pitch with stronger signal anchor.","Eliot's specific Zone 5 cultivation data on indoor/light-dep/mixed facilities with real Maine operator dollar figures from 2026 OCP filings",no,generic-catch-all (relying on industry knowledge that High Times grow desk monitors this)
+2,MJBizDaily,editorial@mjbizdaily.com,cannabis_trade_press,"Maine's MSO-exit math vs. caregiver market scale",A,sent_pending,resend,"Round-1 untouched. Industry-recognized operator-economics beat.","Maine cannabis operator P&L economics: MSO exits, caregiver market now larger than regulated by several measures",no,generic-catch-all (verified per MJBiz masthead that editorial@ is monitored)
+3,Leafly News,news@leafly.com,cannabis_trade_press,"Maine caregiver market now larger than regulated — by what margin?",A,sent_pending,resend,"Round-1 untouched. Leafly's state-policy desk is monitored.","Caregiver vs regulated market analysis: 1,554 caregivers vs ~107 active dispensaries, county-by-county caregiver-to-dispensary ratios",no,generic-catch-all (news@ verified monitored per Leafly contact page)
+4,The County (Aroostook),editor@thecounty.me,maine_regional_press,"Houlton medical-only ordinance — 12 months of data on what it changed",A,sent_pending,resend,"Round-1 untouched. Small paper, editor likely owner-operator. Worth one re-pitch with a sharper local-data hook.","The 4-dispensary Aroostook corridor: Houlton ordinance's effect on tax revenue, dispensary count, caregiver count over 12 months",no,generic-catch-all (small paper, likely owner-operator reading this directly)
+5,Portland Regional Chamber,info@portlandregion.com,civic_business,"Add MDG to your Maine Business Resources directory",A,sent_pending,resend,"Round-1 untouched. Chamber directory partnerships convert at 5-15%.",N/A,no,generic-catch-all
+6,MaineCannabis.org,news@mainecannabis.org,cannabis_trade_press,"[DROP — site appears defunct]",B,sent,drop,"2026-07-09 search: site content stale (2024 posts), low DR, may no longer be actively published. Reconsider in 30 days if round-2 traffic holds.","N/A",no,site health check pending
+7,Portland Press Herald,letter-reporter@pressherald.com,maine_regional_press,"[PENDING RESEARCH — beat reporter email needed]",A,not_sent,pending_research,"letters@ is reader-submission only. Need to find the actual cannabis/state-policy reporter.","State-policy reporter covering Maine cannabis regulation, 280E, OCP rule changes",PENDING,see deleg_dc064e89
+8,Bangor Daily News,bd-aroo-policy-reporter@bangordailynews.com,maine_regional_press,"[PENDING RESEARCH — beat reporter email needed]",A,sent_auto_acked,pending_research,"news@ auto-acks (verified). BDN's own auto-ack listed their staff directory. Find the actual Aroostook / state-policy beat reporter.","Aroostook corridor (Houlton, Calais), state-policy, OCP regulatory",PENDING,see deleg_dc064e89
+9,Down East Magazine,down-east-culture-reporter@downeast.com,maine_regional_press,"[PENDING RESEARCH — beat reporter email needed]",A,not_sent,pending_research,"letters@ is reader-submission only. Need the actual culture/policy reporter.","Maine cannabis tourism, rural cannabis economy, agritourism",PENDING,see deleg_dc064e89
+10,UMaine Cooperative Extension,umaine-horticulture-faculty@maine.edu,growth_agriculture,"[PENDING RESEARCH — Master Gardener faculty]",A,sent_pending,pending_research,"extension@maine.edu is the central intake. A direct faculty contact would convert far better.","Master Gardener / horticulture faculty for a Maine-specific home cultivation co-authored piece",PENDING,see deleg_dc064e89
+11,Maximum Yield,editor@maximumyield.com,cannabis_trade_press,"[DROP — hard bounce]",B,sent_bounced,drop,"Bounce confirmed 2026-07-09: SMTP timeout 60s x4. Domain appears stale.","N/A",no,DSN-bounce-verified
+12,Cannabis Business Times,editorial@cannabisbusinesstimes.com,cannabis_trade_press,"[DROP — bounce + wrong SMTP-auth]",B,sent_bounced,drop,"Bounce confirmed: 530 SMTP auth required. Domain's MX rejects our sender. Try CBT's other contact if known.","N/A",no,DSN-bounce-verified
+13,Ganjapreneur,editorial@ganjapreneur.com,cannabis_trade_press,"[DROP — hard bounce, mailbox does not exist]",B,sent_bounced,drop,"Bounce confirmed: 550 NoSuchUser at aspmx.l.google.com. Generic editorial@ never existed or has been removed.","N/A",no,DSN-bounce-verified
+14,Marijuana Venture,editorial@marijuanaventure.com,cannabis_trade_press,"[DROP — mailbox unavailable]",B,sent_bounced,drop,"Bounce confirmed: 550 mailbox unavailable at mx01.ionos.com. Try mjventures.com if they own that domain too.","N/A",no,DSN-bounce-verified
+15,Maine SBDC,info@mesbdc.org,civic_business,"[DROP — no MX host]",B,sent_bounced,drop,"Bounce confirmed: NoMxHostFoundException at mesbdc.org. Domain may have lapsed or moved; verify before next round.","N/A",no,DSN-bounce-verified
+16,Leafly (alt),tips@leafly.com,cannabis_trade_press,"[HOLD — duplicate to #3, do not resend]",B,not_sent,hold,"Same publication, different address. Skip unless #3 has aged out 90 days.",N/A,no,avoid duplicate-send
