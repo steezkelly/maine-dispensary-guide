@@ -5,6 +5,14 @@
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
 |**Last updated: 2026-07-09 EDT (sixth session — CiteThis extraction + DOI-style permalinks + embeddable iframe shipped; 4 commits, deploy-realization epilogue on Vercel header precedence gotcha logged)**
 
+## Current operational state (live pointer)
+
+The collaborative log below describes each session's work as it shipped. To avoid drift with current docs, refer to these canonical sources:
+
+- **Lead-funnel destination** (2026-07-09 decision): `hello@`, `admin@`, `support@`, and any otherwise-unhandled `mainedispensaryguide.com` address route to `steve@mainedispensaryguide.com` (operator inbox). NOT `steezkelly@purelymail.com` — that user account is separate and empty. Read leads via `mdg-mdg envelope list` (wrapper at `~/.local/bin/mdg-mdg` → `~/.config/himalaya/steve-mdg.toml`). Canonical doc: `docs/LEAD_CAPTURE_SETUP.md`. Purelymail rule ids: 82705 (admin), 82706 (support), 82707 (catch-by-prefix), 113406 (test-* for fix-verification).
+
+- **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
+
 ## 📋 CITE-THIS EXTRACTION + EMBEDDABLE IFRAME (Jul 9, 2026 EDT) — grill-me sprint closeout, commit `55ef7215`
 
 - **Why:** grill-me session 2026-07-09 confirmed the ROI calculator + market-stats must function as a **backlink magnet**. Citation blocks on both pages were 125 lines of duplicated inline markup with no DOI-style permalinks, and there was no embeddable iframe — external sites couldn't link to specific data points or embed the calculator without copy-pasting all the math.

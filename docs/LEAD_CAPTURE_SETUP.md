@@ -11,7 +11,7 @@ The Maine Dispensary Guide runs two patterns for lead capture, split by use case
 | **Direct link, no form** | `/download/metrc-reconciliation-checklist`, `/download/compliance-self-assessment` | Pre-2026-07-08 build path — these two operator-resource pages are pure direct-link downloads (`<a href="/downloads/...pdf" download>`). They capture **zero lead signal**. Intentional gap to close in a future funnel instrumentation sprint (see `/docs/research/lead-magnet-research-memo-2026-07-08.md` Stage 2). |
 | Pattern count summary | **3 Formspree + 3 mailto: + 2 no-form = 8 total lead-capable page variants** (5 distinct download pages + 3 Formspree pages) |
 
-Purelymail catch-all routes `mainedispensaryguide.com` (MX verified 2026-07-13) → `steezkelly@purelymail.com`. All leads — Formspree and mailto: — end up in the same operator inbox.
+Purelymail routing on `mainedispensaryguide.com` (MX verified 2026-07-13) delivers every lead-receiving address — `hello@`, `admin@`, `support@`, and any otherwise-unhandled prefix (the catch-by-prefix rule id 82707) — to `steve@mainedispensaryguide.com` (operator inbox). All leads — Formspree and mailto: — end up in the same operator inbox. The previous `steezkelly@purelymail.com` catch-all destination was retired 2026-07-09; that user account is a separate Purelymail user with its own (separate, empty) mailbox, NOT the lead destination.
 
 ## Operator-side evidence-of-trust gap (Stage 1 RESOLVED 2026-07-08)
 
@@ -37,7 +37,7 @@ The 3 PDF-gate pages use the shared `LeadMailtoForm.astro` component. On submit:
 1. Form's named fields are collected into a values map.
 2. `mailto:` URL is built with the page's pre-baked subject/body templates, with `{name}`, `{email}`, etc. placeholders interpolated from submitted field values.
 3. `gtag('event', 'lead_capture', { form_name, page_path, ...tracked_fields })` fires BEFORE navigation (preserves GA4 attribution that we had via Formspree + `LeadFormTracker.astro`).
-4. Browser navigates to the `mailto:` URL → opens the user's default mail client pre-populated → user clicks "Send" → message arrives at `hello@mainedispensaryguide.com` → Purelymail catch-all → `steezkelly@purelymail.com`.
+4. Browser navigates to the `mailto:` URL → opens the user's default mail client pre-populated → user clicks "Send" → message arrives at `hello@mainedispensaryguide.com` → Purelymail routing (catch-by-prefix rule) → `steve@mainedispensaryguide.com` (operator inbox).
 5. After 800ms (the OS mail-client-open delay), `window.location.href` redirects to the page's `successPath` so the success card renders even if the OS doesn't open a mail client.
 
 The 3 forms, their fields, and their `successPath` are:
@@ -63,9 +63,11 @@ Decision: **C**, with GA4 attribution preserved on the migrated forms via inline
 The Purelymail IMAP/SMTP wiring at `~/.config/himalaya/config.toml` and `~/.config/maine-dispensary-guide/mdg.env` (both mode 600) remains valid for manual agent-side email sends. Used like:
 
 ```bash
-mdg-mail envelope list     # read inbox, including hello@ leads (steezkelly default)
-mdg-leads envelope list    # read leads@mainedispensaryguide.com inbox (leads-only override)
-mdg-mail template send     # reply to leads via SMTP (sends as steezkelly)
+mdg-mdg envelope list      # read steve@mainedispensaryguide.com inbox (operator + all MDG-domain leads after the 2026-07-09 reroute)
+mdg-leads envelope list    # read leads@mainedispensaryguide.com inbox (leads-only override; sends-as-steezkelly)
+mdg-mdg template send      # reply to leads via SMTP as steve@mainedispensaryguide.com
+# Note: `mdg-mail` (the legacy wrapper) still points at steezkelly@purelymail.com.
+# It's no longer where leads land. Use mdg-mdg instead.
 ```
 
 `mdg-leads` is a wrapper at `~/.local/bin/mdg-leads` that loads `~/.config/himalaya/leads-mdg.toml` — a leads-only override config. Prevents accidental send-as-steez from the leads context.
