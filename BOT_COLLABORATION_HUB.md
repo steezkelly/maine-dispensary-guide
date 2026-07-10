@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-09 EDT (sixth session — CiteThis extraction + DOI-style permalinks + embeddable iframe shipped)**
+|**Last updated: 2026-07-09 EDT (sixth session — CiteThis extraction + DOI-style permalinks + embeddable iframe shipped; 4 commits, deploy-realization epilogue on Vercel header precedence gotcha logged)**
 
 ## 📋 CITE-THIS EXTRACTION + EMBEDDABLE IFRAME (Jul 9, 2026 EDT) — grill-me sprint closeout, commit `55ef7215`
 
@@ -30,10 +30,15 @@
   - `?hideheader=1` — suppress attribution header (footer always retained per CC BY 4.0)
 - **Embedder policy (documented in the embed file header, not enforced in code):** non-Maine embedders allowed with attribution; cannabis-product sales pages NOT allowed (would imply endorsement). Trust-but-document for now — server-side referrer check is a future enhancement if abuse appears.
 - **Carry-forward for next agent:**
-  - Verify the 3 net-new URLs are live on production after the deploy completes (~90s post-push): `curl -I https://mainedispensaryguide.com/cite/roi-calculator`, same for `/cite/market-stats` and `/embed/roi-calculator`.
   - Update `/for-journalists` page with the new `/cite/<slug>` permalink pattern + embed snippet. (Not done in this sprint — `/for-journalists` is mid-edit by another agent.)
   - When the 280E calculator state-pack ships, add entries to `STATE_LABELS` in the embed + new entries to `citations.json`. URL contract stays stable.
   - Optional: write a usage example page or README entry showing the canonical `<iframe>` snippet embedders should copy.
+- **🚨 Production-realization epilogue — the Vercel header-precedence gotcha (commit `93fd788e` + `9db4f383` + `da13652a`):** the verify pipeline passed all gates but the FIRST deploy attempt failed at the static-build step with `registry is not defined` in `apps/maine-cannabis/dist/.prerender/chunks/_slug__DXGQ3x39.mjs`. Root cause: Astro's `getStaticPaths` runs in a separate module-evaluation context and CANNOT see top-level frontmatter `const` declarations from the same page. Fix: re-import the JSON inside the function. Three subsequent commits fixed this and an X-Frame-Options / CSP frame-ancestors precedence issue.
+  - **Lesson 1 (Sprint 75 cousin):** `verify:iterate` runs `esbuild parse` + `astro check` — neither runs the actual `astro build`. esbuild resolves names lazily; the real build evaluates `getStaticPaths` and caught the missing `registry` ref. Future guard: add a `npm run build` step to the pre-push hook for any change that touches a `[param].astro` dynamic route, OR add an assertion that runs `astro build --dry` against changed dynamic routes.
+  - **Lesson 2 (more important):** Vercel's `headers` rules behave differently than `routes` / `rewrites`. For matching rules, Vercel emits BOTH sets of headers; HTTP semantics take over and **last-write-wins** per header key. Initial embed override was placed BEFORE the wildcard; the wildcard's `frame-ancestors 'none'` reached the browser last and blocked embedding. Fix: reorder so the more-permissive override is LAST in the `headers` array.
+  - **Lesson 3:** the existing `X-Frame-Options: DENY` was redundant given CSP `frame-ancestors 'none'` (modern browsers prefer CSP). Removed X-Frame-Options site-wide; the CSP `frame-ancestors` directive handles all embedding policy. Per-route exceptions are now possible without the X-Frame-Options merge footgun.
+  - **Final state verified by `curl -I https://mainedispensaryguide.com/embed/roi-calculator`:** `Content-Security-Policy: ... frame-ancestors 'self' https:;` and HTTP 200. Cross-origin curl with `Referer: https://example.com/` returns HTTP 200 (CORS-friendly embed). Embed is live and embeddable on all https origins.
+  - **Cost of the gotcha:** 3 failed deploys (~3 minutes of Vercel compute each), 3 extra commits, ~10 minutes of debugging. Net-net: verify pipeline still says "clean" but actual production reality diverges. Pre-push hook should add a real build assertion for dynamic-route changes.
 
 ## 📋 TOWN-CLUSTER HUB STAGE 2 PILOT (Jul 8, 2026 EDT) — 2,700+ word editorial bodies shipped on 2 of 5 hubs
 
