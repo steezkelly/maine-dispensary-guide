@@ -34,10 +34,16 @@
  *       { type: 'mdg-roi-update', payload: { capital, customers, ... } }
  *
  * Vercel headers note: this route is allowed to be iframed via a
- * route-specific override in vercel.json that sets:
- *   X-Frame-Options: SAMEORIGIN  (the global site-wide DENY would otherwise block us)
- *   Content-Security-Policy: frame-ancestors 'self' https:  (covers all https embedders)
- * The override MUST come before the wildcard `/(.*)` rule in vercel.json.
+ * route-specific override in vercel.json. The global rule sets
+ * `frame-ancestors 'none'` (no embedding anywhere). The /embed/(.*)
+ * override sets `frame-ancestors 'self' https:` so this page CAN be
+ * framed by mainedispensaryguide.com itself AND any HTTPS site.
+ * The override must come BEFORE the wildcard `/(.*)` rule in vercel.json.
+ * Per Vercel's routing rules, both CSP headers are emitted and the browser
+ * intersects them — the more-specific `frame-ancestors 'self' https:`
+ * wins. (X-Frame-Options was removed site-wide in 2026-07-09 in favor of
+ * CSP frame-ancestors, which modern browsers respect exclusively and which
+ * lets us carve out per-route exceptions.)
  */
 
 // Default values mirror the source page calculator
@@ -65,8 +71,8 @@ const STATE_LABELS: Record<string, string> = {
 };
 
 // Whitelisted embedder domains (documentation, not enforcement). Real
-// enforcement is at the X-Frame-Options / CSP frame-ancestors level in
-// vercel.json — we currently allow all https origins.
+// enforcement is at the CSP frame-ancestors level in vercel.json — we
+// currently allow all https origins.
 const EMBEDDER_DISPLAY_MAX = 32;
 ---
 
