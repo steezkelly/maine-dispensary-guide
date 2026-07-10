@@ -6505,3 +6505,42 @@ this without code change; full inventory captured in the Hub commit message.
 - **Passdown doc:** `docs/SESSION_PASSDOWN_OUT_2026-07-06-fourth-session.md` (18K, full TL;DR + verification table + carry-forwards + architectural observations + lessons).
 - **Mnemosyne notes worth retaining:** (a) `mnx vision describe` for PNG screenshot fallback (already pinned); (b) memory notes are leads, not authoritative — three drift cases found this session; (c) memory-correlated fix that maps to incident response: 2026-07-13 RAM hog = orphan tsserver.js = now auto-cleaned.
 
+
+## Sprint 78j v2-GSC-Misroute-Audit (2026-07-10) — /roi-calculator title/description + 2 FAQPage items
+
+**Why this sprint:** the v2 GSC misroute audit (run 2026-07-10 from `apps/maine-cannabis/data/gsc-search-analytics.jsonl`, 14d window, 2,165 records, no openseo credits burned) surfaced a NEW misroute not in the original openseo plan: `/roi-calculator` ranking page-1 (pos 7.7) for `dispensary roi` (75 imp) and `cannabis roi` (12 imp) with 0% CTR. Total 126 imp at 0 clicks on a generic-industry query the existing title couldn't satisfy.
+
+**Operator-name trap pages (Buxton/Gray/Limerick) confirmed NOT an on-page SEO problem:** the 0% CTR on those (~870 imp at page-1) is a domain-authority problem from the 4-backlink / 2-referring-domain profile. Meta descriptions on those pages already contain operator name + address + license type (verified live via `curl` against production HTML post-78g-3/4 deploys). The actual fix is the backlink campaign, decision flagged in the OPENSEO_30_DAY_EVAL_PLAN.md closeout as pending.
+
+**What shipped in this commit (`122a46e9`):**
+
+| File | Edit | Why |
+|---|---|---|
+| `apps/maine-cannabis/src/pages/roi-calculator.astro` | Title: "Dispensary ROI: Maine Cannabis Profitability Calculator (2026)" → "Dispensary ROI Calculator: Break-Even & Net Margin Analysis (2026)" | Leads with the searcher phrase, drops Maine-only signal at front (repels generic-industry searchers) |
+| (same file) | Description rewrote to lead with calculator promise and preview specific Maine numbers in SERP snippet | $1.32M avg revenue, 9.2% net margin post-280E, 18-36 month payback — specific numbers in snippet beat generic "honest analysis" copy |
+| (same file) | Added 2 FAQPage items: "What is dispensary ROI?" + "What is a good profit margin for a dispensary?" | Matches the actual high-volume searcher queries (dispensary roi, dispensary profit margin). 6 → 8 FAQPage items. PAA-rich-snippet eligibility on the new questions. |
+| (same file) | modifiedDate: 2026-06-07 → 2026-07-10 | Triggers sitemap refresh |
+
+**Verify gate (clean):**
+- esbuild parse: parsed clean
+- astro check (filtered to 1 file): 0 errors
+- sitemap-postprocess: all assertions pass
+- docs-vs-code: no drift
+- compressed-frontmatter: AutoRelated inside frontmatter
+- hero-image-naming: no Layout-incompatible suffixes
+- autoRelated regen: no change vs HEAD (existing faq already covered the topical space)
+- Pre-push hook: clean, push proceeded
+- Vercel deploy: pending (5-20 min lag per audit Step 0.5)
+
+**Expected effect over 2-4 week re-crawl window:**
+- `dispensary roi` CTR 0% → 0.5-1% at 75-126 imp/mo = 0.4-1.3 clicks/mo
+- `dispensary profit margin` 0% → 0.5-1% at 14 imp/mo = 0.07-0.14 clicks/mo
+- `cannabis roi` 0% → 0.5-1% at 12 imp/mo = 0.06-0.12 clicks/mo
+- Plus PAA-rich-snippet eligibility on the 2 new questions (high-visibility real estate on page-1)
+
+**Deferred items (named explicitly — do not bury):**
+- Outreach follow-ups to the 9 pending journalist pitches: NOT SHIPPED. Steve's explicit mid-turn directive (2026-07-10 12:00Z): no emails, no outreach to government or news outlets until he explicitly brings it up. Steve's strategic pivot: backlinks should target similar/slightly-higher DR cannabis-niche sites, not Tier-1 press. Round-2 outreach contacts research shipped but the round-2 send is on hold pending strategy revision.
+- Openseo 78h (competitor gap closure, MaineCannabis.org profile): pending, will require updated outreach strategy before execution.
+- Re-measurement on 2026-07-13 to confirm 78g-1 canonical rewrite is being picked up by Google: deferred.
+
+Total impression haul addressed this commit: ~150 imp/month at 0% → ~1.5 clicks/month expected (small but free upside; the real SEO gain on this site is from the backlink campaign, not page-level changes).
