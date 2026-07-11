@@ -311,16 +311,20 @@ const ACQUISITION = ${inlineJson(inlineData('acquisition'))};
 const TECHNOLOGY = ${inlineJson(inlineData('technology'))};
 
 (async () => {
+  // Time series — sort chronologically (defense in depth; JSONL is also sorted at write-time)
+  const ts = [...TIMESERIES].sort((a, b) =>
+    String(a.dimensions.date || '').localeCompare(String(b.dimensions.date || ''))
+  );
   // Time series
   new Chart(document.getElementById('tsChart'), {
     type: 'line',
     data: {
-      labels: TIMESERIES.map(r => r.dimensions.date),
+      labels: ts.map(r => r.dimensions.date),
       datasets: [
-        { label: 'Users', data: TIMESERIES.map(r => r.metrics.totalUsers), borderColor: '#0D4E50', tension: 0.2 },
-        { label: 'New Users', data: TIMESERIES.map(r => r.metrics.newUsers), borderColor: '#7A9A6A', tension: 0.2 },
-        { label: 'Sessions', data: TIMESERIES.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
-        { label: 'Pageviews', data: TIMESERIES.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
+        { label: 'Users', data: ts.map(r => r.metrics.totalUsers), borderColor: '#0D4E50', tension: 0.2 },
+        { label: 'New Users', data: ts.map(r => r.metrics.newUsers), borderColor: '#7A9A6A', tension: 0.2 },
+        { label: 'Sessions', data: ts.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
+        { label: 'Pageviews', data: ts.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
       ],
     },
     options: { responsive: true, plugins: { title: { display: true, text: 'Daily users / sessions / pageviews' } } },
@@ -407,7 +411,19 @@ async function run() {
           _totalAvailable: totalInResponse,
         })
       );
-      fs.writeFileSync(outPath, lines.join('\n') + (lines.length ? '\n' : ''));
+      // Sort timeseries chronologically (GA4 returns by metric desc, not date asc)
+      // so downstream chart x-axes are monotonic.
+      const sortedLines = q.name === 'timeseries'
+        ? [...rows]
+            .sort((a, b) => String(a.dimensions.date || '').localeCompare(String(b.dimensions.date || '')))
+            .map(r => JSON.stringify({
+              dimensions: r.dimensions,
+              metrics: r.metrics,
+              _dateRange: '2020-01-01_to_today',
+              _totalAvailable: totalInResponse,
+            }))
+        : lines;
+      fs.writeFileSync(outPath, sortedLines.join('\n') + (sortedLines.length ? '\n' : ''));
       const sample = rows.slice(0, 3);
       console.log(`[${q.name}] ${rows.length} rows → raw/${q.name}.jsonl${truncated ? ' (TRUNCATED)' : ''}`);
       console.log(`  sample: ${JSON.stringify(sample[0] || {})}`);
