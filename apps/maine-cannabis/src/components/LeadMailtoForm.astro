@@ -184,15 +184,20 @@ const {
       }
 
       fireGA4(form, formName, trackFields);
-      window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
-
-      // After the OS opens the mail client, redirect to the success card so the page
-      // state matches the post-submit UX. Same 800ms delay as first-timer-field-guide.
+      // Brief delay so the gtag push reaches GA4 before the navigation drops the page.
+      // gtag events use sendBeacon when available, but a synchronous navigation can
+      // race against the network flush. 100ms is imperceptible to the user but enough
+      // for the event to land. Same pattern used in LeadFormTracker.astro.
       setTimeout(function () {
-        if (successPath) {
-          window.location.href = successPath;
-        }
-      }, 800);
+        window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
+        // After the OS opens the mail client, redirect to the success card so the page
+        // state matches the post-submit UX. Same 800ms delay as first-timer-field-guide.
+        setTimeout(function () {
+          if (successPath) {
+            window.location.href = successPath;
+          }
+        }, 800);
+      }, 150);
     });
   })();
 </script>

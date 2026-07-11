@@ -87,8 +87,12 @@ public/data/email-tracking.json
 data/email-tracking.json
 # Python bytecode (created by running Python scripts in pitches/)
 __pycache__/
-# Per-session outreach log (operational state, regenerated on each run)
+# Per-session outreach operational state (regenerated on each run;
+# contains recipient addresses + submission status; matches the
+# "outreach state stays local, only templates + scripts are public"
+# convention Steve set 2026-07-11).
 pitches/sent-log.json
+pitches/webform-sent-log.json
 
 # Engineering-skills workflow state (operational, regenerated per session)
 .scratch/
