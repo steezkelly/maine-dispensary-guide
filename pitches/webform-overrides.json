@@ -1,0 +1,133 @@
+{
+  "_doc": "Per-draft overrides for webform-submit.cjs (pitches/webform-failure-buckets-2026-07-10.md). Schema per bucket-doc §'New config schema'. Drop drafts (weedmaps, marijuanaventure, activitymaine, cleangreencertified, kbcannabisconsulting) are NOT included — they're either unfixable or require re-research of the To: URL in the draft markdown, not code changes. For drafts marked 'hands-on inspect' the field_map is empty {} until someone manually inspects the failed-submit screenshot and adds the required field names.",
+  "_generated": "2026-07-11",
+
+  "cannacenterofexcellence.org.md": {
+    "_bucket": "B2",
+    "_note": "Submit button is JS-bound; hands-on inspect required. submit_selectors placeholder until inspect confirms the actual element.",
+    "submit_selectors": ["a[href*=\"submit\"]", "[data-submit]", "button.send-btn", "a.btn-submit"],
+    "wait_strategy": { "post_submit_idle_ms": 3000 }
+  },
+
+  "mgmagazine.com.md": {
+    "_bucket": "B2",
+    "_note": "Likely an embedded contact widget — needs hands-on inspect to identify the actual submit element. extra_selectors.success added per bucket doc.",
+    "submit_selectors": ["button.elementor-button", "input[type=\"submit\"]", ".wpcf7-submit", "button.send-btn"],
+    "extra_selectors": {
+      "success": [".elementor-form-success-message", ".elementor-message-success"]
+    }
+  },
+
+  "mgretailer.com.md": {
+    "_bucket": "B2",
+    "_note": "Sister site to mgmagazine — same embedded widget, same fix path.",
+    "submit_selectors": ["button.elementor-button", "input[type=\"submit\"]", ".wpcf7-submit", "button.send-btn"],
+    "extra_selectors": {
+      "success": [".elementor-form-success-message", ".elementor-message-success"]
+    }
+  },
+
+  "cannabiscreative.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect of the failed-submit screenshot to identify the missing required field.",
+    "field_map": {},
+    "extra_selectors": { "error": [".validation-error", ".field-error"] }
+  },
+
+  "cannabisindustryjournal.com.md": {
+    "_bucket": "B3",
+    "_note": "Trade publication — almost always requires a Publication/Press Outlet field. field_map covers that + phone explicitly null (often a required honeypot on trade-pub forms).",
+    "field_map": {
+      "name":         "Steve Kelly",
+      "email":        "steve.kelly@mainedispensaryguide.com",
+      "company":      "Maine Dispensary Guide",
+      "website":      "https://mainedispensaryguide.com",
+      "publication":  "Maine Dispensary Guide",
+      "press_outlet": "Maine Dispensary Guide",
+      "subject":      "Pitch: Maine cannabis industry resource for your editorial calendar",
+      "message":      "{{draft.body}}",
+      "phone":        null
+    }
+  },
+
+  "cldzcannabis.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "hashdash.com.md": {
+    "_bucket": "B3",
+    "_note": "Partner-application form — likely brand/state/monthly_volume fields per bucket doc. field_map populated with most-likely required fields; verify after first dry-run.",
+    "field_map": {
+      "name":            "Steve Kelly",
+      "email":           "steve.kelly@mainedispensaryguide.com",
+      "company":         "Maine Dispensary Guide",
+      "website":         "https://mainedispensaryguide.com",
+      "brand":           "Maine Dispensary Guide",
+      "state":           "Maine",
+      "monthly_volume":  "N/A — directory site, not a dispensary",
+      "message":         "{{draft.body}}"
+    }
+  },
+
+  "minnygrown.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "mymainemedia.com.md": {
+    "_bucket": "B3",
+    "_note": "Maine media outlet — Publication field very likely required per bucket doc.",
+    "field_map": {
+      "name":         "Steve Kelly",
+      "email":        "steve.kelly@mainedispensaryguide.com",
+      "publication":  "Maine Dispensary Guide",
+      "market":       "Maine",
+      "website":      "https://mainedispensaryguide.com",
+      "message":      "{{draft.body}}"
+    }
+  },
+
+  "pufcreativ.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "thcscout.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "theartofmaryjanemedia.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "thelodgecannabis.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "themainehighlands.com.md": {
+    "_bucket": "B3",
+    "_note": "field_map empty pending hands-on inspect.",
+    "field_map": {}
+  },
+
+  "findcannabis.com.md": {
+    "_bucket": "B4",
+    "_note": "Claim-your-listing flow auto-redirects during fill → Execution context destroyed. wait_strategy.networkidle + retries:2.",
+    "wait_strategy": {
+      "waitUntil":          "networkidle",
+      "waitForNavigation":  true,
+      "post_submit_idle_ms": 2000,
+      "retries":            2
+    }
+  }
+}
