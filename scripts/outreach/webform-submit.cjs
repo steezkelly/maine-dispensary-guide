@@ -186,11 +186,26 @@ async function submitForm(browser, draft, dryRun = false, override = null) {
             return result;
         }
 
-        // 4. Use the FIRST form (or one with method=POST)
-        let targetForm = forms[0];
-        for (const f of forms) {
-            const method = await f.evaluate(el => (el.method || 'GET').toUpperCase());
-            if (method === 'POST') { targetForm = f; break; }
+        // 4. Resolve the target form. If the override specifies
+        //    form_selectors (B1/B2 — pages with multiple forms or
+        //    forms inside iframes), find by those selectors first.
+        //    Otherwise fall back to the first form (or the first one
+        //    with method=POST, as before).
+        let targetForm = null;
+        if (override && Array.isArray(override.form_selectors) && override.form_selectors.length > 0) {
+            for (const sel of override.form_selectors) {
+                try {
+                    const f = await page.$(sel);
+                    if (f) { targetForm = f; break; }
+                } catch { /* invalid selector — try next */ }
+            }
+        }
+        if (!targetForm) {
+            targetForm = forms[0];
+            for (const f of forms) {
+                const method = await f.evaluate(el => (el.method || 'GET').toUpperCase());
+                if (method === 'POST') { targetForm = f; break; }
+            }
         }
 
         // 5. Inspect inputs in the form — identify honeypots vs real fields
@@ -332,18 +347,46 @@ async function submitForm(browser, draft, dryRun = false, override = null) {
             }
         }
 
-        // 7. Click submit button
-        const submitClicked = await targetForm.evaluate(form => {
-            const btn = form.querySelector('button[type="submit"], input[type="submit"], button:not([type])');
-            if (btn) { btn.click(); return true; }
-            return false;
-        });
+        // 7. Click submit button. If override provides submit_selectors
+        //    (B2 — non-standard submit elements like .send-btn, a.btn-submit,
+        //    div[role=button], JS-bound onclick), try each one first, then
+        //    fall back to the default heuristic chain. Click happens via
+        //    page.evaluate on the form so we can iterate selectors.
+        const submitClicked = await targetForm.evaluate((form, customSelectors) => {
+            const trySelectors = (sels) => {
+                for (const sel of sels) {
+                    let el = null;
+                    try { el = form.querySelector(sel); } catch { /* invalid selector */ }
+                    if (el) { el.click(); return sel; }
+                }
+                return null;
+            };
+            if (Array.isArray(customSelectors) && customSelectors.length > 0) {
+                const hit = trySelectors(customSelectors);
+                if (hit) return hit;
+            }
+            // Default heuristic fallback
+            const fallback = trySelectors([
+                'button[type="submit"]',
+                'input[type="submit"]',
+                'button:not([type])',
+            ]);
+            return fallback;
+        }, (override && Array.isArray(override.submit_selectors)) ? override.submit_selectors : null);
 
         if (!submitClicked) {
             result.status = 'fail';
             result.message = 'No submit button found in form';
             return result;
         }
+        // Annotate which selector path actually fired (override vs default)
+        // — useful for the dedup log and for the human-review screenshot path.
+        if (override && Array.isArray(override.submit_selectors) && override.submit_selectors.includes(submitClicked)) {
+            result.submitSelectorSource = 'override';
+        } else {
+            result.submitSelectorSource = 'default';
+        }
+        result.submitSelector = submitClicked;
 
         // 8. Wait for navigation/response
         try {
