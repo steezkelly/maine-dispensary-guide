@@ -1,0 +1,197 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Editorial Policy', href: '/about/editorial-policy' }
+];
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-07-11",
+  modifiedDate: "2026-07-11",
+  section: "About"
+};
+
+const faqData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is Maine Dispensary Guide content created?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every page is researched against primary sources (Maine OCP filings, Title 28-B statutes, legislative records, municipal opt-in ordinances) and written by a named editorial contributor. Pages are reviewed against the same primary sources before publication, then re-verified periodically — see the 'Last reviewed' badge on YMYL pages for the most recent verification date."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who writes for Maine Dispensary Guide?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Five named editorial contributors with public profiles: Steve Kelly (Founder & Publisher), Calvin Waters (Licensing & Compliance Analyst), Margaret Finch (Finance & Taxation Analyst), Eliot Nash (Market & Real Estate Analyst), Thalia Greene (Cultivation & Horticulture Reviewer). Bylines + credentials are linked from every content page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Maine Dispensary Guide handle corrections?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Corrections are tracked publicly at /about/corrections. When a factual error is identified, the affected page is updated with a dated correction note + visible changelog. The corrections log has been continuously maintained since launch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Maine Dispensary Guide contributors independent experts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maine Dispensary Guide's editorial contributors are researchers and analysts whose primary expertise is Maine cannabis regulatory, tax, and market analysis. The 'byline' on each page is the contributor's editorial role at MDG. Where a page benefits from outside legal, accounting, or horticultural review, that review is noted on the page."
+      }
+    }
+  ]
+};
+
+const jsonLd = JSON.stringify(faqData);
+---
+
+<Layout
+  title="Editorial Policy | Maine Dispensary Guide"
+  description="How Maine Dispensary Guide sources, writes, reviews, and corrects content. Includes our named-byline policy, primary-source attribution rules, AI disclosure, and the corrections workflow."
+  breadcrumbs={breadcrumbs}
+  article={article}
+>
+<style>
+  .editorial-policy { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+  .editorial-policy h1 { font-family: var(--font-serif); margin-bottom: 1rem; }
+  .editorial-policy h2 { font-family: var(--font-serif); color: var(--color-primary); margin-top: 3rem; margin-bottom: 1rem; font-size: 1.5rem; }
+  .editorial-policy h3 { font-family: var(--font-serif); color: var(--color-primary); margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.125rem; }
+  .editorial-policy p, .editorial-policy li { line-height: 1.8; margin-bottom: 1rem; }
+  .editorial-policy ul, .editorial-policy ol { padding-left: 1.5rem; }
+  .editorial-policy li { margin-bottom: 0.5rem; }
+  .editorial-policy .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+  .editorial-policy .policy-summary { background: rgba(88, 129, 87, 0.06); border-left: 4px solid var(--color-primary); padding: 1.5rem; margin: 2rem 0; border-radius: 4px; }
+  .editorial-policy .policy-summary h3 { margin-top: 0; }
+  .editorial-policy .faq-item { margin-bottom: 1.5rem; }
+  .editorial-policy .faq-item h3 { margin-bottom: 0.5rem; }
+</style>
+
+<article class="editorial-policy">
+  <h1>Editorial Policy</h1>
+  <p class="last-updated">Last updated: July 11, 2026</p>
+
+  <div class="policy-summary">
+    <h3>What we cover, briefly</h3>
+    <p>Maine Dispensary Guide publishes editorial coverage of the legal cannabis industry in Maine. We are a primary-source-first publication: our content is sourced from the Maine Office of Cannabis Policy (OCP), Title 28-B of the Maine Statutes, OCP-published rulemaking, municipal opt-in ordinances, legislative records, and direct interviews with operators and regulators. We publish operator profiles, market analysis, technical guides for cultivators and dispensary operators, and consumer-facing educational content.</p>
+  </div>
+
+  <section>
+    <h2>1. Sourcing Standards</h2>
+    <p>Every factual claim on a Maine Dispensary Guide page must trace to one of these source types:</p>
+    <ul>
+      <li><strong>Maine OCP filings, license data, opt-in records, and rulemaking</strong> — our primary source for license-type, dispensary-count, and zoning claims.</li>
+      <li><strong>Maine Statutes</strong> — Title 28-B (adult-use cannabis), Title 22 (medical cannabis), and IRS Section 280E for tax claims.</li>
+      <li><strong>Federal primary sources</strong> — DEA scheduling actions, IRS guidance, and federal regulatory bodies, where directly relevant.</li>
+      <li><strong>Documented operator interviews</strong> — operator interviews are conducted by named contributors and the transcript or audio is retained for editorial-record purposes. Operators are cited by business name + role when they grant permission.</li>
+      <li><strong>Third-party industry research</strong> — e.g., Whitney Economics reports cited with year + publication date + retrieval URL.</li>
+    </ul>
+    <p>Secondary reporting, syndication, and unsourced claims are not used. Where a citation is missing or an inference is required, the page must explicitly say so.</p>
+  </section>
+
+  <section>
+    <h2>2. Byline Policy</h2>
+    <p>Every page on mainedispensaryguide.com carries a named byline linked to an author profile. The five named editorial contributors are:</p>
+    <ul>
+      <li><strong>Steve Kelly</strong> — Founder &amp; Publisher</li>
+      <li><strong>Calvin Waters</strong> — Licensing &amp; Compliance Analyst</li>
+      <li><strong>Margaret Finch</strong> — Finance &amp; Taxation Analyst</li>
+      <li><strong>Eliot Nash</strong> — Market &amp; Real Estate Analyst</li>
+      <li><strong>Thalia Greene</strong> — Cultivation &amp; Horticulture Reviewer</li>
+    </ul>
+    <p>Each contributor's area of coverage is listed on their author profile page (see the authors index). Contributor expertise boundaries are respected: a tax page is written by Margaret Finch + reviewed against the latest OCP and IRS guidance, not by another contributor working outside their scope. Reviewer assignments rotate in pairs so no single point of editorial failure exists.</p>
+  </section>
+
+  <section>
+    <h2>3. Fact-Check Cadence</h2>
+    <p>Every page goes through three review phases before publication:</p>
+    <ol>
+      <li><strong>Drafted</strong> against primary sources, with inline citations to those sources.</li>
+      <li><strong>Reviewed</strong> by a second contributor against the same primary sources.</li>
+      <li><strong>Approved</strong> by an editorial signatory on YMYL pages (legal, tax, compliance, financial).</li>
+    </ol>
+    <p>YMYL pages — those in our legal, tax, compliance, finance, and health-adjacent content pillars — carry a "Last reviewed" badge documenting the most recent verification date and the reviewer pair. The cadence varies by content type: time-sensitive data (OCP license counts, tax rates, operating hours) is reviewed monthly; legal references (statutes, court rulings, OCP rulemaking) are reviewed quarterly at minimum.</p>
+  </section>
+
+  <section>
+    <h2>4. Corrections Workflow</h2>
+    <p>Corrections are tracked publicly at <a href="/about/corrections">/about/corrections</a>. The corrections log has been continuously maintained since launch and shows:</p>
+    <ul>
+      <li>The date an error was identified</li>
+      <li>The original claim and its source</li>
+      <li>The corrected claim and its source</li>
+      <li>The pages affected</li>
+      <li>The reviewer who signed off on the correction</li>
+    </ul>
+    <p>Corrections are dated at the time of correction, not retroactively. If a page was updated without an entry in the corrections log, that is itself a process violation we treat as a bug.</p>
+  </section>
+
+  <section>
+    <h2>5. Use of Automation and AI</h2>
+    <p>Maine Dispensary Guide uses LLM-based tooling as a productivity aid in editorial workflows — drafting, restructuring, citation formatting, editorial-routine research, and summarization. Specific rules:</p>
+    <ul>
+      <li>LLM-assisted drafting is always <em>reviewed by a named human contributor</em> against primary sources before publication. No page ships without a human-signed review.</li>
+      <li>LLMs do not generate authoritative claims from memory; all factual statements are sourced and reviewed against primary documents.</li>
+      <li>LLMs do not replace named byline attribution. The author of record for a page is always a named human contributor.</li>
+      <li>Editorial-routine pages (page templates, structured data, sitemap, etc.) may be partially LLM-generated under contributor review.</li>
+    </ul>
+    <p>Where LLM-assisted drafting is material to the page content, the date of the most recent AI-assisted review is documented in the page's authoring metadata. We treat undisclosed AI use as an editorial-integrity violation equivalent to an undisclosed contributor.</p>
+  </section>
+
+  <section>
+    <h2>6. Independence and Conflicts of Interest</h2>
+    <p>Maine Dispensary Guide is reader-supported and accepts limited vendor and CPA referral fees. All referral relationships are disclosed on the page where they appear, and on the <a href="/affiliate-disclosure">/affiliate-disclosure</a> page. Editorial contributors do not receive compensation contingent on a specific editorial outcome.</p>
+    <p>Where a contributor has an ownership, employment, or financial interest in a business they are reviewing, that interest is disclosed on the page. We treat undisclosed conflicts of interest as editorial-integrity violations.</p>
+  </section>
+
+  <section>
+    <h2>7. Sponsorship, Affiliate, and Disclosure</h2>
+    <p>Where a page is sponsored, sponsored content is disclosed at the top of the article with the named sponsor. Sponsored editorial is held to the same sourcing and fact-check standards as organic editorial.</p>
+    <p>Where a page includes an affiliate link or referral, the relationship is disclosed adjacent to the link. Affiliate relationships do not affect our editorial judgments or rankings.</p>
+  </section>
+
+  <section>
+    <h2>8. Press and Corrections Contact</h2>
+    <p>Corrections: <a href="mailto:editorial@mainedispensaryguide.com">editorial@mainedispensaryguide.com</a> (preferred for editorial-integrity inquiries)</p>
+    <p>Press: <a href="mailto:press@mainedispensaryguide.com">press@mainedispensaryguide.com</a></p>
+    <p>Operator and licensing inquiries: <a href="/contact">/contact</a></p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <script type="application/ld+json" set:html={jsonLd}></script>
+
+    <div class="faq-item">
+      <h3>How is Maine Dispensary Guide content created?</h3>
+      <p>Every page is researched against primary sources (Maine OCP filings, Title 28-B statutes, legislative records, municipal opt-in ordinances) and written by a named editorial contributor. Pages are reviewed against the same primary sources before publication, then re-verified periodically — see the "Last reviewed" badge on YMYL pages for the most recent verification date.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Who writes for Maine Dispensary Guide?</h3>
+      <p>Five named editorial contributors with public profiles: Steve Kelly (Founder &amp; Publisher), Calvin Waters (Licensing &amp; Compliance Analyst), Margaret Finch (Finance &amp; Taxation Analyst), Eliot Nash (Market &amp; Real Estate Analyst), Thalia Greene (Cultivation &amp; Horticulture Reviewer). Bylines + credentials are linked from every content page.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How does Maine Dispensary Guide handle corrections?</h3>
+      <p>Corrections are tracked publicly at <a href="/about/corrections">/about/corrections</a>. When a factual error is identified, the affected page is updated with a dated correction note + visible changelog. The corrections log has been continuously maintained since launch.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Are Maine Dispensary Guide contributors independent experts?</h3>
+      <p>Maine Dispensary Guide's editorial contributors are researchers and analysts whose primary expertise is Maine cannabis regulatory, tax, and market analysis. The "byline" on each page is the contributor's editorial role at MDG. Where a page benefits from outside legal, accounting, or horticultural review, that review is noted on the page.</p>
+    </div>
+  </section>
+</article>
+</Layout>
