@@ -185,6 +185,10 @@ function isDuplicateSend(toAddr, subj) {
   return data.emails.find(entry => {
     if (entry.status !== 'sent') return false;
     if (entry.email !== toAddr) return false;
+    // Legacy entries written before 2026-07-11 have no `subject` field at all.
+    // Skip them so they can't false-positive against a fresh send. New entries
+    // always have it (logSentEmail was fixed to write it).
+    if (!entry.subject) return false;
     if (entry.subject !== subj) return false;
     // entry.isoTimestamp (added 2026-07-10) is the precise send time. If
     // absent (legacy entry), the entry is too old to matter — we skip it.
@@ -327,7 +331,7 @@ function saveSentEmail({ to, subject, body, from, messageId }) {
 // both append, and the last writeFileSync would silently drop the other).
 const LOCK_DIR = path.join(path.dirname(TRACKING_FILE), '.email-tracking.lock');
 
-async function logSentEmail({ to, template, messageId }) {
+async function logSentEmail({ to, template, subject, messageId }) {
   // mkdir is atomic on POSIX: only one of N concurrent creators wins.
   // Spin until we acquire, with a short sleep between attempts.
   while (fs.existsSync(LOCK_DIR)) {
@@ -356,6 +360,12 @@ async function logSentEmail({ to, template, messageId }) {
       recipient: name,
       email: email,
       org: '',
+      // 2026-07-11 fix: write the subject into the tracking entry. Without
+      // this, isDuplicateSend()'s `entry.subject !== subj` check was always
+      // `undefined !== "real subject"` and the dedup gate never refused
+      // anything. logSentEmail now accepts `subject` and the call site
+      // passes it from the parsed CLI args.
+      subject: subject || '',
       template: template || 'unknown',
       messageId: messageId || '',
       status: 'sent',
@@ -516,7 +526,7 @@ Credentials:
     });
     console.log(`✓ Email sent successfully`);
     console.log(`  MessageId: ${result.messageId}`);
-    logSentEmail({ to: values.to, template: values.template, messageId: result.messageId });  // fire-and-forget; safe because the function holds its own lock and writes atomically
+    logSentEmail({ to: values.to, template: values.template, subject, messageId: result.messageId });  // fire-and-forget; safe because the function holds its own lock and writes atomically
     saveSentEmail({ to: values.to, subject, body, from: values.from, messageId: result.messageId });
     return result;
   } catch (error) {
