@@ -28,9 +28,54 @@ This is the signature of a **Google ranking surge across many pages simultaneous
 A pure ranking boost doesn't compound — it lasts until Google re-evaluates again. The post-spike drop suggests Google down-shifted the rankings back to baseline within a few days. The fact that the 7-day pre-spike trend was already pointing up (16→17→23) is the real positive signal; the spike was a temporary overshoot, not a new floor.
 
 ### What to investigate next
-1. **Cross-reference with GSC** — the daily `gsc-search-analytics.jsonl` only has snapshots from 2026-07-06 and 2026-07-10, both aggregated to ~3-day windows. To get the queries driving 2026-07-07 specifically, you'd need either (a) GSC's UI date-range filter for that exact day, or (b) a fresh GSC API call with a 1-day window. The `seo:gsc-search-analytics` daily cron uses `last_28_days` by default — needs a one-off manual call.
-2. **Check Wayback Machine / news mentions** for 2026-07-07 specifically to rule out external citation.
-3. **Compare position-rank from GSC** before/after to see which queries moved.
+1. ~~Cross-reference with GSC~~ ✅ DONE — see updated findings below
+2. Check Wayback Machine / news mentions for 2026-07-07 specifically to rule out external citation (low priority given GSC data confirms organic search)
+3. Compare position-rank from GSC before/after to see which queries moved.
+
+---
+
+## Finding 1.5: GSC confirms operator-name query mismatch (the actual driver)
+
+Pulled GSC data for 2026-07-07 specifically (`scripts/analytics/investigate-gsc-spike.cjs 2026-07-07`). The query list reveals the spike wasn't random — Google was routing **operator-name searches** to **town-guide pages** that mention the operator by name.
+
+**Top queries on 2026-07-07** (all operator-name searches):
+- `eclipse dispensary`, `eclipse cannabis`, `eclipse raymond maine` (7+6+4 imp)
+- `hidden greens buxton maine`, `hidden greens buxton` (5+4 imp)
+- `high road gray maine` (4 imp)
+- `great atlantic puffin company` (4 imp)
+- `above all greenery` (4 imp)
+- `420 mules` (2 imp)
+- `maine only bridgton`, `puffinco` (3+3 imp)
+
+**Pages Google ranked for these queries on 2026-07-07:**
+- `/guides/fryeburg-dispensary-guide` (26 imp, 1 click) — ranks for operator-name queries about operators IN Fryeburg
+- `/guides/bar-harbor-dispensary-guide` (25 imp) — same pattern
+- `/guides/raymond-dispensary-guide` (18 imp)
+- `/guides/maine-cannabis-marketing-compliance` (12 imp) — different topic, broad search
+- `/guides/great-atlantic-puffin-company` (11 imp) — **this IS an operator-profile page, got 11 impressions**
+- `/guides/above-all-greenery-dispensary` (9 imp) — operator-profile page
+- `/guides/420-mules-bar-harbor` (6 imp) — operator-profile page
+- `/guides/eclipse-cannabis-company` (4 imp) — operator-profile page
+- `/guides/hidden-greens-dispensary` (4 imp) — operator-profile page
+
+### Interpretation
+The "spike" was Google re-evaluating the disambiguation between town-guide pages and operator-profile pages. On this day, **the town-guide pages outranked the operator-profile pages for operator-name queries** — exactly the pattern the 2026-07-08 GSC+GA4 audit flagged as Finding #2 (`/docs/analytics/GSC_GA4_AUDIT_2026-07-08.md`).
+
+What makes this a "spike" and not the steady state: the audit data showed town-guide pages typically rank pos 5-9 for these queries with 0 clicks. On 2026-07-07, something pushed their rankings up across multiple pages simultaneously (likely a Google core update re-evaluation or freshness boost), which then drove the impression spike. The positions didn't stick long enough to convert to clicks (CTR remained 0% on most queries).
+
+### Why operator-profile pages aren't winning
+The town-guide pages have higher domain-internal authority (more internal links, more content, higher overall ranking signals) so when a query is ambiguous (e.g., "eclipse raymond maine" — could match town OR operator), Google defaults to the stronger page. The operator-profile pages exist but are underweighted in the internal-link graph.
+
+### Why this matters more than the original "spike" framing
+The spike itself was a one-day anomaly, but the **underlying mismatch** is a permanent issue costing MDG impressions and clicks every day. The 2026-07-08 audit estimated 89 of 100 pages had impressions but 0 clicks because of this exact pattern. Fixing this is the highest-ROI SEO work on the site.
+
+### Concrete next actions
+1. **Cross-link town-guide → operator-profile pages** with operator name as anchor text. Right now most operator mentions on town-guide pages are bare text or weak links. Add `[[operator-name]]` style interlinks (the existing `link-architect.cjs` should do this if the terms are in the glossary).
+2. **Add an "Operators in this town" section** at the top of each town-guide page that links explicitly to the operator-profile pages with the operator name as the anchor text.
+3. **Verify operator-profile pages have unique schema** (LocalBusiness + Organization, with the operator's name in the headline).
+4. **Register `userPseudoId` in GA** so we can track whether the people clicking through to operator profiles then convert via lead_capture. (Requires registering custom dimensions in GA Admin.)
+
+The `scripts/analytics/investigate-gsc-spike.cjs` script is now reusable for any future spike day.
 
 ---
 
