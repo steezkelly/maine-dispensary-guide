@@ -30,9 +30,10 @@
 
 interface Props {
   variant?: 'roicalc' | 'checklist' | 'optin' | 'press';
+  instanceId?: string;
 }
 
-const { variant = 'checklist' } = Astro.props;
+const { variant = 'checklist', instanceId } = Astro.props;
 
 const VARIANTS = {
   roicalc: {
@@ -87,7 +88,7 @@ const mailtoHref =
   encodeURIComponent(v.body);
 ---
 
-<aside class={`lead-capture-box card-elev-glow lcb-tone-${v.tone}`} aria-label={v.heading} data-variant={variant}>
+<aside class={`lead-capture-box card-elev-glow lcb-tone-${v.tone}`} aria-label={instanceId || v.heading} data-variant={variant}>
   <div class="lcb-eyebrow">{v.eyebrow}</div>
   <h2 class="lcb-heading">{v.heading}</h2>
   <p class="lcb-subhead">{v.subhead}</p>

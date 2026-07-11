@@ -352,7 +352,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             </div>
             <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
             {authorRecord && (
-              <aside class="article-author-footer" id={`author-${authorRecord.id}`}>
+              <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>
                 <div class="author-footer-card">
                   <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
                   <div class="author-footer-meta">
@@ -397,7 +397,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             </div>
           )}
           {article && authorRecord && (
-            <aside class="article-author-footer" id={`author-${authorRecord.id}`}>
+            <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>
               <div class="author-footer-card">
                 <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
                 <div class="author-footer-meta">
