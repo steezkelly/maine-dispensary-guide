@@ -388,9 +388,14 @@ async function submitForm(browser, draft, dryRun = false, override = null) {
         }
         result.submitSelector = submitClicked;
 
-        // 8. Wait for navigation/response
+        // 8. Wait for navigation/response. If override.wait_strategy.waitUntil
+        //    is set, use that value; otherwise default to 'networkidle'.
+        //    Per-draft control is what unblocks the B4 SPA forms
+        //    (findcannabis.com's claim-your-listing page destroys the
+        //    execution context on submit; 'networkidle' is the right wait).
+        const waitUntil = (override && override.wait_strategy && override.wait_strategy.waitUntil) || 'networkidle';
         try {
-            await page.waitForLoadState('networkidle', { timeout: 15000 });
+            await page.waitForLoadState(waitUntil, { timeout: 15000 });
         } catch {
             // Some forms don't navigate; continue
         }
