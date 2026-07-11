@@ -5,7 +5,7 @@ interface Props {
   level?: 'h2' | 'h3';
 }
 
-const { title, type = 'passion', level = 'h3' } = Astro.props;
+const { title, type = 'passion', level = 'h2' } = Astro.props;
 
 /* Fix 2026-07-06 (visual-readability-polish.md issue #2): tip and warning
    previously shared the ◆ glyph — semantic collision on a YMYL regulatory
