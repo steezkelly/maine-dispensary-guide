@@ -300,6 +300,118 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       gtag('js', new Date());
       gtag('config', analyticsId);
     </script>
+
+    <!--
+      Engagement instrumentation (scroll_depth, page_engaged, faq_open, cta_view).
+      Self-contained: no module imports (loaded before ESM bundle), no network
+      calls, no setInterval on tight loops. All work via passive listeners +
+      IntersectionObserver. Reference impl: src/lib/ga4.ts (typed helpers).
+    -->
+    <script is:inline>
+      (function () {
+        if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+
+        var path = window.location.pathname;
+        var title = document.title;
+        var pageType = document.body && document.body.dataset ? (document.body.dataset.pageType || '') : '';
+        var baseCtx = { page_path: path, page_title: title, page_type: pageType };
+
+        function send(name, params) {
+          try { window.gtag('event', name, Object.assign({}, baseCtx, params || {})); }
+          catch (_) { /* tracking must never break the page */ }
+        }
+
+        // --- scroll_depth (25/50/75/100) --------------------------------------
+        var scrollFired = { 25: false, 50: false, 75: false, 100: false };
+        var scrollPending = false;
+        function checkScroll() {
+          scrollPending = false;
+          var doc = document.documentElement;
+          var scrollTop = window.scrollY || doc.scrollTop || 0;
+          var viewport = window.innerHeight || doc.clientHeight || 0;
+          var total = (doc.scrollHeight || 0) - viewport;
+          if (total <= 0) return;
+          var pct = Math.min(100, Math.round((scrollTop / total) * 100));
+          var thresholds = [25, 50, 75, 100];
+          for (var i = 0; i < thresholds.length; i++) {
+            var t = thresholds[i];
+            if (!scrollFired[t] && pct >= t) {
+              scrollFired[t] = true;
+              send('scroll_depth', { percent: t });
+            }
+          }
+        }
+        function onScroll() {
+          if (scrollPending) return;
+          scrollPending = true;
+          (window.requestAnimationFrame || function (cb) { window.setTimeout(cb, 120); })(checkScroll);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        window.addEventListener('load', function () { setTimeout(checkScroll, 250); });
+
+        // --- page_engaged (30s of focus, or visible-again after hidden) ------
+        var engaged = false;
+        function markEngaged(reason) {
+          if (engaged) return;
+          engaged = true;
+          send('page_engaged', { reason: reason });
+        }
+        window.setTimeout(function () {
+          if (!document.hidden) markEngaged('timer_30s_visible');
+        }, 30000);
+        document.addEventListener('visibilitychange', function () {
+          if (!engaged && document.visibilityState === 'visible') {
+            markEngaged('visibility_returned');
+          }
+        });
+
+        // --- faq_open (delegated on <details data-faq>) ----------------------
+        document.addEventListener('toggle', function (ev) {
+          var t = ev.target;
+          if (!t || t.tagName !== 'DETAILS' || !t.hasAttribute('data-faq')) return;
+          if (!t.open) return;
+          var idx = 1;
+          var sib = t.parentElement && t.parentElement.firstElementChild;
+          while (sib) {
+            if (sib.tagName === 'DETAILS' && sib.hasAttribute('data-faq')) {
+              if (sib === t) break;
+              idx++;
+            }
+            sib = sib.nextElementSibling;
+          }
+          send('faq_open', {
+            faq_index: idx,
+            faq_id: t.getAttribute('data-faq-id') || '',
+            faq_question: (t.querySelector('summary') || {}).textContent || ''
+          });
+        }, true);
+
+        // --- cta_view (IntersectionObserver on [data-cta-id]) ---------------
+        if ('IntersectionObserver' in window) {
+          var seen = new WeakSet();
+          var io = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              var e = entries[i];
+              if (!e.isIntersecting) continue;
+              var el = e.target;
+              if (seen.has(el)) continue;
+              seen.add(el);
+              io.unobserve(el);
+              send('cta_view', {
+                cta_id: el.getAttribute('data-cta-id') || '',
+                cta_destination: el.getAttribute('href') || '',
+                cta_text: (el.textContent || '').trim().slice(0, 80)
+              });
+            }
+          }, { threshold: 0.5 });
+          document.addEventListener('DOMContentLoaded', function () {
+            var ctas = document.querySelectorAll('[data-cta-id]');
+            for (var j = 0; j < ctas.length; j++) io.observe(ctas[j]);
+          });
+        }
+      })();
+    </script>
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>

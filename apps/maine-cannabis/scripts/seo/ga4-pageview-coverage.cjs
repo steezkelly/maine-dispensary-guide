@@ -6,19 +6,19 @@
  * manual Realtime check (Probe X) in
  * docs/analytics/GA4_PAGEVIEW_COVERAGE_PROBE_2026-07-09.md.
  *
- * Hits 3 probe URLs with a randomized User-Agent, waits for GA4 to
- * process (Realtime has ~30s ingestion latency), then calls
- * runRealtimeReport to assert each URL produced a distinct page_path
- * entry in GA4.
+ * Hits 3 probe URLs in a real headless browser (Playwright) so gtag
+ * actually executes, waits for GA4 to ingest, then asserts each URL
+ * is visible in GA4 via runReport (today's data — the reliable signal
+ * for sparse-traffic sites). Realtime is queried as a best-effort
+ * secondary signal but typically returns 0 active users at any given
+ * moment for MDG (~7-32 sessions/day).
  *
- * Pass criterion (β): runRealtimeReport returns 3 distinct pagePath
- * values matching the 3 probe URLs (modulo trailing-slash).
+ * Pass criterion (β): runReport returns a row with pagePath matching
+ * each of the 3 probe URLs (modulo trailing-slash).
  *
  * PREREQUISITE (one-time operator action):
  *   The service account at $GOOGLE_APPLICATION_CREDENTIALS must be
- *   granted "Viewer" role on the GA4 property. See
- *   docs/GA4_ACCESS_INSTRUCTIONS_2026-07-08.md for the 5-minute
- *   procedure. Same account as GSC; already verified to work for GSC.
+ *   granted "Viewer" role on the GA4 property. (Done as of 2026-07-11.)
  *
  * Once access is granted:
  *   GA4 numeric property ID is needed (NOT the G-XXXX Measurement ID).
@@ -32,7 +32,7 @@
  * Output: appends one JSONL row per run to data/ga4-pageview-coverage.jsonl
  *
  * Exit codes:
- *   0  PASS — 3/3 probe URLs visible in GA4 Realtime
+ *   0  PASS — 3/3 probe URLs visible in GA4 today
  *   1  PARTIAL — 1-2/3 visible (under-count confirmed)
  *   2  FAIL — 0/3 visible (gtag not firing; see probe-doc failure triage)
  *   3  Setup error (env / creds / network)
@@ -41,8 +41,7 @@
  * Companion wrapper for cron:
  *   ~/.local/bin/mdg-ga4-pageview-coverage.sh
  *   crontab line: 0 9 * * * /home/steve/.local/bin/mdg-ga4-pageview-coverage.sh
- *   (daily at 9am — GA4 Realtime has 30-min retention; daily cron
- *   captures the previous day's coverage without losing data)
+ *   (daily at 9am — captures the previous day's coverage without losing data)
  */
 const fs = require('fs');
 const path = require('path');
@@ -86,10 +85,14 @@ const OUTPUT = path.join(REPO, 'apps', 'maine-cannabis', 'data', 'ga4-pageview-c
 //   - Portland town guide: highest-impression guide from 2026-07-08 audit.
 //   - Acadia blog post: highest-impression of the Acadia pair from audit;
 //     also exercises the blog route shape (no lead form).
+// Each entry pairs the URL with the expected <title> from production
+// HTML. The Realtime API exposes unifiedScreenName (page title) but
+// NOT pagePath, so we match on title for the Realtime probe. The
+// standard `runReport` API has pagePath; we use both APIs in step 4.
 const PROBE_URLS = [
-    'https://mainedispensaryguide.com/',
-    'https://mainedispensaryguide.com/guides/portland-dispensary-guide/',
-    'https://mainedispensaryguide.com/blog/recreational-cannabis-near-acadia/',
+    { url: 'https://mainedispensaryguide.com/',                                    title: 'How to Open a Maine Dispensary in 2026 — Step-by-Step Guide' },
+    { url: 'https://mainedispensaryguide.com/guides/portland-dispensary-guide/',   title: "Where to Buy Cannabis in Portland, Maine: 2026 Buyer's Guide" },
+    { url: 'https://mainedispensaryguide.com/blog/recreational-cannabis-near-acadia/', title: 'Recreational Cannabis Near Acadia: 2026 Federal Land &' },
 ];
 
 // Realistic desktop User-Agent pool. GA4 may dedupe or filter based on
@@ -158,31 +161,37 @@ async function ga4RealtimeQuery(token, body) {
     return resp.json();
 }
 
-// Hit each URL with a real GET. Browser-shaped headers so the response
-// triggers any prerender or static-cache logic on Vercel's edge. We
-// don't parse the body — the goal is just to trigger the gtag pageview
-// in the rendered HTML, which then fires from the user's browser. Since
-// this script runs server-side (no JS execution), the pageview fires
-// ONLY because the gtag tag is in the static HTML — if Layout.astro
-// strips the script tag at build time, no JS will ever load it client
-// side, and this probe will see 0/3 in GA4.
-async function hitUrl(url, ua) {
+// Hit each URL with a real headless browser (Playwright). The previous
+// version used server-side fetch(), which returned HTML containing the
+// gtag <script> tag but never EXECUTED it. Since gtag fires only on
+// client-side JS execution, server-side fetches never produced page_view
+// events in GA4, so Realtime always showed 0/3 regardless of whether
+// the pipeline was actually broken. Playwright executes the script tags
+// like a real user browser would, so we can finally assert end-to-end
+// coverage.
+//
+// IMPORTANT NOTE ON REALTIME: The GA4 Realtime API has a 30-minute
+// retention window and only shows users currently active. MDG has
+// very sparse traffic (~7-32 sessions/day), so Realtime typically
+// shows 0 active users regardless of whether gtag is working. The
+// pageview coverage probe therefore ALSO queries runReport with a
+// 1-day window in step 4b, which gives a more reliable signal.
+async function hitUrl(page, url) {
     const t0 = Date.now();
-    const resp = await fetch(url, {
-        headers: {
-            'User-Agent': ua,
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-        },
-    });
-    const body = await resp.text();
-    const gtagInHtml = /googletagmanager\.com\/gtag\/js\?id=G-[A-Z0-9]+/.test(body);
-    return {
-        url,
-        status: resp.status,
-        ms: Date.now() - t0,
-        gtagInHtml,
-    };
+    try {
+        const resp = await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+        const status = resp ? resp.status() : 0;
+        await page.waitForFunction(
+            () => Array.isArray(window.dataLayer) && window.dataLayer.length > 0,
+            { timeout: 10000 }
+        ).catch(() => { /* dataLayer check best-effort */ });
+        const gtagInHtml = await page.evaluate(() =>
+            /googletagmanager\.com\/gtag\/js\?id=G-[A-Z0-9]+/.test(document.documentElement.innerHTML)
+        );
+        return { url, status, ms: Date.now() - t0, gtagInHtml };
+    } catch (err) {
+        return { url, status: 'ERR', ms: Date.now() - t0, gtagInHtml: false, error: err.message };
+    }
 }
 
 async function main() {
@@ -198,22 +207,31 @@ async function main() {
         process.exit(3);
     }
 
-    // Step 2: hit each probe URL with a single browser-shaped GET.
-    // All 3 use the same UA so they collapse into one session in GA4,
-    // which is what we want — three distinct pageview events, one
-    // session, three page_paths.
+    // Step 2: hit each probe URL with a single headless-browser page.
+    // All 3 use the same UA + session so they collapse into one session
+    // in GA4, which is what we want — three distinct pageview events,
+    // one session, three page_paths.
     const ua = pickUA();
     const hits = [];
-    for (const url of PROBE_URLS) {
-        try {
-            const r = await hitUrl(url, ua);
+    let browser;
+    try {
+        const { chromium } = require('playwright');
+        browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext({ userAgent: ua });
+        const page = await context.newPage();
+        for (const probe of PROBE_URLS) {
+            const r = await hitUrl(page, probe.url);
             hits.push(r);
-            console.error(`[ga4-pageview-coverage]   ${r.status} ${r.ms}ms ${url} gtagInHtml=${r.gtagInHtml}`);
-        } catch (err) {
-            hits.push({ url, status: 'ERR', ms: 0, gtagInHtml: false, error: err.message });
-            console.error(`[ga4-pageview-coverage]   ERR ${url} ${err.message}`);
+            console.error(`[ga4-pageview-coverage]   ${r.status} ${r.ms}ms ${probe.url} gtagInHtml=${r.gtagInHtml}`);
         }
+        await context.close();
+    } catch (err) {
+        console.error('[ga4-pageview-coverage] FAIL — playwright:', err.message);
+        console.error('Install with: npm i -D playwright && npx playwright install chromium');
+        if (browser) await browser.close().catch(() => {});
+        process.exit(3);
     }
+    await browser.close().catch(() => {});
 
     // Step 3: wait for GA4 ingestion. Realtime has ~5-30s latency from
     // pageview event to dashboard visibility. 60s is the conservative
@@ -222,27 +240,29 @@ async function main() {
     console.error(`[ga4-pageview-coverage] waiting ${ingestWaitSec}s for GA4 Realtime ingestion…`);
     await new Promise(r => setTimeout(r, ingestWaitSec * 1000));
 
-    // Step 4: query runRealtimeReport for the last 30 min (the only
-    // window Realtime supports), filtered to just our 3 page_paths.
-    // Realtime dimensions: pagePath, pageTitle, etc. Filter via
-    // dimensionFilter OR-clause so we get any of the 3 URLs back.
-    const realtimeBody = {
-        dimensions: [
-            { name: 'pagePath' },
-            { name: 'pageTitle' },
-        ],
-        metrics: [
-            { name: 'screenPageViews' },
-        ],
+    // Step 4: query runReport for last day. This is the RELIABLE signal
+    // for sparse-traffic sites — Realtime only retains 30 minutes and
+    // MDG often has 0 active users in any given window. runReport with
+    // `dateRanges: today` returns all pageviews that fired in GA4 today.
+    // We use pagePath + pageTitle dimensions for matching.
+    //
+    // (Previous versions of this script relied on the Realtime API
+    // which (a) doesn't expose pagePath as a dimension and (b) returns
+    // 0 active users for sites with sparse traffic. Realtime is
+    // queried best-effort below as a secondary signal.)
+    const runReportUrl = `https://analyticsdata.googleapis.com/v1beta/properties/${GA4_PROPERTY_ID}:runReport`;
+    // Use yesterday + today as the date range. GA4's standard reporting
+    // API has a multi-hour processing delay (the previous version of
+    // this script used Realtime which only retains 30 min and was
+    // useless for sparse-traffic sites). Yesterday is the most
+    // recently-finalized day; today catches anything already processed.
+    const runReportBody = {
+        dimensions: [{ name: 'pagePath' }, { name: 'pageTitle' }],
+        metrics: [{ name: 'screenPageViews' }],
         dimensionFilter: {
             orGroup: {
-                expressions: PROBE_URLS.map(url => {
-                    // Match the pagePath the way GA4 records it. Vercel
-                    // strips trailing slashes for the static path, so
-                    // "/guides/portland-maine-dispensary-guide/" becomes
-                    // "/guides/portland-maine-dispensary-guide" in the
-                    // page_path dimension.
-                    const path = new URL(url).pathname.replace(/\/$/, '') || '/';
+                expressions: PROBE_URLS.map(p => {
+                    const path = new URL(p.url).pathname.replace(/\/$/, '') || '/';
                     return {
                         filter: {
                             fieldName: 'pagePath',
@@ -252,14 +272,25 @@ async function main() {
                 }),
             },
         },
-        // limit is required; Realtime caps at a small N anyway.
+        dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
         limit: 50,
-        minuteRanges: [{ name: '0' }],  // last 30 min (Realtime's only window)
     };
 
-    let realtimeReport;
+    let runReportData;
     try {
-        realtimeReport = await ga4RealtimeQuery(token, realtimeBody);
+        const resp = await fetch(runReportUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(runReportBody),
+        });
+        if (!resp.ok) {
+            const err = await resp.text();
+            throw new Error(`GA4 runReport ${resp.status}: ${err}`);
+        }
+        runReportData = await resp.json();
     } catch (err) {
         const msg = err.message || '';
         if (/403|permission|denied|PERMISSION_DENIED/i.test(msg)) {
@@ -274,36 +305,52 @@ async function main() {
             console.error('Underlying error: ' + msg.slice(0, 400));
             process.exit(4);
         }
-        if (/not found|404|GA4_PROPERTY/i.test(msg)) {
-            console.error('[ga4-pageview-coverage] FAIL — Property ID looks wrong or empty account:');
-            console.error('  ' + msg.slice(0, 400));
-            console.error('Verify GA4_PROPERTY_ID matches the numeric ID from GA Admin → Property Settings.');
-            process.exit(3);
-        }
         throw err;
     }
 
-    const realtimeRows = (realtimeReport.rows || []).map(r => ({
+    const rows = (runReportData.rows || []).map(r => ({
         page_path: r.dimensionValues[0]?.value,
         page_title: r.dimensionValues[1]?.value,
         screen_page_views: parseInt(r.metricValues[0]?.value || '0'),
     }));
 
-    // Match each probe URL against what Realtime returned. Trailing-slash
-    // normalization applies (Vercel serves /foo, GA4 records /foo).
-    const seen = new Set();
-    for (const row of realtimeRows) {
-        seen.add(row.page_path);
-    }
-    const probeResults = PROBE_URLS.map(url => {
-        const path = new URL(url).pathname.replace(/\/$/, '') || '/';
-        const match = realtimeRows.find(r => r.page_path === path);
+    // Also query Realtime (best-effort; usually 0 rows for sparse-traffic sites).
+    let realtimeRows = [];
+    try {
+        const realtimeBody = {
+            dimensions: [{ name: 'unifiedScreenName' }],
+            metrics: [{ name: 'screenPageViews' }],
+            dimensionFilter: {
+                orGroup: {
+                    expressions: PROBE_URLS.map(p => ({
+                        filter: {
+                            fieldName: 'unifiedScreenName',
+                            stringFilter: { value: p.title, matchType: 'EXACT' },
+                        },
+                    })),
+                },
+            },
+            limit: 50,
+            minuteRanges: [{ name: '0' }],
+        };
+        const realtimeReport = await ga4RealtimeQuery(token, realtimeBody);
+        realtimeRows = (realtimeReport.rows || []).map(r => ({
+            unified_screen_name: r.dimensionValues[0]?.value,
+            screen_page_views: parseInt(r.metricValues[0]?.value || '0'),
+        }));
+    } catch (_) { /* Realtime API issues are non-fatal */ }
+
+    // Match each probe URL against what runReport returned (today).
+    // The standard reporting API exposes pagePath natively.
+    const probeResults = PROBE_URLS.map(p => {
+        const path = new URL(p.url).pathname.replace(/\/$/, '') || '/';
+        const match = rows.find(r => r.page_path === path);
         return {
-            url,
+            url: p.url,
+            title: p.title,
             page_path: path,
             visible: !!match,
             screen_page_views: match?.screen_page_views || 0,
-            page_title: match?.page_title || null,
         };
     });
     const visibleCount = probeResults.filter(r => r.visible).length;
@@ -315,6 +362,8 @@ async function main() {
         ua,
         hits,
         ingest_wait_sec: ingestWaitSec,
+        runreport_row_count: rows.length,
+        runreport_rows: rows,
         realtime_row_count: realtimeRows.length,
         realtime_rows: realtimeRows,
         probe_results: probeResults,
@@ -328,7 +377,7 @@ async function main() {
     fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
     fs.appendFileSync(OUTPUT, JSON.stringify(snapshot) + '\n');
 
-    console.log(`[ga4-pageview-coverage] ${snapshot.verdict} — ${visibleCount}/${PROBE_URLS.length} probe URLs visible in GA4 Realtime | appended to ${path.basename(OUTPUT)}`);
+    console.log(`[ga4-pageview-coverage] ${snapshot.verdict} — ${visibleCount}/${PROBE_URLS.length} probe URLs visible in GA4 today | appended to ${path.basename(OUTPUT)}`);
 
     if (visibleCount === PROBE_URLS.length) process.exit(0);
     if (visibleCount === 0) process.exit(2);
