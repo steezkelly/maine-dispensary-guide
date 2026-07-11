@@ -18,34 +18,10 @@ const breadcrumbs = pathSegments.map((segment, index) => {
 
 const isHome = url.pathname === '/';
 
-// Use the same trailing-slash-free URL as the site's trailingSlash: 'never' config
-// so schema URLs match canonical/page URLs exactly
-const siteUrl = "https://mainedispensaryguide.com";
-
-const breadcrumbListSchema = !isHome ? {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": siteUrl
-    },
-    ...breadcrumbs.map((crumb, index) => ({
-      "@type": "ListItem",
-      "position": index + 2,
-      "name": crumb.label,
-      // href always has trailing slash from the map() above; strip it to match trailingSlash: 'never'
-      "item": siteUrl + crumb.href.replace(/\/$/, '')
-    }))
-  ]
-} : null;
+// BreadcrumbList JSON-LD is no longer emitted here — apps/maine-cannabis/src/layouts/Layout.astro
+// is the single source for it (with human-curated labels like 'ROI Calculator' instead of
+// the regex title-case 'Roi Calculator'). See Sprint 78z / 2026-07 BreadcrumbList de-dup.
 ---
-
-{!isHome && breadcrumbListSchema && (
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbListSchema)} />
-)}
 
 {!isHome && (
   <nav aria-label="Breadcrumb" class="breadcrumbs">
