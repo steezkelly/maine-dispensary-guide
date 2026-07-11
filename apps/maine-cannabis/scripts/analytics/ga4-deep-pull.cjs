@@ -151,16 +151,79 @@ async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '
 
 module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES };
 
-// CLI entry
-if (require.main === module) {
-  try {
-    validateEnv();
-    const dir = getOutputDir();
-    ensureDir(dir);
-    console.log(`[ga4-deep-pull] Output dir: ${dir}`);
-    console.log('[ga4-deep-pull] Scaffold OK — queries not yet implemented');
-  } catch (err) {
-    console.error(`[ga4-deep-pull] FAIL — ${err.message}`);
-    process.exit(1);
+const { google } = require('googleapis');
+
+async function run() {
+  validateEnv();
+  const dir = getOutputDir();
+  ensureDir(dir);
+  const rawDir = path.join(dir, 'raw');
+  const failuresPath = path.join(rawDir, '_failures.jsonl');
+
+  const auth = new google.auth.GoogleAuth({
+    scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
+  });
+  const authClient = await auth.getClient();
+  const client = google.analyticsdata({ version: 'v1beta', auth: authClient });
+
+  const failures = [];
+  const summary = [];
+  const startTime = Date.now();
+
+  for (const q of QUERIES) {
+    try {
+      const { rows, truncated, totalInResponse } = await runQuery(
+        client,
+        process.env.GA4_PROPERTY_ID,
+        q
+      );
+      const outPath = path.join(rawDir, `${q.name}.jsonl`);
+      const lines = rows.map(r =>
+        JSON.stringify({
+          dimensions: r.dimensions,
+          metrics: r.metrics,
+          _dateRange: '2020-01-01_to_today',
+          _truncated: truncated || undefined,
+          _totalAvailable: totalInResponse,
+        })
+      );
+      fs.writeFileSync(outPath, lines.join('\n') + (lines.length ? '\n' : ''));
+      const sample = rows.slice(0, 3);
+      console.log(`[${q.name}] ${rows.length} rows → raw/${q.name}.jsonl${truncated ? ' (TRUNCATED)' : ''}`);
+      console.log(`  sample: ${JSON.stringify(sample[0] || {})}`);
+      summary.push({
+        name: q.name,
+        rows: rows.length,
+        truncated,
+        totalAvailable: totalInResponse,
+        path: `raw/${q.name}.jsonl`,
+        note: q.note,
+      });
+    } catch (err) {
+      const failure = {
+        query: q.name,
+        error: err.message,
+        timestamp: new Date().toISOString(),
+      };
+      fs.appendFileSync(failuresPath, JSON.stringify(failure) + '\n');
+      failures.push(q.name);
+      console.error(`[${q.name}] FAIL — ${err.message}`);
+      summary.push({ name: q.name, rows: 0, failed: true, error: err.message });
+    }
   }
+
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  console.log(`\n[ga4-deep-pull] Done in ${elapsed}s — ${summary.length - failures.length}/${summary.length} queries OK, ${failures.length} failed`);
+
+  fs.writeFileSync(
+    path.join(rawDir, '_summary.json'),
+    JSON.stringify({ summary, failures, elapsed, propertyId: process.env.GA4_PROPERTY_ID }, null, 2)
+  );
+}
+
+if (require.main === module) {
+  run().catch(err => {
+    console.error(`[ga4-deep-pull] FATAL — ${err.message}`);
+    process.exit(1);
+  });
 }
