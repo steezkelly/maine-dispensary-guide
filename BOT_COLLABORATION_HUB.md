@@ -6552,3 +6552,55 @@ this without code change; full inventory captured in the Hub commit message.
 - Re-measurement on 2026-07-13 to confirm 78g-1 canonical rewrite is being picked up by Google: deferred.
 
 Total impression haul addressed this commit: ~150 imp/month at 0% → ~1.5 clicks/month expected (small but free upside; the real SEO gain on this site is from the backlink campaign, not page-level changes).
+
+## 📋 SPRINT 78j — LIMESTONE-LICK-INNIT (Jul 10, 2026 EDT, seventh session) — `bfed4455` (force-pushed over `79c70b4f`)
+
+> **Important:** This sprint was tagged "78j" by the parent Sprint-78 plan but its actual deliverable is a single town-guide rewrite (Phase 2 of the skill-magnified dual-sprint plan). The "j" naming continues the Sprint 78 series (78g = canonical rewrites, 78h = competitor gap, 78i = roi-calculator fix, 78j = limestone town rewrite).
+
+- **Why:** v2 GSC (28d 2026-06-09 → 2026-07-07) showed `/guides/limerick-dispensary-guide` ranked for 347 impressions on brand-named queries (`founding farmers limerick maine` 156 imp pos 5.44, `founding farmers` 51 imp pos 1.0) with 0 clicks. Pre-rewrite diagnostic confirmed Title + meta + body already contain the brand + address + license info (verified live in production via curl). The structural gap was twofold:
+  - H1 didn't lead with the brand searcher was typing
+  - Frontmatter FAQPage schema was DECLARED in frontmatter but never rendered (pre-existing "declared but never read" TS warning) — so the page had 0 FAQPage schema in production despite the JS variable in source
+- **What shipped (1 atomic commit `bfed4455`, force-pushed over `79c70b4f` after self-review caught the duplicate-FAQPage schema path), all live:**
+  - `bfed4455 fix(seo): Sprint 78j — limerick brand-leader H1 + emit FAQPage schema` — 3 files, +160 −4.
+    - `apps/maine-cannabis/src/pages/guides/limerick-dispensary-guide.astro`:
+      - H1: `Limerick Maine Dispensary Guide` → `Founding Farmers — Limerick Maine Dispensary` (brand-leader first; mirrors `<title>` structure; exact token order matches dominant 156-imp search query `founding farmers limerick maine`)
+      - Frontmatter FAQPage JSON-LD: added a brand-leader Q1 ("Founding Farmers Limerick Maine") as the literal first entry, matching the dominant search query 1:1 for Google's NLP FAQ rich-result eligibility
+      - FAQPage now contains 5 Q's (parity with the rendered `<Faq>` component, was 4 → 5)
+      - Added `<script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>` emission at end of article (closes pre-existing "declared but never read" bug)
+      - Set `withoutSchema` prop on the rendered `<Faq>` component (Sprint 78ab precedent) so the package's auto-emitted FAQPage doesn't duplicate the brand-leader schema this page now composes explicitly
+      - `modifiedDate: "2026-05-13"` → `"2026-07-10"` (sitemap re-prior, per Sprint 78e precedent; reversible with single revert)
+    - `tests/sprint-78j-limerick.test.mjs` (NEW): 11 RED-GREEN TDD checks. Includes:
+      - H1 leads with brand-leader
+      - FAQPage JSON-LD has exactly 5 Q's (parity)
+      - FAQPage first Q matches dominant search query literal
+      - modifiedDate bumped to 2026-07-10
+      - Address 16 Main Street preserved
+      - Phone (207) 315-5259 preserved
+      - Reviewers Calvin Waters + Margaret Finch present
+      - Primary source ffmaine.com preserved
+      - JSON-LD emission block present (closes the declared-but-never-used-var bug)
+      - **`<Faq>` uses `withoutSchema={true}`** (the duplicate-schema escape hatch — added in self-review after first commit caught 2 FAQPage blocks in production HTML)
+    - `apps/maine-cannabis/src/data/autoRelatedData.json` (auto-regenerated as part of pre-push verify)
+- **Verification trail:**
+  - All 11/11 test checks pass
+  - `npm run verify:iterate`: parse + filtered astro check + sitemap + docs-vs-code + compressed-frontmatter + hero-image-naming — all PASS
+  - Pre-push hook ran on push: same gates, all clean
+  - Curl probe of `https://mainedispensaryguide.com/guides/limerick-dispensary-guide/` after Vercel deploy settled: HTTP 200, exactly 1 FAQPage block (was 2 before withoutSchema fix), Q1 = "Founding Farmers Limerick Maine", H1 = "Founding Farmers — Limerick Maine Dispensary"
+  - H1 confirmed renders in production HTML
+  - Verified via curl after final push that the schema is exactly one block — no duplicate FAQPage
+- **YMYL audit:**
+  - PASS. Every claim in the new schema Q1 answer is anchored to facts that already exist on the page and that the verifier footer attests to: address (`16 Main Street`), phone (`(207) 315-5259`), founding year (2021, cited to operator site), medical focus (matches page body), hours (explicitly flagged "verify by phone"). No fabricated product-menu enumeration.
+  - The first Q1 draft included a 6-category product list (flower/pre-rolls/vapes/concentrates/tinctures/edibles) that was NOT sourced to a primary source. Caught by the yml audit pattern. Simplified to "carry a range of medical marijuana products" (matches existing page-body language).
+- **Bonus finding (pre-existing bug closed):**
+  - Pre-existing `faqPageJsonLd` frontmatter constant was declared but never rendered. TypeScript emitted "declared but never read" warning. The page had zero FAQPage schema served to Google before this sprint despite the source code declaring a structured FAQ. After the Sprint 78j change, the page emits one FAQPage block matching the rendered Faq component (5 Q's, Q1 matches dominant search query).
+- **Self-review delta:** The first commit (`79c70b4f`) had TWO FAQPage blocks in production HTML (one from the rendered `<Faq>` package auto-emission, one from my new explicit emission). Google would see two FAQPage nodes with different Q1 names. Caught by curling the live URL after the first push. The fix used the existing `withoutSchema` escape hatch on the Faq component (Sprint 78ab precedent) and was folded into a single atomic intent ("emit the right FAQPage schema, in the right place, once") using git `--amend` locally, then re-pushed as `bfed4455` via `--force-with-lease` (this was the user's explicit approval — the safety gate blocked the bare `--force-with-lease` first, requiring a human-confirm step because rewriting remote history).
+- **Carry-forward for next agent:**
+  - The weekly v3-GSC re-measurement cron (Phase 2.8) is queued; this commit message should be referenced from the cron prompt as the 78j baseline (pre: 0/347 clicks on limerick-dispensary-guide over 28d, post: TBD after the cron fires).
+  - If CTR moves from 0.00% to anything > 0.10%, the H1-brand-leader lever generalizes to: gray (121 imp pos 7.94 on `high road gray`), buxton (83 imp pos 7.17 on `hidden greens buxton`), and fryeburg (37 imp pos 6.86 on `puffin co fryeburg`, plus 89 imp pos 6.92 on generic `dispensary fryeburg maine`). Each has the same structural pattern (brand-dominated impressions, 0% CTR, generic H1 leading the page).
+  - If CTR stays flat, the Sprint 78g-misroute-audit memory finding from earlier today (2026-07-10 12:04) is the right read: 0% CTR is a domain-authority problem (4 backlinks from 2 referring domains for the whole site, per openseo `get_backlinks_overview`), not an on-page SEO problem. Operator should redirect sprint cycles from on-page CTR tweaks to backlink outreach.
+  - The fix-the-declared-but-unused-var pattern (closing pre-existing bugs while doing a sprint edit) is widely applicable in this repo — many town-guide pages declare `faqPageJsonLd` in frontmatter but never emit it. The Hub entry's "Bonus finding" section above is a candidate to become a project-wide rollout in a future sprint (estimate: scan `apps/maine-cannabis/src/pages/guides/*.astro` for the bug class, then either auto-fix or document each one). Out of scope for 78j.
+- **Deferred items (named explicitly — do not bury):**
+  - **Apply the same fix to the other 3 brand-dominated town guides** (fryeburg, gray, buxton). Deferred: the v3-GSC cron is the right next measurement; running all 4 in one sprint would conflate "individual fix" with "batch effect" and lose the ability to attribute CTR movement to a single lever. After the first cron cycle, if H1 + emit-FAQPage moves limerick's CTR, run gray + buxton in the same pattern; fryeburg has a more mixed query set (some brand-named, some generic) so it may need the Variant-B trust-first retrofit instead.
+  - **Cite-this extension.** Per R7 of the handoff, cite-this is locked as separate work. The cite-this component exists at `apps/maine-cannabis/src/components/CiteThis.astro` and the citation registry at `apps/maine-cannabis/src/data/citations.json` has 2 entries (roi-calculator + market-stats). Adding limerick to the registry is a follow-on commit, not part of 78j.
+  - **Project-wide "declared-but-unused FAQPage" scan + rollout.** Out of scope for 78j; future sprint.
+
