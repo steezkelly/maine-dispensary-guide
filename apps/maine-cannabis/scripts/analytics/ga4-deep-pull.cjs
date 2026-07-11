@@ -149,7 +149,26 @@ async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '
   return { rows, truncated, totalInResponse };
 }
 
-module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES };
+function writeMeta(rawDir, summary, failures, elapsed) {
+  const totalRows = summary.reduce((acc, s) => acc + (s.rows || 0), 0);
+  const truncated = summary.filter(s => s.truncated).map(s => `${s.name}:hit rowCap`);
+  const meta = {
+    runAt: new Date().toISOString(),
+    propertyId: process.env.GA4_PROPERTY_ID,
+    measurementId: 'G-614GHG67ZQ',
+    queriesRun: summary.length,
+    queriesFailed: failures.length,
+    totalRows,
+    dateRange: { start: '2020-01-01', end: 'today' },
+    truncated,
+    partial: failures.length > 0,
+    elapsedSeconds: parseFloat(elapsed),
+  };
+  fs.writeFileSync(path.join(rawDir, 'meta.json'), JSON.stringify(meta, null, 2));
+  return meta;
+}
+
+module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES, writeMeta };
 
 const { google } = require('googleapis');
 
@@ -215,10 +234,15 @@ async function run() {
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log(`\n[ga4-deep-pull] Done in ${elapsed}s — ${summary.length - failures.length}/${summary.length} queries OK, ${failures.length} failed`);
 
+  // Write summary (for downstream writer passes)
   fs.writeFileSync(
     path.join(rawDir, '_summary.json'),
     JSON.stringify({ summary, failures, elapsed, propertyId: process.env.GA4_PROPERTY_ID }, null, 2)
   );
+
+  // Write meta.json
+  const meta = writeMeta(rawDir, summary, failures, elapsed);
+  console.log(`[ga4-deep-pull] meta.json written — ${meta.totalRows} total rows, ${meta.queriesFailed} failures`);
 }
 
 if (require.main === module) {
