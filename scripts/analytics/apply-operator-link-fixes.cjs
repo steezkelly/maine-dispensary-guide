@@ -4,10 +4,14 @@
  * pages that the scanner (find-missing-operator-links.cjs) flagged.
  *
  * Strategy: for each (town, operator) pair flagged by the scanner:
- *   1. Find the FIRST <p>...</p> body paragraph (skip FAQ JSON, table cells,
- *      h1-h3 headings) that contains the operator's display name.
- *   2. Wrap the operator's display name as an anchor link to the profile.
- *   3. Write back.
+ *   1. Skip lines inside the frontmatter (--- ... ---) block — those are
+ *      JS code, not HTML body, and inserting <a> tags there breaks the page.
+ *   2. Skip lines inside h1-h6 headings.
+ *   3. Skip lines without body HTML tags (defensive).
+ *   4. Skip lines where the operator name is already inside an existing <a> tag.
+ *   5. Find the FIRST body paragraph / list item / table cell with the
+ *      operator name, wrap it as an anchor link to the profile.
+ *   6. Write back.
  *
  * Idempotent: re-runs are no-ops if the link is already in place.
  *
@@ -15,9 +19,11 @@
  */
 const fs = require('node:fs');
 const path = require('node:path');
+const { execSync } = require('child_process');
 
 const GUIDES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages', 'guides');
 
+// Operator display names used as the search needle in town pages.
 const OPERATOR_DISPLAY = {
   'above-all-greenery-dispensary': 'Above All Greenery',
   'eclipse-cannabis-company': 'Eclipse',
@@ -30,18 +36,15 @@ const OPERATOR_DISPLAY = {
   '420-mules-bar-harbor': '420 Mules',
 };
 
-const SCANNER = require('child_process').execSync(
+const SCANNER = execSync(
   'node ' + path.join(__dirname, 'find-missing-operator-links.cjs'),
   { encoding: 'utf8' }
 );
 
-// Parse scanner output: lines like
-//   "<file> mentions \"<name>\" (<n>x) but does NOT link to <path>"
-//   "    line(s): <list>"
+// Parse scanner output: 2-space-indented "file mentions name (Nx) ..." + "    line(s): ..." pair
 const FLAGGED = [];
 let cur = null;
 for (const rawLine of SCANNER.split('\n')) {
-  // Lines are 2-space-indented: '  <file>.astro mentions "<name>" (Nx) but does NOT link to <path>'
   const line = rawLine.replace(/^\s+/, '');
   const m = line.match(/^(\S+\.astro) mentions "([^"]+)" \((\d+)x\) but does NOT link to (\S+)/);
   if (m) {
@@ -55,6 +58,25 @@ for (const rawLine of SCANNER.split('\n')) {
 console.log(`Applying fixes to ${FLAGGED.length} (town, operator) pairs:\n`);
 
 let fixed = 0, skipped = 0, errors = 0;
+
+function findFrontmatterRanges(content) {
+  const lines = content.split('\n');
+  const ranges = [];
+  let inFm = false;
+  let fmStart = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^---$/.test(lines[i])) {
+      if (!inFm) {
+        inFm = true;
+        fmStart = i;
+      } else {
+        inFm = false;
+        ranges.push({ start: fmStart, end: i });
+      }
+    }
+  }
+  return ranges;
+}
 
 for (const flag of FLAGGED) {
   const filePath = path.join(GUIDES_DIR, flag.town);
@@ -72,34 +94,32 @@ for (const flag of FLAGGED) {
     continue;
   }
 
-  // Build the anchor link with the operator's display name
+  // Identify lines inside frontmatter (--- block) — off-limits
+  const frontmatterRanges = findFrontmatterRanges(content);
+
+  // Build the regexes for this operator
   const escapedName = flag.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const nameRe = new RegExp(`\\b${escapedName}\\b`);
   const linkRe = new RegExp(`<a[^>]*href=["']${profilePath.replace(/\//g, '\\/')}["'][^>]*>${escapedName}</a>`);
-  const tagOpenRe = new RegExp(`<a\\b[^>]*>(?!</a>)`);
-  const tagCloseRe = /<\/a>/;
+  // Detect any existing <a>...</a> segment on the line (greedy match for nested)
+  const anchorSegmentRe = /<a\b[^>]*>.*?<\/a>/g;
 
   const lines = content.split('\n');
   let applied = false;
-  // Build a separate regex that detects "is the operator name inside an
-  // existing <a>...</a> block on this line?". Used to avoid nesting
-  // anchors. We split the line into segments-by-existing-anchor and
-  // only insert the new link in segments that don't have one.
-  const anchorSegmentRe = /<a\b[^>]*>.*?<\/a>/g;
-
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    const lineNum = i + 1; // 1-indexed
     if (!nameRe.test(line)) continue;
     if (linkRe.test(line)) continue; // operator name already linked
-    // Skip lines that are inside JSON.stringify FAQ (frontmatter const)
-    if (/^const faqPageJsonLd\s*=/.test(line) || /^const \w+PageJsonLd\s*=/.test(line)) continue;
-    if (/faqPageJsonLd|PageJsonLd/.test(line)) continue;
-    // Skip h1-h6 headings (operate on body paragraphs, list items, table cells)
+    // Skip if line is inside frontmatter (--- block) — those are JS code
+    if (frontmatterRanges.some(r => lineNum >= r.start + 1 && lineNum <= r.end + 1)) continue;
+    // Skip h1-h6 headings
     if (/<h[1-6][\s>]/.test(line)) continue;
+    // Skip lines that don't have body HTML tags (defensive — would catch
+    // any frontmatter leftovers the frontmatter detector missed)
+    if (!/<(p|li|td|th|dd|blockquote)\b/.test(line)) continue;
 
-    // Find segments of the line that are NOT inside an existing anchor.
-    // We do this by replacing anchor segments with sentinels, then
-    // applying the name match only to non-sentinel segments.
+    // Find segments of the line that are NOT inside an existing anchor
     const anchorRanges = [];
     let m;
     anchorSegmentRe.lastIndex = 0;
@@ -116,7 +136,7 @@ for (const flag of FLAGGED) {
     const newLine = `${before}<a href="${profilePath}">${matched}</a>${after}`;
     lines[i] = newLine;
     applied = true;
-    break; // only fix the first eligible match per (town, operator) pair
+    break; // one fix per (town, operator) pair
   }
 
   if (!applied) {
