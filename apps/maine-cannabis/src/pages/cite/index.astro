@@ -1,0 +1,166 @@
+---
+/**
+ * /cite — Citation index for every citable page on Maine Dispensary Guide.
+ *
+ * Hub page that lists every entry in `src/data/citations.json`, each linking
+ * to its DOI-style permalink at `/cite/<slug>`. The actual citation landing
+ * (with copy buttons, BibTeX, etc.) lives at `/cite/[slug].astro`.
+ *
+ * Style mirrors privacy.astro / affiliate-disclosure.astro: max-width 800px
+ * legal-ish layout with var(--font-serif) + var(--color-primary) headings.
+ */
+
+import Layout from '../../layouts/Layout.astro';
+import citationsData from '../../data/citations.json';
+
+interface SectionLink {
+  label: string;
+  anchor: string;
+}
+
+interface AuthorEntry {
+  surname: string;
+  initials: string;
+  full: string;
+}
+
+interface CitationPage {
+  slug: string;
+  page_url: string;
+  title: string;
+  authors: AuthorEntry[];
+  authors_apa: string;
+  authors_plain: string;
+  authors_bib: string;
+  authors_label: string;
+  publish_date: string;
+  reviewed_by: string;
+  section: string;
+  short_citation: string;
+  sections: SectionLink[];
+}
+
+const registry = citationsData as { pages: CitationPage[] };
+const pages = registry.pages;
+
+// Compute a BibTeX key + URL preview per entry. We don't render the full
+// short-hash here (that's what /cite/<slug> shows), just the canonical
+// short-form permalink the index should link to.
+function bibKeyFor(p: CitationPage): string {
+  const [year] = p.publish_date.split('-');
+  return `${p.authors[0].surname.toLowerCase()}${year}${p.slug.replace(/-/g, '')}`;
+}
+
+const meta = (citationsData as { _meta?: { license?: string; updated?: string } })._meta ?? {};
+const licenseLabel = meta.license ?? 'CC BY 4.0';
+const updatedLabel = meta.updated ?? '';
+---
+
+<Layout
+  title="Citable Sources & Citation Index | Maine Dispensary Guide"
+  description="Every citation handle for Maine Dispensary Guide data, statistics, and ROI benchmarks. Journalists and researchers: use these DOI-style permalinks to cite our work."
+  heroImage="/images/heroes/about.jpg"
+  article={{
+    author: 'Eliot Nash',
+    authorId: 'editorial-pool',
+    publishDate: '2026-07-09',
+    modifiedDate: '2026-07-09',
+    section: 'About',
+  }}
+>
+  <style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-serif); margin-bottom: 1.5rem; }
+    .lede { font-size: 1.0625rem; line-height: 1.8; margin-bottom: 2.5rem; color: var(--color-text); }
+    section { margin-bottom: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); }
+    h2 .slug { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.875rem; color: var(--color-text-light); font-weight: 400; margin-left: 0.5rem; }
+    p, li { line-height: 1.8; }
+    .meta-line { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .cite-link { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.875rem; margin: 0.5rem 0 1rem; }
+    .bibtex {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.875rem 1rem;
+      margin-top: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .registry-info { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+    .registry-info p { font-size: 0.9375rem; }
+  </style>
+
+  <article class="legal-page">
+    <h1>Citable Sources &amp; Citation Index</h1>
+    <p class="last-updated">
+      Last Updated: {updatedLabel || 'July 9, 2026'} · License: {licenseLabel}
+    </p>
+
+    <p class="lede">
+      Every citation handle for Maine Dispensary Guide data, statistics, and ROI benchmarks.
+      Journalists, researchers, and policy analysts: use the DOI-style permalinks below to cite
+      our work. Each entry links to a canonical citation landing with copy-ready APA, Chicago,
+      short-form, and BibTeX formats.
+    </p>
+
+    <p class="lede">
+      Adding a new citable page = one entry in <code>src/data/citations.json</code>. No code change required.
+    </p>
+
+    {pages.map((p) => {
+      const bibKey = bibKeyFor(p);
+      const [year] = p.publish_date.split('-');
+      const bibtex = `@misc{${bibKey},
+  author  = {${p.authors_bib}},
+  title   = {${p.title}},
+  year    = {${year}},
+  url     = {${p.page_url}},
+  note    = {Maine Dispensary Guide. Published ${p.publish_date}. Reviewed by ${p.reviewed_by}. DOI-style permalink: https://mainedispensaryguide.com/cite/${p.slug}}
+}`;
+      return (
+        <section id={p.slug}>
+          <h2>
+            {p.title}
+            <span class="slug">/{p.slug}</span>
+          </h2>
+          <p class="meta-line">
+            <strong>By:</strong> {p.authors_label} ·
+            <strong>Published:</strong> {p.publish_date} ·
+            <strong>Section:</strong> {p.section}
+          </p>
+          <p class="meta-line">
+            <strong>Source page:</strong> <a href={p.page_url}>{p.page_url}</a>
+          </p>
+          <p>
+            <a class="cite-link" href={`/cite/${p.slug}`}>Cite this page → /cite/{p.slug}</a>
+          </p>
+          <pre class="bibtex"><code>{bibtex}</code></pre>
+        </section>
+      );
+    })}
+
+    <section class="registry-info">
+      <h2>About this index</h2>
+      <p>
+        This page is the human-browsable index for Maine Dispensary Guide's citation registry.
+        The full citation format options (APA, Chicago, short-form, plain-text, BibTeX with copy
+        buttons) are available at each <code>/cite/&lt;slug&gt;</code> permalink.
+      </p>
+      <p>
+        All data and prose on cited pages are released under
+        <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International ({licenseLabel})</a>.
+        Attribution to the named author(s) and a link back to the source page is the only requirement.
+      </p>
+      <p>
+        Editor-pair review on file. Methodology and reviewer bios at
+        <a href="/about/corrections">/about/corrections</a> and
+        <a href="/about/authors">/about/authors</a>.
+      </p>
+    </section>
+  </article>
+</Layout>
