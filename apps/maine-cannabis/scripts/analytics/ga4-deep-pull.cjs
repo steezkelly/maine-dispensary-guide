@@ -168,7 +168,92 @@ function writeMeta(rawDir, summary, failures, elapsed) {
   return meta;
 }
 
-module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES, writeMeta };
+function readJsonl(filePath) {
+  if (!fs.existsSync(filePath)) return [];
+  const content = fs.readFileSync(filePath, 'utf8').trim();
+  if (!content) return [];
+  return content.split('\n').map(line => JSON.parse(line));
+}
+
+function tableFromRows(rows, dimKeys, metKeys) {
+  if (!rows.length) return '_no rows_';
+  const header = '| ' + [...dimKeys, ...metKeys].join(' | ') + ' |';
+  const sep = '|' + [...dimKeys, ...metKeys].map(() => '---').join('|') + '|';
+  const body = rows.slice(0, 20).map(r => {
+    const dims = dimKeys.map(k => String(r.dimensions[k] ?? '').replace(/\|/g, '\\|')).join(' | ');
+    const mets = metKeys.map(k => String(r.metrics[k] ?? '')).join(' | ');
+    return `| ${dims} | ${mets} |`;
+  }).join('\n');
+  return `${header}\n${sep}\n${body}`;
+}
+
+function writeIndexMd(dir, meta, summary) {
+  const rawDir = path.join(dir, 'raw');
+  const timeseries = readJsonl(path.join(rawDir, 'timeseries.jsonl'));
+  const pageviews = readJsonl(path.join(rawDir, 'pageviews.jsonl'));
+  const geo = readJsonl(path.join(rawDir, 'geography.jsonl'));
+  const acq = readJsonl(path.join(rawDir, 'acquisition.jsonl'));
+  const tech = readJsonl(path.join(rawDir, 'technology.jsonl'));
+  const leads = readJsonl(path.join(rawDir, 'lead_capture.jsonl'));
+  const newRet = readJsonl(path.join(rawDir, 'new_vs_returning.jsonl'));
+
+  const totalUsers = timeseries.reduce((s, r) => s + (r.metrics.users || 0), 0);
+  const totalSessions = timeseries.reduce((s, r) => s + (r.metrics.sessions || 0), 0);
+  const totalPageviews = timeseries.reduce((s, r) => s + (r.metrics.screenPageViews || 0), 0);
+  const totalEvents = timeseries.reduce((s, r) => s + (r.metrics.eventCount || 0), 0);
+
+  const sortBy = (rows, metric) => [...rows].sort((a, b) => (b.metrics[metric] || 0) - (a.metrics[metric] || 0));
+
+  const lines = [
+    `# GA4 Deep Pull — ${meta.runAt.slice(0, 10)}`,
+    ``,
+    `**Property:** ${meta.propertyId} (G-614GHG67ZQ) | **Date range:** ${meta.dateRange.start} to ${meta.dateRange.end} | **Rows:** ${meta.totalRows}`,
+    ``,
+    `## Headline`,
+    ``,
+    `- **Total users:** ${totalUsers.toLocaleString()}`,
+    `- **Total sessions:** ${totalSessions.toLocaleString()}`,
+    `- **Total pageviews:** ${totalPageviews.toLocaleString()}`,
+    `- **Total events:** ${totalEvents.toLocaleString()}`,
+    `- **lead_capture events:** ${leads.reduce((s, r) => s + (r.metrics.eventCount || 0), 0).toLocaleString()}`,
+    ``,
+    `## By page (top 20 of ${pageviews.length})`,
+    ``,
+    tableFromRows(sortBy(pageviews, 'screenPageViews'), ['pagePath', 'pageTitle'], ['screenPageViews', 'engagementDuration', 'bounceRate']),
+    ``,
+    `## By geography (top 20 of ${geo.length})`,
+    ``,
+    tableFromRows(sortBy(geo, 'totalUsers'), ['country', 'city', 'region'], ['totalUsers', 'sessions']),
+    ``,
+    `## By source (top 20 of ${acq.length})`,
+    ``,
+    tableFromRows(sortBy(acq, 'sessions'), ['sessionSource', 'sessionMedium', 'sessionCampaignName'], ['sessions', 'engagedSessions', 'engagementRate']),
+    ``,
+    `## By device (top 20 of ${tech.length})`,
+    ``,
+    tableFromRows(sortBy(tech, 'users'), ['deviceCategory', 'browser', 'operatingSystem'], ['users']),
+    ``,
+    `## Lead capture funnel (${leads.length} rows)`,
+    ``,
+    tableFromRows(sortBy(leads, 'eventCount'), ['form_name', 'page_path', 'stage'], ['eventCount']),
+    ``,
+    `## New vs returning`,
+    ``,
+    tableFromRows(newRet, ['newVsReturning'], ['totalUsers', 'engagementRate', 'sessions']),
+    ``,
+    `## Time series`,
+    ``,
+    `Full time-series chart in \`dashboard.html\`. Raw: \`raw/timeseries.jsonl\` (${timeseries.length} rows).`,
+    ``,
+    `## Files`,
+    ``,
+    summary.map(s => `- \`raw/${s.name}.jsonl\` — ${s.rows} rows${s.failed ? ' (FAILED)' : ''}${s.truncated ? ' (TRUNCATED)' : ''}`).join('\n'),
+    ``,
+  ];
+  fs.writeFileSync(path.join(dir, 'index.md'), lines.join('\n'));
+}
+
+module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES, writeMeta, writeIndexMd, tableFromRows };
 
 const { google } = require('googleapis');
 
@@ -243,6 +328,10 @@ async function run() {
   // Write meta.json
   const meta = writeMeta(rawDir, summary, failures, elapsed);
   console.log(`[ga4-deep-pull] meta.json written — ${meta.totalRows} total rows, ${meta.queriesFailed} failures`);
+
+  // Write index.md
+  writeIndexMd(dir, meta, summary);
+  console.log(`[ga4-deep-pull] index.md written`);
 }
 
 if (require.main === module) {
