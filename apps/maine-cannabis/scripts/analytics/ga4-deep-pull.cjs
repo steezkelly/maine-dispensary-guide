@@ -38,7 +38,54 @@ function ensureDir(dir) {
   fs.mkdirSync(path.join(dir, 'raw'), { recursive: true });
 }
 
-module.exports = { validateEnv, getOutputDir, ensureDir };
+async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '2020-01-01', endDate: 'today' }) {
+  const rows = [];
+  const { dimensions, metrics, rowCap = 10000, pageSize = 10000 } = queryDef;
+  let offset = 0;
+  let truncated = false;
+  let totalInResponse = 0;
+
+  while (true) {
+    const res = await client.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [dateRange],
+        dimensions,
+        metrics,
+        limit: Math.min(pageSize, rowCap - rows.length),
+        offset,
+      },
+    });
+    const data = res.data;
+    if (!data.rows) break;
+    totalInResponse = parseInt(data.rowCount || '0', 10);
+
+    for (const row of data.rows) {
+      const dimObj = {};
+      dimensions.forEach((d, i) => {
+        dimObj[d.name] = row.dimensionValues[i]?.value;
+      });
+      const metObj = {};
+      metrics.forEach((m, i) => {
+        const raw = row.metricValues[i]?.value || '0';
+        metObj[m.name] = Number.isFinite(+raw) && raw !== '' ? +raw : raw;
+      });
+      rows.push({ dimensions: dimObj, metrics: metObj });
+      if (rows.length >= rowCap) {
+        truncated = true;
+        break;
+      }
+    }
+
+    if (truncated) break;
+    if (rows.length >= totalInResponse) break;
+    offset += data.rows.length;
+  }
+
+  return { rows, truncated, totalInResponse };
+}
+
+module.exports = { validateEnv, getOutputDir, ensureDir, runQuery };
 
 // CLI entry
 if (require.main === module) {
