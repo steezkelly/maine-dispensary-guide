@@ -2,8 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import CiteThis from '../components/CiteThis.astro';
-import { getSiteStats } from '../lib/site-stats';
-const siteStats = getSiteStats();
+import LeadCaptureBox from '../components/LeadCaptureBox.astro';
 
 // ---------------------------------------------------------------------------
 // National-benchmark dataset (mid-2025 to H1 2026).
@@ -281,6 +280,8 @@ const faqPageJsonLd = JSON.stringify({
     <h1>Maine &amp; U.S. Cannabis Dispensary ROI: Real Numbers, Real Benchmarks (2026)</h1>
     <p class="lead">An evidence-based breakdown of cannabis dispensary profitability in Maine — anchored to OCP primary-source data on the local side and the most-cited 2025–2026 operator surveys nationally (Whitney Economics, MJBizDaily, Northstar CFO benchmarks, Headset). Maine's mature-market positioning gives it lower revenue-per-store than top-tier states but a meaningfully lower cost-to-enter, producing comparable risk-adjusted returns. Use this page as a model before you sign a lease.</p>
   </section>
+
+  <LeadCaptureBox variant="roicalc" />
 
 <!-- National-overview stat bar with Maine + national side-by-side -->
 <section class="stats-bar reveal">
@@ -874,6 +875,8 @@ const faqPageJsonLd = JSON.stringify({
       </p>
     </div>
   </section>
+
+  <LeadCaptureBox variant="roicalc" />
 
   <script is:inline>
     function calculate() {

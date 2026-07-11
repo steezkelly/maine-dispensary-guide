@@ -1,0 +1,188 @@
+---
+/**
+ * LeadCaptureBox.astro
+ *
+ * Theme-2026 lead-capture CTA card. Four variants wired to the MDG
+ * B2B mailto partner-inbox pattern (Purelymail catch-all routing).
+ *
+ * Usage:
+ *
+ *   <LeadCaptureBox variant="roicalc" />
+ *   <LeadCaptureBox variant="checklist" />
+ *   <LeadCaptureBox variant="optin" />
+ *   <LeadCaptureBox variant="press" />
+ *
+ * Variant semantics + mailto targets:
+ *   - 'roicalc'    → partners@mainedispensaryguide.com  (custom ROI breakdowns)
+ *   - 'checklist' → download-checklist@mainedispensaryguide.com  (compliance checklist)
+ *   - 'optin'     → hello@mainedispensaryguide.com     (quarterly opt-in alerts)
+ *   - 'press'     → press@mainedispensaryguide.com     (press kit + byline bios)
+ *
+ * Each variant renders a card-elev-glow (Theme 2026) box with a heading,
+ * one-line subhead, and a mailto: <a> styled like a button. The CTA link
+ * subject is pre-filled and the body is a templated form the visitor can
+ * adjust (name, town, contact) before sending.
+ *
+ * NOTE: This is a pure-mailto CTA — no JS submit handler, no GA4 event.
+ * For multi-field forms, use LeadMailtoForm.astro instead. LeadCaptureBox
+ * is the lightweight card that fits inline with editorial content.
+ */
+
+interface Props {
+  variant?: 'roicalc' | 'checklist' | 'optin' | 'press';
+}
+
+const { variant = 'checklist' } = Astro.props;
+
+const VARIANTS = {
+  roicalc: {
+    eyebrow: 'Custom ROI breakdown',
+    heading: 'Get a custom ROI breakdown for your Maine town — 24h reply',
+    subhead: 'Tell us your target town, capital range, and timeline. We\'ll send back a town-specific revenue model with real OCP-anchored benchmarks within one business day.',
+    cta: 'Email us your town details',
+    to: 'partners@mainedispensaryguide.com',
+    subject: 'Custom ROI breakdown for [TOWN]',
+    body: 'Hi — I\'d like a custom ROI breakdown for a Maine dispensary.\n\nTown / target market:\nCapital range (USD):\nTimeline (target open date):\nContact phone (optional):\n\nThanks.',
+    tone: 'primary',
+  },
+  checklist: {
+    eyebrow: 'Free compliance checklist',
+    heading: 'Download our Maine cannabis compliance checklist',
+    subhead: 'A printable, OCP-anchored checklist covering licensing, Metrc seed-to-sale, security, advertising rules, and 280E tax planning. One PDF, no signup gate.',
+    cta: 'Email me the checklist',
+    to: 'download-checklist@mainedispensaryguide.com',
+    subject: 'Maine cannabis checklist',
+    body: 'Hi — please send me the Maine cannabis compliance checklist (PDF).\n\nName:\nCompany (if any):\nOperating stage (researching / applying / open):\n\nThanks.',
+    tone: 'accent',
+  },
+  optin: {
+    eyebrow: 'Opt-in alerts',
+    heading: 'Get an alert when your town flips opt-in — quarterly email',
+    subhead: 'Subscribe to a once-per-quarter email that lists which Maine municipalities flipped adult-use opt-in, and what that means for new license applications in that town.',
+    cta: 'Email me quarterly opt-in updates',
+    to: 'hello@mainedispensaryguide.com',
+    subject: 'Opt-in alerts',
+    body: 'Hi — please add me to the quarterly Maine cannabis opt-in alerts list.\n\nName:\nEmail:\nTown(s) of interest:\n\nThanks.',
+    tone: 'primary',
+  },
+  press: {
+    eyebrow: 'Press kit + byline bios',
+    heading: 'Request our press kit and named byline bios',
+    subhead: 'For journalists, editors, and podcast producers covering Maine cannabis industry economics. Includes our editorial corrections log, founder bios, and standard byline photos.',
+    cta: 'Email me the press kit',
+    to: 'press@mainedispensaryguide.com',
+    subject: 'Press kit request',
+    body: 'Hi — please send the Maine Dispensary Guide press kit and the byline bios for the editors / analysts I should expect to see on your stories.\n\nOutlet:\nDeadline (if applicable):\nTopic / angle:\n\nThanks.',
+    tone: 'accent',
+  },
+} as const;
+
+const v = VARIANTS[variant];
+const mailtoHref =
+  'mailto:' +
+  v.to +
+  '?subject=' +
+  encodeURIComponent(v.subject) +
+  '&body=' +
+  encodeURIComponent(v.body);
+---
+
+<aside class={`lead-capture-box card-elev-glow lcb-tone-${v.tone}`} aria-label={v.heading} data-variant={variant}>
+  <div class="lcb-eyebrow">{v.eyebrow}</div>
+  <h3 class="lcb-heading">{v.heading}</h3>
+  <p class="lcb-subhead">{v.subhead}</p>
+  <a class="lcb-cta" href={mailtoHref}>
+    {v.cta}
+    <span aria-hidden="true" class="lcb-cta-arrow">→</span>
+  </a>
+  <div class="lcb-meta">Replies handled by the MDG operator team · usually within 24h on weekdays.</div>
+</aside>
+
+<style>
+.lead-capture-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  margin-block: 2rem;
+  position: relative;
+  z-index: 10;
+}
+.lcb-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+}
+[data-theme="dark"] .lcb-eyebrow {
+  color: var(--color-accent);
+}
+.lcb-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 1.25;
+  margin: 0;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+.lcb-subhead {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-light);
+  max-width: 65ch;
+}
+.lcb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-primary);
+  color: var(--color-background);
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--elev-1-shadow);
+}
+.lcb-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--elev-2-shadow);
+}
+.lcb-cta-arrow {
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.lcb-cta:hover .lcb-cta-arrow {
+  transform: translateX(3px);
+}
+.lcb-tone-accent .lcb-cta {
+  background: var(--color-accent);
+  color: var(--color-primary);
+}
+.lcb-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  margin-top: 0.25rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+[data-theme="dark"] .lead-capture-box {
+  border-color: color-mix(in oklab, var(--color-accent) 25%, transparent);
+}
+[data-theme="dark"] .lcb-cta {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+[data-theme="dark"] .lcb-tone-accent .lcb-cta {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+@media (max-width: 600px) {
+  .lcb-cta { width: 100%; justify-content: center; }
+}
+</style>
