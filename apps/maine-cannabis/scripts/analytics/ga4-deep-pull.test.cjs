@@ -149,6 +149,15 @@ test('writeIndexMd produces all spec sections', () => {
 test('writeDashboard produces valid HTML referencing Chart.js + 4 canvases', () => {
   const tmpDir = fs.mkdtempSync('/tmp/ga4-dash-smoke-');
   fs.mkdirSync(path.join(tmpDir, 'raw'), { recursive: true });
+  // Synthesize minimal JSONL for the dashboard to inline
+  fs.writeFileSync(path.join(tmpDir, 'raw', 'timeseries.jsonl'),
+    JSON.stringify({ dimensions: { date: '20260701' }, metrics: { totalUsers: 10, sessions: 15, screenPageViews: 40, eventCount: 5 } }) + '\n');
+  fs.writeFileSync(path.join(tmpDir, 'raw', 'pageviews.jsonl'),
+    JSON.stringify({ dimensions: { pagePath: '/', pageTitle: 'Home' }, metrics: { screenPageViews: 100 } }) + '\n');
+  fs.writeFileSync(path.join(tmpDir, 'raw', 'acquisition.jsonl'),
+    JSON.stringify({ dimensions: { sessionSource: 'google', sessionMedium: 'organic' }, metrics: { sessions: 20 } }) + '\n');
+  fs.writeFileSync(path.join(tmpDir, 'raw', 'technology.jsonl'),
+    JSON.stringify({ dimensions: { deviceCategory: 'desktop' }, metrics: { totalUsers: 10 } }) + '\n');
   writeDashboard(tmpDir, {
     runAt: '2026-07-11T00:00:00.000Z',
     propertyId: '532778727',
@@ -164,7 +173,11 @@ test('writeDashboard produces valid HTML referencing Chart.js + 4 canvases', () 
   assert.match(html, /<canvas id="pageChart">/);
   assert.match(html, /<canvas id="srcChart">/);
   assert.match(html, /<canvas id="devChart">/);
-  assert.match(html, /loadJsonl\('raw\/timeseries\.jsonl'\)/);
-  assert.match(html, /loadJsonl\('raw\/pageviews\.jsonl'\)/);
+  // Must inline data, not fetch (so file:// works)
+  assert.match(html, /const TIMESERIES =/);
+  assert.match(html, /const PAGEVIEWS =/);
+  assert.match(html, /const ACQUISITION =/);
+  assert.match(html, /const TECHNOLOGY =/);
+  assert.doesNotMatch(html, /loadJsonl/);
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });

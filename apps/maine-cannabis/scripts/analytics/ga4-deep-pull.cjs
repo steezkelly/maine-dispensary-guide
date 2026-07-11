@@ -266,6 +266,17 @@ function writeIndexMd(dir, meta, summary) {
 }
 
 function writeDashboard(dir, meta) {
+  // Inline the JSONL data into a <script> tag so the dashboard works
+  // when opened directly via file:// (fetch() does not support file:// URLs).
+  // The dashboard is a static artifact tied to this pull's data, not a live view.
+  const rawDir = path.join(dir, 'raw');
+  const inlineData = (name) => {
+    const p = path.join(rawDir, `${name}.jsonl`);
+    if (!fs.existsSync(p)) return '[]';
+    return fs.readFileSync(p, 'utf8').trim().split('\n').filter(Boolean).map(l => JSON.parse(l));
+  };
+  const inlineJson = (data) => JSON.stringify(data).replace(/</g, '\\u003c');
+
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -294,60 +305,52 @@ function writeDashboard(dir, meta) {
   <div class="chart-box"><canvas id="devChart"></canvas></div>
 
 <script>
-async function loadJsonl(p) {
-  const r = await fetch(p);
-  const t = await r.text();
-  return t.trim().split('\\n').map(l => JSON.parse(l));
-}
+const TIMESERIES = ${inlineJson(inlineData('timeseries'))};
+const PAGEVIEWS = ${inlineJson(inlineData('pageviews'))};
+const ACQUISITION = ${inlineJson(inlineData('acquisition'))};
+const TECHNOLOGY = ${inlineJson(inlineData('technology'))};
 
 (async () => {
-  const [timeseries, pageviews, acquisition, technology] = await Promise.all([
-    loadJsonl('raw/timeseries.jsonl'),
-    loadJsonl('raw/pageviews.jsonl'),
-    loadJsonl('raw/acquisition.jsonl'),
-    loadJsonl('raw/technology.jsonl'),
-  ]);
-
   // Time series
   new Chart(document.getElementById('tsChart'), {
     type: 'line',
     data: {
-      labels: timeseries.map(r => r.dimensions.date),
+      labels: TIMESERIES.map(r => r.dimensions.date),
       datasets: [
-        { label: 'Users', data: timeseries.map(r => r.metrics.totalUsers), borderColor: '#0D4E50', tension: 0.2 },
-        { label: 'New Users', data: timeseries.map(r => r.metrics.newUsers), borderColor: '#7A9A6A', tension: 0.2 },
-        { label: 'Sessions', data: timeseries.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
-        { label: 'Pageviews', data: timeseries.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
+        { label: 'Users', data: TIMESERIES.map(r => r.metrics.totalUsers), borderColor: '#0D4E50', tension: 0.2 },
+        { label: 'New Users', data: TIMESERIES.map(r => r.metrics.newUsers), borderColor: '#7A9A6A', tension: 0.2 },
+        { label: 'Sessions', data: TIMESERIES.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
+        { label: 'Pageviews', data: TIMESERIES.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
       ],
     },
     options: { responsive: true, plugins: { title: { display: true, text: 'Daily users / sessions / pageviews' } } },
   });
 
   // Top 10 pages
-  const topPages = [...pageviews].sort((a, b) => b.metrics.screenPageViews - a.metrics.screenPageViews).slice(0, 10);
+  const topPages = [...PAGEVIEWS].sort((a, b) => b.metrics.screenPageViews - a.metrics.screenPageViews).slice(0, 10);
   new Chart(document.getElementById('pageChart'), {
     type: 'bar',
     data: {
-      labels: topPages.map(r => r.dimensions.pagePath || '/'),
+      labels: topPages.map(r => (r.dimensions.pagePath || '/') + (r.dimensions.pageTitle ? ' — ' + r.dimensions.pageTitle.slice(0, 40) : '')),
       datasets: [{ label: 'Pageviews', data: topPages.map(r => r.metrics.screenPageViews), backgroundColor: '#0D4E50' }],
     },
-    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 pages by pageviews' } } },
+    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 pages by pageviews' } }, scales: { x: { beginAtZero: true } } },
   });
 
   // Top 10 sources
-  const topSrc = [...acquisition].sort((a, b) => b.metrics.sessions - a.metrics.sessions).slice(0, 10);
+  const topSrc = [...ACQUISITION].sort((a, b) => b.metrics.sessions - a.metrics.sessions).slice(0, 10);
   new Chart(document.getElementById('srcChart'), {
     type: 'bar',
     data: {
       labels: topSrc.map(r => (r.dimensions.sessionSource || '(direct)') + ' / ' + (r.dimensions.sessionMedium || '')),
       datasets: [{ label: 'Sessions', data: topSrc.map(r => r.metrics.sessions), backgroundColor: '#588157' }],
     },
-    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 acquisition sources' } } },
+    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 acquisition sources' } }, scales: { x: { beginAtZero: true } } },
   });
 
   // Device split (aggregate by deviceCategory)
   const devMap = {};
-  technology.forEach(r => {
+  TECHNOLOGY.forEach(r => {
     const k = r.dimensions.deviceCategory || '(unknown)';
     devMap[k] = (devMap[k] || 0) + (r.metrics.totalUsers || 0);
   });
