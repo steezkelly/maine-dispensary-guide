@@ -504,6 +504,26 @@ async function submitForm(browser, draft, dryRun = false, override = null) {
             result.message = `Ambiguous result (filled ${filledCount} fields, skipped ${honeypots.length} honeypots). Screenshot saved: ${screenshotPath || 'FAILED'}`;
         }
     } catch (err) {
+        // B4 retry-on-context-destroyed: SPA forms (e.g. findcannabis.com's
+        // claim-your-listing) destroy the page execution context between
+        // form-fill and submit-click. The page.\$\$ / page.fill calls
+        // throw "Execution context was destroyed, most likely because of
+        // a navigation." Wrap that specific error class in a one-shot
+        // retry that re-resolves the form + re-runs the fill pipeline.
+        // Other error classes fall through to the standard fail path.
+        if (/Execution context was destroyed/i.test(err.message) && !result.__retried) {
+            result.__retried = true;
+            try {
+                await context.close();
+            } catch { /* ignore */ }
+            // Re-open context + re-run submitForm from the top. The retry
+            // path inherits the same override + dryRun args.
+            const retryResult = await submitForm(browser, draft, dryRun, override);
+            // Annotate the retry so the dedup log distinguishes it from
+            // a fresh submission.
+            retryResult.retriedAfterContextDestroyed = true;
+            return retryResult;
+        }
         result.status = 'fail';
         result.message = `Exception: ${err.message}`;
     } finally {
