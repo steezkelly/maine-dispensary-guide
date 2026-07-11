@@ -98,7 +98,7 @@ for (const f of allAstro) {
       const titleMatch = text.match(/<Layout\s+title=["']([^"']+)["']/);
       recentUpdates.push({
         date: m[1],
-        path: f.replace('./src/pages/', '').replace(/\/index\.astro$/, '').replace(/\.astro$/, ''),
+        path: '/' + f.replace('src/pages/', '').replace(/\/index\.astro$/, '').replace(/\.astro$/, ''),
         title: titleMatch ? titleMatch[1] : basename(f, '.astro')
       });
     }
