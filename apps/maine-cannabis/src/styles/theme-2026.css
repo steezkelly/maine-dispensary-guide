@@ -154,3 +154,217 @@ html[data-theme] a[target="_blank"]::after {
   flex-direction: column;
   gap: 1.5rem;
 }
+
+/* =============================================================================
+   SECTION TREATMENT RHYTHM — A / B / C
+   Three deliberate section types that alternate down the page to give
+   editorial rhythm. Apply by adding one of these classes (plus your
+   inner structure) to each <section>:
+
+   A: DARK FEATURE — pine background, white text, oversized stat.
+      Use for: hero stats, "Why Maine Now" big-numbers, authority bars,
+      closing CTAs. The visual weight makes a single number or claim
+      land like a magazine pull-quote.
+   B: EDITORIAL CARD — white surface, eyebrow label, serif H2, generous
+      padding. Use for: prose-heavy sections (mission, ops reality, FAQ,
+      deep-dive). The eyebrow + serif heading signals "read this".
+   C: DATA ROW — flat (no card), horizontal rule separators, stat-on-
+      left + label-on-right OR card-grid without card chrome. Use for:
+      link lists, topic grids, blog/guides indexes. Reads as "browse".
+   ============================================================================= */
+
+/* --- A: Dark Feature ------------------------------------------------- */
+.section-a {
+  background: var(--color-primary);
+  color: var(--color-background);
+  padding: var(--space-3xl) var(--space-md);
+  border-radius: var(--radius-lg);
+  margin-block: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+.section-a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 80% 0%, color-mix(in oklab, var(--color-accent) 18%, transparent), transparent 65%);
+  pointer-events: none;
+}
+[data-theme="dark"] .section-a {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+.section-a > * { position: relative; }
+.section-a .section-eyebrow {
+  color: color-mix(in oklab, var(--color-background) 70%, var(--color-primary));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.section-a h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+  line-height: var(--leading-tight);
+  margin-block: var(--space-sm) var(--space-lg);
+  letter-spacing: -0.02em;
+}
+.section-a p {
+  color: color-mix(in oklab, var(--color-background) 92%, transparent);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  max-width: 60ch;
+}
+.section-a a:not(.btn):not(.button) {
+  color: var(--color-background);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-background) 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+.section-a a:not(.btn):not(.button):hover {
+  text-decoration-color: currentColor;
+}
+
+/* Higher-specificity overrides — some A sections have per-page styles that
+   set their own background/border (e.g. .market-overview, .authority-stats,
+   .newsletter-section). These rules force the dark-feature treatment to
+   win on the outer <section>. Inner content gets re-styled below. */
+.section-a.market-overview,
+.section-a.authority-stats,
+.section-a.newsletter-section {
+  background: var(--color-primary);
+  color: var(--color-background);
+  border: none;
+}
+.section-a.market-overview::before,
+.section-a.authority-stats::before,
+.section-a.newsletter-section::before {
+  display: none;
+}
+[data-theme="dark"] .section-a.market-overview,
+[data-theme="dark"] .section-a.authority-stats,
+[data-theme="dark"] .section-a.newsletter-section {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+/* B sections — kill the per-page card chrome (border, bg, padding) so
+   the B treatment (white surface, accent line, generous padding) wins */
+.section-b.mission-manifesto,
+.section-b.operations-excellence,
+.section-b.geo-explorer,
+.section-b.journey-path,
+.section-b.journey-detail,
+.section-b.market-deep-dive,
+.section-b.homepage-faq {
+  background: var(--color-surface);
+}
+
+/* Inside A: cards should invert (transparent → bone-tinted) so the
+   dark surface reads as one piece rather than white blocks on dark. */
+.section-a .aside-card {
+  background: color-mix(in oklab, var(--color-background) 8%, transparent);
+  border-color: color-mix(in oklab, var(--color-background) 25%, transparent);
+  color: var(--color-background);
+}
+.section-a .aside-card .aside-label {
+  color: color-mix(in oklab, var(--color-background) 70%, transparent);
+}
+.section-a .aside-note {
+  color: color-mix(in oklab, var(--color-background) 80%, transparent);
+  border-top-color: color-mix(in oklab, var(--color-background) 20%, transparent);
+}
+.section-a .stat-block,
+.section-a .stat-text {
+  color: var(--color-background);
+}
+.section-a .stat-divider {
+  background: color-mix(in oklab, var(--color-background) 20%, transparent);
+}
+.section-a .newsletter-content p {
+  color: color-mix(in oklab, var(--color-background) 85%, transparent);
+}
+.section-a .form-input,
+.section-a .form-select {
+  background: color-mix(in oklab, var(--color-background) 95%, transparent);
+  color: var(--color-text);
+  border-color: color-mix(in oklab, var(--color-background) 50%, transparent);
+}
+.section-a .form-btn {
+  background: var(--color-background);
+  color: var(--color-primary);
+}
+
+/* --- B: Editorial Card ----------------------------------------------- */
+.section-b {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  margin-block: var(--space-2xl);
+  box-shadow: var(--elev-1-shadow);
+  position: relative;
+  overflow: hidden;
+}
+.section-b::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 30%, transparent));
+}
+[data-theme="dark"] .section-b {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+.section-b .section-eyebrow {
+  display: inline-block;
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+.section-b h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-4xl));
+  line-height: var(--leading-tight);
+  margin-block: 0 var(--space-lg);
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+}
+.section-b > p,
+.section-b .section-lede {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  color: var(--color-text-light);
+  max-width: 65ch;
+  margin-bottom: var(--space-xl);
+}
+.section-b > *:last-child { margin-bottom: 0; }
+
+/* --- C: Data Row ----------------------------------------------------- */
+.section-c {
+  padding: var(--space-2xl) var(--space-md);
+  margin-block: var(--space-2xl);
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+.section-c .section-eyebrow {
+  display: inline-block;
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+.section-c h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(var(--text-2xl), 3vw, var(--text-3xl));
+  line-height: var(--leading-tight);
+  margin-block: 0 var(--space-lg);
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+}
