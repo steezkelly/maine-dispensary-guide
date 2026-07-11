@@ -278,12 +278,30 @@ console.log('\n=== CASE 3: submit_selectors chain → default heuristic fallback
         bad('submitForm signature does NOT accept override parameter');
     }
     // The default heuristic selector still exists in the source (commit 2
-    // will wrap it in a fallback chain, but the literal selector must
+    // wraps it in a fallback chain, but each selector literal must
     // remain so regression is provable).
-    if (/button\[type="submit"\], input\[type="submit"\], button:not\(\[type\]\)/.test(scriptSrc)) {
-        ok('default heuristic selector literal still present in script (fallback chain will reference it)');
+    const expectedDefaultSelectors = [
+        'button[type="submit"]',
+        'input[type="submit"]',
+        'button:not([type])',
+    ];
+    const missingDefaults = expectedDefaultSelectors.filter(sel => !scriptSrc.includes(sel));
+    if (missingDefaults.length === 0) {
+        ok(`default heuristic selectors all present in script (fallback chain references them): ${expectedDefaultSelectors.join(', ')}`);
     } else {
-        bad('default heuristic selector literal missing — commit 2 must reference it for fallback');
+        bad(`default heuristic selectors missing: ${missingDefaults.join(', ')}`);
+    }
+    // The override-aware path must reference submit_selectors and form_selectors
+    // (commit 2 added these — prove the script actually consults the override).
+    if (/override\s*&&.*submit_selectors/.test(scriptSrc)) {
+        ok('script consults override.submit_selectors before clicking submit');
+    } else {
+        bad('script does NOT consult override.submit_selectors — B2 fix missing');
+    }
+    if (/override\s*&&.*form_selectors/.test(scriptSrc)) {
+        ok('script consults override.form_selectors when resolving the target form');
+    } else {
+        bad('script does NOT consult override.form_selectors — B1 multi-form fix missing');
     }
     // The override file's B4 entry (findcannabis.com.md) must carry wait_strategy.
     const fc = parsed['findcannabis.com.md'];
