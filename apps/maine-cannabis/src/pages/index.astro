@@ -6,9 +6,25 @@ import AnimatedBackdrop from '@network/ui/AnimatedBackdrop';
 import Faq from '../components/Faq.astro';
 import Callout from '../components/Callout.astro';
 import LeadFormTracker from '../components/LeadFormTracker.astro';
+import SiteHealthStrip from '../components/SiteHealthStrip.astro';
 import siteConfig from '../data/site-config.json';
+import authors from '../data/authors.json';
 import { getSiteStats } from '../lib/site-stats';
+import { getPageStats } from '../lib/page-stats';
 const siteStats = getSiteStats();
+
+// Editorial-transparency numbers for the SiteHealthStrip — computed once from
+// the source tree (same helper /site-health uses) so the homepage strip and
+// the full dashboard never drift.
+const pageStats = getPageStats();
+const siteHealthStats = {
+  totalPages: pageStats.totalPages,
+  contentPages: pageStats.contentPages,
+  totalWords: pageStats.totalWords,
+  heroImages: pageStats.heroImages,
+  bylineAuthors: authors.length,
+  avgWordsPerPage: pageStats.totalWords / Math.max(pageStats.contentPages, 1),
+};
 
 const homepageFaqs = [
   { question: "How long does it take to get a Maine cannabis dispensary license?", answer: "Plan for 5-7 months under normal processing conditions. Municipal endorsement alone takes 6-12 weeks. OCP requests for additional information can add another 4-8 weeks. See the full licensing guide: /guides/maine-dispensary-license/" },
@@ -2319,6 +2335,10 @@ const journeySteps = [
       </svg>
     </div>
   </section>
+
+  {/* Editorial-transparency strip — extracted from /site-health "At a glance".
+       Sits directly under the hero; each card deep-links to the full dashboard. */}
+  <SiteHealthStrip stats={siteHealthStats} />
 
   <!-- Video tour strip — featured-media below the editorial hero.
        Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out

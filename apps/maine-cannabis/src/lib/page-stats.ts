@@ -16,6 +16,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const PAGES_DIR = './src/pages';
+const HEROES_DIR = './public/images/heroes';
 
 function walkAstro(dir: string): string[] {
   const out: string[] = [];
@@ -56,6 +57,8 @@ export interface PageStats {
   corePages: number;
   totalPages: number;
   totalWords: number;
+  heroImages: number;
+  contentPages: number;
 }
 
 function countWords(file: string): number {
@@ -81,6 +84,16 @@ export function getPageStats(pagesDir: string = PAGES_DIR): PageStats {
   const corePages =
     allAstro.length - cityGuides - techGuides - blogPosts - founders - resources - downloads;
   const totalWords = allAstro.reduce((sum, f) => sum + countWords(f), 0);
+  const contentPages = cityGuides + techGuides + blogPosts + founders + resources + downloads;
+
+  // Hero-image count — mirrors the exact filter used by the /site-health
+  // dashboard so the strip and the dashboard never drift.
+  let heroImages = 0;
+  try {
+    heroImages = readdirSync(HEROES_DIR).filter(f =>
+      f.endsWith('.jpg') && !f.startsWith('_') && !f.startsWith('.')
+    ).length;
+  } catch { heroImages = 0; }
 
   return {
     cityGuides,
@@ -92,5 +105,7 @@ export function getPageStats(pagesDir: string = PAGES_DIR): PageStats {
     corePages,
     totalPages: allAstro.length,
     totalWords,
+    heroImages,
+    contentPages,
   };
 }
