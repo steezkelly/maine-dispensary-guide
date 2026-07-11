@@ -38,6 +38,70 @@ function ensureDir(dir) {
   fs.mkdirSync(path.join(dir, 'raw'), { recursive: true });
 }
 
+const QUERIES = [
+  {
+    name: 'pageviews',
+    dimensions: [{ name: 'pagePath' }, { name: 'pageTitle' }],
+    metrics: [{ name: 'screenPageViews' }, { name: 'engagementDuration' }, { name: 'bounceRate' }],
+    rowCap: 10000,
+  },
+  {
+    name: 'geography',
+    dimensions: [{ name: 'country' }, { name: 'city' }, { name: 'region' }],
+    metrics: [{ name: 'totalUsers' }, { name: 'sessions' }],
+    rowCap: 10000,
+  },
+  {
+    name: 'acquisition',
+    dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }, { name: 'sessionCampaignName' }],
+    metrics: [{ name: 'sessions' }, { name: 'engagedSessions' }, { name: 'engagementRate' }],
+    rowCap: 5000,
+  },
+  {
+    name: 'technology',
+    dimensions: [{ name: 'deviceCategory' }, { name: 'browser' }, { name: 'operatingSystem' }, { name: 'screenResolution' }],
+    metrics: [{ name: 'users' }],
+    rowCap: 5000,
+  },
+  {
+    name: 'lead_capture',
+    dimensions: [{ name: 'customEvent:form_name' }, { name: 'customEvent:page_path' }, { name: 'customEvent:stage' }],
+    metrics: [{ name: 'eventCount' }],
+    rowCap: 5000,
+    note: 'Custom event scope. Returns 0 rows if lead_capture never fired.',
+  },
+  {
+    name: 'user_journey',
+    dimensions: [{ name: 'userPseudoId' }, { name: 'sessionId' }, { name: 'pagePath' }, { name: 'pageTitle' }],
+    metrics: [{ name: 'screenPageViews' }],
+    rowCap: 10000,
+  },
+  {
+    name: 'new_vs_returning',
+    dimensions: [{ name: 'newVsReturning' }],
+    metrics: [{ name: 'totalUsers' }, { name: 'engagementRate' }, { name: 'sessions' }],
+    rowCap: 10,
+  },
+  {
+    name: 'timeseries',
+    dimensions: [{ name: 'date' }],
+    metrics: [{ name: 'users' }, { name: 'sessions' }, { name: 'screenPageViews' }, { name: 'eventCount' }],
+    rowCap: 1000,
+  },
+  {
+    name: 'landing_pages',
+    dimensions: [{ name: 'landingPagePlusQueryString' }],
+    metrics: [{ name: 'sessions' }, { name: 'bounceRate' }],
+    rowCap: 5000,
+  },
+  {
+    name: 'exit_pages',
+    dimensions: [{ name: 'pagePath' }],
+    metrics: [{ name: 'exits' }],
+    rowCap: 5000,
+  },
+];
+
 async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '2020-01-01', endDate: 'today' }) {
   const rows = [];
   const { dimensions, metrics, rowCap = 10000, pageSize = 10000 } = queryDef;
@@ -85,7 +149,7 @@ async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '
   return { rows, truncated, totalInResponse };
 }
 
-module.exports = { validateEnv, getOutputDir, ensureDir, runQuery };
+module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES };
 
 // CLI entry
 if (require.main === module) {
