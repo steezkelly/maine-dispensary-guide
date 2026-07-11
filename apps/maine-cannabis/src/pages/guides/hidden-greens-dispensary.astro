@@ -25,6 +25,33 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "Do I need a Maine medical marijuana card to shop at Hidden Greens?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hidden Greens operates as a medical dispensary. You must have a valid Maine MMMP card. Out-of-state medical patients with a card from a Maine reciprocity state should call ahead to confirm acceptance. Adult-use (21+) customers should verify licensing directly before visiting." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "Hidden Greens",
+  "url": "https://mainedispensaryguide.com/guides/hidden-greens-dispensary",
+  "description": "Hidden Greens — Maine cannabis dispensary. Serves Buxton, Greater Portland.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Buxton, Greater Portland"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "370 Narragansett Trail, Buxton, ME 04093",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  },
+  "telephone": "+1-207-298-9111"
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="Hidden Greens Buxton Maine — Medical Cannabis Dispensary (2026)" description="Looking for Hidden Greens in Buxton, Maine? The medical cannabis dispensary is at 370 Narragansett Trail, Buxton, ME 04093. Phone (207) 298-9111. Multi-location Maine medical operator with flower, edibles, vapes, and concentrates." heroImage="/images/heroes/hidden-greens-dispensary.jpg" article={article} topics={topics} >
@@ -169,4 +196,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>

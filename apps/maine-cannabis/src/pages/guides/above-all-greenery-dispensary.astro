@@ -25,6 +25,32 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "How do I verify Above All Greenery's current hours and pricing?", "acceptedAnswer": { "@type": "Answer", "text": "Call the operator or check aboveallgreenery.net for the current schedule. Hours listed publicly as of mid-2026 for the Fryeburg location: Mon closed, Tue-Fri 10am-6pm, Sat 10am-5pm, Sun 9am-5pm. Verify before visiting." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "Above All Greenery",
+  "url": "https://mainedispensaryguide.com/guides/above-all-greenery-dispensary",
+  "description": "Above All Greenery — Maine cannabis dispensary. Serves Fryeburg, Western Maine.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Fryeburg, Western Maine"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "48 Fair St, Unit 4, Fryeburg, ME 04037",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  }
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="Above All Greenery — Fryeburg Maine Medical Dispensary (2026)" description="Above All Greenery North is a Maine medical cannabis dispensary at 48 Fair St, Unit 4, Fryeburg, ME 04037. In-house cultivation, pesticide-free product, state-accredited lab testing. Part of a multi-location Maine medical operator." heroImage="/images/heroes/fryeburg-dispensary-guide.jpg" article={article} topics={topics} >
@@ -152,4 +178,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>

@@ -25,6 +25,32 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "What is the service area for White Mountain Craft Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Fryeburg, Conway / North Conway NH, Bridgton, Brownfield, Lovell, Stow, Cornish, Hiram, and the broader Mount Washington Valley region including the New Hampshire border communities." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "White Mountain Craft Cannabis",
+  "url": "https://mainedispensaryguide.com/guides/white-mountain-craft-cannabis",
+  "description": "White Mountain Craft Cannabis — Maine cannabis dispensary. Serves Fryeburg, Mount Washington Valley.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Fryeburg, Mount Washington Valley"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "285 Main Street, Suite 8, Fryeburg, ME",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  }
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="White Mountain Craft Cannabis — Fryeburg Maine Dispensary (2026)" description="White Mountain Craft Cannabis is the first and only recreational dispensary in Fryeburg, Maine at 285 Main Street, Suite 8. Adult-use cannabis serving the Mount Washington Valley. Open 8am-8pm daily. Phone via Yelp or operator's site." heroImage="/images/heroes/white-mountain-craft-cannabis.jpg" article={article} topics={topics} >
@@ -152,4 +178,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>

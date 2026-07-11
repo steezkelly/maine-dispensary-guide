@@ -25,6 +25,33 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "Does Eclipse have a second Maine location?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Per the operator's site, Eclipse also operates a dispensary at 44 Pigeon Hill Road, Mechanic Falls, ME 04256. The Mechanic Falls location has different hours: Mon-Thu 10am-7pm, Fri-Sat 8am-8pm, Sun 8am-6pm. Verify hours with the operator before visiting either location." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "Eclipse Cannabis Company",
+  "url": "https://mainedispensaryguide.com/guides/eclipse-cannabis-company",
+  "description": "Eclipse Cannabis Company — Maine cannabis dispensary. Serves Sebago Lakes, Route 302 corridor, Greater Portland.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Sebago Lakes, Route 302 corridor, Greater Portland"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "1259 Roosevelt Trail, Raymond, ME 04071",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  },
+  "telephone": "+1-207-302-0034"
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="Eclipse Cannabis — Raymond Maine Dispensary (2026)" description="Eclipse Cannabis Company is a Maine cannabis dispensary at 1259 Roosevelt Trail, Raymond, ME 04071. Phone 1-(207)-302-0034. Open 8am-8pm daily. Serves the Sebago Lakes / Route 302 corridor. Also operates a second location in Mechanic Falls." heroImage="/images/heroes/eclipse-cannabis-company.jpg" article={article} topics={topics} >
@@ -158,4 +185,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>

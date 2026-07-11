@@ -25,6 +25,33 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "Where is Puffin Co.'s adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "The adult-use / recreational location is at 510 Portland Road, Bridgton, ME 04009. It is a separate storefront from the medical dispensary in Fryeburg. Both share the same phone number: (207) 935-5444." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "The Great Atlantic Puffin Company",
+  "url": "https://mainedispensaryguide.com/guides/great-atlantic-puffin-company",
+  "description": "The Great Atlantic Puffin Company — Maine cannabis dispensary. Serves Fryeburg, Bridgton, Western Maine.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Fryeburg, Bridgton, Western Maine"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "235 Bridgton Rd, Fryeburg, ME",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  },
+  "telephone": "+1-207-935-5444"
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="Puffin Co. Maine — Great Atlantic Puffin Company Dispensary (2026)" description="Looking for Puffin Co. in Maine? The Great Atlantic Puffin Company operates a medical dispensary at 235 Bridgton Rd, Fryeburg, ME and an adult-use dispensary at 510 Portland Rd, Bridgton, ME. Phone (207) 935-5444. Flower, cartridges, concentrates, edibles, and CBD." heroImage="/images/heroes/great-atlantic-puffin-company.jpg" article={article} topics={topics} >
@@ -168,4 +195,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>

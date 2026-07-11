@@ -24,6 +24,32 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "Who owns Lifted Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Lifted Cannabis is owned by Zachary Waite, who has been active in the Houlton cannabis ordinance debate and testified at town council meetings in 2024 advocating for caregiver retail store rules. Confirm current ownership details with the operator." }}
   ]
 });
+const cannabisDispensaryJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CannabisDispensary",
+  "name": "Lifted Cannabis",
+  "url": "https://mainedispensaryguide.com/guides/lifted-cannabis-maine",
+  "description": "Lifted Cannabis — Maine cannabis dispensary. Serves Houlton, St. John Valley, Aroostook County.",
+  "medicalSpecialty": "Cannabis",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Cannabis retail and medical dispensary services"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Houlton, St. John Valley, Aroostook County"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Houlton, Aroostook County, ME",
+    "addressRegion": "ME",
+    "addressCountry": "US"
+  }
+});
+
+void faqPageJsonLd; // emitted by Faq.astro component (not referenced in template)
 ---
 
 <Layout title="Lifted Cannabis Maine — Houlton Medical Dispensary (2026)" description="Lifted Cannabis is a Maine medical cannabis dispensary in Houlton, Aroostook County. Operator-owned, medical card required. Weekly deals per the operator's site. Serves the St. John Valley and northern Maine." heroImage="/images/heroes/lifted-cannabis-maine.jpg" article={article} topics={topics} >
@@ -146,4 +172,6 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+
+<script type="application/ld+json" set:html={cannabisDispensaryJsonLd} is:inline></script>
 </Layout>
