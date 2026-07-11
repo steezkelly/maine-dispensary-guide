@@ -8,6 +8,10 @@
  *
  * Style mirrors privacy.astro / affiliate-disclosure.astro: max-width 800px
  * legal-ish layout with var(--font-serif) + var(--color-primary) headings.
+ *
+ * Sections are grouped under .section-b cards and filterable via inline
+ * vanilla JS (filter input + chip toggles). BibTeX blocks collapse to a
+ * "Show BibTeX" toggle by default.
  */
 
 import Layout from '../../layouts/Layout.astro';
@@ -43,17 +47,60 @@ interface CitationPage {
 const registry = citationsData as { pages: CitationPage[] };
 const pages = registry.pages;
 
-// Compute a BibTeX key + URL preview per entry. We don't render the full
-// short-hash here (that's what /cite/<slug> shows), just the canonical
-// short-form permalink the index should link to.
+// Compute a BibTeX key per entry.
 function bibKeyFor(p: CitationPage): string {
   const [year] = p.publish_date.split('-');
   return `${p.authors[0].surname.toLowerCase()}${year}${p.slug.replace(/-/g, '')}`;
 }
 
+// Map each entry to one or more filter chips. Categories are derived from the
+// entry's `section` field at build time so we don't need to edit
+// citations.json when adding a page — the section name already encodes intent.
+const SECTION_TO_CHIPS: Record<string, string[]> = {
+  'Market Data':      ['market-data', 'foundational'],
+  'Statistics':       ['market-data', 'foundational'],
+  'Guides':           ['guides'],
+  'Blog':             ['blog'],
+  'Operator Guide':   ['operator-facing'],
+  'Operator-Facing':  ['operator-facing'],
+  'Foundational':     ['foundational'],
+  'Foundations':      ['foundational'],
+  'Editorial':        ['blog'],
+  'About':            ['foundational'],
+};
+function chipsFor(p: CitationPage): string[] {
+  const explicit = SECTION_TO_CHIPS[p.section] ?? [];
+  if (explicit.length) return explicit;
+  // Fallback: anything that smells like market data → market-data chip.
+  if (/(stat|market|revenue|roi)/i.test(p.slug)) return ['market-data'];
+  return ['foundational'];
+}
+
 const meta = (citationsData as { _meta?: { license?: string; updated?: string } })._meta ?? {};
 const licenseLabel = meta.license ?? 'CC BY 4.0';
 const updatedLabel = meta.updated ?? '';
+const lastUpdatedPretty = updatedLabel
+  ? new Date(updatedLabel + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+
+// Group pages by their primary section so we can render section-grouped cards.
+// Sections preserve insertion order from the registry.
+const SECTION_ORDER = ['Market Data', 'Guides', 'Blog', 'Operator-Facing', 'Editorial', 'Foundational', 'About'];
+function sectionRank(s: string): number {
+  const idx = SECTION_ORDER.indexOf(s);
+  return idx === -1 ? SECTION_ORDER.length : idx;
+}
+const grouped = pages
+  .slice()
+  .sort((a, b) => sectionRank(a.section) - sectionRank(b.section) || a.slug.localeCompare(b.slug))
+  .reduce<Record<string, CitationPage[]>>((acc, p) => {
+    (acc[p.section] ??= []).push(p);
+    return acc;
+  }, {});
+const sectionEntries = Object.entries(grouped);
+
+// Total entries for the header strip.
+const totalEntries = pages.length;
 ---
 
 <Layout
@@ -70,36 +117,201 @@ const updatedLabel = meta.updated ?? '';
 >
   <style>
     .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
-    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
     h1 { font-family: var(--font-serif); margin-bottom: 1.5rem; }
     .lede { font-size: 1.0625rem; line-height: 1.8; margin-bottom: 2.5rem; color: var(--color-text); }
-    section { margin-bottom: 3rem; }
-    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); }
-    h2 .slug { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.875rem; color: var(--color-text-light); font-weight: 400; margin-left: 0.5rem; }
-    p, li { line-height: 1.8; }
+
+    /* Header strip — dark .section-a treatment for visual rhythm */
+    .cite-header {
+      margin-block: 1.5rem 2.5rem;
+      padding: 1.5rem 1.75rem;
+      border-radius: var(--radius-lg);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem 1.5rem;
+    }
+    .cite-header .stat { display: flex; flex-direction: column; gap: 0.25rem; }
+    .cite-header .stat-label {
+      font-size: 0.6875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0.75;
+    }
+    .cite-header .stat-value {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+    .cite-header .stat-value[data-license] { font-family: ui-monospace, monospace; font-size: 1rem; }
+
+    /* Filter bar */
+    .cite-filter {
+      margin-bottom: 2.5rem;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+    .cite-filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .cite-filter input[type="search"] {
+      flex: 1 1 240px;
+      min-width: 0;
+      padding: 0.625rem 0.875rem;
+      background: var(--color-background);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      color: var(--color-text);
+    }
+    .cite-filter input[type="search"]:focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+    .chip {
+      appearance: none;
+      cursor: pointer;
+      padding: 0.4375rem 0.875rem;
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+    .chip:hover { border-color: var(--color-accent); }
+    .chip[aria-pressed="true"] {
+      background: var(--color-primary);
+      color: var(--color-background);
+      border-color: var(--color-primary);
+    }
+    .cite-filter .chip-count {
+      margin-left: auto;
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    /* Section group cards */
+    .cite-section {
+      margin-block: 1.75rem;
+      padding: 1.5rem 1.5rem 1.25rem;
+    }
+    .cite-section h2 {
+      font-family: var(--font-serif);
+      font-size: 1.375rem;
+      margin: 0 0 1rem;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    .cite-section h2 .count {
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--color-accent) 22%, transparent);
+      color: var(--color-text);
+    }
+
+    /* Citation entries */
+    .cite-entry {
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .cite-section .cite-entry:first-child { border-top: 0; padding-top: 0.25rem; }
+    .cite-section .cite-entry:last-child  { padding-bottom: 0.25rem; }
+    .cite-entry[hidden] { display: none; }
+    .cite-entry h3 {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      line-height: 1.35;
+      margin: 0 0 0.5rem;
+      color: var(--color-text);
+    }
+    .cite-entry h3 .slug {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+      font-weight: 400;
+      margin-left: 0.375rem;
+    }
     .meta-line { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .cite-link { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.875rem; margin: 0.5rem 0 1rem; }
+    .cite-link {
+      display: inline-block;
+      font-family: ui-monospace, monospace;
+      font-size: 0.875rem;
+      margin: 0.25rem 0 0.75rem;
+      color: var(--color-link);
+      text-decoration-color: color-mix(in oklab, var(--color-link) 40%, transparent);
+      text-underline-offset: 2px;
+    }
+    .cite-link:hover { text-decoration-color: currentColor; }
+
+    /* BibTeX toggle */
+    .bibtex-toggle {
+      appearance: none;
+      cursor: pointer;
+      padding: 0.4375rem 0.875rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .bibtex-toggle::before {
+      content: "▸";
+      font-size: 0.6875rem;
+      transition: transform 120ms ease;
+    }
+    .bibtex-toggle[aria-expanded="true"]::before { content: "▾"; }
+    .bibtex-toggle:hover { border-color: var(--color-accent); }
     .bibtex {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 0.5rem;
       padding: 0.875rem 1rem;
       margin-top: 0.75rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: ui-monospace, monospace;
       font-size: 0.8125rem;
       line-height: 1.55;
       white-space: pre-wrap;
       overflow-x: auto;
     }
-    .registry-info { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+    .bibtex[hidden] { display: none; }
+
+    .registry-info {
+      margin-top: 3rem;
+      padding: 1.5rem 1.5rem 1.25rem;
+    }
     .registry-info p { font-size: 0.9375rem; }
+
+    /* Empty state when filters match nothing */
+    .cite-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--color-text-light);
+      font-style: italic;
+    }
+    .cite-empty[hidden] { display: none; }
   </style>
 
   <article class="legal-page">
     <h1>Citable Sources &amp; Citation Index</h1>
-    <p class="last-updated">
-      Last Updated: {updatedLabel || 'July 9, 2026'} · License: {licenseLabel}
-    </p>
 
     <p class="lede">
       Every citation handle for Maine Dispensary Guide data, statistics, and ROI benchmarks.
@@ -108,43 +320,106 @@ const updatedLabel = meta.updated ?? '';
       short-form, and BibTeX formats.
     </p>
 
-    <p class="lede">
-      Adding a new citable page = one entry in <code>src/data/citations.json</code>. No code change required.
-    </p>
+    <div class="cite-header card-elev section-a" data-license-strip>
+      <div class="stat">
+        <span class="stat-label">Citable entries</span>
+        <span class="stat-value" data-entries-total>{totalEntries}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Last updated</span>
+        <span class="stat-value">{lastUpdatedPretty || 'July 9, 2026'}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">License</span>
+        <a class="stat-value" data-license href="https://creativecommons.org/licenses/by/4.0/">{licenseLabel}</a>
+      </div>
+    </div>
 
-    {pages.map((p) => {
-      const bibKey = bibKeyFor(p);
-      const [year] = p.publish_date.split('-');
-      const bibtex = `@misc{${bibKey},
+    <div class="cite-filter card-elev" role="search" aria-label="Filter citations">
+      <div class="cite-filter-row">
+        <input
+          type="search"
+          id="cite-search"
+          placeholder="Filter by title, author, or section…"
+          aria-label="Filter citations"
+          autocomplete="off"
+        />
+        <span class="chip-count" data-visible-count>{totalEntries} / {totalEntries}</span>
+      </div>
+      <div class="cite-filter-row" role="group" aria-label="Filter by category">
+        <button class="chip" type="button" data-chip="all"            aria-pressed="true">All</button>
+        <button class="chip" type="button" data-chip="guides"         aria-pressed="false">Guides</button>
+        <button class="chip" type="button" data-chip="blog"           aria-pressed="false">Blog</button>
+        <button class="chip" type="button" data-chip="operator-facing" aria-pressed="false">Operator-facing</button>
+        <button class="chip" type="button" data-chip="market-data"    aria-pressed="false">Market Data</button>
+        <button class="chip" type="button" data-chip="foundational"   aria-pressed="false">Foundational</button>
+      </div>
+    </div>
+
+    <div class="cite-empty" data-empty hidden>
+      No entries match the current filter.
+    </div>
+
+    <div class="cite-results" data-results>
+      {sectionEntries.map(([sectionLabel, sectionPages]) => (
+        <section class="cite-section card-elev section-b" data-section={sectionLabel}>
+          <h2>
+            {sectionLabel}
+            <span class="count">{sectionPages.length}</span>
+          </h2>
+
+          {sectionPages.map((p) => {
+            const bibKey = bibKeyFor(p);
+            const [year] = p.publish_date.split('-');
+            const bibtex = `@misc{${bibKey},
   author  = {${p.authors_bib}},
   title   = {${p.title}},
   year    = {${year}},
   url     = {${p.page_url}},
   note    = {Maine Dispensary Guide. Published ${p.publish_date}. Reviewed by ${p.reviewed_by}. DOI-style permalink: https://mainedispensaryguide.com/cite/${p.slug}}
 }`;
-      return (
-        <section id={p.slug}>
-          <h2>
-            {p.title}
-            <span class="slug">/{p.slug}</span>
-          </h2>
-          <p class="meta-line">
-            <strong>By:</strong> {p.authors_label} ·
-            <strong>Published:</strong> {p.publish_date} ·
-            <strong>Section:</strong> {p.section}
-          </p>
-          <p class="meta-line">
-            <strong>Source page:</strong> <a href={p.page_url}>{p.page_url}</a>
-          </p>
-          <p>
-            <a class="cite-link" href={`/cite/${p.slug}`}>Cite this page → /cite/{p.slug}</a>
-          </p>
-          <pre class="bibtex"><code>{bibtex}</code></pre>
+            const chips = chipsFor(p).join(' ');
+            const searchHaystack = `${p.title} ${p.authors_label} ${p.section} ${p.slug} ${p.short_citation}`.toLowerCase();
+            return (
+              <article
+                class="cite-entry"
+                id={p.slug}
+                data-slug={p.slug}
+                data-chips={chips}
+                data-search={searchHaystack}
+              >
+                <h3>
+                  {p.title}
+                  <span class="slug">/{p.slug}</span>
+                </h3>
+                <p class="meta-line">
+                  <strong>By:</strong> {p.authors_label} ·
+                  <strong>Published:</strong> {p.publish_date} ·
+                  <strong>Section:</strong> {p.section}
+                </p>
+                <p class="meta-line">
+                  <strong>Source page:</strong> <a href={p.page_url}>{p.page_url}</a>
+                </p>
+                <p>
+                  <a class="cite-link" href={`/cite/${p.slug}`}>Cite this page → /cite/{p.slug}</a>
+                </p>
+                <button
+                  type="button"
+                  class="bibtex-toggle"
+                  aria-expanded="false"
+                  aria-controls={`bibtex-${p.slug}`}
+                >
+                  Show BibTeX
+                </button>
+                <pre class="bibtex" id={`bibtex-${p.slug}`} hidden><code>{bibtex}</code></pre>
+              </article>
+            );
+          })}
         </section>
-      );
-    })}
+      ))}
+    </div>
 
-    <section class="registry-info">
+    <section class="registry-info card-elev">
       <h2>About this index</h2>
       <p>
         This page is the human-browsable index for Maine Dispensary Guide's citation registry.
@@ -163,4 +438,66 @@ const updatedLabel = meta.updated ?? '';
       </p>
     </section>
   </article>
+
+  <script is:inline>
+    (function () {
+      var root = document.querySelector('[data-results]');
+      if (!root) return;
+      var entries = Array.prototype.slice.call(root.querySelectorAll('.cite-entry'));
+      var sections = Array.prototype.slice.call(root.querySelectorAll('.cite-section'));
+      var totalEl = document.querySelector('[data-visible-count]');
+      var emptyEl = document.querySelector('[data-empty]');
+      var chips = Array.prototype.slice.call(document.querySelectorAll('[data-chip]'));
+      var searchInput = document.getElementById('cite-search');
+
+      var activeChip = 'all';
+      var activeQuery = '';
+
+      function applyFilters() {
+        var visibleTotal = 0;
+        entries.forEach(function (el) {
+          var chipsAttr = (el.getAttribute('data-chips') || '').split(/\s+/);
+          var haystack = el.getAttribute('data-search') || '';
+          var chipMatch = activeChip === 'all' || chipsAttr.indexOf(activeChip) !== -1;
+          var queryMatch = !activeQuery || haystack.indexOf(activeQuery) !== -1;
+          var show = chipMatch && queryMatch;
+          el.hidden = !show;
+          if (show) visibleTotal++;
+        });
+        if (totalEl) totalEl.textContent = visibleTotal + ' / ' + entries.length;
+        if (emptyEl) emptyEl.hidden = visibleTotal !== 0;
+        sections.forEach(function (s) {
+          var any = s.querySelector('.cite-entry:not([hidden])');
+          s.hidden = !any;
+        });
+      }
+
+      chips.forEach(function (c) {
+        c.addEventListener('click', function () {
+          chips.forEach(function (other) { other.setAttribute('aria-pressed', 'false'); });
+          c.setAttribute('aria-pressed', 'true');
+          activeChip = c.getAttribute('data-chip');
+          applyFilters();
+        });
+      });
+      if (searchInput) {
+        searchInput.addEventListener('input', function () {
+          activeQuery = searchInput.value.trim().toLowerCase();
+          applyFilters();
+        });
+      }
+
+      root.addEventListener('click', function (e) {
+        var btn = e.target.closest('.bibtex-toggle');
+        if (!btn) return;
+        var id = btn.getAttribute('aria-controls');
+        var pre = id && document.getElementById(id);
+        if (!pre) return;
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        pre.hidden = expanded;
+        btn.textContent = expanded ? 'Show BibTeX' : 'Hide BibTeX';
+      });
+    })();
+  </script>
 </Layout>
