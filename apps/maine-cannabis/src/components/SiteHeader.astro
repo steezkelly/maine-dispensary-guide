@@ -43,15 +43,15 @@ const siteName = siteConfig.siteName;
 
     <div class="nav-actions">
       <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()">
-        <div class="toggle-track">
-          <div class="toggle-thumb">
+        <span class="toggle-track">
+          <span class="toggle-thumb">
             <span class="sun" aria-hidden="true">✦</span>
             <span class="moon" aria-hidden="true">◆</span>
-          </div>
-        </div>
+          </span>
+        </span>
       </button>
       <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle mobile menu" />
-      <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true" id="mobile-menu-trigger"><span></span></label>
+      <label for="nav-toggle" class="nav-toggle-label" id="mobile-menu-trigger"><span></span></label>
     </div>
 
     <div class="nav-links" id="navigation-menu" role="navigation">
