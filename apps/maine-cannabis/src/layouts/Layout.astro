@@ -21,6 +21,7 @@ import RelatedArticles from '@network/ui/RelatedArticles';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import BaseHead from './BaseHead.astro';
+import AffiliateClickTracker from '../components/AffiliateClickTracker.astro';
 import siteConfig from '../data/site-config.json';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
@@ -325,7 +326,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       {isGuide ? (
         <div class="guide-layout">
           <div class="guide-content">
-            {heroImage && <div class="guide-hero"><picture><source type="image/avif" srcset={`${heroImageMobileAvif} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><source type="image/webp" srcset={`${heroImageMobileWebp} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><img src={heroImage} srcset={`${heroImage} 1x, ${heroImageMobile} 640w`} sizes="(max-width: 640px) 640px, 1280px" alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
+            {heroImage && <div class="guide-hero"><picture><source type="image/avif" srcset={`${heroImageMobileAvif} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><source type="image/webp" srcset={`${heroImageMobileWebp} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><img src={heroImage} srcset={`${heroImageMobile} 640w`} sizes="(max-width: 640px) 640px, 1280px" alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
             <slot />
             {article && (
               <div class="article-meta">
