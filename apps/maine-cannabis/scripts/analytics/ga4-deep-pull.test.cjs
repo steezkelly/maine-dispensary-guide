@@ -7,6 +7,7 @@ const {
   getOutputDir,
   runQuery,
   writeIndexMd,
+  writeDashboard,
   tableFromRows,
 } = require('./ga4-deep-pull.cjs');
 
@@ -142,5 +143,28 @@ test('writeIndexMd produces all spec sections', () => {
   assert.match(md, /## Files/);
   assert.match(md, /raw\/pageviews\.jsonl/);
 
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test('writeDashboard produces valid HTML referencing Chart.js + 4 canvases', () => {
+  const tmpDir = fs.mkdtempSync('/tmp/ga4-dash-smoke-');
+  fs.mkdirSync(path.join(tmpDir, 'raw'), { recursive: true });
+  writeDashboard(tmpDir, {
+    runAt: '2026-07-11T00:00:00.000Z',
+    propertyId: '532778727',
+    totalRows: 5,
+    dateRange: { start: '2020-01-01', end: 'today' },
+    queriesRun: 4,
+    queriesFailed: 0,
+  });
+  const html = fs.readFileSync(path.join(tmpDir, 'dashboard.html'), 'utf8');
+  assert.match(html, /<!doctype html>/i);
+  assert.match(html, /chart\.umd\.min\.js/);
+  assert.match(html, /<canvas id="tsChart">/);
+  assert.match(html, /<canvas id="pageChart">/);
+  assert.match(html, /<canvas id="srcChart">/);
+  assert.match(html, /<canvas id="devChart">/);
+  assert.match(html, /loadJsonl\('raw\/timeseries\.jsonl'\)/);
+  assert.match(html, /loadJsonl\('raw\/pageviews\.jsonl'\)/);
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });

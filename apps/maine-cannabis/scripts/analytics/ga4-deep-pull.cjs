@@ -253,7 +253,107 @@ function writeIndexMd(dir, meta, summary) {
   fs.writeFileSync(path.join(dir, 'index.md'), lines.join('\n'));
 }
 
-module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES, writeMeta, writeIndexMd, tableFromRows };
+function writeDashboard(dir, meta) {
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GA4 Deep Pull — ${meta.runAt.slice(0, 10)}</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; margin: 2rem auto; max-width: 1100px; padding: 0 1rem; color: #101820; }
+    h1 { color: #0D4E50; border-bottom: 2px solid #588157; padding-bottom: 0.5rem; }
+    .chart-box { background: #fff; border: 1px solid #D1D1C1; border-radius: 0.75rem; padding: 1.5rem; margin: 1.5rem 0; }
+    .meta { background: #F2F2E2; padding: 1rem; border-radius: 0.5rem; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>GA4 Deep Pull — ${meta.runAt.slice(0, 10)}</h1>
+  <div class="meta">
+    <strong>Property:</strong> ${meta.propertyId} (G-614GHG67ZQ) ·
+    <strong>Range:</strong> ${meta.dateRange.start} to ${meta.dateRange.end} ·
+    <strong>Rows:</strong> ${meta.totalRows} ·
+    <strong>Queries:</strong> ${meta.queriesRun - meta.queriesFailed}/${meta.queriesRun}
+  </div>
+
+  <div class="chart-box"><canvas id="tsChart"></canvas></div>
+  <div class="chart-box"><canvas id="pageChart"></canvas></div>
+  <div class="chart-box"><canvas id="srcChart"></canvas></div>
+  <div class="chart-box"><canvas id="devChart"></canvas></div>
+
+<script>
+async function loadJsonl(p) {
+  const r = await fetch(p);
+  const t = await r.text();
+  return t.trim().split('\\n').map(l => JSON.parse(l));
+}
+
+(async () => {
+  const [timeseries, pageviews, acquisition, technology] = await Promise.all([
+    loadJsonl('raw/timeseries.jsonl'),
+    loadJsonl('raw/pageviews.jsonl'),
+    loadJsonl('raw/acquisition.jsonl'),
+    loadJsonl('raw/technology.jsonl'),
+  ]);
+
+  // Time series
+  new Chart(document.getElementById('tsChart'), {
+    type: 'line',
+    data: {
+      labels: timeseries.map(r => r.dimensions.date),
+      datasets: [
+        { label: 'Users', data: timeseries.map(r => r.metrics.users), borderColor: '#0D4E50', tension: 0.2 },
+        { label: 'Sessions', data: timeseries.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
+        { label: 'Pageviews', data: timeseries.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
+      ],
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: 'Daily users / sessions / pageviews' } } },
+  });
+
+  // Top 10 pages
+  const topPages = [...pageviews].sort((a, b) => b.metrics.screenPageViews - a.metrics.screenPageViews).slice(0, 10);
+  new Chart(document.getElementById('pageChart'), {
+    type: 'bar',
+    data: {
+      labels: topPages.map(r => r.dimensions.pagePath || '/'),
+      datasets: [{ label: 'Pageviews', data: topPages.map(r => r.metrics.screenPageViews), backgroundColor: '#0D4E50' }],
+    },
+    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 pages by pageviews' } } },
+  });
+
+  // Top 10 sources
+  const topSrc = [...acquisition].sort((a, b) => b.metrics.sessions - a.metrics.sessions).slice(0, 10);
+  new Chart(document.getElementById('srcChart'), {
+    type: 'bar',
+    data: {
+      labels: topSrc.map(r => (r.dimensions.sessionSource || '(direct)') + ' / ' + (r.dimensions.sessionMedium || '')),
+      datasets: [{ label: 'Sessions', data: topSrc.map(r => r.metrics.sessions), backgroundColor: '#588157' }],
+    },
+    options: { responsive: true, indexAxis: 'y', plugins: { title: { display: true, text: 'Top 10 acquisition sources' } } },
+  });
+
+  // Device split (aggregate by deviceCategory)
+  const devMap = {};
+  technology.forEach(r => {
+    const k = r.dimensions.deviceCategory || '(unknown)';
+    devMap[k] = (devMap[k] || 0) + (r.metrics.users || 0);
+  });
+  new Chart(document.getElementById('devChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(devMap),
+      datasets: [{ data: Object.values(devMap), backgroundColor: ['#0D4E50', '#588157', '#C4D4B6', '#7A9A6A', '#F2F2E2'] }],
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: 'Users by device category' } } },
+  });
+})();
+</script>
+</body>
+</html>`;
+  fs.writeFileSync(path.join(dir, 'dashboard.html'), html);
+}
+
+module.exports = { validateEnv, getOutputDir, ensureDir, runQuery, QUERIES, writeMeta, writeIndexMd, writeDashboard, tableFromRows };
 
 const { google } = require('googleapis');
 
@@ -332,6 +432,10 @@ async function run() {
   // Write index.md
   writeIndexMd(dir, meta, summary);
   console.log(`[ga4-deep-pull] index.md written`);
+
+  // Write dashboard.html
+  writeDashboard(dir, meta);
+  console.log(`[ga4-deep-pull] dashboard.html written`);
 }
 
 if (require.main === module) {
