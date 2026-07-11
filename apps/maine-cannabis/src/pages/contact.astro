@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 
 const faqs = [
   {
@@ -28,19 +29,6 @@ const faqs = [
     a: "We vet all professionals before listing. Vendors must demonstrate cannabis industry experience and Maine market presence. Email <a href=\"mailto:partners@mainedispensaryguide.com\">partners@mainedispensaryguide.com</a> with your practice areas, client references, and years of cannabis-specific experience."
   }
 ];
-
-const faqPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqs.map(f => ({
-    "@type": "Question",
-    "name": f.q,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": f.a.replace(/<[^>]+>/g, "")
-    }
-  }))
-};
 ---
 
 <Layout
@@ -76,6 +64,24 @@ const faqPageSchema = {
   .faq-item p { font-size: 1.0rem; color: var(--color-text-light); line-height: 1.7; }
   .faq-item a { color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
   .faq-item a:hover { border-color: var(--color-accent); }
+
+  .contact-form-section { background: var(--color-surface); padding: 4rem; border-radius: 2.5rem; border: 1px solid var(--color-border); margin-bottom: 5rem; }
+  .contact-form-section h2 { margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); font-family: var(--font-serif); text-align: center; }
+  .contact-form-section > p { text-align: center; color: var(--color-text-light); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .contact-form { max-width: 640px; margin: 0 auto; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label { display: block; font-weight: 700; font-size: 0.95rem; color: var(--color-primary); margin-bottom: 0.5rem; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea { width: 100%; padding: 0.875rem 1rem; font-family: var(--font-sans); font-size: 1rem; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 0.75rem; transition: border-color 0.2s, box-shadow 0.2s; }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(13, 78, 80, 0.15); }
+  .form-group textarea { min-height: 140px; resize: vertical; }
+  .form-submit { display: inline-block; background: var(--color-primary); color: #fff; border: none; padding: 1rem 2.5rem; font-size: 1rem; font-weight: 700; border-radius: 0.75rem; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+  .form-submit:hover { background: var(--color-accent); transform: translateY(-1px); }
+  .form-submit:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+  .contact-form-note { text-align: center; font-size: 0.875rem; color: var(--color-text-light); margin-top: 1.25rem; }
 
   .quick-links-section { text-align: center; margin-bottom: 5rem; }
   .quick-links-section h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 1rem; }
@@ -127,6 +133,40 @@ const faqPageSchema = {
       <p>Our editorial team works directly with Maine OCP-licensed attorneys, cannabis-focused CPAs, and experienced operators to verify every data point in our guides. We update content as Maine statutes and municipal codes change — which happens frequently. If you spot an error or have data to contribute, contact us at the address above.</p>
     </section>
 
+    <section class="contact-form-section" aria-labelledby="contact-form-heading">
+      <h2 id="contact-form-heading">Send Us a Message</h2>
+      <p>Prefer a form over email? Drop your details and message below — we route every submission to the right team and reply within 2 business days.</p>
+      <form class="contact-form" action="https://formspree.io/f/xvgzlowz" method="POST" aria-labelledby="contact-form-heading">
+        <input type="hidden" name="_subject" value="Contact form submission — mainedispensaryguide.com" />
+        <div class="form-group">
+          <label for="contact-name">Your Name</label>
+          <input type="text" id="contact-name" name="name" required autocomplete="name" placeholder="Jane Smith" />
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email Address</label>
+          <input type="email" id="contact-email" name="email" required autocomplete="email" placeholder="jane@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="contact-role">Which best describes you?</label>
+          <select id="contact-role" name="role" required>
+            <option value="" disabled selected>Select one…</option>
+            <option value="researching">Researching — just exploring</option>
+            <option value="applying">Applying — have my LLC, working on license</option>
+            <option value="operating">Already operating — looking to grow</option>
+            <option value="journalist">Journalist / researcher</option>
+            <option value="vendor">Vendor (lawyer, CPA, security, etc.)</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Your Message</label>
+          <textarea id="contact-message" name="message" required placeholder="Tell us what you're working on, what you need, or what we got wrong. Specifics help us route to the right person faster."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message</button>
+        <p class="contact-form-note">We respond within 2 business days. Your email is used only to reply — never sold or shared.</p>
+      </form>
+    </section>
+
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
       {faqs.map(faq => (
@@ -172,5 +212,7 @@ const faqPageSchema = {
       The Maine Dispensary Guide provides informational resources only. Nothing on this site constitutes legal or financial advice. Always consult a licensed Maine cannabis attorney and CPA before making business decisions.
     </Callout>
   </article>
+
+  <LeadFormTracker formSelector=".contact-form" formName="contact" trackFields={["role"]} />
 
 </Layout>

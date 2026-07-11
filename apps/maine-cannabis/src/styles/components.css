@@ -414,6 +414,15 @@ thead th {
   font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  /* WCAG 1.4.3 — accessibility fix 2026-07-11.
+     Per-guide scoped styles (data-astro-cid-*) set
+       th { background: var(--color-background) }
+     which otherwise wins on specificity and produces a 1.13:1
+     white-on-cream contrast (WCAG fail). !important is the
+     canonical a11y override here so the dark header is preserved
+     site-wide. */
+  background: var(--color-primary) !important;
+  color: #fff !important;
 }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: rgba(88, 129, 87, 0.04); }
@@ -500,9 +509,17 @@ footer {
 .footer-links-secondary {
   margin-top: 0.25rem;
   gap: 1.25rem;
-  opacity: 0.75;
+  /* WCAG 1.4.3 — accessibility fix 2026-07-11.
+     The 0.75 opacity previously layered over --color-text-light
+     produced an effective 3.95:1 contrast against the white
+     --color-surface footer background (failing AA 4.5:1 for the
+     "For Journalists" and "Contributor Guidelines" links).
+     Drop the opacity and use --color-text so the secondary nav
+     still reads as visually lighter (smaller + italic + lighter
+     weight below) without dragging contrast below threshold. */
 }
 .footer-links-secondary a {
+  color: var(--color-text);
   font-size: 0.8125rem;
   font-weight: 500;
   font-style: italic;
