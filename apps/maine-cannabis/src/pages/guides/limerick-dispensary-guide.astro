@@ -8,7 +8,7 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-05-13",
-  modifiedDate: "2026-05-13",
+  modifiedDate: "2026-07-10",
   section: "City Guides"
 };
 
@@ -18,6 +18,7 @@ const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    { "@type": "Question", "name": "Founding Farmers Limerick Maine", "acceptedAnswer": { "@type": "Answer", "text": "Founding Farmers is a medical cannabis dispensary at 16 Main Street, Limerick, ME 04048 (phone 207-315-5259). Founded in 2021, they primarily serve medical patients and carry a range of medical marijuana products. Hours vary by season; verify by phone before visiting." }},
     { "@type": "Question", "name": "Are there any cannabis dispensaries in Limerick, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Founding Farmers operates a dispensary at 16 Main Street, Limerick, ME 04048. Founded in 2021, they primarily serve medical patients with a focus on medical marijuana products and patient services." }},
     { "@type": "Question", "name": "What is Founding Farmers in Limerick, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Founding Farmers is a cannabis dispensary located at 16 Main Street, Limerick, ME. Established in 2021, they carry a range of medical marijuana products and offer patient-focused services. Contact: (207) 315-5259." }},
     { "@type": "Question", "name": "Does Limerick allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Limerick does NOT appear on the official Maine adult-use opt-in community list. Founding Farmers operates primarily as a medical dispensary. For recreational cannabis, residents typically travel to Bridgton (approximately 18 miles away)." }},
@@ -48,7 +49,7 @@ const faqPageJsonLd = JSON.stringify({
 
 <article>
   <div class="article-header">
-    <h1>Limerick Maine Dispensary Guide</h1>
+    <h1>Founding Farmers — Limerick Maine Dispensary</h1>
     <p class="subtitle">Cannabis dispensaries in Limerick, Maine — Founding Farmers dispensary & nearby rec options</p>
   </div>
 
@@ -133,6 +134,7 @@ const faqPageJsonLd = JSON.stringify({
   <section class="faq-section">
     <h2>Frequently Asked Questions</h2>
     <Faq
+      withoutSchema
       questions={[
         { q: "Are there any dispensaries in Limerick, Maine?", a: "Yes. Founding Farmers operates a medical-focused dispensary at 16 Main Street, Limerick, ME 04048. Established in 2021, they serve the Limerick area and nearby communities." },
         { q: "What is Founding Farmers?", a: "Founding Farmers is a cannabis dispensary at 16 Main Street, Limerick, ME. Founded in 2021, they carry medical marijuana products and offer patient-focused services. Contact: (207) 315-5259." },
@@ -153,5 +155,7 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-primary); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
+  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+  <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+</article>
 </Layout>
