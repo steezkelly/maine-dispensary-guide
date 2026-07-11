@@ -87,11 +87,11 @@ test('writeIndexMd produces all spec sections', () => {
       rows.map(r => JSON.stringify(r)).join('\n') + '\n');
   };
   writeJsonl('timeseries', [
-    { dimensions: { date: '20260701' }, metrics: { users: 10, sessions: 15, screenPageViews: 40, eventCount: 5 } },
-    { dimensions: { date: '20260702' }, metrics: { users: 12, sessions: 18, screenPageViews: 45, eventCount: 7 } },
+    { dimensions: { date: '20260701' }, metrics: { totalUsers: 10, newUsers: 7, sessions: 15, screenPageViews: 40, eventCount: 5 } },
+    { dimensions: { date: '20260702' }, metrics: { totalUsers: 12, newUsers: 9, sessions: 18, screenPageViews: 45, eventCount: 7 } },
   ]);
   writeJsonl('pageviews', [
-    { dimensions: { pagePath: '/', pageTitle: 'Home' }, metrics: { screenPageViews: 100, engagementDuration: 50, bounceRate: 0.3 } },
+    { dimensions: { pagePath: '/', pageTitle: 'Home' }, metrics: { screenPageViews: 100, userEngagementDuration: 50, bounceRate: 0.3 } },
   ]);
   writeJsonl('geography', [
     { dimensions: { country: 'US', city: 'Portland', region: 'ME' }, metrics: { totalUsers: 5, sessions: 8 } },
@@ -100,7 +100,7 @@ test('writeIndexMd produces all spec sections', () => {
     { dimensions: { sessionSource: 'google', sessionMedium: 'organic', sessionCampaignName: '' }, metrics: { sessions: 20, engagedSessions: 15, engagementRate: 0.75 } },
   ]);
   writeJsonl('technology', [
-    { dimensions: { deviceCategory: 'desktop', browser: 'Chrome', operatingSystem: 'Linux' }, metrics: { users: 10 } },
+    { dimensions: { deviceCategory: 'desktop', browser: 'Chrome', operatingSystem: 'Linux' }, metrics: { totalUsers: 10 } },
   ]);
   writeJsonl('lead_capture', []); // empty
   writeJsonl('new_vs_returning', [

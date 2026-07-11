@@ -34,6 +34,8 @@ function getOutputDir() {
 }
 
 function ensureDir(dir) {
+  // Wipe dir to keep idempotency (re-run = clean state)
+  fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });
   fs.mkdirSync(path.join(dir, 'raw'), { recursive: true });
 }
@@ -42,7 +44,7 @@ const QUERIES = [
   {
     name: 'pageviews',
     dimensions: [{ name: 'pagePath' }, { name: 'pageTitle' }],
-    metrics: [{ name: 'screenPageViews' }, { name: 'engagementDuration' }, { name: 'bounceRate' }],
+    metrics: [{ name: 'screenPageViews' }, { name: 'userEngagementDuration' }, { name: 'bounceRate' }],
     rowCap: 10000,
   },
   {
@@ -60,21 +62,25 @@ const QUERIES = [
   {
     name: 'technology',
     dimensions: [{ name: 'deviceCategory' }, { name: 'browser' }, { name: 'operatingSystem' }, { name: 'screenResolution' }],
-    metrics: [{ name: 'users' }],
+    metrics: [{ name: 'totalUsers' }],
     rowCap: 5000,
   },
   {
     name: 'lead_capture',
-    dimensions: [{ name: 'customEvent:form_name' }, { name: 'customEvent:page_path' }, { name: 'customEvent:stage' }],
+    // Custom-event params (form_name, stage, page_path) are not registered as
+    // custom dimensions on this property (verified via getMetadata 2026-07-11).
+    // We can't break out by form_name via the API; query by event name instead
+    // and aggregate the total lead_capture event count over time.
+    dimensions: [{ name: 'pagePath' }],
     metrics: [{ name: 'eventCount' }],
-    rowCap: 5000,
-    note: 'Custom event scope. Returns 0 rows if lead_capture never fired.',
-  },
-  {
-    name: 'user_journey',
-    dimensions: [{ name: 'userPseudoId' }, { name: 'sessionId' }, { name: 'pagePath' }, { name: 'pageTitle' }],
-    metrics: [{ name: 'screenPageViews' }],
-    rowCap: 10000,
+    rowCap: 1000,
+    dimensionFilter: {
+      filter: {
+        fieldName: 'eventName',
+        stringFilter: { value: 'lead_capture', matchType: 'EXACT' },
+      },
+    },
+    note: 'Event-name filter. Total lead_capture events per page (form-level breakdown requires custom-dim registration).',
   },
   {
     name: 'new_vs_returning',
@@ -85,7 +91,7 @@ const QUERIES = [
   {
     name: 'timeseries',
     dimensions: [{ name: 'date' }],
-    metrics: [{ name: 'users' }, { name: 'sessions' }, { name: 'screenPageViews' }, { name: 'eventCount' }],
+    metrics: [{ name: 'totalUsers' }, { name: 'newUsers' }, { name: 'sessions' }, { name: 'screenPageViews' }, { name: 'eventCount' }],
     rowCap: 1000,
   },
   {
@@ -96,9 +102,12 @@ const QUERIES = [
   },
   {
     name: 'exit_pages',
+    // 'exits' is not a valid metric on this property. Use pagePath + sessions
+    // and surface the high-traffic pages so exit behavior can be inferred.
     dimensions: [{ name: 'pagePath' }],
-    metrics: [{ name: 'exits' }],
+    metrics: [{ name: 'sessions' }, { name: 'screenPageViews' }],
     rowCap: 5000,
+    note: 'Exits metric not available. Page-level sessions + pageviews as proxy.',
   },
 ];
 
@@ -118,6 +127,7 @@ async function runQuery(client, propertyId, queryDef, dateRange = { startDate: '
         metrics,
         limit: Math.min(pageSize, rowCap - rows.length),
         offset,
+        ...(queryDef.dimensionFilter ? { dimensionFilter: queryDef.dimensionFilter } : {}),
       },
     });
     const data = res.data;
@@ -197,7 +207,7 @@ function writeIndexMd(dir, meta, summary) {
   const leads = readJsonl(path.join(rawDir, 'lead_capture.jsonl'));
   const newRet = readJsonl(path.join(rawDir, 'new_vs_returning.jsonl'));
 
-  const totalUsers = timeseries.reduce((s, r) => s + (r.metrics.users || 0), 0);
+  const totalUsers = timeseries.reduce((s, r) => s + (r.metrics.totalUsers || 0), 0);
   const totalSessions = timeseries.reduce((s, r) => s + (r.metrics.sessions || 0), 0);
   const totalPageviews = timeseries.reduce((s, r) => s + (r.metrics.screenPageViews || 0), 0);
   const totalEvents = timeseries.reduce((s, r) => s + (r.metrics.eventCount || 0), 0);
@@ -219,7 +229,7 @@ function writeIndexMd(dir, meta, summary) {
     ``,
     `## By page (top 20 of ${pageviews.length})`,
     ``,
-    tableFromRows(sortBy(pageviews, 'screenPageViews'), ['pagePath', 'pageTitle'], ['screenPageViews', 'engagementDuration', 'bounceRate']),
+    tableFromRows(sortBy(pageviews, 'screenPageViews'), ['pagePath', 'pageTitle'], ['screenPageViews', 'userEngagementDuration', 'bounceRate']),
     ``,
     `## By geography (top 20 of ${geo.length})`,
     ``,
@@ -231,11 +241,13 @@ function writeIndexMd(dir, meta, summary) {
     ``,
     `## By device (top 20 of ${tech.length})`,
     ``,
-    tableFromRows(sortBy(tech, 'users'), ['deviceCategory', 'browser', 'operatingSystem'], ['users']),
+    tableFromRows(sortBy(tech, 'totalUsers'), ['deviceCategory', 'browser', 'operatingSystem'], ['totalUsers']),
     ``,
-    `## Lead capture funnel (${leads.length} rows)`,
+    `## Lead capture funnel (${leads.length} rows, by page)`,
     ``,
-    tableFromRows(sortBy(leads, 'eventCount'), ['form_name', 'page_path', 'stage'], ['eventCount']),
+    tableFromRows(sortBy(leads, 'eventCount'), ['pagePath'], ['eventCount']),
+    ``,
+    `(form-level breakdown requires custom-dim registration in GA4 Admin → Custom Definitions)`,
     ``,
     `## New vs returning`,
     ``,
@@ -302,7 +314,8 @@ async function loadJsonl(p) {
     data: {
       labels: timeseries.map(r => r.dimensions.date),
       datasets: [
-        { label: 'Users', data: timeseries.map(r => r.metrics.users), borderColor: '#0D4E50', tension: 0.2 },
+        { label: 'Users', data: timeseries.map(r => r.metrics.totalUsers), borderColor: '#0D4E50', tension: 0.2 },
+        { label: 'New Users', data: timeseries.map(r => r.metrics.newUsers), borderColor: '#7A9A6A', tension: 0.2 },
         { label: 'Sessions', data: timeseries.map(r => r.metrics.sessions), borderColor: '#588157', tension: 0.2 },
         { label: 'Pageviews', data: timeseries.map(r => r.metrics.screenPageViews), borderColor: '#C4D4B6', tension: 0.2 },
       ],
@@ -336,7 +349,7 @@ async function loadJsonl(p) {
   const devMap = {};
   technology.forEach(r => {
     const k = r.dimensions.deviceCategory || '(unknown)';
-    devMap[k] = (devMap[k] || 0) + (r.metrics.users || 0);
+    devMap[k] = (devMap[k] || 0) + (r.metrics.totalUsers || 0);
   });
   new Chart(document.getElementById('devChart'), {
     type: 'doughnut',
