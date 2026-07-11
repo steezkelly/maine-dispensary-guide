@@ -1,0 +1,65 @@
+---
+/**
+ * AffiliateClickTracker.astro
+ *
+ * GA4 outbound-click attribution for `.btn-affiliate` elements.
+ * Pattern: LeadFormTracker.astro (Sprint 76). gtag event with page_path,
+ * idempotent init, try/catch-wrapped.
+ *
+ * Event: affiliate_click
+ * Payload: { partner, href, is_sponsored, page_path }
+ *
+ * Partner derivation: ilgm / amazon / spider_farmer / internal / other
+ */
+
+interface Props {
+  selector?: string;
+}
+
+const { selector = '.btn-affiliate' } = Astro.props;
+---
+
+<script is:inline define:vars={{ selector }}>
+  (function () {
+    try {
+      function derivePartner(url) {
+        try {
+          var u = new URL(url, window.location.href);
+          var host = u.hostname.toLowerCase();
+          if (!host || host === window.location.hostname) return 'internal';
+          if (host === 'ilgm.com' || host.endsWith('.ilgm.com')) return 'ilgm';
+          if (host.indexOf('amazon.com') !== -1) return 'amazon';
+          if (host.indexOf('spider-farmer.com') !== -1 || host.indexOf('spiderfarmer.com') !== -1) return 'spider_farmer';
+          return 'other';
+        } catch (_) { return 'other'; }
+      }
+      function init() {
+        document.addEventListener('click', function (e) {
+          try {
+            var el = e.target;
+            while (el && el !== document.body) {
+              if (el.tagName === 'A' && el.classList && el.classList.contains(selector.replace(/^\./, ''))) {
+                if (typeof window.gtag !== 'function') return;
+                var href = el.getAttribute('href') || '';
+                var isSponsored = (el.getAttribute('rel') || '').indexOf('sponsored') !== -1;
+                window.gtag('event', 'affiliate_click', {
+                  partner: derivePartner(href),
+                  href: href,
+                  is_sponsored: isSponsored,
+                  page_path: window.location.pathname,
+                });
+                return;
+              }
+              el = el.parentNode;
+            }
+          } catch (_) {}
+        }, { capture: true });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    } catch (_) {}
+  })();
+</script>
