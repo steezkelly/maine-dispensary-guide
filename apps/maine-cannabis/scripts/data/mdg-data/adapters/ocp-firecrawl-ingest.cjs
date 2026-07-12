@@ -137,6 +137,46 @@ function parseNumberList(s) {
     }).filter(x => x !== null);
 }
 
+// Period provenance per MDG-DATA-001 corrective review 2026-07-12.
+//
+// The source capture sometimes carries axis labels (Year column or "Yyyy
+// Mmm" cells) and sometimes only a positional value list with no axis.
+// We MUST NOT synthesize period labels just because the dashboard was
+// captured in 2026 or because a "previous 12 months" series implies
+// the most-recent-month was June 2026.
+//
+// Each observation emitted by this file carries:
+//   period_source: 'OBSERVED' | 'INFERRED' | 'UNKNOWN'
+//   reporting_period: <YYYY | YYYY-MM-DD> | null   (null if not OBSERVED)
+//   series_index: int                            (positional index in the
+//                                                  captured series; required
+//                                                  for INFERRED rows so a
+//                                                  later snapshot can
+//                                                  re-pair by position)
+//   series_direction: 'forward' | 'backward'     (which way indices count)
+//
+// Publication gates downstream of this file MUST refuse to publish rows
+// where period_source !== 'OBSERVED'. They are extraction artifacts,
+// not canonical observations.
+const PERIOD_SOURCE = Object.freeze({
+    OBSERVED:  'OBSERVED',
+    INFERRED:  'INFERRED',
+    UNKNOWN:   'UNKNOWN',
+});
+
+// Diagnostic counter. Reports during the run (single-quiet mode by default).
+let __periodDiagnostics = {
+    observed: 0,
+    inferred: 0,
+    unknown: 0,
+};
+function diagReset() { __periodDiagnostics = { observed: 0, inferred: 0, unknown: 0 }; }
+function diagCount(src) {
+    if (src === PERIOD_SOURCE.OBSERVED) __periodDiagnostics.observed += 1;
+    else if (src === PERIOD_SOURCE.INFERRED) __periodDiagnostics.inferred += 1;
+    else __periodDiagnostics.unknown += 1;
+}
+
 function parseSalesRevenue(text) {
     // The dashboard emits a table with columns:
     //   "Start of Month Month,Concentrate,Infused Product,Plants,Usable Cannabis,Total"
@@ -163,8 +203,12 @@ function parseSalesRevenue(text) {
             const yearMatch = cells[0].match(/(\d{4})/);
             const valMatch = cells[1].replace(/[\$,\`]/g, '');
             if (yearMatch && /^-?\d+(\.\d+)?$/.test(valMatch)) {
+                diagCount(PERIOD_SOURCE.OBSERVED);
                 observations.push({
                     reporting_period: yearMatch[1],
+                    period_source: PERIOD_SOURCE.OBSERVED,
+                    series_index: null,
+                    series_direction: null,
                     metric_raw: 'Sales Revenue Annual Trend',
                     metric_norm: 'retail_sales_usd',
                     product_category_raw: 'total',
@@ -190,8 +234,12 @@ function parseSalesRevenue(text) {
             if (!dt) continue;
             const val = Number(cells[1].replace(/[\$,\`]/g, ''));
             if (!Number.isFinite(val)) continue;
+            diagCount(PERIOD_SOURCE.OBSERVED);
             observations.push({
                 reporting_period: dt.toISOString().slice(0, 10),
+                period_source: PERIOD_SOURCE.OBSERVED,
+                series_index: null,
+                series_direction: null,
                 metric_raw: 'Sales Revenue Month Over Month',
                 metric_norm: 'retail_sales_usd',
                 product_category_raw: 'total',
@@ -210,10 +258,17 @@ function parseSalesRevenue(text) {
     const annualMatchBare = text.match(/^Sales Revenue,([\d.,]+)$/m);
     if (annualMatchBare && observations.length === 0) {
         const vals = parseNumberList(annualMatchBare[1]);
-        const startYear = 2026 - vals.length + 1;
+        // INFERRED series: no axis labels in the capture. We emit
+        // positional series_index only — no synthesized reporting_period.
+        // Direction is forward (vals[0] is the OLDEST year per the OCP
+        // dashboard's chronological layout).
         for (let i = 0; i < vals.length; i++) {
+            diagCount(PERIOD_SOURCE.INFERRED);
             observations.push({
-                reporting_period: String(startYear + i),
+                reporting_period: null,
+                period_source: PERIOD_SOURCE.INFERRED,
+                series_index: i,
+                series_direction: 'forward',
                 metric_raw: 'Sales Revenue Annual Trend',
                 metric_norm: 'retail_sales_usd',
                 product_category_raw: 'total',
@@ -226,14 +281,16 @@ function parseSalesRevenue(text) {
     }
     if (annualMatch && observations.length === 0) {
         const vals = parseNumberList(annualMatch[1]);
-        // The annual values correspond to fiscal years ending 2020..2026
-        // (7 years). We can't reliably get the year labels from the
-        // interact output; we flag source_snapshot_date as 2026-07-12
-        // (Firecrawl capture date) and use 2020..2026 as inferred years.
-        const startYear = 2026 - vals.length + 1;
+        // INFERRED series (same shape as above). The OCP dashboard's annual
+        // trend on Firecrawl interact captures does NOT include year-axis
+        // labels; we refuse to invent them.
         for (let i = 0; i < vals.length; i++) {
+            diagCount(PERIOD_SOURCE.INFERRED);
             observations.push({
-                reporting_period: String(startYear + i),
+                reporting_period: null,
+                period_source: PERIOD_SOURCE.INFERRED,
+                series_index: i,
+                series_direction: 'forward',
                 metric_raw: 'Sales Revenue Annual Trend',
                 metric_norm: 'retail_sales_usd',
                 product_category_raw: 'total',
@@ -248,12 +305,19 @@ function parseSalesRevenue(text) {
     const monthlyMatch = text.match(/Sales Revenue - (?:Previous 12 Months|Total Month Over Month)[,\s]+([\d.,\s]+?)(?=\n|Sales Revenue|$)/);
     if (monthlyMatch) {
         const vals = parseNumberList(monthlyMatch[1]);
-        // The most recent month is 2026-06 (June 2026 per the dashboard)
+        // INFERRED monthly series: no axis labels. Direction is backward
+        // (vals[vals.length-1] is the OLDEST month, vals[0] is the most recent,
+        // by OCP dashboard convention). We DO NOT synthesize dates from a
+        // "we captured in 2026 so the latest is June 2026" anchor. The
+        // publication gate downstream treats these as extraction artifacts.
         for (let i = vals.length - 1; i >= 0; i--) {
+            diagCount(PERIOD_SOURCE.INFERRED);
             const offset = vals.length - 1 - i;
-            const dt = new Date(Date.UTC(2026, 5 - offset, 1));
             observations.push({
-                reporting_period: dt.toISOString().slice(0, 10),
+                reporting_period: null,
+                period_source: PERIOD_SOURCE.INFERRED,
+                series_index: i,
+                series_direction: 'backward',
                 metric_raw: 'Sales Revenue Previous 12 Months',
                 metric_norm: 'retail_sales_usd',
                 product_category_raw: 'total',
@@ -288,8 +352,12 @@ function parseSalesRevenue(text) {
                 if (!valCell) continue;
                 const val = Number(valCell.replace(/[\$,\`]/g, ''));
                 if (!Number.isFinite(val)) continue;
+                diagCount(PERIOD_SOURCE.OBSERVED);
                 observations.push({
                     reporting_period: dt.toISOString().slice(0, 10),
+                    period_source: PERIOD_SOURCE.OBSERVED,
+                    series_index: null,
+                    series_direction: null,
                     metric_raw: 'Sales Revenue By Product Category',
                     metric_norm: 'retail_sales_usd',
                     product_category_raw: categoryCols[i],
@@ -306,13 +374,19 @@ function parseSalesRevenue(text) {
         const vals = parseNumberList(byCatMatch[1]);
         const categories = ['Usable Cannabis', 'Plants', 'Infused Product', 'Concentrate'];
         if (vals.length === 48 && categories.length === 4) {
+            // INFERRED matrix: no axis labels in the capture. We refuse to
+            // assign monthly dates from the "captured-in-2026-latest-is-June"
+            // heuristic. Publication gate downstream treats these as
+            // extraction artifacts.
             for (let c = 0; c < 4; c++) {
                 for (let m = 11; m >= 0; m--) {
                     const idx = c * 12 + (11 - m);
-                    const offset = 11 - m;
-                    const dt = new Date(Date.UTC(2026, 5 - offset, 1));
+                    diagCount(PERIOD_SOURCE.INFERRED);
                     observations.push({
-                        reporting_period: dt.toISOString().slice(0, 10),
+                        reporting_period: null,
+                        period_source: PERIOD_SOURCE.INFERRED,
+                        series_index: idx,
+                        series_direction: 'backward',
                         metric_raw: 'Sales Revenue By Product Category',
                         metric_norm: 'retail_sales_usd',
                         product_category_raw: categories[c],
@@ -330,21 +404,50 @@ function parseSalesRevenue(text) {
 
 function parseSalesTransactions(text) {
     const observations = [];
-    // KPI tiles
-    const kpiAmount = text.match(/Sales Amount June 2026,([\d$,.]+)/);
-    const kpiTxns = text.match(/Number of Sales Transactions June 2026,([\d,.]+)/);
-    const kpiPrice = text.match(/Average Price per Gram \(Bud\/Flower\) June 2026,\$([\d.]+)/);
-    const kpiYtdAmount = text.match(/Sales Amount Total Calendar Year to Date,([\d,.$]+)/);
-    const kpiYtdTxns = text.match(/Number of Sales Transactions Total Calendar Year to Date,([\d,.]+)/);
-    const kpiYtdPrice = text.match(/Average Price per Gram \(Bud\/Flower\) Average for Calendar Year to Date,\$([\d.]+)/);
+    // KPI tiles. The period literal appears in the dashboard caption
+    // (e.g. "Sales Amount June 2026"); we extract it via regex and
+    // normalize to YYYY-MM-DD. period_source=OBSERVED.
+    function kpiObservation(metricName, metricNorm, product, unit, parseFn) {
+        const re = new RegExp(`${metricName}\\s+([A-Z][a-z]+\\s+\\d{4}),(.+)`);
+        const m = text.match(re);
+        if (!m) return null;
+        const dt = parseMonthName(m[1].split(' ')[1], m[1].split(' ')[0]);
+        if (!dt) return null;
+        const v = Number(parseFn(m[2]));
+        if (!Number.isFinite(v)) return null;
+        diagCount(PERIOD_SOURCE.OBSERVED);
+        return {
+            reporting_period: dt.toISOString().slice(0, 10),
+            period_source: PERIOD_SOURCE.OBSERVED,
+            series_index: null,
+            series_direction: null,
+            metric_raw: `KPI ${metricName} ${m[1]}`,
+            metric_norm: metricNorm,
+            product_category_raw: product,
+            product_category_norm: product,
+            value: v,
+            unit,
+            preliminary: true
+        };
+    }
+    const kpiAmount  = kpiObservation('Sales Amount', 'retail_sales_usd', 'total', 'USD', s => s.replace(/[$,`]/g, ''));
+    const kpiTxns    = kpiObservation('Number of Sales Transactions', 'transactions', 'total', 'transactions', s => s.replace(/[,\s]/g, ''));
+    const kpiPrice   = kpiObservation('Average Price per Gram \\(Bud\\/Flower\\)', 'avg_price_per_gram_usd', 'bud_flower', 'USD_per_gram', s => s.replace(/^\$/, ''));
+    if (kpiAmount) observations.push(kpiAmount);
+    if (kpiTxns)   observations.push(kpiTxns);
+    if (kpiPrice)  observations.push(kpiPrice);
     // Annual
     const annualMatch = text.match(/^Sales Transactions,([\d.,\s]+?)$/m);
     if (annualMatch) {
         const vals = parseNumberList(annualMatch[1]);
-        const startYear = 2026 - vals.length + 1;
+        // INFERRED series: no axis labels in capture.
         for (let i = 0; i < vals.length; i++) {
+            diagCount(PERIOD_SOURCE.INFERRED);
             observations.push({
-                reporting_period: String(startYear + i),
+                reporting_period: null,
+                period_source: PERIOD_SOURCE.INFERRED,
+                series_index: i,
+                series_direction: 'forward',
                 metric_raw: 'Sales Transactions Annual',
                 metric_norm: 'transactions',
                 product_category_raw: 'total',
@@ -359,11 +462,14 @@ function parseSalesTransactions(text) {
     const monthlyMatch = text.match(/Sales Transactions - Total Month Over Month,([\d.,\s]+?)$/m);
     if (monthlyMatch) {
         const vals = parseNumberList(monthlyMatch[1]);
+        // INFERRED monthly series.
         for (let i = vals.length - 1; i >= 0; i--) {
-            const offset = vals.length - 1 - i;
-            const dt = new Date(Date.UTC(2026, 5 - offset, 1));
+            diagCount(PERIOD_SOURCE.INFERRED);
             observations.push({
-                reporting_period: dt.toISOString().slice(0, 10),
+                reporting_period: null,
+                period_source: PERIOD_SOURCE.INFERRED,
+                series_index: i,
+                series_direction: 'backward',
                 metric_raw: 'Sales Transactions Month Over Month',
                 metric_norm: 'transactions',
                 product_category_raw: 'total',
@@ -380,13 +486,16 @@ function parseSalesTransactions(text) {
         const vals = parseNumberList(byCatMatch[1]);
         const categories = ['Usable Cannabis', 'Plants', 'Infused Product', 'Concentrate'];
         if (vals.length === 48 && categories.length === 4) {
+            // INFERRED matrix.
             for (let c = 0; c < 4; c++) {
                 for (let m = 11; m >= 0; m--) {
                     const idx = c * 12 + (11 - m);
-                    const offset = 11 - m;
-                    const dt = new Date(Date.UTC(2026, 5 - offset, 1));
+                    diagCount(PERIOD_SOURCE.INFERRED);
                     observations.push({
-                        reporting_period: dt.toISOString().slice(0, 10),
+                        reporting_period: null,
+                        period_source: PERIOD_SOURCE.INFERRED,
+                        series_index: idx,
+                        series_direction: 'backward',
                         metric_raw: 'Sales Transactions By Product Category',
                         metric_norm: 'transactions',
                         product_category_raw: categories[c],
@@ -399,49 +508,12 @@ function parseSalesTransactions(text) {
             }
         }
     }
-    // Add KPI tiles as derived observations
-    if (kpiAmount) {
-        observations.push({
-            reporting_period: '2026-06-01',
-            metric_raw: 'KPI Sales Amount June 2026',
-            metric_norm: 'retail_sales_usd',
-            product_category_raw: 'total',
-            product_category_norm: 'total',
-            value: Number(kpiAmount[1].replace(/[\$,\`]/g, '')),
-            unit: 'USD',
-            preliminary: true
-        });
-    }
-    if (kpiTxns) {
-        observations.push({
-            reporting_period: '2026-06-01',
-            metric_raw: 'KPI Number of Sales Transactions June 2026',
-            metric_norm: 'transactions',
-            product_category_raw: 'total',
-            product_category_norm: 'total',
-            value: Number(kpiTxns[1].replace(/[\$,\`]/g, '')),
-            unit: 'transactions',
-            preliminary: true
-        });
-    }
-    if (kpiPrice) {
-        observations.push({
-            reporting_period: '2026-06-01',
-            metric_raw: 'KPI Average Price per Gram June 2026',
-            metric_norm: 'avg_price_per_gram_usd',
-            product_category_raw: 'bud_flower',
-            product_category_norm: 'bud_flower',
-            value: Number(kpiPrice[1]),
-            unit: 'USD_per_gram',
-            preliminary: true
-        });
-    }
     return observations;
 }
 
 function parsePricePerGram(text) {
     const observations = [];
-    // Annual trend (scan markdown table)
+    // Annual trend (scan markdown table). OBSERVED — year parsed from cell label.
     const scanPriceAnnual = scanMarkdownTable(text, '### Annual Data Points');
     if (scanPriceAnnual) {
         const { rows } = scanPriceAnnual;
@@ -451,8 +523,12 @@ function parsePricePerGram(text) {
             if (!yearMatch) continue;
             const val = Number(cells[1].replace(/[\$,\`]/g, ''));
             if (!Number.isFinite(val)) continue;
+            diagCount(PERIOD_SOURCE.OBSERVED);
             observations.push({
                 reporting_period: yearMatch[1],
+                period_source: PERIOD_SOURCE.OBSERVED,
+                series_index: null,
+                series_direction: null,
                 metric_raw: 'Price Per Gram Annual Trend',
                 metric_norm: 'avg_price_per_gram_usd',
                 product_category_raw: 'bud_flower',
@@ -463,7 +539,7 @@ function parsePricePerGram(text) {
             });
         }
     }
-    // Month Over Month (Previous 12 Months)
+    // Month Over Month (Previous 12 Months). OBSERVED — year+month parsed from cell label.
     const scanPriceMonthly = scanMarkdownTable(text, '### Month-Over-Month Data Points');
     if (scanPriceMonthly) {
         const { rows } = scanPriceMonthly;
@@ -478,8 +554,12 @@ function parsePricePerGram(text) {
             if (!dt) continue;
             const val = Number(cells[1].replace(/[\$,\`]/g, ''));
             if (!Number.isFinite(val)) continue;
+            diagCount(PERIOD_SOURCE.OBSERVED);
             observations.push({
                 reporting_period: dt.toISOString().slice(0, 10),
+                period_source: PERIOD_SOURCE.OBSERVED,
+                series_index: null,
+                series_direction: null,
                 metric_raw: 'Price Per Gram Month Over Month',
                 metric_norm: 'avg_price_per_gram_usd',
                 product_category_raw: 'bud_flower',
@@ -633,7 +713,17 @@ function run(sourceId, rootDir) {
             store.writeRawArtifact(rootDir, 'ocp_retail_sales',
                 new Date().toISOString(), body, 'firecrawl/' + path.basename(file));
             for (const o of obs) {
-                o.raw_record_json = { source_file: file, tab_slug: tabSlug, raw_sha256: sha };
+                // Provenance is content-addressed: raw_sha256 is the stable
+                // source identifier. raw_basename is the basename only (no
+                // absolute path) for human readability. DO NOT include the
+                // absolute file path — operators and CI run the engine with
+                // different absolute roots (e.g. dev machine vs container).
+                o.raw_record_json = {
+                    raw_sha256: sha,
+                    raw_basename: path.basename(file),
+                    raw_artifact_ref: `sha256:${sha}`,
+                    tab_slug: tabSlug
+                };
                 observations.push(o);
             }
         }
@@ -651,7 +741,13 @@ function run(sourceId, rootDir) {
             store.writeRawArtifact(rootDir, 'ocp_optin',
                 new Date().toISOString(), body, 'firecrawl/' + path.basename(file));
             for (const r of recs) {
-                r.raw_record_json = { source_file: file, tab_slug: tabSlug, raw_sha256: sha };
+                // Provenance is content-addressed (see above).
+                r.raw_record_json = {
+                    raw_sha256: sha,
+                    raw_basename: path.basename(file),
+                    raw_artifact_ref: `sha256:${sha}`,
+                    tab_slug: tabSlug
+                };
                 records.push(r);
             }
         }
@@ -664,5 +760,8 @@ module.exports = {
     run,
     parseSalesRevenue, parseSalesTransactions, parsePricePerGram,
     parseOptinByMunicipality, parseOptinByLicenseType,
-    normalizeOptinMunicipality, findTabFile
+    normalizeOptinMunicipality, findTabFile,
+    PERIOD_SOURCE,
+    diagSnapshot: () => ({ ...__periodDiagnostics }),
+    diagReset,
 };

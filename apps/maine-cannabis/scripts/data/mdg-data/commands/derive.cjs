@@ -139,7 +139,12 @@ products = derive.derive(root, deriveInputLock, {
             fetched_at_utc: ocpProv.fetched_at_utc || new Date().toISOString(),
             acs_vintage: censusProv.acs_vintage || 2024,
             transform_version: '1',
-            preliminary: false
+            preliminary: false,
+            // Provenance per 2026-07-12 corrective review (finding 2):
+            // surface the real content sha256 of every firecrawl-derived
+            // snapshot so product meta can emit it instead of the literal
+            // 'firecrawl_ingest' sentinel.
+            input_sha256_by_source: deriveInputLock
         });
     } catch (err) {
         if (err.code === 'GEOGRAPHY_UNRESOLVED') {

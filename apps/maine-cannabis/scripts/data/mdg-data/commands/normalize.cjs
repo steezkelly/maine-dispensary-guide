@@ -191,6 +191,34 @@ async function main() {
             const hasObs = out.observations && out.observations.length > 0;
             const hasRec = out.records && out.records.length > 0;
             if (hasObs || hasRec) {
+                // PUBLICATION GATE per 2026-07-12 corrective review.
+                //
+                // INFERRED rows have a `period_source='INFERRED'` flag with
+                // reporting_period=null. They are positional extraction
+                // artifacts (we know value[7] but not which year it maps
+                // to). Per finding 1, INFERRED rows MUST NOT be published
+                // as canonical observations. We split them out:
+                //   - canonical: OBSERVED only, written to data.json
+                //   - artifacts: every non-OBSERVED row, written to
+                //                data.json.annotations (separate file;
+                //                preserves the data so future
+                //                axis-label capture can re-pair by
+                //                series_index)
+                //
+                // Tickets 007+ cannot use INFERRED rows until axis
+                // labels are captured. See MDG-DATA-001-COMMISSIONING.md.
+                let canonicalObs = [];
+                let inferredObs = [];
+                if (hasObs) {
+                    for (const o of out.observations) {
+                        const src = o.period_source;
+                        if (!src || src === 'OBSERVED') {
+                            canonicalObs.push(o);
+                        } else {
+                            inferredObs.push(o);
+                        }
+                    }
+                }
                 // Content hash of all firecrawl markdown files for stable snapshot id
                 const files = fs.readdirSync(fcDir).filter(f => f.endsWith('.md')).sort();
                 let sha = '';
@@ -205,12 +233,26 @@ async function main() {
                 fs.mkdirSync(normDir, { recursive: true });
                 fs.writeFileSync(path.join(normDir, 'data.json'), JSON.stringify({
                     source_id: src.source_id, snapshot_id: snapshotId,
-                    observations: out.observations || [], records: out.records || []
+                    observations: canonicalObs,
+                    records: out.records || []
                 }, null, 2) + '\n');
+                if (inferredObs.length > 0) {
+                    fs.writeFileSync(path.join(normDir, 'data.json.annotations'), JSON.stringify({
+                        source_id: src.source_id, snapshot_id: snapshotId,
+                        reason: 'INFERRED rows preserved separately; not eligible for publication. Re-pair by series_index + series_direction when axis labels become available.',
+                        observations: inferredObs
+                    }, null, 2) + '\n');
+                } else if (fs.existsSync(path.join(normDir, 'data.json.annotations'))) {
+                    // Stale annotation file from a prior run with INFERREDs
+                    // that have since been labeled — remove it so downstream
+                    // publishers can re-evaluate.
+                    fs.unlinkSync(path.join(normDir, 'data.json.annotations'));
+                }
                 fs.writeFileSync(path.join(normDir, 'profile.json'), JSON.stringify({
                     source: 'firecrawl_interact',
                     origin: 'firecrawl_interact_capture',
-                    observations: (out.observations || []).length,
+                    observations: canonicalObs.length,
+                    observations_inferred_deferred: inferredObs.length,
                     records: (out.records || []).length,
                     capture_date: new Date().toISOString().slice(0, 10)
                 }, null, 2) + '\n');
@@ -225,12 +267,12 @@ async function main() {
                     status: 'unchanged', source_id: src.source_id, release_id: null,
                     changed: true, retryable: false, code: 'OK',
                     artifact_sha256: sha,
-                    message: 'firecrawl-captured dashboard data normalized; ' +
-                        (out[key] || []).length + ' ' + key + ' emitted',
+                    message: `firecrawl-captured dashboard data normalized; ${canonicalObs.length} canonical + ${inferredObs.length} inferred rows ${inferredObs.length > 0 ? '(inferred saved as annotations file; not eligible for publication)' : '(no inferred rows)'}`,
                     metrics: {
                         source: 'firecrawl_interact',
                         origin: 'firecrawl_interact_capture',
-                        [key]: (out[key] || []).length,
+                        [key]: hasObs ? canonicalObs.length : (out.records || []).length,
+                        observations_inferred_deferred: inferredObs.length,
                         snapshot_id: snapshotId,
                         normalized_path: normDir
                     }

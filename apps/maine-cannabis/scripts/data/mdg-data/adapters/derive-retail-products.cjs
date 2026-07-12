@@ -54,6 +54,24 @@ function canonicalJSON(obj) {
     return JSON.stringify(sortKeys(obj), null, 2) + '\n';
 }
 
+// PUBLICATION GATE per 2026-07-12 corrective review.
+//
+// Drop any observation whose reporting_period is null OR whose
+// period_source is anything other than OBSERVED. INFERRED rows are
+// positional extraction artifacts — see Ticket 006 notes. They live
+// in data.json.annotations and are NOT eligible for publication.
+//
+// Every product derivation in this file calls this before publishing.
+// Defence-in-depth: normalize.cjs already splits them, but if a future
+// change re-merges or skips normalize, this gate keeps products clean.
+function publicationGate(observations) {
+    return observations.filter(o =>
+        o != null
+        && o.reporting_period != null
+        && (o.period_source == null || o.period_source === 'OBSERVED')
+    );
+}
+
 function csvEscape(s) {
     if (s === null || s === undefined) return '';
     const str = String(s);
@@ -589,8 +607,18 @@ function derive(rootDir, inputLock, releaseMeta) {
 
 function deriveAdultUseRetailSales(ocpSalesData, releaseMeta) {
     const obs = ocpSalesData.observations || [];
-    const totalObs = obs.filter(o => o.metric_norm === 'retail_sales_usd'
-        && o.product_category_norm === 'total');
+    // PUBLICATION GATE per 2026-07-12 corrective review (finding 1+2):
+    // - Drop observations with reporting_period=null. Those rows have
+    //   period_source='INFERRED' (positional, no axis labels) and
+    //   MUST NOT be published as canonical observations. They live in
+    //   data.json.annotations and are not eligible for any product.
+    // - We also document the gate status in the product meta so the
+    //   commissioning report can see why fields may be sparse.
+    const totalObs = obs
+        .filter(o => o.metric_norm === 'retail_sales_usd'
+            && o.product_category_norm === 'total'
+            && o.reporting_period != null
+            && (o.period_source == null || o.period_source === 'OBSERVED'));
     // Sort by reporting_period
     totalObs.sort((a, b) => a.reporting_period < b.reporting_period ? -1
         : a.reporting_period > b.reporting_period ? 1 : 0);
@@ -606,7 +634,8 @@ function deriveAdultUseRetailSales(ocpSalesData, releaseMeta) {
             observations: totalObs,
             notes: ['preliminary: true (per OCP source-level warning)',
                     'extraction_method: firecrawl_interact',
-                    'capture_date: ' + (releaseMeta.data_as_of || '2026-07-12')]
+                    'capture_date: ' + (releaseMeta.data_as_of || '2026-07-12'),
+                    'publication_gate: INFERRED rows filtered out at normalize.cjs and re-defended here']
         }),
         csv: rowsToCsv(totalObs, ['reporting_period', 'value', 'unit',
             'product_category_raw', 'metric_raw', 'preliminary']),
@@ -620,7 +649,12 @@ function deriveAdultUseRetailSales(ocpSalesData, releaseMeta) {
             preliminary: true,
             source_ids: ['ocp_retail_sales'],
             source_urls: ['https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales'],
-            input_sha256: [{ source_id: 'ocp_retail_sales', sha256: 'firecrawl_ingest' }],
+            input_sha256: [{ source_id: 'ocp_retail_sales',
+                // Real content hash; falls back to null when the normalize
+                // step didn't pin one (e.g. zero observed observations).
+                sha256: (releaseMeta && releaseMeta.input_sha256_by_source
+                    && releaseMeta.input_sha256_by_source.ocp_retail_sales)
+                    || null }],
             transform_version: releaseMeta.transform_version,
             schema_version: 1,
             methodology_path: '/data/methodology/adult-use-retail-sales',
@@ -632,7 +666,9 @@ function deriveAdultUseRetailSales(ocpSalesData, releaseMeta) {
 }
 
 function deriveAdultUseTransactions(txnObs, releaseMeta) {
-    const sorted = txnObs.slice().sort((a, b) =>
+    // PUBLICATION GATE: drop INFERRED / null-period rows (see publicationGate).
+    const filtered = publicationGate(txnObs.filter(o => o.metric_norm === 'transactions'));
+    const sorted = filtered.slice().sort((a, b) =>
         a.reporting_period < b.reporting_period ? -1
         : a.reporting_period > b.reporting_period ? 1 : 0);
     return {
@@ -645,7 +681,8 @@ function deriveAdultUseTransactions(txnObs, releaseMeta) {
                 'customer transaction."',
             unit: 'transactions',
             observations: sorted,
-            notes: ['preliminary: true', 'extraction_method: firecrawl_interact']
+            notes: ['preliminary: true', 'extraction_method: firecrawl_interact',
+                    'publication_gate: INFERRED rows excluded at derive']
         }),
         csv: rowsToCsv(sorted, ['reporting_period', 'value', 'unit',
             'product_category_raw', 'metric_raw', 'preliminary']),
@@ -658,7 +695,10 @@ function deriveAdultUseTransactions(txnObs, releaseMeta) {
             preliminary: true,
             source_ids: ['ocp_retail_sales'],
             source_urls: ['https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales'],
-            input_sha256: [{ source_id: 'ocp_retail_sales', sha256: 'firecrawl_ingest' }],
+            input_sha256: [{ source_id: 'ocp_retail_sales',
+                sha256: (releaseMeta && releaseMeta.input_sha256_by_source
+                    && releaseMeta.input_sha256_by_source.ocp_retail_sales)
+                    || null }],
             transform_version: releaseMeta.transform_version, schema_version: 1,
             methodology_path: '/data/methodology/adult-use-transactions',
             acs_vintage: null, origin: 'firecrawl_interact_capture', mock: false
@@ -667,7 +707,9 @@ function deriveAdultUseTransactions(txnObs, releaseMeta) {
 }
 
 function deriveAverageFlowerPrice(priceObs, releaseMeta) {
-    const sorted = priceObs.slice().sort((a, b) =>
+    // PUBLICATION GATE: drop INFERRED / null-period rows (see publicationGate).
+    const filtered = publicationGate(priceObs.filter(o => o.metric_norm === 'avg_price_per_gram_usd'));
+    const sorted = filtered.slice().sort((a, b) =>
         a.reporting_period < b.reporting_period ? -1
         : a.reporting_period > b.reporting_period ? 1 : 0);
     return {
@@ -679,7 +721,8 @@ function deriveAverageFlowerPrice(priceObs, releaseMeta) {
             unit: 'USD_per_gram',
             observations: sorted,
             notes: ['preliminary: true', 'extraction_method: firecrawl_interact',
-                    'product_category: bud_flower only (per OCP definition)']
+                    'product_category: bud_flower only (per OCP definition)',
+                    'publication_gate: INFERRED rows excluded at derive']
         }),
         csv: rowsToCsv(sorted, ['reporting_period', 'value', 'unit',
             'product_category_raw', 'metric_raw', 'preliminary']),
@@ -692,7 +735,10 @@ function deriveAverageFlowerPrice(priceObs, releaseMeta) {
             preliminary: true,
             source_ids: ['ocp_retail_sales'],
             source_urls: ['https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales'],
-            input_sha256: [{ source_id: 'ocp_retail_sales', sha256: 'firecrawl_ingest' }],
+            input_sha256: [{ source_id: 'ocp_retail_sales',
+                sha256: (releaseMeta && releaseMeta.input_sha256_by_source
+                    && releaseMeta.input_sha256_by_source.ocp_retail_sales)
+                    || null }],
             transform_version: releaseMeta.transform_version, schema_version: 1,
             methodology_path: '/data/methodology/average-flower-price',
             acs_vintage: null, origin: 'firecrawl_interact_capture', mock: false
@@ -703,8 +749,13 @@ function deriveAverageFlowerPrice(priceObs, releaseMeta) {
 function deriveProductMix(byCatObs, releaseMeta) {
     // For each (reporting_period, product_category) compute share %.
     // Use unrounded per METRICS.md §Product mix.
+    // PUBLICATION GATE: drop INFERRED / null-period rows (see publicationGate).
+    const filteredByCat = publicationGate(byCatObs.filter(o =>
+        o.metric_norm === 'retail_sales_usd'
+        && o.product_category_norm
+        && o.product_category_norm !== 'total'));
     const byPeriod = {};
-    for (const o of byCatObs) {
+    for (const o of filteredByCat) {
         if (!byPeriod[o.reporting_period]) byPeriod[o.reporting_period] = [];
         byPeriod[o.reporting_period].push(o);
     }
@@ -736,7 +787,8 @@ function deriveProductMix(byCatObs, releaseMeta) {
             unit: 'percent',
             rows,
             notes: ['preliminary: true', 'extraction_method: firecrawl_interact',
-                    'denominator: total monthly sales across all 4 categories']
+                    'denominator: total monthly sales across all 4 categories',
+                    'publication_gate: INFERRED rows excluded at derive']
         }),
         csv: rowsToCsv(rows, ['reporting_period', 'product_category', 'value_usd',
             'share_pct_unrounded', 'share_pct_display']),
@@ -749,7 +801,10 @@ function deriveProductMix(byCatObs, releaseMeta) {
             preliminary: true,
             source_ids: ['ocp_retail_sales'],
             source_urls: ['https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales'],
-            input_sha256: [{ source_id: 'ocp_retail_sales', sha256: 'firecrawl_ingest' }],
+            input_sha256: [{ source_id: 'ocp_retail_sales',
+                sha256: (releaseMeta && releaseMeta.input_sha256_by_source
+                    && releaseMeta.input_sha256_by_source.ocp_retail_sales)
+                    || null }],
             transform_version: releaseMeta.transform_version, schema_version: 1,
             methodology_path: '/data/methodology/adult-use-product-mix',
             acs_vintage: null, origin: 'firecrawl_interact_capture', mock: false
@@ -837,7 +892,9 @@ function deriveRetailOptinGap(optinRecords, activeStoreAllCount,
                 'https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search'
             ],
             input_sha256: [
-                { source_id: 'ocp_optin', sha256: 'firecrawl_ingest' },
+                { source_id: 'ocp_optin',
+                    sha256: (releaseMeta && releaseMeta.input_sha256_by_source
+                        && releaseMeta.input_sha256_by_source.ocp_optin) || null },
                 { source_id: 'ocp_licenses', sha256: 'ocp_licenses_normalized' }
             ],
             transform_version: releaseMeta.transform_version, schema_version: 1,
@@ -956,4 +1013,4 @@ function deriveDispensaryDirectory(dispensaries, findallRuns, releaseMeta) {
     };
 }
 
-module.exports = { derive, canonicalJSON, rowsToCsv };
+module.exports = { derive, canonicalJSON, rowsToCsv, publicationGate };
