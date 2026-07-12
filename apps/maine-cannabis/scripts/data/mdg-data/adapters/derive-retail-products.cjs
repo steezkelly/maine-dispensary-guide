@@ -491,6 +491,41 @@ function derive(rootDir, inputLock, releaseMeta) {
         }
     };
 
+    // ---- dispensary menu prices (MDG-ANALYTICS-001 / 280E calculator) ----
+    // Scaffold: per PILOT-20260712, no source data is captured yet.
+    // The product is emitted as a placeholder so downstream consumers
+    // can wire against the schema while the operator decides on the
+    // Weedmaps/Dutchie API integration.
+    const menuSchema = require('../schemas/dispensary-menu-prices.cjs');
+    products['dispensary-menu-prices'] = {
+        json: canonicalJSON(Object.assign({}, menuSchema.PRODUCT_SCHEMA, {
+            release_id: releaseMeta.release_id,
+            data_as_of: releaseMeta.data_as_of,
+            fetched_at_utc: releaseMeta.fetched_at_utc
+        })),
+        csv: 'license_id,store_name,capture_date,product_name,category,price_usd,in_stock\n' +
+             '# no menu data captured yet\n',
+        meta: {
+            schema_version: 1,
+            slug: 'dispensary-menu-prices',
+            title: menuSchema.PRODUCT_SCHEMA.title,
+            release_id: releaseMeta.release_id,
+            data_as_of: releaseMeta.data_as_of,
+            fetched_at_utc: releaseMeta.fetched_at_utc,
+            preliminary: true,
+            source_ids: ['ocp_dispensaries_firecrawl'],
+            source_urls: [],
+            input_sha256: [],
+            transform_version: releaseMeta.transform_version,
+            schema_version: 1,
+            methodology_path: '/data/methodology/dispensary-menu-prices',
+            acs_vintage: releaseMeta.acs_vintage || null,
+            origin: 'pilot_placeholder',
+            mock: false,
+            note: 'Placeholder per PILOT-20260712. Real source pending Weedmaps/Dutchie API.'
+        }
+    };
+
     // ---- dispensary directory (MDG-ANALYTICS-001 / 280E price tracker) ----
     const dirSha = getSha(inputLock, 'ocp_dispensaries_firecrawl');
     const dirSnap = dirSha ? loadSnapshot(rootDir, 'ocp_dispensaries_firecrawl', dirSha) : null;

@@ -1,0 +1,49 @@
+{
+  "data_as_of": "2026-06-01",
+  "description": "Per-dispensary cannabis product catalog with current pricing, intended as the input source for the 280E cost-of-goods calculator. Authoritative source per PILOT-20260712 is pending operator decision on Weedmaps/Dutchie API access (direct site scraping is blocked by age-gates).",
+  "fetched_at_utc": "2026-07-12T06:21:30.028Z",
+  "notes": [
+    "pilot_record: PILOT-20260712-dispensary-menu-extraction",
+    "authoritative_source: pending (Weedmaps or Dutchie API key)",
+    "identity_key: store.license_id + product.name + capture_date",
+    "pricing_unit: USD, line-item level (not per-gram normalization)",
+    "price_normalization: deferred to METRICS.md §Price normalization"
+  ],
+  "observations": [],
+  "pilot_findings": {
+    "conclusion": "Direct dispensary-site menu scraping not viable in Maine 2026. Required next: Weedmaps/Dutchie API integration or operator-driven manual export per METRICS.md §Source policy.",
+    "date": "2026-07-12",
+    "stores_attempted": 3,
+    "stores_blocked_by_age_gate": 2,
+    "stores_with_placeholder_content": 1
+  },
+  "release_id": "ded381696bddf56f",
+  "schema_draft": {
+    "product": {
+      "category": "enum: flower | pre-roll | edible | concentrate | vape | topical | accessory",
+      "cbd_percent": "number | null",
+      "in_stock": "boolean",
+      "is_medical_only": "boolean",
+      "name": "string",
+      "price_usd": "number",
+      "sale_price_usd": "number | null",
+      "strain_name": "string | null",
+      "subcategory": "string | null",
+      "thc_percent": "number | null",
+      "unit_count": "number | null",
+      "weight_grams": "number | null"
+    },
+    "store": {
+      "capture_date": "ISO 8601 date (snapshot date)",
+      "extraction_confidence": "number 0-1",
+      "legal_name": "string",
+      "license_id": "string (FK to dispensary-directory.license_id)",
+      "source": "string (weedmaps | dutchie | manual | firecrawl_interact)",
+      "source_url": "string"
+    }
+  },
+  "schema_version": 1,
+  "slug": "dispensary-menu-prices",
+  "title": "Maine Dispensary Menu Prices (per-store, per-product)",
+  "unit": "product line item"
+}
