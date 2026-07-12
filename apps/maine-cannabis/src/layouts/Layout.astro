@@ -38,6 +38,7 @@ import {
   type Breadcrumb,
 } from '../lib/seo';
 import { buildJsonLdGraph, type AuthorMeta } from '../lib/json-ld';
+import { dataPageTypeFor } from '../lib/page-route-family';
 import authorsData from '../data/authors.json';
 const authors = authorsData as Array<{
   id: string;
@@ -117,6 +118,12 @@ const heroImageMobileWebp = heroImage?.replace(/\.jpg$/i, '-640w.webp');
 const heroImageMobileAvif = heroImage?.replace(/\.jpg$/i, '-640w.avif');
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
+
+// MDG-ANALYTICS-001 Ticket 006 Surface A — derive data-page-type for <body>.
+// Routes the page-type to GA4 event context (Layout.astro:351 already reads
+// document.body.dataset.pageType). Returns null for /admin/* and similar
+// excluded routes; body tag omits the attribute.
+const dataPageType = dataPageTypeFor(Astro.url.pathname);
 
 const allBreadcrumbs = buildCrumbs(Astro.url.pathname.replace(/\/$/, ''), breadcrumbs);
 
@@ -448,7 +455,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       })();
     </script>
   </head>
-  <body>
+  <body data-page-type={dataPageType}>
     <a href="#main-content" class="sr-only focus:not-sr-only skip-link">Skip to main content</a>
     <div class="grain-overlay"></div>
 
