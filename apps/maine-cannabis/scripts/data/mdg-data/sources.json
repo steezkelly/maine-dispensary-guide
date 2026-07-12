@@ -1,0 +1,86 @@
+{
+  "$comment": "MDG-DATA-001 v0.5 source registry. Schema_version=1. Ticket 001.",
+  "schema_version": 1,
+  "transform_version": "1",
+  "sources": [
+    {
+      "source_id": "ocp_licenses",
+      "display_name": "OCP Adult Use Applicant, Licensee, and Entity Search",
+      "family": "ocp",
+      "authoritative_page_url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search",
+      "discovery": {
+        "strategy": "scrape_html_for_csv_link",
+        "selector_hint": "a[href*='Adult_Use_Establishments']",
+        "expected_content_types": ["text/csv", "application/csv", "text/plain"]
+      },
+      "schedule": {
+        "sensor": "daily",
+        "expected_meaningful_change": "monthly"
+      },
+      "adapter_version": "1",
+      "schema_policy": "observed_then_fixture",
+      "freshness_policy": "store_page_html_and_csv_when_content_hash_new"
+    },
+    {
+      "source_id": "ocp_retail_sales",
+      "display_name": "OCP Adult Use Retail Sales Data",
+      "family": "ocp",
+      "authoritative_page_url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales",
+      "discovery": {
+        "strategy": "transport_discovery_required",
+        "selector_hint": null,
+        "expected_content_types": ["text/csv", "application/json", "text/html"]
+      },
+      "schedule": {
+        "sensor": "daily",
+        "expected_meaningful_change": "monthly"
+      },
+      "adapter_version": "0",
+      "schema_policy": "transport_discovery_first",
+      "freshness_policy": "store_page_html_and_observed_transport_capture"
+    },
+    {
+      "source_id": "ocp_optin",
+      "display_name": "OCP Adult Use Opt-in Communities",
+      "family": "ocp",
+      "authoritative_page_url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities",
+      "discovery": {
+        "strategy": "transport_discovery_required",
+        "selector_hint": null,
+        "expected_content_types": ["text/csv", "application/json", "text/html"]
+      },
+      "schedule": {
+        "sensor": "daily",
+        "expected_meaningful_change": "ad_hoc"
+      },
+      "adapter_version": "0",
+      "schema_policy": "transport_discovery_first",
+      "freshness_policy": "store_page_html_and_observed_transport_capture"
+    },
+    {
+      "source_id": "census_acs5_population",
+      "display_name": "U.S. Census ACS 2024 5-year Population (B01003_001E)",
+      "family": "census",
+      "authoritative_page_url": "https://www.census.gov/data/developers/data-sets/acs-5year.html",
+      "discovery": {
+        "strategy": "census_api_vintage_2024",
+        "endpoint_pattern": "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E&for=county%20subdivision:*&in=state:23",
+        "expected_content_types": ["application/json", "text/plain"]
+      },
+      "schedule": {
+        "sensor": "vintage_pinned",
+        "expected_meaningful_change": "annual_vintage_only",
+        "pinned_vintage": 2024
+      },
+      "adapter_version": "1",
+      "schema_policy": "fixed",
+      "freshness_policy": "fetch_once_then_pin",
+      "acs": {
+        "vintage": 2024,
+        "variable_id": "B01003_001E",
+        "geography": "county_subdivision",
+        "state_fips": "23"
+      }
+    }
+  ]
+}
