@@ -56,9 +56,10 @@
  *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
  *   node scripts/git/pre-push-verify.cjs --with-smoke           # add smoke-200 + smoke-img-200 against production
  *   node scripts/git/pre-push-verify.cjs --with-smoke --ignore-unrelated
- *                                                            # smoke-img-200 only checks pages touched by the current diff
- *                                                              (use when pre-existing broken-image refs aren't your problem)
- *   node scripts/git/pre-push-verify.cjs --ref=<ref>            # checks commits <ref>..HEAD
+ *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
+ *   node scripts/git/pre-push-verify.cjs --data-only            # parse-only + assertion that every diff hunk
+ *                                                              #     adds only data-* attributes; skips slow astro check.
+ *                                                              #     Exits 11 (violation) or 0 (data-only confirmed).
  *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
  *   node scripts/git/pre-push-verify.cjs --skip-smoke-200       # legacy: still works, see below
  *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200   # legacy: still works
@@ -113,16 +114,26 @@ function isValidRef(s) {
 
 function changedFiles(refArg) {
     // Three sources, deduped:
-    //   a) commits in <ref>..HEAD (used when called as a real pre-push hook with the remote ref)
+    //   a) commits in <range> (used when called as a real pre-push hook with the remote ref,
+    //      OR when --ref=<commit> tests a specific commit)
     //   b) staged changes (index vs HEAD)
     //   c) unstaged/uncommitted working-tree changes
+    //
+    // For --ref=<commit>, we diff against the commit's parent so the diff
+    // represents exactly what that commit introduced (otherwise newer work on
+    // the branch would also appear in the file list).
     const all = new Set();
     if (refArg) {
-        // isValidRef already enforced at parse time; defensive recheck here
-        // guards against future callers that bypass main()'s CLI validation.
         if (!isValidRef(refArg)) return all;
+        let range;
+        const isCommit = /^[0-9a-f]{7,40}$/.test(refArg);
+        if (isCommit) {
+            range = `${refArg}^..${refArg}`;
+        } else {
+            range = `${refArg}..HEAD`;
+        }
         try {
-            git(`git diff --name-only ${refArg} HEAD`).split('\n').filter(Boolean).forEach(f => all.add(f));
+            git(`git diff --name-only ${range}`).split('\n').filter(Boolean).forEach(f => all.add(f));
         } catch (e) {
             log('warn', `could not diff against ${refArg}: ${e.message.split('\n')[0]}`);
         }
@@ -527,6 +538,65 @@ function killOrphanedTsServers() {
 process.on('SIGINT', () => { killOrphanedTsServers(); process.exit(130); });
 process.on('SIGTERM', () => { killOrphanedTsServers(); process.exit(143); });
 
+// assertAllDiffsAreDataAttributes -- uses the shared module
+// apps/maine-cannabis/scripts/analytics/data-only-assert.cjs
+//
+// Tests: apps/maine-cannabis/scripts/analytics/test-data-only-assert.cjs
+//   (must remain in sync; both rely on the shared module exporting
+//    HTML_COMMENT_LINE / INSERTED_DATA_ATTR / etc. via the same surface.)
+const dataOnlyAssert = require('../../apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+const {
+    HTML_COMMENT_LINE,
+    INSERTED_DATA_ATTR,
+    _strip: _plusStrip,
+    _lineHasData,
+    _isTagOpenLine,
+    _isAttrTailLine,
+    _isSpacingLine,
+    assertDiffText,
+} = dataOnlyAssert;
+
+function assertAllDiffsAreDataAttributes(files) {
+    const violations = [];
+    let attrsCount = 0;
+    let refArg = null;
+    for (let i = 2; i < process.argv.length; i++) {
+        const a = process.argv[i];
+        if (a.startsWith('--ref=')) { refArg = a.slice('--ref='.length); break; }
+    }
+    let diffRange;
+    if (refArg) {
+        const isCommit = /^[0-9a-f]{7,40}$/.test(refArg);
+        if (isCommit) {
+            diffRange = `${refArg}^..${refArg}`;
+        } else {
+            diffRange = `${refArg}..HEAD`;
+        }
+    } else {
+        diffRange = 'HEAD';
+    }
+
+    for (const rel of files) {
+        if (!rel.match(/\.(astro|cjs|js|css|md|ts)$/)) continue;
+
+        let out;
+        try {
+            out = git(`git diff --no-color ${diffRange} -- "${rel}"`);
+        } catch (_) {
+            violations.push(`${rel}: cannot diff — --data-only requires a working tree state`);
+            continue;
+        }
+        if (!out.trim()) continue;
+
+        const r = assertDiffText(out);
+        attrsCount += r.attrsCount;
+        for (const v of r.violations) {
+            violations.push(`${rel}: ${v.line}`);
+        }
+    }
+    return { ok: violations.length === 0, violations, attrsCount };
+}
+
 function main() {
     const args = process.argv.slice(2);
     const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
@@ -536,6 +606,7 @@ function main() {
     }
     
     const fastOnly = args.includes('--fast-only');
+    const dataOnly = args.includes('--data-only');
 
     log('info', `repo: ${REPO_ROOT}`);
 
@@ -552,6 +623,14 @@ function main() {
     log('info', `changed files: ${files.length}`);
     files.forEach(f => log('info', `  ${f}`));
     console.log();
+
+    if (dataOnly && !fastOnly) {
+        // Note: --data-only implies cheap-mode behavior (parse-only plus the
+        // data-attribute assertion). It's a strict subset of --fast-only for
+        // the slow pass, with the additional check that all diff hunks add
+        // data-* attributes only.
+        log('info', '--data-only: skipping slow astro check (data-attribute additions only)');
+    }
 
     // Inreach pass 2026-07-05: if any changed file is an .astro page,
     // auto-regenerate autoRelatedData.json before the verify runs. The
@@ -578,7 +657,23 @@ function main() {
 
     const fast = fastParseCheck(files);
     if (!fast.ok) process.exit(1);
-    if (fastOnly) {
+    if (fastOnly || dataOnly) {
+        // --data-only implies --fast-only behavior, with the additional
+        // data-attribute assertion below.
+        log('ok', 'fast pass clean');
+
+        if (dataOnly) {
+            const verdict = assertAllDiffsAreDataAttributes(files);
+            if (!verdict.ok) {
+                log('err', '--data-only failed: at least one file changed non-data-attribute content:');
+                for (const line of verdict.violations.slice(0, 5)) console.log(`  ${line}`);
+                log('info', 'drop --data-only to run the full astro check (slower)');
+                process.exit(11);
+            }
+            log('ok', `--data-only confirmed: all ${verdict.attrsCount} additions are data-* attributes`);
+            process.exit(0);
+        }
+
         log('ok', 'fast-only mode — slow pass skipped');
         process.exit(0);
     }
