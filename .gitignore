@@ -96,3 +96,15 @@ pitches/webform-sent-log.json
 
 # Engineering-skills workflow state (operational, regenerated per session)
 .scratch/
+
+# MDG-DATA-001 Maine Cannabis Data Engine (MDG-DATA-001 v0.5)
+# Operational state lives in $MDG_DATA_ROOT (default ~/.hermes/data/mdg-data),
+# outside the repository, so ignore the local shadow in case anyone runs
+# the engine inside the repo during a one-off debug session.
+# The PUBLIC generated-artifact tree under
+# apps/maine-cannabis/src/data/generated/mdg-data/current/ IS tracked
+# (it is what Astro reads at build time). Test/staging scratch is not.
+/mdg-data/
+/apps/maine-cannabis/src/data/generated/mdg-data/.current-*.tmp/
+/apps/maine-cannabis/src/data/generated/mdg-data/.previous-*.tmp/
+/apps/maine-cannabis/docs/data/mdg-data/decisions/.work/
