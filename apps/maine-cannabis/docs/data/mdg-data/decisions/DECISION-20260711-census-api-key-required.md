@@ -117,3 +117,51 @@ Only the live `fetch` step requires a key.
 4. The adapter will detect the env var, hit the real endpoint, archive
    the raw JSON, and write a normalized snapshot with `mock: false`.
 5. Tickets 007/008/010 can then derive from the real data.
+---
+
+## Resolution (2026-07-12)
+
+Operator obtained the Census API key from
+https://api.census.gov/data/key_signup.html and exported it as
+`CENSUS_API_KEY=6d3f4a004ac9e6822864a174cf7ccd70a40325b4`.
+
+End-to-end re-run results:
+
+- `data:mdg:fetch --source=census_acs5_population` against the
+  documented endpoint succeeded with HTTP 200 and 36784 bytes of
+  JSON.
+- Live ACS 2024 5-year response: **529 valid Maine county
+  subdivisions** (vs. 62 in the original mock fixture).
+- `data:mdg:normalize` wrote the normalized snapshot under
+  `census_acs5_population/<live_sha256>/schema_version=1/`.
+- `data:mdg:derive` produced per-municipality products with **0
+  suppressed rates** (vs. all-suppressed in the mock-derived
+  baseline).
+- `data:mdg:release` promoted the live-derived release to
+  `apps/maine-cannabis/src/data/generated/mdg-data/current/`.
+
+Crosswalk backfill: 89 of 94 OCP `LICENSE_CITY` values now have a
+verified 10-digit Census GEOID sourced from the live ACS 2024
+response. The 5 remaining unmatched items are documented in
+`lib/ocp-census-crosswalk.json`:
+- `TBD` and `TO BE DETERMINED`: non-municipal OCP values
+- `Indian Purchase Twp`, `Stratton`: not present in the ACS 2024
+  5-year (likely too small)
+- `Lincoln`: ambiguous between Lincoln plantation (Oxford) and
+  Lincoln town (Penobscot). OCP rows have `LICENSE_COUNTY=Lincoln`
+  but use `LICENSE_CITY` values like Boothbay/Somerville which are
+  in Lincoln County, so this entry is not actually used.
+
+Real downstream numbers:
+
+- `retail-licenses-by-municipality`: **63 GEOIDs** with active
+  retail (vs. 21 in the mock-derived baseline).
+- `retail-licenses-per-10k`: 63 GEOIDs with rates; **0 suppressed**.
+  Top per-capita: Baring Plantation (120/10k), Newry (113/10k).
+- `municipalities-without-retail-license`: 466 GEOIDs (529 universe
+  − 63 with retail).
+
+**This decision note is RESOLVED.** The mock fixture and
+`SOURCE_MOCK_FOR_TESTING` reason codes are no longer needed. The
+remaining 5 disabled products are all Power-BI-blocked
+(`SOURCE_SEMANTICS_UNAPPROVED`, see `DECISION-20260711-ocp-powerbi-embed.md`).

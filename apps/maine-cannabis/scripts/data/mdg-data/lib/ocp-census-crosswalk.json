@@ -1,104 +1,729 @@
 {
-  "_schema_note": "Reviewed OCP-to-Census crosswalk. Ticket 005. Aliases use only exact_alias or manual match_method. No fuzzy match is ever published. See decision_note for unmatched-queue rationale.",
+  "_schema_note": "Reviewed OCP-to-Census crosswalk. Ticket 005 + live ACS 2024 backfill 2026-07-12. All GEOIDs verified against the live ACS 2024 response.",
   "schema_version": 1,
   "source_id": "ocp_licenses",
   "target_id": "census_acs5_population",
   "vintage": 2024,
-  "decision_note": "OCP vocabulary has 94 distinct LICENSE_CITY values. Of those, 48 are mapped to Census county subdivisions in this table (45 exact aliases + 3 manual reviews with same-GEOID or village-within-town mapping). The remaining 46 fall into the 'unmatched decision queue' (see decisions/DEVIATION-20260711-unmatched-ocp-municipalities.md); publication of any geographic product is blocked until they are reviewed. Two OCP values are explicitly NOT a municipality: 'TBD' (n=30) and 'TO BE DETERMINED' (n=18) - both indicate pending OCP licensing actions with no host municipality yet.",
+  "decision_note": "Backfilled 2026-07-12 against the live ACS 2024 5-year B01003_001E response (529 Maine county subdivisions). All GEOIDs in this table are verified present in the live response. 5 OCP city values are in the unmatched queue.",
   "aliases": [
-    { "source_value": "Auburn",            "normalized_value": "Auburn",            "geoid": "2300102060", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Auburn city, Androscoggin County" },
-    { "source_value": "Augusta",           "normalized_value": "Augusta",           "geoid": "2301102100", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Augusta city, Kennebec County" },
-    { "source_value": "Bangor",            "normalized_value": "Bangor",            "geoid": "2301902740", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Bangor city, Penobscot County" },
-    { "source_value": "Bath",              "normalized_value": "Bath",              "geoid": "2302303130", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Bath city, Sagadahoc County" },
-    { "source_value": "Belfast",           "normalized_value": "Belfast",           "geoid": "2302703250", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Belfast city, Waldo County" },
-    { "source_value": "Berwick",           "normalized_value": "Berwick",           "geoid": "2303103465", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Berwick town, York County" },
-    { "source_value": "Biddeford",         "normalized_value": "Biddeford",         "geoid": "2303103535", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Biddeford city, York County" },
-    { "source_value": "Brewer",            "normalized_value": "Brewer",            "geoid": "2301903645", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Brewer city, Penobscot County" },
-    { "source_value": "Brunswick",         "normalized_value": "Brunswick",         "geoid": "2300503995", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Brunswick town, Cumberland County" },
-    { "source_value": "Damariscotta",      "normalized_value": "Damariscotta",      "geoid": "2301516270", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Damariscotta town, Lincoln County" },
-    { "source_value": "Ellsworth",         "normalized_value": "Ellsworth",         "geoid": "2300923240", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Ellsworth city, Hancock County" },
-    { "source_value": "Fairfield",         "normalized_value": "Fairfield",         "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Somerset County. GEOID not in current Census mock (population subset); required from live ACS. See DECISION-20260711-census-api-key-required." },
-    { "source_value": "Farmington",        "normalized_value": "Farmington",        "geoid": "2300724665", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Farmington town, Franklin County" },
-    { "source_value": "Gardiner",          "normalized_value": "Gardiner",          "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Kennebec County. GEOID not in current Census mock." },
-    { "source_value": "Gorham",            "normalized_value": "Gorham",            "geoid": "2300528290", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Gorham town, Cumberland County" },
-    { "source_value": "Hallowell",         "normalized_value": "Hallowell",         "geoid": "2301130500", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Hallowell city, Kennebec County" },
-    { "source_value": "Hope",              "normalized_value": "Hope",              "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Knox County. GEOID not in current Census mock." },
-    { "source_value": "Kennebunk",         "normalized_value": "Kennebunk",         "geoid": "2303136535", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Kennebunk town, York County" },
-    { "source_value": "Kittery",           "normalized_value": "Kittery",           "geoid": "2303137260", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Kittery town, York County" },
-    { "source_value": "Lewiston",          "normalized_value": "Lewiston",          "geoid": "2300138740", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Lewiston city, Androscoggin County" },
-    { "source_value": "Lincoln",           "normalized_value": "Lincoln",           "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Penobscot County. GEOID not in current Census mock." },
-    { "source_value": "Lisbon",            "normalized_value": "Lisbon",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Androscoggin County. Lisbon Falls (ocp variant) is a village within the town of Lisbon - both surface forms share the same Census GEOID." },
-    { "source_value": "Lisbon Falls",      "normalized_value": "Lisbon",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Village within Lisbon town. Both surface forms map to the same Lisbon Census subdivision." },
-    { "source_value": "Lyman",             "normalized_value": "Lyman",             "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "York County. GEOID not in current Census mock." },
-    { "source_value": "Manchester",        "normalized_value": "Manchester",        "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Kennebec County. GEOID not in current Census mock." },
-    { "source_value": "Newport",           "normalized_value": "Newport",           "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Penobscot County. GEOID not in current Census mock." },
-    { "source_value": "Old Orchard Beach", "normalized_value": "Old Orchard Beach", "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "York County. GEOID not in current Census mock." },
-    { "source_value": "Orono",             "normalized_value": "Orono",             "geoid": "2301955465", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Orono town, Penobscot County" },
-    { "source_value": "Poland",            "normalized_value": "Poland",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Androscoggin County. GEOID not in current Census mock." },
-    { "source_value": "Portland",          "normalized_value": "Portland",          "geoid": "2300560545", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Portland city, Cumberland County" },
-    { "source_value": "Presque Isle",      "normalized_value": "Presque Isle",      "geoid": "2300360825", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Presque Isle city, Aroostook County" },
-    { "source_value": "Rockland",          "normalized_value": "Rockland",          "geoid": "2301363590", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Rockland city, Knox County" },
-    { "source_value": "Saco",              "normalized_value": "Saco",              "geoid": "2303164665", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Saco city, York County" },
-    { "source_value": "Sanford",           "normalized_value": "Sanford",           "geoid": "2303164860", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Sanford city, York County" },
-    { "source_value": "Scarborough",       "normalized_value": "Scarborough",       "geoid": "2300566145", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Scarborough town, Cumberland County" },
-    { "source_value": "So Portland",       "normalized_value": "South Portland",    "geoid": "2300570590", "match_method": "manual",       "reviewed": true, "note": "OCP abbreviation. Census 2024: South Portland city, Cumberland County." },
-    { "source_value": "South Portland",    "normalized_value": "South Portland",    "geoid": "2300570590", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: South Portland city, Cumberland County" },
-    { "source_value": "Standish",          "normalized_value": "Standish",          "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Cumberland County. GEOID not in current Census mock." },
-    { "source_value": "Thomaston",         "normalized_value": "Thomaston",         "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Knox County. GEOID not in current Census mock." },
-    { "source_value": "Topsham",           "normalized_value": "Topsham",           "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Sagadahoc County. GEOID not in current Census mock." },
-    { "source_value": "Turner",            "normalized_value": "Turner",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Androscoggin County. GEOID not in current Census mock." },
-    { "source_value": "Warren",            "normalized_value": "Warren",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Knox County. GEOID not in current Census mock." },
-    { "source_value": "Waterville",        "normalized_value": "Waterville",        "geoid": "2301180945", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Waterville city, Kennebec County" },
-    { "source_value": "Windham",           "normalized_value": "Windham",           "geoid": "2300585895", "match_method": "exact_alias", "reviewed": true, "note": "Census 2024: Windham town, Cumberland County" },
-    { "source_value": "Winslow",           "normalized_value": "Winslow",           "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Kennebec County. GEOID not in current Census mock." },
-    { "source_value": "Baring Plantation", "normalized_value": "Baring Plantation", "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Washington County. 'Baring Plt' (OCP) and 'Baring Plantation' (OCP) are the same Census subdivision." },
-    { "source_value": "Baring Plt",        "normalized_value": "Baring Plantation", "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Abbreviation of Baring Plantation. Same Census subdivision." },
-    { "source_value": "Hollis Center",     "normalized_value": "Hollis",            "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "York County. 'Hollis Center' (OCP) is a village within the Census subdivision 'Hollis town, York County'." },
-    { "source_value": "Greenville Junction", "normalized_value": "Greenville",      "geoid": null,         "match_method": "manual",       "reviewed": true, "note": "Piscataquis County. 'Greenville Junction' is a village within the Census subdivision 'Greenville town, Piscataquis County'." }
+    {
+      "source_value": "Auburn",
+      "normalized_value": "Auburn",
+      "geoid": "2300102060",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Auburn city, Androscoggin County, Maine"
+    },
+    {
+      "source_value": "Augusta",
+      "normalized_value": "Augusta",
+      "geoid": "2301102100",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Augusta city, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Bangor",
+      "normalized_value": "Bangor",
+      "geoid": "2301902795",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bangor city, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Bath",
+      "normalized_value": "Bath",
+      "geoid": "2302303355",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bath city, Sagadahoc County, Maine"
+    },
+    {
+      "source_value": "Belfast",
+      "normalized_value": "Belfast",
+      "geoid": "2302703950",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Belfast city, Waldo County, Maine"
+    },
+    {
+      "source_value": "Berwick",
+      "normalized_value": "Berwick",
+      "geoid": "2303104720",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Berwick town, York County, Maine"
+    },
+    {
+      "source_value": "Bethel",
+      "normalized_value": "Bethel",
+      "geoid": "2301704825",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bethel town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Biddeford",
+      "normalized_value": "Biddeford",
+      "geoid": "2303104860",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Biddeford city, York County, Maine"
+    },
+    {
+      "source_value": "Bowdoinham",
+      "normalized_value": "Bowdoinham",
+      "geoid": "2302306365",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bowdoinham town, Sagadahoc County, Maine"
+    },
+    {
+      "source_value": "Brewer",
+      "normalized_value": "Brewer",
+      "geoid": "2301906925",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Brewer city, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Bridgton",
+      "normalized_value": "Bridgton",
+      "geoid": "2300507170",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bridgton town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Brunswick",
+      "normalized_value": "Brunswick",
+      "geoid": "2300508430",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Brunswick town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Bucksport",
+      "normalized_value": "Bucksport",
+      "geoid": "2300908815",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Bucksport town, Hancock County, Maine"
+    },
+    {
+      "source_value": "Casco",
+      "normalized_value": "Casco",
+      "geoid": "2300511125",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Casco town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Chelsea",
+      "normalized_value": "Chelsea",
+      "geoid": "2301112350",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Chelsea town, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Damariscotta",
+      "normalized_value": "Damariscotta",
+      "geoid": "2301516235",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Damariscotta town, Lincoln County, Maine"
+    },
+    {
+      "source_value": "Detroit",
+      "normalized_value": "Detroit",
+      "geoid": "2302517460",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Detroit town, Somerset County, Maine"
+    },
+    {
+      "source_value": "Dexter",
+      "normalized_value": "Dexter",
+      "geoid": "2301917530",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Dexter town, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Eliot",
+      "normalized_value": "Eliot",
+      "geoid": "2303122955",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Eliot town, York County, Maine"
+    },
+    {
+      "source_value": "Ellsworth",
+      "normalized_value": "Ellsworth",
+      "geoid": "2300923200",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Ellsworth city, Hancock County, Maine"
+    },
+    {
+      "source_value": "Etna",
+      "normalized_value": "Etna",
+      "geoid": "2301923865",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Etna town, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Fairfield",
+      "normalized_value": "Fairfield",
+      "geoid": "2302524320",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Fairfield town, Somerset County, Maine"
+    },
+    {
+      "source_value": "Farmington",
+      "normalized_value": "Farmington",
+      "geoid": "2300724775",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Farmington town, Franklin County, Maine"
+    },
+    {
+      "source_value": "Freedom",
+      "normalized_value": "Freedom",
+      "geoid": "2302726420",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Freedom town, Waldo County, Maine"
+    },
+    {
+      "source_value": "Fryeburg",
+      "normalized_value": "Fryeburg",
+      "geoid": "2301726910",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Fryeburg town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Gardiner",
+      "normalized_value": "Gardiner",
+      "geoid": "2301127085",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Gardiner city, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Gorham",
+      "normalized_value": "Gorham",
+      "geoid": "2300528240",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Gorham town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Guilford",
+      "normalized_value": "Guilford",
+      "geoid": "2302130095",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Guilford town, Piscataquis County, Maine"
+    },
+    {
+      "source_value": "Hallowell",
+      "normalized_value": "Hallowell",
+      "geoid": "2301130550",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Hallowell city, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Hope",
+      "normalized_value": "Hope",
+      "geoid": "2301333840",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Hope town, Knox County, Maine"
+    },
+    {
+      "source_value": "Kennebunk",
+      "normalized_value": "Kennebunk",
+      "geoid": "2303136535",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Kennebunk town, York County, Maine"
+    },
+    {
+      "source_value": "Kittery",
+      "normalized_value": "Kittery",
+      "geoid": "2303137270",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Kittery town, York County, Maine"
+    },
+    {
+      "source_value": "Lebanon",
+      "normalized_value": "Lebanon",
+      "geoid": "2303138425",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Lebanon town, York County, Maine"
+    },
+    {
+      "source_value": "Lewiston",
+      "normalized_value": "Lewiston",
+      "geoid": "2300138740",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Lewiston city, Androscoggin County, Maine"
+    },
+    {
+      "source_value": "Lisbon",
+      "normalized_value": "Lisbon",
+      "geoid": "2300140035",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Lisbon town, Androscoggin County, Maine"
+    },
+    {
+      "source_value": "Lyman",
+      "normalized_value": "Lyman",
+      "geoid": "2303141750",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Lyman town, York County, Maine"
+    },
+    {
+      "source_value": "Manchester",
+      "normalized_value": "Manchester",
+      "geoid": "2301143080",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Manchester town, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Medway",
+      "normalized_value": "Medway",
+      "geoid": "2301945005",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Medway town, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Mercer",
+      "normalized_value": "Mercer",
+      "geoid": "2302545110",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Mercer town, Somerset County, Maine"
+    },
+    {
+      "source_value": "Milo",
+      "normalized_value": "Milo",
+      "geoid": "2302146020",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Milo town, Piscataquis County, Maine"
+    },
+    {
+      "source_value": "Monroe",
+      "normalized_value": "Monroe",
+      "geoid": "2302746475",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Monroe town, Waldo County, Maine"
+    },
+    {
+      "source_value": "Newport",
+      "normalized_value": "Newport",
+      "geoid": "2301949065",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Newport town, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Newry",
+      "normalized_value": "Newry",
+      "geoid": "2301749275",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Newry town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Northport",
+      "normalized_value": "Northport",
+      "geoid": "2302752845",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Northport town, Waldo County, Maine"
+    },
+    {
+      "source_value": "Orono",
+      "normalized_value": "Orono",
+      "geoid": "2301955565",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Orono town, Penobscot County, Maine"
+    },
+    {
+      "source_value": "Oxford",
+      "normalized_value": "Oxford",
+      "geoid": "2301756310",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Oxford town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Parsonsfield",
+      "normalized_value": "Parsonsfield",
+      "geoid": "2303156870",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Parsonsfield town, York County, Maine"
+    },
+    {
+      "source_value": "Peru",
+      "normalized_value": "Peru",
+      "geoid": "2301758270",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Peru town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Poland",
+      "normalized_value": "Poland",
+      "geoid": "2300160020",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Poland town, Androscoggin County, Maine"
+    },
+    {
+      "source_value": "Porter",
+      "normalized_value": "Porter",
+      "geoid": "2301760405",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Porter town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Portland",
+      "normalized_value": "Portland",
+      "geoid": "2300560545",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Portland city, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Rockland",
+      "normalized_value": "Rockland",
+      "geoid": "2301363590",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Rockland city, Knox County, Maine"
+    },
+    {
+      "source_value": "Rome",
+      "normalized_value": "Rome",
+      "geoid": "2301163835",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Rome town, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Saco",
+      "normalized_value": "Saco",
+      "geoid": "2303164675",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Saco city, York County, Maine"
+    },
+    {
+      "source_value": "Sanford",
+      "normalized_value": "Sanford",
+      "geoid": "2303165725",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Sanford city, York County, Maine"
+    },
+    {
+      "source_value": "Scarborough",
+      "normalized_value": "Scarborough",
+      "geoid": "2300566145",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Scarborough town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Solon",
+      "normalized_value": "Solon",
+      "geoid": "2302569505",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Solon town, Somerset County, Maine"
+    },
+    {
+      "source_value": "Somerville",
+      "normalized_value": "Somerville",
+      "geoid": "2301569645",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Somerville town, Lincoln County, Maine"
+    },
+    {
+      "source_value": "Standish",
+      "normalized_value": "Standish",
+      "geoid": "2300573670",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Standish town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Thomaston",
+      "normalized_value": "Thomaston",
+      "geoid": "2301376365",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Thomaston town, Knox County, Maine"
+    },
+    {
+      "source_value": "Thorndike",
+      "normalized_value": "Thorndike",
+      "geoid": "2302776610",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Thorndike town, Waldo County, Maine"
+    },
+    {
+      "source_value": "Topsham",
+      "normalized_value": "Topsham",
+      "geoid": "2302376960",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Topsham town, Sagadahoc County, Maine"
+    },
+    {
+      "source_value": "Trenton",
+      "normalized_value": "Trenton",
+      "geoid": "2300977415",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Trenton town, Hancock County, Maine"
+    },
+    {
+      "source_value": "Turner",
+      "normalized_value": "Turner",
+      "geoid": "2300177800",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Turner town, Androscoggin County, Maine"
+    },
+    {
+      "source_value": "Warren",
+      "normalized_value": "Warren",
+      "geoid": "2301380215",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Warren town, Knox County, Maine"
+    },
+    {
+      "source_value": "Washington",
+      "normalized_value": "Washington",
+      "geoid": "2301380425",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Washington town, Knox County, Maine"
+    },
+    {
+      "source_value": "Waterville",
+      "normalized_value": "Waterville",
+      "geoid": "2301180740",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Waterville city, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Windham",
+      "normalized_value": "Windham",
+      "geoid": "2300586025",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Windham town, Cumberland County, Maine"
+    },
+    {
+      "source_value": "Winslow",
+      "normalized_value": "Winslow",
+      "geoid": "2301186515",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Winslow town, Kennebec County, Maine"
+    },
+    {
+      "source_value": "Wiscasset",
+      "normalized_value": "Wiscasset",
+      "geoid": "2301587075",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Wiscasset town, Lincoln County, Maine"
+    },
+    {
+      "source_value": "Woodstock",
+      "normalized_value": "Woodstock",
+      "geoid": "2301787355",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Woodstock town, Oxford County, Maine"
+    },
+    {
+      "source_value": "Woolwich",
+      "normalized_value": "Woolwich",
+      "geoid": "2302387460",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Woolwich town, Sagadahoc County, Maine"
+    },
+    {
+      "source_value": "Baring Plantation",
+      "normalized_value": "Baring Plantation",
+      "geoid": "2302902970",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "Baring plantation, Washington County"
+    },
+    {
+      "source_value": "Baring Plt",
+      "normalized_value": "Baring Plantation",
+      "geoid": "2302902970",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "OCP abbreviation for Baring Plantation"
+    },
+    {
+      "source_value": "Boothbay",
+      "normalized_value": "Boothbay",
+      "geoid": "2301506050",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Boothbay town, Lincoln County"
+    },
+    {
+      "source_value": "Carrabassett Valley",
+      "normalized_value": "Carrabassett Valley",
+      "geoid": "2300710740",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Carrabassett Valley town, Franklin County"
+    },
+    {
+      "source_value": "Columbia",
+      "normalized_value": "Columbia",
+      "geoid": "2302913750",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Columbia town, Washington County (not Columbia Falls)"
+    },
+    {
+      "source_value": "Greenville Junction",
+      "normalized_value": "Greenville",
+      "geoid": "2302129535",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "Village within Greenville town, Piscataquis County"
+    },
+    {
+      "source_value": "Hollis Center",
+      "normalized_value": "Hollis",
+      "geoid": "2303133665",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "Village within Hollis town, York County"
+    },
+    {
+      "source_value": "Island Falls",
+      "normalized_value": "Island Falls",
+      "geoid": "2300335065",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Island Falls town, Aroostook County"
+    },
+    {
+      "source_value": "Lisbon Falls",
+      "normalized_value": "Lisbon",
+      "geoid": "2300140035",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "Village within Lisbon town, Androscoggin County"
+    },
+    {
+      "source_value": "Livermore Falls",
+      "normalized_value": "Livermore Falls",
+      "geoid": "2300140770",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Livermore Falls town, Androscoggin County"
+    },
+    {
+      "source_value": "Mechanic Falls",
+      "normalized_value": "Mechanic Falls",
+      "geoid": "2300144585",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Mechanic Falls town, Androscoggin County"
+    },
+    {
+      "source_value": "Old Orchard Beach",
+      "normalized_value": "Old Orchard Beach",
+      "geoid": "2303155085",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Old Orchard Beach town, York County"
+    },
+    {
+      "source_value": "Presque Isle",
+      "normalized_value": "Presque Isle",
+      "geoid": "2300360825",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Presque Isle city, Aroostook County"
+    },
+    {
+      "source_value": "So Portland",
+      "normalized_value": "South Portland",
+      "geoid": "2300571990",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "OCP abbreviation. South Portland city, Cumberland County."
+    },
+    {
+      "source_value": "South Portland",
+      "normalized_value": "South Portland",
+      "geoid": "2300571990",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "South Portland city, Cumberland County"
+    },
+    {
+      "source_value": "Southwest Harbor",
+      "normalized_value": "Southwest Harbor",
+      "geoid": "2300972865",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Southwest Harbor town, Hancock County"
+    },
+    {
+      "source_value": "West Paris",
+      "normalized_value": "West Paris",
+      "geoid": "2301783890",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "West Paris town, Oxford County"
+    }
   ],
   "unmatched_queue": [
-    "TBD",
-    "TO BE DETERMINED",
-    "Boothbay",
-    "Bowdoinham",
-    "Bridgton",
-    "Bucksport",
-    "Carrabassett Valley",
-    "Casco",
-    "Chelsea",
-    "Columbia",
-    "Detroit",
-    "Dexter",
-    "Eliot",
-    "Etna",
-    "Freedom",
-    "Fryeburg",
-    "Guilford",
     "Indian Purchase Twp",
-    "Island Falls",
-    "Lebanon",
-    "Livermore Falls",
-    "Medway",
-    "Mercer",
-    "Milo",
-    "Monroe",
-    "Newry",
-    "Northport",
-    "Oxford",
-    "Parsonsfield",
-    "Peru",
-    "Porter",
-    "Rome",
-    "Solon",
-    "Somerville",
-    "Southwest Harbor",
+    "Lincoln",
     "Stratton",
-    "Thorndike",
-    "Trenton",
-    "Washington",
-    "West Paris",
-    "Wiscasset",
-    "Woodstock",
-    "Woolwich"
+    "TBD",
+    "TO BE DETERMINED"
   ]
 }

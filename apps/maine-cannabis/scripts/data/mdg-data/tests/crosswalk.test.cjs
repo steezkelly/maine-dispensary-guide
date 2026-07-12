@@ -60,7 +60,8 @@ check('resolve handles "So Portland" abbreviation', () => {
     const r = xw.resolve(cw, 'So Portland');
     assert.strictEqual(r.match_method, 'manual');
     assert.strictEqual(r.normalized_value, 'South Portland');
-    assert.strictEqual(r.geoid, '2300570590');
+    // Live ACS 2024 GEOID for South Portland city (Cumberland County)
+    assert.strictEqual(r.geoid, '2300571990');
 });
 
 check('resolve returns unmatched=true for unknown city', () => {

@@ -73,36 +73,26 @@ check('toCanonicalRecords produces population + comparison rows with pinned vint
     assert.strictEqual(out.comparison[0].comparison_eligible, true);
 });
 
-check('adapter run() with mock fixture stores + emits canonical records', async () => {
-    // Ensure CENSUS_API_KEY is unset for this test.
-    const prev = process.env.CENSUS_API_KEY;
+check('adapter run() errors without mock or live key', async () => {
+    // Live data supersedes the mock. When the operator provides
+    // CENSUS_API_KEY the run() path takes the live branch. When both
+    // are absent and the mock fixture file is gone, run() should
+    // error rather than silently producing empty results.
+    const prevKey = process.env.CENSUS_API_KEY;
     delete process.env.CENSUS_API_KEY;
+    const prevGet = require('../lib/store.cjs').httpGet;
+    require('../lib/store.cjs').httpGet = async () => {
+        throw new Error('httpGet should not be called in this test');
+    };
     try {
         const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-census-'));
-        const out = await census.run(tmp);
-        assert.strictEqual(out.source, 'mock');
-        assert.strictEqual(out.acs_vintage, 2024);
-        assert.strictEqual(out.variable_id, 'B01003_001E');
-        assert.ok(out.raw_sha256);
-        assert.ok(fs.existsSync(out.raw_path));
-        assert.ok(out.diagnostics.valid_rows > 0);
-        assert.strictEqual(out.fixture_note.includes('CENSUS_API_KEY'), true);
-        // Every comparison_geography row has the canonical structure
-        for (const c of out.comparison_geography) {
-            assert.ok(census.isValidGeoid(c.geoid));
-            assert.strictEqual(c.acs_vintage, 2024);
-            assert.strictEqual(c.comparison_eligible, true);
-        }
-        // Every population observation is integer >= 0
-        for (const p of out.population_observations) {
-            assert.strictEqual(Number.isInteger(p.population_estimate), true);
-            assert.ok(p.population_estimate >= 0);
-            assert.strictEqual(p.acs_vintage, 2024);
-            assert.strictEqual(p.variable_id, 'B01003_001E');
-        }
+        let threw = null;
+        try { await census.run(tmp); } catch (err) { threw = err; }
+        assert.ok(threw, 'should throw without mock or live key');
         fs.rmSync(tmp, { recursive: true, force: true });
     } finally {
-        if (prev !== undefined) process.env.CENSUS_API_KEY = prev;
+        require('../lib/store.cjs').httpGet = prevGet;
+        if (prevKey !== undefined) process.env.CENSUS_API_KEY = prevKey;
     }
 });
 
@@ -121,6 +111,14 @@ check('adapter run() with CENSUS_API_KEY env var attempts live API', async () =>
         };
     };
     process.env.CENSUS_API_KEY = 'TESTKEY123';
+    // Use a minimal Census-shaped response so the parser has data.
+    const fakeResponse = [['NAME', 'B01003_001E', 'state', 'county', 'county subdivision'],
+        ['Auburn city, Androscoggin County, Maine', '24602', '23', '001', '02060']];
+    require('../lib/store.cjs').httpGet = async (url, opts) => {
+        hit = { url, opts };
+        return { status: 200, headers: {},
+            body: Buffer.from(JSON.stringify(fakeResponse), 'utf8') };
+    };
     try {
         const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-census-'));
         const out = await census.run(tmp);

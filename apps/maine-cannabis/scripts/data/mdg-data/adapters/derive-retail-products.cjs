@@ -75,11 +75,21 @@ function rowsToCsv(rows, columns) {
 function loadSnapshot(rootDir, sourceId, sourceSha256) {
     const p = path.join(rootDir, 'normalized', sourceId, sourceSha256, 'schema_version=1');
     if (!fs.existsSync(p)) return null;
-    return {
+    const snap = {
         data: JSON.parse(fs.readFileSync(path.join(p, 'data.json'), 'utf8')),
         profile: JSON.parse(fs.readFileSync(path.join(p, 'profile.json'), 'utf8')),
         provenance: JSON.parse(fs.readFileSync(path.join(p, 'provenance.json'), 'utf8'))
     };
+    // population_observations may live in a separate file (Census adapter)
+    // or inline in data.json (OCP). Merge into data for downstream consumers.
+    const popPath = path.join(p, 'population_observations.json');
+    if (fs.existsSync(popPath)) {
+        const pop = JSON.parse(fs.readFileSync(popPath, 'utf8'));
+        if (pop && pop.length && !snap.data.population_observations) {
+            snap.data.population_observations = pop;
+        }
+    }
+    return snap;
 }
 
 /**

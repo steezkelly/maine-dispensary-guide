@@ -35,7 +35,14 @@ const VARIABLE_ID = 'B01003_001E';
 const ACS_VINTAGE = 2024;
 const STATE_FIPS = '23';
 const BASE_URL = 'https://api.census.gov/data/2024/acs/acs5';
-const MAINE_COUNTY_SUBDIVISION_FIXTURE = require('../../../../docs/data/mdg-data/fixtures/census_acs5_2024_mock.json');
+let MAINE_COUNTY_SUBDIVISION_FIXTURE = null;
+try {
+    MAINE_COUNTY_SUBDIVISION_FIXTURE = require('../../../../docs/data/mdg-data/fixtures/census_acs5_2024_mock.json');
+} catch (e) {
+    // Mock fixture not present. The adapter falls through to the
+    // empty-buffer error path; this is the expected state when the
+    // operator provides CENSUS_API_KEY (no mock needed).
+}
 
 function buildUrl(apiKey) {
     const u = new URL(BASE_URL);
