@@ -20,11 +20,12 @@ check('real registry file loads with schema_version 1', () => {
     assert.strictEqual(reg.schema_version, 1);
 });
 
-check('real registry lists all four required source_ids (sorted)', () => {
+check('real registry lists all five required source_ids (sorted)', () => {
     const reg = REGISTRY.loadRegistry(REG_PATH);
     const ids = REGISTRY.listSourceIds(reg);
     assert.deepStrictEqual(ids, [
         'census_acs5_population',
+        'ocp_dispensaries_firecrawl',
         'ocp_licenses',
         'ocp_optin',
         'ocp_retail_sales'

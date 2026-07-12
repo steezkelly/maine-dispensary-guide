@@ -11,7 +11,11 @@
       "discovery": {
         "strategy": "scrape_html_for_csv_link",
         "selector_hint": "a[href*='Adult_Use_Establishments']",
-        "expected_content_types": ["text/csv", "application/csv", "text/plain"]
+        "expected_content_types": [
+          "text/csv",
+          "application/csv",
+          "text/plain"
+        ]
       },
       "schedule": {
         "sensor": "daily",
@@ -29,7 +33,11 @@
       "discovery": {
         "strategy": "transport_discovery_required",
         "selector_hint": null,
-        "expected_content_types": ["text/csv", "application/json", "text/html"]
+        "expected_content_types": [
+          "text/csv",
+          "application/json",
+          "text/html"
+        ]
       },
       "schedule": {
         "sensor": "daily",
@@ -47,7 +55,11 @@
       "discovery": {
         "strategy": "transport_discovery_required",
         "selector_hint": null,
-        "expected_content_types": ["text/csv", "application/json", "text/html"]
+        "expected_content_types": [
+          "text/csv",
+          "application/json",
+          "text/html"
+        ]
       },
       "schedule": {
         "sensor": "daily",
@@ -58,6 +70,27 @@
       "freshness_policy": "store_page_html_and_observed_transport_capture"
     },
     {
+      "source_id": "ocp_dispensaries_firecrawl",
+      "url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search",
+      "display_name": "OCP Active Dispensary Directory (CSV enumeration + Parallel FindAll)",
+      "family": "ocp",
+      "authoritative_page_url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search",
+      "discovery": {
+        "strategy": "csv_enumeration_plus_parallel_findall",
+        "selector_hint": "OCP licensee-search CSV (authoritative) + Parallel findall (validation)",
+        "expected_content_types": [
+          "application/json"
+        ]
+      },
+      "schedule": {
+        "sensor": "daily",
+        "expected_meaningful_change": "monthly"
+      },
+      "adapter_version": "1",
+      "schema_policy": "observed_then_fixture",
+      "freshness_policy": "content_hash_addressed"
+    },
+    {
       "source_id": "census_acs5_population",
       "display_name": "U.S. Census ACS 2024 5-year Population (B01003_001E)",
       "family": "census",
@@ -65,7 +98,10 @@
       "discovery": {
         "strategy": "census_api_vintage_2024",
         "endpoint_pattern": "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E&for=county%20subdivision:*&in=state:23",
-        "expected_content_types": ["application/json", "text/plain"]
+        "expected_content_types": [
+          "application/json",
+          "text/plain"
+        ]
       },
       "schedule": {
         "sensor": "vintage_pinned",

@@ -1,23 +1,22 @@
 {
   "schema_version": 1,
-  "slug": "retail-optin-gap",
-  "title": "Maine Municipalities With Adult-Use Cannabis Opt-In But No Active Retail License",
+  "slug": "dispensary-directory",
+  "title": "Maine Adult-Use Cannabis Dispensary Directory",
   "release_id": "ded381696bddf56f",
   "data_as_of": "2026-06-01",
   "fetched_at_utc": "2026-07-12T05:39:57.235Z",
-  "preliminary": true,
+  "preliminary": false,
   "source_ids": [
-    "ocp_optin",
+    "ocp_dispensaries_firecrawl",
     "ocp_licenses"
   ],
   "source_urls": [
-    "https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities",
     "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search"
   ],
   "input_sha256": [
     {
-      "source_id": "ocp_optin",
-      "sha256": "firecrawl_ingest"
+      "source_id": "ocp_dispensaries_firecrawl",
+      "sha256": "ocp_csv_enumeration+findall"
     },
     {
       "source_id": "ocp_licenses",
@@ -25,8 +24,8 @@
     }
   ],
   "transform_version": "1",
-  "methodology_path": "/data/methodology/retail-optin-gap",
+  "methodology_path": "/data/methodology/dispensary-directory",
   "acs_vintage": 2024,
-  "origin": "firecrawl_interact_capture",
+  "origin": "ocp_csv_enumeration",
   "mock": false
 }

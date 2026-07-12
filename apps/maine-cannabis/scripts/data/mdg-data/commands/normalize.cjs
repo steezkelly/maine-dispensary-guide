@@ -293,6 +293,60 @@ async function main() {
         }
     }
 
+    // Dispensary directory (MDG-ANALYTICS-001 / 280E price tracker path).
+    if (src.source_id === 'ocp_dispensaries_firecrawl') {
+        const dir = require('../adapters/ocp-dispensary-directory.cjs');
+        const out = dir.run(root);
+        if (!out.dispensaries.length && !out.findall_runs.length) {
+            emit({ schema_version: 1, component: 'mdg-data', command: 'normalize',
+                status: 'unchanged', source_id: src.source_id, release_id: null,
+                changed: false, retryable: false, code: 'NO_ARTIFACTS',
+                message: out.note || 'no dispensary artifacts present' });
+            process.exit(0);
+        }
+        // Content hash of all artifacts
+        const dir2 = require('path').join(root, 'raw', 'ocp_dispensaries_firecrawl');
+        let sha = '';
+        for (const f of require('fs').readdirSync(dir2).filter(f => f.endsWith('.json')).sort()) {
+            sha += require('crypto').createHash('sha256')
+                .update(require('fs').readFileSync(require('path').join(dir2, f))).digest('hex');
+        }
+        sha = require('crypto').createHash('sha256').update(sha).digest('hex');
+        const snapshotId = 'snap-' + require('crypto').createHash('sha256')
+            .update(src.source_id + '|' + sha + '|schema_version=1').digest('hex').slice(0, 16);
+        const normDir = require('path').join(root, 'normalized', src.source_id, sha, 'schema_version=1');
+        require('fs').mkdirSync(normDir, { recursive: true });
+        require('fs').writeFileSync(require('path').join(normDir, 'data.json'), JSON.stringify({
+            source_id: src.source_id, snapshot_id: snapshotId,
+            dispensaries: out.dispensaries, findall_runs: out.findall_runs
+        }, null, 2) + '\n');
+        require('fs').writeFileSync(require('path').join(normDir, 'profile.json'), JSON.stringify({
+            source: 'ocp_csv_enumeration+findall',
+            dispensaries: out.dispensaries.length,
+            findall_runs: out.findall_runs.length
+        }, null, 2) + '\n');
+        require('fs').writeFileSync(require('path').join(normDir, 'provenance.json'), JSON.stringify({
+            source_id: src.source_id, raw_sha256: sha,
+            snapshot_id: snapshotId, origin: 'ocp_csv_enumeration',
+            adapter_version: '1-dispensary-directory', schema_version: 1
+        }, null, 2) + '\n');
+        emit({
+            schema_version: 1, component: 'mdg-data', command: 'normalize',
+            status: 'unchanged', source_id: src.source_id, release_id: null,
+            changed: true, retryable: false, code: 'OK',
+            artifact_sha256: sha,
+            message: 'dispensary directory normalized; ' + out.dispensaries.length +
+                ' dispensaries, ' + out.findall_runs.length + ' findall runs',
+            metrics: {
+                dispensaries: out.dispensaries.length,
+                findall_runs: out.findall_runs.length,
+                snapshot_id: snapshotId,
+                normalized_path: normDir
+            }
+        });
+        process.exit(0);
+    }
+
     emit({ schema_version: 1, component: 'mdg-data', command: 'normalize',
         status: 'unchanged', source_id: src.source_id, release_id: null,
         changed: false, retryable: false, code: 'ADAPTER_NOT_YET_WIRED',
