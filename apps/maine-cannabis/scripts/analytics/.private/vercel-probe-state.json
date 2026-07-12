@@ -6,13 +6,33 @@
   "teamId": null,
   "teamId_source": "/v9/projects response did not include teamId, suggesting the token is a personal-account token (not team-scoped)",
   "probe_endpoint": "GET /v1/query/web-analytics/visits/count",
-  "probe_status": 400,
-  "probe_error_code": "web_analytics_not_enabled",
-  "probe_error_message": "Web Analytics is not enabled for this project",
+  "probe_status": 200,
   "token_rotation": {
     "last_rotated": "2026-07-12",
     "expires": "operator-set-1-year-from-2026-07-12",
     "next_rotation_due": "2026-07-12 minus 30 days from expiry",
     "rotation_procedure": "operator creates new token at https://vercel.com/account/tokens with name=mdg, scope=steezkelly's projects, expiration=1 year, Limited Access flag; provides new value via VERCEL_TOKEN env var"
-  }
+  },
+  "probe_status_history": [
+    {
+      "timestamp": "2026-07-12T07:12:00Z",
+      "status": 200,
+      "data": {
+        "visitors": 1,
+        "pageviews": 5
+      },
+      "note": "Gate 3 closes. Events flowing from production environment. Operator fired events via real browser visit; Vercel processing delay (1-3 hours) explained the prior 0 result."
+    }
+  ],
+  "gate_3_status": "CLOSED",
+  "gate_3_closed_at": "2026-07-12T07:12:00Z",
+  "gate_3_evidence": {
+    "visitors": 1,
+    "pageviews": 5,
+    "environment": "production",
+    "since": "2026-05-14T00:00:00.000Z",
+    "until": "2026-07-13T00:00:00.000Z",
+    "raw_response": "{\"version\":1,\"query\":{\"since\":\"2026-05-14T00:00:00.000Z\",\"until\":\"2026-07-13T00:00:00.000Z\",\"filter\":\"environment eq 'production'\"},\"data\":{\"visitors\":1,\"pageviews\":5}}"
+  },
+  "note": "Gate 3 (Vercel A4) closed 2026-07-12. Token valid, events flowing, project prj_PeZ8o8BNAJUpzSClY2ZnbXDtFSjt. Per G4=4c batch approval (commit 4118c540) the agent uses the single read-only probe. Production edit authority (data-debug=true flag on script tag) NOT exercised; A4 instrumented state changes go through separate A4 batch approval if ever needed."
 }
