@@ -70,6 +70,14 @@ const {
 } = Astro.props;
 
 const canonicalHref = canonicalOverride ?? canonicalUrl;
+
+// Mirror Layout.astro's `isGuide` derivation so the heroImage preload can be
+// gated on it. (Layout computes this in its own frontmatter and passes
+// nothing to BaseHead because, before Sprint 81, BaseHead only needed URL-
+// independent data. Now that the preload needs to know "is this a guide
+// page", we recompute the same predicate here rather than threading another
+// prop through the layout.)
+const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 ---
 
 <meta charset="UTF-8" />
@@ -97,7 +105,19 @@ const canonicalHref = canonicalOverride ?? canonicalUrl;
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=optional" rel="stylesheet" media="print" onload="this.media='all'" />
 <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=optional" rel="stylesheet" /></noscript>
 
-{heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
+{/*
+  Sprint 81 (2026-07-11) cleanup: only preload heroImage when the page
+  actually renders it in the body. Previously every page with a heroImage
+  frontmatter prop preloaded it, but the body renderer in Layout.astro:473
+  only shows the hero image for `isGuide` pages. On non-guide pages
+  (homepage, blog index, etc.), the preload fetched 74 KiB of JPG on every
+  load and never used it. The browser logs a console warning about the
+  unused preload within a few seconds of page load.
+
+  Same isGuide rule as Layout.astro:118 — pathname starts with /guides/ but
+  isn't /guides itself.
+*/}
+{heroImage && isGuide && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
 
 <link rel="canonical" href={canonicalHref} />
 <link rel="alternate" hreflang="en-US" href={canonicalHref} />
