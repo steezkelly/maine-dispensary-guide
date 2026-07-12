@@ -2379,28 +2379,27 @@ const journeySteps = [
   <SiteHealthStrip stats={siteHealthStats} />
 
   <!-- Video tour strip — featured-media below the editorial hero.
-       Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out
-       in CSS above. Poster is the LCP candidate.
+         Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out
+         in CSS above. Poster is the LCP candidate.
 
-       Sprint 81 (2026-07-11): Deferred autoplay to keep the 4.8MB mp4 out
-       of the homepage's initial network budget. The poster is now a 640w
-       AVIF (8.7 KiB) instead of the 1920w JPEG (199 KiB). `autoplay` and
-       `muted` are added back by JS once the browser is idle so the visual
-       stays identical for users who actually scroll there. Lighthouse
-       stops counting the full mp4 against the homepage, which is the
-       single biggest contributor to the 68 Performance score. -->
-  <section class="video-tour-strip" aria-label="30-second site tour">
-    <div class="video-tour-container">
-      <video
-        class="video-tour-element"
-        id="video-tour-element"
-        src="/videos/site-tour.mp4"
-        poster="/videos/site-tour.poster-640.avif"
-        playsinline
-        loop
-        preload="none"
-        aria-hidden="true"
-      ></video>
+         Sprint 81 round 4: Removed `src="/videos/site-tour.mp4"` from the markup
+         entirely. PSI's "Avoid enormous network payloads" audit counts the
+         mp4 in the homepage's 5,337 KiB total even with preload="none", because
+         the `src` attribute in the HTML is discoverable to the resource
+         summary. Moving the src into JS (set on idle before play()) drops the
+         mp4 from the initial network budget completely. The poster AVIF stays
+         inline so the LCP element renders immediately. -->
+    <section class="video-tour-strip" aria-label="30-second site tour">
+      <div class="video-tour-container">
+        <video
+          class="video-tour-element"
+          id="video-tour-element"
+          poster="/videos/site-tour.poster-640.avif"
+          playsinline
+          loop
+          preload="none"
+          aria-hidden="true"
+        ></video>
       <div class="video-tour-overlay">
         <span class="video-tour-label">30-second site tour</span>
         <a href="/guides/" class="video-tour-cta">Browse all 109 guides →</a>
@@ -2421,9 +2420,13 @@ const journeySteps = [
         function arm() {
           if (armed) return;
           armed = true;
+          // Sprint 81 round 4: set src on arm so the 4.8MB mp4 doesn't appear
+          // in the initial HTML resource summary. The src attribute in markup
+          // counts against the homepage's network budget even with preload=none.
           v.muted = true;
           v.autoplay = true;
           v.preload = 'metadata';
+          v.src = '/videos/site-tour.mp4';
           // Start playback now if the video is already on-screen, else let
           // the IntersectionObserver start it.
           var r = v.getBoundingClientRect();

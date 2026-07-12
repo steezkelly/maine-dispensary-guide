@@ -291,14 +291,49 @@ const breadcrumbListJsonLd = breadcrumbListSchema
     </script>
 
     <!-- Google Analytics GA4 -->
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`}></script>
-    <script define:vars={{ analyticsId: siteConfig.analyticsId }}>
-      // @ts-nocheck - GA4 dataLayer global
+    {/*
+      Sprint 81 (2026-07-11) PSI mobile round 4: deferred gtag.js load.
+
+      Before: `<script async src="...gtag/js?id=...">` + a second inline script
+      that called `gtag('js', new Date())` and `gtag('config', ...)`. The async
+      attribute kept it off the parser-blocking path but it still fetched and
+      parsed during the LCP window, costing 177 KiB transfer + 192 ms of main-
+      thread time (PSI "3rd parties" audit) and dragging TBT up to 50ms.
+
+      After: define the `gtag` stub inline so the engagement instrumentation
+      below can call window.gtag synchronously without errors. Load the real
+      gtag.js on `requestIdleCallback` (same pattern as the homepage video +
+      decoration defer). `gtag('config', ...)` runs after the script loads.
+      The first ~50-500ms of engagement events might miss the config-time hit
+      but the engagement instrumentation still queues to dataLayer, and the
+      gtag library will replay queued calls when it initializes. Acceptable
+      trade for ~3-5 perf score points.
+    */}
+    <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
+      // Stub gtag so engagement instrumentation (below) can call window.gtag
+      // before the real gtag.js library loads. Calls queue to dataLayer and
+      // are flushed when the real gtag initializes.
       window.dataLayer = window.dataLayer || [];
-      // @ts-ignore
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', analyticsId);
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+
+      // Load the real gtag.js after first idle.
+      (function () {
+        function loadGtag() {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
+          s.onload = function () {
+            window.gtag('config', analyticsId);
+          };
+          document.head.appendChild(s);
+        }
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(loadGtag, { timeout: 2500 });
+        } else {
+          window.addEventListener('load', function () { window.setTimeout(loadGtag, 1500); });
+        }
+      })();
     </script>
 
     <!--
