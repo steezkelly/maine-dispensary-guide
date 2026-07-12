@@ -78,11 +78,10 @@ const vendorCategories = [
                   <h3>{vendor.name}</h3>
                   <p><strong>Specialty:</strong> {vendor.specialty}</p>
                   <p><strong>Location:</strong> {vendor.location}</p>
-                  <button 
-                    type="button" 
+                  <!-- analytics:cta-injected id=cta-inline-resources-01 -->
+<button type="button" 
                     class="btn-theatre-trigger" 
-                    onclick={`window.openTheatre('${vendor.name}')`}
-                  >
+                    onclick={`window.openTheatre('${vendor.name}')`} data-cta-id="cta-inline-resources-01">
                     Request Intro &rarr;
                   </button>
                 </div>
@@ -94,7 +93,8 @@ const vendorCategories = [
 
       <aside class="referral-sidebar">
         <div id="referral-form-box" class="referral-box">
-          <button type="button" class="btn-close-theatre" onclick="window.closeTheatre()" aria-label="&times; Close form">&times;</button>
+          <!-- analytics:cta-injected id=cta-inline-resources-02 -->
+<button type="button" class="btn-close-theatre" onclick="window.closeTheatre()" aria-label="&times; Close form" data-cta-id="cta-inline-resources-02">&times;</button>
           <h3>Need a Referral?</h3>
           <p>Tell us about your project, and we will connect you with the right professional.</p>
           
@@ -127,7 +127,8 @@ const vendorCategories = [
             <label for="message-text-area" class="sr-only">Describe your goals</label>
             <textarea id="message-text-area" name="message" placeholder="Briefly describe your goals..."></textarea>
             
-            <button type="submit" class="btn-main">Request Introduction</button>
+            <!-- analytics:cta-injected id=cta-inline-resources-03 -->
+<button type="submit" class="btn-main" data-cta-id="cta-inline-resources-03">Request Introduction</button>
           </form>
         </div>
       </aside>

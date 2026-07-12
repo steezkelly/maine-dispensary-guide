@@ -92,7 +92,8 @@ const mailtoHref =
   <div class="lcb-eyebrow">{v.eyebrow}</div>
   <h2 class="lcb-heading">{v.heading}</h2>
   <p class="lcb-subhead">{v.subhead}</p>
-  <a class="lcb-cta" href={mailtoHref}>
+  <!-- analytics:cta-injected id=cta-inline-LeadCaptureBox-01 -->
+<a class="lcb-cta" href={mailtoHref} data-cta-id="cta-inline-LeadCaptureBox-01">
     {v.cta}
     <span aria-hidden="true" class="lcb-cta-arrow">→</span>
   </a>

@@ -42,7 +42,8 @@ const siteName = siteConfig.siteName;
     <div class="nav-search-desktop"><Search /></div>
 
     <div class="nav-actions">
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()">
+      <!-- analytics:cta-injected id=cta-inline-SiteHeader-01 -->
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode" onclick="window.toggleTheme()" data-cta-id="cta-inline-SiteHeader-01">
         <span class="toggle-track">
           <span class="toggle-thumb">
             <span class="sun" aria-hidden="true">✦</span>
@@ -55,7 +56,8 @@ const siteName = siteConfig.siteName;
     </div>
 
     <div class="nav-links" id="navigation-menu">
-      <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn"></button>
+      <!-- analytics:cta-injected id=cta-inline-SiteHeader-02 -->
+<button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn" data-cta-id="cta-inline-SiteHeader-02"></button>
       <script is:inline>
         document.getElementById('mobile-close-btn').addEventListener('click', () => {
           document.getElementById('nav-toggle').checked = false;
@@ -69,7 +71,8 @@ const siteName = siteConfig.siteName;
       </script>
       <div class="nav-search-mobile"><Search withData={false} /></div>
       <div class="nav-dropdown">
-        <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾">Browse by Topic ▾</button>
+        <!-- analytics:cta-injected id=cta-inline-SiteHeader-03 -->
+<button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Browse by Topic ▾" data-cta-id="cta-inline-SiteHeader-03">Browse by Topic ▾</button>
         <div class="dropdown-content multi-column">
           <div class="topic-group">
             {/* Fix 2026-07-06 (visual-readability-polish.md issue #10): wrap
@@ -162,7 +165,8 @@ const siteName = siteConfig.siteName;
         </div>
       </div>
       <div class="nav-dropdown">
-        <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾">Business Tools ▾</button>
+        <!-- analytics:cta-injected id=cta-inline-SiteHeader-04 -->
+<button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-label="Business Tools ▾" data-cta-id="cta-inline-SiteHeader-04">Business Tools ▾</button>
         <div class="dropdown-content">
           <a href="/roi-calculator"><span aria-hidden="true">◆</span> ROI Calculator</a>
           <a href="/market-stats"><span aria-hidden="true">◆</span> Market Stats</a>

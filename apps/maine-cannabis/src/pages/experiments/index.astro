@@ -959,13 +959,16 @@ Verify today: confirm directly with the source before relying on this detail.</p
         </p>
         <div class="slop-lab" data-slop-bingo>
           <div class="bingo-actions">
-            <button type="button" data-bingo-shuffle>Shuffle card</button>
-            <button type="button" data-bingo-clear>Clear marks</button>
+            <!-- analytics:cta-injected id=cta-inline-experiments--index-01 -->
+<button type="button" data-bingo-shuffle data-cta-id="cta-inline-experiments--index-01">Shuffle card</button>
+            <!-- analytics:cta-injected id=cta-inline-experiments--index-02 -->
+<button type="button" data-bingo-clear data-cta-id="cta-inline-experiments--index-02">Clear marks</button>
             <span class="bingo-score" data-bingo-score>0 marked</span>
           </div>
           <div class="bingo-grid" aria-label="Cannabis SEO Slop Bingo card">
             {slopSquares.map((square) => (
-              <button type="button" class="bingo-square" aria-pressed="false" data-phrase={square.phrase}>{square.phrase}</button>
+              <!-- analytics:cta-injected id=cta-inline-experiments--index-03 -->
+<button type="button" class="bingo-square" aria-pressed="false" data-phrase={square.phrase} data-cta-id="cta-inline-experiments--index-03">{square.phrase}</button>
             ))}
           </div>
         </div>

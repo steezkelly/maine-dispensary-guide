@@ -880,23 +880,21 @@ const howToSchema = {
     </aside>
 
     <div class="view-toggle" role="tablist" aria-label="Choose your view">
-      <button
-        class="toggle-btn active"
+      <!-- analytics:cta-injected id=cta-inline-launch-checklist-01 -->
+<button class="toggle-btn active"
         data-view="detailed"
         role="tab"
         aria-selected="true"
-        aria-controls="detailed-content"
-      >
+        aria-controls="detailed-content" data-cta-id="cta-inline-launch-checklist-01">
         <span class="toggle-icon">◆</span>
         Detailed Roadmap
       </button>
-      <button
-        class="toggle-btn"
+      <!-- analytics:cta-injected id=cta-inline-launch-checklist-02 -->
+<button class="toggle-btn"
         data-view="overview"
         role="tab"
         aria-selected="false"
-        aria-controls="overview-content"
-      >
+        aria-controls="overview-content" data-cta-id="cta-inline-launch-checklist-02">
         <span class="toggle-icon">◇</span>
         Quick Overview
       </button>
@@ -973,7 +971,8 @@ const howToSchema = {
               <div class="details-content">
                 <p set:html={item.description}></p>
                 <div class="details-actions">
-                  <a href={item.link} class="btn-detail">{item.cta} →</a>
+                  <!-- analytics:cta-injected id=cta-inline-launch-checklist-03 -->
+<a href={item.link} class="btn-detail" data-cta-id="cta-inline-launch-checklist-03">{item.cta} →</a>
                 </div>
               </div>
             </details>
@@ -1144,7 +1143,8 @@ const howToSchema = {
     <div class="print-box">
       <h3>Ready to Go Offline?</h3>
       <p>Download the high-resolution, printable PDF version of this roadmap including OCP form numbers and fee schedules.</p>
-      <a href="/download-checklist" class="btn-main">Get the PDF Version &rarr;</a>
+      <!-- analytics:cta-injected id=cta-inline-launch-checklist-04 -->
+<a href="/download-checklist" class="btn-main" data-cta-id="cta-inline-launch-checklist-04">Get the PDF Version &rarr;</a>
     </div>
   </section>
   <section class="content-verification">

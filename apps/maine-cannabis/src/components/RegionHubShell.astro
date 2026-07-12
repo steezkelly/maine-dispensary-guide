@@ -138,8 +138,10 @@ const faqJsonLd = JSON.stringify({
         <h3>{g.name}</h3>
         <p>{g.summary}</p>
         <div class="hub-guide-actions">
-          <a href={g.href} class="hub-btn-guide">Read guide</a>
-          <a href={g.mapUrl} class="hub-btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
+          <!-- analytics:cta-injected id=cta-inline-RegionHubShell-01 -->
+<a href={g.href} class="hub-btn-guide" data-cta-id="cta-inline-RegionHubShell-01">Read guide</a>
+          <!-- analytics:cta-injected id=cta-inline-RegionHubShell-02 -->
+<a href={g.mapUrl} class="hub-btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-RegionHubShell-02">Map search</a>
         </div>
       </article>
     ))}

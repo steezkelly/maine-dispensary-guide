@@ -191,13 +191,15 @@ const bibtex = `@misc{${bibKey},
           {page.authors_apa} ({year}, {page.publish_date}). <em>{page.title}.</em>
           Maine Dispensary Guide. <a href={page.page_url}>{page.page_url}</a>
         </p>
-        <button class="copy-btn" data-copy={`${page.authors_apa} (${year}, ${page.publish_date}). ${page.title}. Maine Dispensary Guide. ${page.page_url}`}>Copy</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--[...rest]-01 -->
+<button class="copy-btn" data-copy={`${page.authors_apa} (${year}, ${page.publish_date}). ${page.title}. Maine Dispensary Guide. ${page.page_url}`} data-cta-id="cta-inline-cite--[...rest]-01">Copy</button>
       </div>
 
       <h3>Short-form (for journalists)</h3>
       <div class="cite-box cite-box-quote">
         <p style="margin:0;">&ldquo;{page.short_citation}&rdquo;</p>
-        <button class="copy-btn" data-copy={page.short_citation}>Copy</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--[...rest]-02 -->
+<button class="copy-btn" data-copy={page.short_citation} data-cta-id="cta-inline-cite--[...rest]-02">Copy</button>
       </div>
 
       <h3>Plain-text</h3>
@@ -206,13 +208,15 @@ const bibtex = `@misc{${bibKey},
           {page.authors_plain}. {page.title}. Maine Dispensary Guide. Published {page.publish_date}.
           Accessed [date]. {page.page_url}
         </p>
-        <button class="copy-btn" data-copy={`${page.authors_plain}. ${page.title}. Maine Dispensary Guide. Published ${page.publish_date}. Accessed [date]. ${page.page_url}`}>Copy</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--[...rest]-03 -->
+<button class="copy-btn" data-copy={`${page.authors_plain}. ${page.title}. Maine Dispensary Guide. Published ${page.publish_date}. Accessed [date]. ${page.page_url}`} data-cta-id="cta-inline-cite--[...rest]-03">Copy</button>
       </div>
 
       <h3>BibTeX</h3>
       <div class="cite-box">
         <pre style="margin:0; white-space: pre-wrap;"><code>{bibtex}</code></pre>
-        <button class="copy-btn" data-copy={bibtex}>Copy</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--[...rest]-04 -->
+<button class="copy-btn" data-copy={bibtex} data-cta-id="cta-inline-cite--[...rest]-04">Copy</button>
       </div>
     </section>
 

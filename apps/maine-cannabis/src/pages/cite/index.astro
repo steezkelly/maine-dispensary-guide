@@ -347,12 +347,18 @@ const totalEntries = pages.length;
         <span class="chip-count" data-visible-count>{totalEntries} / {totalEntries}</span>
       </div>
       <div class="cite-filter-row" role="group" aria-label="Filter by category">
-        <button class="chip" type="button" data-chip="all"            aria-pressed="true">All</button>
-        <button class="chip" type="button" data-chip="guides"         aria-pressed="false">Guides</button>
-        <button class="chip" type="button" data-chip="blog"           aria-pressed="false">Blog</button>
-        <button class="chip" type="button" data-chip="operator-facing" aria-pressed="false">Operator-facing</button>
-        <button class="chip" type="button" data-chip="market-data"    aria-pressed="false">Market Data</button>
-        <button class="chip" type="button" data-chip="foundational"   aria-pressed="false">Foundational</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-01 -->
+<button class="chip" type="button" data-chip="all"            aria-pressed="true" data-cta-id="cta-inline-cite--index-01">All</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-02 -->
+<button class="chip" type="button" data-chip="guides"         aria-pressed="false" data-cta-id="cta-inline-cite--index-02">Guides</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-03 -->
+<button class="chip" type="button" data-chip="blog"           aria-pressed="false" data-cta-id="cta-inline-cite--index-03">Blog</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-04 -->
+<button class="chip" type="button" data-chip="operator-facing" aria-pressed="false" data-cta-id="cta-inline-cite--index-04">Operator-facing</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-05 -->
+<button class="chip" type="button" data-chip="market-data"    aria-pressed="false" data-cta-id="cta-inline-cite--index-05">Market Data</button>
+        <!-- analytics:cta-injected id=cta-inline-cite--index-06 -->
+<button class="chip" type="button" data-chip="foundational"   aria-pressed="false" data-cta-id="cta-inline-cite--index-06">Foundational</button>
       </div>
     </div>
 
@@ -403,12 +409,11 @@ const totalEntries = pages.length;
                 <p>
                   <a class="cite-link" href={`/cite/${p.slug}`}>Cite this page → /cite/{p.slug}</a>
                 </p>
-                <button
-                  type="button"
+                <!-- analytics:cta-injected id=cta-inline-cite--index-07 -->
+<button type="button"
                   class="bibtex-toggle"
                   aria-expanded="false"
-                  aria-controls={`bibtex-${p.slug}`}
-                >
+                  aria-controls={`bibtex-${p.slug}`} data-cta-id="cta-inline-cite--index-07">
                   Show BibTeX
                 </button>
                 <pre class="bibtex" id={`bibtex-${p.slug}`} hidden><code>{bibtex}</code></pre>

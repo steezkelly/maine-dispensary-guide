@@ -1013,8 +1013,10 @@ const directoryJsonLd = {
               <h3>{guide.name}</h3>
               <p>{guide.summary}</p>
               <div class="guide-actions">
-                <a href={guide.href} class="btn-guide">Read guide</a>
-                <a href={guide.mapUrl} class="btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
+                <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-01 -->
+<a href={guide.href} class="btn-guide" data-cta-id="cta-inline-find-a-dispensary-01">Read guide</a>
+                <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-02 -->
+<a href={guide.mapUrl} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-02">Map search</a>
               </div>
             </article>
           ))}
@@ -1041,8 +1043,10 @@ const directoryJsonLd = {
           <p class="ocp-count">{city.c} active {city.t === 'au' ? `store${city.c > 1 ? 's' : ''}` : `caregiver storefront${city.c > 1 ? 's' : ''}`}</p>
           {city.s && city.s.length > 0 && <p class="ocp-sample">{city.s.slice(0, 2).join(' · ')}</p>}
           <div class="ocp-actions">
-            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer">Map search</a>
-            <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer">OCP search</a>
+            <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-03 -->
+<a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-03">Map search</a>
+            <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-04 -->
+<a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-04">OCP search</a>
           </div>
         </article>
       ))}
