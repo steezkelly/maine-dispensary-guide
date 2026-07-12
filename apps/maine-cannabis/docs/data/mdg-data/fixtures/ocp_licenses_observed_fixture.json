@@ -1,0 +1,132 @@
+{
+  "source_id": "ocp_licenses",
+  "raw_sha256": "6db36e7f2fdb878893261cab31b2b13b52db5331f859f5df0f754f7b66473d7e",
+  "csv_url": "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Adult_Use_Establishments_And_Contacts_2026_06_01.csv",
+  "headers": [
+    "LICENSE",
+    "LICENSE_CATEGORY",
+    "LICENSE_TYPE",
+    "LICENSE_NAME",
+    "DBA",
+    "LICENSE_STATUS",
+    "LICENSE_ISSUE_DATE",
+    "LICENSE_EXPIRATION_DATE",
+    "LICENSE_FIRST_ISSUE_DATE",
+    "LICENSE_COUNTY",
+    "LICENSE_STATE",
+    "LICENSE_CITY"
+  ],
+  "dropped_columns": [
+    "BUSINESS_ENTITY_MEMBER",
+    "BUSINESS_ENTITY_MEMBER_CITY",
+    "BUSINESS_ENTITY_ROLE",
+    "BUSINESS_ENTITY_ROLE_DESCRIPTION",
+    "LICENSE_ADDRESS",
+    "LICENSE_WEBSITE",
+    "PRIMARY_CONTACT_EMAIL",
+    "PRIMARY_CONTACT_NUMBER",
+    "PRIMARY_LICENSE_CONTACT"
+  ],
+  "sample_rows": [
+    {
+      "LICENSE": "AMS102",
+      "LICENSE_CATEGORY": "Store",
+      "LICENSE_TYPE": "Store",
+      "LICENSE_NAME": "ORIGINS CANNABIS COMPANY LLC",
+      "DBA": "",
+      "LICENSE_STATUS": "Active",
+      "LICENSE_ISSUE_DATE": "12-MAR-26",
+      "LICENSE_EXPIRATION_DATE": "11-MAR-27",
+      "LICENSE_FIRST_ISSUE_DATE": "12-MAR-21",
+      "LICENSE_COUNTY": "Kennebec",
+      "LICENSE_STATE": "ME",
+      "LICENSE_CITY": "Manchester"
+    },
+    {
+      "LICENSE": "ACA1811",
+      "LICENSE_CATEGORY": "Cultivation",
+      "LICENSE_TYPE": "Cultivation, Tier 1 (Canopy)",
+      "LICENSE_NAME": "KIND FARMS CONFECTIONS LLC",
+      "DBA": "",
+      "LICENSE_STATUS": "Conditional, Jurisdiction Approved",
+      "LICENSE_ISSUE_DATE": "30-MAR-26",
+      "LICENSE_EXPIRATION_DATE": "21-JAN-27",
+      "LICENSE_FIRST_ISSUE_DATE": "22-JAN-26",
+      "LICENSE_COUNTY": "York",
+      "LICENSE_STATE": "ME",
+      "LICENSE_CITY": "Sanford"
+    },
+    {
+      "LICENSE": "ACA259",
+      "LICENSE_CATEGORY": "Cultivation",
+      "LICENSE_TYPE": "Cultivation, Tier 1 (Canopy)",
+      "LICENSE_NAME": "THE CANNABIS CABIN LLC",
+      "DBA": "THE CABIN",
+      "LICENSE_STATUS": "Active",
+      "LICENSE_ISSUE_DATE": "30-JUL-25",
+      "LICENSE_EXPIRATION_DATE": "29-JUL-26",
+      "LICENSE_FIRST_ISSUE_DATE": "30-JUL-21",
+      "LICENSE_COUNTY": "Androscoggin",
+      "LICENSE_STATE": "ME",
+      "LICENSE_CITY": "Poland"
+    },
+    {
+      "LICENSE": "ACA259",
+      "LICENSE_CATEGORY": "Cultivation",
+      "LICENSE_TYPE": "Cultivation, Tier 1 (Canopy)",
+      "LICENSE_NAME": "THE CANNABIS CABIN LLC",
+      "DBA": "THE CABIN",
+      "LICENSE_STATUS": "Active",
+      "LICENSE_ISSUE_DATE": "30-JUL-25",
+      "LICENSE_EXPIRATION_DATE": "29-JUL-26",
+      "LICENSE_FIRST_ISSUE_DATE": "30-JUL-21",
+      "LICENSE_COUNTY": "Androscoggin",
+      "LICENSE_STATE": "ME",
+      "LICENSE_CITY": "Poland"
+    },
+    {
+      "LICENSE": "ACA259",
+      "LICENSE_CATEGORY": "Cultivation",
+      "LICENSE_TYPE": "Cultivation, Tier 1 (Canopy)",
+      "LICENSE_NAME": "THE CANNABIS CABIN LLC",
+      "DBA": "THE CABIN",
+      "LICENSE_STATUS": "Active",
+      "LICENSE_ISSUE_DATE": "30-JUL-25",
+      "LICENSE_EXPIRATION_DATE": "29-JUL-26",
+      "LICENSE_FIRST_ISSUE_DATE": "30-JUL-21",
+      "LICENSE_COUNTY": "Androscoggin",
+      "LICENSE_STATE": "ME",
+      "LICENSE_CITY": "Poland"
+    }
+  ],
+  "profile_summary": {
+    "total_rows": 1583,
+    "license_status_vocabulary": [
+      "Active",
+      "Conditional",
+      "Conditional, Jurisdiction Approved",
+      "Pending Conditional"
+    ],
+    "license_type_vocabulary": [
+      "Cultivation, Nursery",
+      "Cultivation, Tier 1 (Canopy)",
+      "Cultivation, Tier 1 (Plant)",
+      "Cultivation, Tier 2",
+      "Cultivation, Tier 3",
+      "Cultivation, Tier 4",
+      "Products Manufacturing",
+      "Store"
+    ],
+    "license_number": {
+      "null_count": 0,
+      "null_rate": 0,
+      "distinct": 423,
+      "unique_among_non_null": false
+    },
+    "exact_duplicate_rows": {
+      "duplicate_row_count": 0,
+      "groups_with_duplicates": 0
+    },
+    "repeated_dba_city_count": 23
+  }
+}
