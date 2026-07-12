@@ -207,3 +207,16 @@ If the proposal reaches `RETAIN` after the 14-day post-deploy window, ticket 006
 Default to (3) DEFERRED if you want to keep momentum on BigQuery/Ticket 007 right now and come back to wiring later. (1) is the straight-through path. (2) lets you clip the scope.
 
 Awaiting your call.
+
+
+---
+
+## Addendum (2026-07-12, after gate-analysis correction)
+
+Per the operator's gate-analysis review (`MDG-ANALYTICS-001-CORRECTED-GATE-ANALYSIS-2026-07-12.md`), the following claims in this proposal need verification against the live GA4 admin UI before they can be relied on:
+
+1. **Line 37, 188 — "GA4→BigQuery linkage confirmed live since 2026-07-08; stream ID 14362255636; project 313121319696"**: the date and stream ID are unverified from repo evidence. The only directly-verifiable claim is that the GA4 service-account grant was confirmed on 2026-07-11 per commit `965528ad`. Whether the BigQuery link is currently enabled is unknown until the operator checks the GA4 admin UI.
+
+2. **Line 39, 189 — "GSC BDE requires IAM grant repair for search-console-export@system.gserviceaccount.com"**: this contradicts the operator's 2026-06-09 commit `33ebf83c` which deliberately retired the GSC programmatic-access path. The principal string is also a documentation placeholder, not a real principal. GSC BDE is **deliberately off the critical path** per operator decision.
+
+These two lines should be updated when this proposal is next revised. Until then, treat them as unverified.
