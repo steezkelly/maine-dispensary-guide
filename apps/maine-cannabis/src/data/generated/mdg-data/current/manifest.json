@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "release_id": "76a48bffc3788129",
+  "transform_version": "1",
+  "inputs": [
+    {
+      "source_id": "census_acs5_population",
+      "sha256": "65b02bd7ea78f02d3118a36a42f2aaf0661a3465f92c6767b5846abf5eb0762d"
+    },
+    {
+      "source_id": "ocp_licenses",
+      "sha256": "6db36e7f2fdb878893261cab31b2b13b52db5331f859f5df0f754f7b66473d7e"
+    },
+    {
+      "source_id": "ocp_optin",
+      "sha256": "d83174b1676dd8364c1703b57f41881e413d1ae8863deae6899004ce3644f890"
+    },
+    {
+      "source_id": "ocp_retail_sales",
+      "sha256": "cb77d4b72c330324c3810bfea8fe8f8f14b0632fbd355bb9fe630d3415b37b7a"
+    }
+  ],
+  "files": [
+    {
+      "path": "products/municipalities-without-retail-license.csv",
+      "sha256": "4a8408217ab38e82acb49d8345dcbc3f078ce40441de58994c37fc22a5b17ae2"
+    },
+    {
+      "path": "products/municipalities-without-retail-license.json",
+      "sha256": "ab3f065b9d972ad97799e5eec4adf1256925f9482e105b456dad2139cbc2fe66"
+    },
+    {
+      "path": "products/municipalities-without-retail-license.meta.json",
+      "sha256": "6ef55ec12a73275e293540a1913dfe910534eee9650e011f01b52315d5209675"
+    },
+    {
+      "path": "products/retail-licenses-by-municipality.csv",
+      "sha256": "22ad0903607ec293bae964db5551c1ce9c21b6c2919b139b3fd1eeac0431dcc6"
+    },
+    {
+      "path": "products/retail-licenses-by-municipality.json",
+      "sha256": "88adfceea87c76e59d96574fb300ba0d96a078b0a991fc5ae6c5ccb0ebcdfee9"
+    },
+    {
+      "path": "products/retail-licenses-by-municipality.meta.json",
+      "sha256": "467dc9b5e171e14902524e2f890ae74d74f6fcbdcce5cd47ba115529dbac8b04"
+    },
+    {
+      "path": "products/retail-licenses-per-10k.csv",
+      "sha256": "a9196c954589c41d6943fed17f13efe50198e4ce997e6f30cb2cd0d6787c5fb4"
+    },
+    {
+      "path": "products/retail-licenses-per-10k.json",
+      "sha256": "2e4e651b85a3049c2ec96c37d23c300b6f5b70583fff04c8973b2e701246e5f2"
+    },
+    {
+      "path": "products/retail-licenses-per-10k.meta.json",
+      "sha256": "53814dd95cfdde291fe3c8d96b658d04eb6261023c737e1d46f99199314f4deb"
+    }
+  ],
+  "disabled_products": [
+    {
+      "slug": "retail-licenses-per-10k",
+      "reason_code": "SOURCE_MOCK_FOR_TESTING",
+      "note": "Built from Census API mock fixture; rate values are illustrative."
+    },
+    {
+      "slug": "municipalities-without-retail-license",
+      "reason_code": "SOURCE_MOCK_FOR_TESTING",
+      "note": "Built from Census API mock fixture; universe is partial."
+    },
+    {
+      "slug": "adult-use-retail-sales",
+      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
+      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
+    },
+    {
+      "slug": "adult-use-transactions",
+      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
+      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
+    },
+    {
+      "slug": "average-flower-price",
+      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
+      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
+    },
+    {
+      "slug": "adult-use-product-mix",
+      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
+      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
+    },
+    {
+      "slug": "retail-optin-gap",
+      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
+      "note": "OCP opt-in page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
+    }
+  ]
+}

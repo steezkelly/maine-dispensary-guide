@@ -1,0 +1,125 @@
+{
+  "description": "Distinct approved OCP licenses with status=Active and license_type=cannabis_store, joined to Census county-subdivision GEOIDs via the reviewed OCP-to-Census crosswalk. Excludes OCP rows where the host municipality is unmatched (TBD, TO BE DETERMINED, etc.).",
+  "methodology_notes": [
+    "Counts are based on OCP Active license status, NOT real-time storefront-open census (per CONTEXT.md §Critical semantic rule).",
+    "Identity rule: LICENSE for non-null LICENSE values (see DEVIATION-20260711-retail-identity-rule.md)."
+  ],
+  "rows": [
+    {
+      "active_adult_use_cannabis_store_licenses": 7,
+      "data_as_of": null,
+      "geoid": "2300102060"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 8,
+      "data_as_of": null,
+      "geoid": "2300138740"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 1,
+      "data_as_of": null,
+      "geoid": "2300360825"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 3,
+      "data_as_of": null,
+      "geoid": "2300503995"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 27,
+      "data_as_of": null,
+      "geoid": "2300560545"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 11,
+      "data_as_of": null,
+      "geoid": "2300570590"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 2,
+      "data_as_of": null,
+      "geoid": "2300585895"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 2,
+      "data_as_of": null,
+      "geoid": "2300724665"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 5,
+      "data_as_of": null,
+      "geoid": "2301102100"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 1,
+      "data_as_of": null,
+      "geoid": "2301130500"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 6,
+      "data_as_of": null,
+      "geoid": "2301180945"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 4,
+      "data_as_of": null,
+      "geoid": "2301363590"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 2,
+      "data_as_of": null,
+      "geoid": "2301516270"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 10,
+      "data_as_of": null,
+      "geoid": "2301902740"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 3,
+      "data_as_of": null,
+      "geoid": "2301903645"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 1,
+      "data_as_of": null,
+      "geoid": "2301955465"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 2,
+      "data_as_of": null,
+      "geoid": "2302303130"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 3,
+      "data_as_of": null,
+      "geoid": "2303103465"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 3,
+      "data_as_of": null,
+      "geoid": "2303103535"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 2,
+      "data_as_of": null,
+      "geoid": "2303137260"
+    },
+    {
+      "active_adult_use_cannabis_store_licenses": 4,
+      "data_as_of": null,
+      "geoid": "2303164860"
+    }
+  ],
+  "schema_version": 1,
+  "slug": "retail-licenses-by-municipality",
+  "title": "Active Adult-Use Cannabis-Store Licenses by Maine Municipality",
+  "totals": {
+    "active_store_identities_excluded_unmatched_municipality": 80,
+    "active_store_identities_total_statewide": 187,
+    "active_store_licenses_resolved_to_geoid": 107,
+    "geoids_with_active_store": 21
+  },
+  "unit": "count",
+  "universe": "all comparison_geography rows with comparison_eligible=true"
+}
