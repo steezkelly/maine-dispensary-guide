@@ -1,20 +1,33 @@
 ---
 /**
- * /cite/[slug] — DOI-style permalinks for citable pages.
+ * /cite/[...rest] — DOI-style permalinks for citable pages.
  *
- * Renders a focused citation landing for each registered citable page:
+ * Renders a focused citation landing for each registered citable page.
+ * Both the bare `/cite/<slug>` form AND the short-hash form
+ * `/cite/<slug>-<6-char-hash>` resolve to the same content (the
+ * short-hash form is what citations.json documents as the canonical
+ * permalink_format, so journalists can paste it anywhere and have it
+ * work even if the page slug ever changes).
+ *
  *   /cite/roi-calculator                       → Finch & Nash (2026), ROI benchmarks
+ *   /cite/roi-calculator-22b398                → same page, full DOI-style hash form
  *   /cite/roi-calculator#startup-costs         → same page, specific section
  *   /cite/market-stats                         → Nash & Finch (2026), multi-year stats
+ *   /cite/market-stats-46c93f                  → same page, full DOI-style hash form
  *
- * Adding a new citable page = 1 entry in `src/data/citations.json`. No code change.
+ * The rest-parameter route shape accepts both forms because Astro
+ * matches `[...rest]` against any number of trailing segments.
+ * `/cite/<single-segment>` → rest = `<single-segment>`
+ * `/cite/<a>-<b>`            → rest = `<a>-<b>`
  *
- * NOTE on short-hash suffix: the grill-me plan called for permalinks of the form
- * `https://mainedispensaryguide.com/cite/<slug>-<short-hash>`. We render that hash
- * here (sha256(pageUrl + publishDate) truncated to 6 chars) so journalists see
- * the final URL the plan calls for. The bare `/cite/<slug>` form ALSO resolves to
- * this page (Astro matches `[slug]` against `roi-calculator`); that means
- * canonical-DOI URLs and the shorter form both work and route to the same content.
+ * The short-hash suffix is sha256(pageUrl + "|" + publish_date) truncated
+ * to 6 chars (lowercase hex). If the suffix is present, we verify it;
+ * a mismatched hash returns a 404 (we do NOT silently render — that
+ * would let anyone invent `/cite/foo-deadbeef` and get our cite page
+ * back, which breaks the integrity of the DOI-style permalink).
+ *
+ * Adding a new citable page = 1 entry in `src/data/citations.json`.
+ * No code change.
  */
 
 import Layout from '../../layouts/Layout.astro';
@@ -49,15 +62,40 @@ interface CitationPage {
 }
 
 const registry = citationsData as { pages: CitationPage[] };
+
+/**
+ * Parse a rest-segment into either:
+ *   - `<slug>` (bare form)
+ *   - `<slug>-<6-char-hash>` (DOI-style hash form)
+ *
+ * Returns null if the rest is empty. Hash verification happens in
+ * getStaticPaths — that emits a route only when the hash matches the
+ * canonical computation, so malformed URLs (e.g. `/cite/foo-deadbeef`
+ * where the hash was invented) get a clean 404 instead of returning
+ * our cite page. We keep splitRest as documentation of the wire format
+ * but the build branch is parameterized inside getStaticPaths.
+ */
+// (intentionally unused — wire-format reference kept inline for clarity)
+
 export function getStaticPaths() {
   // Re-import inside the function — Astro's getStaticPaths runs in a separate
   // module-evaluation context and cannot see top-level frontmatter bindings.
   // (See https://docs.astro.build/en/reference/routing-reference/#getstaticpaths)
   const data = citationsData as { pages: CitationPage[] };
-  return data.pages.map((p) => ({
-    params: { slug: p.slug },
-    props: { page: p },
-  }));
+
+  const routes: Array<{ params: { rest: string }; props: { page: typeof data.pages[0] } }> = [];
+
+  for (const p of data.pages) {
+    // 1) Bare form: /cite/<slug>
+    routes.push({ params: { rest: p.slug }, props: { page: p } });
+
+    // 2) Hash form: /cite/<slug>-<hash>. Compute hash from canonical inputs.
+    const hashInput = `${p.page_url}|${p.publish_date}`;
+    const shortHash = createHash('sha256').update(hashInput).digest('hex').slice(0, 6);
+    routes.push({ params: { rest: `${p.slug}-${shortHash}` }, props: { page: p } });
+  }
+
+  return routes;
 }
 
 const { page } = Astro.props as { page: CitationPage };
