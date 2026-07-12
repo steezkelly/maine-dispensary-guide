@@ -115,20 +115,85 @@ function derive(rootDir, inputLock, releaseMeta) {
     const popByGeoid = new Map();
     for (const p of population) popByGeoid.set(p.geoid, p.population_estimate);
 
-    // Count distinct active-store identities per GEOID. Exclude
-    // unmatched_municipality rows from per-geoid products per
-    // publication gate (TICKETS/005 + METRICS.md §Comparison universe).
+    // Tier 1 publication gate per ARTIFACT-CONTRACT.md §Product filenames
+    // and METRICS.md §Comparison universe without a qualifying active
+    // retail license: "100% of qualifying active store rows are
+    // resolved before geographic products publish." (TICKETS/005)
+    //
+    // We classify each qualifying active-store row into:
+    //   - resolved:  has a geoid
+    //   - excluded_unmatched_municipality: status=active + type=cannabis_store
+    //                                    but no geoid (host municipality in
+    //                                    unmatched_queue of the crosswalk)
+    //   - excluded_null_license: null LICENSE (synthetic identity fallback
+    //                              quarantined per ChatGPT review 2026-07-12;
+    //                              null state-issued license identifiers
+    //                              should not produce a published retail identity)
+    //
+    // If ANY qualifying active-store row is excluded for either reason,
+    // the three geographic products are blocked with
+    // GEOGRAPHY_UNRESOLVED. The full active-store count (187 in the
+    // June 2026 snapshot) is still exposed via the disabled-products
+    // manifest entry, not via per-municipality products.
     const activeStoreGeoidCounts = new Map(); // geoid -> Set<identity_key>
     const activeStoreAllCount = new Set(); // distinct active-store identities overall
+    const excludedUnmatchedMunicipality = []; // [{identity_key, license_number, ...}]
+    const excludedNullLicense = []; // [{identity_key, ...}]
     for (const r of records) {
         if (r.license_status_norm !== 'active') continue;
         if (r.license_type_norm !== 'cannabis_store') continue;
         activeStoreAllCount.add(r.identity_key);
-        if (!r.geoid) continue; // unmatched_municipality excluded
+        // Quarantine null-LICENSE rows. Per DEVIATION-20260711-retail-
+        // identity-rule.md, identity_key = LICENSE for non-null rows;
+        // the sha256(TYPE|DBA|CITY) fallback is for non-qualifying rows
+        // and MUST NOT participate in the published retail universe.
+        if (!r.license_number) {
+            excludedNullLicense.push({
+                identity_key: r.identity_key,
+                license_status: r.license_status_raw,
+                license_type: r.license_type_raw,
+                dba: r.dba_name,
+                city: r.host_municipality_raw
+            });
+            continue;
+        }
+        if (!r.geoid) {
+            excludedUnmatchedMunicipality.push({
+                identity_key: r.identity_key,
+                license_number: r.license_number,
+                license_status: r.license_status_raw,
+                license_type: r.license_type_raw,
+                dba: r.dba_name,
+                city: r.host_municipality_raw
+            });
+            continue;
+        }
         if (!activeStoreGeoidCounts.has(r.geoid)) {
             activeStoreGeoidCounts.set(r.geoid, new Set());
         }
         activeStoreGeoidCounts.get(r.geoid).add(r.identity_key);
+    }
+
+    const gate = {
+        geography_unresolved: excludedUnmatchedMunicipality.length > 0
+            || excludedNullLicense.length > 0,
+        excluded_unmatched_municipality_count: excludedUnmatchedMunicipality.length,
+        excluded_null_license_count: excludedNullLicense.length,
+        excluded_unmatched_municipality_sample: excludedUnmatchedMunicipality.slice(0, 10),
+        excluded_null_license_sample: excludedNullLicense.slice(0, 10),
+        active_store_identities_total: activeStoreAllCount.size,
+        active_store_identities_resolved: Array.from(activeStoreGeoidCounts.values())
+            .reduce((s, set) => s + set.size, 0)
+    };
+    // If the gate is not clear, throw to block publication. The caller
+    // (commands/derive.cjs) catches this and emits the appropriate
+    // disabled-products manifest entries.
+    if (gate.geography_unresolved) {
+        const err = new Error(
+            `Tier 1 publication gate: ${excludedUnmatchedMunicipality.length} active-store identities have unmatched municipalities; ${excludedNullLicense.length} have null LICENSE. Geographic products are BLOCKED.`);
+        err.code = 'GEOGRAPHY_UNRESOLVED';
+        err.gate = gate;
+        throw err;
     }
 
     // ----- retail-licenses-by-municipality -----

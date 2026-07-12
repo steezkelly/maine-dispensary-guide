@@ -124,10 +124,34 @@ check('records are sorted by identity_key for determinism', () => {
     }
 });
 
-// Real-data integration test: normalize the actual 2026-06-01 OCP CSV
-const REAL_CSV = '/home/steve/.hermes/data/mdg-data/raw/ocp_licenses/2026/07/12/6db36e7f2fdb8788/Adult_Use_Establishments_And_Contacts_2026_06_01.csv';
-if (fs.existsSync(REAL_CSV)) {
-    check('real OCP CSV (2026-06-01) normalizes 1583 rows into distinct identity keys', () => {
+// Real-data integration test: normalize the actual 2026-06-01 OCP CSV.
+// Per ChatGPT review 2026-07-12: the path must NOT be hard-coded to
+// /home/steve/... — that made the test silently skip on every other
+// machine. Use MDG_DATA_ROOT env var (already required by the engine)
+// and skip with an explicit warning if the raw CSV isn't there.
+const REAL_CSV = (() => {
+    const root = process.env.MDG_DATA_ROOT
+        || require('path').join(require('os').homedir(), '.hermes', 'data', 'mdg-data');
+    const base = require('path').join(root, 'raw', 'ocp_licenses');
+    if (!require('fs').existsSync(base)) return null;
+    const all = [];
+    for (const yyyy of require('fs').readdirSync(base).sort().reverse()) {
+        for (const mm of require('fs').readdirSync(require('path').join(base, yyyy)).sort().reverse()) {
+            for (const dd of require('fs').readdirSync(require('path').join(base, yyyy, mm)).sort().reverse()) {
+                for (const sha16 of require('fs').readdirSync(require('path').join(base, yyyy, mm, dd))) {
+                    const sub = require('path').join(base, yyyy, mm, dd, sha16);
+                    for (const f of require('fs').readdirSync(sub)) {
+                        if (f.endsWith('.csv')) all.push(require('path').join(sub, f));
+                    }
+                }
+            }
+        }
+    }
+    return all[0] || null;
+})();
+if (REAL_CSV) {
+    process.stderr.write('  (real-data integration test using: ' + REAL_CSV + ')\n');
+    check('real OCP CSV (most recent in MDG_DATA_ROOT) normalizes 1583 rows into distinct identity keys', () => {
         const out = norm.normalize(REAL_CSV, crosswalk, { fetched_at_utc: '2026-07-11T00:00:00Z' });
         assert.strictEqual(out.records.length, 1583);
         // Identity: with LICENSE as key, 1583 raw rows produce 423 unique

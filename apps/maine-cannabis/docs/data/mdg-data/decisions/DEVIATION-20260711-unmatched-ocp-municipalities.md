@@ -148,3 +148,46 @@ The cleanest resolution is:
 This deviation remains in force until step 5 is complete and a
 follow-up review records zero unmatched queue items (other than the
 two expected non-municipality strings).
+
+
+---
+
+## Resolution update (2026-07-12, post-Census-key)
+
+After the operator exported CENSUS_API_KEY, the crosswalk was
+rebuilt from the live ACS 2024 5-year B01003_001E response
+(529 Maine county subdivisions). The Tier 1 publication gate
+per `ARTIFACT-CONTRACT.md §Product filenames` ("100% of qualifying
+active store rows are resolved before geographic products publish")
+is now enforced in `adapters/derive-retail-products.cjs` via
+`GEOGRAPHY_UNRESOLVED` exception.
+
+### Crosswalk coverage (2026-07-12)
+
+- 91 of 94 OCP `LICENSE_CITY` values have a verified 10-digit
+  Census GEOID sourced directly from the live ACS 2024 response.
+- 91 of 91 GEOIDs verified present in the live Census data.
+- After ChatGPT review 2026-07-12: Lincoln (Penobscot town) and
+  Stratton (Eustis village-in-town) were added — both had been
+  missed in the original backfill.
+- 3 unmatched items remain:
+  1. `TBD` and `TO BE DETERMINED` (non-municipal OCP values) —
+     active-store count is excluded from per-municipality products
+     per spec.
+  2. `Indian Purchase Twp` — needs address-level investigation.
+     Multiple Indian Purchase townships in Maine (T3, T4); ACS may
+     represent the relevant territory under a broader unorganized
+     subdivision. Not derivable from the ACS dataset alone.
+
+### Live pipeline numbers (release 2950b776cb20cd6b)
+
+- 187 of 187 active-store licenses resolve to GEOIDs.
+- 65 GEOIDs with active retail (matches legacy
+  `site-stats.json::activeAdultUseMunicipalities: 65`).
+- 0 active-store identities excluded by the Tier 1 gate.
+- 464 of 529 Maine county subdivisions have no active retail.
+
+The 50 `unmatched_municipality_count` figure in the OCP normalize
+metrics refers to the OCP row count (denormalized rows that
+include owner/principal entries), not to distinct active-store
+identities. Distinct active-store identities are 100% resolved.

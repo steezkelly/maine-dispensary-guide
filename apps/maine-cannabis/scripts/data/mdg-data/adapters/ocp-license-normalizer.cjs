@@ -71,6 +71,19 @@ function canonicalIdentityKey(rec) {
     return crypto.createHash('sha256').update(parts.join('|')).digest('hex').slice(0, 16);
 }
 
+
+/**
+ * Extract the OCP source snapshot date from the canonical filename
+ * pattern (e.g. ..._2026_06_01.csv -> '2026-06-01'). Returns null
+ * if the filename doesn't match the pattern; callers must treat
+ * null as "unknown source date, do not publish as_of".
+ */
+function extractSnapshotDate(filename) {
+    const m = /_(\d{4})_(\d{2})_(\d{2})\.csv$/.exec(filename);
+    if (!m) return null;
+    return m[1] + '-' + m[2] + '-' + m[3];
+}
+
 function sourceRowHash(rec) {
     return crypto.createHash('sha256').update(JSON.stringify(rec)).digest('hex');
 }
@@ -111,8 +124,12 @@ function normType(raw) {
 function normalize(rawCsvPath, crosswalk, snapshotMeta) {
     const csv = fs.readFileSync(rawCsvPath, 'utf8');
     const parsed = ocpLic.parseCsv(csv);
+    const sourceSha = crypto.createHash('sha256').update(csv).digest('hex');
+    // Per ChatGPT review 2026-07-12: snapshot_id must be deterministic
+    // from the source content + schema, not from a filesystem path that
+    // would change between two runs at different paths.
     const snapshotId = 'snap-' + crypto.createHash('sha256')
-        .update(rawCsvPath + '|' + csv.length).digest('hex').slice(0, 16);
+        .update('ocp_licenses' + '|' + sourceSha + '|schema_version=1').digest('hex').slice(0, 16);
     const records = [];
     let activeStoreCount = 0;
     const activeIdentityKeys = new Set();
@@ -190,7 +207,17 @@ function normalize(rawCsvPath, crosswalk, snapshotMeta) {
     const snapshot = {
         snapshot_id: snapshotId,
         source_sha256: crypto.createHash('sha256').update(csv).digest('hex'),
+        // Per ChatGPT review 2026-07-12: OCP source files encode
+        // a snapshot date in the filename (e.g. ..._2026_06_01.csv).
+        // Extract that as source_snapshot_date and preserve the
+        // page-level last-modified separately. We retain the
+        // legacy source_as_of field as null (OCP does not expose a
+        // per-row as-of) and use source_snapshot_date as the
+        // authoritative data-as-of for public copy. This is a
+        // Tier-2 deviation: source_snapshot_date is the file-level
+        // publication date, not a per-row observation timestamp.
         source_as_of: null,
+        source_snapshot_date: extractSnapshotDate(path.basename(rawCsvPath)),
         source_filename: path.basename(rawCsvPath),
         fetched_at_utc: snapshotMeta && snapshotMeta.fetched_at_utc
             ? snapshotMeta.fetched_at_utc : new Date().toISOString(),

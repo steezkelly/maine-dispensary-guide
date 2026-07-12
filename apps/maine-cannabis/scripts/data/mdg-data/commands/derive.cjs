@@ -108,19 +108,76 @@ function main() {
     fs.mkdirSync(path.join(releaseDir, 'products'), { recursive: true });
 
     let products;
+    let blockedGate = null;
     try {
         products = derive.derive(root, {
             ocp_licenses: inputLock.inputs.find(i => i.source_id === 'ocp_licenses').sha256,
             census_acs5_population: inputLock.inputs.find(i => i.source_id === 'census_acs5_population').sha256
         }, {
             release_id: releaseId,
-            data_as_of: ocpProf._data_as_of || null,
+            data_as_of: (() => {
+                try {
+                    const ocpData = JSON.parse(require('fs').readFileSync(
+                        require('path').join(ocpSnapDir, 'data.json'), 'utf8'));
+                    return ocpData.snapshot && ocpData.snapshot.source_snapshot_date
+                        || null;
+                } catch (e) { return null; }
+            })(),
             fetched_at_utc: ocpProv.fetched_at_utc || new Date().toISOString(),
             acs_vintage: censusProv.acs_vintage || 2024,
             transform_version: '1',
             preliminary: false
         });
     } catch (err) {
+        if (err.code === 'GEOGRAPHY_UNRESOLVED') {
+            // Tier 1 publication gate blocked. We do NOT promote a release;
+            // we materialize a "blocked" manifest for operator review
+            // and exit 50. The excluded rows are recorded in the manifest
+            // so the operator can resolve the crosswalk or quarantine the
+            // problematic identities and re-run.
+            blockedGate = err.gate;
+            process.stderr.write(
+                'derive: Tier 1 publication gate blocked publication.\n' +
+                '  excluded_unmatched_municipality: ' + blockedGate.excluded_unmatched_municipality_count + '\n' +
+                '  excluded_null_license: ' + blockedGate.excluded_null_license_count + '\n' +
+                '  active_store_identities_total: ' + blockedGate.active_store_identities_total + '\n' +
+                '  active_store_identities_resolved: ' + blockedGate.active_store_identities_resolved + '\n' +
+                '  No products emitted. Resolve the excluded rows, then re-run.\n');
+            const blockedManifest = {
+                schema_version: 1,
+                release_id: releaseId,
+                transform_version: '1',
+                inputs: inputLock.inputs,
+                files: [],
+                disabled_products: [
+                    { slug: 'retail-licenses-by-municipality',
+                      reason_code: 'GEOGRAPHY_UNRESOLVED',
+                      note: 'Tier 1 publication gate: ' + blockedGate.excluded_unmatched_municipality_count + ' active-store identities have unmatched municipalities; ' + blockedGate.excluded_null_license_count + ' have null LICENSE.' },
+                    { slug: 'retail-licenses-per-10k',
+                      reason_code: 'GEOGRAPHY_UNRESOLVED',
+                      note: 'Same Tier 1 publication gate as retail-licenses-by-municipality.' },
+                    { slug: 'municipalities-without-retail-license',
+                      reason_code: 'GEOGRAPHY_UNRESOLVED',
+                      note: 'Same Tier 1 publication gate as retail-licenses-by-municipality.' }
+                ],
+                blocked_by_gate: blockedGate
+            };
+            fs.writeFileSync(path.join(releaseDir, 'manifest.json'),
+                JSON.stringify(blockedManifest, null, 2) + '\n');
+            emit({
+                schema_version: 1, component: 'mdg-data', command: 'derive',
+                status: 'failed', source_id: null, release_id: releaseId,
+                changed: false, retryable: false, code: 'GEOGRAPHY_UNRESOLVED',
+                message: 'Tier 1 publication gate blocked. No products emitted.',
+                metrics: {
+                    release_id: releaseId,
+                    release_dir: releaseDir,
+                    manifest_path: path.join(releaseDir, 'manifest.json'),
+                    gate: blockedGate
+                }
+            });
+            process.exit(50);
+        }
         emit({ schema_version: 1, component: 'mdg-data', command: 'derive',
             status: 'failed', code: 'DERIVE_ERROR', retryable: false,
             message: err.message });

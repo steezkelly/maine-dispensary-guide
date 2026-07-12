@@ -4,7 +4,7 @@
   "source_id": "ocp_licenses",
   "target_id": "census_acs5_population",
   "vintage": 2024,
-  "decision_note": "Backfilled 2026-07-12 against the live ACS 2024 5-year B01003_001E response (529 Maine county subdivisions). All GEOIDs in this table are verified present in the live response. 5 OCP city values are in the unmatched queue.",
+  "decision_note": "Backfilled 2026-07-12 against the live ACS 2024 5-year B01003_001E response (529 Maine county subdivisions). All GEOIDs in this table are verified present in the live response. 3 OCP city values remain in the unmatched queue. After ChatGPT review 2026-07-12: Lincoln and Stratton were added (both had been missed in the original backfill). Indian Purchase Twp needs address-level investigation (multiple Indian Purchase townships in Maine; ACS may not represent the relevant territory under a broader unorganized subdivision).",
   "aliases": [
     {
       "source_value": "Auburn",
@@ -717,12 +717,26 @@
       "match_method": "exact_alias",
       "reviewed": true,
       "note": "West Paris town, Oxford County"
+    },
+    {
+      "source_value": "Lincoln",
+      "normalized_value": "Lincoln",
+      "geoid": "2301939475",
+      "match_method": "exact_alias",
+      "reviewed": true,
+      "note": "Census 2024: Lincoln town, Penobscot County. All 13 OCP 'Lincoln' rows have LICENSE_COUNTY=Penobscot, disambiguating from Lincoln plantation (Oxford County). The agent initially left this in the unmatched queue; ChatGPT review 2026-07-12 caught the miss."
+    },
+    {
+      "source_value": "Stratton",
+      "normalized_value": "Eustis",
+      "geoid": "2300724005",
+      "match_method": "manual",
+      "reviewed": true,
+      "note": "Stratton is a village within the town of Eustis (Franklin County). Same village-in-town mapping pattern as 'Greenville Junction' -> 'Greenville', 'Hollis Center' -> 'Hollis', 'Lisbon Falls' -> 'Lisbon' (per Wikipedia + Census 2024 verified). ChatGPT review 2026-07-12 caught the miss."
     }
   ],
   "unmatched_queue": [
     "Indian Purchase Twp",
-    "Lincoln",
-    "Stratton",
     "TBD",
     "TO BE DETERMINED"
   ]
