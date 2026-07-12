@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const store = require('../lib/store.cjs');
 const { loadRegistry, getSource } = require('../lib/registry.cjs');
 const xw = require('../lib/crosswalk.cjs');
@@ -175,6 +176,68 @@ async function main() {
             }
         });
         process.exit(0);
+    }
+
+    // Firecrawl-ingest path (Ticket 009/010 corrective, second
+    // production path). Triggered when firecrawl-captured markdown
+    // reports are present under raw/ocp_{sales,optin}_firecrawl/.
+    const firecrawlSrcIds = ['ocp_retail_sales', 'ocp_optin'];
+    if (firecrawlSrcIds.includes(src.source_id)) {
+        const fcDirMap = { ocp_retail_sales: 'ocp_sales_firecrawl', ocp_optin: 'ocp_optin_firecrawl' };
+        const fcDir = path.join(root, 'raw', fcDirMap[src.source_id]);
+        if (fs.existsSync(fcDir) && fs.readdirSync(fcDir).some(f => f.endsWith('.md'))) {
+            const fc = require('../adapters/ocp-firecrawl-ingest.cjs');
+            const out = fc.run(src.source_id, root);
+            const hasObs = out.observations && out.observations.length > 0;
+            const hasRec = out.records && out.records.length > 0;
+            if (hasObs || hasRec) {
+                // Content hash of all firecrawl markdown files for stable snapshot id
+                const files = fs.readdirSync(fcDir).filter(f => f.endsWith('.md')).sort();
+                let sha = '';
+                for (const f of files) {
+                    sha += crypto.createHash('sha256')
+                        .update(fs.readFileSync(path.join(fcDir, f))).digest('hex');
+                }
+                sha = crypto.createHash('sha256').update(sha).digest('hex');
+                const snapshotId = 'snap-' + crypto.createHash('sha256')
+                    .update(src.source_id + '|' + sha + '|schema_version=1').digest('hex').slice(0, 16);
+                const normDir = path.join(root, 'normalized', src.source_id, sha, 'schema_version=1');
+                fs.mkdirSync(normDir, { recursive: true });
+                fs.writeFileSync(path.join(normDir, 'data.json'), JSON.stringify({
+                    source_id: src.source_id, snapshot_id: snapshotId,
+                    observations: out.observations || [], records: out.records || []
+                }, null, 2) + '\n');
+                fs.writeFileSync(path.join(normDir, 'profile.json'), JSON.stringify({
+                    source: 'firecrawl_interact',
+                    origin: 'firecrawl_interact_capture',
+                    observations: (out.observations || []).length,
+                    records: (out.records || []).length,
+                    capture_date: new Date().toISOString().slice(0, 10)
+                }, null, 2) + '\n');
+                fs.writeFileSync(path.join(normDir, 'provenance.json'), JSON.stringify({
+                    source_id: src.source_id, raw_sha256: sha,
+                    snapshot_id: snapshotId, origin: 'firecrawl_interact_capture',
+                    adapter_version: '1-firecrawl', schema_version: 1
+                }, null, 2) + '\n');
+                const key = hasObs ? 'observations' : 'records';
+                emit({
+                    schema_version: 1, component: 'mdg-data', command: 'normalize',
+                    status: 'unchanged', source_id: src.source_id, release_id: null,
+                    changed: true, retryable: false, code: 'OK',
+                    artifact_sha256: sha,
+                    message: 'firecrawl-captured dashboard data normalized; ' +
+                        (out[key] || []).length + ' ' + key + ' emitted',
+                    metrics: {
+                        source: 'firecrawl_interact',
+                        origin: 'firecrawl_interact_capture',
+                        [key]: (out[key] || []).length,
+                        snapshot_id: snapshotId,
+                        normalized_path: normDir
+                    }
+                });
+                process.exit(0);
+            }
+        }
     }
 
     // Manual artifact normalize path (Ticket 009/010 corrective).

@@ -120,10 +120,13 @@ function main() {
     let products;
     let blockedGate = null;
     try {
-        products = derive.derive(root, {
-            ocp_licenses: inputLock.inputs.find(i => i.source_id === 'ocp_licenses').sha256,
-            census_acs5_population: inputLock.inputs.find(i => i.source_id === 'census_acs5_population').sha256
-        }, {
+        // Pass all input sources to derive so firecrawl-ingested sources
+// (ocp_retail_sales, ocp_optin) can produce their products too.
+const deriveInputLock = {};
+for (const inp of inputLock.inputs) {
+    deriveInputLock[inp.source_id] = inp.sha256;
+}
+products = derive.derive(root, deriveInputLock, {
             release_id: releaseId,
             data_as_of: (() => {
                 try {
@@ -255,10 +258,14 @@ function main() {
                 inputLock.inputs.find(i => i.source_id === 'ocp_optin').sha256,
                 'schema_version=1', 'provenance.json'), 'utf8'))
         : null;
-    const isSalesManual = ocpSalesProv && ocpSalesProv.origin === 'manual_csv_export';
-    const isOptinManual = ocpOptinProv && ocpOptinProv.origin === 'manual_csv_export';
+    const isSalesNonDashboard = ocpSalesProv
+        && (ocpSalesProv.origin === 'manual_csv_export'
+            || ocpSalesProv.origin === 'firecrawl_interact_capture');
+    const isOptinNonDashboard = ocpOptinProv
+        && (ocpOptinProv.origin === 'manual_csv_export'
+            || ocpOptinProv.origin === 'firecrawl_interact_capture');
 
-    if (hasOcpSales && !isSalesManual) {
+    if (hasOcpSales && !isSalesNonDashboard) {
         // Power BI embed — see DECISION-20260711-ocp-powerbi-embed.md
         ['adult-use-retail-sales', 'adult-use-transactions',
          'average-flower-price', 'adult-use-product-mix'].forEach(slug => {
@@ -270,7 +277,7 @@ function main() {
             });
         });
     }
-    if (hasOcpOptin && !isOptinManual) {
+    if (hasOcpOptin && !isOptinNonDashboard) {
         manifest.disabled_products.push({
             slug: 'retail-optin-gap',
             reason_code: 'SOURCE_SEMANTICS_UNAPPROVED',
