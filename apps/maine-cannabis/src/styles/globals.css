@@ -243,3 +243,71 @@ figure.infographic figcaption {
 [data-theme="dark"] figure.infographic img {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
+
+/* === Print stylesheet ===
+   Operator audience (CFO, founder, compliance) plausibly prints reference
+   guides (costs, taxes, wholesale, license map) as paper docs. Without
+   these rules, Cmd-P renders the grain overlay, 12 fixed bg-ornament SVGs,
+   and the sticky site header — wasting ink and obscuring the article body.
+   design-audit-2026-07-12 finding #1 (MEDIUM). */
+@media print {
+  /* Hide decorative / chrome elements */
+  .grain-overlay,
+  .bg-ornament,
+  .mdg-anim-backdrop,
+  .theater-overlay,
+  #site-header,
+  #back-to-top,
+  .back-to-top,
+  nav.footer-links,
+  .article-tags,
+  .nav-search-desktop,
+  .skip-link {
+    display: none !important;
+  }
+
+  /* Reset page-level decoration */
+  html, body {
+    background: #fff !important;
+    background-image: none !important;
+    color: #000 !important;
+    overflow: visible !important;
+  }
+
+  /* Article body: full-width, no fixed-width constraints */
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Preserve typography hierarchy without color cues */
+  h1, h2, h3, h4 {
+    color: #000 !important;
+    page-break-after: avoid;
+  }
+
+  /* Avoid awkward page breaks inside content */
+  article, figure, table, blockquote, .article-author-footer {
+    page-break-inside: avoid;
+  }
+
+  /* Links: show URL for external references (YMYL operator trust) */
+  a[href^="http"]:not([href*="mainedispensaryguide.com"])::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+  }
+
+  /* Ensure images print */
+  img { max-width: 100% !important; height: auto !important; }
+
+  /* Honor dark-mode preference in print preview as light (printer paper) */
+  [data-theme="dark"] {
+    --color-background: #fff;
+    --color-text: #000;
+    --color-text-light: #333;
+    --color-border: #ccc;
+    --color-primary: #000;
+  }
+}
