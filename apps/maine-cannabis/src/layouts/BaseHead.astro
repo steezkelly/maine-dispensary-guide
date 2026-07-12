@@ -83,8 +83,19 @@ const canonicalHref = canonicalOverride ?? canonicalUrl;
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+{/*
+  Sprint 81 (2026-07-11) PSI mobile follow-up: switched from display=swap to
+  display=optional. The LCP element is the .hero-descriptor body paragraph
+  (Plus Jakarta Sans). With swap, the page renders in the system fallback
+  and re-flows when the webfont loads — pushing the LCP element's effective
+  render time later than necessary. With optional, the browser uses the
+  fallback if the webfont doesn't load within ~100ms, no swap, no late LCP
+  re-layout. Trade-off: slow-network users see system fonts for body copy,
+  but the brand still reads correctly (system sans is close enough to Plus
+  Jakarta for body, system serif is acceptable for Fraunces headings).
+*/}
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=optional" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=optional" rel="stylesheet" /></noscript>
 
 {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
 

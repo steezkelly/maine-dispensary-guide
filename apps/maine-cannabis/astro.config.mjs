@@ -56,4 +56,19 @@ export default defineConfig({
       theme: 'github-dark',
     },
   },
+  // Sprint 81 (2026-07-11) PSI mobile follow-up: inline small CSS files into
+  // HTML so the homepage critical-path CSS chain becomes just the page-scoped
+  // stylesheet. Previously the chain was Layout (4.6KB) + index (8.4KB) +
+  // seo (7.6KB) = ~1,320ms render-blocking. With assetsInlineLimit=32KB,
+  // Layout (15.7KB raw) and seo (27.1KB raw) get inlined into the HTML
+  // (gzipped ~9KB total, but no extra network round-trip); only the page-
+  // scoped index.css (44.7KB raw, homepage-specific) stays external.
+  // Trade-off: ~9KB added to HTML on every page (gzipped), so cache benefit
+  // for repeat visits to other pages goes away — but those are visited less
+  // than the homepage and the LCP win dominates.
+  vite: {
+    build: {
+      assetsInlineLimit: 32768,
+    },
+  },
 });
