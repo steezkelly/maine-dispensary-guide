@@ -42,12 +42,19 @@ body {
 }
 .skip-link:focus { top: 0; }
 
-/* === Grain overlay (subtle paper texture) === */
+/* === Grain overlay (subtle paper texture) ===
+   Self-hosted AVIF/WebP/PNG served from /textures/natural-paper.* — saves a
+   3rd-party DNS lookup + TLS handshake on first paint (PSI estimate: 250ms LCP).
+   Original PNG was 99 KiB from transparenttextures.com; AVIF is 36 KiB. */
 .grain-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  background-image: image-set(
+    url("/textures/natural-paper.avif") type("image/avif"),
+    url("/textures/natural-paper.webp") type("image/webp"),
+    url("/textures/natural-paper.png")  type("image/png")
+  );
   opacity: 0.3;
   pointer-events: none;
   z-index: 999;

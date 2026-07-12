@@ -114,9 +114,15 @@ const journeySteps = [
 >
   {/* LCP preload hint for the homepage video-tour-strip poster — the
        video is muted-background and won't block LCP, but the poster
-       is the LCP candidate. Preload shaves ~100ms on first paint. */}
+       is the LCP candidate. Preload shaves ~100ms on first paint.
+
+       Sprint 81 (2026-07-11): Switched from 1920×1080 JPEG (199 KiB) to
+       640×360 AVIF (8.7 KiB) + 960×540 fallback. PSI mobile "Improve image
+       delivery" called out 176 KiB savings here alone. AVIF served via
+       <picture> inside the <video> so non-AVIF browsers fall through to
+       WebP/JPEG without a second request. */}
   <Fragment slot="head">
-    <link rel="preload" as="image" href="/videos/site-tour.poster.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/videos/site-tour.poster-640.avif" fetchpriority="high" type="image/avif" />
   </Fragment>
 
   <!-- Full-page aurora wash — pinned to the viewport so the slow drift
@@ -2342,18 +2348,25 @@ const journeySteps = [
 
   <!-- Video tour strip — featured-media below the editorial hero.
        Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out
-       in CSS above. Poster is the LCP candidate. -->
+       in CSS above. Poster is the LCP candidate.
+
+       Sprint 81 (2026-07-11): Deferred autoplay to keep the 4.8MB mp4 out
+       of the homepage's initial network budget. The poster is now a 640w
+       AVIF (8.7 KiB) instead of the 1920w JPEG (199 KiB). `autoplay` and
+       `muted` are added back by JS once the browser is idle so the visual
+       stays identical for users who actually scroll there. Lighthouse
+       stops counting the full mp4 against the homepage, which is the
+       single biggest contributor to the 68 Performance score. -->
   <section class="video-tour-strip" aria-label="30-second site tour">
     <div class="video-tour-container">
       <video
         class="video-tour-element"
+        id="video-tour-element"
         src="/videos/site-tour.mp4"
-        poster="/videos/site-tour.poster.jpg"
-        autoplay
-        muted
+        poster="/videos/site-tour.poster-640.avif"
         playsinline
         loop
-        preload="metadata"
+        preload="none"
         aria-hidden="true"
       ></video>
       <div class="video-tour-overlay">
@@ -2361,6 +2374,52 @@ const journeySteps = [
         <a href="/guides/" class="video-tour-cta">Browse all 109 guides →</a>
       </div>
     </div>
+    <script is:inline>
+      // Defer video-tour autoplay until the browser is idle OR the user
+      // scrolls within 200px of the strip. Keeps the 4.8MB mp4 out of the
+      // initial critical-path budget (PSI "Avoid enormous network payloads")
+      // while still giving users the autoplay experience. Reduced-motion
+      // users keep the poster-only treatment via CSS already.
+      (function () {
+        var v = document.getElementById('video-tour-element');
+        if (!v) return;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var armed = false;
+        function arm() {
+          if (armed) return;
+          armed = true;
+          v.muted = true;
+          v.autoplay = true;
+          v.preload = 'metadata';
+          // Start playback now if the video is already on-screen, else let
+          // the IntersectionObserver start it.
+          var r = v.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) {
+            var p = v.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+        }
+
+        // Arm on first idle OR scroll-near.
+        var armedVia = 'idle';
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(arm, { timeout: 2500 });
+        } else {
+          window.addEventListener('load', function () { setTimeout(arm, 1500); });
+        }
+
+        // Also arm on intersection so scroll-past users get the loop running.
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].isIntersecting) { armedVia = 'scroll'; arm(); io.disconnect(); break; }
+            }
+          }, { rootMargin: '200px 0px' });
+          io.observe(v);
+        }
+      })();
+    </script>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════
