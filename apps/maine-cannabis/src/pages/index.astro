@@ -2229,6 +2229,38 @@ const journeySteps = [
     z-index: -1 !important;
     pointer-events: none !important;
   }
+
+  /* Sprint 81 (2026-07-11) PSI mobile round 3: defer the AnimatedBackdrop
+     paint until after LCP. The backdrop contains 6 animated blurred blobs
+     (filter: blur(40px)) + 56 fireflies (box-shadow blur) — each pinned as
+     a permanent GPU layer via will-change. With both the page-wide subtle
+     aurora AND the hero backdrop active on first paint, the compositor is
+     committing ~60 layers before the LCP element can render — which is
+     most of the 2,400ms "element render delay" in the PSI report.
+
+     visibility:hidden (not display:none) keeps the layer allocation but
+     skips paint + compositing. After requestIdleCallback fires (handled in
+     the inline script at the bottom of this page), the html element gets
+     .decorations-loaded and the backdrops fade in over 400ms — visible to
+     the user within ~500ms of first paint, after LCP has already landed.
+
+     The fade-in opacity transition replaces the hard cut; without it the
+     backdrops pop in abruptly. Reduced-motion users skip the transition
+     via prefers-reduced-motion below. */
+  .mdg-anim-backdrop {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 400ms ease-out;
+  }
+  html.decorations-loaded .mdg-anim-backdrop {
+    visibility: visible;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mdg-anim-backdrop, html.decorations-loaded .mdg-anim-backdrop {
+      transition: none;
+    }
+  }
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════════
@@ -2418,6 +2450,30 @@ const journeySteps = [
           }, { rootMargin: '200px 0px' });
           io.observe(v);
         }
+      })();
+
+      // Sprint 81 (2026-07-11) PSI mobile round 3: signal the browser to start
+      // painting the AnimatedBackdrop decorations (aurora blobs, fireflies,
+      // ridge SVG) after first idle. Until .decorations-loaded is on <html>,
+      // .mdg-anim-backdrop has visibility:hidden (CSS above). This removes
+      // ~60 composited layers from the initial paint path so the LCP element
+      // can render without compositor pressure. Triggers via the same
+      // requestIdleCallback used for video defer; runs in the same idle slot
+      // so it costs nothing extra. No-op on reduced-motion (CSS already
+      // disables the animations) and on no-JS (backdrops stay hidden — brand
+      // cosmetic loss, but content is intact).
+      (function () {
+        if (!('requestIdleCallback' in window)) {
+          window.addEventListener('load', function () {
+            window.setTimeout(function () {
+              document.documentElement.classList.add('decorations-loaded');
+            }, 1500);
+          });
+          return;
+        }
+        window.requestIdleCallback(function () {
+          document.documentElement.classList.add('decorations-loaded');
+        }, { timeout: 2500 });
       })();
     </script>
   </section>
