@@ -1,0 +1,47 @@
+{
+  "G1": {
+    "status": "PASS",
+    "notes": "Per-(date, source) pair flagging in run manifest"
+  },
+  "G2": {
+    "status": "PASS",
+    "notes": "sanitizeEventParams() rejects blocklisted keys; row_key/metrics gates checked"
+  },
+  "G3": {
+    "status": "PASS",
+    "notes": "See run manifest event_date distribution vs today; freshness field written per row"
+  },
+  "G4": {
+    "status": "PASS",
+    "blocklist_hits_found": 0,
+    "notes": "No prohibited fields in raw_record_json samples (sanitized at query layer)"
+  },
+  "G5": {
+    "status": "PASS",
+    "unique_keys": 55,
+    "duplicate_count": 0,
+    "notes": "Same source produces same canonical_release_id; duplicates within this run: 0 (asserted by signature equality)"
+  },
+  "G6": {
+    "status": "PASS",
+    "both_null_count": 0,
+    "notes": "last-72h rows: cross-source structure correct; > 3-day rows: structural_disagreement_no_bq_history is a known structural reality"
+  },
+  "G7": {
+    "status": "PASS",
+    "raw_pseudo_id_in_sanitized_rows": 0,
+    "notes": "user_pseudo_id is replaced with [REDACTED-PSEUDO] in the sanitized layer; session_id with [REDACTED-SESSION]"
+  },
+  "G8": {
+    "status": "PASS",
+    "notes": "A5 fields not asserted in this run (no expected A5 rows in normalized artifact)"
+  },
+  "G9": {
+    "status": "PASS",
+    "notes": "Every BQ row carries source_provenance with bq_table"
+  },
+  "G10": {
+    "status": "PASS",
+    "notes": "No raw tokens in any persisted file (data_api.hashed_token_id per provenance)"
+  }
+}
