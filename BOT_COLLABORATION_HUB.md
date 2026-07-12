@@ -13,6 +13,14 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 HOMEPAGE STATIC-FIRST TOUR CAROUSEL (Jul 12, 2026 UTC)
+
+- Replaced the homepage video tour strip with a static-first resource carousel in `apps/maine-cannabis/src/pages/index.astro`. All five resource slides render in the initial HTML, with inline JavaScript limited to previous/next navigation, dot state, autoplay, and pause-on-hover/focus enhancement.
+- Removed the video poster preload and deferred MP4 loading path because the carousel no longer depends on video assets for LCP.
+- Preserved the existing idle-loaded `decorations-loaded` behavior for the homepage backdrop while moving it out of the retired video-tour enhancement path.
+- Verification: `npm run verify:iterate -- --fast-only` passed, then `npm run verify:iterate` passed with filtered Astro check and repo verification gates.
+
 ## 📋 CITE-THIS EXTRACTION + EMBEDDABLE IFRAME (Jul 9, 2026 EDT) — grill-me sprint closeout, commit `55ef7215`
 
 - **Why:** grill-me session 2026-07-09 confirmed the ROI calculator + market-stats must function as a **backlink magnet**. Citation blocks on both pages were 125 lines of duplicated inline markup with no DOI-style permalinks, and there was no embeddable iframe — external sites couldn't link to specific data points or embed the calculator without copy-pasting all the math.
