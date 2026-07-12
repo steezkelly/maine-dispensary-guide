@@ -8,20 +8,38 @@ const store = require('../lib/store.cjs');
  * adapters/ocp-firecrawl-ingest.cjs
  *
  * Ingest path for OCP retail-sales and opt-in data extracted from the
- * Power BI dashboards via Firecrawl's interact tool. Per the operator
- * override 2026-07-12, this is the production ingest path.
+ * Power BI dashboards via the operator's firecrawl interact session.
+ *
+ * ACQUISITION MODE: `operator-assisted-acquisition`. See DECISION-20260712.
+ *  - The engine does NOT call firecrawl on its own.
+ *  - The engine does NOT automate a browser.
+ *  - The operator runs firecrawl interact on their workstation, then
+ *    places markdown files in:
+ *      $MDG_DATA_ROOT/raw/ocp_sales_firecrawl/{tab_slug}.md
+ *      $MDG_DATA_ROOT/raw/ocp_optin_firecrawl/{tab_slug}.md
+ *  - The engine takes it from there: discover, archive
+ *    content-addressed, profile, normalize, derive, publish.
  *
  * Workflow:
- *   1. Operator runs `firecrawl interact` against the Power BI embed URL.
+ *   1. Operator runs `firecrawl interact` against the Power BI embed URL
+ *      (operator workstation).
  *   2. Operator saves the markdown report to:
  *      $MDG_DATA_ROOT/raw/ocp_sales_firecrawl/{tab_slug}.md
  *      $MDG_DATA_ROOT/raw/ocp_optin_firecrawl/{tab_slug}.md
- *   3. The engine's `data:mdg:fetch` discovers the files, archives
- *      them content-addressed, and the manual-adapter path
- *      (ocp-retail-sales-manual / ocp-optin-manual) profiles them.
- *   4. The `data:mdg:normalize` step calls the appropriate
- *      firecrawl-derived normalizer (this file) which produces
- *      DATA-MODEL.md-shaped sales_observation / optin_record rows.
+ *   3. The engine's `data:mdg:fetch` discovers the files, archives them
+ *      content-addressed, and the firecrawl-derived normalizer (this
+ *      file) profiles them.
+ *   4. The `data:mdg:normalize` step calls the parser functions exported
+ *      here which produce DATA-MODEL.md-shaped sales_observation /
+ *      optin_record rows.
+ *
+ * Period provenance (per MDG-DATA-001 corrective review 2026-07-12):
+ *  - reporting_period is OBSERVED only when the capture label is
+ *    parseable; otherwise the row is INFERRED with reporting_period=null
+ *    and series_index/series_direction recorded for later re-pairing.
+ *  - INFERRED rows are split into data.json.annotations at the normalize
+ *    step; they are NOT eligible for publication as canonical observations.
+ *    See DECISION-20260712-firecrawl-acquisition-mode.md for context.
  *
  * The opt-in dashboard has 3 tabs:
  *   - "Adult Use Cannabis Opt-in by Municipality" (per-municipality)
