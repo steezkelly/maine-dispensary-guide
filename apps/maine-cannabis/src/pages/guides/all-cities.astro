@@ -171,7 +171,8 @@ const canonicalUrl = `${SITE_URL}/guides/all-cities`;
   <section class="faq-section" style="margin-top: 2.5rem;">
     <h2>Frequently Asked Questions</h2>
     {faqItems.map((f) => (
-      <details>
+      <!-- analytics:faq-injected faq-id=faq-guides--all-cities--s1-1 -->
+      <details data-faq data-faq-id="faq-guides--all-cities--s1-1">
         <summary>{f.question}</summary>
         <p>{f.answer}</p>
       </details>
