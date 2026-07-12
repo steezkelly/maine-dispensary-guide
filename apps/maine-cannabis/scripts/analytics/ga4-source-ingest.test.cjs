@@ -339,7 +339,8 @@ test('perSourceRouting flags last-3-days for BQ; older for Data API only', () =>
   const todayMinus5 = ingest.dateMinusDays(today, 5);
   const todayMinus2 = ingest.dateMinusDays(today, 2);
   const todayMinus10 = ingest.dateMinusDays(today, 10);
-  const routing = ingest.perSourceRouting(todayMinus10, today);
+  const routingResult = ingest.perSourceRouting(todayMinus10, today, null);
+  const routing = routingResult.dates;
   // Verify: today-10 should be Data API only.
   // today-2 should be both.
   const old = routing.find(r => r.date === todayMinus10);
@@ -348,6 +349,29 @@ test('perSourceRouting flags last-3-days for BQ; older for Data API only', () =>
   assert.ok(recent, 'recent date should be in routing');
   assert.strictEqual(old.has_bq, false, '> 3-day-old date should NOT have BQ');
   assert.strictEqual(recent.has_bq, true, '<= 3-day-old date SHOULD have BQ');
+});
+
+test('perSourceRouting backs off to data floor when floor is older than requested', () => {
+  // If operator asks --from=2025-01-01 but data floor is 2026-04-13,
+  // the routing should back off to 2026-04-13.
+  const floor = '2026-04-13';
+  const requested = '2025-01-01';
+  const today = ingest.todayUtc();
+  const r = ingest.perSourceRouting(requested, today, floor);
+  assert.strictEqual(r.backedOff, true, 'should have backed off');
+  assert.strictEqual(r.requestedFrom, requested);
+  assert.strictEqual(r.effectiveFrom, floor, 'effectiveFrom should be data floor');
+  // dates is sorted chronologically after .reverse(); dates[0] is earliest
+  assert.strictEqual(r.dates[0].date, floor, 'earliest routing date should match floor');
+  assert.strictEqual(r.dates[r.dates.length - 1].date, today, 'latest routing date should be today');
+});
+
+test('perSourceRouting honors --from when it is newer than the data floor', () => {
+  // --from=2026-06-01 but floor is 2026-04-13; floor is older so
+  // --from is honored (operator is explicitly asking for narrower).
+  const r = ingest.perSourceRouting('2026-06-01', ingest.todayUtc(), '2026-04-13');
+  assert.strictEqual(r.backedOff, false, 'should NOT back off because requested is newer');
+  assert.strictEqual(r.effectiveFrom, '2026-06-01');
 });
 
 test('daysBetween handles single-day windows', () => {

@@ -1,6 +1,14 @@
 {
-  "from": "2026-04-13",
+  "from": "2025-01-01",
+  "effective_from": "2026-04-13",
   "to": "2026-07-12",
+  "data_floor_detection": {
+    "floor_date": "20260413",
+    "probe_status": "detected",
+    "method": "coarse_window_nonzero",
+    "note": "earliest nonzero date in 11-month backward window"
+  },
+  "backed_off": true,
   "per_day_routing": [
     {
       "date": "2026-04-13",
@@ -549,15 +557,15 @@
       "bq_reason": "intraday_fresh"
     }
   ],
-  "canonical_release_id": "rel_7db2831c8abf93ab",
-  "acquisition_release_id": "run_86f42e0bdf8b4f18",
+  "canonical_release_id": "rel_c5a3f1e37e936ae6",
+  "acquisition_release_id": "run_bff1ae80a22f4b78",
   "adapter_version": "1-ga4-source-ingestion",
   "schema_version": "1",
   "run_meta": {
-    "ingested_at_utc": "2026-07-12T18:16:10.110Z",
+    "ingested_at_utc": "2026-07-12T22:41:44.154Z",
     "adapter_version": "1-ga4-source-ingestion",
     "schema_version": "1",
-    "from": "2026-04-13",
+    "from": "2025-01-01",
     "to": "2026-07-12",
     "property_id": "532778727",
     "project_id": "maine-dispensary-guide",
@@ -590,7 +598,7 @@
     "R4_geo_daily": "VALIDATED",
     "R5_device_daily": "VALIDATED",
     "R6_new_vs_returning_daily": "VALIDATED",
-    "R7_custom_event_faq_daily": "PENDING_VALIDATION",
-    "R8_custom_event_cta_daily": "PENDING_VALIDATION"
+    "R7_custom_event_faq_daily": "VALIDATED",
+    "R8_custom_event_cta_daily": "VALIDATED"
   }
 }
