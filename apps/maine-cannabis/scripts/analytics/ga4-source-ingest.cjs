@@ -84,24 +84,112 @@ function daysBetween(from, to) {
   return Math.max(0, Math.floor((b - a) / 86400000) + 1);
 }
 
+// --------------------- Data floor detection (added 2026-07-12) ----------------
+
+/**
+ * Auto-detect the empirically earliest date in the GA4 property that
+ * has traffic. Uses a coarse probe (Aug 1 → today), finds the earliest
+ * day with non-zero screenPageViews, and returns that.
+ *
+ * Per v3 §6 (preserve both observed values, never fabricate canonicals):
+ * the backfill lower bound is data-derived, not a hardcoded 90-day
+ * window. The site launched around 2026-03-20 but GA4 traffic data
+ * actually starts ~Apr 13 once gtag was firing in production; a hard-
+ * coded 90-day window happens to land right today but is incidental.
+ *
+ * Threshold tuning: if the earliest nonzero day is far in the past
+ * (e.g., 6+ months ago), the floor is well below retention cap and
+ * is reliable. If it lands within the most recent 7 days, the floor
+ * is recent but still reliable.
+ *
+ * @param {object} dataApiReportsResult — already-completed runAllReports() output
+ *   (we use it as a sanity probe; if R1 already has rows, the floor is wherever R1's earliest row is)
+ * @returns {{ floor_date: string|null, probe_status: 'detected'|'not_detected'|'error', method: string }}
+ */
+async function detectDataFloor(authClient, propertyId) {
+  // Method 1: coarse window probe (Aug 2025 -> today, low limit).
+  try {
+    const client = dataApi.REPORTS ? null : null; // we'll use googleapis directly below
+    const { google } = require('googleapis');
+    const clientG = google.analyticsdata({ version: 'v1beta', auth: authClient });
+    const probeDate = (() => {
+      // Choose a probe start that's well outside retention cap so
+      // an empty result implies "no data before this date." If
+      // retention is 14 months, Aug 2025 covers it. If retention is
+      // 2 months (default), the probe starts ~2 months back from
+      // today and we cannot distinguish floor from retention cap.
+      // In that case, we fall back to Method 2.
+      const d = new Date();
+      d.setMonth(d.getMonth() - 11);
+      return d.toISOString().slice(0, 10);
+    })();
+    const r = await clientG.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{ startDate: probeDate, endDate: todayUtc() }],
+        dimensions: [{ name: 'date' }],
+        metrics: [{ name: 'screenPageViews' }],
+        limit: 2000
+      }
+    });
+    const rows = (r.data.rows || []);
+    const dates = rows
+      .map((x) => ({ date: x.dimensionValues[0].value, pv: +(x.metricValues[0].value) }))
+      .filter((x) => x.pv > 0)
+      .map((x) => x.date)
+      .sort();
+    if (dates.length === 0) {
+      // Method 1 returned nothing — either site has zero traffic ever
+      // or retention cap hides everything. Fall back to Method 2.
+      return { floor_date: null, probe_status: 'not_detected', method: 'coarse_window_empty', note: 'coarse window returned no rows; check retention or traffic' };
+    }
+    // Earliest nonzero date = earliest observed data
+    const earliest = dates[0];
+    return { floor_date: earliest, probe_status: 'detected', method: 'coarse_window_nonzero', note: 'earliest nonzero date in 11-month backward window' };
+  } catch (e) {
+    return { floor_date: null, probe_status: 'error', method: 'coarse_window', error: String(e.message || e) };
+  }
+}
+
+/**
+ * Convert a YYYYMMDD (GA4 wire-format) to ISO YYYY-MM-DD, or pass
+ * through if already in another format.
+ */
+function normalizeGa4Date(s) {
+  if (!s) return null;
+  const str = String(s);
+  if (/^\d{8}$/.test(str)) return `${str.slice(0, 4)}-${str.slice(4, 6)}-${str.slice(6, 8)}`;
+  return str;
+}
+
 // --------------------- Per-day source routing (v3 §8) ------------------------
 
 /**
  * For each date in [from, to], return which sources are reachable.
  * Last-72h dates get both Data API + BQ intraday.
  * Older dates get Data API only (BQ has expired).
+ *
+ * Effective backfill lower bound: max({from arg}, {empirical data floor}).
+ * If the operator passes --from=2025-01-01 but GA4 has data only from
+ * 2026-04-13, the orchestrator backs off to 2026-04-13 and records
+ * the floor-detection event in the run manifest.
  */
-function perSourceRouting(from, to) {
+function perSourceRouting(from, to, dataFloor) {
   const today = todayUtc();
   const cutoff = dateMinusDays(today, 2); // 3-day window (today, today-1, today-2)
+  const effectiveFrom = dataFloor ? (from > dataFloor ? from : dataFloor) : from;
   const dates = [];
-  for (let i = 0; i < daysBetween(from, to); i++) {
+  for (let i = 0; i < daysBetween(effectiveFrom, to); i++) {
     const d = dateMinusDays(to, i);
     const hasBq = d >= cutoff;
     dates.push({ date: d, has_data_api: true, has_bq: hasBq, bq_reason: hasBq ? 'intraday_fresh' : 'intraday_expired' });
     dates[dates.length - 1].has_data_api = true;
   }
-  return dates.reverse();
+  // If we backed off, flag the reason.
+  if (dataFloor && effectiveFrom !== from) {
+    return { dates: dates.reverse(), effectiveFrom, requestedFrom: from, dataFloor, backedOff: true };
+  }
+  return { dates: dates.reverse(), effectiveFrom: from, requestedFrom: from, dataFloor, backedOff: false };
 }
 
 // --------------------- Release identity (v3 §15.1) --------------------------
@@ -342,16 +430,42 @@ function joinDataForReport(reportKey, dataApiRows, bqRows) {
 async function main() {
   const args = parseArgs();
   const today = todayUtc();
-  const routing = perSourceRouting(args.from, args.to);
 
-  console.log(`[ingest] from=${args.from} to=${args.to} out=${args.out}`);
+  // Step 0a: Auto-detect empirical GA4 data floor (2026-07-12 hot-path).
+  // The site launched around 2026-03-20 but GA4 traffic data actually
+  // starts later once gtag was firing. We detect the floor from the
+  // empirical row presence, not a hardcoded 90-day window.
+  let floorInfo = null;
+  let dataFloor = null;
+  try {
+    const authClient = await dataApi.getAuthClient();
+    floorInfo = await detectDataFloor(authClient, dataApi.PROPERTY_ID);
+    if (floorInfo.floor_date) {
+      dataFloor = normalizeGa4Date(floorInfo.floor_date);
+      console.log(`[ingest] detected data floor: ${dataFloor} (method=${floorInfo.method}, status=${floorInfo.probe_status})`);
+    } else {
+      console.log(`[ingest] WARNING: data floor not detected (status=${floorInfo.probe_status}, reason=${floorInfo.note || floorInfo.error || ''})`);
+    }
+  } catch (e) {
+    console.log(`[ingest] WARNING: floor detection failed; falling back to arg-provided --from: ${e.message}`);
+  }
+  // The data floor constrains the routing but never overrides the
+  // operator's --from= arg upward. If --from is already newer than
+  // the floor, we honor it (the operator is explicitly asking for a
+  // narrower window).
+  const routingResult = perSourceRouting(args.from, args.to, dataFloor);
+  const routing = routingResult.dates;
+  if (routingResult.backedOff) {
+    console.log(`[ingest] backfilled effective window: ${routingResult.requestedFrom} -> ${routingResult.effectiveFrom} (data floor: ${dataFloor})`);
+  }
+  console.log(`[ingest] requested from=${args.from} effective from=${routingResult.effectiveFrom} to=${args.to} out=${args.out}`);
   console.log(`[ingest] per-day routing: ${routing.filter(r => r.has_bq).length} days with BQ, ${routing.length - routing.filter(r => r.has_bq).length} days with Data API only`);
 
   fs.mkdirSync(args.out, { recursive: true });
 
   // Step 1: Run all 8 Data API reports
   console.log('[ingest] Running 8 Data API reports across full window...');
-  const dataApiResult = await dataApi.runAllReports(args.from, args.to);
+  const dataApiResult = await dataApi.runAllReports(routingResult.effectiveFrom, args.to);
   for (const [k, r] of Object.entries(dataApiResult.reports)) {
     const status = r.status;
     console.log(`  ${k}: ${status} (${r.rows?.length || 0} rows, compat=${r.compat_status})`);
@@ -437,7 +551,10 @@ async function main() {
     path.join(args.out, 'run-manifest.json'),
     JSON.stringify({
       from: args.from,
+      effective_from: routingResult.effectiveFrom,
       to: args.to,
+      data_floor_detection: floorInfo || { probe_status: 'skipped' },
+      backed_off: routingResult.backedOff,
       per_day_routing: routing,
       canonical_release_id: canonicalReleaseId,
       acquisition_release_id: acquisitionReleaseId,
@@ -505,6 +622,8 @@ module.exports = {
   dateMinusDays,
   daysBetween,
   perSourceRouting,
+  detectDataFloor,
+  normalizeGa4Date,
   computeCanonicalReleaseId,
   computeAcquisitionReleaseId,
   runGates,
