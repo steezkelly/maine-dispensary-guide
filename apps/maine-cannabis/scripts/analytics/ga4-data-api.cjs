@@ -74,16 +74,20 @@ const REPORTS = {
     dimensions: ['date', 'pagePath', 'customEvent:faq_id'],
     metrics: ['eventCount'],
     grain: 'day_page_FAQ',
-    compat_status: 'PENDING_VALIDATION',
-    intended_use: 'Per-FAQ reach'
+    compat_status: 'VALIDATED',
+    intended_use: 'Per-FAQ reach',
+    registered_dim_id: 'properties/532778727/customDimensions/15244515003',
+    registered_at: '2026-07-12'
   },
   R8_custom_event_cta_daily: {
     report_id: 'custom_event_cta_daily',
     dimensions: ['date', 'pagePath', 'customEvent:cta_id'],
     metrics: ['eventCount'],
     grain: 'day_page_CTA',
-    compat_status: 'PENDING_VALIDATION',
-    intended_use: 'Per-CTA reach'
+    compat_status: 'VALIDATED',
+    intended_use: 'Per-CTA reach',
+    registered_dim_id: 'properties/532778727/customDimensions/15244436311',
+    registered_at: '2026-07-12'
   }
 };
 
