@@ -1,0 +1,18 @@
+{
+  "_note": "Discovered state from MDG-ANALYTICS-001 A4 reachability probe on 2026-07-12. Non-secret; projectId/teamId are public Vercel identifiers. Token is read from VERCEL_TOKEN env var at runtime; never committed; never echoed in any log or chat context.",
+  "projectId": "prj_PeZ8o8BNAJUpzSClY2ZnbXDtFSjt",
+  "projectName": "maine-dispensary-guide",
+  "framework": "astro",
+  "teamId": null,
+  "teamId_source": "/v9/projects response did not include teamId, suggesting the token is a personal-account token (not team-scoped)",
+  "probe_endpoint": "GET /v1/query/web-analytics/visits/count",
+  "probe_status": 400,
+  "probe_error_code": "web_analytics_not_enabled",
+  "probe_error_message": "Web Analytics is not enabled for this project",
+  "token_rotation": {
+    "last_rotated": "2026-07-12",
+    "expires": "operator-set-1-year-from-2026-07-12",
+    "next_rotation_due": "2026-07-12 minus 30 days from expiry",
+    "rotation_procedure": "operator creates new token at https://vercel.com/account/tokens with name=mdg, scope=steezkelly's projects, expiration=1 year, Limited Access flag; provides new value via VERCEL_TOKEN env var"
+  }
+}
