@@ -19,6 +19,24 @@ function parseArgs(argv) {
 }
 function emit(ev) { process.stdout.write(JSON.stringify(ev) + '\n'); }
 
+function latestRawAny(rootDir, sourceId) {
+    // Return the most recent raw file (not directory) under raw/{sourceId}.
+    // listRawArtifacts returns every path including directories; we
+    // need a file. We also pick the .csv with the most recent mtime.
+    const arts = store.listRawArtifacts(rootDir, sourceId);
+    if (!arts.length) return null;
+    const files = arts.filter(p => fs.statSync(p).isFile()
+        && !p.includes('source-checks') && !p.endsWith('manual'));
+    // Prefer CSV (manual exports are CSVs)
+    const csvs = files.filter(p => p.endsWith('.csv'));
+    if (csvs.length) {
+        csvs.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+        return csvs[0];
+    }
+    files.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+    return files[0] || null;
+}
+
 function latestRawJson(rootDir, sourceId) {
     const arts = store.listRawArtifacts(rootDir, sourceId);
     const jsons = arts.filter(p => p.endsWith('.json') && !p.includes('source-checks'));
@@ -157,6 +175,59 @@ async function main() {
             }
         });
         process.exit(0);
+    }
+
+    // Manual artifact normalize path (Ticket 009/010 corrective).
+    // Triggered when the most-recent raw artifact is under a manual/
+    // subdirectory of the raw source path.
+    const manualSrcIds = ['ocp_retail_sales', 'ocp_optin'];
+    if (manualSrcIds.includes(src.source_id)) {
+        const latestRaw = latestRawAny(root, src.source_id);
+        if (latestRaw && latestRaw.includes('/manual/')) {
+            const manualNorm = require('../adapters/ocp-manual-normalize.cjs');
+            let out;
+            try {
+                out = src.source_id === 'ocp_retail_sales'
+                    ? manualNorm.normalizeManualSales(latestRaw,
+                        { fetched_at_utc: new Date().toISOString() })
+                    : manualNorm.normalizeManualOptin(latestRaw,
+                        { fetched_at_utc: new Date().toISOString() });
+            } catch (err) {
+                emit({ schema_version: 1, component: 'mdg-data', command: 'normalize',
+                    status: 'failed', source_id: src.source_id, release_id: null,
+                    changed: false, retryable: false, code: 'NORMALIZE_ERROR',
+                    message: err.message });
+                process.exit(50);
+            }
+            const sha = store.sha256(fs.readFileSync(latestRaw));
+            const normDir = path.join(root, 'normalized', src.source_id, sha, 'schema_version=1');
+            fs.mkdirSync(normDir, { recursive: true });
+            fs.writeFileSync(path.join(normDir, 'data.json'),
+                JSON.stringify(out, null, 2) + '\n');
+            fs.writeFileSync(path.join(normDir, 'provenance.json'),
+                JSON.stringify(Object.assign(out.snapshot, { source_id: src.source_id }), null, 2) + '\n');
+            const observationKey = src.source_id === 'ocp_retail_sales'
+                ? 'observations' : 'records';
+            emit({
+                schema_version: 1, component: 'mdg-data', command: 'normalize',
+                status: 'unchanged', source_id: src.source_id, release_id: null,
+                changed: true, retryable: false, code: 'OK',
+                artifact_sha256: sha,
+                message: 'manual artifact normalized; ' + (out[observationKey] || []).length
+                    + ' ' + observationKey + ' emitted (schema_needs_review)',
+                metrics: {
+                    source: 'manual',
+                    origin: 'manual_csv_export',
+                    [observationKey]: (out[observationKey] || []).length,
+                    snapshot_id: out.snapshot.snapshot_id,
+                    normalized_path: normDir,
+                    note: 'metric_norm and activity_norm are placeholder; operator ' +
+                        'should update ocp-manual-normalize.cjs to map column headers ' +
+                        'to canonical metric/activity names.'
+                }
+            });
+            process.exit(0);
+        }
     }
 
     emit({ schema_version: 1, component: 'mdg-data', command: 'normalize',

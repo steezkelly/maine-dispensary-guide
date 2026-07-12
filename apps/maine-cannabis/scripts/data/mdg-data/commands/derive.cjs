@@ -35,17 +35,27 @@ function sha256(p) {
 }
 
 function listNormalizedSources(rootDir) {
-    // Find all (source_id, sha256) pairs that have a schema_version=1 snapshot.
+    // Find the MOST RECENT (source_id, sha256) pair per source. The
+    // input lock must use one normalized snapshot per source; otherwise
+    // a source with multiple fetches (live + manual + dashboard) would
+    // contribute multiple hashes to release_id derivation, breaking
+    // determinism.
     const base = path.join(rootDir, 'normalized');
     if (!fs.existsSync(base)) return [];
     const out = [];
     for (const sourceId of fs.readdirSync(base).sort()) {
         const sdir = path.join(base, sourceId);
         if (!fs.statSync(sdir).isDirectory()) continue;
-        for (const sha of fs.readdirSync(sdir).sort()) {
+        let latest = null;
+        for (const sha of fs.readdirSync(sdir)) {
             const snapDir = path.join(sdir, sha, 'schema_version=1');
-            if (fs.existsSync(snapDir)) out.push({ source_id: sourceId, sha256: sha });
+            if (!fs.existsSync(snapDir)) continue;
+            const mtime = fs.statSync(snapDir).mtimeMs;
+            if (!latest || mtime > latest.mtime) {
+                latest = { source_id: sourceId, sha256: sha, mtime };
+            }
         }
+        if (latest) out.push({ source_id: latest.source_id, sha256: latest.sha256 });
     }
     return out;
 }
@@ -227,7 +237,28 @@ function main() {
             note: 'Built from Census API mock fixture; universe is partial.'
         });
     }
-    if (hasOcpSales) {
+    // Sales/optin disabled-by-default is gated on the source being a
+    // dashboard discovery (Power BI, no programmatic API). When the
+    // source is a manual CSV export (origin: 'manual_csv_export' in
+    // provenance), the data exists; the column-mapping question is
+    // tracked in the source provenance and surfaced via
+    // metric_needs_review / activity_needs_review in the data.
+    const ocpSalesProv = inputLock.inputs.find(i => i.source_id === 'ocp_retail_sales')
+        ? JSON.parse(fs.readFileSync(
+            path.join(root, 'normalized', 'ocp_retail_sales',
+                inputLock.inputs.find(i => i.source_id === 'ocp_retail_sales').sha256,
+                'schema_version=1', 'provenance.json'), 'utf8'))
+        : null;
+    const ocpOptinProv = inputLock.inputs.find(i => i.source_id === 'ocp_optin')
+        ? JSON.parse(fs.readFileSync(
+            path.join(root, 'normalized', 'ocp_optin',
+                inputLock.inputs.find(i => i.source_id === 'ocp_optin').sha256,
+                'schema_version=1', 'provenance.json'), 'utf8'))
+        : null;
+    const isSalesManual = ocpSalesProv && ocpSalesProv.origin === 'manual_csv_export';
+    const isOptinManual = ocpOptinProv && ocpOptinProv.origin === 'manual_csv_export';
+
+    if (hasOcpSales && !isSalesManual) {
         // Power BI embed — see DECISION-20260711-ocp-powerbi-embed.md
         ['adult-use-retail-sales', 'adult-use-transactions',
          'average-flower-price', 'adult-use-product-mix'].forEach(slug => {
@@ -239,7 +270,7 @@ function main() {
             });
         });
     }
-    if (hasOcpOptin) {
+    if (hasOcpOptin && !isOptinManual) {
         manifest.disabled_products.push({
             slug: 'retail-optin-gap',
             reason_code: 'SOURCE_SEMANTICS_UNAPPROVED',

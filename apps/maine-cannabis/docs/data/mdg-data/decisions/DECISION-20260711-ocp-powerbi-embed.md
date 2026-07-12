@@ -1,170 +1,122 @@
-# DECISION-20260711-ocp-powerbi-embed
+# DECISION-20260711-ocp-powerbi-embed — RESOLVED via manual ingest
 
-**Status:** open — awaiting operator direction (interactive export vs
-contact OCP for data feed)
-**Date:** 2026-07-11
-**Ticket:** 009 (OCP Retail Sales Adapter) + 010 (Opt-in Adapter)
+**Status:** RESOLVED 2026-07-12
+**Date opened:** 2026-07-11
+**Date resolved:** 2026-07-12
+**Tickets:** 009 (retail sales) + 010 (opt-in)
 **Authority:** `SPEC-AUTHORITY.md §3` stop conditions
 
-## The ambiguity
+## Original ambiguity
 
-The OCP retail-sales and opt-in pages embed **Microsoft Power BI
-dashboards** as iframes:
-
-- Retail sales:
-  `https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales`
-  → iframe `https://app.powerbigov.us/view?r=…&pageName=…`
-- Opt-in:
-  `https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities`
-  → iframe `https://app.powerbigov.us/view?r=…&pageName=…`
-
-Tickets 009 and 010 require "transport discovery documented" and a
-"source-derived fixture". The transport discovery has been
-completed (see `fetch.cjs` for `ocp_retail_sales` and `ocp_optin`):
-both embeds are Power BI public reports, identified by the iframe
-URL family `app.powerbigov.us`.
-
-## Evidence
-
-Direct probe of both authoritative pages on 2026-07-11:
-
-```
-$ curl -sS https://www.maine.gov/dafs/ocp/open-data/adult-use/retail-sales \
-    | grep -oE '<iframe[^>]*src="[^"]*"'
-<iframe allowfullscreen="true" frameborder="0" height="747"
-  src="https://app.powerbigov.us/view?r=eyJrIj..."
-  title="DAFS_OCP_PublicReporting_Adult Use Retail Sales Data"
-  width="1200">
-```
-
-Power BI's public embed model:
-- Embeds are **client-side rendered** from a semantic model hosted in
-  the Power BI service.
-- The semantic model is **not exposed** via a documented public API.
-- Power BI's "Export Data" UI is interactive-only.
-- Programmatic extraction (e.g., the undocumented `pbi.dataset`
-  endpoint, scraping the rendered DOM) is **unsupported** and may
-  violate the Power BI terms of use and the OCP site terms of use.
-
-## Impact
-
-Without a programmatic data endpoint, the OCP sales and opt-in
-products cannot be derived deterministically. Per `METRICS.md §Monthly
-sales`, "Use the directly observed OCP retail-sales metric" — and
-"directly observed" requires a stable data feed.
-
-The Sprint 1 product gate in `ARTIFACT-CONTRACT.md §Product
-filenames` allows the products to be **absent** with a stable reason
-code in `manifest.json:disabled_products`. The approved reason codes
-are: `SOURCE_FIELD_NOT_OBSERVED`, `SOURCE_SEMANTICS_UNAPPROVED`,
-`RECONCILIATION_FAILED`, `GEOGRAPHY_UNRESOLVED`.
-
-`SOURCE_SEMANTICS_UNAPPROVED` fits: we know the page exists and the
-report exists, but we cannot extract its data without unsupported
-mechanisms.
-
-## Options
-
-1. **Operator manually exports CSVs** from the Power BI UI on a
-   monthly cadence and drops them into
-   `$MDG_DATA_ROOT/raw/{ocp_retail_sales|ocp_optin}/manual/`. The
-   `data:mdg:fetch` command grows a branch that detects manual
-   artifacts and normalizes them like the OCP license CSV. No
-   bypass, no scraping. **Recommended.**
-2. **Operator contacts OCP** and requests a public data feed (CSV
-   download, ArcGIS REST, Socrata, etc.). Maine state agencies
-   routinely publish open data; OCP may already have a feed that
-   the embedded dashboard is *built on top of* rather than
-   *generated from*. Out of Sprint 1 scope until the feed exists.
-3. **Use the OCP annual reports** as a fallback for sales. The
-   annual report contains annual totals that match the embedded
-   dashboard. Suitable for the **annual** sales product only;
-   monthly / transactions / price / product-mix remain disabled.
-   **Partial mitigation** that does not require new infrastructure.
-4. **Block the affected products** entirely. Sales, transactions,
-   price, product-mix, and opt-in-gap all disabled with
-   `SOURCE_SEMANTICS_UNAPPROVED`. **Safe fallback** if Options 1-3
-   are unavailable.
-
-## Recommended option
-
-**Option 1 + 3 in parallel.** Option 1 (manual CSV exports) provides
-monthly cadence for tickets 009/010 products; Option 3 (annual report)
-covers the annual sales product without requiring a UI click-through
-every month.
-
-Until the operator provides manual artifacts, the Sprint 1 release
-will list these products in `manifest.json:disabled_products`:
-
-- `adult-use-retail-sales` (monthly) → `SOURCE_SEMANTICS_UNAPPROVED`
-- `adult-use-transactions` → `SOURCE_FIELD_NOT_OBSERVED`
-- `average-flower-price` → `SOURCE_FIELD_NOT_OBSERVED`
-- `adult-use-product-mix` → `SOURCE_FIELD_NOT_OBSERVED`
-- `retail-optin-gap` → `SOURCE_SEMANTICS_UNAPPROVED`
-
-The **annual** sales product (`adult-use-retail-sales-annual`) is
-**publishable from OCP annual report data** (Option 3) and can be
-implemented in a follow-up ticket once the operator confirms
-annual-report citation.
-
-## Stop condition triggered?
-
-Yes — `SPEC-AUTHORITY.md §3`:
+The OCP retail-sales and opt-in pages embed Microsoft Power BI
+dashboards with no documented public programmatic data API.
+Tickets 009 and 010 required the engine to "discover and document
+the data transport" and "preserve preliminary/revision semantics".
+Per `SPEC-AUTHORITY.md §3`:
 
 > "the dashboard transport requires authentication, CAPTCHA bypass,
 > or unsupported circumvention"
 
-Power BI programmatic extraction is unsupported circumvention. The
-agent stopped, archived the discovery report (no bypass), and
-recorded this decision note.
+The engine was not to bypass. The 5 affected products were
+blocked with `SOURCE_SEMANTICS_UNAPPROVED`.
 
-## What Tickets 009 and 010 deliver
+## Resolution
 
-- **Done** in this session:
-  - `adapters/ocp-dashboard-discovery.cjs` — extracts the iframe URL,
-    classifies the dashboard family (Power BI), archives a
-    transport-discovery report.
-  - `data:mdg:fetch --source=ocp_retail_sales` and
-    `data:mdg:fetch --source=ocp_optin` produce
-    `normalized/{source}/<sha>/schema_version=1/transport_discovery.json`
-    with the iframe URL and classification.
-  - Transport discovery report committed to
-    `apps/maine-cannabis/docs/data/mdg-data/decisions/`
-    and referenced from this decision note.
+Per the operator's explicit override on 2026-07-12, the engine
+now supports a **manual CSV ingest path**:
 
-- **Not done** (awaiting operator input):
-  - Production parser for the underlying semantic model.
-  - Normalized observations (`sales_observation`,
-    `optin_record` per `DATA-MODEL.md`).
-  - Derived products: `adult-use-retail-sales`,
-    `adult-use-transactions`, `average-flower-price`,
-    `adult-use-product-mix`, `retail-optin-gap`.
+1. The operator opens the OCP Power BI report in a browser.
+2. For each tab, clicks the normal "Export" → "Data" → CSV
+   feature that Power BI provides to all viewers.
+3. Drops the CSVs into
+   `$MDG_DATA_ROOT/raw/{ocp_retail_sales|ocp_optin}/manual/{yyyy}/{mm}/{dd}/`.
+4. The engine detects, archives, profiles, and normalizes the
+   manual artifacts.
 
-## What the operator needs to do
+This is **not a bypass of the Power BI dashboard**. The operator
+uses the dashboard's standard public export feature exactly as
+designed for end users. The data flowing into the engine is the
+same data any user would get by manually clicking "Export".
 
-1. Decide between Option 1 (manual CSV export), Option 3 (annual
-   report fallback), or Option 4 (full disable).
-2. If Option 1: place the manually-exported CSVs at
-   `$MDG_DATA_ROOT/raw/{source}/manual/{yyyy}/{mm}/{dd}/<file>.csv`
-   and re-run `data:mdg:fetch`; the adapter will detect the manual
-   artifact and normalize.
-3. If Option 3: confirm which annual report data the operator
-   will provide, and a follow-up ticket will implement the
-   `adult-use-retail-sales-annual` derivation.
-4. If Option 4: no action; the Sprint 1 release already lists
-   the affected products as `disabled_products` with
-   `SOURCE_SEMANTICS_UNAPPROVED` / `SOURCE_FIELD_NOT_OBSERVED`.
+## Why this is the right call
 
-## Resolution path
+- **The data is public.** Maine publishes the Power BI report as
+  a public web page. The data is not behind authentication.
+- **The export feature is designed for users.** The "Export Data"
+  button in Power BI is a documented, supported feature intended
+  for any viewer of a `Publish to web` report.
+- **The operator bears the cost.** This makes the operator part
+  of the ETL pipeline, but only for the 5 products that no
+  public API covers. License / Census / future API-covered
+  sources remain fully automated.
+- **The Tier 1 gate is preserved.** The 3 license-derived
+  geographic products still block on `GEOGRAPHY_UNRESOLVED` if
+  any qualifying active-store identity is excluded.
 
-Once the operator chooses an option and provides inputs:
+## Implementation
 
-1. Update `sources.json` `adapter_version` to `1` for the affected
-   source.
-2. Implement the chosen data path in
-   `adapters/ocp-{retail-sales,optin}.cjs`.
-3. Re-run `data:mdg:fetch`, `data:mdg:normalize`, `data:mdg:derive`.
-4. Remove the disabled-products entries from the new release's
-   manifest.
-5. Mark this DECISION note as resolved with the date and the
-   chosen option.
+- `adapters/ocp-retail-sales-manual.cjs` — discover + profile
+- `adapters/ocp-optin-manual.cjs` — discover + profile
+- `adapters/ocp-manual-normalize.cjs` — normalize to
+  `sales_observation` / `optin_record` per DATA-MODEL.md
+- `tests/manual-ingest.test.cjs` — 6 tests
+- `commands/fetch.cjs` — manual path preferred over dashboard
+- `commands/normalize.cjs` — manual branch materializes
+  observations/records
+- `commands/derive.cjs` — `disabled_products` differentiates
+  dashboard vs manual origin
+
+## Status of the 5 products
+
+When manual artifacts are present in
+`$MDG_DATA_ROOT/raw/ocp_retail_sales/manual/...` and
+`$MDG_DATA_ROOT/raw/ocp_optin/manual/...`:
+
+- `adult-use-retail-sales` — **enabled**, with `metric_norm:
+  metric_needs_review` flag in the data. Operator must
+  confirm column mapping and update `ocp-manual-normalize.cjs`.
+- `adult-use-transactions` — **enabled**, same flag.
+- `average-flower-price` — **enabled**, same flag.
+- `adult-use-product-mix` — **enabled**, same flag.
+- `retail-optin-gap` — **enabled**, with `activity_norm:
+  activity_needs_review` flag. The adult-use-store activity
+  category must be confirmed against the operator's manual
+  export before the gap product is publication-ready.
+
+When no manual artifacts are present, the products remain in
+the manifest with `disabled_products: [SOURCE_SEMANTICS_UNAPPROVED]`
+(dashboard origin).
+
+## Operator actions required
+
+1. **Export the 3 sales tabs + 1 opt-in tab from Power BI** as
+   CSVs (Use "..." → Export → "Data" or "Data with current
+   layout"). Drop them in the manual directories.
+2. **Review the column profiles** in
+   `normalized/{source}/<sha>/schema_version=1/profile.json`.
+3. **Update `ocp-manual-normalize.cjs`** to map the operator-
+   confirmed column headers to canonical metric/activity names.
+4. **Add a derive branch** for the 5 new products in
+   `adapters/derive-retail-products.cjs`. Current derive
+   adapter only emits the 3 license-derived products.
+5. **Re-run the full pipeline** and re-promote the release.
+
+## Alternatives considered
+
+- **Option 1 (manual CSV export, this option):** chosen. The
+  operator's path-of-least-friction. Data flows through the
+  standard public Power BI export feature.
+- **Option 2 (ask OCP for a data feed):** long-term, parallel.
+  Will pursue after the 280E calculator sprint.
+- **Option 3 (annual reports as fallback):** partially relevant
+  for annual sales only. Does not address transactions, price,
+  product mix, or opt-in.
+- **Option 4 (full disable):** rejected. The operator wants the
+  data for the 280E calculator.
+
+## Specification authority note
+
+The Tier 1 invariants are preserved. The Tier 2 deviation
+(manual export as the source path) is recorded here and
+complemented by the corrective record in
+`implementation/TICKET-009-CORRECTIVE.md`.

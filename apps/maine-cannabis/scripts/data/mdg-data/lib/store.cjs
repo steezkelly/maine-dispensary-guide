@@ -76,7 +76,8 @@ function writeRawArtifact(rootDir, sourceId, fetchedAtUtc, buf, originalName) {
     const dd = String(d.getUTCDate()).padStart(2, '0');
     const dir = path.join(rootDir, 'raw', sourceId, yyyy, mm, dd, sha16);
     fs.mkdirSync(dir, { recursive: true });
-    const target = path.join(dir, originalName || `${sha16}.bin`);
+    const target = path.join(dir, originalName);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
     if (!fs.existsSync(target)) {
         fs.writeFileSync(target, buf);
     }

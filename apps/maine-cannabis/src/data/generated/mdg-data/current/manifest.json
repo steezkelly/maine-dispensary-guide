@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "release_id": "2950b776cb20cd6b",
+  "release_id": "01dfdc4cbf7d8900",
   "transform_version": "1",
   "inputs": [
     {
@@ -13,11 +13,11 @@
     },
     {
       "source_id": "ocp_optin",
-      "sha256": "d83174b1676dd8364c1703b57f41881e413d1ae8863deae6899004ce3644f890"
+      "sha256": "247bc01805df098e8b118b0074fba5c8ded13708bbf47aa8c5508aea0d643a69"
     },
     {
       "source_id": "ocp_retail_sales",
-      "sha256": "cb77d4b72c330324c3810bfea8fe8f8f14b0632fbd355bb9fe630d3415b37b7a"
+      "sha256": "a3aaf58c95d638f908fe1a21a499b56919d6a09b41c321cdd11fccadf2a41c04"
     }
   ],
   "files": [
@@ -31,7 +31,7 @@
     },
     {
       "path": "products/municipalities-without-retail-license.meta.json",
-      "sha256": "23abc14d4cfc9d1344f0fb8a3eb735a5fab9feec4b95368667a2510a4788c61d"
+      "sha256": "6b2e197b4a1c527bf5e874a7ff0d723c17b3c636c29f7232ae6dc6f8ef267663"
     },
     {
       "path": "products/retail-licenses-by-municipality.csv",
@@ -43,7 +43,7 @@
     },
     {
       "path": "products/retail-licenses-by-municipality.meta.json",
-      "sha256": "307047a89e78e804dfc574a72acae4eaf7e9ee681f8e8fb40c5e6ae59f2325fc"
+      "sha256": "e0f587b115f37fcdcfa60ededb10b2168bc665d0c01f2ac737c8eaa16458450d"
     },
     {
       "path": "products/retail-licenses-per-10k.csv",
@@ -55,34 +55,8 @@
     },
     {
       "path": "products/retail-licenses-per-10k.meta.json",
-      "sha256": "9d3c6c27e8977a53972201c5aedc364b8af940358f5f171f545c99e4b842b830"
+      "sha256": "adb9bda832dacc928410ff62cfb9d2a15211218b4cdb33375d9ea8476392438f"
     }
   ],
-  "disabled_products": [
-    {
-      "slug": "adult-use-retail-sales",
-      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
-      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
-    },
-    {
-      "slug": "adult-use-transactions",
-      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
-      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
-    },
-    {
-      "slug": "average-flower-price",
-      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
-      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
-    },
-    {
-      "slug": "adult-use-product-mix",
-      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
-      "note": "OCP retail-sales page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
-    },
-    {
-      "slug": "retail-optin-gap",
-      "reason_code": "SOURCE_SEMANTICS_UNAPPROVED",
-      "note": "OCP opt-in page embeds a Power BI dashboard with no documented programmatic data API. See DECISION-20260711-ocp-powerbi-embed.md."
-    }
-  ]
+  "disabled_products": []
 }

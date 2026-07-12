@@ -203,6 +203,48 @@ async function main() {
 
     const dashSrcIds = ['ocp_retail_sales', 'ocp_optin'];
     if (dashSrcIds.includes(src.source_id)) {
+        // First: check for manual artifacts. If present, prefer them
+        // over the Power BI dashboard (per operator override 2026-07-12).
+        // Manual artifacts are CSVs the operator exported from the
+        // Power BI UI and dropped into $MDG_DATA_ROOT/raw/<source>/manual/.
+        const manualAdapter = src.source_id === 'ocp_retail_sales'
+            ? require('../adapters/ocp-retail-sales-manual.cjs')
+            : require('../adapters/ocp-optin-manual.cjs');
+        const manualOut = manualAdapter.run(root);
+        if (manualOut.artifacts.length > 0) {
+            // Archive each manual artifact and write a profile + provenance
+            // to a normalized path keyed by the manual sha.
+            for (const a of manualOut.artifacts) {
+                const normDir = path.join(root, 'normalized', src.source_id, a.raw_sha256, 'schema_version=1');
+                fs.mkdirSync(normDir, { recursive: true });
+                fs.writeFileSync(path.join(normDir, 'profile.json'),
+                    JSON.stringify({ source: 'manual', tab_slug: a.tab_slug,
+                        tab_label: a.tab_label, schema: a.profile }, null, 2) + '\n');
+                fs.writeFileSync(path.join(normDir, 'provenance.json'),
+                    JSON.stringify({ source_id: src.source_id,
+                        raw_sha256: a.raw_sha256, origin: 'manual_csv_export',
+                        tab_slug: a.tab_slug, original_path: a.original_path,
+                        adapter_version: '1-manual', schema_version: 1 }, null, 2) + '\n');
+            }
+            const code = manualOut.artifacts.length === 1 ? 'OK' : 'OK';
+            emit({
+                schema_version: 1, component: 'mdg-data', command: 'fetch',
+                status: 'new_artifact', source_id: src.source_id, release_id: null,
+                changed: true, retryable: false, code: code,
+                artifact_sha256: manualOut.artifacts[0].raw_sha256,
+                message: 'manual artifacts ingested: ' + manualOut.artifacts.length + ' tab(s)',
+                metrics: {
+                    source: 'manual',
+                    tabs: manualOut.artifacts.map(a => a.tab_slug),
+                    headers: manualOut.artifacts[0].profile.headers,
+                    row_count: manualOut.artifacts[0].profile.row_count,
+                    raw_paths: manualOut.artifacts.map(a => a.raw_path)
+                }
+            });
+            process.exit(0);
+        }
+        // No manual artifacts: fall back to the Power BI dashboard
+        // transport-discovery path (Ticket 009/010).
         const ocpDash = require('../adapters/ocp-dashboard-discovery.cjs');
         let r;
         try {
