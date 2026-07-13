@@ -97,6 +97,40 @@ const recentPosts = [
   { title: "Maine Psilocybin Legality 2026 — Decriminalization Status & What Operators Must Know", href: "/blog/maine-psilocybin-2026-guide", date: "June 7, 2026", badge: "Policy" },
 ];
 
+
+const tourSlides = [
+  {
+    title: "Find every Maine dispensary market",
+    href: "/guides",
+    eyebrow: "City guide index",
+    description: `Browse ${siteStats.activeAdultUseRetailStores} active adult-use storefronts across ${siteStats.activeAdultUseMunicipalities} Maine municipalities, with local pricing, tax, and operator notes.`
+  },
+  {
+    title: "Run startup numbers",
+    href: "/roi-calculator",
+    eyebrow: "ROI calculator",
+    description: "Model startup capital, monthly customers, operating expenses, and payback timing before signing a lease or filing with OCP."
+  },
+  {
+    title: "Track market stats",
+    href: "/market-stats",
+    eyebrow: "Market dashboard",
+    description: `Follow Maine's ${siteStats.totalMarketValueAdultUse} adult-use market with live-style benchmarks for sales, stores, and price compression.`
+  },
+  {
+    title: "Check opt-in towns",
+    href: "/guides/maine-cannabis-opt-in-tracker",
+    eyebrow: "Municipal tracker",
+    description: "Confirm which towns allow adult-use cannabis, which remain medical-only, and where local ordinance review should start."
+  },
+  {
+    title: "Plan licensing",
+    href: "/guides/maine-dispensary-license",
+    eyebrow: "License roadmap",
+    description: "Sequence OCP application steps, municipal endorsement, background checks, fees, and inspection milestones without missing a gate."
+  },
+];
+
 const journeySteps = [
   { num: "01", title: "Get the Launch Checklist", desc: "Download the step-by-step checklist used by Portland and Bangor applicants — covers OCP forms, municipal filings, and lease contingencies.", href: "/launch-checklist" },
   { num: "02", title: "Understand Licensing", desc: `Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and ${siteStats.activeAdultUseMunicipalities - 2} other opt-in towns have different timelines — know yours.`, href: "/guides/maine-dispensary-license" },
@@ -112,19 +146,6 @@ const journeySteps = [
   article={{ author: "Eliot Nash", authorTitle: "Editorial", authorId: "eliot-nash", publishDate: "2026-01-01", modifiedDate: "2026-06-07", section: "Home" }}
   isHub={true}
 >
-  {/* LCP preload hint for the homepage video-tour-strip poster — the
-       video is muted-background and won't block LCP, but the poster
-       is the LCP candidate. Preload shaves ~100ms on first paint.
-
-       Sprint 81 (2026-07-11): Switched from 1920×1080 JPEG (199 KiB) to
-       640×360 AVIF (8.7 KiB) + 960×540 fallback. PSI mobile "Improve image
-       delivery" called out 176 KiB savings here alone. AVIF served via
-       <picture> inside the <video> so non-AVIF browsers fall through to
-       WebP/JPEG without a second request. */}
-  <Fragment slot="head">
-    <link rel="preload" as="image" href="/videos/site-tour.poster-640.avif" fetchpriority="high" type="image/avif" />
-  </Fragment>
-
   <!-- Full-page aurora wash — pinned to the viewport so the slow drift
        stays visible while scrolling. Sits behind all content (z-index: -1)
        and uses low intensity (0.18) so it tints the page background
@@ -496,85 +517,150 @@ const journeySteps = [
   }
 
   /* =============================================================
-     VIDEO TOUR STRIP — featured media below the editorial hero
+     TOUR CAROUSEL — static-first homepage resource tour
      ============================================================= */
-  .video-tour-strip {
-    background: var(--color-primary-dark, #143027);
+  .tour-carousel {
+    background: var(--color-primary-dark);
     padding: 0;
     margin: 0;
-    border-top: 1px solid var(--color-accent, #5F7E50);
-    border-bottom: 1px solid var(--color-accent, #5F7E50);
+    border-top: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
   }
-  .video-tour-container {
+  .tour-carousel-frame {
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    aspect-ratio: 16 / 9;
-    background: #0A2A6E; /* fallback while poster loads */
+    min-height: clamp(360px, 46vw, 620px);
+    background:
+      radial-gradient(circle at 18% 20%, rgba(95, 126, 80, 0.42), transparent 28%),
+      radial-gradient(circle at 82% 18%, rgba(242, 242, 226, 0.12), transparent 24%),
+      linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 56%, var(--color-primary-dark) 100%);
     overflow: hidden;
   }
-  .video-tour-element {
+  .tour-slides {
+    display: flex;
+    min-height: inherit;
+    transform: translateX(calc(var(--tour-index, 0) * -100%));
+    transition: transform 520ms var(--ease-out);
+  }
+  .tour-slide {
+    position: relative;
+    flex: 0 0 100%;
+    min-height: inherit;
+    display: grid;
+    align-items: end;
+    padding: clamp(2rem, 5vw, 5rem);
+    color: var(--color-background);
+  }
+  .tour-slide::before {
+    content: "";
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .video-tour-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(180deg, transparent 0%, rgba(20, 48, 39, 0.85) 100%);
-    color: var(--color-background, #F4F1E4);
-    font-family: var(--font-serif, 'Fraunces', serif);
+    background: linear-gradient(180deg, transparent 0%, rgba(20, 48, 39, 0.86) 100%);
     pointer-events: none;
   }
-  .video-tour-overlay > * {
-    pointer-events: auto;
+  .tour-slide-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
   }
-  .video-tour-label {
-    font-size: 14px;
+  .tour-slide-label {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-serif, 'Fraunces', serif);
+    font-size: 0.95rem;
     font-style: italic;
     letter-spacing: 0.04em;
     opacity: 0.9;
   }
-  .video-tour-cta {
-    display: inline-block;
-    padding: 8px 16px;
-    background: var(--color-accent, #5F7E50);
-    color: var(--color-background, #F4F1E4);
-    text-decoration: none;
-    border-radius: 6px;
-    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    transition: background 0.2s ease;
+  .tour-slide h2 {
+    margin: 0 0 0.75rem;
+    color: inherit;
+    font-size: clamp(2rem, 5vw, 4.25rem);
+    line-height: 0.96;
   }
-  .video-tour-cta:hover {
-    background: var(--color-primary, #1F4D3A);
+  .tour-slide p {
+    max-width: 620px;
+    margin: 0 0 1.5rem;
+    color: rgba(242, 242, 226, 0.88);
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    line-height: 1.7;
+  }
+  .tour-slide-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-accent);
+    color: var(--color-background);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .tour-slide-cta:hover,
+  .tour-slide-cta:focus-visible {
+    background: var(--color-primary);
+    transform: translateY(-1px);
+  }
+  .tour-controls {
+    position: absolute;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .tour-control {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(242, 242, 226, 0.5);
+    border-radius: 999px;
+    background: rgba(6, 26, 27, 0.56);
+    color: var(--color-background);
+    cursor: pointer;
+    font: inherit;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .tour-control:hover,
+  .tour-control:focus-visible {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  .tour-dots {
+    position: absolute;
+    left: clamp(2rem, 5vw, 5rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 2;
+    display: flex;
+    gap: 0.6rem;
+  }
+  .tour-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid rgba(242, 242, 226, 0.7);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+  .tour-dot[aria-current="true"] {
+    background: var(--color-background);
+  }
+  @media (max-width: 720px) {
+    .tour-slide { padding: 2rem 1.25rem 5.5rem; }
+    .tour-dots { left: 1.25rem; }
+    .tour-controls { right: 1.25rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .video-tour-element {
-      display: none;
-    }
-    .video-tour-container {
-      background: var(--color-background, #F4F1E4);
-    }
-    .video-tour-container::before {
-      content: "Video tour disabled by your motion preferences. Browse the guides:";
-      display: block;
-      padding: 32px 24px;
-      text-align: center;
-      color: var(--color-text, #0E1A14);
-      font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-      font-size: 14px;
+    .tour-slides,
+    .tour-slide-cta,
+    .tour-control {
+      transition: none;
     }
   }
 
@@ -2381,82 +2467,86 @@ const journeySteps = [
        Sits directly under the hero; each card deep-links to the full dashboard. */}
   <SiteHealthStrip stats={siteHealthStats} />
 
-  <!-- Video tour strip — featured-media below the editorial hero.
-         Autoplay muted per Chrome/Safari policy. Reduced-motion opt-out
-         in CSS above. Poster is the LCP candidate.
+  <!-- Static-first resource carousel. All slides render as HTML; the inline
+       script below only enhances previous/next, dot state, and autoplay. -->
+  <section class="tour-carousel" aria-label="Maine Dispensary Guide resource tour" data-tour-carousel>
+    <div class="tour-carousel-frame" style="--tour-index: 0;">
+      <div class="tour-slides" data-tour-slides>
+        {tourSlides.map((slide, index) => (
+          <article class="tour-slide" id={`tour-slide-${index + 1}`} aria-label={`${index + 1} of ${tourSlides.length}`}>
+            <div class="tour-slide-content">
+              <span class="tour-slide-label">{slide.eyebrow}</span>
+              <h2>{slide.title}</h2>
+              <p>{slide.description}</p>
+              <a href={slide.href} class="tour-slide-cta" data-cta-id={`cta-inline-index-tour-${index + 1}`}>
+                Open resource →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
 
-         Sprint 81 round 4: Removed `src="/videos/site-tour.mp4"` from the markup
-         entirely. PSI's "Avoid enormous network payloads" audit counts the
-         mp4 in the homepage's 5,337 KiB total even with preload="none", because
-         the `src` attribute in the HTML is discoverable to the resource
-         summary. Moving the src into JS (set on idle before play()) drops the
-         mp4 from the initial network budget completely. The poster AVIF stays
-         inline so the LCP element renders immediately. -->
-    <section class="video-tour-strip" aria-label="30-second site tour">
-      <div class="video-tour-container">
-        <video
-          class="video-tour-element"
-          id="video-tour-element"
-          poster="/videos/site-tour.poster-640.avif"
-          playsinline
-          loop
-          preload="none"
-          aria-hidden="true"
-        ></video>
-      <div class="video-tour-overlay">
-        <span class="video-tour-label">30-second site tour</span>
-        <!-- analytics:cta-injected id=cta-inline-index-04 -->
-<a href="/guides/" class="video-tour-cta" data-cta-id="cta-inline-index-04">Browse all 109 guides →</a>
+      <div class="tour-controls" aria-label="Carousel controls">
+        <button class="tour-control" type="button" data-tour-prev aria-label="Previous slide">‹</button>
+        <button class="tour-control" type="button" data-tour-next aria-label="Next slide">›</button>
+      </div>
+
+      <div class="tour-dots" role="tablist" aria-label="Choose a carousel slide">
+        {tourSlides.map((slide, index) => (
+          <button
+            class="tour-dot"
+            type="button"
+            data-tour-dot={index}
+            aria-label={`Show slide ${index + 1}: ${slide.title}`}
+            aria-controls={`tour-slide-${index + 1}`}
+            aria-current={index === 0 ? "true" : "false"}
+          ></button>
+        ))}
       </div>
     </div>
     <script is:inline>
-      // Defer video-tour autoplay until the browser is idle OR the user
-      // scrolls within 200px of the strip. Keeps the 4.8MB mp4 out of the
-      // initial critical-path budget (PSI "Avoid enormous network payloads")
-      // while still giving users the autoplay experience. Reduced-motion
-      // users keep the poster-only treatment via CSS already.
       (function () {
-        var v = document.getElementById('video-tour-element');
-        if (!v) return;
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var root = document.querySelector('[data-tour-carousel]');
+        if (!root) return;
+        var frame = root.querySelector('.tour-carousel-frame');
+        var dots = Array.prototype.slice.call(root.querySelectorAll('[data-tour-dot]'));
+        var prev = root.querySelector('[data-tour-prev]');
+        var next = root.querySelector('[data-tour-next]');
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var index = 0;
+        var timer = null;
+        var paused = reduceMotion;
 
-        var armed = false;
-        function arm() {
-          if (armed) return;
-          armed = true;
-          // Sprint 81 round 4: set src on arm so the 4.8MB mp4 doesn't appear
-          // in the initial HTML resource summary. The src attribute in markup
-          // counts against the homepage's network budget even with preload=none.
-          v.muted = true;
-          v.autoplay = true;
-          v.preload = 'metadata';
-          v.src = '/videos/site-tour.mp4';
-          // Start playback now if the video is already on-screen, else let
-          // the IntersectionObserver start it.
-          var r = v.getBoundingClientRect();
-          if (r.top < window.innerHeight && r.bottom > 0) {
-            var p = v.play();
-            if (p && p.catch) p.catch(function () {});
-          }
+        function setSlide(nextIndex) {
+          index = (nextIndex + dots.length) % dots.length;
+          frame.style.setProperty('--tour-index', index);
+          dots.forEach(function (dot, i) {
+            dot.setAttribute('aria-current', i === index ? 'true' : 'false');
+          });
         }
 
-        // Arm on first idle OR scroll-near.
-        var armedVia = 'idle';
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(arm, { timeout: 2500 });
-        } else {
-          window.addEventListener('load', function () { setTimeout(arm, 1500); });
+        function stop() {
+          if (timer) window.clearInterval(timer);
+          timer = null;
         }
 
-        // Also arm on intersection so scroll-past users get the loop running.
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (entries) {
-            for (var i = 0; i < entries.length; i++) {
-              if (entries[i].isIntersecting) { armedVia = 'scroll'; arm(); io.disconnect(); break; }
-            }
-          }, { rootMargin: '200px 0px' });
-          io.observe(v);
+        function start() {
+          stop();
+          if (paused || reduceMotion || dots.length < 2) return;
+          timer = window.setInterval(function () { setSlide(index + 1); }, 6500);
         }
+
+        prev.addEventListener('click', function () { setSlide(index - 1); start(); });
+        next.addEventListener('click', function () { setSlide(index + 1); start(); });
+        dots.forEach(function (dot, i) {
+          dot.addEventListener('click', function () { setSlide(i); start(); });
+        });
+        root.addEventListener('mouseenter', function () { paused = true; stop(); });
+        root.addEventListener('mouseleave', function () { paused = false; start(); });
+        root.addEventListener('focusin', function () { paused = true; stop(); });
+        root.addEventListener('focusout', function () { paused = false; start(); });
+
+        start();
       })();
 
       // Sprint 81 (2026-07-11) PSI mobile round 3: signal the browser to start
@@ -2464,11 +2554,9 @@ const journeySteps = [
       // ridge SVG) after first idle. Until .decorations-loaded is on <html>,
       // .mdg-anim-backdrop has visibility:hidden (CSS above). This removes
       // ~60 composited layers from the initial paint path so the LCP element
-      // can render without compositor pressure. Triggers via the same
-      // requestIdleCallback used for video defer; runs in the same idle slot
-      // so it costs nothing extra. No-op on reduced-motion (CSS already
-      // disables the animations) and on no-JS (backdrops stay hidden — brand
-      // cosmetic loss, but content is intact).
+      // can render without compositor pressure. No-op on reduced-motion (CSS
+      // already disables the animations) and on no-JS (backdrops stay hidden
+      // — brand cosmetic loss, but content is intact).
       (function () {
         if (!('requestIdleCallback' in window)) {
           window.addEventListener('load', function () {
