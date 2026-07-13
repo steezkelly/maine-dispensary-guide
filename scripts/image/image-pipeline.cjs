@@ -29,6 +29,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 
 // Check for node-fetch (CommonJS compat)
 let fetch;
@@ -57,26 +58,25 @@ const modelMap = {
 
 const rootDir = path.join(__dirname, '..');
 
-// Parse arguments
-const args = process.argv.slice(2);
-const manifestPath = args.find(arg => !arg.startsWith('--'));
-const force = args.includes('--force');
+let manifest = [];
+let force = false;
 
-if (!manifestPath) {
-  console.error('Usage: node scripts/image-pipeline.cjs manifest.json [--force]');
-  process.exit(1);
-}
+function loadManifest(argv) {
+  const manifestPath = argv.find(arg => !arg.startsWith('--'));
+  force = argv.includes('--force');
 
-// Read manifest
-let manifest;
-try {
+  if (!manifestPath) {
+    throw new Error('Usage: node scripts/image-pipeline.cjs manifest.json [--force]');
+  }
+
   const absoluteManifestPath = path.isAbsolute(manifestPath)
     ? manifestPath
     : path.join(rootDir, manifestPath);
-  manifest = JSON.parse(fs.readFileSync(absoluteManifestPath, 'utf8'));
-} catch (err) {
-  console.error(`❌ Failed to read manifest: ${err.message}`);
-  process.exit(1);
+  try {
+    return JSON.parse(fs.readFileSync(absoluteManifestPath, 'utf8'));
+  } catch (err) {
+    throw new Error(`❌ Failed to read manifest: ${err.message}`);
+  }
 }
 
 // Determine output directory based on field type
@@ -127,7 +127,34 @@ async function generateImage(prompt, model, width, height) {
 }
 
 // Step 2: Download image to local path
-async function downloadImage(url, filePath) {
+async function writeHeroVariants(buffer, filePath) {
+  const extension = path.extname(filePath);
+  const base = filePath.slice(0, -extension.length);
+  const variants = [
+    [filePath, null, 'jpeg'],
+    [`${base}.webp`, null, 'webp'],
+    [`${base}.avif`, null, 'avif'],
+    [`${base}-640w.jpg`, 640, 'jpeg'],
+    [`${base}-640w.webp`, 640, 'webp'],
+    [`${base}-640w.avif`, 640, 'avif'],
+  ];
+
+  await Promise.all(variants.map(([outputPath, width, format]) => {
+    let image = sharp(buffer);
+    if (width) image = image.resize({ width });
+    return image[format]().toFile(outputPath);
+  }));
+}
+
+async function writeImageFiles(buffer, filePath, field) {
+  if (field === 'heroImage') {
+    await writeHeroVariants(buffer, filePath);
+    return;
+  }
+  fs.writeFileSync(filePath, buffer);
+}
+
+async function downloadImage(url, filePath, field) {
   // Ensure directory exists
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
@@ -148,7 +175,7 @@ async function downloadImage(url, filePath) {
   }
 
   const buffer = await response.arrayBuffer();
-  fs.writeFileSync(filePath, Buffer.from(buffer));
+  await writeImageFiles(Buffer.from(buffer), filePath, field);
   return true;
 }
 
@@ -254,7 +281,7 @@ async function runPipeline() {
       console.log(`    └─ Generated: ${falUrl}`);
 
       // Step 2: Download
-      const downloaded = await downloadImage(falUrl, outputFile);
+      const downloaded = await downloadImage(falUrl, outputFile, field);
       if (downloaded) {
         const sizeKB = (fs.statSync(outputFile).size / 1024).toFixed(0);
         console.log(`    └─ Downloaded: ${sizeKB}KB`);
@@ -299,7 +326,18 @@ async function runPipeline() {
   }
 }
 
-runPipeline().catch(err => {
-  console.error('Pipeline error:', err.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  try {
+    manifest = loadManifest(process.argv.slice(2));
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+
+  runPipeline().catch(err => {
+    console.error('Pipeline error:', err.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { writeHeroVariants, writeImageFiles };
