@@ -16,13 +16,13 @@ function ignored(repoPath) {
 }
 
 test('agent operational directories are ignored', () => {
-  for (const repoPath of ['.worktrees/', '.agents/leases/', '.hermes/']) {
+  for (const repoPath of ['.agents/leases/', '.hermes/']) {
     assert.equal(ignored(repoPath), true, `${repoPath} must be ignored`);
   }
 });
 
-test('agent boundary preserves non-operational source and documentation paths', () => {
-  for (const repoPath of ['.agents/product-marketing.md', '.agents/rewrites/example.md', 'apps/maine-cannabis/src/pages/index.astro']) {
+test('repository policy leaves nested worktrees and source paths visible to Git', () => {
+  for (const repoPath of ['.worktrees/sample.astro', '.agents/product-marketing.md', '.agents/rewrites/example.md', 'apps/maine-cannabis/src/pages/index.astro']) {
     assert.equal(ignored(repoPath), false, `${repoPath} must remain visible to Git`);
   }
 });
