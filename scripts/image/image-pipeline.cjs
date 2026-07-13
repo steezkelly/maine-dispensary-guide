@@ -127,6 +127,24 @@ async function generateImage(prompt, model, width, height) {
 }
 
 // Step 2: Download image to local path
+function getHeroVariantPaths(filePath) {
+  const extension = path.extname(filePath);
+  const base = filePath.slice(0, -extension.length);
+  return [
+    filePath,
+    `${base}.webp`,
+    `${base}.avif`,
+    `${base}-640w.jpg`,
+    `${base}-640w.webp`,
+    `${base}-640w.avif`,
+  ];
+}
+
+function hasCompleteImageSet(filePath, field) {
+  const expectedPaths = field === 'heroImage' ? getHeroVariantPaths(filePath) : [filePath];
+  return expectedPaths.every(candidate => fs.existsSync(candidate));
+}
+
 async function writeHeroVariants(buffer, filePath) {
   const extension = path.extname(filePath);
   const base = filePath.slice(0, -extension.length);
@@ -139,11 +157,34 @@ async function writeHeroVariants(buffer, filePath) {
     [`${base}-640w.avif`, 640, 'avif'],
   ];
 
-  await Promise.all(variants.map(([outputPath, width, format]) => {
-    let image = sharp(buffer);
-    if (width) image = image.resize({ width });
-    return image[format]().toFile(outputPath);
-  }));
+  for (const [outputPath] of variants) {
+    if (fs.existsSync(outputPath) && !fs.lstatSync(outputPath).isFile()) {
+      throw new Error(`Cannot replace non-file hero variant: ${outputPath}`);
+    }
+  }
+
+  const token = `${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const staged = variants.map(([outputPath, width, format]) => {
+    const extension = path.extname(outputPath);
+    const tempPath = `${outputPath.slice(0, -extension.length)}.${token}.tmp${extension}`;
+    return { outputPath, tempPath, width, format };
+  });
+
+  try {
+    await Promise.all(staged.map(({ tempPath, width, format }) => {
+      let image = sharp(buffer);
+      if (width) image = image.resize({ width });
+      return image[format]().toFile(tempPath);
+    }));
+    for (const { outputPath, tempPath } of staged) {
+      fs.renameSync(tempPath, outputPath);
+    }
+  } catch (err) {
+    for (const { tempPath } of staged) {
+      fs.rmSync(tempPath, { force: true });
+    }
+    throw err;
+  }
 }
 
 async function writeImageFiles(buffer, filePath, field) {
@@ -161,12 +202,8 @@ async function downloadImage(url, filePath, field) {
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  if (fs.existsSync(filePath)) {
-    if (force) {
-      fs.unlinkSync(filePath);
-    } else {
-      return false; // Already exists, skip
-    }
+  if (hasCompleteImageSet(filePath, field) && !force) {
+    return false; // Already exists, skip
   }
 
   const response = await fetch(url);
@@ -267,7 +304,7 @@ async function runPipeline() {
     const targetPath = target ? (path.isAbsolute(target) ? target : path.join(rootDir, target)) : null;
 
     // Check if already exists
-    if (fs.existsSync(outputFile) && !force) {
+    if (hasCompleteImageSet(outputFile, field) && !force) {
       console.log(`${num} ⏭  ${slug} (already exists)`);
       skipped++;
       continue;
@@ -340,4 +377,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { writeHeroVariants, writeImageFiles };
+module.exports = { hasCompleteImageSet, writeHeroVariants, writeImageFiles };

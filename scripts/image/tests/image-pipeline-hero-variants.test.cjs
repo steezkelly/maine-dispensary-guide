@@ -4,7 +4,7 @@ const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
 const sharp = require('sharp');
-const { writeHeroVariants, writeImageFiles } = require('../image-pipeline.cjs');
+const { hasCompleteImageSet, writeHeroVariants, writeImageFiles } = require('../image-pipeline.cjs');
 
 test('writeHeroVariants writes desktop and 640px mobile JPG, WebP, and AVIF files', async (t) => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'image-pipeline-'));
@@ -37,6 +37,56 @@ test('writeHeroVariants writes desktop and 640px mobile JPG, WebP, and AVIF file
     assert.equal(metadata.format, format, `${filename} should use ${format}`);
     assert.equal(metadata.width, width, `${filename} should be ${width}px wide`);
   }
+});
+
+test('writeHeroVariants does not publish a partial set when one encoder output fails', async (t) => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'image-pipeline-atomic-'));
+  t.after(() => fs.rmSync(tempDir, { recursive: true, force: true }));
+  const source = await sharp({
+    create: {
+      width: 1200,
+      height: 400,
+      channels: 3,
+      background: { r: 20, g: 80, b: 40 },
+    },
+  }).jpeg().toBuffer();
+  const outputFile = path.join(tempDir, 'synthetic.jpg');
+  const blockedPath = path.join(tempDir, 'synthetic.avif');
+  fs.mkdirSync(blockedPath);
+
+  await assert.rejects(writeHeroVariants(source, outputFile));
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  for (const filename of [
+    'synthetic.jpg',
+    'synthetic.webp',
+    'synthetic-640w.jpg',
+    'synthetic-640w.webp',
+    'synthetic-640w.avif',
+  ]) {
+    assert.equal(fs.existsSync(path.join(tempDir, filename)), false, `${filename} must not be published`);
+  }
+});
+
+test('hasCompleteImageSet rejects an incomplete hero variant set', async (t) => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'image-pipeline-incomplete-'));
+  t.after(() => fs.rmSync(tempDir, { recursive: true, force: true }));
+  const outputFile = path.join(tempDir, 'synthetic.jpg');
+  fs.writeFileSync(outputFile, 'partial');
+
+  assert.equal(hasCompleteImageSet(outputFile, 'heroImage'), false);
+  assert.equal(hasCompleteImageSet(outputFile, 'infographic'), true);
+
+  const source = await sharp({
+    create: {
+      width: 1200,
+      height: 400,
+      channels: 3,
+      background: { r: 20, g: 80, b: 40 },
+    },
+  }).jpeg().toBuffer();
+  await writeHeroVariants(source, outputFile);
+  assert.equal(hasCompleteImageSet(outputFile, 'heroImage'), true);
 });
 
 test('writeImageFiles preserves single-JPG output for infographics', async (t) => {

@@ -16,6 +16,7 @@
     "verify:push": "node scripts/git/pre-push-verify.cjs --with-smoke",
     "verify:pre-push": "node scripts/git/pre-push-verify.cjs --with-smoke",
     "verify:pre-push:fast": "node scripts/git/pre-push-verify.cjs --fast-only",
+    "test:image-pipeline": "node --test scripts/image/tests/image-pipeline-hero-variants.test.cjs",
     "hooks:install": "node scripts/git/install-hooks.cjs"
   },
   "devDependencies": {
@@ -29,5 +30,8 @@
   "overrides": {
     "path-to-regexp": "6.3.0",
     "yaml": "2.8.3"
+  },
+  "dependencies": {
+    "sharp": "0.34.5"
   }
 }
