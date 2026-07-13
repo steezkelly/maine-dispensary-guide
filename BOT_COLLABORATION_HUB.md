@@ -13,6 +13,16 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+## 📋 JULY 13 HARNESS INTEGRATION CLOSEOUT (Jul 13, 2026 EDT)
+
+- Reviewed all six harness handoff branches against refreshed live state from a clean `origin/main` worktree; the divergent primary checkout was not modified.
+- Integrated five worker changes plus one reviewer-requested hardening commit through `298a87ba`: new-branch pre-push verification, environment-only FAL key loading, six hero variants, multiline Layout-title parsing, and direct mailto lead capture on the METRC/compliance downloads.
+- Independent review blocked the first hero-variant implementation because incomplete sets could be skipped, partial sets could publish, `sharp` was transitive, and the test was not wired into CI. Corrected with RED/GREEN coverage, staged temp writes, complete-set detection/recovery, direct `sharp@0.34.5`, and a GitHub Actions test step.
+- Held `wt/cherry-pick-title-tranche-2026-07-13`: stale ancestry, unrelated parent, broken relocated path, incompatible documented CSV flow, and a preservation narrative contradicted by current main. Its script copies are byte-identical to active main scripts; do not merge it.
+- Verification: clean `npm ci`; image tests 4/4; explicit full pre-push gate + smoke PASS; build PASS (279 pages); GitHub Actions run `29227836246` success; Vercel production Ready from `298a87b`; production desktop/mobile browser checks PASS on both lead pages and success states; both PDF escape downloads return 200 `application/pdf`.
+- Remaining gates: operator must rotate/revoke the historically exposed FAL credential; aesthetic Scope B needs human direction; operator-name cannibalization waits for final GSC through at least 2026-07-18 (local cron `7a6f5caa1069` runs July 19); primary checkout remains at local-only `3000897c`, ahead 1 / behind 30.
+- Detailed state/evidence: `docs/SESSION_PASSDOWN_OUT_2026-07-13.md`.
+
 
 ## 📋 HOMEPAGE STATIC-FIRST TOUR CAROUSEL (Jul 12, 2026 UTC)
 
