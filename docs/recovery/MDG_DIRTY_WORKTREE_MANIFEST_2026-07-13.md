@@ -101,5 +101,5 @@ The local-only `3000897c` content commit is preserved by existing branch refs bu
 | Intentional tracked image output recovered | 22 | Six dirty variants each for three selected heroes, plus four dirty JPG/WebP variants (desktop and 640w) for the patient-guide replacement. The clean candidate intentionally adds/regenerates the two corresponding AVIF variants, yielding 24 coherent files. |
 | Tracked image output rejected/restored | 902 | 42 files from seven editorially rejected generated candidates plus 860 incidental whole-directory re-encodes. |
 | Backup/trial/session files archived then removed from primary | 68 | 60 `.bak` files, 6 unreferenced cultivation-license trial variants, 2 stale/historical session documents. |
-| Agent/worktree directories preserved and ignored by current main | 2 | `.hermes/`, `.worktrees/`; neither is source or deleted data. |
+| Agent/worktree operational entries preserved | 2 | `.hermes/` is ignored by current main; `.worktrees/` remains intentionally visible as one top-level status entry so registered linked-worktree containers are not mistaken for disposable source. Neither path is deleted or staged. |
 | **Total** | **994** | Complete accounting; no unknown entry remains. |
