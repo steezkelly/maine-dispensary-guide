@@ -107,8 +107,12 @@ function parseWorktrees(root) {
   });
 }
 
+function sharedLeaseDirectory(root) {
+  return path.resolve(root, runGit(root, ['rev-parse', '--git-common-dir']), 'mdg-worktree-leases');
+}
+
 function readLeases(root) {
-  const directory = path.join(root, '.agents', 'leases');
+  const directory = sharedLeaseDirectory(root);
   if (!fs.existsSync(directory)) return { leases: [], invalidLeases: [] };
   return fs.readdirSync(directory)
     .filter((name) => name.endsWith('.json'))
@@ -183,4 +187,4 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { classifyWorktree, summarizeStatus, normalizeLeasePath, detectLeaseConflict, parseLease, parseStatus };
+module.exports = { classifyWorktree, summarizeStatus, normalizeLeasePath, detectLeaseConflict, parseLease, parseStatus, sharedLeaseDirectory, readLeases };

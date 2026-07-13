@@ -52,7 +52,7 @@ npm run verify:push                  # adds smoke-200 + smoke-img-200 against pr
 
 Before editing, run `npm run workflow:status`; before creating a branch or integrating, run `npm run workflow:status:fetch`. Do not use the primary checkout as an integration surface: create a named worktree from freshly fetched `origin/main`, then work on one coherent change set only.
 
-For changes that touch shared source paths, write an ignored lease under `.agents/leases/` containing agent, branch, absolute worktree path, paths, `startedAt`, and `expiresAt`. Remove or expire that lease once the branch is committed and handed to integration. A lease conflict or expired lease blocks automatic edits until it is reconciled.
+For changes that touch shared source paths, write a lease under `$(git rev-parse --git-common-dir)/mdg-worktree-leases/` (never under a worktree) containing agent, branch, absolute worktree path, paths, `startedAt`, and `expiresAt`. This Git-common directory is shared by every linked worktree and stays outside repository source. Remove or expire that lease once the branch is committed and handed to integration. A lease conflict or expired lease blocks automatic edits until it is reconciled.
 
 Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
 

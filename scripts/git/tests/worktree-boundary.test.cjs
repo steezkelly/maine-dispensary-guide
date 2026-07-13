@@ -15,10 +15,9 @@ function ignored(repoPath) {
   return spawnSync('git', ['-C', ROOT, 'check-ignore', '-q', repoPath]).status === 0;
 }
 
-test('agent operational directories are ignored', () => {
-  for (const repoPath of ['.agents/leases/', '.hermes/']) {
-    assert.equal(ignored(repoPath), true, `${repoPath} must be ignored`);
-  }
+test('only repository-local agent state is ignored', () => {
+  assert.equal(ignored('.hermes/'), true, '.hermes/ must be ignored');
+  assert.equal(ignored('.agents/leases/'), false, '.agents/leases/ must remain visible to prevent local-only leases');
 });
 
 test('repository policy leaves nested worktrees and source paths visible to Git', () => {

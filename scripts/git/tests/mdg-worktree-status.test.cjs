@@ -1,6 +1,10 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const test = require('node:test');
 
 const {
@@ -10,6 +14,8 @@ const {
   detectLeaseConflict,
   parseLease,
   parseStatus,
+  sharedLeaseDirectory,
+  readLeases,
 } = require('../mdg-worktree-status.cjs');
 
 test('summarizeStatus counts staged, tracked, and untracked entries', () => {
@@ -70,4 +76,40 @@ test('parseStatus preserves NUL-delimited rename paths', () => {
     { status: 'R ', paths: ['new name.astro', 'old name.astro'] },
     { status: '??', paths: ['untracked file.txt'] },
   ]);
+});
+
+test('shared leases created for two linked worktrees are visible and conflicting from either worktree', () => {
+  const primary = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-shared-lease-'));
+  const secondary = `${primary}-secondary`;
+  const git = (cwd, ...args) => execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8' }).trim();
+  const lease = (agent, branch, worktree) => ({
+    agent,
+    branch,
+    worktree,
+    paths: ['apps/maine-cannabis/src/pages/index.astro'],
+    startedAt: '2026-07-13T20:00:00Z',
+    expiresAt: '2026-07-14T02:00:00Z',
+  });
+  try {
+    git(primary, 'init', '--initial-branch=main');
+    git(primary, 'config', 'user.email', 'test@example.com');
+    git(primary, 'config', 'user.name', 'Test User');
+    fs.writeFileSync(path.join(primary, 'README.md'), 'fixture\n');
+    git(primary, 'add', 'README.md');
+    git(primary, 'commit', '-m', 'fixture');
+    git(primary, 'worktree', 'add', '-b', 'secondary', secondary);
+
+    const directory = sharedLeaseDirectory(primary);
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(path.join(directory, 'primary.json'), JSON.stringify(lease('agent-primary', 'main', primary)));
+    fs.writeFileSync(path.join(directory, 'secondary.json'), JSON.stringify(lease('agent-secondary', 'secondary', secondary)));
+
+    const report = readLeases(secondary);
+    assert.equal(report.leases.length, 2);
+    assert.equal(report.invalidLeases.length, 0);
+    assert.equal(detectLeaseConflict(report.leases[0].paths, report.leases[1].paths), true);
+  } finally {
+    fs.rmSync(primary, { recursive: true, force: true });
+    fs.rmSync(secondary, { recursive: true, force: true });
+  }
 });
