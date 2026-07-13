@@ -161,13 +161,16 @@ html[data-theme] a[target="_blank"]::after {
    (html[data-theme] main a:not(...):not(.btn-cta)...) has very high
    specificity from multiple :not() class selectors.
    ============================================================================= */
-.btn-cta {
-  color: #0E1A14 !important; /* dark spruce — works on bone/cream chips in light mode */
-}
-[data-theme="dark"] .btn-cta,
-[data-theme="dark"] html .btn-cta {
-  color: #F4F1E4 !important; /* cream — works on dark spruce page bg in dark mode */
-}
+/* No global .btn-cta rules here. The Vite CSS minifier collapses
+   adjacent .btn-cta rules into a single selector-list that mismatches
+   specificity, breaking light/dark mode toggling. The component-level
+   .btn-cta rules in components.css and in the per-page <style is:global>
+   blocks handle this — they have scoped selectors that Vite can't
+   merge with each other.
+
+   If you need a global .btn-cta override, use a UNIQUE selector
+   (e.g. add a body class or a wrapper class) so the minifier can't
+   pair it with another .btn-cta rule. */
 
 /* =============================================================================
    EMBOSSED CARD UTILITIES — tier 1 (default), tier 2 (raised), tier 3 (hero/featured)

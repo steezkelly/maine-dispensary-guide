@@ -503,7 +503,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             <div class="lead-capture-box">
               <h3>Get the 2026 Maine Launch Checklist</h3>
               <p>Download our step-by-step roadmap. 100% Free.</p>
-              <a href="/download-checklist" class="btn-cta" style="background: var(--color-background); color: var(--color-cream-ink);">Download PDF Checklist &rarr;</a>
+              <a href="/download-checklist" class="btn-cta lcb-cta-btn" data-mode-context="page">Download PDF Checklist &rarr;</a>
             </div>
             <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
             {authorRecord && (
@@ -642,4 +642,38 @@ const breadcrumbListJsonLd = breadcrumbListSchema
     </script>
   </body>
 </html>
+
+<style is:global>
+  /* Layout-level .lcb-cta-btn: bone chip + dark-spruce text in LIGHT mode,
+     dark-spruce chip + cream text in DARK mode. Uses a UNIQUE class
+     name (lcb-cta-btn) instead of .btn-cta because Vite's CSS minifier
+     collapses adjacent .btn-cta rules into one merged selector-list
+     that breaks light/dark cascade ordering. */
+  .lcb-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #F4F1E4; /* bone */
+    color: #0E1A14; /* dark spruce */
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+    border: 1px solid #D6DBC9;
+  }
+  .lcb-cta-btn:hover {
+    background: #FFFFFF;
+    transform: translateY(-1px);
+  }
+  [data-theme="dark"] .lcb-cta-btn {
+    background: #11261B; /* dark surface */
+    color: #ECF3E4; /* cream */
+    border-color: #1E3627;
+  }
+  [data-theme="dark"] .lcb-cta-btn:hover {
+    background: #152F23;
+  }
+</style>
 

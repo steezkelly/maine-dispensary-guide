@@ -568,8 +568,12 @@ const hasRelatedContent = relatedCityGuides.length > 0 || relatedBusinessGuides.
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: white;
-    color: var(--color-primary);
+    /* White chip + dark-spruce text — constant in both modes. The
+       previous color: var(--color-primary) flipped to pale-sage in
+       dark mode, which on a white chip failed WCAG at 1.67:1. The
+       dark spruce #1F4D3A holds 8.5:1 against white in both themes. */
+    background: #FFFFFF;
+    color: #1F4D3A;
     padding: 0.75rem 1.25rem;
     border-radius: 0.375rem;
     font-size: 0.875rem;
