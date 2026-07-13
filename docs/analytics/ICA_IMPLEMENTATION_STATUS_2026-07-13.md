@@ -13,7 +13,7 @@ manifest, and production-origin checks.
 - Documentation/measurement closeout: `4fde053e0b09ffd23cc48fdec7cf369050c873c4` (`docs(ica): record production pilot baseline`).
 - Conservative measurement-clock start: `2026-07-13T17:17:25Z`.
 - This is an **instrumented fixed-route pilot**, not an A/B experiment and not evidence of causal lift.
-- No further production UI wiring is required for the original 10-route scope. The remaining work is measurement, mapping review, one operator-side analytics configuration item, and separately gated future phases.
+- No further production UI wiring is required for the original 10-route scope. The remaining work is post-rollout analytics reporting verification, mapping review, and separately gated future phases.
 
 The decision source is
 `docs/superpowers/specs/2026-07-13-mdg-ica-second-pass-v2.md`. The structured
@@ -212,28 +212,39 @@ contextual_action_arrival_rate
 For download/lead resources, retain the existing destination-side
 instrumentation; do not rename an informational proxy to "task success."
 
-### Current analytics limitation: exact CTA-slot reporting is not yet wired
+### GA4 custom-dimension configuration: registration verified; event-data availability pending
 
-The front end already emits `cta_id`, but it is **not registered as a GA4
-custom dimension**. Consequently:
+The front end emits `cta_id`. An operator-provided GA4 Admin screenshot,
+recorded in `docs/analytics/ICA_GA4_CONFIGURATION_EVIDENCE_2026-07-13.md`,
+shows that the custom dimension is already registered:
 
-- Page-level aggregate `cta_view` is reportable now.
-- Exact exposure reporting split by individual editorial vs. contextual CTA is
-  not reportable in the GA4 UI/API yet.
-- This is an operator-side GA4 configuration step, not an application-code
-  change and not a reason to add an event taxonomy.
+| Dimension display name | Scope | Event parameter | Last changed |
+|---|---|---|---|
+| `cta_id` | Event | `cta_id` | Jul 12, 2026 |
+
+Consequently:
+
+- Creating the custom definition is **not** remaining ICA work.
+- The pilot needs a post-rollout reporting check to establish that `cta_view`
+  rows carrying the new ICA values are available and can be segmented by
+  `cta_id` in the GA4 UI/Data API.
+- The screenshot proves configuration, not event delivery, retained event data,
+  Data API response shape, or a user-behavior result.
+- No application-code change or new GA4 event taxonomy is indicated.
 
 ## Remaining work, in order
 
 ### A. Required to make the pilot measurable
 
-1. **Register `cta_id` in GA4 as an event-scoped custom dimension.**
-   - Owner: operator with GA4 Admin permission.
-   - Parameter name must be exactly `cta_id` (the emitted event parameter),
-     not a display-name surrogate.
-   - No code change or new GA4 event is required.
-   - After registration and post-registration event collection, verify that
-     `cta_id` can segment `cta_view` in GA4/Data API reporting.
+1. **Verify post-rollout `cta_view` reporting by `cta_id`.**
+   - Query or inspect GA4 after ICA pilot events have had time to process.
+   - Confirm that `cta_view` includes the emitted `editorial-next-*` and
+     `contextual-action-*` values and that the custom dimension can segment
+     them.
+   - Use DebugView or a GA4/Data API report; do not treat the configuration
+     screenshot alone as delivery evidence.
+   - If the values do not surface, investigate event delivery/processing before
+     changing implementation or creating another event.
 
 2. **Collect a settled post-rollout observation window.**
    - Use the measurement clock above; do not backdate treatment exposure.

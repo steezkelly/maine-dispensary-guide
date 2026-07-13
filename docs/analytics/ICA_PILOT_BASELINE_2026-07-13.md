@@ -18,7 +18,7 @@ Ship a 10-route instrumented pilot: six business dependency pages and four consu
 - GA4: same dates, pagePath/device/pageReferrer plus `page_engaged` and `cta_view` event probes.
 - GA4 query completed with zero API failures.
 - No `page_engaged` or `cta_view` rows exist in this settled window because this instrumentation was deployed after the window. Post-rollout event data is therefore the pilot baseline for those events.
-- `cta_id` is emitted but is not a registered GA4 custom dimension. Exact slot-level exposure reporting remains operator-gated; page-level aggregate `cta_view` is available without a new event taxonomy.
+- Correction recorded 2026-07-13: an operator-provided GA4 Admin screenshot shows `cta_id` is already registered as an Event-scoped custom dimension with event parameter `cta_id` (last changed Jul 12, 2026). The remaining reporting check is whether post-rollout ICA `cta_view` values are available and segmentable by that dimension; page-level aggregate `cta_view` needs no new event taxonomy. See `ICA_GA4_CONFIGURATION_EVIDENCE_2026-07-13.md`.
 
 ## Selected cohort
 
