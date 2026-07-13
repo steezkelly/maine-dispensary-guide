@@ -37,3 +37,69 @@
 
 - Live machine-readable worktree inventory: `node scripts/git/mdg-worktree-status.cjs --json`.
 - Branch inventory at this snapshot: `/tmp/mdg-remote-branch-triage-2026-07-13.json` (transient analysis output; its final reconciled decisions belong in a committed branch-triage manifest).
+
+## Resolution audit — 2026-07-13
+
+### Ground truth and recovery archive
+
+The exact primary-checkout inventory was repeated with NUL-delimited porcelain output at local `HEAD` `3000897ce4140466014094b48fce45b360972838`:
+
+- 994 status entries total;
+- 924 tracked hero-image modifications;
+- 70 untracked entries: 60 image backups, 6 unreferenced cultivation-license trial variants, 2 session documents, `.hermes/`, and `.worktrees/`.
+
+Before cleanup, 992 file entries were copied into a durable recovery archive; the two remaining status entries are live agent/worktree directories and remain in place. Archive: `/home/steve/recoveries/mdg-primary-994-20260713/`.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `status.json` | `e3f09f1aa4a36ba9502d3756bc031d84255e2db5d6faa657edccc393dd773bf7` |
+| `tracked-heroes.patch` | `65cac161bb614b999b912c4707a819d9107efa1dd0ca089c36a92c16c71d0a2b` |
+| `dirty-files.tar.gz` (992 files) | `e90ef260c744b056147085de3ab65d5bc42d8574419312d65634e3b9eedeb072` |
+
+All three hashes were verified with `sha256sum -c`; the tar inventory contains exactly 992 paths.
+
+### Producer provenance recovered
+
+Session evidence identified the source as the user-requested MMX `image-01` blog-hero trial from 2026-07-13. That run intended 11 blog hero replacements plus one separate cultivation-license text-overlay experiment. It then ran the whole-directory `compress-heroes.cjs`, which re-encoded every hero JPG/WebP and created the 924-file tracked delta. `generate-mobile-variants.cjs` skips already-complete sets, so at least one replaced hero retained stale mobile/AVIF variants even though the earlier session reported six coherent files.
+
+Population-wide forensic checks found:
+
+- all 924 tracked images decode successfully;
+- aggregate bytes changed from 68,757,031 to 60,452,592 (−8,304,439 bytes);
+- only 12 logical bases showed replacement-scale pixel differences; the rest were incidental whole-directory recompression;
+- the prior dirty set left `maine-medical-marijuana-patient-guide` inconsistent across desktop/mobile/AVIF variants;
+- the untracked `maine-cannabis-cultivation-license-2026-text` set has zero source references;
+- the 60 `.bak` files are rollback/intermediate artifacts, not deployable source.
+
+### Selective source recovery
+
+A clean candidate was created from current `origin/main` in `/tmp/mdg-hero-recovery-20260713`. Four editorially defensible desktop JPGs were copied from the dirty source and all six variants were regenerated coherently (desktop and 640w JPG/WebP/AVIF):
+
+- `ibogaine-executive-order-2026`
+- `maine-medical-marijuana-patient-guide`
+- `terpene-guide-maine`
+- `terpene-preservation-maine-2026`
+
+Every selected set is 1280×720 desktop plus 640×360 mobile, all 24 files decode, all expected page references resolve, and minimum cross-variant PSNR is above 32 dB. The replacement fixes the stale mobile/AVIF mismatch on `maine-medical-marijuana-patient-guide` rather than preserving the interrupted producer state.
+
+Seven generated candidates were rejected by direct full-resolution media QA plus independent editorial review and restored from `origin/main` in the clean candidate:
+
+- `best-maine-dispensaries-2026`: generic invented commercial streetscape with no identifiable dispensary risks presenting synthetic Maine documentary imagery;
+- `maine-cannabis-coa-2026`: generated fake certificate contains malformed/gibberish text and can be mistaken for YMYL documentary evidence;
+- `maine-cannabis-social-equity`: empty unlabeled storefront has no people, cannabis, or social-equity concept and could be mistaken for a real featured business;
+- `maine-psilocybin-2026`: generic woodland mushrooms have no recognizable psilocybin characteristics, creating species ambiguity on a legal/research guide;
+- `ocp-license-map`: gavel plus bagged cannabis implies criminal enforcement and does not represent a license map or licensed-store inventory;
+- `maine-medical-delivery`: an anonymous paper bag is too ambiguous to communicate medical cannabis delivery;
+- `maine-cannabis-wholesale-guide-2026`: a generic `SOLD` storefront fits the secondary acquisition page but misrepresents the primary wholesale/B2B guide that shares the asset.
+
+The local-only `3000897c` content commit is preserved by existing branch refs but is not integrated: `git cherry` shows it is unique, its parent is stale, and the current tracked passdown explicitly flags its count assumption for review. The two untracked session documents are archived; the local July 13 copy is an older, truncated version of the tracked `origin/main` document, and the July 12 document is historical task state rather than current source of truth.
+
+### Exact 994-entry disposition
+
+| Disposition | Count | Evidence |
+| --- | ---: | --- |
+| Intentional tracked image output recovered | 22 | Six dirty variants each for three selected heroes, plus four dirty JPG/WebP variants (desktop and 640w) for the patient-guide replacement. The clean candidate intentionally adds/regenerates the two corresponding AVIF variants, yielding 24 coherent files. |
+| Tracked image output rejected/restored | 902 | 42 files from seven editorially rejected generated candidates plus 860 incidental whole-directory re-encodes. |
+| Backup/trial/session files archived then removed from primary | 68 | 60 `.bak` files, 6 unreferenced cultivation-license trial variants, 2 stale/historical session documents. |
+| Agent/worktree directories preserved and ignored by current main | 2 | `.hermes/`, `.worktrees/`; neither is source or deleted data. |
+| **Total** | **994** | Complete accounting; no unknown entry remains. |
