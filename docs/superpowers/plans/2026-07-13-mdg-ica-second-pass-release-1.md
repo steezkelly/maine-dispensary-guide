@@ -109,3 +109,19 @@ Run:
 - Existing event names only: `cta_view`, `page_view`, `page_engaged`.
 - Exact `cta_id` reporting requires operator-side registration of the already emitted parameter as a GA4 custom dimension; do not invent a replacement event.
 - First settled read: exposures, same-site referred arrivals, destination engagement, directory/tool/download behavior, duplication, accessibility, and performance.
+
+## Execution record — local verification
+
+- Initial RED: `node --test scripts/continuation/tests/ica-release-1.test.cjs` exited 1 before the registries, components, and layout mode existed.
+- Reduced-motion RED: after independent review identified inherited global link animation, the focused component test exited 1 until both links and their `::after` pseudo-elements received `prefers-reduced-motion: reduce` overrides.
+- Empty-wrapper RED: second-pass review found four blank legacy continuation containers and one FAQ rendered after `</Layout>`; source and built-output tests failed until empty containers/CSS were removed and the FAQ was moved inside the answer slot.
+- Duplicate-rail RED: final review found non-empty manual `Continue reading` / `further-reading` rails on two consumer pages; source and built-output tests failed until those rails were removed and factual source lists were renamed `external-resources`.
+- GREEN: `npm run test:continuation` passes 6/6.
+- Built-output guard: `npm run test:continuation:built` validates all 10 rendered pilot routes plus one legacy guide and one legacy blog control; it runs after `npm run build` in CI.
+- Build: `npm run build` generated 279 pages.
+- Rendered browser audit: 20 route/viewport combinations (10 routes × desktop/mobile) produced 0 critical, serious, moderate, or minor axe WCAG 2.1 A/AA findings; each had one editorial slot, one action slot, one discovery rail, correct order, no horizontal overflow, and a visible 44px action target.
+- Keyboard probe: both new links entered the tab order, matched `:focus-visible`, showed a 3px outline, and measured 44px high on mobile.
+- Analytics probe: the existing `cta_view` observer emitted `editorial-next-license-to-opt-in` and `contextual-action-license-launch-checklist`; the existing 30-second timer emitted `page_engaged`.
+- Visual inspection: desktop and 390px mobile module captures showed readable text, visible CTA labels, distinct editorial/action treatments, and no clipping or overlap.
+
+Production and post-deploy evidence remain intentionally absent until the branch is committed, pushed, deployed, and fetched from the canonical origin.

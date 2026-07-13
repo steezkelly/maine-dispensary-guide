@@ -18,6 +18,10 @@ import PineTree from '@network/ui/PineTree';
 import Leaf from '@network/ui/Leaf';
 import GuideSidebar from '@network/ui/GuideSidebar';
 import RelatedArticles from '@network/ui/RelatedArticles';
+import AutoRelated from '../components/AutoRelated.astro';
+import LegacyLeadCapture from '../components/LegacyLeadCapture.astro';
+import EditorialNextStep from '../components/continuation/EditorialNextStep.astro';
+import ContextualAction from '../components/continuation/ContextualAction.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import BaseHead from './BaseHead.astro';
@@ -78,6 +82,7 @@ interface Props {
   noindex?: boolean;
   topics?: string[];
   tags?: string[];
+  continuationMode?: 'legacy' | 'pilot';
   /**
    * Optional cross-page canonical. When set, the rendered `<link rel="canonical">`
    * (and hreflang alternates) point at this URL instead of the page's own
@@ -101,6 +106,7 @@ const {
   noindex = false,
   topics = [],
   tags = [],
+  continuationMode = 'legacy',
   canonicalOverride
 } = Astro.props;
 
@@ -500,12 +506,18 @@ const breadcrumbListJsonLd = breadcrumbListSchema
                 )}
               </div>
             )}
-            <div class="lead-capture-box">
-              <h3>Get the 2026 Maine Launch Checklist</h3>
-              <p>Download our step-by-step roadmap. 100% Free.</p>
-              <a href="/download-checklist" class="btn-cta lcb-cta-btn" data-mode-context="page">Download PDF Checklist &rarr;</a>
-            </div>
-            <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
+            {continuationMode === 'pilot' ? (
+              <>
+                <EditorialNextStep currentPath={Astro.url.pathname} />
+                <ContextualAction currentPath={Astro.url.pathname} />
+                <AutoRelated currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} limit={6} />
+              </>
+            ) : (
+              <>
+                <LegacyLeadCapture />
+                <RelatedArticles currentPath={Astro.url.pathname} currentTopics={topics} section={article?.section} />
+              </>
+            )}
             {authorRecord && (
               <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>
                 <div class="author-footer-card">
@@ -550,6 +562,13 @@ const breadcrumbListJsonLd = breadcrumbListSchema
                 </span>
               )}
             </div>
+          )}
+          {article && continuationMode === 'pilot' && (
+            <>
+              <EditorialNextStep currentPath={Astro.url.pathname} />
+              <ContextualAction currentPath={Astro.url.pathname} />
+              <AutoRelated currentPath={Astro.url.pathname} currentTopics={topics} section={article.section} limit={6} />
+            </>
           )}
           {article && authorRecord && (
             <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>

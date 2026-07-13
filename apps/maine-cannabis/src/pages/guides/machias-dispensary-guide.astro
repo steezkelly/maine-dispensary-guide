@@ -1,5 +1,4 @@
 ---
-import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -8,9 +7,9 @@ const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Ma
 const topics = ["city", "market"];
 const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Machias, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Machias has dispensaries including Indian Trail Farms and Lake Smoke Farm, both serving medical and adult-use customers. The town is the county seat of Washington County and the primary retail hub for the rural Down East coast."}},{"@type":"Question","name":"What is the closest dispensary to Machias?","acceptedAnswer":{"@type":"Answer","text":"In town: Indian Trail Farms and Lake Smoke Farm. For a broader selection, Calais (~30 min NE) has additional dispensaries. Ellsworth is roughly 65 mi SW on US-1."}},{"@type":"Question","name":"Does Machias allow recreational cannabis?","acceptedAnswer":{"@type":"Answer","text":"Yes. Machias permits adult-use cannabis retail. Indian Trail Farms and Lake Smoke Farm both serve 21+ recreational customers in addition to MMMP cardholders."}},{"@type":"Question","name":"What is Machias Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Machias is the county seat of Washington County — Maine's easternmost county and one of its most rural, with only ~31,000 residents across 2,563 sq mi. The town is known for the University of Maine at Machias, the historic Burnham Tavern (built 1770, site of the first naval battle of the American Revolution in 1775), and the Machias River, famous for its wild Atlantic salmon fishery."}}]});
 ---
-<Layout title="Machias, ME Dispensary Guide — Indian Trail Farms & Lake Smoke Farm 2026" description="Machias, Maine dispensary guide. Indian Trail Farms, Lake Smoke Farm — Washington County's Down East cannabis retail hub for 2026." heroImage="/images/heroes/machias-dispensary-guide.jpg" article={article} topics={topics} >
+<Layout title="Machias, ME Dispensary Guide — Indian Trail Farms & Lake Smoke Farm 2026" description="Machias, Maine dispensary guide. Indian Trail Farms, Lake Smoke Farm — Washington County's Down East cannabis retail hub for 2026." heroImage="/images/heroes/machias-dispensary-guide.jpg" article={article} topics={topics}  continuationMode="pilot">
 <style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:rgba(88,129,87,.05);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
+  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:rgba(88,129,87,.1);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}
 </style>
 
 <article>
@@ -76,11 +75,6 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 <!-- see-also-nearby-peers -->
   </section>
 
-<section>
-    <div class="further-reading">
-      <AutoRelated currentPath="/guides/machias-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
-    </div>
-  </section>
 
   <section class="faq-section">
     <h2>Frequently Asked Questions</h2>

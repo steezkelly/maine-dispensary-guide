@@ -36,11 +36,17 @@ jobs:
       - name: Test image pipeline hero variants
         run: npm run test:image-pipeline
 
+      - name: Test ICA continuation guardrails
+        run: npm run test:continuation
+
       - name: Type check
         run: npx astro check
 
       - name: Build
         run: npm run build
+
+      - name: Verify built ICA continuation output
+        run: npm run test:continuation:built
 
       # Asserts the build is pure static (no SSR function bundle).
       # The previous check asserted the OPPOSITE shape (functions/_render.func/.vc-config.json

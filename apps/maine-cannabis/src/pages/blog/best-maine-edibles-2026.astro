@@ -1,5 +1,4 @@
---- 
-import AutoRelated from '../../components/AutoRelated.astro';
+---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -44,7 +43,7 @@ const faqPageSchema = {
   heroImage="/images/heroes/best-maine-edibles-2026.jpg"
   article={article}
   topics={topics}
->
+ continuationMode="pilot">
 <style>
   article { max-width: 720px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
@@ -60,8 +59,7 @@ const faqPageSchema = {
   .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
   .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
-  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+
   blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: rgba(88, 129, 87, 0.05); border-radius: 0 0.5rem 0.5rem 0; }
   .operator-card { background: rgba(88, 129, 87, 0.05); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
   .operator-card h3 { margin-top: 0; color: var(--color-text); font-family: var(--font-serif); }
@@ -327,26 +325,6 @@ const faqPageSchema = {
     <Faq faqs={faqItems} />
   </section>
 
-  <section class="related-content">
-    <h2>Continue reading</h2>
-    <ul>
-      <li><a href="/guides/cannabis-microdosing-anxiety-maine">Cannabis Microdosing for Anxiety — Maine Guide</a> — research-anchored 1–5 mg titration protocol with the Maine regulatory frame and biphasic dose-response.</li>
-      <li><a href="/guides/maine-out-of-state-patient-reciprocity">Out-of-State Medical Cannabis Patients in Maine</a> — if you're visiting from out of state and holding a medical card, here's how Maine's reciprocity works.</li>
-    </ul>
-  </section>
-
-  <section class="further-reading">
-    <h2>Read More from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/blog/best-maine-dispensaries-2026">Best Maine Dispensaries 2026</a> — 12 stores worth the drive</li>
-      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Maine Dispensary 2026</a> — ounce and eighth price guide</li>
-      <li><a href="/blog/best-live-rosin-maine">Best Live Rosin in Maine 2026</a> — solventless concentrates buyer's guide</li>
-      <li><a href="/guides/maine-cannabis-edibles-compliance">Maine Cannabis Edibles Compliance</a> — Title 28-B rules, packaging, and labeling</li>
-      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator & Maine Dosing Guide (2026)</a> — Title 28-B §703(1)(F) per-serving and per-package limits, beginner-to-experienced dose chart, onset times, overconsumption management</li>
-      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market Guide</a> — sales, license, and tax data</li>
-      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
-    </ul>
-  </section>
 
   <section class="disclaimer">
     <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute medical, legal, or purchasing advice. Cannabis edibles affect individuals differently based on body chemistry, tolerance, food intake, and other factors. Start with a low dose (2.5-5mg THC) and wait at least two hours before considering more. Do not drive or operate machinery after consuming cannabis. Consult a qualified physician before combining cannabis with any prescription medication. Cannabis products and operator menus change frequently; verify current availability and dosing directly with the dispensary before purchasing. Maine Dispensary Guide has no commercial relationship with any operator or brand mentioned in this article. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent.</em></p>
@@ -360,5 +338,5 @@ const faqPageSchema = {
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside><AutoRelated currentPath="/blog/best-maine-edibles-2026" currentTopics={['edibles', 'consumer-guide', 'best-of']} section="Consumer Guide" limit={6} /></article>
+  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
 </Layout>

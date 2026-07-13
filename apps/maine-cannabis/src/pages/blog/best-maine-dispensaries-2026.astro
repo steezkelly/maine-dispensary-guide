@@ -1,5 +1,4 @@
---- 
-import AutoRelated from '../../components/AutoRelated.astro';
+---
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -38,13 +37,13 @@ const faqPageSchema = {
 };
 ---
 
-<Layout 
+<Layout
   title="Best Maine Dispensaries in 2026: 12 Stores Worth the Drive by Region"
   description="A region-by-region guide to the best adult-use and medical dispensaries in Maine in 2026 — what each store carries, what makes it stand out, and which one fits your drive."
   heroImage="/images/heroes/best-maine-dispensaries-2026.jpg"
   article={article}
   topics={topics}
->
+ continuationMode="pilot">
 <style>
   article { max-width: 720px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
@@ -60,8 +59,7 @@ const faqPageSchema = {
   .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
   .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
   .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
-  .further-reading { background: rgba(88, 129, 87, 0.05); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+
   .fact-box { background: rgba(88, 129, 87, 0.1); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
   .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
   .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
@@ -389,21 +387,6 @@ const faqPageSchema = {
     <Faq faqs={faqItems} />
   </section>
 
-  <section class="further-reading">
-    <h2>Read More from Maine Dispensary Guide</h2>
-    <ul>
-      <li><a href="/blog/cheapest-maine-dispensary-2026">Cheapest Dispensary in Maine 2026</a> — where to find the best ounce and eighth prices</li>
-      <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia National Park</a> — Bar Harbor and Ellsworth visitor's guide</li>
-      <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market Guide</a> — sales data, license counts, regional patterns</li>
-      <li><a href="/guides/portland-dispensary-guide">Portland Dispensary Guide</a> — 23 stores in Greater Portland</li>
-      <li><a href="/guides/bangor-dispensary-guide">Bangor Dispensary Guide</a> — the Penobscot regional market</li>
-      <li><a href="/guides/ellsworth-dispensary-guide">Ellsworth Dispensary Guide</a> — Downeast mainland market</li>
-      <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a> — Acadia gateway market</li>
-      <li><a href="/guides/presque-isle-dispensary-guide">Presque Isle Dispensary Guide</a> — Aroostook County market</li>
-      <li><a href="/find-a-dispensary">Find a Maine Dispensary</a> — current dispensary directory</li>
-      <li><a href="/directory">Maine Dispensary Directory</a> — all licensed stores</li>
-    </ul>
-  </section>
 
   <section class="disclaimer">
     <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute legal or purchasing advice. Cannabis retail operations and inventory in Maine change frequently — dispensary hours, product menus, ownership, and licensing status should be verified directly with each operator and with the Maine Office of Cannabis Policy (OCP) before visiting. Maine Dispensary Guide has no commercial relationship with any of the dispensaries listed in this article. No payment, sponsorship, or promotional consideration was provided by any operator in exchange for inclusion. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent. Do not drive under the influence of cannabis.</em></p>
@@ -417,6 +400,6 @@ const faqPageSchema = {
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside><AutoRelated currentPath="/blog/best-maine-dispensaries-2026" currentTopics={['best-dispensaries', 'regional', 'maine-market']} section="Market Analysis" limit={6} /></article>
+  <aside class="consumer-hub-callout" style="background: rgba(88, 129, 87, 0.06); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
 
 </Layout>
