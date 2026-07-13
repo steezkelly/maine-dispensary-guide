@@ -4,8 +4,9 @@
 **Author:** Hermes (parent agent)
 **Spec source:** `/home/steve/Documents/mdg-analytics-intelligence-package-v0.5/`
 **Repo:** `/home/steve/projects/maine-dispensary-guide` @ `60bc8641`
-**Supersedes:** `MDG-ANALYTICS-001-TICKET-STATUS-SURVEY-2026-07-12.md`
-**Trigger:** Operator identified two contradictions in the prior survey:
+**Superseded by:** the current Ticket Status Survey for readiness and closure.
+**Historical reconciliation snapshot:** This document preserves its original source-evidence findings. It does not establish current Ticket 007 gate status, release readiness, or optimization authority.
+
 1. Ticket 006 says GA4→BigQuery is "live since 2026-07-08" but the prior survey asked the operator to enable it.
 2. The prior survey collapsed Vercel A4 (Web Analytics REST API) and A5 (Speed Insights — no read REST API, Vercel Drain only) into a single combined token scope.
 
