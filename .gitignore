@@ -97,6 +97,11 @@ pitches/webform-sent-log.json
 # Engineering-skills workflow state (operational, regenerated per session)
 .scratch/
 
+# Agent-local orchestration state; never source or release material
+.worktrees/
+.agents/leases/
+.hermes/
+
 # MDG-DATA-001 Maine Cannabis Data Engine (MDG-DATA-001 v0.5)
 # Operational state lives in $MDG_DATA_ROOT (default ~/.hermes/data/mdg-data),
 # outside the repository, so ignore the local shadow in case anyone runs
