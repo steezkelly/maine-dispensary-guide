@@ -15,6 +15,7 @@ node -e "require('fs').rmSync('.vercel/output',{recursive:true,force:true})"
 # and is then copied to ../../dist by the subsequent cp step.
 cd ../..
 node apps/maine-cannabis/scripts/admin/sprint-score.cjs --write-public 2>&1 | tail -10 || echo "sprint-score: skipped (non-fatal)"
+node scripts/build/write-build-info.cjs
 cd "$(dirname "$0")/apps/maine-cannabis"
 
 NODE_PATH=../../node_modules npx astro build
