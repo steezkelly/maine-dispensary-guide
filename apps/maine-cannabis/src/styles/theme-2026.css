@@ -82,7 +82,7 @@
   --color-text-light: #B5C5B0;       /* readable secondary */
   --color-border: #1E3627;
 
-  --color-link: #B5D0A8;             /* bright sage — fixes dark-mode pain */
+  --color-link: #C4E2B0;             /* brighter sage — was #B5D0A8, was failing WCAG on tinted cards (1.02:1) */
   --color-link-hover: #D4E4C6;
 
   /* On-surface foreground tokens — see light block for rationale.
@@ -95,6 +95,18 @@
   --color-on-surface-elev: var(--color-text);
   --color-on-tag-fill: #0B1A14;        /* dark text on pale-sage tag chip in dark mode */
   --color-on-secondary: #F4F1E4;       /* cream text on dark navy secondary panel (constant both modes) */
+
+  /* .btn-cta override: View Vendor Directory and similar sidebar CTAs
+     sit on white cards in LIGHT mode, so the text must be dark spruce.
+     In DARK mode the global .btn-cta surfaces (.lead-capture-box, footer
+     CTA, Layout hero secondary CTA) sit on the dark page background
+     --color-background = #0B1A14, where dark-spruce text disappears. The
+     :where() / explicit dark-mode override below swaps to cream. The
+     light-mode !important beats the link rule (which has very high
+     specificity via multiple :not() selectors). */
+  .btn-cta { color: #0E1A14 !important; }
+  [data-theme="dark"] .btn-cta { color: #F4F1E4 !important; }
+  [data-theme="dark"] html .btn-cta { color: #F4F1E4 !important; }
 
   /* Dark elevation: deeper shadows, more pronounced */
   --elev-1-shadow: inset 0 1px 0 rgba(168,196,154,.06), 0 1px 2px rgba(0,0,0,.4), 0 6px 16px rgba(0,0,0,.4);
@@ -115,12 +127,17 @@ html[data-theme] body {
 }
 
 /* =============================================================================
-   LINK STYLES — fixes the dark-mode readability issue at the global level
-   ============================================================================= */
-html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link),
+   LINK STYLES — fixes the dark-mode readability issue at the global level.
+   The :not(.btn-cta):not(.tour-slide-cta):not(.hero-secondary-cta) carve-outs
+   prevent the link-color rule from painting these button-like CTAs. Each of
+   those has its own color rule (cream-on-dark for .tour-slide-cta,
+   dark-spruce-on-pale-sage or cream-on-dark-green for .hero-secondary-cta,
+   dark-spruce-on-white for .btn-cta) and the link rule's pale-sage or
+   mid-green text otherwise bleeds through and breaks WCAG-AA. */
+html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta),
 html[data-theme] .article-content a,
 html[data-theme] .guide-content a,
-html[data-theme] section a:not(.btn):not(.button) {
+html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta) {
   color: var(--color-link);
   text-decoration: underline;
   text-decoration-color: color-mix(in oklab, var(--color-link) 35%, transparent);

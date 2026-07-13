@@ -534,10 +534,11 @@ const journeySteps = [
 
   /* =============================================================
      TOUR CAROUSEL — static-first homepage resource tour
-     Theme-pinned dark panel (same in both modes) so the section reads
-     as an editorial break. Without the pin, --color-primary-dark
-     flips from #143027 (light) to #DDE9C8 (dark) and the cream text
-     becomes invisible. */
+     Pinned to dark in BOTH themes so the section reads as an editorial
+     break instead of inverting with the page theme. The previous
+     gradient used var(--color-primary-dark) which flips pale-green in
+     dark mode, producing cream-on-pale-green text at 1.12:1.
+     --color-secondary (#101820) is constant in both modes. */
   .tour-carousel {
     background: var(--color-secondary);
     padding: 0;
@@ -553,7 +554,7 @@ const journeySteps = [
     background:
       radial-gradient(circle at 18% 20%, rgba(95, 126, 80, 0.42), transparent 28%),
       radial-gradient(circle at 82% 18%, rgba(244, 241, 228, 0.12), transparent 24%),
-      linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary-dark, #143027) 56%, var(--color-secondary) 100%);
+      linear-gradient(135deg, var(--color-secondary) 0%, #143027 56%, var(--color-secondary) 100%);
     overflow: hidden;
   }
   .tour-slides {
