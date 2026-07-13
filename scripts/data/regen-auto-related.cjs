@@ -91,6 +91,8 @@ function extractTitle(text, fm) {
     if (m2) return m2[1];
     const h1 = text.match(/<h1[^>]*>([^<]+)<\/h1>/);
     if (h1) return h1[1].trim();
+    const layout = text.match(/<Layout\b[^>]*\btitle\s*=\s*(['"])(.*?)\1/);
+    if (layout) return layout[2];
     return path.basename(text, '.astro').replace(/-/g, ' ');
 }
 
@@ -334,4 +336,8 @@ function main() {
     console.log(`✓ Wrote ${items.length} items to ${path.relative(REPO, DATA_FILE)}`);
 }
 
-main();
+if (require.main === module) {
+    main();
+}
+
+module.exports = { extractTitle };
