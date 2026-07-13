@@ -48,6 +48,14 @@ npm run verify:push                  # adds smoke-200 + smoke-img-200 against pr
 - Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of sprint, or once before deploy if `verify:push` smoke passes.
 - The pre-push hook (`.githooks/pre-push`) runs `verify:push` automatically on `git push`. If it fails, that means `verify:push` failed locally — fix and re-push.
 
+### Autonomous worktree protocol
+
+Before editing, run `npm run workflow:status`; before creating a branch or integrating, run `npm run workflow:status:fetch`. Do not use the primary checkout as an integration surface: create a named worktree from freshly fetched `origin/main`, then work on one coherent change set only.
+
+For changes that touch shared source paths, write an ignored lease under `.agents/leases/` containing agent, branch, absolute worktree path, paths, `startedAt`, and `expiresAt`. Remove or expire that lease once the branch is committed and handed to integration. A lease conflict or expired lease blocks automatic edits until it is reconciled.
+
+Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
+
 **File-scoped validation (use for one-off checks, not iteration):**
 ```bash
 npx astro check src/pages/guides/example.astro   # Type check single file
