@@ -101,8 +101,12 @@ body {
   }
 }
 
-/* === Typography === */
-h1, h2, h3, h4 { font-family: var(--font-serif); color: var(--color-primary); }
+/* === Typography ===
+   h1/h2/h3/h4 get color from their own per-page rules (or inherit
+   --color-text via html { color: var(--color-text) }). The global
+   "h1-h4 { color: var(--color-primary) }" rule was removed 2026-07-13
+   because --color-primary flips to pale-sage in dark mode, producing
+   green-on-green headings across every page. */
 
 h1 {
   font-size: 3rem;
@@ -115,6 +119,7 @@ h2 {
   line-height: 1.25;
   letter-spacing: -0.01em;
   position: relative;
+  color: var(--color-text);
 }
 h2::before {
   content: '';

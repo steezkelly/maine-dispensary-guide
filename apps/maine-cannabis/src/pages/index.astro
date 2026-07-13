@@ -295,12 +295,20 @@ const journeySteps = [
     flex-wrap: wrap;
   }
 
-  .btn-primary {
+  /* Hero CTA buttons — bone chip with dark-spruce text in BOTH modes.
+     This is intentional contrast inversion: the hero gradient flips from
+     dark-green in light mode to bright sage in dark mode, so a chip
+     that contrasts with BOTH backgrounds is needed. Bone (var(--color-background))
+     works in light (against dark hero) and in dark (against pale hero) with
+     dark-spruce text holding the contrast. The dark-spruce literal is used
+     directly because Astro's CSS pipeline strips per-component custom
+     property declarations from scoped blocks. */
+  html .hero-manifesto .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
     background: var(--color-background);
-    color: var(--color-cream-ink);
+    color: #0E1A14;
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
     font-weight: 700;
@@ -309,23 +317,17 @@ const journeySteps = [
     transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
   }
 
-  .btn-primary:hover {
+  html .hero-manifesto .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   }
 
-  .btn-ghost {
+  html .hero-manifesto .btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    /* Steve's brother flagged: button appeared transparent on the deep-spruce
-       hero, so the bone text floated without an anchor. Give it a SOLID bone
-       fill (same pattern as .btn-primary) so it reads as a real button.
-       In dark mode the hero gradient swaps to bright sage — bone on sage
-       would clash, so the is:global override below swaps to a dark-spruce
-       chip with cream text. */
-    color: var(--color-cream-ink);
-    background: #F2F2E2;
+    color: #0E1A14;
+    background: var(--color-background);
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
     font-weight: 700;
@@ -333,26 +335,40 @@ const journeySteps = [
     text-decoration: none;
     transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
   }
-
-  .btn-ghost:hover {
+  html .hero-manifesto .btn-ghost:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     background: #FFFFFF;
   }
 
-  .hero-secondary-cta {
+  html .hero-manifesto .hero-secondary-cta {
     display: inline-block;
     margin-top: var(--space-sm);
     font-size: var(--text-sm);
     font-weight: 600;
-    /* Same issue as .btn-ghost — hard-code bone, override per-mode below. */
-    color: #F2F2E2;
-    text-decoration: none;
-    transition: color 0.2s;
+    color: #F4F1E4;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    text-decoration-color: rgba(244, 241, 228, 0.5);
+    transition: color 0.2s, text-decoration-color 0.2s;
   }
 
-  .hero-secondary-cta:hover {
+  html .hero-manifesto .hero-secondary-cta:hover {
     color: #FFFFFF;
+    text-decoration-color: #FFFFFF;
+  }
+
+  /* Dark mode: hero gradient flips to pale sage. The bone secondary-cta
+     becomes invisible against pale green, so swap to dark-spruce with
+     dark-spruce underline. The html[data-theme=dark] prefix wins over
+     the lighter rule above. */
+  html[data-theme="dark"] .hero-manifesto .hero-secondary-cta {
+    color: #0E1A14;
+    text-decoration-color: rgba(14, 26, 20, 0.5);
+  }
+  html[data-theme="dark"] .hero-manifesto .hero-secondary-cta:hover {
+    color: #000000;
+    text-decoration-color: #000000;
   }
 
   .hero-visual {
@@ -553,7 +569,7 @@ const journeySteps = [
     display: grid;
     align-items: end;
     padding: clamp(2rem, 5vw, 5rem);
-    color: var(--color-on-primary-dark);
+    color: var(--color-on-secondary);
   }
   .tour-slide::before {
     content: "";
@@ -585,7 +601,7 @@ const journeySteps = [
   .tour-slide p {
     max-width: 620px;
     margin: 0 0 1.5rem;
-    color: var(--color-on-primary-dark);
+    color: var(--color-on-secondary);
     opacity: 0.92;
     font-size: clamp(1rem, 1.6vw, 1.2rem);
     line-height: 1.7;
@@ -623,19 +639,19 @@ const journeySteps = [
   .tour-control {
     width: 2.75rem;
     height: 2.75rem;
-    border: 1px solid var(--color-on-primary-dark);
+    border: 1px solid var(--color-on-secondary);
     border-radius: 999px;
     background: rgba(14, 26, 20, 0.5);
-    color: var(--color-on-primary-dark);
+    color: var(--color-on-secondary);
     cursor: pointer;
     font: inherit;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
   .tour-control:hover,
   .tour-control:focus-visible {
-    background: var(--color-on-primary-dark);
+    background: var(--color-on-secondary);
     color: var(--color-secondary);
-    border-color: var(--color-on-primary-dark);
+    border-color: var(--color-on-secondary);
   }
   .tour-dots {
     position: absolute;
@@ -648,7 +664,7 @@ const journeySteps = [
   .tour-dot {
     width: 0.75rem;
     height: 0.75rem;
-    border: 1px solid var(--color-on-primary-dark);
+    border: 1px solid var(--color-on-secondary);
     border-radius: 999px;
     background: transparent;
     cursor: pointer;
@@ -656,8 +672,8 @@ const journeySteps = [
     opacity: 0.55;
   }
   .tour-dot[aria-current="true"] {
-    background: var(--color-on-primary-dark);
-    border-color: var(--color-on-primary-dark);
+    background: var(--color-on-secondary);
+    border-color: var(--color-on-secondary);
     opacity: 1;
   }
   @media (max-width: 720px) {
@@ -2268,26 +2284,10 @@ const journeySteps = [
   html[data-theme="dark"] .ops-closing {
     border-color: var(--color-border);
   }
-  /* Hero controls in dark mode: the hero gradient uses var(--color-primary)
-     which flips to bright sage in dark, but the bone-white text from the
-     light-mode rules sits on sage and fails WCAG. The theme-2026 link rule
-     ([data-theme] section a:not(.btn)) also sets color via cascade, so
-     the override uses a more specific selector (html+section+class) to
-     win at specificity 0,3,1 vs theme-2026's 0,2,2. */
-  /* Hero controls in light mode: theme-2026's link-color rule
-     ([data-theme] section a:not(.btn)) cascades to the ghost button and
-     secondary cta, painting them with --color-link (deep spruce) — same
-     color as the hero gradient. The link rule accumulates very high
-     specificity (0,~6,~3) via :not(.btn) chains, so to win we anchor the
-     override with a specific class on <a> AND !important for this known
-     hero-only override. */
-  html[data-theme="light"] section.hero-manifesto a.btn-ghost:hover {
-    background: #FFFFFF !important;
-  }
-  /* Dark mode overrides for hero-manifesto buttons removed 2026-07-13:
-     the bone-chip + dark-spruce text pattern now uses --color-cream-ink
-     (constant in both themes) so the buttons render correctly without
-     per-mode !important overrides. */
+  /* Old per-mode !important overrides for hero-manifesto buttons removed
+     2026-07-13: the bone-chip + dark-spruce text pattern now uses
+     scoped rules (html .hero-manifesto .btn-primary etc.) at the
+     source, not !important at the bottom of the file. */
   /* Full-page aurora: pinned to viewport, behind all content, with the
      component-rendered blobs slowly drifting. pointer-events: none so it
      never intercepts clicks; z-index: -1 so it sits behind everything. */
