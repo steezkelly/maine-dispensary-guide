@@ -42,6 +42,11 @@
   --color-on-surface: var(--color-text); /* text on light surface (resolves to dark in light, cream in dark) */
   --color-on-surface-elev: var(--color-text); /* text on raised card surface (surface-2) */
   --color-on-tag-fill: #FFFFFF;        /* text on solid .tag-badge fill (the badge bg uses --color-primary) */
+  /* Constant across both modes: dark spruce for text on cream/bone chips
+     (used by .btn-primary and .btn-ghost on the hero). The bone chip stays
+     the same in dark mode but its text must NOT follow the primary token
+     (which flips to pale sage) — that produces green-on-green in dark. */
+  --color-cream-ink: #1F4D3A;
 
   /* Existing radii — slight bump for organic feel */
   --radius: 1rem;                    /* was 0.75rem */

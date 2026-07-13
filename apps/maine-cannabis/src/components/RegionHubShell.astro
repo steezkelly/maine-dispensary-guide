@@ -79,7 +79,7 @@ const faqJsonLd = JSON.stringify({
   .hub-section h2:first-child { margin-top: 0; }
   .hub-directory { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
   .hub-directory .hub-guide-card { background: var(--color-surface); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--color-border); }
-  .hub-directory .hub-guide-card h3 { margin: 0 0 0.5rem; font-family: var(--font-serif); font-size: 1.0625rem; color: var(--color-primary); }
+  .hub-directory .hub-guide-card h3 { margin: 0 0 0.5rem; font-family: var(--font-serif); font-size: 1.0625rem; color: var(--color-text); }
   .hub-directory .hub-guide-card p { margin: 0 0 0.85rem; font-size: 0.875rem; color: var(--color-text-light); line-height: 1.5; }
   .hub-guide-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .hub-btn-guide, .hub-btn-map { display: inline-flex; align-items: center; justify-content: center; min-height: 2.25rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 0.8125rem; }
@@ -164,7 +164,7 @@ const faqJsonLd = JSON.stringify({
 <style>
   .hub-faq-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
   .hub-faq-item { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1rem 1.25rem; }
-  .hub-faq-item summary { font-weight: 600; color: var(--color-primary); cursor: pointer; }
+  .hub-faq-item summary { font-weight: 600; color: var(--color-text); cursor: pointer; }
   .hub-faq-item p { margin: 0.75rem 0 0; color: var(--color-text-light); line-height: 1.6; }
 </style>
 
@@ -186,7 +186,7 @@ const faqJsonLd = JSON.stringify({
   </div>
 </section>
 
-<p class="hub-editorial-note"><strong>Editorial note.</strong> This is part of the Maine Dispensary Guide editorial corpus. Every material correction is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix. See <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">/about/authors</a> for the byline + reviewer pair.</p>
+<p class="hub-editorial-note"><strong>Editorial note.</strong> This is part of the Maine Dispensary Guide editorial corpus. Every material correction is documented in our public <a href="/about/corrections" style="color: var(--color-text); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix. See <a href="/about/authors" style="color: var(--color-primary); text-decoration: underline;">/about/authors</a> for the byline + reviewer pair.</p>
 
 {faqJsonLd !== '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[]}' && (
   <script type="application/ld+json" set:html={faqJsonLd} is:inline></script>

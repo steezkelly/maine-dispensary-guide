@@ -40,8 +40,8 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   .article-header h1 { margin-bottom: 0.5rem; }
   .lead { font-size: 1.25rem; color: var(--color-text-light); margin-top: 1rem; }
   section { margin-bottom: 3rem; }
-  section h2 { color: var(--color-primary); font-family: var(--font-serif); margin-bottom: 1rem; }
-  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-primary); }
+  section h2 { color: var(--color-text); font-family: var(--font-serif); margin-bottom: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text); }
   pre.code-block {
     background: #1a1a1a;
     color: #e8e8e8;
@@ -56,7 +56,7 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   pre.code-block code { color: #e8e8e8; }
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
   .stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
-  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--color-primary); font-family: var(--font-serif); line-height: 1; }
+  .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--color-text); font-family: var(--font-serif); line-height: 1; }
   .stat-card .label { font-size: 0.875rem; color: var(--color-text-light); margin-top: 0.5rem; }
   .embed-demo { background: var(--color-surface); border: 2px dashed var(--color-border); border-radius: 0.5rem; padding: 1.5rem; margin: 1rem 0; }
   .embed-demo table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
@@ -74,7 +74,7 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   .toc { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1.25rem; margin: 1.5rem 0; }
   .toc h2 { margin-top: 0; font-size: 1.125rem; }
   .toc ul { columns: 2; column-gap: 2rem; }
-  .toc a { text-decoration: none; color: var(--color-primary); }
+  .toc a { text-decoration: none; color: var(--color-text); }
   [data-theme="dark"] .pre.code-block { background: #0d0d0d; }
   [data-theme="dark"] .stat-card { background: var(--color-surface); }
 </style>

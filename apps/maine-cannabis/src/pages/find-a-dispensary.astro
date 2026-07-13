@@ -947,14 +947,14 @@ const directoryJsonLd = {
     .hero-badge { display: inline-block; background: var(--color-accent); color: var(--color-background); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
     .lead { font-size: 1.25rem; color: var(--color-text-light); max-width: 760px; margin: 0 auto; }
     .market-overview { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 2rem; padding: 3rem; margin-bottom: 5rem; }
-    .market-overview h2 { font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-primary); margin-top: 0; margin-bottom: 1.5rem; }
+    .market-overview h2 { font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-text); margin-top: 0; margin-bottom: 1.5rem; }
     .market-overview p { font-size: 1rem; color: var(--color-text-light); line-height: 1.8; margin-bottom: 1rem; }
     .market-overview p:last-child { margin-bottom: 0; }
     .region-directory { display: flex; flex-direction: column; gap: 4.5rem; margin-bottom: 6rem; }
     .region-section h2 { margin: 0 0 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); }
     .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
     .guide-card { background: var(--color-surface); padding: 1.5rem; border-radius: 1.25rem; border: 1px solid var(--color-border); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02); }
-    .guide-card h3 { margin-top: 0; margin-bottom: 0.75rem; font-family: var(--font-serif); color: var(--color-primary); }
+    .guide-card h3 { margin-top: 0; margin-bottom: 0.75rem; font-family: var(--font-serif); color: var(--color-text); }
     .guide-card p { color: var(--color-text-light); line-height: 1.6; margin-bottom: 1.25rem; }
     .guide-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .btn-map, .btn-guide { display: inline-flex; align-items: center; justify-content: center; min-height: 2.5rem; padding: 0.65rem 0.85rem; border-radius: 0.75rem; font-weight: 700; text-decoration: none; font-size: 0.85rem; }
@@ -967,7 +967,7 @@ const directoryJsonLd = {
     .ocp-source { font-size: 0.875rem; margin-top: 0.5rem; }
     .ocp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
     .ocp-card { background: var(--color-surface); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--color-border); }
-    .ocp-card h3 { margin: 0 0 0.5rem; font-size: 1.0625rem; font-family: var(--font-serif); color: var(--color-primary); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .ocp-card h3 { margin: 0 0 0.5rem; font-size: 1.0625rem; font-family: var(--font-serif); color: var(--color-text); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
     .ocp-tag { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.125rem 0.5rem; border-radius: 0.5rem; font-family: var(--font-sans); }
     .ocp-tag.au { background: var(--color-primary); color: var(--color-background); }
     .ocp-tag.med { background: rgba(88, 129, 87, 0.15); color: var(--color-primary); }
@@ -997,14 +997,14 @@ const directoryJsonLd = {
       <section class="region-section" aria-labelledby={`region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
         <h2 id={`region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
           {hubByName[region.name] ? (
-            <a href={hubByName[region.name]} style="color: var(--color-primary); text-decoration: none;">{region.name} ◆</a>
+            <a href={hubByName[region.name]} style="color: var(--color-text); text-decoration: none;">{region.name} ◆</a>
           ) : (
             region.name
           )}
         </h2>
         {hubByName[region.name] && (
           <p style="margin: -0.75rem 0 1.25rem; font-size: 0.875rem; color: var(--color-text-light);">
-            Browse the <a href={hubByName[region.name]} style="color: var(--color-primary); text-decoration: underline;">{region.name} regional hub</a> for the canonical directory, opt-in county breakdown, and (in Stage 2/3) the 2,000+ word editorial body.
+            Browse the <a href={hubByName[region.name]} style="color: var(--color-text); text-decoration: underline;">{region.name} regional hub</a> for the canonical directory, opt-in county breakdown, and (in Stage 2/3) the 2,000+ word editorial body.
           </p>
         )}
         <div class="guide-grid">

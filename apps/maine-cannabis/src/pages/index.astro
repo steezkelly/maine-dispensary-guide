@@ -300,7 +300,7 @@ const journeySteps = [
     align-items: center;
     gap: var(--space-xs);
     background: var(--color-background);
-    color: var(--color-primary);
+    color: var(--color-cream-ink);
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
     font-weight: 700;
@@ -324,7 +324,7 @@ const journeySteps = [
        In dark mode the hero gradient swaps to bright sage — bone on sage
        would clash, so the is:global override below swaps to a dark-spruce
        chip with cream text. */
-    color: var(--color-primary);
+    color: var(--color-cream-ink);
     background: #F2F2E2;
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
@@ -456,7 +456,7 @@ const journeySteps = [
     font-family: var(--font-serif);
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
     line-height: 1;
   }
   .live-panel-stat-label {
@@ -495,7 +495,7 @@ const journeySteps = [
     font-weight: 600;
   }
   .live-panel-foot a:hover {
-    color: var(--color-primary);
+    color: var(--color-text);
   }
   @media (max-width: 1100px) {
     .live-panel { width: 200px; right: 0; }
@@ -518,9 +518,12 @@ const journeySteps = [
 
   /* =============================================================
      TOUR CAROUSEL — static-first homepage resource tour
-     ============================================================= */
+     Theme-pinned dark panel (same in both modes) so the section reads
+     as an editorial break. Without the pin, --color-primary-dark
+     flips from #143027 (light) to #DDE9C8 (dark) and the cream text
+     becomes invisible. */
   .tour-carousel {
-    background: var(--color-primary-dark);
+    background: var(--color-secondary);
     padding: 0;
     margin: 0;
     border-top: 1px solid var(--color-accent);
@@ -533,8 +536,8 @@ const journeySteps = [
     min-height: clamp(360px, 46vw, 620px);
     background:
       radial-gradient(circle at 18% 20%, rgba(95, 126, 80, 0.42), transparent 28%),
-      radial-gradient(circle at 82% 18%, rgba(242, 242, 226, 0.12), transparent 24%),
-      linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 56%, var(--color-primary-dark) 100%);
+      radial-gradient(circle at 82% 18%, rgba(244, 241, 228, 0.12), transparent 24%),
+      linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary-dark, #143027) 56%, var(--color-secondary) 100%);
     overflow: hidden;
   }
   .tour-slides {
@@ -550,13 +553,13 @@ const journeySteps = [
     display: grid;
     align-items: end;
     padding: clamp(2rem, 5vw, 5rem);
-    color: var(--color-background);
+    color: var(--color-on-primary-dark);
   }
   .tour-slide::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(20, 48, 39, 0.86) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(14, 26, 20, 0.86) 100%);
     pointer-events: none;
   }
   .tour-slide-content {
@@ -582,7 +585,8 @@ const journeySteps = [
   .tour-slide p {
     max-width: 620px;
     margin: 0 0 1.5rem;
-    color: rgba(242, 242, 226, 0.88);
+    color: var(--color-on-primary-dark);
+    opacity: 0.92;
     font-size: clamp(1rem, 1.6vw, 1.2rem);
     line-height: 1.7;
   }
@@ -591,8 +595,8 @@ const journeySteps = [
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
-    background: var(--color-accent);
-    color: var(--color-background);
+    background: var(--color-background);
+    color: var(--color-cream-ink);
     text-decoration: none;
     border-radius: 0.5rem;
     font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
@@ -603,7 +607,8 @@ const journeySteps = [
   }
   .tour-slide-cta:hover,
   .tour-slide-cta:focus-visible {
-    background: var(--color-primary);
+    background: var(--color-on-primary-dark);
+    color: var(--color-secondary);
     transform: translateY(-1px);
   }
   .tour-controls {
@@ -618,18 +623,19 @@ const journeySteps = [
   .tour-control {
     width: 2.75rem;
     height: 2.75rem;
-    border: 1px solid rgba(242, 242, 226, 0.5);
+    border: 1px solid var(--color-on-primary-dark);
     border-radius: 999px;
-    background: rgba(6, 26, 27, 0.56);
-    color: var(--color-background);
+    background: rgba(14, 26, 20, 0.5);
+    color: var(--color-on-primary-dark);
     cursor: pointer;
     font: inherit;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
   .tour-control:hover,
   .tour-control:focus-visible {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
+    background: var(--color-on-primary-dark);
+    color: var(--color-secondary);
+    border-color: var(--color-on-primary-dark);
   }
   .tour-dots {
     position: absolute;
@@ -642,14 +648,17 @@ const journeySteps = [
   .tour-dot {
     width: 0.75rem;
     height: 0.75rem;
-    border: 1px solid rgba(242, 242, 226, 0.7);
+    border: 1px solid var(--color-on-primary-dark);
     border-radius: 999px;
     background: transparent;
     cursor: pointer;
     padding: 0;
+    opacity: 0.55;
   }
   .tour-dot[aria-current="true"] {
-    background: var(--color-background);
+    background: var(--color-on-primary-dark);
+    border-color: var(--color-on-primary-dark);
+    opacity: 1;
   }
   @media (max-width: 720px) {
     .tour-slide { padding: 2rem 1.25rem 5.5rem; }
@@ -703,7 +712,7 @@ const journeySteps = [
     font-family: var(--font-serif);
     font-size: var(--text-2xl);
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
     line-height: 1;
   }
 
@@ -761,7 +770,7 @@ const journeySteps = [
   .mission-title {
     font-family: var(--font-serif);
     font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0;
   }
 
@@ -1000,7 +1009,7 @@ const journeySteps = [
   }
 
   .ops-eyebrow {
-    color: var(--color-primary);
+    color: var(--color-text);
   }
 
   .ops-header h2 {
@@ -1092,7 +1101,7 @@ const journeySteps = [
     align-items: flex-end;
     font-size: 1.0625rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
     line-height: 1.1;
   }
   .mod-cost em {
@@ -1112,7 +1121,7 @@ const journeySteps = [
     margin: 0 0 var(--space-md) 0;
   }
   .mod-body a {
-    color: var(--color-primary);
+    color: var(--color-text);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -1124,7 +1133,7 @@ const journeySteps = [
     display: inline-block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-text);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-bottom-color 0.2s var(--ease-out);
@@ -1152,7 +1161,7 @@ const journeySteps = [
     font-family: var(--font-serif);
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
     line-height: 1;
   }
   .ops-hero-stat-label {
@@ -1185,7 +1194,7 @@ const journeySteps = [
     display: inline-block;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    color: var(--color-primary);
+    color: var(--color-text);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: var(--text-sm);
@@ -1313,13 +1322,13 @@ const journeySteps = [
   }
 
   .hub-card:hover .hub-icon svg {
-    color: var(--color-primary);
+    color: var(--color-text);
   }
 
   .hub-card h3 {
     font-family: var(--font-serif);
     font-size: var(--text-xl);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 var(--space-xs);
   }
 
@@ -1480,7 +1489,7 @@ const journeySteps = [
     display: inline-block;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    color: var(--color-primary);
+    color: var(--color-text);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: var(--text-sm);
@@ -1500,7 +1509,7 @@ const journeySteps = [
     align-items: center;
     gap: var(--space-xs);
     border: 1px solid var(--color-primary);
-    color: var(--color-primary);
+    color: var(--color-text);
     padding: 0.875rem 1.5rem;
     border-radius: 0.5rem;
     font-weight: 700;
@@ -1779,7 +1788,7 @@ const journeySteps = [
   .step-content h3 {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 0.25rem;
   }
 
@@ -1869,7 +1878,7 @@ const journeySteps = [
   .form-btn {
     padding: .875rem 1.5rem;
     background: var(--color-primary);
-    color: var(--color-background);
+    color: var(--color-on-primary);
     border: none;
     border-radius: .5rem;
     font-weight: 700;
@@ -1996,7 +2005,7 @@ const journeySteps = [
   [data-theme="dark"] .geo-header h2,
   [data-theme="dark"] .new-header h2,
   [data-theme="dark"] .journey-header h2 {
-    color: var(--color-primary);
+    color: var(--color-text);
   }
 
   /* Global dark-mode card surface overrides live after the closing style
@@ -2039,7 +2048,7 @@ const journeySteps = [
   .detail-stage h3 {
     font-family: var(--font-serif);
     font-size: var(--text-xl);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 var(--space-sm);
   }
 
@@ -2091,7 +2100,7 @@ const journeySteps = [
   .dive-card h3 {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 var(--space-sm);
   }
 
@@ -2140,7 +2149,7 @@ const journeySteps = [
   .faq-item h3 {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 var(--space-sm);
   }
 
@@ -2208,7 +2217,7 @@ const journeySteps = [
   .resource-link h3 {
     font-family: var(--font-serif);
     font-size: var(--text-base);
-    color: var(--color-primary);
+    color: var(--color-text);
     margin: 0 0 0.25rem;
   }
 
@@ -2272,39 +2281,13 @@ const journeySteps = [
      specificity (0,~6,~3) via :not(.btn) chains, so to win we anchor the
      override with a specific class on <a> AND !important for this known
      hero-only override. */
-  html[data-theme="light"] section.hero-manifesto a.btn-ghost {
-    color: var(--color-primary) !important;
-    background: #F2F2E2 !important;
-    border: none !important;
-  }
   html[data-theme="light"] section.hero-manifesto a.btn-ghost:hover {
     background: #FFFFFF !important;
   }
-  html[data-theme="light"] section.hero-manifesto a.hero-secondary-cta {
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-  html[data-theme="light"] section.hero-manifesto a.hero-secondary-cta:hover {
-    color: #FFFFFF !important;
-  }
-  /* Dark mode: hero gradient flips to bright sage per theme-2026 token
-     swap, so bone white would clash. Use a dark-spruce chip with cream
-     text — same readability pattern as the light mode but inverted. */
-  html[data-theme="dark"] section.hero-manifesto a.btn-ghost {
-    color: #ECF3E4 !important;
-    background: rgba(14, 26, 20, 0.85) !important;
-    border: 1px solid rgba(236, 243, 228, 0.3) !important;
-  }
-  html[data-theme="dark"] section.hero-manifesto a.btn-ghost:hover {
-    color: #ECF3E4 !important;
-    background: rgba(14, 26, 20, 0.95) !important;
-    border-color: rgba(236, 243, 228, 0.5) !important;
-  }
-  html[data-theme="dark"] section.hero-manifesto a.hero-secondary-cta {
-    color: rgba(14, 26, 20, 0.85) !important;
-  }
-  html[data-theme="dark"] section.hero-manifesto a.hero-secondary-cta:hover {
-    color: var(--color-primary-dark) !important;
-  }
+  /* Dark mode overrides for hero-manifesto buttons removed 2026-07-13:
+     the bone-chip + dark-spruce text pattern now uses --color-cream-ink
+     (constant in both themes) so the buttons render correctly without
+     per-mode !important overrides. */
   /* Full-page aurora: pinned to viewport, behind all content, with the
      component-rendered blobs slowly drifting. pointer-events: none so it
      never intercepts clicks; z-index: -1 so it sits behind everything. */
