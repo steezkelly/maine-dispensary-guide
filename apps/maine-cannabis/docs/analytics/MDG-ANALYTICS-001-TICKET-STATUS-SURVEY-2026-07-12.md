@@ -6,6 +6,8 @@
 **Repo:** `/home/steve/projects/maine-dispensary-guide` @ `7bb51d55`
 **Scope of this survey:** v0.5 ticket sequence 000–012. The dispensary-directory / firecrawl-ingest / optin / menu-price workstreams shipped under `MDG-DATA-001` and `MDG-ANALYTICS-001` commits are **preserved as-is** and **parked separately** per operator instruction 2026-07-12.
 
+**Historical gate note:** The operator-gate instructions below are retained for audit history. Current Ticket 012 truth is authoritative: GA4 is operational; Vercel A4 credential/reachability is available but the probe observed zero events; A5 is deferred; no production optimization is authorized.
+
 ---
 
 ## Summary
