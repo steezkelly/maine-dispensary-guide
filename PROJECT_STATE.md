@@ -29,6 +29,7 @@
 - `Layout.astro` keeps legacy behavior as the default; pilot activation is explicit per route.
 - Editorial and contextual/conversion mappings use separate typed registries. No generated journey graph, recommendation scoring, personalization, progress state, or local storage is part of release 1.
 - Structured cohort, baseline, measurement caveats, and treatment clock: `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json` and `docs/analytics/ICA_PILOT_BASELINE_2026-07-13.md`.
+- Implementation/handoff status (what is wired, measurement gates, and intentionally deferred architecture): `docs/analytics/ICA_IMPLEMENTATION_STATUS_2026-07-13.md`.
 
 ## Site Structure (current as of 2026-07-08)
 - **Homepage:** `/` — Optimized for SEO clusters; includes start-here journey, resource cards, lead capture.
