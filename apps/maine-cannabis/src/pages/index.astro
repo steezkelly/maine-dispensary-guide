@@ -303,18 +303,16 @@ const journeySteps = [
   }
 
   /* Hero CTA buttons — bone chip with dark-spruce text in BOTH modes.
-     This is intentional contrast inversion: the hero gradient flips from
-     dark-green in light mode to bright sage in dark mode, so a chip
-     that contrasts with BOTH backgrounds is needed. Bone (var(--color-background))
-     works in light (against dark hero) and in dark (against pale hero) with
-     dark-spruce text holding the contrast. The dark-spruce literal is used
-     directly because Astro's CSS pipeline strips per-component custom
-     property declarations from scoped blocks. */
+     The hero gradient is pinned to constant dark (--hero-bg-pin was
+     removed from theme tokens; literal #143027 / #0E1A14 used
+     directly) so the chip must also be theme-independent. Bone
+     background (#F4F1E4) + dark-spruce text (#0E1A14) holds 13:1
+     against either theme's hero bg. */
   html .hero-manifesto .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    background: var(--color-background);
+    background: #F4F1E4;
     color: #0E1A14;
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
@@ -334,7 +332,7 @@ const journeySteps = [
     align-items: center;
     gap: var(--space-xs);
     color: #0E1A14;
-    background: var(--color-background);
+    background: #F4F1E4;
     padding: 1rem 1.75rem;
     border-radius: 0.5rem;
     font-weight: 700;
