@@ -73,4 +73,4 @@ The structured manifest is `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json`.
 - Browser verification: 20 desktop/mobile checks; zero axe violations at all recorded impact levels; no horizontal overflow; 44px action targets; keyboard focus and reduced-motion checks passed.
 - GitHub Actions run `29269220675`: Build, production smoke, and production deploy jobs completed successfully; preview-only jobs were skipped on the main push.
 - Post-rollout `cta_view` and `page_engaged` observations begin after the measurement-clock timestamp. This release remains observational; do not infer causal lift from before/after movement alone.
-- Exact slot-level reporting still depends on operator registration of `cta_id` as a GA4 custom dimension. Until then, use page-level aggregate exposure and destination-session evidence.
+- Exact slot-level reporting is configured: `cta_id` is a registered GA4 Event-scoped custom dimension (event parameter `cta_id`, confirmed through the GA4 Data API on 2026-07-13). Post-rollout ICA values still require a settled reporting check; do not infer exposure from this pre-treatment snapshot.

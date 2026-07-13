@@ -300,6 +300,7 @@ commercial ranking.
 | Exact ten-route scope and treatment clock | `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json` |
 | Baseline values, exclusions, query definitions, prior verification | `docs/analytics/ICA_PILOT_BASELINE_2026-07-13.md` |
 | Current implementation summary | `PROJECT_STATE.md` → "Intent Continuity Architecture pilot" |
+| GA4 custom-dimension setup and Data API queryability | `docs/analytics/ICA_GA4_CONFIGURATION_EVIDENCE_2026-07-13.md` and `docs/analytics/ICA_GA4_DELIVERY_CHECK_2026-07-13.md` |
 | Chronological change log | `BOT_COLLABORATION_HUB.md` and commits `aea20614`, `50fda8fb`, `4fde053e` |
 | Mapping source of truth | `src/data/continuation/editorial-next-steps.ts` and `src/data/continuation/contextual-actions.ts` |
 | Regression assertions | `scripts/continuation/tests/ica-release-1.test.cjs` and `scripts/continuation/tests/ica-built-output.test.cjs` |
