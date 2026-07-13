@@ -1,0 +1,201 @@
+{
+  "version": "1.0",
+  "pilotName": "ICA release-1 instrumented pilot",
+  "approvedPlan": "docs/superpowers/specs/2026-07-13-mdg-ica-second-pass-v2.md",
+  "baselineWindow": {
+    "start": "2026-06-12",
+    "end": "2026-07-10",
+    "reason": "Latest settled GSC final window; avoids incomplete recent days"
+  },
+  "scopeHashAlgorithm": "sha256(newline-delimited sorted allowedSourceFiles; final newline)",
+  "scopeHash": "8c505f0d62b4db1bd4a5e76deef48105b64a8c8df58bfbeb75de29dbfaebf12a",
+  "pilotRoutes": [
+    {
+      "path": "/guides/maine-dispensary-license",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 2,
+        "impressions": 580
+      },
+      "ga4": {
+        "views": 9,
+        "sessions": 9,
+        "engagedSessions": 4
+      }
+    },
+    {
+      "path": "/guides/maine-cannabis-opt-in-tracker",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 0,
+        "impressions": 78
+      },
+      "ga4": {
+        "views": 2,
+        "sessions": 2,
+        "engagedSessions": 2
+      }
+    },
+    {
+      "path": "/guides/maine-cannabis-zoning-requirements",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 2,
+        "impressions": 34
+      },
+      "ga4": {
+        "views": 3,
+        "sessions": 2,
+        "engagedSessions": 2
+      }
+    },
+    {
+      "path": "/guides/maine-cannabis-site-selection",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 0,
+        "impressions": 39
+      },
+      "ga4": {
+        "views": 0,
+        "sessions": 0,
+        "engagedSessions": 0
+      }
+    },
+    {
+      "path": "/guides/maine-cannabis-inventory-management",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 0,
+        "impressions": 122
+      },
+      "ga4": {
+        "views": 0,
+        "sessions": 0,
+        "engagedSessions": 0
+      }
+    },
+    {
+      "path": "/guides/maine-metrc-compliance-guide",
+      "cohort": "business",
+      "gsc": {
+        "clicks": 1,
+        "impressions": 56
+      },
+      "ga4": {
+        "views": 2,
+        "sessions": 1,
+        "engagedSessions": 1
+      }
+    },
+    {
+      "path": "/blog/best-maine-edibles-2026",
+      "cohort": "consumer",
+      "gsc": {
+        "clicks": 20,
+        "impressions": 234
+      },
+      "ga4": {
+        "views": 26,
+        "sessions": 24,
+        "engagedSessions": 14
+      }
+    },
+    {
+      "path": "/blog/best-maine-dispensaries-2026",
+      "cohort": "consumer",
+      "gsc": {
+        "clicks": 13,
+        "impressions": 328
+      },
+      "ga4": {
+        "views": 22,
+        "sessions": 21,
+        "engagedSessions": 10
+      }
+    },
+    {
+      "path": "/blog/maine-dispensary-gift-cards",
+      "cohort": "consumer",
+      "gsc": {
+        "clicks": 2,
+        "impressions": 214
+      },
+      "ga4": {
+        "views": 2,
+        "sessions": 2,
+        "engagedSessions": 1
+      }
+    },
+    {
+      "path": "/guides/machias-dispensary-guide",
+      "cohort": "consumer",
+      "gsc": {
+        "clicks": 3,
+        "impressions": 48
+      },
+      "ga4": {
+        "views": 7,
+        "sessions": 7,
+        "engagedSessions": 3
+      }
+    }
+  ],
+  "excludedExamples": [
+    {
+      "paths": [
+        "/guides/bar-harbor-dispensary-guide",
+        "/guides/maine-dispensary-costs"
+      ],
+      "reason": "Active 2026-07-12 title-treatment cohort"
+    },
+    {
+      "paths": [
+        "operator-profile pages"
+      ],
+      "reason": "Operator-name cannibalization remains measurement-gated"
+    },
+    {
+      "paths": [
+        "/blog/cannabis-friendly-maine-travel",
+        "/blog/recreational-cannabis-near-acadia"
+      ],
+      "reason": "Recent expansion/canonical consolidation would contaminate baseline"
+    }
+  ],
+  "allowedSourceFiles": [
+    ".github/workflows/ci.yml",
+    "package.json",
+    "apps/maine-cannabis/src/layouts/Layout.astro",
+    "apps/maine-cannabis/src/components/LegacyLeadCapture.astro",
+    "apps/maine-cannabis/src/components/continuation/EditorialNextStep.astro",
+    "apps/maine-cannabis/src/components/continuation/ContextualAction.astro",
+    "apps/maine-cannabis/src/data/continuation/editorial-next-steps.ts",
+    "apps/maine-cannabis/src/data/continuation/contextual-actions.ts",
+    "scripts/continuation/tests/ica-release-1.test.cjs",
+    "apps/maine-cannabis/src/pages/guides/maine-dispensary-license.astro",
+    "apps/maine-cannabis/src/pages/guides/maine-cannabis-opt-in-tracker.astro",
+    "apps/maine-cannabis/src/pages/guides/maine-cannabis-zoning-requirements.astro",
+    "apps/maine-cannabis/src/pages/guides/maine-cannabis-site-selection.astro",
+    "apps/maine-cannabis/src/pages/guides/maine-cannabis-inventory-management.astro",
+    "apps/maine-cannabis/src/pages/guides/maine-metrc-compliance-guide.astro",
+    "apps/maine-cannabis/src/pages/blog/best-maine-edibles-2026.astro",
+    "apps/maine-cannabis/src/pages/blog/best-maine-dispensaries-2026.astro",
+    "apps/maine-cannabis/src/pages/blog/maine-dispensary-gift-cards.astro",
+    "apps/maine-cannabis/src/pages/guides/machias-dispensary-guide.astro",
+    "docs/superpowers/specs/2026-07-13-mdg-ica-second-pass-v2.md",
+    "docs/superpowers/plans/2026-07-13-mdg-ica-second-pass-release-1.md",
+    "docs/analytics/ICA_PILOT_BASELINE_2026-07-13.md",
+    "docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json"
+  ],
+  "measurement": {
+    "runtimeSignals": [
+      "cta_view",
+      "page_view",
+      "page_engaged"
+    ],
+    "newEventNames": [],
+    "reportingCaveat": "cta_id is emitted but is not currently a registered GA4 custom dimension; exact editorial-vs-contextual exposure reporting requires operator-side custom-definition registration. Page-level aggregate cta_view remains reportable.",
+    "primaryMetric": "engaged referred destination sessions / editorial next-step exposures"
+  }
+}
