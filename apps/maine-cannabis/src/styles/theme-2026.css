@@ -96,18 +96,6 @@
   --color-on-tag-fill: #0B1A14;        /* dark text on pale-sage tag chip in dark mode */
   --color-on-secondary: #F4F1E4;       /* cream text on dark navy secondary panel (constant both modes) */
 
-  /* .btn-cta override: View Vendor Directory and similar sidebar CTAs
-     sit on white cards in LIGHT mode, so the text must be dark spruce.
-     In DARK mode the global .btn-cta surfaces (.lead-capture-box, footer
-     CTA, Layout hero secondary CTA) sit on the dark page background
-     --color-background = #0B1A14, where dark-spruce text disappears. The
-     :where() / explicit dark-mode override below swaps to cream. The
-     light-mode !important beats the link rule (which has very high
-     specificity via multiple :not() selectors). */
-  .btn-cta { color: #0E1A14 !important; }
-  [data-theme="dark"] .btn-cta { color: #F4F1E4 !important; }
-  [data-theme="dark"] html .btn-cta { color: #F4F1E4 !important; }
-
   /* Dark elevation: deeper shadows, more pronounced */
   --elev-1-shadow: inset 0 1px 0 rgba(168,196,154,.06), 0 1px 2px rgba(0,0,0,.4), 0 6px 16px rgba(0,0,0,.4);
   --elev-2-shadow: inset 0 1px 0 rgba(168,196,154,.08), 0 2px 4px rgba(0,0,0,.5), 0 14px 32px rgba(0,0,0,.5);
@@ -158,6 +146,27 @@ html[data-theme] a[target="_blank"]::after {
   text-decoration: none;
   display: inline-block;
   margin-left: 0.1em;
+}
+
+/* =============================================================================
+   .btn-cta THEME OVERRIDE
+   Placed OUTSIDE the [data-theme="dark"] block because Vite's CSS
+   minifier collapsed adjacent dark-block rules together (dropping a
+   closing brace), which broke cascade ordering and pinned .btn-cta
+   to dark-spruce text in BOTH modes. With the rules outside the dark
+   block and selectors explicitly scoped to each theme, Vite can't
+   collapse them with the dark token declarations.
+
+   The !important is required because the global link rule
+   (html[data-theme] main a:not(...):not(.btn-cta)...) has very high
+   specificity from multiple :not() class selectors.
+   ============================================================================= */
+.btn-cta {
+  color: #0E1A14 !important; /* dark spruce — works on bone/cream chips in light mode */
+}
+[data-theme="dark"] .btn-cta,
+[data-theme="dark"] html .btn-cta {
+  color: #F4F1E4 !important; /* cream — works on dark spruce page bg in dark mode */
 }
 
 /* =============================================================================
@@ -260,9 +269,9 @@ html[data-theme] a[target="_blank"]::after {
   letter-spacing: -0.02em;
   /* Without this, h2 inherits var(--color-text) (dark spruce in both
      modes) which is invisible against the section-a primary bg (also
-     dark spruce in light, pale sage in dark). Force cream so the
-     heading always contrasts with the section's primary-green panel. */
-  color: var(--color-background);
+     dark spruce in light, pale sage in dark). Force cream-on-secondary
+     text --color-on-secondary is constant cream in both modes. */
+  color: var(--color-on-secondary);
 }
 .section-a p {
   color: color-mix(in oklab, var(--color-background) 92%, transparent);

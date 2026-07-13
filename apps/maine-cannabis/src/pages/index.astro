@@ -211,9 +211,16 @@ const journeySteps = [
       ),
       linear-gradient(
         180deg,
-        var(--color-primary) 0%,
-        var(--color-primary-dark) 100%
+        #143027 0%,
+        #0E1A14 100%
       );
+    /* Hero gradient pinned to constant dark spruce in BOTH modes. The
+       previous var(--color-primary)/var(--color-primary-dark) tokens
+       flip to pale sage/pale-green in dark mode, which collapses the
+       hero section into the page bg and makes .hero-title (cream text)
+       invisible against the page-bg-cream walk-up. With literal hex
+       values the hero panel is always dark and the cream text always
+       contrasts. */
     color: var(--color-background);
     padding: var(--space-xl) 0 var(--space-lg);
     margin-bottom: var(--space-lg);
