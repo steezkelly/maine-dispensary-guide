@@ -1,7 +1,13 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
+import LeadMailtoForm from '../../components/LeadMailtoForm.astro';
 import Layout from '../../layouts/Layout.astro';
 import PineTree from '@network/ui/PineTree';
+
+const pdfUrl = "/downloads/maine-dispensary-compliance-self-assessment.pdf";
+const leadTo = "hello@mainedispensaryguide.com";
+const leadSubject = "Compliance Self-Assessment request: {email}";
+const leadBody = "Hi — please send me the Maine Dispensary Compliance Self-Assessment PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/compliance-self-assessment";
 
 const faqPageJsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -111,6 +117,86 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
       box-shadow: 0 6px 24px rgba(6, 26, 27, 0.3);
       text-decoration: none;
       color: white;
+    }
+
+    :global(.lead-mailto-form) {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .form-group label {
+      color: var(--color-text);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .optional {
+      color: var(--color-text-light);
+      font-weight: 400;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+    }
+
+    .cta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .success-card {
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      padding: 1.5rem;
+      border: 1px solid var(--color-primary);
+      border-radius: 1rem;
+      background: var(--color-background);
+    }
+
+    .success-card h2 {
+      margin-top: 0;
+    }
+
+    .success-card a {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .or-download {
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+
+    .or-download a {
+      color: var(--color-text-light);
+      font-size: 0.875rem;
+      text-decoration: underline;
     }
 
     .domain-grid {
@@ -228,10 +314,48 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
       <h1 class="doc-title">Maine Dispensary<br/>Compliance Self-Assessment</h1>
       <p class="doc-subtitle">The 8-domain checklist Maine operators use to prepare for OCP inspections</p>
       <div class="doc-meta">Version 2026.1 &bull; Updated May 2026 &bull; 12 pages &bull; Free Download</div>
-      <!-- analytics:cta-injected id=cta-inline-download--compliance-self-assessment-01 -->
-<a href="/downloads/maine-dispensary-compliance-self-assessment.pdf" class="download-btn" download data-cta-id="cta-inline-download--compliance-self-assessment-01">
-        <span>&#8595;</span> Download PDF Checklist
-      </a>
+      <div class="success-card" id="compliance-assessment-success" style="display: none;">
+        <h2>Check your inbox — the Compliance Self-Assessment is on its way.</h2>
+        <p>Or <a href={pdfUrl} download>download now without subscribing</a>.</p>
+      </div>
+      <LeadMailtoForm
+        formId="compliance-self-assessment-lead-form"
+        leadTo={leadTo}
+        leadSubject={leadSubject}
+        leadBody={leadBody}
+        formName="compliance_self_assessment"
+        successPath="/download/compliance-self-assessment?success=true"
+        trackFields={['stage']}
+      >
+        <div class="form-group">
+          <label for="compliance-name">Your Name</label>
+          <input type="text" id="compliance-name" name="name" required placeholder="Jane Smith" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="compliance-email">Email Address</label>
+          <input type="email" id="compliance-email" name="email" required placeholder="jane@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="compliance-business">Business Name <span class="optional">(optional)</span></label>
+          <input type="text" id="compliance-business" name="business" placeholder="Pine Tree Cannabis LLC" autocomplete="organization" />
+        </div>
+        <div class="form-group">
+          <label for="compliance-stage">What stage are you at?</label>
+          <select id="compliance-stage" name="stage" required>
+            <option value="">Select one...</option>
+            <option value="researching">Researching — just exploring</option>
+            <option value="applying">Applying — have my LLC, working on license</option>
+            <option value="operating">Already Operating — looking to grow</option>
+          </select>
+        </div>
+        <!-- analytics:cta-injected id=cta-inline-download--compliance-self-assessment-01 -->
+        <button type="submit" class="cta-button" data-cta-id="cta-inline-download--compliance-self-assessment-01">
+          Download Free — Enter Your Email
+        </button>
+      </LeadMailtoForm>
+      <div class="or-download">
+        <a href={pdfUrl} download>Or download now without subscribing</a>
+      </div>
     </div>
 
     <section>
@@ -323,8 +447,8 @@ REVIEW DATE: Quarterly (next review: July 2026)
       <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Download the Full Assessment</h2>
       <p class="doc-subtitle">12 pages &bull; 88 checklist items &bull; 3 SOP templates &bull; Print-ready PDF</p>
       <!-- analytics:cta-injected id=cta-inline-download--compliance-self-assessment-02 -->
-<a href="/downloads/maine-dispensary-compliance-self-assessment.pdf" class="download-btn" download data-cta-id="cta-inline-download--compliance-self-assessment-02">
-        <span>&#8595;</span> Download Free PDF
+<a href={pdfUrl} class="download-btn" download data-cta-id="cta-inline-download--compliance-self-assessment-02">
+        <span>&#8595;</span> Or download now without subscribing
       </a>
     </div>
 
@@ -332,5 +456,12 @@ REVIEW DATE: Quarterly (next review: July 2026)
       <AutoRelated currentPath="/download/compliance-self-assessment" currentTopics={[]} limit={6} />
     </section>
   </article>
+  <script is:inline>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      document.getElementById('compliance-assessment-success').style.display = 'block';
+      var form = document.getElementById('compliance-self-assessment-lead-form');
+      if (form) form.style.display = 'none';
+    }
+  </script>
 </Layout>
-
