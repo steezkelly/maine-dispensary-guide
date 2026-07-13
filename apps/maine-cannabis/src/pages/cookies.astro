@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Cookie Policy"
+  description="How Maine Dispensary Guide uses cookies and similar technologies. The categories of cookies we set, what we use them for, and how to control them."
+  heroImage="/images/heroes/about.jpg"
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-07-13", modifiedDate: "2026-07-13", section: "Legal" }}
+>
+  <style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
+    section { margin-bottom: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+    h3 { font-family: var(--font-serif); font-size: 1.125rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text); }
+    p, li { line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .cookie-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+    .cookie-table th, .cookie-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--color-border, #e5e0d0); vertical-align: top; }
+    .cookie-table th { background: var(--color-background, #f4f1e4); font-family: var(--font-serif); }
+  </style>
+  <article class="legal-page">
+    <h1>Cookie Policy</h1>
+    <p class="last-updated">Last Updated: July 13, 2026</p>
+
+    <section>
+      <h2>1. What This Page Covers</h2>
+      <p>This Cookie Policy explains how Maine Dispensary Guide ("we," "us," or "our") uses cookies and similar local-storage technologies on mainedispensaryguide.com. It supplements our <a href="/privacy">Privacy Policy</a>. If anything in the two documents appears to conflict, the Privacy Policy controls.</p>
+    </section>
+
+    <section>
+      <h2>2. What Is a Cookie</h2>
+      <p>A cookie is a small text file placed in your browser by a website you visit. Some cookies expire when you close your browser ("session cookies") and others stay until you delete them or they expire ("persistent cookies"). Local storage and similar browser technologies serve the same purpose and are treated the same way under this policy.</p>
+    </section>
+
+    <section>
+      <h2>3. Categories of Cookies We Use</h2>
+
+      <h3>3.1 Strictly Necessary</h3>
+      <p>These cookies are required for the site to function. They remember your theme preference (light or dark), your collapsed/expanded navigation state, and your session token for any authenticated area such as the editorial corrections form. The site cannot provide basic features without them.</p>
+
+      <h3>3.2 Performance and Analytics</h3>
+      <p>We use first-party analytics to understand which pages and guides are read most, which operator profiles convert to inquiries, and where visitors leave the site. All analytics data is aggregated and IP-anonymized before review. We use this information only to improve our content, not to build user profiles for advertising.</p>
+
+      <h3>3.3 Functional</h3>
+      <p>Functional cookies remember choices you make to give you a personalized experience — for example, which state or region of Maine you have selected in a search filter, or whether you have dismissed a banner notification.</p>
+
+      <h3>3.4 Advertising</h3>
+      <p>Maine Dispensary Guide does not currently run behavioral or interest-based advertising. If we introduce it, we will update this policy, request consent where required by law, and respect the opt-out controls described below.</p>
+    </section>
+
+    <section>
+      <h2>4. Cookies We Set</h2>
+      <table class="cookie-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Purpose</th>
+            <th>Type</th>
+            <th>Lifespan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mdg-theme</code></td>
+            <td>Remembers light/dark theme preference.</td>
+            <td>Functional</td>
+            <td>1 year</td>
+          </tr>
+          <tr>
+            <td><code>mdg-region</code></td>
+            <td>Remembers last-selected Maine region in the regional hub.</td>
+            <td>Functional</td>
+            <td>90 days</td>
+          </tr>
+          <tr>
+            <td><code>mdg-banner-dismissed</code></td>
+            <td>Prevents re-showing a dismissed banner notification.</td>
+            <td>Functional</td>
+            <td>30 days</td>
+          </tr>
+          <tr>
+            <td>First-party analytics cookies</td>
+            <td>Aggregate, IP-anonymized page-view and outbound-link tracking.</td>
+            <td>Performance</td>
+            <td>Up to 13 months</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>We periodically audit the cookies we set. The list above reflects our current set as of the date at the top of this page.</p>
+    </section>
+
+    <section>
+      <h2>5. Third-Party Cookies</h2>
+      <p>Some embedded content on our pages (such as embedded calculators, lead-magnet trackers, or operator-rating widgets) may set their own cookies. We work to keep third-party embeds to a minimum and to choose providers with strong privacy commitments. Third-party cookies are governed by the third party's own privacy and cookie policies, not this one.</p>
+    </section>
+
+    <section>
+      <h2>6. Your Choices</h2>
+      <p>You can control cookies in several ways:</p>
+      <ul>
+        <li><strong>Browser settings</strong> — most browsers let you block cookies, delete existing cookies, or warn you before accepting them. Help pages for major browsers: Chrome, Firefox, Safari, Edge.</li>
+        <li><strong>Private or incognito mode</strong> — sessions that do not persist cookies across visits.</li>
+        <li><strong>Mobile device settings</strong> — reset advertising identifiers or limit ad tracking in your device privacy settings.</li>
+        <li><strong>Do Not Track</strong> — we honor browser-level Do Not Track signals as an opt-out of non-essential cookies where technically feasible.</li>
+      </ul>
+      <p>If you disable strictly necessary cookies, parts of the site may not function correctly. Performance, functional, and any future advertising cookies can be disabled without breaking the site.</p>
+    </section>
+
+    <section>
+      <h2>7. European Economic Area, UK, and California Residents</h2>
+      <p>If you are located in the EEA, the United Kingdom, or California, you have additional rights described in our <a href="/privacy">Privacy Policy</a>. We rely on legitimate interest as the legal basis for performance and functional cookies under the GDPR, and we honor the right to opt out under the CCPA. We do not sell personal information.</p>
+    </section>
+
+    <section>
+      <h2>8. Updates to This Policy</h2>
+      <p>We update this page when we change our cookie practices. The "Last Updated" date at the top of the page reflects the most recent change. Material changes are also noted in our <a href="/about/corrections">Editorial Corrections Log</a>.</p>
+    </section>
+
+    <section>
+      <h2>9. Contact</h2>
+      <p>Questions about cookies or this policy can be sent to <a href="mailto:privacy@mainedispensaryguide.com">privacy@mainedispensaryguide.com</a>.</p>
+    </section>
+  </article>
+</Layout>

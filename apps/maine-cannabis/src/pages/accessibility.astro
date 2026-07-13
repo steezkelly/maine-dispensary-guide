@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Accessibility Statement"
+  description="Maine Dispensary Guide's commitment to digital accessibility. WCAG 2.1 AA conformance, assistive-technology support, and how to report accessibility barriers."
+  heroImage="/images/heroes/about.jpg"
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-07-13", modifiedDate: "2026-07-13", section: "Legal" }}
+>
+  <style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
+    section { margin-bottom: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+    p, li { line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+  <article class="legal-page">
+    <h1>Accessibility Statement</h1>
+    <p class="last-updated">Last Updated: July 13, 2026</p>
+
+    <section>
+      <h2>1. Our Commitment</h2>
+      <p>Maine Dispensary Guide is committed to ensuring digital accessibility for people with disabilities. We continually improve the user experience for everyone and apply the relevant accessibility standards in our design, development, and content workflows.</p>
+      <p>This site is operated as a B2B resource for Maine cannabis entrepreneurs and operators. We aim to ensure that founders, attorneys, accountants, and licensing consultants using assistive technology can access our licensing guides, compliance pages, and operator profiles on equal terms.</p>
+    </section>
+
+    <section>
+      <h2>2. Conformance Status</h2>
+      <p>We aim to conform to <strong>Web Content Accessibility Guidelines (WCAG) 2.1, Level AA</strong>. These guidelines explain how to make web content more accessible for people with disabilities and more user-friendly for everyone. Conformance means that the content meets the success criteria set by the World Wide Web Consortium (W3C).</p>
+      <p>We test new pages against the following axes before publication:</p>
+      <ul>
+        <li>Perceivable — text alternatives for non-text content, captions and transcripts for media, sufficient color contrast (≥ 4.5:1 for body text).</li>
+        <li>Operable — keyboard-navigable interfaces, no flashing content, descriptive page titles and headings.</li>
+        <li>Understandable — readable content (target 9th-grade reading level for body copy), predictable navigation, input assistance on forms.</li>
+        <li>Robust — compatible with current and future assistive technologies, valid HTML.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Accessibility Features on This Site</h2>
+      <ul>
+        <li>Skip-to-content link as the first focusable element on every page.</li>
+        <li>Semantic HTML landmarks: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code> on every route.</li>
+        <li>Light and dark themes — both meet WCAG AA contrast against the primary background palette.</li>
+        <li>Reduced-motion media query disables autoplay carousels and large animations.</li>
+        <li>All images include descriptive <code>alt</code> attributes; decorative images use empty alt.</li>
+        <li>Form fields have associated <code>&lt;label&gt;</code> elements and inline error messaging.</li>
+        <li>Tables include <code>&lt;caption&gt;</code> and header-row <code>scope</code> attributes.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Known Limitations</h2>
+      <p>Despite our efforts, some content may not yet be fully accessible. We are actively working on the following:</p>
+      <ul>
+        <li>Long-form historical content published before 2026 may have older image alts we are auditing in a phased sweep.</li>
+        <li>Embedded third-party iframes (for example, embedded calculators or trackers) may not meet WCAG 2.1 AA. We disclose these embeds on each host page and provide text fallbacks where possible.</li>
+        <li>PDF lead magnets are tagged with structure for screen readers, but if you encounter a barrier we can supply an HTML equivalent on request.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. Reporting an Accessibility Barrier</h2>
+      <p>If you encounter an accessibility barrier on Maine Dispensary Guide, please contact us. We take all reports seriously and respond within five business days.</p>
+      <p><strong>Email:</strong> <a href="mailto:accessibility@mainedispensaryguide.com">accessibility@mainedispensaryguide.com</a></p>
+      <p>Please include the page URL, the assistive technology and browser version you are using, and a short description of the issue. We will work with you to provide the information in an alternate format or resolve the issue at the source.</p>
+    </section>
+
+    <section>
+      <h2>6. Assessment Approach</h2>
+      <p>We assess accessibility through a combination of automated checks (axe-core against representative route samples), manual keyboard navigation testing on every new template, and content-review spot checks against our editorial standards. The audit report and outstanding findings are tracked internally and re-run before each major release.</p>
+    </section>
+
+    <section>
+      <h2>7. Continuous Improvement</h2>
+      <p>Accessibility is not a one-time project. We treat it as part of our editorial and engineering standards, the same way we treat factual accuracy and source citation. Updates to this statement are logged in our editorial corrections page.</p>
+    </section>
+  </article>
+</Layout>
