@@ -190,7 +190,7 @@ This section supersedes the review/merge instructions above. Live sources were r
 
 ### Integrated and deployed
 
-`origin/main` is `298a87badf8d9b580f1809694d31a88ef38cb2a9` after six ordered commits rebased onto the then-current main (`6565a897`):
+The deployed code-integration point is `298a87badf8d9b580f1809694d31a88ef38cb2a9`, containing six ordered commits rebased onto the then-current main (`6565a897`). Docs-only closeout commits follow it on `origin/main`:
 
 1. `c678f5e1` — new-branch pre-push diff-base fix
 2. `9d0f49b5` — FAL credential removed from current image-script source; runtime now requires `FAL_KEY`
@@ -222,7 +222,7 @@ The original worker SHAs were rewritten only by the clean rebase; the source cha
 
 ### Final live state
 
-- Primary checkout remains untouched at local commit `3000897c`: ahead 1 / behind 30, with its prior untracked files.
+- Primary checkout remains untouched at local commit `3000897c`, ahead of and behind `origin/main`, with its prior untracked files. It was ahead 1 / behind 30 at the code-integration point; refresh the count live because docs-only closeout commits follow.
 - Kanban active tasks: 0.
 - Active MDG Codex/OpenCode/Claude workers: 0.
 - One-shot local operator-name GSC cron `7a6f5caa1069` remains scheduled for 2026-07-19 10:00 America/New_York.
