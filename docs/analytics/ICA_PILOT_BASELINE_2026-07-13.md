@@ -63,3 +63,14 @@ Contextual actions remain separate: launch checklist, ROI calculator, METRC/comp
 5. GA4 events: `pagePath + eventName`; eventCount filtered to `cta_view` and `page_engaged`.
 
 The structured manifest is `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json`.
+
+## Deployment and measurement clock
+
+- State: `deployment_verified`.
+- Production commit: `50fda8fb9fe26eaf394e90ad6828f2a062e2c897`.
+- Conservative treatment/measurement clock start: `2026-07-13T17:17:25Z`, the fresh production-verification timestamp rather than the local edit or push time.
+- Production verification: all 10 canonical routes returned exactly one editorial next step, one contextual action, and one `AutoRelated` rail in that order; no manual discovery rail remained.
+- Browser verification: 20 desktop/mobile checks; zero axe violations at all recorded impact levels; no horizontal overflow; 44px action targets; keyboard focus and reduced-motion checks passed.
+- GitHub Actions run `29269220675`: Build, production smoke, and production deploy jobs completed successfully; preview-only jobs were skipped on the main push.
+- Post-rollout `cta_view` and `page_engaged` observations begin after the measurement-clock timestamp. This release remains observational; do not infer causal lift from before/after movement alone.
+- Exact slot-level reporting still depends on operator registration of `cta_id` as a GA4 custom dimension. Until then, use page-level aggregate exposure and destination-session evidence.

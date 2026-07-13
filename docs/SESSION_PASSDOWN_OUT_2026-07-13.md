@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 Repository: `/home/steve/projects/maine-dispensary-guide`
-State: locally verified branches pushed for review; no production-deployment claims
+State: includes production-verified ICA release-1 closeout; earlier branch notes are superseded by later closeout sections
 
 ## Start here
 
@@ -235,3 +235,18 @@ The original worker SHAs were rewritten only by the clean rebase; the source cha
 3. Wait for the July 19 GSC measurement before any additional operator-name title/H1/internal-link batch.
 4. Resolve the primary checkout divergence explicitly before using primary `main` as an implementation base.
 5. MDG-ANALYTICS-001 and `mdg-data-001/final-corrective` remain operator-gated unless separately authorized.
+
+---
+
+## ICA release-1 production closeout — 2026-07-13 17:17 UTC
+
+- Production commit: `50fda8fb9fe26eaf394e90ad6828f2a062e2c897` on `origin/main`.
+- State: `deployment_verified`; treatment/measurement clock starts conservatively at `2026-07-13T17:17:25Z`.
+- Cohort: fixed manifest of six business and four consumer routes. Legacy layout behavior remains the default outside those 10 explicit pilot opt-ins.
+- Architecture: complete article answer → editorial next dependency → separate contextual action → existing `AutoRelated`. Editorial and action registries remain independent; release 1 contains no generated graph, scoring, personalization, progress tracking, or local storage.
+- Production-origin result: 10/10 routes returned the correct canonical and exactly one editorial, action, and discovery module in order; no manual discovery rail remained.
+- Production browser result: 20 desktop/mobile checks, zero axe violations at every recorded impact level, no horizontal overflow, 44px targets, keyboard focus PASS, reduced motion PASS.
+- GitHub Actions `29269220675`: Build, production smoke, and production deploy jobs completed successfully; preview-only jobs were skipped for the main push.
+- Independent staged-diff review: PASS with no security concerns, logic errors, or spec gaps. Its three suggestions are non-blocking follow-ups, not release-1 defects.
+- Baseline and measurement caveats: `docs/analytics/ICA_PILOT_BASELINE_2026-07-13.md`; structured cohort and deployment metadata: `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json`.
+- Measurement discipline: this is observational, not an A/B test. Do not infer causality from before/after movement. `cta_id` still requires operator-side GA4 custom-dimension registration for exact slot-level reporting.

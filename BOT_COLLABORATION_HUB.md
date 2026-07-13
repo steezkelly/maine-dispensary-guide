@@ -3,7 +3,7 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-09 EDT (sixth session — CiteThis extraction + DOI-style permalinks + embeddable iframe shipped; 4 commits, deploy-realization epilogue on Vercel header precedence gotcha logged)**
+|**Last updated: 2026-07-13 EDT (ICA release-1 pilot production verification and measurement-clock closeout)**
 
 ## Current operational state (live pointer)
 
@@ -12,6 +12,15 @@ The collaborative log below describes each session's work as it shipped. To avoi
 - **Lead-funnel destination** (2026-07-09 decision): `hello@`, `admin@`, `support@`, and any otherwise-unhandled `mainedispensaryguide.com` address route to `steve@mainedispensaryguide.com` (operator inbox). NOT `steezkelly@purelymail.com` — that user account is separate and empty. Read leads via `mdg-mdg envelope list` (wrapper at `~/.local/bin/mdg-mdg` → `~/.config/himalaya/steve-mdg.toml`). Canonical doc: `docs/LEAD_CAPTURE_SETUP.md`. Purelymail rule ids: 82705 (admin), 82706 (support), 82707 (catch-by-prefix), 113406 (test-* for fix-verification).
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
+
+## 📋 ICA RELEASE-1 PILOT CLOSEOUT (Jul 13, 2026 UTC)
+
+- Production commit `50fda8fb` activates an explicit 10-route Intent Continuity Architecture pilot while preserving legacy behavior everywhere else.
+- Pilot order is editorial next dependency → separate contextual action → existing `AutoRelated`. Editorial and conversion/action mappings remain independent typed registries; no journey graph, scoring, personalization, progress state, or local storage was introduced.
+- Independent pre-commit review passed with no security concerns, logic errors, or spec gaps. Non-blocking follow-ups: broaden exact-path and lead-magnet disclosure guardrails; consider a pre-existing reduced-motion cleanup in `AutoRelated` separately.
+- Local source, Astro, build, rendered-output, responsive, axe, keyboard, and reduced-motion checks passed. Production-origin verification passed on all 10 canonical routes; each rendered one module of each type in the required order with no duplicate manual discovery rail.
+- GitHub Actions run `29269220675`: Build, production smoke, and production deploy jobs completed successfully. Structured baseline and conservative treatment clock (`2026-07-13T17:17:25Z`) live in `docs/analytics/ICA_PILOT_{MANIFEST,BASELINE}_2026-07-13.*`.
+- This is an instrumented observational pilot, not an A/B test. Do not claim causal lift. Exact slot-level GA4 reporting remains gated on registering `cta_id` as a custom dimension.
 
 ## 📋 JULY 13 HARNESS INTEGRATION CLOSEOUT (Jul 13, 2026 EDT)
 

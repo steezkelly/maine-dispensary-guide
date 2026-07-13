@@ -22,6 +22,14 @@
 - **env vars:** none currently in production Vercel — all lead-magnet forms
   flow through Formspree externally.
 
+### Intent Continuity Architecture pilot
+
+- A fixed 10-route release-1 pilot is production-verified as of `2026-07-13T17:17:25Z`.
+- Pilot page-bottom order is: editorial next dependency → separate contextual action → existing `AutoRelated` discovery.
+- `Layout.astro` keeps legacy behavior as the default; pilot activation is explicit per route.
+- Editorial and contextual/conversion mappings use separate typed registries. No generated journey graph, recommendation scoring, personalization, progress state, or local storage is part of release 1.
+- Structured cohort, baseline, measurement caveats, and treatment clock: `docs/analytics/ICA_PILOT_MANIFEST_2026-07-13.json` and `docs/analytics/ICA_PILOT_BASELINE_2026-07-13.md`.
+
 ## Site Structure (current as of 2026-07-08)
 - **Homepage:** `/` — Optimized for SEO clusters; includes start-here journey, resource cards, lead capture.
 - **Guides Index:** `/guides/` — Business, Compliance, Cities, Operations, Market categories.
@@ -73,5 +81,5 @@
 
 ---
 
-*Last Updated: 2026-07-08 EDT (Sprint 78 series refresh)*
+*Last Updated: 2026-07-13 EDT (ICA release-1 pilot closeout)*
 *Previous full refresh: 2026-06-07 (Sprint 77 observability pass)*
