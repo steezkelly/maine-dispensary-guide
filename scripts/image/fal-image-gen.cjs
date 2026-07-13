@@ -14,7 +14,13 @@
  * Example: node scripts/fal-image-gen.cjs "cannabis storefront" flux-2-pro 1200 400 --safety-tolerance 5
  */
 
-const FAL_KEY = '0074bb6b-18bc-43fa-8df5-3fe3db094237:6c10c5e128ab0aa68815fed1cf224b52';
+function getFalKey() {
+  const key = process.env.FAL_KEY?.trim();
+  if (!key) {
+    throw new Error('FAL_KEY is required for image generation. Set it in the environment; never commit credentials to source.');
+  }
+  return key;
+}
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
@@ -80,7 +86,7 @@ async function generateImage() {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      'Authorization': `Key ${FAL_KEY}`,
+      'Authorization': `Key ${getFalKey()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
