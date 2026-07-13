@@ -346,29 +346,22 @@ const journeySteps = [
     margin-top: var(--space-sm);
     font-size: var(--text-sm);
     font-weight: 600;
-    color: #F4F1E4;
-    text-decoration: underline;
-    text-underline-offset: 0.3em;
-    text-decoration-color: rgba(244, 241, 228, 0.5);
-    transition: color 0.2s, text-decoration-color 0.2s;
+    /* Cream chip + dark-spruce text, constant in BOTH modes. The hero gradient
+       flips from dark-green (light) to pale-sage (dark), so a chip that
+       contrasts with both must be theme-independent. Bone (#F4F1E4) and
+       dark-spruce (#0E1A14) hold 13:1 contrast against either background. */
+    color: #0E1A14;
+    background: #F4F1E4;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
 
   html .hero-manifesto .hero-secondary-cta:hover {
-    color: #FFFFFF;
-    text-decoration-color: #FFFFFF;
-  }
-
-  /* Dark mode: hero gradient flips to pale sage. The bone secondary-cta
-     becomes invisible against pale green, so swap to dark-spruce with
-     dark-spruce underline. The html[data-theme=dark] prefix wins over
-     the lighter rule above. */
-  html[data-theme="dark"] .hero-manifesto .hero-secondary-cta {
+    background: #FFFFFF;
     color: #0E1A14;
-    text-decoration-color: rgba(14, 26, 20, 0.5);
-  }
-  html[data-theme="dark"] .hero-manifesto .hero-secondary-cta:hover {
-    color: #000000;
-    text-decoration-color: #000000;
+    transform: translateY(-1px);
   }
 
   .hero-visual {
@@ -612,8 +605,8 @@ const journeySteps = [
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
-    background: var(--color-background);
-    color: var(--color-cream-ink);
+    background: #F4F1E4;
+    color: #0E1A14;
     text-decoration: none;
     border-radius: 0.5rem;
     font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
@@ -624,8 +617,8 @@ const journeySteps = [
   }
   .tour-slide-cta:hover,
   .tour-slide-cta:focus-visible {
-    background: var(--color-on-primary-dark);
-    color: var(--color-secondary);
+    background: #FFFFFF;
+    color: #0E1A14;
     transform: translateY(-1px);
   }
   .tour-controls {

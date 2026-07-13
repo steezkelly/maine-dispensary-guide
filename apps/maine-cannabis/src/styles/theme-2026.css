@@ -134,10 +134,10 @@ html[data-theme] body {
    dark-spruce-on-pale-sage or cream-on-dark-green for .hero-secondary-cta,
    dark-spruce-on-white for .btn-cta) and the link rule's pale-sage or
    mid-green text otherwise bleeds through and breaks WCAG-AA. */
-html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta),
+html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link),
 html[data-theme] .article-content a,
 html[data-theme] .guide-content a,
-html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta) {
+html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link) {
   color: var(--color-link);
   text-decoration: underline;
   text-decoration-color: color-mix(in oklab, var(--color-link) 35%, transparent);
@@ -258,6 +258,11 @@ html[data-theme] a[target="_blank"]::after {
   line-height: var(--leading-tight);
   margin-block: var(--space-sm) var(--space-lg);
   letter-spacing: -0.02em;
+  /* Without this, h2 inherits var(--color-text) (dark spruce in both
+     modes) which is invisible against the section-a primary bg (also
+     dark spruce in light, pale sage in dark). Force cream so the
+     heading always contrasts with the section's primary-green panel. */
+  color: var(--color-background);
 }
 .section-a p {
   color: color-mix(in oklab, var(--color-background) 92%, transparent);
