@@ -32,10 +32,15 @@ if [ ! -t 0 ]; then
         if [ -n "$REMOTE_REF" ] && [ "$REMOTE_REF" != "(delete)" ] && [ "$REMOTE_REF" != "(local)" ]; then
             case "$REMOTE_REF" in
                 refs/heads/*)
-                    # translate refs/heads/main -> refs/remotes/origin/main
+                    # translate refs/heads/main -> refs/remotes/origin/main.
+                    # A first push has no remote-tracking ref yet; do not leave
+                    # the local refs/heads/* value in place because diffing it
+                    # against HEAD produces an empty range.
                     short="${REMOTE_REF#refs/heads/}"
                     if git show-ref --verify --quiet "refs/remotes/origin/$short"; then
                         REMOTE_REF="refs/remotes/origin/$short"
+                    else
+                        REMOTE_REF=""
                     fi
                     ;;
             esac
