@@ -84,7 +84,7 @@ function parseLease(root, lease) {
   if (!isIsoTimestamp(lease.expiresAt)) {
     throw new Error('lease.expiresAt must be a valid timestamp');
   }
-  const paths = lease.paths.map((item) => normalizeLeasePath(root, item));
+  const paths = lease.paths.map((item) => normalizeLeasePath(lease.worktree, item));
   if (paths.includes('.')) throw new Error('lease.paths cannot claim repository root');
   return {
     agent: lease.agent,

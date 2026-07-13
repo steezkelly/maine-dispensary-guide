@@ -86,7 +86,7 @@ test('shared leases created for two linked worktrees are visible and conflicting
     agent,
     branch,
     worktree,
-    paths: ['apps/maine-cannabis/src/pages/index.astro'],
+    paths: [path.join(worktree, 'apps/maine-cannabis/src/pages/index.astro')],
     startedAt: '2026-07-13T20:00:00Z',
     expiresAt: '2026-07-14T02:00:00Z',
   });
