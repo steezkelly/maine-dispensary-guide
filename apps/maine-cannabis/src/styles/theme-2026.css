@@ -30,6 +30,19 @@
   --color-link: #1F4D3A;
   --color-link-hover: #4F6F4E;
 
+  /* === ON-SURFACE FOREGROUND TOKENS ===
+     Pre-computed foreground colors for each theme-flippable background
+     surface. Use these instead of hardcoding white/dark text in component
+     rules so a single rule works in both themes. Without these, every
+     "color: white on --color-primary" rule breaks when --color-primary
+     flips to pale-sage in dark mode (green-on-green). */
+  --color-on-primary: #FFFFFF;         /* text on dark spruce primary chip */
+  --color-on-primary-dark: #F4F1E4;    /* text on dark navy/deep-spruce panel */
+  --color-on-accent: #FFFFFF;          /* text on forest-green accent fill (mid green reads as light enough) */
+  --color-on-surface: var(--color-text); /* text on light surface (resolves to dark in light, cream in dark) */
+  --color-on-surface-elev: var(--color-text); /* text on raised card surface (surface-2) */
+  --color-on-tag-fill: #FFFFFF;        /* text on solid .tag-badge fill (the badge bg uses --color-primary) */
+
   /* Existing radii — slight bump for organic feel */
   --radius: 1rem;                    /* was 0.75rem */
   --radius-lg: 1.5rem;               /* NEW: large tier */
@@ -62,6 +75,16 @@
 
   --color-link: #B5D0A8;             /* bright sage — fixes dark-mode pain */
   --color-link-hover: #D4E4C6;
+
+  /* On-surface foreground tokens — see light block for rationale.
+     In dark mode the --color-primary chip becomes pale sage, so the
+     foreground flips to dark spruce for contrast. */
+  --color-on-primary: #0B1A14;         /* dark spruce text on pale-sage primary chip */
+  --color-on-primary-dark: #0B1A14;    /* dark spruce text on bone/pale primary-dark surface (e.g. dark-spruce hero card) */
+  --color-on-accent: #FFFFFF;          /* white still wins on mid-green accent in dark mode */
+  --color-on-surface: var(--color-text); /* text on dark surface (resolves to cream) */
+  --color-on-surface-elev: var(--color-text);
+  --color-on-tag-fill: #0B1A14;        /* dark text on pale-sage tag chip in dark mode */
 
   /* Dark elevation: deeper shadows, more pronounced */
   --elev-1-shadow: inset 0 1px 0 rgba(168,196,154,.06), 0 1px 2px rgba(0,0,0,.4), 0 6px 16px rgba(0,0,0,.4);
