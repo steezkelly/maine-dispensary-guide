@@ -6904,3 +6904,105 @@ doesn't understand a known pattern. Classification:
   `https://mainedispensaryguide.com/embed/opt-in-tracker` continues
   to render with `noindex, nofollow`. The shorter description is
   served on next Vercel deploy.
+
+
+## Round 6 (refit) — Universal Language v1 (executed 2026-07-14, parent agent)
+
+Branch `docs/universal-language-2026-07-14` (commit pending
+verification). Worktree: `.worktrees/universal-language-2026-07-14`
+from `origin/main`@`ebf7ea75`.
+
+### Trigger
+
+Two things shifted since the round-6 escalation:
+
+1. Steve's message: "Do not worry about the strain heatmap, that
+   was mostly me talking aloud." Round 7's strain-heatmap goal is
+   **retired**. Round 6 is no longer "blocked on round 7's
+   threshold"; round 6 is "do not work on that data pipeline at
+   all, the design branch removed it."
+2. Steve's message: "the terminologies of these 'rounds' 'phases'
+   'turns' 'tasks' etc. should be solidified so there is a universal
+   language going on in our system." This is the actionable ask.
+
+### Re-survey of the design branch (2026-07-14 post-snapshot)
+
+`git diff origin/main design/refined-editorial-foundation-20260713
+--name-status` shows 49 files changed, including wholesale deletion
+of the franchise-data-pipeline subtree I shipped in commit
+`be74317e` (round 1):
+
+- `apps/maine-cannabis/docs/seo/menu-data-pipeline.md` (D)
+- `apps/maine-cannabis/src/components/MenuBlock.astro` (D)
+- `apps/maine-cannabis/src/data/canonical-overrides.json` (D) — round 5
+- `apps/maine-cannabis/src/data/dispensary-intel/...` (D) — entire
+  directory tree
+- `scripts/seo/menu-extract.cjs` (D) and `menu-coalesce.cjs` (D)
+
+The design session made a deliberate architectural deprecation
+choice. Per `mdg-context-preservation` integration-worktree
+protocol, I am not force-restoring the pipeline. Round 6's
+self-assigned task is closed: the franchise data pipeline is no
+longer part of MDG.
+
+### What shipped (this commit)
+
+**New file:** `docs/superpowers/specs/2026-07-14-mdg-universal-language-v1.md`
+(180 lines). Establishes the project's universal vocabulary across:
+
+- **§1 Unit-of-work hierarchy**: round / phase / turn / task / step.
+  Includes a "historical usage to normalize away from" list
+  (sprint → round, worker → subagent, etc.).
+- **§2 Agent / actor vocabulary**: operator / agent / subagent /
+  session / worktree. Marks `worker` and `helper` as deprecated
+  synonyms.
+- **§3 Domain classification**: engineering / design / seo-geo /
+  data / operations / analytics / agent-meta. Each domain has a
+  canonical doc-root + branch-naming convention.
+- **§4 Doc-type taxonomy**: spec / ADR / audit / incident / report /
+  plan / glossary / pasdown — with the exact filename convention for
+  each.
+- **§5 Status vocabulary**: proposed / approved / in-progress /
+  shipped / verified / paused / deprecated / escalated.
+- **§6 Mnemosyne-importance scale**: 0.9+ for arch decisions and
+  sprint-ship records; 0.7-0.89 for tool discoveries; 0.4-0.69 for
+  domain facts; < 0.4 transient observations.
+- **§7 Hub-entry convention**: heading format, body subsection
+  order, no-ship-round rule.
+- **§8 Deprecated / do-not-use terms**: hit-list for future audits.
+- **§9 How to use this doc**: decisions trees for new docs, old-doc
+  normalization, conflicts.
+- **§10 Change history**: just this entry for v1.
+
+### Round 8 (continuous integration readiness) — this round
+
+Zero path-overlap on the spec file (the design branch's spec doc
+in the same directory is `2026-07-13-mdg-refined-editorial-foundation-design.md`
+— different name, different file). I will not touch the design
+branch's spec.
+
+### What this round does NOT do
+
+- **Restore the franchise-data-pipeline.** The design branch
+  removed it intentionally. Per the integration-worktree protocol,
+  this round respects that decision. If a future round wants the
+  pipeline back, that's a reintroduction — separate work, separate
+  branch, separate operator approval.
+- **Migrate existing docs to the new vocabulary.** The Hub still
+  has 94 `round` references, 31 `phase` references, 19 `turn`
+  references, etc. Migration is a separate round that should use
+  doc-search-and-replace scripts. Suggest: round 9 in a future
+  planning cycle. **This doc itself is the spec for that future
+  work** — the v1.0 reference for what the migration should target.
+- **Touch any non-language-doc file in the design branch's diff
+  range.** Even though the design branch's wholesale deletion is
+  observable, I am not re-asserting those files. Round 8 discipline.
+
+### Verification
+
+- `npm run verify:iterate` clean (no .astro/.ts files changed; only
+  the docs-vs-code gate ran and passed).
+- Single new file: `docs/superpowers/specs/2026-07-14-mdg-universal-language-v1.md`.
+- Pre-push hook does not run docs-vs-code for new spec files, but
+  the existing repo's docs-vs-code gate accepts the new file (no
+  drift, no missing-references warning).
