@@ -295,12 +295,23 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       })();
       document.documentElement.setAttribute('data-theme', theme);
 
+      function syncThemeToggle(nextTheme) {
+        const toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        const isDark = nextTheme === 'dark';
+        toggle.setAttribute('aria-pressed', String(isDark));
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+
       window.toggleTheme = function() {
         const current = document.documentElement.getAttribute('data-theme');
         const next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
+        syncThemeToggle(next);
       };
+
+      document.addEventListener('DOMContentLoaded', () => syncThemeToggle(theme), { once: true });
     </script>
 
     <!-- Google Analytics GA4 -->

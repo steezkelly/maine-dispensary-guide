@@ -238,7 +238,7 @@ html[data-theme] a[target="_blank"]::after {
 /* --- A: Dark Feature ------------------------------------------------- */
 .section-a {
   background: #143027;
-  color: var(--color-background);
+  color: var(--color-on-secondary);
   padding: var(--space-3xl) var(--space-md);
   border-radius: var(--radius-lg);
   margin-block: var(--space-2xl);
@@ -258,7 +258,7 @@ html[data-theme] a[target="_blank"]::after {
 }
 .section-a > * { position: relative; }
 .section-a .section-eyebrow {
-  color: color-mix(in oklab, var(--color-background) 70%, var(--color-primary));
+  color: #D9E5D0;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: var(--text-xs);
@@ -277,15 +277,15 @@ html[data-theme] a[target="_blank"]::after {
   color: var(--color-on-secondary);
 }
 .section-a p {
-  color: color-mix(in oklab, var(--color-background) 92%, transparent);
+  color: color-mix(in oklab, var(--color-on-secondary) 90%, transparent);
   font-size: var(--text-lg);
   line-height: var(--leading-normal);
   max-width: 60ch;
 }
 .section-a a:not(.btn):not(.button) {
-  color: var(--color-background);
+  color: var(--color-on-secondary);
   text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--color-background) 40%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--color-on-secondary) 45%, transparent);
   text-underline-offset: 0.2em;
 }
 .section-a a:not(.btn):not(.button):hover {
@@ -296,21 +296,21 @@ html[data-theme] a[target="_blank"]::after {
    set their own background/border (e.g. .market-overview, .authority-stats,
    .newsletter-section). These rules force the dark-feature treatment to
    win on the outer <section>. Inner content gets re-styled below. */
-.section-a.market-overview,
-.section-a.authority-stats,
-.section-a.newsletter-section {
+html[data-theme] .section-a.market-overview,
+html[data-theme] .section-a.authority-stats,
+html[data-theme] .section-a.newsletter-section {
   background: #143027;
-  color: var(--color-background);
+  color: var(--color-on-secondary);
   border: none;
 }
-.section-a.market-overview::before,
-.section-a.authority-stats::before,
-.section-a.newsletter-section::before {
+html[data-theme] .section-a.market-overview::before,
+html[data-theme] .section-a.authority-stats::before,
+html[data-theme] .section-a.newsletter-section::before {
   display: none;
 }
-[data-theme="dark"] .section-a.market-overview,
-[data-theme="dark"] .section-a.authority-stats,
-[data-theme="dark"] .section-a.newsletter-section {
+html[data-theme="dark"] .section-a.market-overview,
+html[data-theme="dark"] .section-a.authority-stats,
+html[data-theme="dark"] .section-a.newsletter-section {
   background: var(--color-surface-2);
   color: var(--color-text);
 }
@@ -329,37 +329,39 @@ html[data-theme] a[target="_blank"]::after {
 
 /* Inside A: cards should invert (transparent → bone-tinted) so the
    dark surface reads as one piece rather than white blocks on dark. */
-.section-a .aside-card {
-  background: color-mix(in oklab, var(--color-background) 8%, transparent);
-  border-color: color-mix(in oklab, var(--color-background) 25%, transparent);
-  color: var(--color-background);
+html[data-theme] .section-a .aside-card {
+  background: color-mix(in oklab, var(--color-on-secondary) 8%, transparent);
+  border-color: color-mix(in oklab, var(--color-on-secondary) 25%, transparent);
+  color: var(--color-on-secondary);
 }
-.section-a .aside-card .aside-label {
-  color: color-mix(in oklab, var(--color-background) 70%, transparent);
+html[data-theme] .section-a .aside-card .aside-label {
+  color: color-mix(in oklab, var(--color-on-secondary) 76%, transparent);
 }
-.section-a .aside-note {
-  color: color-mix(in oklab, var(--color-background) 80%, transparent);
-  border-top-color: color-mix(in oklab, var(--color-background) 20%, transparent);
+html[data-theme] .section-a .aside-note {
+  color: color-mix(in oklab, var(--color-on-secondary) 82%, transparent);
+  border-top-color: color-mix(in oklab, var(--color-on-secondary) 20%, transparent);
 }
-.section-a .stat-block,
-.section-a .stat-text {
-  color: var(--color-background);
+html[data-theme] .section-a .stat-block,
+html[data-theme] .section-a .stat-text {
+  color: var(--color-on-secondary);
 }
-.section-a .stat-divider {
-  background: color-mix(in oklab, var(--color-background) 20%, transparent);
+html[data-theme] .section-a .stat-divider {
+  background: color-mix(in oklab, var(--color-on-secondary) 20%, transparent);
 }
-.section-a .newsletter-content p {
-  color: color-mix(in oklab, var(--color-background) 85%, transparent);
+html[data-theme] .section-a .overview-main p,
+html[data-theme] .section-a .stats-intro,
+html[data-theme] .section-a .newsletter-content p {
+  color: color-mix(in oklab, var(--color-on-secondary) 90%, transparent);
 }
-.section-a .form-input,
-.section-a .form-select {
-  background: color-mix(in oklab, var(--color-background) 95%, transparent);
+html[data-theme] .section-a .form-input,
+html[data-theme] .section-a .form-select {
+  background: color-mix(in oklab, var(--color-on-secondary) 95%, transparent);
   color: var(--color-text);
-  border-color: color-mix(in oklab, var(--color-background) 50%, transparent);
+  border-color: color-mix(in oklab, var(--color-on-secondary) 50%, transparent);
 }
-.section-a .form-btn {
-  background: var(--color-background);
-  color: var(--color-primary);
+html[data-theme] .section-a .form-btn {
+  background: var(--color-on-secondary);
+  color: var(--color-cream-ink);
 }
 
 /* --- B: Editorial Card ----------------------------------------------- */

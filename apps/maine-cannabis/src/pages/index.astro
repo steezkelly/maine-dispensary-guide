@@ -221,7 +221,7 @@ const journeySteps = [
        invisible against the page-bg-cream walk-up. With literal hex
        values the hero panel is always dark and the cream text always
        contrasts. */
-    color: var(--color-background);
+    color: #F4F1E4;
     padding: var(--space-xl) 0 var(--space-lg);
     margin-bottom: var(--space-lg);
     overflow: hidden;
@@ -279,7 +279,7 @@ const journeySteps = [
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.02em;
-    color: var(--color-background);
+    color: #F4F1E4;
     margin-bottom: var(--space-md);
   }
 
@@ -2283,10 +2283,42 @@ const journeySteps = [
   html[data-theme="dark"] .ops-closing {
     border-color: var(--color-border);
   }
-  /* Old per-mode !important overrides for hero-manifesto buttons removed
-     2026-07-13: the bone-chip + dark-spruce text pattern now uses
-     scoped rules (html .hero-manifesto .btn-primary etc.) at the
-     source, not !important at the bottom of the file. */
+  /* Readability guardrails for fixed dark surfaces and their controls. */
+  html[data-theme] .hero-manifesto,
+  html[data-theme] .hero-title,
+  html[data-theme] .hero-descriptor,
+  html[data-theme] .edition-mark {
+    color: #F4F1E4;
+  }
+  html[data-theme] .hero-manifesto .btn-primary,
+  html[data-theme] .hero-manifesto .btn-ghost {
+    background: #F4F1E4 !important;
+    color: #0E1A14 !important;
+  }
+  html[data-theme="dark"] .section-eyebrow,
+  html[data-theme="dark"] .freshness-label,
+  html[data-theme="dark"] .resource-icon,
+  html[data-theme="dark"] .author-footer-role {
+    color: #B7D0A6;
+  }
+  html[data-theme="dark"] .step-num {
+    color: #B7D0A6;
+    opacity: 1;
+  }
+  html[data-theme="dark"] .hub-cta {
+    color: #B7D0A6;
+  }
+  html[data-theme] .market-overview .section-eyebrow {
+    color: #D9E5D0 !important;
+  }
+  html[data-theme="dark"] .new-badge.badge-new {
+    background: #315D3E;
+    color: #F4F1E4;
+  }
+  html[data-theme="dark"] .section-a .form-input,
+  html[data-theme="dark"] .section-a .form-select {
+    color: #0E1A14;
+  }
   /* Full-page aurora: pinned to viewport, behind all content, with the
      component-rendered blobs slowly drifting. pointer-events: none so it
      never intercepts clicks; z-index: -1 so it sits behind everything. */

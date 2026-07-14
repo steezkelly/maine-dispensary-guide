@@ -307,6 +307,10 @@ const recentIssues = [
     margin-bottom: 0.5rem;
   }
 
+  :global(html[data-theme="dark"]) .issue-date {
+    color: #B7D0A6;
+  }
+
   .issue-card h3 {
     font-size: 1rem;
     color: var(--color-text);
@@ -388,12 +392,16 @@ const recentIssues = [
     display: inline-block;
     padding: 0.875rem 1.75rem;
     background: #143027;
-    color: white;
+    color: #F4F1E4;
     border-radius: 1rem;
     font-weight: 600;
     font-size: 0.9375rem;
     text-decoration: none;
     transition: background 0.2s, transform 0.2s;
+  }
+
+  :global(html[data-theme]) .archive-link {
+    color: #F4F1E4 !important;
   }
 
   .archive-link:hover {
