@@ -6,6 +6,7 @@ const test = require('node:test');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const PROTOCOL_PATH = path.join(ROOT, 'docs/governance/mdg-agent-orchestration-v1.md');
 const TEMPLATE_PATH = path.join(ROOT, 'docs/governance/templates/mdg-task-contract.md');
+const CODEX_AUTHOR_PROMPT_TEMPLATE_PATH = path.join(ROOT, 'docs/governance/templates/mdg-codex-author-prompt.md');
 
 function hasWholeWord(content, term) {
   return new RegExp(`\\b${term}\\b`, 'i').test(content);
@@ -86,4 +87,18 @@ test('MDG task contract template is forward-compatible with the Task 2 validator
   assert.match(template, /^role: codex-author$/m);
   assert.match(template, /^allowed_paths:\n\s+- docs\/governance\/example\.md$/m);
   assert.match(template, /^acceptance:\n\s+- node scripts\/git\/tests\/example\.test\.cjs$/m);
+});
+
+test('MDG Codex Author prompt template preserves bounded-author safeguards', () => {
+  const template = fs.readFileSync(CODEX_AUTHOR_PROMPT_TEMPLATE_PATH, 'utf8');
+
+  for (const requiredInstruction of [
+    'DO NOT commit or push',
+    'DO NOT run git add -A or git add .',
+    'Only edit allowed_paths',
+    'run the acceptance commands',
+    'report exact changed paths and command exits',
+  ]) {
+    assert.ok(template.includes(requiredInstruction), `template must include: ${requiredInstruction}`);
+  }
 });

@@ -32,6 +32,21 @@ on the card. The author never commits, pushes, alters `main`, rebases, resets,
 uses `git add -A`, or expands scope. Do not use `git add -A`; authors leave
 their diff unstaged for review.
 
+### Codex Author launch procedure
+
+Before launching an author, the Coordinator must have a validated contract,
+completed the scoped preflight, created a fresh worktree, and acquired the
+allowed-path lease. Then render the bounded author prompt at
+`/tmp/mdg-task-{{id}}-prompt.txt` and launch it with:
+
+```bash
+codex --yolo exec "$(cat /tmp/mdg-task-{{id}}-prompt.txt)"
+```
+
+Run the author in a PTY or background process. Monitor its logs without typing
+into the process unless the contract is amended; an amended contract requires a
+new bounded prompt before further direction is sent.
+
 ### Verifier
 
 The Verifier is independent of the Codex Author. The Verifier must read the
