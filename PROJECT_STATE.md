@@ -32,14 +32,21 @@
 - Implementation/handoff status (what is wired, measurement gates, and intentionally deferred architecture): `docs/analytics/ICA_IMPLEMENTATION_STATUS_2026-07-13.md`.
 
 ## Site Structure (current as of 2026-07-08)
+
+> **Note on numeric counts:** All page/sitemap/post counts below were verified
+> against the live production sitemap and built dist on 2026-07-14. They
+> will drift with every build; re-derive before quoting. Procedure:
+> `curl -s https://mainedispensaryguide.com/sitemap-0.xml | grep -c '<loc>'`
+> for sitemap; `find dist -name 'index.html' | wc -l` for built count.
+
 - **Homepage:** `/` — Optimized for SEO clusters; includes start-here journey, resource cards, lead capture.
 - **Guides Index:** `/guides/` — Business, Compliance, Cities, Operations, Market categories.
 - **City Guides:** **111** Maine cities/towns (Portland, Bangor, Lewiston, Augusta, Auburn, Biddeford, Brunswick, Saco, Scarborough, Sanford, Waterville, Westbrook, South Portland, Old Orchard Beach, Kittery, + 95 small towns).
 - **Technical / Operator Guides:** **75** (280E Taxes, Metrc, Staff Licensing, Real Estate, Transfer of Ownership, Conditional License, + 69 others).
 - **Blog:** 36 posts.
 - **OCP directory:** `/find-a-dispensary` — 86 OCP-licensed towns (25 adult-use retail + 61 caregiver storefronts) in addition to curated guides.
-- **Total pages:** 262 html (258 in sitemap; 4 admin/download/404 intentionally noindex).
-- **Sitemap:** `/sitemap-index.xml` (auto-generated, 258 URLs).
+- **Total pages:** 278 html (274 in sitemap; 4 noindex pages — admin/email-dashboard, download/roadmap, experiments, search — correctly excluded per `NOINDEX_PATH_PREFIXES` in `scripts/check/sitemap-postprocess.mjs`).
+- **Sitemap:** `/sitemap-index.xml` (auto-generated, 274 URLs; verified 2026-07-14).
 - **Live health snapshot:** `/status.json` (auto-refreshed on every build).
 
 ## Recent Optimizations (Sprint 78+)
