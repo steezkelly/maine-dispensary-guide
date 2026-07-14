@@ -45,7 +45,7 @@ npm run verify:push                  # adds smoke-200 + smoke-img-200 against pr
 **Rules:**
 - Do **NOT** run `npx astro check` directly — it does a full unfiltered project check (~3min) instead of the changed-files filter that `verify:iterate` uses. Use `verify:iterate` instead.
 - Do **NOT** run smoke checks during iteration. They hit production URLs and add 30+s for no iteration value. Run them once before pushing.
-- Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of sprint, or once before deploy if `verify:push` smoke passes.
+- Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of round, or once before deploy if `verify:push` smoke passes.
 - The pre-push hook (`.githooks/pre-push`) runs `verify:push` automatically on `git push`. If it fails, that means `verify:push` failed locally — fix and re-push.
 
 ### Autonomous worktree protocol
@@ -390,8 +390,8 @@ task(description="Review homepage redesign", prompt="Compare screenshot of / aft
 
 ## Process & Safety
 
-### Sprint Retrospective (Every Multi-Step Sprint)
-After completing any sprint with 3+ steps or 4+ agents:
+### Round Retrospective (Every Multi-Step Round)
+After completing any round with 3+ steps or 4+ agents:
 1. **What worked** — note effective patterns for reuse
 2. **What failed** — bugs, wrong delegation sizes, missing deps
 3. **Is it a pattern?** — if yes, promote to `memory.md` or update `corrections.md`

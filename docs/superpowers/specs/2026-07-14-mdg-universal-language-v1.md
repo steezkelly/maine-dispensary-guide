@@ -178,3 +178,76 @@ these, flag it.
 | Date | Author | Change |
 |---|---|---|
 | 2026-07-14 | Hermes Agent (parent) | Initial v1: §1 unit-of-work hierarchy, §2 agent vocab, §3 domain classification, §4 doc types, §5 status vocabulary, §6 mnemosyne importance, §7 Hub convention, §8 deprecated terms, §9 usage, §10 change history |
+
+## §11. v1.1 Amendment — 2026-07-14 (post-migration-survey)
+
+### Scope of the §8 deprecated-term list
+
+The v1 §8 list says "sprint → round" and "iteration → turn or round".
+That list applies to **prose usage as a generic noun**. It does NOT
+apply to:
+
+- **File names that contain `sprint-` as a historical prefix**:
+  `scripts/git/sprint-handoff.cjs`,
+  `apps/maine-cannabis/scripts/admin/sprint-score.cjs`. These are
+  named after the pre-v1 project convention and renaming them is
+  out of scope for vocabulary standardization. They keep the legacy
+  name because the file content's purpose (sprint-handoff = "after
+  a round, generate a Hub entry from git history"; sprint-score =
+  "compute the project's audit score") is functionally still
+  applicable under the v1 vocabulary, just with a different word.
+- **OpenCode custom command names**: `/sprint-close`. The command is
+  user-facing; renaming it would break user muscle memory. The
+  command's *semantics* align with the v1 round-end convention; the
+  *name* is a historical artifact.
+- **Domain-specific uses of "iteration"**: in AGENTS.md, the verify
+  cycle's "iteration" mode (`npm run verify:iterate` is the
+  command) is a domain word meaning "during the editing loop." It
+  is NOT the deprecated synonym. Same for code-loop counter
+  language ("Any loop >100 iterations" = any code loop that runs
+  >100 times).
+
+When a future migration sweep encounters one of these cases, do
+NOT rename the file or command. Leave a Hub entry noting the
+audit result and move on.
+
+### Migration scope (per round 9, 2026-07-14)
+
+Round 9 migrated **AGENTS.md only** — three lines of the most
+"read this first" doc. The migration touch list:
+
+- "Build once at end of sprint" → "Build once at end of round"
+  (AGENTS.md, deprecated noun)
+- "Sprint Retrospective (Every Multi-Step Sprint)" → "Round
+  Retrospective (Every Multi-Step Round)" (AGENTS.md, section header)
+- "After completing any sprint with 3+ steps" → "After completing
+  any round with 3+ steps" (AGENTS.md, deprecated noun)
+
+Five file/path mentions were left intact as historical artifacts
+per the scope rule above (`sprint-handoff.cjs`, `sprint-score.cjs`,
+`/sprint-close`, `verify:iterate` cycle references, code-loop
+counter language).
+
+### Deferred migration (named explicitly, NOT buried)
+
+- **MDG_AGENT_HANDBOOK.md** — 18 sprint mentions; round 10.
+- **PROJECT_STATE.md** — 16 deprecated mentions; round 10.
+- **MISSION_CONTROL.md** — 24 sprint mentions; round 11.
+- **Hub body migration** — 527 deprecated-term occurrences across
+  ~459 Hub sections. The Hub preserves the chronological record
+  verbatim per §7 ("the Hub is the project's de-facto vocabulary
+  source") and per the v1 §9 ("use the term that survives in the
+  Hub"). Migration here would falsify history. The Hub gains a
+  **v1 vocabulary footer** that maps deprecated terms to canonical
+  terms going forward, so future agents reading the Hub get the
+  mapping without the body being rewritten.
+- **File-name renaming** — `sprint-handoff.cjs` →
+  `round-handoff.cjs` etc. is a separate workstream that would also
+  require updating the pre-push hook and the `/sprint-close`
+  custom command. Out of scope for vocabulary standardization.
+
+### Change history (v1.1)
+
+| Date | Author | Change |
+|---|---|---|
+| 2026-07-14 | Hermes Agent (parent) | v1.1: §10 amendment scope rules + §11 deferred-migration scope. The v1 spec was correct in principle; the migration needed scope guards the v1 itself didn't spell out. |

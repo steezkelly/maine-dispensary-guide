@@ -7006,3 +7006,55 @@ branch's spec.
 - Pre-push hook does not run docs-vs-code for new spec files, but
   the existing repo's docs-vs-code gate accepts the new file (no
   drift, no missing-references warning).
+
+
+## v1 Vocabulary Glossary (canonical reference, 2026-07-14)
+
+> **For Hermes and friends:** this footer is the stable glossary
+> for the universal-language v1 spec. The Hub body preserves
+> historical vocabulary verbatim per v1 §7; the glossary is how
+> future agents reading the Hub get the v1 → v0 mapping without
+> rewriting history. Source of truth:
+> `docs/superpowers/specs/2026-07-14-mdg-universal-language-v1.md`
+> (v1.1 amendment in §11).
+
+### Deprecated → canonical
+
+| Deprecated term (v0) | Canonical term (v1) | Notes |
+|---|---|---|
+| `sprint` (as a generic noun for a work unit) | `round` | File names and OpenCode commands containing `sprint-` are historical artifacts, NOT in this list. See v1 §11. |
+| `worker` | `subagent` | All occurrences in this log kept verbatim. |
+| `helper` | `subagent` | All occurrences in this log kept verbatim. |
+| `iteration` (as a synonym for round/turn) | `turn` (conversation) or `round` (work) | Domain-specific uses of "iteration" (verify:iterate cycle, code-loop counter) stay as the domain word. |
+| `milestone` | `phase` boundary | "End of phase" = "milestone reached." |
+| `dispatch` (as a noun) | `worktree` or `commit` | `dispatch` as a verb stays. |
+| `automation` (as a synonym for agent) | `script` / `cron` / non-LLM automation | Automation is not an LLM. Don't use "automation" to mean "agent." |
+| `session` (as a synonym for worktree) | keep distinct | A session is a conversation. A worktree is a git checkout. Sessions work IN worktrees, not equal them. |
+
+### Domain classification (v1 §3)
+
+| Domain | Doc roots | Round-naming |
+|---|---|---|
+| `engineering` | `apps/`, `scripts/`, `AGENTS.md` | `chore/*`, `refactor/*`, `feat/*` |
+| `design` | `apps/maine-cannabis/src/components/`, styles/ | `design/*` |
+| `seo-geo` | `docs/seo/`, `apps/maine-cannabis/src/data/citations.json` | `chore/seo-*`, `chore/content-*` |
+| `data` | `apps/maine-cannabis/src/data/`, `scripts/seo/` (data-related) | `feat/data-*` |
+| `operations` | `vercel.json`, `vercel-build.sh`, `apps/maine-cannabis/scripts/admin/` | `chore/ops-*` |
+| `analytics` | `docs/analytics/`, scripts/analytics/ | `chore/analytics-*` |
+| `agent-meta` | `BOT_COLLABORATION_HUB.md`, `AGENTS.md`, `MDG_AGENT_HANDBOOK.md`, `.hermes/plans/` | `docs/*` |
+
+### Status vocabulary (v1 §5)
+
+`proposed` → `approved` → `in-progress` → `shipped` (with `verified` per-step) → `paused` or `deprecated` or `escalated` (terminal states)
+
+### Mnemosyne importance (v1 §6)
+
+0.9+ for arch decisions and sprint-ship records. 0.7-0.89 for tool discoveries. 0.4-0.69 for domain facts. < 0.4 for transient observations.
+
+### Hub-entry convention (v1 §7)
+
+`## Round N — <Title> (executed YYYY-MM-DD, <actor>)` then sub-headings: Trigger / What shipped / Pre-flight + verification / Out of scope (named, not buried) / Mnemosyne ID.
+
+### Change history (this footer)
+
+- 2026-07-14: appended at the end of the Hub (round 9 standardization). Footer does not modify Hub body — the body is the chronological log, the footer is the v1 → v0 glossary.
