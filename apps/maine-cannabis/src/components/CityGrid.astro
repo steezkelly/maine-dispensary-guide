@@ -1,0 +1,15 @@
+---
+import CityCard, { type CityCardData } from './CityCard.astro';
+
+interface Props {
+  cities: CityCardData[];
+}
+
+const { cities } = Astro.props;
+---
+
+<div class="city-grid">
+  {cities.map((city) => (
+    <CityCard {...city} variant={city.featured ? 'featured' : 'default'} />
+  ))}
+</div>
