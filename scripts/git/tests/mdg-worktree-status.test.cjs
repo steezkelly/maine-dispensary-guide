@@ -71,6 +71,19 @@ test('parseLease rejects malformed expiration and missing identity fields', () =
   }).paths, ['apps/a.astro']);
 });
 
+test('parseLease accepts RFC 3339 offsets while rejecting impossible offset dates', () => {
+  const lease = {
+    agent: 'workflow-agent',
+    branch: 'chore/workflow',
+    worktree: '/tmp/mdg-worktree',
+    paths: ['apps/a.astro'],
+    startedAt: '2026-07-14T17:16:00-04:00',
+    expiresAt: '2026-07-14T19:16:00-04:00',
+  };
+  assert.equal(parseLease('/repo', lease).startedAt, '2026-07-14T17:16:00-04:00');
+  assert.throws(() => parseLease('/repo', { ...lease, expiresAt: '2026-02-31T19:16:00-04:00' }), /expiresAt/);
+});
+
 test('parseStatus preserves NUL-delimited rename paths', () => {
   assert.deepEqual(parseStatus('R  new name.astro\0old name.astro\0?? untracked file.txt\0'), [
     { status: 'R ', paths: ['new name.astro', 'old name.astro'] },

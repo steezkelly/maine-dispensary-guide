@@ -64,11 +64,19 @@ function parseStatus(raw) {
 }
 
 function isIsoTimestamp(value) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) return false;
+  const match = typeof value === 'string'
+    && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{3})?(Z|[+-]\d{2}:\d{2})$/.exec(value);
+  if (!match) return false;
+  const [year, month, day, hour, minute, second] = match.slice(1, 7).map(Number);
+  const offset = match[7];
+  const daysInMonth = [31, year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1] || hour > 23 || minute > 59 || second > 59) return false;
+  if (offset !== 'Z') {
+    const [offsetHour, offsetMinute] = offset.slice(1).split(':').map(Number);
+    if (offsetHour > 23 || offsetMinute > 59) return false;
+  }
   const timestamp = Date.parse(value);
-  if (!Number.isFinite(timestamp)) return false;
-  const canonical = new Date(timestamp).toISOString();
-  return value === canonical || value === canonical.replace('.000Z', 'Z');
+  return Number.isFinite(timestamp);
 }
 
 function parseLease(root, lease) {
