@@ -1,11 +1,17 @@
 # Maine Dispensary Guide — Project Todos
 
-> **2026-07-08 refresh:** This file was 33 days stale (last touched 2026-06-05).
-> Refreshed to reflect Sprints 78a–78t + the 2026-07-07 backlink campaign.
-> For sprint-by-sprint detail, see `BOT_COLLABORATION_HUB.md` (source of truth)
-> or run `node apps/maine-cannabis/scripts/admin/sprint-score.cjs` for the
-> live health snapshot. This file is now a curated high-level view, not a
-> hand-maintained changelog.
+> **2026-07-14 refresh (round 13):** Refreshed against current
+> `origin/main` post-rounds-1-12. Closed stale items. Surfaced
+> the cron-not-running finding (project-todos #7). OCP roster
+> reconciliation (#1) was a misdiagnosis — the 187/65 vs 107/49
+> numbers are a deliberate dual-stat design (annual-report
+> state-of-market vs live OCP licensee-roster). No data change
+> needed.
+> For sprint-by-sprint detail, see `BOT_COLLABORATION_HUB.md`
+> (source of truth) or run
+> `node apps/maine-cannabis/scripts/admin/sprint-score.cjs` for
+> the live health snapshot. This file is now a curated high-level
+> view, not a hand-maintained changelog.
 
 ## Priority Legend
 | Level | Meaning |
@@ -25,17 +31,52 @@
 - [x] **`@astrojs/vercel` bump to v11.0.2 (`c1697430`):** succeeds in isolation; `vercel.json` `outputDirectory` flip flipped+reverted twice — structural incompatibility documented in Hub §"THIRD-SESSION POSTMORTEM"
 - [x] **CI regression guard (`cd82300d`):** post-build assertion that `.vercel/output/functions/_render.func/.vc-config.json` exists; catches the next SSR-shape drift at CI
 - [x] **Post-campaign hardening (`27976a18`, 2026-07-08):** `--force-resend` flag in send-outreach-pitches.py; per-send atomic log writes defeat parallel-invocation race window; opt-in BCC (`MDG_BCC_SELF=1`); file lock + atomic rename in `logSentEmail()`; `.eml` filename guard against undefined `messageId`
+- [x] **Rounds 1-12 (Jul 14):** parent-agent session shipped SEO title/H1 alignment for fryeburg (1,850 imp / 0.5% CTR pivot), canonical-overrides registry + 2-of-3 caller migration, universal-language v1 spec (round/phase/turn/task/step vocabulary), AGENTS.md v1 vocab migration, March 2026 Spam Update policy audit + orphan-detector docstring correction. All commits live on `origin/main`. See Hub rounds 1-12 for full detail.
 
-## 🟠 HIGH — Pending (Open for next sprint)
+## 🟠 HIGH — Pending (Open for next round)
 
-- [ ] **OCP roster reconciliation** — `refresh-site-stats.cjs --dry-run` reports live count dropped from 187 stores / 65 municipalities → 107 / 49 between April and July 2026. Writing this drops every page that reads from `site-stats.json` and forces re-audit of the 7-page hardcode class (`404.astro`, `index.astro`, etc.). Operator scope: confirm the live count is correct, decide whether the drop reflects license non-renewals or stale-CSV reclassification.
-- [ ] **Theme 2026 → main merge decision** — held on `feature/theme-2026-fusion` since pre-Sprint 50; spruce + cream palette + elevation tiers, low technical risk (token-level override, reversible).
-- [ ] **`sprint-78k-visual-readability-polish` branch** — 11 commits behind main (`6940e2b6`); all green, all verified, needs rebase onto current main + ship decision.
-- [ ] **External link partnerships** — 5 warm-up emails sent (Mainebiz, Ganjapreneur, Maine Beacon, Cannabis Business Times, Maine Chamber/SBDC/SCORE outreach pending). 2026-07-07 backlink campaign sent 16 pitches; await replies.
-- [ ] **Vercel env vars cleanup** — `PURELYMAIL_SMTP_USER`, `PURELYMAIL_SMTP_PASS`, `MDG_FROM_ADDRESS`, `MDG_REPLY_TO` still in production Vercel from a 2026-07-06 failed activation; harmless (no code reads them) but stale. `vercel env rm <name> production`.
-- [ ] **Formspree autoresponder (5-min operator task)** — `xvgzlowz` form needs the autoresponder wired with attachment = `public/downloads/maine-first-timer-field-guide.pdf`. Until done, success-screen + direct-download work; only the email-delivered PDF is missing.
-- [ ] **GSC data pull** — OAuth re-auth needed for per-query × page slice. Cron `~/.local/bin/mdg-gsc-daily.sh` (6am daily) + `~/.local/bin/mdg-gsc-audit-weekly.sh` (Mon 7am) installed 2026-07-07; verify they're firing and producing useful rows.
-- [ ] **GA4 form-completion dashboard panel** — `lead_capture` events fire (Sprint 76) on all 5 forms; needs ~7 days of data + a GA4 exploration view to surface per-form conversion.
+- [x] **OCP roster reconciliation** — **CLOSED BY DESIGN (round 13).**
+  `site-stats.json` deliberately preserves two different facts:
+  `activeAdultUseRetailStores: 187` / `activeAdultUseMunicipalities: 65`
+  are the 2025 OCP Annual Report state-of-market figures for stat cards;
+  `currentOcpLicenseeRoster.auRetailStores: 107` /
+  `currentOcpLicenseeRoster.auMunicipalities: 49` are the live, deduped
+  OCP Store-type CSV counts refreshed 2026-07-08 for directory cards.
+  The file explicitly says these facts "should NOT be conflated." No
+  site-wide stat rewrite is required.
+- [ ] **External link partnerships** — 2026-07-07 backlink campaign sent
+  16 pitches; await replies and continue human-led follow-up. This remains
+  operator-side outreach, not an autonomous site edit.
+- [x] **Vercel production-env cleanup** — **CLOSED (round 13 verification).**
+  `AGENTS.md` records that production has zero environment variables after
+  the 2026-07-06 cleanup; the former Purelymail variables are not present
+  in production and no code reads them.
+- [ ] **Formspree autoresponder (operator action)** — wire the `xvgzlowz`
+  autoresponder with `public/downloads/maine-first-timer-field-guide.pdf`.
+  Direct-download and success-screen paths remain functional; only the
+  email-delivered PDF is missing.
+- [ ] **GSC scheduled measurement** — **BLOCKED: scheduler not running.**
+  Crontab contains the 6am daily and Monday 7am weekly jobs, and both
+  wrapper scripts exist, but `cron.service` is absent on this host.
+  `~/.local/log/gsc-daily.log` and `gsc-audit-weekly.log` last wrote
+  2026-07-06; `gsc-search-analytics.jsonl` last has a 2026-07-10 snapshot.
+  System-level scheduler enablement is operator scope. OpenSEO MCP remains
+  the verified live GSC query path used in round 1 and later analysis.
+- [ ] **GA4 form-completion dashboard panel** — `lead_capture` events fire
+  on all 5 forms; defer until at least seven stable days of data are
+  available, then create a per-form GA4 exploration view.
+
+## 🟡 Coordination / operator decisions
+
+- [ ] **Theme 2026 → main merge decision** — pre-Sprint-50
+  `feature/theme-2026-fusion` is now superseded in practice by the active
+  `design/refined-editorial-foundation-20260713` redesign branch. Do not
+  merge or rebase the old theme branch without an operator decision.
+- [ ] **`sprint-78k-visual-readability-polish` branch disposition** — the
+  previously-listed visual readability work has later production coverage;
+  verify unique commits before choosing archive vs rebase. Do not rebase
+  blindly.
+
 
 ## 🟡 MEDIUM — Backlog
 
@@ -68,23 +109,23 @@
 - [ ] Featured directory listings (paid placement).
 - [ ] Lead gen fees from referred businesses.
 
-## Metrics Tracker (live snapshot — run `node apps/maine-cannabis/scripts/admin/sprint-score.cjs` for canonical view)
+## Metrics Tracker (round-13 measured snapshot — `sprint-score` is canonical)
 
 | Goal | Target | Current | Status |
 |------|--------|---------|--------|
-| Sprint-Score checks | 11/11 | **9/11** | 🟠 (2 stale OCP + docs are deterministic / refreshable on demand) |
-| Sitemap URLs | >150 | **258** | ✅ |
-| Guide pages | 175+ | **186** (111 city + 75 technical/operator) | ✅ |
+| Sprint-score checks | 11/11 | **8/11** on 2026-07-14 | 🟠 3 actionable checks: content-health regressions, stale Hub header claim, AGENTS.md component-count drift |
+| Sitemap URLs | >150 | **274** | ✅ (278 built HTML routes; four intentional noindex exclusions) |
+| Guide pages | 175+ | **193** | ✅ |
 | Blog posts | — | **36** | ✅ |
-| Dist HTML pages | — | **262** | ✅ |
-| Pages with FAQPage JSON-LD | — | **159** | ✅ |
-| Internal-link orphans | 0 | **0** (per content-health baseline) | ✅ |
-| Hero images, broken refs | 0 | **0** of 1893 refs | ✅ |
-| OCP-Covered cities (directory) | — | **159** | ✅ |
-| External domains linking | >10 | ~2 estimated, awaiting link-campaign landing | 🟠 HIGH |
+| Dist HTML pages | — | **278** | ✅ |
+| Pages with FAQPage JSON-LD | — | **163** | ✅ |
+| Internal-link orphans | 0 | **2** (sprint-score current) | 🟠 triage needed; read-only detector remains intentional |
+| Hero images, broken refs | 0 | **0** of 1,288 refs | ✅ |
+| OCP-Covered cities (live roster) | — | **49 municipalities / 107 Store-type licensees** | ✅ dual-stat design; see OCP item above |
+| External domains linking | >10 | ~2 estimated, awaiting campaign landing | 🟠 human follow-up pending |
 
 ---
 
-*Last updated: 2026-07-08 EDT (Sprint 78 series refresh)*
-*Previous full refresh: 2026-06-05 (Sprint 50 closeout)*
-*Source: BOT_COLLABORATION_HUB.md latest entries + `apps/maine-cannabis/scripts/admin/sprint-score.cjs` output + filesystem ground truth*
+*Last updated: 2026-07-14 EDT (round-13 open-issues triage)*
+*Previous full refresh: 2026-07-08 (Sprint 78 series refresh)*
+*Source: `sprint-score.cjs --dry-run` from primary checkout, `data-integrity-check.cjs`, `site-stats.json`, cron-wrapper/log inspection, and filesystem ground truth. The component-count drift in `AGENTS.md` is intentionally left for design-branch integration because that file overlaps the active redesign branch.*
