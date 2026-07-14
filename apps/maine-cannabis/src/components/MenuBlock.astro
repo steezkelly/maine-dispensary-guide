@@ -1,0 +1,163 @@
+---
+/**
+ * MenuBlock.astro — Renders an operator's menu snapshot as a structured
+ * editorial block on a franchise page.
+ *
+ * The data file is loaded at build time via Vite's static-asset import;
+ * no runtime fetch. Every block carries the snapshot's freshness caveat
+ * directly under the heading ("Prices and availability change without
+ * notice — verify directly with the operator before visiting.").
+ *
+ * Props:
+ *   snapshotJson: the imported JSON file (Astro static-import syntax).
+ *
+ * Strictly informational. No affiliate CTAs. No commerce routing.
+ * Per operator decision 2026-07-14.
+ */
+interface Product {
+  sku: string;
+  name: string;
+  strain_type: string;
+  brand_or_grower: string | null;
+  weight_options?: string[];
+  thc_mg_or_pct?: number | null;
+  price_low_usd: number | null;
+  price_high_usd: number | null;
+  in_stock: boolean;
+  source_url: string | null;
+}
+
+interface Category {
+  name: string;
+  extraction_status: 'complete' | 'unavailable';
+  products: Product[];
+}
+
+interface SnapshotMeta {
+  retrieved_at: string;
+  source_url: string;
+  retrieval_method: string;
+  extractor_version: string;
+  snapshot_date: string;
+  freshness_caveat: string;
+}
+
+interface Snapshot {
+  schema_version: string;
+  operator: {
+    slug: string;
+    display_name: string;
+    address: string;
+    phone: string;
+    website: string;
+    service_area_county: string;
+    category_paths_root?: string;
+  };
+  snapshot: SnapshotMeta;
+  categories: Category[];
+}
+
+interface Props {
+  snapshot: Record<string, any>;  // schema-broad interface; see apps/maine-cannabis/docs/seo/menu-data-pipeline.md
+  heading?: string;
+}
+
+// Narrow props at the call site per the menu-data-pipeline schema.
+const { snapshot, heading } = Astro.props;
+const categories = (snapshot.categories as Category[]) || [];
+const categoriesCompleted = categories.filter((c: Category) => c.extraction_status === 'complete');
+const categoriesMissing = categories.filter((c: Category) => c.extraction_status !== 'complete');
+
+// Sum up products actually rendered
+const productCount = categoriesCompleted.reduce((n: number, c: Category) => n + c.products.length, 0);
+
+const fmtPrice = (lo: number | null, hi: number | null): string => {
+  if (lo === null && hi === null) return '—';
+  if (lo === hi) return `$${lo}`;
+  return `$${lo}–$${hi}`;
+};
+
+const categoryDisplayName = (slug: string): string => {
+  const m: Record<string, string> = {
+    flower: 'Flower',
+    edibles: 'Edibles',
+    concentrates: 'Concentrates',
+    prerolls: 'Pre-rolls',
+    vapes: 'Vapes',
+    topicals: 'Topicals',
+    drinks: 'Drinks',
+    glass: 'Accessories',
+  };
+  return m[slug] || (slug.charAt(0).toUpperCase() + slug.slice(1));
+};
+---
+<section class="menu-block" aria-label={`${snapshot.operator.display_name} menu snapshot`}>
+  <h2>{heading ?? 'Current menu — what we found'}</h2>
+  <p class="menu-freshness">
+    Prices below are from <strong>{snapshot.operator.display_name}'s</strong> published menu, retrieved on <strong>{snapshot.snapshot.snapshot_date}</strong>.
+    <em>{snapshot.snapshot.freshness_caveat}</em>
+  </p>
+
+  <p class="menu-summary">
+    {productCount} products captured across {categoriesCompleted.length} of {snapshot.categories.length} standard categories from
+    <a href={snapshot.operator.website} rel="noopener noreferrer">{snapshot.operator.website}</a>.
+    {categoriesMissing.length > 0 && (
+      <span class="menu-summary-unavail">
+        {' '}Not available: {categoriesMissing.map((c: Category) => categoryDisplayName(c.name)).join(', ')} (operator's site uses client-rendered listings for these categories — see methodology).
+      </span>
+    )}
+  </p>
+
+  {categoriesCompleted.map((cat: Category) => (
+    <details open class="menu-category">
+      <summary>
+        <span class="menu-category-title">{categoryDisplayName(cat.name)}</span>
+        <span class="menu-category-count">{cat.products.length} products</span>
+      </summary>
+      <table class="menu-table" aria-label={`${categoryDisplayName(cat.name)} products at ${snapshot.operator.display_name}`}>
+        <thead>
+          <tr><th>Product</th><th>Strain</th><th>Brand / Grower</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          {cat.products.map((p: Product) => (
+            <tr>
+              <td>{p.name}</td>
+              <td>{p.strain_type === 'n/a' ? '—' : p.strain_type}</td>
+              <td>{p.brand_or_grower ?? '—'}</td>
+              <td class="menu-price">{fmtPrice(p.price_low_usd, p.price_high_usd)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </details>
+  ))}
+
+  <p class="menu-provenance">
+    Methodology: prices were extracted programmatically from {snapshot.operator.website}'s category pages on {snapshot.snapshot.snapshot_date} and verified against the operator's own listing.
+    Methodology doc: <code>docs/seo/menu-data-pipeline.md</code> (added with this commit).
+  </p>
+</section>
+
+<style>
+  .menu-block {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(88, 129, 87, 0.04);
+    border-radius: 1rem;
+    border-left: 4px solid var(--color-primary, #1F4D3A);
+  }
+  .menu-block h2 { margin-top: 0; font-size: 1.5rem; }
+  .menu-freshness { font-size: 0.9rem; color: var(--color-text-light, #4A5A4F); margin: 0.5rem 0 1rem; }
+  .menu-summary { font-size: 0.875rem; color: var(--color-text-light, #4A5A4F); margin: 0.75rem 0 1.5rem; }
+  .menu-summary-unavail { color: var(--color-text-light, #4A5A4F); font-style: italic; }
+  details.menu-category { margin: 1rem 0; border-radius: 0.5rem; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.4); }
+  .menu-category summary {
+    font-weight: 600; cursor: pointer; padding: 0.25rem 0; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  }
+  .menu-category-count { font-size: 0.75rem; color: var(--color-text-light, #4A5A4F); font-weight: 400; }
+  table.menu-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 0.25rem; font-size: 0.875rem; }
+  table.menu-table th { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--color-border, #D6DBC9); color: var(--color-text-light, #4A5A4F); font-weight: 500; }
+  table.menu-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--color-border, #D6DBC9); }
+  .menu-price { font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+  .menu-provenance { font-size: 0.75rem; color: var(--color-text-light, #4A5A4F); margin-top: 1.5rem; font-style: italic; }
+</style>

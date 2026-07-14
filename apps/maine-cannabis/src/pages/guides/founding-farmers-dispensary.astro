@@ -2,6 +2,8 @@
 import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
+import MenuBlock from '../../components/MenuBlock.astro';
+import foundingFarmersSnapshot from '../../data/dispensary-intel/founding-farmers/menu.snapshot.json';
 
 const article = {
   author: "Eliot Nash",
@@ -92,7 +94,13 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 
   <section>
-    <h2>Product Menu</h2>
+    <h2>Current Menu (from operator site)</h2>
+    <p>The categories and prices below were captured from the operator's published online menu on this guide's last review date. We update this section when Founding Farmers publishes a new menu and add an archive snapshot when the prior menu changes materially.</p>
+    <MenuBlock snapshot={foundingFarmersSnapshot} />
+  </section>
+
+  <section>
+    <h2>Product Menu (category overview)</h2>
     <p>Founding Farmers carries a full Maine dispensary menu organized into eight categories on their public site:</p>
     <ul>
       <li><strong>Flower</strong> — fresh whole-bud cannabis in multiple cultivars</li>
