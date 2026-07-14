@@ -27,7 +27,8 @@
     "workflow:lease": "node scripts/git/mdg-worktree-lease.cjs",
     "workflow:preflight": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
     "verify:worktree-resolution": "node scripts/build/assert-worktree-isolation.cjs --allow-existing-output",
-    "build:isolated": "node scripts/build/assert-worktree-isolation.cjs && bash vercel-build.sh && node scripts/continuation/tests/ica-built-output.test.cjs"
+    "build:isolated": "node scripts/build/assert-worktree-isolation.cjs && bash vercel-build.sh && node scripts/continuation/tests/ica-built-output.test.cjs",
+    "agents:preflight": "node scripts/agent/mdg-task-preflight.cjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
