@@ -24,6 +24,8 @@
     "workflow:status": "node scripts/git/mdg-worktree-status.cjs --assert-no-conflicts",
     "workflow:status:fetch": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
     "workflow:status:json": "node scripts/git/mdg-worktree-status.cjs --json",
+    "workflow:lease": "node scripts/git/mdg-worktree-lease.cjs",
+    "workflow:preflight": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
     "verify:worktree-resolution": "node scripts/build/assert-worktree-isolation.cjs --allow-existing-output",
     "build:isolated": "node scripts/build/assert-worktree-isolation.cjs && bash vercel-build.sh && node scripts/continuation/tests/ica-built-output.test.cjs"
   },

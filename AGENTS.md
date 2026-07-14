@@ -52,7 +52,14 @@ npm run verify:push                  # adds smoke-200 + smoke-img-200 against pr
 
 Before editing, run `npm run workflow:status`; before creating a branch or integrating, run `npm run workflow:status:fetch`. Do not use the primary checkout as an integration surface: create a named worktree from freshly fetched `origin/main`, then work on one coherent change set only.
 
-For changes that touch shared source paths, write a lease under `$(git rev-parse --git-common-dir)/mdg-worktree-leases/` (never under a worktree) containing agent, branch, absolute worktree path, paths, `startedAt`, and `expiresAt`. This Git-common directory is shared by every linked worktree and stays outside repository source. Remove or expire that lease once the branch is committed and handed to integration. A lease conflict or expired lease blocks automatic edits until it is reconciled.
+For changes that touch shared source paths, acquire a lease after task-contract validation and before Codex starts:
+```bash
+node scripts/git/mdg-worktree-lease.cjs acquire --agent <agent> --branch <branch> --worktree <absolute-worktree> --path <repo-path> --ttl-minutes 120
+```
+The shared Git-common lease directory is outside every worktree. A lease conflict or expired lease blocks automatic edits until reconciled. Release a lease only after commit handoff, an explicit block, or expiry:
+```bash
+node scripts/git/mdg-worktree-lease.cjs release --branch <branch> --worktree <absolute-worktree>
+```
 
 Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
 
