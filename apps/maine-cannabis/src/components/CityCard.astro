@@ -1,0 +1,26 @@
+---
+import '../styles/components/cards.css';
+
+export type CityCardVariant = 'default' | 'compact' | 'featured';
+
+export interface CityCardData {
+  title: string;
+  description: string;
+  href: string;
+  featured?: boolean;
+}
+
+interface Props extends CityCardData {
+  variant?: CityCardVariant;
+}
+
+const { title, description, href, variant = 'default' } = Astro.props;
+const normalizedVariant: CityCardVariant = ['default', 'compact', 'featured'].includes(variant)
+  ? variant
+  : 'default';
+---
+
+<a href={href} class={`city-card city-card--${normalizedVariant}`} data-city-card-variant={normalizedVariant}>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</a>
