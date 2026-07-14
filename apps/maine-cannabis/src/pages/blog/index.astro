@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import blogCrosslinks from '../../data/blog-crosslinks.json';
 
 const posts = [
   { url: '/blog/maine-medical-patient-delivery-services-2026', title: 'Maine Medical Marijuana Patient Delivery Services 2026', description: 'How Maine medical cannabis patients access delivery through caregiver networks and licensed dispensaries — rules, documentation, rural access solutions, and operator requirements.', date: '2026-05-13', section: 'Medical Cannabis' },
@@ -130,6 +131,63 @@ const grouped = sectionOrder.reduce((acc, section) => {
 <section class="page-header">
     <h1>Maine Cannabis Blog</h1>
     <p>Industry news, operational guides, and policy analysis for Maine cannabis professionals.</p>
+  </section>
+
+  <section class="blog-section">
+    <h2>Need a specific Maine cannabis path?</h2>
+    <p>Use these topic pathways when you are comparing policy, operator, career, and consumer decisions across the Maine cannabis market.</p>
+    <div class="posts-grid">
+      <a href="/blog/buying-cannabis-by-effect-2026" class="post-card">
+        <span class="post-date">Consumer Guide</span>
+        <h3>{blogCrosslinks["buying-cannabis-by-effect-2026"]}</h3>
+        <p>Match Maine menu terms to the outcome you want before you choose a strain, edible, or concentrate.</p>
+      </a>
+      <a href="/blog/maine-dispensary-gift-cards" class="post-card">
+        <span class="post-date">Consumer Guide</span>
+        <h3>{blogCrosslinks["maine-dispensary-gift-cards"]}</h3>
+        <p>Check which gift-card options work for Maine stores and which purchase rules matter at checkout.</p>
+      </a>
+      <a href="/blog/maine-cannabis-budtender-careers" class="post-card">
+        <span class="post-date">Careers</span>
+        <h3>{blogCrosslinks["maine-cannabis-budtender-careers"]}</h3>
+        <p>Review pay bands, OCP worker requirements, interview signals, and retail cannabis career paths.</p>
+      </a>
+      <a href="/blog/maine-cannabis-delivery-business-guide-2026" class="post-card">
+        <span class="post-date">Business Operations</span>
+        <h3>{blogCrosslinks["maine-cannabis-delivery-business-guide-2026"]}</h3>
+        <p>Plan delivery licensing, vehicle controls, security SOPs, and compliance expectations before launch.</p>
+      </a>
+      <a href="/blog/maine-dispensary-business-for-sale" class="post-card">
+        <span class="post-date">Finance & Investment</span>
+        <h3>{blogCrosslinks["maine-dispensary-business-for-sale"]}</h3>
+        <p>Use the acquisition checklist before underwriting a Maine dispensary listing or change-of-ownership deal.</p>
+      </a>
+      <a href="/blog/portland-maine-cannabis-rules-2026" class="post-card">
+        <span class="post-date">Compliance</span>
+        <h3>{blogCrosslinks["portland-maine-cannabis-rules-2026"]}</h3>
+        <p>Verify local zoning, municipal approval, and operating constraints before planning in Portland.</p>
+      </a>
+      <a href="/blog/maine-cannabis-social-equity-program-2026" class="post-card">
+        <span class="post-date">Policy & Legislation</span>
+        <h3>{blogCrosslinks["maine-cannabis-social-equity-program-2026"]}</h3>
+        <p>Understand eligibility, fee reductions, priority licensing, and support programs for applicants.</p>
+      </a>
+      <a href="/blog/maine-cannabis-gray-market-ocp-enforcement-2026" class="post-card">
+        <span class="post-date">Policy & Legislation</span>
+        <h3>{blogCrosslinks["maine-cannabis-gray-market-ocp-enforcement-2026"]}</h3>
+        <p>Read the enforcement analysis behind caregiver leakage, out-of-state delivery, and OCP capacity limits.</p>
+      </a>
+      <a href="/blog/maine-psilocybin-2026-guide" class="post-card">
+        <span class="post-date">Policy & Legislation</span>
+        <h3>{blogCrosslinks["maine-psilocybin-2026-guide"]}</h3>
+        <p>Track LD 1034, the state commission, federal research signals, and operational implications.</p>
+      </a>
+      <a href="/blog/ibogaine-federal-executive-order-maine-2026" class="post-card">
+        <span class="post-date">Policy & Legislation</span>
+        <h3>{blogCrosslinks["ibogaine-federal-executive-order-maine-2026"]}</h3>
+        <p>Separate ibogaine policy signals from Maine's psilocybin debate and cannabis operator strategy.</p>
+      </a>
+    </div>
   </section>
 
   {Object.entries(grouped).map(([section, sectionPosts]) => (
