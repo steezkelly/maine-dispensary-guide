@@ -129,6 +129,30 @@ its resume trigger are durable. When work is `blocked`, the task card must name
 the blocker owner, evidence, next action, and resume trigger so continuity does
 not depend on one agent's memory.
 
+### Deterministic continuity command
+
+Use `npm run agents:continuity -- --board-state <json> [--json] [--now <iso>]`
+to compute the next action from local board state, with no network calls or writes.
+`<json>` may be either raw JSON text or a path to a `.json` file. The command
+emits a stable object with:
+
+  - `kind`: one of `dispatch`, `continue-reconnaissance`,
+    `inactive-with-trigger`, `escalate-missing-trigger`, or `idle`.
+  - `action`: alias of `kind` (kept for compatibility).
+  - `taskId`: selected task for the action, if any.
+  - `details`: deterministic rationale and trigger metadata.
+
+Use this policy:
+
+- `dispatch` when one or more tasks are `ready`, dependency-cleared, and not
+  colliding with active in-progress lease paths.
+- `continue-reconnaissance` when authors are running but no dispatchable task is
+  available.
+- `inactive-with-trigger` when every remaining candidate is blocked and all
+  blocker handoff metadata is complete.
+- `escalate-missing-trigger` and exit non-zero if any blocked task is missing
+  `blocking_reason`, `blocked_by`, `next_action`, or `nextCheckAt`.
+
 ## MDG Kanban operating procedure
 
 The MDG Kanban board is `mdg-site`. Board selection has been observed not to
