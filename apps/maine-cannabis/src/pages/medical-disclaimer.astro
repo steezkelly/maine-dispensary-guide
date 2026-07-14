@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Medical Disclaimer"
+  description="Medical and health disclaimer for Maine Dispensary Guide. Cannabis is not evaluated by the FDA; medical claims on this site are for informational purposes only."
+  heroImage="/images/heroes/about.jpg"
+  article={{ author: "Steve Kelly", authorId: "steve-kelly", authorTitle: "Founder & Publisher", publishDate: "2026-07-13", modifiedDate: "2026-07-13", section: "Legal" }}
+>
+  <style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 4rem 0; }
+    .last-updated { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-serif); margin-bottom: 3rem; }
+    section { margin-bottom: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+    p, li { line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .callout { background: var(--color-background, #f4f1e4); border-left: 4px solid var(--color-accent, #588157); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+    .callout strong { display: block; margin-bottom: 0.5rem; }
+  </style>
+  <article class="legal-page">
+    <h1>Medical Disclaimer</h1>
+    <p class="last-updated">Last Updated: July 13, 2026</p>
+
+    <div class="callout">
+      <strong>The information on Maine Dispensary Guide is for informational purposes only.</strong>
+      <p>Maine Dispensary Guide does not provide medical advice. The content on this site is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a qualified healthcare provider with any questions you may have regarding a medical condition, the use of cannabis for medical purposes, or the interaction of cannabis with medications you are currently taking.</p>
+    </div>
+
+    <section>
+      <h2>1. FDA Disclosure</h2>
+      <p>Cannabis and cannabis-derived products have not been evaluated by the U.S. Food and Drug Administration. They are not intended to diagnose, treat, cure, or prevent any disease. Statements made on this site regarding dietary supplements, cannabinoids (including CBD, THC, CBG, CBN, and other phytocannabinoids), terpenes, or whole-plant cannabis have not been evaluated by the FDA.</p>
+    </section>
+
+    <section>
+      <h2>2. No Doctor–Patient Relationship</h2>
+      <p>Your use of this site does not create a doctor–patient, clinician–patient, or any other professional advisory relationship between you and Maine Dispensary Guide, its authors, or its affiliates. Nothing on this site should be interpreted as a recommendation to start, stop, change, or substitute any medication or treatment you are currently using.</p>
+    </section>
+
+    <section>
+      <h2>3. Medical Cannabis in Maine</h2>
+      <p>If you are considering cannabis for a medical condition, Maine has a structured medical cannabis program administered by the Maine Department of Administrative and Financial Services, Office of Cannabis Policy (OCP). To participate as a medical patient in Maine, you must:</p>
+      <ul>
+        <li>Hold a certification from a Maine-licensed medical provider (physician, nurse practitioner, or physician assistant) confirming you have a qualifying medical condition under 28-B M.R.S. § 1502.</li>
+        <li>Register with the state and obtain a Maine medical cannabis patient card.</li>
+        <li>Purchase only from a state-licensed medical cannabis dispensary or, where applicable, cultivate a limited number of plants for personal medical use under caregiver rules.</li>
+      </ul>
+      <p>Qualifying conditions and program rules change. We surface the current statute and rule references on our <a href="/guides/maine-dispensary-license">OCP licensing guide</a> and <a href="/guides/maine-cannabis-edibles-compliance">edibles compliance page</a>, but always confirm with the OCP and your medical provider before making decisions based on what you read here.</p>
+    </section>
+
+    <section>
+      <h2>4. Drug Interactions and Contraindications</h2>
+      <p>Cannabinoids can interact with prescription medications, over-the-counter drugs, alcohol, and certain supplements. Mechanisms include but are not limited to CYP450 enzyme inhibition at clinically relevant doses. If you are pregnant, breastfeeding, trying to become pregnant, taking anticoagulants, antipsychotics, anticonvulsants, immunosuppressants, or any medication with a narrow therapeutic window, talk to your prescribing clinician before using cannabis in any form.</p>
+      <p>We do not maintain a comprehensive drug-interaction database, and we do not warrant that the absence of a warning implies safety.</p>
+    </section>
+
+    <section>
+      <h2>5. Mental Health</h2>
+      <p>High-THC cannabis use is associated with increased risk of anxiety, panic, paranoia, and psychotic symptoms in some individuals, particularly adolescents and young adults, and individuals with a personal or family history of psychotic disorders. If you or someone you care about is experiencing a mental health crisis, contact the Maine Crisis Line at <strong>988</strong>, or for substance-use support, the Maine Office of Behavioral Health helpline.</p>
+    </section>
+
+    <section>
+      <h2>6. Driving and Operating Machinery</h2>
+      <p>Driving under the influence of cannabis is illegal in Maine. Do not drive, operate heavy machinery, or perform safety-sensitive tasks while impaired. THC metabolites can be detectable in blood and saliva for hours to days after consumption; impairment is not the same as detectability.</p>
+    </section>
+
+    <section>
+      <h2>7. Pregnancy and Breastfeeding</h2>
+      <p>The American College of Obstetricians and Gynecologists and the U.S. Surgeon General both advise against cannabis use during pregnancy and breastfeeding. THC crosses the placenta and is present in breast milk. Talk to your prenatal care provider if you have questions.</p>
+    </section>
+
+    <section>
+      <h2>8. Children and Pets</h2>
+      <p>Keep all cannabis products, including edibles, out of reach of children and pets. Accidental ingestion of adult-use edibles by children has resulted in emergency-room visits. If a child or pet ingests cannabis, contact Poison Control (1-800-222-1222 in the U.S.) or your local emergency department immediately.</p>
+    </section>
+
+    <section>
+      <h2>9. Emergency</h2>
+      <p>If you suspect a cannabis-related poisoning or adverse reaction, contact Poison Control at <strong>1-800-222-1222</strong> or 911 for severe symptoms. Maine residents may also contact their primary care provider, a Maine OCP-licensed medical dispensary clinician, or the state crisis line at 988.</p>
+    </section>
+
+    <section>
+      <h2>10. Source Citations</h2>
+      <p>Where this site makes statements about cannabis and health, we cite primary sources — peer-reviewed studies, OCP guidance, FDA statements, and major medical society positions. Citations appear inline and are listed in the "Sources" or "References" block of each affected article. If you spot a citation we have missed or a claim that should be sourced more strongly, please write to <a href="mailto:corrections@mainedispensaryguide.com">corrections@mainedispensaryguide.com</a> and we will review and update.</p>
+    </section>
+
+    <section>
+      <h2>11. Acceptance</h2>
+      <p>By using Maine Dispensary Guide, you acknowledge that you have read and understood this Medical Disclaimer and agree to its terms. If you do not agree, please discontinue use of the site.</p>
+    </section>
+
+    <div class="callout">
+      <strong>Related pages:</strong>
+      <p><a href="/about/editorial-policy">Editorial Policy</a> · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a> · <a href="/about/corrections">Editorial Corrections Log</a></p>
+    </div>
+  </article>
+</Layout>
