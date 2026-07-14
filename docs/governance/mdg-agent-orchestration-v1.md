@@ -103,3 +103,84 @@ work rather than idle. The supervisor may stop only after task/card state and
 its resume trigger are durable. When work is `blocked`, the task card must name
 the blocker owner, evidence, next action, and resume trigger so continuity does
 not depend on one agent's memory.
+
+## MDG Kanban operating procedure
+
+The MDG Kanban board is `mdg-site`. Board selection has been observed not to
+persist between Hermes CLI invocations, so every board operation must name the
+board explicitly. Use commands in this form:
+
+```bash
+hermes kanban --board mdg-site <operation> ...
+```
+
+Do not rely on a previously selected board, an implicit default, or a shell
+alias for card creation, inspection, assignment, state changes, comments, or
+archival.
+
+The existing MDG project slug is `mdg`. Bind that project to the board with:
+
+```bash
+hermes project bind-board mdg mdg-site
+```
+
+Do not create a duplicate project to obtain a board binding. On a fresh Hermes
+installation, first inspect the existing boards with this read-only command and
+check whether a board whose slug is `mdg-site` is present:
+
+```bash
+hermes kanban boards list --json
+```
+
+Only if that board is absent, create it with:
+
+```bash
+hermes kanban boards create mdg-site --name "MDG Site" --description "Maine Dispensary Guide delivery board" --default-workdir /home/steve/projects/maine-dispensary-guide
+```
+
+Then bind the existing project to the existing or newly created board:
+
+```bash
+hermes project bind-board mdg mdg-site
+```
+
+Do not repeat `hermes kanban boards create` when `mdg-site` already exists;
+retain that board and continue with the binding rather than creating a second
+board or project.
+
+### Card migration and inventory
+
+Before changing existing cards, inventory the source board and record each
+candidate's ID, title, owner, state, parent/dependency links, and evidence.
+Never bulk-migrate generic or default cards. For every inventoried candidate,
+either archive it with a durable reason or create a fresh MDG card that links
+back to the source card and records why the replacement is needed. Preserve the
+source evidence until the new MDG card is durable.
+
+### Initiative topology and release gate
+
+An initiative is the parent card for one outcome. Its children follow this
+topology:
+
+```text
+initiative
+├── reconnaissance
+├── implementation
+├── verification
+└── integration  (created only after verifier PASS)
+```
+
+Reconnaissance establishes the bounded contract and dependencies before an
+implementation author begins. Implementation cards carry the author role and
+the allowed-path lease. Verification is independently owned by a Verifier and
+records an explicit PASS or FAIL against the contract. Do not create an
+integration child merely because implementation is authored or verification is
+in progress: the Coordinator creates the integration child only after the
+Verifier records PASS. The integration child then follows the Integrator's
+single-writer authority and existing `accepted → integrating → released`
+controls above.
+
+Every MDG card uses the canonical body at
+`docs/governance/templates/mdg-kanban-card-body.md`. The task-contract YAML,
+author report path, completion metadata, and blocked-handoff data on that card
+are the durable operating record for this procedure.
