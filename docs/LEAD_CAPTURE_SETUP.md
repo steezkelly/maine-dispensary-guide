@@ -1,15 +1,15 @@
 # Lead Capture — current setup
 
-**Last updated:** 2026-07-13 (after lead-funnel architectural simplification, Sprint 78).
+**Last updated:** 2026-07-14 (round-14 lead-magnet audit; verified
+against current page sources and live download pages).
 
 The Maine Dispensary Guide runs two patterns for lead capture, split by use case:
 
 | Pattern | Forms | Why |
 |---|---|---|
 | **Formspree** (`xvgzlowz`) | `/newsletter`, `/` (index inline newsletter), `/resources` (referral) | High-volume, low-friction signup UX. Free tier handles 50 submissions/month. GA4 `lead_capture` fires via `LeadFormTracker.astro`. |
-| **mailto:** (`hello@mainedispensaryguide.com`) | `/download-checklist` (Roadmap), `/download/founders-bible`, `/download/first-timer-field-guide` | PDF gates — Formspree free tier does NOT deliver PDF autoresponders (Plus-only feature). mailto: is zero third-party, zero SSR surface, no Vercel env vars. PDF autoresponder is replaced by Steve pasting the public PDF link in reply. |
-| **Direct link, no form** | `/download/metrc-reconciliation-checklist`, `/download/compliance-self-assessment` | Pre-2026-07-08 build path — these two operator-resource pages are pure direct-link downloads (`<a href="/downloads/...pdf" download>`). They capture **zero lead signal**. Intentional gap to close in a future funnel instrumentation sprint (see `/docs/research/lead-magnet-research-memo-2026-07-08.md` Stage 2). |
-| Pattern count summary | **3 Formspree + 3 mailto: + 2 no-form = 8 total lead-capable page variants** (5 distinct download pages + 3 Formspree pages) |
+| **mailto:** (`hello@mainedispensaryguide.com`) | `/download-checklist` (Roadmap), `/download/founders-bible`, `/download/first-timer-field-guide`, `/download/metrc-reconciliation-checklist`, `/download/compliance-self-assessment` | PDF gates — Formspree free tier does NOT deliver PDF autoresponders (Plus-only feature). mailto: is zero third-party, zero SSR surface, no Vercel env vars. PDF reply is operator-managed. |
+| Pattern count summary | **3 Formspree + 5 mailto: = 8 lead-capable page variants** (5 distinct download pages + 3 Formspree pages) |
 
 Purelymail routing on `mainedispensaryguide.com` (MX verified 2026-07-13) delivers every lead-receiving address — `hello@`, `admin@`, `support@`, and any otherwise-unhandled prefix (the catch-by-prefix rule id 82707) — to `steve@mainedispensaryguide.com` (operator inbox). All leads — Formspree and mailto: — end up in the same operator inbox. The previous `steezkelly@purelymail.com` catch-all destination was retired 2026-07-09; that user account is a separate Purelymail user with its own (separate, empty) mailbox, NOT the lead destination.
 
@@ -23,16 +23,26 @@ The 2026-07-08 lead-magnet research audit (`docs/research/lead-magnet-research-m
 
 **Stop-shipping rule:** RESOLVED. The 2026-07-07 backlink campaign did not link to these pages — that was fortunate. **Today's external outreach can safely promote all 3 download pages.** Future campaigns must audit the `/downloads/*` asset before linking (a smoke-200 check on the PDF URL is the canonical guard).
 
-**Stage 2 carry-forward (NOT in `1f20d199`):**
-- Add `LeadMailtoForm` to `/download/metrc-reconciliation-checklist` and `/download/compliance-self-assessment` (currently no-form, zero lead capture per the gap analysis).
-- Remove "or download without subscribing" escape hatch on the 3 B2B pages.
-- Update docs to advertise the new author byline (Calvin Waters) on these pages.
+**Stage 2 carry-forward (partially resolved by `b1fd5971`,
+2026-07-13):**
+- `LeadMailtoForm` is now present on both
+  `/download/metrc-reconciliation-checklist` and
+  `/download/compliance-self-assessment`; both fire `lead_capture`
+  with their own `formName` values.
+- The B2B "or download without subscribing" escape hatches remain
+  intentionally visible. Treat any change to their gating as a
+  conversion experiment, not as a silent cleanup.
+- The author-byline documentation update remains a separate
+  editorial task.
 
-Toolchain: `python3 scripts/build/generate-{name}-pdf.py` regenerates each PDF from source. Build matches the existing first-timer PDF builder at `scripts/build/generate-first-timer-pdf.py`.
+Round-14 evidence confirms the prior Stage-2 "two no-form pages"
+claim is obsolete. The same PDF generator toolchain remains valid:
+`python3 scripts/build/generate-{name}-pdf.py` regenerates each PDF
+from source.
 
 ## Mailto: funnel (PDF gates)
 
-The 3 PDF-gate pages use the shared `LeadMailtoForm.astro` component. On submit:
+The 5 PDF-gate pages use the shared `LeadMailtoForm.astro` component. On submit:
 
 1. Form's named fields are collected into a values map.
 2. `mailto:` URL is built with the page's pre-baked subject/body templates, with `{name}`, `{email}`, etc. placeholders interpolated from submitted field values.
@@ -40,13 +50,15 @@ The 3 PDF-gate pages use the shared `LeadMailtoForm.astro` component. On submit:
 4. Browser navigates to the `mailto:` URL → opens the user's default mail client pre-populated → user clicks "Send" → message arrives at `hello@mainedispensaryguide.com` → Purelymail routing (catch-by-prefix rule) → `steve@mainedispensaryguide.com` (operator inbox).
 5. After 800ms (the OS mail-client-open delay), `window.location.href` redirects to the page's `successPath` so the success card renders even if the OS doesn't open a mail client.
 
-The 3 forms, their fields, and their `successPath` are:
+The 5 forms, their fields, and their `successPath` are:
 
 | Page | Fields | Subject template | Body template |
 |---|---|---|---|
 | `/download-checklist` | name, email, stage, interest | `Roadmap request: {email}` | `Hi — please send me the Maine Dispensary Roadmap PDF.\n\nName: {name}\nEmail: {email}\nStage: {stage}\nInterest: {interest}\nSource page: /download-checklist` |
 | `/download/founders-bible` | name, email, business, stage | `Founders Bible request: {email}` | `Hi — please send me the Maine Cannabis Founders Bible PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/founders-bible` |
 | `/download/first-timer-field-guide` | email, age_confirmed | `Field Guide request: {email}` | `Hi — please send me the Maine First-Timer's Field Guide PDF.\n\nMy email: {email}\nSource page: /download/first-timer-field-guide` |
+| `/download/metrc-reconciliation-checklist` | name, email, business, stage | `METRC Checklist request: {email}` | `Hi — please send me the Maine METRC Reconciliation Checklist PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/metrc-reconciliation-checklist` |
+| `/download/compliance-self-assessment` | name, email, business, stage | `Compliance Self-Assessment request: {email}` | `Hi — please send me the Maine Dispensary Compliance Self-Assessment PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/compliance-self-assessment` |
 
 ## Why this split (architectural rationale, 2026-07-13)
 

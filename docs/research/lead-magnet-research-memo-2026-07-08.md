@@ -1,8 +1,23 @@
 # Lead Magnet Research Memo — Maine Dispensary Guide
 **To:** Steve  **From:** Subagent  **Date:** 2026-07-08  **Re:** High-converting B2B lead-magnet plan (cannabis operators, Maine)
 
+> **Historical research note (superseded in part 2026-07-14):** This
+> memo accurately captured the July 8 broken-promise audit, but its
+> inventory and Stage-2 state are no longer current. The three PDFs
+> were made real in `1f20d199`; the two formerly no-form pages gained
+> `LeadMailtoForm` gates in `b1fd5971` (2026-07-13). The current
+> evidence record is `docs/audits/lead-magnet-audit-2026-07-14.md`;
+> `docs/LEAD_CAPTURE_SETUP.md` is the funnel source of truth.
+>
+> **Keep using:** §A's benchmark/sourcing notes and §B's production
+> guidance. **Do not use without reconciling:** §C inventory, §D
+> Stage-1/Stage-2 task state, or the old 3-mailto + 2-no-form count.
+
 > **Scope:** research + plan only. No copy written. Steve approved research-only handoff.
-> **State correction:** the brief said "4-Formspree + 1-mailto" — the **actual** state per `docs/LEAD_CAPTURE_SETUP.md` and Mnemosyne "MDG lead-funnel architecture decision (2026-07-13)" is **3 Formspree + 3 mailto:** plus **2 download pages with NO lead capture at all** (METRC checklist, Compliance self-assessment). See §C.
+> **Historical state correction (2026-07-08):** the brief then said
+> "4-Formspree + 1-mailto"; the then-current state was 3 Formspree +
+> 3 mailto + 2 no-form. This has since changed to 3 Formspree + 5
+> mailto; use the 2026-07-14 setup doc for the current inventory.
 
 ---
 
@@ -45,7 +60,7 @@ After reading all 18 creative skills, the two I'd actually use:
 
 ---
 
-## C. Current state of MDG lead-magnet PDFs — gap analysis
+## C. Historical 2026-07-08 lead-magnet state — gap analysis (superseded; see 2026-07-14 audit)
 
 ### Asset inventory (verified 2026-07-08)
 
@@ -66,13 +81,13 @@ After reading all 18 creative skills, the two I'd actually use:
 ### Architecture inconsistencies
 
 - **Asset path split:** 1 PDF in `/public/pdfs/`, 3 in `/apps/maine-cannabis/public/downloads/`. Should be one canonical path.
-- **"Or download now without subscribing" escape hatch** appears on `/founders-bible`, `/first-timer-field-guide`, and both checklist pages. This is the **single biggest CVR-killer** in the current pages — for the cannabis-operator audience (B2B, intentional), this is especially bad because the buyer is *more qualified* than a consumer. Recommend: keep one for `/first-timer-field-guide` (consumer B2C, legal-disclosure-heavy), remove from all B2B operator pages.
-- **State correction on the brief's "4-Formspree + 1-mailto":** actual is **3 Formspree** (newsletter, homepage inline, `/resources` referral) + **3 mailto:** (first-timer, founders-bible, download-checklist/roadmap) + **2 no-form** (METRC, Compliance). The mailto: + GA4-instrumented funnel pattern (`LeadMailtoForm.astro`) is **good — preserve it.** The Mnemosyne record "MDG lead-funnel state-of-record (2026-07-13)" confirms this is the 2026-07-13 settled architecture; do not propose going back to all-Formspree.
-- **GA4 `lead_capture` fires via inline `gtag()` on mailto: pages** — this works, but the no-form pages fire **zero events**. That means 2 of 5 download pages are invisible to GA4.
+- **Historical 2026-07-08 escape-hatch hypothesis:** the memo described these as a CVR risk and recommended removal. Round 14 does **not** adopt that conclusion without a post-gate baseline; see audit recommendation R4.
+- **Historical 2026-07-08 state correction:** the then-current architecture was **3 Formspree** (newsletter, homepage inline, `/resources` referral) + **3 mailto:** (first-timer, founders-bible, download-checklist/roadmap) + **2 no-form** (METRC, Compliance). It changed to 3 Formspree + 5 mailto in `b1fd5971`; use the 2026-07-14 setup doc for current state.
+- **Historical GA4 note:** `lead_capture` fires via inline `gtag()` on mailto pages. The two no-form pages mentioned in this memo became mailto forms in `b1fd5971`; do not use this memo to infer present event coverage.
 
 ---
 
-## D. Three-stage execution plan (Steve reviews in <3 min)
+## D. Historical proposed execution plan (completed/superseded; do not execute)
 
 ### Stage 1 — **Fix the broken promises first** (Day 1-2, agent work, $0)
 

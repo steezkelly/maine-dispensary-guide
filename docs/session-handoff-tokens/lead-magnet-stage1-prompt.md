@@ -1,5 +1,13 @@
 # Handoff Prompt: MDG Lead-Magnet Stage 1 (Fix the Broken Promises)
 
+> **Completed / historical prompt — 2026-07-14:** The three Stage-1
+> deliverables landed in `1f20d199` (real Roadmap, METRC, and
+> Compliance PDFs), and Stage-2 mailto gates landed in `b1fd5971`.
+> Do not execute this prompt as a current work order. For current
+> funnel state, use `docs/LEAD_CAPTURE_SETUP.md`; for current audit
+> findings and recommendations, use
+> `docs/audits/lead-magnet-audit-2026-07-14.md`.
+
 Copy the text below into a fresh Hermes Agent session to start the work.
 
 ---
@@ -11,7 +19,7 @@ You are starting a **Stage 1 repair sprint** for Maine Dispensary Guide (`https:
 **Canonical brief:** Read `/home/steve/projects/maine-dispensary-guide/docs/research/lead-magnet-research-memo-2026-07-08.md` first. Sections §A (benchmarks), §B (skill recommendations), §C (gap analysis), §D (Stage 1-3 plan). This is Stage 1 only.
 
 **Authoritative references:**
-- `/home/steve/projects/maine-dispensary-guide/docs/LEAD_CAPTURE_SETUP.md` — 3 Formspree + 3 mailto + 2 no-form architecture
+- `/home/steve/projects/maine-dispensary-guide/docs/LEAD_CAPTURE_SETUP.md` — current 3 Formspree + 5 mailto architecture
 - `/home/steve/projects/maine-dispensary-guide/AGENTS.md` — Fraunces + Plus Jakarta Sans, semantic HTML, design tokens, no Tailwind/React/shadcn
 - `/home/steve/projects/maine-dispensary-guide/apps/maine-cannabis/src/pages/download-checklist.astro` — what the Roadmap page currently advertises
 - `/home/steve/projects/maine-dispensary-guide/apps/maine-cannabis/src/pages/download/metrc-reconciliation-checklist.astro` — what METRC page promises
@@ -69,7 +77,7 @@ Choose the most natural byline per deliverable. The byline + authorId + reviewer
 **Net expected impact (per the memo):**
 - 0% → ~80% deliverable trust recovery.
 - Stops burning SEO goodwill + GA4 trust on every operator download that hits a stub.
-- Stage 2 (re-instrument the 2 no-form pages + add LeadMailtoForm) becomes possible AFTER the PDFs are real.
+- Stage 2 (re-instrument the 2 no-form pages + add LeadMailtoForm) **is complete** in `b1fd5971`; see the 2026-07-14 audit before proposing any further funnel change.
 
 **Total expected effort:** ~5-7 days focused content-eng work. Each of the 3 PDFs needs its own research pass + byline + humanizer review.
 

@@ -2,7 +2,12 @@
 
 **Window:** 90 days ending 2026-07-06 (most recent GSC dump date)
 **Data sources:** `apps/maine-cannabis/data/gsc-search-analytics.jsonl` (2,109 query+page records, schema v2)
-**GA4 status:** GA4 Property ID 532778727 connected; first daily dump captured 0 events (mailto: GA4 events not instrumented for the 2 no-form pages — see Stage-2 carry-forward)
+**GA4 status (historical 2026-07-08 window):** GA4 Property ID
+532778727 connected; first daily dump captured 0 events. The report's
+then-current explanation (two no-form download pages) is obsolete:
+`b1fd5971` added mailto gates to both pages on 2026-07-13. Current
+lead-magnet measurement status is recorded in
+`docs/audits/lead-magnet-audit-2026-07-14.md`.
 
 ## Headline numbers
 
