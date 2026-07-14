@@ -24,11 +24,11 @@ import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 
 const article = {
-  author: "Eliot Nash",
-  authorId: "eliot-nash",
-  authorTitle: "Market & Real Estate Analyst",
-  publishDate: "2026-07-10",
-  modifiedDate: "2026-07-10",
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-07-13",
+  modifiedDate: "2026-07-13",
   section: "Editorial"
 };
 ---
@@ -100,7 +100,7 @@ const article = {
     <li><a href="#submission-formats">Submission Formats</a></li>
     <li><a href="#editorial-process">Editorial Process</a></li>
     <li><a href="#standards">Editorial Standards</a></li>
-    <li><a href="#attribution">Attribution &amp; Reciprocity</a></li>
+    <li><a href="#attribution">Attribution &amp; Links</a></li>
     <li><a href="#submit">Submit a Pitch</a></li>
   </ul>
 </nav>
@@ -114,30 +114,30 @@ const article = {
 
 <section id="what-we-publish">
   <h2>What We Publish</h2>
-  <div class="stat-grid">
+  <div class="stat-grid" aria-label="Contributor program standards">
     <div class="stat-card">
-      <div class="num">186+</div>
-      <div class="label">Municipal guides live on the site</div>
+      <div class="num">Maine</div>
+      <div class="label">Local business, policy, and operations focus</div>
     </div>
     <div class="stat-card">
-      <div class="num">34+</div>
-      <div class="label">Opted-in Maine municipalities tracked</div>
+      <div class="num">Named</div>
+      <div class="label">Human bylines and disclosed expertise</div>
     </div>
     <div class="stat-card">
-      <div class="num">12</div>
-      <div class="label">Average monthly unique research citations</div>
+      <div class="num">Primary</div>
+      <div class="label">Sources for material factual claims</div>
     </div>
     <div class="stat-card">
-      <div class="num">~70%</div>
-      <div class="label">Of our traffic is Maine-based operators and advisors</div>
+      <div class="num">No fee</div>
+      <div class="label">For qualified editorial submissions</div>
     </div>
   </div>
   <p>Contributor pieces slot into four buckets:</p>
   <ul>
-    <li><strong>Operator case studies.</strong> A specific operator's experience with a Maine-specific problem: a contested municipal opt-in vote, a 280E audit, a real estate deal that fell through because of license transfer restrictions, a cultivation facility that survived a Zone 5 winter. We do not run promotional content dressed as case studies.</li>
-    <li><strong>Specialist explainers.</strong> Long-form technical pieces by CPAs, attorneys, compliance consultants, or real estate brokers with a Maine cannabis practice. The most useful contribution here is "the thing my clients get wrong because there's no public explainer of it."</li>
-    <li><strong>Original research.</strong> Data-driven pieces drawing on the contributor's proprietary data: a CPA firm publishing aggregated 280E cost-of-goods ratios across their Maine book, a security vendor publishing incident rates by town, a cultivation equipment supplier publishing energy-use benchmarks. We co-author with the contributor and the underlying data is reviewed before publication.</li>
-    <li><strong>Policy analysis.</strong> Independent analysis of pending OCP rule changes, legislative bills, or municipal ordinance drafts. We will publish critical analysis of the OCP's own data and positions if the analysis is grounded in primary sources.</li>
+    <li><strong>Operator case studies.</strong> A specific Maine decision, constraint, or lesson: a municipal opt-in process, a 280E audit, a real-estate deal affected by transfer rules, or a cultivation operation built for a Maine winter. Promotional content dressed as a case study is not a fit.</li>
+    <li><strong>Specialist explainers.</strong> Practical technical pieces by CPAs, attorneys, compliance consultants, or real-estate professionals with relevant Maine experience. The best submissions explain the question clients repeatedly ask because no clear public answer exists.</li>
+    <li><strong>Original research.</strong> Data-driven work based on a contributor's own, reviewable data. We can collaborate on the analysis and will ask to understand the source, methods, and limits before publication.</li>
+    <li><strong>Policy analysis.</strong> Independent analysis of a pending OCP rule, LD-prefixed bill, or municipal ordinance. Claims must be grounded in the primary documents—not industry rumor or a press release.</li>
   </ul>
 </section>
 
@@ -173,13 +173,13 @@ const article = {
 
 <section id="editorial-process">
   <h2>Editorial Process</h2>
+  <p>Before you send a draft, send a short pitch. Include a working title, the format you are proposing, the specific Maine question it answers, and a sentence on what a reader can do with it. If the topic is a fit, we will reply with the next step and any reporting or citation requirements.</p>
   <ol>
-    <li><strong>Pitch first.</strong> Send a 3-5 sentence pitch to <code>editorial [at] mainedispensaryguide.com</code> with the working title, the bucket (case study / explainer / research / policy), and a one-line summary of what's new in your piece versus what's already published.</li>
-    <li><strong>Pitch review.</strong> We respond within 5 business days. A "no" usually means topic-fit or timing, not quality. We're happy to suggest a different angle or to publish on a different cadence.</li>
-    <li><strong>Draft.</strong> Submit as a Google Doc, Notion page, or Markdown file. Bylined pieces carry your byline and a one-paragraph bio with links you control (work, firm, LinkedIn).</li>
-    <li><strong>Editing.</strong> One or two editorial passes. We mark up structure, factual claims, and citation gaps; we do not rewrite your voice.</li>
-    <li><strong>Fact-check.</strong> For pieces that make specific dollar figures, statute citations, or operator claims, we verify against primary sources before publication.</li>
-    <li><strong>Publication.</strong> Live on the site with your byline. We promote it to our newsletter, the relevant city/regional guide pages, and our social channels.</li>
+    <li><strong>Pitch.</strong> Email <a href="mailto:admin@mainedispensaryguide.com?subject=Contributor%20pitch%20for%20Maine%20Dispensary%20Guide">admin@mainedispensaryguide.com</a> with a 3–5 sentence pitch, a working title, a format (case study / explainer / research / policy), and one example of relevant prior work.</li>
+    <li><strong>Fit review.</strong> We review the proposal for audience fit, novelty, conflicts, and source availability. A decline may reflect timing or overlap with existing coverage rather than the quality of the idea.</li>
+    <li><strong>Draft.</strong> Submit in a Google Doc, Notion page, or Markdown file. Published work carries a human byline and a short bio.</li>
+    <li><strong>Editing and fact-checking.</strong> We may suggest structural edits, ask for source material, and verify legal, regulatory, financial, and operator-specific claims against primary sources.</li>
+    <li><strong>Publication.</strong> Accepted work is published with a dated byline and is linked from the relevant MDG resource areas when useful to readers.</li>
   </ol>
 </section>
 
@@ -197,31 +197,30 @@ const article = {
 </section>
 
 <section id="attribution">
-  <h2>Attribution, Bylines &amp; Reciprocal Linking</h2>
-  <p>Bylined pieces carry the contributor's name, headshot, and one-paragraph bio. The bio may include up to three outbound links: typically the contributor's professional site, the firm, and one additional reference (LinkedIn, a specific guide, etc.). We do not edit the bio or remove links after publication except by mutual agreement.</p>
-
-  <p>We do not charge contributors a publication fee, and we do not pay contributors a fee for bylined pieces. The compensation is the byline, the bio links, and the audience reach — typically 1,500 to 4,000 reads within the first 60 days for a substantive piece.</p>
+  <h2>Attribution, Bylines &amp; Links</h2>
+  <p>Accepted pieces carry a named human byline and a concise author bio. A bio may include a relevant professional site or profile when it helps readers evaluate the contributor's perspective. We do not sell editorial links, guarantee a follow link, or exchange publication for a backlink.</p>
 
   <div class="policy-note">
-    <p><strong>Reciprocal linking policy.</strong> Bylined contributors are welcome — and encouraged — to link back to their published MDG piece from their own site, newsletter, and relevant resource pages. We see the byline and bio links as the primary reciprocal-link surface, not as a separately negotiated link exchange. Contributors do not pay for links, and we do not pay for inbound links. The editorial relationship stands on its own.</p>
+    <p><strong>Editorial independence.</strong> A contribution is considered on its merit: whether it gives a Maine operator, adviser, researcher, or policy reader useful information they cannot get from a generic article. It is not a placement service. If you choose to share a published MDG piece from your own site, newsletter, or social account, do so because it is useful to your audience—not as a condition of publication.</p>
   </div>
 
-  <p>We do not publish "link exchange" pieces, do not accept payment for inclusion in editorial content, and do not guarantee a link in exchange for a contribution. Pieces are selected and edited on editorial grounds. The byline + bio links are the standard reciprocity — they go with every published piece, not as a deal.</p>
+  <p>We do not charge a publication fee and do not accept paid editorial submissions. Commercial partnerships belong under our <a href="/advertising">Advertising Policy</a>; affiliate relationships are disclosed under our <a href="/affiliate-disclosure">Affiliate Disclosure</a>.</p>
 </section>
 
 <section id="submit">
   <h2>Submit a Pitch</h2>
   <div class="contact-block">
     <h2>Pitch us</h2>
-    <p>Email <strong>editorial [at] mainedispensaryguide.com</strong> with:</p>
+    <p><a href="mailto:admin@mainedispensaryguide.com?subject=Contributor%20pitch%20for%20Maine%20Dispensary%20Guide"><strong>Email your pitch to admin@mainedispensaryguide.com</strong></a></p>
+    <p>Include:</p>
     <ul style="color: white; padding-left: 1.5rem;">
-      <li>Working title and bucket (case study / explainer / research / policy)</li>
-      <li>One-paragraph summary</li>
-      <li>Why this piece and why now (what's new vs. what's already published)</li>
-      <li>Your relevant background (firm, license type, years in market, publications)</li>
-      <li>Two or three links to your prior work</li>
+      <li>A working title and format (case study / explainer / research / policy)</li>
+      <li>A one-paragraph summary of the reader problem you will solve</li>
+      <li>Why the information is timely, Maine-specific, or otherwise unavailable in our library</li>
+      <li>Your relevant experience and any conflicts to disclose</li>
+      <li>One or two examples of prior work, if available</li>
     </ul>
-    <p style="margin-top: 1.5rem;">We respond to every pitch within 5 business days. If you've published a piece with us before, send the new pitch directly to your editor.</p>
+    <p style="margin-top: 1.5rem;">A clear pitch is enough. Please do not send a full draft until we have confirmed that the topic is a fit.</p>
   </div>
 
   <Callout title="Before you pitch" type="info">
