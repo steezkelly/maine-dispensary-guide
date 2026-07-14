@@ -18,7 +18,7 @@ Round 17 adopts a **preserve and isolate** posture until an operator-approved in
 
 | Check | Result | Consequence |
 |---|---|---|
-| Worktree preflight | `npm run workflow:status:fetch` listed this branch as `synced-clean`; it also showed numerous unrelated dirty/diverged/stale worktrees. | This round stayed on a named worktree and did not integrate anything. |
+| Worktree preflight | `npm run workflow:status:fetch` returned non-zero because its inventory contains unrelated dirty, diverged, and stale-base worktrees. | This round used a named clean worktree, avoided integration until its own verification passed, and did not modify other worktrees. |
 | Current design worktree | Local head `f860ef24ba8a621a3ea1377797b17175f536b7cd`; committed diff versus `origin/main` spans shared components, layouts, and many page files. | Treat broad source-page edits as design-overlapping even where an individual change looks small. |
 | Trust-audit candidate paths | The current design diff includes `/find-a-dispensary` and broad page/component surfaces. | The audit reports corrections but does not patch public source paths in parallel. |
 | Hub status at current design head | `git diff origin/main...HEAD -- BOT_COLLABORATION_HUB.md` returned no committed Hub diff. | The older `coordination-status-v1` interpretation of Hub-section removal is not treated as a current fact without revalidation. |
