@@ -51,10 +51,11 @@
   `AGENTS.md` records that production has zero environment variables after
   the 2026-07-06 cleanup; the former Purelymail variables are not present
   in production and no code reads them.
-- [ ] **Formspree autoresponder (operator action)** — wire the `xvgzlowz`
-  autoresponder with `public/downloads/maine-first-timer-field-guide.pdf`.
-  Direct-download and success-screen paths remain functional; only the
-  email-delivered PDF is missing.
+- [x] **Formspree autoresponder carry-forward** — **CLOSED BY 2026-07-13
+  architecture decision.** PDF gates intentionally use mailto: + manual
+  operator reply; Formspree Plus autoresponders are a paid optional upgrade,
+  not a missing required setup. See `docs/LEAD_CAPTURE_SETUP.md` §§51-80 and
+  `docs/FORMSPREE_AUTORESPONDER_RESOLUTION_2026-07-08.md`.
 - [ ] **GSC scheduled measurement** — **BLOCKED: scheduler not running.**
   Crontab contains the 6am daily and Monday 7am weekly jobs, and both
   wrapper scripts exist, but `cron.service` is absent on this host.
