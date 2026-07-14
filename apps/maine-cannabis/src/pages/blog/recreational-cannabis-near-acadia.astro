@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 import authors from '../../data/authors.json';
+import canonicalOverrides from '../../data/canonical-overrides.json';
 const editorialAuthor = authors.find(a => a.id === 'eliot-nash');
 const complianceReviewer = authors.find(a => a.id === 'margaret-finch');
 const article = {
@@ -51,7 +52,7 @@ const faqPageSchema = {
   heroImage="/images/heroes/recreational-cannabis-near-acadia.jpg"
   article={article}
   topics={topics}
-  canonicalOverride="https://mainedispensaryguide.com/blog/cannabis-friendly-maine-travel"
+  canonicalOverride={canonicalOverrides["blog/recreational-cannabis-near-acadia"].target}
 >
 <style>
   article { max-width: 720px; margin: 0 auto; }

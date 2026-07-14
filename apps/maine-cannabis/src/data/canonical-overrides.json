@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "purpose": "Registry of every static canonicalOverride value used in MDG franchise/guide/blog pages. Edit this file when adding a new canonical mapping — no .astro change required for the registry entry itself. The Migration Status field tells the run-time whether each row is the literal source-of-truth (migrated) or just an advertised target for in-progress consolidation (migrate-pending).",
+    "shape": "Object keyed by stable source-page slug (e.g. 'blog/recreational-cannabis-near-acadia'). Each value is { 'target': 'absolute URL the page consolidates to', 'rationale': 'one-sentence reason for the consolidation', 'migrated': 'YYYY-MM-DD | no', 'sha256[0:16]': 'first 16 chars of the sha256 of the file at migrate time; recompute when target changes.' }",
+    "unsupported_shapes": "Pages that derive their canonicalOverride from a runtime computation (e.g. all-cities.astro: {canonicalUrl} from frontmatter) DO NOT appear here. This registry covers only static literals. If you find yourself wanting a runtime override with multiple conditional targets, surface it in a Hub entry and discuss before adding a registry shape for it.",
+    "license": "internal-only"
+  },
+  "blog/recreational-cannabis-near-acadia": {
+    "target": "https://mainedispensaryguide.com/blog/cannabis-friendly-maine-travel",
+    "rationale": "Cannibalization consolidation (Sprint 78z): the Acadia/recreational-cannabis content lives more completely on the canonical travel guide; this page is now a sibling.",
+    "migrated": "2026-07-14",
+    "sha256[0:16]": "9bfb6e2e524d152c"
+  },
+  "blog/maine-dispensary-how-to-open": {
+    "target": "https://mainedispensaryguide.com/guides/maine-dispensary-license",
+    "rationale": "Sprint 78k canonicalOverride pattern; buyer-intent 'how to open a dispensary in maine' queries belong on the buyer-intent guide, not on a date-stamped blog.",
+    "migrated": "no — design/refined-editorial-foundation-20260713 worktree currently editing this file; integration worktree will migrate via that path",
+    "sha256[0:16]": ""
+  },
+  "resources/maine-cannabis-official-resources": {
+    "target": "https://mainedispensaryguide.com/guides/maine-dispensary-license",
+    "rationale": "Resource hub consolidates to the canonical licensing guide so bookmarked + cited links return users to the guide context, not to a static links list.",
+    "migrated": "2026-07-14",
+    "sha256[0:16]": "5ab2a3ebd39619ed"
+  }
+}
