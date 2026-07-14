@@ -35,9 +35,25 @@
  *     - `consumer-blog` : `/blog/*.astro` topics include consumer-guide/edibles
  *     - `utility`       : `/embed/*`, `/market-*`, `/maine-cannabis-tax-calculator`, etc.
  *     - `unknown`       : fallback when no section/topics match
- * - Why no fix-mode: cross-link auto-injection is a YMYL/SEO risk
- *   (Google March 2026 Spam Update targets scaled cross-link patterns).
- *   The detector reports; a human-or-agent session makes content decisions.
+ * - Why no fix-mode: cross-link auto-injection is intentionally
+ *   excluded from this script's scope. Three reasons:
+ *     1. **Editorial judgment**: cross-link decisions benefit from
+ *        human review (anchor text choice, context relevance,
+ *        near-duplicate avoidance). Auto-injection patterns scale
+ *        into uniform outputs that miss this judgment layer.
+ *     2. **YMYL discipline**: this project covers cannabis
+ *        regulatory and licensing content where unverified
+ *        auto-generated cross-links could mislead readers.
+ *     3. **Caution against pattern-match YMYL triggers**: while
+ *        the Google March 2026 Spam Update (verified via
+ *        `docs/superpowers/specs/2026-07-14-mdg-march-2026-spam-update-audit.md`)
+ *        does NOT specifically ban internal cross-link injection,
+ *        its scope includes "manipulative outbound link patterns"
+ *        and the broader scaled-content-abuse category. Future
+ *        updates may extend this scope. Keeping the detector
+ *        read-only is the conservative position.
+ *   The detector reports; a human-or-agent session makes content
+ *   decisions with editorial judgment.
  *
  * Usage:
  *
