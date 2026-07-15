@@ -13,6 +13,6 @@
 
 | Check | Status |
 | --- | --- |
-| Verifier command output | PENDING VERIFIER |
-| Integrator command output | PENDING INTEGRATOR |
-| Lease release command evidence | PENDING LEASE RELEASE |
+| Verifier command output | PASS — `/tmp/mdg-harness-smoke-20260714-codex-report.md`; independent verifier AUTHORIZATION/SPEC/QUALITY PASS |
+| Integrator command output | PASS — `git diff --check`, acceptance Node command, `npm run verify:iterate`, `npm run verify:push`; harness integration SHA `c41f231fdd7e2f6802cdc05051a21bbdcbb4a453` |
+| Lease release command evidence | PASS — released author lease for `/tmp/mdg-harness-smoke-20260714` after clean integration |
