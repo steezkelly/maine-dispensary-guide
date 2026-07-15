@@ -108,6 +108,14 @@ jobs:
         run: |
           npm --workspace @network/maine-cannabis run check:content-health:regression
 
+      - name: Test content-health regression baseline contract
+        run: |
+          node scripts/check/check-content-health-regression.test.cjs
+
+      - name: Test pre-push diagnostic filtering contract
+        run: |
+          node scripts/git/tests/pre-push-verify-diagnostics.test.cjs
+
       - name: Check build warnings (post-build CSS/HTML warnings)
         run: |
           npm --workspace @network/maine-cannabis run check:build-warnings
