@@ -20,3 +20,11 @@ test('extracts every srcset candidate alongside rendered image references', () =
     '/images/social.jpg',
   ]);
 });
+
+test('decodes HTML entities in rendered srcset URLs', () => {
+  const refs = extractRenderedImageRefs(
+    '<source srcset="/images/hero.webp?width=640&amp;quality=80 640w">',
+  );
+
+  assert.deepEqual(refs, ['/images/hero.webp?width=640&quality=80']);
+});
