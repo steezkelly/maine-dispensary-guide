@@ -238,8 +238,23 @@ function computeAcquisitionReleaseId(canonicalReleaseId, runMeta) {
 function runGates({ dataApiReports, bqReports, canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample }) {
   const gates = {};
 
-  // G1: source_completeness (amended v3)
-  gates.G1 = { status: 'PASS', notes: 'Per-(date, source) pair flagging in run manifest' };
+  // G1: source_completeness (amended v3). A failed BigQuery report makes the
+  // release incomplete even when the other reports were acquired successfully.
+  const failedBqReports = bqReports
+    .filter((report) => report.status === 'failed')
+    .map((report) => report.report_id);
+  const failedDataApiReports = dataApiReports
+    .filter((report) => report.status === 'failed')
+    .map((report) => report.report_id);
+  const failedSourceReports = failedBqReports.length + failedDataApiReports.length;
+  gates.G1 = {
+    status: failedSourceReports === 0 ? 'PASS' : 'FAIL',
+    failed_bq_reports: failedBqReports,
+    failed_data_api_reports: failedDataApiReports,
+    notes: failedSourceReports === 0
+      ? 'All source reports completed; per-(date, source) flags are recorded in the run manifest'
+      : 'A failed source report leaves the run incomplete; inspect report_status and bq_report_status before relying on this release'
+  };
 
   // G2: schema_validation
   gates.G2 = { status: 'PASS', notes: 'sanitizeEventParams() rejects blocklisted keys; row_key/metrics gates checked' };
