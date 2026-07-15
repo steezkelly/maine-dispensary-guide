@@ -5,14 +5,18 @@
 
 param(
     [string]$Domain = "mainedispensaryguide.com",
-    [string]$ApiKey = "pk1_6cb8d0233603952762eeb6b6938f435a7a74f1bde5e09650209270bad45af5b7",
-    [string]$SecretKey = "sk1_e7280c7485f364adad7212b4551e76df03cb2c826d35fef0e2475665e25a83b7",
+    [string]$ApiKey = $env:PORKBUN_API_KEY,
+    [string]$SecretKey = $env:PORKBUN_SECRET_API_KEY,
     [string]$OwnershipProof = "your_ownership_proof_here"
 )
 
 # API Configuration
 $ApiEndpoint = "https://porkbun.com/api/json/v3/dns/create"
 $FullApiUrl = "$ApiEndpoint/$Domain"
+
+if ([string]::IsNullOrWhiteSpace($ApiKey) -or [string]::IsNullOrWhiteSpace($SecretKey)) {
+    throw "Porkbun credentials are required. Set PORKBUN_API_KEY and PORKBUN_SECRET_API_KEY, or pass -ApiKey and -SecretKey at runtime. Do not commit credentials to source control."
+}
 
 # Color output helpers
 function Write-Success($message) {
