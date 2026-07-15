@@ -1,7 +1,16 @@
+function htmlDecode(value) {
+  return String(value || '')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
 function extractAttr(tag, name) {
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const match = tag.match(new RegExp(`\\b${escaped}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'));
-  return match ? match[2] : '';
+  return match ? htmlDecode(match[2]) : '';
 }
 
 function htmlTags(html, tagName) {
