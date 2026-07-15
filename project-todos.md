@@ -101,6 +101,7 @@ and lease check. A candidate branch is not an authorization to duplicate work.
 
 ---
 
-*Last reconciled: 2026-07-14 against `origin/main` `d4dd9f68`.*
+*Last reconciled: 2026-07-14 after fetching `origin/main`; inspect live Git
+state before dispatch or integration.*
 *For task-state truth: `hermes kanban --board mdg-site list --json`.*
 *For current agent routing: `docs/governance/AGENT_WORKING_ORDERS.md`.*

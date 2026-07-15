@@ -5,7 +5,8 @@
 > where the evidence lives.
 >
 > **As of:** 2026-07-14
-> **Reconciled base:** `origin/main` `d4dd9f68b12a0745a2f3c67c51e3e38f7171d3da`
+> **Reconciled:** 2026-07-14 after fetching `origin/main`. Inspect live Git
+> state before dispatch; this document is not a commit-status ledger.
 > **Execution state:** `hermes kanban --board mdg-site list --json` is the
 > durable task authority. This document is the navigable priority index, not a
 > substitute for a task contract.
@@ -33,7 +34,7 @@ active leases.
 | Guide meta-description trim | Candidate branch exists | Candidate/integration review | Inspect `chore/guides-description-trim-2026-07-14` from a clean integration worktree; accept or reject as one bounded candidate. | Git branch and current worktree inventory |
 | Guide title trim | Owner-managed candidate; worktree state is live | Title-trim owner, then integration review | Before any action inspect its worktree status and `origin/main` divergence. Do not touch guide-title paths outside its worktree; resolve/rebase/verify there before handoff. | `chore/guides-title-trim-2026-07-14` worktree |
 | Homepage design-token cleanup | Candidate branch exists | Candidate/integration review | Review `refactor/homepage-design-tokens-2026-07-14` only in the composed design context. | Git branch and current worktree inventory |
-| Repeated inline-CSS extraction | Owner worktree has uncommitted shared-style wiring and is behind `origin/main` | CSS-extraction owner | Complete and verify the three shared-style files plus barrel imports in the owner worktree; check cascade safety before committing. Do not merge partial shared assets. | `refactor/css-extract-top3-2026-07-14` worktree |
+| Repeated inline-CSS extraction | Owner-managed candidate; worktree state is live | CSS-extraction owner | Before action inspect its worktree status and `origin/main` divergence. Complete and verify the shared-style wiring and barrel imports in the owner worktree; check cascade safety before committing. Do not merge partial shared assets. | `refactor/css-extract-top3-2026-07-14` worktree |
 
 ## Ready to specify after preflight
 

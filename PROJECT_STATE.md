@@ -102,5 +102,6 @@ node apps/maine-cannabis/scripts/admin/sprint-score.cjs --dry-run
 
 ---
 
-*Last reconciled: 2026-07-14 against `origin/main` `d4dd9f68`.*
+*Last reconciled: 2026-07-14 after fetching `origin/main`; inspect live Git
+state before dispatch or integration.*
 *Previous snapshot: 2026-07-13 ICA pilot closeout.*
