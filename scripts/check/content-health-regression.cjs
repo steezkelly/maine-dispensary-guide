@@ -18,8 +18,10 @@
  *
  * Usage:
  *   node ./scripts/check/content-health-regression.cjs
+ *   node ./scripts/check/content-health-regression.cjs --update-baseline
  *   CI usage: `node ./scripts/check/content-health-regression.cjs`
- *     (non-zero exit on regression; zero exit on improvement or no change)
+ *     (non-zero exit on regression or a missing baseline; baseline writes
+ *      require the explicit --update-baseline maintenance flag)
  */
 
 const { execSync } = require('node:child_process');
@@ -29,6 +31,7 @@ const path = require('node:path');
 const SCRIPT_DIR = __dirname;
 const CHECK_SCRIPT = path.join(SCRIPT_DIR, 'check-content-health.cjs');
 const BASELINE_FILE = path.join(SCRIPT_DIR, '.content-health-baseline.json');
+const UPDATE_BASELINE = process.argv.includes('--update-baseline');
 
 let baseline = {};
 if (fs.existsSync(BASELINE_FILE)) {
@@ -85,11 +88,15 @@ console.log('📊 content-health regression check');
 console.log('');
 
 if (Object.keys(baseline).length === 0) {
-  console.log(`ℹ️  No baseline found. Recording current state (${Object.keys(current).length} failing checks, ${Object.values(current).reduce((a, b) => a + b, 0)} total failures) as initial baseline.`);
-  fs.writeFileSync(BASELINE_FILE, JSON.stringify(current, null, 2) + '\n');
-  console.log(`   Written to ${path.relative(process.cwd(), BASELINE_FILE)}`);
-  console.log('   Commit this file to lock in the baseline.');
-  process.exit(0);
+  console.log(`ℹ️  No baseline found. Current state has ${Object.keys(current).length} failing checks and ${Object.values(current).reduce((a, b) => a + b, 0)} total failures.`);
+  if (UPDATE_BASELINE) {
+    fs.writeFileSync(BASELINE_FILE, JSON.stringify(current, null, 2) + '\n');
+    console.log(`   Written to ${path.relative(process.cwd(), BASELINE_FILE)}`);
+    console.log('   Commit this file to lock in the baseline.');
+    process.exit(0);
+  }
+  console.log('   Baseline not written. Re-run with --update-baseline to record it as an explicit maintenance action.');
+  process.exit(1);
 }
 
 if (newChecks.length > 0) {
@@ -113,12 +120,15 @@ if (improvements.length > 0) {
   for (const { name, baseline, current, delta } of improvements) {
     console.log(`   ✓ ${name}: ${baseline} → ${current} (-${delta})`);
   }
-  // Update the baseline to the new lower counts
-  for (const { name, current } of improvements) {
-    baseline[name] = current;
+  if (UPDATE_BASELINE) {
+    for (const { name, current } of improvements) {
+      baseline[name] = current;
+    }
+    fs.writeFileSync(BASELINE_FILE, JSON.stringify(baseline, null, 2) + '\n');
+    console.log('   → Baseline updated to reflect improvements.');
+  } else {
+    console.log('   → Baseline not updated. Re-run with --update-baseline to accept these improvements.');
   }
-  fs.writeFileSync(BASELINE_FILE, JSON.stringify(baseline, null, 2) + '\n');
-  console.log(`   → Baseline updated to reflect improvements.`);
 }
 
 if (newChecks.length === 0 && regressions.length === 0 && improvements.length === 0) {

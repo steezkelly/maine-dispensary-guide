@@ -92,6 +92,7 @@ const REPO_ROOT = (() => {
 const APPS = ['apps/maine-cannabis'];
 const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
+const NODE_SCRIPT_RE = /\.(cjs|js)$/;
 
 function log(level, msg) {
     const tags = { info: '\x1b[36mi\x1b[0m', ok: '\x1b[32m✓\x1b[0m', warn: '\x1b[33m!\x1b[0m', err: '\x1b[31m✗\x1b[0m' };
@@ -157,9 +158,18 @@ function changedFiles(refArg) {
     // Also pick up untracked-but-tracked-by-intent .astro/.ts files (rare but real)
     try {
         const untracked = git('git ls-files --others --exclude-standard').split('\n').filter(Boolean);
-        untracked.forEach(f => { if (ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f)) all.add(f); });
+        untracked.forEach(f => { if (ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)) all.add(f); });
     } catch {}
-    return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f));
+    return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f));
+}
+
+function normalizeRepoPath(filePath) {
+    return filePath.split(path.sep).join('/').replace(/^\.\//, '');
+}
+
+function isRootNodeScript(filePath) {
+    const rel = normalizeRepoPath(filePath);
+    return NODE_SCRIPT_RE.test(rel) && rel.startsWith('scripts/');
 }
 
 /**
@@ -249,8 +259,10 @@ function fastParseCheck(files) {
 
 function slowAstroCheck(files) {
     const astroFiles = files.filter(f => ASTRO_FILE_RE.test(f));
-    if (astroFiles.length === 0) {
-        log('info', 'no .astro files changed — skipping astro check pass');
+    const appSrcTsFiles = files.filter(f => TS_FILE_RE.test(f) && normalizeRepoPath(f).startsWith('apps/maine-cannabis/src/'));
+    const astroCheckFiles = [...astroFiles, ...appSrcTsFiles];
+    if (astroCheckFiles.length === 0) {
+        log('info', 'no .astro files or app src TS files changed — skipping astro check pass');
         return { ok: true };
     }
 
@@ -261,7 +273,7 @@ function slowAstroCheck(files) {
         return { ok: true };
     }
 
-    log('info', `astro check (filtered to ${astroFiles.length} changed file(s))…`);
+    log('info', `astro check (filtered to ${astroCheckFiles.length} changed Astro/app TS file(s))…`);
     const res = spawnSync('npx', ['astro', 'check'], {
         cwd: astroApp,
         encoding: 'utf8',
@@ -273,6 +285,18 @@ function slowAstroCheck(files) {
     if (res.status === 0) {
         log('ok', 'astro check passed (0 errors)');
         return { ok: true };
+    }
+
+    // A changed app-source TS module can surface an Astro diagnostic in an
+    // unchanged consumer such as a layout. There is no reliable reverse map
+    // from that consumer diagnostic to the changed import, so any Astro-check
+    // failure while app source TS changed blocks the push rather than silently
+    // accepting a potentially introduced type error.
+    if (appSrcTsFiles.length > 0) {
+        const relevantOutput = output.trim().split('\n').slice(0, 60).join('\n');
+        if (relevantOutput) console.log(relevantOutput);
+        log('err', 'astro check failed while changed app source TS files may affect Astro consumers — push blocked.');
+        return { ok: false };
     }
 
     // Filter output to lines mentioning any of the changed basenames
@@ -287,6 +311,40 @@ function slowAstroCheck(files) {
     console.log(relevant.slice(0, 60).join('\n'));
     log('err', `astro check found errors in changed files — push blocked.`);
     return { ok: false };
+}
+
+function nodeSyntaxCheck(files) {
+    const nodeFiles = files.filter(f => {
+        const rel = normalizeRepoPath(f);
+        return isRootNodeScript(rel) && fs.existsSync(path.join(REPO_ROOT, rel));
+    });
+    if (nodeFiles.length === 0) {
+        log('info', 'no root Node .cjs/.js scripts changed — skipping node --check pass');
+        return { ok: true };
+    }
+
+    log('info', `node --check on ${nodeFiles.length} root Node script(s)…`);
+    const failures = [];
+    for (const rel of nodeFiles) {
+        const res = spawnSync('node', ['--check', rel], {
+            encoding: 'utf8',
+            cwd: REPO_ROOT,
+            timeout: 30_000,
+        });
+        const out = ((res.stdout || '') + (res.stderr || '')).trim();
+        if (res.status === 0) {
+            log('ok', `${rel} — node syntax clean`);
+        } else {
+            failures.push(rel);
+            log('err', `${rel} — node --check failed`);
+            if (out) console.log(out.split('\n').slice(0, 12).join('\n'));
+        }
+    }
+    if (failures.length > 0) {
+        log('err', `${failures.length} root Node script(s) failed node --check — push blocked.`);
+        return { ok: false };
+    }
+    return { ok: true };
 }
 
 function smoke200Check() {
@@ -627,7 +685,7 @@ function main() {
 
     const files = changedFiles(refArg);
     if (files.length === 0) {
-        log('ok', 'no .astro or .ts files changed — nothing to verify');
+        log('ok', 'no .astro, .ts, or root Node script files changed — nothing to verify');
         process.exit(0);
     }
     log('info', `changed files: ${files.length}`);
@@ -687,6 +745,9 @@ function main() {
         log('ok', 'fast-only mode — slow pass skipped');
         process.exit(0);
     }
+
+    const nodeSyntax = nodeSyntaxCheck(files);
+    if (!nodeSyntax.ok) process.exit(10);
 
     const slow = slowAstroCheck(files);
     // Sweep any tsserver.js children that slowAstroCheck spawned but
