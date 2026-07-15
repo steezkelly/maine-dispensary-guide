@@ -103,6 +103,16 @@ function git(cmd) {
     return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf8', shell: true }).trim();
 }
 
+function gitExec(args) {
+    const res = spawnSync('git', args, { cwd: REPO_ROOT, encoding: 'utf8' });
+    if (res.status !== 0) {
+        const err = new Error((res.stderr || res.stdout || `git ${args.join(' ')} failed`).trim());
+        err.status = res.status;
+        throw err;
+    }
+    return (res.stdout || '').trim();
+}
+
 // Validate a git ref name. The set covers the realistic use cases —
 // branch names, commit SHAs, ref paths (refs/heads/main), and standard
 // git operators (HEAD~1, HEAD^2). Git itself does stricter validation per
@@ -581,7 +591,7 @@ function assertAllDiffsAreDataAttributes(files) {
 
         let out;
         try {
-            out = git(`git diff --no-color ${diffRange} -- "${rel}"`);
+            out = gitExec(['diff', '--no-color', diffRange, '--', rel]);
         } catch (_) {
             violations.push(`${rel}: cannot diff — --data-only requires a working tree state`);
             continue;
