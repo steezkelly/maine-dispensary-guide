@@ -13,6 +13,14 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 CONTENT AUDIT SAFE THIN-CONTENT DIAGNOSTICS (Jul 15, 2026 UTC)
+
+- Updated `scripts/content/audit-fix-loop.cjs` so default `--apply` no longer inserts generic body paragraphs or FAQ skeletons for thin pages; missing-description autofix remains the safe default.
+- Thin-content findings now report current word count, page type, missing section heuristics, and a recommended editorial owner/source pack.
+- Preserved the old generic insertion path only behind explicit `--allow-generic-boilerplate`, with dry-run output labeled unsafe.
+- Verification: `node --check scripts/content/audit-fix-loop.cjs`, `node scripts/content/audit-fix-loop.cjs`, and `npm run verify:iterate` passed; `workflow:status` remains blocked by a pre-existing `origin/main...work` rev-list failure in the status helper.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
