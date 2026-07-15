@@ -66,6 +66,19 @@ try {
     assert.match(output, /Layout\.astro/);
   });
 
+  fs.writeFileSync(
+    fakeNpx,
+    "#!/usr/bin/env node\nconsole.error('\\u001b[96msrc/pages/guides/index.astro\\u001b[0m:12:5 - error ts(2322): Type number is not assignable to string.');\nprocess.exit(1);\n",
+    { mode: 0o755 },
+  );
+  const astroFixture = path.join(ROOT, 'apps/maine-cannabis/src/pages/blog/index.astro');
+  withFixture(astroFixture, '---\nconst title = \'Fixture\';\n---\n<h1>{title}</h1>\n', () => {
+    const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` });
+    const output = (result.stdout || '') + (result.stderr || '');
+    assert.equal(result.status, 0, output);
+    assert.match(output, /pre-existing baseline/);
+  });
+
   const mjsFixture = path.join(ROOT, 'scripts', `__pre-push-node-syntax-fixture-${fixtureSuffix}.mjs`);
   withFixture(mjsFixture, 'export const = ;\n', () => {
     const result = runPrePush();

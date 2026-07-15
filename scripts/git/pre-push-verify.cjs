@@ -96,6 +96,7 @@ const APPS = ['apps/maine-cannabis'];
 const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
 const NODE_SCRIPT_RE = /\.(cjs|mjs|js)$/;
+const ANSI_ESCAPE_RE = /\u001B\[[0-?]*[ -/]*[@-~]/g;
 
 function log(level, msg) {
     const tags = { info: '\x1b[36mi\x1b[0m', ok: '\x1b[32m✓\x1b[0m', warn: '\x1b[33m!\x1b[0m', err: '\x1b[31m✗\x1b[0m' };
@@ -167,7 +168,7 @@ function changedFiles(refArg) {
 }
 
 function normalizeRepoPath(filePath) {
-    return filePath.replace(/\\/g, '/').replace(/^\.\//, '');
+    return String(filePath).replace(ANSI_ESCAPE_RE, '').replace(/\\/g, '/').replace(/^\.\//, '');
 }
 
 function isRootNodeScript(filePath) {
@@ -311,11 +312,12 @@ function slowAstroCheck(files) {
             : repoRelative;
         return [repoRelative, appRelative];
     });
-    const basenames = new Set(astroFiles.map(f => path.basename(f)));
     const relevant = output.split('\n').filter(line => {
         const normalizedLine = normalizeRepoPath(line);
-        return normalizedChanged.some(f => normalizedLine.includes(f))
-            || [...basenames].some(b => normalizedLine.includes(b));
+        return normalizedChanged.some(file => {
+            const escaped = file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return new RegExp(`(?:^|[^\\w./-])${escaped}(?::\\d+(?::\\d+)?)?(?:[^\\w./-]|$)`).test(normalizedLine);
+        });
     });
     if (relevant.length === 0) {
         log('warn', 'astro check failed but no errors match changed files — pre-existing baseline. Continuing.');
