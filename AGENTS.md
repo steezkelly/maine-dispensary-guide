@@ -12,6 +12,22 @@ Astro 6.0 static site deployed to Vercel. High-authority cannabis business resou
 
 **Host:** https://mainedispensaryguide.com
 
+## Current-work routing
+
+After reading these repository rules, use the control plane in this order:
+
+1. `docs/README.md` — record map and state-of-record hierarchy.
+2. `docs/governance/AGENT_WORKING_ORDERS.md` — current priorities,
+   ownership boundaries, and dispatch rules.
+3. `hermes kanban --board mdg-site list --json` — live task ownership,
+   dependencies, blockers, and release evidence.
+4. `project-todos.md` and `PROJECT_STATE.md` — curated priority and state
+   summaries.
+
+`BOT_COLLABORATION_HUB.md` is historical chronology and evidence. Consult it
+to understand what happened; do not treat it as live task authority or append
+routine session state to it.
+
 ---
 
 ## Commands
@@ -25,7 +41,6 @@ node scripts/link/link-architect.cjs   # Glossary term linker
 node scripts/search/brave-search.cjs "q"    # Primary web search
 node scripts/search/wikipedia-search.cjs "q"  # Research (free, no key)
 node scripts/git/install-hooks.cjs            # Install pre-push hook (one-time per clone)
-node scripts/git/sprint-handoff.cjs   # Generate Hub entry from git history
 node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
 
@@ -39,7 +54,7 @@ npm run verify:iterate               # esbuild parse + filtered astro check + si
                                      # (~10-15s, no production URL hits)
 npm run verify:iterate -- --fast-only  # sub-second parse-only check (during a single edit session)
 
-# PUSH / DEPLOY — full verify including production smoke. Use before pushing.
+# PUSH / DEPLOY — full verify including production smoke. Run explicitly before pushing.
 npm run verify:push                  # adds smoke-200 + smoke-img-200 against production
                                      # (~30-45s, hits https://mainedispensaryguide.com)
 ```
@@ -48,7 +63,7 @@ npm run verify:push                  # adds smoke-200 + smoke-img-200 against pr
 - Do **NOT** run `npx astro check` directly — it does a full unfiltered project check (~3min) instead of the changed-files filter that `verify:iterate` uses. Use `verify:iterate` instead.
 - Do **NOT** run smoke checks during iteration. They hit production URLs and add 30+s for no iteration value. Run them once before pushing.
 - Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of round, or once before deploy if `verify:push` smoke passes.
-- The pre-push hook (`.githooks/pre-push`) runs `verify:push` automatically on `git push`. If it fails, that means `verify:push` failed locally — fix and re-push.
+- The pre-push hook (`.githooks/pre-push`) runs the diff-scoped pre-push verifier, not production smoke. Run `npm run verify:push` explicitly before a release or when production smoke is required.
 
 ### Autonomous worktree protocol
 
@@ -102,7 +117,7 @@ project-1/
 ├── public/                       # Favicons, OG images
 ├── astro.config.mjs              # Static output, Vercel adapter, trailingSlash: never
 ├── vercel.json                   # CSP headers, www→non-www redirect
-└── BOT_COLLABORATION_HUB.md      # Multi-agent communication log (READ FIRST)
+└── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
 **Components** (21, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
@@ -118,7 +133,7 @@ What `npm run build` actually does (verified 2026-07-06):
 3. `astro build` writes its full output to `apps/maine-cannabis/.vercel/output/`:
    - `.vercel/output/static/` — every pre-rendered HTML page + assets.
    - `.vercel/output/config.json` — Vercel Build Output API v3 routes manifest.
-   - `.vercel/output/functions/_render.func/` — Astro SSR function bundle (only present when at least one `.astro` route has `export const prerender = false`).
+   - No `.vercel/output/functions/` directory in the current pure-static architecture; CI rejects an unexpected SSR function bundle.
 4. The script ALSO copies `.vercel/output/static/*` to `dist/` at the repo root, then runs sitemap-prettify + llms.txt + MISSION_CONTROL.md regeneration against `dist/`. The `dist/` is a build artifact for those post-build steps; it is NOT what Vercel serves.
 
 What Vercel actually serves:
@@ -132,15 +147,16 @@ What Vercel actually serves:
 **Lead-funnel pattern**: `/download/first-timer-field-guide` uses a client-side `mailto:` form (Formspree + the dormant SSR endpoint were both removed 2026-07-06). Submitting opens the user's mail client pre-filled to `hello@mainedispensaryguide.com`. Purelymail routing on `mainedispensaryguide.com` delivers `hello@`, `admin@`, `support@`, and any otherwise-unhandled address to `steve@mainedispensaryguide.com` (operator inbox) — NOT to the previous `steezkelly@purelymail.com` catch-all, which is a separate user mailbox with its own (empty) inbox. Read leads via `mdg-mdg envelope list` (wrapper at `~/.local/bin/mdg-mdg` → `~/.config/himalaya/steve-mdg.toml`). See `docs/LEAD_CAPTURE_SETUP.md` for the full operator-side flow. Reroute decision: 2026-07-09.
 
 **Reading these signals**:
-- A `node_modules/@astrojs/vercel/dist/index.js` log line `Bundling function ../../../../dist/server/entry.mjs` followed by `Server built in N s` = SSR function bundle emitted.
-- `.vercel/output/functions/_render.func/.vc-config.json` present at the end of build = Vercel-shape serverless function emitted. CI step (`.github/workflows/ci.yml` "Assert Astro SSR function bundle") asserts this.
+- A build that emits `.vercel/output/functions/` indicates an unexpected SSR function bundle under the current `output: 'static'` architecture; CI step `.github/workflows/ci.yml` "Assert pure-static build (no SSR functions emitted)" fails it.
 - `dist/` having HTML files after build = `vercel-build.sh` ran successfully, even if Vercel never reads from there.
 
 ---
 
 ## Do
 
-- Read `BOT_COLLABORATION_HUB.md` before starting any task
+- After reading this file, read `docs/README.md`, working orders, and live
+  `mdg-site` Kanban state before starting a task; consult the Hub only for
+  relevant historical evidence
 - Audit `src/pages/` and `src/components/` before proposing new pages or features
 - Use design tokens / CSS variables — never hardcode colors
 - Use semantic HTML (`<nav>`, `<main>`, `<article>`)
@@ -148,7 +164,9 @@ What Vercel actually serves:
 - Use slash-less internal links (`/about` NOT `/about/`)
 - Use `path.basename()` for path splitting — `f.split('/').pop()` fails on Windows
 - Run file-scoped typecheck after changes
-- Write to `BOT_COLLABORATION_HUB.md` after completing significant work
+- Record task ownership, verifier evidence, and integration/release evidence
+  on the relevant `mdg-site` Kanban card; do not create a second live log in
+  the Hub
 - Use Formspree (`https://formspree.io/f/xvgzlowz`) for all lead capture forms
 - Pass `article` prop to Layout on guide pages for JSON-LD schema
 - Close Playwright browser after EVERY operation — memory leak otherwise
@@ -161,29 +179,31 @@ What Vercel actually serves:
 - Do not use pure white (#FFF) on dark backgrounds — use Warm Bone `#F2F2E2`
 - **`npm run build` — run freely, no "ask first" needed.** Routine verify
   step. Same for `vercel-build.sh`, `npx astro check`, and any file-scoped
-  or full-project typecheck. Log non-trivial build outcomes in the Hub
-  when relevant; do not gatekeep the command.
+  or full-project typecheck. Record non-trivial build outcomes on the scoped
+  Kanban card when relevant; do not gatekeep the command.
 - **`astro.config.mjs`, `vercel.json`, `turbo.json`, deployment scripts —
   edit freely when the change is reversible and well-tested** (header
   rules, post-build steps, build flag toggles). The audit+typecheck
   pass is the substitute for "ask first." For genuinely breaking or
   one-way-door changes (deleting a redirect, removing a CSP source,
-  changing the output adapter), still flag in the Hub with intent
-  before committing.
+  changing the output adapter), record the intent and decision on the scoped
+  Kanban card before committing.
 - **Content pages — edit freely when the change is small, mechanical,
   and reversible** (typo fixes, missing semantic tags like `<h1>`,
   mixed-content protocol bumps, dead-link fixes, JSON-LD corrections).
-  Log non-trivial content edits in the Hub. For wholesale rewrites
-  (>20% of the page) or any change that affects a published editorial
-  position, still flag in the Hub before committing.
+  Record non-trivial content edits on the scoped Kanban card. For wholesale
+  rewrites (>20% of the page) or any change that affects a published editorial
+  position, record intent and obtain the required task contract before
+  committing.
 - Do not recommend building something that already exists
 - Do not leave Playwright browser open — each instance = 100-750 MB memory leak
 
 > **Reframed 2026-06-06.** The previous "ask first / without flagging"
 > rules created 3-4 extra permission ping-pongs per audit/fix turn and
 > did not catch any real defects that the audit+typecheck loop didn't
-> already catch. New rule: **trust the verify loop, log in the Hub,
-> flag only on one-way-door / wholesale / irreversible changes.**
+> already catch. New rule: **trust the verify loop; record task/release
+> evidence on the scoped Kanban card; flag only one-way-door, wholesale,
+> or irreversible changes.**
 
 ---
 
@@ -363,8 +383,14 @@ Available topics: city, market, licensing, finance, real-estate, operations, com
 
 ## Multi-Agent Collaboration
 
-- `BOT_COLLABORATION_HUB.md` is the **source of truth** — read before starting, write after completing
-- Format: `[AGENT] [DATE] [EDT TIME] — note`
+- **Live task authority:** Hermes Kanban board `mdg-site` owns task state,
+  dependencies, blockers, and release evidence.
+- **Current routing:** `docs/governance/AGENT_WORKING_ORDERS.md` and
+  `project-todos.md` provide the navigable priority queue; `PROJECT_STATE.md`
+  is the concise snapshot.
+- **History:** `BOT_COLLABORATION_HUB.md` records chronology and evidence only.
+  Do not append routine completion notes or use its headings as active task
+  state. Preserve it for archaeology.
 
 ### Agent System — 6-Agent Pantheon
 
@@ -427,13 +453,15 @@ After completing any round with 3+ steps or 4+ agents:
 - [ ] Typecheck passes (or errors are known/pre-existing)
 - [ ] Diff is small and focused — summarize what changed and why
 - [ ] No excessive logs or comments left in code
-- [ ] `BOT_COLLABORATION_HUB.md` updated with decision log
+- [ ] Relevant `mdg-site` Kanban card has verifier/integration evidence and
+      any decision needed to resume the work
 
 ---
 
 ## When Stuck
 
-- Ask a clarifying question, propose a short plan, or flag in the Hub
+- Ask a clarifying question, propose a short plan, or update/block the scoped
+  Kanban card with the evidence and resume trigger
 - Do not push speculative changes without confirmation (audited+typechecked changes with documented intent are fine — see `## Don't`)
 - For OpenCode issues: see `reference/opencode-config.md` for diagnostics
 
@@ -443,7 +471,11 @@ After completing any round with 3+ steps or 4+ agents:
 
 | File | Purpose |
 |------|---------|
-| `BOT_COLLABORATION_HUB.md` | Multi-agent communication log (read first) |
+| `docs/README.md` | Documentation map and state-of-record hierarchy (read after this file) |
+| `docs/governance/AGENT_WORKING_ORDERS.md` | Current priorities, ownership boundaries, and dispatch rules |
+| `hermes kanban --board mdg-site list --json` | Live task ownership, dependencies, blockers, and release evidence |
+| `project-todos.md` / `PROJECT_STATE.md` | Curated priority queue / concise current-state snapshot |
+| `BOT_COLLABORATION_HUB.md` | Historical collaboration chronology and evidence |
 | `reference/workflows.md` | Pre-flight, end-of-sprint, Windows patterns |
 | `reference/opencode-config.md` | Council config, fallbacks, plugin features, diagnostics |
 | `reference/self-improving.md` | Memory system, triggers, memory files |
