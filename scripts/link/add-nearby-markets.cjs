@@ -1,45 +1,56 @@
 // Script to add Nearby Markets sections to city guide orphans
 const fs = require('fs');
 const path = require('path');
+const { appRoot } = require('../check/lib/paths.cjs');
 
-const projectRoot = 'C:\\Users\\Steve\\OpenCode Projects\\project-1';
+const guidePagesDir = path.join(appRoot, 'src', 'pages', 'guides');
+
+function assertDirectory(dir, label) {
+  if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+    console.error(`Expected ${label} directory not found: ${dir}`);
+    process.exit(1);
+  }
+}
+
+assertDirectory(appRoot, 'Astro app root');
+assertDirectory(guidePagesDir, 'guide pages');
 
 // Geographic neighbors for each city
 const cityNeighbors = {
   'auburn': [
-    { city: 'Lewiston', distance: '3 miles', href: '/guides/lewiston-dispensary-guide/', notes: 'Connected via Memorial Bridge, same metro market' },
-    { city: 'Brunswick', distance: '28 miles', href: '/guides/brunswick-dispensary-guide/', notes: 'Coastal market, Bowdoin College' },
-    { city: 'Portland', distance: '30 miles', href: '/guides/portland-dispensary-guide/', notes: 'Largest Maine market' }
+    { city: 'Lewiston', distance: '3 miles', href: '/guides/lewiston-dispensary-guide', notes: 'Connected via Memorial Bridge, same metro market' },
+    { city: 'Brunswick', distance: '28 miles', href: '/guides/brunswick-dispensary-guide', notes: 'Coastal market, Bowdoin College' },
+    { city: 'Portland', distance: '30 miles', href: '/guides/portland-dispensary-guide', notes: 'Largest Maine market' }
   ],
   'bangor': [
-    { city: 'Waterville', distance: '30 miles', href: '/guides/waterville-dispensary-guide/', notes: 'Central Maine hub' },
-    { city: 'Lewiston', distance: '50 miles', href: '/guides/lewiston-dispensary-guide/', notes: 'Second-largest market' },
-    { city: 'Brewer', distance: '3 miles', href: '/guides/bangor-dispensary-guide/', notes: 'Part of Bangor metro' }
+    { city: 'Waterville', distance: '30 miles', href: '/guides/waterville-dispensary-guide', notes: 'Central Maine hub' },
+    { city: 'Lewiston', distance: '50 miles', href: '/guides/lewiston-dispensary-guide', notes: 'Second-largest market' },
+    { city: 'Brewer', distance: '3 miles', href: '/guides/bangor-dispensary-guide', notes: 'Part of Bangor metro' }
   ],
   'biddeford': [
-    { city: 'Saco', distance: '4 miles', href: '/guides/saco-dispensary-guide/', notes: 'Adjacent coastal market' },
-    { city: 'Portland', distance: '15 miles', href: '/guides/portland-dispensary-guide/', notes: 'Largest Maine market' },
-    { city: 'Kittery', distance: '40 miles', href: '/guides/kittery-dispensary-guide/', notes: 'Southern Maine, I-95 corridor' }
+    { city: 'Saco', distance: '4 miles', href: '/guides/saco-dispensary-guide', notes: 'Adjacent coastal market' },
+    { city: 'Portland', distance: '15 miles', href: '/guides/portland-dispensary-guide', notes: 'Largest Maine market' },
+    { city: 'Kittery', distance: '40 miles', href: '/guides/kittery-dispensary-guide', notes: 'Southern Maine, I-95 corridor' }
   ],
   'kittery': [
-    { city: 'Portsmouth', distance: '2 miles', href: '/guides/portland-dispensary-guide/', notes: 'Cross-border New Hampshire market' },
-    { city: 'Biddeford', distance: '40 miles', href: '/guides/biddeford-dispensary-guide/', notes: 'York County market' },
-    { city: 'Sanford', distance: '20 miles', href: '/guides/sanford-dispensary-guide/', notes: 'York County opportunity' }
+    { city: 'Portsmouth', distance: '2 miles', href: '/guides/portland-dispensary-guide', notes: 'Cross-border New Hampshire market' },
+    { city: 'Biddeford', distance: '40 miles', href: '/guides/biddeford-dispensary-guide', notes: 'York County market' },
+    { city: 'Sanford', distance: '20 miles', href: '/guides/sanford-dispensary-guide', notes: 'York County opportunity' }
   ],
   'saco': [
-    { city: 'Biddeford', distance: '4 miles', href: '/guides/biddeford-dispensary-guide/', notes: 'Adjacent coastal market' },
-    { city: 'Portland', distance: '15 miles', href: '/guides/portland-dispensary-guide/', notes: 'Largest Maine market' },
-    { city: 'Old Orchard Beach', distance: '8 miles', href: '/guides/old-orchard-beach-dispensary-guide/', notes: 'Tourist market, seasonal traffic' }
+    { city: 'Biddeford', distance: '4 miles', href: '/guides/biddeford-dispensary-guide', notes: 'Adjacent coastal market' },
+    { city: 'Portland', distance: '15 miles', href: '/guides/portland-dispensary-guide', notes: 'Largest Maine market' },
+    { city: 'Old Orchard Beach', distance: '8 miles', href: '/guides/old-orchard-beach-dispensary-guide', notes: 'Tourist market, seasonal traffic' }
   ],
   'sanford': [
-    { city: 'Biddeford', distance: '12 miles', href: '/guides/biddeford-dispensary-guide/', notes: 'York County hub' },
-    { city: 'Kittery', distance: '20 miles', href: '/guides/kittery-dispensary-guide/', notes: 'Southern Maine corridor' },
-    { city: 'Portland', distance: '45 miles', href: '/guides/portland-dispensary-guide/', notes: 'Largest Maine market' }
+    { city: 'Biddeford', distance: '12 miles', href: '/guides/biddeford-dispensary-guide', notes: 'York County hub' },
+    { city: 'Kittery', distance: '20 miles', href: '/guides/kittery-dispensary-guide', notes: 'Southern Maine corridor' },
+    { city: 'Portland', distance: '45 miles', href: '/guides/portland-dispensary-guide', notes: 'Largest Maine market' }
   ],
   'waterville': [
-    { city: 'Lewiston', distance: '30 miles', href: '/guides/lewiston-dispensary-guide/', notes: 'Second-largest market' },
-    { city: 'Augusta', distance: '20 miles', href: '/guides/augusta-dispensary-guide/', notes: 'State capital, central Maine' },
-    { city: 'Bangor', distance: '30 miles', href: '/guides/bangor-dispensary-guide/', notes: 'Northern hub, third-largest market' }
+    { city: 'Lewiston', distance: '30 miles', href: '/guides/lewiston-dispensary-guide', notes: 'Second-largest market' },
+    { city: 'Augusta', distance: '20 miles', href: '/guides/augusta-dispensary-guide', notes: 'State capital, central Maine' },
+    { city: 'Bangor', distance: '30 miles', href: '/guides/bangor-dispensary-guide', notes: 'Northern hub, third-largest market' }
   ]
 };
 
@@ -101,7 +112,7 @@ console.log('Adding Nearby Markets sections to orphan city guides...\n');
 let modified = 0;
 for (const [fileName, cityName] of Object.entries(orphanCities)) {
   const slug = fileName.replace('-dispensary-guide', '');
-  const filePath = path.join(projectRoot, 'src/pages/guides', fileName + '.astro');
+  const filePath = path.join(guidePagesDir, fileName + '.astro');
   if (fs.existsSync(filePath)) {
     const changed = addNearbyMarketsToFile(filePath, cityName, slug);
     if (changed) {

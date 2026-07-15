@@ -11,6 +11,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { appRoot, publicDir } = require('../check/lib/paths.cjs');
 
 // ANSI color codes
 const colors = {
@@ -453,11 +454,15 @@ function main() {
     process.exit(1);
   }
 
-  // Determine project root (one level up from scripts/)
-  const scriptDir = __dirname;
-  const projectRoot = path.dirname(scriptDir);
-  const publicDir = path.join(projectRoot, 'public');
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
+  const projectRoot = appRoot;
+  const pagesDir = path.join(appRoot, 'src', 'pages');
+
+  for (const [dir, label] of [[appRoot, 'Astro app root'], [publicDir, 'public assets'], [pagesDir, 'pages']]) {
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+      console.error(`Expected ${label} directory not found: ${dir}`);
+      process.exit(1);
+    }
+  }
 
   console.log(`${colors.dim}Image Audit — Maine Dispensary Guide${colors.reset}`);
   console.log(`${colors.dim}Type: ${type} | Root: ${path.basename(projectRoot)}${colors.reset}`);

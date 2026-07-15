@@ -1,8 +1,18 @@
 const fs = require('fs');
 const path = require('path');
+const { appRoot } = require('../check/lib/paths.cjs');
 
-const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
-const pagesPath = path.join(projectRoot, 'src/pages/guides');
+const pagesPath = path.join(appRoot, 'src', 'pages', 'guides');
+
+function assertDirectory(dir, label) {
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+        console.error(`Expected ${label} directory not found: ${dir}`);
+        process.exit(1);
+    }
+}
+
+assertDirectory(appRoot, 'Astro app root');
+assertDirectory(pagesPath, 'guide pages');
 
 const glossaryMap = {
     "Metrc": "/glossary/#metrc",

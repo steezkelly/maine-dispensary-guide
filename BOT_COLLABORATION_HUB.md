@@ -13,6 +13,14 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 LEGACY SCRIPT ROOT RESOLUTION REFACTOR (Jul 15, 2026 UTC)
+
+- Refactored `scripts/link/link-architect.cjs`, `scripts/link/add-nearby-markets.cjs`, and `scripts/image/image-audit.cjs` to reuse `scripts/check/lib/paths.cjs` for app/public/pages path resolution instead of legacy checkout assumptions.
+- Added startup directory guards so missing app, guide, public, or pages directories fail fast with a non-zero exit.
+- Normalized nearby-market script guide href data to slash-less internal paths.
+- Verification: `node --check` for all three touched scripts, `npm run verify:iterate -- --fast-only`, `npm run verify:iterate`, and `node scripts/image/image-audit.cjs heroes` passed. `npm run workflow:status` failed before edits because the local branch references missing `origin/main...work`; `hermes` is not installed in this environment.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
