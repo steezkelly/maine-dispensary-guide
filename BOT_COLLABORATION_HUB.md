@@ -13,6 +13,13 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+## 📋 SHARED SMOKE HTTP HELPER (Jul 15, 2026 UTC)
+
+- Added `scripts/check/lib/http-status.cjs` to centralize smoke-check concurrency and HTTP status probing. `headOrGet(url)` now tries HEAD first, falls back to a capped GET for ambiguous statuses/errors (`0`, `403`, `405`, `501`, timeout), and preserves status/location fields used by existing CLI summaries.
+- Refactored `smoke-200` and `smoke-img-200` to use the shared helper while keeping their route/image counting and broken/redirect output shape intact.
+- Added focused Node tests for definitive HEAD handling, HEAD-to-GET fallback, GET body cap wiring, and concurrency result ordering.
+- Verification: `node --check` for the helper and both smoke scripts passed; `node --test scripts/check/http-status.test.cjs` passed; `npm run verify:iterate` passed (no Astro/TS files changed).
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
