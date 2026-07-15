@@ -184,31 +184,59 @@ function buildBqSql(reportKey, from, to) {
       `;
     }
     case 'R2_session_metrics_daily': {
-      // Session-level engagement metrics. Multiple aggregations
-      // are normalized.
+      // Build a session grain before aggregating. `traffic_source` is a RECORD,
+      // not a repeated field; session_traffic_source_last_click supplies the
+      // GA4 session channel group and traffic_source.medium is only a fallback.
       return `
+        WITH session_events AS (
+          SELECT
+            event_date,
+            COALESCE(
+              session_traffic_source_last_click.cross_channel_campaign.default_channel_group,
+              traffic_source.medium,
+              '(not set)'
+            ) AS sessionDefaultChannelGroup,
+            CONCAT(
+              user_pseudo_id,
+              ':',
+              CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
+            ) AS session_key,
+            COUNTIF(event_name = 'page_view') AS page_views,
+            MAX(IF(
+              COALESCE(
+                (SELECT value.string_value FROM UNNEST(event_params) WHERE key='session_engaged'),
+                CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='session_engaged') AS STRING)
+              ) = '1',
+              1,
+              0
+            )) AS session_engaged,
+            SUM(COALESCE(
+              (SELECT value.int_value FROM UNNEST(event_params) WHERE key='engagement_time_msec'),
+              0
+            )) AS engagement_time_msec
+          FROM ${tab}
+          WHERE ${tableFilter}
+            AND (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
+          GROUP BY event_date, sessionDefaultChannelGroup, session_key
+        )
         SELECT
           event_date,
-          (SELECT value.string_value FROM UNNEST(traffic_source)
-            WHERE key='medium' OR traffic_source IS NULL) AS sessionDefaultChannelGroup,
-          COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
-                || ':' || user_pseudo_id) AS sessions,
-          COUNT(DISTINCT CASE WHEN (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
-            AND (user_engagement_duration_value > 10000
-                 OR (SELECT COUNT(*) FROM UNNEST(event_params) WHERE key='page_view') >= 2
-                 OR EXISTS (SELECT 1 FROM UNNEST(event_params) WHERE key='conversion'))
-            THEN (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
-              || ':' || user_pseudo_id END) AS engagedSessions,
+          sessionDefaultChannelGroup,
+          COUNT(*) AS sessions,
+          COUNTIF(
+            session_engaged = 1
+            OR engagement_time_msec > 10000
+            OR page_views >= 2
+          ) AS engagedSessions,
           SAFE_DIVIDE(
-            COUNT(DISTINCT CASE WHEN (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
-              AND (user_engagement_duration_value > 10000 OR (SELECT COUNT(*) FROM UNNEST(event_params) WHERE key='page_view') >= 2)
-              THEN (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
-                || ':' || user_pseudo_id END),
-            NULLIF(COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
-              || ':' || user_pseudo_id), 0)
+            COUNTIF(
+              session_engaged = 1
+              OR engagement_time_msec > 10000
+              OR page_views >= 2
+            ),
+            NULLIF(COUNT(*), 0)
           ) AS engagementRate
-        FROM ${tab}
-        WHERE ${tableFilter}
+        FROM session_events
         GROUP BY event_date, sessionDefaultChannelGroup
       `;
     }
