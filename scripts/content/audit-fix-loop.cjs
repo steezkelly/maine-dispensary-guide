@@ -4,9 +4,9 @@
  * Audits content quality and optionally auto-fixes common issues.
  *
  * Usage:
- *   node scripts/audit-fix-loop.cjs                    # Dry-run: report only
- *   node scripts/audit-fix-loop.cjs --apply           # Apply fixes
- *   node scripts/audit-fix-loop.cjs --url https://...  # Custom URL
+ *   node scripts/content/audit-fix-loop.cjs                    # Dry-run: report only
+ *   node scripts/content/audit-fix-loop.cjs --apply           # Apply fixes
+ *   node scripts/content/audit-fix-loop.cjs --url https://...  # Custom URL
  *
  * What it does:
  * 1. Scans local .astro files for content issues
@@ -17,6 +17,22 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+const REPO_ROOT = (() => {
+  // Walk up from this file until we find the monorepo package.json.
+  let dir = __dirname;
+  for (let i = 0; i < 6; i++) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
+      if (Array.isArray(pkg.workspaces)) return dir;
+    } catch {}
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return path.resolve(__dirname, '..', '..');
+})();
+const APP_ROOT = path.join(REPO_ROOT, 'apps', 'maine-cannabis');
 
 // Configuration
 const DEFAULT_URL = 'https://mainedispensaryguide.com';
@@ -136,7 +152,7 @@ function addFaqSkeleton(filePath) {
   return { success: true, words: 180 };
 }
 
-function findAstroFile(relativePath, projectRoot) {
+function findAstroFile(relativePath, appRoot) {
   // relativePath might be:
   // - "src/pages/guides/bangor-dispensary-guide.astro"
   // - "/guides/bangor-dispensary-guide.astro"
@@ -145,13 +161,13 @@ function findAstroFile(relativePath, projectRoot) {
   // Clean the path
   let cleanPath = relativePath.replace(/^\//, '');
 
-  // Try direct path from project root
-  const directPath = path.join(projectRoot, cleanPath);
+  // Try direct path from app root
+  const directPath = path.join(appRoot, cleanPath);
   if (fs.existsSync(directPath)) return directPath;
 
   // Try just the filename
-  const basename = cleanPath.split('/').pop();
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
+  const basename = path.basename(cleanPath);
+  const pagesDir = path.join(appRoot, 'src', 'pages');
   if (fs.existsSync(path.join(pagesDir, basename))) {
     return path.join(pagesDir, basename);
   }
@@ -159,7 +175,7 @@ function findAstroFile(relativePath, projectRoot) {
   // Search recursively for the file
   try {
     const { globSync } = require('glob');
-    const matches = globSync(`**/${basename}`, { cwd: projectRoot, absolute: true });
+    const matches = globSync(`src/pages/**/${basename}`, { cwd: appRoot, absolute: true });
     return matches.length > 0 ? matches[0] : null;
   } catch {
     return null;
@@ -212,13 +228,13 @@ function fixThinContent(filePath, manualReview, shouldApply) {
   }
 }
 
-function applyAutoFixes(issues, projectRoot, shouldApply) {
+function applyAutoFixes(issues, appRoot, shouldApply) {
   const fixes = [];
   const manualReview = [];
 
   // Fix thin content
   for (const item of issues.thinContent) {
-    const filePath = findAstroFile(item.file, projectRoot);
+    const filePath = findAstroFile(item.file, appRoot);
     if (filePath) {
       fixThinContent(filePath, manualReview, shouldApply);
     } else {
@@ -228,7 +244,7 @@ function applyAutoFixes(issues, projectRoot, shouldApply) {
 
   // Fix missing descriptions
   for (const file of issues.missingDescriptions) {
-    const filePath = findAstroFile(file, projectRoot);
+    const filePath = findAstroFile(file, appRoot);
     if (filePath) {
       if (shouldApply) {
         const result = addMetaDescription(filePath);
@@ -274,8 +290,8 @@ function main() {
     }
   }
 
-  const projectRoot = path.resolve(__dirname, '..');
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
+  const appRoot = APP_ROOT;
+  const pagesDir = path.join(appRoot, 'src', 'pages');
 
   log('=== Audit-Fix Loop ===');
   log(`Target: ${url}`);
@@ -304,12 +320,17 @@ function main() {
     }
     scanDir(pagesDir);
 
+    if (allFiles.length === 0) {
+      log(`No .astro files found. Resolved pagesDir: ${pagesDir}`);
+      process.exit(1);
+    }
+
     const issues = { thinContent: [], missingDescriptions: [], brokenLinks: [] };
 
     for (const filePath of allFiles) {
       const content = fs.readFileSync(filePath, 'utf8');
-      const relPath = path.relative(projectRoot, filePath).replace(/\\/g, '/');
-      const wordCount = getWordCount(content);
+      const relPath = path.relative(appRoot, filePath).replace(/\\/g, '/');
+      const wordCount = countWords(content);
 
       if (wordCount < WORD_COUNT_THRESHOLD) {
         issues.thinContent.push({ file: relPath, count: wordCount });
@@ -326,7 +347,7 @@ function main() {
     log(`- Missing descriptions: ${issues.missingDescriptions.length} page(s)`);
     log(`- Broken internal links: ${issues.brokenLinks.length} (manual check needed)\n`);
 
-    const { fixes, manualReview } = applyAutoFixes(issues, projectRoot, shouldApply);
+    const { fixes, manualReview } = applyAutoFixes(issues, appRoot, shouldApply);
 
     // Phase 3: Report
     if (shouldApply) {

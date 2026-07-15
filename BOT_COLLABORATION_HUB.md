@@ -7059,4 +7059,3 @@ branch's spec.
 
 - 2026-07-14: appended at the end of the Hub (round 9 standardization). Footer does not modify Hub body — the body is the chronological log, the footer is the v1 → v0 glossary.
 
-[GPT-5.5] 2026-07-14 00:00 UTC — Refactored `scripts/check/content-health.cjs` into a two-phase audit: explicit build/CSS-warning preflight, shared source/rendered/sitemap cache, and `--no-build` / `--build` / `--source-only` / `--rendered-only` modes. Preserved existing per-check output lines for regression parsing and fixed `content-health-regression.cjs` to invoke the active script path.
