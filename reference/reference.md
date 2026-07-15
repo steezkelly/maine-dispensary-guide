@@ -128,15 +128,15 @@ Quick links to technical documentation for tools, APIs, and integrations used in
 
 | File | Purpose |
 |------|---------|
-| `BOT_COLLABORATION_HUB.md` | Multi-agent communication log (READ FIRST) |
-| `project-todos.md` | Persistent todo tracking across sprints |
-| `UI_IMPROVEMENTS.md` | UI change log and status tracker |
-| `link-outreach.md` | External linking strategy and outreach plan |
-| `PROJECT_DNA.md` | Project identity and core principles |
-| `PROJECT_STATE.md` | Current project state snapshot |
-| `BUGS.md` | Known bugs and fix status |
-| `MISSION_CONTROL.md` | Mission and priority tracker |
-| `ROADMAP_*.md` | Various roadmap drafts and plans |
+| `AGENTS.md` + `docs/governance/AGENT_WORKING_ORDERS.md` | Current repository rules and agent/session routing |
+| `hermes kanban --board mdg-site list --json` | Durable active-task ownership and acceptance state |
+| `project-todos.md` | Human-readable priority queue |
+| `PROJECT_STATE.md` | Curated current project snapshot |
+| `docs/README.md` | State-of-record map and reading order |
+| `docs/LEAD_CAPTURE_SETUP.md` | Canonical lead-funnel documentation |
+| `BOT_COLLABORATION_HUB.md` | Historical collaboration log; not live task state |
+| `UI_IMPROVEMENTS.md`, `PROJECT_DNA.md` | Historical root stubs; originals in `docs/archive/2026-07-historical-root/` |
+| `link-outreach.md`, `BUGS.md`, `MISSION_CONTROL.md`, `ROADMAP_*.md` | Dated strategy, issue, generated, or roadmap records; verify currency before acting |
 
 ---
 
