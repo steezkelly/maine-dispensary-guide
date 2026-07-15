@@ -54,9 +54,9 @@
    correction only as a composed, tested integration patch.
 3. **Existing SEO/design candidates** require independent fresh-base review one
    at a time before integration; do not merge for cleanup convenience.
-4. **Active owner worktrees** also hold uncommitted guide-title trimming and
-   shared-CSS extraction. Their paths are protected until their respective
-   owners finish, rebase, verify, and hand off bounded candidates.
+4. **Active owner worktrees** include a committed guide-title candidate and
+   uncommitted shared-CSS extraction. Their paths are protected until their
+   respective owners verify and hand off bounded candidates.
 
 ## Prioritized next work
 
