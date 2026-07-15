@@ -7058,3 +7058,10 @@ branch's spec.
 ### Change history (this footer)
 
 - 2026-07-14: appended at the end of the Hub (round 9 standardization). Footer does not modify Hub body — the body is the chronological log, the footer is the v1 → v0 glossary.
+
+## 📋 AUDIT-FIX LOOP APP ROOT RESOLUTION (Jul 14, 2026 UTC)
+
+- Updated `scripts/content/audit-fix-loop.cjs` to resolve the monorepo root and real Astro app root (`apps/maine-cannabis`) before scanning or resolving page files.
+- The dry-run scan now exits non-zero if no `.astro` pages are found and reports the resolved `pagesDir`, preventing silent success from the historical `scripts/src/pages` path mistake.
+- Corrected usage comments to `node scripts/content/audit-fix-loop.cjs` and fixed the local scan word-count call to count loaded file content instead of treating file content as a path.
+- Verification: `node -c scripts/content/audit-fix-loop.cjs`, `node scripts/content/audit-fix-loop.cjs`, and `npm run verify:iterate -- --fast-only` passed. `npm run workflow:status` was attempted first but failed because this checkout's `work` branch has no resolvable `origin/main...work` revision range.
