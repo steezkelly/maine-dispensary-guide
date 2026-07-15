@@ -2,9 +2,11 @@
 
 ## Project Overview
 
-Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 186 guide pages (109 city + 77 technical/business/operators), 36 blog posts, 262 dist HTML pages. Technical compliance maps, B2B lead-gen tools.
+Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 193 guide source pages and 36 blog posts. Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
 
 **SCOPE: Maine Only** — Do NOT propose or build state-specific hubs for other states.
+
+**Current work routing:** After this file, read `docs/governance/AGENT_WORKING_ORDERS.md` and inspect `hermes kanban --board mdg-site list --json` before claiming or dispatching work.
 
 **This is a real, monetizable web property** — not a demo. Decisions about content, structure, and SEO have compounding consequences.
 
@@ -85,7 +87,7 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 13 reusable components (see below)
+│   ├── components/               # 21 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
@@ -103,7 +105,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Multi-agent communication log (READ FIRST)
 ```
 
-**Components** (14, `apps/maine-cannabis/src/components/`): `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `Faq`, `GuideSidebar`, `LeadFormTracker`, `LeadMailtoForm`, `NextStep`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `RegionHubShell`
+**Components** (21, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
 
 ---
 

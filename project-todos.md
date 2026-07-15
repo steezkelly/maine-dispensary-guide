@@ -1,132 +1,97 @@
 # Maine Dispensary Guide — Project Todos
 
-> **2026-07-14 refresh (round 13):** Refreshed against current
-> `origin/main` post-rounds-1-12. Closed stale items. Surfaced
-> the cron-not-running finding (project-todos #7). OCP roster
-> reconciliation (#1) was a misdiagnosis — the 187/65 vs 107/49
-> numbers are a deliberate dual-stat design (annual-report
-> state-of-market vs live OCP licensee-roster). No data change
-> needed.
-> For sprint-by-sprint detail, see `BOT_COLLABORATION_HUB.md`
-> (source of truth) or run
-> `node apps/maine-cannabis/scripts/admin/sprint-score.cjs` for
-> the live health snapshot. This file is now a curated high-level
-> view, not a hand-maintained changelog.
+> **Official human-readable priority queue.** The Hermes Kanban board
+> (`mdg-site`) owns task state, dependencies, and release evidence; this file
+> sets the order of work for agents and sessions.
+>
+> **2026-07-14 reconciliation:** Current ownership and record locations are in
+> `docs/governance/AGENT_WORKING_ORDERS.md`. Historical shipped work remains in
+> `BOT_COLLABORATION_HUB.md`; this is not a changelog.
 
-## Priority Legend
-| Level | Meaning |
-|-------|---------|
-| 🔴 CRITICAL | Blocks score/growth, do now |
-| 🟠 HIGH | Impacts ranking/indexing, sprint this |
-| 🟡 MEDIUM | Improves UX/content, queue for next sprint |
-| 🟢 LOW | Nice-to-have, do when idle |
-| ⚫ BACKLOG | Future phase, not yet planned |
+## Start here
 
-## 🚀 Recently Closed (Sprint 78 series + closeouts)
+```bash
+cd /home/steve/repos/maine-dispensary-guide
+git fetch origin --prune
+npm run workflow:status:fetch
+hermes kanban --board mdg-site list --json
+```
 
-- [x] **Sprint 78a–78t (Jun 6 – Jul 7):** 20+ delivered items — YMYL "Last reviewed" badges on 232/257 pages, transfer-of-ownership guide, conditional license guide, ROI refresh, visual-readability polish (9 fixes + AAA contrast for nav), 3 broken heroImage paths retired, security fixes on `pre-push-verify.cjs` + `audit-fix.cjs` (URL whitelist + `spawnSync`), self-cleaning orphan tsserver.js LSPs
-- [x] **Backlink campaign (2026-07-07, commit `dbf5f0f6`):** 3 linkable assets + press kit + 16 pitches sent via Purelymail SMTP
-- [x] **Formspree revert (Jul 6):** All 5 lead-magnet forms restored via Formspree external pipeline (`xvgzlowz`); dormant `/api/lead-capture.ts` + `/api/indexnow-key.ts` endpoints retired from prod (Playbook preserved in `docs/LEAD_CAPTURE_SETUP.md`)
-- [x] **COA hero image fix (`cff15405`):** 6 broken responsive variants closed (rename to match Layout string-convention)
-- [x] **`@astrojs/vercel` bump to v11.0.2 (`c1697430`):** succeeds in isolation; `vercel.json` `outputDirectory` flip flipped+reverted twice — structural incompatibility documented in Hub §"THIRD-SESSION POSTMORTEM"
-- [x] **CI regression guard (`cd82300d`):** post-build assertion that `.vercel/output/functions/_render.func/.vc-config.json` exists; catches the next SSR-shape drift at CI
-- [x] **Post-campaign hardening (`27976a18`, 2026-07-08):** `--force-resend` flag in send-outreach-pitches.py; per-send atomic log writes defeat parallel-invocation race window; opt-in BCC (`MDG_BCC_SELF=1`); file lock + atomic rename in `logSentEmail()`; `.eml` filename guard against undefined `messageId`
-- [x] **Rounds 1-12 (Jul 14):** parent-agent session shipped SEO title/H1 alignment for fryeburg (1,850 imp / 0.5% CTR pivot), canonical-overrides registry + 2-of-3 caller migration, universal-language v1 spec (round/phase/turn/task/step vocabulary), AGENTS.md v1 vocab migration, March 2026 Spam Update policy audit + orphan-detector docstring correction. All commits live on `origin/main`. See Hub rounds 1-12 for full detail.
+Do not start an item from this list without a scoped Kanban card, preflight,
+and lease check. A candidate branch is not an authorization to duplicate work.
 
-## 🟠 HIGH — Pending (Open for next round)
+## P0 — Active ownership / integration only
 
-- [x] **OCP roster reconciliation** — **CLOSED BY DESIGN (round 13).**
-  `site-stats.json` deliberately preserves two different facts:
-  `activeAdultUseRetailStores: 187` / `activeAdultUseMunicipalities: 65`
-  are the 2025 OCP Annual Report state-of-market figures for stat cards;
-  `currentOcpLicenseeRoster.auRetailStores: 107` /
-  `currentOcpLicenseeRoster.auMunicipalities: 49` are the live, deduped
-  OCP Store-type CSV counts refreshed 2026-07-08 for directory cards.
-  The file explicitly says these facts "should NOT be conflated." No
-  site-wide stat rewrite is required.
-- [ ] **External link partnerships** — 2026-07-07 backlink campaign sent
-  16 pitches; await replies and continue human-led follow-up. This remains
-  operator-side outreach, not an autonomous site edit.
-- [x] **Vercel production-env cleanup** — **CLOSED (round 13 verification).**
-  `AGENTS.md` records that production has zero environment variables after
-  the 2026-07-06 cleanup; the former Purelymail variables are not present
-  in production and no code reads them.
-- [x] **Formspree autoresponder carry-forward** — **CLOSED BY 2026-07-13
-  architecture decision.** PDF gates intentionally use mailto: + manual
-  operator reply; Formspree Plus autoresponders are a paid optional upgrade,
-  not a missing required setup. See `docs/LEAD_CAPTURE_SETUP.md` §§51-80 and
-  `docs/FORMSPREE_AUTORESPONDER_RESOLUTION_2026-07-08.md`.
-- [ ] **GSC scheduled measurement** — **BLOCKED: scheduler not running.**
-  Crontab contains the 6am daily and Monday 7am weekly jobs, and both
-  wrapper scripts exist, but `cron.service` is absent on this host.
-  `~/.local/log/gsc-daily.log` and `gsc-audit-weekly.log` last wrote
-  2026-07-06; `gsc-search-analytics.jsonl` last has a 2026-07-10 snapshot.
-  System-level scheduler enablement is operator scope. OpenSEO MCP remains
-  the verified live GSC query path used in round 1 and later analysis.
-- [ ] **GA4 form-completion dashboard panel** — `lead_capture` events fire
-  on all 5 forms; defer until at least seven stable days of data are
-  available, then create a per-form GA4 exploration view.
+- [ ] **Compose the Refined Editorial Foundation safely.**
+  Active design work owns shared layouts/components and affected public pages.
+  Preserve and isolate until its integration owner chooses a composed base.
+  Evidence: `docs/governance/round-17-coordination-decision-memo-2026-07-14.md`.
+- [ ] **Reconcile public OCP data trust in that composition.**
+  Correct the annual-report retail figure to 180 where supported; retain the
+  dated live 107/49 roster as a separate definition; correct coupled ROI math;
+  and fix the refresh-script caregiver field mismatch with regression coverage.
+  Do not patch affected public surfaces independently.
+  Evidence: `docs/audits/round-17-trust-data-reconciliation-2026-07-14.md`.
+- [ ] **Review existing candidate branches one at a time.**
+  `chore/guides-description-trim-2026-07-14` and
+  `refactor/homepage-design-tokens-2026-07-14` require fresh-base, scoped,
+  independent review before integration. Do not batch them for tidiness.
 
-## 🟡 Coordination / operator decisions
+## P1 — Ready to specify after preflight
 
-- [ ] **Theme 2026 → main merge decision** — pre-Sprint-50
-  `feature/theme-2026-fusion` is now superseded in practice by the active
-  `design/refined-editorial-foundation-20260713` redesign branch. Do not
-  merge or rebase the old theme branch without an operator decision.
-- [ ] **`sprint-78k-visual-readability-polish` branch disposition** — the
-  previously-listed visual readability work has later production coverage;
-  verify unique commits before choosing archive vs rebase. Do not rebase
-  blindly.
+- [ ] **Re-measure SEO health and internal-link orphans from a built,
+  production-aligned checkout.** Separate true content-health regressions from
+  missing-`dist/` worktree noise. If defects are current, make small scoped
+  remediation cards that do not conflict with design composition.
+- [ ] **Create GA4 form-completion reporting only after confirming a stable,
+  usable event window.** Build a per-form exploration/dashboard; report
+  observed data, not causal lift.
+- [ ] **Add a hero-image responsive-variant guardrail.** Prevent incomplete
+  `.jpg/.webp/.avif` plus `-640w` sets from publishing; include a focused test.
+- [ ] **Advance town-cluster Stage 3 as a controlled editorial initiative.**
+  One hub/source-pack/reviewer cycle at a time; do not mass-generate thin
+  locality pages. Existing Stage 2 evidence remains in the Hub and source packs.
 
+## P2 — Blocked on an operator or external event
 
-## 🟡 MEDIUM — Backlog
+- [ ] **Restore scheduled GSC measurement.** Blocked because the host has no
+  running cron implementation even though wrappers/crontab entries exist.
+  Resume only after a functioning scheduler produces fresh daily/weekly logs.
+- [ ] **Partnership follow-up.** The backlink campaign is human-led; await
+  replies or operator direction before sending further outreach.
+- [ ] **Choose the lead-magnet PDF scope.** Operator decision required:
+  Path A (write fresh assets) or Path B (route to existing assets), with named
+  target magnets.
+- [ ] **Dispose of legacy theme/readability branches.** Reconcile unique commits
+  against fresh `origin/main`; archive/rebase only after the integration owner
+  has a documented disposition.
 
-- [x] **W7 download-cluster decision (Path A vs Path B)** — flagged in 2026-07-06 passdowns, re-surfaced across three sessions. Operator scope input needed.
-- [ ] **3 lead-magnet PDFs** — operator decision still pending Path A (write fresh PDFs) vs Path B (point at existing PDF).
-- [x] **54+ town-cluster hub pages** — Stage 1 foundation shipped 2026-07-08 (`d3d1b772` + `05b97945`); 5 hubs live at `/guides/{region}-cannabis-guide`. Stage 2 brief at `docs/STAGE_2_TOWN_CLUSTER_PILOT_BRIEF_2026-07-08.md`. Stage 3 deferred to the sprint after. Sprint-score 11/11, production live.
-- [ ] **Dormant `/api/lead-capture.ts` endpoint** — still 404s on prod. Three options for re-enable: (a) post-build flatten `.vercel/output/{static,functions}` into `dist/`; (b) Vercel support; (c) abandon Astro SSR, use Vercel Edge Functions via a different adapter path. Playbook in `docs/LEAD_CAPTURE_SETUP.md`.
-- [ ] **Defensive measure for hero-image variant naming** — `Layout.astro` derives 5 variants by string-convention; future uploads using dimension-suffix recreate the 6-404 bug. Worth utility-side guard.
-- [ ] **Pre-push hook `--ignore-unrelated` flag** — currently blocks pushes on pre-existing image 404s even when no image ref changed in the diff.
-- [ ] **Domain warm-up — `config/credentials/mainedispensaryguide.env`** still needs real credentials + more contacts.
-- [ ] **86 OCP-only cities → expand top 10-15 by search volume into full guide pages.**
-- [ ] **Vendor directory page with categorized service providers.**
-- [ ] **Municipal zoning resource pages for each of the 15 opt-in towns.**
-- [ ] **Maine Cannabis Industry Report — annual gated PDF with market data.**
+## P3 — Backlog, not a current dispatch
 
-## 🟢 LOW — Nice-to-Have
+- [ ] Vendor directory with categorized service providers.
+- [ ] Municipal zoning resource pages for opt-in towns, based on verified local
+  sources rather than templated thin pages.
+- [ ] Annual Maine Cannabis Industry Report lead magnet, after PDF scope and
+  source/update cadence are defined.
+- [ ] Maine-specific founders-page imagery.
+- [ ] GEO citation tracker improvement after a measurable reporting requirement.
+- [ ] Monetization surfaces only after a category reaches `destination_live` in
+  the documented maturity model; no automatic affiliate CTA from a candidate.
 
-- [ ] **Founders-page hero images** — swap stock Unsplash for Maine-specific imagery.
-- [ ] **Build GEO citation tracker** — currently manual via `/admin/seo-dashboard.astro`.
+## Closed / do not reopen without new evidence
 
-## ⚫ BACKLOG — Future Phase
-
-### Phase: Authority Building
-- [ ] Professional email domain setup (`@mainedispensaryguide.com`) — prerequisite for all outreach credibility.
-- [ ] Guest blog outreach to Maine cannabis media outlets.
-- [ ] Configure OpenRouter multi-agent router for additional model diversity (optional future).
-
-### Phase: Monetization Infrastructure
-- [ ] Affiliate links to cannabis-adjacent services (POS systems, insurance, banking).
-- [ ] Featured directory listings (paid placement).
-- [ ] Lead gen fees from referred businesses.
-
-## Metrics Tracker (round-13 measured snapshot — `sprint-score` is canonical)
-
-| Goal | Target | Current | Status |
-|------|--------|---------|--------|
-| Sprint-score checks | 11/11 | **8/11** on 2026-07-14 | 🟠 3 actionable checks: content-health regressions, stale Hub header claim, AGENTS.md component-count drift |
-| Sitemap URLs | >150 | **274** | ✅ (278 built HTML routes; four intentional noindex exclusions) |
-| Guide pages | 175+ | **193** | ✅ |
-| Blog posts | — | **36** | ✅ |
-| Dist HTML pages | — | **278** | ✅ |
-| Pages with FAQPage JSON-LD | — | **163** | ✅ |
-| Internal-link orphans | 0 | **2** (sprint-score current) | 🟠 triage needed; read-only detector remains intentional |
-| Hero images, broken refs | 0 | **0** of 1,288 refs | ✅ |
-| OCP-Covered cities (live roster) | — | **49 municipalities / 107 Store-type licensees** | ✅ dual-stat design; see OCP item above |
-| External domains linking | >10 | ~2 estimated, awaiting campaign landing | 🟠 human follow-up pending |
+- [x] OCP 187/65 versus 107/49 was initially treated as one mismatch. It is
+  not: annual-report and live-roster values are different snapshots/definitions.
+  Round 17 found the annual-report attribution itself needs a composed correction
+  to 180, so handle that under P0 rather than resurrecting the old false-drop task.
+- [x] Production Vercel environment-variable cleanup.
+- [x] Formspree autoresponder is an optional paid upgrade, not a missing
+  architecture requirement.
+- [x] Static `/api/lead-capture` is retired by design; do not treat its 404 as a
+  bug without a new architecture decision.
 
 ---
 
-*Last updated: 2026-07-14 EDT (round-13 open-issues triage)*
-*Previous full refresh: 2026-07-08 (Sprint 78 series refresh)*
-*Source: `sprint-score.cjs --dry-run` from primary checkout, `data-integrity-check.cjs`, `site-stats.json`, cron-wrapper/log inspection, and filesystem ground truth. The component-count drift in `AGENTS.md` is intentionally left for design-branch integration because that file overlaps the active redesign branch.*
+*Last reconciled: 2026-07-14 against `origin/main` `d4dd9f68`.*
+*For task-state truth: `hermes kanban --board mdg-site list --json`.*
+*For current agent routing: `docs/governance/AGENT_WORKING_ORDERS.md`.*

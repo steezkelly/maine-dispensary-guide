@@ -1,10 +1,10 @@
 # MDG Agent Handbook
 
-> Read this first. The `BOT_COLLABORATION_HUB.md` is chronological
-> history; this file is what the next agent needs in the first 60
-> seconds of any session. If the Hub and this file disagree, the
-> Hub is right about what happened, this file is right about what
-> to do next.
+> Read this first, then `docs/governance/AGENT_WORKING_ORDERS.md` and the
+> `mdg-site` Kanban board. The `BOT_COLLABORATION_HUB.md` is chronological
+> history; working orders and task cards route current action. If the Hub and
+> this file disagree, the Hub is right about what happened; the working orders
+> and valid task contract are right about what to do next.
 
 ## Project: Maine Dispensary Guide
 
@@ -251,6 +251,5 @@ MDG_BASE=https://mainedispensaryguide.com node apps/maine-cannabis/scripts/build
 node scripts/git/sprint-handoff.cjs   # generate Hub entry from git history
 ```
 
-Last updated: 2026-06-07 (gate validation evidence added).
-Edit when the next agent discovers
-something every future agent needs to know.
+Last reconciled: 2026-07-14 (working-orders and state-of-record routing added).
+Edit only for a verified rule the next agent needs before opening its task card.
