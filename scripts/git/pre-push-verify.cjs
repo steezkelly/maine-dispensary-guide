@@ -2,8 +2,8 @@
 /**
  * pre-push-verify.cjs
  *
- * Pre-push verification for the MDG monorepo. Detects .astro and .ts files
- * that are about to be pushed and runs two passes:
+ * Pre-push verification for the MDG monorepo. Detects changed .astro files,
+ * app-source TypeScript, and root Node scripts, then runs three passes:
  *
  *   1. FAST: esbuild parse-only on the .astro frontmatter JS.
  *      Catches the Sprint 75 failure class (missing commas, stray braces
@@ -11,9 +11,11 @@
  *      esbuild will refuse to bundle but happily parse-check JS, so we
  *      feed the extracted frontmatter as a virtual entry on stdin.
  *
- *   2. THOROUGH: `npx astro check` (full project), then filters results
- *      to the changed files. Slow (5-15s for the MDG app), so only runs
- *      after pass 1 is green.
+ *   2. NODE SCRIPTS: `node --check` on changed recursive scripts/ .cjs/.mjs/.js files.
+ *
+ *   3. THOROUGH: `npx astro check` (full project), then filters results
+ *      to changed .astro files and changed app-source TypeScript. Slow
+ *      (5-15s for the MDG app), so only runs after pass 1 is green.
  *
  * Replaces the previous scripts/git/delta-typecheck.cjs, which had a
  * hardcoded Windows projectRoot and was never wired into any hook.
@@ -29,6 +31,7 @@
  *   7  docs-vs-code: a doc claims a check runs that isn't wired in CI or the pre-push gate
  *   8  compressed-frontmatter: a .astro page imports AutoRelated outside its frontmatter fence
  *   9  hero-image-naming: a hero/infographic file uses a Layout-incompatible suffix
+ *   10 node --check: a changed root Node script has invalid syntax
  *      (e.g. -1280x720.jpg) — the bug class closed by commit cff15405 on
  *      2026-07-06. Re-introduction guard (Pass 9); see scripts/image/check-hero-naming.cjs.
  *
@@ -92,7 +95,7 @@ const REPO_ROOT = (() => {
 const APPS = ['apps/maine-cannabis'];
 const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
-const NODE_SCRIPT_RE = /\.(cjs|js)$/;
+const NODE_SCRIPT_RE = /\.(cjs|mjs|js)$/;
 
 function log(level, msg) {
     const tags = { info: '\x1b[36mi\x1b[0m', ok: '\x1b[32m✓\x1b[0m', warn: '\x1b[33m!\x1b[0m', err: '\x1b[31m✗\x1b[0m' };
@@ -329,7 +332,7 @@ function nodeSyntaxCheck(files) {
         return isRootNodeScript(rel) && fs.existsSync(path.join(REPO_ROOT, rel));
     });
     if (nodeFiles.length === 0) {
-        log('info', 'no root Node .cjs/.js scripts changed — skipping node --check pass');
+        log('info', 'no root Node .cjs/.mjs/.js scripts changed — skipping node --check pass');
         return { ok: true };
     }
 
