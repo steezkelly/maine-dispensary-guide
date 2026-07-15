@@ -13,6 +13,14 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 PRE-PUSH VERIFY TS/NODE SPLIT (Jul 15, 2026 UTC)
+
+- Extended `scripts/git/pre-push-verify.cjs` so changed files are split by Astro, app TS, and root Node script syntax concerns.
+- `npx astro check` now runs for changed `.astro` files and changed TS files under `apps/maine-cannabis/src`, then filters diagnostics against normalized repo-relative/app-relative paths instead of basename-only matching.
+- Added a lightweight `node --check` pass for changed `scripts/*.cjs` / `scripts/*.js` files before Astro check.
+- Verification: `node --check scripts/git/pre-push-verify.cjs` and `npm run verify:iterate` passed.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
