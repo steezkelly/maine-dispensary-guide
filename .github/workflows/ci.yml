@@ -39,6 +39,11 @@ jobs:
       - name: Test image audit responsive variants
         run: node --test scripts/image/tests/image-audit.test.cjs
 
+      - name: Test GSC daily analytics contract
+        run: |
+          node --test apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.test.cjs
+          node --test apps/maine-cannabis/scripts/seo/gsc-misroute-audit.test.cjs
+
       - name: Test ICA continuation guardrails
         run: npm run test:continuation
 
