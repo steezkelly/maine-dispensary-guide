@@ -37,10 +37,11 @@ and lease check. A candidate branch is not an authorization to duplicate work.
   `refactor/homepage-design-tokens-2026-07-14` require fresh-base, scoped,
   independent review before integration. Do not batch them for tidiness.
 - [ ] **Protect the active guide-title and shared-CSS worktrees.**
-  `chore/guides-title-trim-2026-07-14` is a committed candidate; the
-  `refactor/css-extract-top3-2026-07-14` owner has uncommitted shared-style
-  wiring. Verify each bounded change from a fresh base before integration. Do
-  not touch their paths or merge partial assets.
+  Treat `chore/guides-title-trim-2026-07-14` and
+  `refactor/css-extract-top3-2026-07-14` as owner-managed live worktrees:
+  inspect current status, conflicts, and `origin/main` divergence immediately
+  before an integration decision. Verify each bounded change from a fresh base;
+  do not touch their paths or merge partial assets.
 
 ## P1 — Ready to specify after preflight
 
