@@ -19,16 +19,87 @@ const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirn
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'public'));
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
-// ─── Check 1: no href="#" ───────────────────────────────────────────────────
-function checkHrefHash() {
-  const results = [];
-  walk(ROOT).forEach(file => {
+function parseArgs(argv) {
+  const flags = new Set(argv);
+  const sourceOnly = flags.has('--source-only');
+  const renderedOnly = flags.has('--rendered-only');
+  if (sourceOnly && renderedOnly) {
+    console.error('Cannot combine --source-only and --rendered-only');
+    process.exit(2);
+  }
+  return {
+    build: flags.has('--build'),
+    noBuild: flags.has('--no-build'),
+    sourceOnly,
+    renderedOnly,
+  };
+}
+
+const OPTIONS = parseArgs(process.argv.slice(2));
+
+function runBuildPreflight() {
+  if (OPTIONS.noBuild || OPTIONS.sourceOnly || ROOT !== DEFAULT_ROOT) return [];
+  if (!OPTIONS.build && process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1') return [];
+
+  const { execSync } = require('node:child_process');
+  try {
+    const out = execSync('npm run build 2>&1', {
+      cwd: path.resolve(__dirname, '../..'),
+      encoding: 'utf8',
+      timeout: 180000,
+      maxBuffer: 20 * 1024 * 1024,
+    });
+    const lines = out.split('\n');
+    const cssWarnings = [];
+    lines.forEach((line) => {
+      const lower = line.toLowerCase();
+      if (lower.includes('warn') && (lower.includes('css') || lower.includes('style'))) {
+        cssWarnings.push(line.trim());
+      }
+      if (lower.includes('deprecated') && lower.includes('style')) {
+        cssWarnings.push(line.trim());
+      }
+    });
+    return cssWarnings.filter(l =>
+      l.match(/\[warn\]/i) ||
+      l.match(/warning:/i) ||
+      l.match(/css.*warning/i) ||
+      l.includes('deprecated') && l.includes('style')
+    ).slice(0, 10);
+  } catch (err) {
+    const message = err && err.message ? err.message.split('\n')[0] : String(err);
+    return [`build failed while scanning CSS warnings: ${message}`];
+  }
+}
+
+function buildAuditCache() {
+  const sourceFiles = walk(ROOT).map(file => {
     const text = fs.readFileSync(file, 'utf8');
-    const lines = text.split(/\r?\n/);
+    return { file, rel: path.relative(ROOT, file).replace(/\\/g, '/'), text, lines: text.split(/\r?\n/) };
+  });
+  const renderedHtmlFiles = htmlFiles(DIST).map(file => {
+    const text = fs.readFileSync(file, 'utf8');
+    const rel = path.relative(DIST, file).replace(/\\/g, '/');
+    return { file, rel, route: routeForHtml(DIST, file), text };
+  });
+  const routeSet = new Set(renderedHtmlFiles.map(entry => entry.route));
+  const sitemapXml = fs.existsSync(SITEMAP) ? fs.readFileSync(SITEMAP, 'utf8') : '';
+  return { sourceFiles, renderedHtmlFiles, routeSet, sitemapXml };
+}
+
+function sourceEntry(cache, rel) {
+  const normalized = rel.replace(/\\/g, '/');
+  return cache.sourceFiles.find(entry => entry.rel === normalized);
+}
+
+// ─── Check 1: no href="#" ───────────────────────────────────────────────────
+function checkHrefHash(cache) {
+  const results = [];
+  cache.sourceFiles.forEach(({ file, rel, text, lines }) => {
     lines.forEach((line, idx) => {
       // Match href="#" inside HTML — but allow href="#section-id" anchors
       if (/href\s*=\s*["']#["']/.test(line)) {
-        results.push(`${path.relative(ROOT, file)}:${idx + 1}: bare href=\"#\" found`);
+        results.push(`${rel}:${idx + 1}: bare href=\"#\" found`);
       }
     });
   });
@@ -37,22 +108,20 @@ function checkHrefHash() {
 
 // ─── Check 2: malformed frontmatter shape ──────────────────────────────────
 const FRONTMATTER_BAD = /---\s+import\s+\w+\s+from\s+['"][^'"]+['"]/;
-function checkFrontmatter() {
+function checkFrontmatter(cache) {
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  cache.sourceFiles.forEach(({ rel, lines }) => {
     // Must have at least one --- line, then import, then --- <Layout
-    const lines = text.split(/\r?\n/);
     let state = 'search';
     for (let i = 0; i < lines.length; i++) {
       const l = lines[i].trim();
       if (state === 'search' && l === '---') { state = 'frontmatter'; continue; }
       if (state === 'frontmatter') {
         if (FRONTMATTER_BAD.test(l)) {
-          results.push(`${path.relative(ROOT, file)}:${i + 1}: malformed frontmatter import (--- import, --- <Layout): ${l}`);
+          results.push(`${rel}:${i + 1}: malformed frontmatter import (--- import, --- <Layout): ${l}`);
         }
-        if (l.startsWith('<')) { state = 'done'; } // layout tag closes frontmatter
-        if (l === '---') { state = 'done'; }        // empty frontmatter end
+        if (l.startsWith('<')) { state = 'done'; }
+        if (l === '---') { state = 'done'; }
       }
       if (state === 'done') break;
     }
@@ -61,12 +130,12 @@ function checkFrontmatter() {
 }
 
 // ─── Check 3: noindex pages in sitemap ─────────────────────────────────────
-function checkNoindexInSitemap() {
+function checkNoindexInSitemap(cache) {
   const results = [];
   if (!fs.existsSync(SITEMAP)) {
     return ['sitemap-0.xml not found — run build first'];
   }
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = cache.sitemapXml;
   // Pages that should NOT be in sitemap (noindex pages).
   // /admin/, /experiments/, /link-dashboard — already excluded via
   // sitemap-config.json noindexPathPrefixes. The /download/* lead-magnet
@@ -87,18 +156,18 @@ function checkNoindexInSitemap() {
 
 // ─── Check 4: fake "Menu"/"Directions" buttons (store-cards array) ──────────
 // The stores array in find-a-dispensary.astro should not produce href="#"
-function checkFakeAnchorsInStores() {
-  const file = path.join(ROOT, 'find-a-dispensary.astro');
-  if (!fs.existsSync(file)) return [];
-  const text = fs.readFileSync(file, 'utf8');
+function checkFakeAnchorsInStores(cache) {
+  const entry = sourceEntry(cache, 'find-a-dispensary.astro');
+  if (!entry) return [];
+  const { rel, text } = entry;
   const results = [];
 
   // Check that store card buttons don't have href="#"
   const cardRegex = /<a[^>]+href\s*=\s*["']#["'][^>]*>(Directions|Menu|Visit|View)<\/a>/gi;
-  const lines = text.split(/\r?\n/);
+  const lines = entry.lines;
   lines.forEach((line, idx) => {
     if (cardRegex.test(line)) {
-      results.push(`${path.relative(ROOT, file)}:${idx + 1}: fake anchor button found: ${line.trim()}`);
+      results.push(`${rel}:${idx + 1}: fake anchor button found: ${line.trim()}`);
     }
     cardRegex.lastIndex = 0;
   });
@@ -107,7 +176,7 @@ function checkFakeAnchorsInStores() {
   const badStoreProp = /(?:menu|directions|menuUrl|mapUrl)\s*:\s*["']#["']/g;
   lines.forEach((line, idx) => {
     if (badStoreProp.test(line)) {
-      results.push(`${path.relative(ROOT, file)}:${idx + 1}: store prop set to bare '#': ${line.trim()}`);
+      results.push(`${rel}:${idx + 1}: store prop set to bare '#': ${line.trim()}`);
     }
     badStoreProp.lastIndex = 0;
   });
@@ -117,16 +186,14 @@ function checkFakeAnchorsInStores() {
 
 // ─── Check 5: typo literals ────────────────────────────────────────────────
 const KNOWN_BAD = ['retaillaunch'];
-function checkTypoLiterals() {
+function checkTypoLiterals(cache) {
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
-    const lines = text.split(/\r?\n/);
+  cache.sourceFiles.forEach(({ file, rel, text, lines }) => {
     KNOWN_BAD.forEach(typo => {
       const re = new RegExp(`\\b${typo}\\b`, 'i');
       lines.forEach((line, idx) => {
         if (re.test(line)) {
-          results.push(`${path.relative(ROOT, file)}:${idx + 1}: typo literal '${typo}': ${line.trim().slice(0, 100)}`);
+          results.push(`${rel}:${idx + 1}: typo literal '${typo}': ${line.trim().slice(0, 100)}`);
         }
       });
     });
@@ -135,12 +202,11 @@ function checkTypoLiterals() {
 }
 
 // ─── Check 6: internal static links to missing pages ───────────────────────
-function checkDeadInternalLinks() {
+function checkDeadInternalLinks(cache) {
   // Build list of valid pages from sitemap
   const validPages = new Set();
-  if (fs.existsSync(SITEMAP)) {
-    const xml = fs.readFileSync(SITEMAP, 'utf8');
-    const locMatches = xml.matchAll(/<loc>https:\/\/mainedispensaryguide\.com([^<]*)<\/loc>/g);
+  if (cache.sitemapXml) {
+    const locMatches = cache.sitemapXml.matchAll(/<loc>https:\/\/mainedispensaryguide\.com([^<]*)<\/loc>/g);
     for (const m of locMatches) {
       const p = m[1] || '/';
       validPages.add(p);
@@ -150,8 +216,7 @@ function checkDeadInternalLinks() {
   // Also trust concrete Astro source routes. Some valid pages are intentionally
   // noindex and excluded from the sitemap (download funnels, 404, search), but
   // internal links to them are not dead links.
-  walk(ROOT).forEach(f => {
-    const rel = path.relative(ROOT, f).replace(/\\/g, '/');
+  cache.sourceFiles.forEach(({ rel }) => {
     let route = '/' + rel.replace(/\.astro$/, '');
     route = route.replace(/\/index$/, '') || '/';
     validPages.add(route);
@@ -161,11 +226,8 @@ function checkDeadInternalLinks() {
   const internalLinkRe = /href\s*=\s*["'](?!https?:\/\/|tel:|mailto:|\/\/)([^"']+)["']/g;
   const skipRe = /^#|^javascript:/;
 
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
-    const rel = path.relative(ROOT, file);
+  cache.sourceFiles.forEach(({ file, rel, text }) => {
     const fileDir = path.dirname(file);
-
     let m;
     while ((m = internalLinkRe.exec(text)) !== null) {
       const raw = m[1];
@@ -197,15 +259,13 @@ function checkDeadInternalLinks() {
 }
 
 // ─── Check 7: malformed \\1 hrefs (from bad regex replacements) ─────────────
-function checkMalformedBackrefHrefs() {
+function checkMalformedBackrefHrefs(cache) {
   const badHrefPattern = /href=["']\\1["']/g;
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
-    const lines = text.split(/\r?\n/);
+  cache.sourceFiles.forEach(({ file, rel, text, lines }) => {
     lines.forEach((line, idx) => {
       if (badHrefPattern.test(line)) {
-        results.push(`${path.relative(ROOT, file)}:${idx + 1}: malformed \\1 href: ${line.trim()}`);
+        results.push(`${rel}:${idx + 1}: malformed \\1 href: ${line.trim()}`);
       }
       badHrefPattern.lastIndex = 0;
     });
@@ -231,7 +291,7 @@ function walk(dir, out = []) {
 // ─── Check 8: production pages missing complete OG image metadata ───────────
 // ─── Check 10: OG image dimensions ────────────────────────────────────────────
 
-function checkOGImageDimensions() {
+function checkOGImageDimensions(cache) {
   const results = [];
   const distPath = DIST;
 
@@ -282,120 +342,59 @@ function checkOGImageDimensions() {
     return null;
   }
 
-  // Walk built HTML pages
-  function walkDist(dir) {
-    if (!fs.existsSync(dir)) return;
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        walkDist(full);
-      } else if (entry.name.endsWith('.html')) {
-        const rel = path.relative(distPath, full);
-        const text = fs.readFileSync(full, 'utf8');
+  // Walk built HTML pages from the shared cache.
+  for (const { rel, text } of cache.renderedHtmlFiles) {
+    const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
+    const ogImageMatch = text.match(ogImageRe);
+    const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
 
-        // Find og:image URL
-        const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
-        const ogImageMatch = text.match(ogImageRe);
-        const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
+    const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
+    const robotsMatch = text.match(robotsRe);
+    const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
+    if (robots.includes('noindex')) continue;
 
-        // Noindex pages (admin, experiments, gated funnels) don't need OG image
-        // meta tags — they're not shared on social and search engines ignore them.
-        // Skip them to keep the check focused on real public pages.
-        const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
-        const robotsMatch = text.match(robotsRe);
-        const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
-        if (robots.includes('noindex')) return;
+    const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
+    const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
+    const wMatch = text.match(wRe);
+    const hMatch = text.match(hRe);
 
-        // Find og:image:width / height
-        const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
-        const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
-        const wMatch = text.match(wRe);
-        const hMatch = text.match(hRe);
-
-        if (!ogImageUrl) {
-          results.push(`${rel}: missing og:image`);
-          return;
-        }
-        if (!wMatch) {
-          results.push(`${rel}: missing og:image:width`);
-        } else if (!hMatch) {
-          results.push(`${rel}: missing og:image:height`);
-        } else {
-          const reportedW = parseInt(wMatch[1], 10);
-          const reportedH = parseInt(hMatch[1], 10);
-          if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
-            const local = readLocalImageDims(ogImageUrl);
-            if (local) {
-              if (reportedW !== local.w) {
-                results.push(`${rel}: og:image:width=${reportedW} doesn't match actual image width ${local.w} (${ogImageUrl})`);
-              }
-              if (reportedH !== local.h) {
-                results.push(`${rel}: og:image:height=${reportedH} doesn't match actual image height ${local.h} (${ogImageUrl})`);
-              }
-            }
-            // External images (no local dims available): just sanity-check reasonable size
-            else {
-              if (reportedW < 200 || reportedH < 100) {
-                results.push(`${rel}: og:image dimensions look too small (${reportedW}x${reportedH}) for ${ogImageUrl}`);
-              }
-            }
-          }
+    if (!ogImageUrl) {
+      results.push(`${rel}: missing og:image`);
+      continue;
+    }
+    if (!wMatch) {
+      results.push(`${rel}: missing og:image:width`);
+    } else if (!hMatch) {
+      results.push(`${rel}: missing og:image:height`);
+    } else {
+      const reportedW = parseInt(wMatch[1], 10);
+      const reportedH = parseInt(hMatch[1], 10);
+      if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
+        const local = readLocalImageDims(ogImageUrl);
+        if (local) {
+          if (reportedW !== local.w) results.push(`${rel}: og:image:width=${reportedW} doesn't match actual image width ${local.w} (${ogImageUrl})`);
+          if (reportedH !== local.h) results.push(`${rel}: og:image:height=${reportedH} doesn't match actual image height ${local.h} (${ogImageUrl})`);
+        } else if (reportedW < 200 || reportedH < 100) {
+          results.push(`${rel}: og:image dimensions look too small (${reportedW}x${reportedH}) for ${ogImageUrl}`);
         }
       }
     }
   }
-
-  walkDist(distPath);
   return results;
 }
 
 // ─── Check 9: CSS build warnings ─────────────────────────────────────────────
 // Runs `astro build` and scans stdout/stderr for CSS warnings
-function checkCSSBuildWarnings() {
-  if (process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1' || ROOT !== DEFAULT_ROOT) return [];
-
-  const { execSync } = require('node:child_process');
-  try {
-    const out = execSync('npm run build 2>&1', {
-      cwd: path.resolve(__dirname, '../..'),
-      encoding: 'utf8',
-      timeout: 180000,
-      maxBuffer: 20 * 1024 * 1024,
-    });
-    const lines = out.split('\n');
-    const cssWarnings = [];
-    lines.forEach((line) => {
-      const lower = line.toLowerCase();
-      // Catch vite/warning/css related warnings
-      if (lower.includes('warn') && (lower.includes('css') || lower.includes('style'))) {
-        cssWarnings.push(line.trim());
-      }
-      // Also catch deprecation warnings that affect CSS
-      if (lower.includes('deprecated') && lower.includes('style')) {
-        cssWarnings.push(line.trim());
-      }
-    });
-    // Only fail if there are real warnings (not just the word "warning" in passing text)
-    const realWarnings = cssWarnings.filter(l =>
-      l.match(/\[warn\]/i) ||
-      l.match(/warning:/i) ||
-      l.match(/css.*warning/i) ||
-      l.includes('deprecated') && l.includes('style')
-    );
-    return realWarnings.slice(0, 10);
-  } catch (err) {
-    // A failed build means the CSS-warning check did not complete; surface it
-    // instead of falsely reporting OK.
-    const message = err && err.message ? err.message.split('\n')[0] : String(err);
-    return [`build failed while scanning CSS warnings: ${message}`];
-  }
+function checkCSSBuildWarnings(cache) {
+  return cache.cssBuildWarnings || [];
 }
+
 
 
 // ─── Check 10: trailing-slash internal links ───────────────────────────────
 // The site config uses trailingSlash: 'never'. Source links to /path/ create
 // avoidable 3XX redirects and crawl noise.
-function checkTrailingSlashInternalLinks() {
+function checkTrailingSlashInternalLinks(cache) {
   const results = [];
   const quotedInternalRouteRe = /["'](\/[^\"'?]+\/)(?=[#']|["'])/g;
   // JS code that uses path strings inside .includes() / .test() / RegExp()
@@ -404,9 +403,7 @@ function checkTrailingSlashInternalLinks() {
   const jsContextRe = /\.(?:includes|test|match|exec|search|indexOf|concat)\s*\(|new\s+RegExp\s*\(|`[^`]*\$\{|\/\//;
   const skipPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
-    const lines = text.split(/\r?\n/);
+  cache.sourceFiles.forEach(({ file, rel, text, lines }) => {
     let m;
     while ((m = quotedInternalRouteRe.exec(text)) !== null) {
       const href = m[1];
@@ -427,7 +424,6 @@ function checkTrailingSlashInternalLinks() {
       const jsxStringConcatExpr = /\{\s*['"`][^'"`]*['"`]\s*\+/;
       if (jsxStringConcatExpr.test(line)) continue;
       if (jsContextRe.test(line)) continue;
-      const rel = path.relative(ROOT, file);
       results.push(`${rel}:${lineNum}: trailing-slash internal route string → ${href}`);
     }
   });
@@ -471,12 +467,11 @@ function extractAttr(tag, name) {
 // Mirrors the Ahrefs issue classes that have regressed before: broken rendered
 // images/assets, internal page links to missing routes, overlong SEO metadata,
 // malformed JSON-LD, and /download parent breadcrumbs.
-function checkRenderedCrawlBasics() {
+function checkRenderedCrawlBasics(cache) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
 
-  const files = htmlFiles(DIST);
-  const routes = new Set(files.map(file => routeForHtml(DIST, file)));
+  const routes = cache.routeSet;
   const skipHrefPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
   function assetExists(urlPath) {
@@ -485,10 +480,7 @@ function checkRenderedCrawlBasics() {
       fs.existsSync(path.join(DIST, clean.replace(/^\//, '')));
   }
 
-  for (const file of files) {
-    const rel = path.relative(DIST, file).replace(/\\/g, '/');
-    const route = routeForHtml(DIST, file);
-    const text = fs.readFileSync(file, 'utf8');
+  for (const { rel, route, text } of cache.renderedHtmlFiles) {
 
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (title.length > 60) results.push(`${rel}: title too long (${title.length})`);
@@ -559,12 +551,12 @@ function checkRenderedCrawlBasics() {
 
 // ─── Check 12: sitemap XML escaping ────────────────────────────────────────
 // Sitemap parsers require '&' to be escaped as '&amp;' in XML content.
-function checkSitemapXmlEntities() {
+function checkSitemapXmlEntities(cache) {
   if (!fs.existsSync(SITEMAP)) {
     return ['sitemap-0.xml not found — run build first'];
   }
 
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = cache.sitemapXml;
   const invalid = [...xml.matchAll(/&(?![a-zA-Z0-9#]+;)/g)];
   if (invalid.length === 0) return [];
   const positions = invalid.slice(0, 5).map(m => m.index);
@@ -579,26 +571,19 @@ function checkSitemapXmlEntities() {
 // a unique description — duplicates dilute the page's value in search
 // snippets and signal low content diversity to Google. The 2026-07-02
 // senior SEO sweep confirmed 0 duplicates; this check prevents regressions.
-function checkMetaDescriptionUniqueness() {
+function checkMetaDescriptionUniqueness(cache) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
-  const files = htmlFiles(DIST);
-  const seen = new Map(); // desc -> first file
-  for (const file of files) {
-    const text = fs.readFileSync(file, 'utf8');
-    // Use only double-quote form to avoid apostrophe collisions in content
-    // (e.g. "Maine's best..." would otherwise match only "Maine" because
-    // the regex character class [^"']+ stops at the apostrophe).
+  const seen = new Map(); // desc -> first route
+  for (const { route, text } of cache.renderedHtmlFiles) {
     const m = text.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
     if (!m) continue;
     const desc = m[1].trim();
     if (!desc) continue;
     if (seen.has(desc)) {
-      const rel1 = '/' + path.relative(DIST, seen.get(desc)).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-      const rel2 = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-      if (results.length < 5) results.push(`duplicate description on ${rel2} (also on ${rel1})`);
+      if (results.length < 5) results.push(`duplicate description on ${route} (also on ${seen.get(desc)})`);
     } else {
-      seen.set(desc, file);
+      seen.set(desc, route);
     }
   }
   return results;
@@ -613,10 +598,10 @@ function checkMetaDescriptionUniqueness() {
 // without an `article={...}` frontmatter prop). The fix in astro.config.mjs
 // falls back to source-file mtime when no article-modifiedDate exists;
 // this check prevents regressions.
-function checkSitemapLastmod() {
+function checkSitemapLastmod(cache) {
   const results = [];
   if (!fs.existsSync(SITEMAP)) return ['sitemap-0.xml not found — run build first'];
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = cache.sitemapXml;
   // Match each <url>...</url> entry. Per-entry scan is more reliable than the
   // old per-tag regex (which fails when whitespace falls between </loc> and
   // <lastmod>; produced 5 false-positives on 2026-07-08 against a sitemap
@@ -651,95 +636,61 @@ function checkSitemapLastmod() {
 // homepage and 30+ guide pages). This check makes the problem
 // non-regressing: future PRs that add a new page without linking to it
 // from at least one other page will be caught.
-function checkOrphanPages() {
+function checkOrphanPages(cache) {
+  if (ROOT !== DEFAULT_ROOT) return [];
   const results = [];
-  // Resolve PAGES_DIR relative to this script's location so the check
-  // works from any cwd, matching the rest of the checks in this file.
-  const PAGES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
-  if (!fs.existsSync(PAGES_DIR)) return ['pages/ not found'];
-  // Routes that are intentionally noindex and don't need inbound links.
+  if (!fs.existsSync(ROOT)) return ['pages/ not found'];
   const NOINDEX_PATHS = new Set([
     '/404', '/admin', '/experiments', '/search', '/download/roadmap',
-    '/embed/opt-in-tracker', // opt-in trackers rarely warrant navigation presence
-    '/guides/all-cities',   // self-index: every city guide references it; not a leaf page
+    '/embed/opt-in-tracker', '/guides/all-cities',
   ]);
-  function isNoindex(file) {
-    try {
-      return /noindex\s*=\s*\{\s*true\s*\}/.test(fs.readFileSync(file, 'utf8'));
-    } catch { return false; }
+  function routeForSource(rel) {
+    const relRaw = rel.replace(/\.astro$/, '');
+    return '/' + (relRaw === 'index' ? '' : relRaw.replace(/\/index$/, ''));
   }
-  function listAstroFilesRecursive(dir, out = []) {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        if (entry.name === 'admin' || entry.name === 'api' || entry.name === 'node_modules') continue;
-        listAstroFilesRecursive(full, out);
-      } else if (entry.isFile() && entry.name.endsWith('.astro')) {
-        out.push(full);
-      }
-    }
-    return out;
+  function isNoindex(entry) {
+    return /noindex\s*=\s*\{\s*true\s*\}/.test(entry.text);
   }
-  // Sprint 80 patch: source-only regex misses inbound links emitted by
-  // JSX expressions like `<a href={hubByName[region.name]}>` or by data-
-  // driven iteration like `{posts.map(p => <a href={p.url}>)}`. The
-  // rendered-HTML check catches those — it walks dist/ for `*.html` files
-  // and counts any literal `href="/<path>"` reference. If either check
-  // finds an inbound link, the page is not an orphan.
-  function findInboundLink(needle, excludeFile) {
-    // Match both `href="/path"`, `href='/path'`, and `href: "/path"` forms.
-    // The needle is the route (e.g. "guides/lebanon-dispensary-guide").
+  function findInboundLink(needle, excludeFile, targetRoute) {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
-    const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
-    const all = listAstroFilesRecursive(path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src'));
-    for (const f of all) {
-      if (f === excludeFile) continue;
-      let text;
-      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
-      if (re1.test(text) || re2.test(text)) return f;
+    const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'#?]|$)`);
+    const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}(?:["'#?]|$)`);
+    const hrefRe = /href\s*=\s*["'](?!https?:\/\/|tel:|mailto:|\/\/)([^"']+)["']/g;
+    for (const entry of cache.sourceFiles) {
+      if (entry.file === excludeFile) continue;
+      if (re1.test(entry.text) || re2.test(entry.text)) return entry.file;
+      let m;
+      while ((m = hrefRe.exec(entry.text)) !== null) {
+        const raw = m[1];
+        const pagePath = raw.split('#')[0].split('?')[0];
+        if (!pagePath || pagePath.startsWith('#') || pagePath.includes('\\')) continue;
+        const resolved = pagePath.startsWith('/')
+          ? pagePath.replace(/\/$/, '') || '/'
+          : '/' + path.relative(ROOT, path.resolve(path.dirname(entry.file), pagePath)).replace(/\\/g, '/').replace(/\/$/, '');
+        if ((resolved || '/') === targetRoute) return entry.file;
+      }
     }
     return '';
   }
-  function findInboundFromRendered(needle) {
+  function findInboundFromRendered(needle, route) {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'/#?]|$)`, 'm');
-    const distBase = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist');
-    const distPath = path.join(distBase, needle, 'index.html');
-    function walk(dir, out) {
-      out = out || [];
-      if (!fs.existsSync(dir)) return out;
-      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-        const full = path.join(dir, entry.name);
-        if (entry.isDirectory()) walk(full, out);
-        else if (entry.isFile() && full.endsWith('.html')) out.push(full);
-      }
-      return out;
-    }
-    const htmlFiles = walk(distBase);
-    for (const f of htmlFiles) {
-      if (f === distPath) continue;
-      let text;
-      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
-      if (re.test(text)) return f;
+    for (const entry of cache.renderedHtmlFiles) {
+      if (entry.route === route) continue;
+      if (re.test(entry.text)) return entry.file;
     }
     return '';
   }
-  const files = listAstroFilesRecursive(PAGES_DIR);
-  for (const f of files) {
-    if (isNoindex(f)) continue;
-    const relRaw = path.relative(PAGES_DIR, f).replace(/\\/g, '/').replace(/\.astro$/, '');
-    // Map `path/to/index` → `path/to` (Astro's index.astro = parent route).
-    const rel = '/' + (relRaw === 'index' ? '' : relRaw.replace(/\/index$/, ''));
+  for (const entry of cache.sourceFiles) {
+    if (isNoindex(entry)) continue;
+    const rel = routeForSource(entry.rel);
     if (rel === '/') continue;
     const normalized = rel.replace(/\/$/, '') || '/';
     if (NOINDEX_PATHS.has(normalized)) continue;
     const needle = rel.replace(/^\//, '');
-    const foundSrc = findInboundLink(needle, f);
-    const foundDist = findInboundFromRendered(needle);
-    if (!foundSrc && !foundDist) {
-      results.push(`${normalized}: no inbound link from any other page`);
-    }
+    const foundSrc = findInboundLink(needle, entry.file, normalized);
+    const foundDist = findInboundFromRendered(needle, normalized);
+    if (!foundSrc && !foundDist) results.push(`${normalized}: no inbound link from any other page`);
   }
   return results;
 }
@@ -752,23 +703,18 @@ function checkOrphanPages() {
 // `website`. The 2026-07-02 QA sweep found 4 hub pages emitting
 // `og:type=article`. Hub pages are identified by Layout.astro's
 // isHub={true} prop or by being one of the canonical hub routes below.
-function checkOgTypeMatchesRole() {
+function checkOgTypeMatchesRole(cache) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
-  // Routes that are always hub pages regardless of isHub prop.
   const HUB_ROUTES = new Set([
     '/', '/about', '/blog', '/all-guides', '/guides', '/learn', '/glossary',
     '/find-a-dispensary', '/resources', '/directory', '/blog/index',
   ]);
-  const files = htmlFiles(DIST);
-  for (const file of files) {
-    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-    if (!HUB_ROUTES.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
-    const text = fs.readFileSync(file, 'utf8');
+  for (const { route, text } of cache.renderedHtmlFiles) {
+    const rel = route.replace(/\/$/, '') || '/';
+    if (!HUB_ROUTES.has(rel)) continue;
     const m = text.match(/<meta\s+property=["']og:type["']\s+content=["']([^"']+)["']/i);
-    if (m && m[1] !== 'website') {
-      results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
-    }
+    if (m && m[1] !== 'website') results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
   }
   return results;
 }
@@ -781,31 +727,18 @@ function checkOgTypeMatchesRole() {
 // existing tech guides, 35 blog posts, and 109 city guides. A 2026-07-02 QA
 // sweep found 13 more (see docs/SENIOR_REVIEW_2026-07-02.md). The fix lives
 // in lib/seo.ts buildFullTitle; this check makes the fix non-regressing.
-function checkTitleTruncation() {
+function checkTitleTruncation(cache) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
-  // Pages whose titles legitimately end with digits, abbreviations, or
-  // short names that would otherwise look "truncated" to the regex.
-  // These pages are reviewed and excluded manually.
-  const ALLOWLIST = new Set([
-    '/404', // 404 page
-  ]);
-  // Trailing punctuation/em-dash that should never appear in a complete title.
-  const TRAILING_PUNCT = /[,;:\u2014\-–]$/;
-  // Trailing connector words that would leave a sentence visibly incomplete.
+  const ALLOWLIST = new Set(['/404']);
+  const TRAILING_PUNCT = /[,;:—\-–]$/;
   const TRAILING_CONNECTOR = /\s+(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from)$/i;
-  const files = htmlFiles(DIST);
-  for (const file of files) {
-    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-    if (ALLOWLIST.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
-    const text = fs.readFileSync(file, 'utf8');
+  for (const { route, text } of cache.renderedHtmlFiles) {
+    if (ALLOWLIST.has(route.replace(/\/$/, '') || '/')) continue;
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (!title) continue;
-    if (TRAILING_PUNCT.test(title)) {
-      results.push(`${rel}: title ends with trailing punctuation → ${title}`);
-    } else if (TRAILING_CONNECTOR.test(title)) {
-      results.push(`${rel}: title ends with connector word → ${title}`);
-    }
+    if (TRAILING_PUNCT.test(title)) results.push(`${route}: title ends with trailing punctuation → ${title}`);
+    else if (TRAILING_CONNECTOR.test(title)) results.push(`${route}: title ends with connector word → ${title}`);
   }
   return results;
 }
@@ -870,44 +803,19 @@ function checkDuplicateHeroImages() {
 // schema) ends up with two identical blocks in dist/. Wastes bytes and may
 // confuse Google structured-data parsers. Catches the regression that
 // shipped in 116 pages before Sprint 80.
-function checkDuplicateFaqPageSchema() {
+function checkDuplicateFaqPageSchema(cache) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
-  // Pages that intentionally emit multiple FAQPage JSON-LD scripts with
-  // non-overlapping content (e.g. /guides/faq emits one per category
-  // section — Buyer-intent, Cannabis Science, etc.). These are NOT
-  // duplicates; they're a deliberate per-category schema pattern. The
-  // linter protects against real duplicates but should skip pages whose
-  // only job IS to be a multi-page FAQ catalog.
-  const FAQ_GENERATOR_PAGES = new Set([
-    '/guides/faq', // the FAQ catalog page emits 1 FAQPage per category
-  ]);
-  function walk(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) {
-        if (p.includes('/_astro') || p.includes('/admin/')) continue;
-        walk(p);
-      } else if (e.isFile() && p.endsWith('.html')) {
-        const relPath = p.replace(DIST, '').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-        // Normalize trailing-slash path the same way orphan/check does.
-        const route = '/' + (relPath === '' ? '' : relPath.replace(/^\//, ''));
-        if (FAQ_GENERATOR_PAGES.has(route)) continue;
-        const text = fs.readFileSync(p, 'utf8');
-        // Count FAQPage blocks. Use a non-greedy match for each `<script>`
-        // containing a FAQPage JSON-LD.
-        const scriptRe = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
-        let count = 0;
-        for (const m of text.matchAll(scriptRe)) {
-          if (/"@type"\s*:\s*"FAQPage"/.test(m[1])) count++;
-        }
-        if (count > 1) {
-          results.push(p.replace(DIST, '').replace(/^\//, ''));
-        }
-      }
+  const FAQ_GENERATOR_PAGES = new Set(['/guides/faq']);
+  for (const { rel, route, text } of cache.renderedHtmlFiles) {
+    if (FAQ_GENERATOR_PAGES.has(route)) continue;
+    const scriptRe = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    let count = 0;
+    for (const m of text.matchAll(scriptRe)) {
+      if (/"@type"\s*:\s*"FAQPage"/.test(m[1])) count++;
     }
+    if (count > 1) results.push(rel);
   }
-  walk(DIST);
   return results;
 }
 
@@ -936,25 +844,19 @@ const YMYL_BLOG_PAGES = [
   'blog/maine-home-grow-cannabis-guide-2026.astro',
 ];
 
-function checkYMYLReviewerCoverage() {
+function checkYMYLReviewerCoverage(cache) {
+  if (ROOT !== DEFAULT_ROOT) return [];
   const results = [];
   YMYL_BLOG_PAGES.forEach(rel => {
-    const file = path.join(ROOT, rel);
-    if (!fs.existsSync(file)) {
+    const entry = sourceEntry(cache, rel);
+    if (!entry) {
       results.push(`${rel}: file not found`);
       return;
     }
-    const text = fs.readFileSync(file, 'utf8');
-    // Source-level checks — verify the frontmatter declares a reviewer
-    // field (either as `reviewer:` object or as a `complianceReviewer`
-    // lookup that will populate the reviewer field).
+    const text = entry.text;
     const hasReviewerField = /reviewer\s*:\s*complianceReviewer\s*\?/.test(text)
       || /reviewer\s*:\s*\{\s*name\s*:/.test(text)
-      || /reviewer\s*:\s*undefined/.test(text);  // explicit undefined = intentional
-    // Also accept pages that have a "Reviewed by" byline in the body
-    // AND a complianceReviewer import that could populate the schema —
-    // covers the case where the schema frontmatter hasn't been wired yet
-    // but the human-readable byline is in place.
+      || /reviewer\s*:\s*undefined/.test(text);
     const hasReviewedByByline = /Reviewed by\s+/i.test(text);
     const hasComplianceReviewerImport = /const complianceReviewer\s*=\s*authors\.find/.test(text);
 
@@ -966,29 +868,27 @@ function checkYMYLReviewerCoverage() {
 }
 
 const CHECKS = [
-  { name: 'bare href="#" links', fn: checkHrefHash },
-  { name: 'malformed frontmatter', fn: checkFrontmatter },
-  { name: 'fake anchor buttons', fn: checkFakeAnchorsInStores },
-  { name: 'typo literals', fn: checkTypoLiterals },
-  { name: 'dead internal links', fn: checkDeadInternalLinks },
-  { name: 'malformed \\1 hrefs', fn: checkMalformedBackrefHrefs },
-  { name: 'trailing-slash internal links', fn: checkTrailingSlashInternalLinks },
-  // Build before rendered-output checks so a clean checkout can run this script
-  // end-to-end without a pre-existing dist/sitemap from a previous session.
-  { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
-  { name: 'noindex pages in sitemap', fn: checkNoindexInSitemap },
-  { name: 'OG image dimensions', fn: checkOGImageDimensions },
-  { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
-  { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
-  { name: 'duplicate hero image content', fn: checkDuplicateHeroImages },
-  { name: 'duplicate FAQPage JSON-LD', fn: checkDuplicateFaqPageSchema },
-  { name: 'title not truncated mid-sentence', fn: checkTitleTruncation },
-  { name: 'og:type matches page role', fn: checkOgTypeMatchesRole },
-  { name: 'orphan pages (no inbound link)', fn: checkOrphanPages },
-  { name: 'sitemap lastmod coverage', fn: checkSitemapLastmod },
-  { name: 'meta description uniqueness', fn: checkMetaDescriptionUniqueness },
-  { name: 'YMYL reviewer-byline coverage', fn: checkYMYLReviewerCoverage },
-  { name: 'body-internal-link minimum (Sprint 84)', fn: checkBodyInternalLinkMinimum },
+  { name: 'bare href="#" links', phase: 'source', fn: checkHrefHash },
+  { name: 'malformed frontmatter', phase: 'source', fn: checkFrontmatter },
+  { name: 'fake anchor buttons', phase: 'source', fn: checkFakeAnchorsInStores },
+  { name: 'typo literals', phase: 'source', fn: checkTypoLiterals },
+  { name: 'dead internal links', phase: 'source', fn: checkDeadInternalLinks },
+  { name: 'malformed \\1 hrefs', phase: 'source', fn: checkMalformedBackrefHrefs },
+  { name: 'trailing-slash internal links', phase: 'source', fn: checkTrailingSlashInternalLinks },
+  { name: 'CSS build warnings', phase: 'preflight', fn: checkCSSBuildWarnings },
+  { name: 'noindex pages in sitemap', phase: 'rendered', fn: checkNoindexInSitemap },
+  { name: 'OG image dimensions', phase: 'rendered', fn: checkOGImageDimensions },
+  { name: 'sitemap XML entities', phase: 'rendered', fn: checkSitemapXmlEntities },
+  { name: 'rendered crawl basics', phase: 'rendered', fn: checkRenderedCrawlBasics },
+  { name: 'duplicate hero image content', phase: 'source', fn: checkDuplicateHeroImages },
+  { name: 'duplicate FAQPage JSON-LD', phase: 'rendered', fn: checkDuplicateFaqPageSchema },
+  { name: 'title not truncated mid-sentence', phase: 'rendered', fn: checkTitleTruncation },
+  { name: 'og:type matches page role', phase: 'rendered', fn: checkOgTypeMatchesRole },
+  { name: 'orphan pages (no inbound link)', phase: 'rendered', fn: checkOrphanPages },
+  { name: 'sitemap lastmod coverage', phase: 'rendered', fn: checkSitemapLastmod },
+  { name: 'meta description uniqueness', phase: 'rendered', fn: checkMetaDescriptionUniqueness },
+  { name: 'YMYL reviewer-byline coverage', phase: 'source', fn: checkYMYLReviewerCoverage },
+  { name: 'body-internal-link minimum (Sprint 84)', phase: 'rendered', fn: checkBodyInternalLinkMinimum },
 ];
 
 // ─── Check 21: body-internal-link minimum ──────────────────────────────
@@ -1008,71 +908,43 @@ const CHECKS = [
 // fail this check either need: (a) more body content with contextual
 // references, (b) hand-curated sibling links, or (c) the linkifier
 // re-run with additional rules.
-function checkBodyInternalLinkMinimum() {
+function checkBodyInternalLinkMinimum(cache) {
   const results = [];
-  if (!fs.existsSync(DIST)) {
-    return ['dist/ not found — run build first'];
-  }
-  // Walk every HTML file in dist/ and count unique internal hrefs
-  // within the rendered <main> content area. We include the main
-  // area (not just <article>) so that the new "City-by-City Coverage"
-  // block (which lives outside the article but inside <main>) is counted.
-  // The sidebar is also inside <main> via Layout.astro, so we exclude
-  // the related-articles <aside> from the count to avoid double-counting
-  // the sidebar's links.
+  if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
   const MIN_BODY_INTERNAL_LINKS = 3;
-  // Only enforce on guide pages and blog posts — not on utility pages
-  // like /about, /contact, /download, /resources, /affiliate-disclosure,
-  // etc. which legitimately have minimal body content. The check is
-  // designed to catch orphan-thin content on the high-value surfaces
-  // that drive organic traffic, not to force every page to be a guide.
-  const SCOPE_RE = /\/(guides|blog|learn)\//;
-  function walk(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) {
-        if (p.includes('/_astro') || p.includes('/admin/')) continue;
-        walk(p);
-      } else if (e.isFile() && p.endsWith('.html')) {
-        // Scope: only guide and blog pages (not /about, /download, etc.)
-        const relPath = p.replace(DIST, '').replace(/^\//, '').replace(/index\.html$/, '');
-        if (!SCOPE_RE.test('/' + relPath + '/')) continue;
-        const text = fs.readFileSync(p, 'utf8');
-        // Extract <main>...</main> body
-        const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/);
-        if (!mainMatch) continue;
-        // Remove the related-articles sidebar so we only count
-        // body-contextual links, not sidebar-generated ones.
-        const mainNoSidebar = mainMatch[1].replace(
-          /<aside class="related-articles[\s\S]*?<\/aside>/g,
-          ''
-        );
-        // Get all unique internal hrefs (path only, no fragment).
-        const hrefs = new Set();
-        for (const m of mainNoSidebar.matchAll(/href="(\/[^"#?]+)"/g)) {
-          hrefs.add(m[1]);
-        }
-        // Exclude self-reference (the page linking to itself).
-        const pagePath = p.replace(DIST, '').replace(/index\.html$/, '').replace(/\/$/, '');
-        hrefs.delete(pagePath);
-        if (hrefs.size < MIN_BODY_INTERNAL_LINKS) {
-          results.push(p.replace(DIST, '').replace(/^\//, ''));
-        }
-      }
-    }
+  const SCOPE_RE = /^\/(guides|blog|learn)(?:\/|$)/;
+  for (const { route, rel, text } of cache.renderedHtmlFiles) {
+    if (!SCOPE_RE.test(route)) continue;
+    const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/);
+    if (!mainMatch) continue;
+    const mainNoSidebar = mainMatch[1].replace(/<aside class="related-articles[\s\S]*?<\/aside>/g, '');
+    const hrefs = new Set();
+    for (const m of mainNoSidebar.matchAll(/href="(\/[^"#?]+)"/g)) hrefs.add(m[1]);
+    hrefs.delete(route);
+    if (hrefs.size < MIN_BODY_INTERNAL_LINKS) results.push(rel);
   }
-  walk(DIST);
   return results;
 }
+
 
 let totalFailures = 0;
 let totalWarnings = 0;
 
 console.log('🔍 Content Health QA\n');
 
-CHECKS.forEach(({ name, fn }) => {
+const cssBuildWarnings = runBuildPreflight();
+const cache = buildAuditCache();
+cache.cssBuildWarnings = cssBuildWarnings;
+
+const activeChecks = CHECKS.filter(({ phase }) => {
+  if (OPTIONS.sourceOnly) return phase === 'source';
+  if (OPTIONS.renderedOnly) return phase === 'rendered' || phase === 'preflight';
+  return true;
+});
+
+activeChecks.forEach(({ name, fn }) => {
   try {
-    const issues = fn();
+    const issues = fn(cache);
     if (issues.length === 0) {
       console.log(`✅  ${name}: OK`);
     } else {
