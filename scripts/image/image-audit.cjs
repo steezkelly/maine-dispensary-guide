@@ -11,6 +11,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { appRoot } = require('../check/lib/paths.cjs');
 
 // ANSI color codes
 const colors = {
@@ -122,19 +123,27 @@ function findAstroFiles(pagesDir) {
 // Phase 1: Scan filesystem
 // ─────────────────────────────────────────────────────────────
 
+function isResponsiveVariant(filePath) {
+  return /-640w\.(jpe?g)$/i.test(path.basename(filePath));
+}
+
 function scanFilesystem(baseDir) {
   const heroesDir = path.join(baseDir, 'images', 'heroes');
   const infographicsDir = path.join(baseDir, 'images', 'infographics');
 
-  const heroFiles = getFilesRecursively(heroesDir, ['.jpg', '.jpeg']).map(f => ({
-    path: f,
-    slug: path.basename(f, path.extname(f)),
-  }));
+  const heroFiles = getFilesRecursively(heroesDir, ['.jpg', '.jpeg'])
+    .filter(f => !isResponsiveVariant(f))
+    .map(f => ({
+      path: f,
+      slug: path.basename(f, path.extname(f)),
+    }));
 
-  const infographicFiles = getFilesRecursively(infographicsDir, ['.jpg', '.jpeg']).map(f => ({
-    path: f,
-    slug: path.basename(f, path.extname(f)),
-  }));
+  const infographicFiles = getFilesRecursively(infographicsDir, ['.jpg', '.jpeg'])
+    .filter(f => !isResponsiveVariant(f))
+    .map(f => ({
+      path: f,
+      slug: path.basename(f, path.extname(f)),
+    }));
 
   return { heroFiles, infographicFiles };
 }
@@ -453,9 +462,7 @@ function main() {
     process.exit(1);
   }
 
-  // Determine project root (one level up from scripts/)
-  const scriptDir = __dirname;
-  const projectRoot = path.dirname(scriptDir);
+  const projectRoot = appRoot;
   const publicDir = path.join(projectRoot, 'public');
   const pagesDir = path.join(projectRoot, 'src', 'pages');
 
@@ -480,4 +487,14 @@ function main() {
   generateReport(type, filesystem, pageScan, projectRoot, pagesDir);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  findAstroFiles,
+  getFilesRecursively,
+  isResponsiveVariant,
+  scanFilesystem,
+  scanPages,
+};
