@@ -39,6 +39,9 @@ jobs:
       - name: Test ICA continuation guardrails
         run: npm run test:continuation
 
+      - name: Test market-stats video no-autoplay contract
+        run: npm run test:market-stats-video
+
       - name: Type check
         run: npx astro check
 
