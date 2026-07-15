@@ -23,6 +23,9 @@ verify, decompose work, and authorize the next state transition. The
 Coordinator must not accept a worker self-report as evidence. The Coordinator
 must not write another writer's leased paths, and may not bypass independent
 verification or the Integrator's single-writer authority.
+After Verifier PASS, the Coordinator creates the bounded candidate commit on the
+author branch, records the candidate as accepted in Kanban, and transmits its
+SHA to the Integrator for integration.
 
 ### Codex Author
 
@@ -54,7 +57,9 @@ contract, inspect the actual diff, confirm it remains within allowed paths,
 reproduce the contract tests, and record an explicit PASS/FAIL result. A
 Verifier may accept a task or return it as `needs_fix`; the Verifier must not
 author fixes, commit, or integrate. The Verifier must not waive acceptance
-criteria.
+criteria. For each task, the Verifier follows
+`docs/governance/templates/mdg-verifier-prompt.md` as the execution checklist
+and records separate `SPEC COMPLIANCE` and `CODE QUALITY` verdicts.
 
 ### Integrator
 
@@ -63,8 +68,11 @@ may update `origin/main`; the Integrator must not use the primary checkout. The
 Integrator must cherry-pick one accepted candidate, recheck base compatibility,
 lease status, verification evidence, and scope, then run `npm run
 verify:iterate`, `npm run verify:push`, and deploy verification. The Integrator
-must not merge unverified batch work. No author, verifier, or coordinator may
-independently write to `origin/main`.
+must not merge unverified batch work. For release readiness, the Integrator
+must execute `docs/governance/templates/mdg-integrator-checklist.md`
+in exact order and record final SHA, Vercel deployment ID/URL, validation
+commands, and deferred work metadata before release. No author, verifier, or
+coordinator may independently write to `origin/main`.
 
 ### Continuity Watcher
 
@@ -109,7 +117,9 @@ Independence is mandatory: the author supplies focused-test evidence, while a
 separate Verifier validates the diff and acceptance criteria. Acceptance is not
 permission to write a branch or release; it is a prerequisite for the
 Integrator's single-writer integration flow. The Integrator records the
-integration and release evidence on the task card before marking `released`.
+integration and release evidence on the task card before marking `released`, and
+must not write to `origin/main` until the candidate SHA is accepted by the
+Coordinator after Verifier PASS.
 
 ## Continuity and non-idling
 
@@ -118,6 +128,30 @@ work rather than idle. The supervisor may stop only after task/card state and
 its resume trigger are durable. When work is `blocked`, the task card must name
 the blocker owner, evidence, next action, and resume trigger so continuity does
 not depend on one agent's memory.
+
+### Deterministic continuity command
+
+Use `npm run agents:continuity -- --board-state <json> [--json] [--now <iso>]`
+to compute the next action from local board state, with no network calls or writes.
+`<json>` may be either raw JSON text or a path to a `.json` file. The command
+emits a stable object with:
+
+  - `kind`: one of `dispatch`, `continue-reconnaissance`,
+    `inactive-with-trigger`, `escalate-missing-trigger`, or `idle`.
+  - `action`: alias of `kind` (kept for compatibility).
+  - `taskId`: selected task for the action, if any.
+  - `details`: deterministic rationale and trigger metadata.
+
+Use this policy:
+
+- `dispatch` when one or more tasks are `ready`, dependency-cleared, and not
+  colliding with active in-progress lease paths.
+- `continue-reconnaissance` when authors are running but no dispatchable task is
+  available.
+- `inactive-with-trigger` when every remaining candidate is blocked and all
+  blocker handoff metadata is complete.
+- `escalate-missing-trigger` and exit non-zero if any blocked task is missing
+  `blocking_reason`, `blocked_by`, `next_action`, or `nextCheckAt`.
 
 ## MDG Kanban operating procedure
 
