@@ -91,22 +91,84 @@ function loadJsonl() {
   return records;
 }
 
-function filterByDays(records, days) {
-  if (!days) return records;
-  const cutoff = new Date(Date.now() - days * 86400 * 1000).toISOString().slice(0, 10);
-  return records.filter(r => r.snapshotDate >= cutoff);
+const SOURCE_TIMEZONE = 'America/Los_Angeles';
+
+function laYmd(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: SOURCE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const value = type => parts.find(part => part.type === type)?.value;
+  return `${value('year')}-${value('month')}-${value('day')}`;
 }
 
-function dedupeByQueryPage(records) {
-  // Keep max-impressions snapshot per (query, page) pair
-  const best = new Map();
-  for (const r of records) {
-    const key = `${r.query}|||${r.page}`;
-    if (!best.has(key) || best.get(key).impressions < r.impressions) {
-      best.set(key, r);
+function shiftYmd(date, calendarDays) {
+  const [year, month, day] = date.split('-').map(Number);
+  const shifted = new Date(Date.UTC(year, month - 1, day));
+  shifted.setUTCDate(shifted.getUTCDate() + calendarDays);
+  return shifted.toISOString().slice(0, 10);
+}
+
+function isFinalizedDailyRecord(record) {
+  return record.sourceTimezone === SOURCE_TIMEZONE
+    && record.sourceDataState === 'final'
+    && /^\d{4}-\d{2}-\d{2}$/.test(record.sourceStartDate || '')
+    && record.sourceStartDate === record.sourceEndDate;
+}
+
+function filterByDays(records, days, now = new Date()) {
+  const finalized = records.filter(isFinalizedDailyRecord);
+  if (!days) return finalized;
+
+  const today = laYmd(now);
+  const cutoff = shiftYmd(today, -(days - 1));
+  return finalized.filter(record => record.sourceEndDate >= cutoff && record.sourceEndDate <= today);
+}
+
+function dedupeDailyRecords(records) {
+  const latest = new Map();
+  for (const record of records.filter(isFinalizedDailyRecord)) {
+    const key = `${record.sourceEndDate}|||${record.query}|||${record.page}`;
+    const prior = latest.get(key);
+    if (!prior || String(record.snapshotDate || '') >= String(prior.snapshotDate || '')) {
+      latest.set(key, record);
     }
   }
-  return Array.from(best.values());
+  return Array.from(latest.values());
+}
+
+function aggregateDailyRecords(records) {
+  const aggregates = new Map();
+  for (const record of records) {
+    const key = `${record.query}|||${record.page}`;
+    if (!aggregates.has(key)) {
+      aggregates.set(key, {
+        query: record.query,
+        page: record.page,
+        clicks: 0,
+        impressions: 0,
+        positionWeight: 0,
+        sourceDates: new Set(),
+      });
+    }
+    const aggregate = aggregates.get(key);
+    aggregate.clicks += record.clicks || 0;
+    aggregate.impressions += record.impressions || 0;
+    aggregate.positionWeight += (record.position || 0) * (record.impressions || 0);
+    aggregate.sourceDates.add(record.sourceEndDate);
+  }
+
+  return Array.from(aggregates.values()).map(aggregate => ({
+    query: aggregate.query,
+    page: aggregate.page,
+    clicks: aggregate.clicks,
+    impressions: aggregate.impressions,
+    ctr: aggregate.impressions ? aggregate.clicks / aggregate.impressions : 0,
+    position: aggregate.impressions ? aggregate.positionWeight / aggregate.impressions : 0,
+    sourceDates: Array.from(aggregate.sourceDates).sort(),
+  }));
 }
 
 function aggregate(records) {
@@ -171,7 +233,7 @@ function aggregate(records) {
     totalQueries: queryPages.size,
     totalImpressions: records.reduce((s, r) => s + r.impressions, 0),
     totalClicks: records.reduce((s, r) => s + r.clicks, 0),
-    snapshotDays: [...new Set(records.map(r => r.snapshotDate))].length,
+    sourceDays: [...new Set(records.flatMap(record => record.sourceDates || []))].length,
   };
 }
 
@@ -180,7 +242,7 @@ function renderMarkdown(stats) {
   const lines = [];
   lines.push(`# GSC Misroute Audit — ${date}`);
   lines.push('');
-  lines.push(`*Window: ${days ? "last " + days + " day(s)" : "all-time"} of v2 analytics data. Source: gsc-search-analytics.jsonl (${stats.snapshotDays} snapshot(s))`);
+  lines.push(`*Window: ${days ? "last " + days + " day(s)" : "all-time"} of finalized one-day GSC facts. Source: gsc-search-analytics.jsonl (${stats.sourceDays} source day(s)); provenance-free rolling snapshots are excluded.*`);
   lines.push('');
   lines.push(`## Summary`);
   lines.push(`- Total queries: **${stats.totalQueries}**`);
@@ -242,18 +304,21 @@ function renderMarkdown(stats) {
 }
 
 async function main() {
-  let records = loadJsonl();
-  logOk(`Loaded ${records.length} v2 records from ${path.basename(JSONL_PATH)}`);
+  const loaded = loadJsonl();
+  const records = filterByDays(loaded, days);
+  const excluded = loaded.length - records.length;
+  logOk(`Loaded ${loaded.length} v2 records; retained ${records.length} finalized one-day provenance records`);
+  if (excluded) logOk(`Excluded ${excluded} legacy, rolling-window, or non-final records`);
   if (days) {
-    records = filterByDays(records, days);
-    logOk(`Filtered to ${records.length} records within last ${days} days`);
+    logOk(`Filtered to ${records.length} records within the last ${days} Los Angeles source day(s)`);
   }
   if (records.length === 0) {
-    logErr('No records to analyze. Run seo:gsc-search-analytics first.');
+    logErr('No finalized one-day provenance records to analyze. Run seo:gsc-search-analytics-daily after the daily contract is deployed.');
     process.exit(1);
   }
-  const deduped = dedupeByQueryPage(records);
-  const stats = aggregate(deduped);
+  const deduped = dedupeDailyRecords(records);
+  const aggregated = aggregateDailyRecords(deduped);
+  const stats = aggregate(aggregated);
   const md = renderMarkdown(stats);
 
   if (OUT_PATH) {
@@ -266,8 +331,17 @@ async function main() {
   }
 }
 
-main().catch(e => {
-  logErr(`\n✗ FATAL: ${e.message || e}`);
-  if (e.stack) console.error(e.stack.split('\n').slice(0, 5).join('\n'));
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(e => {
+    logErr(`\n✗ FATAL: ${e.message || e}`);
+    if (e.stack) console.error(e.stack.split('\n').slice(0, 5).join('\n'));
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  aggregateDailyRecords,
+  dedupeDailyRecords,
+  filterByDays,
+  isFinalizedDailyRecord,
+};
