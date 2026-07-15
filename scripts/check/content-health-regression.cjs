@@ -34,9 +34,15 @@ const BASELINE_FILE = path.join(SCRIPT_DIR, '.content-health-baseline.json');
 const UPDATE_BASELINE = process.argv.includes('--update-baseline');
 
 let baseline = {};
+let hasBaseline = false;
 if (fs.existsSync(BASELINE_FILE)) {
   try {
-    baseline = JSON.parse(fs.readFileSync(BASELINE_FILE, 'utf-8'));
+    const parsed = JSON.parse(fs.readFileSync(BASELINE_FILE, 'utf-8'));
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error('expected a JSON object');
+    }
+    baseline = parsed;
+    hasBaseline = true;
   } catch (e) {
     console.error(`⚠️  Baseline file malformed: ${e.message}. Treating as empty.`);
     baseline = {};
@@ -87,7 +93,7 @@ for (const k of allKeys) {
 console.log('📊 content-health regression check');
 console.log('');
 
-if (Object.keys(baseline).length === 0) {
+if (!hasBaseline) {
   console.log(`ℹ️  No baseline found. Current state has ${Object.keys(current).length} failing checks and ${Object.values(current).reduce((a, b) => a + b, 0)} total failures.`);
   if (UPDATE_BASELINE) {
     fs.writeFileSync(BASELINE_FILE, JSON.stringify(current, null, 2) + '\n');

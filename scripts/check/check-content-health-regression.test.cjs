@@ -36,7 +36,29 @@ try {
   assert.equal(updateResult.status, 0, (updateResult.stdout || '') + (updateResult.stderr || ''));
   assert.equal(fs.existsSync(path.join(fixtureDir, '.content-health-baseline.json')), true);
 
-  console.log('content-health missing-baseline regression: PASS');
+  const zeroFixtureDir = path.join(tempRoot, 'zero/scripts/check');
+  fs.mkdirSync(zeroFixtureDir, { recursive: true });
+  fs.copyFileSync(SOURCE, path.join(zeroFixtureDir, 'content-health-regression.cjs'));
+  fs.writeFileSync(
+    path.join(zeroFixtureDir, 'check-content-health.cjs'),
+    "console.log('✅ fixture check: no issues'); process.exit(0);\n",
+  );
+
+  const zeroUpdate = spawnSync('node', ['content-health-regression.cjs', '--update-baseline'], {
+    cwd: zeroFixtureDir,
+    encoding: 'utf8',
+  });
+  assert.equal(zeroUpdate.status, 0, (zeroUpdate.stdout || '') + (zeroUpdate.stderr || ''));
+  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(zeroFixtureDir, '.content-health-baseline.json'), 'utf8')), {});
+
+  const zeroNormal = spawnSync('node', ['content-health-regression.cjs'], {
+    cwd: zeroFixtureDir,
+    encoding: 'utf8',
+  });
+  assert.equal(zeroNormal.status, 0, (zeroNormal.stdout || '') + (zeroNormal.stderr || ''));
+  assert.match((zeroNormal.stdout || '') + (zeroNormal.stderr || ''), /No change from baseline/);
+
+  console.log('content-health baseline regression: PASS');
 } finally {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 }
