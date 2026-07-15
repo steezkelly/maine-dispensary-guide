@@ -33,8 +33,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { rootDist, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
-const https = require('node:https');
-const http = require('node:http');
+const { headOrGet, runWithConcurrency } = require('./lib/http-status.cjs');
+const { extractImgRefs } = require('./lib/rendered-refs.cjs');
 
 const DIST = rootDist;
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
@@ -58,37 +58,6 @@ function listHtmlFiles(dir, out = []) {
   return out;
 }
 
-function extractImgRefs(html) {
-  const refs = new Set();
-  // 1. <img src=...>, <source srcset=...>, <video poster=...>
-  //    Intentionally permissive — we want to catch everything that could
-  //    produce a 404 image request.
-  const attrRe = /\b(?:src|srcset|poster)\s*=\s*"([^"]+)"/g;
-  let m;
-  while ((m = attrRe.exec(html)) !== null) {
-    const v = m[1];
-    // srcset can be "url 1x, url 2x" — split on commas at end-of-token
-    for (const part of v.split(',')) {
-      const token = part.trim().split(/\s+/)[0]; // drop descriptor
-      if (token) refs.add(token);
-    }
-  }
-  // 2. <link rel="preload" as="image" href="..."> — Layout emits this
-  //    for every page that has a heroImage. Catches the case where the
-  //    preload target 404s (e.g. the /learn/ consumer hub regression
-  //    on 2026-07-02: heroImage pointed at a 404 path, the build was
-  //    green, smoke-200 was green, but the browser was preloading a
-  //    404 image and the social-share OG image was 404 too).
-  const preloadRe = /<link[^>]+rel\s*=\s*"preload"[^>]+as\s*=\s*"image"[^>]+href\s*=\s*"([^"]+)"/g;
-  while ((m = preloadRe.exec(html)) !== null) refs.add(m[1]);
-  // 3. <meta property="og:image" content="..."> — Layout emits this for
-  //    every page with a heroImage. Catches the same regression as
-  //    #2 but via the social-share metadata path.
-  const ogRe = /<meta[^>]+property\s*=\s*"og:image"[^>]+content\s*=\s*"([^"]+)"/g;
-  while ((m = ogRe.exec(html)) !== null) refs.add(m[1]);
-  return [...refs];
-}
-
 function isExternal(u) {
   if (u.startsWith('//')) return true;
   if (u.startsWith('http://') || u.startsWith('https://')) {
@@ -106,31 +75,6 @@ function normalizeUrl(ref) {
   if (ref.startsWith('http://') || ref.startsWith('https://')) return ref;
   if (ref.startsWith('/')) return MDG_BASE.replace(/\/+$/, '') + ref;
   return MDG_BASE.replace(/\/+$/, '') + '/' + ref;
-}
-
-function headOnce(target) {
-  return new Promise((resolve) => {
-    const lib = target.startsWith('https:') ? https : http;
-    const req = lib.request(target, { method: 'HEAD', timeout: 15000 }, (res) => {
-      resolve({ status: res.statusCode });
-    });
-    req.on('error', (err) => resolve({ status: 0, error: err.message }));
-    req.on('timeout', () => { req.destroy(); resolve({ status: 0, error: 'timeout' }); });
-    req.end();
-  });
-}
-
-async function runWithConcurrency(items, fn, limit) {
-  const results = new Array(items.length);
-  let cursor = 0;
-  async function worker() {
-    while (cursor < items.length) {
-      const i = cursor++;
-      results[i] = await fn(items[i], i);
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
-  return results;
 }
 
 async function main() {
@@ -184,7 +128,7 @@ async function main() {
 
   const startedAt = Date.now();
   const results = await runWithConcurrency(items, async (item) => {
-    const r = await headOnce(item.url);
+    const r = await headOrGet(item.url);
     return { ...item, ...r };
   }, CONCURRENCY);
   const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1);

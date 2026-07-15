@@ -6,12 +6,16 @@
  * Usage:
  *   node scripts/content/audit-fix-loop.cjs                    # Dry-run: report only
  *   node scripts/content/audit-fix-loop.cjs --apply           # Apply fixes
+ *   node scripts/content/audit-fix-loop.cjs --apply --allow-generic-boilerplate
+ *                                                            # Unsafe: insert generic body/FAQ copy
  *   node scripts/content/audit-fix-loop.cjs --url https://...  # Custom URL
  *
  * What it does:
  * 1. Scans local .astro files for content issues
  * 2. Reports fixable issues (thin content, missing meta descriptions)
- * 3. With --apply: adds template content and meta descriptions
+ * 3. With --apply: adds meta descriptions only
+ * 4. Thin content is reported as an editorial diagnostic unless
+ *    --allow-generic-boilerplate is explicitly supplied
  */
 
 const { execSync } = require('child_process');
@@ -60,6 +64,36 @@ const FAQ_SKELETON = `
 </section>
 `;
 
+const REQUIRED_SECTIONS_BY_PAGE_TYPE = {
+  cityGuide: [
+    { label: 'local market overview', patterns: [/market overview/i, /local market/i] },
+    { label: 'adult-use / medical access notes', patterns: [/adult-use/i, /medical/i] },
+    { label: 'operator or dispensary context', patterns: [/operator/i, /dispensar/i, /store/i] },
+    { label: 'compliance or local ordinance notes', patterns: [/compliance/i, /ordinance/i, /opt-in/i] },
+    { label: 'FAQ block', patterns: [/faq-section/i, /<Faq\b/i, /frequently asked questions/i] }
+  ],
+  operatorGuide: [
+    { label: 'regulatory requirements', patterns: [/regulatory/i, /requirement/i, /compliance/i] },
+    { label: 'operational checklist or next steps', patterns: [/checklist/i, /next steps/i, /action/i] },
+    { label: 'primary-source references', patterns: [/Office of Cannabis Policy/i, /\bOCP\b/i, /source/i] },
+    { label: 'FAQ block', patterns: [/faq-section/i, /<Faq\b/i, /frequently asked questions/i] }
+  ],
+  blogPost: [
+    { label: 'reported context or background', patterns: [/context/i, /background/i, /why it matters/i] },
+    { label: 'source-backed detail', patterns: [/source/i, /according to/i, /Office of Cannabis Policy/i] },
+    { label: 'reader takeaway or next step', patterns: [/takeaway/i, /next step/i, /what to do/i] }
+  ],
+  resourcePage: [
+    { label: 'resource overview', patterns: [/overview/i, /resource/i] },
+    { label: 'eligibility or use case', patterns: [/eligib/i, /use case/i, /who should/i] },
+    { label: 'next step', patterns: [/next step/i, /download/i, /contact/i] }
+  ],
+  generalPage: [
+    { label: 'clear H1/H2 structure', patterns: [/<h1\b/i, /<h2\b/i] },
+    { label: 'reader next step', patterns: [/next step/i, /contact/i, /learn more/i] }
+  ]
+};
+
 function log(msg) {
   console.log(msg);
 }
@@ -84,6 +118,64 @@ function getWordCount(filePath) {
   } catch {
     return 0;
   }
+}
+
+function getPageType(relativePath, content) {
+  const normalized = relativePath.replace(/\\/g, '/');
+  if (/src\/pages\/guides\/[^/]+-dispensary-guide\.astro$/.test(normalized)) return 'cityGuide';
+  if (/src\/pages\/guides\//.test(normalized)) return 'operatorGuide';
+  if (/src\/pages\/blog\//.test(normalized)) return 'blogPost';
+  if (/src\/pages\/(resources|download)\//.test(normalized)) return 'resourcePage';
+  if (/operator|license|compliance|metrc|testing|delivery/i.test(content)) return 'operatorGuide';
+  return 'generalPage';
+}
+
+function findMissingSections(content, pageType) {
+  const requirements = REQUIRED_SECTIONS_BY_PAGE_TYPE[pageType] || REQUIRED_SECTIONS_BY_PAGE_TYPE.generalPage;
+  return requirements
+    .filter(section => !section.patterns.some(pattern => pattern.test(content)))
+    .map(section => section.label);
+}
+
+function recommendEditorialOwner(pageType, relativePath, missingSections) {
+  if (pageType === 'cityGuide') {
+    return 'City editorial owner with local ordinance/source pack (OCP opt-in tracker, municipal code, local operators)';
+  }
+  if (pageType === 'operatorGuide') {
+    return 'Compliance/operator editorial owner with OCP rules, METRC, testing, licensing, and enforcement source pack';
+  }
+  if (pageType === 'blogPost') {
+    return 'Blog/editorial owner with article-specific reporting/source pack';
+  }
+  if (pageType === 'resourcePage') {
+    return 'Lead-funnel/resource owner with offer, eligibility, and conversion-path source pack';
+  }
+  if (missingSections.includes('reader next step')) {
+    return 'Site editorial owner with navigation and next-step source pack';
+  }
+  return `General editorial owner for ${relativePath}`;
+}
+
+function buildThinContentDiagnostic(filePath, appRoot, currentWordCount) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const relativePath = path.relative(appRoot, filePath).replace(/\\/g, '/');
+  const pageType = getPageType(relativePath, content);
+  const missingSections = findMissingSections(content, pageType);
+  const owner = recommendEditorialOwner(pageType, relativePath, missingSections);
+
+  return {
+    currentWordCount,
+    pageType,
+    missingSections,
+    owner
+  };
+}
+
+function formatThinContentDiagnostic(diagnostic) {
+  const missing = diagnostic.missingSections.length > 0
+    ? diagnostic.missingSections.join('; ')
+    : 'none detected by heuristic';
+  return `Thin content diagnostic — ${diagnostic.currentWordCount}/${WORD_COUNT_THRESHOLD} words; page type: ${diagnostic.pageType}; missing sections: ${missing}; recommended owner/source pack: ${diagnostic.owner}`;
 }
 
 function hasFrontmatter(content) {
@@ -182,7 +274,7 @@ function findAstroFile(relativePath, appRoot) {
   }
 }
 
-function fixThinContent(filePath, manualReview, shouldApply) {
+function fixThinContent(filePath, appRoot, manualReview, shouldApply, allowGenericBoilerplate) {
   const currentWordCount = getWordCount(filePath);
 
   if (currentWordCount >= WORD_COUNT_THRESHOLD) {
@@ -191,6 +283,16 @@ function fixThinContent(filePath, manualReview, shouldApply) {
   }
 
   const content = fs.readFileSync(filePath, 'utf8');
+  const diagnostic = buildThinContentDiagnostic(filePath, appRoot, currentWordCount);
+  const file = path.relative(appRoot, filePath).replace(/\\/g, '/');
+
+  if (!allowGenericBoilerplate) {
+    manualReview.push({
+      file,
+      reason: formatThinContentDiagnostic(diagnostic)
+    });
+    return;
+  }
 
   // Check if FAQ skeleton is better option
   if (!content.includes('faq-section') && !content.includes('<Faq')) {
@@ -198,15 +300,15 @@ function fixThinContent(filePath, manualReview, shouldApply) {
       const result = addFaqSkeleton(filePath);
       if (result.success) {
         manualReview.push({
-          file: path.basename(filePath),
+          file,
           reason: `[APPLIED] Added FAQ skeleton (${result.words} words)`
         });
         return;
       }
     } else {
       manualReview.push({
-        file: path.basename(filePath),
-        reason: `[DRY-RUN] Would add FAQ skeleton (~${180} words)`
+        file,
+        reason: `[UNSAFE DRY-RUN] Would add FAQ skeleton (~${180} words); ${formatThinContentDiagnostic(diagnostic)}`
       });
       return;
     }
@@ -217,18 +319,18 @@ function fixThinContent(filePath, manualReview, shouldApply) {
     const newCount = getWordCount(filePath);
     const added = newCount - currentWordCount;
     manualReview.push({
-      file: path.basename(filePath),
+      file,
       reason: `[APPLIED] Added ${TEMPLATE_PARAGRAPHS.length} template paragraphs (${added} words)`
     });
   } else {
     manualReview.push({
-      file: path.basename(filePath),
-      reason: `[DRY-RUN] Would add ${TEMPLATE_PARAGRAPHS.length} template paragraphs (~${TEMPLATE_PARAGRAPHS.length * 50} words)`
+      file,
+      reason: `[UNSAFE DRY-RUN] Would add ${TEMPLATE_PARAGRAPHS.length} template paragraphs (~${TEMPLATE_PARAGRAPHS.length * 50} words); ${formatThinContentDiagnostic(diagnostic)}`
     });
   }
 }
 
-function applyAutoFixes(issues, appRoot, shouldApply) {
+function applyAutoFixes(issues, appRoot, shouldApply, allowGenericBoilerplate) {
   const fixes = [];
   const manualReview = [];
 
@@ -236,7 +338,7 @@ function applyAutoFixes(issues, appRoot, shouldApply) {
   for (const item of issues.thinContent) {
     const filePath = findAstroFile(item.file, appRoot);
     if (filePath) {
-      fixThinContent(filePath, manualReview, shouldApply);
+      fixThinContent(filePath, appRoot, manualReview, shouldApply, allowGenericBoilerplate);
     } else {
       manualReview.push({ file: item.file, reason: 'File not found in project' });
     }
@@ -280,6 +382,7 @@ function main() {
   const args = process.argv.slice(2);
   let url = DEFAULT_URL;
   let shouldApply = false;
+  let allowGenericBoilerplate = false;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--url' && args[i + 1]) {
@@ -287,6 +390,9 @@ function main() {
     }
     if (args[i] === '--apply') {
       shouldApply = true;
+    }
+    if (args[i] === '--allow-generic-boilerplate') {
+      allowGenericBoilerplate = true;
     }
   }
 
@@ -299,6 +405,11 @@ function main() {
     log('Mode: APPLY (will modify files)\n');
   } else {
     log('Mode: DRY-RUN (no files will be modified)\n');
+  }
+  if (allowGenericBoilerplate) {
+    log('Unsafe boilerplate insertion: ENABLED for thin-content FAQ/body copy\n');
+  } else {
+    log('Thin-content handling: diagnostics only (no FAQ/body copy insertion)\n');
   }
 
   try {
@@ -347,7 +458,7 @@ function main() {
     log(`- Missing descriptions: ${issues.missingDescriptions.length} page(s)`);
     log(`- Broken internal links: ${issues.brokenLinks.length} (manual check needed)\n`);
 
-    const { fixes, manualReview } = applyAutoFixes(issues, appRoot, shouldApply);
+    const { fixes, manualReview } = applyAutoFixes(issues, appRoot, shouldApply, allowGenericBoilerplate);
 
     // Phase 3: Report
     if (shouldApply) {
@@ -377,7 +488,8 @@ function main() {
     }
 
     log(`\nRun \`npx squirrelscan audit ${url} --format llm\` to verify.`);
-    log('Run with --apply to apply the suggested fixes.\n');
+    log('Run with --apply to apply safe suggested fixes.');
+    log('Add --allow-generic-boilerplate only when you explicitly want unsafe generic FAQ/body insertion.\n');
 
   } catch (err) {
     log('Error during audit-fix loop:');

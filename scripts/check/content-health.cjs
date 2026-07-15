@@ -12,6 +12,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { appRoot, rootDist, publicDir, sitemapPath, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
+const { extractImgRefs } = require('./lib/rendered-refs.cjs');
 
 const DEFAULT_ROOT = path.join(appRoot, 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
@@ -21,15 +22,14 @@ const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || publicDir);
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
 // ─── Check 1: no href="#" ───────────────────────────────────────────────────
-function checkHrefHash() {
+function checkHrefHash(context) {
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  context.sourceFiles.forEach(({ rel, text }) => {
     const lines = text.split(/\r?\n/);
     lines.forEach((line, idx) => {
       // Match href="#" inside HTML — but allow href="#section-id" anchors
       if (/href\s*=\s*["']#["']/.test(line)) {
-        results.push(`${path.relative(ROOT, file)}:${idx + 1}: bare href=\"#\" found`);
+        results.push(`${rel}:${idx + 1}: bare href=\"#\" found`);
       }
     });
   });
@@ -38,10 +38,9 @@ function checkHrefHash() {
 
 // ─── Check 2: malformed frontmatter shape ──────────────────────────────────
 const FRONTMATTER_BAD = /---\s+import\s+\w+\s+from\s+['"][^'"]+['"]/;
-function checkFrontmatter() {
+function checkFrontmatter(context) {
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  context.sourceFiles.forEach(({ rel, text }) => {
     // Must have at least one --- line, then import, then --- <Layout
     const lines = text.split(/\r?\n/);
     let state = 'search';
@@ -50,7 +49,7 @@ function checkFrontmatter() {
       if (state === 'search' && l === '---') { state = 'frontmatter'; continue; }
       if (state === 'frontmatter') {
         if (FRONTMATTER_BAD.test(l)) {
-          results.push(`${path.relative(ROOT, file)}:${i + 1}: malformed frontmatter import (--- import, --- <Layout): ${l}`);
+          results.push(`${rel}:${i + 1}: malformed frontmatter import (--- import, --- <Layout): ${l}`);
         }
         if (l.startsWith('<')) { state = 'done'; } // layout tag closes frontmatter
         if (l === '---') { state = 'done'; }        // empty frontmatter end
@@ -62,12 +61,12 @@ function checkFrontmatter() {
 }
 
 // ─── Check 3: noindex pages in sitemap ─────────────────────────────────────
-function checkNoindexInSitemap() {
+function checkNoindexInSitemap(context) {
   const results = [];
   if (!fs.existsSync(SITEMAP)) {
     return ['sitemap-0.xml not found — run build first'];
   }
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = context.sitemapXml;
   // Pages that should NOT be in sitemap (noindex pages).
   // /admin/, /experiments/, /link-dashboard — already excluded via
   // sitemap-config.json noindexPathPrefixes. The /download/* lead-magnet
@@ -88,10 +87,10 @@ function checkNoindexInSitemap() {
 
 // ─── Check 4: fake "Menu"/"Directions" buttons (store-cards array) ──────────
 // The stores array in find-a-dispensary.astro should not produce href="#"
-function checkFakeAnchorsInStores() {
-  const file = path.join(ROOT, 'find-a-dispensary.astro');
-  if (!fs.existsSync(file)) return [];
-  const text = fs.readFileSync(file, 'utf8');
+function checkFakeAnchorsInStores(context) {
+  const entry = context.sourceFiles.find(source => source.rel === 'find-a-dispensary.astro');
+  if (!entry) return [];
+  const { rel, text } = entry;
   const results = [];
 
   // Check that store card buttons don't have href="#"
@@ -99,7 +98,7 @@ function checkFakeAnchorsInStores() {
   const lines = text.split(/\r?\n/);
   lines.forEach((line, idx) => {
     if (cardRegex.test(line)) {
-      results.push(`${path.relative(ROOT, file)}:${idx + 1}: fake anchor button found: ${line.trim()}`);
+      results.push(`${rel}:${idx + 1}: fake anchor button found: ${line.trim()}`);
     }
     cardRegex.lastIndex = 0;
   });
@@ -108,7 +107,7 @@ function checkFakeAnchorsInStores() {
   const badStoreProp = /(?:menu|directions|menuUrl|mapUrl)\s*:\s*["']#["']/g;
   lines.forEach((line, idx) => {
     if (badStoreProp.test(line)) {
-      results.push(`${path.relative(ROOT, file)}:${idx + 1}: store prop set to bare '#': ${line.trim()}`);
+      results.push(`${rel}:${idx + 1}: store prop set to bare '#': ${line.trim()}`);
     }
     badStoreProp.lastIndex = 0;
   });
@@ -118,16 +117,15 @@ function checkFakeAnchorsInStores() {
 
 // ─── Check 5: typo literals ────────────────────────────────────────────────
 const KNOWN_BAD = ['retaillaunch'];
-function checkTypoLiterals() {
+function checkTypoLiterals(context) {
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  context.sourceFiles.forEach(({ path: file, rel, text }) => {
     const lines = text.split(/\r?\n/);
     KNOWN_BAD.forEach(typo => {
       const re = new RegExp(`\\b${typo}\\b`, 'i');
       lines.forEach((line, idx) => {
         if (re.test(line)) {
-          results.push(`${path.relative(ROOT, file)}:${idx + 1}: typo literal '${typo}': ${line.trim().slice(0, 100)}`);
+          results.push(`${rel}:${idx + 1}: typo literal '${typo}': ${line.trim().slice(0, 100)}`);
         }
       });
     });
@@ -136,11 +134,11 @@ function checkTypoLiterals() {
 }
 
 // ─── Check 6: internal static links to missing pages ───────────────────────
-function checkDeadInternalLinks() {
+function checkDeadInternalLinks(context) {
   // Build list of valid pages from sitemap
   const validPages = new Set();
   if (fs.existsSync(SITEMAP)) {
-    const xml = fs.readFileSync(SITEMAP, 'utf8');
+    const xml = context.sitemapXml;
     const locMatches = xml.matchAll(/<loc>https:\/\/mainedispensaryguide\.com([^<]*)<\/loc>/g);
     for (const m of locMatches) {
       const p = m[1] || '/';
@@ -151,8 +149,7 @@ function checkDeadInternalLinks() {
   // Also trust concrete Astro source routes. Some valid pages are intentionally
   // noindex and excluded from the sitemap (download funnels, 404, search), but
   // internal links to them are not dead links.
-  walk(ROOT).forEach(f => {
-    const rel = path.relative(ROOT, f).replace(/\\/g, '/');
+  context.sourceFiles.forEach(({ path: f, rel }) => {
     let route = '/' + rel.replace(/\.astro$/, '');
     route = route.replace(/\/index$/, '') || '/';
     validPages.add(route);
@@ -162,9 +159,7 @@ function checkDeadInternalLinks() {
   const internalLinkRe = /href\s*=\s*["'](?!https?:\/\/|tel:|mailto:|\/\/)([^"']+)["']/g;
   const skipRe = /^#|^javascript:/;
 
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
-    const rel = path.relative(ROOT, file);
+  context.sourceFiles.forEach(({ path: file, rel, text }) => {
     const fileDir = path.dirname(file);
 
     let m;
@@ -198,15 +193,14 @@ function checkDeadInternalLinks() {
 }
 
 // ─── Check 7: malformed \\1 hrefs (from bad regex replacements) ─────────────
-function checkMalformedBackrefHrefs() {
+function checkMalformedBackrefHrefs(context) {
   const badHrefPattern = /href=["']\\1["']/g;
   const results = [];
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  context.sourceFiles.forEach(({ path: file, rel, text }) => {
     const lines = text.split(/\r?\n/);
     lines.forEach((line, idx) => {
       if (badHrefPattern.test(line)) {
-        results.push(`${path.relative(ROOT, file)}:${idx + 1}: malformed \\1 href: ${line.trim()}`);
+        results.push(`${rel}:${idx + 1}: malformed \\1 href: ${line.trim()}`);
       }
       badHrefPattern.lastIndex = 0;
     });
@@ -232,7 +226,7 @@ function walk(dir, out = []) {
 // ─── Check 8: production pages missing complete OG image metadata ───────────
 // ─── Check 10: OG image dimensions ────────────────────────────────────────────
 
-function checkOGImageDimensions() {
+function checkOGImageDimensions(context) {
   const results = [];
   const distPath = DIST;
 
@@ -284,75 +278,52 @@ function checkOGImageDimensions() {
   }
 
   // Walk built HTML pages
-  function walkDist(dir) {
-    if (!fs.existsSync(dir)) return;
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        walkDist(full);
-      } else if (entry.name.endsWith('.html')) {
-        const rel = path.relative(distPath, full);
-        const text = fs.readFileSync(full, 'utf8');
+  for (const { rel, html: text } of context.renderedFiles) {
+    const ogImageUrl = extractAttr(findMetaByProperty(text, 'og:image'), 'content');
 
-        // Find og:image URL
-        const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
-        const ogImageMatch = text.match(ogImageRe);
-        const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
+    // Noindex pages (admin, experiments, gated funnels) don't need OG image
+    // meta tags — they're not shared on social and search engines ignore them.
+    // Skip them to keep the check focused on real public pages.
+    const robots = extractAttr(findMetaByName(text, 'robots'), 'content').toLowerCase();
+    if (robots.includes('noindex')) continue;
 
-        // Noindex pages (admin, experiments, gated funnels) don't need OG image
-        // meta tags — they're not shared on social and search engines ignore them.
-        // Skip them to keep the check focused on real public pages.
-        const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
-        const robotsMatch = text.match(robotsRe);
-        const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
-        if (robots.includes('noindex')) return;
+    const ogWidth = extractAttr(findMetaByProperty(text, 'og:image:width'), 'content');
+    const ogHeight = extractAttr(findMetaByProperty(text, 'og:image:height'), 'content');
 
-        // Find og:image:width / height
-        const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
-        const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
-        const wMatch = text.match(wRe);
-        const hMatch = text.match(hRe);
-
-        if (!ogImageUrl) {
-          results.push(`${rel}: missing og:image`);
-          return;
-        }
-        if (!wMatch) {
-          results.push(`${rel}: missing og:image:width`);
-        } else if (!hMatch) {
-          results.push(`${rel}: missing og:image:height`);
-        } else {
-          const reportedW = parseInt(wMatch[1], 10);
-          const reportedH = parseInt(hMatch[1], 10);
-          if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
-            const local = readLocalImageDims(ogImageUrl);
-            if (local) {
-              if (reportedW !== local.w) {
-                results.push(`${rel}: og:image:width=${reportedW} doesn't match actual image width ${local.w} (${ogImageUrl})`);
-              }
-              if (reportedH !== local.h) {
-                results.push(`${rel}: og:image:height=${reportedH} doesn't match actual image height ${local.h} (${ogImageUrl})`);
-              }
-            }
-            // External images (no local dims available): just sanity-check reasonable size
-            else {
-              if (reportedW < 200 || reportedH < 100) {
-                results.push(`${rel}: og:image dimensions look too small (${reportedW}x${reportedH}) for ${ogImageUrl}`);
-              }
-            }
+    if (!ogImageUrl) {
+      results.push(`${rel}: missing og:image`);
+      continue;
+    }
+    if (!ogWidth) {
+      results.push(`${rel}: missing og:image:width`);
+    } else if (!ogHeight) {
+      results.push(`${rel}: missing og:image:height`);
+    } else {
+      const reportedW = parseInt(ogWidth, 10);
+      const reportedH = parseInt(ogHeight, 10);
+      if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
+        const local = readLocalImageDims(ogImageUrl);
+        if (local) {
+          if (reportedW !== local.w) {
+            results.push(`${rel}: og:image:width=${reportedW} doesn't match actual image width ${local.w} (${ogImageUrl})`);
           }
+          if (reportedH !== local.h) {
+            results.push(`${rel}: og:image:height=${reportedH} doesn't match actual image height ${local.h} (${ogImageUrl})`);
+          }
+        } else if (reportedW < 200 || reportedH < 100) {
+          // External images (no local dims available): just sanity-check reasonable size.
+          results.push(`${rel}: og:image dimensions look too small (${reportedW}x${reportedH}) for ${ogImageUrl}`);
         }
       }
     }
   }
 
-  walkDist(distPath);
   return results;
 }
 
 // ─── Check 9: CSS build warnings ─────────────────────────────────────────────
-// Runs `astro build` and scans stdout/stderr for CSS warnings
-function checkCSSBuildWarnings() {
+// Runs `astro build` and scans stdout/stderr for CSS warnings.
+function collectCSSBuildWarnings() {
   if (process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1' || ROOT !== DEFAULT_ROOT) return [];
 
   const { execSync } = require('node:child_process');
@@ -392,11 +363,15 @@ function checkCSSBuildWarnings() {
   }
 }
 
+function checkCSSBuildWarnings(context) {
+  return context.cssBuildWarnings;
+}
+
 
 // ─── Check 10: trailing-slash internal links ───────────────────────────────
 // The site config uses trailingSlash: 'never'. Source links to /path/ create
 // avoidable 3XX redirects and crawl noise.
-function checkTrailingSlashInternalLinks() {
+function checkTrailingSlashInternalLinks(context) {
   const results = [];
   const quotedInternalRouteRe = /["'](\/[^\"'?]+\/)(?=[#']|["'])/g;
   // JS code that uses path strings inside .includes() / .test() / RegExp()
@@ -405,8 +380,7 @@ function checkTrailingSlashInternalLinks() {
   const jsContextRe = /\.(?:includes|test|match|exec|search|indexOf|concat)\s*\(|new\s+RegExp\s*\(|`[^`]*\$\{|\/\//;
   const skipPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
-  walk(ROOT).forEach(file => {
-    const text = fs.readFileSync(file, 'utf8');
+  context.sourceFiles.forEach(({ path: file, rel, text }) => {
     const lines = text.split(/\r?\n/);
     let m;
     while ((m = quotedInternalRouteRe.exec(text)) !== null) {
@@ -428,7 +402,6 @@ function checkTrailingSlashInternalLinks() {
       const jsxStringConcatExpr = /\{\s*['"`][^'"`]*['"`]\s*\+/;
       if (jsxStringConcatExpr.test(line)) continue;
       if (jsContextRe.test(line)) continue;
-      const rel = path.relative(ROOT, file);
       results.push(`${rel}:${lineNum}: trailing-slash internal route string → ${href}`);
     }
   });
@@ -453,6 +426,57 @@ function htmlFiles(dir, out = []) {
   return out;
 }
 
+function buildContext(cssBuildWarnings = []) {
+  const sourceFiles = walk(ROOT).map(file => ({
+    path: file,
+    rel: path.relative(ROOT, file).replace(/\\/g, '/'),
+    text: fs.readFileSync(file, 'utf8'),
+  }));
+  const renderedFiles = htmlFiles(DIST).map(file => ({
+    path: file,
+    rel: path.relative(DIST, file).replace(/\\/g, '/'),
+    route: routeForHtml(DIST, file),
+    html: fs.readFileSync(file, 'utf8'),
+  }));
+  return {
+    sourceFiles,
+    renderedFiles,
+    routes: new Set(renderedFiles.map(file => file.route)),
+    sitemapXml: fs.existsSync(SITEMAP) ? fs.readFileSync(SITEMAP, 'utf8') : '',
+    cssBuildWarnings,
+  };
+}
+
+function addInbound(inbound, route, from) {
+  const normalized = route.replace(/\/$/, '') || '/';
+  if (!inbound.has(normalized)) inbound.set(normalized, new Set());
+  inbound.get(normalized).add(from);
+}
+
+function buildInboundLinkMap(context) {
+  const inbound = new Map();
+
+  // Match both `href="/path"`, `href='/path'`, and source-data `href: "/path"`
+  // forms in one source scan. Rendered HTML links are scanned separately below.
+  const sourceHrefRe = /href\s*(?:=|:)\s*["']\/([^"'#?]+)(?:["'\/#?]|$)/g;
+  for (const source of context.sourceFiles) {
+    let match;
+    while ((match = sourceHrefRe.exec(source.text)) !== null) {
+      addInbound(inbound, `/${match[1]}`, source.path);
+    }
+  }
+
+  const renderedHrefRe = /href\s*=\s*["']\/([^"'#?]+)(?:["'\/#?]|$)/g;
+  for (const rendered of context.renderedFiles) {
+    let match;
+    while ((match = renderedHrefRe.exec(rendered.html)) !== null) {
+      addInbound(inbound, `/${match[1]}`, rendered.path);
+    }
+  }
+
+  return inbound;
+}
+
 function htmlDecode(value) {
   return value
     .replace(/&quot;/g, '"')
@@ -462,22 +486,42 @@ function htmlDecode(value) {
     .replace(/&gt;/g, '>');
 }
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function extractAttr(tag, name) {
-  const re = new RegExp(`${name}=["']([^"']*)["']`, 'i');
+  const escapedName = escapeRegExp(name);
+  const re = new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*([\"'])(.*?)\\1`, 'i');
   const m = tag.match(re);
-  return m ? htmlDecode(m[1]) : '';
+  return m ? htmlDecode(m[2]) : '';
+}
+
+function findAllTags(html, tagName) {
+  const escapedTagName = escapeRegExp(tagName);
+  return [...html.matchAll(new RegExp(`<${escapedTagName}\\b[^>]*>`, 'gi'))].map(match => match[0]);
+}
+
+function findMetaByName(html, name) {
+  const needle = String(name).toLowerCase();
+  return findAllTags(html, 'meta').find(tag => extractAttr(tag, 'name').toLowerCase() === needle) || '';
+}
+
+function findMetaByProperty(html, property) {
+  const needle = String(property).toLowerCase();
+  return findAllTags(html, 'meta').find(tag => extractAttr(tag, 'property').toLowerCase() === needle) || '';
 }
 
 // ─── Check 11: rendered crawl basics ─────────────────────────────────────────
 // Mirrors the Ahrefs issue classes that have regressed before: broken rendered
 // images/assets, internal page links to missing routes, overlong SEO metadata,
 // malformed JSON-LD, and /download parent breadcrumbs.
-function checkRenderedCrawlBasics() {
+function checkRenderedCrawlBasics(context) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
 
-  const files = htmlFiles(DIST);
-  const routes = new Set(files.map(file => routeForHtml(DIST, file)));
+  const files = context.renderedFiles;
+  const routes = context.routes;
   const skipHrefPrefixes = ['/images/', '/fonts/', '/_astro/', '/downloads/', '/pdfs/'];
 
   function assetExists(urlPath) {
@@ -486,22 +530,15 @@ function checkRenderedCrawlBasics() {
       fs.existsSync(path.join(DIST, clean.replace(/^\//, '')));
   }
 
-  for (const file of files) {
-    const rel = path.relative(DIST, file).replace(/\\/g, '/');
-    const route = routeForHtml(DIST, file);
-    const text = fs.readFileSync(file, 'utf8');
+  for (const { rel, route, html: text } of files) {
 
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (title.length > 60) results.push(`${rel}: title too long (${title.length})`);
 
-    const descTag = text.match(/<meta\s+[^>]*name=["']description["'][^>]*>/i)?.[0] || '';
-    const desc = extractAttr(descTag, 'content');
+    const desc = extractAttr(findMetaByName(text, 'description'), 'content');
     if (desc.length > 160) results.push(`${rel}: meta description too long (${desc.length})`);
 
-    const mediaRe = /<(?:img|source)\s+[^>]*(?:src|srcset)=["']([^"']+)["'][^>]*>/gi;
-    let mediaMatch;
-    while ((mediaMatch = mediaRe.exec(text)) !== null) {
-      const raw = mediaMatch[1].split(',')[0].trim().split(/\s+/)[0];
+    for (const raw of extractImgRefs(text)) {
       if (!raw || raw.startsWith('http') || raw.startsWith('data:')) continue;
       if (raw.startsWith('/') && !assetExists(raw)) results.push(`${rel}: broken rendered media → ${raw}`);
     }
@@ -560,12 +597,12 @@ function checkRenderedCrawlBasics() {
 
 // ─── Check 12: sitemap XML escaping ────────────────────────────────────────
 // Sitemap parsers require '&' to be escaped as '&amp;' in XML content.
-function checkSitemapXmlEntities() {
+function checkSitemapXmlEntities(context) {
   if (!fs.existsSync(SITEMAP)) {
     return ['sitemap-0.xml not found — run build first'];
   }
 
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = context.sitemapXml;
   const invalid = [...xml.matchAll(/&(?![a-zA-Z0-9#]+;)/g)];
   if (invalid.length === 0) return [];
   const positions = invalid.slice(0, 5).map(m => m.index);
@@ -580,19 +617,13 @@ function checkSitemapXmlEntities() {
 // a unique description — duplicates dilute the page's value in search
 // snippets and signal low content diversity to Google. The 2026-07-02
 // senior SEO sweep confirmed 0 duplicates; this check prevents regressions.
-function checkMetaDescriptionUniqueness() {
+function checkMetaDescriptionUniqueness(context) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
-  const files = htmlFiles(DIST);
+  const files = context.renderedFiles;
   const seen = new Map(); // desc -> first file
-  for (const file of files) {
-    const text = fs.readFileSync(file, 'utf8');
-    // Use only double-quote form to avoid apostrophe collisions in content
-    // (e.g. "Maine's best..." would otherwise match only "Maine" because
-    // the regex character class [^"']+ stops at the apostrophe).
-    const m = text.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
-    if (!m) continue;
-    const desc = m[1].trim();
+  for (const { path: file, html: text } of files) {
+    const desc = extractAttr(findMetaByName(text, 'description'), 'content').trim();
     if (!desc) continue;
     if (seen.has(desc)) {
       const rel1 = '/' + path.relative(DIST, seen.get(desc)).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
@@ -614,10 +645,10 @@ function checkMetaDescriptionUniqueness() {
 // without an `article={...}` frontmatter prop). The fix in astro.config.mjs
 // falls back to source-file mtime when no article-modifiedDate exists;
 // this check prevents regressions.
-function checkSitemapLastmod() {
+function checkSitemapLastmod(context) {
   const results = [];
   if (!fs.existsSync(SITEMAP)) return ['sitemap-0.xml not found — run build first'];
-  const xml = fs.readFileSync(SITEMAP, 'utf8');
+  const xml = context.sitemapXml;
   // Match each <url>...</url> entry. Per-entry scan is more reliable than the
   // old per-tag regex (which fails when whitespace falls between </loc> and
   // <lastmod>; produced 5 false-positives on 2026-07-08 against a sitemap
@@ -652,8 +683,9 @@ function checkSitemapLastmod() {
 // homepage and 30+ guide pages). This check makes the problem
 // non-regressing: future PRs that add a new page without linking to it
 // from at least one other page will be caught.
-function checkOrphanPages() {
+function checkOrphanPages(context) {
   const results = [];
+  if (ROOT !== DEFAULT_ROOT) return results;
   // Resolve PAGES_DIR relative to this script's location so the check
   // works from any cwd, matching the rest of the checks in this file.
   const PAGES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
@@ -664,81 +696,21 @@ function checkOrphanPages() {
     '/embed/opt-in-tracker', // opt-in trackers rarely warrant navigation presence
     '/guides/all-cities',   // self-index: every city guide references it; not a leaf page
   ]);
-  function isNoindex(file) {
-    try {
-      return /noindex\s*=\s*\{\s*true\s*\}/.test(fs.readFileSync(file, 'utf8'));
-    } catch { return false; }
-  }
-  function listAstroFilesRecursive(dir, out = []) {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        if (entry.name === 'admin' || entry.name === 'api' || entry.name === 'node_modules') continue;
-        listAstroFilesRecursive(full, out);
-      } else if (entry.isFile() && entry.name.endsWith('.astro')) {
-        out.push(full);
-      }
-    }
-    return out;
-  }
-  // Sprint 80 patch: source-only regex misses inbound links emitted by
-  // JSX expressions like `<a href={hubByName[region.name]}>` or by data-
-  // driven iteration like `{posts.map(p => <a href={p.url}>)}`. The
-  // rendered-HTML check catches those — it walks dist/ for `*.html` files
-  // and counts any literal `href="/<path>"` reference. If either check
-  // finds an inbound link, the page is not an orphan.
-  function findInboundLink(needle, excludeFile) {
-    // Match both `href="/path"`, `href='/path'`, and `href: "/path"` forms.
-    // The needle is the route (e.g. "guides/lebanon-dispensary-guide").
-    const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
-    const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
-    const all = listAstroFilesRecursive(path.join(appRoot, 'src'));
-    for (const f of all) {
-      if (f === excludeFile) continue;
-      let text;
-      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
-      if (re1.test(text) || re2.test(text)) return f;
-    }
-    return '';
-  }
-  function findInboundFromRendered(needle) {
-    const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const re = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'/#?]|$)`, 'm');
-    const distBase = DIST;
-    const distPath = path.join(distBase, needle, 'index.html');
-    function walk(dir, out) {
-      out = out || [];
-      if (!fs.existsSync(dir)) return out;
-      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-        const full = path.join(dir, entry.name);
-        if (entry.isDirectory()) walk(full, out);
-        else if (entry.isFile() && full.endsWith('.html')) out.push(full);
-      }
-      return out;
-    }
-    const htmlFiles = walk(distBase);
-    for (const f of htmlFiles) {
-      if (f === distPath) continue;
-      let text;
-      try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
-      if (re.test(text)) return f;
-    }
-    return '';
-  }
-  const files = listAstroFilesRecursive(PAGES_DIR);
-  for (const f of files) {
-    if (isNoindex(f)) continue;
-    const relRaw = path.relative(PAGES_DIR, f).replace(/\\/g, '/').replace(/\.astro$/, '');
+  const inbound = buildInboundLinkMap(context);
+
+  for (const { path: f, rel: sourceRel, text } of context.sourceFiles) {
+    if (/noindex\s*=\s*\{\s*true\s*\}/.test(text)) continue;
+    const relRaw = sourceRel.replace(/\.astro$/, '');
     // Map `path/to/index` → `path/to` (Astro's index.astro = parent route).
     const rel = '/' + (relRaw === 'index' ? '' : relRaw.replace(/\/index$/, ''));
     if (rel === '/') continue;
     const normalized = rel.replace(/\/$/, '') || '/';
     if (NOINDEX_PATHS.has(normalized)) continue;
-    const needle = rel.replace(/^\//, '');
-    const foundSrc = findInboundLink(needle, f);
-    const foundDist = findInboundFromRendered(needle);
-    if (!foundSrc && !foundDist) {
+    const found = (inbound.get(normalized) || new Set());
+    found.delete(f);
+    const renderedSelf = path.join(DIST, normalized.replace(/^\//, ''), 'index.html');
+    found.delete(renderedSelf);
+    if (found.size === 0) {
       results.push(`${normalized}: no inbound link from any other page`);
     }
   }
@@ -753,7 +725,7 @@ function checkOrphanPages() {
 // `website`. The 2026-07-02 QA sweep found 4 hub pages emitting
 // `og:type=article`. Hub pages are identified by Layout.astro's
 // isHub={true} prop or by being one of the canonical hub routes below.
-function checkOgTypeMatchesRole() {
+function checkOgTypeMatchesRole(context) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
   // Routes that are always hub pages regardless of isHub prop.
@@ -761,14 +733,12 @@ function checkOgTypeMatchesRole() {
     '/', '/about', '/blog', '/all-guides', '/guides', '/learn', '/glossary',
     '/find-a-dispensary', '/resources', '/directory', '/blog/index',
   ]);
-  const files = htmlFiles(DIST);
-  for (const file of files) {
-    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+  const files = context.renderedFiles;
+  for (const { route: rel, html: text } of files) {
     if (!HUB_ROUTES.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
-    const text = fs.readFileSync(file, 'utf8');
-    const m = text.match(/<meta\s+property=["']og:type["']\s+content=["']([^"']+)["']/i);
-    if (m && m[1] !== 'website') {
-      results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
+    const ogType = extractAttr(findMetaByProperty(text, 'og:type'), 'content');
+    if (ogType && ogType !== 'website') {
+      results.push(`${rel}: hub page emits og:type=${ogType} (should be website)`);
     }
   }
   return results;
@@ -782,7 +752,7 @@ function checkOgTypeMatchesRole() {
 // existing tech guides, 35 blog posts, and 109 city guides. A 2026-07-02 QA
 // sweep found 13 more (see docs/SENIOR_REVIEW_2026-07-02.md). The fix lives
 // in lib/seo.ts buildFullTitle; this check makes the fix non-regressing.
-function checkTitleTruncation() {
+function checkTitleTruncation(context) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
   // Pages whose titles legitimately end with digits, abbreviations, or
@@ -795,11 +765,9 @@ function checkTitleTruncation() {
   const TRAILING_PUNCT = /[,;:\u2014\-–]$/;
   // Trailing connector words that would leave a sentence visibly incomplete.
   const TRAILING_CONNECTOR = /\s+(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from)$/i;
-  const files = htmlFiles(DIST);
-  for (const file of files) {
-    const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+  const files = context.renderedFiles;
+  for (const { route: rel, html: text } of files) {
     if (ALLOWLIST.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
-    const text = fs.readFileSync(file, 'utf8');
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (!title) continue;
     if (TRAILING_PUNCT.test(title)) {
@@ -821,7 +789,7 @@ function checkTitleTruncation() {
 // Operators can whitelist intentional shared fallbacks (granite hero, generic
 // compliance graphics) by adding the MD5 to
 // `scripts/content/known-shared-hero-hashes.txt`.
-function checkDuplicateHeroImages() {
+function checkDuplicateHeroImages(context) {
   const results = [];
   if (!fs.existsSync(PUBLIC_DIR)) {
     return [`public/ directory not found at ${PUBLIC_DIR}`];
@@ -871,7 +839,7 @@ function checkDuplicateHeroImages() {
 // schema) ends up with two identical blocks in dist/. Wastes bytes and may
 // confuse Google structured-data parsers. Catches the regression that
 // shipped in 116 pages before Sprint 80.
-function checkDuplicateFaqPageSchema() {
+function checkDuplicateFaqPageSchema(context) {
   const results = [];
   if (!fs.existsSync(DIST)) return ['dist/ not found — run build first'];
   // Pages that intentionally emit multiple FAQPage JSON-LD scripts with
@@ -883,32 +851,17 @@ function checkDuplicateFaqPageSchema() {
   const FAQ_GENERATOR_PAGES = new Set([
     '/guides/faq', // the FAQ catalog page emits 1 FAQPage per category
   ]);
-  function walk(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) {
-        if (p.includes('/_astro') || p.includes('/admin/')) continue;
-        walk(p);
-      } else if (e.isFile() && p.endsWith('.html')) {
-        const relPath = p.replace(DIST, '').replace(/\/index\.html$/, '').replace(/\.html$/, '');
-        // Normalize trailing-slash path the same way orphan/check does.
-        const route = '/' + (relPath === '' ? '' : relPath.replace(/^\//, ''));
-        if (FAQ_GENERATOR_PAGES.has(route)) continue;
-        const text = fs.readFileSync(p, 'utf8');
-        // Count FAQPage blocks. Use a non-greedy match for each `<script>`
-        // containing a FAQPage JSON-LD.
-        const scriptRe = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
-        let count = 0;
-        for (const m of text.matchAll(scriptRe)) {
-          if (/"@type"\s*:\s*"FAQPage"/.test(m[1])) count++;
-        }
-        if (count > 1) {
-          results.push(p.replace(DIST, '').replace(/^\//, ''));
-        }
-      }
+  for (const { rel, route, html: text } of context.renderedFiles) {
+    if (FAQ_GENERATOR_PAGES.has(route)) continue;
+    // Count FAQPage blocks. Use a non-greedy match for each `<script>`
+    // containing a FAQPage JSON-LD.
+    const scriptRe = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    let count = 0;
+    for (const m of text.matchAll(scriptRe)) {
+      if (/"@type"\s*:\s*"FAQPage"/.test(m[1])) count++;
     }
+    if (count > 1) results.push(rel);
   }
-  walk(DIST);
   return results;
 }
 
@@ -937,15 +890,16 @@ const YMYL_BLOG_PAGES = [
   'blog/maine-home-grow-cannabis-guide-2026.astro',
 ];
 
-function checkYMYLReviewerCoverage() {
+function checkYMYLReviewerCoverage(context) {
   const results = [];
+  if (ROOT !== DEFAULT_ROOT) return results;
   YMYL_BLOG_PAGES.forEach(rel => {
-    const file = path.join(ROOT, rel);
-    if (!fs.existsSync(file)) {
+    const entry = context.sourceFiles.find(source => source.rel === rel);
+    if (!entry) {
       results.push(`${rel}: file not found`);
       return;
     }
-    const text = fs.readFileSync(file, 'utf8');
+    const { text } = entry;
     // Source-level checks — verify the frontmatter declares a reviewer
     // field (either as `reviewer:` object or as a `complianceReviewer`
     // lookup that will populate the reviewer field).
@@ -1009,7 +963,7 @@ const CHECKS = [
 // fail this check either need: (a) more body content with contextual
 // references, (b) hand-curated sibling links, or (c) the linkifier
 // re-run with additional rules.
-function checkBodyInternalLinkMinimum() {
+function checkBodyInternalLinkMinimum(context) {
   const results = [];
   if (!fs.existsSync(DIST)) {
     return ['dist/ not found — run build first'];
@@ -1028,41 +982,29 @@ function checkBodyInternalLinkMinimum() {
   // designed to catch orphan-thin content on the high-value surfaces
   // that drive organic traffic, not to force every page to be a guide.
   const SCOPE_RE = /\/(guides|blog|learn)\//;
-  function walk(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) {
-        if (p.includes('/_astro') || p.includes('/admin/')) continue;
-        walk(p);
-      } else if (e.isFile() && p.endsWith('.html')) {
-        // Scope: only guide and blog pages (not /about, /download, etc.)
-        const relPath = p.replace(DIST, '').replace(/^\//, '').replace(/index\.html$/, '');
-        if (!SCOPE_RE.test('/' + relPath + '/')) continue;
-        const text = fs.readFileSync(p, 'utf8');
-        // Extract <main>...</main> body
-        const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/);
-        if (!mainMatch) continue;
-        // Remove the related-articles sidebar so we only count
-        // body-contextual links, not sidebar-generated ones.
-        const mainNoSidebar = mainMatch[1].replace(
-          /<aside class="related-articles[\s\S]*?<\/aside>/g,
-          ''
-        );
-        // Get all unique internal hrefs (path only, no fragment).
-        const hrefs = new Set();
-        for (const m of mainNoSidebar.matchAll(/href="(\/[^"#?]+)"/g)) {
-          hrefs.add(m[1]);
-        }
-        // Exclude self-reference (the page linking to itself).
-        const pagePath = p.replace(DIST, '').replace(/index\.html$/, '').replace(/\/$/, '');
-        hrefs.delete(pagePath);
-        if (hrefs.size < MIN_BODY_INTERNAL_LINKS) {
-          results.push(p.replace(DIST, '').replace(/^\//, ''));
-        }
-      }
+  for (const { rel, route, html: text } of context.renderedFiles) {
+    // Scope: only guide and blog pages (not /about, /download, etc.)
+    if (!SCOPE_RE.test(`${route}/`)) continue;
+    // Extract <main>...</main> body
+    const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/);
+    if (!mainMatch) continue;
+    // Remove the related-articles sidebar so we only count
+    // body-contextual links, not sidebar-generated ones.
+    const mainNoSidebar = mainMatch[1].replace(
+      /<aside class="related-articles[\s\S]*?<\/aside>/g,
+      ''
+    );
+    // Get all unique internal hrefs (path only, no fragment).
+    const hrefs = new Set();
+    for (const m of mainNoSidebar.matchAll(/href="(\/[^"#?]+)"/g)) {
+      hrefs.add(m[1]);
+    }
+    // Exclude self-reference (the page linking to itself).
+    hrefs.delete(route);
+    if (hrefs.size < MIN_BODY_INTERNAL_LINKS) {
+      results.push(rel);
     }
   }
-  walk(DIST);
   return results;
 }
 
@@ -1074,6 +1016,8 @@ console.log(`📁 content-health source root: ${ROOT}`);
 console.log(`📁 content-health rendered output: ${DIST}${process.env.CONTENT_HEALTH_DIST ? ' (CONTENT_HEALTH_DIST override)' : ''}`);
 console.log(`📁 content-health sitemap: ${SITEMAP}${process.env.CONTENT_HEALTH_SITEMAP ? ' (CONTENT_HEALTH_SITEMAP override)' : ''}`);
 console.log(`📁 content-health public dir: ${PUBLIC_DIR}${process.env.CONTENT_HEALTH_PUBLIC ? ' (CONTENT_HEALTH_PUBLIC override)' : ''}`);
+const cssBuildWarnings = collectCSSBuildWarnings();
+const context = buildContext(cssBuildWarnings);
 try {
   warnIfRenderedOutputStale({ distDir: DIST, sitemap: SITEMAP, label: 'content-health rendered output' });
 } catch (err) {
@@ -1084,7 +1028,7 @@ console.log('');
 
 CHECKS.forEach(({ name, fn }) => {
   try {
-    const issues = fn();
+    const issues = fn(context);
     if (issues.length === 0) {
       console.log(`✅  ${name}: OK`);
     } else {

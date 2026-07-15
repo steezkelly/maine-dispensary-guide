@@ -97,8 +97,11 @@ jobs:
       # by design — those are the known/accepted failures captured in
       # .content-health-baseline.json). The actual CI gate is the
       # regression detector below, which compares current against the
-      # baseline and exits 0 only when they match. `|| true` keeps the
-      # standalone informational (output preserved) without blocking.
+      # baseline and exits 0 when there are no regressions. Improvements are
+      # reported but do not mutate .content-health-baseline.json in CI; accepting
+      # a lower baseline must be an explicit maintenance action with
+      # `node scripts/check/content-health-regression.cjs --update-baseline`.
+      # `|| true` keeps the standalone informational (output preserved) without blocking.
       - name: Check content health (14 invariants, informational)
         if: success()  # only run if build succeeded
         run: |
