@@ -12,9 +12,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { appRoot, rootDist, publicDir, sitemapPath, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
+const { extractRenderedImageRefs, metaContent } = require('./lib/rendered-image-refs.cjs');
 
 const DEFAULT_ROOT = path.join(appRoot, 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
+const SOURCE_ROOT = path.resolve(process.env.CONTENT_HEALTH_SOURCE_ROOT || path.join(appRoot, 'src'));
 const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || sitemapPath);
 const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || rootDist);
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || publicDir);
@@ -295,35 +297,29 @@ function checkOGImageDimensions() {
         const text = fs.readFileSync(full, 'utf8');
 
         // Find og:image URL
-        const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
-        const ogImageMatch = text.match(ogImageRe);
-        const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
+        const ogImageUrl = metaContent(text, 'property', 'og:image');
 
         // Noindex pages (admin, experiments, gated funnels) don't need OG image
         // meta tags — they're not shared on social and search engines ignore them.
         // Skip them to keep the check focused on real public pages.
-        const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
-        const robotsMatch = text.match(robotsRe);
-        const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
+        const robots = metaContent(text, 'name', 'robots').toLowerCase();
         if (robots.includes('noindex')) return;
 
         // Find og:image:width / height
-        const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
-        const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
-        const wMatch = text.match(wRe);
-        const hMatch = text.match(hRe);
+        const reportedWidth = metaContent(text, 'property', 'og:image:width');
+        const reportedHeight = metaContent(text, 'property', 'og:image:height');
 
         if (!ogImageUrl) {
           results.push(`${rel}: missing og:image`);
           return;
         }
-        if (!wMatch) {
+        if (!reportedWidth) {
           results.push(`${rel}: missing og:image:width`);
-        } else if (!hMatch) {
+        } else if (!reportedHeight) {
           results.push(`${rel}: missing og:image:height`);
         } else {
-          const reportedW = parseInt(wMatch[1], 10);
-          const reportedH = parseInt(hMatch[1], 10);
+          const reportedW = parseInt(reportedWidth, 10);
+          const reportedH = parseInt(reportedHeight, 10);
           if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
             const local = readLocalImageDims(ogImageUrl);
             if (local) {
@@ -494,14 +490,10 @@ function checkRenderedCrawlBasics() {
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (title.length > 60) results.push(`${rel}: title too long (${title.length})`);
 
-    const descTag = text.match(/<meta\s+[^>]*name=["']description["'][^>]*>/i)?.[0] || '';
-    const desc = extractAttr(descTag, 'content');
+    const desc = metaContent(text, 'name', 'description');
     if (desc.length > 160) results.push(`${rel}: meta description too long (${desc.length})`);
 
-    const mediaRe = /<(?:img|source)\s+[^>]*(?:src|srcset)=["']([^"']+)["'][^>]*>/gi;
-    let mediaMatch;
-    while ((mediaMatch = mediaRe.exec(text)) !== null) {
-      const raw = mediaMatch[1].split(',')[0].trim().split(/\s+/)[0];
+    for (const raw of extractRenderedImageRefs(text)) {
       if (!raw || raw.startsWith('http') || raw.startsWith('data:')) continue;
       if (raw.startsWith('/') && !assetExists(raw)) results.push(`${rel}: broken rendered media → ${raw}`);
     }
@@ -590,9 +582,7 @@ function checkMetaDescriptionUniqueness() {
     // Use only double-quote form to avoid apostrophe collisions in content
     // (e.g. "Maine's best..." would otherwise match only "Maine" because
     // the regex character class [^"']+ stops at the apostrophe).
-    const m = text.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
-    if (!m) continue;
-    const desc = m[1].trim();
+    const desc = metaContent(text, 'name', 'description').trim();
     if (!desc) continue;
     if (seen.has(desc)) {
       const rel1 = '/' + path.relative(DIST, seen.get(desc)).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
@@ -654,9 +644,12 @@ function checkSitemapLastmod() {
 // from at least one other page will be caught.
 function checkOrphanPages() {
   const results = [];
-  // Resolve PAGES_DIR relative to this script's location so the check
-  // works from any cwd, matching the rest of the checks in this file.
-  const PAGES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
+  // Fixture roots should not inherit the repository's known orphan baseline.
+  // Tests opt in when they specifically exercise this check.
+  if (ROOT !== DEFAULT_ROOT && process.env.CONTENT_HEALTH_ENABLE_FIXTURE_ORPHAN_CHECK !== '1') return results;
+  // Keep the route inventory page-scoped; only inbound-link discovery scans the
+  // full source tree so links emitted by shared components/layouts count.
+  const PAGES_DIR = ROOT;
   if (!fs.existsSync(PAGES_DIR)) return ['pages/ not found'];
   // Routes that are intentionally noindex and don't need inbound links.
   const NOINDEX_PATHS = new Set([
@@ -693,7 +686,7 @@ function checkOrphanPages() {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
     const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
-    const all = listAstroFilesRecursive(path.join(appRoot, 'src'));
+    const all = listAstroFilesRecursive(SOURCE_ROOT);
     for (const f of all) {
       if (f === excludeFile) continue;
       let text;
@@ -766,9 +759,9 @@ function checkOgTypeMatchesRole() {
     const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
     if (!HUB_ROUTES.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
     const text = fs.readFileSync(file, 'utf8');
-    const m = text.match(/<meta\s+property=["']og:type["']\s+content=["']([^"']+)["']/i);
-    if (m && m[1] !== 'website') {
-      results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
+    const ogType = metaContent(text, 'property', 'og:type');
+    if (ogType && ogType !== 'website') {
+      results.push(`${rel}: hub page emits og:type=${ogType} (should be website)`);
     }
   }
   return results;
@@ -938,6 +931,9 @@ const YMYL_BLOG_PAGES = [
 ];
 
 function checkYMYLReviewerCoverage() {
+  // Custom source roots are isolated fixtures, not a partial copy of the
+  // repository's fixed YMYL inventory.
+  if (ROOT !== DEFAULT_ROOT) return [];
   const results = [];
   YMYL_BLOG_PAGES.forEach(rel => {
     const file = path.join(ROOT, rel);

@@ -8,12 +8,18 @@ const test = require('node:test');
 
 const script = path.resolve(__dirname, 'content-health.cjs');
 
-function makePages(files) {
+function makePages(files, sourceFiles = {}) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'content-health-'));
-  const pages = path.join(tmp, 'src/pages');
+  const sourceRoot = path.join(tmp, 'src');
+  const pages = path.join(sourceRoot, 'pages');
   fs.mkdirSync(pages, { recursive: true });
   for (const [relativePath, text] of Object.entries(files)) {
     const fullPath = path.join(pages, relativePath);
+    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    fs.writeFileSync(fullPath, text);
+  }
+  for (const [relativePath, text] of Object.entries(sourceFiles)) {
+    const fullPath = path.join(sourceRoot, relativePath);
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
     fs.writeFileSync(fullPath, text);
   }
@@ -24,7 +30,7 @@ function makePages(files) {
   const publicDir = path.join(tmp, 'public');
   fs.mkdirSync(publicDir, { recursive: true });
   fs.writeFileSync(path.join(publicDir, 'og-image.svg'), '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
-  return { tmp, pages, sitemap, dist: path.join(tmp, 'dist'), publicDir };
+  return { tmp, sourceRoot, pages, sitemap, dist: path.join(tmp, 'dist'), publicDir };
 }
 
 function makeHeroes(publicDir, heroes) {
@@ -35,12 +41,14 @@ function makeHeroes(publicDir, heroes) {
   }
 }
 
-function runCheck({ pages, sitemap, dist, publicDir }) {
+function runCheck({ pages, sourceRoot, sitemap, dist, publicDir }, { enableFixtureOrphanCheck = false } = {}) {
   return spawnSync(process.execPath, [script], {
     cwd: path.resolve(__dirname, '../..'),
     env: {
       ...process.env,
       CONTENT_HEALTH_ROOT: pages,
+      CONTENT_HEALTH_SOURCE_ROOT: sourceRoot,
+      CONTENT_HEALTH_ENABLE_FIXTURE_ORPHAN_CHECK: enableFixtureOrphanCheck ? '1' : '',
       CONTENT_HEALTH_SITEMAP: sitemap,
       CONTENT_HEALTH_DIST: dist,
       CONTENT_HEALTH_PUBLIC: publicDir,
@@ -214,4 +222,52 @@ test('passes when og:image dimensions match the actual image file', () => {
   const result = runCheck(fixture);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /All content health checks passed/);
+});
+
+test('counts a component-only link as inbound without rendered output', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    'cookies.astro': '<p>Cookies</p>\n',
+    'privacy.astro': '<p>Privacy</p>\n',
+  }, {
+    'components/SiteFooter.astro': '<a href="/cookies">Cookies</a>\n',
+  });
+
+  const result = runCheck(fixture, { enableFixtureOrphanCheck: true });
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.doesNotMatch(result.stdout, /\/cookies: no inbound link from any other page/);
+  assert.match(result.stdout, /\/privacy: no inbound link from any other page/);
+});
+
+test('parses reversed single-quoted meta attributes for crawl and uniqueness checks', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/second">Second</a>\n',
+    'guides/second.astro': '<a href="/">Home</a>\n',
+  });
+  const description = 'A'.repeat(161);
+  const html = value => `<html><head><title>Fixture</title><meta content='${value}' name='description'><meta content='website' property='og:type'><meta content='/og-image.svg' property='og:image'><meta content='1200' property='og:image:width'><meta content='630' property='og:image:height'></head><body><a href="/">Home</a><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script></body></html>`;
+  fs.writeFileSync(path.join(fixture.dist, 'index.html'), html(description));
+  fs.mkdirSync(path.join(fixture.dist, 'guides', 'second'), { recursive: true });
+  fs.writeFileSync(path.join(fixture.dist, 'guides', 'second', 'index.html'), html(description));
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /meta description too long \(161\)/);
+  assert.match(result.stdout, /duplicate description on \/(?:index|guides\/second)/);
+});
+
+test('reports a broken later srcset candidate in rendered HTML', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+  });
+  fs.mkdirSync(path.join(fixture.publicDir, 'images'), { recursive: true });
+  fs.writeFileSync(path.join(fixture.publicDir, 'images', 'present.svg'), '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+  fs.writeFileSync(path.join(fixture.dist, 'index.html'), '<html><head><title>Fixture</title><meta name="description" content="Fixture"><meta property="og:image" content="/og-image.svg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></head><body><source srcset="/images/present.svg 640w, /images/missing.svg 1280w"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script></body></html>');
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /broken rendered media → \/images\/missing\.svg/);
 });
