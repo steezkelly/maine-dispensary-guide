@@ -13,6 +13,13 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 SECURITY FIX — DATA-ONLY VERIFY SHELL INJECTION (Jul 14, 2026 UTC)
+
+- Aardvark report confirmed `scripts/git/pre-push-verify.cjs --data-only` still reached a shell-interpolated `git diff` command for repository-controlled paths.
+- Fixed the vulnerable per-file diff call by adding an argv-based `gitExec()` wrapper around `spawnSync('git', args, ...)` and using it for the data-only filename path, preserving the existing shell helper for static/internal commands only.
+- Verified the regression with the existing data-only assertion fixtures, a syntax check, the fast iterate gate, and a malicious filename control (`proof$(touch MDG_CMDINJ_PROOF).astro`) that no longer creates the marker file.
+
 ## 📋 ICA RELEASE-1 PILOT CLOSEOUT (Jul 13, 2026 UTC)
 
 - Production commit `50fda8fb` activates an explicit 10-route Intent Continuity Architecture pilot while preserving legacy behavior everywhere else.
