@@ -93,6 +93,63 @@ const APPS = ['apps/maine-cannabis'];
 const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
 
+
+function toPosixPath(value) {
+    return String(value || '').replace(/\\/g, '/').replace(/^\.\//, '');
+}
+
+function normalizeChangedAstroPath(file) {
+    const repoRelative = toPosixPath(path.relative(REPO_ROOT, path.isAbsolute(file) ? file : path.join(REPO_ROOT, file)));
+    const appPrefix = `${APPS[0]}/`;
+    const appRelative = repoRelative.startsWith(appPrefix) ? repoRelative.slice(appPrefix.length) : repoRelative;
+    return {
+        repoRelative,
+        appRelative,
+        normalized: repoRelative,
+        candidates: [...new Set([repoRelative, appRelative].filter(Boolean).map(toPosixPath))],
+    };
+}
+
+function diagnosticLinePath(line) {
+    const normalized = toPosixPath(line);
+    const match = normalized.match(/(?:^|\s|\(|\[|>|-)((?:\.\/)?(?:[\w@.-]+\/)*[\w@.-]+\.astro)(?::\d+:\d+|:\d+)?/);
+    return match ? toPosixPath(match[1]) : null;
+}
+
+function parseAstroDiagnosticBlocks(output) {
+    const blocks = [];
+    let current = [];
+    for (const line of String(output || '').split('\n')) {
+        const startsDiagnostic = Boolean(diagnosticLinePath(line));
+        if (startsDiagnostic && current.length > 0) {
+            blocks.push(current.join('\n'));
+            current = [];
+        }
+        if (line.trim() === '' && current.length === 0) continue;
+        if (line.trim() === '' && current.length > 0) {
+            blocks.push(current.join('\n'));
+            current = [];
+            continue;
+        }
+        current.push(line);
+    }
+    if (current.length > 0) blocks.push(current.join('\n'));
+    return blocks.filter(block => diagnosticLinePath(block));
+}
+
+function diagnosticBlockMentionsChangedPath(block, changedPathInfo) {
+    const normalizedBlock = toPosixPath(block);
+    return changedPathInfo.some(info => info.candidates.some(candidate => {
+        const escaped = candidate.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return new RegExp(`(?:^|[^\\w./-])${escaped}(?::\\d+(?::\\d+)?)?(?:[^\\w./-]|$)`).test(normalizedBlock);
+    }));
+}
+
+function relevantAstroDiagnosticBlocks(output, astroFiles) {
+    const changedPathInfo = astroFiles.map(normalizeChangedAstroPath);
+    return parseAstroDiagnosticBlocks(output).filter(block => diagnosticBlockMentionsChangedPath(block, changedPathInfo));
+}
+
 function log(level, msg) {
     const tags = { info: '\x1b[36mi\x1b[0m', ok: '\x1b[32m✓\x1b[0m', warn: '\x1b[33m!\x1b[0m', err: '\x1b[31m✗\x1b[0m' };
     const tag = tags[level] || tags.info;
@@ -265,16 +322,12 @@ function slowAstroCheck(files) {
         return { ok: true };
     }
 
-    // Filter output to lines mentioning any of the changed basenames
-    const basenames = new Set(astroFiles.map(f => path.basename(f)));
-    const relevant = output.split('\n').filter(line => {
-        return [...basenames].some(b => line.includes(b));
-    });
+    const relevant = relevantAstroDiagnosticBlocks(output, astroFiles);
     if (relevant.length === 0) {
-        log('warn', 'astro check failed but no errors match changed files — pre-existing baseline. Continuing.');
+        log('warn', 'astro check failed but no diagnostic blocks match changed files — pre-existing baseline. Continuing.');
         return { ok: true };
     }
-    console.log(relevant.slice(0, 60).join('\n'));
+    console.log(relevant.slice(0, 20).join('\n\n'));
     log('err', `astro check found errors in changed files — push blocked.`);
     return { ok: false };
 }
@@ -742,4 +795,13 @@ function main() {
     process.exit(0);
 }
 
-main();
+if (require.main === module) {
+    main();
+}
+
+module.exports = {
+    toPosixPath,
+    normalizeChangedAstroPath,
+    parseAstroDiagnosticBlocks,
+    relevantAstroDiagnosticBlocks,
+};

@@ -7072,3 +7072,10 @@ branch's spec.
 - The dry-run scan now exits non-zero if no `.astro` pages are found and reports the resolved `pagesDir`, preventing silent success from the historical `scripts/src/pages` path mistake.
 - Corrected usage comments to `node scripts/content/audit-fix-loop.cjs` and fixed the local scan word-count call to count loaded file content instead of treating file content as a path.
 - Verification: `node -c scripts/content/audit-fix-loop.cjs`, `node scripts/content/audit-fix-loop.cjs`, and `npm run verify:iterate -- --fast-only` passed. `npm run workflow:status` was attempted first but failed because this checkout's `work` branch has no resolvable `origin/main...work` revision range.
+
+## 📋 PRE-PUSH ASTRO DIAGNOSTIC FILTER HARDENING (Jul 15, 2026 UTC)
+
+- Updated `scripts/git/pre-push-verify.cjs` so changed Astro files are normalized as repo-relative and app-relative POSIX paths before filtering `astro check` output.
+- Replaced basename-only `astro check` filtering with diagnostic-block parsing, so a changed `blog/index.astro` no longer inherits unrelated diagnostics from another `index.astro` path.
+- Added `scripts/git/tests/pre-push-verify-diagnostics.test.cjs` covering two distinct `index.astro` diagnostics and asserting only the changed path block is relevant.
+- Verification: `node --check scripts/git/pre-push-verify.cjs`, `node scripts/git/tests/pre-push-verify-diagnostics.test.cjs`, and `npm run verify:iterate -- --fast-only` passed. `npm run workflow:status` is currently blocked because the local branch is named `work` and `origin/main...work` is not resolvable in this clone.
