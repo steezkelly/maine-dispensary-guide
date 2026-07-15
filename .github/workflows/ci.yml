@@ -120,6 +120,11 @@ jobs:
         run: |
           node scripts/check/check-content-health-regression.test.cjs
 
+      - name: Test content-health source and rendered-reference contracts
+        run: |
+          node --test scripts/check/check-content-health.test.cjs
+          node --test scripts/check/lib/rendered-image-refs.test.cjs
+
       - name: Test pre-push diagnostic filtering contract
         run: |
           node scripts/git/tests/pre-push-verify-diagnostics.test.cjs

@@ -34,6 +34,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { rootDist, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
 const { headOrGet, runWithConcurrency } = require('./lib/http-status.cjs');
+const { extractRenderedImageRefs } = require('./lib/rendered-image-refs.cjs');
 
 const DIST = rootDist;
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
@@ -55,37 +56,6 @@ function listHtmlFiles(dir, out = []) {
     }
   }
   return out;
-}
-
-function extractImgRefs(html) {
-  const refs = new Set();
-  // 1. <img src=...>, <source srcset=...>, <video poster=...>
-  //    Intentionally permissive — we want to catch everything that could
-  //    produce a 404 image request.
-  const attrRe = /\b(?:src|srcset|poster)\s*=\s*"([^"]+)"/g;
-  let m;
-  while ((m = attrRe.exec(html)) !== null) {
-    const v = m[1];
-    // srcset can be "url 1x, url 2x" — split on commas at end-of-token
-    for (const part of v.split(',')) {
-      const token = part.trim().split(/\s+/)[0]; // drop descriptor
-      if (token) refs.add(token);
-    }
-  }
-  // 2. <link rel="preload" as="image" href="..."> — Layout emits this
-  //    for every page that has a heroImage. Catches the case where the
-  //    preload target 404s (e.g. the /learn/ consumer hub regression
-  //    on 2026-07-02: heroImage pointed at a 404 path, the build was
-  //    green, smoke-200 was green, but the browser was preloading a
-  //    404 image and the social-share OG image was 404 too).
-  const preloadRe = /<link[^>]+rel\s*=\s*"preload"[^>]+as\s*=\s*"image"[^>]+href\s*=\s*"([^"]+)"/g;
-  while ((m = preloadRe.exec(html)) !== null) refs.add(m[1]);
-  // 3. <meta property="og:image" content="..."> — Layout emits this for
-  //    every page with a heroImage. Catches the same regression as
-  //    #2 but via the social-share metadata path.
-  const ogRe = /<meta[^>]+property\s*=\s*"og:image"[^>]+content\s*=\s*"([^"]+)"/g;
-  while ((m = ogRe.exec(html)) !== null) refs.add(m[1]);
-  return [...refs];
 }
 
 function isExternal(u) {
@@ -144,7 +114,7 @@ async function main() {
   const allRefs = new Map(); // ref -> { pages: Set, url }
   for (const f of htmlFiles) {
     const html = fs.readFileSync(f, 'utf-8');
-    const refs = extractImgRefs(html);
+    const refs = extractRenderedImageRefs(html);
     for (const r of refs) {
       if (SKIP_SCHEMES.some((s) => r.startsWith(s))) continue;
       if (SKIP_EXTERNAL && isExternal(r)) continue;
