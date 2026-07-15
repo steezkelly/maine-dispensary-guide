@@ -164,7 +164,7 @@ function changedFiles(refArg) {
 }
 
 function normalizeRepoPath(filePath) {
-    return filePath.split(path.sep).join('/').replace(/^\.\//, '');
+    return filePath.replace(/\\/g, '/').replace(/^\.\//, '');
 }
 
 function isRootNodeScript(filePath) {
@@ -299,10 +299,20 @@ function slowAstroCheck(files) {
         return { ok: false };
     }
 
-    // Filter output to lines mentioning any of the changed basenames
+    // Filter output to lines mentioning normalized changed paths. Astro check
+    // reports paths relative to the app cwd, while git paths are repo-relative.
+    const normalizedChanged = astroFiles.flatMap(f => {
+        const repoRelative = normalizeRepoPath(f);
+        const appRelative = repoRelative.startsWith('apps/maine-cannabis/')
+            ? repoRelative.slice('apps/maine-cannabis/'.length)
+            : repoRelative;
+        return [repoRelative, appRelative];
+    });
     const basenames = new Set(astroFiles.map(f => path.basename(f)));
     const relevant = output.split('\n').filter(line => {
-        return [...basenames].some(b => line.includes(b));
+        const normalizedLine = normalizeRepoPath(line);
+        return normalizedChanged.some(f => normalizedLine.includes(f))
+            || [...basenames].some(b => normalizedLine.includes(b));
     });
     if (relevant.length === 0) {
         log('warn', 'astro check failed but no errors match changed files — pre-existing baseline. Continuing.');
