@@ -26,10 +26,10 @@ scripts/
 **Usage:**
 ```bash
 node scripts/content/audit-fix-loop.cjs                    # Dry-run (report only)
-node scripts/content/audit-fix-loop.cjs --apply           # Apply fixes
+node scripts/content/audit-fix-loop.cjs --apply           # Apply metadata-only fixes
 node scripts/content/audit-fix-loop.cjs --url https://...  # Custom target
 ```
-**Notes:** Dry-run by default. `--apply` flag required to modify files. Adds template paragraphs, FAQ skeletons, and meta descriptions.
+**Notes:** Dry-run by default. `--apply` is restricted to mechanical metadata descriptions. Thin-content findings are diagnostics only; body copy and FAQs require a human-reviewed editorial patch.
 
 ---
 
@@ -272,7 +272,7 @@ powershell -ExecutionPolicy Bypass -File scripts/self-improving-maintenance.ps1
 | Typecheck only changed files | `git/delta-typecheck.cjs` |
 | Generate Hub entry from git | `git/sprint-handoff.cjs` |
 | Audit content quality | `content/audit-fix-loop.cjs --dry-run` |
-| Fix content issues | `content/audit-fix-loop.cjs --apply` |
+| Fix metadata issues | `content/audit-fix-loop.cjs --apply` |
 | Generate AI image | `image/fal-image-gen.cjs "prompt" [model]` |
 | Batch generate images | `image/image-pipeline.cjs` |
 | Verify image references | `image/image-audit.cjs` |

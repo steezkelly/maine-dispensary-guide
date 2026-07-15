@@ -1,17 +1,22 @@
 /**
  * audit-fix-loop.cjs
  *
- * Audits content quality and optionally auto-fixes common issues.
+ * Audits content quality and optionally auto-fixes mechanical metadata issues.
+ *
+ * WARNING: Body-content expansion, boilerplate paragraphs, and FAQ copy must be
+ * drafted from source material and editorially reviewed before publication. This
+ * script intentionally keeps thin-content audits diagnostic unless a human has
+ * supplied and reviewed a content patch outside this automation.
  *
  * Usage:
- *   node scripts/audit-fix-loop.cjs                    # Dry-run: report only
- *   node scripts/audit-fix-loop.cjs --apply           # Apply fixes
- *   node scripts/audit-fix-loop.cjs --url https://...  # Custom URL
+ *   node scripts/content/audit-fix-loop.cjs                    # Dry-run: report only
+ *   node scripts/content/audit-fix-loop.cjs --apply           # Apply metadata-only fixes
+ *   node scripts/content/audit-fix-loop.cjs --url https://...  # Custom URL
  *
  * What it does:
  * 1. Scans local .astro files for content issues
- * 2. Reports fixable issues (thin content, missing meta descriptions)
- * 3. With --apply: adds template content and meta descriptions
+ * 2. Reports thin-content diagnostics with page type, owner, and missing elements
+ * 3. With --apply: adds missing meta descriptions only; never body copy or FAQs
  */
 
 const { execSync } = require('child_process');
@@ -21,28 +26,6 @@ const path = require('path');
 // Configuration
 const DEFAULT_URL = 'https://mainedispensaryguide.com';
 const WORD_COUNT_THRESHOLD = 800;
-const TEMPLATE_PARAGRAPHS = [
-  '<p>This guide provides essential information for cannabis businesses operating in Maine. Understanding the regulatory landscape is critical for maintaining compliance and avoiding costly violations.</p>',
-  '<p>License holders must maintain accurate records and adhere to all state and local requirements. Failure to comply can result in penalties, license suspension, or revocation.</p>',
-  '<p>For the most current regulatory information, consult the Maine Office of Cannabis Policy (OCP) official resources and maintain regular communication with your compliance team.</p>'
-];
-const FAQ_SKELETON = `
-<section class="faq-section">
-  <h2>Frequently Asked Questions</h2>
-  <div class="faq-item">
-    <h3>What are the key compliance requirements?</h3>
-    <p>Consult the Maine OCP for current requirements. Key areas include licensing, inventory tracking via METRC, advertising restrictions, and product testing requirements.</p>
-  </div>
-  <div class="faq-item">
-    <h3>How do I renew my license?</h3>
-    <p>License renewal requirements are established by the Maine Office of Cannabis Policy. Submit renewal applications before expiration and ensure all documentation is current.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What penalties apply for violations?</h3>
-    <p>Penalties vary by violation type and severity. The OCP maintains a penalty schedule that includes fines, license suspension, and revocation for serious or repeated violations.</p>
-  </div>
-</section>
-`;
 
 function log(msg) {
   console.log(msg);
@@ -102,38 +85,61 @@ function addMetaDescription(filePath) {
   return { success: true, description: title };
 }
 
-function addTemplateContent(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
-
-  // Find insertion point: before closing </Layout> or at end of body
-  let insertPoint = content.lastIndexOf('</Layout>');
-  if (insertPoint === -1) insertPoint = content.lastIndexOf('</main>');
-  if (insertPoint === -1) insertPoint = content.lastIndexOf('</article>');
-  if (insertPoint === -1) insertPoint = content.length - 1;
-
-  const newContent = content.slice(0, insertPoint) + TEMPLATE_PARAGRAPHS.join('\n') + content.slice(insertPoint);
-  fs.writeFileSync(filePath, newContent);
-
-  return TEMPLATE_PARAGRAPHS.length * 50; // rough estimate
+function getPageType(relativePath) {
+  if (relativePath.includes('/blog/')) return 'blog post';
+  if (relativePath.includes('/founders/')) return 'founder story';
+  if (relativePath.includes('/resources/')) return 'resource page';
+  if (relativePath.includes('/guides/')) {
+    if (relativePath.includes('-dispensary-guide.astro')) return 'city guide';
+    if (relativePath.includes('-cannabis-guide.astro')) return 'regional guide';
+    return 'technical/operator guide';
+  }
+  if (relativePath.includes('/download/')) return 'lead magnet landing page';
+  return 'site page';
 }
 
-function addFaqSkeleton(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
-
-  if (content.includes('faq-section') || content.includes('<Faq')) {
-    return { success: false, reason: 'FAQ already present' };
+function getEditorialOwner(pageType) {
+  switch (pageType) {
+    case 'city guide':
+    case 'regional guide':
+      return 'regional editorial lead';
+    case 'technical/operator guide':
+      return 'compliance/business editor';
+    case 'blog post':
+      return 'blog editor';
+    case 'founder story':
+      return 'founder-story editor';
+    case 'resource page':
+      return 'resources editor';
+    case 'lead magnet landing page':
+      return 'conversion/editorial owner';
+    default:
+      return 'site editor';
   }
+}
 
-  // Insert before </Layout> or at end
-  let insertPoint = content.lastIndexOf('</Layout>');
-  if (insertPoint === -1) insertPoint = content.lastIndexOf('</main>');
-  if (insertPoint === -1) insertPoint = content.lastIndexOf('</article>');
-  if (insertPoint === -1) insertPoint = content.length - 1;
+function getMissingEditorialElements(content) {
+  const missing = [];
+  if (!/<h1[\s>]/i.test(content)) missing.push('visible H1');
+  if (!/<h2[\s>]/i.test(content)) missing.push('section H2s');
+  if (!/(faq-section|<Faq|FAQPage)/i.test(content)) missing.push('reviewed FAQ section');
+  if (!/(<Callout|class=["'][^"']*callout|content-verification)/i.test(content)) missing.push('editorial/source callout');
+  if (!/(https?:\/\/|<a\s+[^>]*href=)/i.test(content)) missing.push('supporting citations or outbound references');
+  return missing.length > 0 ? missing : ['source-backed expansion plan'];
+}
 
-  const newContent = content.slice(0, insertPoint) + FAQ_SKELETON + content.slice(insertPoint);
-  fs.writeFileSync(filePath, newContent);
-
-  return { success: true, words: 180 };
+function buildThinContentDiagnostic(filePath, relativePath, currentWordCount) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const pageType = getPageType(relativePath);
+  return {
+    file: relativePath,
+    reason: [
+      `Thin content diagnostic: ${currentWordCount} words`,
+      `page type: ${pageType}`,
+      `suggested editorial owner: ${getEditorialOwner(pageType)}`,
+      `missing: ${getMissingEditorialElements(content).join(', ')}`
+    ].join(' | ')
+  };
 }
 
 function findAstroFile(relativePath, projectRoot) {
@@ -150,10 +156,15 @@ function findAstroFile(relativePath, projectRoot) {
   if (fs.existsSync(directPath)) return directPath;
 
   // Try just the filename
-  const basename = cleanPath.split('/').pop();
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
-  if (fs.existsSync(path.join(pagesDir, basename))) {
-    return path.join(pagesDir, basename);
+  const basename = path.basename(cleanPath);
+  const candidatePageDirs = [
+    path.join(projectRoot, 'src', 'pages'),
+    path.join(projectRoot, 'apps', 'maine-cannabis', 'src', 'pages')
+  ];
+  for (const pagesDir of candidatePageDirs) {
+    if (fs.existsSync(path.join(pagesDir, basename))) {
+      return path.join(pagesDir, basename);
+    }
   }
 
   // Search recursively for the file
@@ -166,50 +177,15 @@ function findAstroFile(relativePath, projectRoot) {
   }
 }
 
-function fixThinContent(filePath, manualReview, shouldApply) {
+function fixThinContent(filePath, relativePath, manualReview) {
   const currentWordCount = getWordCount(filePath);
 
   if (currentWordCount >= WORD_COUNT_THRESHOLD) {
-    manualReview.push({ file: path.basename(filePath), reason: 'Word count already sufficient' });
+    manualReview.push({ file: relativePath, reason: 'Word count already sufficient' });
     return;
   }
 
-  const content = fs.readFileSync(filePath, 'utf8');
-
-  // Check if FAQ skeleton is better option
-  if (!content.includes('faq-section') && !content.includes('<Faq')) {
-    if (shouldApply) {
-      const result = addFaqSkeleton(filePath);
-      if (result.success) {
-        manualReview.push({
-          file: path.basename(filePath),
-          reason: `[APPLIED] Added FAQ skeleton (${result.words} words)`
-        });
-        return;
-      }
-    } else {
-      manualReview.push({
-        file: path.basename(filePath),
-        reason: `[DRY-RUN] Would add FAQ skeleton (~${180} words)`
-      });
-      return;
-    }
-  }
-
-  if (shouldApply) {
-    addTemplateContent(filePath);
-    const newCount = getWordCount(filePath);
-    const added = newCount - currentWordCount;
-    manualReview.push({
-      file: path.basename(filePath),
-      reason: `[APPLIED] Added ${TEMPLATE_PARAGRAPHS.length} template paragraphs (${added} words)`
-    });
-  } else {
-    manualReview.push({
-      file: path.basename(filePath),
-      reason: `[DRY-RUN] Would add ${TEMPLATE_PARAGRAPHS.length} template paragraphs (~${TEMPLATE_PARAGRAPHS.length * 50} words)`
-    });
-  }
+  manualReview.push(buildThinContentDiagnostic(filePath, relativePath, currentWordCount));
 }
 
 function applyAutoFixes(issues, projectRoot, shouldApply) {
@@ -220,7 +196,7 @@ function applyAutoFixes(issues, projectRoot, shouldApply) {
   for (const item of issues.thinContent) {
     const filePath = findAstroFile(item.file, projectRoot);
     if (filePath) {
-      fixThinContent(filePath, manualReview, shouldApply);
+      fixThinContent(filePath, item.file, manualReview);
     } else {
       manualReview.push({ file: item.file, reason: 'File not found in project' });
     }
@@ -264,6 +240,7 @@ function main() {
   const args = process.argv.slice(2);
   let url = DEFAULT_URL;
   let shouldApply = false;
+  let allowBoilerplateRisk = false;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--url' && args[i + 1]) {
@@ -272,13 +249,21 @@ function main() {
     if (args[i] === '--apply') {
       shouldApply = true;
     }
+    if (args[i] === '--allow-boilerplate-risk') {
+      allowBoilerplateRisk = true;
+    }
   }
 
-  const projectRoot = path.resolve(__dirname, '..');
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
+  const projectRoot = path.resolve(__dirname, '..', '..');
+  const pagesDir = fs.existsSync(path.join(projectRoot, 'apps', 'maine-cannabis', 'src', 'pages'))
+    ? path.join(projectRoot, 'apps', 'maine-cannabis', 'src', 'pages')
+    : path.join(projectRoot, 'src', 'pages');
 
   log('=== Audit-Fix Loop ===');
   log(`Target: ${url}`);
+  if (allowBoilerplateRisk) {
+    log('Warning: --allow-boilerplate-risk is deprecated/no-op; body copy and FAQs are never generated by this script.');
+  }
   if (shouldApply) {
     log('Mode: APPLY (will modify files)\n');
   } else {
@@ -309,7 +294,7 @@ function main() {
     for (const filePath of allFiles) {
       const content = fs.readFileSync(filePath, 'utf8');
       const relPath = path.relative(projectRoot, filePath).replace(/\\/g, '/');
-      const wordCount = getWordCount(content);
+      const wordCount = countWords(content);
 
       if (wordCount < WORD_COUNT_THRESHOLD) {
         issues.thinContent.push({ file: relPath, count: wordCount });
@@ -336,7 +321,7 @@ function main() {
         log('  (none applied)');
       } else {
         for (const item of appliedFixes) {
-          log(`  ✓ ${item.file}: ${item.reason}`);
+          log(`  ✓ ${item.file}: ${item.reason || item.action}`);
         }
       }
     } else {
@@ -356,7 +341,7 @@ function main() {
     }
 
     log(`\nRun \`npx squirrelscan audit ${url} --format llm\` to verify.`);
-    log('Run with --apply to apply the suggested fixes.\n');
+    log('Run with --apply to apply metadata-only fixes. Thin-content findings require editorial review.\n');
 
   } catch (err) {
     log('Error during audit-fix loop:');

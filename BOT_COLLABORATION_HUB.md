@@ -7058,3 +7058,9 @@ branch's spec.
 ### Change history (this footer)
 
 - 2026-07-14: appended at the end of the Hub (round 9 standardization). Footer does not modify Hub body — the body is the chronological log, the footer is the v1 → v0 glossary.
+
+## 📋 AUDIT-FIX LOOP DIAGNOSTIC-ONLY GUARDRAIL (Jul 14, 2026 UTC)
+
+- Refactored `scripts/content/audit-fix-loop.cjs` so thin-content findings are diagnostics only: page path, word count, inferred page type, suggested editorial owner, and missing editorial elements.
+- Removed automated body-copy/FAQ generation from the audit path. `--apply` is now limited to mechanical metadata descriptions, and `--allow-boilerplate-risk` is accepted only as a deprecated/no-op warning so old invocations do not silently generate boilerplate.
+- Added a script-header warning that body-content expansion must be source-backed and editorially reviewed before publication.
