@@ -1,6 +1,6 @@
 # Shell-command injection audit — verifier and operator scripts
 
-**Date:** 2026-07-15  
+**Date:** 2026-07-15
 **Scope:** Follow-up to the reported `--data-only` verifier shell-injection finding in `scripts/git/pre-push-verify.cjs`.
 
 ## Finding status
