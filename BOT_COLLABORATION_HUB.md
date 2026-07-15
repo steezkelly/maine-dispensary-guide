@@ -13,6 +13,13 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
+
+- Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
+- Aligned `content-health`, `smoke-200`, and `smoke-img-200` rendered-output resolution on repo-root `dist/`; `CONTENT_HEALTH_DIST` remains an explicit override and startup logs now print resolved paths.
+- Added a rendered-output freshness warning comparing sitemap/representative HTML mtimes to build/source markers; set `STRICT_RENDERED_OUTPUT_STALENESS=1` to promote the warning to an error.
+- Verification: `node --check` for touched check scripts and `npm run verify:iterate` passed (no Astro/TS files changed).
+
 ## 📋 ICA RELEASE-1 PILOT CLOSEOUT (Jul 13, 2026 UTC)
 
 - Production commit `50fda8fb` activates an explicit 10-route Intent Continuity Architecture pilot while preserving legacy behavior everywhere else.

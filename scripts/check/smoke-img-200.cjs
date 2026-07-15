@@ -32,11 +32,11 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { rootDist, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
 const https = require('node:https');
 const http = require('node:http');
 
-const REPO = path.resolve(__dirname, '..', '..');
-const DIST = path.join(REPO, 'dist');
+const DIST = rootDist;
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
 const CONCURRENCY = parseInt(process.env.SMOKE_CONCURRENCY || '8', 10);
 const SKIP_EXTERNAL = !process.argv.includes('--include-external');
@@ -134,6 +134,8 @@ async function runWithConcurrency(items, fn, limit) {
 }
 
 async function main() {
+  console.log(`📁 smoke-img-200 rendered output: ${DIST}`);
+  warnIfRenderedOutputStale({ distDir: DIST, label: 'smoke-img-200 rendered output' });
   if (!fs.existsSync(DIST)) {
     console.error(`dist/ not found at ${DIST}. Run \`npm run build\` first.`);
     process.exit(1);

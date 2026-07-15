@@ -11,12 +11,13 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { appRoot, rootDist, publicDir, sitemapPath, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
 
-const DEFAULT_ROOT = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
+const DEFAULT_ROOT = path.join(appRoot, 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
-const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || path.resolve(__dirname, '..', '..', 'dist', 'sitemap-0.xml'));
-const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist'));
-const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'public'));
+const SITEMAP = path.resolve(process.env.CONTENT_HEALTH_SITEMAP || sitemapPath);
+const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || rootDist);
+const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || publicDir);
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
 // ─── Check 1: no href="#" ───────────────────────────────────────────────────
@@ -692,7 +693,7 @@ function checkOrphanPages() {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re1 = new RegExp(`href\\s*=\\s*["']\\/?${escaped}["']`);
     const re2 = new RegExp(`href\\s*:\\s*["']\\/?${escaped}["']`);
-    const all = listAstroFilesRecursive(path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src'));
+    const all = listAstroFilesRecursive(path.join(appRoot, 'src'));
     for (const f of all) {
       if (f === excludeFile) continue;
       let text;
@@ -704,7 +705,7 @@ function checkOrphanPages() {
   function findInboundFromRendered(needle) {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'/#?]|$)`, 'm');
-    const distBase = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'dist');
+    const distBase = DIST;
     const distPath = path.join(distBase, needle, 'index.html');
     function walk(dir, out) {
       out = out || [];
@@ -1068,7 +1069,18 @@ function checkBodyInternalLinkMinimum() {
 let totalFailures = 0;
 let totalWarnings = 0;
 
-console.log('🔍 Content Health QA\n');
+console.log('🔍 Content Health QA');
+console.log(`📁 content-health source root: ${ROOT}`);
+console.log(`📁 content-health rendered output: ${DIST}${process.env.CONTENT_HEALTH_DIST ? ' (CONTENT_HEALTH_DIST override)' : ''}`);
+console.log(`📁 content-health sitemap: ${SITEMAP}${process.env.CONTENT_HEALTH_SITEMAP ? ' (CONTENT_HEALTH_SITEMAP override)' : ''}`);
+console.log(`📁 content-health public dir: ${PUBLIC_DIR}${process.env.CONTENT_HEALTH_PUBLIC ? ' (CONTENT_HEALTH_PUBLIC override)' : ''}`);
+try {
+  warnIfRenderedOutputStale({ distDir: DIST, sitemap: SITEMAP, label: 'content-health rendered output' });
+} catch (err) {
+  console.log(`⚠️   rendered output freshness: ERROR — ${err.message}`);
+  totalWarnings++;
+}
+console.log('');
 
 CHECKS.forEach(({ name, fn }) => {
   try {
