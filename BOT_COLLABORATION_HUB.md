@@ -13,6 +13,12 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+## 📋 CONTENT-HEALTH BASELINE UPDATE FLAG (Jul 15, 2026 UTC)
+
+- Updated `scripts/check/content-health-regression.cjs` so content-health improvements are reported without mutating `.content-health-baseline.json` unless `--update-baseline` is explicitly passed. Missing-baseline initialization now follows the same explicit-maintenance rule.
+- Clarified the GitHub Actions CI comment: CI remains a no-regression gate and accepting lower baselines is a separate maintenance action.
+- Verification: `node --check scripts/check/content-health-regression.cjs` and `npm run verify:iterate -- --fast-only` passed.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
