@@ -12,6 +12,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { appRoot, rootDist, publicDir, sitemapPath, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
+const { extractImgRefs } = require('./lib/rendered-refs.cjs');
 
 const DEFAULT_ROOT = path.join(appRoot, 'src', 'pages');
 const ROOT = path.resolve(process.env.CONTENT_HEALTH_ROOT || DEFAULT_ROOT);
@@ -498,10 +499,7 @@ function checkRenderedCrawlBasics() {
     const desc = extractAttr(descTag, 'content');
     if (desc.length > 160) results.push(`${rel}: meta description too long (${desc.length})`);
 
-    const mediaRe = /<(?:img|source)\s+[^>]*(?:src|srcset)=["']([^"']+)["'][^>]*>/gi;
-    let mediaMatch;
-    while ((mediaMatch = mediaRe.exec(text)) !== null) {
-      const raw = mediaMatch[1].split(',')[0].trim().split(/\s+/)[0];
+    for (const raw of extractImgRefs(text)) {
       if (!raw || raw.startsWith('http') || raw.startsWith('data:')) continue;
       if (raw.startsWith('/') && !assetExists(raw)) results.push(`${rel}: broken rendered media → ${raw}`);
     }

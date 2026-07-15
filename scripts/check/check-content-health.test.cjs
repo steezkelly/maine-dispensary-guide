@@ -108,6 +108,23 @@ test('flags rendered slashful internal links that would redirect', () => {
   assert.match(result.stdout, /rendered internal link redirects under trailingSlash=never → \/guides\/existing\//);
 });
 
+
+test('flags a broken second srcset candidate in rendered media', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+  });
+  const imageDir = path.join(fixture.publicDir, 'images', 'fixtures');
+  fs.mkdirSync(imageDir, { recursive: true });
+  fs.writeFileSync(path.join(imageDir, 'valid-first.jpg'), Buffer.from([0xff, 0xd8, 0xff, 0xd9]));
+  fs.writeFileSync(path.join(fixture.dist, 'index.html'), '<html><head><title>Fixture</title><meta name="description" content="Fixture page"><meta property="og:image" content="/og-image.svg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></head><body><img src="/images/fixtures/valid-first.jpg" srcset="/images/fixtures/valid-first.jpg 1x, /images/fixtures/broken-second.jpg 2x" alt="Fixture"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script></body></html>');
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stdout, /rendered crawl basics: 1 issue/);
+  assert.match(result.stdout, /broken rendered media → \/images\/fixtures\/broken-second\.jpg/);
+});
+
 test('ignores query strings when checking dead internal route links in source', () => {
   const fixture = makePages({
     'index.astro': '<a href="/guides/existing?source=home">Existing guide with campaign param</a>\n',

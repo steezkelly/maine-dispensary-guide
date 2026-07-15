@@ -13,6 +13,13 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+## 📋 RENDERED IMAGE REFERENCE PARSER CONSOLIDATION (Jul 15, 2026 UTC)
+
+- Moved image/reference extraction into `scripts/check/lib/rendered-refs.cjs` and reused it from both `smoke-img-200.cjs` and `content-health.cjs` rendered crawl basics.
+- Rendered crawl basics now validates every `srcset` candidate instead of only the first candidate, preserving preload, `og:image`, `poster`, and same-origin rendered media coverage.
+- Added a regression fixture where the first `srcset` candidate exists and the second candidate is broken; targeted node test passes. Full content-health unit file still exposes unrelated fixture assumptions around orphan/YMYL checks in this checkout.
+- Verification: `node --check` for touched scripts, targeted `node --test --test-name-pattern "broken second srcset" scripts/check/check-content-health.test.cjs`, and `npm run verify:iterate` passed.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
