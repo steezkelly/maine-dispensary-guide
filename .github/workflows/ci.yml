@@ -36,6 +36,9 @@ jobs:
       - name: Test image pipeline hero variants
         run: npm run test:image-pipeline
 
+      - name: Test image audit responsive variants
+        run: node --test scripts/image/tests/image-audit.test.cjs
+
       - name: Test ICA continuation guardrails
         run: npm run test:continuation
 

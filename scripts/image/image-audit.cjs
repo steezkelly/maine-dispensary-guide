@@ -11,6 +11,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { appRoot } = require('../check/lib/paths.cjs');
 
 // ANSI color codes
 const colors = {
@@ -122,21 +123,24 @@ function findAstroFiles(pagesDir) {
 // Phase 1: Scan filesystem
 // ─────────────────────────────────────────────────────────────
 
+function isResponsiveVariant(file) {
+  return /-640w\.jpe?g$/i.test(file.path);
+}
+
 function scanFilesystem(baseDir) {
   const heroesDir = path.join(baseDir, 'images', 'heroes');
   const infographicsDir = path.join(baseDir, 'images', 'infographics');
+  const toImageFile = file => ({
+    path: file,
+    slug: path.basename(file, path.extname(file)),
+  });
 
-  const heroFiles = getFilesRecursively(heroesDir, ['.jpg', '.jpeg']).map(f => ({
-    path: f,
-    slug: path.basename(f, path.extname(f)),
-  }));
+  const heroAuditFiles = getFilesRecursively(heroesDir, ['.jpg', '.jpeg']).map(toImageFile);
+  const infographicAuditFiles = getFilesRecursively(infographicsDir, ['.jpg', '.jpeg']).map(toImageFile);
+  const heroFiles = heroAuditFiles.filter(file => !isResponsiveVariant(file));
+  const infographicFiles = infographicAuditFiles.filter(file => !isResponsiveVariant(file));
 
-  const infographicFiles = getFilesRecursively(infographicsDir, ['.jpg', '.jpeg']).map(f => ({
-    path: f,
-    slug: path.basename(f, path.extname(f)),
-  }));
-
-  return { heroFiles, infographicFiles };
+  return { heroFiles, infographicFiles, heroAuditFiles, infographicAuditFiles };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -243,7 +247,12 @@ function scanPages(pagesDir) {
 // ─────────────────────────────────────────────────────────────
 
 function generateReport(type, filesystem, pageScan, baseDir, pagesDir) {
-  const { heroFiles, infographicFiles } = filesystem;
+  const {
+    heroFiles,
+    infographicFiles,
+    heroAuditFiles = heroFiles,
+    infographicAuditFiles = infographicFiles,
+  } = filesystem;
   const { heroRefs, infographicRefs, pagesWithHeroField, pagesWithNullHero, pagesWithInfographic } = pageScan;
 
   const showHeroes = type === 'all' || type === 'heroes';
@@ -396,8 +405,8 @@ function generateReport(type, filesystem, pageScan, baseDir, pagesDir) {
     logSection('IMAGE SIZE AUDIT');
 
     const allImages = [
-      ...(showHeroes ? heroFiles : []),
-      ...(showInfographics ? infographicFiles : []),
+      ...(showHeroes ? heroAuditFiles : []),
+      ...(showInfographics ? infographicAuditFiles : []),
     ];
 
     if (allImages.length === 0) {
@@ -443,6 +452,14 @@ function generateReport(type, filesystem, pageScan, baseDir, pagesDir) {
 // Main
 // ─────────────────────────────────────────────────────────────
 
+function getProjectPaths() {
+  return {
+    projectRoot: appRoot,
+    publicDir: path.join(appRoot, 'public'),
+    pagesDir: path.join(appRoot, 'src', 'pages'),
+  };
+}
+
 function main() {
   const args = process.argv.slice(2);
   const type = args[0] || 'all';
@@ -453,11 +470,7 @@ function main() {
     process.exit(1);
   }
 
-  // Determine project root (one level up from scripts/)
-  const scriptDir = __dirname;
-  const projectRoot = path.dirname(scriptDir);
-  const publicDir = path.join(projectRoot, 'public');
-  const pagesDir = path.join(projectRoot, 'src', 'pages');
+  const { projectRoot, publicDir, pagesDir } = getProjectPaths();
 
   console.log(`${colors.dim}Image Audit — Maine Dispensary Guide${colors.reset}`);
   console.log(`${colors.dim}Type: ${type} | Root: ${path.basename(projectRoot)}${colors.reset}`);
@@ -480,4 +493,12 @@ function main() {
   generateReport(type, filesystem, pageScan, projectRoot, pagesDir);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  generateReport,
+  getProjectPaths,
+  scanFilesystem,
+};
