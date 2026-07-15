@@ -21,12 +21,12 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { rootDist, sitemapPath, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
 const https = require('node:https');
 const http = require('node:http');
 
-const REPO = path.resolve(__dirname, '..', '..');
-const DIST = path.join(REPO, 'dist');
-const SITEMAP = path.join(DIST, 'sitemap-0.xml');
+const DIST = rootDist;
+const SITEMAP = sitemapPath;
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
 const FROM_SITEMAP = process.argv.includes('--from-sitemap');
 const CONCURRENCY = parseInt(process.env.SMOKE_CONCURRENCY || '8', 10);
@@ -94,6 +94,8 @@ async function runWithConcurrency(items, fn, limit) {
 
 async function main() {
   const base = MDG_BASE.replace(/\/+$/, '');
+  console.log(`📁 smoke-200 rendered output: ${DIST}`);
+  warnIfRenderedOutputStale({ distDir: DIST, sitemap: SITEMAP, label: 'smoke-200 rendered output' });
   const routes = FROM_SITEMAP ? listSitemapUrls() : listHtmlPages();
   if (routes.length === 0) {
     console.error(`No routes found. dist exists: ${fs.existsSync(DIST)}, sitemap exists: ${fs.existsSync(SITEMAP)}`);
