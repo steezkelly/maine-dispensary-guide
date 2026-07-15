@@ -33,8 +33,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { rootDist, warnIfRenderedOutputStale } = require('./lib/paths.cjs');
-const https = require('node:https');
-const http = require('node:http');
+const { headOrGet, runWithConcurrency } = require('./lib/http-status.cjs');
 
 const DIST = rootDist;
 const MDG_BASE = process.env.MDG_BASE || process.env.PREVIEW_URL || 'https://mainedispensaryguide.com';
@@ -108,31 +107,6 @@ function normalizeUrl(ref) {
   return MDG_BASE.replace(/\/+$/, '') + '/' + ref;
 }
 
-function headOnce(target) {
-  return new Promise((resolve) => {
-    const lib = target.startsWith('https:') ? https : http;
-    const req = lib.request(target, { method: 'HEAD', timeout: 15000 }, (res) => {
-      resolve({ status: res.statusCode });
-    });
-    req.on('error', (err) => resolve({ status: 0, error: err.message }));
-    req.on('timeout', () => { req.destroy(); resolve({ status: 0, error: 'timeout' }); });
-    req.end();
-  });
-}
-
-async function runWithConcurrency(items, fn, limit) {
-  const results = new Array(items.length);
-  let cursor = 0;
-  async function worker() {
-    while (cursor < items.length) {
-      const i = cursor++;
-      results[i] = await fn(items[i], i);
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
-  return results;
-}
-
 async function main() {
   console.log(`📁 smoke-img-200 rendered output: ${DIST}`);
   warnIfRenderedOutputStale({ distDir: DIST, label: 'smoke-img-200 rendered output' });
@@ -184,7 +158,7 @@ async function main() {
 
   const startedAt = Date.now();
   const results = await runWithConcurrency(items, async (item) => {
-    const r = await headOnce(item.url);
+    const r = await headOrGet(item.url);
     return { ...item, ...r };
   }, CONCURRENCY);
   const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1);
