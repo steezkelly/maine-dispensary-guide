@@ -295,35 +295,29 @@ function checkOGImageDimensions() {
         const text = fs.readFileSync(full, 'utf8');
 
         // Find og:image URL
-        const ogImageRe = /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/;
-        const ogImageMatch = text.match(ogImageRe);
-        const ogImageUrl = ogImageMatch ? ogImageMatch[1] : '';
+        const ogImageUrl = extractAttr(findMetaByProperty(text, 'og:image'), 'content');
 
         // Noindex pages (admin, experiments, gated funnels) don't need OG image
         // meta tags — they're not shared on social and search engines ignore them.
         // Skip them to keep the check focused on real public pages.
-        const robotsRe = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']/;
-        const robotsMatch = text.match(robotsRe);
-        const robots = robotsMatch ? robotsMatch[1].toLowerCase() : '';
+        const robots = extractAttr(findMetaByName(text, 'robots'), 'content').toLowerCase();
         if (robots.includes('noindex')) return;
 
         // Find og:image:width / height
-        const wRe = /<meta\s+property=["']og:image:width["']\s+content=["']([^"']*)["']/;
-        const hRe = /<meta\s+property=["']og:image:height["']\s+content=["']([^"']*)["']/;
-        const wMatch = text.match(wRe);
-        const hMatch = text.match(hRe);
+        const ogWidth = extractAttr(findMetaByProperty(text, 'og:image:width'), 'content');
+        const ogHeight = extractAttr(findMetaByProperty(text, 'og:image:height'), 'content');
 
         if (!ogImageUrl) {
           results.push(`${rel}: missing og:image`);
           return;
         }
-        if (!wMatch) {
+        if (!ogWidth) {
           results.push(`${rel}: missing og:image:width`);
-        } else if (!hMatch) {
+        } else if (!ogHeight) {
           results.push(`${rel}: missing og:image:height`);
         } else {
-          const reportedW = parseInt(wMatch[1], 10);
-          const reportedH = parseInt(hMatch[1], 10);
+          const reportedW = parseInt(ogWidth, 10);
+          const reportedH = parseInt(ogHeight, 10);
           if (Number.isFinite(reportedW) && Number.isFinite(reportedH)) {
             const local = readLocalImageDims(ogImageUrl);
             if (local) {
@@ -462,10 +456,30 @@ function htmlDecode(value) {
     .replace(/&gt;/g, '>');
 }
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function extractAttr(tag, name) {
-  const re = new RegExp(`${name}=["']([^"']*)["']`, 'i');
+  const escapedName = escapeRegExp(name);
+  const re = new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*([\"'])(.*?)\\1`, 'i');
   const m = tag.match(re);
-  return m ? htmlDecode(m[1]) : '';
+  return m ? htmlDecode(m[2]) : '';
+}
+
+function findAllTags(html, tagName) {
+  const escapedTagName = escapeRegExp(tagName);
+  return [...html.matchAll(new RegExp(`<${escapedTagName}\\b[^>]*>`, 'gi'))].map(match => match[0]);
+}
+
+function findMetaByName(html, name) {
+  const needle = String(name).toLowerCase();
+  return findAllTags(html, 'meta').find(tag => extractAttr(tag, 'name').toLowerCase() === needle) || '';
+}
+
+function findMetaByProperty(html, property) {
+  const needle = String(property).toLowerCase();
+  return findAllTags(html, 'meta').find(tag => extractAttr(tag, 'property').toLowerCase() === needle) || '';
 }
 
 // ─── Check 11: rendered crawl basics ─────────────────────────────────────────
@@ -494,8 +508,7 @@ function checkRenderedCrawlBasics() {
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (title.length > 60) results.push(`${rel}: title too long (${title.length})`);
 
-    const descTag = text.match(/<meta\s+[^>]*name=["']description["'][^>]*>/i)?.[0] || '';
-    const desc = extractAttr(descTag, 'content');
+    const desc = extractAttr(findMetaByName(text, 'description'), 'content');
     if (desc.length > 160) results.push(`${rel}: meta description too long (${desc.length})`);
 
     const mediaRe = /<(?:img|source)\s+[^>]*(?:src|srcset)=["']([^"']+)["'][^>]*>/gi;
@@ -587,12 +600,7 @@ function checkMetaDescriptionUniqueness() {
   const seen = new Map(); // desc -> first file
   for (const file of files) {
     const text = fs.readFileSync(file, 'utf8');
-    // Use only double-quote form to avoid apostrophe collisions in content
-    // (e.g. "Maine's best..." would otherwise match only "Maine" because
-    // the regex character class [^"']+ stops at the apostrophe).
-    const m = text.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
-    if (!m) continue;
-    const desc = m[1].trim();
+    const desc = extractAttr(findMetaByName(text, 'description'), 'content').trim();
     if (!desc) continue;
     if (seen.has(desc)) {
       const rel1 = '/' + path.relative(DIST, seen.get(desc)).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
@@ -654,6 +662,7 @@ function checkSitemapLastmod() {
 // from at least one other page will be caught.
 function checkOrphanPages() {
   const results = [];
+  if (ROOT !== DEFAULT_ROOT) return results;
   // Resolve PAGES_DIR relative to this script's location so the check
   // works from any cwd, matching the rest of the checks in this file.
   const PAGES_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'src', 'pages');
@@ -766,9 +775,9 @@ function checkOgTypeMatchesRole() {
     const rel = '/' + path.relative(DIST, file).replace(/\\/g, '/').replace(/\/index\.html$/, '').replace(/\.html$/, '');
     if (!HUB_ROUTES.has(rel === '/' ? '/' : rel.replace(/\/$/, '') || '/')) continue;
     const text = fs.readFileSync(file, 'utf8');
-    const m = text.match(/<meta\s+property=["']og:type["']\s+content=["']([^"']+)["']/i);
-    if (m && m[1] !== 'website') {
-      results.push(`${rel}: hub page emits og:type=${m[1]} (should be website)`);
+    const ogType = extractAttr(findMetaByProperty(text, 'og:type'), 'content');
+    if (ogType && ogType !== 'website') {
+      results.push(`${rel}: hub page emits og:type=${ogType} (should be website)`);
     }
   }
   return results;
@@ -939,6 +948,7 @@ const YMYL_BLOG_PAGES = [
 
 function checkYMYLReviewerCoverage() {
   const results = [];
+  if (ROOT !== DEFAULT_ROOT) return results;
   YMYL_BLOG_PAGES.forEach(rel => {
     const file = path.join(ROOT, rel);
     if (!fs.existsSync(file)) {

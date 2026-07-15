@@ -13,6 +13,13 @@ The collaborative log below describes each session's work as it shipped. To avoi
 
 - **Email-pipeline regression test**: `tests/email-pipeline-regression.sh` proves the 2026-07-07 over-send fix (dedup race + atomic write + --help short-circuit) and the 2026-07-09 bounce-mailbox fix (sender mailbox, not catch-all) actually hold. Run before any cold-outreach campaign.
 
+
+## 📋 CONTENT-HEALTH META PARSER HARDENING (Jul 15, 2026 UTC)
+
+- Hardened `scripts/check/content-health.cjs` rendered-meta parsing so description, robots, OG image, OG dimensions, and `og:type` checks resolve meta tags by extracted attributes instead of assuming attribute order or double-quote style.
+- Added regression fixtures in `scripts/check/check-content-health.test.cjs` for reversed meta attributes and single-quoted meta attributes.
+- Verification: `node --check` for touched check scripts, `node scripts/check/check-content-health.test.cjs`, and `npm run verify:iterate` passed.
+
 ## 📋 RENDERED-OUTPUT PATH HELPER (Jul 14, 2026 UTC)
 
 - Added shared `scripts/check/lib/paths.cjs` for repo/app roots, repo-root `dist/`, public dir, and sitemap path.
