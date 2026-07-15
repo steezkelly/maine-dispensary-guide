@@ -36,6 +36,11 @@ and lease check. A candidate branch is not an authorization to duplicate work.
   `chore/guides-description-trim-2026-07-14` and
   `refactor/homepage-design-tokens-2026-07-14` require fresh-base, scoped,
   independent review before integration. Do not batch them for tidiness.
+- [ ] **Protect the active guide-title and shared-CSS worktrees.**
+  `chore/guides-title-trim-2026-07-14` contains 18 uncommitted guide edits;
+  `refactor/css-extract-top3-2026-07-14` contains uncommitted shared-style
+  wiring. Their owners must finish, rebase, and verify each bounded change
+  before integration. Do not touch their paths or merge partial assets.
 
 ## P1 — Ready to specify after preflight
 
@@ -51,6 +56,9 @@ and lease check. A candidate branch is not an authorization to duplicate work.
 - [ ] **Advance town-cluster Stage 3 as a controlled editorial initiative.**
   One hub/source-pack/reviewer cycle at a time; do not mass-generate thin
   locality pages. Existing Stage 2 evidence remains in the Hub and source packs.
+- [ ] **Expand franchise menu data one operator at a time.** Keep unavailable
+  menus explicitly unavailable; defer heatmaps and price comparisons until the
+  existing three-snapshot threshold is actually met.
 
 ## P2 — Blocked on an operator or external event
 
