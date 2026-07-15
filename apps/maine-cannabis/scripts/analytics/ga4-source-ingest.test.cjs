@@ -187,7 +187,11 @@ test('duplicate row keys within a BQ report are deduped', () => {
   // Two rows in data API source map to two row entries in joined output;
   // dedup happens at a higher level. We assert the structure: each
   // data_api row produces one joined row.
-  assert.strictEqual(joinedRows.length, 2);
+  assert.strictEqual(joinedRows.length, 6);
+  assert.deepStrictEqual(
+    [...new Set(joinedRows.map((row) => row.metric_name))],
+    ['screenPageViews', 'totalUsers', 'sessions']
+  );
 });
 
 test('source_row_id hash is deterministic for identical cell metadata', () => {
@@ -251,6 +255,38 @@ test('G5 gate: same source state produces same canonical_release_id across runs'
   const id1 = ingest.computeCanonicalReleaseId(rows, '2026-07-12', '2026-07-12');
   const id2 = ingest.computeCanonicalReleaseId(rows, '2026-07-12', '2026-07-12');
   assert.strictEqual(id1, id2);
+});
+
+
+test('joinDataForReport emits report-specific metric rows for multi-metric reports', () => {
+  const joined = ingest.joinDataForReport(
+    'R2_session_metrics_daily',
+    [{ dimensions: { date: '2026-07-12', sessionDefaultChannelGroup: 'Organic Search' }, metrics: { sessions: 4, engagedSessions: 3, engagementRate: 0.75 } }],
+    [{ row_key: { event_date: '2026-07-12', sessionDefaultChannelGroup: 'Organic Search' }, metrics: { sessions: 4, engagedSessions: 3, engagementRate: 0.75 } }]
+  );
+  assert.deepStrictEqual(joined.map((row) => row.metric_name), ['sessions', 'engagedSessions', 'engagementRate', 'averageSessionDuration', 'bounceRate']);
+  assert.strictEqual(joined.find((row) => row.metric_name === 'sessions').delta_classification, 'match');
+  assert.strictEqual(joined.find((row) => row.metric_name === 'engagedSessions').data_api_value, 3);
+});
+
+test('G6 gate fails when completed source reports emit both_null joined rows', () => {
+  const gates = ingest.runGates({
+    dataApiReports: [{ report_id: 'session_metrics_daily', status: 'ok' }],
+    bqReports: [{ report_id: 'session_metrics_daily', report_key: 'R2_session_metrics_daily', status: 'ok', rows: [] }],
+    joinedRows: [{
+      report_id: 'session_metrics_daily',
+      report_key: 'R2_session_metrics_daily',
+      data_api_status: 'ok',
+      bq_status: 'ok',
+      sanitized_rows: [{ metric_name: 'sessions', delta_classification: 'both_null', data_api_value: null, bq_value: null }]
+    }],
+    canonicalReleaseId: 'rel_test',
+    acquisitionReleaseId: 'run_test',
+    raw_record_json_sample: []
+  });
+  assert.strictEqual(gates.G6.status, 'FAIL');
+  assert.strictEqual(gates.G6.both_null_count, 1);
+  assert.deepStrictEqual(gates.G6.both_null_reports, ['R2_session_metrics_daily']);
 });
 
 test('G6 gate: structural_disagreement_no_bq_history is not a fail', () => {

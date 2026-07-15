@@ -235,7 +235,7 @@ function computeAcquisitionReleaseId(canonicalReleaseId, runMeta) {
 /**
  * Run all 10 gates. Return a structured result per gate.
  */
-function runGates({ dataApiReports, bqReports, canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample }) {
+function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample }) {
   const gates = {};
 
   // G1: source_completeness (amended v3). A failed BigQuery report makes the
@@ -285,15 +285,29 @@ function runGates({ dataApiReports, bqReports, canonicalReleaseId, acquisitionRe
   }
   gates.G5 = { status: 'PASS', unique_keys: seenKeys.size, duplicate_count: dupeCount, notes: 'Same source produces same canonical_release_id; duplicates within this run: 0 (asserted by signature equality)' };
 
-  // G6: reconciliation_health (amended v3) — no `both_null` in last-72h rows where both sources should be reachable
+  // G6: reconciliation_health (amended v3) — no `both_null` rows are
+  // allowed when both source reports completed. `both_null` means the join
+  // found the grain but failed to carry either side's metric value, which
+  // corrupts the canonical reconciliation artifact.
   let bothNull = 0;
-  for (const r of dataApiReports) {
-    if (!r.status === 'ok') continue;
-    // Note: per-row reconciliation happens in joinDataForReport; here we
-    // assert that the run-level joined report emits the expected cross-source
-    // structure.
+  const bothNullReports = new Set();
+  for (const report of joinedRows || []) {
+    if (report.data_api_status !== 'ok' || report.bq_status !== 'ok') continue;
+    for (const row of report.sanitized_rows || []) {
+      if (row.delta_classification === 'both_null') {
+        bothNull++;
+        bothNullReports.add(report.report_key || report.report_id || 'unknown');
+      }
+    }
   }
-  gates.G6 = { status: 'PASS', both_null_count: bothNull, notes: 'last-72h rows: cross-source structure correct; > 3-day rows: structural_disagreement_no_bq_history is a known structural reality' };
+  gates.G6 = {
+    status: bothNull === 0 ? 'PASS' : 'FAIL',
+    both_null_count: bothNull,
+    both_null_reports: Array.from(bothNullReports).sort(),
+    notes: bothNull === 0
+      ? 'No both_null rows where Data API and BQ reports both completed; > 3-day rows may still be structural_disagreement_no_bq_history'
+      : 'Both-null joined rows found for completed Data API + BQ reports; metric selection or source mapping is incomplete'
+  };
 
   // G7: privacy_invariant
   // SanitizeEventParams runs at query layer. Verify with sample rows.
@@ -332,7 +346,7 @@ function runGates({ dataApiReports, bqReports, canonicalReleaseId, acquisitionRe
 
 // ----------------------- Cross-source join -----------------------------------
 
-function joinDataForReport(reportKey, dataApiRows, bqRows) {
+function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REPORTS[reportKey]?.metrics || []) {
   const out = {
     report_id: reportKey,
     data_api_value: null,
@@ -364,7 +378,8 @@ function joinDataForReport(reportKey, dataApiRows, bqRows) {
     browser: 'browser', operatingSystem: 'operating_system',
     operating_system: 'operating_system',
     newVsReturning: 'new_vs_returning', new_vs_returning: 'new_vs_returning',
-    faq_id: 'faq_id', cta_id: 'cta_id'
+    faq_id: 'faq_id', 'customEvent:faq_id': 'faq_id',
+    cta_id: 'cta_id', 'customEvent:cta_id': 'cta_id'
   };
   function canonKey(k) {
     return FIELD_CANON[k] || k;
@@ -402,6 +417,12 @@ function joinDataForReport(reportKey, dataApiRows, bqRows) {
     const norm = buildNormKeyFromDims(b.row_key || {});
     bqKeyByNormalized.set(norm, b);
   }
+  const metricNames = metrics.length
+    ? metrics
+    : Array.from(new Set([
+      ...dataApiRows.flatMap((row) => Object.keys(row.metrics || {})),
+      ...bqRows.flatMap((row) => Object.keys(row.metrics || {}))
+    ]));
   const rows = [];
   for (const d of dataApiRows) {
     // data_api row uses GA4 dimension API names (date, pagePath, eventName)
@@ -414,28 +435,32 @@ function joinDataForReport(reportKey, dataApiRows, bqRows) {
       rowKey[ck] = ck === 'date' ? normalizeDate(v) : (v === null || v === undefined ? null : String(v));
     }
 
-    let bqValue = bqMatch ? (bqMatch.metrics?.eventCount ?? null) : null;
-    let dataValue = d.metrics?.eventCount ?? d.metrics?.screenPageViews ?? null;
-    let delta = null;
-    let cls = 'both_null';
-    if (dataValue !== null && bqValue !== null) {
-      delta = Math.abs((+dataValue) - (+bqValue));
-      cls = delta === 0 ? 'match' : (delta / Math.max(dataValue, bqValue) >= 0.05 ? 'count_disagreement' : 'match');
-    } else if (dataValue !== null && bqValue === null) {
-      cls = 'structural_disagreement_no_bq_history';
-    } else if (dataValue === null && bqValue !== null) {
-      cls = 'structural_disagreement_no_api_history';
+    for (const metricName of metricNames) {
+      const bqValue = bqMatch ? (bqMatch.metrics?.[metricName] ?? null) : null;
+      const dataValue = d.metrics?.[metricName] ?? null;
+      let delta = null;
+      let cls = 'both_null';
+      if (dataValue !== null && bqValue !== null) {
+        delta = Math.abs((+dataValue) - (+bqValue));
+        const denom = Math.max(+dataValue, +bqValue);
+        cls = delta === 0 ? 'match' : (denom > 0 && delta / denom >= 0.05 ? 'count_disagreement' : 'match');
+      } else if (dataValue !== null && bqValue === null) {
+        cls = 'structural_disagreement_no_bq_history';
+      } else if (dataValue === null && bqValue !== null) {
+        cls = 'structural_disagreement_no_api_history';
+      }
+      rows.push({
+        row_key: { ...rowKey, metric_name: metricName },
+        metric_name: metricName,
+        bq_value: bqValue,
+        data_api_value: dataValue,
+        delta_classification: cls,
+        delta_absolute: delta,
+        delta_relative: delta !== null && Math.max(+dataValue || 0, +bqValue || 0) > 0 ? delta / Math.max(+dataValue || 0, +bqValue || 0) : null,
+        freshness: 'settled' /* default; would need date comparison */,
+        row_signature: `${norm}::${metricName}`
+      });
     }
-    rows.push({
-      row_key: rowKey,
-      bq_value: bqValue,
-      data_api_value: dataValue,
-      delta_classification: cls,
-      delta_absolute: delta,
-      delta_relative: delta && Math.max(dataValue || 0, bqValue || 0) > 0 ? delta / Math.max(dataValue, bqValue) : null,
-      freshness: 'settled' /* default; would need date comparison */,
-      row_signature: norm
-    });
   }
   return rows;
 }
@@ -513,7 +538,7 @@ async function main() {
   for (const rk of Object.keys(dataApi.REPORTS)) {
     const dr = dataApiResult.reports[rk] || { rows: [], status: 'failed' };
     const br = bqResults[rk] || { rows: [] };
-    const joined = joinDataForReport(rk, dr.rows || [], br.rows || []);
+    const joined = joinDataForReport(rk, dr.rows || [], br.rows || [], dataApi.REPORTS[rk]?.metrics || []);
     joinedRows.push({
       report_id: rk.replace(/^R\d+_/, ''),
       report_key: rk,
@@ -549,6 +574,7 @@ async function main() {
   const gates = runGates({
     dataApiReports: dataApiReportsForGates,
     bqReports: bqReportsForGates,
+    joinedRows,
     canonicalReleaseId,
     acquisitionReleaseId,
     raw_record_json_sample: rawRecordJsonSample
