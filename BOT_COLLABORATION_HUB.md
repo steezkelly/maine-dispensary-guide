@@ -7072,3 +7072,10 @@ branch's spec.
 - The dry-run scan now exits non-zero if no `.astro` pages are found and reports the resolved `pagesDir`, preventing silent success from the historical `scripts/src/pages` path mistake.
 - Corrected usage comments to `node scripts/content/audit-fix-loop.cjs` and fixed the local scan word-count call to count loaded file content instead of treating file content as a path.
 - Verification: `node -c scripts/content/audit-fix-loop.cjs`, `node scripts/content/audit-fix-loop.cjs`, and `npm run verify:iterate -- --fast-only` passed. `npm run workflow:status` was attempted first but failed because this checkout's `work` branch has no resolvable `origin/main...work` revision range.
+
+## 📋 CONTENT-HEALTH SINGLE-SCAN REFACTOR (Jul 15, 2026 UTC)
+
+- Refactored `scripts/check/content-health.cjs` so the QA runner builds one shared context with cached source files, rendered HTML files, route set, sitemap XML, and CSS-build warning output, then passes that context into every check.
+- Replaced repeated source/rendered tree walks and repeated UTF-8 reads in source/rendered checks with the cached context while preserving existing check names/output lines for `content-health-regression.cjs` parsing.
+- Reworked orphan-page detection to construct a single inbound-link map from cached source and rendered files instead of rescanning all source/rendered files for every page.
+- Verification: `node --check scripts/check/content-health.cjs`, `node --test scripts/check/check-content-health.test.cjs`, and `npm run verify:iterate -- --fast-only` passed. Full `npm run build` / full content-health remain blocked in this checkout because `turbo` is not installed in `node_modules/.bin`.
