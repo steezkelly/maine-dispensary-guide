@@ -1,0 +1,40 @@
+name: Legacy Maintenance Script Tests
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/link/link-architect.cjs'
+      - 'scripts/link/link-architect.test.cjs'
+      - 'scripts/link/add-nearby-markets.cjs'
+      - 'scripts/link/add-nearby-markets.test.cjs'
+      - 'scripts/check/lib/paths.cjs'
+      - '.github/workflows/maintenance-script-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/link/link-architect.cjs'
+      - 'scripts/link/link-architect.test.cjs'
+      - 'scripts/link/add-nearby-markets.cjs'
+      - 'scripts/link/add-nearby-markets.test.cjs'
+      - 'scripts/check/lib/paths.cjs'
+      - '.github/workflows/maintenance-script-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Link maintenance fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Run real-script fixture tests
+        run: node --test scripts/link/add-nearby-markets.test.cjs scripts/link/link-architect.test.cjs
