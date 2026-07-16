@@ -297,7 +297,12 @@ function buildBqSql(reportKey, from, to) {
         WITH session_events AS (
           SELECT
             event_date,
-            CASE WHEN event_name = 'first_visit' THEN 'new' ELSE 'returning' END AS newVsReturning,
+            -- Classify after grouping events into a session so a new user's
+            -- follow-on events cannot also create a returning-session row.
+            CASE
+              WHEN COUNTIF(event_name = 'first_visit') > 0 THEN 'new'
+              ELSE 'returning'
+            END AS newVsReturning,
             user_pseudo_id,
             CONCAT(
               user_pseudo_id,
@@ -315,7 +320,7 @@ function buildBqSql(reportKey, from, to) {
           FROM ${tab}
           WHERE ${tableFilter}
             AND (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
-          GROUP BY event_date, newVsReturning, user_pseudo_id, session_key
+          GROUP BY event_date, user_pseudo_id, session_key
         )
         SELECT event_date, newVsReturning,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,

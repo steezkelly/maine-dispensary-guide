@@ -37,6 +37,15 @@ test('R6 mirrors engagedSessions alongside users and sessions', () => {
   assert.match(sql, /AS engagedSessions/);
 });
 
+test('R6 classifies each session once when it contains first_visit', () => {
+  const sql = buildBqSql('R6_new_vs_returning_daily', '2026-07-10', '2026-07-12');
+
+  assert.match(sql, /COUNTIF\(event_name = 'first_visit'\) > 0 THEN 'new'/);
+  assert.doesNotMatch(sql, /CASE WHEN event_name = 'first_visit' THEN 'new' ELSE 'returning' END/);
+  assert.doesNotMatch(sql, /GROUP BY event_date, newVsReturning, user_pseudo_id, session_key/);
+  assert.match(sql, /GROUP BY event_date, user_pseudo_id, session_key/);
+});
+
 test('page reports normalize BQ page_location URLs to paths before grouping', () => {
   const sql = buildBqSql('R1_pageview_daily', '2026-07-10', '2026-07-12');
 
