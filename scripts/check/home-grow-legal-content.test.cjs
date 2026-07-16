@@ -7,6 +7,7 @@ const repoRoot = path.resolve(__dirname, '..', '..');
 const blogDir = path.join(repoRoot, 'apps', 'maine-cannabis', 'src', 'pages', 'blog');
 const pillarPath = path.join(blogDir, 'maine-home-grow-cannabis-guide-2026.astro');
 const medicalPath = path.join(blogDir, 'maine-medical-cannabis-patient-grow-guide.astro');
+const distDir = path.join(repoRoot, 'dist', 'blog');
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -54,6 +55,7 @@ test('mandatory routing, definitions, property, and scenario sections remain pre
   assert.match(medical, /ordinary adult-use grower/i);
   assert.match(medical, /id="rentals-property-local-rules"/);
   assert.match(medical, /status protection[\s\S]*not[\s\S]*(?:blanket )?permission/i);
+  assert.match(medical, /§2430-C\(3\)/);
 });
 
 test('publication metadata stays consistent and unsafe equivalence stays absent', () => {
@@ -65,4 +67,14 @@ test('publication metadata stays consistent and unsafe equivalence stays absent'
   assert.doesNotMatch(combined, /medical (?:card|patient).{0,60}(?:allows?|may grow).{0,30}30 (?:mature )?plants/i);
   assert.doesNotMatch(combined, /adult-use and medical (?:plants|cultivation).{0,40}(?:same|identical) rules/i);
   assert.doesNotMatch(combined, /Last verified/i);
+});
+
+test('built article metadata preserves calendar dates', () => {
+  const pillarHtml = read(path.join(distDir, 'maine-home-grow-cannabis-guide-2026', 'index.html'));
+  const medicalHtml = read(path.join(distDir, 'maine-medical-cannabis-patient-grow-guide', 'index.html'));
+  assert.match(pillarHtml, /Published April 18, 2026/);
+  assert.match(pillarHtml, /Updated July 16, 2026/);
+  assert.doesNotMatch(pillarHtml, /Published April 17, 2026|Updated July 15, 2026/);
+  assert.match(medicalHtml, /Published July 16, 2026/);
+  assert.doesNotMatch(medicalHtml, /Published July 15, 2026/);
 });
