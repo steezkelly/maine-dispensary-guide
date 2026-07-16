@@ -25,6 +25,15 @@ test('GA4 release extracts page path rows', () => {
   const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 4, bq_value: null }] }] });
   assert.equal(rows.length, 1); assert.equal(rows[0].canonical_page_path, '/x'); assert.equal(rows[0].date, '2026-07-12');
 });
+
+test('GA4 page-window rows prefer canonical BigQuery values with Data API fallback', () => {
+  const bqRows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 4, bq_value: 7 }] }] });
+  assert.equal(bqRows[0].value, 7);
+
+  const fallbackRows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 4, bq_value: null }] }] });
+  assert.equal(fallbackRows[0].value, 4);
+});
+
 test('GA4 release ignores non-page-window rows', () => {
   const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R2_session_metrics_daily', sanitized_rows: [{ row_key: { date: '20260712', channel: 'Organic' }, data_api_value: 4 }] }] });
   assert.equal(rows.length, 0);
@@ -104,5 +113,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/32 passed.`);
+console.log(`Tests: ${pass}/33 passed.`);
 if (process.exitCode) process.exit(1);
