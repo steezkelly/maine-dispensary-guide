@@ -10,12 +10,17 @@ const article = {
   author: 'Margaret Finch',
   authorId: 'margaret-finch',
   authorTitle: 'Finance & Taxation Analyst',
-  publishDate: '2026-07-16T12:00:00',
-  modifiedDate: '2026-07-16T12:00:00',
+  publishDate: '2026-07-16',
+  modifiedDate: '2026-07-16',
   section: 'Medical Cannabis',
   reviewer: complianceReviewer
     ? { name: complianceReviewer.name, jobTitle: complianceReviewer.role, id: complianceReviewer.id }
     : undefined,
+};
+const layoutArticle = {
+  ...article,
+  publishDate: `${article.publishDate}T12:00:00`,
+  modifiedDate: `${article.modifiedDate}T12:00:00`,
 };
 const topics = ['medical-cannabis', 'home-grow', 'maine-law'];
 
@@ -31,7 +36,7 @@ const medicalRule = 'https://www.maine.gov/dafs/ocp/medical-use/rules-statutes/1
   title="Can Maine Medical Cannabis Patients Grow Their Own?"
   description="Maine medical patient grow rules: plant limits, cultivation areas, caregiver designation, possession, transport, and official Title 22 sources."
   heroImage="/images/heroes/maine-home-grow-cannabis-guide-2026.jpg"
-  article={article}
+  article={layoutArticle}
   topics={topics}
 >
   <style>

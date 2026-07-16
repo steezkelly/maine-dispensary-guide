@@ -9,14 +9,19 @@ const article = {
   author: "Margaret Finch",
   authorId: "margaret-finch",
   authorTitle: "Finance & Taxation Analyst",
-  publishDate: "2026-04-18T12:00:00",
-  modifiedDate: "2026-07-16T12:00:00",
+  publishDate: "2026-04-18",
+  modifiedDate: "2026-07-16",
   section: "Home Cultivation",
   reviewer: complianceReviewer ? {
     name: complianceReviewer.name,
     jobTitle: complianceReviewer.role,
     id: complianceReviewer.id,
   } : undefined,
+};
+const layoutArticle = {
+  ...article,
+  publishDate: `${article.publishDate}T12:00:00`,
+  modifiedDate: `${article.modifiedDate}T12:00:00`,
 };
 const topics = ["home-grow", "medical-cannabis", "maine-law"];
 
@@ -34,7 +39,7 @@ const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
   title="Maine Home Grow Laws: Adult-Use vs Medical Rules"
   description="Maine home-grow laws explained: adult-use and medical patient plant limits, tagging, cultivation areas, property rules, and official sources."
   heroImage="/images/heroes/maine-home-grow-cannabis-guide-2026.jpg"
-  article={article}
+  article={layoutArticle}
   topics={topics}
 >
   <style>
