@@ -257,7 +257,6 @@ test('G5 gate: same source state produces same canonical_release_id across runs'
   assert.strictEqual(id1, id2);
 });
 
-
 test('joinDataForReport emits report-specific metric rows for multi-metric reports', () => {
   const joined = ingest.joinDataForReport(
     'R2_session_metrics_daily',
@@ -313,6 +312,19 @@ test('G6 gate: match classification when sources agree', () => {
   );
   assert.strictEqual(joined[0].delta_classification, 'match');
   assert.strictEqual(joined[0].delta_absolute, 0);
+});
+
+
+test('joinDataForReport preserves unmatched BQ rows as API-history disagreements', () => {
+  const joined = ingest.joinDataForReport(
+    'R3_event_count_daily',
+    [],
+    [{ row_key: { event_date: '2026-07-12', event_name: 'cta_view' }, metrics: { eventCount: 6 } }]
+  );
+  assert.strictEqual(joined.length, 1);
+  assert.strictEqual(joined[0].delta_classification, 'structural_disagreement_no_api_history');
+  assert.strictEqual(joined[0].data_api_value, null);
+  assert.strictEqual(joined[0].bq_value, 6);
 });
 
 test('G6 gate: count_disagreement when values differ', () => {

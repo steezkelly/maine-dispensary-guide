@@ -162,6 +162,12 @@ function buildBqSql(reportKey, from, to) {
   // would also work but we restrict to intraday per v3 §3.1 reality.
   const tab = `\`${PROJECT_ID}.${DATASET_ID}.events_intraday_*\``;
   const tableFilter = `_TABLE_SUFFIX BETWEEN REPLACE('${from}','-','') AND REPLACE('${to}','-','')`;
+  const pageLocationSql = `(SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location')`;
+  const pagePathSql = `IF(
+    REGEXP_CONTAINS(${pageLocationSql}, r'^[a-zA-Z][a-zA-Z0-9+.-]*://'),
+    COALESCE(NULLIF(REGEXP_EXTRACT(${pageLocationSql}, r'^[a-zA-Z][a-zA-Z0-9+.-]*://[^/]+([^?#]*)'), ''), '/'),
+    COALESCE(NULLIF(REGEXP_EXTRACT(${pageLocationSql}, r'^([^?#]*)'), ''), '/')
+  )`;
 
   switch (reportKey) {
     case 'R1_pageview_daily': {
@@ -171,7 +177,7 @@ function buildBqSql(reportKey, from, to) {
       return `
         SELECT
           event_date,
-          (SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location') AS pagePath,
+          ${pagePathSql} AS pagePath,
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_title') AS pageTitle,
           COUNT(*) AS screenPageViews,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
@@ -235,7 +241,19 @@ function buildBqSql(reportKey, from, to) {
               OR page_views >= 2
             ),
             NULLIF(COUNT(*), 0)
-          ) AS engagementRate
+          ) AS engagementRate,
+          SAFE_DIVIDE(
+            SUM(engagement_time_msec),
+            NULLIF(COUNT(*), 0) * 1000
+          ) AS averageSessionDuration,
+          1 - SAFE_DIVIDE(
+            COUNTIF(
+              session_engaged = 1
+              OR engagement_time_msec > 10000
+              OR page_views >= 2
+            ),
+            NULLIF(COUNT(*), 0)
+          ) AS bounceRate
         FROM session_events
         GROUP BY event_date, sessionDefaultChannelGroup
       `;
@@ -276,20 +294,41 @@ function buildBqSql(reportKey, from, to) {
     case 'R6_new_vs_returning_daily': {
       // new vs returning requires per-day first-touch comparison; simplified BQ mirror:
       return `
-        SELECT event_date,
-          CASE WHEN event_name = 'first_visit' THEN 'new' ELSE 'returning' END AS newVsReturning,
+        WITH session_events AS (
+          SELECT
+            event_date,
+            CASE WHEN event_name = 'first_visit' THEN 'new' ELSE 'returning' END AS newVsReturning,
+            user_pseudo_id,
+            CONCAT(
+              user_pseudo_id,
+              ':',
+              CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
+            ) AS session_key,
+            MAX(IF(
+              COALESCE(
+                (SELECT value.string_value FROM UNNEST(event_params) WHERE key='session_engaged'),
+                CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='session_engaged') AS STRING)
+              ) = '1',
+              1,
+              0
+            )) AS session_engaged
+          FROM ${tab}
+          WHERE ${tableFilter}
+            AND (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
+          GROUP BY event_date, newVsReturning, user_pseudo_id, session_key
+        )
+        SELECT event_date, newVsReturning,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
-          COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
-                || ':' || user_pseudo_id) AS sessions
-        FROM ${tab}
-        WHERE ${tableFilter}
+          COUNT(DISTINCT session_key) AS sessions,
+          COUNT(DISTINCT IF(session_engaged = 1, session_key, NULL)) AS engagedSessions
+        FROM session_events
         GROUP BY event_date, newVsReturning
       `;
     }
     case 'R7_custom_event_faq_daily': {
       return `
         SELECT event_date,
-          (SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location') AS pagePath,
+          ${pagePathSql} AS pagePath,
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='faq_id') AS faq_id,
           COUNT(*) AS eventCount
         FROM ${tab}
@@ -301,7 +340,7 @@ function buildBqSql(reportKey, from, to) {
     case 'R8_custom_event_cta_daily': {
       return `
         SELECT event_date,
-          (SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location') AS pagePath,
+          ${pagePathSql} AS pagePath,
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='cta_id') AS cta_id,
           COUNT(*) AS eventCount
         FROM ${tab}
@@ -369,11 +408,11 @@ async function queryBqReport(reportKey, from, to) {
       // Add metric values per report definition
       const REPORT_METRICS = {
         R1_pageview_daily: ['screenPageViews', 'totalUsers', 'sessions'],
-        R2_session_metrics_daily: ['sessions', 'engagedSessions', 'engagementRate'],
+        R2_session_metrics_daily: ['sessions', 'engagedSessions', 'engagementRate', 'averageSessionDuration', 'bounceRate'],
         R3_event_count_daily: ['eventCount'],
         R4_geo_daily: ['totalUsers', 'sessions'],
         R5_device_daily: ['totalUsers', 'sessions'],
-        R6_new_vs_returning_daily: ['totalUsers', 'sessions'],
+        R6_new_vs_returning_daily: ['totalUsers', 'sessions', 'engagedSessions'],
         R7_custom_event_faq_daily: ['eventCount'],
         R8_custom_event_cta_daily: ['eventCount']
       };

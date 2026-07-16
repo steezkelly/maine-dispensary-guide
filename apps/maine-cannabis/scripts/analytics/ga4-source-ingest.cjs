@@ -424,20 +424,21 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
       ...bqRows.flatMap((row) => Object.keys(row.metrics || {}))
     ]));
   const rows = [];
-  for (const d of dataApiRows) {
-    // data_api row uses GA4 dimension API names (date, pagePath, eventName)
-    const norm = buildNormKeyFromDims(d.dimensions || {});
-    const bqMatch = bqKeyByNormalized.get(norm);
-    // Build normalized row_key from the data_api dims (date normalized to YYYY-MM-DD)
+  const matchedBqNorms = new Set();
+
+  function normalizedRowKeyFromDims(dims) {
     const rowKey = {};
-    for (const [k, v] of Object.entries(d.dimensions || {})) {
+    for (const [k, v] of Object.entries(dims || {})) {
       const ck = canonKey(k);
       rowKey[ck] = ck === 'date' ? normalizeDate(v) : (v === null || v === undefined ? null : String(v));
     }
+    return rowKey;
+  }
 
+  function emitMetricRows({ norm, rowKey, dataMetrics = {}, bqMetrics = {} }) {
     for (const metricName of metricNames) {
-      const bqValue = bqMatch ? (bqMatch.metrics?.[metricName] ?? null) : null;
-      const dataValue = d.metrics?.[metricName] ?? null;
+      const bqValue = bqMetrics?.[metricName] ?? null;
+      const dataValue = dataMetrics?.[metricName] ?? null;
       let delta = null;
       let cls = 'both_null';
       if (dataValue !== null && bqValue !== null) {
@@ -461,6 +462,29 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
         row_signature: `${norm}::${metricName}`
       });
     }
+  }
+
+  for (const d of dataApiRows) {
+    // data_api row uses GA4 dimension API names (date, pagePath, eventName)
+    const norm = buildNormKeyFromDims(d.dimensions || {});
+    const bqMatch = bqKeyByNormalized.get(norm);
+    if (bqMatch) matchedBqNorms.add(norm);
+    emitMetricRows({
+      norm,
+      rowKey: normalizedRowKeyFromDims(d.dimensions || {}),
+      dataMetrics: d.metrics || {},
+      bqMetrics: bqMatch?.metrics || {}
+    });
+  }
+
+  for (const [norm, bqRow] of bqKeyByNormalized.entries()) {
+    if (matchedBqNorms.has(norm)) continue;
+    emitMetricRows({
+      norm,
+      rowKey: normalizedRowKeyFromDims(bqRow.row_key || {}),
+      dataMetrics: {},
+      bqMetrics: bqRow.metrics || {}
+    });
   }
   return rows;
 }

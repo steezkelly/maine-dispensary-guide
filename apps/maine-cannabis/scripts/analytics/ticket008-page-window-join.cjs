@@ -86,13 +86,27 @@ function sourceFamily(reportKey) {
 
 function metricValue(row, report) {
   if (row.value !== undefined) return row.value;
+
+  const preferredSource = METRIC_SOURCES[sourceFamily(report?.report_key || report?.report_id || '')];
+  if (row.data_api_value !== undefined || row.bq_value !== undefined) {
+    if (preferredSource === 'ga4_bigquery') {
+      if (row.bq_value !== undefined && row.bq_value !== null) return row.bq_value;
+      if (row.data_api_value !== undefined && row.data_api_value !== null) return row.data_api_value;
+    }
+    if (preferredSource === 'ga4_data_api') {
+      if (row.data_api_value !== undefined && row.data_api_value !== null) return row.data_api_value;
+      if (row.bq_value !== undefined && row.bq_value !== null) return row.bq_value;
+    }
+    if (row.data_api_value !== undefined && row.data_api_value !== null) return row.data_api_value;
+    if (row.bq_value !== undefined && row.bq_value !== null) return row.bq_value;
+    return null;
+  }
+
   if (row.metrics && typeof row.metrics === 'object') {
     const keys = Object.keys(row.metrics);
     if (keys.length === 1) return row.metrics[keys[0]];
     return row.metrics;
   }
-  if (row.data_api_value !== undefined) return row.data_api_value;
-  if (row.bq_value !== undefined) return row.bq_value;
   return null;
 }
 
