@@ -22,7 +22,9 @@ const topics = ["home-grow", "medical-cannabis", "maine-law"];
 
 const adultUseLaw = "https://legislature.maine.gov/statutes/28-b/title28-Bsec1502.html";
 const adultUsePossessionLaw = "https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html";
+const adultUseDefinitionsLaw = "https://legislature.maine.gov/statutes/28-b/title28-Bsec102-A.html";
 const medicalLaw = "https://legislature.maine.gov/statutes/22/title22sec2423-A.html";
+const medicalDefinitionsLaw = "https://legislature.maine.gov/statutes/22/title22sec2421-A.html";
 const ocpFaq = "https://www.maine.gov/dafs/ocp/resources/faq";
 const medicalRule = "https://www.maine.gov/dafs/ocp/medical-use/rules-statutes/18-691-C.M.R.-ch.-2";
 const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
@@ -101,7 +103,7 @@ const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
       <h2>Adult-Use and Medical Patient Home Grow Compared</h2>
       <div class="table-wrap">
         <table aria-label="Comparison of Maine personal adult-use and qualifying medical patient cultivation rules">
-          <thead><tr><th>Question</th><th>Personal adult use</th><th>Qualifying medical patient</th></tr></thead>
+          <thead><tr><th scope="col">Rule</th><th scope="col">Personal adult use</th><th scope="col">Qualifying medical patient</th></tr></thead>
           <tbody>
             <tr><td>Controlling law</td><td><a href={adultUseLaw} target="_blank" rel="noopener noreferrer">28-B M.R.S. §1502</a>; it expressly excludes medical cultivation.</td><td><a href={medicalLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-A</a>, Maine Medical Use of Cannabis Act.</td></tr>
             <tr><td>Who qualifies</td><td>A person age 21 or older cultivating for personal adult use. <a href={adultUseLaw} target="_blank" rel="noopener noreferrer">§1502 introductory text and sub-§1</a>.</td><td>A qualifying patient under the medical act. <a href={medicalLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)</a>.</td></tr>
@@ -115,6 +117,12 @@ const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
         </table>
       </div>
       <p class="source-note">This table is a route-selection aid, not a substitute for reading the controlling law. A patient's own six-plant ceiling and a caregiver's cultivation for that same patient should not be treated as two allocations to stack. This page deliberately does not resolve stacking across other separate legal capacities. Ask OCP or a Maine attorney about your exact facts.</p>
+    </section>
+
+    <section id="definitions">
+      <h2>Definitions That Control the Plant Count</h2>
+      <p>These labels are legal categories, not casual gardening shorthand. Title 28-B defines a <strong>mature plant</strong> as a flowering cannabis plant, an <strong>immature plant</strong> as a plant that is neither mature nor a seedling, and a <strong>seedling</strong> as a nonflowering plant or rooted cutting that is less than 24 inches high and less than 24 inches wide. See <a href={adultUseDefinitionsLaw} target="_blank" rel="noopener noreferrer">28-B M.R.S. §102-A(32), (41), and (59)</a>.</p>
+      <p>For the medical program, a <strong>cultivation area</strong> is an indoor or outdoor area used to grow mature plants, immature plants, or seedlings; it may contain multiple contiguous or noncontiguous areas on the same parcel. A <strong>qualifying patient</strong> is a Maine resident of at least 30 days who has a valid written certification, subject to the full statutory definition. See <a href={medicalDefinitionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2421-A(17) and (39)</a>. Title 22 separately defines mature plants, immature plants, and seedlings for medical-program use; do not move a definition from one program into the other without checking the controlling title.</p>
     </section>
 
     <section id="adult-use-rules">
@@ -146,6 +154,18 @@ const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
       <p>The medical law is not an expanded version of §1502. Under <a href={medicalLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-A(1)(B)</a>, a qualifying patient may cultivate—or designate a caregiver operating under the cited provisions to cultivate—up to a total of 6 mature plants, 12 immature plants, and unlimited seedlings for that patient. The mature and immature limits are combined patient allocations <strong>whether cultivated by the patient or by a caregiver</strong>.</p>
       <p>A patient who grows must keep the plants in a cultivation area except during authorized transport, and access is limited to the patient plus the specifically listed supervised or emergency access in <a href={medicalLaw} target="_blank" rel="noopener noreferrer">§2423-A(3)(A)</a>. Caregiver business limits such as 30 mature plants/60 immature plants or canopy alternatives are separate caregiver provisions—not a patient's personal allowance.</p>
       <p>For designation, cultivation-area, household, and caregiver distinctions, use the <a href="/blog/maine-medical-cannabis-patient-grow-guide">Maine medical cannabis patient grow guide</a>. Do not assume adult-use tagging, location, or possession rules carry over.</p>
+    </section>
+
+    <section id="common-scenarios">
+      <h2>Common Scenarios and Mistakes</h2>
+      <ul>
+        <li><strong>One person has more than one legal status:</strong> the reviewed statutes do not provide a general formula for stacking adult-use, patient, and caregiver allotments. Do not add them together without current OCP or Maine legal guidance.</li>
+        <li><strong>A patient and caregiver split cultivation:</strong> they share the patient's combined 6-mature/12-immature allocation; the caregiver does not receive a second allocation for that patient.</li>
+        <li><strong>Household members share a room:</strong> shared cultivation areas do not pool or increase individual or per-patient limits. Keep records showing whose plants are whose.</li>
+        <li><strong>An adult-use harvest leaves the residence or grow site:</strong> the broad crop-possession allowance applies at those locations; away from them, the general possession and transport limits remain separate.</li>
+        <li><strong>A tenant grows at the tenant's domicile:</strong> §1502 does not by itself resolve every lease or property-right question. Review the lease, building and fire rules, insurance or federal-housing conditions, and obtain current legal guidance rather than assuming either unrestricted cultivation or a statutory written-permission requirement.</li>
+        <li><strong>A patient copies an adult-use tag:</strong> do not assume §1502's adult-use tag fields apply to patient plants. Check the current MMCP rule and OCP guidance for the medical framework.</li>
+      </ul>
     </section>
 
     <section id="cultivation-planning">
@@ -192,7 +212,7 @@ const medicalRuleIndex = "https://www.maine.gov/sos/cec/rules/18/chaps18.htm";
         },
         {
           question: "Can a landlord or property owner restrict cannabis cultivation?",
-          answer: "Property rights and private agreements still matter. Section 1502 expressly requires a written owner agreement when the grower neither owns nor is domiciled on the parcel, and requires the owner's name on adult-use plant tags whenever another person owns the land. Renters should also review their lease and obtain written owner approval rather than assuming state authorization overrides a private restriction.",
+          answer: "Property rights and private agreements still matter. Section 1502 expressly requires a written owner agreement when the grower neither owns nor is domiciled on the parcel, and requires the owner's name on adult-use plant tags whenever another person owns the land. For a tenant growing at the tenant's domicile, §1502 does not by itself resolve every lease or property-right question. Review the lease, building and fire rules, insurance or federal-housing conditions, and obtain current legal guidance rather than assuming either unrestricted cultivation or a statutory written-permission requirement.",
         },
         {
           question: "Can a Maine town ban all personal adult-use cultivation?",
