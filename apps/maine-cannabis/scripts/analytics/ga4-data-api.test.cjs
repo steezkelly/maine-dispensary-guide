@@ -1,7 +1,8 @@
 'use strict';
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { REPORTS, reportCompleteness, buildReportRequest } = require('./ga4-data-api.cjs');
+const { google } = require('googleapis');
+const { REPORTS, reportCompleteness, buildReportRequest, runReport } = require('./ga4-data-api.cjs');
 
 test('marks a response with unfetched rows incomplete', () => {
   assert.equal(reportCompleteness(100001, 100000), 'partial');
@@ -28,4 +29,32 @@ test('R7 Data API query uses the same faq_open population as the BigQuery mirror
 test('R8 Data API query uses the same cta_view population as the BigQuery mirror', () => {
   const body = buildReportRequest(REPORTS.R8_custom_event_cta_daily, { from: '2026-07-01', to: '2026-07-07' });
   assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['cta_view']);
+});
+
+test('runReport paginates until every row the GA4 API reports has been retrieved', async () => {
+  const originalAnalyticsData = google.analyticsdata;
+  const calls = [];
+  const rows = Array.from({ length: 5 }, (_, index) => ({
+    dimensionValues: [{ value: `2026070${index + 1}` }, { value: `/page-${index}` }, { value: `Title ${index}` }],
+    metricValues: [{ value: String(index + 1) }, { value: '1' }, { value: '1' }]
+  }));
+  google.analyticsdata = () => ({
+    properties: {
+      runReport: async ({ requestBody }) => {
+        calls.push(requestBody);
+        const offset = Number(requestBody.offset || 0);
+        return { data: { rowCount: String(rows.length), rows: rows.slice(offset, offset + requestBody.limit) } };
+      }
+    }
+  });
+
+  try {
+    const result = await runReport({}, 'R1_pageview_daily', { from: '2026-07-01', to: '2026-07-07', limit: 2 });
+    assert.equal(result.status, 'ok');
+    assert.equal(result.rowCount, 5);
+    assert.equal(result.rows.length, 5);
+    assert.deepEqual(calls.map((request) => request.offset), [0, 2, 4]);
+  } finally {
+    google.analyticsdata = originalAnalyticsData;
+  }
 });

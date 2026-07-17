@@ -102,6 +102,7 @@ function buildReportRequest(def, opts) {
     dimensions: def.dimensions.map((name) => ({ name })),
     metrics: def.metrics.map((name) => ({ name })),
     limit: opts.limit || 100000,
+    offset: opts.offset || 0,
   };
   if (Array.isArray(def.event_names) && def.event_names.length) {
     request.dimensionFilter = { filter: { fieldName: 'eventName', inListFilter: { values: def.event_names } } };
@@ -124,12 +125,26 @@ async function runReport(authClient, reportKey, opts) {
   const client = google.analyticsdata({ version: 'v1beta', auth: authClient });
 
   try {
-    const resp = await client.properties.runReport({
-      property: `properties/${PROPERTY_ID}`,
-      requestBody: buildReportRequest(def, opts)
-    });
-    const data = resp.data;
-    const rows = (data.rows || []).map((row) => {
+    const limit = opts.limit || 100000;
+    const rawRows = [];
+    let offset = 0;
+    let rowCount = 0;
+
+    while (true) {
+      const resp = await client.properties.runReport({
+        property: `properties/${PROPERTY_ID}`,
+        requestBody: buildReportRequest(def, { ...opts, limit, offset })
+      });
+      const data = resp.data;
+      const pageRows = data.rows || [];
+      rawRows.push(...pageRows);
+      rowCount = Number(data.rowCount ?? rawRows.length);
+
+      if (rawRows.length >= rowCount || pageRows.length === 0) break;
+      offset += pageRows.length;
+    }
+
+    const rows = rawRows.map((row) => {
       const dimObj = {};
       const metricObj = {};
       def.dimensions.forEach((d, i) => {
@@ -141,7 +156,7 @@ async function runReport(authClient, reportKey, opts) {
       });
       return { dimensions: dimObj, metrics: metricObj };
     });
-    const completeness = reportCompleteness(data.rowCount || rows.length, rows.length);
+    const completeness = reportCompleteness(rowCount, rows.length);
     return {
       status: completeness === 'ok' ? 'ok' : 'failed',
       report_id: def.report_id,
@@ -151,9 +166,9 @@ async function runReport(authClient, reportKey, opts) {
       compat_status: def.compat_status,
       from: opts.from,
       to: opts.to,
-      rowCount: data.rowCount || rows.length,
+      rowCount,
       rows,
-      ...(completeness === 'partial' ? { error: { code: 'TRUNCATED_RESPONSE', message: `GA4 returned ${data.rowCount} rows but only ${rows.length} were fetched` } } : {}),
+      ...(completeness === 'partial' ? { error: { code: 'TRUNCATED_RESPONSE', message: `GA4 returned ${rowCount} rows but only ${rows.length} were fetched` } } : {}),
       fetched_at_utc: new Date().toISOString()
     };
   } catch (e) {
