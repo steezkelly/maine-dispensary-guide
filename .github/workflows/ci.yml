@@ -46,6 +46,8 @@ jobs:
         run: |
           node --test apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.test.cjs
           node --test apps/maine-cannabis/scripts/seo/gsc-misroute-audit.test.cjs
+          node --test apps/maine-cannabis/scripts/seo/gsc-cluster-report.test.cjs
+          node --test apps/maine-cannabis/scripts/seo/gsc-technical-snapshot.test.cjs
 
       - name: Test ICA continuation guardrails
         run: npm run test:continuation

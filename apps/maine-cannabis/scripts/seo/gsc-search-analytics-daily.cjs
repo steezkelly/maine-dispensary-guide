@@ -64,6 +64,7 @@ const { google } = require('googleapis');
 
 const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics.jsonl');
+const SNAPSHOT_DIR = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics-snapshots');
 const SITE_URL = 'https://mainedispensaryguide.com/';
 
 const CRED_PATHS = [
@@ -83,6 +84,10 @@ const days = parseInt(flags.days, 10) || 1;
 const endOffsetDays = parseInt(flags['end-offset-days'], 10) || 3;
 const ROW_LIMIT = parseInt(flags.limit, 10) || 1000;
 const DRY_RUN = !!flags['dry-run'];
+const SEARCH_TYPE = flags['search-type'] || 'web';
+const COUNTRY = flags.country || null;
+const DEVICE = flags.device || null;
+const SEARCH_APPEARANCE = flags['search-appearance'] || null;
 
 function logErr(m) { console.error(`\x1b[31m${m}\x1b[0m`); }
 function logOk(m) { console.log(`\x1b[32m${m}\x1b[0m`); }
@@ -123,6 +128,28 @@ function getSourceWindow(now = new Date(), sourceDays = days, offsetDays = endOf
   };
 }
 
+function dimensionFilterGroups() {
+  const filters = [
+    COUNTRY && { dimension: 'country', operator: 'equals', expression: COUNTRY },
+    DEVICE && { dimension: 'device', operator: 'equals', expression: DEVICE },
+    SEARCH_APPEARANCE && { dimension: 'searchAppearance', operator: 'equals', expression: SEARCH_APPEARANCE },
+  ].filter(Boolean);
+  return filters.length ? [{ groupType: 'and', filters }] : undefined;
+}
+
+function requestBody(sourceWindow, dimensions) {
+  return {
+    startDate: sourceWindow.sourceStartDate,
+    endDate: sourceWindow.sourceEndDate,
+    dimensions,
+    rowLimit: ROW_LIMIT,
+    dataState: 'final',
+    searchType: SEARCH_TYPE,
+    dimensionFilterGroups: dimensionFilterGroups(),
+    orderBy: dimensions.length ? [{ field: 'impressions', sortOrder: 'DESCENDING' }] : undefined,
+  };
+}
+
 async function fetchAnalytics(sc, sourceWindow = getSourceWindow()) {
   // GSC searchanalytics.query returns search traffic data. We ask for top
   // ROW_LIMIT queries by impressions over the last `days` days, broken down by query.
@@ -137,17 +164,62 @@ async function fetchAnalytics(sc, sourceWindow = getSourceWindow()) {
   logInfo(`Fetching finalized searchanalytics: ${startDate} → ${endDate} (top ${ROW_LIMIT} query+page pairs)…`);
   const res = await sc.searchanalytics.query({
     siteUrl: SITE_URL,
-    requestBody: {
-      startDate,
-      endDate,
-      dimensions: ['query', 'page'],
-      rowLimit: ROW_LIMIT,
-      dataState: 'final',
-      // Order by impressions desc to capture the long-tail of "we're seen but not clicked"
-      orderBy: [{ field: 'impressions', sortOrder: 'DESCENDING' }],
-    },
+    requestBody: requestBody(sourceWindow, ['query', 'page']),
   });
   return { rows: res.data.rows || [], sourceWindow };
+}
+
+function totals(rows) {
+  const impressions = rows.reduce((sum, row) => sum + (row.impressions || 0), 0);
+  const clicks = rows.reduce((sum, row) => sum + (row.clicks || 0), 0);
+  return { clicks, impressions, ctr: impressions ? clicks / impressions : 0,
+    position: impressions ? rows.reduce((sum, row) => sum + (row.position || 0) * (row.impressions || 0), 0) / impressions : 0 };
+}
+
+function snapshotFromRows({ name, dimensions, rows, sourceWindow, siteTotals, extractedAt }) {
+  const observedTotals = totals(rows);
+  const complete = rows.length < ROW_LIMIT;
+  return {
+    schemaVersion: 1,
+    snapshotKind: name,
+    extractedAt,
+    snapshotDate: ymd(new Date(extractedAt)),
+    sourceWindow: { ...sourceWindow, sourceTimezone: SOURCE_TIMEZONE, sourceDataState: 'final' },
+    searchType: SEARCH_TYPE,
+    filters: { country: COUNTRY, device: DEVICE, searchAppearance: SEARCH_APPEARANCE },
+    dimensions,
+    rowLimit: ROW_LIMIT,
+    rowCount: rows.length,
+    completeness: { status: complete ? 'complete_within_requested_dimensions' : 'top_rows_truncated_or_unknown', rowLimitReached: !complete },
+    siteTotals,
+    observedTotals,
+    coverageOfSiteTotals: {
+      impressions: siteTotals.impressions ? observedTotals.impressions / siteTotals.impressions : null,
+      clicks: siteTotals.clicks ? observedTotals.clicks / siteTotals.clicks : null,
+    },
+    rows: rows.map(row => ({ keys: row.keys || [], clicks: row.clicks || 0, impressions: row.impressions || 0, ctr: row.ctr || 0, position: row.position || 0 })),
+  };
+}
+
+function appendSnapshot(snapshot, outputDir = SNAPSHOT_DIR) {
+  fs.mkdirSync(outputDir, { recursive: true });
+  fs.appendFileSync(path.join(outputDir, `${snapshot.snapshotKind}.jsonl`), `${JSON.stringify(snapshot)}\n`);
+}
+
+async function collectAggregateSnapshots(sc, sourceWindow, extractedAt = new Date().toISOString()) {
+  const kinds = [
+    ['query', ['query']],
+    ['page', ['page']],
+    ['query-by-page', ['query', 'page']],
+  ];
+  const totalResponse = await sc.searchanalytics.query({ siteUrl: SITE_URL, requestBody: requestBody(sourceWindow, []) });
+  const siteTotals = totals(totalResponse.data.rows || []);
+  const snapshots = [];
+  for (const [name, dimensions] of kinds) {
+    const response = await sc.searchanalytics.query({ siteUrl: SITE_URL, requestBody: requestBody(sourceWindow, dimensions) });
+    snapshots.push(snapshotFromRows({ name, dimensions, rows: response.data.rows || [], sourceWindow, siteTotals, extractedAt }));
+  }
+  return snapshots;
 }
 
 function recordsFromRows(rows, sourceWindow, snapshotDate = ymd(new Date())) {
@@ -188,6 +260,7 @@ async function main() {
   const sourceWindow = getSourceWindow();
   const { rows } = await fetchAnalytics(sc, sourceWindow);
   const records = recordsFromRows(rows, sourceWindow);
+  const aggregateSnapshots = await collectAggregateSnapshots(sc, sourceWindow);
 
   const totalClicks = records.reduce((s, r) => s + r.clicks, 0);
   const totalImpressions = records.reduce((s, r) => s + r.impressions, 0);
@@ -202,6 +275,7 @@ async function main() {
     logInfo('Source window: ' + JSON.stringify(sourceWindow));
     logInfo('First 3 rows:');
     records.slice(0, 3).forEach(r => logInfo('  ' + JSON.stringify(r)));
+    aggregateSnapshots.forEach(snapshot => logInfo(`Would append ${snapshot.snapshotKind} snapshot: ${snapshot.rowCount} rows; ${snapshot.completeness.status}; ${Math.round((snapshot.coverageOfSiteTotals.impressions || 0) * 100)}% impression coverage.`));
     return;
   }
 
@@ -209,7 +283,9 @@ async function main() {
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   const lines = records.map(r => JSON.stringify(r)).join('\n') + '\n';
   fs.appendFileSync(OUTPUT_PATH, lines);
+  aggregateSnapshots.forEach(appendSnapshot);
   logOk(`Appended ${records.length} rows to ${OUTPUT_PATH}`);
+  logOk(`Appended separate query, page, and query-by-page aggregate snapshots to ${SNAPSHOT_DIR}`);
   logInfo(`Daily cron-friendly. Re-run tomorrow for trend delta.`);
 }
 
@@ -224,4 +300,7 @@ if (require.main === module) {
 module.exports = {
   getSourceWindow,
   recordsFromRows,
+  snapshotFromRows,
+  totals,
+  requestBody,
 };
