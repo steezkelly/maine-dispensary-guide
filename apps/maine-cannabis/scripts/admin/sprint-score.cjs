@@ -72,10 +72,16 @@ function readJson(p) {
   try { return JSON.parse(fs.readFileSync(p, 'utf-8')); } catch { return null; }
 }
 
+function isNoindexHtmlPage(file) {
+  const head = fs.readFileSync(file, 'utf8').slice(0, 20000);
+  return /<meta\b(?=[^>]*\bname\s*=\s*["']robots["'])(?=[^>]*\bcontent\s*=\s*["'][^"']*\bnoindex\b[^"']*["'])[^>]*>/i.test(head);
+}
+
 function countHtmlPages() {
   if (!fs.existsSync(DIST)) return 0;
-  // Count every *.html file under dist/, minus /_astro/ and /admin/.
-  // (We DO count /404.html — it's a real page MDG serves.)
+  // Count indexable *.html files under dist/, excluding assets, admin surfaces,
+  // and deliberately noindex routes which do not belong in the public sitemap.
+  // (We DO count /404.html — it is a real page MDG serves.)
   let n = 0;
   function walk(d) {
     let entries;
@@ -85,7 +91,7 @@ function countHtmlPages() {
       if (e.isDirectory()) {
         if (p.includes('/_astro') || p.includes('/admin/')) continue;
         walk(p);
-      } else if (e.isFile() && p.endsWith('.html')) {
+      } else if (e.isFile() && p.endsWith('.html') && !isNoindexHtmlPage(p)) {
         n++;
       }
     }
