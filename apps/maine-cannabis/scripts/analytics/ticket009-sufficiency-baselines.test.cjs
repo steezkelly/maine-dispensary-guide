@@ -67,6 +67,14 @@ test('sparse exact cell falls back explicitly', () => {
   const out = b.selectPeers(target, [target, ...peers], b.POLICIES.gsc_ctr, 3);
   assert.equal(out.level, 1); assert.equal(out.dimensions.includes('branded_status'), false);
 });
+test('task-compatible fallback never admits another primary task family', () => {
+  const policy = { metric_family: 'gsc_ctr', fallback: [['query_intent', 'primary_task_family'], ['query_intent']], required_task_compatibility: true };
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', primary_task_family: 'how_to_task', numerator: 1, denominator: 10 };
+  const incompatible = [1, 2, 3].map((n) => ({ ...target, canonical_page_path: `/peer-${n}`, primary_task_family: 'other_task', numerator: n, denominator: 10 }));
+  const out = b.selectPeers(target, [target, ...incompatible], policy, 3);
+  assert.equal(out.level, 'insufficient');
+  assert.equal(out.peers.length, 0);
+});
 test('peer selection excludes every observation for the target page', () => {
   const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
   const priorWindow = { ...target, numerator: 9, denominator: 10, window_start: '2026-06-01' };
@@ -135,5 +143,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/36 passed.`);
+console.log(`Tests: ${pass}/37 passed.`);
 if (process.exitCode) process.exit(1);

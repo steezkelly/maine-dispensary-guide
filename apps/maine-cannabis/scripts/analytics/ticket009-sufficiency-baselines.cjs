@@ -156,7 +156,7 @@ function dominantIntent(dist) {
 function peerCellId(metric, level, values) { return `${metric}:${level}:${stableKey(values)}`; }
 
 function selectPeers(target, observations, policy, minPeerCount) {
-  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null);
+  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family)));
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
