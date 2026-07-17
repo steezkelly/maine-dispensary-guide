@@ -6,7 +6,8 @@ const path = require('node:path');
 
 const APP = path.resolve(__dirname, '..', '..');
 const DEFAULT_MANIFEST = path.join(APP, 'docs/content-maintenance/claims.v1.json');
-const DEFAULT_GSC = path.join(APP, 'data/gsc-spike-investigation-2026-07-07.jsonl');
+const { privateDataRoot } = require('../seo/gsc-private-data-root.cjs');
+const DEFAULT_GSC = path.join(privateDataRoot(), 'gsc-spike-investigation-2026-07-07.jsonl');
 const DEFAULT_GA4 = path.join(APP, 'data/ga4-pull-2026-07-11/raw/pageviews.jsonl');
 
 function readJsonl(file) {

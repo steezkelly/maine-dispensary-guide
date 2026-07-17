@@ -113,12 +113,12 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     <div class="stat-card"><div class="num">{totalOperating}+</div><div class="label">Operating adult-use dispensaries across opted-in towns</div></div>
     <div class="stat-card"><div class="num">${totalFeeRevenue.toLocaleString()}</div><div class="label">Total municipal license fee revenue (one-time, summed across all opted-in towns)</div></div>
     <div class="stat-card"><div class="num">{meta.counties_covered}</div><div class="label">Maine counties with at least one opted-in municipality</div></div>
-    <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique Google search queries observed driving demand to MDG (28-day window)</div></div>
-    <div class="stat-card"><div class="num">{totalImpressions.toLocaleString()}</div><div class="label">Total search impressions for Maine cannabis queries (28-day window)</div></div>
+    <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique queries in the multi-snapshot GSC aggregate</div></div>
+    <div class="stat-card"><div class="num">{totalImpressions.toLocaleString()}</div><div class="label">Aggregate search impressions observed on MDG</div></div>
   </div>
 
   <h3>What this means in one paragraph</h3>
-  <p>Maine's adult-use cannabis market is a <strong>patchwork of {meta.town_count} opted-in municipalities</strong> that have authorized {totalOperating}+ operating dispensaries, but those towns only represent {meta.counties_covered} of Maine's 16 counties. The average license fee is <strong>${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</strong>, with a wide spread from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland). Search demand data shows strong interest in operator-economics queries — "how to open a dispensary in Maine" averages 100+ monthly impressions — and consistent interest in municipal-by-municipal dispensary queries from prospective customers.</p>
+  <p>Maine's adult-use cannabis market is a <strong>patchwork of {meta.town_count} opted-in municipalities</strong> that have authorized {totalOperating}+ operating dispensaries, but those towns only represent {meta.counties_covered} of Maine's 16 counties. The average license fee is <strong>${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</strong>, with a wide spread from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland). The reviewed GSC aggregate shows recurring search demand for Maine cannabis information, but does not publish individual query text or infer a single reporting-period trend.</p>
 </section>
 
 <section id="opt-in-timeline">

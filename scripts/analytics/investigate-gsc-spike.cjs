@@ -16,7 +16,8 @@ if (!DATE || !/^\d{4}-\d{2}-\d{2}$/.test(DATE)) {
   process.exit(1);
 }
 
-const OUT_DIR = path.resolve(__dirname, '..', '..', 'apps', 'maine-cannabis', 'data');
+const { privateDataRoot } = require('../../apps/maine-cannabis/scripts/seo/gsc-private-data-root.cjs');
+const OUT_DIR = privateDataRoot();
 const SITE_URL = 'https://mainedispensaryguide.com/';
 
 (async () => {
@@ -86,6 +87,7 @@ const SITE_URL = 'https://mainedispensaryguide.com/';
 
   // Write raw + summary
   const outFile = path.join(OUT_DIR, `gsc-spike-investigation-${DATE}.jsonl`);
+  fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.writeFileSync(outFile, all.map(r => JSON.stringify({
     date: r.keys[2],
     query: r.keys[0],

@@ -64,7 +64,8 @@ const path = require('node:path');
 const { google } = require('googleapis');
 
 const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
-const PRIVATE_DATA_ROOT = process.env.MDG_GSC_DATA_ROOT || path.join(process.env.HOME || '', '.hermes', 'data', 'mdg-gsc');
+const { privateDataRoot } = require('./gsc-private-data-root.cjs');
+const PRIVATE_DATA_ROOT = privateDataRoot();
 const OUTPUT_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 const SNAPSHOT_DIR = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics-snapshots');
 const PUBLIC_PAGE_SNAPSHOT_DIR = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-page-analytics-snapshots');
