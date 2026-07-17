@@ -155,12 +155,13 @@ function dominantIntent(dist) {
 
 function peerCellId(metric, level, values) { return `${metric}:${level}:${stableKey(values)}`; }
 
-function isEligiblePeer(row, requireChangeContext = false) {
+function isEligiblePeer(row, requireChangeContext = false, requireSettled = false) {
   const settlement = String(row.settlement_state || row.window_status || '').toLowerCase();
   const measurement = String(row.measurement_status || row.measurement_health || '').toUpperCase();
   const change = String(row.change_contamination_status || row.change_status || '').toUpperCase();
   const task = String(row.task_contract_status || '').toUpperCase();
   if (settlement && settlement !== 'settled') return false;
+  if (requireSettled && settlement !== 'settled') return false;
   if (measurement.startsWith('MEASUREMENT_BLOCKED') || ['SOURCE_UNAVAILABLE', 'WINDOW_NOT_COMPARABLE', 'WINDOW_MEASUREMENT_DEGRADED'].includes(measurement)) return false;
   if (row.window_comparable === false) return false;
   if (requireChangeContext && row.change_context_evaluated !== true) return false;
@@ -196,7 +197,8 @@ function uniquePeerEvidence(peers) {
 }
 
 function selectPeers(target, observations, policy, minPeerCount) {
-  const peers = uniquePeerEvidence(observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row, target.change_context_evaluated === true) && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family))));
+  const targetSettlement = String(target.settlement_state || target.window_status || '').toLowerCase();
+  const peers = uniquePeerEvidence(observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row, target.change_context_evaluated === true, targetSettlement === 'settled') && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family))));
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
