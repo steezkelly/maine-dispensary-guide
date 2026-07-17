@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import Faq from '../components/Faq.astro';
 import CiteThis from '../components/CiteThis.astro';
+import LeadMailtoForm from '../components/LeadMailtoForm.astro';
 import { getSiteStats } from '../lib/site-stats';
 const siteStats = getSiteStats();
 // site-stats.json guarantees currentOcpLicenseeRoster when activeAdultUseRetailStores is set;
@@ -183,6 +184,19 @@ const faqPageJsonLd = JSON.stringify({
     "acceptedAnswer": { "@type": "Answer", "text": f.answer.replace(/<[^>]+>/g, '') }
   }))
 });
+
+const dataRequestLeadTo = 'press@mainedispensaryguide.com';
+const dataRequestLeadSubject = 'Market stats data request: {request_type} — {email}';
+const dataRequestLeadBody = `Market-stats data request
+
+Name: {name}
+Email: {email}
+Request type: {request_type}
+
+Message:
+{message}
+
+Source page: https://mainedispensaryguide.com/market-stats`;
 ---
 
 <Layout
@@ -360,6 +374,40 @@ const faqPageJsonLd = JSON.stringify({
   }
   .methodology h3 { margin-top: 0; }
   .methodology p { font-size: 0.9375rem; line-height: 1.7; }
+
+  .data-request {
+    margin: 2rem 0;
+  }
+  .data-request-fields {
+    display: grid;
+    gap: 1rem;
+    max-width: 42rem;
+  }
+  .data-request .form-group {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .data-request label {
+    font-weight: 600;
+  }
+  .data-request input,
+  .data-request select,
+  .data-request textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.35rem;
+    font: inherit;
+  }
+  .data-request textarea {
+    min-height: 8rem;
+    resize: vertical;
+  }
+  .data-request-success {
+    margin-bottom: 1rem;
+  }
 
   /* FAQ */
   .faq-section details {
@@ -554,7 +602,7 @@ const faqPageJsonLd = JSON.stringify({
         preload="metadata"
         controls
       ></video>
-      <figcaption>35-second summary of the 2025 OCP data — sales, transactions, stores, tax revenue, and the H1 2026 forecast. Press play when you want to watch; use the speaker control to unmute.</figcaption>
+      <figcaption>Live 60-second summary of the 2025 OCP data — sales, transactions, stores, tax revenue, and the H1 2026 forecast. Muted by default; click the speaker icon to unmute.</figcaption>
     </figure>
 
     <table class="year-table" aria-label="Maine adult-use cannabis retail sales 2020 to first half 2026">
@@ -1077,46 +1125,105 @@ const faqPageJsonLd = JSON.stringify({
     </ul>
   </section>
 
-  <section id="cite-this">
-    <CiteThis
-      slug="market-stats"
-      pageTitle="Maine cannabis market stats — multi-year data 2020 to H1 2026, with national &amp; federal context"
-      pageUrl="https://mainedispensaryguide.com/market-stats"
-      authors={["Nash, E.", "Finch, M."]}
-      publishDate="2026-07-09"
-      shortCitation={`"Maine's adult-use cannabis market generated $246.4M across 4.84M transactions in 2025 — the fifth year of legal sales and a 1.0% YoY plateau — per OCP data released in January 2026 and reported by Maine Dispensary Guide's market-stats page (mainedispensaryguide.com/market-stats, July 2026)."`}
-      note={`All data and prose on this page are released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publications. The recommended citation format is below; for the underlying spreadsheets, contact <a href="/contact">us</a>.`}
-      sections={[
-        { label: "Headline Numbers 2025",                  anchor: "headline-numbers" },
-        { label: "AU Sales 2020 – H1 2026",                 anchor: "multi-year" },
-        { label: "Active Licensed Establishments",          anchor: "establishments" },
-        { label: "Medical Program 2021 – 2025",             anchor: "medical-program" },
-        { label: "Regional & County Breakdown",            anchor: "regional" },
-        { label: "Tax Revenue Trajectory",                 anchor: "tax-revenue" },
-        { label: "Product Mix Dec 2025",                   anchor: "product-mix" },
-        { label: "January 2026 Tax Reset",                 anchor: "tax-reset" },
-        { label: "National & Federal Context",             anchor: "national-context" },
-      ]}
-      sources={[
-        { title: "OCP Adult Use Cannabis Program 2025 Annual Report", url: "https://www.maine.gov/dafs/ocp/resources/annual-reports", sourceId: "ocp-au-annual-report-2025", note: "28-B M.R.S. §113 — primary source for Maine adult-use retail sales, store count, transactions, average price." },
-        { title: "OCP Medical Use of Cannabis Program 2025 Annual Report", url: "https://legislature.maine.gov/doc/12333", note: "22 M.R.S. §2430-N — primary source for Maine medical patient, provider, caregiver data." },
-        { title: "Maine Revenue Services (MRS) Adult-Use Cannabis Taxable Sales", url: "https://www.maine.gov/revenue/" },
-        { title: "SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007)", url: "https://www.samhsa.gov/data/data-we-collect/nsduh-national-survey-drug-use-and-health", note: "U.S. cannabis demand baseline." },
-        { title: "NCSL State Medical Cannabis Laws + Adult-Use Cannabis Laws", url: "https://www.ncsl.org/civil-and-criminal-justice/state-medical-cannabis-laws", note: "State-law tracker." },
-        { title: "DEA Marijuana Rescheduling page", url: "https://www.dea.gov/drug-information/drug-scheduling", note: "Federal status of cannabis." },
-        { title: "Federal Register: 91 FR 22777 (DEA rescheduling NPRM)", url: "https://www.federalregister.gov/documents/2026/05/29/" },
-        { title: "Federal Register: 91 FR doc 2026-08176 (DEA marijuana Schedule III final rule, Apr 22 2026)", url: "https://www.federalregister.gov/" },
-        { title: "Whitney Economics federal-tax-impact brief (April 9, 2026)", url: "https://www.cannabisbusinesstimes.com/" },
-        { title: "Vangst 2025 Jobs Report", url: "https://www.vangst.com/" },
-        { title: "Headset June 2026 retail POS data (12-market panel)", url: "https://headset.io/" },
-        { title: "BDSA 2026 State of the Cannabis Industry", url: "https://bdsa.com/" },
-        { title: "Flowhub 2026 Cannabis Industry Statistics", url: "https://www.flowhub.com/cannabis-industry-statistics" },
-        { title: "Statista cannabis market outlook (paywalled)", url: "https://www.statista.com/outlook/io-mo/cannabis/united-states" },
-        { title: "NORML FBI Crime Data Explorer analysis (Sept 25, 2024)", url: "https://norml.org/marijuana/fact-sheets/" },
-        { title: "Maine Opt-In Tracker (MDG)", url: "/guides/maine-cannabis-opt-in-tracker" },
-      ]}
-    />
+  <CiteThis
+    slug="market-stats"
+    pageTitle="Maine cannabis market stats — multi-year data 2020 to H1 2026, with national &amp; federal context"
+    pageUrl="https://mainedispensaryguide.com/market-stats"
+    authors={["Nash, E.", "Finch, M."]}
+    publishDate="2026-07-09"
+    shortCitation={`"Maine's adult-use cannabis market generated $246.4M across 4.84M transactions in 2025 — the fifth year of legal sales and a 1.0% YoY plateau — per OCP data released in January 2026 and reported by Maine Dispensary Guide's market-stats page (mainedispensaryguide.com/market-stats, July 2026)."`}
+    note={`All data and prose on this page are released under <strong>CC BY 4.0</strong> for use in journalism, academic research, and trade publications. The recommended citation format is below; for the underlying spreadsheets, contact <a href="/contact">us</a>.`}
+    sections={[
+      { label: "Headline Numbers 2025",                  anchor: "headline-numbers" },
+      { label: "AU Sales 2020 – H1 2026",                 anchor: "multi-year" },
+      { label: "Active Licensed Establishments",          anchor: "establishments" },
+      { label: "Medical Program 2021 – 2025",             anchor: "medical-program" },
+      { label: "Regional & County Breakdown",            anchor: "regional" },
+      { label: "Tax Revenue Trajectory",                 anchor: "tax-revenue" },
+      { label: "Product Mix Dec 2025",                   anchor: "product-mix" },
+      { label: "January 2026 Tax Reset",                 anchor: "tax-reset" },
+      { label: "National & Federal Context",             anchor: "national-context" },
+    ]}
+    sources={[
+      { title: "OCP Adult Use Cannabis Program 2025 Annual Report", url: "https://www.maine.gov/dafs/ocp/resources/annual-reports", note: "28-B M.R.S. §113 — primary source for Maine adult-use retail sales, store count, transactions, average price." },
+      { title: "OCP Medical Use of Cannabis Program 2025 Annual Report", url: "https://legislature.maine.gov/doc/12333", note: "22 M.R.S. §2430-N — primary source for Maine medical patient, provider, caregiver data." },
+      { title: "Maine Revenue Services (MRS) Adult-Use Cannabis Taxable Sales", url: "https://www.maine.gov/revenue/" },
+      { title: "SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007)", url: "https://www.samhsa.gov/data/data-we-collect/nsduh-national-survey-drug-use-and-health", note: "U.S. cannabis demand baseline." },
+      { title: "NCSL State Medical Cannabis Laws + Adult-Use Cannabis Laws", url: "https://www.ncsl.org/civil-and-criminal-justice/state-medical-cannabis-laws", note: "State-law tracker." },
+      { title: "DEA Marijuana Rescheduling page", url: "https://www.dea.gov/drug-information/drug-scheduling", note: "Federal status of cannabis." },
+      { title: "Federal Register: 91 FR 22777 (DEA rescheduling NPRM)", url: "https://www.federalregister.gov/documents/2026/05/29/" },
+      { title: "Federal Register: 91 FR doc 2026-08176 (DEA marijuana Schedule III final rule, Apr 22 2026)", url: "https://www.federalregister.gov/" },
+      { title: "Whitney Economics federal-tax-impact brief (April 9, 2026)", url: "https://www.cannabisbusinesstimes.com/" },
+      { title: "Vangst 2025 Jobs Report", url: "https://www.vangst.com/" },
+      { title: "Headset June 2026 retail POS data (12-market panel)", url: "https://headset.io/" },
+      { title: "BDSA 2026 State of the Cannabis Industry", url: "https://bdsa.com/" },
+      { title: "Flowhub 2026 Cannabis Industry Statistics", url: "https://www.flowhub.com/cannabis-industry-statistics" },
+      { title: "Statista cannabis market outlook (paywalled)", url: "https://www.statista.com/outlook/io-mo/cannabis/united-states" },
+      { title: "NORML FBI Crime Data Explorer analysis (Sept 25, 2024)", url: "https://norml.org/marijuana/fact-sheets/" },
+      { title: "Maine Opt-In Tracker (MDG)", url: "/guides/maine-cannabis-opt-in-tracker" },
+    ]}
+  />
+
+  <section id="data-request" class="data-request">
+    <h2>Request underlying data or press clarification</h2>
+    <p>
+      Use this ungated form to ask about an underlying spreadsheet, a source,
+      or a press clarification. Submitting opens a pre-addressed message in your
+      mail app for review and sending. You can also email
+      <a href="mailto:press@mainedispensaryguide.com">press@mainedispensaryguide.com</a>
+      directly.
+    </p>
+
+    <div id="data-request-success" class="data-request-success" hidden>
+      <p><strong>Your mail app should have opened with a draft.</strong> Review and send that message to complete the request.</p>
+      <p><a href="#market-stats-data-request-form">Retry the data request</a> if no draft appeared.</p>
+    </div>
+
+    <LeadMailtoForm
+      formId="market-stats-data-request-form"
+      leadTo={dataRequestLeadTo}
+      leadSubject={dataRequestLeadSubject}
+      leadBody={dataRequestLeadBody}
+      formName="market_stats_data_request"
+      trackFields={['request_type']}
+      successPath="/market-stats?data-request=sent#data-request"
+    >
+      <div class="data-request-fields">
+        <div class="form-group">
+          <label for="data-request-name">Name <span>(optional)</span></label>
+          <input id="data-request-name" name="name" type="text" autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="data-request-email">Email</label>
+          <input id="data-request-email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="data-request-type">Request type</label>
+          <select id="data-request-type" name="request_type" required>
+            <option value="">Select one</option>
+            <option value="underlying-data">Underlying data</option>
+            <option value="source-clarification">Source clarification</option>
+            <option value="press-question">Press question</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="data-request-message">Message</label>
+          <textarea id="data-request-message" name="message" required></textarea>
+        </div>
+
+        <button type="submit" class="cta-button">Open pre-addressed message</button>
+      </div>
+    </LeadMailtoForm>
   </section>
+
+  <script is:inline>
+    if (new URLSearchParams(window.location.search).get('data-request') === 'sent') {
+      document.getElementById('data-request-success')?.removeAttribute('hidden');
+    }
+  </script>
 
   <section id="methodology" class="methodology">
     <h3>Methodology &amp; Sources</h3>
