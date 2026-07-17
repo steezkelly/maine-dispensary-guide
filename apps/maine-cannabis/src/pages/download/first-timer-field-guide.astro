@@ -94,7 +94,7 @@ const success = Astro.url.searchParams.get('success') === 'true';
     margin: 2rem auto;
     max-width: 480px;
     width: 100%;
-    box-shadow: 0 2px 8px rgba(13, 78, 80, 0.04);
+    box-shadow: 0 2px 8px color-mix(in oklab, var(--color-primary) 4%, transparent);
   }
 
   .preview-card h3 {
@@ -135,7 +135,7 @@ const success = Astro.url.searchParams.get('success') === 'true';
     margin: 2rem auto;
     max-width: 480px;
     width: 100%;
-    box-shadow: 0 4px 16px rgba(13, 78, 80, 0.06);
+    box-shadow: 0 4px 16px color-mix(in oklab, var(--color-primary) 6%, transparent);
   }
 
   .capture-section h2 {
@@ -184,7 +184,7 @@ const success = Astro.url.searchParams.get('success') === 'true';
   .form-group input[type="email"]:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-soft-green) 15%, transparent);
   }
 
   .age-checkbox {
@@ -262,7 +262,7 @@ const success = Astro.url.searchParams.get('success') === 'true';
   }
 
   .success-card {
-    background: linear-gradient(135deg, rgba(88, 129, 87, 0.08), rgba(13, 78, 80, 0.04));
+    background: linear-gradient(135deg, color-mix(in oklab, var(--color-soft-green) 8%, transparent), color-mix(in oklab, var(--color-primary) 4%, transparent));
     border: 1px solid var(--color-primary);
     border-radius: 1rem;
     padding: 2.5rem 1.5rem;

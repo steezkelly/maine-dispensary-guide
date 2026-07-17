@@ -201,12 +201,12 @@ const journeySteps = [
     background:
       radial-gradient(
         ellipse 80% 50% at 20% 80%,
-        rgba(88, 129, 87, 0.18) 0%,
+        color-mix(in oklab, var(--color-soft-green) 18%, transparent) 0%,
         transparent 50%
       ),
       radial-gradient(
         ellipse 60% 40% at 80% 20%,
-        rgba(13, 78, 80, 0.25) 0%,
+        color-mix(in oklab, var(--color-primary) 25%, transparent) 0%,
         transparent 50%
       ),
       linear-gradient(
@@ -1307,7 +1307,7 @@ const journeySteps = [
 
   .hub-card:hover {
     transform: translateY(-6px);
-    border-color: rgba(13, 78, 80, 0.3);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
     box-shadow: var(--elev-2-shadow);
     background: rgba(255, 255, 255, 0.98);
   }
@@ -1563,7 +1563,7 @@ const journeySteps = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(88,129,87,0.1);
+    background: color-mix(in oklab, var(--color-soft-green) 10%, transparent);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     margin-bottom: var(--space-sm);
@@ -1630,7 +1630,7 @@ const journeySteps = [
   .new-card:hover {
     border-color: var(--color-primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(13,78,80,0.06);
+    box-shadow: 0 4px 16px color-mix(in oklab, var(--color-primary) 6%, transparent);
   }
 
   .new-badge {
@@ -1780,7 +1780,7 @@ const journeySteps = [
   }
 
   .journey-step:hover {
-    border-color: rgba(13, 78, 80, 0.3);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
     transform: translateX(8px);
     box-shadow: var(--elev-2-shadow);
     background: rgba(255, 255, 255, 0.98);
@@ -2218,7 +2218,7 @@ const journeySteps = [
   }
 
   .resource-link:hover {
-    border-color: rgba(13, 78, 80, 0.3);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
     transform: translateY(-4px);
     box-shadow: var(--elev-2-shadow);
   }

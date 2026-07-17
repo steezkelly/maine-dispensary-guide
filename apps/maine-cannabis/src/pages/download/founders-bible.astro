@@ -206,7 +206,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-07-13" };
   .form-group select:focus {
     outline: none;
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(88, 129, 87, 0.15);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-soft-green) 15%, transparent);
   }
 
   .form-group input::placeholder {
@@ -230,13 +230,13 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-07-13" };
     font-family: var(--font-family);
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 16px rgba(13, 78, 80, 0.25);
+    box-shadow: 0 4px 16px color-mix(in oklab, var(--color-primary) 25%, transparent);
     margin-top: 0.5rem;
   }
 
   .cta-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(13, 78, 80, 0.3);
+    box-shadow: 0 6px 20px color-mix(in oklab, var(--color-primary) 30%, transparent);
   }
 
   .cta-button:active {
