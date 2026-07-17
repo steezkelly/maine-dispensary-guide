@@ -132,7 +132,9 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
   const policy = getPolicy(metric);
   const numerator = num(row.numerator ?? row[policy.numerator] ?? row.successes);
   const denominator = num(row.denominator ?? row[policy.denominator] ?? row.exposures);
-  const q = queryDistributions.find((x) => x.canonical_page_path === page && x.window_start === (row.window_start || row.start_date || row.date));
+  const rowStart = row.window_start || row.start_date || row.date;
+  const rowEnd = row.window_end || row.end_date || row.date || rowStart;
+  const q = queryDistributions.find((x) => x.canonical_page_path === page && x.window_start === rowStart && x.window_end === rowEnd);
   const queryIntent = row.query_intent || (q ? dominantIntent(q.intent_distribution) : null);
   const context = {
     ...manifest,

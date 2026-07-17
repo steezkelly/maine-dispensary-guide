@@ -22,6 +22,16 @@ test('query distributions are page-window scoped', () => {
   ]);
   assert.equal(rows.length, 2); assert.equal(rows[0].evidence_total, 4); assert.equal(rows[0].intent_distribution.local_store_discovery, 0.75);
 });
+test('query context matches both reporting-window boundaries', () => {
+  const out = b.buildBaselines({
+    observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 2, denominator: 10, window_start: '2026-07-01', window_end: '2026-07-14' }],
+    queries: [
+      { canonical_page_path: '/x', window_start: '2026-07-01', window_end: '2026-07-07', query: 'dispensary near me', impressions: 10 },
+      { canonical_page_path: '/x', window_start: '2026-07-01', window_end: '2026-07-14', query: 'Maine cannabis license requirements', impressions: 10 },
+    ], manifest: []
+  });
+  assert.equal(out.baselines[0].query_intent, 'licensing_regulatory');
+});
 test('query distributions are versioned and auditable', () => {
   const row = b.buildQueryIntentDistributions([{ canonical_page_path: '/x', date: '2026-07-01', query: 'x', impressions: 1 }])[0];
   assert.equal(row.schema_version, 'query-intent.v1'); assert.equal(row.classifier, 'deterministic-regex-v1');
@@ -175,5 +185,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/42 passed.`);
+console.log(`Tests: ${pass}/43 passed.`);
 if (process.exitCode) process.exit(1);
