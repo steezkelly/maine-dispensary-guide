@@ -144,7 +144,7 @@ function sanitizeEventParams(eventParams) {
   for (const p of eventParams) {
     const k = (p.key || '').toLowerCase();
     const blocked = BLOCKED_EVENT_PARAM_PATTERNS.some((re) => re.test(k));
-    if (blocked) { dropped++; continue; }
+    if (blocked || !ALLOWED_EVENT_PARAM_KEYS.includes(k)) { dropped++; continue; }
     sanitized.push(p);
   }
   return { sanitized, dropped };

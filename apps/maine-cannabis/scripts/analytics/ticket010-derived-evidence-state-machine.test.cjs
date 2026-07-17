@@ -32,7 +32,7 @@ test('opportunity evidence grade is E1', () => { const out = s.deriveEvidence(el
 test('opportunity requires hypothesis set but does not execute it', () => { const out = s.deriveEvidence(eligibleRows()); assert.equal(out.opportunities[0].hypothesis_set_required, true); assert.equal(out.opportunities[0].proposal_ids.length, 0); });
 test('Core Web Vitals preserve field percentile semantics', () => { const out = s.deriveEvidence([row({ metric_family: 'core_web_vitals_lcp', field_percentile: 0.75, source: 'CrUX', independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].cwv_evidence.semantic_type, 'field_percentile'); assert.equal(out.derived_evidence[0].cwv_evidence.percentile, 0.75); });
 test('blocked Core Web Vitals cannot receive performance labels', () => { const out = s.deriveEvidence([row({ metric_family: 'core_web_vitals_lcp', field_percentile: 0.75, measurement_status: 'MEASUREMENT_BLOCKED' })]); assert.equal(out.derived_evidence[0].state, 'MEASUREMENT_BLOCKED'); assert.equal(out.derived_evidence[0].cwv_evidence.performance_label_blocked, true); });
-test('change context is required for eligibility', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: false })]); assert.equal(out.derived_evidence[1].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
+test('change context is required for eligibility', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: false })]); assert.equal(out.derived_evidence[1].state, 'MEASUREMENT_BLOCKED'); });
 test('fresh rows cannot create investigation eligibility', () => { const out = s.deriveEvidence([row({ settlement_state: 'fresh', independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].state, 'MEASUREMENT_BLOCKED'); });
 test('measurement blocked does not create opportunity', () => { const out = s.deriveEvidence([row({ measurement_status: 'SOURCE_UNAVAILABLE', independent_source_corroborated: true })]); assert.equal(out.opportunities.length, 0); });
 test('no recommendations assertion is true', () => { const out = s.deriveEvidence([row(), row({ measurement_status: 'SOURCE_UNAVAILABLE' })]); assert.equal(out.no_recommendations_assertion, true); });
@@ -41,5 +41,8 @@ test('multiple pages get separate cases', () => { const out = s.deriveEvidence([
 test('performance labels list is descriptive only', () => assert.ok(s.PERFORMANCE_LABELS.includes('SERP_PACKAGING_OPPORTUNITY')));
 test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'ticket-010.v1'));
 
-console.log(`Tests: ${pass}/34 passed.`);
+test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
+test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
+
+console.log(`Tests: ${pass}/36 passed.`);
 if (process.exitCode) process.exit(1);

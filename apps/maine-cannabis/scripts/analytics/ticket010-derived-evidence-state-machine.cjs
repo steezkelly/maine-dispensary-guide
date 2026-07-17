@@ -14,7 +14,7 @@ const crypto = require('node:crypto');
 const CONTRACT_VERSION = 'ticket-010.v1';
 const STATES = Object.freeze(['NORMAL', 'WATCH', 'PERSISTENT_SHIFT_CANDIDATE', 'INVESTIGATION_ELIGIBLE', 'MEASUREMENT_BLOCKED']);
 const PERFORMANCE_LABELS = Object.freeze(['WINNER_CANDIDATE', 'SERP_PACKAGING_OPPORTUNITY', 'INTENT_OR_LANDING_RISK', 'WEAK_OR_IMMATURE_ASSET', 'HIGH_SATISFACTION_LOW_PROGRESSION', 'HIGH_SATISFACTION_LOW_DISCOVERY', 'EXPERIENCE_CORRELATED_RISK', 'CONTENT_DECAY_CANDIDATE']);
-const BLOCKED_REASONS = Object.freeze({ HEALTH: 'MEASUREMENT_BLOCKED', UNSETTLED: 'WINDOW_UNSETTLED', INCOMPARABLE: 'WINDOW_NOT_COMPARABLE', CHANGE: 'CHANGE_CONTAMINATED', TASK: 'TASK_CONTRACT_UNRESOLVED', SOURCE: 'SOURCE_UNAVAILABLE' });
+const BLOCKED_REASONS = Object.freeze({ HEALTH: 'MEASUREMENT_BLOCKED', UNSETTLED: 'WINDOW_UNSETTLED', INCOMPARABLE: 'WINDOW_NOT_COMPARABLE', CHANGE: 'CHANGE_CONTAMINATED', CHANGE_CONTEXT: 'CHANGE_CONTEXT_UNEVALUATED', TASK: 'TASK_CONTRACT_UNRESOLVED', SOURCE: 'SOURCE_UNAVAILABLE' });
 
 function clean(v) { return v == null || v === '' ? null : String(v); }
 function bool(v, fallback = false) { return v == null ? fallback : Boolean(v); }
@@ -33,7 +33,7 @@ function signalFamily(row) {
 }
 function isSettled(row) { return row.settlement_state === 'settled' || row.window_status === 'settled' || row.settled === true; }
 function isHealthy(row) { return row.measurement_status === 'MEASURED' || row.measurement_status === 'HEALTHY' || row.measurement_health === 'HEALTHY' || row.measurement_health_status === 'PASS'; }
-function isTaskResolved(row) { return !['UNRESOLVED', 'NEEDS_EDITORIAL_REVIEW'].includes(String(row.task_contract_status || '').toUpperCase()) && row.measurement_status !== 'MEASUREMENT_BLOCKED: TASK_CONTRACT_UNRESOLVED'; }
+function isTaskResolved(row) { return ['CONFIRMED', 'RESOLVED'].includes(String(row.task_contract_status || '').toUpperCase()) && row.measurement_status !== 'MEASUREMENT_BLOCKED: TASK_CONTRACT_UNRESOLVED'; }
 function isComparable(row) { return row.window_comparable !== false && row.measurement_status !== 'WINDOW_NOT_COMPARABLE' && row.measurement_status !== 'WINDOW_MEASUREMENT_DEGRADED'; }
 function changeState(row) { return String(row.change_contamination_status || row.change_status || '').toUpperCase(); }
 function signalProbability(row) { return Math.max(Number(row.probability_above_practical_delta) || 0, Number(row.probability_below_practical_delta) || 0); }
@@ -50,6 +50,7 @@ function measurementBlockReason(row) {
   if (!isHealthy(row)) return row.measurement_status || BLOCKED_REASONS.HEALTH;
   if (!isSettled(row)) return BLOCKED_REASONS.UNSETTLED;
   if (!isComparable(row)) return BLOCKED_REASONS.INCOMPARABLE;
+  if (row.change_context_evaluated !== true) return BLOCKED_REASONS.CHANGE_CONTEXT;
   if (changeState(row) === 'CONTAMINATED' || changeState(row) === 'CHANGE_CONTAMINATED') return BLOCKED_REASONS.CHANGE;
   if (!isTaskResolved(row)) return BLOCKED_REASONS.TASK;
   return null;
@@ -65,7 +66,7 @@ function requiredEvidence(row) {
     page_manifest_match: row.page_manifest_match !== false && Boolean(row.page_id || row.canonical_page_path || row.canonical_path),
     task_contract_resolved: isTaskResolved(row),
     measurement_block_reason: blocked,
-    change_context_evaluated: row.change_context_evaluated !== false,
+    change_context_evaluated: row.change_context_evaluated === true,
     cwv_field_percentile_semantics: cwv ? Boolean(row.field_percentile || row.percentile || row.source_semantics === 'field') : null,
   };
 }

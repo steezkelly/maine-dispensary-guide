@@ -207,13 +207,14 @@ function computeCanonicalReleaseId(rows, from, to) {
       const key = `${r.report_id}::` + JSON.stringify(row.row_key, Object.keys(row.row_key).sort());
       const bqVal = row.bq_value !== undefined ? row.bq_value : null;
       const apiVal = row.data_api_value !== undefined ? row.data_api_value : null;
-      flat.push(JSON.stringify({ k: key, bq: bqVal, api: apiVal }));
+      flat.push(JSON.stringify({ k: key, bq: bqVal, api: apiVal, freshness: row.freshness || null, classification: row.delta_classification || null }));
     }
   }
   flat.sort();
   const payload = JSON.stringify({
     from, to,
     flat_rows_hash: crypto.createHash('sha256').update(flat.join('\n')).digest('hex'),
+    report_source_state: rows.map((r) => ({ report_key: r.report_key || r.report_id, data_api_status: r.data_api_status || null, bq_status: r.bq_status || null })).sort((a, b) => a.report_key.localeCompare(b.report_key)),
     adapter_version: '1-ga4-source-ingestion',
     schema_version: '1'
   });
@@ -257,7 +258,8 @@ function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalRelease
   };
 
   // G2: schema_validation
-  gates.G2 = { status: 'PASS', notes: 'sanitizeEventParams() rejects blocklisted keys; row_key/metrics gates checked' };
+  const unexpectedParams = (raw_record_json_sample || []).flatMap((row) => row.event_params || []).filter((param) => !bqClient.ALLOWED_EVENT_PARAM_KEYS.includes(String(param.key || '').toLowerCase()));
+  gates.G2 = { status: unexpectedParams.length === 0 ? 'PASS' : 'FAIL', unexpected_parameter_count: unexpectedParams.length, notes: 'Only declared event-parameter allowlist keys may be persisted' };
 
   // G3: late_arrival_settlement — TODO: settled/fresh tagging. For now: explicit determination is in run manifest.
   gates.G3 = { status: 'PASS', notes: 'See run manifest event_date distribution vs today; freshness field written per row' };
@@ -283,7 +285,7 @@ function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalRelease
       else seenKeys.add(sig);
     }
   }
-  gates.G5 = { status: 'PASS', unique_keys: seenKeys.size, duplicate_count: dupeCount, notes: 'Same source produces same canonical_release_id; duplicates within this run: 0 (asserted by signature equality)' };
+  gates.G5 = { status: dupeCount === 0 ? 'PASS' : 'FAIL', unique_keys: seenKeys.size, duplicate_count: dupeCount, notes: dupeCount === 0 ? 'No duplicate source signatures within this run' : 'Duplicate source signatures invalidate this run' };
 
   // G6: reconciliation_health (amended v3) — no `both_null` rows are
   // allowed when both source reports completed. `both_null` means the join

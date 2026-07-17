@@ -76,7 +76,7 @@ test('sanitizeEventParams drops leading-underscore and test/dryrun prefixes', ()
     { key: 'test_flag', value: { string_value: 'x' } },
     { key: 'dryrun', value: { string_value: 'true' } },
     { key: 'internal_state', value: { string_value: 'x' } },
-    { key: 'regular_param', value: { string_value: 'ok' } }
+    { key: 'faq_id', value: { string_value: 'ok' } }
   ];
   const { sanitized, dropped } = bq.sanitizeEventParams(params);
   assert.strictEqual(sanitized.length, 1);
@@ -465,6 +465,9 @@ test('G4 gate: no email/phone/token/uuid strings survive sanitization', () => {
   assert.ok(!/email|@bar|token|bearer|uuid/i.test(allValues), 'no email/token/uuid values should survive');
   assert.strictEqual(dropped, 3);
 });
+
+test('G5 fails duplicate source signatures', () => { const report = { report_id: 'R1_pageview_daily', status: 'ok', rows: [{ row_key: { date: '2026-07-12', page_path: '/x' }, metrics: { screenPageViews: 1 } }, { row_key: { date: '2026-07-12', page_path: '/x' }, metrics: { screenPageViews: 1 } }] }; const gates = ingest.runGates({ dataApiReports: [{ report_id: report.report_id, status: 'ok' }], bqReports: [report], raw_record_json_sample: [] }); assert.equal(gates.G5.status, 'FAIL'); assert.equal(gates.G5.duplicate_count, 1); });
+test('parameter sanitizer drops keys outside the explicit allowlist', () => { const { sanitized, dropped } = bq.sanitizeEventParams([{ key: 'faq_id' }, { key: 'unreviewed_param' }]); assert.deepEqual(sanitized.map((p) => p.key), ['faq_id']); assert.equal(dropped, 1); });
 
 // ============================================================================
 // Summary

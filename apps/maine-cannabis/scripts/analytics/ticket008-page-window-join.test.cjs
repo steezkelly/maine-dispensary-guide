@@ -191,5 +191,9 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/40 passed.`);
+test('R7 observations retain distinct FAQ IDs even with metric names', () => { const release = { release_status: 'VALID', rows: [{ report_key: 'R7_custom_event_faq_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-a' }, metric_name: 'eventCount', bq_value: 2 }, { row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-b' }, metric_name: 'eventCount', bq_value: 3 }] }] }; assert.equal(join.joinPageWindow({ ga4Release: release, vercelRows: [], asOf: '2026-07-20' }).length, 2); });
+test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
+test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
+
+console.log(`Tests: ${pass}/43 passed.`);
 if (process.exitCode) process.exit(1);
