@@ -310,7 +310,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       reconciliation_status: reconciliationBlocked ? 'measurement_blocked' : primaryStatus,
       measurement_status: measurementBlocked ? 'MEASUREMENT_BLOCKED' : measurementStatus(group.date, records),
       delta_fields: deltaFields(ga, ve),
-      canonical_metric_source: measurementBlocked ? null : ga?.metric_source || METRIC_SOURCES[ga?.source_family || ve?.source_family] || null,
+      canonical_metric_source: measurementBlocked ? null : (!ga && ve ? 'vercel_a4' : (ga?.metric_source || METRIC_SOURCES[ga?.source_family || ve?.source_family] || null)),
       canonical_release_id: sourceReleaseIds.canonical_release_id || null,
       acquisition_release_id: sourceReleaseIds.acquisition_release_id || null,
       privacy_redaction_status: 'asserted_no_user_level_join',

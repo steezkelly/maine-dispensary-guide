@@ -72,6 +72,10 @@ test('Vercel-only rows are explicit', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [] }, vercelRows: [{ day: '2026-07-12', requestPath: '/x', value: 4 }] });
   assert.equal(rows[0].source_presence, 'vercel_only'); assert.equal(rows[0].reconciliation_status, 'missing_ga4');
 });
+test('Vercel-only observations retain Vercel provenance rather than a GA4 canonical source', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [] }, vercelRows: [{ day: '2026-07-12', requestPath: '/x', value: 4, source_family: 'pageviews' }] });
+  assert.equal(rows[0].canonical_metric_source, 'vercel_a4');
+});
 test('source delta preserves both values', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 8 }] }] }, vercelRows: [{ day: '2026-07-12', requestPath: '/x', value: 6 }] });
   assert.equal(rows[0].reconciliation_status, 'source_delta'); assert.equal(rows[0].ga4_r1.value, 8); assert.equal(rows[0].vercel_a4.value, 6); assert.equal(rows[0].delta_fields.value.absolute, 2);
@@ -257,5 +261,5 @@ test('R7 observations retain distinct FAQ IDs even with metric names', () => { c
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
 test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
 
-console.log(`Tests: ${pass}/51 passed.`);
+console.log(`Tests: ${pass}/52 passed.`);
 if (process.exitCode) process.exit(1);

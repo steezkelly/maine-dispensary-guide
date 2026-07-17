@@ -104,6 +104,15 @@ test('peer selection requires an affirmative task contract', () => {
   const unknown = { ...target, canonical_page_path: '/unknown', task_contract_status: 'UNKNOWN', numerator: 2 };
   assert.equal(b.selectPeers(target, [target, unknown], b.POLICIES.gsc_ctr, 1).level, 'insufficient');
 });
+test('peer selection excludes false or omitted change-context evaluation', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED', change_context_evaluated: true };
+  const falsePeer = { ...target, canonical_page_path: '/false', numerator: 2, change_context_evaluated: false };
+  const omittedPeer = { ...target, canonical_page_path: '/omitted', numerator: 3 };
+  delete omittedPeer.change_context_evaluated;
+  const out = b.selectPeers(target, [target, falsePeer, omittedPeer], b.POLICIES.gsc_ctr, 2);
+  assert.equal(out.level, 'insufficient');
+  assert.deepEqual(out.peers, []);
+});
 test('peer selection cannot use a later reporting window', () => {
   const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED', window_start: '2026-07-01', window_end: '2026-07-07' };
   const futurePeer = { ...target, canonical_page_path: '/future', numerator: 2, window_start: '2026-07-15', window_end: '2026-07-21' };
@@ -199,5 +208,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/45 passed.`);
+console.log(`Tests: ${pass}/46 passed.`);
 if (process.exitCode) process.exit(1);
