@@ -21,6 +21,10 @@ const vendorCategories = [
     ]
   }
 ];
+
+function resourcesVendorActionId(name: string): string {
+  return `cta-inline-resources-vendor-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
+}
 ---
 
 <Layout 
@@ -78,10 +82,10 @@ const vendorCategories = [
                   <h3>{vendor.name}</h3>
                   <p><strong>Specialty:</strong> {vendor.specialty}</p>
                   <p><strong>Location:</strong> {vendor.location}</p>
-                  <!-- analytics:cta-injected id=cta-inline-resources-01 -->
+                  <!-- analytics:cta-injected vendor-specific action ID -->
 <button type="button" 
                     class="btn-theatre-trigger" 
-                    onclick={`window.openTheatre('${vendor.name}')`} data-cta-id="cta-inline-resources-01">
+                    onclick={`window.openTheatre('${vendor.name}')`} data-cta-id={resourcesVendorActionId(vendor.name)}>
                     Request Intro &rarr;
                   </button>
                 </div>

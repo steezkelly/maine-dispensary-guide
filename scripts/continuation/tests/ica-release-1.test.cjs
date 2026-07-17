@@ -16,6 +16,7 @@ const EDITORIAL_COMPONENT = path.join(APP, 'components', 'continuation', 'Editor
 const ACTION_COMPONENT = path.join(APP, 'components', 'continuation', 'ContextualAction.astro');
 const REGION_HUB = path.join(APP, 'components', 'RegionHubShell.astro');
 const FIND_A_DISPENSARY = path.join(APP, 'pages', 'find-a-dispensary.astro');
+const RESOURCES = path.join(APP, 'pages', 'resources.astro');
 const LAYOUT = path.join(APP, 'layouts', 'Layout.astro');
 const FUNNEL_SQL = path.join(ROOT, 'apps', 'maine-cannabis', 'docs', 'analytics', 'mdg-action-funnel-v1.sql');
 
@@ -116,6 +117,28 @@ test('find-a-dispensary CTA IDs distinguish repeated guide and OCP cards', () =>
     { identity: '/guides/alpha-dispensary-guide', action: 'guide', instance: 'region-b-0' },
   ]);
   assertUnique(ids, 'repeated find-a-dispensary card CTA IDs');
+});
+
+function resourcesVendorActionIds(source, names) {
+  const helper = source.match(/function resourcesVendorActionId\([^)]*\)\s*(?::\s*string)?\s*\{[\s\S]*?\n\}/);
+  assert.ok(helper, 'resources must define one deterministic vendor action-ID helper');
+  const executable = helper[0].replace(/: string(?=\s*[,)]|\s*\{)/g, '');
+  const resourcesVendorActionId = vm.runInNewContext(`"use strict"; ${executable}; resourcesVendorActionId`);
+  return names.map((name) => resourcesVendorActionId(name));
+}
+
+test('resources vendor Request Intro controls have distinct action IDs', () => {
+  const source = read(RESOURCES);
+  assert.match(source, /data-cta-id=\{resourcesVendorActionId\(vendor\.name\)\}/);
+  assert.doesNotMatch(source, /data-cta-id="cta-inline-resources-01"/);
+
+  const ids = resourcesVendorActionIds(source, [
+    'Tammie Snow, Esq.',
+    'Bernstein Shur',
+    'BerryDunn',
+    'Macpage',
+  ]);
+  assertUnique(ids, 'resources vendor CTA IDs');
 });
 
 test('typed registries expose one high-confidence mapping per exact pilot path', () => {
