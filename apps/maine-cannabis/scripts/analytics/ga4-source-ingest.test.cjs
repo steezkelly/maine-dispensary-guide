@@ -451,6 +451,17 @@ test('perSourceRouting uses one frozen GA4 property-date snapshot around UTC mid
   assert.ok(!routing.dates.some((entry) => entry.date === '2026-07-18'));
 });
 
+test('data-floor probe request uses the same frozen GA4 property-date snapshot', () => {
+  const request = ingest.buildDataFloorProbeRequest('532778727', '2026-07-17');
+  assert.strictEqual(request.property, 'properties/532778727');
+  assert.strictEqual(request.requestBody.dateRanges[0].endDate, '2026-07-17');
+  assert.strictEqual(request.requestBody.dateRanges[0].startDate, '2025-08-17');
+  assert.throws(
+    () => ingest.buildDataFloorProbeRequest('532778727', ''),
+    /property date snapshot/,
+  );
+});
+
 test('perSourceRouting backs off to data floor when floor is older than requested', () => {
   // If operator asks --from=2025-01-01 but data floor is 2026-04-13,
   // the routing should back off to 2026-04-13.

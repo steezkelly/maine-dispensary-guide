@@ -118,36 +118,41 @@ function daysBetween(from, to) {
  * is reliable. If it lands within the most recent 7 days, the floor
  * is recent but still reliable.
  *
- * @param {object} dataApiReportsResult — already-completed runAllReports() output
- *   (we use it as a sanity probe; if R1 already has rows, the floor is wherever R1's earliest row is)
+ * @param {object} authClient Google auth client
+ * @param {string} propertyId GA4 property ID
+ * @param {string} propertyDate frozen GA4 property-local date for this run
  * @returns {{ floor_date: string|null, probe_status: 'detected'|'not_detected'|'error', method: string }}
  */
-async function detectDataFloor(authClient, propertyId) {
+function buildDataFloorProbeRequest(propertyId, propertyDate) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(propertyDate || ''))) {
+    throw new TypeError('an explicit GA4 property date snapshot is required');
+  }
+  const [year, month, day] = propertyDate.split('-').map(Number);
+  const targetMonth = new Date(Date.UTC(year, month - 12, 1));
+  const lastDay = new Date(Date.UTC(targetMonth.getUTCFullYear(), targetMonth.getUTCMonth() + 1, 0)).getUTCDate();
+  const probeDate = new Date(Date.UTC(
+    targetMonth.getUTCFullYear(),
+    targetMonth.getUTCMonth(),
+    Math.min(day, lastDay),
+  )).toISOString().slice(0, 10);
+  return {
+    property: `properties/${propertyId}`,
+    requestBody: {
+      dateRanges: [{ startDate: probeDate, endDate: propertyDate }],
+      dimensions: [{ name: 'date' }],
+      metrics: [{ name: 'screenPageViews' }],
+      limit: 2000,
+    },
+  };
+}
+
+async function detectDataFloor(authClient, propertyId, propertyDate) {
   // Method 1: coarse window probe (Aug 2025 -> today, low limit).
   try {
     const client = dataApi.REPORTS ? null : null; // we'll use googleapis directly below
     const { google } = require('googleapis');
     const clientG = google.analyticsdata({ version: 'v1beta', auth: authClient });
-    const probeDate = (() => {
-      // Choose a probe start that's well outside retention cap so
-      // an empty result implies "no data before this date." If
-      // retention is 14 months, Aug 2025 covers it. If retention is
-      // 2 months (default), the probe starts ~2 months back from
-      // today and we cannot distinguish floor from retention cap.
-      // In that case, we fall back to Method 2.
-      const d = new Date();
-      d.setMonth(d.getMonth() - 11);
-      return d.toISOString().slice(0, 10);
-    })();
-    const r = await clientG.properties.runReport({
-      property: `properties/${propertyId}`,
-      requestBody: {
-        dateRanges: [{ startDate: probeDate, endDate: todayProperty() }],
-        dimensions: [{ name: 'date' }],
-        metrics: [{ name: 'screenPageViews' }],
-        limit: 2000
-      }
-    });
+    const r = await clientG.properties.runReport(buildDataFloorProbeRequest(propertyId, propertyDate));
     const rows = (r.data.rows || []);
     const dates = rows
       .map((x) => ({ date: x.dimensionValues[0].value, pv: +(x.metricValues[0].value) }))
@@ -570,7 +575,7 @@ async function main() {
   let dataFloor = null;
   try {
     const authClient = await dataApi.getAuthClient();
-    floorInfo = await detectDataFloor(authClient, dataApi.PROPERTY_ID);
+    floorInfo = await detectDataFloor(authClient, dataApi.PROPERTY_ID, today);
     if (floorInfo.floor_date) {
       dataFloor = normalizeGa4Date(floorInfo.floor_date);
       console.log(`[ingest] detected data floor: ${dataFloor} (method=${floorInfo.method}, status=${floorInfo.probe_status})`);
@@ -761,6 +766,7 @@ module.exports = {
   dateMinusDays,
   daysBetween,
   perSourceRouting,
+  buildDataFloorProbeRequest,
   detectDataFloor,
   normalizeGa4Date,
   computeCanonicalReleaseId,
