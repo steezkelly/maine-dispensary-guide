@@ -458,7 +458,7 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
         delta_classification: cls,
         delta_absolute: delta,
         delta_relative: delta !== null && Math.max(+dataValue || 0, +bqValue || 0) > 0 ? delta / Math.max(+dataValue || 0, +bqValue || 0) : null,
-        freshness: 'settled' /* default; would need date comparison */,
+        freshness: rowKey.date && rowKey.date >= dateMinusDays(todayUtc(), 2) ? 'fresh' : 'settled',
         row_signature: `${norm}::${metricName}`
       });
     }

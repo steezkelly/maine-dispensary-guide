@@ -181,7 +181,7 @@ function buildBqSql(reportKey, from, to) {
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_title') AS pageTitle,
           COUNT(*) AS screenPageViews,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
-          COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
+          COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
                 || ':' || user_pseudo_id) AS sessions
         FROM ${tab}
         WHERE ${tableFilter}
@@ -271,7 +271,7 @@ function buildBqSql(reportKey, from, to) {
       return `
         SELECT event_date, geo.country, geo.region, geo.city,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
-          COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
+          COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
                 || ':' || user_pseudo_id) AS sessions
         FROM ${tab}
         WHERE ${tableFilter}
@@ -284,7 +284,7 @@ function buildBqSql(reportKey, from, to) {
           device.web_info.browser AS browser,
           device.operating_system AS operatingSystem,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
-          COUNT(DISTINCT (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id')
+          COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
                 || ':' || user_pseudo_id) AS sessions
         FROM ${tab}
         WHERE ${tableFilter}

@@ -46,6 +46,13 @@ test('R6 classifies each session once when it contains first_visit', () => {
   assert.match(sql, /GROUP BY event_date, user_pseudo_id, session_key/);
 });
 
+test('R1, R4, and R5 cast integer session IDs before concatenating them', () => {
+  for (const reportKey of ['R1_pageview_daily', 'R4_geo_daily', 'R5_device_daily']) {
+    const sql = buildBqSql(reportKey, '2026-07-10', '2026-07-12');
+    assert.match(sql, /CAST\(\(SELECT value\.int_value FROM UNNEST\(event_params\) WHERE key='ga_session_id'\) AS STRING\)\s*\|\|/);
+  }
+});
+
 test('page reports normalize BQ page_location URLs to paths before grouping', () => {
   const sql = buildBqSql('R1_pageview_daily', '2026-07-10', '2026-07-12');
 

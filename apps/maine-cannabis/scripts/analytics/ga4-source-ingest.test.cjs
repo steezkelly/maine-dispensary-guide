@@ -428,6 +428,14 @@ test('daysBetween handles single-day windows', () => {
   assert.strictEqual(ingest.daysBetween('2026-07-12', '2026-07-19'), 8);
 });
 
+test('joined rows in the settlement window remain fresh', () => {
+  const today = ingest.todayUtc();
+  const joined = ingest.joinDataForReport('R1_pageview_daily', [
+    { dimensions: { date: today, pagePath: '/x' }, metrics: { screenPageViews: 5 } }
+  ], []);
+  assert.equal(joined[0].freshness, 'fresh');
+});
+
 test('date normalization: GA4 YYYYMMDD becomes ISO YYYY-MM-DD in row_key', () => {
   // The export buildNormKeyFromDims is internal; we test through joinDataForReport.
   const joined = ingest.joinDataForReport(

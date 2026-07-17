@@ -1,7 +1,11 @@
 {
   "G1": {
-    "status": "PASS",
-    "notes": "Per-(date, source) pair flagging in run manifest"
+    "status": "FAIL",
+    "failed_bq_reports": [
+      "R2_session_metrics_daily"
+    ],
+    "failed_data_api_reports": [],
+    "notes": "A failed source report leaves the run incomplete; inspect report_status and bq_report_status before relying on this release"
   },
   "G2": {
     "status": "PASS",
