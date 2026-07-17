@@ -178,6 +178,7 @@ function perSourceRouting(from, to, dataFloor) {
   const today = todayUtc();
   const cutoff = dateMinusDays(today, 2); // 3-day window (today, today-1, today-2)
   const effectiveFrom = dataFloor ? (from > dataFloor ? from : dataFloor) : from;
+  if (effectiveFrom > to) return { dates: [], effectiveFrom, requestedFrom: from, dataFloor, backedOff: true, empty: true };
   const dates = [];
   for (let i = 0; i < daysBetween(effectiveFrom, to); i++) {
     const d = dateMinusDays(to, i);
@@ -520,6 +521,7 @@ async function main() {
   // the floor, we honor it (the operator is explicitly asking for a
   // narrower window).
   const routingResult = perSourceRouting(args.from, args.to, dataFloor);
+  if (routingResult.empty) throw new RangeError(`requested window ${args.from} through ${args.to} is wholly before GA4 data floor ${dataFloor}`);
   const routing = routingResult.dates;
   if (routingResult.backedOff) {
     console.log(`[ingest] backfilled effective window: ${routingResult.requestedFrom} -> ${routingResult.effectiveFrom} (data floor: ${dataFloor})`);

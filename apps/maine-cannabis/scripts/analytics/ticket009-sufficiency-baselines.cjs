@@ -162,8 +162,7 @@ function selectPeers(target, observations, policy, minPeerCount) {
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
     if (candidate.length >= minPeerCount) return { peers: candidate, level, dimensions: dims, cell_id: peerCellId(policy.metric_family, level, dims.map((d) => target[d])) };
   }
-  const usable = peers;
-  return { peers: usable, level: 'site_fallback', dimensions: [], cell_id: peerCellId(policy.metric_family, 'site_fallback', []) };
+  return { peers: [], level: 'insufficient', dimensions: [], cell_id: peerCellId(policy.metric_family, 'insufficient', []) };
 }
 
 function logGamma(z) {
@@ -266,7 +265,7 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
     }
     const policy = target.policy;
     const selected = selectPeers(target, normalized, policy, config.minimum_peer_count || 3);
-    const posterior = target.denominator > 0 && target.numerator != null ? posteriorFor(target, selected.peers, config) : { sample_state: 'insufficient', sample_state_reason: 'required numerator/denominator absent' };
+    const posterior = selected.peers.length >= (config.minimum_peer_count || 3) && target.denominator > 0 && target.numerator != null ? posteriorFor(target, selected.peers, config) : { sample_state: 'insufficient', sample_state_reason: selected.peers.length ? 'required numerator/denominator absent' : 'minimum peer context unavailable' };
     return {
       canonical_page_path: target.canonical_page_path,
       window_start: target.window_start || target.date || null,
@@ -276,6 +275,12 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
       primary_task_family: target.primary_task_family || null,
       query_intent: target.query_intent,
       task_contract_status: target.task_contract_status || 'UNKNOWN',
+      settlement_state: target.settlement_state || null,
+      change_context_evaluated: target.change_context_evaluated === true,
+      window_comparable: target.window_comparable,
+      canonical_release_id: target.canonical_release_id || null,
+      acquisition_release_id: target.acquisition_release_id || null,
+      reconciliation_status: target.reconciliation_status || null,
       peer_policy_version: POLICY_VERSION,
       peer_cell_id: selected.cell_id,
       peer_fallback_level: selected.level,

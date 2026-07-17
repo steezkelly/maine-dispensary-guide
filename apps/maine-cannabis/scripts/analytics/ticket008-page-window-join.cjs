@@ -88,7 +88,7 @@ function sourceFamily(reportKey) {
 function metricValue(row, report) {
   if (row.value !== undefined) return row.value;
 
-  const preferredSource = METRIC_SOURCES[sourceFamily(report?.report_key || report?.report_id || '')];
+  const preferredSource = METRIC_SOURCES[canonicalComparableMetricName(first(row, ['metric_name', 'metricName', 'metric'])) || sourceFamily(report?.report_key || report?.report_id || '')];
   if (row.data_api_value !== undefined || row.bq_value !== undefined) {
     if (preferredSource === 'ga4_bigquery') {
       if (row.bq_value !== undefined && row.bq_value !== null) return row.bq_value;
@@ -112,7 +112,7 @@ function metricValue(row, report) {
 }
 
 function metricSource(row, report) {
-  const preferredSource = METRIC_SOURCES[sourceFamily(report?.report_key || report?.report_id || '')];
+  const preferredSource = METRIC_SOURCES[canonicalComparableMetricName(first(row, ['metric_name', 'metricName', 'metric'])) || sourceFamily(report?.report_key || report?.report_id || '')];
   if (preferredSource === 'ga4_bigquery') return row.bq_value != null ? 'ga4_bigquery' : (row.data_api_value != null ? 'ga4_data_api_fallback' : null);
   if (preferredSource === 'ga4_data_api') return row.data_api_value != null ? 'ga4_data_api' : (row.bq_value != null ? 'ga4_bigquery_fallback' : null);
   return null;
@@ -258,8 +258,15 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
 
   const rows = [];
   for (const group of groups.values()) {
-    const ga = group.ga4[0] || null;
-    const ve = group.vercel[0] || null;
+    // Same page/day/metric title variants are one observation. Aggregate their
+    // numeric values deterministically instead of keeping input-order-first.
+    const aggregate = (records) => {
+      if (!records.length) return null;
+      const values = records.map((record) => record.value);
+      return { ...records[0], value: values.every((value) => typeof value === 'number') ? values.reduce((sum, value) => sum + value, 0) : records[0].value, row_key: records.map((record) => record.row_key) };
+    };
+    const ga = aggregate(group.ga4);
+    const ve = aggregate(group.vercel);
     const a5 = group.a5[0] || null;
     const records = [...group.ga4, ...group.vercel, ...group.a5];
     const blocked = Boolean(a5);
