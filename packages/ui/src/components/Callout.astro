@@ -3,9 +3,10 @@ interface Props {
   title?: string;
   type?: 'passion' | 'tip' | 'success' | 'warning' | 'info';
   level?: 'h2' | 'h3';
+  headingId?: string;
 }
 
-const { title, type = 'passion', level = 'h2' } = Astro.props;
+const { title, type = 'passion', level = 'h2', headingId } = Astro.props;
 
 /* Fix 2026-07-06 (visual-readability-polish.md issue #2): tip and warning
    previously shared the ◆ glyph — semantic collision on a YMYL regulatory
@@ -60,7 +61,7 @@ const bgColor = {
 <div class="callout" style={`--callout-accent: ${accents[type]}; background-color: ${bgColor[type]};`}>
   <div class="callout-header">
     <span class="callout-icon" style={`color: ${accents[type]};`}>{icons[type]}</span>
-    {title && (level === 'h2' ? <h2>{title}</h2> : <h3>{title}</h3>)}
+    {title && (level === 'h2' ? <h2 id={headingId}>{title}</h2> : <h3 id={headingId}>{title}</h3>)}
   </div>
   <div class="callout-content">
     <slot />

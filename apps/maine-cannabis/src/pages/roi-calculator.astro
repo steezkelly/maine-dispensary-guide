@@ -153,8 +153,8 @@ const faqPageJsonLd = JSON.stringify({
     border-radius: 0 1rem 1rem 0;
     margin: 2rem 0;
   }
-  .callout-box.warning { background: rgba(180, 100, 60, 0.08); border-left-color: var(--color-warning); }
-  .callout-box.accent { background: rgba(163, 177, 138, 0.15); border-left-color: var(--color-accent); }
+  .callout-box.warning { background: color-mix(in oklab, var(--color-accent) 8%, transparent); border-left-color: var(--color-warning); }
+  .callout-box.accent { background: color-mix(in oklab, var(--color-lichen) 15%, transparent); border-left-color: var(--color-accent); }
   .callout-icon { font-size: 1.25rem; color: var(--color-text); flex-shrink: 0; }
   .callout-box.warning .callout-icon { color: var(--color-warning); }
   .callout-box.accent .callout-icon { color: var(--color-accent); }

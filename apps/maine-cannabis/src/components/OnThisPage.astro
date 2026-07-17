@@ -1,0 +1,151 @@
+---
+/**
+ * OnThisPage.astro — Sticky table-of-contents component (Phase 2, spec §17.6 #5)
+ *
+ * Use:
+ *   <OnThisPage
+ *     headings={[
+ *       { id: 'portland-at-a-glance', label: 'Portland at a Glance' },
+ *       { id: 'the-portland-opportunity', label: 'The Portland Opportunity' },
+ *       ...
+ *     ]}
+ *     title="On this page"
+ *   />
+ *
+ * Per spec:
+ *   - §17.6 ticket #5: in-body TOC that becomes sticky on scroll.
+ *   - §18 R6: visited anchors get a ✦ glyph + aria-current="location".
+ *   - §6.9 motion rule: 220ms transitions, respects prefers-reduced-motion.
+ *   - §6.3 component rules: hairline border, NO box-shadow.
+ *   - Phase 1 token layer (--color-rule, --color-accent, --color-primary):
+ *     no hardcoded hex values.
+ *
+ * Deployment contract:
+ *   The Portland guide deploys this component with the full, stable
+ *   heading inventory. To deploy elsewhere, import and use it as shown
+ *   above; the corresponding H2/H3 elements must have id="" attributes
+ *   that match the headings[].id values.
+ */
+
+interface TocItem {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  headings: TocItem[];
+  title?: string;
+}
+
+const { headings, title = 'On this page' } = Astro.props;
+---
+
+<details class="on-this-page" open>
+  <summary>{title}</summary>
+  <nav aria-label="Table of contents">
+    <ol>
+      {headings.map((item) => (
+        <li>
+          <a href={`#${item.id}`} data-toc-id={item.id}>{item.label}</a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</details>
+
+<script is:inline>
+  // R6 — visited anchors get a ✦ glyph + aria-current="location".
+  // Uses IntersectionObserver (threshold 0.5) so a heading is marked
+  // visited once it's the dominant section on screen.
+  document.addEventListener('DOMContentLoaded', function() {
+    const tocLinks = document.querySelectorAll('[data-toc-id]');
+    if (!tocLinks.length) return;
+
+    const linkByHeading = new Map();
+    tocLinks.forEach((link) => {
+      linkByHeading.set(link.dataset.tocId, link);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || entry.intersectionRatio <= 0.5) return;
+        const link = linkByHeading.get(entry.target.id);
+        if (!link) return;
+        link.setAttribute('aria-current', 'location');
+        if (!link.querySelector('.visited-mark')) {
+          const mark = document.createElement('span');
+          mark.className = 'visited-mark';
+          mark.setAttribute('aria-hidden', 'true');
+          mark.textContent = ' ✦';
+          link.appendChild(mark);
+        }
+      });
+    }, { threshold: [0.5] });
+
+    linkByHeading.forEach((_, id) => {
+      const heading = document.getElementById(id);
+      if (heading) observer.observe(heading);
+    });
+  });
+</script>
+
+<style>
+  /* §6.3 — hairline border, no shadow */
+  .on-this-page {
+    position: sticky;
+    top: 80px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-card, 6px);
+    padding: var(--space-sm, 1rem) var(--space-md, 2rem);
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    font-size: var(--text-sm, 0.875rem);
+  }
+  .on-this-page summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: var(--text-xs, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0;
+    list-style: none;
+  }
+  .on-this-page summary::-webkit-details-marker { display: none; }
+  .on-this-page summary::marker { display: none; }
+
+  .on-this-page nav { margin-top: var(--space-xs, 0.5rem); }
+  .on-this-page nav ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .on-this-page nav li { padding: 0.25rem 0; }
+
+  /* §6.9 motion — 220ms transition on hover; reduced-motion-aware */
+  .on-this-page nav a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color 220ms linear;
+  }
+  .on-this-page nav a:hover { color: var(--color-primary); }
+
+  /* R6 — visited anchor visual + semantic state */
+  .on-this-page nav a[aria-current="location"] {
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  /* R6 — ✦ glyph marker for visited anchors */
+  .on-this-page .visited-mark {
+    color: var(--color-accent);
+    font-size: 0.8em;
+    margin-left: 0.25em;
+  }
+
+  /* §6.9 — kills transition for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .on-this-page nav a { transition: none; }
+  }
+</style>
