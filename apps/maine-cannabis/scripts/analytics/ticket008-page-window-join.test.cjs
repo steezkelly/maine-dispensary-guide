@@ -113,6 +113,22 @@ test('a recent window remains fresh until the arrival-lag threshold passes', () 
   assert.equal(rows[0].settlement_state, 'fresh');
 });
 
+test('page-window join retains separate metrics for the same page-day', () => {
+  const rows = join.joinPageWindow({
+    ga4Release: { rows: [
+      { report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 8 }] },
+      { report_key: 'R3_event_count_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', event_name: 'lead_capture' }, data_api_value: 2 }] },
+    ] },
+    vercelRows: [
+      { day: '2026-07-12', requestPath: '/x', value: 8, source_family: 'pageviews' },
+      { day: '2026-07-12', requestPath: '/x', value: 2, source_family: 'custom_events' },
+    ],
+  });
+  assert.equal(rows.length, 2);
+  assert.deepEqual(rows.map((row) => row.metric_family), ['custom_events', 'pageviews']);
+  assert.deepEqual(rows.map((row) => row.reconciliation_status), ['matched', 'matched']);
+});
+
 test('contract version is stable', () => assert.equal(join.CONTRACT_VERSION, 'ticket-008.v1'));
 test('A5 source family classification is blocked by source', () => assert.equal(join.classifyReconciliation({ source: 'a5', value: 1 }, { value: 1 }), 'measurement_blocked'));
 test('unknown nonnumeric values remain source deltas', () => assert.equal(join.classifyReconciliation({ value: '4' }, { value: 4 }), 'source_delta'));
@@ -122,5 +138,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/35 passed.`);
+console.log(`Tests: ${pass}/36 passed.`);
 if (process.exitCode) process.exit(1);
