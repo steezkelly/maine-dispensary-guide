@@ -167,8 +167,8 @@ function sameUrlSet(left, right) {
   return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((url, index) => url === right[index]);
 }
 
-function archiveFilename(dateStamp, coverage) {
-  return `gsc-indexing-report-${dateStamp}${coverage.scope === 'full_sitemap' ? '' : `-${coverage.scope}`}.json`;
+function archiveFilename(dateStamp, coverage, runId = process.hrtime.bigint().toString()) {
+  return `gsc-indexing-report-${dateStamp}${coverage.scope === 'full_sitemap' ? '' : `-${coverage.scope}-${runId}`}.json`;
 }
 
 async function main() {

@@ -2,6 +2,10 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const { buildReport, markdown } = require('./gsc-cluster-report.cjs');
 
+test('reads query-by-page snapshots from the private GSC data root by default', () => {
+  assert.match(require('./gsc-cluster-report.cjs').SNAPSHOTS, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics-snapshots\/query-by-page\.jsonl$/);
+});
+
 test('only ranks opportunities at the documented impression floor and flags conflicts for review', () => {
   const report = buildReport({
     sourceWindow: { sourceStartDate: '2026-07-01', sourceEndDate: '2026-07-01' }, completeness: { status: 'complete_within_requested_dimensions' },

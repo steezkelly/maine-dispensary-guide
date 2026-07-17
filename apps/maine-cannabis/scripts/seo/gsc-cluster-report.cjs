@@ -10,7 +10,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
-const SNAPSHOTS = path.join(ROOT, 'data', 'gsc-search-analytics-snapshots', 'query-by-page.jsonl');
+const PRIVATE_DATA_ROOT = process.env.MDG_GSC_DATA_ROOT || path.join(process.env.HOME || '', '.hermes', 'data', 'mdg-gsc');
+const SNAPSHOTS = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics-snapshots', 'query-by-page.jsonl');
 const MANIFEST = path.join(ROOT, 'docs', 'analytics', 'page_task_manifest.v1.jsonl');
 const CANONICALS = path.join(ROOT, 'src', 'data', 'canonical-overrides.json');
 const SITE = 'https://mainedispensaryguide.com';
@@ -78,4 +79,4 @@ function main() {
   const output = markdown(report); if (flags.output) fs.writeFileSync(path.resolve(flags.output), output); else process.stdout.write(output);
 }
 if (require.main === module) main();
-module.exports = { buildReport, clusterFor, markdown, normalizePage };
+module.exports = { buildReport, clusterFor, markdown, normalizePage, PRIVATE_DATA_ROOT, SNAPSHOTS };
