@@ -20,6 +20,7 @@ for (const relativePath of operatorPages) {
     const source = read(relativePath);
     assert.match(source, /P\.L\. 2025, ch\. 764 effective April 19, 2026/);
     assert.match(source, /§ 605's prior-testing, documentation, and tracking conditions/);
+    assert.match(source, /every cannabis concentrate input used in the edible has passed all required mandatory contaminant testing/i);
     assert.match(source, /§ 602\(1\)\(F\)/);
     assert.match(source, /draft Chapter 40 would incorporate (?:this|that) statutory exception|draft Chapter 40[^.]+incorporate the statutory edible/);
     assert.ok(source.includes(implementationGuidancePath));
@@ -40,6 +41,8 @@ for (const relativePath of consumerPages) {
   test(`${relativePath} does not claim every finished edible gets a contaminant panel`, () => {
     const source = read(relativePath);
     assert.match(source, /P\.L\. 2025, ch\. 764/);
+    assert.match(source, /P\.L\. 2025, ch\. 764[\s\S]{0,320}effective April 19, 2026/i);
+    assert.match(source, /every cannabis concentrate used to make the edible (?:has already passed|must already have passed) all required mandatory contaminant testing/i);
     assert.ok(source.includes(implementationGuidancePath));
     assert.match(source, /THC-potency, cannabinoid-profile, and homogeneity testing/);
     assert.match(source, /not subject to additional mandatory contaminant testing/);
