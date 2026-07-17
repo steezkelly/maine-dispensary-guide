@@ -6,7 +6,7 @@
  *   <OnThisPage
  *     headings={[
  *       { id: 'portland-at-a-glance', label: 'Portland at a Glance' },
- *       { id: 'portland-opportunity', label: 'The Portland Opportunity' },
+ *       { id: 'the-portland-opportunity', label: 'The Portland Opportunity' },
  *       ...
  *     ]}
  *     title="On this page"
@@ -21,16 +21,10 @@
  *     no hardcoded hex values.
  *
  * Deployment contract:
- *   The Portland guide has not been deployed with OnThisPage in this
- *   commit. Deployment is deferred to Task 9 (which adds stable
- *   id="" attributes to every H2/H3 in the Portland guide, the
- *   "R1/TOC prerequisite" ticket). Task 9 wires the OnThisPage.tsx
- *   headings[] prop to the real heading IDs it adds. Doing it in
- *   the right order avoids dead anchors.
- *
- *   To deploy elsewhere: import and use as shown in the JSDoc above;
- *   the corresponding H2/H3 elements must have id="" attributes that
- *   match the headings[].id values.
+ *   The Portland guide deploys this component with the full, stable
+ *   heading inventory. To deploy elsewhere, import and use it as shown
+ *   above; the corresponding H2/H3 elements must have id="" attributes
+ *   that match the headings[].id values.
  */
 
 interface TocItem {
@@ -133,7 +127,7 @@ const { headings, title = 'On this page' } = Astro.props;
   .on-this-page nav a {
     color: var(--color-text-light);
     text-decoration: none;
-    transition: color 220ms ease-out;
+    transition: color 220ms linear;
   }
   .on-this-page nav a:hover { color: var(--color-primary); }
 

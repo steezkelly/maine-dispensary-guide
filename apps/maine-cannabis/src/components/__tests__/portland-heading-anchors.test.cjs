@@ -118,3 +118,33 @@ test('Portland rendered article heading contract covers literal and mounted comp
   assert.strictEqual(new Set(ids).size, ids.length, 'rendered heading IDs must be unique');
   assert.ok(ids.every((id) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)), 'IDs must be stable lowercase kebab-case');
 });
+
+test('Portland mounts one OnThisPage with the complete rendered heading inventory', () => {
+  const page = readFileSync(PAGE, 'utf8');
+  const imports = page.match(
+    /^\s*import\s+OnThisPage\s+from\s+['"]\.\.\/\.\.\/components\/OnThisPage\.astro['"];\s*$/gm,
+  ) || [];
+  const mounts = page.match(/<OnThisPage\b/g) || [];
+
+  assert.strictEqual(imports.length, 1, 'Portland guide must import OnThisPage exactly once');
+  assert.strictEqual(mounts.length, 1, 'Portland guide must mount OnThisPage exactly once');
+
+  const invocation = getInvocation(page, 'OnThisPage');
+  const headingsSource = invocation.match(/\bheadings=\{(\[[\s\S]*\])\}/)?.[1];
+  assert.ok(headingsSource, 'Portland OnThisPage must receive a headings array');
+
+  const passedHeadings = [...headingsSource.matchAll(
+    /\{\s*id:\s*(['"])(.*?)\1,\s*label:\s*(['"])(.*?)\3\s*\}/g,
+  )].map((match) => [match[4], match[2]]);
+
+  assert.deepStrictEqual(
+    passedHeadings,
+    EXPECTED_HEADINGS,
+    'OnThisPage headings must match all 13 rendered article headings in order',
+  );
+  assert.deepStrictEqual(
+    passedHeadings.map(([, id]) => id),
+    EXPECTED_HEADINGS.map(([, id]) => id),
+    'every OnThisPage ID must correspond to the asserted rendered-heading inventory',
+  );
+});

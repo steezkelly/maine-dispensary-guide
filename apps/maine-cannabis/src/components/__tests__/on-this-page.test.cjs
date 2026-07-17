@@ -7,15 +7,9 @@
 //   - prefers-reduced-motion respected.
 //   - Hairline border, NOT shadow (per §6.3 — shadow only for overlays).
 //
-// Per the rollout plan ordering, this test file is the RED target for
-// Task 7. The component lives at:
-//   apps/maine-cannabis/src/components/OnThisPage.astro
-//
-// The deployment on the Portland guide is intentionally deferred to
-// Task 9 (which adds stable id="" to every H2/H3 — Task 9 is the
-// "stable heading IDs + R1/TOC prerequisite" ticket). This ordering
-// avoids dead anchors from Task 7 having to know about IDs Task 9
-// adds later.
+// Historical rollout ordering: this suite began as the RED target for
+// the component before Portland had stable heading IDs. Portland now deploys
+// the component after those IDs were added, avoiding dead anchors.
 
 const test = require('node:test');
 const assert = require('node:assert');
@@ -101,5 +95,28 @@ test('OnThisPage uses the Phase 1 token layer (no hardcoded colors)', () => {
   assert.ok(
     tokenUses >= 2,
     `expected at least 2 token references (--color-*); found ${tokenUses}`,
+  );
+});
+
+test('OnThisPage uses linear color transitions (§6.9)', () => {
+  const src = readFileSync(COMP, 'utf8');
+  assert.match(
+    src,
+    /transition:\s*color\s+220ms\s+linear;/,
+    'color changes must use linear easing per §6.9',
+  );
+});
+
+test('OnThisPage Portland deployment example uses the stable heading ID', () => {
+  const src = readFileSync(COMP, 'utf8');
+  assert.match(
+    src,
+    /id:\s*'the-portland-opportunity'/,
+    'deployment example must use the stable Portland heading ID',
+  );
+  assert.doesNotMatch(
+    src,
+    /id:\s*'portland-opportunity'/,
+    'deployment example must not use the obsolete Portland heading ID',
   );
 });
