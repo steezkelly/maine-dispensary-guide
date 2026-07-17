@@ -33,6 +33,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # The continuation suite includes a browser-level regression contract.
+      # Keep this in the required build job so a preview-smoke skip cannot
+      # silently turn that contract into source-only coverage.
+      - name: Install Chromium for ICA continuation guardrails
+        run: npx playwright install chromium --with-deps
+
       - name: Test image pipeline hero variants
         run: npm run test:image-pipeline
 

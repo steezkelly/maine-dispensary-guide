@@ -159,6 +159,16 @@ test('v1 active attention requires 30 seconds of accumulated foreground time', (
   assert.doesNotMatch(layout, /visibilityState === 'visible'\) \{\n\s*markEngaged\('visibility_returned'\);\n\s*\}/, 'a visibility return must not directly mark active attention');
 });
 
+test('required CI provisions Chromium before the browser-backed continuation contract', () => {
+  const workflow = read(path.join(ROOT, '.github', 'workflows', 'ci.yml'));
+  const buildJob = workflow.slice(workflow.indexOf('  build:'), workflow.indexOf('  deploy-preview:'));
+  const chromiumInstall = buildJob.indexOf('npx playwright install chromium --with-deps');
+  const continuationTest = buildJob.indexOf('run: npm run test:continuation');
+
+  assert.ok(chromiumInstall >= 0, 'the required build job must provision Chromium');
+  assert.ok(continuationTest > chromiumInstall, 'the browser-backed continuation contract must run after Chromium is provisioned');
+});
+
 test('funnel SQL joins active attention only to the same-site source path', () => {
   const sql = read(FUNNEL_SQL);
   assert.match(sql, /same_site_source_path AS source_path/);
@@ -245,13 +255,7 @@ test('v1 browser instrumentation preserves native actions and enforces dwell, ac
   t.after(() => new Promise((resolve) => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
 
-  let browser;
-  try {
-    browser = await chromium.launch({ headless: true });
-  } catch (error) {
-    t.skip(`Playwright browser is unavailable: ${error.message}`);
-    return;
-  }
+  const browser = await chromium.launch({ headless: true });
   t.after(async () => { await browser.close(); });
   const page = await browser.newPage();
   await page.exposeBinding('__recordGtag', (_source, args) => events.push(args));
