@@ -22,6 +22,8 @@ const statusGroups = {
 const formatDate = (value: string) => new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(value));
 const formatOcpRefresh = (value: string) => value.replace('T', ' ').replace(/\.\d+$/, '');
 const typeLabel = (type: string) => type.charAt(0).toUpperCase() + type.slice(1);
+const activityLabel = (value: string) => value === 'unknown' ? 'Not recorded' : value;
+const activityClass = (value: string) => value === 'Y' ? 'yes' : value === 'unknown' ? 'unknown' : 'no';
 ---
 
 <Layout
@@ -93,7 +95,7 @@ const typeLabel = (type: string) => type.charAt(0).toUpperCase() + type.slice(1)
         <table aria-label="Maine municipalities with OCP-recorded adult-use retail authorization">
           <thead><tr><th scope="col">Municipality</th><th scope="col">County</th><th scope="col">Type</th><th scope="col">Retail</th><th scope="col">Cultivation</th><th scope="col">Manufacturing</th><th scope="col">Testing</th></tr></thead>
           <tbody>
-            {statusGroups.retail_authorized.map((municipality) => <tr data-municipality-row data-status="retail_authorized" data-search={`${municipality.name} ${municipality.county} ${municipality.municipality_type}`.toLowerCase()}><td>{municipality.name}</td><td>{municipality.county}</td><td>{typeLabel(municipality.municipality_type)}</td><td class={`activity activity--${municipality.retail === 'Y' ? 'yes' : 'no'}`}>{municipality.retail}</td><td class={`activity activity--${municipality.cultivation === 'Y' ? 'yes' : 'no'}`}>{municipality.cultivation}</td><td class={`activity activity--${municipality.manufacturing === 'Y' ? 'yes' : 'no'}`}>{municipality.manufacturing}</td><td class={`activity activity--${municipality.testing === 'Y' ? 'yes' : 'no'}`}>{municipality.testing}</td></tr>)}
+            {statusGroups.retail_authorized.map((municipality) => <tr data-municipality-row data-status="retail_authorized" data-search={`${municipality.name} ${municipality.county} ${municipality.municipality_type}`.toLowerCase()}><td>{municipality.name}</td><td>{municipality.county}</td><td>{typeLabel(municipality.municipality_type)}</td><td class={`activity activity--${activityClass(municipality.retail)}`}>{activityLabel(municipality.retail)}</td><td class={`activity activity--${activityClass(municipality.cultivation)}`}>{activityLabel(municipality.cultivation)}</td><td class={`activity activity--${activityClass(municipality.manufacturing)}`}>{activityLabel(municipality.manufacturing)}</td><td class={`activity activity--${activityClass(municipality.testing)}`}>{activityLabel(municipality.testing)}</td></tr>)}
           </tbody>
         </table>
       </div>
@@ -119,7 +121,7 @@ const typeLabel = (type: string) => type.charAt(0).toUpperCase() + type.slice(1)
         <table aria-label="Maine municipalities without OCP-recorded adult-use retail authorization">
           <thead><tr><th scope="col">Municipality</th><th scope="col">County</th><th scope="col">Type</th><th scope="col">Retail</th><th scope="col">Cultivation</th><th scope="col">Manufacturing</th><th scope="col">Testing</th></tr></thead>
           <tbody>
-            {statusGroups.no_recorded_retail_authorization.map((municipality) => <tr data-municipality-row data-status="no_recorded_retail_authorization" data-search={`${municipality.name} ${municipality.county} ${municipality.municipality_type}`.toLowerCase()}><td>{municipality.name}</td><td>{municipality.county}</td><td>{typeLabel(municipality.municipality_type)}</td><td class={`activity activity--${municipality.retail === 'Y' ? 'yes' : 'no'}`}>{municipality.retail}</td><td class={`activity activity--${municipality.cultivation === 'Y' ? 'yes' : 'no'}`}>{municipality.cultivation}</td><td class={`activity activity--${municipality.manufacturing === 'Y' ? 'yes' : 'no'}`}>{municipality.manufacturing}</td><td class={`activity activity--${municipality.testing === 'Y' ? 'yes' : 'no'}`}>{municipality.testing}</td></tr>)}
+            {statusGroups.no_recorded_retail_authorization.map((municipality) => <tr data-municipality-row data-status="no_recorded_retail_authorization" data-search={`${municipality.name} ${municipality.county} ${municipality.municipality_type}`.toLowerCase()}><td>{municipality.name}</td><td>{municipality.county}</td><td>{typeLabel(municipality.municipality_type)}</td><td class={`activity activity--${activityClass(municipality.retail)}`}>{activityLabel(municipality.retail)}</td><td class={`activity activity--${activityClass(municipality.cultivation)}`}>{activityLabel(municipality.cultivation)}</td><td class={`activity activity--${activityClass(municipality.manufacturing)}`}>{activityLabel(municipality.manufacturing)}</td><td class={`activity activity--${activityClass(municipality.testing)}`}>{activityLabel(municipality.testing)}</td></tr>)}
           </tbody>
         </table>
       </div>

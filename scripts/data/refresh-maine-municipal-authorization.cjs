@@ -161,7 +161,7 @@ function buildDataset({ geoRows, ocpRows, retrievedAt, modelRefreshTime = null }
   }
 
   const rows = municipalities.map((municipality) => {
-    const authorization = authorizationByName.get(municipality.name) || { retail: 'N', cultivation: 'N', manufacturing: 'N', testing: 'N' };
+    const authorization = authorizationByName.get(municipality.name) || { retail: 'unknown', cultivation: 'unknown', manufacturing: 'unknown', testing: 'unknown' };
     return {
       ...municipality,
       ...authorization,

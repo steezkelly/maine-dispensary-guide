@@ -36,7 +36,12 @@ test('buildDataset does not infer an explicit opt-out when OCP has no retail rec
     modelRefreshTime: '2026-07-09T20:34:15.803',
   });
 
-  assert.equal(dataset.municipalities.find((row) => row.name === 'Town 001').status, 'no_recorded_retail_authorization');
+  const municipality = dataset.municipalities.find((row) => row.name === 'Town 001');
+  assert.equal(municipality.status, 'no_recorded_retail_authorization');
+  assert.deepEqual(
+    { retail: municipality.retail, cultivation: municipality.cultivation, manufacturing: municipality.manufacturing, testing: municipality.testing },
+    { retail: 'unknown', cultivation: 'unknown', manufacturing: 'unknown', testing: 'unknown' },
+  );
   assert.equal(dataset.meta.status_counts.explicit_opt_out, 0);
 });
 
