@@ -38,7 +38,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
   }
 
   .editorial-process {
-    background: rgba(88, 129, 87, 0.04);
+    background: color-mix(in oklab, var(--color-soft-green) 4%, transparent);
     border-radius: 1rem;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -103,7 +103,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
   }
 
   .author-card:hover {
-    box-shadow: 0 8px 24px rgba(13, 78, 80, 0.08);
+    box-shadow: 0 8px 24px color-mix(in oklab, var(--color-primary) 8%, transparent);
   }
 
   .author-photo {
@@ -177,7 +177,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
   }
 
   .author-credentials li {
-    background: rgba(88, 129, 87, 0.1);
+    background: color-mix(in oklab, var(--color-soft-green) 10%, transparent);
     color: var(--color-text);
     padding: 0.25rem 0.75rem;
     border-radius: 2rem;
@@ -200,7 +200,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
   .photo-infrastructure {
     margin-top: 3rem;
     padding: 2rem;
-    background: rgba(13, 78, 80, 0.03);
+    background: color-mix(in oklab, var(--color-primary) 3%, transparent);
     border-radius: 1rem;
   }
 
@@ -226,7 +226,7 @@ const article = { publishDate: "2026-06-06", modifiedDate: "2026-06-06" };
   .trust-for-outreach {
     margin-top: 3rem;
     padding: 2rem;
-    background: linear-gradient(135deg, rgba(13, 78, 80, 0.04) 0%, rgba(88, 129, 87, 0.08) 100%);
+    background: linear-gradient(135deg, color-mix(in oklab, var(--color-primary) 4%, transparent) 0%, color-mix(in oklab, var(--color-soft-green) 8%, transparent) 100%);
     border-radius: 1rem;
     border-left: 4px solid var(--color-primary);
   }
