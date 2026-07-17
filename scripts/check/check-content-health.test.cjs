@@ -410,3 +410,15 @@ test('no-build skips CSS preflight while build overrides the environment skip', 
   assert.match(build.stdout, /CSS build warnings: 1 issue/);
   assert.match(build.stdout, /build failed while scanning CSS warnings/);
 });
+
+test('rejects mutually exclusive build and no-build modes before auditing', () => {
+  const result = spawnSync(process.execPath, [script, '--rendered-only', '--build', '--no-build'], {
+    cwd: path.resolve(__dirname, '../..'),
+    env: { ...process.env, PATH: '' },
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 2, result.stdout + result.stderr);
+  assert.equal(result.stdout, '', 'conflicting modes must stop before audit output');
+  assert.match(result.stderr, /Cannot combine --build and --no-build/);
+});
