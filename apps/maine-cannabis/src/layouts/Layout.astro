@@ -620,11 +620,11 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       // Scroll handler for header effects, progress bar, and back-to-top
       (function() {
         const header = document.getElementById('site-header');
-        if (!header) return;
-
         const handleScroll = () => {
-          const scrolled = window.scrollY > 50;
-          header.classList.toggle('scrolled', scrolled);
+          if (header) {
+            const scrolled = window.scrollY > 50;
+            header.classList.toggle('scrolled', scrolled);
+          }
 
           const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
           const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -639,7 +639,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         // Check for reduced motion preference
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (!prefersReducedMotion) {
+        if (header && !prefersReducedMotion) {
           window.addEventListener('scroll', handleScroll, { passive: true });
           handleScroll(); // Initial check
         }
@@ -648,26 +648,43 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         if (bttBtn) bttBtn.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
         // Scroll-triggered reveal animation
-        const observerOptions = {
-          root: null,
-          rootMargin: '0px 0px -80px 0px',
-          threshold: 0.1
+        const revealAll = () => {
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
         };
 
-        const revealObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-              const delay = entry.target.style.animationDelay || '0s';
-              entry.target.style.transitionDelay = delay;
-              entry.target.classList.add('visible');
-              revealObserver.unobserve(entry.target);
-            }
-          });
-        }, observerOptions);
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+          revealAll();
+          return;
+        }
 
-        document.querySelectorAll('.reveal').forEach(el => {
-          revealObserver.observe(el);
-        });
+        document.documentElement.classList.add('reveal-enhanced');
+
+        try {
+          const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -80px 0px',
+            threshold: 0.1
+          };
+
+          const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const delay = entry.target.style.animationDelay || '0s';
+                entry.target.style.transitionDelay = delay;
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          }, observerOptions);
+
+          document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+          });
+          window.setTimeout(revealAll, 2000);
+        } catch (_) {
+          document.documentElement.classList.remove('reveal-enhanced');
+          revealAll();
+        }
       })();
     </script>
   </body>
