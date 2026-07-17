@@ -36,7 +36,8 @@
  *   - acquisition_release_id (run-addressed)
  *   - run-manifest.json (provenance + per-report status)
  *   - gate-result.json (G1-G10 validation gate results)
- *   - canonical_release.json (the canonical artifact payload)
+ *   - canonical_release.json (the canonical artifact payload; emitted only after all gates pass)
+ *   - rejected_release.json (non-canonical failed-run payload, when a gate fails)
  */
 
 const fs = require('fs');
@@ -638,8 +639,9 @@ async function main() {
     }, null, 2)
   );
 
+  const releaseFilename = allPass ? 'canonical_release.json' : 'rejected_release.json';
   fs.writeFileSync(
-    path.join(args.out, 'canonical_release.json'),
+    path.join(args.out, releaseFilename),
     JSON.stringify({
       canonical_release_id: canonicalReleaseId,
       acquisition_release_id: acquisitionReleaseId,
@@ -651,6 +653,8 @@ async function main() {
       rows: joinedRows
     }, null, 2)
   );
+
+  if (!allPass) console.log('[ingest] Gates failed; wrote rejected_release.json and did not promote a canonical release.');
 
   fs.writeFileSync(
     path.join(args.out, 'gate-result.json'),

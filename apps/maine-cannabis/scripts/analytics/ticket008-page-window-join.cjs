@@ -209,7 +209,12 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
   const manifest = normalizeManifestRows(manifestRows);
   const groups = new Map();
   const add = (record) => {
-    const observationKey = /^R[78]_custom_event_/.test(record.report_key) ? `${record.report_key}|${stableHash(record.row_key)}` : '';
+    // Event totals are distinct observations, not page-level values. Keep the
+    // report key and complete evidence key in the join identity so FAQ/CTA IDs
+    // (and distinct R3 event names) can never overwrite one another.
+    const observationKey = record.source_family === 'custom_events' && record.source === 'ga4'
+      ? `${record.report_key}|${stableHash(record.row_key)}`
+      : '';
     const key = `${rowKey(record.canonical_page_path, record.date)}|${record.source_family}|${observationKey}`;
     if (!groups.has(key)) groups.set(key, { date: record.date, canonical_page_path: record.canonical_page_path, metric_family: record.source_family, ga4: [], vercel: [], a5: [] });
     const group = groups.get(key);

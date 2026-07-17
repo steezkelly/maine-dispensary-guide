@@ -93,6 +93,38 @@ const REPORTS = {
 
 function reportCompleteness(rowCount, fetchedRows) { return Number(rowCount) > Number(fetchedRows) ? 'partial' : 'ok'; }
 
+function normalizeRows(def, rows) {
+  return (rows || []).map((row) => {
+    const dimObj = {};
+    const metricObj = {};
+    def.dimensions.forEach((d, i) => {
+      dimObj[d] = row.dimensionValues[i]?.value || null;
+    });
+    def.metrics.forEach((m, i) => {
+      const v = row.metricValues[i]?.value;
+      metricObj[m] = v === undefined || v === '' ? null : (Number.isFinite(+v) ? +v : v);
+    });
+    return { dimensions: dimObj, metrics: metricObj };
+  });
+}
+
+async function fetchAllReportPages(runReport, requestBody, pageSize) {
+  const first = await runReport({ ...requestBody, limit: pageSize, offset: 0 });
+  const expectedRowCount = Number(first.data.rowCount || (first.data.rows || []).length);
+  const rawRows = [...(first.data.rows || [])];
+
+  let offset = rawRows.length;
+  while (offset < expectedRowCount) {
+    const page = await runReport({ ...requestBody, limit: pageSize, offset });
+    const pageRows = page.data.rows || [];
+    if (pageRows.length === 0) break;
+    rawRows.push(...pageRows);
+    offset = rawRows.length;
+  }
+
+  return { rowCount: expectedRowCount, rows: rawRows };
+}
+
 /**
  * Run a single named report against the GA4 Data API.
  *
@@ -108,29 +140,22 @@ async function runReport(authClient, reportKey, opts) {
   const client = google.analyticsdata({ version: 'v1beta', auth: authClient });
 
   try {
-    const resp = await client.properties.runReport({
+    const requestBody = {
+      dateRanges: [{ startDate: opts.from, endDate: opts.to }],
+      dimensions: def.dimensions.map((name) => ({ name })),
+      metrics: def.metrics.map((name) => ({ name }))
+    };
+    const pageSize = opts.limit || 100000;
+    const data = await fetchAllReportPages(
+      (requestBodyWithPage) => client.properties.runReport({
       property: `properties/${PROPERTY_ID}`,
-      requestBody: {
-        dateRanges: [{ startDate: opts.from, endDate: opts.to }],
-        dimensions: def.dimensions.map((name) => ({ name })),
-        metrics: def.metrics.map((name) => ({ name })),
-        limit: opts.limit || 100000
-      }
-    });
-    const data = resp.data;
-    const rows = (data.rows || []).map((row) => {
-      const dimObj = {};
-      const metricObj = {};
-      def.dimensions.forEach((d, i) => {
-        dimObj[d] = row.dimensionValues[i]?.value || null;
-      });
-      def.metrics.forEach((m, i) => {
-        const v = row.metricValues[i]?.value;
-        metricObj[m] = v === undefined || v === '' ? null : (Number.isFinite(+v) ? +v : v);
-      });
-      return { dimensions: dimObj, metrics: metricObj };
-    });
-    const completeness = reportCompleteness(data.rowCount || rows.length, rows.length);
+       requestBody: requestBodyWithPage
+      }),
+      requestBody,
+      pageSize
+    );
+    const rows = normalizeRows(def, data.rows);
+    const completeness = reportCompleteness(data.rowCount, rows.length);
     return {
       status: completeness === 'ok' ? 'ok' : 'failed',
       report_id: def.report_id,
@@ -140,9 +165,9 @@ async function runReport(authClient, reportKey, opts) {
       compat_status: def.compat_status,
       from: opts.from,
       to: opts.to,
-      rowCount: data.rowCount || rows.length,
+      rowCount: data.rowCount,
       rows,
-      ...(completeness === 'partial' ? { error: { code: 'TRUNCATED_RESPONSE', message: `GA4 returned ${data.rowCount} rows but only ${rows.length} were fetched` } } : {}),
+      ...(completeness === 'partial' ? { error: { code: 'TRUNCATED_RESPONSE', message: `GA4 reported ${data.rowCount} rows but only ${rows.length} were fetched across all pages` } } : {}),
       fetched_at_utc: new Date().toISOString()
     };
   } catch (e) {
@@ -202,6 +227,8 @@ module.exports = {
   PROPERTY_ID,
   REPORTS,
   reportCompleteness,
+  normalizeRows,
+  fetchAllReportPages,
   getAuthClient,
   runReport,
   runAllReports
