@@ -242,7 +242,7 @@ function computeAcquisitionReleaseId(canonicalReleaseId, runMeta) {
 /**
  * Run all 10 gates. Return a structured result per gate.
  */
-function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample }) {
+function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample, settlementAsOf = null }) {
   const gates = {};
 
   // G1: source_completeness (amended v3). A failed BigQuery report makes the
@@ -267,8 +267,42 @@ function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalRelease
   const unexpectedParams = (raw_record_json_sample || []).flatMap((row) => row.event_params || []).filter((param) => !bqClient.ALLOWED_EVENT_PARAM_KEYS.includes(String(param.key || '').toLowerCase()));
   gates.G2 = { status: unexpectedParams.length === 0 ? 'PASS' : 'FAIL', unexpected_parameter_count: unexpectedParams.length, notes: 'Only declared event-parameter allowlist keys may be persisted' };
 
-  // G3: late_arrival_settlement — TODO: settled/fresh tagging. For now: explicit determination is in run manifest.
-  gates.G3 = { status: 'PASS', notes: 'See run manifest event_date distribution vs today; freshness field written per row' };
+  // G3: late_arrival_settlement — fail closed while any canonical row remains
+  // inside the three-day arrival-lag window. The explicit as-of date makes the
+  // decision reproducible and lets us verify every persisted freshness tag.
+  const validSettlementAsOf = /^\d{4}-\d{2}-\d{2}$/.test(String(settlementAsOf || ''));
+  const settlementCutoff = validSettlementAsOf ? dateMinusDays(settlementAsOf, 2) : null;
+  const canonicalRows = (joinedRows || []).flatMap((report) => report.sanitized_rows || []);
+  const freshDates = new Set();
+  let settledRowCount = 0;
+  let freshnessMismatchCount = 0;
+  let undatedRowCount = 0;
+  for (const row of canonicalRows) {
+    const date = normalizeGa4Date(row.row_key?.date || row.row_key?.event_date || null);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) {
+      undatedRowCount++;
+      continue;
+    }
+    const expectedFreshness = date >= settlementCutoff ? 'fresh' : 'settled';
+    if (expectedFreshness === 'fresh') freshDates.add(date);
+    else settledRowCount++;
+    if (row.freshness !== expectedFreshness) freshnessMismatchCount++;
+  }
+  const freshRowCount = canonicalRows.length - settledRowCount - undatedRowCount;
+  const settlementPass = validSettlementAsOf && freshRowCount === 0 && freshnessMismatchCount === 0 && undatedRowCount === 0;
+  gates.G3 = {
+    status: settlementPass ? 'PASS' : 'FAIL',
+    as_of: validSettlementAsOf ? settlementAsOf : null,
+    settlement_cutoff: settlementCutoff,
+    settled_row_count: settledRowCount,
+    fresh_row_count: freshRowCount,
+    fresh_dates: Array.from(freshDates).sort(),
+    freshness_mismatch_count: freshnessMismatchCount,
+    undated_row_count: undatedRowCount,
+    notes: settlementPass
+      ? 'Every canonical row is outside the late-arrival window and carries the expected settled tag'
+      : 'Canonical release is unavailable until all rows settle and their freshness tags match the explicit as-of cutoff'
+  };
 
   // G4: consent_boundary
   const blocklistHits = (raw_record_json_sample || []).filter((r) => /email|phone|token|consent|secret|uuid/i.test(JSON.stringify(r)));
@@ -355,7 +389,7 @@ function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalRelease
 
 // ----------------------- Cross-source join -----------------------------------
 
-function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REPORTS[reportKey]?.metrics || []) {
+function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REPORTS[reportKey]?.metrics || [], settlementAsOf = todayUtc()) {
   const out = {
     report_id: reportKey,
     data_api_value: null,
@@ -467,7 +501,7 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
         delta_classification: cls,
         delta_absolute: delta,
         delta_relative: delta !== null && Math.max(+dataValue || 0, +bqValue || 0) > 0 ? delta / Math.max(+dataValue || 0, +bqValue || 0) : null,
-        freshness: rowKey.date && rowKey.date >= dateMinusDays(todayUtc(), 2) ? 'fresh' : 'settled',
+        freshness: rowKey.date && rowKey.date >= dateMinusDays(settlementAsOf, 2) ? 'fresh' : 'settled',
         source_provenance: bqSourceProvenance,
         row_signature: `${norm}::${metricName}`
       });
@@ -575,7 +609,7 @@ async function main() {
   for (const rk of Object.keys(dataApi.REPORTS)) {
     const dr = dataApiResult.reports[rk] || { rows: [], status: 'failed' };
     const br = bqResults[rk] || { rows: [] };
-    const joined = joinDataForReport(rk, dr.rows || [], br.rows || [], dataApi.REPORTS[rk]?.metrics || []);
+    const joined = joinDataForReport(rk, dr.rows || [], br.rows || [], dataApi.REPORTS[rk]?.metrics || [], today);
     joinedRows.push({
       report_id: rk.replace(/^R\d+_/, ''),
       report_key: rk,
@@ -615,7 +649,8 @@ async function main() {
     joinedRows,
     canonicalReleaseId,
     acquisitionReleaseId,
-    raw_record_json_sample: rawRecordJsonSample
+    raw_record_json_sample: rawRecordJsonSample,
+    settlementAsOf: today
   });
   let allPass = true;
   for (const [g, v] of Object.entries(gates)) {

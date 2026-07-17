@@ -52,3 +52,35 @@ test('G1 fails when a Data API report fails', () => {
   assert.equal(gates.G1.status, 'FAIL');
   assert.deepEqual(gates.G1.failed_data_api_reports, ['R1_pageview_daily']);
 });
+
+test('G3 fails closed while canonical rows remain inside the late-arrival window', () => {
+  const gates = runGates({
+    dataApiReports: [],
+    bqReports: [],
+    joinedRows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [
+      { row_key: { date: '2026-07-16' }, freshness: 'fresh' },
+    ] }],
+    settlementAsOf: '2026-07-17',
+    raw_record_json_sample: [],
+  });
+
+  assert.equal(gates.G3.status, 'FAIL');
+  assert.equal(gates.G3.fresh_row_count, 1);
+  assert.deepEqual(gates.G3.fresh_dates, ['2026-07-16']);
+});
+
+test('G3 passes only when every dated canonical row is settled at the explicit as-of date', () => {
+  const gates = runGates({
+    dataApiReports: [],
+    bqReports: [],
+    joinedRows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [
+      { row_key: { date: '2026-07-13' }, freshness: 'settled' },
+    ] }],
+    settlementAsOf: '2026-07-17',
+    raw_record_json_sample: [],
+  });
+
+  assert.equal(gates.G3.status, 'PASS');
+  assert.equal(gates.G3.settled_row_count, 1);
+  assert.equal(gates.G3.fresh_row_count, 0);
+});
