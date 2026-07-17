@@ -178,7 +178,9 @@ function totals(rows) {
 
 function snapshotFromRows({ name, dimensions, rows, sourceWindow, siteTotals, extractedAt }) {
   const observedTotals = totals(rows);
-  const complete = rows.length < ROW_LIMIT;
+  // Search Analytics returns top rows and does not provide an exhaustiveness
+  // signal. A response below rowLimit is therefore still partial or unknown.
+  const rowLimitReached = rows.length >= ROW_LIMIT;
   return {
     schemaVersion: 1,
     snapshotKind: name,
@@ -190,7 +192,7 @@ function snapshotFromRows({ name, dimensions, rows, sourceWindow, siteTotals, ex
     dimensions,
     rowLimit: ROW_LIMIT,
     rowCount: rows.length,
-    completeness: { status: complete ? 'complete_within_requested_dimensions' : 'top_rows_truncated_or_unknown', rowLimitReached: !complete },
+    completeness: { status: 'top_rows_truncated_or_unknown', rowLimitReached },
     siteTotals,
     observedTotals,
     coverageOfSiteTotals: {
