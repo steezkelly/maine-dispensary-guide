@@ -419,7 +419,7 @@ test('one failed report does not affect other reports', async () => {
 console.log('--- §8 per-day source routing ---');
 
 test('perSourceRouting flags last-3-days for BQ; older for Data API only', () => {
-  const today = ingest.todayUtc();
+  const today = ingest.todayProperty();
   const todayMinus5 = ingest.dateMinusDays(today, 5);
   const todayMinus2 = ingest.dateMinusDays(today, 2);
   const todayMinus10 = ingest.dateMinusDays(today, 10);
@@ -435,12 +435,21 @@ test('perSourceRouting flags last-3-days for BQ; older for Data API only', () =>
   assert.strictEqual(recent.has_bq, true, '<= 3-day-old date SHOULD have BQ');
 });
 
+test('perSourceRouting uses the GA4 property date around UTC midnight', () => {
+  const utcAfterMidnight = new Date('2026-07-18T02:00:00.000Z');
+  assert.strictEqual(ingest.todayProperty(utcAfterMidnight), '2026-07-17');
+  const routing = ingest.perSourceRouting('2026-07-15', '2026-07-17', null, utcAfterMidnight);
+  assert.strictEqual(routing.dates.at(-1).date, '2026-07-17');
+  assert.strictEqual(routing.dates.at(-1).has_bq, true);
+  assert.ok(!routing.dates.some((entry) => entry.date === '2026-07-18'));
+});
+
 test('perSourceRouting backs off to data floor when floor is older than requested', () => {
   // If operator asks --from=2025-01-01 but data floor is 2026-04-13,
   // the routing should back off to 2026-04-13.
   const floor = '2026-04-13';
   const requested = '2025-01-01';
-  const today = ingest.todayUtc();
+  const today = ingest.todayProperty();
   const r = ingest.perSourceRouting(requested, today, floor);
   assert.strictEqual(r.backedOff, true, 'should have backed off');
   assert.strictEqual(r.requestedFrom, requested);
@@ -453,7 +462,7 @@ test('perSourceRouting backs off to data floor when floor is older than requeste
 test('perSourceRouting honors --from when it is newer than the data floor', () => {
   // --from=2026-06-01 but floor is 2026-04-13; floor is older so
   // --from is honored (operator is explicitly asking for narrower).
-  const r = ingest.perSourceRouting('2026-06-01', ingest.todayUtc(), '2026-04-13');
+  const r = ingest.perSourceRouting('2026-06-01', ingest.todayProperty(), '2026-04-13');
   assert.strictEqual(r.backedOff, false, 'should NOT back off because requested is newer');
   assert.strictEqual(r.effectiveFrom, '2026-06-01');
 });
@@ -465,7 +474,7 @@ test('daysBetween handles single-day windows', () => {
 });
 
 test('joined rows in the settlement window remain fresh', () => {
-  const today = ingest.todayUtc();
+  const today = ingest.todayProperty();
   const joined = ingest.joinDataForReport('R1_pageview_daily', [
     { dimensions: { date: today, pagePath: '/x' }, metrics: { screenPageViews: 5 } }
   ], []);

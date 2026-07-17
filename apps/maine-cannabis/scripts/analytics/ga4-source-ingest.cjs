@@ -45,6 +45,7 @@ const crypto = require('crypto');
 
 const dataApi = require('./ga4-data-api.cjs');
 const bqClient = require('./ga4-bigquery.cjs');
+const PROPERTY_TIMEZONE = bqClient.PROPERTY_TIMEZONE;
 
 // ------------------------------ Config / arg parsing ------------------------
 
@@ -70,6 +71,17 @@ function parseArgs() {
 
 function todayUtc() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function todayProperty(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: PROPERTY_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(now);
+  const part = (type) => parts.find((entry) => entry.type === type).value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
 }
 
 function dateMinusDays(yyyymmdd, days) {
@@ -126,7 +138,7 @@ async function detectDataFloor(authClient, propertyId) {
     const r = await clientG.properties.runReport({
       property: `properties/${propertyId}`,
       requestBody: {
-        dateRanges: [{ startDate: probeDate, endDate: todayUtc() }],
+        dateRanges: [{ startDate: probeDate, endDate: todayProperty() }],
         dimensions: [{ name: 'date' }],
         metrics: [{ name: 'screenPageViews' }],
         limit: 2000
@@ -174,8 +186,8 @@ function normalizeGa4Date(s) {
  * 2026-04-13, the orchestrator backs off to 2026-04-13 and records
  * the floor-detection event in the run manifest.
  */
-function perSourceRouting(from, to, dataFloor) {
-  const today = todayUtc();
+function perSourceRouting(from, to, dataFloor, now = new Date()) {
+  const today = todayProperty(now);
   const cutoff = dateMinusDays(today, 2); // 3-day window (today, today-1, today-2)
   const effectiveFrom = dataFloor ? (from > dataFloor ? from : dataFloor) : from;
   if (effectiveFrom > to) return { dates: [], effectiveFrom, requestedFrom: from, dataFloor, backedOff: true, empty: true };
@@ -539,7 +551,7 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
 
 async function main() {
   const args = parseArgs();
-  const today = todayUtc();
+  const today = todayProperty();
 
   // Step 0a: Auto-detect empirical GA4 data floor (2026-07-12 hot-path).
   // The site launched around 2026-03-20 but GA4 traffic data actually
@@ -734,6 +746,7 @@ if (require.main === module) {
 module.exports = {
   parseArgs,
   todayUtc,
+  todayProperty,
   dateMinusDays,
   daysBetween,
   perSourceRouting,
