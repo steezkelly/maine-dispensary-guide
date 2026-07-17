@@ -77,3 +77,9 @@ test('analytics workspace declares the BigQuery client required by its ingestion
   assert.ok(manifest.dependencies['@google-cloud/bigquery']);
   assert.ok(lock.packages['node_modules/@google-cloud/bigquery']);
 });
+
+test('R3 groups event counts by normalized page path', () => {
+  const sql = buildBqSql('R3_event_count_daily', '2026-07-10', '2026-07-12');
+  assert.match(sql, /AS pagePath/);
+  assert.match(sql, /GROUP BY event_date, pagePath, event_name/);
+});
