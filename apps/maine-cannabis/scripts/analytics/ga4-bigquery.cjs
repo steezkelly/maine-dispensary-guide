@@ -197,11 +197,7 @@ function buildBqSql(reportKey, from, to) {
         WITH session_events AS (
           SELECT
             event_date,
-            COALESCE(
-              session_traffic_source_last_click.cross_channel_campaign.default_channel_group,
-              traffic_source.medium,
-              '(not set)'
-            ) AS sessionDefaultChannelGroup,
+            COALESCE(traffic_source.medium, '(not set)') AS sessionDefaultChannelGroup,
             CONCAT(
               user_pseudo_id,
               ':',
@@ -263,7 +259,7 @@ function buildBqSql(reportKey, from, to) {
         SELECT event_date, ${pagePathSql} AS pagePath, event_name, COUNT(*) AS eventCount
         FROM ${tab}
         WHERE ${tableFilter}
-          AND event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open','faq_open', 'cta_view', 'user_engagement', 'session_start')
+          AND event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start')
         GROUP BY event_date, pagePath, event_name
       `;
     }

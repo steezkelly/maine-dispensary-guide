@@ -7,12 +7,13 @@ const test = require('node:test');
 
 const { buildBqSql } = require('./ga4-bigquery.cjs');
 
-test('R2 rolls events into sessions without unnesting record traffic sources', () => {
+test('R2 uses an intraday-supported channel fallback without daily-only session attribution', () => {
   const sql = buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12');
 
   assert.doesNotMatch(sql, /UNNEST\(traffic_source\)/);
   assert.match(sql, /WITH session_events AS/);
-  assert.match(sql, /session_traffic_source_last_click\.cross_channel_campaign\.default_channel_group/);
+  assert.doesNotMatch(sql, /session_traffic_source_last_click/);
+  assert.match(sql, /traffic_source\.medium/);
   assert.match(sql, /event_name = 'page_view'/);
   assert.match(sql, /key='session_engaged'/);
 });
@@ -82,4 +83,10 @@ test('R3 groups event counts by normalized page path', () => {
   const sql = buildBqSql('R3_event_count_daily', '2026-07-10', '2026-07-12');
   assert.match(sql, /AS pagePath/);
   assert.match(sql, /GROUP BY event_date, pagePath, event_name/);
+});
+
+test('R3 BigQuery mirror includes emitted conversion events', () => {
+  const sql = buildBqSql('R3_event_count_daily', '2026-07-10', '2026-07-12');
+  assert.match(sql, /'lead_capture'/);
+  assert.match(sql, /'affiliate_click'/);
 });
