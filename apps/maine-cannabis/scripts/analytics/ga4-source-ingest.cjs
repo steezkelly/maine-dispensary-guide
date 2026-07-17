@@ -438,7 +438,7 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
     return rowKey;
   }
 
-  function emitMetricRows({ norm, rowKey, dataMetrics = {}, bqMetrics = {} }) {
+  function emitMetricRows({ norm, rowKey, dataMetrics = {}, bqMetrics = {}, bqSourceProvenance = null }) {
     for (const metricName of metricNames) {
       const bqValue = bqMetrics?.[metricName] ?? null;
       const dataValue = dataMetrics?.[metricName] ?? null;
@@ -462,6 +462,7 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
         delta_absolute: delta,
         delta_relative: delta !== null && Math.max(+dataValue || 0, +bqValue || 0) > 0 ? delta / Math.max(+dataValue || 0, +bqValue || 0) : null,
         freshness: rowKey.date && rowKey.date >= dateMinusDays(todayUtc(), 2) ? 'fresh' : 'settled',
+        source_provenance: bqSourceProvenance,
         row_signature: `${norm}::${metricName}`
       });
     }
@@ -476,7 +477,8 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
       norm,
       rowKey: normalizedRowKeyFromDims(d.dimensions || {}),
       dataMetrics: d.metrics || {},
-      bqMetrics: bqMatch?.metrics || {}
+      bqMetrics: bqMatch?.metrics || {},
+      bqSourceProvenance: bqMatch?.source_provenance || null
     });
   }
 
@@ -486,7 +488,8 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
       norm,
       rowKey: normalizedRowKeyFromDims(bqRow.row_key || {}),
       dataMetrics: {},
-      bqMetrics: bqRow.metrics || {}
+      bqMetrics: bqRow.metrics || {},
+      bqSourceProvenance: bqRow.source_provenance || null
     });
   }
   return rows;

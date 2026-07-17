@@ -168,8 +168,17 @@ function isEligiblePeer(row) {
   return true;
 }
 
+function matchesTargetWindow(target, peer) {
+  const targetStart = clean(target.window_start || target.start_date || target.date);
+  const targetEnd = clean(target.window_end || target.end_date || target.date);
+  const peerStart = clean(peer.window_start || peer.start_date || peer.date);
+  const peerEnd = clean(peer.window_end || peer.end_date || peer.date);
+  if (!targetStart && !targetEnd && !peerStart && !peerEnd) return true;
+  return targetStart === peerStart && targetEnd === peerEnd;
+}
+
 function selectPeers(target, observations, policy, minPeerCount) {
-  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family)));
+  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row) && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family)));
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
@@ -286,6 +295,7 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
       metric_family: target.metric_family,
       reporting_archetype: target.reporting_archetype || null,
       primary_task_family: target.primary_task_family || null,
+      promise_task_alignment: target.promise_task_alignment || null,
       query_intent: target.query_intent,
       task_contract_status: target.task_contract_status || 'UNKNOWN',
       settlement_state: target.settlement_state || null,

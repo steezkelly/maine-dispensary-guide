@@ -94,6 +94,11 @@ test('peer selection requires an affirmative task contract', () => {
   const unknown = { ...target, canonical_page_path: '/unknown', task_contract_status: 'UNKNOWN', numerator: 2 };
   assert.equal(b.selectPeers(target, [target, unknown], b.POLICIES.gsc_ctr, 1).level, 'insufficient');
 });
+test('peer selection cannot use a later reporting window', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED', window_start: '2026-07-01', window_end: '2026-07-07' };
+  const futurePeer = { ...target, canonical_page_path: '/future', numerator: 2, window_start: '2026-07-15', window_end: '2026-07-21' };
+  assert.equal(b.selectPeers(target, [target, futurePeer], b.POLICIES.gsc_ctr, 1).level, 'insufficient');
+});
 test('peer selection excludes every observation for the target page', () => {
   const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED' };
   const priorWindow = { ...target, numerator: 9, denominator: 10, window_start: '2026-06-01' };
@@ -145,6 +150,10 @@ test('baseline output retains contamination state for downstream evidence gating
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 2, denominator: 10, change_contamination_status: 'CONTAMINATED' }], manifest: [] });
   assert.equal(out.baselines[0].change_contamination_status, 'CONTAMINATED');
 });
+test('baseline output retains manifest promise-task alignment for downstream ownership diagnosis', () => {
+  const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 2, denominator: 10 }], manifest: [{ canonical_path: '/x', promise_task_alignment: 'PROMISE_BODY_MISMATCH' }] });
+  assert.equal(out.baselines[0].promise_task_alignment, 'PROMISE_BODY_MISMATCH');
+});
 test('manifest context is used but not itself treated as a peer ID', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'active_attention_rate', numerator: 5, denominator: 10 }], manifest: [{ canonical_path: '/x', reporting_archetype: 'calculator', primary_task_family: 'calculator_decision_tool' }] });
   assert.equal(out.baselines[0].reporting_archetype, 'calculator'); assert.equal(out.baselines[0].peer_cell_id.includes('calculator'), false);
@@ -166,5 +175,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/40 passed.`);
+console.log(`Tests: ${pass}/42 passed.`);
 if (process.exitCode) process.exit(1);

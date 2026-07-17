@@ -267,6 +267,15 @@ test('joinDataForReport emits report-specific metric rows for multi-metric repor
   assert.strictEqual(joined.find((row) => row.metric_name === 'sessions').delta_classification, 'match');
   assert.strictEqual(joined.find((row) => row.metric_name === 'engagedSessions').data_api_value, 3);
 });
+test('joinDataForReport persists BQ provenance in canonical metric rows', () => {
+  const provenance = { bq_table: 'events_20260712', query_id: 'q_test' };
+  const joined = ingest.joinDataForReport(
+    'R3_event_count_daily',
+    [{ dimensions: { date: '2026-07-12', eventName: 'page_view' }, metrics: { eventCount: 20 } }],
+    [{ row_key: { event_date: '2026-07-12', event_name: 'page_view' }, metrics: { eventCount: 20 }, source_provenance: provenance }]
+  );
+  assert.deepStrictEqual(joined[0].source_provenance, provenance);
+});
 
 test('G6 gate fails when completed source reports emit both_null joined rows', () => {
   const gates = ingest.runGates({
