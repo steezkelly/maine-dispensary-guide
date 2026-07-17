@@ -1,0 +1,216 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const complianceReviewer = authors.find((author) => author.id === 'thalia-greene');
+const article = {
+  author: 'Margaret Finch',
+  authorId: 'margaret-finch',
+  authorTitle: 'Finance & Taxation Analyst',
+  publishDate: '2026-07-16T12:00:00',
+  modifiedDate: '2026-07-16T12:00:00',
+  section: 'Medical Cannabis',
+  reviewer: complianceReviewer
+    ? { name: complianceReviewer.name, jobTitle: complianceReviewer.role, id: complianceReviewer.id }
+    : undefined,
+};
+const topics = ['medical-cannabis', 'home-grow', 'maine-law'];
+
+const patientLaw = 'https://www.legislature.maine.gov/legis/statutes/22/title22sec2423-A.html';
+const definitionsLaw = 'https://legislature.maine.gov/statutes/22/title22sec2421-A.html';
+const protectionsLaw = 'https://legislature.maine.gov/statutes/22/title22sec2430-C.html';
+const manufacturingLaw = 'https://legislature.maine.gov/statutes/22/title22sec2423-F-1.html';
+const ocpFaq = 'https://www.maine.gov/dafs/ocp/resources/faq';
+const medicalRule = 'https://www.maine.gov/dafs/ocp/medical-use/rules-statutes/18-691-C.M.R.-ch.-2';
+---
+
+<Layout
+  title="Can Maine Medical Cannabis Patients Grow Their Own?"
+  description="Maine medical patient grow rules: plant limits, cultivation areas, caregiver designation, possession, transport, and official Title 22 sources."
+  heroImage="/images/heroes/maine-home-grow-cannabis-guide-2026.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    article { max-width: 760px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.2rem; color: var(--color-text-light); }
+    .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; }
+    .byline p { margin: 0.25rem 0; }
+    section { margin-bottom: 3rem; }
+    section h2, section h3 { color: var(--color-primary); font-family: var(--font-serif); }
+    section h3 { margin-top: 1.75rem; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.7rem; }
+    .answer-capsule { background: color-mix(in srgb, var(--color-primary) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0 2.5rem; border-radius: 0 0.5rem 0.5rem 0; line-height: 1.65; }
+    .answer-capsule strong { color: var(--color-primary); }
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; min-width: 680px; border-collapse: collapse; }
+    th, td { padding: 0.8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); }
+    th { background: var(--color-background); font-weight: 700; }
+    td:first-child { font-weight: 700; }
+    .source-note { font-size: 0.9rem; color: var(--color-text-light); }
+    .disclaimer { border: 1px solid var(--color-border); border-left: 4px solid var(--color-primary); padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; }
+    .content-verification { margin-top: 2.5rem; }
+    .verification-badge { display: flex; gap: 0.75rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 0.75rem; }
+  </style>
+
+  <article class="blog-post">
+    <header class="article-header">
+      <h1>Can Maine Medical Cannabis Patients Grow Their Own?</h1>
+      <p class="subtitle">A patient-first guide to plant limits, grow areas, caregiver designation, possession, and transport</p>
+      <div class="byline">
+        <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
+        <p>Published 2026-07-16 · Last reviewed 2026-07-16</p>
+      </div>
+    </header>
+
+    <div class="answer-capsule">
+      <strong>Yes.</strong> A Maine qualifying patient may cultivate up to 6 mature cannabis plants, 12 immature cannabis plants, and unlimited seedlings for that patient under 22 M.R.S. §2423-A. If a caregiver grows for the patient, the patient and caregiver share that allocation; their combined total for that patient may not exceed 6 mature and 12 immature plants.
+    </div>
+
+    <section id="choose-your-path">
+      <h2>Patient, Caregiver, or Ordinary Adult-Use Grow?</h2>
+      <ul>
+        <li><strong>Qualifying patient growing for yourself:</strong> continue with this guide and the patient provisions in Title 22.</li>
+        <li><strong>Caregiver growing for another patient:</strong> patient designation, caregiver registration or a narrow exemption, and the caregiver provisions apply; the caregiver's broader business limits are not the patient's personal allowance.</li>
+        <li><strong>Ordinary adult-use grower:</strong> use the <a href="/blog/maine-home-grow-cannabis-guide-2026">adult-use versus medical comparison</a> and <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1502.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §1502</a>.</li>
+        <li><strong>Mixed-status grow:</strong> the reviewed statutes do not establish a general additive formula. Ask OCP or Maine counsel before combining plants attributed to separate programs or capacities.</li>
+      </ul>
+    </section>
+
+    <section id="qualifying-first">
+      <h2>Start With a Valid Patient Certification</h2>
+      <p>A qualifying patient needs a valid written certification from an authorized Maine medical provider. The statutory definition also includes Maine-residency requirements. Read the current definition in <a href={definitionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2421-A(39)</a>.</p>
+      <p>OCP says it <strong>does not maintain a list or registry</strong> of qualifying patients or patient certifications. That does not eliminate the need to hold and present valid documentation when required. See the <a href={ocpFaq} target="_blank" rel="noopener noreferrer">OCP medical cannabis FAQ</a> and <a href={protectionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2430-C(7)(A)</a>.</p>
+    </section>
+
+    <section id="patient-plant-allocation">
+      <h2>Count the Patient's Single Plant Allocation</h2>
+      <p>A patient may grow—or designate an eligible caregiver to grow—up to <strong>6 mature cannabis plants, 12 immature cannabis plants, and an unlimited number of seedlings</strong> for that patient. The patient and caregiver may split the plants, but the combined total for that patient remains 6 mature and 12 immature plants. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-A(1)(B)</a>.</p>
+      <p>Caregiver ceilings of <strong>30 mature cannabis plants</strong> and 60 immature plants, or <strong>500 square feet of mature plant canopy</strong> and 1,000 square feet of immature canopy, describe the registered-caregiver framework. They are <strong>not the patient's personal plant allowance</strong> and do not create another allocation for the same patient. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(2)(B)</a>.</p>
+      <p>This guide does not add medical and personal adult-use allowances together. The reviewed statutes do not supply a general stacking formula for mixed-program cultivation, so ask OCP or Maine counsel about a mixed-status grow.</p>
+    </section>
+
+    <section id="cultivation-area">
+      <h2>Keep Patient Plants in a Cultivation Area</h2>
+      <p>A self-cultivating patient's plants must remain in a cultivation area except during transport authorized by the medical statute. Access is limited to the patient, with narrow supervised exceptions for emergency, testing, repair, maintenance, or construction personnel. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-A(3)(A)</a>. A cultivation area may include contiguous or noncontiguous indoor or outdoor areas on the same parcel under the <a href={definitionsLaw} target="_blank" rel="noopener noreferrer">Title 22 definition in §2421-A(17)</a>.</p>
+      <p><strong>Security wording requires care.</strong> The current statute controls today's patient access and plant limits but does not itself say the patient's cultivation area must be locked. OCP still posts Chapter 2 as effective from 2018, and that older rule broadly describes medical cultivation in an enclosed, locked area. The rule uses older terminology and can conflict with later statutory amendments. Do not assume either that a patient lock is categorically required or that no lock is required; review the <a href={medicalRule} target="_blank" rel="noopener noreferrer">current OCP Chapter 2 posting</a> and ask OCP or Maine counsel about the present application to your site.</p>
+      <p>By contrast, the current statute expressly requires a caregiver's cultivation areas to be enclosed and secured and limits caregiver access. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(3)(B)</a>. Do not import that caregiver wording into a categorical patient rule.</p>
+    </section>
+
+    <section id="shared-household">
+      <h2>Shared Households May Use No More Than Two Cultivation Areas</h2>
+      <p>Two or more qualifying patients in the same household who each grow their own plants may share no more than two cultivation areas. Sharing space does not merge or increase either patient's plant allocation. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)(B)</a> and the <a href={definitionsLaw} target="_blank" rel="noopener noreferrer">“same household” definition in §2421-A(33)</a>.</p>
+    </section>
+
+    <section id="possession-transport-transfer">
+      <h2>Keep Possession, Transport, and Transfers Within Title 22</h2>
+      <h3>Harvested cannabis possession</h3>
+      <p>A qualifying patient may possess up to <strong>8 pounds of harvested cannabis</strong>. Title 22 supplies special weight rules for dried and undried material and ingredients that are not cannabis. This medical limit differs from ordinary adult-use possession. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)(A)</a> and <a href={protectionsLaw} target="_blank" rel="noopener noreferrer">§2430-C(11)</a>. The separate defense for medically necessary excess possession is not a higher routine allowance.</p>
+      <h3>Authorized transport</h3>
+      <p>A patient may transport plants or harvested cannabis for medical use as authorized by the chapter. A separately designated pickup person must carry the documents listed in the statute. This is not permission to cross state lines. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)(F-1)(3) and (L)</a> and the <a href={ocpFaq} target="_blank" rel="noopener noreferrer">OCP FAQ</a>.</p>
+      <h3>No patient retail sales</h3>
+      <p>A patient may furnish another qualifying patient up to 2.5 ounces for that patient's medical use only <strong>without remuneration</strong>, and may receive specified cannabis without paying the source. These provisions do not authorize patient retail sales; remuneration includes indirect value, not only cash. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)(D) and (H)</a> and <a href={definitionsLaw} target="_blank" rel="noopener noreferrer">§2421-A(46)</a>.</p>
+      <h3>Manufacturing and extraction are separate</h3>
+      <p>Title 22 separately addresses patient manufacturing and transfers to a registered manufacturing facility. Food production and inherently hazardous extraction carry additional licensing, notice, engineering, fire-code, equipment, and rule requirements. Do not treat home cultivation authority as a solvent-extraction authorization. See <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1)(J)-(K)</a> and <a href={manufacturingLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-F</a>.</p>
+    </section>
+
+    <section id="rentals-property-local-rules">
+      <h2>Rentals, Property Rules, and Local Requirements</h2>
+      <p><strong>Status protection is not blanket permission to cultivate or smoke.</strong> Under <a href={protectionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2430-C(3)</a>, a landlord generally may not refuse to lease to or penalize someone solely because that person is a qualifying patient or caregiver, unless compliance would violate federal law or cause loss of a federal contract or funding. The same subsection allows restrictions when cannabis administration or cultivation conflicts with the premises' general use.</p>
+      <p>A landlord or business owner may prohibit medical cannabis smoking where all smoking is prohibited and notice is posted. A lease, building or fire code, electrical capacity, insurance terms, condominium rules, and federally funded housing conditions can also affect a proposed grow. The statute does not support either an unconditional right to cultivate in every rental or an unconditional landlord ban based only on patient status.</p>
+      <p>Municipal and other local requirements depend on the location and proposed conduct. Check the actual ordinance, code, and permitting facts rather than generalizing the personal adult-use municipal floor to medical cultivation. For a rental, shared property, significant electrical alteration, or mixed-status grow, obtain current OCP or qualified Maine legal guidance before relying on a broad rule.</p>
+    </section>
+
+    <section id="patient-caregiver-comparison">
+      <h2>Patient Growing for Self vs. Caregiver Growing for Patient</h2>
+      <div class="table-wrap">
+        <table aria-label="Comparison of a Maine medical patient growing for self and a caregiver growing for the patient">
+          <thead><tr><th scope="col">Question</th><th scope="col">Patient growing for self</th><th scope="col">Caregiver growing for patient</th></tr></thead>
+          <tbody>
+            <tr><td>Who authorizes the grow</td><td>The patient's valid written certification supports the patient's authorized conduct.</td><td>The patient designates an eligible caregiver under Title 22.</td></tr>
+            <tr><td>Plant allocation relationship</td><td>Up to the patient's 6 mature/12 immature/unlimited-seedling allocation.</td><td>Shares that same patient allocation; it is not a duplicate 6/12 allowance.</td></tr>
+            <tr><td>Registration/certification</td><td>Patient certification is required; OCP says it keeps no patient-certification registry.</td><td>Caregiver registration generally applies, with limited family/household exceptions.</td></tr>
+            <tr><td>Cultivation-area security</td><td>Current statute limits location and access; the effective 2018 rule's enclosed/locked wording creates an unresolved fit requiring current guidance.</td><td>Current statute expressly requires enclosed, secured cultivation areas.</td></tr>
+            <tr><td>Possession/transfer purpose</td><td>For the patient's medical use and only the patient transfers expressly allowed by statute.</td><td>For assistance and transfers authorized by the caregiver provisions; business rules are separate.</td></tr>
+            <tr><td>When professional guidance is prudent</td><td>Rental/property restrictions, mixed adult-use status, security ambiguity, excess possession, or extraction.</td><td>Registration exceptions, multiple patients, assistants, wholesale activity, pesticides, stores, or canopy elections.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-note">The patient column summarizes <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(1) and (3)(A)</a>; the caregiver column summarizes <a href={patientLaw} target="_blank" rel="noopener noreferrer">§2423-A(2) and (3)(B)-(C-1)</a>. Read the cited provisions for the complete conditions.</p>
+
+      <Callout title="Need caregiver-business rules?" type="info">
+        This page explains the patient’s side of the law. Registered-caregiver plant limits, registration fees, assistants, wholesale transfers, retail stores, pesticides, and canopy elections are a separate operator topic and should be covered in a dedicated caregiver guide.
+      </Callout>
+    </section>
+
+    <section id="official-sources">
+      <h2>Official Sources to Check Before You Grow</h2>
+      <ul>
+        <li><a href={patientLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2423-A — patient and caregiver authorized conduct</a></li>
+        <li><a href={definitionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2421-A — medical-program definitions</a></li>
+        <li><a href={protectionsLaw} target="_blank" rel="noopener noreferrer">22 M.R.S. §2430-C — protections, possession defense, and weight rules</a></li>
+        <li><a href={ocpFaq} target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy FAQ</a></li>
+        <li><a href={medicalRule} target="_blank" rel="noopener noreferrer">OCP Chapter 2 landing page</a> — OCP identifies the posted rule as effective from 2018; later statutory amendments can conflict with its older text.</li>
+      </ul>
+    </section>
+
+    <section class="faq-section" id="frequently-asked-questions">
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={[
+        {
+          question: 'Can a Maine medical cannabis patient grow at home?',
+          answer: 'Yes. A Maine qualifying patient with a valid written certification may cultivate for medical use under 22 M.R.S. §2423-A, subject to plant, cultivation-area, access, possession, and other requirements. Property, lease, safety, or local restrictions may also matter.',
+        },
+        {
+          question: 'How many plants may a Maine qualifying patient grow?',
+          answer: 'Up to 6 mature cannabis plants, 12 immature cannabis plants, and an unlimited number of seedlings for that patient under §2423-A(1)(B). The patient and any designated cultivating caregiver share that patient allocation.',
+        },
+        {
+          question: 'Can my caregiver and I each grow six mature plants for me?',
+          answer: 'No. For one patient, the combined patient-and-caregiver total may not exceed 6 mature and 12 immature plants. Caregiver-wide ceilings do not create a duplicate allocation for that patient.',
+        },
+        {
+          question: 'Does Maine keep a registry of medical cannabis patients?',
+          answer: 'OCP says it does not maintain a list or registry of qualifying patients or patient certifications. A patient still needs valid written certification and must present required documentation when relying on statutory protections.',
+        },
+        {
+          question: 'Must patient plants be kept in a locked area?',
+          answer: 'The current statute requires patient plants to remain in a cultivation area except during authorized transport and limits access, but it does not itself state a patient-lock requirement. OCP still posts an effective 2018 rule with broader enclosed-and-locked wording that does not align cleanly with later statute. Do not rely on a categorical yes or no; ask OCP or Maine counsel about current application. Caregiver areas are expressly enclosed and secured under the current statute.',
+        },
+        {
+          question: 'Can two medical patients in one household share a grow space?',
+          answer: 'Yes. Two or more qualifying patients in the same household who grow their own plants may share no more than two cultivation areas. Sharing does not increase or merge their individual plant allocations.',
+        },
+        {
+          question: 'How much harvested cannabis may a qualifying patient possess?',
+          answer: 'A qualifying patient may routinely possess up to 8 pounds of harvested cannabis under §2423-A(1)(A), subject to Title 22 weight rules. A separate medical-necessity defense for excess is not advance authorization or a higher routine cap.',
+        },
+        {
+          question: 'Can a patient sell home-grown medical cannabis?',
+          answer: 'No patient retail-sale authority is provided. The statute permits limited transfers to another qualifying patient without remuneration. Remuneration is broader than cash, and manufacturing or extraction has separate restrictions.',
+        },
+      ]} />
+    </section>
+
+    <section class="disclaimer">
+      <p><em><strong>Legal disclaimer:</strong> This article provides general information, not legal advice. Cannabis statutes, rules, agency interpretations, property terms, and local requirements can change or apply differently to particular facts. Check the linked primary sources, ask the Maine Office of Cannabis Policy for current program guidance, and consult a qualified Maine attorney for legal advice.</em></p>
+    </section>
+
+    <section class="content-verification">
+      <div class="verification-badge">
+        <span aria-hidden="true">◆</span>
+        <span>Last reviewed <strong>2026-07-16</strong> by <strong>Margaret Finch + Thalia Greene</strong> against the Maine Legislature and OCP sources cited on this page. Review methodology and attribution: <a href="/about/corrections">corrections log</a> and <a href="/about/authors">authors</a>.</span>
+      </div>
+    </section>
+
+    <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> Material corrections are documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the source supporting the change.</p>
+    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide uses a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> and reviewer attribution; the legal interpretation is the publisher's reading of the cited primary sources.</p>
+
+    <AutoRelated currentPath="/blog/maine-medical-cannabis-patient-grow-guide" currentTopics={topics} section="Medical Cannabis" limit={6} />
+  </article>
+</Layout>

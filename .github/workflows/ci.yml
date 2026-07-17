@@ -124,6 +124,7 @@ jobs:
         run: |
           node --test scripts/check/check-content-health.test.cjs
           node --test scripts/check/lib/rendered-image-refs.test.cjs
+          npm run test:home-grow-legal-content
 
       - name: Test pre-push diagnostic filtering contract
         run: |
