@@ -3,7 +3,7 @@ const test = require('node:test');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { buildSnapshot, fetchSitemapUrls, latestCoverage } = require('./gsc-technical-snapshot.cjs');
+const { buildSnapshot, fetchSitemapUrls, indexabilityFor, latestCoverage } = require('./gsc-technical-snapshot.cjs');
 
 test('rejects a newer partial export and selects the newest demonstrably complete coverage export', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-coverage-'));
@@ -47,6 +47,31 @@ test('rejects non-success sitemap responses before parsing their bodies', async 
 test('omits wildcard redirect patterns from concrete route states', () => {
   const snapshot = buildSnapshot({ sitemapUrls: [], manifestRows: [], coverageRows: [], redirectSources: ['/(.*)', '/legacy'] });
   assert.deepEqual(snapshot.routes.map((row) => row.route), ['/legacy']);
+});
+
+test('models configured noindex routes as ineligible for sitemap and indexation review', () => {
+  assert.deepEqual(indexabilityFor('/admin/email-dashboard'), { indexable: false, sitemapEligible: false, reason: 'CONFIGURED_NOINDEX_ROUTE' });
+  assert.deepEqual(indexabilityFor('/search'), { indexable: false, sitemapEligible: false, reason: 'CONFIGURED_NOINDEX_ROUTE' });
+  assert.deepEqual(indexabilityFor('/404'), { indexable: false, sitemapEligible: false, reason: 'NOT_FOUND_ROUTE' });
+  assert.deepEqual(indexabilityFor('/guides/a'), { indexable: true, sitemapEligible: true, reason: null });
+});
+
+test('excludes intentionally non-indexable manifest routes from route-state review', () => {
+  const snapshot = buildSnapshot({
+    sitemapUrls: ['https://mainedispensaryguide.com/guides/a'],
+    manifestRows: [
+      { canonical_path: '/guides/a' },
+      { canonical_path: '/admin/email-dashboard' },
+      { canonical_path: '/search' },
+      { canonical_path: '/404' },
+    ],
+    coverageRows: [{ url: 'https://mainedispensaryguide.com/guides/a', status: 'INDEXED' }],
+    redirectSources: [],
+    pageChecks: { '/guides/a': { checked: true, fetchStatus: 200 } },
+  });
+  assert.deepEqual(snapshot.routes.map(row => row.route), ['/guides/a']);
+  assert.deepEqual(snapshot.sources.excludedManifestRoutes, ['/404', '/admin/email-dashboard', '/search']);
+  assert.equal(snapshot.routes[0].state, 'PASS');
 });
 
 test('classifies unknown GSC inspections as review evidence', () => {
