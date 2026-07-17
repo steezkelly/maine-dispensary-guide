@@ -74,6 +74,17 @@ function clean(value) { return value == null || value === '' ? null : String(val
 function num(value) { const n = Number(value); return Number.isFinite(n) ? n : null; }
 function stableKey(values) { return values.map((v) => clean(v) ?? '(null)').join('|'); }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function canonicalPagePath(value) {
+  const raw = clean(value);
+  if (!raw) return null;
+  try {
+    const pathname = /^[a-z][a-z\d+.-]*:\/\//i.test(raw) ? new URL(raw).pathname : raw;
+    const pathOnly = pathname.split(/[?#]/, 1)[0].replace(/\/+/g, '/');
+    return pathOnly === '/' ? '/' : `/${pathOnly.replace(/^\/+|\/+$/g, '')}`;
+  } catch {
+    return raw;
+  }
+}
 
 function classifyQueryIntent(query) {
   const q = String(query || '').toLowerCase().trim();
@@ -126,7 +137,7 @@ function getPolicy(metric) {
 }
 
 function normalizeObservation(row, queryDistributions, manifestByPath) {
-  const page = clean(row.canonical_page_path || row.canonical_path || row.page_path || row.path);
+  const page = canonicalPagePath(row.canonical_page_path || row.canonical_path || row.page_path || row.path);
   const manifest = manifestByPath.get(page) || {};
   const metric = clean(row.metric_family || row.metric || row.metric_name);
   const policy = getPolicy(metric);
@@ -156,7 +167,8 @@ function dominantIntent(dist) {
 function peerCellId(metric, level, values) { return `${metric}:${level}:${stableKey(values)}`; }
 
 function selectPeers(target, observations, policy, minPeerCount) {
-  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null);
+  const targetPage = canonicalPagePath(target.canonical_page_path);
+  const peers = observations.filter((row) => canonicalPagePath(row.canonical_page_path) !== targetPage && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null);
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
@@ -308,5 +320,5 @@ function main() {
   console.log(`Ticket 009 baselines: ${result.baselines.length} rows written to ${args.out}`);
 }
 
-module.exports = { CONTRACT_VERSION, QUERY_INTENT_VERSION, POLICY_VERSION, QUERY_INTENTS, POLICIES, classifyQueryIntent, buildQueryIntentDistributions, normalizeObservation, selectPeers, regularizedBeta, betaQuantile, estimatePrior, posteriorFor, buildBaselines };
+module.exports = { CONTRACT_VERSION, QUERY_INTENT_VERSION, POLICY_VERSION, QUERY_INTENTS, POLICIES, canonicalPagePath, classifyQueryIntent, buildQueryIntentDistributions, normalizeObservation, selectPeers, regularizedBeta, betaQuantile, estimatePrior, posteriorFor, buildBaselines };
 if (require.main === module) main();

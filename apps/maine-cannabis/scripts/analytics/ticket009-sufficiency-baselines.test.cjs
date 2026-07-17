@@ -74,6 +74,13 @@ test('peer selection excludes every observation for the target page', () => {
   const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
   assert.deepEqual(out.peers.map((row) => row.canonical_page_path), ['/peer']);
 });
+test('peer selection excludes canonical-path variants of the target across windows', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
+  const priorWindow = { ...target, canonical_page_path: 'https://mainedispensaryguide.com/target/?utm=prior', numerator: 9, denominator: 10, window_start: '2026-06-01' };
+  const peer = { ...target, canonical_page_path: '/peer', numerator: 2, denominator: 10 };
+  const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
+  assert.deepEqual(out.peers.map((row) => row.canonical_page_path), ['/peer']);
+});
 test('site fallback is explicit when no peers exist', () => {
   const target = { metric_family: 'progression_rate', numerator: 1, denominator: 10 };
   const out = b.selectPeers(target, [target], b.POLICIES.progression_rate, 3);
@@ -135,5 +142,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/36 passed.`);
+console.log(`Tests: ${pass}/37 passed.`);
 if (process.exitCode) process.exit(1);

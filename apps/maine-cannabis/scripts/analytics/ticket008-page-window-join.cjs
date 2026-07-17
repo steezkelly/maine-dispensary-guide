@@ -118,6 +118,20 @@ function metricSource(row, report) {
   return null;
 }
 
+// Source exports may carry several named metrics in one page-day row. Expand
+// them before grouping so no metric is selected merely because it arrived
+// first in an upstream response.
+function metricEntries(row, key) {
+  const metricName = first(row, ['metric_name', 'metricName', 'metric'])
+    || first(key, ['metric_name', 'metricName', 'metric'])
+    || null;
+  if (metricName) return [{ metric_name: metricName, value: metricValue(row, row) }];
+  if (row.metrics && typeof row.metrics === 'object' && !Array.isArray(row.metrics)) {
+    return Object.entries(row.metrics).map(([name, value]) => ({ metric_name: name, value }));
+  }
+  return [{ metric_name: null, value: metricValue(row, row) }];
+}
+
 function normalizeManifestRows(rows) {
   const out = new Map();
   for (const row of rows || []) {
@@ -139,16 +153,14 @@ function normalizeGa4Release(release) {
       const page = canonicalizePagePath(first(key, ['page_path', 'pagePath', 'requestPath', 'path', 'page_location']));
       if (!date || !page) continue;
       const eventName = first(key, ['event_name', 'eventName', 'event']) || null;
-      const metricName = first(raw, ['metric_name', 'metricName', 'metric'])
-        || first(key, ['metric_name', 'metricName', 'metric'])
-        || null;
-      const value = metricValue(raw, report);
-      records.push({
-        source: 'ga4', source_family: family, report_key: reportKey,
-        date, canonical_page_path: page, event_name: eventName, metric_name: metricName,
-        value, metric_source: metricSource(raw, report), observed: { bq_value: raw.bq_value ?? null, data_api_value: raw.data_api_value ?? null },
-        row_key: raw.row_key || key,
-      });
+      for (const metric of metricEntries(raw, key)) {
+        records.push({
+          source: 'ga4', source_family: family, report_key: reportKey,
+          date, canonical_page_path: page, event_name: eventName, metric_name: metric.metric_name,
+          value: metric.value, metric_source: metricSource(raw, report), observed: { bq_value: raw.bq_value ?? null, data_api_value: raw.data_api_value ?? null },
+          row_key: raw.row_key || key,
+        });
+      }
     }
   }
   return records;
@@ -156,21 +168,21 @@ function normalizeGa4Release(release) {
 
 function normalizeVercelRows(input) {
   const rows = Array.isArray(input) ? input : (input && Array.isArray(input.rows) ? input.rows : []);
-  return rows.map((raw) => {
+  return rows.flatMap((raw) => {
     const date = normalizeDate(first(raw, ['date', 'day', 'measurement_date', 'window_date']));
     const page = canonicalizePagePath(first(raw, ['canonical_page_path', 'requestPath', 'request_path', 'page_path', 'path']));
     const family = String(first(raw, ['source_family', 'dataset', 'metric_family']) || 'vercel_a4').toLowerCase();
     const a5 = family.includes('speed') || family.includes('vital') || String(raw.source || '').toUpperCase() === 'A5';
     const reportKey = raw.report_key || raw.dataset || 'vercel_a4_visits';
     const metricFamily = family === 'vercel_a4' ? sourceFamily(reportKey) : family;
-    return {
+    return metricEntries(raw, raw).map((metric) => ({
       source: a5 ? 'a5' : 'vercel', source_family: a5 ? 'speed_insights' : metricFamily,
       report_key: reportKey, date,
       canonical_page_path: page, event_name: raw.event_name || raw.eventName || null,
-      metric_name: raw.metric_name || raw.metricName || raw.metric || null,
-      value: metricValue(raw, raw), observed: raw,
+      metric_name: metric.metric_name,
+      value: metric.value, observed: raw,
       row_key: raw.row_key || raw,
-    };
+    }));
   }).filter((row) => row.date && row.canonical_page_path);
 }
 
