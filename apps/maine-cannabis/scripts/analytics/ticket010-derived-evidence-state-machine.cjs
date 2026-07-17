@@ -24,7 +24,13 @@ function requireTimestamp(value, field) {
   return String(value);
 }
 function stableDeduplicationKey(row) {
-  return `oppkey_${hash([row.page_id || '(page)', row.canonical_page_path || row.canonical_path || '(path)', row.primary_task_family || '(task)', row.metric_family || '(metric)', row.signal_family || signalFamily(row)].join('|'))}`;
+  return `oppkey_${hash([row.page_id || '(page)', row.canonical_page_path || row.canonical_path || '(path)', row.primary_task_family || '(task)', row.metric_family || '(metric)', row.signal_family || signalFamily(row), peerCellId(row)].join('|'))}`;
+}
+function peerCellId(row) {
+  if (row.peer_cell_id) return `cell:${row.peer_cell_id}`;
+  if (row.peer_fallback_level != null) return `fallback:${row.peer_fallback_level}`;
+  if (Array.isArray(row.policy_dimensions) && row.policy_dimensions.length) return `policy:${row.policy_dimensions.join('|')}`;
+  return 'policy:default';
 }
 function signalFamily(row) {
   const metric = String(row.metric_family || '').toLowerCase();

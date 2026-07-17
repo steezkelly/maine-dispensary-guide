@@ -14,6 +14,7 @@ function eligibleRows() { return [row({ window_end: '2026-07-01' }), row({ windo
 test('required states exist', () => { for (const x of ['NORMAL','WATCH','PERSISTENT_SHIFT_CANDIDATE','INVESTIGATION_ELIGIBLE','MEASUREMENT_BLOCKED']) assert.ok(s.STATES.includes(x)); });
 test('stable dedup key is deterministic', () => assert.equal(s.stableDeduplicationKey(row()), s.stableDeduplicationKey(row())));
 test('different metric changes dedup key', () => assert.notEqual(s.stableDeduplicationKey(row()), s.stableDeduplicationKey(row({ metric_family: 'progression_rate' }))));
+test('different peer cells change the persistence identity', () => assert.notEqual(s.stableDeduplicationKey(row()), s.stableDeduplicationKey(row({ peer_cell_id: 'gsc_ctr:1:how_to' }))));
 test('signal families are metric-specific', () => { assert.equal(s.signalFamily(row({ metric_family: 'gsc_ctr' })), 'acquisition_discovery'); assert.equal(s.signalFamily(row({ metric_family: 'progression_rate' })), 'progression'); });
 test('healthy settled comparable row passes evidence checks', () => { const e = s.requiredEvidence(row()); assert.equal(e.source_contract_healthy, true); assert.equal(e.source_window_settled, true); assert.equal(e.source_window_comparable, true); assert.equal(e.measurement_block_reason, null); });
 test('unsettled row is blocked', () => assert.equal(s.measurementBlockReason(row({ settlement_state: 'fresh' })), 'WINDOW_UNSETTLED'));
@@ -25,6 +26,15 @@ test('measurement blocked state has no performance label', () => { const out = s
 test('no practical posterior shift becomes NORMAL', () => { const out = s.deriveEvidence([row({ probability_above_practical_delta: 0.2, probability_below_practical_delta: 0.1 })]); assert.equal(out.derived_evidence[0].state, 'NORMAL'); });
 test('first practical shift becomes WATCH', () => { const out = s.deriveEvidence([row()]); assert.equal(out.derived_evidence[0].state, 'WATCH'); });
 test('two settled practical windows become persistent candidate', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' })]); assert.equal(out.derived_evidence[1].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
+test('successive shifts from different peer cells cannot manufacture persistence', () => {
+  const out = s.deriveEvidence([
+    row({ window_end: '2026-07-01', peer_cell_id: 'gsc_ctr:device:desktop' }),
+    row({ window_start: '2026-07-08', window_end: '2026-07-08', peer_cell_id: 'gsc_ctr:device:mobile' }),
+    row({ window_start: '2026-07-15', window_end: '2026-07-15', peer_cell_id: 'gsc_ctr:fallback:task' }),
+  ]);
+  assert.ok(out.derived_evidence.every((evidence) => evidence.state === 'WATCH'));
+  assert.equal(out.opportunities.length, 0);
+});
 test('a settled normal window resets directional persistence', () => {
   const out = s.deriveEvidence([
     row({ window_end: '2026-07-01' }),
@@ -106,5 +116,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/43 passed.`);
+console.log(`Tests: ${pass}/45 passed.`);
 if (process.exitCode) process.exit(1);
