@@ -103,6 +103,8 @@ export interface MdgActiveAttentionEvent extends EventEnvelope {
   event_name: 'mdg_active_attention';
   attention_seconds_bucket: AttentionSecondsBucket;
   content_zone?: string;       // bounded zone ID (NOT visible text)
+  /** Same-site document.referrer pathname only; omitted for direct/external visits. */
+  same_site_source_path?: string;
   privacy_classification: 'anonymous_aggregate';
 }
 
@@ -132,6 +134,7 @@ export interface MdgActionExposureEvent extends EventEnvelope {
   action_id: string;           // bounded slug
   action_family: 'cta_click' | 'cta_download' | 'cta_mailto' | 'cta_link' | 'cta_form_start' | 'cta_form_submit' | 'cta_share' | 'cta_navigate' | 'cta_search' | 'cta_filter';
   placement_id: string;        // bounded placement slug
+  destination_family: 'internal_route' | 'external_url' | 'mailto_open' | 'tel_open' | 'download_start' | 'form_submit' | 'search_submit' | 'filter_apply' | 'other';
   privacy_classification: 'anonymous_aggregate';
 }
 
@@ -140,7 +143,9 @@ export interface MdgActionSelectEvent extends EventEnvelope {
   action_id: string;
   action_family: MdgActionExposureEvent['action_family'];
   placement_id: string;
-  destination_family: 'internal_route' | 'external_url' | 'mailto_open' | 'tel_open' | 'download_start' | 'form_submit' | 'search_submit' | 'filter_apply' | 'other';
+  destination_family: MdgActionExposureEvent['destination_family'];
+  /** Canonical same-site path only; omitted for external, mailto, and non-route actions. */
+  destination_path?: string;
   privacy_classification: 'anonymous_aggregate';
 }
 

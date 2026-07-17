@@ -316,22 +316,13 @@ const breadcrumbListJsonLd = breadcrumbListSchema
 
     <!-- Google Analytics GA4 -->
     {/*
-      Sprint 81 (2026-07-11) PSI mobile round 4: deferred gtag.js load.
+      Sprint 81 (2026-07-11) PSI mobile round 4: asynchronous gtag.js load.
 
-      Before: `<script async src="...gtag/js?id=...">` + a second inline script
-      that called `gtag('js', new Date())` and `gtag('config', ...)`. The async
-      attribute kept it off the parser-blocking path but it still fetched and
-      parsed during the LCP window, costing 177 KiB transfer + 192 ms of main-
-      thread time (PSI "3rd parties" audit) and dragging TBT up to 50ms.
-
-      After: define the `gtag` stub inline so the engagement instrumentation
-      below can call window.gtag synchronously without errors. Load the real
-      gtag.js on `requestIdleCallback` (same pattern as the homepage video +
-      decoration defer). `gtag('config', ...)` runs after the script loads.
-      The first ~50-500ms of engagement events might miss the config-time hit
-      but the engagement instrumentation still queues to dataLayer, and the
-      gtag library will replay queued calls when it initializes. Acceptable
-      trade for ~3-5 perf score points.
+      The inline stub queues `js` and `config` before the asynchronous client
+      fetch so instrumentation has an ordered destination from the first event.
+      The client begins fetching immediately: a CTA may navigate away before an
+      idle callback or load-event fallback fires, which would otherwise leave
+      its queued exposure/select events stranded in the discarded document.
     */}
     <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
       // Stub gtag so engagement instrumentation (below) can call window.gtag
@@ -340,23 +331,19 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
+      window.gtag('config', analyticsId);
 
-      // Load the real gtag.js after first idle.
+      // Start the async client immediately. The stub keeps this non-blocking,
+      // while avoiding a deliberate 1.5–2.5 second window where a first CTA
+      // can navigate before gtag has even begun to load.
       (function () {
         function loadGtag() {
           var s = document.createElement('script');
           s.async = true;
           s.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
-          s.onload = function () {
-            window.gtag('config', analyticsId);
-          };
           document.head.appendChild(s);
         }
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(loadGtag, { timeout: 2500 });
-        } else {
-          window.addEventListener('load', function () { window.setTimeout(loadGtag, 1500); });
-        }
+        loadGtag();
       })();
     </script>
 
@@ -409,19 +396,78 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         window.addEventListener('resize', onScroll, { passive: true });
         window.addEventListener('load', function () { setTimeout(checkScroll, 250); });
 
-        // --- page_engaged (30s of focus, or visible-again after hidden) ------
+        // --- page_engaged + v1 active foreground attention -------------------
+        // Active attention means foreground time with a recent intentional input,
+        // not simply an open tab. This stays anonymous: only timing is retained.
+        var activityWindowMs = 30000;
+        var lastQualifyingActivityAt = 0;
+        function recordQualifyingActivity() {
+          if (!document.hidden) {
+            lastQualifyingActivityAt = Date.now();
+            scheduleActiveAttention();
+          }
+        }
+        window.addEventListener('pointerdown', recordQualifyingActivity, { passive: true });
+        window.addEventListener('keydown', recordQualifyingActivity, { passive: true });
+        window.addEventListener('touchstart', recordQualifyingActivity, { passive: true });
+        window.addEventListener('scroll', recordQualifyingActivity, { passive: true });
+
         var engaged = false;
+        var activeAttentionSent = false;
+        var foregroundStartedAt = document.hidden ? 0 : Date.now();
+        var foregroundElapsedMs = 0;
+        var attentionTimer = 0;
         function markEngaged(reason) {
           if (engaged) return;
           engaged = true;
           send('page_engaged', { reason: reason });
         }
-        window.setTimeout(function () {
-          if (!document.hidden) markEngaged('timer_30s_visible');
-        }, 30000);
+        function foregroundAttentionMs() {
+          return foregroundElapsedMs + (foregroundStartedAt ? Date.now() - foregroundStartedAt : 0);
+        }
+        function sameSiteReferrerPath() {
+          try {
+            var referrer = new URL(document.referrer || '');
+            var currentHost = window.location.hostname.replace(/^www\./, '');
+            if (referrer.hostname.replace(/^www\./, '') !== currentHost) return '';
+            return referrer.pathname;
+          } catch (_) { return ''; }
+        }
+        function hasRecentQualifyingActivity() {
+          return lastQualifyingActivityAt && Date.now() - lastQualifyingActivityAt <= activityWindowMs;
+        }
+        function markActiveAttention() {
+          if (activeAttentionSent || foregroundAttentionMs() < 30000 || !hasRecentQualifyingActivity()) return;
+          activeAttentionSent = true;
+          var attentionParams = { schema_version: 'v1', attention_seconds_bucket: 30, transport_type: 'beacon' };
+          var sourcePath = sameSiteReferrerPath();
+          if (sourcePath) attentionParams.same_site_source_path = sourcePath;
+          send('mdg_active_attention', attentionParams);
+        }
+        function scheduleActiveAttention() {
+          if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
+          if (activeAttentionSent || !foregroundStartedAt) return;
+          attentionTimer = window.setTimeout(function () {
+            attentionTimer = 0;
+            markActiveAttention();
+            if (!engaged) markEngaged('timer_30s_visible');
+          }, Math.max(0, 30000 - foregroundAttentionMs()));
+        }
+        scheduleActiveAttention();
         document.addEventListener('visibilitychange', function () {
-          if (!engaged && document.visibilityState === 'visible') {
-            markEngaged('visibility_returned');
+          if (document.visibilityState === 'hidden') {
+            cancelPendingActionDwellTimers();
+            foregroundElapsedMs = foregroundAttentionMs();
+            foregroundStartedAt = 0;
+            if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
+          } else {
+            foregroundStartedAt = Date.now();
+            // Retain the legacy page_engaged signal, but do not let a tab
+            // return satisfy the v1 foreground-attention threshold by itself.
+            if (!engaged) markEngaged('visibility_returned');
+            markActiveAttention();
+            scheduleActiveAttention();
+            restartQualifiedActionDwellTimers();
           }
         });
 
@@ -446,28 +492,134 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           });
         }, true);
 
-        // --- cta_view (IntersectionObserver on [data-cta-id]) ---------------
-        if ('IntersectionObserver' in window) {
-          var seen = new WeakSet();
-          var io = new IntersectionObserver(function (entries) {
-            for (var i = 0; i < entries.length; i++) {
-              var e = entries[i];
-              if (!e.isIntersecting) continue;
-              var el = e.target;
-              if (seen.has(el)) continue;
-              seen.add(el);
-              io.unobserve(el);
-              send('cta_view', {
-                cta_id: el.getAttribute('data-cta-id') || '',
-                cta_destination: el.getAttribute('href') || '',
-                cta_text: (el.textContent || '').trim().slice(0, 80)
-              });
-            }
-          }, { threshold: 0.5 });
-          document.addEventListener('DOMContentLoaded', function () {
-            var ctas = document.querySelectorAll('[data-cta-id]');
-            for (var j = 0; j < ctas.length; j++) io.observe(ctas[j]);
+        // --- v1 action exposure/select (queued and beacon-safe) --------------
+        // CTA metadata is authored where an ICA module knows it. Existing CTA
+        // IDs get stable defaults here so the rollout does not require link
+        // navigation to wait for analytics.
+        function defaultActionFamily(el) {
+          if (el.tagName === 'BUTTON' && (el.getAttribute('type') || '').toLowerCase() === 'submit') {
+            return 'cta_form_submit';
+          }
+          return 'cta_navigate';
+        }
+        function destinationPath(el, family) {
+          if (family !== 'internal_route') return '';
+          try { return new URL(el.getAttribute('href') || '', window.location.origin).pathname; }
+          catch (_) { return ''; }
+        }
+        function actionMetadata(el) {
+          var ctaId = el.getAttribute('data-cta-id') || '';
+          var placementMatch = /^cta-([a-z-]+)-/.exec(ctaId);
+          return {
+            action_id: el.getAttribute('data-action-id') || ctaId,
+            action_family: el.getAttribute('data-action-family') || defaultActionFamily(el),
+            placement_id: el.getAttribute('data-placement-id') || (placementMatch ? placementMatch[1] : 'inline'),
+            destination_family: destinationFamily(el)
+          };
+        }
+        function destinationFamily(el) {
+          var explicit = el.getAttribute('data-destination-family');
+          if (explicit) return explicit;
+          if (el.tagName === 'BUTTON' && (el.getAttribute('type') || '').toLowerCase() === 'submit') {
+            return 'form_submit';
+          }
+          var href = el.getAttribute('href') || '';
+          if (href.indexOf('mailto:') === 0) return 'mailto_open';
+          if (href.indexOf('tel:') === 0) return 'tel_open';
+          if (href && (href.charAt(0) === '/' || href.indexOf(window.location.origin) === 0)) return 'internal_route';
+          if (href) return 'external_url';
+          return 'other';
+        }
+        function sendAction(name, metadata, extra) {
+          // gtag queues before its network library loads; transport_type asks
+          // the loaded client to use beacon where available. Never await this.
+          send(name, Object.assign({ schema_version: 'v1', transport_type: 'beacon' }, metadata, extra || {}));
+        }
+        var exposedActions = new WeakSet();
+        var actionDwellTimers = new Map();
+        var actionIntersectionState = new Set();
+        var actionObserver = null;
+        function cancelPendingActionDwellTimers() {
+          actionDwellTimers.forEach(function (timer) { window.clearTimeout(timer); });
+          actionDwellTimers.clear();
+        }
+        function scheduleActionDwell(target) {
+          if (exposedActions.has(target) || actionDwellTimers.has(target) || document.hidden) return;
+          var timer = window.setTimeout(function () {
+            actionDwellTimers.delete(target);
+            // A timer cannot convert a backgrounded or no-longer-visible
+            // element into a meaningful viewport exposure.
+            if (document.hidden || !actionIntersectionState.has(target) || exposedActions.has(target)) return;
+            if (actionObserver) actionObserver.unobserve(target);
+            exposeAction(target);
+          }, 750);
+          actionDwellTimers.set(target, timer);
+        }
+        function restartQualifiedActionDwellTimers() {
+          actionIntersectionState.forEach(function (target) {
+            scheduleActionDwell(target);
           });
+        }
+        function legacyCtaView(target) {
+          send('cta_view', {
+            cta_id: target.getAttribute('data-cta-id') || '',
+            cta_destination: target.getAttribute('href') || '',
+            cta_text: (target.textContent || '').trim()
+          });
+        }
+        function exposeAction(target) {
+          if (exposedActions.has(target)) return;
+          exposedActions.add(target);
+          sendAction('mdg_action_exposure', actionMetadata(target));
+          // Keep the v0 reach report populated until it is explicitly migrated.
+          legacyCtaView(target);
+        }
+        function observeActions() {
+          if (!('IntersectionObserver' in window)) return;
+          actionObserver = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              var entry = entries[i];
+              var el = entry.target;
+              if (exposedActions.has(el)) continue;
+              if (!entry.isIntersecting || entry.intersectionRatio < 0.5) {
+                actionIntersectionState.delete(el);
+                var pending = actionDwellTimers.get(el);
+                if (pending) { window.clearTimeout(pending); actionDwellTimers.delete(el); }
+                continue;
+              }
+              actionIntersectionState.add(el);
+              scheduleActionDwell(el);
+            }
+          }, { threshold: [0, 0.5] });
+          var ctas = document.querySelectorAll('[data-cta-id]');
+          for (var j = 0; j < ctas.length; j++) actionObserver.observe(ctas[j]);
+        }
+        document.addEventListener('click', function (ev) {
+          var target = ev.target && ev.target.closest ? ev.target.closest('[data-cta-id]') : null;
+          if (!target) return;
+          var metadata = actionMetadata(target);
+          var path = destinationPath(target, metadata.destination_family);
+          // A deliberate selection qualifies the action even when the 750ms
+          // viewport dwell has not elapsed or IntersectionObserver is absent.
+          exposeAction(target);
+          sendAction('mdg_action_select', metadata, path ? { destination_path: path } : {});
+          // Deliberately do not preventDefault or await analytics: links and
+          // form-control actions must remain reliable even when tracking fails.
+        }, true);
+        // A native navigation triggered by a first CTA can unload the document
+        // before gtag.js has initialized, leaving queued events stranded in
+        // the discarded dataLayer. pagehide/visibilitychange flushes ask the
+        // (possibly still stubbed) gtag client to drain its queue via beacon
+        // while the network stack is still alive.
+        function flushQueuedActions() {
+          try { if (typeof window.gtag === 'function') window.gtag('event', 'page_unload_before_gtag'); } catch (_) { /* no-op: tracking must never break navigation */ }
+        }
+        window.addEventListener('pagehide', flushQueuedActions);
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushQueuedActions(); });
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', observeActions);
+        } else {
+          observeActions();
         }
       })();
     </script>
@@ -723,4 +875,3 @@ const breadcrumbListJsonLd = breadcrumbListSchema
     background: #152F23;
   }
 </style>
-

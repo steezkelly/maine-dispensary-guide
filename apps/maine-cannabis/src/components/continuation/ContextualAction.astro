@@ -23,9 +23,12 @@ const familyLabels = {
   <aside
     class="contextual-action"
     aria-labelledby={`contextual-action-${rule.id}`}
-    data-action-id={rule.id}
-    data-action-family={rule.actionFamily}
+    data-action-id={`contextual-action-${rule.id}`}
+    data-action-family="cta_navigate"
+    data-placement-id="contextual_conversion_action"
+    data-destination-family="internal_route"
     data-continuation-slot="contextual-action"
+    data-contextual-action-family={rule.actionFamily}
   >
     <div class="contextual-action__copy">
       <p class="contextual-action__eyebrow">{familyLabels[rule.actionFamily]}</p>
@@ -37,6 +40,10 @@ const familyLabels = {
       class="contextual-action__link btn"
       href={rule.href}
       data-cta-id={`contextual-action-${rule.id}`}
+      data-action-id={`contextual-action-${rule.id}`}
+      data-action-family="cta_navigate"
+      data-placement-id="contextual_conversion_action"
+      data-destination-family="internal_route"
     >
       Open resource <span aria-hidden="true">→</span>
     </a>

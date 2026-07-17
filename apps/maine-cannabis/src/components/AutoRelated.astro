@@ -74,7 +74,14 @@ const sectionTitle = section === 'City Guides' ? 'Nearby Towns & Related Guides'
   <ul class="auto-related-list">
     {finalItems.map(item => (
       <li>
-        <a href={item.url}>
+        <a
+          href={item.url}
+          data-cta-id={`auto-related-${item.url.replace(/^\//, '').replace(/\//g, '--')}`}
+          data-action-id={`auto-related-${item.url.replace(/^\//, '').replace(/\//g, '--')}`}
+          data-action-family="cta_navigate"
+          data-placement-id="auto_related_module"
+          data-destination-family="internal_route"
+        >
           <span class="auto-related-title">{item.title}</span>
           <span class="auto-related-section">{item.section}</span>
         </a>

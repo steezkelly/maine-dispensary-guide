@@ -920,6 +920,15 @@ const allGuideNames = new Set(allGuides.map(g => g.name.toLowerCase()));
 const ocpAuCities = ocpCities.filter(c => c.t === 'au' && !allGuideNames.has(c.n.toLowerCase()));
 const ocpMedCities = ocpCities.filter(c => c.t === 'med' && !allGuideNames.has(c.n.toLowerCase()));
 
+function findADispensaryActionId(destination: string, action: string, instance: string): string {
+  const key = `${destination}-${instance}`
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  return `cta-inline-find-a-dispensary-${action}-${key}`;
+}
+
 const directoryJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
@@ -1008,15 +1017,15 @@ const directoryJsonLd = {
           </p>
         )}
         <div class="guide-grid">
-          {region.guides.map((guide) => (
+          {region.guides.map((guide, guideIndex) => (
             <article class="guide-card">
               <h3>{guide.name}</h3>
               <p>{guide.summary}</p>
               <div class="guide-actions">
-                <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-01 -->
-<a href={guide.href} class="btn-guide" data-cta-id="cta-inline-find-a-dispensary-01">Read guide</a>
-                <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-02 -->
-<a href={guide.mapUrl} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-02">Map search</a>
+                <!-- analytics:cta-injected id=generated-from-destination-action-and-card -->
+                <a href={guide.href} class="btn-guide" data-cta-id={findADispensaryActionId(guide.href, 'guide', `${region.name}-${guideIndex}`)}>Read guide</a>
+                <!-- analytics:cta-injected id=generated-from-destination-action-and-card -->
+                <a href={guide.mapUrl} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id={findADispensaryActionId(guide.href, 'map', `${region.name}-${guideIndex}`)}>Map search</a>
               </div>
             </article>
           ))}
@@ -1034,7 +1043,7 @@ const directoryJsonLd = {
     <p class="ocp-intro">Maine Dispensary Guide publishes a curated local guide for the highest-traffic towns. Below are the {ocpAuCities.length + ocpMedCities.length} additional Maine towns with at least one active adult-use store or caregiver storefront licensed by the Maine Office of Cannabis Policy. Each row links to a map search and the OCP licensee search for that town. <strong>Recently added full guides:</strong> <a href="/guides/bath-dispensary-guide">Bath</a>, <a href="/guides/brewer-dispensary-guide">Brewer</a>, <a href="/guides/berwick-dispensary-guide">Berwick</a>. Local guides for other towns are in the editorial queue; submit your town as a <a href="/contact">suggested guide</a> if you want it prioritized.</p>
     <p class="ocp-source">Source: <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (April 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (April 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
     <div class="ocp-grid">
-      {[...ocpAuCities, ...ocpMedCities].sort((a, b) => a.n.localeCompare(b.n)).map((city) => (
+      {[...ocpAuCities, ...ocpMedCities].sort((a, b) => a.n.localeCompare(b.n)).map((city, cityIndex) => (
         <article class="ocp-card">
           <h3>
             {city.n}
@@ -1043,10 +1052,10 @@ const directoryJsonLd = {
           <p class="ocp-count">{city.c} active {city.t === 'au' ? `store${city.c > 1 ? 's' : ''}` : `caregiver storefront${city.c > 1 ? 's' : ''}`}</p>
           {city.s && city.s.length > 0 && <p class="ocp-sample">{city.s.slice(0, 2).join(' · ')}</p>}
           <div class="ocp-actions">
-            <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-03 -->
-<a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-03">Map search</a>
-            <!-- analytics:cta-injected id=cta-inline-find-a-dispensary-04 -->
-<a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-find-a-dispensary-04">OCP search</a>
+            <!-- analytics:cta-injected id=generated-from-destination-action-and-card -->
+            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.n + ', ME cannabis')}`} class="btn-map" target="_blank" rel="noopener noreferrer" data-cta-id={findADispensaryActionId(city.n, 'ocp-map', String(cityIndex))}>Map search</a>
+            <!-- analytics:cta-injected id=generated-from-destination-action-and-card -->
+            <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" class="btn-guide-secondary" target="_blank" rel="noopener noreferrer" data-cta-id={findADispensaryActionId(city.n, 'ocp-search', String(cityIndex))}>OCP search</a>
           </div>
         </article>
       ))}

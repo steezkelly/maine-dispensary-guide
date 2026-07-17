@@ -52,6 +52,15 @@ const auditNote = hubIsShipped
   ? 'Stage 1 foundation — Stage 2 editorial body lands on this hub next. The directory, primary-source registry, and verification badge below are live now.'
   : 'Stage 1 foundation stub — directory + verification live; the 2,000+ word editorial body ships in Stage 3 with the two pilot hubs already shipped.';
 
+function regionHubActionId(href: string, action: string): string {
+  const guideKey = href
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  return `cta-inline-region-hub-${action}-${guideKey}`;
+}
+
 const faqJsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -138,10 +147,10 @@ const faqJsonLd = JSON.stringify({
         <h3>{g.name}</h3>
         <p>{g.summary}</p>
         <div class="hub-guide-actions">
-          <!-- analytics:cta-injected id=cta-inline-RegionHubShell-01 -->
-<a href={g.href} class="hub-btn-guide" data-cta-id="cta-inline-RegionHubShell-01">Read guide</a>
-          <!-- analytics:cta-injected id=cta-inline-RegionHubShell-02 -->
-<a href={g.mapUrl} class="hub-btn-map" target="_blank" rel="noopener noreferrer" data-cta-id="cta-inline-RegionHubShell-02">Map search</a>
+          <!-- analytics:cta-injected id=generated-from-guide-href-and-action -->
+          <a href={g.href} class="hub-btn-guide" data-cta-id={regionHubActionId(g.href, 'guide')}>Read guide</a>
+          <!-- analytics:cta-injected id=generated-from-guide-href-and-action -->
+          <a href={g.mapUrl} class="hub-btn-map" target="_blank" rel="noopener noreferrer" data-cta-id={regionHubActionId(g.href, 'map')}>Map search</a>
         </div>
       </article>
     ))}

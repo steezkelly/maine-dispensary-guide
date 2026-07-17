@@ -132,6 +132,7 @@ const howToSchema = {
   )
 };
 
+const analyticsCtaId = (raw: string): string => `cta-inline-launch-checklist-${raw.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()}`;
 ---
 
 <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
@@ -959,7 +960,9 @@ const howToSchema = {
           <span class="duration-badge">{section.duration}</span>
         </div>
         <div class="item-list">
-          {section.items.map(item => (
+          {section.items.map(item => {
+            const perItem = analyticsCtaId(item.title);
+            return (
             <details class="check-card">
               <summary>
                 <div class="summary-content">
@@ -971,12 +974,13 @@ const howToSchema = {
               <div class="details-content">
                 <p set:html={item.description}></p>
                 <div class="details-actions">
-                  <!-- analytics:cta-injected id=cta-inline-launch-checklist-03 -->
-<a href={item.link} class="btn-detail" data-cta-id="cta-inline-launch-checklist-03">{item.cta} →</a>
+                  <!-- analytics:cta-injected id=cta-inline-launch-checklist-{perItem} -->
+<a href={item.link} class="btn-detail" data-cta-id={`cta-inline-launch-checklist-${perItem}`}>{item.cta} →</a>
                 </div>
               </div>
             </details>
-          ))}
+            );
+          })}
         </div>
       </div>
     ))}
