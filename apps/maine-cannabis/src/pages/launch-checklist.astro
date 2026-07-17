@@ -132,7 +132,7 @@ const howToSchema = {
   )
 };
 
-const analyticsCtaId = (raw: string): string => `cta-inline-launch-checklist-${raw.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()}`;
+const analyticsCtaId = (raw: string): string => raw.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
 ---
 
 <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
