@@ -38,6 +38,40 @@ try {
   assert.equal(fs.existsSync(baselineFile), true);
   assert.deepEqual(JSON.parse(fs.readFileSync(baselineFile, 'utf8')), { 'fixture check': 1 });
 
+  const replacementFixtureDir = path.join(tempRoot, 'replacement/scripts/check');
+  fs.mkdirSync(replacementFixtureDir, { recursive: true });
+  fs.copyFileSync(SOURCE, path.join(replacementFixtureDir, 'content-health-regression.cjs'));
+  fs.writeFileSync(
+    path.join(replacementFixtureDir, 'content-health.cjs'),
+    "console.log('❌ existing fixture check: 2 issues\\n❌ new fixture check: 3 issues'); process.exit(1);\n",
+  );
+  const replacementBaselineFile = path.join(replacementFixtureDir, '.content-health-baseline.json');
+  fs.writeFileSync(replacementBaselineFile, JSON.stringify({ 'existing fixture check': 1 }, null, 2) + '\n');
+
+  const replacementNormalBeforeUpdate = spawnSync('node', ['content-health-regression.cjs'], {
+    cwd: replacementFixtureDir,
+    encoding: 'utf8',
+  });
+  assert.notEqual(replacementNormalBeforeUpdate.status, 0);
+  assert.deepEqual(JSON.parse(fs.readFileSync(replacementBaselineFile, 'utf8')), { 'existing fixture check': 1 });
+
+  const replacementUpdate = spawnSync('node', ['content-health-regression.cjs', '--update-baseline'], {
+    cwd: replacementFixtureDir,
+    encoding: 'utf8',
+  });
+  assert.equal(replacementUpdate.status, 0, (replacementUpdate.stdout || '') + (replacementUpdate.stderr || ''));
+  assert.deepEqual(JSON.parse(fs.readFileSync(replacementBaselineFile, 'utf8')), {
+    'existing fixture check': 2,
+    'new fixture check': 3,
+  });
+
+  const replacementNormal = spawnSync('node', ['content-health-regression.cjs'], {
+    cwd: replacementFixtureDir,
+    encoding: 'utf8',
+  });
+  assert.equal(replacementNormal.status, 0, (replacementNormal.stdout || '') + (replacementNormal.stderr || ''));
+  assert.match((replacementNormal.stdout || '') + (replacementNormal.stderr || ''), /No change from baseline/);
+
   const zeroFixtureDir = path.join(tempRoot, 'zero/scripts/check');
   fs.mkdirSync(zeroFixtureDir, { recursive: true });
   fs.copyFileSync(SOURCE, path.join(zeroFixtureDir, 'content-health-regression.cjs'));

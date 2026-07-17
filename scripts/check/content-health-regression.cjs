@@ -137,6 +137,12 @@ if (improvements.length > 0) {
   }
 }
 
+if (UPDATE_BASELINE && (regressions.length > 0 || newChecks.length > 0)) {
+  baseline = current;
+  fs.writeFileSync(BASELINE_FILE, JSON.stringify(current, null, 2) + '\n');
+  console.log('   → Baseline replaced with the current findings.');
+}
+
 if (newChecks.length === 0 && regressions.length === 0 && improvements.length === 0) {
   console.log('✅  No change from baseline. All checks holding steady.');
 }
@@ -146,12 +152,12 @@ const totalBaseline = Object.values(baseline).reduce((a, b) => a + b, 0);
 const totalCurrent = Object.values(current).reduce((a, b) => a + b, 0);
 console.log(`Total: baseline=${totalBaseline} current=${totalCurrent}`);
 
-if (regressions.length > 0 || newChecks.length > 0) {
+if (!UPDATE_BASELINE && (regressions.length > 0 || newChecks.length > 0)) {
   console.log('');
   console.log('❌  content-health regression detected. Fix the new failures or update the baseline if intentional.');
   process.exit(1);
 }
 
 console.log('');
-console.log('✅  content-health: no regressions.');
+console.log(UPDATE_BASELINE ? '✅  content-health: baseline updated.' : '✅  content-health: no regressions.');
 process.exit(0);
