@@ -75,6 +75,19 @@ test('task-compatible fallback never admits another primary task family', () => 
   assert.equal(out.level, 'insufficient');
   assert.equal(out.peers.length, 0);
 });
+test('peer selection excludes unsettled or unhealthy candidates from the prior', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
+  const badPeers = [
+    { ...target, canonical_page_path: '/fresh', settlement_state: 'fresh', numerator: 2 },
+    { ...target, canonical_page_path: '/blocked', settlement_state: 'settled', measurement_status: 'MEASUREMENT_BLOCKED: SOURCE_UNAVAILABLE', numerator: 3 },
+    { ...target, canonical_page_path: '/incomparable', settlement_state: 'settled', measurement_status: 'MEASURED', window_comparable: false, numerator: 4 },
+    { ...target, canonical_page_path: '/contaminated', settlement_state: 'settled', measurement_status: 'MEASURED', change_contamination_status: 'CONTAMINATED', numerator: 5 },
+    { ...target, canonical_page_path: '/unresolved', settlement_state: 'settled', measurement_status: 'MEASURED', task_contract_status: 'UNRESOLVED', numerator: 6 },
+  ];
+  const out = b.selectPeers(target, [target, ...badPeers], b.POLICIES.gsc_ctr, 1);
+  assert.equal(out.level, 'insufficient');
+  assert.equal(out.peers.length, 0);
+});
 test('peer selection excludes every observation for the target page', () => {
   const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
   const priorWindow = { ...target, numerator: 9, denominator: 10, window_start: '2026-06-01' };
@@ -143,5 +156,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/37 passed.`);
+console.log(`Tests: ${pass}/38 passed.`);
 if (process.exitCode) process.exit(1);
