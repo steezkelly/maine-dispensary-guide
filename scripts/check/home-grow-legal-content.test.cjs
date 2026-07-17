@@ -2,15 +2,28 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const blogDir = path.join(repoRoot, 'apps', 'maine-cannabis', 'src', 'pages', 'blog');
 const pillarPath = path.join(blogDir, 'maine-home-grow-cannabis-guide-2026.astro');
 const medicalPath = path.join(blogDir, 'maine-medical-cannabis-patient-grow-guide.astro');
 const distDir = path.join(repoRoot, 'dist', 'blog');
+const sitemapPath = path.join(repoRoot, 'dist', 'sitemap-0.xml');
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
+}
+
+function loadDisplaySafeDate(file) {
+  const source = read(file);
+  const match = source.match(/function displaySafeDate\(date: string\): string \{[\s\S]*?^\}/m);
+  assert.ok(match, `displaySafeDate helper missing from ${file}`);
+  const runnable = match[0]
+    .replace(/\(date: string\): string/, '(date)')
+    .replace(/\(hint: string\)/g, '(hint)')
+    .replace(/ as unknown as string/g, '');
+  return vm.runInNewContext(`${runnable}; displaySafeDate`);
 }
 
 test('home-grow pillar separates adult-use and medical law', () => {
@@ -74,6 +87,7 @@ test('built article metadata preserves calendar dates', () => {
   const medicalHtml = read(path.join(distDir, 'maine-medical-cannabis-patient-grow-guide', 'index.html'));
   assert.match(pillarHtml, /Published April 18, 2026/);
   assert.match(pillarHtml, /Updated July 16, 2026/);
+  assert.match(pillarHtml, /<time datetime="2026-07-16">Updated July 16, 2026<\/time>/);
   assert.doesNotMatch(pillarHtml, /Published April 17, 2026|Updated July 15, 2026/);
   assert.match(pillarHtml, /property="og:article:published_time" content="2026-04-18"/);
   assert.match(pillarHtml, /property="og:article:modified_time" content="2026-07-16"/);
@@ -81,8 +95,27 @@ test('built article metadata preserves calendar dates', () => {
   assert.match(pillarHtml, /"dateModified":"2026-07-16"/);
   assert.match(medicalHtml, /Published July 16, 2026/);
   assert.doesNotMatch(medicalHtml, /Published July 15, 2026/);
+  assert.doesNotMatch(medicalHtml, /class="article-updated"|>Updated July 16, 2026</);
   assert.match(medicalHtml, /property="og:article:published_time" content="2026-07-16"/);
   assert.match(medicalHtml, /property="og:article:modified_time" content="2026-07-16"/);
   assert.match(medicalHtml, /"datePublished":"2026-07-16"/);
   assert.match(medicalHtml, /"dateModified":"2026-07-16"/);
+});
+
+test('display-safe adapter and sitemap retain their separate date contracts', () => {
+  for (const file of [pillarPath, medicalPath]) {
+    const displaySafeDate = loadDisplaySafeDate(file);
+    const value = displaySafeDate('2026-07-16');
+    const parsed = new Date(value);
+    assert.equal(parsed.getFullYear(), 2026);
+    assert.equal(parsed.getMonth(), 6);
+    assert.equal(parsed.getDate(), 16);
+    assert.equal(parsed.getHours(), 12);
+    assert.equal(String(value), '2026-07-16');
+    assert.equal(JSON.stringify(value), '"2026-07-16"');
+  }
+
+  const sitemap = read(sitemapPath);
+  assert.match(sitemap, /<loc>https:\/\/mainedispensaryguide\.com\/blog\/maine-home-grow-cannabis-guide-2026<\/loc>[\s\S]*?<lastmod>2026-07-16<\/lastmod>/);
+  assert.match(sitemap, /<loc>https:\/\/mainedispensaryguide\.com\/blog\/maine-medical-cannabis-patient-grow-guide<\/loc>[\s\S]*?<lastmod>2026-07-16<\/lastmod>/);
 });
