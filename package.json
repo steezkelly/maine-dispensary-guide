@@ -23,6 +23,7 @@
     "agents:validate-contract": "node scripts/agent/validate-task-contract.cjs",
     "hooks:install": "node scripts/git/install-hooks.cjs",
     "test:market-stats-video": "npm --workspace @network/maine-cannabis run test:market-stats-video && node --test scripts/check/market-stats-video-ci-wiring.test.cjs",
+    "test:answer-engine-benchmark-manifest": "node --test scripts/analytics/check-answer-engine-benchmark-manifest.test.cjs",
     "test:home-grow-legal-content": "node scripts/check/home-grow-legal-content.test.cjs",
     "workflow:status": "node scripts/git/mdg-worktree-status.cjs --assert-no-conflicts",
     "workflow:status:fetch": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",

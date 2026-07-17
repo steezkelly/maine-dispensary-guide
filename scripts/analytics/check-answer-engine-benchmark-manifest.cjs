@@ -3,7 +3,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const manifestPath = path.resolve(__dirname, '../../docs/analytics/answer-engine-benchmark-manifest.v1.json');
+const manifestPath = process.env.ANSWER_ENGINE_BENCHMARK_MANIFEST_PATH
+  ? path.resolve(process.env.ANSWER_ENGINE_BENCHMARK_MANIFEST_PATH)
+  : path.resolve(__dirname, '../../docs/analytics/answer-engine-benchmark-manifest.v1.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const expectedIntents = new Set([
   'consumer local discovery',
@@ -19,7 +21,7 @@ function fail(message) {
 
 if (manifest.manifestVersion !== '1.0.0') fail('manifestVersion must be 1.0.0');
 if (manifest.scope?.geography !== 'Maine only') fail('scope must remain Maine only');
-if (!Array.isArray(manifest.benchmarkQueries) || manifest.benchmarkQueries.length < 10) fail('requires at least 10 benchmark queries');
+if (!Array.isArray(manifest.benchmarkQueries) || manifest.benchmarkQueries.length < 9) fail('requires at least 9 active benchmark queries');
 
 const seenIds = new Set();
 const seenIntents = new Set();
@@ -39,6 +41,25 @@ for (const entry of manifest.benchmarkQueries) {
   if (!entry.queryOwner || !/^\d{4}-\d{2}-\d{2}$/.test(entry.reviewDate)) fail(`${entry.id} needs owner and ISO review date`);
 }
 for (const intent of expectedIntents) if (!seenIntents.has(intent)) fail(`missing intent group: ${intent}`);
+
+const deferredRetailStores = manifest.deferredQueries?.find((entry) => entry.id === 'market-retail-stores');
+if (seenIds.has('market-retail-stores')) fail('market-retail-stores must remain deferred while its canonical page disagrees with the source-reviewed answer');
+if (!deferredRetailStores || deferredRetailStores.status !== 'deferred') fail('market-retail-stores needs a deferred query record');
+if (deferredRetailStores.canonicalMdgUrl !== 'https://mainedispensaryguide.com/market-stats') fail('deferred market-retail-stores needs the market-stats canonical URL');
+if (!deferredRetailStores.reason || !deferredRetailStores.resumeCondition) fail('deferred market-retail-stores needs a reason and resume condition');
+if (!Array.isArray(deferredRetailStores.requiredAnswer?.primarySourceReferences) || deferredRetailStores.requiredAnswer.primarySourceReferences.length === 0) {
+  fail('deferred market-retail-stores needs primary-source provenance');
+}
+
+const retailStatsPath = path.resolve(__dirname, '../../apps/maine-cannabis/src/data/site-stats.json');
+const retailStats = JSON.parse(fs.readFileSync(retailStatsPath, 'utf8'));
+const renderedValue = deferredRetailStores.canonicalPageObservation?.renderedValue;
+if (deferredRetailStores.canonicalPageObservation?.sourcePath !== 'apps/maine-cannabis/src/data/site-stats.json'
+  || deferredRetailStores.canonicalPageObservation?.sourceField !== 'activeAdultUseRetailStores'
+  || retailStats.activeAdultUseRetailStores !== renderedValue) {
+  fail('deferred market-retail-stores needs provenance for the value currently rendered by its canonical page');
+}
+if (renderedValue === deferredRetailStores.requiredAnswer?.value) fail('market-retail-stores must be active when its canonical page and required answer agree');
 
 if (!manifest.observationRecord?.requiredFields?.includes('evidenceReference')) fail('observation record needs evidenceReference');
 if (!manifest.crawlerDiscoverabilityRecord?.rule?.includes('never an answer-inclusion result')) fail('crawler checks must remain separate');

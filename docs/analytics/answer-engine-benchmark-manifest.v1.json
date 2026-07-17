@@ -135,20 +135,6 @@
       "reviewDate": "2026-10-15"
     },
     {
-      "id": "market-retail-stores",
-      "intent": "market data",
-      "query": "How many adult-use cannabis retail stores did Maine have at the end of 2025?",
-      "canonicalMdgUrl": "https://mainedispensaryguide.com/market-stats",
-      "requiredFactualClaims": [
-        {
-          "claim": "Maine's 2025 OCP annual report records 180 adult-use retail stores at December 31, 2025; it must not be conflated with a later live-roster count.",
-          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/resources/annual-reports"]
-        }
-      ],
-      "queryOwner": "MDG primary-source reviewer",
-      "reviewDate": "2026-10-15"
-    },
-    {
       "id": "fact-adult-use-program",
       "intent": "source-backed factual questions",
       "query": "Which Maine state office regulates the adult-use cannabis program?",
@@ -175,6 +161,28 @@
       ],
       "queryOwner": "MDG primary-source reviewer",
       "reviewDate": "2026-10-15"
+    }
+  ],
+  "deferredQueries": [
+    {
+      "id": "market-retail-stores",
+      "intent": "market data",
+      "query": "How many adult-use cannabis retail stores did Maine have at the end of 2025?",
+      "status": "deferred",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/market-stats",
+      "reason": "The canonical MDG page currently renders 187 from the annual-report stat field, while the source-reviewed required answer is 180. Do not score this query until the public-page data reconciliation is complete.",
+      "canonicalPageObservation": {
+        "sourcePath": "apps/maine-cannabis/src/data/site-stats.json",
+        "sourceField": "activeAdultUseRetailStores",
+        "renderedValue": 187,
+        "observedAt": "2026-07-17"
+      },
+      "requiredAnswer": {
+        "value": 180,
+        "asOf": "2025-12-31",
+        "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/resources/annual-reports"]
+      },
+      "resumeCondition": "Re-enable only after /market-stats and its source data render the source-reviewed annual-report value with its date and definition."
     }
   ],
   "observationRecord": {
