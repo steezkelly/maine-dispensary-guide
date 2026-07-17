@@ -10,14 +10,14 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-06-05",
-  modifiedDate: "2026-06-05",
+  modifiedDate: "2026-07-16",
   section: "Consumer Guide"
 };
 const topics = ["edibles", "consumer-guide", "best-of"];
 
 const faqItems = [
   { question: "How many mg of THC should a beginner take in a Maine edible?", answer: "If you have not used a THC edible before, start at 2.5-5mg of THC total and wait a full two hours before taking more. Maine Revised Statutes Title 28-B §703(1)(F) caps a single serving of a cannabis edible at 10mg of THC, and a single package at 200mg of THC, with a 10% allowable variance. A 10mg gummy can be split in half for a true 5mg starting dose. The most common edible mistake in Maine is taking a second piece at the one-hour mark because the first has not kicked in; two hours is the realistic onset window for most gummies on a full stomach." },
-  { question: "Are Maine dispensary edibles lab tested?", answer: "Yes. Every cannabis edible sold at a licensed Maine dispensary is lab tested at an ISO-17025 accredited cannabis lab, and the results are posted to the state's METRC seed-to-sale tracking system. Each batch of edible has a Certificate of Analysis (COA) that lists total THC, total CBD, terpene content, and a contaminant panel (residual solvents, heavy metals, microbials, mycotoxins, pesticides). The COA is available on the dispensary's menu and on the OCP's public-facing product tracker. Maine's testing standards are consistent with mature West Coast markets and stricter than several Northeast peers on the pesticide panel." },
+  { question: "Are Maine dispensary edibles lab tested?", answer: "Yes. Every adult-use edible batch must complete the mandatory testing that applies to it. P.L. 2025, ch. 764 and OCP's April 28, 2026 implementation guidance provide that a qualifying finished edible made with cannabis concentrate that already passed all required mandatory contaminant testing is not subject to additional mandatory contaminant testing. The finished edible still requires THC-potency, cannabinoid-profile, and homogeneity testing. The applicable COA and testing records therefore depend on the input-testing history; do not assume every finished edible has the same contaminant panel." },
   { question: "How long do Maine cannabis gummies take to kick in?", answer: "Most Maine cannabis gummies take 30-90 minutes to take effect when eaten on a light snack, and 60-120 minutes when eaten on a full meal. The peak effect arrives roughly 2-3 hours after consumption, and the total duration runs 4-8 hours depending on dose, individual metabolism, and tolerance. Sublingual formats (mints, lozenges, oral strips) absorb faster, with onset at 5-15 minutes and duration of 2-4 hours. Beverages typically onset at 15-30 minutes and last 2-4 hours. The single most common edible problem in Maine is impatience; wait the full two hours before redosing." },
   { question: "What is the best edible for sleep in Maine?", answer: "For sleep specifically, a 1:1 or 2:1 THC:CBN edible is the most reliable option. The Maine Lab Snooze Sleep Tablets (100mg THC:200mg CBN, 4-count, ~50mg THC + 100mg CBN per tablet) are the highest-dose sleep edible produced by a Maine operator and are widely stocked across the state. For a milder starting dose, Theory Wellness' Rest line and Sola's RSO Sleep gummies (4:1 CBN:THC) are both effective at 10-20mg THC. CBN is a degraded-THC cannabinoid with sedating properties, and the 1:1 or 2:1 THC:CBN ratio is the most-researched combination for sleep onset and duration. Avoid caffeine and high-sugar edible formats within four hours of bedtime." },
   { question: "Can I have a Maine edible delivered to my home?", answer: "Medical-use delivery is well-established in Maine, but adult-use delivery is limited. Several caregivers and a small number of dispensaries offer delivery to registered MMMP cardholders within a defined service radius (typically 15-30 miles). For adult-use customers, in-store pickup is the default; a small number of operators in the Portland and Bangor metros offer same-day or next-day adult-use delivery through Dutchie, Leafly, or their own e-commerce platform. The OCP has been expanding the adult-use delivery framework in 2025-2026, and statewide adult-use delivery is expected to roll out more broadly through 2026-2027." }
@@ -79,7 +79,7 @@ const faqPageSchema = {
     <p class="subtitle">Yes. Cannabis edibles are legal in Maine for adults 21+ at licensed dispensaries. Here's what actually works, what to avoid, and which Maine operators make the strongest edible lineup in 2026.</p>
     <div class="byline">
       <p>By <a href="/about/authors#eliot-nash"><strong>Eliot Nash</strong></a>, Market &amp; Real Estate Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
-      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+      <p class="last-updated">Published June 5, 2026 · Last updated July 16, 2026</p>
     </div>
   </div>
 
@@ -137,15 +137,13 @@ const faqPageSchema = {
 
   <section>
     <h2>Lab Testing: What the COA Tells You</h2>
-    <p>Every edible sold at a licensed Maine dispensary is tested at an ISO-17025 accredited cannabis lab before it reaches the shelf. The Certificate of Analysis (COA) reports on five panels:</p>
+    <p>Every adult-use edible sold at a licensed Maine dispensary must complete the mandatory testing that applies to its product matrix and input history before sale. Under <a href="https://legislature.maine.gov/backend/App/services/getDocument.aspx?documentId=124398" target="_blank" rel="noopener noreferrer">P.L. 2025, ch. 764</a> and <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/OCP%20Guidance%20for%20Mandatory%20Testing%20of%20Adult%20Use%20Edibles%20April%202026.pdf" target="_blank" rel="noopener noreferrer">OCP's April 28, 2026 implementation guidance</a>:</p>
     <ul>
-      <li><strong>Potency:</strong> Total THC, total CBD, and minor cannabinoid content (CBG, CBN, THCV, CBC) per serving and per package. Maine allows up to 15% variance between the label claim and the tested value, which is consistent with most state programs.</li>
-      <li><strong>Terpene profile:</strong> For full-spectrum and strain-specific edibles, the terpene content is reported. Terpenes drive a meaningful share of the subjective effect, and a 5mg full-spectrum edible feels different from a 5mg distillate-only edible at the same dose.</li>
-      <li><strong>Residual solvents:</strong> Required for any edible infused with a solvent-extracted concentrate (distillate, hydrocarbon extract). Maine's limits align with the USP 467 standard for residual solvents.</li>
-      <li><strong>Heavy metals:</strong> Lead, arsenic, cadmium, and mercury. Required because of the bioaccumulation risk in edibles.</li>
-      <li><strong>Microbials, mycotoxins, and pesticides:</strong> Standard contaminant panel. Maine's pesticide list is shorter than California's but covers the major categories (myclobutanil, bifenazate, abamectin, and others).</li>
+      <li><strong>Finished edible batch:</strong> THC-potency, cannabinoid-profile, and homogeneity testing remain mandatory.</li>
+      <li><strong>Concentrate input:</strong> To use the exception, the cannabis concentrate used to make the edible must already have passed all required mandatory contaminant testing, with the prior testing, documentation, and tracking required by 28-B M.R.S. § 605.</li>
+      <li><strong>Additional contaminant testing:</strong> A qualifying finished edible is not subject to additional mandatory contaminant testing. Voluntary or research-and-development testing is still permitted, so the analytes shown on a COA can vary.</li>
     </ul>
-    <p>The COA is available on the dispensary's menu (look for a "lab results" or "COA" link on the product page) and on the OCP's public-facing product tracker. If a dispensary cannot produce a COA for a specific batch within 24 hours, that is a red flag. Maine's testing standards are consistent with mature markets and meaningfully stricter than some Northeast peers, especially on the pesticide panel; see the <a href="/guides/maine-cannabis-edibles-compliance">Maine cannabis edibles compliance guide</a> for the regulatory detail.</p>
+    <p>Ask the dispensary for the batch's applicable COA or testing records, but do not assume every finished edible has the same contaminant panel. See the <a href="/guides/maine-cannabis-edibles-compliance">Maine cannabis edibles compliance guide</a> for the operator-facing detail.</p>
   </section>
 
   <section>
