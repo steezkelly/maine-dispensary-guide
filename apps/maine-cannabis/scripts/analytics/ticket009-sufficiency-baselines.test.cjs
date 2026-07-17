@@ -129,6 +129,15 @@ test('query intent distribution feeds observation context', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', date: '2026-07-01', metric_family: 'gsc_ctr', numerator: 1, denominator: 10 }], queries: [{ canonical_page_path: '/x', date: '2026-07-01', query: 'dispensary near me', impressions: 10 }], manifest: [] });
   assert.equal(out.baselines[0].query_intent, 'local_store_discovery');
 });
+test('query evidence URL variants are canonicalized before observation matching', () => {
+  const out = b.buildBaselines({
+    observations: [{ canonical_page_path: '/x', date: '2026-07-01', metric_family: 'gsc_ctr', numerator: 1, denominator: 10 }],
+    queries: [{ canonical_page_path: 'https://mainedispensaryguide.com/x/?utm=campaign', date: '2026-07-01', query: 'dispensary near me', impressions: 10 }],
+    manifest: [{ canonical_path: 'https://mainedispensaryguide.com/x/?utm=manifest', reporting_archetype: 'guide' }],
+  });
+  assert.equal(out.baselines[0].query_intent, 'local_store_discovery');
+  assert.equal(out.baselines[0].reporting_archetype, 'guide');
+});
 test('all output rows have provenance', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 1, denominator: 10 }], manifest: [] });
   assert.equal(out.baselines[0].provenance.contract_version, 'ticket-009.v1');
@@ -142,5 +151,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/37 passed.`);
+console.log(`Tests: ${pass}/38 passed.`);
 if (process.exitCode) process.exit(1);

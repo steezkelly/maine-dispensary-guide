@@ -121,15 +121,15 @@ function metricSource(row, report) {
 // Source exports may carry several named metrics in one page-day row. Expand
 // them before grouping so no metric is selected merely because it arrived
 // first in an upstream response.
-function metricEntries(row, key) {
+function metricEntries(row, report, key) {
   const metricName = first(row, ['metric_name', 'metricName', 'metric'])
     || first(key, ['metric_name', 'metricName', 'metric'])
     || null;
-  if (metricName) return [{ metric_name: metricName, value: metricValue(row, row) }];
+  if (metricName) return [{ metric_name: metricName, value: metricValue(row, report) }];
   if (row.metrics && typeof row.metrics === 'object' && !Array.isArray(row.metrics)) {
     return Object.entries(row.metrics).map(([name, value]) => ({ metric_name: name, value }));
   }
-  return [{ metric_name: null, value: metricValue(row, row) }];
+  return [{ metric_name: null, value: metricValue(row, report) }];
 }
 
 function normalizeManifestRows(rows) {
@@ -153,7 +153,7 @@ function normalizeGa4Release(release) {
       const page = canonicalizePagePath(first(key, ['page_path', 'pagePath', 'requestPath', 'path', 'page_location']));
       if (!date || !page) continue;
       const eventName = first(key, ['event_name', 'eventName', 'event']) || null;
-      for (const metric of metricEntries(raw, key)) {
+      for (const metric of metricEntries(raw, report, key)) {
         records.push({
           source: 'ga4', source_family: family, report_key: reportKey,
           date, canonical_page_path: page, event_name: eventName, metric_name: metric.metric_name,
@@ -175,7 +175,7 @@ function normalizeVercelRows(input) {
     const a5 = family.includes('speed') || family.includes('vital') || String(raw.source || '').toUpperCase() === 'A5';
     const reportKey = raw.report_key || raw.dataset || 'vercel_a4_visits';
     const metricFamily = family === 'vercel_a4' ? sourceFamily(reportKey) : family;
-    return metricEntries(raw, raw).map((metric) => ({
+    return metricEntries(raw, raw, raw).map((metric) => ({
       source: a5 ? 'a5' : 'vercel', source_family: a5 ? 'speed_insights' : metricFamily,
       report_key: reportKey, date,
       canonical_page_path: page, event_name: raw.event_name || raw.eventName || null,

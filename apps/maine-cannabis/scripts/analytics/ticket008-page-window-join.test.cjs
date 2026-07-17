@@ -182,6 +182,15 @@ test('page-window join expands packed GA4 and Vercel metrics without order-depen
   assert.equal(byMetric.get('metric:visits').vercel_a4.value, 4);
 });
 
+test('session reports retain the Data API value when both GA4 values are present', () => {
+  const [record] = join.normalizeGa4Release({ rows: [{
+    report_key: 'R2_sessions_daily',
+    sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', metric_name: 'sessions' }, data_api_value: 6, bq_value: 8 }],
+  }] });
+  assert.equal(record.value, 6);
+  assert.equal(record.metric_source, 'ga4_data_api');
+});
+
 test('page-window join retains every FAQ and CTA observation for one page-day', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [
     { report_key: 'R7_custom_event_faq_daily', sanitized_rows: [
@@ -211,5 +220,5 @@ test('R7 observations retain distinct FAQ IDs even with metric names', () => { c
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
 test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
 
-console.log(`Tests: ${pass}/44 passed.`);
+console.log(`Tests: ${pass}/45 passed.`);
 if (process.exitCode) process.exit(1);

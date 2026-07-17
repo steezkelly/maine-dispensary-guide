@@ -101,7 +101,7 @@ function classifyQueryIntent(query) {
 }
 
 function queryWindowKey(row) {
-  const page = clean(row.canonical_page_path || row.canonical_path || row.page_path || row.path) || '(unknown-page)';
+  const page = canonicalPagePath(row.canonical_page_path || row.canonical_path || row.page_path || row.path) || '(unknown-page)';
   const start = clean(row.window_start || row.start_date || row.date) || '(unknown-start)';
   const end = clean(row.window_end || row.end_date || row.date) || start;
   return `${page}|${start}|${end}`;
@@ -111,7 +111,7 @@ function buildQueryIntentDistributions(queryRows, options = {}) {
   const grouped = new Map();
   for (const row of queryRows || []) {
     const key = queryWindowKey(row);
-    if (!grouped.has(key)) grouped.set(key, { key, page: row.canonical_page_path || row.canonical_path || row.page_path || row.path || null, window_start: row.window_start || row.start_date || row.date || null, window_end: row.window_end || row.end_date || row.date || null, counts: {}, total: 0 });
+    if (!grouped.has(key)) grouped.set(key, { key, page: canonicalPagePath(row.canonical_page_path || row.canonical_path || row.page_path || row.path), window_start: row.window_start || row.start_date || row.date || null, window_end: row.window_end || row.end_date || row.date || null, counts: {}, total: 0 });
     const group = grouped.get(key);
     const intent = row.query_intent || classifyQueryIntent(row.query || row.query_text || row.search_query);
     const weight = Math.max(0, num(row.impressions ?? row.exposures ?? row.weight ?? 1) || 0);
@@ -269,7 +269,7 @@ function posteriorFor(target, peers, config = {}) {
 }
 
 function buildBaselines({ observations = [], queries = [], manifest = [], config = {} }) {
-  const manifestByPath = new Map((manifest || []).map((row) => [row.canonical_path || row.canonical_page_path, row]));
+  const manifestByPath = new Map((manifest || []).map((row) => [canonicalPagePath(row.canonical_path || row.canonical_page_path || row.page_path || row.path), row]));
   const queryDistributions = buildQueryIntentDistributions(queries, config);
   const normalized = observations.map((row) => normalizeObservation(row, queryDistributions, manifestByPath));
   const outputs = normalized.map((target) => {
