@@ -14,7 +14,7 @@ try {
   fs.mkdirSync(fixtureDir, { recursive: true });
   fs.copyFileSync(SOURCE, path.join(fixtureDir, 'content-health-regression.cjs'));
   fs.writeFileSync(
-    path.join(fixtureDir, 'check-content-health.cjs'),
+    path.join(fixtureDir, 'content-health.cjs'),
     "console.log('❌ fixture check: 1 issue'); process.exit(1);\n",
   );
 
@@ -34,13 +34,15 @@ try {
     encoding: 'utf8',
   });
   assert.equal(updateResult.status, 0, (updateResult.stdout || '') + (updateResult.stderr || ''));
-  assert.equal(fs.existsSync(path.join(fixtureDir, '.content-health-baseline.json')), true);
+  const baselineFile = path.join(fixtureDir, '.content-health-baseline.json');
+  assert.equal(fs.existsSync(baselineFile), true);
+  assert.deepEqual(JSON.parse(fs.readFileSync(baselineFile, 'utf8')), { 'fixture check': 1 });
 
   const zeroFixtureDir = path.join(tempRoot, 'zero/scripts/check');
   fs.mkdirSync(zeroFixtureDir, { recursive: true });
   fs.copyFileSync(SOURCE, path.join(zeroFixtureDir, 'content-health-regression.cjs'));
   fs.writeFileSync(
-    path.join(zeroFixtureDir, 'check-content-health.cjs'),
+    path.join(zeroFixtureDir, 'content-health.cjs'),
     "console.log('✅ fixture check: no issues'); process.exit(0);\n",
   );
 
