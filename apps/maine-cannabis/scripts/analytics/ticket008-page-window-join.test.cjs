@@ -129,6 +129,22 @@ test('page-window join retains separate metrics for the same page-day', () => {
   assert.deepEqual(rows.map((row) => row.reconciliation_status), ['matched', 'matched']);
 });
 
+test('page-window join retains every FAQ and CTA observation for one page-day', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [
+    { report_key: 'R7_custom_event_faq_daily', sanitized_rows: [
+      { row_key: { date: '20260712', page_path: '/x', 'customEvent:faq_id': 'faq-a' }, data_api_value: 2 },
+      { row_key: { date: '20260712', page_path: '/x', 'customEvent:faq_id': 'faq-b' }, data_api_value: 3 },
+    ] },
+    { report_key: 'R8_custom_event_cta_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', 'customEvent:cta_id': 'cta-a' }, data_api_value: 4 }] },
+  ] }, vercelRows: [] });
+  assert.equal(rows.length, 3);
+  assert.deepEqual(rows.map((row) => row.ga4_r1.value), [2, 3, 4]);
+});
+
+test('page-window join rejects explicitly invalid canonical releases', () => {
+  assert.throws(() => join.joinPageWindow({ ga4Release: { release_status: 'INVALID', rows: [] }, vercelRows: [] }), /invalid canonical release/);
+});
+
 test('contract version is stable', () => assert.equal(join.CONTRACT_VERSION, 'ticket-008.v1'));
 test('A5 source family classification is blocked by source', () => assert.equal(join.classifyReconciliation({ source: 'a5', value: 1 }, { value: 1 }), 'measurement_blocked'));
 test('unknown nonnumeric values remain source deltas', () => assert.equal(join.classifyReconciliation({ value: '4' }, { value: 4 }), 'source_delta'));
@@ -138,5 +154,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/36 passed.`);
+console.log(`Tests: ${pass}/38 passed.`);
 if (process.exitCode) process.exit(1);

@@ -203,12 +203,14 @@ function deltaFields(ga4, vercel) {
 }
 
 function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart = null, windowEnd = null, sourceReleaseIds = {}, asOf = null }) {
+  if (ga4Release?.release_status === 'INVALID') throw new Error('invalid canonical release cannot be joined');
   const ga4 = normalizeGa4Release(ga4Release);
   const vercel = normalizeVercelRows(vercelRows);
   const manifest = normalizeManifestRows(manifestRows);
   const groups = new Map();
   const add = (record) => {
-    const key = `${rowKey(record.canonical_page_path, record.date)}|${record.source_family}`;
+    const observationKey = /^R[78]_custom_event_/.test(record.report_key) ? `${record.report_key}|${stableHash(record.row_key)}` : '';
+    const key = `${rowKey(record.canonical_page_path, record.date)}|${record.source_family}|${observationKey}`;
     if (!groups.has(key)) groups.set(key, { date: record.date, canonical_page_path: record.canonical_page_path, metric_family: record.source_family, ga4: [], vercel: [], a5: [] });
     const group = groups.get(key);
     if (record.source === 'ga4') group.ga4.push(record);
