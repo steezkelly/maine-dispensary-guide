@@ -16,7 +16,7 @@ function declaredRedirects() { return (json(path.join(ROOT, 'vercel.json')).redi
 function priorState(prior, key, now) { const old = prior?.routes?.find(row => row.route === key); return { firstSeenAt: old?.firstSeenAt || now, lastSeenAt: now }; }
 function buildSnapshot({ sitemapUrls, manifestRows, coverageRows, redirectSources = declaredRedirects(), pageChecks = {}, prior, extractedAt = new Date().toISOString() }) {
   const sitemap = new Set(sitemapUrls.map(route)); const manifest = new Set(manifestRows.map(row => row.canonical_path)); const coverage = new Map(coverageRows.map(row => [route(row.url), row]));
-  const redirects = new Set(redirectSources); const all = new Set([...sitemap, ...manifest, ...coverage.keys(), ...redirects]);
+  const redirects = new Set(redirectSources.filter(source => !/[()*]/.test(source))); const all = new Set([...sitemap, ...manifest, ...coverage.keys(), ...redirects]);
   const routes = [...all].sort().map(key => { const inspection = coverage.get(key); const check = pageChecks[key] || {}; const reasons = [];
     if (!sitemap.has(key)) reasons.push('NOT_IN_PRODUCTION_SITEMAP'); if (!manifest.has(key)) reasons.push('NOT_IN_CANONICAL_ROUTE_MANIFEST'); if (redirects.has(key)) reasons.push('DECLARED_REDIRECT_SOURCE');
     if (inspection?.status === 'ERROR') reasons.push('GSC_CRAWL_FAILURE'); if (inspection?.status === 'NOT_INDEXED') reasons.push('GSC_NOT_INDEXED'); if (inspection?.status === 'NEUTRAL') reasons.push('GSC_NEUTRAL_REQUIRES_REVIEW'); if (inspection && !['INDEXED', 'ERROR', 'NOT_INDEXED', 'NEUTRAL'].includes(inspection.status)) reasons.push('GSC_UNRECOGNIZED_STATUS_REQUIRES_REVIEW');
