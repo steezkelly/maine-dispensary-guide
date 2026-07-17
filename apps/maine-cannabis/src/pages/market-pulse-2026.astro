@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Callout from '../components/Callout.astro';
 import optInData from '../data/maine-opt-in-towns.json';
-import gscRaw from '../../data/gsc-search-analytics.jsonl?raw';
+import gscSummary from '../data/gsc-search-demand-summary.json';
 
 const article = {
   author: "Eliot Nash",
@@ -25,38 +25,10 @@ type Town = {
 const meta = optInData.meta as { as_of: string; town_count: number; counties_covered: number; source: string; source_url: string; license: string; last_updated: string };
 const towns: Town[] = optInData.towns as Town[];
 
-// Parse GSC data
-const records: Array<{query: string; clicks: number; impressions: number; position: number}> = gscRaw
-  .split('\n')
-  .filter(line => line.trim())
-  .map(line => JSON.parse(line));
-
-// Aggregate by query
-const queryAgg: Record<string, {clicks: number; impressions: number; positions: number[]}> = {};
-for (const r of records) {
-  if (!r.query) continue;
-  if (!queryAgg[r.query]) queryAgg[r.query] = {clicks: 0, impressions: 0, positions: []};
-  queryAgg[r.query].clicks += r.clicks;
-  queryAgg[r.query].impressions += r.impressions;
-  queryAgg[r.query].positions.push(r.position);
-}
-
-const totalImpressions = records.reduce((s, r) => s + r.impressions, 0);
-const totalClicks = records.reduce((s, r) => s + r.clicks, 0);
-const totalQueries = Object.keys(queryAgg).length;
-
-// Top queries by impressions
-const topByImpressions = Object.entries(queryAgg)
-  .map(([q, m]) => ({query: q, ...m, avgPos: m.positions.reduce((a, b) => a + b, 0) / m.positions.length}))
-  .sort((a, b) => b.impressions - a.impressions)
-  .slice(0, 20);
-
-// "How to start" intent queries (the most journalist-valuable signal)
-const intentQueries = Object.entries(queryAgg)
-  .filter(([q]) => /\b(how to|can i|is .* legal|are .* legal|do i need|where to|when can)\b/i.test(q))
-  .map(([q, m]) => ({query: q, ...m}))
-  .sort((a, b) => b.impressions - a.impressions)
-  .slice(0, 15);
+// Public GSC aggregate only. Query-level records remain in private operational storage.
+const totalImpressions = gscSummary.totalImpressions;
+const totalClicks = gscSummary.totalClicks;
+const totalQueries = gscSummary.uniqueQueryCount;
 
 // Town-by-town aggregations
 const townsByYear: Record<number, number> = {};
@@ -211,61 +183,16 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 </section>
 
 <section id="search-demand">
-  <h2>Search Demand — What Maine Cannabis Searchers Want</h2>
-  <p>This is the part of the report journalists are most likely to cite. Using GSC data over a 28-day window, we observed <strong>{totalQueries.toLocaleString()} unique search queries</strong> driving {totalImpressions.toLocaleString()} impressions and {totalClicks} clicks to MDG.</p>
+  <h2>Search Demand — Aggregate Signal</h2>
+  <p>MDG's public research summary records <strong>{totalQueries.toLocaleString()} unique queries</strong>, {totalImpressions.toLocaleString()} impressions, and {totalClicks} clicks from its GSC export. Individual query text remains private operational data and is not published in this report.</p>
 
-  <h3>Top 20 queries by impressions</h3>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Query</th>
-        <th style="text-align: right;">Impressions</th>
-        <th style="text-align: right;">Clicks</th>
-        <th style="text-align: right;">Avg Position</th>
-      </tr>
-    </thead>
-    <tbody>
-      {topByImpressions.map((q, i) => (
-        <tr>
-          <td>{i + 1}</td>
-          <td>{q.query}</td>
-          <td style="text-align: right;">{q.impressions}</td>
-          <td style="text-align: right;">{q.clicks}</td>
-          <td style="text-align: right;">{q.avgPos.toFixed(1)}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique queries in the aggregate snapshot</div></div>
+    <div class="stat-card"><div class="num">{totalImpressions.toLocaleString()}</div><div class="label">Aggregate impressions</div></div>
+    <div class="stat-card"><div class="num">{totalClicks.toLocaleString()}</div><div class="label">Aggregate clicks</div></div>
+  </div>
 
-  <h3>Informational intent queries (the journalist-rich signal)</h3>
-  <p>These are the queries from people researching the market — "how to start," "can I," "is X legal." They're not customers yet; they're reporters, would-be operators, researchers, and policy people. This is the audience the press kit and the Maine Cannabis Market Pulse exist to serve.</p>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Query</th>
-        <th style="text-align: right;">Impressions</th>
-        <th style="text-align: right;">Clicks</th>
-      </tr>
-    </thead>
-    <tbody>
-      {intentQueries.map(q => (
-        <tr>
-          <td>{q.query}</td>
-          <td style="text-align: right;">{q.impressions}</td>
-          <td style="text-align: right;">{q.clicks}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-
-  <h3>What the search demand tells us</h3>
-  <ul>
-    <li><strong>Local market queries dominate</strong> — "fryeburg maine dispensary," "old orchard beach dispensary," "bangor dispensary" are all top searches. This is a local-services market, not a national one.</li>
-    <li><strong>Operator-economics queries are persistent</strong> — "how to open a dispensary in Maine" averages 100+ monthly impressions. These are the people the regulatory framework is gating out (or in).</li>
-    <li><strong>Compliance queries are seasonal</strong> — "is cannabis allowed in acadia national park" spikes in summer; "maine edibles laws" persists year-round. Useful timing for journalism.</li>
-    <li><strong>The branded-dispensary search pattern</strong> — "founding farmers limerick maine," "high road gray," "hidden greens buxton" — is strong (200-400+ impressions each). Customers search by name, not just by location. This implies brand recognition matters even in a regulated market.</li>
-  </ul>
+  <p>These numbers describe demand observed on MDG pages, not total Maine-cannabis search volume. Query-level data is used privately for editorial and technical analysis; publication requires a separately reviewed aggregate.</p>
 </section>
 
 <section id="methodology">
@@ -274,7 +201,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     <p><strong>Opt-in data:</strong> Compiled from MDG's ongoing municipal records review, cross-referenced with the Maine OCP public docket and individual town clerk records. Updated quarterly. Last refresh: April 2026. Next refresh: October 2026.</p>
     <p><strong>License fees:</strong> Pulled from individual municipal ordinances and town-clerk fee schedules. May not reflect the most recent revision; confirm with town clerk before relying on a specific number for a business decision.</p>
     <p><strong>Dispensary counts:</strong> Compiled from OCP license filings and direct outreach to operators. Estimates only — actual operating counts may vary by ±20%.</p>
-    <p><strong>Search demand data:</strong> Google Search Console (GSC) impressions and clicks for mainedispensaryguide.com, 28-day rolling window ending 2026-07-06. Note: GSC data shows queries that drove impressions on MDG, not total Maine-cannabis search volume.</p>
+    <p><strong>Search demand data:</strong> A reviewed aggregate from MDG's Google Search Console export, published {gscSummary.publishedAt}. It reports counts only; raw query text is retained in private operational storage and is not published. The figures describe impressions on MDG, not total Maine-cannabis search volume.</p>
     <p><strong>License:</strong> All data in this report is released under CC BY 4.0. Cite as: Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026.</p>
     <p><strong>Caveats:</strong> This is observational data, not a controlled study. Numbers are point-in-time snapshots. Maine's regulatory environment changes frequently; verify current status with the OCP and individual town clerks before relying on any specific figure for a business decision.</p>
   </div>
