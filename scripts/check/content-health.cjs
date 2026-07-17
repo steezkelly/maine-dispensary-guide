@@ -29,12 +29,12 @@ function parseOptions(argv) {
   if (sourceOnly && renderedOnly) {
     throw new Error('Cannot combine --source-only and --rendered-only');
   }
-  return {
-    sourceOnly,
-    renderedOnly,
-    build: flags.has('--build'),
-    noBuild: flags.has('--no-build'),
-  };
+  const build = flags.has('--build');
+  const noBuild = flags.has('--no-build');
+  if (build && noBuild) {
+    throw new Error('Cannot combine --build and --no-build');
+  }
+  return { sourceOnly, renderedOnly, build, noBuild };
 }
 
 let OPTIONS;

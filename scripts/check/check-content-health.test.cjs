@@ -282,6 +282,16 @@ test('rejects mutually exclusive source-only and rendered-only modes before audi
   assert.match(result.stderr, /Cannot combine --source-only and --rendered-only/);
 });
 
+test('rejects mutually exclusive build and no-build modes before auditing', () => {
+  const result = spawnSync(process.execPath, [script, '--build', '--no-build'], {
+    cwd: path.resolve(__dirname, '../..'),
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 2, result.stdout + result.stderr);
+  assert.match(result.stderr, /Cannot combine --build and --no-build/);
+});
+
 test('source-only rejects a route that exists only in stale sitemap data', () => {
   const fixture = makePages({
     'index.astro': '<a href="/stale-sitemap-route">Stale route</a>\n',
