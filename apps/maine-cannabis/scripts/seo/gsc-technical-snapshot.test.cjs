@@ -22,6 +22,12 @@ test('rejects non-success sitemap responses before parsing their bodies', async 
   assert.equal(readBody, false);
 });
 
+test('classifies unknown GSC inspections as review evidence', () => {
+  const snapshot = buildSnapshot({ sitemapUrls: ['https://mainedispensaryguide.com/about/authors'], manifestRows: [{ canonical_path: '/about/authors' }], coverageRows: [{ url: 'https://mainedispensaryguide.com/about/authors', status: 'CRAWLED_PENDING' }], redirectSources: [], pageChecks: { '/about/authors': { checked: true, fetchStatus: 200 } }, extractedAt: '2026-07-17T12:00:00.000Z' });
+  assert.deepEqual(snapshot.routes[0].reasonCodes, ['GSC_UNRECOGNIZED_STATUS_REQUIRES_REVIEW']);
+  assert.equal(snapshot.routes[0].state, 'REVIEW');
+});
+
 test('classifies NEUTRAL GSC inspections as review evidence', async () => {
   const snapshot = buildSnapshot({ sitemapUrls: ['https://mainedispensaryguide.com/about/authors'], manifestRows: [{ canonical_path: '/about/authors' }], coverageRows: [{ url: 'https://mainedispensaryguide.com/about/authors', status: 'NEUTRAL' }], pageChecks: { '/about/authors': { checked: true, fetchStatus: 200 } }, extractedAt: '2026-07-17T12:00:00.000Z' });
   const row = snapshot.routes.find(candidate => candidate.route === '/about/authors');
