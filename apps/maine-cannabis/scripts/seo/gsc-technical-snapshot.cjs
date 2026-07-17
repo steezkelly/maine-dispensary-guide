@@ -8,15 +8,13 @@
 const fs = require('node:fs'); const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..', '..', '..'); const APP = path.join(ROOT, 'apps', 'maine-cannabis');
 const DATA = path.join(APP, 'data'); const OUT = path.join(DATA, 'gsc-technical-snapshots.jsonl'); const SITE = 'https://mainedispensaryguide.com';
-const NON_INDEXABLE_PATH_PREFIXES = ['/experiments', '/search', '/admin/'];
+const { isNoindexRoute } = require(path.join(ROOT, 'scripts', 'check', 'noindex-source.cjs'));
+const PAGES = path.join(APP, 'src', 'pages');
 function json(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 function readJsonl(file) { return fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : []; }
 function route(url) { return new URL(url).pathname.replace(/\/$/, '') || '/'; }
 function indexabilityFor(key) {
-  if (key === '/404') return { indexable: false, sitemapEligible: false, reason: 'NOT_FOUND_ROUTE' };
-  if (NON_INDEXABLE_PATH_PREFIXES.some(prefix => key === prefix.replace(/\/$/, '') || key.startsWith(prefix))) {
-    return { indexable: false, sitemapEligible: false, reason: 'CONFIGURED_NOINDEX_ROUTE' };
-  }
+  if (isNoindexRoute(key, PAGES)) return { indexable: false, sitemapEligible: false, reason: key === '/404' ? 'NOT_FOUND_ROUTE' : 'SOURCE_DECLARED_NOINDEX_ROUTE' };
   return { indexable: true, sitemapEligible: true, reason: null };
 }
 function completeCoverage(report) {
