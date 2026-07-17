@@ -80,6 +80,11 @@ apps/maine-cannabis/public/build-info.json
 
 # GSC indexing: cache is regenerated on every run (transient), keep dated reports only
 apps/maine-cannabis/data/gsc-indexing-cache.json
+# Query-level GSC records are operational analytics data. They may contain
+# sensitive search terms; keep them in $MDG_GSC_DATA_ROOT, never in this repo.
+apps/maine-cannabis/data/gsc-search-analytics.jsonl
+apps/maine-cannabis/data/gsc-search-analytics-snapshots/
+apps/maine-cannabis/data/gsc-spike-investigation-*.jsonl
 
 # Local email pipeline artifacts (per-session sent-mail archive + tracking)
 # These are operational state, not source. The MDG email pipeline writes

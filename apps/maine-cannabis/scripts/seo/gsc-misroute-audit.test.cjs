@@ -20,6 +20,12 @@ function dailyRecord(overrides = {}) {
   };
 }
 
+test('rejects raw-query misroute audit output paths outside private GSC storage', () => {
+  const { privateOutputPath, PRIVATE_DATA_ROOT } = require('./gsc-misroute-audit.cjs');
+  assert.match(privateOutputPath(`${PRIVATE_DATA_ROOT}/reports/misroute.md`), /mdg-gsc\/reports\/misroute\.md$/);
+  assert.throws(() => privateOutputPath('docs/analytics/misroute.md'), /private GSC data root/);
+});
+
 test('filters by finalized source dates across the Los Angeles DST transition', () => {
   const now = new Date('2026-03-09T19:00:00Z'); // March 9 in Los Angeles, after DST begins.
   const records = [
@@ -32,6 +38,11 @@ test('filters by finalized source dates across the Los Angeles DST transition', 
 
   const filtered = audit.filterByDays(records, 7, now);
   assert.deepEqual(filtered.map(record => record.sourceEndDate), ['2026-03-03', '2026-03-09']);
+});
+
+test('reads raw query-level ledgers from the private GSC data root by default', () => {
+  assert.match(audit.JSONL_PATH, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics\.jsonl$/);
+  assert.doesNotMatch(audit.JSONL_PATH, /apps\/maine-cannabis\/data/);
 });
 
 test('deduplicates a repeated source day and aggregates compatible daily facts', () => {

@@ -44,8 +44,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
-const JSONL_PATH = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics.jsonl');
+const { privateDataRoot, privateOutputPath } = require('./gsc-private-data-root.cjs');
+const PRIVATE_DATA_ROOT = privateDataRoot();
+const JSONL_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 
 const args = process.argv.slice(2);
 const flags = Object.fromEntries(
@@ -322,7 +323,7 @@ async function main() {
   const md = renderMarkdown(stats);
 
   if (OUT_PATH) {
-    const out = path.resolve(OUT_PATH);
+    const out = privateOutputPath(OUT_PATH);
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, md);
     logOk(`Wrote audit report to ${out}`);
@@ -344,4 +345,7 @@ module.exports = {
   dedupeDailyRecords,
   filterByDays,
   isFinalizedDailyRecord,
+  PRIVATE_DATA_ROOT,
+  JSONL_PATH,
+  privateOutputPath,
 };

@@ -27,10 +27,13 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import noindexSource from './noindex-source.cjs';
+
+const { NOINDEX_PATH_PREFIXES, sourcePathForRoute, isNoindexSource, isNoindexRoute } = noindexSource;
 
 // Pages with Layout noindex={true} should stay out of the public sitemap.
 // Matches the @astrojs/sitemap filter in astro.config.mjs.
-export const NOINDEX_PATH_PREFIXES = ['/experiments', '/search', '/admin/'];
+export { NOINDEX_PATH_PREFIXES };
 
 /**
  * Read a source .astro file and report whether the page declares
@@ -38,20 +41,7 @@ export const NOINDEX_PATH_PREFIXES = ['/experiments', '/search', '/admin/'];
  * Also returns true for routes that are always noindex (e.g. /404,
  * and any path under the NOINDEX_PATH_PREFIXES list).
  */
-export function isNoindexSource(srcPath, route) {
-  if (route === '/404') return true;
-  if (NOINDEX_PATH_PREFIXES.some(
-    (prefix) => route === prefix.replace(/\/$/, '') || route.startsWith(prefix),
-  )) return true;
-  try {
-    const raw = fs.readFileSync(srcPath, 'utf8');
-    return /noindex\s*=\s*\{\s*true\s*\}/.test(raw);
-  } catch {
-    // File unreadable — treat as not-noindex so we don't accidentally
-    // exclude pages on transient filesystem errors.
-    return false;
-  }
-}
+export { isNoindexSource };
 
 /**
  * XML-escape a string for safe inclusion in sitemap content. Required
@@ -76,22 +66,7 @@ export function escapeXml(value) {
  */
 export function urlToSrcPath(loc, pagesDir) {
   try {
-    const u = new URL(loc);
-    let pathname = u.pathname.replace(/\/$/, '') || '/';
-    if (pathname === '/') {
-      const index = path.join(pagesDir, 'index.astro');
-      return fs.existsSync(index) ? index : null;
-    }
-    const indexPath = path.join(pagesDir, pathname, 'index.astro');
-    if (fs.existsSync(indexPath)) return indexPath;
-    const directPath = path.join(pagesDir, pathname + '.astro');
-    if (fs.existsSync(directPath)) return directPath;
-    const segments = pathname.split('/');
-    if (segments.length > 1) {
-      const parentIndex = path.join(pagesDir, segments[0], 'index.astro');
-      if (fs.existsSync(parentIndex)) return parentIndex;
-    }
-    return null;
+    return sourcePathForRoute(new URL(loc).pathname, pagesDir);
   } catch {
     return null;
   }
@@ -171,9 +146,7 @@ export function postprocessSitemap(rawSitemap, options) {
     try {
       const url = new URL(loc);
       const pathname = url.pathname;
-      if (NOINDEX_PATH_PREFIXES.some((p) => pathname.startsWith(p))) continue;
-      const srcPath = urlToSrcPath(loc, pagesDir);
-      if (srcPath && isNoindexSource(srcPath, pathname)) continue;
+      if (isNoindexRoute(pathname, pagesDir)) continue;
       newUrlEntries.push(buildUrlEntry(loc, pagesDir, { extractMeta }));
     } catch {
       /* skip invalid URLs */
