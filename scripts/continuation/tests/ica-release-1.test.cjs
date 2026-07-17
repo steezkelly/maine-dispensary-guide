@@ -135,6 +135,26 @@ test('Layout defaults to legacy and renders pilot slots in the approved order', 
   assert.ok(editorialAt >= 0 && actionAt > editorialAt && relatedAt > actionAt, 'pilot order must be Editorial → Contextual → AutoRelated');
 });
 
+test('v1 action funnel preserves legacy reach and pairs every selection with an exposure', () => {
+  const layout = read(LAYOUT);
+  assert.match(layout, /function legacyCtaView\(target\)/);
+  assert.match(layout, /send\('cta_view', \{/);
+  assert.match(layout, /function exposeAction\(target\)/);
+  assert.match(layout, /sendAction\('mdg_action_exposure', actionMetadata\(target\)\)/);
+  const clickHandler = layout.slice(layout.indexOf("document.addEventListener('click'"));
+  assert.ok(clickHandler.indexOf('exposeAction(target);') < clickHandler.indexOf("sendAction('mdg_action_select'"), 'selection must emit its paired exposure first');
+});
+
+test('v1 active attention requires 30 seconds of accumulated foreground time', () => {
+  const layout = read(LAYOUT);
+  assert.match(layout, /var foregroundElapsedMs = 0/);
+  assert.match(layout, /function foregroundAttentionMs\(\)/);
+  assert.match(layout, /foregroundAttentionMs\(\) < 30000/);
+  assert.match(layout, /foregroundElapsedMs = foregroundAttentionMs\(\)/);
+  assert.match(layout, /markActiveAttention\(\);\n\s*scheduleActiveAttention\(\);/);
+  assert.doesNotMatch(layout, /visibilityState === 'visible'\) \{\n\s*markEngaged\('visibility_returned'\);\n\s*\}/, 'a visibility return must not directly mark active attention');
+});
+
 test('all pilot pages opt in and have exactly one Layout-owned discovery rail', () => {
   for (const route of PILOT_ROUTES) {
     const source = read(pageFile(route));
