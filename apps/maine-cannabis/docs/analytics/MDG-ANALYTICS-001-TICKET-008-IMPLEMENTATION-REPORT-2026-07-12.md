@@ -33,10 +33,10 @@ Data-integrity: all docs match reality
 verify:iterate: clean
 ```
 
-The CLI was exercised against the real Ticket 007 GA4 canonical release plus a temporary synthetic A4 fixture. The temporary fixture was not committed and is not production evidence.
+The historical CLI exercise used a Ticket 007 artifact plus a temporary synthetic A4 fixture. The temporary fixture was not committed and is not production evidence. The Ticket 007 artifact was subsequently rejected (G1/G6 failure and missing durable BQ provenance) and removed; this historical exercise is not valid production evidence or an approved downstream input.
 
 ```text
-Input: apps/maine-cannabis/data/ga4-ingest/2026-07-12/canonical_release.json
+Historical input (removed after rejection): apps/maine-cannabis/data/ga4-ingest/2026-07-12/canonical_release.json
 Output: /tmp/ticket008-output/page-window-join.json
 Rows: 691
 Statuses: 688 missing_vercel, 1 measurement_blocked, 2 missing_ga4

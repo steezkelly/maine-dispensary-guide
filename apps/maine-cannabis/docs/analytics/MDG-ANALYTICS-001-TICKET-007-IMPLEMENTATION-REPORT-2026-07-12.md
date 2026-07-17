@@ -23,10 +23,10 @@ Updated `apps/maine-cannabis/package.json`:
 - Added scripts `data:mdg:analytics:test` (run unit tests) and `data:mdg:analytics:ingest` (run the orchestrator).
 - Extended `data:mdg:test` to include the new analytics test suite.
 
-Live run artifacts at `apps/maine-cannabis/data/ga4-ingest/2026-07-12/` (representative sample, not the canonical artifact):
-- `run-manifest.json` (13KB) — per-day routing table, per-report status, canonical+acquisition IDs
-- `gate-result.json` (1.5KB) — 10/10 gates PASS
-- `canonical_release.json` (1.3MB) — 2,425 joined rows
+Historical run records at `apps/maine-cannabis/data/ga4-ingest/2026-07-12/` are retained only as rejected-run evidence:
+- `run-manifest.json` — per-day routing table and per-report status.
+- `gate-result.json` — records the failing G1/G6 state.
+- The former `canonical_release.json` was removed because it represented a rejected run and lacked durable BQ provenance. It must not be treated as a canonical release or downstream input.
 
 ## 2. Live run (90-day backfill on 2026-07-12)
 
@@ -37,7 +37,7 @@ Live run artifacts at `apps/maine-cannabis/data/ga4-ingest/2026-07-12/` (represe
 [ingest] BQ reports: 7/8 ok (R2 session_metrics query needs fixing; per-report isolation keeps run alive)
 [ingest] canonical_release_id:  rel_b418bcd901d6005d
 [ingest] acquisition_release_id: run_<run-timestamp>-<hash>
-[ingest] 10/10 validation gates PASS
+[ingest] historical output later rejected: G1/G6 failed
 [ingest] total_rows: 2,425
 ```
 

@@ -46,6 +46,7 @@ function practicalDirection(row) {
 function opportunityId(row) { return `opp_${String(row.window_end || row.window_start || 'unknown').replaceAll('-', '')}_${hash(row.deduplication_key || stableDeduplicationKey(row))}`; }
 
 function measurementBlockReason(row) {
+  if (row.duplicate_window_evidence) return 'DUPLICATE_WINDOW_EVIDENCE';
   if (String(row.measurement_status || '').startsWith('MEASUREMENT_BLOCKED')) return row.measurement_status;
   if (!isHealthy(row)) return row.measurement_status || BLOCKED_REASONS.HEALTH;
   if (!isSettled(row)) return BLOCKED_REASONS.UNSETTLED;
@@ -162,9 +163,13 @@ function deriveEvidence(rows, config = {}) {
   for (const [key, group] of groups) {
     group.sort((a, b) => String(a.window_end || a.window_start || '').localeCompare(String(b.window_end || b.window_start || '')));
     const history = [];
+    const seenWindowIdentities = new Set();
     for (const row of group) {
-      const transition = transitionForEvidence(row, history, config);
-      const current = { ...row, deduplication_key: key, signal_family: row.signal_family || signalFamily(row), state: transition.state, state_reason: transition.reason, state_version: (history.at(-1)?.state_version || 0) + 1, signal: transition.signal, required_evidence: transition.evidence, cwv_evidence: cwvEvidence(row), operator_item_emitted: transition.operator_item_emitted, persistence: transition.persistence || null, recommendation_or_edit_instruction: null, causal_language_allowed: false };
+      const windowIdentity = `${row.window_start || row.date || '(unknown-start)'}|${row.window_end || row.date || row.window_start || '(unknown-end)'}`;
+      const evidenceRow = { ...row, duplicate_window_evidence: seenWindowIdentities.has(windowIdentity) };
+      seenWindowIdentities.add(windowIdentity);
+      const transition = transitionForEvidence(evidenceRow, history, config);
+      const current = { ...evidenceRow, deduplication_key: key, signal_family: evidenceRow.signal_family || signalFamily(evidenceRow), state: transition.state, state_reason: transition.reason, state_version: (history.at(-1)?.state_version || 0) + 1, signal: transition.signal, required_evidence: transition.evidence, cwv_evidence: cwvEvidence(evidenceRow), operator_item_emitted: transition.operator_item_emitted, persistence: transition.persistence || null, recommendation_or_edit_instruction: null, causal_language_allowed: false };
       derived.push(current);
       if (transition.operator_item_emitted) transitions.push({ deduplication_key: key, from_state: history.at(-1)?.state || null, to_state: transition.state, window_start: row.window_start || row.date || null, window_end: row.window_end || row.date || null, reason: transition.reason, emitted_operator_item: true });
       const opportunity = makeOpportunitySnapshot(current, transition);

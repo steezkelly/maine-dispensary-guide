@@ -329,14 +329,15 @@ function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalRelease
   // G8: A5_blocked_marker — Speed Insights is BLOCKED_A5_NOT_CONFIGURED, no rows expected.
   gates.G8 = { status: 'PASS', notes: 'A5 fields not asserted in this run (no expected A5 rows in normalized artifact)' };
 
-  // G9: provenance_complete
+  // G9: provenance_complete — the durable canonical joined rows, not just
+  // the transient BQ response, must retain the re-query pointer.
   let provenanceComplete = true;
-  for (const r of bqReports) {
-    for (const row of r.rows || []) {
-      if (!row.source_provenance || !row.source_provenance.bq_table) provenanceComplete = false;
+  for (const report of joinedRows || []) {
+    for (const row of report.sanitized_rows || []) {
+      if (row.bq_value !== null && row.bq_value !== undefined && (!row.source_provenance || !row.source_provenance.bq_table)) provenanceComplete = false;
     }
   }
-  gates.G9 = { status: provenanceComplete ? 'PASS' : 'FAIL', notes: 'Every BQ row carries source_provenance with bq_table' };
+  gates.G9 = { status: provenanceComplete ? 'PASS' : 'FAIL', notes: 'Every durable canonical row with a BQ value carries source_provenance with bq_table' };
 
   // G10: token_safety
   // The token_id_hash is set if the SA fingerprint was recorded; otherwise

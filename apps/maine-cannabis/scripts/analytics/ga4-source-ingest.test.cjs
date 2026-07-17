@@ -311,6 +311,16 @@ test('G6 gate: structural_disagreement_no_bq_history is not a fail', () => {
   assert.strictEqual(joined[0].data_api_value, 5);
 });
 
+test('G9 fails when a durable joined BQ observation lacks provenance', () => {
+  const gates = ingest.runGates({
+    dataApiReports: [],
+    bqReports: [{ rows: [{ source_provenance: { bq_table: 'events_20260712' } }] }],
+    joinedRows: [{ sanitized_rows: [{ bq_value: 2, source_provenance: null }] }],
+    canonicalReleaseId: 'rel_test', acquisitionReleaseId: 'run_test', raw_record_json_sample: []
+  });
+  assert.strictEqual(gates.G9.status, 'FAIL');
+});
+
 test('G6 gate: match classification when sources agree', () => {
   const joined = ingest.joinDataForReport(
     'R3_event_count_daily',
