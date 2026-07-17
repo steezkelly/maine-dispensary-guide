@@ -36,7 +36,9 @@ verify:iterate: clean
 The CLI was exercised against the real Ticket 007 GA4 canonical release plus a temporary synthetic A4 fixture. The temporary fixture was not committed and is not production evidence.
 
 ```text
-Input: apps/maine-cannabis/data/ga4-ingest/2026-07-12/canonical_release.json
+Superseded evidence notice: the former `canonical_release.json` input was rejected after G1 failed and has been replaced by `rejected_release.json` with `release_status: "INVALID"`. Ticket 008 must reject it; this historical CLI exercise is not reproducible from a valid canonical 2026-07-12 release.
+
+Historical input (rejected): apps/maine-cannabis/data/ga4-ingest/2026-07-12/rejected_release.json
 Output: /tmp/ticket008-output/page-window-join.json
 Rows: 691
 Statuses: 688 missing_vercel, 1 measurement_blocked, 2 missing_ga4

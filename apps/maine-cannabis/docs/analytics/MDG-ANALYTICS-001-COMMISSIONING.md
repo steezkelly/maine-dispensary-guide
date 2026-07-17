@@ -28,8 +28,8 @@ It is not commissioned for:
 
 | Check | Result | Evidence / limitation |
 |---|---|---|
-| Source extraction | PASS | Live GA4 run `apps/maine-cannabis/data/ga4-ingest/2026-07-12/`; 8 reports, 3,519 canonical rows, `rel_c5a3f1e37e936ae6`, `run_bff1ae80a22f4b78`. |
-| GA4 BigQuery/source gates | PASS | `gate-result.json`: G1–G10 all PASS. |
+| Source extraction | SUPERSEDED / REJECTED | The 2026-07-12 run (`rel_c5a3f1e37e936ae6`, `run_bff1ae80a22f4b78`) is retained only as `rejected_release.json`; it is not canonical evidence and must not be consumed downstream. |
+| GA4 BigQuery/source gates | FAIL / SUPERSEDED | The checked-in `gate-result.json` records G1 failure. The prior all-pass commissioning statement is superseded; no canonical 2026-07-12 release is commissioned. |
 | Search Console BDE role proof | FALLBACK DOCUMENTED | GSC BDE is retired/off the critical path by operator decision. GSC/API evidence remains source-specific; no BDE claim is made. |
 | Deterministic rerun behavior | PASS | Ticket 007 canonical release identity tests; Ticket 007 25/25. Ticket 008/009/010/011 deterministic fixture tests pass. |
 | Exact-run synthetic GA4 collection probe | PARTIAL / NOT COMMISSIONED | GA4 Probe Y passed pipeline-level Playwright verification for 2/3 URLs, but the exact Ticket 005 probe suite with run-attributed `probe_id` and destination echo is not commissioned. |

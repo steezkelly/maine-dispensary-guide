@@ -126,7 +126,7 @@ test('page-window join retains separate metrics for the same page-day', () => {
   });
   assert.equal(rows.length, 3);
   assert.deepEqual(rows.map((row) => row.metric_family), ['custom_events', 'custom_events', 'pageviews']);
-  assert.deepEqual(rows.map((row) => row.reconciliation_status), ['missing_vercel', 'missing_ga4', 'matched']);
+  assert.deepEqual(rows.map((row) => row.reconciliation_status).sort(), ['matched', 'missing_ga4', 'missing_vercel']);
 });
 
 test('page-window join retains every FAQ and CTA observation for one page-day', () => {
@@ -147,7 +147,22 @@ test('page-window join retains distinct R3 custom event observations for one pag
     { row_key: { date: '20260712', page_path: '/x', event_name: 'cta_view' }, data_api_value: 3 },
   ] }] }, vercelRows: [] });
   assert.equal(rows.length, 2);
-  assert.deepEqual(rows.map((row) => row.ga4_r1.value), [2, 3]);
+  assert.deepEqual(rows.map((row) => row.ga4_r1.value).sort(), [2, 3]);
+});
+
+test('custom-event observation ordering is stable when equivalent inputs are reordered', () => {
+  const releaseRows = [
+    { row_key: { date: '20260712', page_path: '/x', event_name: 'faq_open' }, data_api_value: 2 },
+    { row_key: { date: '20260712', page_path: '/x', event_name: 'cta_view' }, data_api_value: 3 },
+  ];
+  const buildRows = (sanitized_rows) => join.joinPageWindow({
+    ga4Release: { rows: [{ report_key: 'R3_event_count_daily', sanitized_rows }] },
+    vercelRows: [],
+  });
+  const ordered = buildRows(releaseRows);
+  const reordered = buildRows([...releaseRows].reverse());
+  assert.deepEqual(ordered, reordered);
+  assert.equal(join.buildEvidenceManifest(ordered).output_hash, join.buildEvidenceManifest(reordered).output_hash);
 });
 
 test('page-window join rejects explicitly invalid canonical releases', () => {
@@ -163,5 +178,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/39 passed.`);
+console.log(`Tests: ${pass}/40 passed.`);
 if (process.exitCode) process.exit(1);

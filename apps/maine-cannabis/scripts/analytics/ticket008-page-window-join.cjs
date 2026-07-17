@@ -216,7 +216,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       ? `${record.report_key}|${stableHash(record.row_key)}`
       : '';
     const key = `${rowKey(record.canonical_page_path, record.date)}|${record.source_family}|${observationKey}`;
-    if (!groups.has(key)) groups.set(key, { date: record.date, canonical_page_path: record.canonical_page_path, metric_family: record.source_family, ga4: [], vercel: [], a5: [] });
+    if (!groups.has(key)) groups.set(key, { date: record.date, canonical_page_path: record.canonical_page_path, metric_family: record.source_family, observation_identity: observationKey, ga4: [], vercel: [], a5: [] });
     const group = groups.get(key);
     if (record.source === 'ga4') group.ga4.push(record);
     else if (record.source === 'a5') group.a5.push(record);
@@ -253,9 +253,10 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       join_contract_version: CONTRACT_VERSION,
       settlement_state: settlementState(group.date, asOf),
       measurement_block_reason: blocked ? 'A5_SPEED_INSIGHTS_DEFERRED' : null,
+      observation_identity: group.observation_identity || null,
     });
   }
-  rows.sort((a, b) => `${a.measurement_date}|${a.canonical_page_path}|${a.metric_family}`.localeCompare(`${b.measurement_date}|${b.canonical_page_path}|${b.metric_family}`));
+  rows.sort((a, b) => `${a.measurement_date}|${a.canonical_page_path}|${a.metric_family}|${a.observation_identity || ''}`.localeCompare(`${b.measurement_date}|${b.canonical_page_path}|${b.metric_family}|${b.observation_identity || ''}`));
   return rows;
 }
 

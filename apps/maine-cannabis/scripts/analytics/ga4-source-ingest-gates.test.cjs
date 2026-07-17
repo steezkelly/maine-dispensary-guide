@@ -7,6 +7,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const { runGates, writeReleaseArtifact } = require('./ga4-source-ingest.cjs');
+const { joinPageWindow } = require('./ticket008-page-window-join.cjs');
 
 test('G1 fails when a BigQuery report fails', () => {
   const gates = runGates({
@@ -47,9 +48,11 @@ test('a failed rerun removes a stale canonical release artifact', () => {
     writeReleaseArtifact(outDir, { release_status: 'INVALID', acquisition_release_id: 'run_failed' }, false);
 
     assert.equal(fs.existsSync(path.join(outDir, 'canonical_release.json')), false);
-    assert.deepEqual(
-      JSON.parse(fs.readFileSync(path.join(outDir, 'rejected_release.json'), 'utf8')),
-      { release_status: 'INVALID', acquisition_release_id: 'run_failed' }
+    const rejectedRelease = JSON.parse(fs.readFileSync(path.join(outDir, 'rejected_release.json'), 'utf8'));
+    assert.deepEqual(rejectedRelease, { release_status: 'INVALID', acquisition_release_id: 'run_failed' });
+    assert.throws(
+      () => joinPageWindow({ ga4Release: rejectedRelease, vercelRows: [] }),
+      /invalid canonical release/
     );
   } finally {
     fs.rmSync(outDir, { recursive: true, force: true });
