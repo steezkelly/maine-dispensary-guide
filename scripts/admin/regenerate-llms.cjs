@@ -1,75 +1,121 @@
-#!/usr/bin/env node
+'use strict';
+
 /**
- * Regenerate llms.txt from sitemap-0.xml
- * Run: node scripts/admin/regenerate-llms.cjs
+ * Regenerate llms.txt from an XML sitemap.
+ *
+ * Usage:
+ *   node scripts/admin/regenerate-llms.cjs --from-file=dist/sitemap-0.xml
+ *   node scripts/admin/regenerate-llms.cjs --from-file sitemap.xml --output /tmp/llms.txt
+ *
+ * With no --from-file argument, the canonical production sitemap is fetched.
  */
-const fs = require('fs');
-const https = require('https');
+const fs = require('node:fs');
+const https = require('node:https');
+const path = require('node:path');
+
+const SITE_ORIGIN = 'https://mainedispensaryguide.com';
+const DEFAULT_OUTPUT = path.join('apps', 'maine-cannabis', 'public', 'llms.txt');
+const GROUPS = ['homepage', 'top', 'guides', 'resources', 'about', 'blog', 'download', 'founders', 'additional'];
 
 function fetchUrl(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, res => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`failed to fetch ${url}: HTTP ${res.statusCode}`));
+        res.resume();
+        return;
+      }
       let data = '';
-      res.on('data', chunk => data += chunk);
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => resolve(data));
     }).on('error', reject);
   });
 }
 
-async function main() {
-  const sitemapXml = await fetchUrl('https://mainedispensaryguide.com/sitemap-0.xml');
-  const urls = [...sitemapXml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
-
-  // Group URLs
-  const groups = { homepage: [], top: [], guides: [], resources: [], about: [], blog: [], download: [], founders: [] };
-  for (const url of urls) {
-    const path = url.replace('https://mainedispensaryguide.com', '') || '/';
-    const segs = path.split('/').filter(Boolean);
-    if (!segs.length) { groups.homepage.push({ label: 'Homepage', url }); continue; }
-    if (segs.length === 1) { groups.top.push({ label: segs[0].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), url }); continue; }
-    const sec = segs[0];
-    if (groups[sec]) groups[sec].push({ label: segs[segs.length - 1].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), url });
-    else if (!groups.guides.includes(url)) { /* skip unknown */ }
+function parseArguments(argv) {
+  const args = { fromFile: null, output: DEFAULT_OUTPUT };
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    const [flag, inline] = arg.split('=', 2);
+    if (!['--from-file', '--output'].includes(flag)) throw new Error(`unknown argument: ${flag}`);
+    const value = inline ?? argv[++index];
+    if (!value) throw new Error(`missing value for ${flag}`);
+    if (flag === '--from-file') args.fromFile = value;
+    else args.output = value;
   }
-
-  const regenDate = new Date().toISOString().split('T')[0];
-  const lines = [
-    '# Maine Dispensary Guide — Agent Discoverability Index',
-    '# https://mainedispensaryguide.com',
-    '# For AI agents and crawlers. See /robots.txt for crawl-directive.',
-    `# Last regenerated: ${regenDate} from ${urls.length} sitemap URLs`,
-    '',
-    '## Homepage',
-    '- [Maine Dispensary Guide](https://mainedispensaryguide.com) — Cannabis business resource hub for Maine operators',
-    '',
-    '## Top-Level Pages',
-    ...groups.top.map(p => `- [${p.label}](${p.url})`),
-    '',
-    '## City & Regional Guides',
-    '- [All Guides](https://mainedispensaryguide.com/guides) — 40+ city and technical guides',
-    ...groups.guides.filter(g => !g.label.includes('maine-cannabis') && !g.label.includes('maine-dispensary') && !g.label.includes('ocp')).map(g => `- [${g.label}](${g.url})`),
-    '',
-    '## Technical Guides',
-    ...groups.guides.filter(g => g.label.includes('maine-cannabis') || g.label.includes('maine-dispensary') || g.label.includes('ocp')).map(g => `- [${g.label}](${g.url})`),
-    '',
-    '## Resources',
-    '- [Vendor Directory](https://mainedispensaryguide.com/resources) — Service providers and equipment vendors',
-    ...groups.resources.map(g => `- [${g.label}](${g.url})`),
-    '',
-    '## About & Founders',
-    ...groups.about.map(g => `- [${g.label}](${g.url})`),
-    ...groups.founders.map(g => `- [${g.label}](${g.url})`),
-    '',
-    '## Blog',
-    ...groups.blog.map(g => `- [${g.label}](${g.url})`),
-    '',
-    '## Downloads',
-    ...groups.download.map(g => `- [${g.label}](${g.url})`),
-    '',
-  ].filter(Boolean);
-
-  fs.writeFileSync('apps/maine-cannabis/public/llms.txt', lines.join('\n') + '\n');
-  console.log(`✓ llms.txt regenerated — ${urls.length} URLs, ${lines.length} lines`);
+  return args;
 }
 
-main().catch(console.error);
+function titleFromSegment(segment) {
+  return segment.replace(/-/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function sitemapUrls(xml) {
+  return [...new Set([...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1].trim()).filter(Boolean))];
+}
+
+function groupUrls(urls) {
+  const groups = Object.fromEntries(GROUPS.map((group) => [group, []]));
+  for (const url of urls) {
+    const route = url.replace(SITE_ORIGIN, '') || '/';
+    const segments = route.split('/').filter(Boolean);
+    if (!segments.length) {
+      groups.homepage.push({ label: 'Maine Dispensary Guide', url });
+      continue;
+    }
+    if (segments.length === 1) {
+      groups.top.push({ label: titleFromSegment(segments[0]), url });
+      continue;
+    }
+    const group = Object.hasOwn(groups, segments[0]) ? segments[0] : 'additional';
+    groups[group].push({ label: titleFromSegment(segments.at(-1)), url });
+  }
+  return groups;
+}
+
+function renderGroup(title, entries) {
+  if (!entries.length) return [];
+  return [`## ${title}`, ...entries.map((entry) => `- [${entry.label}](${entry.url})`), ''];
+}
+
+function buildIndex(urls, regenerationDate = new Date().toISOString().split('T')[0]) {
+  const groups = groupUrls(urls);
+  return [
+    '# Maine Dispensary Guide — Agent Discoverability Index',
+    `# ${SITE_ORIGIN}`,
+    '# For AI agents and crawlers. See /robots.txt for crawl-directive.',
+    `# Last regenerated: ${regenerationDate} from ${urls.length} sitemap URLs`,
+    '',
+    ...renderGroup('Homepage', groups.homepage),
+    ...renderGroup('Top-Level Pages', groups.top),
+    ...renderGroup('City & Regional Guides', groups.guides.filter((entry) => !/maine cannabis|maine dispensary|ocp/i.test(entry.label))),
+    ...renderGroup('Technical Guides', groups.guides.filter((entry) => /maine cannabis|maine dispensary|ocp/i.test(entry.label))),
+    ...renderGroup('Resources', groups.resources),
+    ...renderGroup('About & Founders', [...groups.about, ...groups.founders]),
+    ...renderGroup('Blog', groups.blog),
+    ...renderGroup('Downloads', groups.download),
+    ...renderGroup('Additional Sitemap Pages', groups.additional),
+  ].join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n';
+}
+
+async function main() {
+  const args = parseArguments(process.argv.slice(2));
+  const xml = args.fromFile
+    ? fs.readFileSync(args.fromFile, 'utf8')
+    : await fetchUrl(`${SITE_ORIGIN}/sitemap-0.xml`);
+  const urls = sitemapUrls(xml);
+  if (!urls.length) throw new Error('sitemap contained no URLs');
+  fs.mkdirSync(path.dirname(args.output), { recursive: true });
+  fs.writeFileSync(args.output, buildIndex(urls));
+  console.log(`✓ llms.txt regenerated — ${urls.length} URLs, output: ${args.output}`);
+}
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { buildIndex, groupUrls, parseArguments, sitemapUrls };
