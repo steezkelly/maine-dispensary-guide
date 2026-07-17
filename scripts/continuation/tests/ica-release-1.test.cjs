@@ -172,9 +172,20 @@ test('required CI provisions Chromium before the browser-backed continuation con
 test('funnel SQL joins active attention only to the same-site source path', () => {
   const sql = read(FUNNEL_SQL);
   assert.match(sql, /same_site_source_path AS source_path/);
-  assert.match(sql, /att\.source_path = e\.source_path AND att\.destination_path = s\.destination_path/);
+  assert.match(sql, /'source_destination_outcome' AS reporting_grain/);
+  assert.match(sql, /'unattributable_to_individual_cta' AS outcome_attribution/);
+  assert.match(sql, /LEFT JOIN attention att USING \(source_path, destination_path\)/);
+  assert.doesNotMatch(sql, /att\.source_path = e\.source_path AND att\.destination_path = s\.destination_path/, 'destination outcomes must not be duplicated onto CTA rows');
   assert.match(sql, /r'\^https\?:\/\/\(www\\\.\)\?'/, 'BigQuery raw regex needs one escaping backslash');
   assert.doesNotMatch(sql, /www\\\\\./, 'BigQuery raw regex must not double-escape www.');
+});
+
+test('GA4 configuration is queued before deferred CTA instrumentation can emit events', () => {
+  const layout = read(LAYOUT);
+  const configAt = layout.indexOf("window.gtag('config', analyticsId);");
+  const instrumentationAt = layout.indexOf('--- v1 action exposure/select');
+  assert.ok(configAt >= 0 && configAt < instrumentationAt, 'the gtag stub must queue config before CTA events');
+  assert.equal(layout.indexOf("window.gtag('config', analyticsId);", configAt + 1), -1, 'deferred script load must not queue a second config');
 });
 
 test('all pilot pages opt in and have exactly one Layout-owned discovery rail', () => {
@@ -282,6 +293,16 @@ test('v1 browser instrumentation preserves native actions and enforces dwell, ac
   });
   await page.clock.fastForward(800);
   assert.equal(eventNames(events).includes('mdg_action_exposure'), false, 'backgrounded dwell must not create an exposure');
+
+  // A CTA that remained qualified while hidden restarts its dwell timer on
+  // return even when IntersectionObserver emits no additional callback.
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => false });
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.clock.fastForward(800);
+  assert.equal(eventNames(events).includes('mdg_action_exposure'), true, 'visible qualifying CTA must resume dwell after tab return');
 
   // Delegated analytics never cancels native form submission.
   await page.goto(`${origin}/fixture?no-io`);

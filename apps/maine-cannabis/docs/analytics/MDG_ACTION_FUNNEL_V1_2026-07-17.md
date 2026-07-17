@@ -29,3 +29,13 @@ A destination arrival means a same-site page view whose referrer is a same-site
 source path. It is navigation evidence only. Do **not** call it a lead,
 conversion, or completed task unless that destination has its own separately
 defined completion event (for example `mdg_conversion_complete`).
+
+## Attribution boundary
+
+The SQL emits two explicitly separate grains. `action_cta` rows contain CTA
+exposure and selection counts only. `source_destination_outcome` rows contain
+arrival and active-attention counts for a source/destination path pair and are
+labelled `unattributable_to_individual_cta`. Multiple CTA IDs can share a
+destination, so these destination outcomes must not be summed, compared, or
+reported as action-level CTA results without a future action-level attribution
+key.

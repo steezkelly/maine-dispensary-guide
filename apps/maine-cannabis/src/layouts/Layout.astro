@@ -327,10 +327,10 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       After: define the `gtag` stub inline so the engagement instrumentation
       below can call window.gtag synchronously without errors. Load the real
       gtag.js on `requestIdleCallback` (same pattern as the homepage video +
-      decoration defer). `gtag('config', ...)` runs after the script loads.
-      The first ~50-500ms of engagement events might miss the config-time hit
-      but the engagement instrumentation still queues to dataLayer, and the
-      gtag library will replay queued calls when it initializes. Acceptable
+      decoration defer). The `gtag` stub queues both `js` and `config` before
+      the script fetch, then the gtag library replays that ordered queue when
+      it initializes. This preserves the configured destination for early
+      engagement events while retaining the deferred network fetch. Acceptable
       trade for ~3-5 perf score points.
     */}
     <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
@@ -340,6 +340,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
+      window.gtag('config', analyticsId);
 
       // Load the real gtag.js after first idle.
       (function () {
@@ -347,9 +348,6 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           var s = document.createElement('script');
           s.async = true;
           s.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
-          s.onload = function () {
-            window.gtag('config', analyticsId);
-          };
           document.head.appendChild(s);
         }
         if ('requestIdleCallback' in window) {
@@ -480,6 +478,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             if (!engaged) markEngaged('visibility_returned');
             markActiveAttention();
             scheduleActiveAttention();
+            restartQualifiedActionDwellTimers();
           }
         });
 
@@ -540,10 +539,28 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         }
         var exposedActions = new WeakSet();
         var actionDwellTimers = new Map();
-        var actionIntersectionState = new WeakSet();
+        var actionIntersectionState = new Set();
+        var actionObserver = null;
         function cancelPendingActionDwellTimers() {
           actionDwellTimers.forEach(function (timer) { window.clearTimeout(timer); });
           actionDwellTimers.clear();
+        }
+        function scheduleActionDwell(target) {
+          if (exposedActions.has(target) || actionDwellTimers.has(target) || document.hidden) return;
+          var timer = window.setTimeout(function () {
+            actionDwellTimers.delete(target);
+            // A timer cannot convert a backgrounded or no-longer-visible
+            // element into a meaningful viewport exposure.
+            if (document.hidden || !actionIntersectionState.has(target) || exposedActions.has(target)) return;
+            if (actionObserver) actionObserver.unobserve(target);
+            exposeAction(target);
+          }, 750);
+          actionDwellTimers.set(target, timer);
+        }
+        function restartQualifiedActionDwellTimers() {
+          actionIntersectionState.forEach(function (target) {
+            scheduleActionDwell(target);
+          });
         }
         function legacyCtaView(target) {
           send('cta_view', {
@@ -561,7 +578,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         }
         function observeActions() {
           if (!('IntersectionObserver' in window)) return;
-          var io = new IntersectionObserver(function (entries) {
+          actionObserver = new IntersectionObserver(function (entries) {
             for (var i = 0; i < entries.length; i++) {
               var entry = entries[i];
               var el = entry.target;
@@ -573,22 +590,11 @@ const breadcrumbListJsonLd = breadcrumbListSchema
                 continue;
               }
               actionIntersectionState.add(el);
-              if (actionDwellTimers.has(el)) continue;
-              var timer = window.setTimeout(function (target) {
-                return function () {
-                  actionDwellTimers.delete(target);
-                  // A timer cannot convert a backgrounded or no-longer-visible
-                  // element into a meaningful viewport exposure.
-                  if (document.hidden || !actionIntersectionState.has(target) || exposedActions.has(target)) return;
-                  io.unobserve(target);
-                  exposeAction(target);
-                };
-              }(el), 750);
-              actionDwellTimers.set(el, timer);
+              scheduleActionDwell(el);
             }
           }, { threshold: [0, 0.5] });
           var ctas = document.querySelectorAll('[data-cta-id]');
-          for (var j = 0; j < ctas.length; j++) io.observe(ctas[j]);
+          for (var j = 0; j < ctas.length; j++) actionObserver.observe(ctas[j]);
         }
         document.addEventListener('click', function (ev) {
           var target = ev.target && ev.target.closest ? ev.target.closest('[data-cta-id]') : null;
