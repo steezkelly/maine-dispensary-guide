@@ -42,24 +42,32 @@ for (const entry of manifest.benchmarkQueries) {
 }
 for (const intent of expectedIntents) if (!seenIntents.has(intent)) fail(`missing intent group: ${intent}`);
 
+const activeRetailStores = manifest.benchmarkQueries.find((entry) => entry.id === 'market-retail-stores');
 const deferredRetailStores = manifest.deferredQueries?.find((entry) => entry.id === 'market-retail-stores');
-if (seenIds.has('market-retail-stores')) fail('market-retail-stores must remain deferred while its canonical page disagrees with the source-reviewed answer');
-if (!deferredRetailStores || deferredRetailStores.status !== 'deferred') fail('market-retail-stores needs a deferred query record');
-if (deferredRetailStores.canonicalMdgUrl !== 'https://mainedispensaryguide.com/market-stats') fail('deferred market-retail-stores needs the market-stats canonical URL');
-if (!deferredRetailStores.reason || !deferredRetailStores.resumeCondition) fail('deferred market-retail-stores needs a reason and resume condition');
-if (!Array.isArray(deferredRetailStores.requiredAnswer?.primarySourceReferences) || deferredRetailStores.requiredAnswer.primarySourceReferences.length === 0) {
-  fail('deferred market-retail-stores needs primary-source provenance');
-}
-
-const retailStatsPath = path.resolve(__dirname, '../../apps/maine-cannabis/src/data/site-stats.json');
+const retailStatsPath = process.env.ANSWER_ENGINE_RETAIL_STATS_PATH
+  ? path.resolve(process.env.ANSWER_ENGINE_RETAIL_STATS_PATH)
+  : path.resolve(__dirname, '../../apps/maine-cannabis/src/data/site-stats.json');
 const retailStats = JSON.parse(fs.readFileSync(retailStatsPath, 'utf8'));
-const renderedValue = deferredRetailStores.canonicalPageObservation?.renderedValue;
-if (deferredRetailStores.canonicalPageObservation?.sourcePath !== 'apps/maine-cannabis/src/data/site-stats.json'
-  || deferredRetailStores.canonicalPageObservation?.sourceField !== 'activeAdultUseRetailStores'
-  || retailStats.activeAdultUseRetailStores !== renderedValue) {
-  fail('deferred market-retail-stores needs provenance for the value currently rendered by its canonical page');
+if (activeRetailStores) {
+  if (retailStats.activeAdultUseRetailStores !== activeRetailStores.requiredAnswer?.value) {
+    fail('market-retail-stores must remain deferred while its canonical page disagrees with the source-reviewed answer');
+  }
+} else {
+  if (!deferredRetailStores || deferredRetailStores.status !== 'deferred') fail('market-retail-stores needs a deferred query record');
+  if (deferredRetailStores.canonicalMdgUrl !== 'https://mainedispensaryguide.com/market-stats') fail('deferred market-retail-stores needs the market-stats canonical URL');
+  if (!deferredRetailStores.reason || !deferredRetailStores.resumeCondition) fail('deferred market-retail-stores needs a reason and resume condition');
+  if (!Array.isArray(deferredRetailStores.requiredAnswer?.primarySourceReferences) || deferredRetailStores.requiredAnswer.primarySourceReferences.length === 0) {
+    fail('deferred market-retail-stores needs primary-source provenance');
+  }
+
+  const renderedValue = deferredRetailStores.canonicalPageObservation?.renderedValue;
+  if (deferredRetailStores.canonicalPageObservation?.sourcePath !== 'apps/maine-cannabis/src/data/site-stats.json'
+    || deferredRetailStores.canonicalPageObservation?.sourceField !== 'activeAdultUseRetailStores'
+    || retailStats.activeAdultUseRetailStores !== renderedValue) {
+    fail('deferred market-retail-stores needs provenance for the value currently rendered by its canonical page');
+  }
+  if (renderedValue === deferredRetailStores.requiredAnswer?.value) fail('market-retail-stores must be active when its canonical page and required answer agree');
 }
-if (renderedValue === deferredRetailStores.requiredAnswer?.value) fail('market-retail-stores must be active when its canonical page and required answer agree');
 
 if (!manifest.observationRecord?.requiredFields?.includes('evidenceReference')) fail('observation record needs evidenceReference');
 if (!manifest.crawlerDiscoverabilityRecord?.rule?.includes('never an answer-inclusion result')) fail('crawler checks must remain separate');
