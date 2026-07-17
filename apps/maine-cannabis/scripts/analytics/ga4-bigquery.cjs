@@ -153,15 +153,29 @@ function sanitizeEventParams(eventParams) {
 /**
  * Build the BQ mirror SQL for a given named report.
  *
- * For most reports the BQ mirror is a per-day aggregation against
- * `events_intraday_*`. R7/R8 (custom event dimensions) require
- * extracting the custom-dim keys from `event_params`.
+ * For most reports the BQ mirror is a per-day aggregation. Completed dates
+ * are read from `events_*`; only the current date reads `events_intraday_*`.
+ * R7/R8 (custom event dimensions) require extracting the custom-dim keys
+ * from `event_params`.
  */
 function buildBqSql(reportKey, from, to) {
-  // events_intraday_* shards; the wildcard unioned with events_*
-  // would also work but we restrict to intraday per v3 §3.1 reality.
-  const tab = `\`${PROJECT_ID}.${DATASET_ID}.events_intraday_*\``;
-  const tableFilter = `_TABLE_SUFFIX BETWEEN REPLACE('${from}','-','') AND REPLACE('${to}','-','')`;
+  const rangeFilter = `_TABLE_SUFFIX BETWEEN REPLACE('${from}','-','') AND REPLACE('${to}','-','')`;
+  const currentDaySuffix = `FORMAT_DATE('%Y%m%d', CURRENT_DATE())`;
+  // Daily exports are the durable source for completed GA4 dates. The
+  // intraday table is retained only for the current date so a day cannot be
+  // double-counted when the daily shard appears.
+  const tab = `(
+    SELECT *, CONCAT('${PROJECT_ID}.${DATASET_ID}.events_', _TABLE_SUFFIX) AS _mdg_source_table
+    FROM \`${PROJECT_ID}.${DATASET_ID}.events_*\`
+    WHERE REGEXP_CONTAINS(_TABLE_SUFFIX, r'^[0-9]{8}$')
+      AND ${rangeFilter}
+      AND _TABLE_SUFFIX < ${currentDaySuffix}
+    UNION ALL
+    SELECT *, CONCAT('${PROJECT_ID}.${DATASET_ID}.events_intraday_', _TABLE_SUFFIX) AS _mdg_source_table
+    FROM \`${PROJECT_ID}.${DATASET_ID}.events_intraday_*\`
+    WHERE ${rangeFilter}
+      AND _TABLE_SUFFIX = ${currentDaySuffix}
+  )`;
   const pageLocationSql = `(SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location')`;
   const pagePathSql = `IF(
     REGEXP_CONTAINS(${pageLocationSql}, r'^[a-zA-Z][a-zA-Z0-9+.-]*://'),
@@ -182,10 +196,10 @@ function buildBqSql(reportKey, from, to) {
           COUNT(*) AS screenPageViews,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
           COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
-                || ':' || user_pseudo_id) AS sessions
+                || ':' || user_pseudo_id) AS sessions,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
-          AND event_name IN ('page_view')
+        WHERE event_name IN ('page_view')
         GROUP BY event_date, pagePath, pageTitle
       `;
     }
@@ -196,10 +210,10 @@ function buildBqSql(reportKey, from, to) {
     }
     case 'R3_event_count_daily': {
       return `
-        SELECT event_date, ${pagePathSql} AS pagePath, event_name, COUNT(*) AS eventCount
+        SELECT event_date, ${pagePathSql} AS pagePath, event_name, COUNT(*) AS eventCount,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
-          AND event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start')
+        WHERE event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start')
         GROUP BY event_date, pagePath, event_name
       `;
     }
@@ -208,9 +222,9 @@ function buildBqSql(reportKey, from, to) {
         SELECT event_date, geo.country, geo.region, geo.city,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
           COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
-                || ':' || user_pseudo_id) AS sessions
+                || ':' || user_pseudo_id) AS sessions,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
         GROUP BY event_date, geo.country, geo.region, geo.city
       `;
     }
@@ -221,9 +235,9 @@ function buildBqSql(reportKey, from, to) {
           device.operating_system AS operatingSystem,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
           COUNT(DISTINCT CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
-                || ':' || user_pseudo_id) AS sessions
+                || ':' || user_pseudo_id) AS sessions,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
         GROUP BY event_date, deviceCategory, browser, operatingSystem
       `;
     }
@@ -252,16 +266,17 @@ function buildBqSql(reportKey, from, to) {
               ) = '1',
               1,
               0
-            )) AS session_engaged
+            )) AS session_engaged,
+            ANY_VALUE(_mdg_source_table) AS bq_source_table
           FROM ${tab}
-          WHERE ${tableFilter}
-            AND (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
+          WHERE (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
           GROUP BY event_date, user_pseudo_id, session_key
         )
         SELECT event_date, newVsReturning,
           COUNT(DISTINCT user_pseudo_id) AS totalUsers,
           COUNT(DISTINCT session_key) AS sessions,
-          COUNT(DISTINCT IF(session_engaged = 1, session_key, NULL)) AS engagedSessions
+          COUNT(DISTINCT IF(session_engaged = 1, session_key, NULL)) AS engagedSessions,
+          ANY_VALUE(bq_source_table) AS bq_source_table
         FROM session_events
         GROUP BY event_date, newVsReturning
       `;
@@ -271,10 +286,10 @@ function buildBqSql(reportKey, from, to) {
         SELECT event_date,
           ${pagePathSql} AS pagePath,
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='faq_id') AS faq_id,
-          COUNT(*) AS eventCount
+          COUNT(*) AS eventCount,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
-          AND event_name = 'faq_open'
+        WHERE event_name = 'faq_open'
         GROUP BY event_date, pagePath, faq_id
       `;
     }
@@ -283,10 +298,10 @@ function buildBqSql(reportKey, from, to) {
         SELECT event_date,
           ${pagePathSql} AS pagePath,
           (SELECT value.string_value FROM UNNEST(event_params) WHERE key='cta_id') AS cta_id,
-          COUNT(*) AS eventCount
+          COUNT(*) AS eventCount,
+          ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE ${tableFilter}
-          AND event_name = 'cta_view'
+        WHERE event_name = 'cta_view'
         GROUP BY event_date, pagePath, cta_id
       `;
     }
@@ -417,7 +432,7 @@ async function queryBqReport(reportKey, from, to) {
 
       // source_provenance: re-query pointer (v3 §3.3)
       sanitized.source_provenance = {
-        bq_table: `${PROJECT_ID}.${DATASET_ID}.events_intraday_${(r.event_date || '').replace(/-/g, '')}`,
+        bq_table: r.bq_source_table || `${PROJECT_ID}.${DATASET_ID}.events_intraday_${(r.event_date || '').replace(/-/g, '')}`,
         bq_row_offset: r._offset || null,
         fetched_at_utc: new Date().toISOString(),
         stream_id: r.stream_id

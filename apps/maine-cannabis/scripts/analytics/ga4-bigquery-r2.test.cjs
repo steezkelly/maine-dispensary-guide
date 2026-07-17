@@ -89,3 +89,14 @@ test('R3 BigQuery mirror includes emitted conversion events', () => {
   assert.match(sql, /'lead_capture'/);
   assert.match(sql, /'affiliate_click'/);
 });
+
+test('BQ reconciliation reads completed days from daily shards and only the current day from intraday shards', () => {
+  const sql = buildBqSql('R1_pageview_daily', '2026-07-10', '2026-07-12');
+
+  assert.match(sql, /events_\*`/);
+  assert.match(sql, /REGEXP_CONTAINS\(_TABLE_SUFFIX, r'\^\[0-9\]\{8\}\$'\)/);
+  assert.match(sql, /_TABLE_SUFFIX < FORMAT_DATE\('%Y%m%d', CURRENT_DATE\(\)\)/);
+  assert.match(sql, /events_intraday_\*`/);
+  assert.match(sql, /_TABLE_SUFFIX = FORMAT_DATE\('%Y%m%d', CURRENT_DATE\(\)\)/);
+  assert.match(sql, /ANY_VALUE\(_mdg_source_table\) AS bq_source_table/);
+});
