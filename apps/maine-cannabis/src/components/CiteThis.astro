@@ -26,7 +26,7 @@
  *   shortCitation string — pre-formatted short citation for journalists
  *   note         string? — optional extra paragraph before the citations
  *   sections     Array<{label: string, anchor: string}>? — per-section permalinks
- *   sources      Array<{title: string, url: string, note?: string}>? — primary sources
+ *   sources      Array<{title: string, url: string, note?: string, sourceId?: string}>? — primary sources
  *
  * Style note: relies on `.cite-box` CSS already in each page's <style>
  * block (both market-stats.astro and roi-calculator.astro define it). For
@@ -42,6 +42,8 @@ interface SourceLink {
   title: string;
   url: string;
   note?: string;
+  /** Stable manifest source ID when the source backs a maintained claim. */
+  sourceId?: string;
 }
 
 interface Props {
@@ -180,9 +182,16 @@ const sectionId = `cite-this-${slug}`;
     <>
       <h3>Primary sources cited on this page</h3>
       <ul>
-        {sources.map(s => (
+        {sources.map((s, index) => (
           <li>
-            <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-mdg-source-id={s.sourceId || `citation-${slug}-${index + 1}`}
+              data-mdg-source-family="citation"
+              data-mdg-source-placement="cite-this"
+            >{s.title}</a>
             {s.note && <span> — {s.note}</span>}
           </li>
         ))}
@@ -190,3 +199,22 @@ const sectionId = `cite-this-${slug}`;
     </>
   )}
 </section>
+
+<script is:inline>
+  // Source clicks are an optional verification/trust signal only. They never
+  // assert source accuracy, reader comprehension, endorsement, or intent.
+  document.currentScript?.previousElementSibling?.addEventListener('click', (event) => {
+    const link = event.target?.closest?.('a[data-mdg-source-id]');
+    if (!link || typeof window.gtag !== 'function') return;
+    window.gtag('event', 'mdg_source_select', {
+      schema_version: 'v1',
+      instrumented_at: new Date().toISOString(),
+      page_path: window.location.pathname,
+      page_title: document.title,
+      source_id: link.dataset.mdgSourceId,
+      source_family: link.dataset.mdgSourceFamily,
+      placement_id: link.dataset.mdgSourcePlacement,
+      privacy_classification: 'anonymous_aggregate',
+    });
+  });
+</script>
