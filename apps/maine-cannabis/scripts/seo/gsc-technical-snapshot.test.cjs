@@ -1,6 +1,28 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { buildSnapshot, fetchSitemapUrls } = require('./gsc-technical-snapshot.cjs');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { buildSnapshot, fetchSitemapUrls, latestCoverage } = require('./gsc-technical-snapshot.cjs');
+
+test('rejects a newer partial export and selects the newest demonstrably complete coverage export', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-coverage-'));
+  try {
+    fs.writeFileSync(path.join(directory, 'gsc-indexing-report-2026-07-10.json'), JSON.stringify({ coverage: { scope: 'full_sitemap', complete: true, sitemapUrlCount: 2, inspectedUrlCount: 2 }, results: [{ url: 'https://mainedispensaryguide.com/a', status: 'INDEXED' }, { url: 'https://mainedispensaryguide.com/b', status: 'INDEXED' }] }));
+    fs.writeFileSync(path.join(directory, 'gsc-indexing-report-2026-07-11-limited_sitemap.json'), JSON.stringify({ coverage: { scope: 'limited_sitemap', complete: false, sitemapUrlCount: 2, inspectedUrlCount: 1, limit: 1 }, results: [{ url: 'https://mainedispensaryguide.com/a', status: 'NOT_INDEXED' }] }));
+    const coverage = latestCoverage(directory);
+    assert.equal(coverage.file, 'gsc-indexing-report-2026-07-10.json');
+    assert.equal(coverage.results.length, 2);
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('does not trust legacy exports without explicit completeness metadata', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-coverage-'));
+  try {
+    fs.writeFileSync(path.join(directory, 'gsc-indexing-report-2026-07-10.json'), JSON.stringify({ results: [{ url: 'https://mainedispensaryguide.com/a', status: 'INDEXED' }] }));
+    assert.deepEqual(latestCoverage(directory), { file: null, report: null, results: [] });
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
 
 test('retains first-seen state and records unobserved coverage rather than passing it', () => {
   const snapshot = buildSnapshot({ sitemapUrls: ['https://mainedispensaryguide.com/guides/a'], manifestRows: [{ canonical_path: '/guides/a' }], coverageRows: [], pageChecks: { '/guides/a': { checked: false } }, extractedAt: '2026-07-17T12:00:00.000Z', prior: { routes: [{ route: '/guides/a', firstSeenAt: '2026-07-01T00:00:00.000Z' }] } });

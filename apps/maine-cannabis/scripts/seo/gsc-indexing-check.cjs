@@ -13,7 +13,9 @@
  *
  * Output:
  *   - console: human-readable summary grouped by status
- *   - data/gsc-indexing-report-<date>.json: full per-URL result, archived
+ *   - data/gsc-indexing-report-<date>.json: full-sitemap per-URL result, archived
+ *   - data/gsc-indexing-report-<date>-<scope>.json: partial per-URL result,
+ *     kept separate so a smoke test cannot overwrite full-site evidence
  *   - data/gsc-indexing-cache.json: latest result, 24h TTL
  *
  * Required:
@@ -149,6 +151,26 @@ async function inspectAll(sc, urls, concurrency = 8) {
   return results;
 }
 
+function coverageMetadata({ sitemapUrlCount, inspectedUrls, flags }) {
+  const scope = flags.url ? 'single_url' : flags.limit ? 'limited_sitemap' : 'full_sitemap';
+  return {
+    scope,
+    complete: scope === 'full_sitemap' && inspectedUrls.length === sitemapUrlCount,
+    sitemapUrlCount,
+    inspectedUrlCount: inspectedUrls.length,
+    limit: flags.limit ? Number(flags.limit) : null,
+    requestedUrl: flags.url || null,
+  };
+}
+
+function sameUrlSet(left, right) {
+  return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((url, index) => url === right[index]);
+}
+
+function archiveFilename(dateStamp, coverage) {
+  return `gsc-indexing-report-${dateStamp}${coverage.scope === 'full_sitemap' ? '' : `-${coverage.scope}`}.json`;
+}
+
 async function main() {
   // Resolve target URLs
   let urls;
@@ -159,14 +181,16 @@ async function main() {
     urls = await fetchSitemapUrls();
     logInfo(`Found ${urls.length} URL(s) in sitemap.`);
   }
+  const sitemapUrlCount = urls.length;
   if (flags.limit) urls = urls.slice(0, parseInt(flags.limit, 10));
+  const coverage = coverageMetadata({ sitemapUrlCount, inspectedUrls: urls, flags });
 
   // Cache: skip API calls if we have a fresh result for this exact URL set
   let cache = null;
   if (!flags.refresh && fs.existsSync(CACHE_PATH)) {
     try {
       cache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
-      if (cache.timestamp && Date.now() - new Date(cache.timestamp).getTime() < 24 * 3600 * 1000) {
+      if (cache.timestamp && sameUrlSet(cache.requestedUrls, urls) && Date.now() - new Date(cache.timestamp).getTime() < 24 * 3600 * 1000) {
         logInfo(`Cache hit (${cache.results.length} URLs, age <24h). Pass --refresh to bypass.`);
         summarize(cache.results);
         return;
@@ -221,13 +245,14 @@ async function main() {
   const results = await inspectAll(sc, urls, 8);
 
   // Persist
-  const record = { timestamp: new Date().toISOString(), sourceUrl: SITE_URL, results };
+  const record = { timestamp: new Date().toISOString(), sourceUrl: SITE_URL, requestedUrls: urls, coverage, results };
   fs.mkdirSync(REPORT_DIR, { recursive: true });
   fs.writeFileSync(CACHE_PATH, JSON.stringify(record, null, 2));
   const dateStamp = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(path.join(REPORT_DIR, `gsc-indexing-report-${dateStamp}.json`), JSON.stringify(record, null, 2));
+  const archivePath = path.join(REPORT_DIR, archiveFilename(dateStamp, coverage));
+  fs.writeFileSync(archivePath, JSON.stringify(record, null, 2));
   logInfo(`Cache: ${CACHE_PATH}`);
-  logInfo(`Archive: ${path.join(REPORT_DIR, `gsc-indexing-report-${dateStamp}.json`)}`);
+  logInfo(`Archive: ${archivePath}`);
 
   summarize(results);
 }
@@ -263,8 +288,10 @@ function summarize(results) {
   }
 }
 
-main().catch(e => {
+if (require.main === module) main().catch(e => {
   logErr(`\n✗ FATAL: ${e.message || e}`);
   if (e.stack) console.error(e.stack.split('\n').slice(0, 5).join('\n'));
   process.exit(1);
 });
+
+module.exports = { archiveFilename, coverageMetadata, sameUrlSet };
