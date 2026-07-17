@@ -94,7 +94,26 @@ const REPORTS = {
   }
 };
 
-function reportCompleteness(rowCount, fetchedRows) { return Number(rowCount) > Number(fetchedRows) ? 'partial' : 'ok'; }
+function reportCompleteness(rowCount, fetchedRows) {
+  const expected = Number(rowCount);
+  const fetched = Number(fetchedRows);
+  return Number.isInteger(expected) && expected >= 0 && expected === fetched ? 'ok' : 'partial';
+}
+
+function validatedRowCount(value, expected = null) {
+  const count = Number(value);
+  if (value == null || String(value).trim() === '' || !Number.isInteger(count) || count < 0) {
+    const error = new Error('GA4 response rowCount must be a non-negative integer on every page');
+    error.code = 'INVALID_ROW_COUNT';
+    throw error;
+  }
+  if (expected != null && count !== expected) {
+    const error = new Error(`GA4 response rowCount changed across pages (${expected} -> ${count})`);
+    error.code = 'INVALID_ROW_COUNT';
+    throw error;
+  }
+  return count;
+}
 
 function buildReportRequest(def, opts) {
   const request = {
@@ -128,7 +147,7 @@ async function runReport(authClient, reportKey, opts) {
     const limit = opts.limit || 100000;
     const rawRows = [];
     let offset = 0;
-    let rowCount = 0;
+    let rowCount = null;
 
     while (true) {
       const resp = await client.properties.runReport({
@@ -137,8 +156,8 @@ async function runReport(authClient, reportKey, opts) {
       });
       const data = resp.data;
       const pageRows = data.rows || [];
+      rowCount = validatedRowCount(data.rowCount, rowCount);
       rawRows.push(...pageRows);
-      rowCount = Number(data.rowCount ?? rawRows.length);
 
       if (rawRows.length >= rowCount || pageRows.length === 0) break;
       offset += pageRows.length;

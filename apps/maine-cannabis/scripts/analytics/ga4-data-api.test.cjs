@@ -58,3 +58,32 @@ test('runReport paginates until every row the GA4 API reports has been retrieved
     google.analyticsdata = originalAnalyticsData;
   }
 });
+
+test('runReport fails on missing, invalid, or inconsistent paginated row counts', async () => {
+  const originalAnalyticsData = google.analyticsdata;
+  const rows = Array.from({ length: 5 }, (_, index) => ({
+    dimensionValues: [{ value: `2026070${index + 1}` }, { value: `/page-${index}` }, { value: `Title ${index}` }],
+    metricValues: [{ value: String(index + 1) }, { value: '1' }, { value: '1' }]
+  }));
+  const scenarios = [
+    { name: 'missing later count', counts: ['5', undefined] },
+    { name: 'inconsistent later count', counts: ['5', '4'] },
+    { name: 'invalid initial count', counts: ['not-a-number'] },
+  ];
+
+  try {
+    for (const scenario of scenarios) {
+      let call = 0;
+      google.analyticsdata = () => ({ properties: { runReport: async () => {
+        const index = call++;
+        const rowCount = scenario.counts[index];
+        return { data: { ...(rowCount === undefined ? {} : { rowCount }), rows: index < 2 ? rows.slice(index * 2, index * 2 + 2) : [] } };
+      } } });
+      const result = await runReport({}, 'R1_pageview_daily', { from: '2026-07-01', to: '2026-07-07', limit: 2 });
+      assert.equal(result.status, 'failed', scenario.name);
+      assert.equal(result.error.code, 'INVALID_ROW_COUNT', scenario.name);
+    }
+  } finally {
+    google.analyticsdata = originalAnalyticsData;
+  }
+});
