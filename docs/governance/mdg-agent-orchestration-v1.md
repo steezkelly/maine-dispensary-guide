@@ -184,7 +184,7 @@ hermes kanban boards list --json
 Only if that board is absent, create it with:
 
 ```bash
-hermes kanban boards create mdg-site --name "MDG Site" --description "Maine Dispensary Guide delivery board" --default-workdir /home/steve/projects/maine-dispensary-guide
+hermes kanban boards create mdg-site --name "MDG Site" --description "Maine Dispensary Guide delivery board" --default-workdir /home/steve/repos/maine-dispensary-guide
 ```
 
 Then bind the existing project to the existing or newly created board:
