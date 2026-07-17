@@ -49,6 +49,10 @@ const PROPERTY_TIMEZONE = bqClient.PROPERTY_TIMEZONE;
 
 // ------------------------------ Config / arg parsing ------------------------
 
+function defaultOutputDir(stamp) {
+  return path.resolve(__dirname, '../../data/ga4-ingest', stamp);
+}
+
 function parseArgs() {
   const args = { from: null, to: null, out: null };
   for (const a of process.argv.slice(2)) {
@@ -62,7 +66,7 @@ function parseArgs() {
   }
   if (!args.out) {
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-    args.out = `apps/maine-cannabis/data/ga4-ingest/${stamp}`;
+    args.out = defaultOutputDir(stamp);
   }
   return args;
 }
@@ -750,6 +754,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  defaultOutputDir,
   parseArgs,
   todayUtc,
   todayProperty,

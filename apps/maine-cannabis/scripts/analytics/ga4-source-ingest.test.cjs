@@ -24,6 +24,7 @@
 
 const assert = require('assert');
 const crypto = require('crypto');
+const path = require('path');
 
 const bq = require('./ga4-bigquery.cjs');
 const ingest = require('./ga4-source-ingest.cjs');
@@ -45,6 +46,10 @@ function test(name, fn) {
     console.log(`  FAIL  ${name}: ${e.message.split('\n')[0]}`);
   }
 }
+
+test('default ingest output is anchored at the analytics workspace data directory', () => {
+  assert.equal(ingest.defaultOutputDir('2026-07-17T00-00-00-000Z'), path.resolve(__dirname, '../../data/ga4-ingest/2026-07-17T00-00-00-000Z'));
+});
 
 // ============================================================================
 // §3.3 v3 sanitized evidence
