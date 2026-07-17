@@ -44,6 +44,7 @@ for (const intent of expectedIntents) if (!seenIntents.has(intent)) fail(`missin
 
 const activeRetailStores = manifest.benchmarkQueries.find((entry) => entry.id === 'market-retail-stores');
 const deferredRetailStores = manifest.deferredQueries?.find((entry) => entry.id === 'market-retail-stores');
+if (activeRetailStores && deferredRetailStores) fail('market-retail-stores cannot be both active and deferred');
 const retailStatsPath = process.env.ANSWER_ENGINE_RETAIL_STATS_PATH
   ? path.resolve(process.env.ANSWER_ENGINE_RETAIL_STATS_PATH)
   : path.resolve(__dirname, '../../apps/maine-cannabis/src/data/site-stats.json');
