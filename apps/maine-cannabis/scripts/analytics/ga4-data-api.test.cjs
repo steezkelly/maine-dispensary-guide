@@ -19,3 +19,13 @@ test('R3 Data API query uses the same event population as the BigQuery mirror', 
   const body = buildReportRequest(REPORTS.R3_event_count_daily, { from: '2026-07-01', to: '2026-07-07' });
   assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start']);
 });
+
+test('R7 Data API query uses the same faq_open population as the BigQuery mirror', () => {
+  const body = buildReportRequest(REPORTS.R7_custom_event_faq_daily, { from: '2026-07-01', to: '2026-07-07' });
+  assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['faq_open']);
+});
+
+test('R8 Data API query uses the same cta_view population as the BigQuery mirror', () => {
+  const body = buildReportRequest(REPORTS.R8_custom_event_cta_daily, { from: '2026-07-01', to: '2026-07-07' });
+  assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['cta_view']);
+});
