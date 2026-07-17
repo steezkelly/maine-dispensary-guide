@@ -16,6 +16,13 @@ test('case has required identity fields', () => { const c = o.buildOpportunityEn
 test('opportunity ID survives evidence refresh', () => { const out = o.buildOpportunityEngine({ derived_evidence: [eligible(), eligible({ window_start: '2026-07-08', window_end: '2026-07-14', posterior_mean: 0.02 })] }); assert.equal(out.case_count, 1); assert.equal(out.cases[0].opportunity_id, out.event_ledger[0].opportunity_id); });
 test('duplicate unresolved cases are not created', () => { const out = o.buildOpportunityEngine({ derived_evidence: [eligible(), eligible(), eligible()] }); assert.equal(out.case_count, 1); assert.equal(out.duplicate_unresolved_cases, 0); assert.equal(out.event_ledger.length, 3); });
 test('immutable detection snapshot is present', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; assert.ok(c.immutable_detection_snapshot); assert.equal(c.immutable_detection_snapshot.window_start, '2026-07-01'); });
+test('immutable detection snapshot preserves top-level Ticket 010 release IDs', () => {
+  const c = o.buildOpportunityEngine({ derived_evidence: [eligible({ canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' })] }).cases[0];
+  assert.deepEqual(c.immutable_detection_snapshot.source_release_ids, {
+    canonical_release_id: 'rel_0123456789abcdef',
+    acquisition_release_id: 'run_0123456789abcdef',
+  });
+});
 test('current evidence refreshes without overwriting detection snapshot', () => { const out = o.buildOpportunityEngine({ derived_evidence: [eligible({ posterior_mean: 0.03 }), eligible({ posterior_mean: 0.01, window_start: '2026-07-08' })] }); assert.equal(out.cases[0].immutable_detection_snapshot.posterior_summary.posterior_mean, 0.03); assert.equal(out.cases[0].current_evidence_summary.posterior_mean, 0.01); });
 test('E0/E1 causal language is constrained', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible({ evidence_grade: 'E1' })] }).cases[0]; assert.equal(c.causal_language_allowed, false); assert.equal(o.causalLanguageAllowed('E0'), false); });
 test('tail-selection flag exists', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible({ selected_from_extreme_tail: true })] }).cases[0]; assert.equal(c.selected_from_extreme_tail, true); });
@@ -46,5 +53,5 @@ test('proposal has no authorization hash before human signoff', () => { let c = 
 test('diagnostic ledger records evidence quality', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; const next = o.applyDiagnosticUpdate(c, { diagnostic_id: 'D_PROMISE_BODY_CONTRACT_AUDIT', evidence_quality: 'strong', result_summary: 'aligned' }); assert.equal(next.diagnostic_ledger[0].evidence_quality, 'strong'); });
 test('contract lists no automatic causal upgrade', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; assert.equal(c.causal_language_allowed, false); });
 
-console.log(`Tests: ${pass}/39 passed.`);
+console.log(`Tests: ${pass}/40 passed.`);
 if (process.exitCode) process.exit(1);

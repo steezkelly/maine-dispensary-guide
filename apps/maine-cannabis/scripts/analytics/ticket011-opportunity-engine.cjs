@@ -57,6 +57,17 @@ function buildDiagnosticPlan(row) {
   })).concat(taskMismatch ? [{ diagnostic_id: 'D_TASK_OWNERSHIP_PACKET', question: 'Which user task should this URL own?', evidence_source: 'page contract, query mix, competing URLs, body task map', hypotheses_supported_if_positive: ['TASK_OWNERSHIP_REVIEW'], hypotheses_weakened_if_positive: ['H0_NO_ACTION_OR_NOISE'], information_value_class: 'HIGH', cost_class: 'LOW', production_touch: false, required_capability: 'read_only', stop_condition: 'route to editorial task-ownership review; do not rewrite', status: 'PLANNED' }] : []);
 }
 
+function sourceReleaseIds(row) {
+  if (row.source_release_ids && typeof row.source_release_ids === 'object') return row.source_release_ids;
+  if (row.canonical_release_id || row.acquisition_release_id) {
+    return {
+      canonical_release_id: row.canonical_release_id || null,
+      acquisition_release_id: row.acquisition_release_id || null,
+    };
+  }
+  return {};
+}
+
 function makeInvestigationPacket(row) {
   const deduplicationKey = stableDeduplicationKey(row);
   const evidenceGrade = EVIDENCE_GRADES.includes(row.evidence_grade) ? row.evidence_grade : 'E1';
@@ -71,7 +82,7 @@ function makeInvestigationPacket(row) {
     change_contamination_status: row.change_contamination_status || 'NOT_CONTAMINATED',
     observation_statement: observation,
     task_context: { declared_primary_task: row.primary_task_family || null, secondary_tasks: row.secondary_task_families || [], serp_promise_family: row.serp_promise_family || null, promise_task_alignment: row.promise_task_alignment || null, observed_query_intent_distribution: row.query_intent_distribution || row.query_intent || 'unknown', entity_scope: row.entity_scope || null, approved_progression_families: row.approved_progression_families || [], task_contract_status: row.task_contract_status || 'UNKNOWN' },
-    immutable_detection_snapshot: { detected_at: row.detected_at || new Date().toISOString(), window_start: row.window_start || row.date || null, window_end: row.window_end || row.date || null, settlement_state: row.settlement_state || row.window_status || null, source_release_ids: row.source_release_ids || {}, page_manifest_version: row.page_manifest_version || null, query_intent_classifier_version: row.query_intent_classifier_version || 'query-intent.v1', peer_policy_version: row.peer_policy_version || null, peer_cell_id: row.peer_cell_id || null, peer_fallback_level: row.peer_fallback_level ?? null, posterior_summary: { posterior_mean: row.posterior_mean ?? null, interval_80: [row.posterior_interval_80_low ?? null, row.posterior_interval_80_high ?? null], interval_95: [row.posterior_interval_95_low ?? null, row.posterior_interval_95_high ?? null], practical_delta: row.practical_delta ?? null, probability_above_practical_delta: row.probability_above_practical_delta ?? null, probability_below_practical_delta: row.probability_below_practical_delta ?? null }, measurement_health_state: row.measurement_status || row.measurement_health || null, change_contamination_state: row.change_contamination_status || 'NOT_CONTAMINATED', selected_from_extreme_tail: Boolean(row.selected_from_extreme_tail) },
+    immutable_detection_snapshot: { detected_at: row.detected_at || new Date().toISOString(), window_start: row.window_start || row.date || null, window_end: row.window_end || row.date || null, settlement_state: row.settlement_state || row.window_status || null, source_release_ids: sourceReleaseIds(row), page_manifest_version: row.page_manifest_version || null, query_intent_classifier_version: row.query_intent_classifier_version || 'query-intent.v1', peer_policy_version: row.peer_policy_version || null, peer_cell_id: row.peer_cell_id || null, peer_fallback_level: row.peer_fallback_level ?? null, posterior_summary: { posterior_mean: row.posterior_mean ?? null, interval_80: [row.posterior_interval_80_low ?? null, row.posterior_interval_80_high ?? null], interval_95: [row.posterior_interval_95_low ?? null, row.posterior_interval_95_high ?? null], practical_delta: row.practical_delta ?? null, probability_above_practical_delta: row.probability_above_practical_delta ?? null, probability_below_practical_delta: row.probability_below_practical_delta ?? null }, measurement_health_state: row.measurement_status || row.measurement_health || null, change_contamination_state: row.change_contamination_status || 'NOT_CONTAMINATED', selected_from_extreme_tail: Boolean(row.selected_from_extreme_tail) },
     current_evidence_summary: { posterior_mean: row.posterior_mean ?? null, interval_80: [row.posterior_interval_80_low ?? null, row.posterior_interval_80_high ?? null], interval_95: [row.posterior_interval_95_low ?? null, row.posterior_interval_95_high ?? null], probability_above_practical_delta: row.probability_above_practical_delta ?? null, probability_below_practical_delta: row.probability_below_practical_delta ?? null, sample_state: row.sample_state || null, persistence_state: row.state, evidence_grade: evidenceGrade },
     hypotheses: buildHypotheses(row), diagnostic_plan: buildDiagnosticPlan(row), diagnostic_ledger: [], resolution: null,
     authority: { investigation_authority_level: 'A1', production_edit_authority: 'A4_REQUIRED', current_authorization_state: 'NOT_AUTHORIZED', authorization_scope_hash: null },
