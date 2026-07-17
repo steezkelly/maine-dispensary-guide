@@ -349,6 +349,45 @@ test('source-only caches each source file read and never reads the sitemap', () 
   assert.equal(reads[fixture.sitemap], undefined);
 });
 
+test('does not cache sitemap or rendered artifacts that a build can replace', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/existing">Existing</a>\n',
+    'guides/existing.astro': '<a href="/">Home</a>\n',
+  });
+  const readLog = path.join(fixture.tmp, 'read-log.json');
+  const hook = path.join(fixture.tmp, 'count-rendered-reads.cjs');
+  fs.writeFileSync(hook, [
+    "const fs = require('node:fs');",
+    'const original = fs.readFileSync.bind(fs);',
+    'const counts = {};',
+    'fs.readFileSync = (file, ...rest) => {',
+    '  const name = String(file);',
+    "  if (/\\.(html|xml)$/.test(name)) counts[name] = (counts[name] || 0) + 1;",
+    '  return original(file, ...rest);',
+    '};',
+    "process.on('exit', () => fs.writeFileSync(process.env.CONTENT_HEALTH_READ_LOG, JSON.stringify(counts)));",
+  ].join('\n'));
+
+  const result = spawnSync(process.execPath, ['--require', hook, script, '--no-build'], {
+    cwd: path.resolve(__dirname, '../..'),
+    env: {
+      ...process.env,
+      CONTENT_HEALTH_ROOT: fixture.pages,
+      CONTENT_HEALTH_SOURCE_ROOT: fixture.sourceRoot,
+      CONTENT_HEALTH_SITEMAP: fixture.sitemap,
+      CONTENT_HEALTH_DIST: fixture.dist,
+      CONTENT_HEALTH_PUBLIC: fixture.publicDir,
+      CONTENT_HEALTH_READ_LOG: readLog,
+    },
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const reads = JSON.parse(fs.readFileSync(readLog, 'utf8'));
+  assert.ok(reads[fixture.sitemap] > 1, 'sitemap reads must not survive a build boundary');
+  assert.ok(reads[path.join(fixture.dist, 'index.html')] > 1, 'rendered artifact reads must not survive a build boundary');
+});
+
 test('no-build skips CSS preflight while build overrides the environment skip', () => {
   const fixture = makePages({ 'index.astro': '<a href="/">Home</a>\n' });
   const env = {

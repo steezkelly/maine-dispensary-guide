@@ -45,14 +45,26 @@ try {
   process.exit(2);
 }
 
-// A single audit invokes overlapping checks. Cache file contents at the I/O
-// boundary so each path is read once while callers retain Node's usual string
-// versus Buffer return contract.
+// A single audit invokes overlapping source checks. Cache immutable source
+// inputs at the I/O boundary so each path is read once while callers retain
+// Node's usual string versus Buffer return contract. Do not cache sitemap or
+// rendered-output reads: a build can replace those artifacts between the CSS
+// preflight and the rendered checks below.
 const originalReadFileSync = fs.readFileSync.bind(fs);
 const auditReadCache = new Map();
+function isWithin(directory, candidate) {
+  const relative = path.relative(directory, candidate);
+  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
+}
+
+function isCacheableSourceInput(file) {
+  return isWithin(SOURCE_ROOT, file) || isWithin(PUBLIC_DIR, file);
+}
+
 fs.readFileSync = (file, options) => {
   if (typeof file !== 'string' && !Buffer.isBuffer(file)) return originalReadFileSync(file, options);
   const resolved = path.resolve(String(file));
+  if (!isCacheableSourceInput(resolved)) return originalReadFileSync(resolved, options);
   if (!auditReadCache.has(resolved)) auditReadCache.set(resolved, originalReadFileSync(resolved));
   const content = auditReadCache.get(resolved);
   const encoding = typeof options === 'string' ? options : options?.encoding;
