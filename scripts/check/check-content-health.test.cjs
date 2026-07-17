@@ -41,8 +41,8 @@ function makeHeroes(publicDir, heroes) {
   }
 }
 
-function runCheck({ pages, sourceRoot, sitemap, dist, publicDir }, { enableFixtureOrphanCheck = false } = {}) {
-  return spawnSync(process.execPath, [script], {
+function runCheck({ pages, sourceRoot, sitemap, dist, publicDir }, { enableFixtureOrphanCheck = false, args = [] } = {}) {
+  return spawnSync(process.execPath, [script, ...args], {
     cwd: path.resolve(__dirname, '../..'),
     env: {
       ...process.env,
@@ -270,4 +270,104 @@ test('reports a broken later srcset candidate in rendered HTML', () => {
 
   assert.notEqual(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /broken rendered media → \/images\/missing\.svg/);
+});
+
+test('rejects mutually exclusive source-only and rendered-only modes before auditing', () => {
+  const result = spawnSync(process.execPath, [script, '--source-only', '--rendered-only'], {
+    cwd: path.resolve(__dirname, '../..'),
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 2, result.stdout + result.stderr);
+  assert.match(result.stderr, /Cannot combine --source-only and --rendered-only/);
+});
+
+test('source-only rejects a route that exists only in stale sitemap data', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/stale-sitemap-route">Stale route</a>\n',
+  });
+  fs.writeFileSync(fixture.sitemap, '<urlset><url><loc>https://mainedispensaryguide.com/stale-sitemap-route</loc></url></urlset>');
+
+  const result = runCheck(fixture, { args: ['--source-only'] });
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /dead internal links: 1 issue/);
+  assert.match(result.stdout, /dead internal link → \/stale-sitemap-route/);
+  assert.doesNotMatch(result.stdout, /rendered crawl basics/);
+});
+
+test('rendered-only excludes source checks while retaining rendered checks', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="#">Source-only violation</a>\n',
+  });
+
+  const result = runCheck(fixture, { args: ['--rendered-only'] });
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.doesNotMatch(result.stdout, /bare href="#" links/);
+  assert.match(result.stdout, /rendered crawl basics: OK/);
+});
+
+test('source-only caches each source file read and never reads the sitemap', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/existing">Existing</a>\n',
+    'guides/existing.astro': '<a href="/">Home</a>\n',
+  });
+  const readLog = path.join(fixture.tmp, 'read-log.json');
+  const hook = path.join(fixture.tmp, 'count-reads.cjs');
+  fs.writeFileSync(hook, [
+    "const fs = require('node:fs');",
+    'const original = fs.readFileSync.bind(fs);',
+    'const counts = {};',
+    'fs.readFileSync = (file, ...rest) => {',
+    '  const name = String(file);',
+    "  if (/\\.(astro|html|xml)$/.test(name)) counts[name] = (counts[name] || 0) + 1;",
+    '  return original(file, ...rest);',
+    '};',
+    "process.on('exit', () => fs.writeFileSync(process.env.CONTENT_HEALTH_READ_LOG, JSON.stringify(counts)));",
+  ].join('\n'));
+
+  const result = spawnSync(process.execPath, ['--require', hook, script, '--source-only'], {
+    cwd: path.resolve(__dirname, '../..'),
+    env: {
+      ...process.env,
+      CONTENT_HEALTH_ROOT: fixture.pages,
+      CONTENT_HEALTH_SOURCE_ROOT: fixture.sourceRoot,
+      CONTENT_HEALTH_SITEMAP: fixture.sitemap,
+      CONTENT_HEALTH_DIST: fixture.dist,
+      CONTENT_HEALTH_PUBLIC: fixture.publicDir,
+      CONTENT_HEALTH_SKIP_CSS_BUILD: '1',
+      CONTENT_HEALTH_READ_LOG: readLog,
+    },
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const reads = JSON.parse(fs.readFileSync(readLog, 'utf8'));
+  assert.equal(reads[path.join(fixture.pages, 'index.astro')], 1);
+  assert.equal(reads[path.join(fixture.pages, 'guides/existing.astro')], 1);
+  assert.equal(reads[fixture.sitemap], undefined);
+});
+
+test('no-build skips CSS preflight while build overrides the environment skip', () => {
+  const fixture = makePages({ 'index.astro': '<a href="/">Home</a>\n' });
+  const env = {
+    ...process.env,
+    CONTENT_HEALTH_ROOT: fixture.pages,
+    CONTENT_HEALTH_SOURCE_ROOT: fixture.sourceRoot,
+    CONTENT_HEALTH_SITEMAP: fixture.sitemap,
+    CONTENT_HEALTH_DIST: fixture.dist,
+    CONTENT_HEALTH_PUBLIC: fixture.publicDir,
+    CONTENT_HEALTH_SKIP_CSS_BUILD: '1',
+    PATH: '',
+  };
+
+  const noBuild = spawnSync(process.execPath, [script, '--rendered-only', '--no-build'], { cwd: path.resolve(__dirname, '../..'), env, encoding: 'utf8' });
+  assert.equal(noBuild.status, 0, noBuild.stdout + noBuild.stderr);
+  assert.match(noBuild.stdout, /CSS build warnings: OK/);
+
+  const build = spawnSync(process.execPath, [script, '--rendered-only', '--build'], { cwd: path.resolve(__dirname, '../..'), env, encoding: 'utf8' });
+  assert.notEqual(build.status, 0, build.stdout + build.stderr);
+  assert.match(build.stdout, /CSS build warnings: 1 issue/);
+  assert.match(build.stdout, /build failed while scanning CSS warnings/);
 });
