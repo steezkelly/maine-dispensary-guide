@@ -321,7 +321,7 @@ where the LSP is known-good.
 
 - **Framework:** Astro 6.0 with `mdx` and `sitemap` integrations
 - **Adapter:** Vercel (Static Mode, `output: 'static'`)
-- **Design System:** "Heritage Authority" — High-contrast (12.8:1), Fraunces/Jakarta typography
+- **Design System:** editorial publication aesthetic — Newsreader (display) + Source Sans 3 (body), warm bone/deep spruce palette (operator-approved 2026-07-17; the prior "Heritage Authority" rule with separate display/body fallback typography has been retired)
 - **Lead Gen:** Formspree (`xvgzlowz`)
 - **Analytics:** GA4 (`G-614GHG67ZQ`) + Vercel Analytics + Speed Insights
 - **Search:** Brave Search (primary), Wikipedia (secondary), Playwright MCP (browser)
