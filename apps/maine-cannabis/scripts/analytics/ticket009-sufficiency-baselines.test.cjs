@@ -164,6 +164,15 @@ test('zero denominator is insufficient', () => {
   const p = b.posteriorFor({ numerator: null, denominator: 0, raw_rate: null, policy: b.POLICIES.gsc_ctr }, []);
   assert.equal(p.sample_state, 'insufficient');
 });
+test('invalid rate counts fail closed instead of producing a posterior', () => {
+  const invalidTarget = { numerator: 10, denominator: 1, raw_rate: 10, policy: b.POLICIES.gsc_ctr };
+  assert.throws(() => b.posteriorFor(invalidTarget, []), /invalid rate counts/);
+  assert.throws(() => b.posteriorFor({ numerator: 1, denominator: 10, raw_rate: 0.1, policy: b.POLICIES.gsc_ctr }, [{ numerator: -1, denominator: 10 }]), /invalid rate counts/);
+  const output = b.buildBaselines({ observations: [{ canonical_page_path: '/invalid', metric_family: 'gsc_ctr', numerator: 10, denominator: 1 }], manifest: [] });
+  assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
+  assert.equal(output.baselines[0].sample_state, 'insufficient');
+  assert.equal(output.baselines[0].posterior_mean, undefined);
+});
 
 test('unresolved task is measurement blocked', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'progression_rate', numerator: 2, denominator: 10, task_contract_status: 'UNRESOLVED' }], manifest: [] });
@@ -216,5 +225,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/47 passed.`);
+console.log(`Tests: ${pass}/48 passed.`);
 if (process.exitCode) process.exit(1);

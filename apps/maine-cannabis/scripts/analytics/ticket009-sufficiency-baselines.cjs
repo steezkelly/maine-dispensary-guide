@@ -148,6 +148,18 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
   return { ...context, metric_family: metric, numerator, denominator, raw_rate: denominator > 0 && numerator != null ? numerator / denominator : null, policy };
 }
 
+function hasInvalidRateCounts(row) {
+  const numerator = row?.numerator;
+  const denominator = row?.denominator;
+  if (numerator != null && (!Number.isFinite(numerator) || numerator < 0)) return true;
+  if (denominator != null && (!Number.isFinite(denominator) || denominator < 0)) return true;
+  return numerator != null && denominator != null && numerator > denominator;
+}
+
+function assertValidRateCounts(row) {
+  if (hasInvalidRateCounts(row)) throw new Error('invalid rate counts');
+}
+
 function dominantIntent(dist) {
   if (!dist) return 'unknown';
   return Object.entries(dist).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || 'unknown';
@@ -198,7 +210,7 @@ function uniquePeerEvidence(peers) {
 
 function selectPeers(target, observations, policy, minPeerCount) {
   const targetSettlement = String(target.settlement_state || target.window_status || '').toLowerCase();
-  const peers = uniquePeerEvidence(observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row, target.change_context_evaluated === true, targetSettlement === 'settled') && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family))));
+  const peers = uniquePeerEvidence(observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && !hasInvalidRateCounts(row) && isEligiblePeer(row, target.change_context_evaluated === true, targetSettlement === 'settled') && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family))));
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
@@ -265,6 +277,8 @@ function estimatePrior(peers, strength = 20) {
 }
 
 function posteriorFor(target, peers, config = {}) {
+  assertValidRateCounts(target);
+  peers.forEach(assertValidRateCounts);
   const prior = estimatePrior(peers, config.prior_strength || 20);
   const alpha = prior.alpha + Math.max(0, target.numerator || 0);
   const beta = prior.beta + Math.max(0, (target.denominator || 0) - (target.numerator || 0));
@@ -322,6 +336,9 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
     }
     if (target.task_contract_status === 'UNRESOLVED' || target.task_contract_status === 'NEEDS_EDITORIAL_REVIEW') {
       return { ...target, peer_policy_version: POLICY_VERSION, sample_state: 'insufficient', measurement_status: 'MEASUREMENT_BLOCKED: TASK_CONTRACT_UNRESOLVED', peer_fallback_level: 'blocked', peer_count: 0, metric_family: target.metric_family };
+    }
+    if (hasInvalidRateCounts(target)) {
+      return { ...target, peer_policy_version: POLICY_VERSION, sample_state: 'insufficient', sample_state_reason: 'rate counts must be finite, non-negative, and numerator cannot exceed denominator', measurement_status: 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS', peer_fallback_level: 'blocked', peer_count: 0, metric_family: target.metric_family, raw_rate_leaderboard_eligible: false };
     }
     const policy = target.policy;
     const selected = selectPeers(target, normalized, policy, config.minimum_peer_count || 3);
