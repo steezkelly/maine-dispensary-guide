@@ -104,6 +104,15 @@ test('manifest evidence counts statuses', () => {
   const m = join.buildEvidenceManifest(rows, { sourceReleaseIds: { canonical_release_id: 'rel_x' }, windowStart: '2026-07-12', windowEnd: '2026-07-12' });
   assert.equal(m.row_count, 2); assert.equal(m.reconciliation_status_counts.matched, 1); assert.equal(m.source_presence_counts.ga4_only, 1); assert.equal(m.privacy_redaction_assertion, true);
 });
+test('a post-CSP window settles after the arrival-lag threshold', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 1 }] }] }, vercelRows: [], asOf: '2026-07-16' });
+  assert.equal(rows[0].settlement_state, 'settled');
+});
+test('a recent window remains fresh until the arrival-lag threshold passes', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260714', page_path: '/x' }, data_api_value: 1 }] }] }, vercelRows: [], asOf: '2026-07-16' });
+  assert.equal(rows[0].settlement_state, 'fresh');
+});
+
 test('contract version is stable', () => assert.equal(join.CONTRACT_VERSION, 'ticket-008.v1'));
 test('A5 source family classification is blocked by source', () => assert.equal(join.classifyReconciliation({ source: 'a5', value: 1 }, { value: 1 }), 'measurement_blocked'));
 test('unknown nonnumeric values remain source deltas', () => assert.equal(join.classifyReconciliation({ value: '4' }, { value: 4 }), 'source_delta'));
@@ -113,5 +122,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/33 passed.`);
+console.log(`Tests: ${pass}/35 passed.`);
 if (process.exitCode) process.exit(1);

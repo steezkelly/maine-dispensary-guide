@@ -22,6 +22,7 @@ const crypto = require('node:crypto');
 
 const CONTRACT_VERSION = 'ticket-008.v1';
 const CSP_FIX_DATE = '2026-07-12';
+const SETTLEMENT_LAG_DAYS = 3;
 const METRIC_SOURCES = Object.freeze({
   sessions: 'ga4_data_api',
   engagement_rate: 'ga4_data_api',
@@ -184,13 +185,22 @@ function measurementStatus(date, records) {
   return 'MEASURED';
 }
 
+function settlementState(date, asOf) {
+  const observed = normalizeDate(date);
+  const reference = normalizeDate(asOf) || new Date().toISOString().slice(0, 10);
+  if (!observed) return 'fresh';
+  const cutoff = new Date(`${reference}T00:00:00.000Z`);
+  cutoff.setUTCDate(cutoff.getUTCDate() - SETTLEMENT_LAG_DAYS);
+  return observed <= cutoff.toISOString().slice(0, 10) ? 'settled' : 'fresh';
+}
+
 function deltaFields(ga4, vercel) {
   if (!ga4 || !vercel) return {};
   if (typeof ga4.value !== 'number' || typeof vercel.value !== 'number') return { observed: true };
   return { value: { ga4: ga4.value, vercel: vercel.value, absolute: ga4.value - vercel.value } };
 }
 
-function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart = null, windowEnd = null, sourceReleaseIds = {} }) {
+function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart = null, windowEnd = null, sourceReleaseIds = {}, asOf = null }) {
   const ga4 = normalizeGa4Release(ga4Release);
   const vercel = normalizeVercelRows(vercelRows);
   const manifest = normalizeManifestRows(manifestRows);
@@ -231,7 +241,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       acquisition_release_id: sourceReleaseIds.acquisition_release_id || null,
       privacy_redaction_status: 'asserted_no_user_level_join',
       join_contract_version: CONTRACT_VERSION,
-      settlement_state: group.date < CSP_FIX_DATE ? 'settled' : 'open',
+      settlement_state: settlementState(group.date, asOf),
       measurement_block_reason: blocked ? 'A5_SPEED_INSIGHTS_DEFERRED' : null,
     });
   }
