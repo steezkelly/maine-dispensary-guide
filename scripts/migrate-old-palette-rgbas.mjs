@@ -3,9 +3,23 @@
  * migrate-old-palette-rgbas.mjs
  *
  * One-shot migration script — Task M1 of the Refined Editorial Foundation
- * rollout plan (spec §19). Replaces 590 hardcoded old-palette sage/tint
- * rgbas across 232 content pages with color-mix(in oklab) calls that flow
- * with the new token layer.
+ * rollout plan (spec §19). Replaces hardcoded old-palette sage/tint rgbas
+ * across Maine Dispensary Guide content pages with color-mix(in oklab)
+ * calls that flow with the new token layer.
+ *
+ * Real migration totals from commit `f31fde43`:
+ *   - 234 .astro pages touched
+ *   - 840 rgba() calls migrated to color-mix() calls
+ *   - Distribution by old color family: 588 sage (88,129,87) + 87 spruce
+ *     (13,78,80) + 4 lichen (163,177,138) + 13 orange (180,100,60) + 1 red
+ *     (217,79,49) ≈ 693 unique migration targets; some files have multiple
+ *     replacements accounting for the higher running total.
+ *
+ * The original spec §19 estimated ~590 sage + 540 spruce + 100 lichen +
+ * 50 orange + 30 red = ~1310 total. The real audit found fewer because
+ * production surfaces never accumulated as many callouts as the spec
+ * extrapolated. Future audits should use grep totals, not the spec
+ * estimate, as the source of truth.
  *
  * Per spec §19, the mapping is:
  *   rgba(88,  129, 87,  X) → color-mix(in oklab, var(--color-soft-green) X*100%, transparent)
