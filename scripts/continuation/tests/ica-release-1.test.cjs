@@ -245,6 +245,15 @@ test('GA4 configuration is queued before deferred CTA instrumentation can emit e
   assert.equal(layout.indexOf("window.gtag('config', analyticsId);", configAt + 1), -1, 'deferred script load must not queue a second config');
 });
 
+test('GA4 starts its async client fetch before a first CTA can navigate away', () => {
+  const layout = read(LAYOUT);
+  const loaderAt = layout.indexOf('function loadGtag()');
+  const firstLoadAt = layout.indexOf('loadGtag();', loaderAt);
+  assert.ok(loaderAt >= 0 && firstLoadAt > loaderAt, 'GA4 bootstrap must start its client fetch immediately');
+  assert.doesNotMatch(layout, /requestIdleCallback\(loadGtag/, 'CTA delivery cannot wait for an idle callback');
+  assert.doesNotMatch(layout, /window\.addEventListener\('load'.*loadGtag/, 'CTA delivery cannot wait for the page load event');
+});
+
 test('all pilot pages opt in and have exactly one Layout-owned discovery rail', () => {
   for (const route of PILOT_ROUTES) {
     const source = read(pageFile(route));

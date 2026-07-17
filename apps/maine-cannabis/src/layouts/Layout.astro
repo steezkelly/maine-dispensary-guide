@@ -316,22 +316,13 @@ const breadcrumbListJsonLd = breadcrumbListSchema
 
     <!-- Google Analytics GA4 -->
     {/*
-      Sprint 81 (2026-07-11) PSI mobile round 4: deferred gtag.js load.
+      Sprint 81 (2026-07-11) PSI mobile round 4: asynchronous gtag.js load.
 
-      Before: `<script async src="...gtag/js?id=...">` + a second inline script
-      that called `gtag('js', new Date())` and `gtag('config', ...)`. The async
-      attribute kept it off the parser-blocking path but it still fetched and
-      parsed during the LCP window, costing 177 KiB transfer + 192 ms of main-
-      thread time (PSI "3rd parties" audit) and dragging TBT up to 50ms.
-
-      After: define the `gtag` stub inline so the engagement instrumentation
-      below can call window.gtag synchronously without errors. Load the real
-      gtag.js on `requestIdleCallback` (same pattern as the homepage video +
-      decoration defer). The `gtag` stub queues both `js` and `config` before
-      the script fetch, then the gtag library replays that ordered queue when
-      it initializes. This preserves the configured destination for early
-      engagement events while retaining the deferred network fetch. Acceptable
-      trade for ~3-5 perf score points.
+      The inline stub queues `js` and `config` before the asynchronous client
+      fetch so instrumentation has an ordered destination from the first event.
+      The client begins fetching immediately: a CTA may navigate away before an
+      idle callback or load-event fallback fires, which would otherwise leave
+      its queued exposure/select events stranded in the discarded document.
     */}
     <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
       // Stub gtag so engagement instrumentation (below) can call window.gtag
@@ -342,7 +333,9 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       window.gtag('js', new Date());
       window.gtag('config', analyticsId);
 
-      // Load the real gtag.js after first idle.
+      // Start the async client immediately. The stub keeps this non-blocking,
+      // while avoiding a deliberate 1.5–2.5 second window where a first CTA
+      // can navigate before gtag has even begun to load.
       (function () {
         function loadGtag() {
           var s = document.createElement('script');
@@ -350,11 +343,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           s.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
           document.head.appendChild(s);
         }
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(loadGtag, { timeout: 2500 });
-        } else {
-          window.addEventListener('load', function () { window.setTimeout(loadGtag, 1500); });
-        }
+        loadGtag();
       })();
     </script>
 
