@@ -24,7 +24,7 @@ test('regenerator writes every sitemap URL exactly once from a local sitemap fil
     'https://mainedispensaryguide.com/unclassified-route',
   ];
 
-  fs.writeFileSync(sitemap, `<?xml version="1.0"?><urlset>${urls.map((url) => `<url><loc>${url}</loc></url>`).join('')}</urlset>`);
+  fs.writeFileSync(sitemap, `<?xml version="1.0"?>\n<urlset>\n${urls.map((url) => `  <url>\n    <loc>\n      ${url}\n    </loc>\n  </url>`).join('\n')}\n</urlset>\n`);
 
   try {
     execFileSync(process.execPath, [SCRIPT, '--from-file', sitemap, '--output', output], { cwd: REPO, stdio: 'pipe' });

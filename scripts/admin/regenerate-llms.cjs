@@ -52,7 +52,7 @@ function titleFromSegment(segment) {
 }
 
 function sitemapUrls(xml) {
-  return [...new Set([...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1].trim()).filter(Boolean))];
+  return [...new Set([...xml.matchAll(/<loc>([\s\S]*?)<\/loc>/g)].map((match) => match[1].trim()).filter(Boolean))];
 }
 
 function groupUrls(urls) {
