@@ -269,8 +269,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       if (!records.length) return null;
       const ordered = [...records].sort((a, b) => JSON.stringify(a.row_key).localeCompare(JSON.stringify(b.row_key)));
       const values = ordered.map((record) => record.value);
-      const multipleValues = new Set(values.map((value) => JSON.stringify(value))).size > 1;
-      const ambiguousNonAdditive = isNonAdditiveMetric(ordered[0].metric_name) && multipleValues;
+      const ambiguousNonAdditive = isNonAdditiveMetric(ordered[0].metric_name) && ordered.length > 1;
       return {
         ...ordered[0],
         value: ambiguousNonAdditive ? null : (values.every((value) => typeof value === 'number') ? values.reduce((sum, value) => sum + value, 0) : ordered[0].value),
@@ -321,7 +320,7 @@ function buildEvidenceManifest(rows, inputs = {}) {
   }
   return {
     schema_version: CONTRACT_VERSION,
-    generated_at_utc: new Date().toISOString(),
+    generated_at_utc: inputs.generatedAt || null,
     input_release_ids: inputs.sourceReleaseIds || {},
     window: { start: inputs.windowStart || null, end: inputs.windowEnd || null, timezone: 'America/New_York' },
     row_count: rows.length,
@@ -361,7 +360,7 @@ function main() {
   const output = { schema_version: CONTRACT_VERSION, rows };
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, JSON.stringify(output, null, 2) + '\n');
-  fs.writeFileSync(args.out.replace(/\.json$/, '.manifest.json'), JSON.stringify(buildEvidenceManifest(rows, { sourceReleaseIds, windowStart: args.window_start || ga4.from, windowEnd: args.window_end || ga4.to }), null, 2) + '\n');
+  fs.writeFileSync(args.out.replace(/\.json$/, '.manifest.json'), JSON.stringify(buildEvidenceManifest(rows, { sourceReleaseIds, windowStart: args.window_start || ga4.from, windowEnd: args.window_end || ga4.to, generatedAt: `${args.as_of}T00:00:00.000Z` }), null, 2) + '\n');
   console.log(`Ticket 008 join: ${rows.length} rows written to ${args.out}`);
 }
 
