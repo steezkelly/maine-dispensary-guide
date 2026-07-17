@@ -1,8 +1,18 @@
 const fs = require('fs');
 const path = require('path');
+const { appRoot } = require('../check/lib/paths.cjs');
 
-const projectRoot = 'C:/Users/Steve/OpenCode Projects/project-1';
-const pagesPath = path.join(projectRoot, 'src/pages/guides');
+const pagesPath = path.join(appRoot, 'src', 'pages', 'guides');
+
+function assertDirectory(dir, label) {
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+        console.error(`Expected ${label} directory not found: ${dir}`);
+        process.exit(1);
+    }
+}
+
+assertDirectory(appRoot, 'Astro app root');
+assertDirectory(pagesPath, 'guide pages');
 
 const glossaryMap = {
     "Metrc": "/glossary/#metrc",
@@ -22,18 +32,37 @@ const glossaryMap = {
 
 console.log("🚀 Starting Node.js Link Architect (Body-Only Sync)...");
 
+function replaceOutsideProtectedBlocks(content, pattern, replacement) {
+    const protectedBlockPattern = /<(style|script)\b[^>]*>[\s\S]*?<\/\1>/gi;
+    let cursor = 0;
+
+    for (const match of content.matchAll(protectedBlockPattern)) {
+        const visibleSegment = content.slice(cursor, match.index);
+        if (pattern.test(visibleSegment)) {
+            return content.slice(0, cursor) + visibleSegment.replace(pattern, replacement) + content.slice(match.index);
+        }
+        cursor = match.index + match[0].length;
+    }
+
+    const visibleSegment = content.slice(cursor);
+    if (!pattern.test(visibleSegment)) return content;
+    return content.slice(0, cursor) + visibleSegment.replace(pattern, replacement);
+}
+
 const files = fs.readdirSync(pagesPath).filter(f => f.endsWith('.astro') && f !== 'index.astro');
 
 files.forEach(fileName => {
     const filePath = path.join(pagesPath, fileName);
     let content = fs.readFileSync(filePath, 'utf8');
 
-    // Split at </head> to protect Layout props and Metadata
-    const splitPoint = content.indexOf('</head>');
+    // Protect Astro frontmatter, Layout props, and page-local styles; only link visible page copy.
+    const articleStart = content.indexOf('<article');
+    const styleEnd = content.indexOf('</style>');
+    const splitPoint = articleStart !== -1 ? articleStart : styleEnd !== -1 ? styleEnd + '</style>'.length : -1;
     if (splitPoint === -1) return;
 
-    const head = content.substring(0, splitPoint + 7);
-    let body = content.substring(splitPoint + 7);
+    const protectedContent = content.slice(0, splitPoint);
+    let bodyContent = content.slice(splitPoint);
     let modified = false;
 
     Object.keys(glossaryMap).forEach(term => {
@@ -45,17 +74,22 @@ files.forEach(fileName => {
         // (?![^<]*>) - Don't match if inside another HTML tag
         const pattern = new RegExp(`(?<![/">])\\b(${term})\\b(?![^<]*>)`, 'i');
 
-        // Only link if the link itself isn't already present in the body
-        if (!body.includes(`href="${link}"`)) {
-            if (pattern.test(body)) {
-                body = body.replace(pattern, `<a href="${link}">$1</a>`);
+        // Only link if the link itself isn't already present in the body.
+        if (!bodyContent.includes(`href="${link}"`)) {
+            const linkedContent = replaceOutsideProtectedBlocks(
+                bodyContent,
+                pattern,
+                `<a href="${link}">$1</a>`,
+            );
+            if (linkedContent !== bodyContent) {
+                bodyContent = linkedContent;
                 modified = true;
             }
         }
     });
 
     if (modified) {
-        fs.writeFileSync(filePath, head + body);
+        fs.writeFileSync(filePath, protectedContent + bodyContent);
         console.log(`✅ Synced: ${fileName}`);
     }
 });
