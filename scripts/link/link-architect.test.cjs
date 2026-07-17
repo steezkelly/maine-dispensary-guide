@@ -63,3 +63,15 @@ const metadataTerm = 'THC';
   assert.ok(output.includes('<style>.THC { color: red; }</style>'));
   assert.ok(output.includes("<script>const label = 'Caregiver';</script>"));
 });
+
+test('does not link glossary terms inside existing anchors', () => {
+  const source = `---
+const metadataTerm = 'Municipal Opt-In';
+---
+<Layout><article><p><a href="/guides/maine-cannabis-municipal-opt-in-guide">Current municipal opt-in status</a>.</p><p>Use Metrc reporting.</p></article></Layout>`;
+  const output = runLinkArchitect(source);
+
+  assert.ok(output.includes('<a href="/guides/maine-cannabis-municipal-opt-in-guide">Current municipal opt-in status</a>'));
+  assert.ok(output.includes('<p>Use <a href="/glossary/#metrc">Metrc</a> reporting.</p>'));
+  assert.ok(!/<a\b[^>]*>(?:(?!<\/a>)[\s\S])*<a\b/i.test(output), 'output must not contain nested anchors');
+});
