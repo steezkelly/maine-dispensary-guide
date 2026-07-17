@@ -143,14 +143,14 @@ test('resources vendor Request Intro controls have distinct action IDs', () => {
 });
 
 function launchChecklistActionIds(source, titles) {
-  const helper = source.match(/const\s+analyticsCtaId\s*=\s*\([\s\S]*?\)\s*(?::\s*string)?\s*=>\s*`[\s\S]*?`;/);
+  const helper = source.match(/const\s+analyticsCtaId\s*=\s*\([\s\S]*?\)\s*(?::\s*string)?\s*=>\s*[\s\S]*?;/);
   assert.ok(helper, 'launch-checklist must define one deterministic per-item action-ID helper');
   // Strip TypeScript annotations so plain Node vm can parse the arrow.
   const executable = helper[0]
     .replace(/\)\s*:\s*string\s*=>/, ') =>')
     .replace(/\(\s*raw\s*:\s*string\s*\)/, '(raw)');
   const fn = vm.runInNewContext(`"use strict"; ${executable}; analyticsCtaId`);
-  return titles.map((title) => fn(title));
+  return titles.map((title) => `cta-inline-launch-checklist-${fn(title)}`);
 }
 
 test('launch-checklist per-item CTA IDs are unique per checklist item', () => {
