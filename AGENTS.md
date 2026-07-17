@@ -102,7 +102,7 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 21 reusable components (see below)
+│   ├── components/               # 22 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
@@ -120,7 +120,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
-**Components** (21, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
+**Components** (22, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
 
 ---
 
