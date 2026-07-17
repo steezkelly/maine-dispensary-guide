@@ -74,10 +74,10 @@ test('peer selection excludes every observation for the target page', () => {
   const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
   assert.deepEqual(out.peers.map((row) => row.canonical_page_path), ['/peer']);
 });
-test('site fallback is explicit when no peers exist', () => {
+test('missing peer context is explicitly insufficient when no peers exist', () => {
   const target = { metric_family: 'progression_rate', numerator: 1, denominator: 10 };
   const out = b.selectPeers(target, [target], b.POLICIES.progression_rate, 3);
-  assert.equal(out.level, 'site_fallback'); assert.equal(out.dimensions.length, 0);
+  assert.equal(out.level, 'insufficient'); assert.equal(out.peers.length, 0);
 });
 
 test('posterior contains required evidence fields', () => {

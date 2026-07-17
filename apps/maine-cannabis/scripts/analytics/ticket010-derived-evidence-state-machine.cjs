@@ -92,9 +92,15 @@ function transitionForEvidence(row, history = [], config = {}) {
     return { state: 'NORMAL', reason: 'no_practical_effect_or_insufficient_sample', signal, evidence, operator_item_emitted: prior?.state && prior.state !== 'NORMAL' };
   }
   const settledSignals = [...history, { ...row, signal }].filter((r) => isSettled(r) && r.signal?.practical_effect_plausible);
+  // Persistence is directional: an above/below reversal starts a new run.
+  const directionalRun = [];
+  for (let i = settledSignals.length - 1; i >= 0; i--) {
+    if (settledSignals[i].signal.direction !== signal.direction) break;
+    directionalRun.unshift(settledSignals[i]);
+  }
   const requiredSettled = Number(config.required_settled_windows || 2);
   const eligibilitySettled = Number(config.eligibility_settled_windows || (requiredSettled + 1));
-  const persistent = settledSignals.length >= requiredSettled;
+  const persistent = directionalRun.length >= requiredSettled;
   const corroborated = bool(row.independent_source_corroborated, false) || bool(row.corroborated, false);
   const changeEvaluated = evidence.change_context_evaluated;
   let state = 'WATCH';
@@ -102,11 +108,11 @@ function transitionForEvidence(row, history = [], config = {}) {
   if (persistent || (corroborated && signal.probability >= Number(config.corroboration_probability || 0.9))) {
     state = 'PERSISTENT_SHIFT_CANDIDATE'; reason = persistent ? `practical shift persisted across ${settledSignals.length} settled windows` : 'practical shift corroborated by independent source';
   }
-  if (state === 'PERSISTENT_SHIFT_CANDIDATE' && settledSignals.length >= eligibilitySettled && changeEvaluated && isTaskResolved(row)) {
+  if (state === 'PERSISTENT_SHIFT_CANDIDATE' && directionalRun.length >= eligibilitySettled && changeEvaluated && isTaskResolved(row)) {
     state = 'INVESTIGATION_ELIGIBLE'; reason = 'settled persistence/corroboration and change context evaluated';
   }
   const operatorItem = !prior || prior.state !== state || (prior.state !== 'INVESTIGATION_ELIGIBLE' && state === 'INVESTIGATION_ELIGIBLE');
-  return { state, reason, signal, evidence, operator_item_emitted: operatorItem, persistence: { settled_signal_windows: settledSignals.length, required_settled_windows: requiredSettled, corroborated, change_context_evaluated: changeEvaluated } };
+  return { state, reason, signal, evidence, operator_item_emitted: operatorItem, persistence: { settled_signal_windows: directionalRun.length, required_settled_windows: requiredSettled, corroborated, change_context_evaluated: changeEvaluated } };
 }
 
 function cwvEvidence(row) {

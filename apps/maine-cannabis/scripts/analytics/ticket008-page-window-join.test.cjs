@@ -33,6 +33,10 @@ test('GA4 page-window rows prefer canonical BigQuery values with Data API fallba
   const fallbackRows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 4, bq_value: null }] }] });
   assert.equal(fallbackRows[0].value, 4);
 });
+test('R1 sessions use the Data API canonical value at metric granularity', () => {
+  const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, metric_name: 'sessions', data_api_value: 4, bq_value: 7 }] }] });
+  assert.equal(rows[0].value, 4); assert.equal(rows[0].metric_source, 'ga4_data_api');
+});
 
 test('GA4 release ignores non-page-window rows', () => {
   const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R2_session_metrics_daily', sanitized_rows: [{ row_key: { date: '20260712', channel: 'Organic' }, data_api_value: 4 }] }] });
@@ -189,6 +193,13 @@ test('empty groups classify as blocked', () => assert.equal(join.classifyReconci
 test('joined rows are deterministic in sort order', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/z' }, data_api_value: 1 }, { row_key: { date: '20260711', page_path: '/a' }, data_api_value: 1 }] }] }, vercelRows: [] });
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
+});
+test('title variants aggregate rather than retaining an input-order-first value', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [
+    { row_key: { date: '20260712', page_path: '/x', page_title: 'A' }, metric_name: 'screenPageViews', data_api_value: 2 },
+    { row_key: { date: '20260712', page_path: '/x', page_title: 'B' }, metric_name: 'screenPageViews', data_api_value: 3 },
+  ] }] }, vercelRows: [] });
+  assert.equal(rows.length, 1); assert.equal(rows[0].ga4_r1.value, 5);
 });
 
 test('R7 observations retain distinct FAQ IDs even with metric names', () => { const release = { release_status: 'VALID', rows: [{ report_key: 'R7_custom_event_faq_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-a' }, metric_name: 'eventCount', bq_value: 2 }, { row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-b' }, metric_name: 'eventCount', bq_value: 3 }] }] }; assert.equal(join.joinPageWindow({ ga4Release: release, vercelRows: [], asOf: '2026-07-20' }).length, 2); });
