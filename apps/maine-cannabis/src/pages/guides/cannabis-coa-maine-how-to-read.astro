@@ -10,18 +10,18 @@ const article = {
   reviewer: { name: "Calvin Waters", jobTitle: "Licensing & Compliance Analyst", id: "calvin-waters" },
   authorTitle: "Cannabis Science Writer",
   publishDate: "2026-07-04",
-  modifiedDate: "2026-07-04",
+  modifiedDate: "2026-07-16",
   section: "Learn"
 };
 
 const topics = ["consumer-guide", "cannabis-science", "lab-testing", "dosing"];
 
 const coaFaqs = [
-  { question: "What is a cannabis Certificate of Analysis (COA)?", answer: "A COA is the third-party laboratory test report that Maine dispensaries are required to provide for every product they sell. It documents the test results for potency (cannabinoids), terpenes, microbial contaminants, heavy metals, pesticides, mycotoxins, and (for concentrates) residual solvents. The lab must hold ISO/IEC 17025 accreditation and operate independently of the producer — see <a href=\"https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html\" target=\"_blank\" rel=\"noopener noreferrer\">Title 28-B §601</a> for the testing-program statute." },
+  { question: "What is a cannabis Certificate of Analysis (COA)?", answer: "A COA is a laboratory report for a specific cannabis or cannabis-product batch. It records the analyses performed and their results; the required analyte categories depend on product matrix, final form, and documented input-testing history under OCP Rule Chapter 40. The testing facility must be certified by OCP — see <a href=\"https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html\" target=\"_blank\" rel=\"noopener noreferrer\">Title 28-B §601</a> for the testing-program statute." },
   { question: "Where do I find the COA for a Maine dispensary product?", answer: "Three reliable places: (1) the QR code on the product packaging itself — every compliant Maine product label must link to its batch-specific COA; (2) the operator's own website, usually under a \"Lab Results,\" \"Test Results,\" or \"Compliance\" page; (3) the Maine OCP licensee lookup (maine.gov/dafs/ocp), which lists each licensed establishment and links to operator compliance resources. If a product has no QR code and no online COA, that's a red flag — ask the budtender before purchasing." },
   { question: "How recent does the COA have to be?", answer: "Maine does not impose a calendar-shelf-life on the COA itself — the COA is permanently tied to the production batch it tested, not to the package date. What matters is that the COA matches the batch number on your specific package. If your package's batch number doesn't appear on the linked COA, you have a different (or relabeled) product than the lab tested — return it." },
   { question: "What's the difference between THC% and Total THC?", answer: "THC% (often listed as Δ9-THC) measures only the psychoactive delta-9 form of THC that is already decarboxylated (activated). Total THC adds the THCa content × 0.877 (the decarboxylation conversion factor) plus any Δ9-THC already present. For cannabis flower and most concentrates, Total THC is the number that reflects the actual potency you'll experience. Edibles and tinctures are labeled in milligrams per serving (mg/serving) rather than percent." },
-  { question: "What does 'ND' or 'NT' mean on a COA?", answer: "ND = Not Detected (the analyte was below the lab's limit of detection). NT = Not Tested (the panel wasn't run for that analyte — a meaningful distinction). 'Pass' means the analyte was tested and is below the action limit; 'Fail' means it exceeded the action limit and the batch should not have been sold. Any 'Fail' on a Maine product COA is grounds for reporting to OCP — the batch should have been destroyed, not released." },
+  { question: "What does 'ND' or 'NT' mean on a COA?", answer: "ND = Not Detected (the analyte was below the lab's limit of detection). NT = Not Tested (the panel wasn't run for that analyte — a meaningful distinction). 'Pass' means the analyte was tested and is below the action limit; 'Fail' means it exceeded the action limit and the batch must not be released for sale. A failure triggers the analyte- and matrix-specific retest, remediation, or destruction procedure in the applicable Chapter 40 rule; it does not always mean immediate destruction." },
   { question: "Can the COA's cannabinoid numbers differ from the package label?", answer: "Yes, within Maine's 10% allowable variance per <a href=\"https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html\" target=\"_blank\" rel=\"noopener noreferrer\">Title 28-B §703(1)(F)</a>. A flower labeled 22% THC might test at 20.5% on the COA and still be compliant. Edibles labeled 10mg per serving might test at 9.0-11.0mg and still be compliant. Differences beyond 10% are noncompliant and should be reported." },
   { question: "Do I need to read the COA every time I buy?", answer: "Not every time — but you should read it once for any new operator or new product category you haven't tried before, and especially for medical patients and anyone with respiratory or immune-system concerns. The COA tells you (a) whether the product is safe from contaminants, (b) what cannabinoids and terpenes to expect, and (c) how to dose accurately. The 2 minutes spent reading the COA before a first purchase typically prevents a much costlier bad experience." },
   { question: "What should I do if a Maine dispensary won't show me the COA?", answer: "Walk away. Maine's testing program requires COAs to be available to consumers on request, and Maine dispensaries that refuse to share COAs are noncompliant. You can report noncompliance to the Maine OCP at maine.gov/dafs/ocp/. Other operators in the same area will have their COAs accessible — there's no reason to settle for one that hides them." },
@@ -62,8 +62,12 @@ const coaFaqs = [
   </div>
 
   <div class="verification">
-    <strong>Last reviewed:</strong> July 4, 2026. Primary citations confirmed: <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html" target="_blank" rel="noopener noreferrer">Title 28-B §601 (testing program)</a>, <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Title 28-B §703(1)(F) (10mg/200mg/10% variance)</a>, Maine OCP contaminant-action limits rule. Always verify the batch number on your specific package against the COA before relying on its results.
+    <strong>Last reviewed:</strong> July 16, 2026. Primary citations confirmed: <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html" target="_blank" rel="noopener noreferrer">Title 28-B §601 (testing program)</a>, <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Title 28-B §703(1)(F) (10mg/200mg/10% variance)</a>, and Maine OCP Chapter 40. Always verify the batch number on your specific package against the COA before relying on its results.
   </div>
+
+  <aside class="related-callout" aria-label="Proposed rulemaking notice" style="background: var(--color-background); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.25rem 0 2rem; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6;">
+    <strong>Rule watch — proposed, not yet effective:</strong> OCP's <a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes/rulemaking/proposed-rules" target="_blank" rel="noopener noreferrer">July 2026 Chapter 5 and Chapter 40 rulemaking</a> would clarify which tests apply in final form, edible input-testing exceptions, and potency retests. Public comment closes August 14, 2026 at 5:00 p.m. Continue using the <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch%2040%20Final.pdf" target="_blank" rel="noopener noreferrer">current final Chapter 40 rule</a> unless OCP publishes adopted text and an effective date.
+  </aside>
 
   <section class="fact-box">
     <h2>The COA at a Glance</h2>
@@ -82,7 +86,7 @@ const coaFaqs = [
 
   <section>
     <h2>Why the COA Exists</h2>
-    <p>Maine's adult-use cannabis testing program is established under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html" target="_blank" rel="noopener noreferrer">Title 28-B §601</a>. Every production batch sold at a licensed Maine dispensary must be tested by an independent third-party laboratory holding ISO/IEC 17025 accreditation. The lab tests for potency (cannabinoids), terpene profile, microbial contaminants, heavy metals, pesticides, mycotoxins, and (for concentrates) residual solvents.</p>
+    <p>Maine's adult-use cannabis testing program is established under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec601.html" target="_blank" rel="noopener noreferrer">Title 28-B §601</a>. Mandatory testing must be performed by an OCP-certified testing facility, but the analyses required for a particular batch depend on product matrix, final form, intended sale or further processing, and documented input-testing history under Chapter 40. Terpene analysis is optional rather than a mandatory safety panel.</p>
 
     <p>The COA — Certificate of Analysis — is the document the lab issues at the end of testing. It's the bridge between what the operator claims is in the product and what the lab actually measured. For the consumer, it's the single most useful piece of safety and potency information available, and it's yours by right.</p>
 
@@ -157,7 +161,7 @@ const coaFaqs = [
         <li><strong>Terpinolene:</strong> Floral, herbal. Often dominant in sativa-leaning varieties.</li>
         <li><strong>Humulene:</strong> Hops, earthy. Associated with appetite suppression.</li>
       </ul>
-      <p>A product with no terpene panel is unusual but legal; terpenes are tested for characterization but not subject to Maine's pass/fail action limits the way contaminants are.</p>
+      <p>A product with no terpene panel can still be compliant. Terpene analysis is optional and is not subject to Maine's mandatory pass/fail action limits.</p>
     </div>
   </section>
 
@@ -165,7 +169,7 @@ const coaFaqs = [
     <h2>Section 4: Contaminant Panels — Is It Safe</h2>
     <div class="coa-section">
       <h3>What it is</h3>
-      <p>The contaminant panels report whether the product is free of substances that could harm the consumer. Maine has set action limits for each — concentrations above the limit cause the batch to fail and (per Maine OCP rules) be destroyed.</p>
+      <p>The contaminant panels report results for substances that could harm the consumer. Maine sets action limits for required analytes; a result above an applicable limit causes the batch to fail and prevents release, after which the current Chapter 40 retest, remediation, or destruction pathway applies.</p>
       <h3>The five panels</h3>
       <ul>
         <li><strong>Microbial (yeast, mold, E. coli, Salmonella):</strong> Tested in colony-forming units per gram (CFU/g). Maine's action limit for total yeast and mold is 10,000 CFU/g on flower. Pathogens like Salmonella must show "Not Detected."</li>
@@ -177,7 +181,7 @@ const coaFaqs = [
     </div>
 
     <div class="red-flag">
-      <strong>Red flag:</strong> Any "Fail" on a contaminant panel. A failed batch should never have been released to retail. If you see one on a COA you've been sold, do not consume the product, return it to the dispensary, and report the incident to the Maine OCP.
+      <strong>Red flag:</strong> Any "Fail" on a required contaminant panel for a batch that was released to retail. Do not consume the product; contact the dispensary and Maine OCP. A failed batch must be held from sale while the applicable retest, remediation, or destruction process is completed.
     </div>
   </section>
 

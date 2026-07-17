@@ -10,7 +10,7 @@ const breadcrumbs = [
 
 const article = {
   publishDate: "2026-07-04",
-  modifiedDate: "2026-07-04",
+  modifiedDate: "2026-07-16",
   section: "Editorial Standards"
 };
 
@@ -20,6 +20,26 @@ const article = {
 // site-health stat bump in the nav (a single counter — handled
 // elsewhere; this page is the canonical source).
 const corrections = [
+  {
+    date: "2026-07-16",
+    slug: "maine-ocp-testing-rule-watch-2026",
+    title: "Testing and edibles guides — proposed 2026 OCP rulemaking separated from current requirements",
+    what_was_wrong:
+      "Several guides described a universal full testing panel for every adult-use product or edible and treated destruction as the automatic outcome of any failed test. The regulations guide also referred to unspecified 2026 testing updates as already effective. Those summaries did not account for product matrix, final form, prior input testing, or Chapter 40's analyte-specific retest and remediation pathways.",
+    what_is_correct:
+      "OCP's July 2026 Chapter 5 and Chapter 40 documents are proposals, not effective rules. The draft Chapter 40 would clarify final-form testing, provide an edible contaminant-testing exception when the concentrate input has passed all mandatory testing, and specify that two passing potency-retest samples use the higher result for labeling. Current compliance still follows the final Chapter 40 rule effective November 6, 2024 until OCP adopts replacement text and publishes an effective date. Testing and failed-batch disposition depend on the product matrix, input-testing history, failed analyte, and applicable retest or remediation pathway.",
+    verified_via:
+      "Primary: maine.gov/dafs/ocp/adult-use/rules-statutes/rulemaking/proposed-rules; OCP's 18-691 CMR Chapter 5 and Chapter 40 public-comment drafts; current final 18-691 CMR Chapter 40 (effective November 6, 2024). OCP public comment closes August 14, 2026 at 5:00 p.m.; hearing August 3, 2026 at 10:00 a.m.",
+    published_in: [
+      { name: "Cannabis edibles compliance guide", href: "/guides/maine-cannabis-edibles-compliance" },
+      { name: "Cannabis product testing guide", href: "/guides/maine-cannabis-product-testing-guide" },
+      { name: "How to read a Maine cannabis COA", href: "/guides/cannabis-coa-maine-how-to-read" },
+      { name: "How to read a Maine cannabis COA for terpenes", href: "/blog/how-to-read-maine-cannabis-coa-terpenes-2026" },
+      { name: "Cannabis cultivation guide", href: "/guides/maine-cannabis-cultivation-guide" },
+      { name: "Cannabis waste management guide", href: "/guides/maine-cannabis-waste-management" },
+      { name: "Maine cannabis regulations guide", href: "/guides/maine-cannabis-regulations" },
+    ],
+  },
   {
     date: "2026-07-05",
     slug: "maine-edible-dose-cap",
@@ -242,7 +262,11 @@ const corrections = [
   },
 ];
 
-const today = "2026-07-04";
+const today = "2026-07-16";
+const latestCorrectionDate = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "long",
+  timeZone: "UTC",
+}).format(new Date(`${corrections[0].date}T00:00:00Z`));
 ---
 
 <Layout
@@ -411,7 +435,7 @@ const today = "2026-07-04";
   </section>
 
   <Callout title="How to use this page" type="info">
-    If you used one of our guides before July 4, 2026 and want to know whether anything you read has since been corrected, search the descriptions below for keywords from the article you read (operator name, address, statute citation, dollar figure). When in doubt about operator data — addresses, hours, license types — verify directly with the operator before making business decisions.
+    If you used one of our guides before {latestCorrectionDate} and want to know whether anything you read has since been corrected, search the descriptions below for keywords from the article you read (operator name, address, statute citation, dollar figure). When in doubt about operator data — addresses, hours, license types — verify directly with the operator before making business decisions.
   </Callout>
 
   <section class="corrections-section">
