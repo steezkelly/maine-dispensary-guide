@@ -7,10 +7,24 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const SOURCE = path.join(ROOT, 'scripts/check/content-health-regression.cjs');
+const RUNTIME_BASELINE = path.join(ROOT, 'scripts/check/.content-health-baseline.json');
+const LEGACY_BASELINE = path.join(ROOT, 'apps/maine-cannabis/scripts/content/.content-health-baseline.json');
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'content-health-regression-'));
 const fixtureDir = path.join(tempRoot, 'scripts/check');
 
 try {
+  const expectedKnownFindings = {
+    'duplicate hero image content': 12,
+    'orphan pages (no inbound link)': 2,
+    'meta description uniqueness': 2,
+  };
+  const runtimeBaseline = JSON.parse(fs.readFileSync(RUNTIME_BASELINE, 'utf8'));
+  const legacyBaseline = JSON.parse(fs.readFileSync(LEGACY_BASELINE, 'utf8'));
+  for (const [check, count] of Object.entries(expectedKnownFindings)) {
+    assert.equal(runtimeBaseline[check], count, `runtime baseline ${check}`);
+    assert.equal(legacyBaseline[check], count, `legacy baseline ${check}`);
+  }
+
   fs.mkdirSync(fixtureDir, { recursive: true });
   fs.copyFileSync(SOURCE, path.join(fixtureDir, 'content-health-regression.cjs'));
   fs.writeFileSync(
