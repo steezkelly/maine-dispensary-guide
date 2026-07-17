@@ -184,8 +184,8 @@ test('malformed or blank raw rate counts fail closed before numeric coercion', (
     assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
   }
 });
-test('non-numeric raw rate-count types fail closed while numeric strings remain valid', () => {
-  for (const [index, numerator] of [false, true, [], [1], {}].entries()) {
+test('non-integral or non-numeric raw rate-count types fail closed while integer strings remain valid', () => {
+  for (const [index, numerator] of [false, true, [], [1], {}, 1.5, '1.5'].entries()) {
     const output = b.buildBaselines({ observations: [{ canonical_page_path: `/invalid-type-${index}`, metric_family: 'gsc_ctr', numerator, denominator: 10 }], manifest: [] });
     assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
   }

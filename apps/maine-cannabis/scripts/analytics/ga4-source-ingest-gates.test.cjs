@@ -21,7 +21,7 @@ test('G1 fails when a BigQuery report fails', () => {
   assert.deepEqual(gates.G1.failed_bq_reports, ['R2_session_metrics_daily']);
 });
 
-test('G1 records unavailable intraday attribution without misclassifying it as a source failure', () => {
+test('G1 fails when R2 attribution cannot be reconciled', () => {
   const gates = runGates({
     dataApiReports: [],
     bqReports: [
@@ -33,8 +33,8 @@ test('G1 records unavailable intraday attribution without misclassifying it as a
     raw_record_json_sample: [],
   });
 
-  assert.equal(gates.G1.status, 'PASS');
-  assert.deepEqual(gates.G1.failed_bq_reports, []);
+  assert.equal(gates.G1.status, 'FAIL');
+  assert.deepEqual(gates.G1.failed_bq_reports, ['R2_session_metrics_daily']);
 });
 
 test('G1 fails when a Data API report fails', () => {

@@ -76,7 +76,8 @@ function hasInvalidRawRateCount(value) {
   if (value == null) return false;
   if (!['number', 'string'].includes(typeof value)) return true;
   if (typeof value === 'string' && value.trim() === '') return true;
-  return !Number.isFinite(Number(value));
+  const count = Number(value);
+  return !Number.isFinite(count) || !Number.isInteger(count);
 }
 function stableKey(values) { return values.map((v) => clean(v) ?? '(null)').join('|'); }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }

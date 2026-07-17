@@ -271,10 +271,10 @@ function computeAcquisitionReleaseId(canonicalReleaseId, runMeta) {
 function runGates({ dataApiReports, bqReports, joinedRows = [], canonicalReleaseId, acquisitionReleaseId, sanitization, raw_record_json_sample, settlementAsOf = null }) {
   const gates = {};
 
-  // G1: source_completeness (amended v3). A failed BigQuery report makes the
-  // release incomplete even when the other reports were acquired successfully.
+  // G1: source completeness. A failed or unreconciled BigQuery report makes
+  // the release incomplete even when the Data API report was acquired.
   const failedBqReports = bqReports
-    .filter((report) => report.status === 'failed')
+    .filter((report) => report.status === 'failed' || report.status === 'unavailable_intraday')
     .map((report) => report.report_id);
   const failedDataApiReports = dataApiReports
     .filter((report) => report.status === 'failed')
