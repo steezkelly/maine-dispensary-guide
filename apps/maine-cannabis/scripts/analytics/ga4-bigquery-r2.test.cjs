@@ -95,8 +95,8 @@ test('BQ reconciliation reads completed days from daily shards and only the curr
 
   assert.match(sql, /events_\*`/);
   assert.match(sql, /REGEXP_CONTAINS\(_TABLE_SUFFIX, r'\^\[0-9\]\{8\}\$'\)/);
-  assert.match(sql, /_TABLE_SUFFIX < FORMAT_DATE\('%Y%m%d', CURRENT_DATE\(\)\)/);
+  assert.match(sql, /_TABLE_SUFFIX < FORMAT_DATE\('%Y%m%d', CURRENT_DATE\('America\/New_York'\)\)/);
   assert.match(sql, /events_intraday_\*`/);
-  assert.match(sql, /_TABLE_SUFFIX = FORMAT_DATE\('%Y%m%d', CURRENT_DATE\(\)\)/);
+  assert.match(sql, /_TABLE_SUFFIX = FORMAT_DATE\('%Y%m%d', CURRENT_DATE\('America\/New_York'\)\)/);
   assert.match(sql, /ANY_VALUE\(_mdg_source_table\) AS bq_source_table/);
 });

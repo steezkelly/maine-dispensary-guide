@@ -23,6 +23,7 @@ const { BigQuery } = require('@google-cloud/bigquery');
 const PROJECT_ID = process.env.GCP_PROJECT_ID || 'maine-dispensary-guide';
 const DATASET_ID = process.env.GA4_BQ_DATASET || 'analytics_532778727';
 const PROPERTY_ID = process.env.GA4_PROPERTY_ID || '532778727';
+const PROPERTY_TIMEZONE = 'America/New_York';
 
 /**
  * The full standard GA4 BQ export column list. We DO NOT select
@@ -160,7 +161,7 @@ function sanitizeEventParams(eventParams) {
  */
 function buildBqSql(reportKey, from, to) {
   const rangeFilter = `_TABLE_SUFFIX BETWEEN REPLACE('${from}','-','') AND REPLACE('${to}','-','')`;
-  const currentDaySuffix = `FORMAT_DATE('%Y%m%d', CURRENT_DATE())`;
+  const currentDaySuffix = `FORMAT_DATE('%Y%m%d', CURRENT_DATE('${PROPERTY_TIMEZONE}'))`;
   // Daily exports are the durable source for completed GA4 dates. The
   // intraday table is retained only for the current date so a day cannot be
   // double-counted when the daily shard appears.
@@ -470,6 +471,7 @@ module.exports = {
   PROJECT_ID,
   DATASET_ID,
   PROPERTY_ID,
+  PROPERTY_TIMEZONE,
   ALLOWED_EVENT_PARAM_KEYS,
   getClient,
   sanitizeEventParams,
