@@ -260,11 +260,11 @@ function buildBqSql(reportKey, from, to) {
     }
     case 'R3_event_count_daily': {
       return `
-        SELECT event_date, event_name, COUNT(*) AS eventCount
+        SELECT event_date, ${pagePathSql} AS pagePath, event_name, COUNT(*) AS eventCount
         FROM ${tab}
         WHERE ${tableFilter}
           AND event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open','faq_open', 'cta_view', 'user_engagement', 'session_start')
-        GROUP BY event_date, event_name
+        GROUP BY event_date, pagePath, event_name
       `;
     }
     case 'R4_geo_daily': {
@@ -431,7 +431,7 @@ async function queryBqReport(reportKey, from, to) {
       const REPORT_DIMENSIONS = {
         R1_pageview_daily: ['event_date', 'pagePath', 'pageTitle'],
         R2_session_metrics_daily: ['event_date', 'sessionDefaultChannelGroup'],
-        R3_event_count_daily: ['event_date', 'event_name'],
+        R3_event_count_daily: ['event_date', 'pagePath', 'event_name'],
         R4_geo_daily: ['event_date', 'country', 'region', 'city'],
         R5_device_daily: ['event_date', 'deviceCategory', 'browser', 'operatingSystem'],
         R6_new_vs_returning_daily: ['event_date', 'newVsReturning'],

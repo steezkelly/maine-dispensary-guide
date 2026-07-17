@@ -267,14 +267,15 @@ test('joinDataForReport emits report-specific metric rows for multi-metric repor
   assert.strictEqual(joined.find((row) => row.metric_name === 'sessions').delta_classification, 'match');
   assert.strictEqual(joined.find((row) => row.metric_name === 'engagedSessions').data_api_value, 3);
 });
-test('joinDataForReport persists BQ provenance in canonical metric rows', () => {
+test('R3 preserves page keys while joining BQ provenance into canonical metric rows', () => {
   const provenance = { bq_table: 'events_20260712', query_id: 'q_test' };
   const joined = ingest.joinDataForReport(
     'R3_event_count_daily',
-    [{ dimensions: { date: '2026-07-12', eventName: 'page_view' }, metrics: { eventCount: 20 } }],
-    [{ row_key: { event_date: '2026-07-12', event_name: 'page_view' }, metrics: { eventCount: 20 }, source_provenance: provenance }]
+    [{ dimensions: { date: '2026-07-12', pagePath: '/guides/portland', eventName: 'page_view' }, metrics: { eventCount: 20 } }],
+    [{ row_key: { event_date: '2026-07-12', pagePath: '/guides/portland', event_name: 'page_view' }, metrics: { eventCount: 20 }, source_provenance: provenance }]
   );
   assert.deepStrictEqual(joined[0].source_provenance, provenance);
+  assert.strictEqual(joined[0].row_key.page_path, '/guides/portland');
 });
 
 test('G6 gate fails when completed source reports emit both_null joined rows', () => {
@@ -324,9 +325,9 @@ test('G9 fails when a durable joined BQ observation lacks provenance', () => {
 test('G6 gate: match classification when sources agree', () => {
   const joined = ingest.joinDataForReport(
     'R3_event_count_daily',
-    [{ dimensions: { date: '2026-07-12', eventName: 'page_view' }, metrics: { eventCount: 20 } }],
+    [{ dimensions: { date: '2026-07-12', pagePath: '/x', eventName: 'page_view' }, metrics: { eventCount: 20 } }],
     [
-      { row_key: { event_date: '2026-07-12', event_name: 'page_view' }, metrics: { eventCount: 20 } }
+      { row_key: { event_date: '2026-07-12', pagePath: '/x', event_name: 'page_view' }, metrics: { eventCount: 20 } }
     ]
   );
   assert.strictEqual(joined[0].delta_classification, 'match');
@@ -338,7 +339,7 @@ test('joinDataForReport preserves unmatched BQ rows as API-history disagreements
   const joined = ingest.joinDataForReport(
     'R3_event_count_daily',
     [],
-    [{ row_key: { event_date: '2026-07-12', event_name: 'cta_view' }, metrics: { eventCount: 6 } }]
+    [{ row_key: { event_date: '2026-07-12', pagePath: '/x', event_name: 'cta_view' }, metrics: { eventCount: 6 } }]
   );
   assert.strictEqual(joined.length, 1);
   assert.strictEqual(joined[0].delta_classification, 'structural_disagreement_no_api_history');
@@ -349,9 +350,9 @@ test('joinDataForReport preserves unmatched BQ rows as API-history disagreements
 test('G6 gate: count_disagreement when values differ', () => {
   const joined = ingest.joinDataForReport(
     'R3_event_count_daily',
-    [{ dimensions: { date: '2026-07-12', eventName: 'cta_view' }, metrics: { eventCount: 8 } }],
+    [{ dimensions: { date: '2026-07-12', pagePath: '/x', eventName: 'cta_view' }, metrics: { eventCount: 8 } }],
     [
-      { row_key: { event_date: '2026-07-12', event_name: 'cta_view' }, metrics: { eventCount: 6 } }
+      { row_key: { event_date: '2026-07-12', pagePath: '/x', event_name: 'cta_view' }, metrics: { eventCount: 6 } }
     ]
   );
   // 8 vs 6, delta=2, max=8, ratio=0.25 > 0.05 -> count_disagreement

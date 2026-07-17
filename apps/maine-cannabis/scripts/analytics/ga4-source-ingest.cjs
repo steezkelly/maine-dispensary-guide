@@ -366,9 +366,9 @@ function joinDataForReport(reportKey, dataApiRows, bqRows, metrics = dataApi.REP
   // pulled from the matching bq row (if any). Real reconciliation needs
   // a per-date join, but at minimum the structure is preserved.
   //
-  // JOIN strategy: normalize field names so {date, eventName} matches
-  // {event_date, event_name} etc. Date-day events are joined at the
-  // grain level (date, pagePath, etc.). Both camelCase and snake_case
+  // JOIN strategy: normalize field names so {date, pagePath, eventName} matches
+  // {event_date, pagePath, event_name} etc. Rows are joined at their report
+  // grain level. Both camelCase and snake_case
   // variants are mapped to a canonical key so they compare equal.
   const FIELD_CANON = {
     date: 'date', event_date: 'date',

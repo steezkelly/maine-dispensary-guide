@@ -61,6 +61,14 @@ test('page reports normalize BQ page_location URLs to paths before grouping', ()
   assert.match(sql, /AS pagePath/);
 });
 
+test('R3 retains pagePath at the same grain as the Data API event report', () => {
+  const sql = buildBqSql('R3_event_count_daily', '2026-07-10', '2026-07-12');
+
+  assert.match(sql, /REGEXP_EXTRACT/);
+  assert.match(sql, /AS pagePath/);
+  assert.match(sql, /GROUP BY event_date, pagePath, event_name/);
+});
+
 test('analytics workspace declares the BigQuery client required by its ingestion module', () => {
   const workspaceRoot = path.resolve(__dirname, '../..');
   const manifest = JSON.parse(fs.readFileSync(path.join(workspaceRoot, 'package.json'), 'utf8'));

@@ -39,11 +39,11 @@ const REPORTS = {
   },
   R3_event_count_daily: {
     report_id: 'event_count_daily',
-    dimensions: ['date', 'eventName'],
+    dimensions: ['date', 'pagePath', 'eventName'],
     metrics: ['eventCount'],
-    grain: 'day_event',
+    grain: 'day_pagePath_event',
     compat_status: 'VALIDATED',
-    intended_use: 'Custom event totals (page_view, scroll_depth, page_engaged, faq_open, cta_view)'
+    intended_use: 'Per-page custom event totals (page_view, scroll_depth, page_engaged, faq_open, cta_view)'
   },
   R4_geo_daily: {
     report_id: 'geo_daily',
