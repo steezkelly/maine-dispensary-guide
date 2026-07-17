@@ -44,9 +44,20 @@ function practicalDirection(row) {
   return above >= below ? 'above_peer' : 'below_peer';
 }
 function opportunityId(row) { return `opp_${String(row.window_end || row.window_start || 'unknown').replaceAll('-', '')}_${hash(row.deduplication_key || stableDeduplicationKey(row))}`; }
+function hasOverlappingPriorWindow(row, history) {
+  const start = String(row.window_start || row.date || '');
+  const end = String(row.window_end || row.date || row.window_start || '');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !/^\d{4}-\d{2}-\d{2}$/.test(end) || start > end) return false;
+  return history.some((prior) => {
+    const priorStart = String(prior.window_start || prior.date || '');
+    const priorEnd = String(prior.window_end || prior.date || prior.window_start || '');
+    return /^\d{4}-\d{2}-\d{2}$/.test(priorStart) && /^\d{4}-\d{2}-\d{2}$/.test(priorEnd) && priorStart <= end && start <= priorEnd;
+  });
+}
 
 function measurementBlockReason(row) {
   if (row.duplicate_window_evidence) return 'DUPLICATE_WINDOW_EVIDENCE';
+  if (row.overlapping_window_evidence) return 'OVERLAPPING_WINDOW_EVIDENCE';
   if (String(row.measurement_status || '').startsWith('MEASUREMENT_BLOCKED')) return row.measurement_status;
   if (!isHealthy(row)) return row.measurement_status || BLOCKED_REASONS.HEALTH;
   if (!isSettled(row)) return BLOCKED_REASONS.UNSETTLED;
@@ -174,7 +185,7 @@ function deriveEvidence(rows, config = {}) {
     const seenWindowIdentities = new Set();
     for (const row of group) {
       const windowIdentity = `${row.window_start || row.date || '(unknown-start)'}|${row.window_end || row.date || row.window_start || '(unknown-end)'}`;
-      const evidenceRow = { ...row, duplicate_window_evidence: seenWindowIdentities.has(windowIdentity) };
+      const evidenceRow = { ...row, duplicate_window_evidence: seenWindowIdentities.has(windowIdentity), overlapping_window_evidence: hasOverlappingPriorWindow(row, history) };
       seenWindowIdentities.add(windowIdentity);
       const transition = transitionForEvidence(evidenceRow, history, config);
       const current = { ...evidenceRow, deduplication_key: key, signal_family: evidenceRow.signal_family || signalFamily(evidenceRow), state: transition.state, state_reason: transition.reason, state_version: (history.at(-1)?.state_version || 0) + 1, signal: transition.signal, required_evidence: transition.evidence, cwv_evidence: cwvEvidence(evidenceRow), operator_item_emitted: transition.operator_item_emitted, persistence: transition.persistence || null, recommendation_or_edit_instruction: null, causal_language_allowed: false };

@@ -41,6 +41,7 @@ const REPORTS = {
     report_id: 'event_count_daily',
     dimensions: ['date', 'pagePath', 'eventName'],
     metrics: ['eventCount'],
+    event_names: ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start'],
     grain: 'day_pagePath_event',
     compat_status: 'VALIDATED',
     intended_use: 'Per-page custom event totals (page_view, scroll_depth, page_engaged, faq_open, cta_view)'
@@ -93,6 +94,19 @@ const REPORTS = {
 
 function reportCompleteness(rowCount, fetchedRows) { return Number(rowCount) > Number(fetchedRows) ? 'partial' : 'ok'; }
 
+function buildReportRequest(def, opts) {
+  const request = {
+    dateRanges: [{ startDate: opts.from, endDate: opts.to }],
+    dimensions: def.dimensions.map((name) => ({ name })),
+    metrics: def.metrics.map((name) => ({ name })),
+    limit: opts.limit || 100000,
+  };
+  if (Array.isArray(def.event_names) && def.event_names.length) {
+    request.dimensionFilter = { filter: { fieldName: 'eventName', inListFilter: { values: def.event_names } } };
+  }
+  return request;
+}
+
 /**
  * Run a single named report against the GA4 Data API.
  *
@@ -110,12 +124,7 @@ async function runReport(authClient, reportKey, opts) {
   try {
     const resp = await client.properties.runReport({
       property: `properties/${PROPERTY_ID}`,
-      requestBody: {
-        dateRanges: [{ startDate: opts.from, endDate: opts.to }],
-        dimensions: def.dimensions.map((name) => ({ name })),
-        metrics: def.metrics.map((name) => ({ name })),
-        limit: opts.limit || 100000
-      }
+      requestBody: buildReportRequest(def, opts)
     });
     const data = resp.data;
     const rows = (data.rows || []).map((row) => {
@@ -202,6 +211,7 @@ module.exports = {
   PROPERTY_ID,
   REPORTS,
   reportCompleteness,
+  buildReportRequest,
   getAuthClient,
   runReport,
   runAllReports
