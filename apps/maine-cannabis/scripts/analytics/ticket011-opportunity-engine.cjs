@@ -119,8 +119,8 @@ function applyDiagnosticUpdate(packet, result) {
   const planned = packet.diagnostic_plan.find((d) => d.diagnostic_id === result.diagnostic_id);
   if (!planned) throw new Error(`diagnostic is not declared: ${result.diagnostic_id}`);
   if (result.production_touch === true || planned.production_touch === true) throw new Error('production edits are not diagnostics');
-  const supporting = new Set(result.supporting_hypotheses || planned.hypotheses_supported_if_positive || []);
-  const contradicting = new Set(result.contradicting_hypotheses || planned.hypotheses_weakened_if_positive || []);
+  const supporting = new Set(result.supporting_hypotheses || []);
+  const contradicting = new Set(result.contradicting_hypotheses || []);
   const hypotheses = packet.hypotheses.map((h) => {
     const next = { ...h, supporting_observations: [...h.supporting_observations], contradicting_observations: [...h.contradicting_observations] };
     if (supporting.has(h.hypothesis_id)) next.supporting_observations.push(result.observation || result.result_summary || 'diagnostic positive');

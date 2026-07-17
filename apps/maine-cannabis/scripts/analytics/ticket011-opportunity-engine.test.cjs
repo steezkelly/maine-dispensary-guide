@@ -62,7 +62,13 @@ test('hypothesis status can be rejected', () => { const c = o.buildOpportunityEn
 test('evidence grade is mandatory and bounded', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible({ evidence_grade: 'E9' })] }).cases[0]; assert.equal(c.evidence_grade, 'E1'); assert.ok(o.EVIDENCE_GRADES.includes(c.evidence_grade)); });
 test('proposal has no authorization hash before human signoff', () => { let c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; c = o.resolveInvestigation(c, { resolved_at: TS, resolution_code: 'EDITORIAL_TASK_OWNERSHIP_REVIEW', leading_hypotheses: ['TASK_OWNERSHIP_REVIEW'] }); const x = o.buildProposalDraft(c, { created_at: TS, intervention_hypothesis: 'ownership review', change_surface: 'content', exact_routes_or_components: ['/x'], proposed_treatment: 'draft', primary_metric: 'gsc_ctr', eligible_population: 'queries', minimum_practical_effect: 0.02, harm_threshold: 0.03, guardrail_metrics: [], maximum_horizon: '28d', decision_rule: 'pre-specified', rollback_procedure: 'revert' }); assert.equal(x.proposal.authorization_scope_hash, null); });
 test('diagnostic ledger records evidence quality', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; const next = o.applyDiagnosticUpdate(c, { executed_at: TS, diagnostic_id: 'D_PROMISE_BODY_CONTRACT_AUDIT', evidence_quality: 'strong', result_summary: 'aligned' }); assert.equal(next.diagnostic_ledger[0].evidence_quality, 'strong'); });
+test('diagnostic without explicit hypothesis evidence does not infer a positive polarity', () => {
+  const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0];
+  const next = o.applyDiagnosticUpdate(c, { executed_at: TS, diagnostic_id: 'D_CHANGE_MANIFEST_JOIN', result_summary: 'no overlap found' });
+  assert.deepEqual(next.diagnostic_ledger[0].hypothesis_updates, { supporting: [], contradicting: [] });
+  assert.ok(next.hypotheses.every((hypothesis) => hypothesis.supporting_observations.length === 0 && hypothesis.contradicting_observations.length === 0));
+});
 test('contract lists no automatic causal upgrade', () => { const c = o.buildOpportunityEngine({ derived_evidence: [eligible()] }).cases[0]; assert.equal(c.causal_language_allowed, false); });
 
-console.log(`Tests: ${pass}/45 passed.`);
+console.log(`Tests: ${pass}/46 passed.`);
 if (process.exitCode) process.exit(1);
