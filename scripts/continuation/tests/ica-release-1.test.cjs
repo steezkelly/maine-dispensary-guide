@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const Module = require('node:module');
+const vm = require('node:vm');
 const test = require('node:test');
 const esbuild = require('esbuild');
 
@@ -13,6 +14,7 @@ const EDITORIAL = path.join(APP, 'data', 'continuation', 'editorial-next-steps.t
 const ACTIONS = path.join(APP, 'data', 'continuation', 'contextual-actions.ts');
 const EDITORIAL_COMPONENT = path.join(APP, 'components', 'continuation', 'EditorialNextStep.astro');
 const ACTION_COMPONENT = path.join(APP, 'components', 'continuation', 'ContextualAction.astro');
+const REGION_HUB = path.join(APP, 'components', 'RegionHubShell.astro');
 const LAYOUT = path.join(APP, 'layouts', 'Layout.astro');
 const FUNNEL_SQL = path.join(ROOT, 'apps', 'maine-cannabis', 'docs', 'analytics', 'mdg-action-funnel-v1.sql');
 
@@ -60,6 +62,30 @@ function bundleModule(entry) {
 function assertUnique(values, label) {
   assert.equal(new Set(values).size, values.length, `${label} must be unique`);
 }
+
+function regionHubActionIds(source, guideHrefs) {
+  const helper = source.match(/function regionHubActionId\(href, action\) \{[\s\S]*?\n\}/);
+  assert.ok(helper, 'RegionHub must define one deterministic action-ID helper');
+  const regionHubActionId = vm.runInNewContext(`"use strict"; ${helper[0]}; regionHubActionId`);
+  return guideHrefs.flatMap((href) => [
+    regionHubActionId(href, 'guide'),
+    regionHubActionId(href, 'map'),
+  ]);
+}
+
+test('RegionHub CTA IDs distinguish every guide destination and action type', () => {
+  const source = read(REGION_HUB);
+  assert.match(source, /data-cta-id=\{regionHubActionId\(g\.href, 'guide'\)\}/);
+  assert.match(source, /data-cta-id=\{regionHubActionId\(g\.href, 'map'\)\}/);
+
+  const ids = regionHubActionIds(source, [
+    '/guides/alpha-dispensary-guide',
+    '/guides/beta-dispensary-guide',
+  ]);
+  assertUnique(ids, 'multi-guide RegionHub CTA IDs');
+  assert.notEqual(ids[0], ids[1], 'guide and map CTAs for one guide need distinct action IDs');
+  assert.notEqual(ids[0], ids[2], 'different guide destinations cannot share an exposure bucket');
+});
 
 test('typed registries expose one high-confidence mapping per exact pilot path', () => {
   const editorial = bundleModule(EDITORIAL);
