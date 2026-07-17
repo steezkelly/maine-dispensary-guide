@@ -247,7 +247,8 @@ function validateReleaseProvenance(ga4Release, runManifest, sourceReleaseIds) {
   if (!/^rel_[0-9a-f]{16}$/.test(sourceReleaseIds.canonical_release_id || '')) throw new Error('valid canonical_release_id is required');
   if (!/^run_[0-9a-f]{16}$/.test(sourceReleaseIds.acquisition_release_id || '')) throw new Error('valid acquisition_release_id is required');
   for (const releaseId of ['canonical_release_id', 'acquisition_release_id']) {
-    if (ga4Release?.[releaseId] != null && ga4Release[releaseId] !== sourceReleaseIds[releaseId]) {
+    if (ga4Release?.[releaseId] == null) throw new Error(`GA4 artifact ${releaseId} is required`);
+    if (ga4Release[releaseId] !== sourceReleaseIds[releaseId]) {
       throw new Error(`GA4 artifact ${releaseId} must match selected release IDs`);
     }
   }

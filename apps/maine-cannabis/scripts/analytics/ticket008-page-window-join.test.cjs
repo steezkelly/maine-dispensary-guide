@@ -282,7 +282,14 @@ test('page-window join excludes source records outside the requested bounds', ()
   assert.equal(rows[0].window_end, '2026-07-12');
 });
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
-test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
+test('release provenance rejects invalid status and mismatched manifest IDs', () => {
+  const selected = { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' };
+  assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, selected), /VALID/);
+  assert.throws(
+    () => join.validateReleaseProvenance({ release_status: 'VALID', ...selected }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: selected.acquisition_release_id }, selected),
+    /match/
+  );
+});
 test('release provenance rejects GA4 artifact IDs that disagree with selected manifest IDs', () => {
   const selected = { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' };
   const manifest = { ...selected };
@@ -295,6 +302,18 @@ test('release provenance rejects GA4 artifact IDs that disagree with selected ma
     /GA4 artifact.*acquisition_release_id.*match/i
   );
 });
+test('release provenance rejects VALID GA4 artifacts that omit either release ID', () => {
+  const selected = { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' };
+  const manifest = { ...selected };
+  assert.throws(
+    () => join.validateReleaseProvenance({ release_status: 'VALID', acquisition_release_id: selected.acquisition_release_id }, manifest, selected),
+    /GA4 artifact.*canonical_release_id.*required/i
+  );
+  assert.throws(
+    () => join.validateReleaseProvenance({ release_status: 'VALID', canonical_release_id: selected.canonical_release_id }, manifest, selected),
+    /GA4 artifact.*acquisition_release_id.*required/i
+  );
+});
 
-console.log(`Tests: ${pass}/55 passed.`);
+console.log(`Tests: ${pass}/56 passed.`);
 if (process.exitCode) process.exit(1);
