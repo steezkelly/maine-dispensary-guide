@@ -54,22 +54,56 @@ attention AS (
   FROM event_params
   WHERE event_name = 'mdg_active_attention' AND same_site_source_path IS NOT NULL
   GROUP BY 1,2
+),
+selected_destinations AS (
+  -- A source/destination pair may have many CTA IDs. It is intentionally
+  -- de-duplicated before joining path-level outcomes.
+  SELECT DISTINCT source_path, destination_path
+  FROM selects
+  WHERE destination_family = 'internal_route' AND destination_path IS NOT NULL
+),
+action_rows AS (
+  -- CTA-level measurements stop at selection. Arrival and attention have no
+  -- action-level attribution key, so joining them here would duplicate them.
+  SELECT
+    'action_cta' AS reporting_grain,
+    CASE
+      WHEN e.placement_id = 'editorial_next_step' THEN 'editorial_next_step'
+      WHEN e.placement_id = 'contextual_conversion_action' THEN 'contextual_conversion_action'
+      WHEN e.placement_id = 'auto_related_module' THEN 'auto_related_module'
+      ELSE 'other_meaningful_cta'
+    END AS reporting_module,
+    e.source_path, e.action_id, e.action_family, e.placement_id, e.destination_family,
+    s.destination_path,
+    e.event_count AS exposures,
+    COALESCE(s.event_count, 0) AS selects,
+    CAST(NULL AS INT64) AS same_site_destination_arrivals,
+    CAST(NULL AS INT64) AS destination_active_attention_events,
+    'not_action_attributable' AS outcome_attribution
+  FROM exposures e
+  LEFT JOIN selects s USING (source_path, action_id, action_family, placement_id, destination_family)
+),
+destination_outcome_rows AS (
+  -- These are path-level outcomes, not CTA outcomes: no action ID is present.
+  SELECT
+    'source_destination_outcome' AS reporting_grain,
+    'unattributable_destination_outcome' AS reporting_module,
+    d.source_path,
+    CAST(NULL AS STRING) AS action_id,
+    CAST(NULL AS STRING) AS action_family,
+    CAST(NULL AS STRING) AS placement_id,
+    'internal_route' AS destination_family,
+    d.destination_path,
+    CAST(NULL AS INT64) AS exposures,
+    CAST(NULL AS INT64) AS selects,
+    COALESCE(a.destination_arrivals, 0) AS same_site_destination_arrivals,
+    COALESCE(att.active_attention_events, 0) AS destination_active_attention_events,
+    'unattributable_to_individual_cta' AS outcome_attribution
+  FROM selected_destinations d
+  LEFT JOIN arrivals a USING (source_path, destination_path)
+  LEFT JOIN attention att USING (source_path, destination_path)
 )
-SELECT
-  CASE
-    WHEN placement_id = 'editorial_next_step' THEN 'editorial_next_step'
-    WHEN placement_id = 'contextual_conversion_action' THEN 'contextual_conversion_action'
-    WHEN placement_id = 'auto_related_module' THEN 'auto_related_module'
-    ELSE 'other_meaningful_cta'
-  END AS reporting_module,
-  e.source_path, e.action_id, e.action_family, e.placement_id, e.destination_family,
-  s.destination_path,
-  e.event_count AS exposures,
-  COALESCE(s.event_count, 0) AS selects,
-  COALESCE(a.destination_arrivals, 0) AS same_site_destination_arrivals,
-  COALESCE(att.active_attention_events, 0) AS destination_active_attention_events
-FROM exposures e
-LEFT JOIN selects s USING (source_path, action_id, action_family, placement_id, destination_family)
-LEFT JOIN arrivals a ON a.source_path = e.source_path AND a.destination_path = s.destination_path
-LEFT JOIN attention att ON att.source_path = e.source_path AND att.destination_path = s.destination_path
-ORDER BY reporting_module, exposures DESC;
+SELECT * FROM action_rows
+UNION ALL
+SELECT * FROM destination_outcome_rows
+ORDER BY reporting_grain, reporting_module, exposures DESC, same_site_destination_arrivals DESC;
