@@ -52,13 +52,13 @@ test('prior is estimated from peer aggregate', () => {
 });
 
 test('exact peer cell is selected when minimum count is met', () => {
-  const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic' };
+  const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', task_contract_status: 'CONFIRMED' };
   const peers = [1, 2, 3].map((n) => ({ ...target, canonical_page_path: `/peer-${n}`, numerator: n, denominator: 10 }));
   const out = b.selectPeers(target, [target, ...peers], b.POLICIES.gsc_ctr, 3);
   assert.equal(out.level, 0); assert.equal(out.peers.length, 3); assert.match(out.cell_id, /^gsc_ctr:0:/);
 });
 test('sparse exact cell falls back explicitly', () => {
-  const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'branded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic' };
+  const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'branded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', task_contract_status: 'CONFIRMED' };
   const peers = [
     { ...target, canonical_page_path: '/peer-1', branded_status: 'nonbranded', numerator: 1, denominator: 10 },
     { ...target, canonical_page_path: '/peer-2', branded_status: 'nonbranded', numerator: 2, denominator: 10 },
@@ -76,20 +76,26 @@ test('task-compatible fallback never admits another primary task family', () => 
   assert.equal(out.peers.length, 0);
 });
 test('peer selection excludes unsettled or unhealthy candidates from the prior', () => {
-  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED' };
   const badPeers = [
     { ...target, canonical_page_path: '/fresh', settlement_state: 'fresh', numerator: 2 },
     { ...target, canonical_page_path: '/blocked', settlement_state: 'settled', measurement_status: 'MEASUREMENT_BLOCKED: SOURCE_UNAVAILABLE', numerator: 3 },
     { ...target, canonical_page_path: '/incomparable', settlement_state: 'settled', measurement_status: 'MEASURED', window_comparable: false, numerator: 4 },
     { ...target, canonical_page_path: '/contaminated', settlement_state: 'settled', measurement_status: 'MEASURED', change_contamination_status: 'CONTAMINATED', numerator: 5 },
     { ...target, canonical_page_path: '/unresolved', settlement_state: 'settled', measurement_status: 'MEASURED', task_contract_status: 'UNRESOLVED', numerator: 6 },
+    { ...target, canonical_page_path: '/unknown', settlement_state: 'settled', measurement_status: 'MEASURED', task_contract_status: 'UNKNOWN', numerator: 7 },
   ];
   const out = b.selectPeers(target, [target, ...badPeers], b.POLICIES.gsc_ctr, 1);
   assert.equal(out.level, 'insufficient');
   assert.equal(out.peers.length, 0);
 });
+test('peer selection requires an affirmative task contract', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED' };
+  const unknown = { ...target, canonical_page_path: '/unknown', task_contract_status: 'UNKNOWN', numerator: 2 };
+  assert.equal(b.selectPeers(target, [target, unknown], b.POLICIES.gsc_ctr, 1).level, 'insufficient');
+});
 test('peer selection excludes every observation for the target page', () => {
-  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED' };
   const priorWindow = { ...target, numerator: 9, denominator: 10, window_start: '2026-06-01' };
   const peer = { ...target, canonical_page_path: '/peer', numerator: 2, denominator: 10 };
   const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
@@ -135,6 +141,10 @@ test('build output has metric-specific fallback metadata', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'action_selection_rate', numerator: 2, denominator: 10, action_family: 'map', primary_task_family: 'local_store_discovery' }], manifest: [] });
   assert.ok('peer_policy_version' in out.baselines[0]); assert.ok('peer_dimensions' in out.baselines[0]);
 });
+test('baseline output retains contamination state for downstream evidence gating', () => {
+  const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 2, denominator: 10, change_contamination_status: 'CONTAMINATED' }], manifest: [] });
+  assert.equal(out.baselines[0].change_contamination_status, 'CONTAMINATED');
+});
 test('manifest context is used but not itself treated as a peer ID', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'active_attention_rate', numerator: 5, denominator: 10 }], manifest: [{ canonical_path: '/x', reporting_archetype: 'calculator', primary_task_family: 'calculator_decision_tool' }] });
   assert.equal(out.baselines[0].reporting_archetype, 'calculator'); assert.equal(out.baselines[0].peer_cell_id.includes('calculator'), false);
@@ -156,5 +166,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/38 passed.`);
+console.log(`Tests: ${pass}/40 passed.`);
 if (process.exitCode) process.exit(1);

@@ -97,7 +97,7 @@ function transitionForEvidence(row, history = [], config = {}) {
   const evidenceHistory = [...history, { ...row, signal }];
   for (let i = evidenceHistory.length - 1; i >= 0; i--) {
     const candidate = evidenceHistory[i];
-    if (!isSettled(candidate)) continue;
+    if (!isSettled(candidate)) break;
     if (!candidate.signal?.practical_effect_plausible || candidate.signal.direction !== signal.direction) break;
     directionalRun.unshift(candidate);
   }

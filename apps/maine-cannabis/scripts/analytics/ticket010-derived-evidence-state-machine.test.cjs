@@ -28,6 +28,15 @@ test('a settled normal window resets directional persistence', () => {
   ]);
   assert.equal(out.derived_evidence[2].state, 'WATCH');
 });
+test('an unsettled window resets directional persistence', () => {
+  const out = s.deriveEvidence([
+    row({ window_end: '2026-07-01' }),
+    row({ window_start: '2026-07-08', window_end: '2026-07-08', settlement_state: 'fresh' }),
+    row({ window_start: '2026-07-15', window_end: '2026-07-15' }),
+  ]);
+  assert.equal(out.derived_evidence[2].state, 'WATCH');
+  assert.equal(out.derived_evidence[2].persistence.settled_signal_windows, 1);
+});
 test('two settled windows with change context become investigation eligible', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' }), row({ window_start: '2026-07-15', window_end: '2026-07-15' })]); assert.equal(out.derived_evidence[2].state, 'INVESTIGATION_ELIGIBLE'); });
 test('custom persistence threshold is honored', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' })], { required_settled_windows: 3 }); assert.equal(out.derived_evidence[1].state, 'WATCH'); });
 test('corroboration can promote a single settled window', () => { const out = s.deriveEvidence([row({ independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
@@ -52,5 +61,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/37 passed.`);
+console.log(`Tests: ${pass}/38 passed.`);
 if (process.exitCode) process.exit(1);

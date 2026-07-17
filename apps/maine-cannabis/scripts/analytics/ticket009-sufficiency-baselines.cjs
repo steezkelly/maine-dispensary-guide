@@ -164,7 +164,7 @@ function isEligiblePeer(row) {
   if (measurement.startsWith('MEASUREMENT_BLOCKED') || ['SOURCE_UNAVAILABLE', 'WINDOW_NOT_COMPARABLE', 'WINDOW_MEASUREMENT_DEGRADED'].includes(measurement)) return false;
   if (row.window_comparable === false) return false;
   if (change === 'CONTAMINATED' || change === 'CHANGE_CONTAMINATED') return false;
-  if (['UNRESOLVED', 'NEEDS_EDITORIAL_REVIEW'].includes(task)) return false;
+  if (!['CONFIRMED', 'RESOLVED'].includes(task)) return false;
   return true;
 }
 
@@ -290,6 +290,7 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
       task_contract_status: target.task_contract_status || 'UNKNOWN',
       settlement_state: target.settlement_state || null,
       change_context_evaluated: target.change_context_evaluated === true,
+      change_contamination_status: target.change_contamination_status || target.change_status || null,
       window_comparable: target.window_comparable,
       canonical_release_id: target.canonical_release_id || null,
       acquisition_release_id: target.acquisition_release_id || null,
