@@ -56,7 +56,8 @@ const modelMap = {
   'ideogram-3': 'fal-ai/ideogram/v3/generate',
 };
 
-const rootDir = path.join(__dirname, '..');
+const repoRoot = path.join(__dirname, '..', '..');
+const siteRoot = path.join(repoRoot, 'apps', 'maine-cannabis');
 
 let manifest = [];
 let force = false;
@@ -71,7 +72,7 @@ function loadManifest(argv) {
 
   const absoluteManifestPath = path.isAbsolute(manifestPath)
     ? manifestPath
-    : path.join(rootDir, manifestPath);
+    : path.join(repoRoot, manifestPath);
   try {
     return JSON.parse(fs.readFileSync(absoluteManifestPath, 'utf8'));
   } catch (err) {
@@ -82,9 +83,9 @@ function loadManifest(argv) {
 // Determine output directory based on field type
 function getOutputDir(field) {
   if (field === 'infographic') {
-    return path.join(rootDir, 'public', 'images', 'infographics');
+    return path.join(siteRoot, 'public', 'images', 'infographics');
   }
-  return path.join(rootDir, 'public', 'images', 'heroes');
+  return path.join(siteRoot, 'public', 'images', 'heroes');
 }
 
 // Determine output filename
@@ -143,6 +144,18 @@ function getHeroVariantPaths(filePath) {
 function hasCompleteImageSet(filePath, field) {
   const expectedPaths = field === 'heroImage' ? getHeroVariantPaths(filePath) : [filePath];
   return expectedPaths.every(candidate => fs.existsSync(candidate));
+}
+
+function assertHeroImageSetReady(filePath) {
+  const expectedPaths = getHeroVariantPaths(filePath);
+  const missingPaths = expectedPaths.filter(candidate => !fs.existsSync(candidate));
+  if (missingPaths.length === 0 || missingPaths.length === expectedPaths.length) return;
+
+  const missing = missingPaths.map(candidate => path.basename(candidate)).join(', ');
+  throw new Error(
+    `Incomplete hero responsive variant set for ${path.basename(filePath)}; missing: ${missing}. `
+    + 'Run the pipeline with --force to regenerate the complete JPG, WebP, and AVIF set before publication.',
+  );
 }
 
 async function writeHeroVariants(buffer, filePath) {
@@ -301,7 +314,7 @@ async function runPipeline() {
     const outputDir = getOutputDir(field);
     const outputFile = path.join(outputDir, getOutputFilename(slug, field));
     const localPath = getLocalPath(slug, field);
-    const targetPath = target ? (path.isAbsolute(target) ? target : path.join(rootDir, target)) : null;
+    const targetPath = target ? (path.isAbsolute(target) ? target : path.join(siteRoot, target)) : null;
 
     // Check if already exists
     if (hasCompleteImageSet(outputFile, field) && !force) {
@@ -313,6 +326,8 @@ async function runPipeline() {
     console.log(`${num} Generating ${slug}...`);
 
     try {
+      if (field === 'heroImage' && !force) assertHeroImageSetReady(outputFile);
+
       // Step 1: Generate
       const falUrl = await generateImage(prompt, model, width, height);
       console.log(`    └─ Generated: ${falUrl}`);
@@ -377,4 +392,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { hasCompleteImageSet, writeHeroVariants, writeImageFiles };
+module.exports = { assertHeroImageSetReady, hasCompleteImageSet, writeHeroVariants, writeImageFiles };
