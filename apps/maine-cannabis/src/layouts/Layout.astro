@@ -496,15 +496,11 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         // CTA metadata is authored where an ICA module knows it. Existing CTA
         // IDs get stable defaults here so the rollout does not require link
         // navigation to wait for analytics.
-        function destinationFamily(el) {
-          var explicit = el.getAttribute('data-destination-family');
-          if (explicit) return explicit;
-          var href = el.getAttribute('href') || '';
-          if (href.indexOf('mailto:') === 0) return 'mailto_open';
-          if (href.indexOf('tel:') === 0) return 'tel_open';
-          if (href && (href.charAt(0) === '/' || href.indexOf(window.location.origin) === 0)) return 'internal_route';
-          if (href) return 'external_url';
-          return 'other';
+        function defaultActionFamily(el) {
+          if (el.tagName === 'BUTTON' && (el.getAttribute('type') || '').toLowerCase() === 'submit') {
+            return 'cta_form_submit';
+          }
+          return 'cta_navigate';
         }
         function destinationPath(el, family) {
           if (family !== 'internal_route') return '';
@@ -516,10 +512,23 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           var placementMatch = /^cta-([a-z-]+)-/.exec(ctaId);
           return {
             action_id: el.getAttribute('data-action-id') || ctaId,
-            action_family: el.getAttribute('data-action-family') || 'cta_navigate',
+            action_family: el.getAttribute('data-action-family') || defaultActionFamily(el),
             placement_id: el.getAttribute('data-placement-id') || (placementMatch ? placementMatch[1] : 'inline'),
             destination_family: destinationFamily(el)
           };
+        }
+        function destinationFamily(el) {
+          var explicit = el.getAttribute('data-destination-family');
+          if (explicit) return explicit;
+          if (el.tagName === 'BUTTON' && (el.getAttribute('type') || '').toLowerCase() === 'submit') {
+            return 'form_submit';
+          }
+          var href = el.getAttribute('href') || '';
+          if (href.indexOf('mailto:') === 0) return 'mailto_open';
+          if (href.indexOf('tel:') === 0) return 'tel_open';
+          if (href && (href.charAt(0) === '/' || href.indexOf(window.location.origin) === 0)) return 'internal_route';
+          if (href) return 'external_url';
+          return 'other';
         }
         function sendAction(name, metadata, extra) {
           // gtag queues before its network library loads; transport_type asks
@@ -597,6 +606,16 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           // Deliberately do not preventDefault or await analytics: links and
           // form-control actions must remain reliable even when tracking fails.
         }, true);
+        // A native navigation triggered by a first CTA can unload the document
+        // before gtag.js has initialized, leaving queued events stranded in
+        // the discarded dataLayer. pagehide/visibilitychange flushes ask the
+        // (possibly still stubbed) gtag client to drain its queue via beacon
+        // while the network stack is still alive.
+        function flushQueuedActions() {
+          try { if (typeof window.gtag === 'function') window.gtag('event', 'page_unload_before_gtag'); } catch (_) { /* no-op: tracking must never break navigation */ }
+        }
+        window.addEventListener('pagehide', flushQueuedActions);
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushQueuedActions(); });
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', observeActions);
         } else {

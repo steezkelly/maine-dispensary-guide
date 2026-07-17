@@ -17,6 +17,7 @@ const ACTION_COMPONENT = path.join(APP, 'components', 'continuation', 'Contextua
 const REGION_HUB = path.join(APP, 'components', 'RegionHubShell.astro');
 const FIND_A_DISPENSARY = path.join(APP, 'pages', 'find-a-dispensary.astro');
 const RESOURCES = path.join(APP, 'pages', 'resources.astro');
+const LAUNCH_CHECKLIST = path.join(APP, 'pages', 'launch-checklist.astro');
 const LAYOUT = path.join(APP, 'layouts', 'Layout.astro');
 const FUNNEL_SQL = path.join(ROOT, 'apps', 'maine-cannabis', 'docs', 'analytics', 'mdg-action-funnel-v1.sql');
 
@@ -139,6 +140,47 @@ test('resources vendor Request Intro controls have distinct action IDs', () => {
     'Macpage',
   ]);
   assertUnique(ids, 'resources vendor CTA IDs');
+});
+
+function launchChecklistActionIds(source, titles) {
+  const helper = source.match(/const\s+analyticsCtaId\s*=\s*\([\s\S]*?\)\s*(?::\s*string)?\s*=>\s*`[\s\S]*?`;/);
+  assert.ok(helper, 'launch-checklist must define one deterministic per-item action-ID helper');
+  // Strip TypeScript annotations so plain Node vm can parse the arrow.
+  const executable = helper[0]
+    .replace(/\)\s*:\s*string\s*=>/, ') =>')
+    .replace(/\(\s*raw\s*:\s*string\s*\)/, '(raw)');
+  const fn = vm.runInNewContext(`"use strict"; ${executable}; analyticsCtaId`);
+  return titles.map((title) => fn(title));
+}
+
+test('launch-checklist per-item CTA IDs are unique per checklist item', () => {
+  const source = read(LAUNCH_CHECKLIST);
+  assert.match(source, /data-cta-id=\{`cta-inline-launch-checklist-\$\{perItem\}`\}/);
+  assert.doesNotMatch(source, /data-cta-id="cta-inline-launch-checklist-03"/);
+
+  const titles = [
+    'Form your Legal Entity (LLC/Corp)',
+    'Choose a Compliant Business Name',
+    'Apply for EIN with the IRS',
+    'Open a Business Bank Account',
+    'Draft an Operating Agreement',
+  ];
+  const ids = launchChecklistActionIds(source, titles);
+  assertUnique(ids, 'launch-checklist per-item CTA IDs');
+});
+
+test('layout classifies form-submit CTAs as cta_form_submit and form_submit', () => {
+  const source = read(LAYOUT);
+  assert.match(source, /function defaultActionFamily\(el\)/);
+  assert.match(source, /'cta_form_submit'/);
+  // The destination family branch must include the form_submit taxonomy value.
+  assert.match(source, /'form_submit'/);
+});
+
+test('layout flushes queued actions on pagehide and visibilitychange', () => {
+  const source = read(LAYOUT);
+  assert.match(source, /window\.addEventListener\('pagehide', flushQueuedActions\)/);
+  assert.match(source, /document\.visibilityState === 'hidden'/);
 });
 
 test('typed registries expose one high-confidence mapping per exact pilot path', () => {
