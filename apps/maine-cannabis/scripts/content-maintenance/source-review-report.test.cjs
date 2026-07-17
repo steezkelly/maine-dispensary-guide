@@ -17,6 +17,10 @@ test('prioritizes exposed expired evidence ahead of current evidence', () => {
   assert.equal(rows[0].status, 'expired');
   assert.equal(rows[0].priority_score, 120);
 });
+test('current claims with overdue propagation remain actionable', () => {
+  const rows = buildReport({ manifest: { claims: [{ claim_id: 'x', canonical_path: '/x', mdg_verification_date: '2026-07-01', review_cadence_days: 90, propagation_sla_days: 2, dependent_pages: [{ canonical_path: '/dependent', completed_at: null }] }] }, asOf: '2026-07-10', gscRows: [], ga4Rows: [] });
+  assert.match(markdown(rows, '2026-07-10'), /\/dependent: pending, 9d, overdue/);
+});
 test('report labels source selection as optional and non-probative', () => {
   const report = markdown([], '2026-07-17');
   assert.match(report, /optional trust\/verification signal only/);

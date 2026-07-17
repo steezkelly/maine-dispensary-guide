@@ -24,6 +24,7 @@ function dueStatus(claim, asOf) {
   const remaining = claim.review_cadence_days - age;
   return { age, remaining, status: remaining < 0 ? 'expired' : remaining <= 14 ? 'due_soon' : 'current' };
 }
+function propagationStatus(claim, asOf) { return (claim.dependent_pages || []).map((page) => { const item = typeof page === 'string' ? { canonical_path: page, completed_at: null } : page; const end = item.completed_at || asOf; const elapsed_days = daysBetween(claim.mdg_verification_date, end); const status = item.completed_at ? (elapsed_days <= claim.propagation_sla_days ? 'complete_on_time' : 'complete_late') : (elapsed_days <= claim.propagation_sla_days ? 'pending_within_sla' : 'overdue'); return { ...item, elapsed_days, status }; }); }
 function aggregateTraffic(gscRows, ga4Rows) {
   const map = new Map();
   const add = (page, key, value) => {
@@ -42,11 +43,11 @@ function buildReport({ manifest, gscRows, ga4Rows, asOf }) {
     const metric = traffic.get(claim.canonical_path) || { gsc_clicks: 0, gsc_impressions: 0, ga4_pageviews: 0 };
     const exposure = metric.gsc_impressions + metric.gsc_clicks * 5 + metric.ga4_pageviews;
     const urgency = due.status === 'expired' ? 3 : due.status === 'due_soon' ? 2 : 0;
-    return { ...claim, ...due, ...metric, exposure, priority_score: exposure * urgency };
+    return { ...claim, ...due, propagation: propagationStatus(claim, asOf), ...metric, exposure, priority_score: exposure * urgency };
   }).sort((a, b) => b.priority_score - a.priority_score || b.exposure - a.exposure || a.claim_id.localeCompare(b.claim_id));
 }
 function markdown(rows, asOf) {
-  const actionRows = rows.filter((r) => r.status !== 'current');
+  const actionRows = rows.filter((r) => r.status !== 'current' || r.propagation?.some((page) => page.status === 'overdue' || page.status === 'complete_late'));
   const lines = [
     '# Source-review priority report', '',
     `**As of:** ${asOf}`, '',
@@ -55,7 +56,7 @@ function markdown(rows, asOf) {
     '| Priority | Claim | Canonical page | Evidence status | Organic impressions | GA4 pageviews | Correction / propagation | Small task |',
     '| ---: | --- | --- | --- | ---: | ---: | --- | --- |'
   ];
-  for (const r of actionRows) lines.push(`| ${r.priority_score} | \`${r.claim_id}\` | ${r.canonical_path} | ${r.status.replace('_', ' ')} (${r.remaining}d) | ${r.gsc_impressions} | ${r.ga4_pageviews} | ${r.correction_log_reference || '—'}; ${r.dependent_pages.length} dependent page(s), ${r.propagation_sla_days}d SLA | Revalidate \`${r.source_id}\`; correct source claim and propagate before expansion. |`);
+  for (const r of actionRows) lines.push(`| ${r.priority_score} | \`${r.claim_id}\` | ${r.canonical_path} | ${r.status.replace('_', ' ')} (${r.remaining}d) | ${r.gsc_impressions} | ${r.ga4_pageviews} | ${r.correction_log_reference || '—'}; ${r.propagation.map((page) => `${page.canonical_path}: ${page.completed_at || 'pending'}, ${page.elapsed_days}d, ${page.status}`).join('<br>')} | Revalidate \`${r.source_id}\`; correct source claim and propagate before expansion. |`);
   if (!actionRows.length) lines.push('| — | No expired or soon-due evidence | — | — | — | — | — | No source-review task created. |');
   lines.push('', '## Method and limits', '', '- GSC facts are aggregated by canonical page from the supplied page-dimension export. GA4 facts are aggregate pageviews; neither dataset identifies a person.', '- `mdg_source_select` is an optional trust/verification signal only. A click indicates that a visitor opened a marked source/reference link; it is **not** evidence that the claim is accurate, that the source was read, or that there is commercial intent.', '- Pages without page-dimension GSC data receive zero GSC exposure rather than an invented value. Reviewers must replace fixture/legacy extracts with current finalized exports before acting on a production priority.', '- Correction references and propagation SLAs are workflow controls. Record the actual dependent-page completion date in the correction entry or task evidence.', '', '## Full claim register', ''
   );
@@ -66,9 +67,13 @@ function main(argv) {
   const asOfArg = argv.find((arg) => arg.startsWith('--as-of='));
   const asOf = asOfArg ? asOfArg.slice(8) : new Date().toISOString().slice(0, 10);
   const outputArg = argv.find((arg) => arg.startsWith('--output='));
+  const gscArg = argv.find((arg) => arg.startsWith('--gsc='));
+  const ga4Arg = argv.find((arg) => arg.startsWith('--ga4='));
   const manifest = JSON.parse(fs.readFileSync(DEFAULT_MANIFEST, 'utf8'));
-  const rows = buildReport({ manifest, gscRows: readJsonl(DEFAULT_GSC), ga4Rows: readJsonl(DEFAULT_GA4), asOf });
-  const report = markdown(rows, asOf);
+  const gscPath = gscArg ? path.resolve(gscArg.slice(6)) : DEFAULT_GSC;
+  const ga4Path = ga4Arg ? path.resolve(ga4Arg.slice(6)) : DEFAULT_GA4;
+  const rows = buildReport({ manifest, gscRows: readJsonl(gscPath), ga4Rows: readJsonl(ga4Path), asOf });
+  const report = `${markdown(rows, asOf)}\n<!-- GSC input: ${gscPath}; GA4 input: ${ga4Path} -->\n`;
   if (outputArg) fs.writeFileSync(path.resolve(outputArg.slice(9)), report);
   else process.stdout.write(report);
 }
