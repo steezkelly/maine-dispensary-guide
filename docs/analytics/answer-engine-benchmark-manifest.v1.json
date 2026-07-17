@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifestVersion": "1.0.0",
+  "name": "Maine-only answer-engine benchmark",
+  "scope": {
+    "geography": "Maine only",
+    "prohibitedUse": [
+      "Do not use referral traffic to estimate answer-engine market share.",
+      "Do not infer performance from a low-volume referral result; preserve it as qualitative evidence."
+    ]
+  },
+  "cadence": {
+    "answerObservations": "quarterly, during the first 10 business days of January, April, July, and October",
+    "crawlerDiscoverability": "monthly",
+    "queryReview": "quarterly; next review 2026-10-15"
+  },
+  "owners": {
+    "benchmark": "MDG editorial analytics",
+    "ga4Reporting": "MDG measurement owner",
+    "sourceReview": "MDG primary-source reviewer"
+  },
+  "answerEngines": [
+    { "id": "chatgpt", "name": "ChatGPT", "domains": ["chatgpt.com", "chat.openai.com"] },
+    { "id": "perplexity", "name": "Perplexity", "domains": ["perplexity.ai"] },
+    { "id": "gemini", "name": "Google Gemini", "domains": ["gemini.google.com"] },
+    { "id": "copilot", "name": "Microsoft Copilot", "domains": ["copilot.microsoft.com", "bing.com"] },
+    { "id": "claude", "name": "Claude", "domains": ["claude.ai"] }
+  ],
+  "qualityRubric": {
+    "citationSourceQuality": ["primary", "authoritative-secondary", "mixed", "unverifiable", "none"],
+    "materialFactualAccuracy": ["accurate", "partially-accurate", "material-error", "not-assessable"],
+    "freshness": ["current", "dated-but-disclosed", "stale-or-undated", "not-stated"]
+  },
+  "benchmarkQueries": [
+    {
+      "id": "consumer-portland-discovery",
+      "intent": "consumer local discovery",
+      "query": "Where can I buy adult-use cannabis in Portland, Maine?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/portland-dispensary-guide",
+      "requiredFactualClaims": [
+        {
+          "claim": "The answer distinguishes Portland consumer discovery from operator licensing and directs operator questions to the operator guide.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        },
+        {
+          "claim": "The answer tells consumers to verify a retailer's current license and hours rather than asserting a live store count as a durable fact.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        }
+      ],
+      "queryOwner": "MDG editorial analytics",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "consumer-first-visit",
+      "intent": "consumer local discovery",
+      "query": "What should a first-time cannabis buyer know before visiting a Maine dispensary?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/first-time-maine-dispensary-buyer",
+      "requiredFactualClaims": [
+        {
+          "claim": "The answer presents Maine-specific consumer guidance and tells the reader to confirm current state rules before purchase.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        }
+      ],
+      "queryOwner": "MDG editorial analytics",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "operator-metrc",
+      "intent": "operator compliance",
+      "query": "What seed-to-sale tracking does a Maine adult-use cannabis operator need?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-metrc-compliance-guide",
+      "requiredFactualClaims": [
+        {
+          "claim": "Maine adult-use licensees use Metrc for seed-to-sale tracking.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/stakeholders/batch-tracking", "https://www.metrc.com/partner/maine/"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "operator-packaging",
+      "intent": "operator compliance",
+      "query": "What packaging compliance should a Maine cannabis retailer verify before sale?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-dispensary-packaging",
+      "requiredFactualClaims": [
+        {
+          "claim": "The answer treats packaging requirements as regulated and directs the operator to current OCP adult-use rules rather than presenting unsourced packaging advice as law.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "license-opening",
+      "intent": "licensing",
+      "query": "How do I get an adult-use dispensary license in Maine?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-dispensary-license",
+      "requiredFactualClaims": [
+        {
+          "claim": "An adult-use retailer needs authorization from the host municipality and an OCP adult-use license before operating.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use", "https://www.maine.gov/dafs/ocp/adult-use/applications-forms"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "license-opt-in",
+      "intent": "licensing",
+      "query": "Has my Maine town opted in to adult-use cannabis businesses?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-cannabis-opt-in-tracker",
+      "requiredFactualClaims": [
+        {
+          "claim": "Municipal authorization is location-specific; the answer must not imply statewide municipal opt-in.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "market-2025-sales",
+      "intent": "market data",
+      "query": "How much adult-use cannabis was sold in Maine in 2025?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/market-stats",
+      "requiredFactualClaims": [
+        {
+          "claim": "Maine adult-use retail sales were $246.4 million in 2025; the answer identifies the year and program definition.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/resources/annual-reports"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "fact-adult-use-program",
+      "intent": "source-backed factual questions",
+      "query": "Which Maine state office regulates the adult-use cannabis program?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-dispensary-license",
+      "requiredFactualClaims": [
+        {
+          "claim": "The Maine Office of Cannabis Policy administers the adult-use cannabis program.",
+          "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/adult-use"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    },
+    {
+      "id": "fact-cannabis-tax",
+      "intent": "source-backed factual questions",
+      "query": "Where can I verify Maine adult-use cannabis tax rules?",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/guides/maine-cannabis-taxes-2026",
+      "requiredFactualClaims": [
+        {
+          "claim": "The answer identifies Maine Revenue Services as the primary source for tax verification and labels dated tax figures with their effective date.",
+          "primarySourceReferences": ["https://www.maine.gov/revenue/"]
+        }
+      ],
+      "queryOwner": "MDG primary-source reviewer",
+      "reviewDate": "2026-10-15"
+    }
+  ],
+  "deferredQueries": [
+    {
+      "id": "market-retail-stores",
+      "intent": "market data",
+      "query": "How many adult-use cannabis retail stores did Maine have at the end of 2025?",
+      "status": "deferred",
+      "canonicalMdgUrl": "https://mainedispensaryguide.com/market-stats",
+      "reason": "The canonical MDG page currently renders 187 from the annual-report stat field, while the source-reviewed required answer is 180. Do not score this query until the public-page data reconciliation is complete.",
+      "canonicalPageObservation": {
+        "sourcePath": "apps/maine-cannabis/src/data/site-stats.json",
+        "sourceField": "activeAdultUseRetailStores",
+        "renderedValue": 187,
+        "observedAt": "2026-07-17"
+      },
+      "requiredAnswer": {
+        "value": 180,
+        "asOf": "2025-12-31",
+        "primarySourceReferences": ["https://www.maine.gov/dafs/ocp/resources/annual-reports"]
+      },
+      "resumeCondition": "Re-enable only after /market-stats and its source data render the source-reviewed annual-report value with its date and definition."
+    }
+  ],
+  "observationRecord": {
+    "storage": "docs/analytics/evidence/answer-engine-observations-YYYY-QN.jsonl",
+    "requiredFields": ["observedAt", "engineId", "engineModelOrVersion", "queryId", "query", "included", "citedMdgUrl", "correctCanonicalUrl", "citationSourceQuality", "materialFactualAccuracy", "answerDateOrFreshness", "evidenceReference"],
+    "rules": ["Use null when an engine/model/version is not visible.", "Record a permitted manual observation only; do not automate an engine where its terms prohibit it.", "Set citedMdgUrl to null and correctCanonicalUrl to false when MDG is not included.", "EvidenceReference must be a stable permitted URL or a repository screenshot path with access controls respected."]
+  },
+  "crawlerDiscoverabilityRecord": {
+    "storage": "docs/analytics/evidence/llms-crawler-discoverability-YYYY-MM.jsonl",
+    "requiredFields": ["checkedAt", "crawlerOrFetcher", "llmsTxtUrl", "httpStatus", "contentHash", "discoveredCanonicalUrl", "evidenceReference"],
+    "rule": "Crawler discoverability measures access to llms.txt and is never an answer-inclusion result."
+  },
+  "ga4ReferralReport": {
+    "channelGroup": "AI referral",
+    "matchingRule": "sessionSource matches a listed answer-engine domain or an explicitly documented subdomain; retain source separately and do not reclassify direct, organic, or unknown traffic.",
+    "reportingCadence": "quarterly after GA4 data has settled",
+    "dimensions": ["sessionSource", "landingPagePlusQueryString", "landingPageCluster"],
+    "landingPageClusters": {
+      "consumer-local-discovery": ["/guides/*-dispensary-guide", "/guides/first-time-maine-dispensary-buyer", "/directory"],
+      "operator-compliance": ["/guides/maine-metrc-compliance-guide", "/guides/maine-dispensary-packaging", "/guides/maine-cannabis-marketing-compliance"],
+      "licensing": ["/guides/maine-dispensary-license", "/guides/maine-cannabis-opt-in-tracker", "/guides/maine-cannabis-zoning-requirements"],
+      "market-data": ["/market-stats", "/market-pulse-2026", "/guides/maine-cannabis-market"],
+      "other": ["all remaining landing pages"]
+    },
+    "metrics": {
+      "sessions": "sessions",
+      "engagedSessions": "engagedSessions",
+      "actionSelection": "eventCount filtered to cta_view, affiliate_click, or faq_open; label as interaction proxy, not completed work",
+      "completedTaskProxies": "eventCount filtered to lead_capture; report as submit intent because mailto completion is not observable in GA4"
+    },
+    "interpretation": ["Report low-volume results as qualitative evidence.", "Do not infer answer-engine market share, reach, or causal lift from AI referral traffic.", "Keep answer-engine inclusion observations and GA4 referrals as separate evidence streams."]
+  }
+}
