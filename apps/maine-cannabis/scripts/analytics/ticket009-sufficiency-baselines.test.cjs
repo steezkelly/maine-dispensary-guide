@@ -173,6 +173,17 @@ test('invalid rate counts fail closed instead of producing a posterior', () => {
   assert.equal(output.baselines[0].sample_state, 'insufficient');
   assert.equal(output.baselines[0].posterior_mean, undefined);
 });
+test('malformed or blank raw rate counts fail closed before numeric coercion', () => {
+  for (const observation of [
+    { numerator: '', denominator: 10 },
+    { numerator: 'not-a-number', denominator: 10 },
+    { numerator: Infinity, denominator: 10 },
+    { numerator: 1, denominator: ' ' },
+  ]) {
+    const output = b.buildBaselines({ observations: [{ canonical_page_path: '/invalid-raw', metric_family: 'gsc_ctr', ...observation }], manifest: [] });
+    assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
+  }
+});
 
 test('unresolved task is measurement blocked', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'progression_rate', numerator: 2, denominator: 10, task_contract_status: 'UNRESOLVED' }], manifest: [] });
@@ -225,5 +236,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/48 passed.`);
+console.log(`Tests: ${pass}/49 passed.`);
 if (process.exitCode) process.exit(1);

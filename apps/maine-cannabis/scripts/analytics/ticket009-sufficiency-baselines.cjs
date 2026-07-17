@@ -72,6 +72,9 @@ const POLICIES = Object.freeze({
 
 function clean(value) { return value == null || value === '' ? null : String(value); }
 function num(value) { const n = Number(value); return Number.isFinite(n) ? n : null; }
+function hasInvalidRawRateCount(value) {
+  return value != null && (typeof value === 'string' && value.trim() === '' || !Number.isFinite(Number(value)));
+}
 function stableKey(values) { return values.map((v) => clean(v) ?? '(null)').join('|'); }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -128,8 +131,10 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
   const manifest = manifestByPath.get(page) || {};
   const metric = clean(row.metric_family || row.metric || row.metric_name);
   const policy = getPolicy(metric);
-  const numerator = num(row.numerator ?? (policy ? row[policy.numerator] : null) ?? row.successes);
-  const denominator = num(row.denominator ?? (policy ? row[policy.denominator] : null) ?? row.exposures);
+  const rawNumerator = row.numerator ?? (policy ? row[policy.numerator] : null) ?? row.successes;
+  const rawDenominator = row.denominator ?? (policy ? row[policy.denominator] : null) ?? row.exposures;
+  const numerator = num(rawNumerator);
+  const denominator = num(rawDenominator);
   const rowStart = row.window_start || row.start_date || row.date;
   const rowEnd = row.window_end || row.end_date || row.date || rowStart;
   const q = queryDistributions.find((x) => x.canonical_page_path === page && x.window_start === rowStart && x.window_end === rowEnd);
@@ -145,10 +150,11 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
     interaction_structure: row.interaction_structure || row.template_family || 'unknown',
     progression_family: row.progression_family || 'unknown',
   };
-  return { ...context, metric_family: metric, numerator, denominator, raw_rate: denominator > 0 && numerator != null ? numerator / denominator : null, policy };
+  return { ...context, metric_family: metric, numerator, denominator, raw_rate: denominator > 0 && numerator != null ? numerator / denominator : null, invalid_rate_counts: hasInvalidRawRateCount(rawNumerator) || hasInvalidRawRateCount(rawDenominator), policy };
 }
 
 function hasInvalidRateCounts(row) {
+  if (row?.invalid_rate_counts === true) return true;
   const numerator = row?.numerator;
   const denominator = row?.denominator;
   if (numerator != null && (!Number.isFinite(numerator) || numerator < 0)) return true;
