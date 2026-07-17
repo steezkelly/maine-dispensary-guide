@@ -11,7 +11,23 @@ const DATA = path.join(APP, 'data'); const OUT = path.join(DATA, 'gsc-technical-
 function json(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 function readJsonl(file) { return fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : []; }
 function route(url) { return new URL(url).pathname.replace(/\/$/, '') || '/'; }
-function latestCoverage() { const files = fs.readdirSync(DATA).filter(name => /^gsc-indexing-report-\d{4}-\d{2}-\d{2}\.json$/.test(name)).sort(); return files.length ? json(path.join(DATA, files.at(-1))).results || [] : []; }
+function completeCoverage(report) {
+  const coverage = report?.coverage;
+  return coverage?.scope === 'full_sitemap'
+    && coverage.complete === true
+    && Number.isInteger(coverage.sitemapUrlCount)
+    && coverage.sitemapUrlCount > 0
+    && coverage.inspectedUrlCount === coverage.sitemapUrlCount
+    && Array.isArray(report.results)
+    && report.results.length === coverage.inspectedUrlCount;
+}
+function latestCoverage(dataDirectory = DATA) {
+  const files = fs.readdirSync(dataDirectory).filter(name => /^gsc-indexing-report-\d{4}-\d{2}-\d{2}(?:-[a-z_]+)?\.json$/.test(name)).sort().reverse();
+  for (const file of files) {
+    try { const report = json(path.join(dataDirectory, file)); if (completeCoverage(report)) return { file, report, results: report.results }; } catch (_) {}
+  }
+  return { file: null, report: null, results: [] };
+}
 function declaredRedirects() { return (json(path.join(ROOT, 'vercel.json')).redirects || []).map(row => row.source); }
 function priorState(prior, key, now) { const old = prior?.routes?.find(row => row.route === key); return { firstSeenAt: old?.firstSeenAt || now, lastSeenAt: now }; }
 function buildSnapshot({ sitemapUrls, manifestRows, coverageRows, redirectSources = declaredRedirects(), pageChecks = {}, prior, extractedAt = new Date().toISOString() }) {
@@ -28,6 +44,6 @@ function buildSnapshot({ sitemapUrls, manifestRows, coverageRows, redirectSource
 }
 async function checksFor(routes) { const results = {}; for (const key of routes) { try { const response = await fetch(`${SITE}${key}`, { redirect: 'manual', signal: AbortSignal.timeout(15000) }); const body = await response.text(); const canonical = body.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)?.[1] || null; results[key] = { checked: true, fetchStatus: response.status, canonical, noindex: /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(body) }; } catch (error) { results[key] = { checked: true, fetchStatus: 599, error: error.message }; } } return results; }
 async function fetchSitemapUrls(fetchImpl = fetch) { const response = await fetchImpl(`${SITE}/sitemap-0.xml`, { signal: AbortSignal.timeout(15000) }); if (!response.ok) throw new Error(`sitemap fetch ${response.status}`); const sitemapText = await response.text(); return [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]); }
-async function main() { const flags = new Set(process.argv.slice(2)); const sitemapUrls = await fetchSitemapUrls(); const manifestRows = readJsonl(path.join(APP, 'docs', 'analytics', 'page_task_manifest.v1.jsonl')); const previous = readJsonl(OUT).at(-1); const pageChecks = flags.has('--fetch-pages') ? await checksFor(sitemapUrls.map(route)) : {}; const snapshot = buildSnapshot({ sitemapUrls, manifestRows, coverageRows: latestCoverage(), pageChecks, prior: previous }); if (flags.has('--dry-run')) process.stdout.write(`${JSON.stringify(snapshot, null, 2)}\n`); else { fs.appendFileSync(OUT, `${JSON.stringify(snapshot)}\n`); console.log(`Appended ${snapshot.routes.length} technical route states to ${OUT}`); } }
+async function main() { const flags = new Set(process.argv.slice(2)); const sitemapUrls = await fetchSitemapUrls(); const manifestRows = readJsonl(path.join(APP, 'docs', 'analytics', 'page_task_manifest.v1.jsonl')); const previous = readJsonl(OUT).at(-1); const pageChecks = flags.has('--fetch-pages') ? await checksFor(sitemapUrls.map(route)) : {}; const coverage = latestCoverage(); const snapshot = buildSnapshot({ sitemapUrls, manifestRows, coverageRows: coverage.results, pageChecks, prior: previous }); if (flags.has('--dry-run')) process.stdout.write(`${JSON.stringify(snapshot, null, 2)}\n`); else { fs.appendFileSync(OUT, `${JSON.stringify(snapshot)}\n`); console.log(`Appended ${snapshot.routes.length} technical route states to ${OUT}${coverage.file ? ` using ${coverage.file}` : ' without a demonstrably complete GSC export'}`); } }
 if (require.main === module) main().catch(error => { console.error(error.stack || error); process.exit(1); });
-module.exports = { buildSnapshot, route, fetchSitemapUrls };
+module.exports = { buildSnapshot, completeCoverage, latestCoverage, route, fetchSitemapUrls };
