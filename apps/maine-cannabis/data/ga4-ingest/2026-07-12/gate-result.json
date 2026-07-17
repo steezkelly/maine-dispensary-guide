@@ -27,9 +27,9 @@
     "notes": "Same source produces same canonical_release_id; duplicates within this run: 0 (asserted by signature equality)"
   },
   "G6": {
-    "status": "PASS",
-    "both_null_count": 0,
-    "notes": "last-72h rows: cross-source structure correct; > 3-day rows: structural_disagreement_no_bq_history is a known structural reality"
+    "status": "FAIL",
+    "both_null_count": 1157,
+    "notes": "Recalculated 2026-07-17: 1,157 both-null rows require metric/source remediation; this release is invalid."
   },
   "G7": {
     "status": "PASS",

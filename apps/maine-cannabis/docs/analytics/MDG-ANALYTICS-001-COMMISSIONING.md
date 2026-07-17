@@ -1,7 +1,7 @@
 # MDG-ANALYTICS-001 Commissioning Report
 
 **Date:** 2026-07-12
-**Status:** COMMISSIONED FOR READ-ONLY OBSERVATION / INVESTIGATION; NOT COMMISSIONED FOR AUTONOMOUS PRODUCTION OPTIMIZATION
+**Status:** NOT COMMISSIONED — the committed 2026-07-12 source release is INVALID; NOT COMMISSIONED FOR AUTONOMOUS PRODUCTION OPTIMIZATION
 **Branch at handback:** `mdg-analytics-001/ticket-007-ingest`
 **Required stopping boundary:** Ticket 012
 
@@ -28,8 +28,8 @@ It is not commissioned for:
 
 | Check | Result | Evidence / limitation |
 |---|---|---|
-| Source extraction | PASS | Live GA4 run `apps/maine-cannabis/data/ga4-ingest/2026-07-12/`; 8 reports, 3,519 canonical rows, `rel_c5a3f1e37e936ae6`, `run_bff1ae80a22f4b78`. |
-| GA4 BigQuery/source gates | PASS | `gate-result.json`: G1–G10 all PASS. |
+| Source extraction | FAIL / INVALID | The committed run is not consumable: its canonical release is `INVALID` because R2 BigQuery failed and recalculation found 1,157 both-null rows. |
+| GA4 BigQuery/source gates | FAIL | `gate-result.json`: G1 fails for `R2_session_metrics_daily`; G6 fails with 1,157 both-null rows. |
 | Search Console BDE role proof | FALLBACK DOCUMENTED | GSC BDE is retired/off the critical path by operator decision. GSC/API evidence remains source-specific; no BDE claim is made. |
 | Deterministic rerun behavior | PASS | Ticket 007 canonical release identity tests; Ticket 007 25/25. Ticket 008/009/010/011 deterministic fixture tests pass. |
 | Exact-run synthetic GA4 collection probe | PARTIAL / NOT COMMISSIONED | GA4 Probe Y passed pipeline-level Playwright verification for 2/3 URLs, but the exact Ticket 005 probe suite with run-attributed `probe_id` and destination echo is not commissioned. |
@@ -58,15 +58,10 @@ It is not commissioned for:
 ## Test totals
 
 ```text
-Ticket 007: 25/25
-Ticket 008: 32/32
-Ticket 009: 35/35
-Ticket 010: 34/34
-Ticket 011: 39/39
-Data integrity: clean
-verify:iterate: clean
+Historical totals are superseded by the complete CI-wired analytics suite.
+The 2026-07-12 release is INVALID and must not be used downstream.
 ```
 
 ## Commissioning conclusion
 
-The stack is commissioned for observation, WATCH creation, settled-window investigation opportunity creation, read-only investigation, and non-authorized proposal drafting. Measurement-health limitations are represented as blocked states rather than performance labels. No autonomous optimization implementation may begin after this handback.
+The stack is **not commissioned** for downstream observation or investigation until a newly acquired release has valid matching release/run-manifest IDs and all source gates pass. No autonomous optimization implementation may begin after this handback.

@@ -111,6 +111,13 @@ function metricValue(row, report) {
   return null;
 }
 
+function metricSource(row, report) {
+  const preferredSource = METRIC_SOURCES[sourceFamily(report?.report_key || report?.report_id || '')];
+  if (preferredSource === 'ga4_bigquery') return row.bq_value != null ? 'ga4_bigquery' : (row.data_api_value != null ? 'ga4_data_api_fallback' : null);
+  if (preferredSource === 'ga4_data_api') return row.data_api_value != null ? 'ga4_data_api' : (row.bq_value != null ? 'ga4_bigquery_fallback' : null);
+  return null;
+}
+
 function normalizeManifestRows(rows) {
   const out = new Map();
   for (const row of rows || []) {
@@ -139,7 +146,7 @@ function normalizeGa4Release(release) {
       records.push({
         source: 'ga4', source_family: family, report_key: reportKey,
         date, canonical_page_path: page, event_name: eventName, metric_name: metricName,
-        value, observed: { bq_value: raw.bq_value ?? null, data_api_value: raw.data_api_value ?? null },
+        value, metric_source: metricSource(raw, report), observed: { bq_value: raw.bq_value ?? null, data_api_value: raw.data_api_value ?? null },
         row_key: raw.row_key || key,
       });
     }
@@ -217,14 +224,19 @@ function canonicalComparableMetricName(metricName) {
 }
 
 function observationIdentity(record) {
+  if (/^R[78]_custom_event_/.test(record.report_key)) return `row:${record.report_key}|${stableHash(record.row_key)}`;
   const metricName = canonicalComparableMetricName(record.metric_name);
   if (metricName && record.event_name) return `metric:${metricName}|event:${record.event_name}`;
   if (metricName) return `metric:${metricName}`;
   if (record.event_name) return `event:${record.event_name}`;
-  // R7/R8 rows have additional event dimensions (for example FAQ or CTA IDs)
-  // that distinguish observations sharing a page, day, and event report.
-  if (/^R[78]_custom_event_/.test(record.report_key)) return `row:${record.report_key}|${stableHash(record.row_key)}`;
   return null;
+}
+
+function validateReleaseProvenance(ga4Release, runManifest, sourceReleaseIds) {
+  if (ga4Release?.release_status !== 'VALID') throw new Error('only a VALID canonical release can be joined');
+  if (!/^rel_[0-9a-f]{16}$/.test(sourceReleaseIds.canonical_release_id || '')) throw new Error('valid canonical_release_id is required');
+  if (!/^run_[0-9a-f]{16}$/.test(sourceReleaseIds.acquisition_release_id || '')) throw new Error('valid acquisition_release_id is required');
+  if (runManifest && Object.keys(runManifest).length && (runManifest.canonical_release_id !== sourceReleaseIds.canonical_release_id || runManifest.acquisition_release_id !== sourceReleaseIds.acquisition_release_id)) throw new Error('run manifest release IDs must match canonical release IDs');
 }
 
 function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart = null, windowEnd = null, sourceReleaseIds = {}, asOf = null }) {
@@ -269,7 +281,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       reconciliation_status: blocked ? 'measurement_blocked' : primaryStatus,
       measurement_status: blocked ? 'MEASUREMENT_BLOCKED' : measurementStatus(group.date, records),
       delta_fields: deltaFields(ga, ve),
-      canonical_metric_source: blocked ? null : METRIC_SOURCES[ga?.source_family || ve?.source_family] || null,
+      canonical_metric_source: blocked ? null : ga?.metric_source || METRIC_SOURCES[ga?.source_family || ve?.source_family] || null,
       canonical_release_id: sourceReleaseIds.canonical_release_id || null,
       acquisition_release_id: sourceReleaseIds.acquisition_release_id || null,
       privacy_redaction_status: 'asserted_no_user_level_join',
@@ -323,7 +335,9 @@ function main() {
     canonical_release_id: runManifest.canonical_release_id || ga4.canonical_release_id || null,
     acquisition_release_id: runManifest.acquisition_release_id || ga4.acquisition_release_id || null,
   };
-  const rows = joinPageWindow({ ga4Release: ga4, vercelRows: vercel, manifestRows: manifest, windowStart: args.window_start || ga4.from || null, windowEnd: args.window_end || ga4.to || null, sourceReleaseIds });
+  validateReleaseProvenance(ga4, runManifest, sourceReleaseIds);
+  if (!normalizeDate(args.as_of)) throw new Error('a deterministic --as_of=YYYY-MM-DD is required');
+  const rows = joinPageWindow({ ga4Release: ga4, vercelRows: vercel, manifestRows: manifest, windowStart: args.window_start || ga4.from || null, windowEnd: args.window_end || ga4.to || null, sourceReleaseIds, asOf: args.as_of });
   const output = { schema_version: CONTRACT_VERSION, rows };
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, JSON.stringify(output, null, 2) + '\n');
@@ -331,6 +345,6 @@ function main() {
   console.log(`Ticket 008 join: ${rows.length} rows written to ${args.out}`);
 }
 
-module.exports = { CONTRACT_VERSION, CSP_FIX_DATE, canonicalizePagePath, canonicalComparableMetricName, normalizeDate, normalizeGa4Release, normalizeVercelRows, joinPageWindow, buildEvidenceManifest, classifyPresence, classifyReconciliation, measurementStatus };
+module.exports = { CONTRACT_VERSION, CSP_FIX_DATE, canonicalizePagePath, canonicalComparableMetricName, normalizeDate, normalizeGa4Release, normalizeVercelRows, joinPageWindow, buildEvidenceManifest, classifyPresence, classifyReconciliation, measurementStatus, metricSource, validateReleaseProvenance };
 
 if (require.main === module) main();
