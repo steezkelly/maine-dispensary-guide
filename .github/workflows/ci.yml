@@ -39,6 +39,9 @@ jobs:
       - name: Test image audit responsive variants
         run: node --test scripts/image/tests/image-audit.test.cjs
 
+      - name: Test progressive reveal fail-open behavior
+        run: npm run test:reveal-progressive-enhancement
+
       - name: Test GSC daily analytics contract
         run: |
           node --test apps/maine-cannabis/scripts/seo/gsc-search-analytics-daily.test.cjs
