@@ -111,6 +111,22 @@ test('canonical_release_id is identical for identical input state', () => {
   assert.strictEqual(id1, id2);
 });
 
+test('canonical_release_id uses the effective acquired window rather than the requested start', () => {
+  const rows = [{
+    report_id: 'pageview_daily',
+    report_key: 'R1_pageview_daily',
+    data_api_status: 'ok',
+    bq_status: 'skipped',
+    sanitized_rows: [{ row_key: { date: '2026-04-13', page_path: '/a' }, bq_value: null, data_api_value: 5 }]
+  }];
+  const firstRequest = { requestedFrom: '2025-01-01', effectiveFrom: '2026-04-13' };
+  const secondRequest = { requestedFrom: '2026-01-01', effectiveFrom: '2026-04-13' };
+  assert.strictEqual(
+    ingest.computeCanonicalReleaseIdForRouting(rows, firstRequest, '2026-07-12'),
+    ingest.computeCanonicalReleaseIdForRouting(rows, secondRequest, '2026-07-12')
+  );
+});
+
 test('canonical_release_id differs when input state differs', () => {
   const from = '2026-07-08', to = '2026-07-12';
   const rowsA = [

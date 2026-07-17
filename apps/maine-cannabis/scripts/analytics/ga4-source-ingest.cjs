@@ -222,6 +222,11 @@ function computeCanonicalReleaseId(rows, from, to) {
   return 'rel_' + crypto.createHash('sha256').update(payload).digest('hex').slice(0, 16);
 }
 
+function computeCanonicalReleaseIdForRouting(rows, routingResult, to) {
+  if (!routingResult?.effectiveFrom) throw new Error('effective ingestion start is required for canonical release identity');
+  return computeCanonicalReleaseId(rows, routingResult.effectiveFrom, to);
+}
+
 /**
  * acquisition_release_id = sha256 of canonical + run timestamps.
  * Different per run.
@@ -587,12 +592,13 @@ async function main() {
     adapter_version: '1-ga4-source-ingestion',
     schema_version: '1',
     from: args.from,
+    effective_from: routingResult.effectiveFrom,
     to: args.to,
     property_id: dataApi.PROPERTY_ID,
     project_id: bqClient.PROJECT_ID,
     dataset_id: bqClient.DATASET_ID
   };
-  const canonicalReleaseId = computeCanonicalReleaseId(joinedRows, args.from, args.to);
+  const canonicalReleaseId = computeCanonicalReleaseIdForRouting(joinedRows, routingResult, args.to);
   const acquisitionReleaseId = computeAcquisitionReleaseId(canonicalReleaseId, runMeta);
 
   console.log(`[ingest] canonical_release_id:  ${canonicalReleaseId}`);
@@ -652,7 +658,7 @@ async function main() {
       canonical_release_id: canonicalReleaseId,
       acquisition_release_id: acquisitionReleaseId,
       release_status: allPass ? 'VALID' : 'INVALID',
-      from: args.from,
+      from: routingResult.effectiveFrom,
       to: args.to,
       report_count: joinedRows.length,
       total_rows: joinedRows.reduce((acc, r) => acc + r.row_count, 0),
@@ -699,6 +705,7 @@ module.exports = {
   detectDataFloor,
   normalizeGa4Date,
   computeCanonicalReleaseId,
+  computeCanonicalReleaseIdForRouting,
   computeAcquisitionReleaseId,
   runGates,
   joinDataForReport
