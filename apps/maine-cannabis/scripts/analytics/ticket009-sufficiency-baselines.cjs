@@ -73,7 +73,10 @@ const POLICIES = Object.freeze({
 function clean(value) { return value == null || value === '' ? null : String(value); }
 function num(value) { const n = Number(value); return Number.isFinite(n) ? n : null; }
 function hasInvalidRawRateCount(value) {
-  return value != null && (typeof value === 'string' && value.trim() === '' || !Number.isFinite(Number(value)));
+  if (value == null) return false;
+  if (!['number', 'string'].includes(typeof value)) return true;
+  if (typeof value === 'string' && value.trim() === '') return true;
+  return !Number.isFinite(Number(value));
 }
 function stableKey(values) { return values.map((v) => clean(v) ?? '(null)').join('|'); }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }

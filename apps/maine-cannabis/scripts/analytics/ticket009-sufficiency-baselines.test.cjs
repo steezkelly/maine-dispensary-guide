@@ -184,6 +184,20 @@ test('malformed or blank raw rate counts fail closed before numeric coercion', (
     assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
   }
 });
+test('non-numeric raw rate-count types fail closed while numeric strings remain valid', () => {
+  for (const [index, numerator] of [false, true, [], [1], {}].entries()) {
+    const output = b.buildBaselines({ observations: [{ canonical_page_path: `/invalid-type-${index}`, metric_family: 'gsc_ctr', numerator, denominator: 10 }], manifest: [] });
+    assert.equal(output.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: INVALID_RATE_COUNTS');
+  }
+  const normalized = b.normalizeObservation(
+    { canonical_page_path: '/numeric-string', metric_family: 'gsc_ctr', numerator: '2', denominator: '10' },
+    [],
+    new Map(),
+  );
+  assert.equal(normalized.numerator, 2);
+  assert.equal(normalized.denominator, 10);
+  assert.equal(normalized.invalid_rate_counts, false);
+});
 
 test('unresolved task is measurement blocked', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'progression_rate', numerator: 2, denominator: 10, task_contract_status: 'UNRESOLVED' }], manifest: [] });
@@ -236,5 +250,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/49 passed.`);
+console.log(`Tests: ${pass}/50 passed.`);
 if (process.exitCode) process.exit(1);
