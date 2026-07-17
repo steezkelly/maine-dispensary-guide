@@ -263,6 +263,10 @@ const corrections = [
 ];
 
 const today = "2026-07-16";
+const latestCorrectionDate = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "long",
+  timeZone: "UTC",
+}).format(new Date(`${corrections[0].date}T00:00:00Z`));
 ---
 
 <Layout
@@ -431,7 +435,7 @@ const today = "2026-07-16";
   </section>
 
   <Callout title="How to use this page" type="info">
-    If you used one of our guides before July 4, 2026 and want to know whether anything you read has since been corrected, search the descriptions below for keywords from the article you read (operator name, address, statute citation, dollar figure). When in doubt about operator data — addresses, hours, license types — verify directly with the operator before making business decisions.
+    If you used one of our guides before {latestCorrectionDate} and want to know whether anything you read has since been corrected, search the descriptions below for keywords from the article you read (operator name, address, statute citation, dollar figure). When in doubt about operator data — addresses, hours, license types — verify directly with the operator before making business decisions.
   </Callout>
 
   <section class="corrections-section">
