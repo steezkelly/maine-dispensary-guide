@@ -50,13 +50,13 @@ test('omits wildcard redirect patterns from concrete route states', () => {
 });
 
 test('models configured noindex routes as ineligible for sitemap and indexation review', () => {
-  assert.deepEqual(indexabilityFor('/admin/email-dashboard'), { indexable: false, sitemapEligible: false, reason: 'CONFIGURED_NOINDEX_ROUTE' });
-  assert.deepEqual(indexabilityFor('/search'), { indexable: false, sitemapEligible: false, reason: 'CONFIGURED_NOINDEX_ROUTE' });
+  assert.deepEqual(indexabilityFor('/admin/email-dashboard'), { indexable: false, sitemapEligible: false, reason: 'SOURCE_DECLARED_NOINDEX_ROUTE' });
+  assert.deepEqual(indexabilityFor('/search'), { indexable: false, sitemapEligible: false, reason: 'SOURCE_DECLARED_NOINDEX_ROUTE' });
   assert.deepEqual(indexabilityFor('/404'), { indexable: false, sitemapEligible: false, reason: 'NOT_FOUND_ROUTE' });
   assert.deepEqual(indexabilityFor('/guides/a'), { indexable: true, sitemapEligible: true, reason: null });
 });
 
-test('excludes intentionally non-indexable manifest routes from route-state review', () => {
+test('excludes source-declared noindex manifest routes from route-state review', () => {
   const snapshot = buildSnapshot({
     sitemapUrls: ['https://mainedispensaryguide.com/guides/a'],
     manifestRows: [
@@ -64,13 +64,16 @@ test('excludes intentionally non-indexable manifest routes from route-state revi
       { canonical_path: '/admin/email-dashboard' },
       { canonical_path: '/search' },
       { canonical_path: '/404' },
+      { canonical_path: '/embed/opt-in-tracker' },
+      { canonical_path: '/embed/roi-calculator' },
+      { canonical_path: '/download/roadmap' },
     ],
     coverageRows: [{ url: 'https://mainedispensaryguide.com/guides/a', status: 'INDEXED' }],
     redirectSources: [],
     pageChecks: { '/guides/a': { checked: true, fetchStatus: 200 } },
   });
   assert.deepEqual(snapshot.routes.map(row => row.route), ['/guides/a']);
-  assert.deepEqual(snapshot.sources.excludedManifestRoutes, ['/404', '/admin/email-dashboard', '/search']);
+  assert.deepEqual(snapshot.sources.excludedManifestRoutes, ['/404', '/admin/email-dashboard', '/download/roadmap', '/embed/opt-in-tracker', '/embed/roi-calculator', '/search']);
   assert.equal(snapshot.routes[0].state, 'PASS');
 });
 
