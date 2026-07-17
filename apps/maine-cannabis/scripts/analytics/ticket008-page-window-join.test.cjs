@@ -216,9 +216,28 @@ test('non-additive title variants fail closed and remain deterministic across in
   assert.equal(join.buildEvidenceManifest(forward).output_hash, join.buildEvidenceManifest(reverse).output_hash);
 });
 
+test('equal-valued non-additive title variants still fail closed', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [
+    { row_key: { date: '20260712', page_path: '/x', page_title: 'A' }, metric_name: 'sessions', data_api_value: 2 },
+    { row_key: { date: '20260712', page_path: '/x', page_title: 'B' }, metric_name: 'sessions', data_api_value: 2 },
+  ] }] }, vercelRows: [] });
+  assert.equal(rows[0].ga4_r1.value, null);
+  assert.equal(rows[0].measurement_status, 'MEASUREMENT_BLOCKED');
+  assert.equal(rows[0].measurement_block_reason, 'NON_ADDITIVE_TITLE_VARIANT_AMBIGUITY');
+});
+
+test('evidence manifest is byte-stable with an explicit deterministic timestamp', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 1 }] }] }, vercelRows: [] });
+  const inputs = { generatedAt: '2026-07-16T00:00:00.000Z' };
+  const first = join.buildEvidenceManifest(rows, inputs);
+  const second = join.buildEvidenceManifest(rows, inputs);
+  assert.equal(first.generated_at_utc, inputs.generatedAt);
+  assert.equal(JSON.stringify(first), JSON.stringify(second));
+});
+
 test('R7 observations retain distinct FAQ IDs even with metric names', () => { const release = { release_status: 'VALID', rows: [{ report_key: 'R7_custom_event_faq_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-a' }, metric_name: 'eventCount', bq_value: 2 }, { row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-b' }, metric_name: 'eventCount', bq_value: 3 }] }] }; assert.equal(join.joinPageWindow({ ga4Release: release, vercelRows: [], asOf: '2026-07-20' }).length, 2); });
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
 test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
 
-console.log(`Tests: ${pass}/46 passed.`);
+console.log(`Tests: ${pass}/48 passed.`);
 if (process.exitCode) process.exit(1);
