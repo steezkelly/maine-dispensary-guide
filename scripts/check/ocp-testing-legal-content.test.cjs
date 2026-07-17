@@ -52,6 +52,12 @@ for (const relativePath of consumerPages) {
   });
 }
 
+test('best Maine edibles verification badge reflects the legal-review date', () => {
+  const source = read('apps/maine-cannabis/src/pages/blog/best-maine-edibles-2026.astro');
+  assert.match(source, /Last reviewed <strong>2026-07-16<\/strong>/);
+  assert.doesNotMatch(source, /Last reviewed <strong>2026-07-06<\/strong>/);
+});
+
 test('corrections log records the statute/rule/guidance distinction', () => {
   const source = read('apps/maine-cannabis/src/pages/about/corrections.astro');
   assert.match(source, /P\.L\. 2025, ch\. 764 made it effective April 19, 2026/);
