@@ -178,8 +178,9 @@ function normalizeGa4Date(s) {
 
 /**
  * For each date in [from, to], return which sources are reachable.
- * Last-72h dates get both Data API + BQ intraday.
- * Older dates get Data API only (BQ has expired).
+ * Every date with an available GA4 export gets Data API + BigQuery:
+ * completed property dates read the daily shard; only the current property
+ * date reads its intraday shard.
  *
  * Effective backfill lower bound: max({from arg}, {empirical data floor}).
  * If the operator passes --from=2025-01-01 but GA4 has data only from
@@ -188,15 +189,18 @@ function normalizeGa4Date(s) {
  */
 function perSourceRouting(from, to, dataFloor, now = new Date()) {
   const today = todayProperty(now);
-  const cutoff = dateMinusDays(today, 2); // 3-day window (today, today-1, today-2)
   const effectiveFrom = dataFloor ? (from > dataFloor ? from : dataFloor) : from;
   if (effectiveFrom > to) return { dates: [], effectiveFrom, requestedFrom: from, dataFloor, backedOff: true, empty: true };
   const dates = [];
   for (let i = 0; i < daysBetween(effectiveFrom, to); i++) {
     const d = dateMinusDays(to, i);
-    const hasBq = d >= cutoff;
-    dates.push({ date: d, has_data_api: true, has_bq: hasBq, bq_reason: hasBq ? 'intraday_fresh' : 'intraday_expired' });
-    dates[dates.length - 1].has_data_api = true;
+    const currentPropertyDate = d === today;
+    dates.push({
+      date: d,
+      has_data_api: true,
+      has_bq: true,
+      bq_reason: currentPropertyDate ? 'intraday_current' : 'daily_completed'
+    });
   }
   // If we backed off, flag the reason.
   if (dataFloor && effectiveFrom !== from) {

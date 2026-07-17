@@ -418,21 +418,21 @@ test('one failed report does not affect other reports', async () => {
 
 console.log('--- §8 per-day source routing ---');
 
-test('perSourceRouting flags last-3-days for BQ; older for Data API only', () => {
+test('perSourceRouting routes every completed post-floor day through BigQuery daily shards', () => {
   const today = ingest.todayProperty();
-  const todayMinus5 = ingest.dateMinusDays(today, 5);
   const todayMinus2 = ingest.dateMinusDays(today, 2);
   const todayMinus10 = ingest.dateMinusDays(today, 10);
   const routingResult = ingest.perSourceRouting(todayMinus10, today, null);
   const routing = routingResult.dates;
-  // Verify: today-10 should be Data API only.
-  // today-2 should be both.
-  const old = routing.find(r => r.date === todayMinus10);
-  const recent = routing.find(r => r.date === todayMinus2);
-  assert.ok(old, 'old date should be in routing');
-  assert.ok(recent, 'recent date should be in routing');
-  assert.strictEqual(old.has_bq, false, '> 3-day-old date should NOT have BQ');
-  assert.strictEqual(recent.has_bq, true, '<= 3-day-old date SHOULD have BQ');
+  const historical = routing.find((r) => r.date === todayMinus10);
+  const completed = routing.find((r) => r.date === todayMinus2);
+  const current = routing.find((r) => r.date === today);
+  assert.equal(historical.has_bq, true, 'completed historical date must retain BigQuery reconciliation');
+  assert.equal(historical.bq_reason, 'daily_completed');
+  assert.equal(completed.has_bq, true);
+  assert.equal(completed.bq_reason, 'daily_completed');
+  assert.equal(current.has_bq, true);
+  assert.equal(current.bq_reason, 'intraday_current');
 });
 
 test('perSourceRouting uses the GA4 property date around UTC midnight', () => {
