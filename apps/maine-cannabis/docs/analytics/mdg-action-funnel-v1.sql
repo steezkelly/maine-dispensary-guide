@@ -16,7 +16,8 @@ WITH event_params AS (
     (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'destination_family') AS destination_family,
     (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'destination_path') AS destination_path,
     (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location') AS page_location,
-    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_referrer') AS page_referrer
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_referrer') AS page_referrer,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'same_site_source_path') AS same_site_source_path
   FROM `PROJECT.analytics_XXXXXX.events_*`
   WHERE _TABLE_SUFFIX BETWEEN start_date AND end_date
 ),
@@ -42,14 +43,17 @@ arrivals AS (
     COUNT(*) AS destination_arrivals
   FROM event_params
   WHERE event_name = 'page_view'
-    AND REGEXP_CONTAINS(page_referrer, CONCAT(r'^https?://(www\\.)?', site_host, r'(/|$)'))
+    AND REGEXP_CONTAINS(page_referrer, CONCAT(r'^https?://(www\.)?', site_host, r'(/|$)'))
   GROUP BY 1,2
 ),
 attention AS (
-  SELECT page_path AS destination_path, COUNT(*) AS active_attention_events
+  -- The active-attention event carries only a normalized same-site source path;
+  -- direct, search, and external-referrer visits have no joinable source.
+  SELECT page_path AS destination_path, same_site_source_path AS source_path,
+    COUNT(*) AS active_attention_events
   FROM event_params
-  WHERE event_name = 'mdg_active_attention'
-  GROUP BY 1
+  WHERE event_name = 'mdg_active_attention' AND same_site_source_path IS NOT NULL
+  GROUP BY 1,2
 )
 SELECT
   CASE
@@ -67,5 +71,5 @@ SELECT
 FROM exposures e
 LEFT JOIN selects s USING (source_path, action_id, action_family, placement_id, destination_family)
 LEFT JOIN arrivals a ON a.source_path = e.source_path AND a.destination_path = s.destination_path
-LEFT JOIN attention att ON att.destination_path = s.destination_path
+LEFT JOIN attention att ON att.source_path = e.source_path AND att.destination_path = s.destination_path
 ORDER BY reporting_module, exposures DESC;

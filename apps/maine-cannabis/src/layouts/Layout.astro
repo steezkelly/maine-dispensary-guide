@@ -410,6 +410,21 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         window.addEventListener('load', function () { setTimeout(checkScroll, 250); });
 
         // --- page_engaged + v1 active foreground attention -------------------
+        // Active attention means foreground time with a recent intentional input,
+        // not simply an open tab. This stays anonymous: only timing is retained.
+        var activityWindowMs = 30000;
+        var lastQualifyingActivityAt = 0;
+        function recordQualifyingActivity() {
+          if (!document.hidden) {
+            lastQualifyingActivityAt = Date.now();
+            scheduleActiveAttention();
+          }
+        }
+        window.addEventListener('pointerdown', recordQualifyingActivity, { passive: true });
+        window.addEventListener('keydown', recordQualifyingActivity, { passive: true });
+        window.addEventListener('touchstart', recordQualifyingActivity, { passive: true });
+        window.addEventListener('scroll', recordQualifyingActivity, { passive: true });
+
         var engaged = false;
         var activeAttentionSent = false;
         var foregroundStartedAt = document.hidden ? 0 : Date.now();
@@ -423,10 +438,24 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         function foregroundAttentionMs() {
           return foregroundElapsedMs + (foregroundStartedAt ? Date.now() - foregroundStartedAt : 0);
         }
+        function sameSiteReferrerPath() {
+          try {
+            var referrer = new URL(document.referrer || '');
+            var currentHost = window.location.hostname.replace(/^www\./, '');
+            if (referrer.hostname.replace(/^www\./, '') !== currentHost) return '';
+            return referrer.pathname;
+          } catch (_) { return ''; }
+        }
+        function hasRecentQualifyingActivity() {
+          return lastQualifyingActivityAt && Date.now() - lastQualifyingActivityAt <= activityWindowMs;
+        }
         function markActiveAttention() {
-          if (activeAttentionSent || foregroundAttentionMs() < 30000) return;
+          if (activeAttentionSent || foregroundAttentionMs() < 30000 || !hasRecentQualifyingActivity()) return;
           activeAttentionSent = true;
-          send('mdg_active_attention', { schema_version: 'v1', attention_seconds_bucket: 30, transport_type: 'beacon' });
+          var attentionParams = { schema_version: 'v1', attention_seconds_bucket: 30, transport_type: 'beacon' };
+          var sourcePath = sameSiteReferrerPath();
+          if (sourcePath) attentionParams.same_site_source_path = sourcePath;
+          send('mdg_active_attention', attentionParams);
         }
         function scheduleActiveAttention() {
           if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
@@ -440,6 +469,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         scheduleActiveAttention();
         document.addEventListener('visibilitychange', function () {
           if (document.visibilityState === 'hidden') {
+            cancelPendingActionDwellTimers();
             foregroundElapsedMs = foregroundAttentionMs();
             foregroundStartedAt = 0;
             if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
@@ -509,6 +539,12 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           send(name, Object.assign({ schema_version: 'v1', transport_type: 'beacon' }, metadata, extra || {}));
         }
         var exposedActions = new WeakSet();
+        var actionDwellTimers = new Map();
+        var actionIntersectionState = new WeakSet();
+        function cancelPendingActionDwellTimers() {
+          actionDwellTimers.forEach(function (timer) { window.clearTimeout(timer); });
+          actionDwellTimers.clear();
+        }
         function legacyCtaView(target) {
           send('cta_view', {
             cta_id: target.getAttribute('data-cta-id') || '',
@@ -525,27 +561,30 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         }
         function observeActions() {
           if (!('IntersectionObserver' in window)) return;
-          var timers = new WeakMap();
           var io = new IntersectionObserver(function (entries) {
             for (var i = 0; i < entries.length; i++) {
               var entry = entries[i];
               var el = entry.target;
               if (exposedActions.has(el)) continue;
               if (!entry.isIntersecting || entry.intersectionRatio < 0.5) {
-                var pending = timers.get(el);
-                if (pending) { window.clearTimeout(pending); timers.delete(el); }
+                actionIntersectionState.delete(el);
+                var pending = actionDwellTimers.get(el);
+                if (pending) { window.clearTimeout(pending); actionDwellTimers.delete(el); }
                 continue;
               }
-              if (timers.has(el)) continue;
+              actionIntersectionState.add(el);
+              if (actionDwellTimers.has(el)) continue;
               var timer = window.setTimeout(function (target) {
                 return function () {
-                  timers.delete(target);
-                  if (exposedActions.has(target)) return;
+                  actionDwellTimers.delete(target);
+                  // A timer cannot convert a backgrounded or no-longer-visible
+                  // element into a meaningful viewport exposure.
+                  if (document.hidden || !actionIntersectionState.has(target) || exposedActions.has(target)) return;
                   io.unobserve(target);
                   exposeAction(target);
                 };
               }(el), 750);
-              timers.set(el, timer);
+              actionDwellTimers.set(el, timer);
             }
           }, { threshold: [0, 0.5] });
           var ctas = document.querySelectorAll('[data-cta-id]');
