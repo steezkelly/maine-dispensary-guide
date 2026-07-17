@@ -5,28 +5,27 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
-const { buildBqSql } = require('./ga4-bigquery.cjs');
+const { buildBqSql, queryBqReport } = require('./ga4-bigquery.cjs');
 
-test('R2 uses an intraday-supported channel fallback without daily-only session attribution', () => {
-  const sql = buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12');
-
-  assert.doesNotMatch(sql, /UNNEST\(traffic_source\)/);
-  assert.match(sql, /WITH session_events AS/);
-  assert.doesNotMatch(sql, /session_traffic_source_last_click/);
-  assert.match(sql, /traffic_source\.medium/);
-  assert.match(sql, /event_name = 'page_view'/);
-  assert.match(sql, /key='session_engaged'/);
+test('R2 is explicitly unavailable from the intraday-only BigQuery source', () => {
+  assert.throws(
+    () => buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12'),
+    /not available from events_intraday/,
+  );
 });
 
+test('R2 does not claim to mirror session-scoped Data API attribution from intraday data', () => {
+  assert.throws(
+    () => buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12'),
+    /session-scoped attribution/,
+  );
+});
 
-test('R2 mirrors all Data API session metrics requested by the report', () => {
-  const sql = buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12');
-
-  assert.match(sql, /AS sessions/);
-  assert.match(sql, /AS engagedSessions/);
-  assert.match(sql, /AS engagementRate/);
-  assert.match(sql, /AS averageSessionDuration/);
-  assert.match(sql, /AS bounceRate/);
+test('R2 is recorded as unavailable without constructing a BigQuery client', async () => {
+  const result = await queryBqReport('R2_session_metrics_daily', '2026-07-10', '2026-07-12');
+  assert.equal(result.status, 'unavailable_intraday');
+  assert.equal(result.compat_status, 'not_comparable');
+  assert.deepEqual(result.rows, []);
 });
 
 test('R6 mirrors engagedSessions alongside users and sessions', () => {

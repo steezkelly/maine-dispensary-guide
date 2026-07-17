@@ -1,6 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const s = require('./ticket010-derived-evidence-state-machine.cjs');
+const ticket011 = require('./ticket011-opportunity-engine.cjs');
 let pass = 0;
 function test(name, fn) { try { fn(); pass++; console.log(`PASS ${name}`); } catch (e) { console.error(`FAIL ${name}: ${e.message}`); process.exitCode = 1; } }
 function row(overrides = {}) { return { page_id: 'page-x', canonical_page_path: '/x', primary_task_family: 'how_to_task', metric_family: 'gsc_ctr', signal_family: 'acquisition_discovery', window_start: '2026-07-01', window_end: '2026-07-01', settlement_state: 'settled', measurement_status: 'MEASURED', window_comparable: true, change_context_evaluated: true, task_contract_status: 'CONFIRMED', sample_state: 'directional', probability_above_practical_delta: 0.9, probability_below_practical_delta: 0.05, peer_policy_version: 'metric-peer-policy.v1', peer_cell_id: 'gsc_ctr:0:how_to', peer_fallback_level: 0, peer_count: 4, posterior_mean: 0.1, posterior_interval_80_low: 0.05, posterior_interval_80_high: 0.15, posterior_interval_95_low: 0.02, posterior_interval_95_high: 0.2, practical_delta: 0.02, ...overrides }; }
@@ -51,6 +52,11 @@ test('state transition ledger records only emitted items', () => { const out = s
 test('opportunity snapshot is not a recommendation', () => { const out = s.deriveEvidence(eligibleRows()); assert.equal(out.opportunities.length, 1); assert.equal(out.opportunities[0].recommendation_or_edit_instruction, null); assert.equal(out.opportunities[0].causal_language_allowed, false); });
 test('stable opportunity deduplication key is emitted', () => { const out = s.deriveEvidence(eligibleRows()); assert.match(out.opportunities[0].deduplication_key, /^oppkey_[0-9a-f]+$/); });
 test('opportunity ID remains stable across refreshes', () => { const a = s.deriveEvidence(eligibleRows()).opportunities[0]; const b = s.deriveEvidence(eligibleRows().map((r, i) => i === 2 ? { ...r, posterior_mean: 0.2 } : r)).opportunities[0]; assert.equal(a.opportunity_id, b.opportunity_id); });
+test('release provenance survives Ticket 010 into Ticket 011 immutable packets', () => {
+  const evidence = s.deriveEvidence(eligibleRows().map((entry) => ({ ...entry, canonical_release_id: 'rel_chain', acquisition_release_id: 'run_chain' })));
+  const packet = ticket011.buildOpportunityEngine(evidence.opportunities).cases[0];
+  assert.deepEqual(packet.immutable_detection_snapshot.source_release_ids, { canonical_release_id: 'rel_chain', acquisition_release_id: 'run_chain' });
+});
 test('opportunity evidence grade is E1', () => { const out = s.deriveEvidence(eligibleRows()); assert.equal(out.opportunities[0].evidence_grade, 'E1'); });
 test('opportunity requires hypothesis set but does not execute it', () => { const out = s.deriveEvidence(eligibleRows()); assert.equal(out.opportunities[0].hypothesis_set_required, true); assert.equal(out.opportunities[0].proposal_ids.length, 0); });
 test('Core Web Vitals preserve field percentile semantics', () => { const out = s.deriveEvidence([row({ metric_family: 'core_web_vitals_lcp', field_percentile: 0.75, source: 'CrUX', independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].cwv_evidence.semantic_type, 'field_percentile'); assert.equal(out.derived_evidence[0].cwv_evidence.percentile, 0.75); });
@@ -67,5 +73,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/39 passed.`);
+console.log(`Tests: ${pass}/40 passed.`);
 if (process.exitCode) process.exit(1);

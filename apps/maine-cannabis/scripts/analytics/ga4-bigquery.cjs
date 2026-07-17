@@ -190,69 +190,9 @@ function buildBqSql(reportKey, from, to) {
       `;
     }
     case 'R2_session_metrics_daily': {
-      // Build a session grain before aggregating. `traffic_source` is a RECORD,
-      // not a repeated field; session_traffic_source_last_click supplies the
-      // GA4 session channel group and traffic_source.medium is only a fallback.
-      return `
-        WITH session_events AS (
-          SELECT
-            event_date,
-            COALESCE(traffic_source.medium, '(not set)') AS sessionDefaultChannelGroup,
-            CONCAT(
-              user_pseudo_id,
-              ':',
-              CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)
-            ) AS session_key,
-            COUNTIF(event_name = 'page_view') AS page_views,
-            MAX(IF(
-              COALESCE(
-                (SELECT value.string_value FROM UNNEST(event_params) WHERE key='session_engaged'),
-                CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='session_engaged') AS STRING)
-              ) = '1',
-              1,
-              0
-            )) AS session_engaged,
-            SUM(COALESCE(
-              (SELECT value.int_value FROM UNNEST(event_params) WHERE key='engagement_time_msec'),
-              0
-            )) AS engagement_time_msec
-          FROM ${tab}
-          WHERE ${tableFilter}
-            AND (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
-          GROUP BY event_date, sessionDefaultChannelGroup, session_key
-        )
-        SELECT
-          event_date,
-          sessionDefaultChannelGroup,
-          COUNT(*) AS sessions,
-          COUNTIF(
-            session_engaged = 1
-            OR engagement_time_msec > 10000
-            OR page_views >= 2
-          ) AS engagedSessions,
-          SAFE_DIVIDE(
-            COUNTIF(
-              session_engaged = 1
-              OR engagement_time_msec > 10000
-              OR page_views >= 2
-            ),
-            NULLIF(COUNT(*), 0)
-          ) AS engagementRate,
-          SAFE_DIVIDE(
-            SUM(engagement_time_msec),
-            NULLIF(COUNT(*), 0) * 1000
-          ) AS averageSessionDuration,
-          1 - SAFE_DIVIDE(
-            COUNTIF(
-              session_engaged = 1
-              OR engagement_time_msec > 10000
-              OR page_views >= 2
-            ),
-            NULLIF(COUNT(*), 0)
-          ) AS bounceRate
-        FROM session_events
-        GROUP BY event_date, sessionDefaultChannelGroup
-      `;
+      // GA4 does not populate session-scoped attribution in events_intraday_*.
+      // Do not manufacture a non-equivalent BQ channel dimension for reconciliation.
+      throw new Error('R2 session-scoped attribution is not available from events_intraday_*; BigQuery reconciliation is intentionally unavailable for this report');
     }
     case 'R3_event_count_daily': {
       return `
@@ -368,6 +308,20 @@ function buildBqSql(reportKey, from, to) {
  * @returns {Promise<{ report_key, report_id, from, to, rowCount, rows, sanitization: { dropped_params: number }, fetched_at_utc }>}
  */
 async function queryBqReport(reportKey, from, to) {
+  if (reportKey === 'R2_session_metrics_daily') {
+    return {
+      status: 'unavailable_intraday',
+      compat_status: 'not_comparable',
+      report_key: reportKey,
+      report_id: reportKey.replace(/^R\d+_/, ''),
+      from, to,
+      rowCount: 0,
+      rows: [],
+      sanitization: { dropped_params: 0, sanitized_rows: 0 },
+      reason: 'session-scoped attribution is unavailable from events_intraday_*',
+      fetched_at_utc: new Date().toISOString()
+    };
+  }
   const client = getClient();
   const sql = buildBqSql(reportKey, from, to);
 
