@@ -29,7 +29,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SCRIPT_DIR = __dirname;
-const CHECK_SCRIPT = path.join(SCRIPT_DIR, 'check-content-health.cjs');
+const CHECK_SCRIPT = path.join(SCRIPT_DIR, 'content-health.cjs');
 const BASELINE_FILE = path.join(SCRIPT_DIR, '.content-health-baseline.json');
 const UPDATE_BASELINE = process.argv.includes('--update-baseline');
 
