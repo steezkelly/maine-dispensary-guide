@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { buildReport } = require('./gsc-cluster-report.cjs');
+const { buildReport, markdown } = require('./gsc-cluster-report.cjs');
 
 test('only ranks opportunities at the documented impression floor and flags conflicts for review', () => {
   const report = buildReport({
@@ -15,4 +15,15 @@ test('only ranks opportunities at the documented impression floor and flags conf
   assert.equal(report.mismatches.length, 1);
   assert.equal(report.canonicalCompetitors.length, 1);
   assert.equal(report.clusters.find(row => row.cluster === 'business guides').impressions, 43);
+});
+
+test('carries query snapshot filters into the report and visible markdown scope', () => {
+  const report = buildReport({
+    sourceWindow: { sourceStartDate: '2026-07-01', sourceEndDate: '2026-07-01' },
+    completeness: { status: 'top_rows_truncated_or_unknown' },
+    searchType: 'web', filters: { country: 'USA', device: 'MOBILE', searchAppearance: null },
+    rows: [],
+  }, new Map(), new Map());
+  assert.deepEqual(report.scope, { searchType: 'web', filters: { country: 'USA', device: 'MOBILE', searchAppearance: null } });
+  assert.match(markdown(report), /Scope: search type web; filters country=USA, device=MOBILE\./);
 });

@@ -38,6 +38,18 @@ test('marks absent production checks as unobserved rather than passing the route
   assert.deepEqual(row.reasonCodes, ['PRODUCTION_HTML_UNOBSERVED']);
   assert.equal(row.state, 'REVIEW');
 });
+test('marks redirects as production failures when manual fetches return 3xx responses', () => {
+  const snapshot = buildSnapshot({
+    sitemapUrls: ['https://mainedispensaryguide.com/guides/a'],
+    manifestRows: [{ canonical_path: '/guides/a' }],
+    coverageRows: [{ url: 'https://mainedispensaryguide.com/guides/a', status: 'INDEXED' }],
+    redirectSources: [],
+    pageChecks: { '/guides/a': { checked: true, fetchStatus: 302 } },
+  });
+  assert.deepEqual(snapshot.routes[0].reasonCodes, ['PRODUCTION_HTTP_FAILURE']);
+  assert.equal(snapshot.routes[0].state, 'REVIEW');
+});
+
 test('rejects non-success sitemap responses before parsing their bodies', async () => {
   let readBody = false;
   await assert.rejects(() => fetchSitemapUrls(async () => ({ ok: false, status: 500, text: async () => { readBody = true; return ''; } })), /sitemap fetch 500/);

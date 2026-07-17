@@ -56,10 +56,12 @@ function buildReport(snapshot, manifest, canonicals, minimumImpressions = 20) {
       if (target && ordered.some(other => other.page === target)) canonicalCompetitors.push({ query, impressions: total, source: row.page, canonical: target });
     }
   }
-  return { minimumImpressions, completeness: snapshot.completeness, sourceWindow: snapshot.sourceWindow, clusters: [...pages.values()].sort((a, b) => b.impressions - a.impressions), opportunities: opportunities.sort((a, b) => b.impressions - a.impressions), mismatches: mismatches.sort((a, b) => b.impressions - a.impressions), canonicalCompetitors };
+  return { minimumImpressions, completeness: snapshot.completeness, sourceWindow: snapshot.sourceWindow, scope: { searchType: snapshot.searchType || 'web', filters: snapshot.filters || {} }, clusters: [...pages.values()].sort((a, b) => b.impressions - a.impressions), opportunities: opportunities.sort((a, b) => b.impressions - a.impressions), mismatches: mismatches.sort((a, b) => b.impressions - a.impressions), canonicalCompetitors };
 }
 function markdown(report) {
-  const lines = ['# GSC Cluster Editorial Review', '', `Source window: ${report.sourceWindow.sourceStartDate} to ${report.sourceWindow.sourceEndDate}. Snapshot completeness: **${report.completeness.status}**.`, '', `Opportunities are ranked only at **${report.minimumImpressions}+ impressions**; this is a review queue, not page-generation input.`, '', '## Clusters', '', '| Cluster | Impressions | Clicks | Rows |', '|---|---:|---:|---:|'];
+  const filters = Object.entries(report.scope.filters).filter(([, value]) => value).map(([name, value]) => `${name}=${value}`);
+  const scope = `Scope: search type ${report.scope.searchType}; ${filters.length ? `filters ${filters.join(', ')}` : 'no dimension filters'}.`;
+  const lines = ['# GSC Cluster Editorial Review', '', `Source window: ${report.sourceWindow.sourceStartDate} to ${report.sourceWindow.sourceEndDate}. Snapshot completeness: **${report.completeness.status}**.`, scope, '', `Opportunities are ranked only at **${report.minimumImpressions}+ impressions**; this is a review queue, not page-generation input.`, '', '## Clusters', '', '| Cluster | Impressions | Clicks | Rows |', '|---|---:|---:|---:|'];
   report.clusters.forEach(r => lines.push(`| ${r.cluster} | ${r.impressions} | ${r.clicks} | ${r.rows} |`));
   lines.push('', '## Ranked opportunities', '', '| Query | Cluster | Page | Impressions | Position |', '|---|---|---|---:|---:|');
   report.opportunities.forEach(r => lines.push(`| ${r.query} | ${r.cluster} | \`${r.page}\` | ${r.impressions} | ${r.position.toFixed(1)} |`));
