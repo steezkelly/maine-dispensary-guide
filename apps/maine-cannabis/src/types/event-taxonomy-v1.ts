@@ -103,6 +103,8 @@ export interface MdgActiveAttentionEvent extends EventEnvelope {
   event_name: 'mdg_active_attention';
   attention_seconds_bucket: AttentionSecondsBucket;
   content_zone?: string;       // bounded zone ID (NOT visible text)
+  /** Same-site document.referrer pathname only; omitted for direct/external visits. */
+  same_site_source_path?: string;
   privacy_classification: 'anonymous_aggregate';
 }
 

@@ -14,6 +14,7 @@ const ACTIONS = path.join(APP, 'data', 'continuation', 'contextual-actions.ts');
 const EDITORIAL_COMPONENT = path.join(APP, 'components', 'continuation', 'EditorialNextStep.astro');
 const ACTION_COMPONENT = path.join(APP, 'components', 'continuation', 'ContextualAction.astro');
 const LAYOUT = path.join(APP, 'layouts', 'Layout.astro');
+const FUNNEL_SQL = path.join(ROOT, 'apps', 'maine-cannabis', 'docs', 'analytics', 'mdg-action-funnel-v1.sql');
 
 const PILOT_ROUTES = [
   '/guides/maine-dispensary-license',
@@ -151,8 +152,19 @@ test('v1 active attention requires 30 seconds of accumulated foreground time', (
   assert.match(layout, /function foregroundAttentionMs\(\)/);
   assert.match(layout, /foregroundAttentionMs\(\) < 30000/);
   assert.match(layout, /foregroundElapsedMs = foregroundAttentionMs\(\)/);
+  assert.match(layout, /recordQualifyingActivity/);
+  assert.match(layout, /hasRecentQualifyingActivity\(\)/);
+  assert.match(layout, /same_site_source_path/);
   assert.match(layout, /markActiveAttention\(\);\n\s*scheduleActiveAttention\(\);/);
   assert.doesNotMatch(layout, /visibilityState === 'visible'\) \{\n\s*markEngaged\('visibility_returned'\);\n\s*\}/, 'a visibility return must not directly mark active attention');
+});
+
+test('funnel SQL joins active attention only to the same-site source path', () => {
+  const sql = read(FUNNEL_SQL);
+  assert.match(sql, /same_site_source_path AS source_path/);
+  assert.match(sql, /att\.source_path = e\.source_path AND att\.destination_path = s\.destination_path/);
+  assert.match(sql, /r'\^https\?:\/\/\(www\\\.\)\?'/, 'BigQuery raw regex needs one escaping backslash');
+  assert.doesNotMatch(sql, /www\\\\\./, 'BigQuery raw regex must not double-escape www.');
 });
 
 test('all pilot pages opt in and have exactly one Layout-owned discovery rail', () => {
@@ -186,4 +198,103 @@ test('release-1 continuation surface excludes deferred architecture', () => {
   for (const prohibited of ['localStorage', 'Math.random', 'journeyGraph', 'JourneyProgress', 'ContinueTask', 'Thompson']) {
     assert.equal(source.includes(prohibited), false, `${prohibited} is deferred`);
   }
+});
+
+function analyticsScript() {
+  const source = read(LAYOUT);
+  const analyticsMarker = source.indexOf('--- v1 action exposure/select');
+  const start = source.indexOf('(function () {', source.lastIndexOf('<script is:inline>', analyticsMarker));
+  const end = source.indexOf('</script>', start);
+  assert.ok(start >= 0 && end > start, 'Layout must contain the v1 analytics inline script');
+  return source.slice(start, end);
+}
+
+function eventNames(events) {
+  return events.map((event) => event[1]);
+}
+
+test('v1 browser instrumentation preserves native actions and enforces dwell, activity, and canonical paths', async (t) => {
+  const http = require('node:http');
+  const { chromium } = require('playwright');
+  const script = analyticsScript();
+  const events = [];
+  const submits = [];
+  const server = http.createServer((request, response) => {
+    const noIo = new URL(request.url, 'http://localhost').searchParams.has('no-io');
+    response.writeHead(200, { 'content-type': 'text/html' });
+    response.end(`<!doctype html><html><head><title>Instrument test</title></head><body data-page-type="test">
+      <a id="pre-dwell" data-cta-id="cta-inline-pre-dwell" href="/destination?campaign=test#native-link">Pre dwell</a>
+      <a id="hidden-dwell" data-cta-id="cta-inline-hidden-dwell" href="#hidden-link">Hidden dwell</a>
+      <form id="native-form" action="#submitted"><button data-cta-id="cta-inline-submit" type="submit">Submit</button></form>
+      <script>
+        window.gtag = (...args) => window.__recordGtag(args);
+        window.__ioInstances = [];
+        ${noIo ? 'delete window.IntersectionObserver;' : `window.IntersectionObserver = class {
+          constructor(callback) { this.callback = callback; window.__ioInstances.push(this); }
+          observe() {} unobserve() {}
+          trigger(target, isIntersecting, intersectionRatio) { this.callback([{ target, isIntersecting, intersectionRatio }]); }
+        };`}
+        document.querySelector('#native-form').addEventListener('submit', function (event) {
+          window.__recordSubmit(event.defaultPrevented); event.preventDefault();
+        });
+      </script>
+      <script>${script}</script>
+    </body></html>`);
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+  } catch (error) {
+    t.skip(`Playwright browser is unavailable: ${error.message}`);
+    return;
+  }
+  t.after(async () => { await browser.close(); });
+  const page = await browser.newPage();
+  await page.exposeBinding('__recordGtag', (_source, args) => events.push(args));
+  await page.exposeBinding('__recordSubmit', (_source, defaultPrevented) => submits.push(defaultPrevented));
+  await page.clock.install({ time: new Date('2026-07-17T00:00:00Z') });
+
+  // A pre-dwell click without IntersectionObserver emits exposure before select,
+  // strips query/hash from its canonical path, and does not block navigation.
+  await page.goto(`${origin}/fixture?no-io`);
+  await page.click('#pre-dwell');
+  assert.deepEqual(eventNames(events).slice(0, 3), ['mdg_action_exposure', 'cta_view', 'mdg_action_select']);
+  assert.equal(events[2][2].destination_path, '/destination');
+  await page.waitForURL(`${origin}/destination?campaign=test#native-link`);
+
+  // Hiding the tab cancels an in-flight 750 ms dwell rather than emitting it.
+  events.length = 0;
+  await page.goto(`${origin}/fixture`);
+  await page.evaluate(() => {
+    const target = document.querySelector('#hidden-dwell');
+    window.__ioInstances[0].trigger(target, true, 0.75);
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.clock.fastForward(800);
+  assert.equal(eventNames(events).includes('mdg_action_exposure'), false, 'backgrounded dwell must not create an exposure');
+
+  // Delegated analytics never cancels native form submission.
+  await page.goto(`${origin}/fixture?no-io`);
+  await page.click('button[type="submit"]');
+  assert.deepEqual(submits, [false], 'instrumentation must not prevent native form submission');
+
+  // Thirty seconds of passive foreground time is insufficient; a recent keyboard
+  // action qualifies the already-accumulated foreground threshold. The same-site
+  // referrer path is normalized for the SQL funnel join.
+  events.length = 0;
+  await page.goto(`${origin}/source?ignored=query#fragment`);
+  await page.goto(`${origin}/fixture`, { referer: `${origin}/source?ignored=query#fragment` });
+  await page.clock.fastForward(30_000);
+  assert.equal(eventNames(events).includes('mdg_active_attention'), false, 'passive foreground time is not active attention');
+  await page.dispatchEvent('body', 'keydown');
+  await page.clock.fastForward(1);
+  const attention = events.find((event) => event[1] === 'mdg_active_attention');
+  assert.ok(attention, 'recent keyboard activity after foreground threshold must qualify attention');
+  assert.equal(attention[2].same_site_source_path, '/source');
 });
