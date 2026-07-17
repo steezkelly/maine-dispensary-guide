@@ -246,6 +246,11 @@ function validateReleaseProvenance(ga4Release, runManifest, sourceReleaseIds) {
   if (ga4Release?.release_status !== 'VALID') throw new Error('only a VALID canonical release can be joined');
   if (!/^rel_[0-9a-f]{16}$/.test(sourceReleaseIds.canonical_release_id || '')) throw new Error('valid canonical_release_id is required');
   if (!/^run_[0-9a-f]{16}$/.test(sourceReleaseIds.acquisition_release_id || '')) throw new Error('valid acquisition_release_id is required');
+  for (const releaseId of ['canonical_release_id', 'acquisition_release_id']) {
+    if (ga4Release?.[releaseId] != null && ga4Release[releaseId] !== sourceReleaseIds[releaseId]) {
+      throw new Error(`GA4 artifact ${releaseId} must match selected release IDs`);
+    }
+  }
   if (runManifest && Object.keys(runManifest).length && (runManifest.canonical_release_id !== sourceReleaseIds.canonical_release_id || runManifest.acquisition_release_id !== sourceReleaseIds.acquisition_release_id)) throw new Error('run manifest release IDs must match canonical release IDs');
 }
 
