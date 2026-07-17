@@ -91,12 +91,15 @@ function transitionForEvidence(row, history = [], config = {}) {
   if (!signal.practical_effect_plausible) {
     return { state: 'NORMAL', reason: 'no_practical_effect_or_insufficient_sample', signal, evidence, operator_item_emitted: prior?.state && prior.state !== 'NORMAL' };
   }
-  const settledSignals = [...history, { ...row, signal }].filter((r) => isSettled(r) && r.signal?.practical_effect_plausible);
-  // Persistence is directional: an above/below reversal starts a new run.
+  // Persistence is directional and contiguous: an above/below reversal or a
+  // settled normal window starts a new run.
   const directionalRun = [];
-  for (let i = settledSignals.length - 1; i >= 0; i--) {
-    if (settledSignals[i].signal.direction !== signal.direction) break;
-    directionalRun.unshift(settledSignals[i]);
+  const evidenceHistory = [...history, { ...row, signal }];
+  for (let i = evidenceHistory.length - 1; i >= 0; i--) {
+    const candidate = evidenceHistory[i];
+    if (!isSettled(candidate)) continue;
+    if (!candidate.signal?.practical_effect_plausible || candidate.signal.direction !== signal.direction) break;
+    directionalRun.unshift(candidate);
   }
   const requiredSettled = Number(config.required_settled_windows || 2);
   const eligibilitySettled = Number(config.eligibility_settled_windows || (requiredSettled + 1));
@@ -106,7 +109,7 @@ function transitionForEvidence(row, history = [], config = {}) {
   let state = 'WATCH';
   let reason = 'new practical posterior shift';
   if (persistent || (corroborated && signal.probability >= Number(config.corroboration_probability || 0.9))) {
-    state = 'PERSISTENT_SHIFT_CANDIDATE'; reason = persistent ? `practical shift persisted across ${settledSignals.length} settled windows` : 'practical shift corroborated by independent source';
+    state = 'PERSISTENT_SHIFT_CANDIDATE'; reason = persistent ? `practical shift persisted across ${directionalRun.length} settled windows` : 'practical shift corroborated by independent source';
   }
   if (state === 'PERSISTENT_SHIFT_CANDIDATE' && directionalRun.length >= eligibilitySettled && changeEvaluated && isTaskResolved(row)) {
     state = 'INVESTIGATION_ELIGIBLE'; reason = 'settled persistence/corroboration and change context evaluated';

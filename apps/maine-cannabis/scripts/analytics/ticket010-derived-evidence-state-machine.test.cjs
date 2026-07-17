@@ -20,6 +20,14 @@ test('measurement blocked state has no performance label', () => { const out = s
 test('no practical posterior shift becomes NORMAL', () => { const out = s.deriveEvidence([row({ probability_above_practical_delta: 0.2, probability_below_practical_delta: 0.1 })]); assert.equal(out.derived_evidence[0].state, 'NORMAL'); });
 test('first practical shift becomes WATCH', () => { const out = s.deriveEvidence([row()]); assert.equal(out.derived_evidence[0].state, 'WATCH'); });
 test('two settled practical windows become persistent candidate', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' })]); assert.equal(out.derived_evidence[1].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
+test('a settled normal window resets directional persistence', () => {
+  const out = s.deriveEvidence([
+    row({ window_end: '2026-07-01' }),
+    row({ window_start: '2026-07-08', window_end: '2026-07-08', probability_above_practical_delta: 0.2, probability_below_practical_delta: 0.1 }),
+    row({ window_start: '2026-07-15', window_end: '2026-07-15' }),
+  ]);
+  assert.equal(out.derived_evidence[2].state, 'WATCH');
+});
 test('two settled windows with change context become investigation eligible', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' }), row({ window_start: '2026-07-15', window_end: '2026-07-15' })]); assert.equal(out.derived_evidence[2].state, 'INVESTIGATION_ELIGIBLE'); });
 test('custom persistence threshold is honored', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' })], { required_settled_windows: 3 }); assert.equal(out.derived_evidence[1].state, 'WATCH'); });
 test('corroboration can promote a single settled window', () => { const out = s.deriveEvidence([row({ independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
@@ -44,5 +52,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/36 passed.`);
+console.log(`Tests: ${pass}/37 passed.`);
 if (process.exitCode) process.exit(1);

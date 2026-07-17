@@ -223,6 +223,10 @@ function canonicalComparableMetricName(metricName) {
   return String(metricName);
 }
 
+function isNonAdditiveMetric(metricName) {
+  return ['sessions', 'totalUsers', 'activeUsers', 'newUsers'].includes(canonicalComparableMetricName(metricName));
+}
+
 function observationIdentity(record) {
   if (/^R[78]_custom_event_/.test(record.report_key)) return `row:${record.report_key}|${stableHash(record.row_key)}`;
   const metricName = canonicalComparableMetricName(record.metric_name);
@@ -258,18 +262,27 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
 
   const rows = [];
   for (const group of groups.values()) {
-    // Same page/day/metric title variants are one observation. Aggregate their
-    // numeric values deterministically instead of keeping input-order-first.
+    // Same page/day/metric title variants are one observation. Additive metrics
+    // can be summed, but user/session metrics cannot: title variants can
+    // overlap and their union is not recoverable from the aggregate rows.
     const aggregate = (records) => {
       if (!records.length) return null;
-      const values = records.map((record) => record.value);
-      return { ...records[0], value: values.every((value) => typeof value === 'number') ? values.reduce((sum, value) => sum + value, 0) : records[0].value, row_key: records.map((record) => record.row_key) };
+      const ordered = [...records].sort((a, b) => JSON.stringify(a.row_key).localeCompare(JSON.stringify(b.row_key)));
+      const values = ordered.map((record) => record.value);
+      const multipleValues = new Set(values.map((value) => JSON.stringify(value))).size > 1;
+      const ambiguousNonAdditive = isNonAdditiveMetric(ordered[0].metric_name) && multipleValues;
+      return {
+        ...ordered[0],
+        value: ambiguousNonAdditive ? null : (values.every((value) => typeof value === 'number') ? values.reduce((sum, value) => sum + value, 0) : ordered[0].value),
+        row_key: ordered.map((record) => record.row_key),
+        aggregation_blocked: ambiguousNonAdditive,
+      };
     };
     const ga = aggregate(group.ga4);
     const ve = aggregate(group.vercel);
     const a5 = group.a5[0] || null;
     const records = [...group.ga4, ...group.vercel, ...group.a5];
-    const blocked = Boolean(a5);
+    const blocked = Boolean(a5 || ga?.aggregation_blocked || ve?.aggregation_blocked);
     const primaryStatus = blocked ? 'MEASUREMENT_BLOCKED' : classifyReconciliation(ga, ve);
     rows.push({
       canonical_page_path: group.canonical_page_path,
@@ -294,7 +307,7 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       privacy_redaction_status: 'asserted_no_user_level_join',
       join_contract_version: CONTRACT_VERSION,
       settlement_state: settlementState(group.date, asOf),
-      measurement_block_reason: blocked ? 'A5_SPEED_INSIGHTS_DEFERRED' : null,
+      measurement_block_reason: a5 ? 'A5_SPEED_INSIGHTS_DEFERRED' : ((ga?.aggregation_blocked || ve?.aggregation_blocked) ? 'NON_ADDITIVE_TITLE_VARIANT_AMBIGUITY' : null),
     });
   }
   rows.sort((a, b) => `${a.measurement_date}|${a.canonical_page_path}|${a.metric_family}|${a.observation_identity || ''}`.localeCompare(`${b.measurement_date}|${b.canonical_page_path}|${b.metric_family}|${b.observation_identity || ''}`));
