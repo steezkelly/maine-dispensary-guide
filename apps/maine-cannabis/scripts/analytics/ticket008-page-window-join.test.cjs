@@ -264,8 +264,25 @@ test('page-scoped R3 event rows survive independently for different pages', () =
 });
 
 test('R7 observations retain distinct FAQ IDs even with metric names', () => { const release = { release_status: 'VALID', rows: [{ report_key: 'R7_custom_event_faq_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-a' }, metric_name: 'eventCount', bq_value: 2 }, { row_key: { date: '20260712', page_path: '/x', faq_id: 'faq-b' }, metric_name: 'eventCount', bq_value: 3 }] }] }; assert.equal(joinPageWindow({ ga4Release: release, vercelRows: [], asOf: '2026-07-20' }).length, 2); });
+test('page-window join excludes source records outside the requested bounds', () => {
+  const rows = joinPageWindow({
+    ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [
+      { row_key: { date: '20260701', page_path: '/x', metric_name: 'screenPageViews' }, metric_name: 'screenPageViews', data_api_value: 4 },
+      { row_key: { date: '20260712', page_path: '/x', metric_name: 'screenPageViews' }, metric_name: 'screenPageViews', data_api_value: 7 },
+    ] }] },
+    vercelRows: [
+      { day: '2026-07-01', requestPath: '/x', metric_name: 'pageviews', value: 4 },
+      { day: '2026-07-12', requestPath: '/x', metric_name: 'pageviews', value: 7 },
+    ],
+    windowStart: '2026-07-12',
+    windowEnd: '2026-07-12',
+  });
+  assert.deepEqual(rows.map((row) => row.measurement_date), ['2026-07-12']);
+  assert.equal(rows[0].window_start, '2026-07-12');
+  assert.equal(rows[0].window_end, '2026-07-12');
+});
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
 test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
 
-console.log(`Tests: ${pass}/53 passed.`);
+console.log(`Tests: ${pass}/54 passed.`);
 if (process.exitCode) process.exit(1);

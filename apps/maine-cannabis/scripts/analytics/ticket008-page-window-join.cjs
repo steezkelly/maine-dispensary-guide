@@ -251,8 +251,13 @@ function validateReleaseProvenance(ga4Release, runManifest, sourceReleaseIds) {
 
 function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart = null, windowEnd = null, sourceReleaseIds = {}, asOf = null }) {
   if (ga4Release?.release_status === 'INVALID') throw new Error('invalid canonical release cannot be joined');
-  const ga4 = normalizeGa4Release(ga4Release);
-  const vercel = normalizeVercelRows(vercelRows);
+  const normalizedWindowStart = windowStart == null ? null : normalizeDate(windowStart);
+  const normalizedWindowEnd = windowEnd == null ? null : normalizeDate(windowEnd);
+  if ((windowStart != null && !normalizedWindowStart) || (windowEnd != null && !normalizedWindowEnd)) throw new Error('window bounds must be valid YYYY-MM-DD dates');
+  if (normalizedWindowStart && normalizedWindowEnd && normalizedWindowStart > normalizedWindowEnd) throw new Error('window_start must not be after window_end');
+  const inRequestedWindow = (record) => (!normalizedWindowStart || record.date >= normalizedWindowStart) && (!normalizedWindowEnd || record.date <= normalizedWindowEnd);
+  const ga4 = normalizeGa4Release(ga4Release).filter(inRequestedWindow);
+  const vercel = normalizeVercelRows(vercelRows).filter(inRequestedWindow);
   const manifest = normalizeManifestRows(manifestRows);
   const groups = new Map();
   const add = (record) => {
@@ -301,8 +306,8 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       event_name: ga?.event_name || ve?.event_name || a5?.event_name || null,
       observation_identity: group.observation_identity,
       measurement_date: group.date,
-      window_start: windowStart,
-      window_end: windowEnd,
+      window_start: normalizedWindowStart,
+      window_end: normalizedWindowEnd,
       property_timezone: 'America/New_York',
       ga4_r1: ga ? { row_key: ga.row_key, value: ga.value, report_key: ga.report_key, observed: ga.observed } : null,
       vercel_a4: ve ? { row_key: ve.row_key, value: ve.value, report_key: ve.report_key, observed: ve.observed } : null,
