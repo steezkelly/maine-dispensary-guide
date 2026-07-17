@@ -435,10 +435,12 @@ test('perSourceRouting routes every completed post-floor day through BigQuery da
   assert.equal(current.bq_reason, 'intraday_current');
 });
 
-test('perSourceRouting uses the GA4 property date around UTC midnight', () => {
+test('perSourceRouting uses one frozen GA4 property-date snapshot around UTC midnight', () => {
   const utcAfterMidnight = new Date('2026-07-18T02:00:00.000Z');
-  assert.strictEqual(ingest.todayProperty(utcAfterMidnight), '2026-07-17');
-  const routing = ingest.perSourceRouting('2026-07-15', '2026-07-17', null, utcAfterMidnight);
+  const propertyDate = ingest.todayProperty(utcAfterMidnight);
+  assert.strictEqual(propertyDate, '2026-07-17');
+  const routing = ingest.perSourceRouting('2026-07-15', '2026-07-17', null, propertyDate);
+  assert.strictEqual(routing.propertyDate, propertyDate);
   assert.strictEqual(routing.dates.at(-1).date, '2026-07-17');
   assert.strictEqual(routing.dates.at(-1).has_bq, true);
   assert.ok(!routing.dates.some((entry) => entry.date === '2026-07-18'));

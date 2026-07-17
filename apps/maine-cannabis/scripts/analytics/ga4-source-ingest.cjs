@@ -187,10 +187,11 @@ function normalizeGa4Date(s) {
  * 2026-04-13, the orchestrator backs off to 2026-04-13 and records
  * the floor-detection event in the run manifest.
  */
-function perSourceRouting(from, to, dataFloor, now = new Date()) {
-  const today = todayProperty(now);
+function perSourceRouting(from, to, dataFloor, propertyDate = todayProperty()) {
+  const today = typeof propertyDate === 'string' ? propertyDate : todayProperty(propertyDate);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) throw new TypeError('an explicit GA4 property date snapshot is required');
   const effectiveFrom = dataFloor ? (from > dataFloor ? from : dataFloor) : from;
-  if (effectiveFrom > to) return { dates: [], effectiveFrom, requestedFrom: from, dataFloor, backedOff: true, empty: true };
+  if (effectiveFrom > to) return { dates: [], effectiveFrom, requestedFrom: from, dataFloor, propertyDate: today, backedOff: true, empty: true };
   const dates = [];
   for (let i = 0; i < daysBetween(effectiveFrom, to); i++) {
     const d = dateMinusDays(to, i);
@@ -204,9 +205,9 @@ function perSourceRouting(from, to, dataFloor, now = new Date()) {
   }
   // If we backed off, flag the reason.
   if (dataFloor && effectiveFrom !== from) {
-    return { dates: dates.reverse(), effectiveFrom, requestedFrom: from, dataFloor, backedOff: true };
+    return { dates: dates.reverse(), effectiveFrom, requestedFrom: from, dataFloor, propertyDate: today, backedOff: true };
   }
-  return { dates: dates.reverse(), effectiveFrom: from, requestedFrom: from, dataFloor, backedOff: false };
+  return { dates: dates.reverse(), effectiveFrom: from, requestedFrom: from, dataFloor, propertyDate: today, backedOff: false };
 }
 
 // --------------------- Release identity (v3 §15.1) --------------------------
@@ -579,7 +580,7 @@ async function main() {
   // operator's --from= arg upward. If --from is already newer than
   // the floor, we honor it (the operator is explicitly asking for a
   // narrower window).
-  const routingResult = perSourceRouting(args.from, args.to, dataFloor);
+  const routingResult = perSourceRouting(args.from, args.to, dataFloor, today);
   if (routingResult.empty) throw new RangeError(`requested window ${args.from} through ${args.to} is wholly before GA4 data floor ${dataFloor}`);
   const routing = routingResult.dates;
   if (routingResult.backedOff) {
@@ -607,7 +608,7 @@ async function main() {
     console.log(`[ingest] Running 8 BQ reports for last-72h window ${bqFrom}..${bqTo}...`);
     for (const rk of Object.keys(dataApi.REPORTS)) {
       try {
-        const result = await bqClient.queryBqReport(rk, bqFrom, bqTo);
+        const result = await bqClient.queryBqReport(rk, bqFrom, bqTo, today);
         bqResults[rk] = result;
         console.log(`  ${rk}: ${result.status} (${result.rows?.length || 0} rows, dropped ${result.sanitization?.dropped_params || 0} params)`);
       } catch (e) {
@@ -646,7 +647,8 @@ async function main() {
     to: args.to,
     property_id: dataApi.PROPERTY_ID,
     project_id: bqClient.PROJECT_ID,
-    dataset_id: bqClient.DATASET_ID
+    dataset_id: bqClient.DATASET_ID,
+    property_date_snapshot: today
   };
   const canonicalReleaseId = computeCanonicalReleaseIdForRouting(joinedRows, routingResult, args.to);
   const acquisitionReleaseId = computeAcquisitionReleaseId(canonicalReleaseId, runMeta);

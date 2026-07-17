@@ -159,9 +159,12 @@ function sanitizeEventParams(eventParams) {
  * R7/R8 (custom event dimensions) require extracting the custom-dim keys
  * from `event_params`.
  */
-function buildBqSql(reportKey, from, to) {
+function buildBqSql(reportKey, from, to, propertyDate) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(propertyDate || ''))) {
+    throw new TypeError('an explicit GA4 property date snapshot is required');
+  }
   const rangeFilter = `_TABLE_SUFFIX BETWEEN REPLACE('${from}','-','') AND REPLACE('${to}','-','')`;
-  const currentDaySuffix = `FORMAT_DATE('%Y%m%d', CURRENT_DATE('${PROPERTY_TIMEZONE}'))`;
+  const currentDaySuffix = `REPLACE('${propertyDate}','-','')`;
   // Daily exports are the durable source for completed GA4 dates. The
   // intraday table is retained only for the current date so a day cannot be
   // double-counted when the daily shard appears.
@@ -321,9 +324,10 @@ function buildBqSql(reportKey, from, to) {
  * @param {string} reportKey
  * @param {string} from - YYYY-MM-DD
  * @param {string} to - YYYY-MM-DD
+ * @param {string} propertyDate - frozen GA4 property-local date for this ingestion run
  * @returns {Promise<{ report_key, report_id, from, to, rowCount, rows, sanitization: { dropped_params: number }, fetched_at_utc }>}
  */
-async function queryBqReport(reportKey, from, to) {
+async function queryBqReport(reportKey, from, to, propertyDate) {
   if (reportKey === 'R2_session_metrics_daily') {
     return {
       status: 'unavailable_intraday',
@@ -331,6 +335,7 @@ async function queryBqReport(reportKey, from, to) {
       report_key: reportKey,
       report_id: reportKey.replace(/^R\d+_/, ''),
       from, to,
+      property_date_snapshot: propertyDate,
       rowCount: 0,
       rows: [],
       sanitization: { dropped_params: 0, sanitized_rows: 0 },
@@ -339,7 +344,7 @@ async function queryBqReport(reportKey, from, to) {
     };
   }
   const client = getClient();
-  const sql = buildBqSql(reportKey, from, to);
+  const sql = buildBqSql(reportKey, from, to, propertyDate);
 
   try {
     const [rows] = await client.query({ query: sql, location: 'US' });
@@ -447,6 +452,7 @@ async function queryBqReport(reportKey, from, to) {
       report_key: reportKey,
       report_id: reportKey.replace(/^R\d+_/, ''),
       from, to,
+      property_date_snapshot: propertyDate,
       rowCount: rows.length,
       rows: sanitizedRows,
       sanitization: { dropped_params: droppedTotal, sanitized_rows: sanitizedRows.length },
@@ -458,6 +464,7 @@ async function queryBqReport(reportKey, from, to) {
       report_key: reportKey,
       report_id: reportKey.replace(/^R\d+_/, ''),
       from, to,
+      property_date_snapshot: propertyDate,
       rowCount: 0,
       rows: [],
       sanitization: { dropped_params: 0, sanitized_rows: 0 },
