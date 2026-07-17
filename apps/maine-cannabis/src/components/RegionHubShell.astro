@@ -52,7 +52,7 @@ const auditNote = hubIsShipped
   ? 'Stage 1 foundation — Stage 2 editorial body lands on this hub next. The directory, primary-source registry, and verification badge below are live now.'
   : 'Stage 1 foundation stub — directory + verification live; the 2,000+ word editorial body ships in Stage 3 with the two pilot hubs already shipped.';
 
-function regionHubActionId(href, action) {
+function regionHubActionId(href: string, action: string): string {
   const guideKey = href
     .replace(/^\/+|\/+$/g, '')
     .replace(/[^a-z0-9]+/gi, '-')

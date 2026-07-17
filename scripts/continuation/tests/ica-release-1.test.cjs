@@ -15,6 +15,7 @@ const ACTIONS = path.join(APP, 'data', 'continuation', 'contextual-actions.ts');
 const EDITORIAL_COMPONENT = path.join(APP, 'components', 'continuation', 'EditorialNextStep.astro');
 const ACTION_COMPONENT = path.join(APP, 'components', 'continuation', 'ContextualAction.astro');
 const REGION_HUB = path.join(APP, 'components', 'RegionHubShell.astro');
+const FIND_A_DISPENSARY = path.join(APP, 'pages', 'find-a-dispensary.astro');
 const LAYOUT = path.join(APP, 'layouts', 'Layout.astro');
 const FUNNEL_SQL = path.join(ROOT, 'apps', 'maine-cannabis', 'docs', 'analytics', 'mdg-action-funnel-v1.sql');
 
@@ -64,9 +65,10 @@ function assertUnique(values, label) {
 }
 
 function regionHubActionIds(source, guideHrefs) {
-  const helper = source.match(/function regionHubActionId\(href, action\) \{[\s\S]*?\n\}/);
+  const helper = source.match(/function regionHubActionId\([^)]*\)\s*(?::\s*string)?\s*\{[\s\S]*?\n\}/);
   assert.ok(helper, 'RegionHub must define one deterministic action-ID helper');
-  const regionHubActionId = vm.runInNewContext(`"use strict"; ${helper[0]}; regionHubActionId`);
+  const executable = helper[0].replace(/: string(?=\s*[,)]|\s*\{)/g, '');
+  const regionHubActionId = vm.runInNewContext(`"use strict"; ${executable}; regionHubActionId`);
   return guideHrefs.flatMap((href) => [
     regionHubActionId(href, 'guide'),
     regionHubActionId(href, 'map'),
@@ -85,6 +87,35 @@ test('RegionHub CTA IDs distinguish every guide destination and action type', ()
   assertUnique(ids, 'multi-guide RegionHub CTA IDs');
   assert.notEqual(ids[0], ids[1], 'guide and map CTAs for one guide need distinct action IDs');
   assert.notEqual(ids[0], ids[2], 'different guide destinations cannot share an exposure bucket');
+});
+
+function findADispensaryActionIds(source, calls) {
+  const helper = source.match(/function findADispensaryActionId\([^)]*\)\s*(?::\s*string)?\s*\{[\s\S]*?\n\}/);
+  assert.ok(helper, 'find-a-dispensary must define one deterministic action-ID helper');
+  const executable = helper[0].replace(/: string(?=\s*[,)]|\s*\{)/g, '');
+  const findADispensaryActionId = vm.runInNewContext(`"use strict"; ${executable}; findADispensaryActionId`);
+  return calls.map(({ identity, action, instance }) => findADispensaryActionId(identity, action, instance));
+}
+
+test('find-a-dispensary CTA IDs distinguish repeated guide and OCP cards', () => {
+  const source = read(FIND_A_DISPENSARY);
+  assert.match(source, /data-cta-id=\{findADispensaryActionId\(guide\.href, 'guide',/);
+  assert.match(source, /data-cta-id=\{findADispensaryActionId\(guide\.href, 'map',/);
+  assert.match(source, /data-cta-id=\{findADispensaryActionId\(city\.n, 'ocp-map',/);
+  assert.match(source, /data-cta-id=\{findADispensaryActionId\(city\.n, 'ocp-search',/);
+
+  const ids = findADispensaryActionIds(source, [
+    { identity: '/guides/alpha-dispensary-guide', action: 'guide', instance: 'region-a-0' },
+    { identity: '/guides/alpha-dispensary-guide', action: 'map', instance: 'region-a-0' },
+    { identity: '/guides/beta-dispensary-guide', action: 'guide', instance: 'region-a-1' },
+    { identity: '/guides/beta-dispensary-guide', action: 'map', instance: 'region-a-1' },
+    { identity: 'Alpha, ME', action: 'ocp-map', instance: 'ocp-0' },
+    { identity: 'Alpha, ME', action: 'ocp-search', instance: 'ocp-0' },
+    { identity: 'Beta, ME', action: 'ocp-map', instance: 'ocp-1' },
+    { identity: 'Beta, ME', action: 'ocp-search', instance: 'ocp-1' },
+    { identity: '/guides/alpha-dispensary-guide', action: 'guide', instance: 'region-b-0' },
+  ]);
+  assertUnique(ids, 'repeated find-a-dispensary card CTA IDs');
 });
 
 test('typed registries expose one high-confidence mapping per exact pilot path', () => {
