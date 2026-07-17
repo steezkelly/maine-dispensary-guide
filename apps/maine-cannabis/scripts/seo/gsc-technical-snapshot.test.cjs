@@ -9,3 +9,10 @@ test('retains first-seen state and records unobserved coverage rather than passi
   assert.deepEqual(row.reasonCodes, ['GSC_COVERAGE_UNOBSERVED', 'PRODUCTION_HTML_UNOBSERVED']);
   assert.equal(row.state, 'REVIEW');
 });
+
+test('classifies NEUTRAL GSC inspections as review evidence', () => {
+  const snapshot = buildSnapshot({ sitemapUrls: ['https://mainedispensaryguide.com/about/authors'], manifestRows: [{ canonical_path: '/about/authors' }], coverageRows: [{ url: 'https://mainedispensaryguide.com/about/authors', status: 'NEUTRAL' }], pageChecks: { '/about/authors': { checked: true, fetchStatus: 200 } }, extractedAt: '2026-07-17T12:00:00.000Z' });
+  const row = snapshot.routes.find(candidate => candidate.route === '/about/authors');
+  assert.deepEqual(row.reasonCodes, ['GSC_NEUTRAL_REQUIRES_REVIEW']);
+  assert.equal(row.state, 'REVIEW');
+});
