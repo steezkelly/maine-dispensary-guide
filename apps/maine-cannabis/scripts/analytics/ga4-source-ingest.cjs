@@ -85,6 +85,25 @@ function daysBetween(from, to) {
   return Math.max(0, Math.floor((b - a) / 86400000) + 1);
 }
 
+/**
+ * Persist the single terminal release artifact for an ingestion attempt.
+ *
+ * Output directories may be intentionally reused.  Do not allow a failed
+ * rerun to leave a canonical payload from an earlier successful run beside a
+ * manifest describing the failed attempt.
+ */
+function writeReleaseArtifact(outDir, release, allPass) {
+  const canonicalPath = path.join(outDir, 'canonical_release.json');
+  const rejectedPath = path.join(outDir, 'rejected_release.json');
+  const releasePath = allPass ? canonicalPath : rejectedPath;
+  const stalePath = allPass ? rejectedPath : canonicalPath;
+
+  // Remove the opposite terminal state before writing the current one so a
+  // consumer cannot pair a stale release payload with this run's manifest.
+  fs.rmSync(stalePath, { force: true });
+  fs.writeFileSync(releasePath, JSON.stringify(release, null, 2));
+}
+
 // --------------------- Data floor detection (added 2026-07-12) ----------------
 
 /**
@@ -639,20 +658,16 @@ async function main() {
     }, null, 2)
   );
 
-  const releaseFilename = allPass ? 'canonical_release.json' : 'rejected_release.json';
-  fs.writeFileSync(
-    path.join(args.out, releaseFilename),
-    JSON.stringify({
-      canonical_release_id: canonicalReleaseId,
-      acquisition_release_id: acquisitionReleaseId,
-      release_status: allPass ? 'VALID' : 'INVALID',
-      from: args.from,
-      to: args.to,
-      report_count: joinedRows.length,
-      total_rows: joinedRows.reduce((acc, r) => acc + r.row_count, 0),
-      rows: joinedRows
-    }, null, 2)
-  );
+  writeReleaseArtifact(args.out, {
+    canonical_release_id: canonicalReleaseId,
+    acquisition_release_id: acquisitionReleaseId,
+    release_status: allPass ? 'VALID' : 'INVALID',
+    from: args.from,
+    to: args.to,
+    report_count: joinedRows.length,
+    total_rows: joinedRows.reduce((acc, r) => acc + r.row_count, 0),
+    rows: joinedRows
+  }, allPass);
 
   if (!allPass) console.log('[ingest] Gates failed; wrote rejected_release.json and did not promote a canonical release.');
 
@@ -697,5 +712,6 @@ module.exports = {
   computeCanonicalReleaseId,
   computeAcquisitionReleaseId,
   runGates,
-  joinDataForReport
+  joinDataForReport,
+  writeReleaseArtifact
 };
