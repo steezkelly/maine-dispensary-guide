@@ -53,19 +53,26 @@ test('prior is estimated from peer aggregate', () => {
 
 test('exact peer cell is selected when minimum count is met', () => {
   const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic' };
-  const peers = [1, 2, 3].map((n) => ({ ...target, numerator: n, denominator: 10 }));
+  const peers = [1, 2, 3].map((n) => ({ ...target, canonical_page_path: `/peer-${n}`, numerator: n, denominator: 10 }));
   const out = b.selectPeers(target, [target, ...peers], b.POLICIES.gsc_ctr, 3);
   assert.equal(out.level, 0); assert.equal(out.peers.length, 3); assert.match(out.cell_id, /^gsc_ctr:0:/);
 });
 test('sparse exact cell falls back explicitly', () => {
   const target = { metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'branded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic' };
   const peers = [
-    { ...target, branded_status: 'nonbranded', numerator: 1, denominator: 10 },
-    { ...target, branded_status: 'nonbranded', numerator: 2, denominator: 10 },
-    { ...target, branded_status: 'nonbranded', numerator: 3, denominator: 10 },
+    { ...target, canonical_page_path: '/peer-1', branded_status: 'nonbranded', numerator: 1, denominator: 10 },
+    { ...target, canonical_page_path: '/peer-2', branded_status: 'nonbranded', numerator: 2, denominator: 10 },
+    { ...target, canonical_page_path: '/peer-3', branded_status: 'nonbranded', numerator: 3, denominator: 10 },
   ];
   const out = b.selectPeers(target, [target, ...peers], b.POLICIES.gsc_ctr, 3);
   assert.equal(out.level, 1); assert.equal(out.dimensions.includes('branded_status'), false);
+});
+test('peer selection excludes every observation for the target page', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', numerator: 1, denominator: 10 };
+  const priorWindow = { ...target, numerator: 9, denominator: 10, window_start: '2026-06-01' };
+  const peer = { ...target, canonical_page_path: '/peer', numerator: 2, denominator: 10 };
+  const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
+  assert.deepEqual(out.peers.map((row) => row.canonical_page_path), ['/peer']);
 });
 test('site fallback is explicit when no peers exist', () => {
   const target = { metric_family: 'progression_rate', numerator: 1, denominator: 10 };
@@ -128,5 +135,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/35 passed.`);
+console.log(`Tests: ${pass}/36 passed.`);
 if (process.exitCode) process.exit(1);
