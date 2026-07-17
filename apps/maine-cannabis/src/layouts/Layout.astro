@@ -409,20 +409,47 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         window.addEventListener('resize', onScroll, { passive: true });
         window.addEventListener('load', function () { setTimeout(checkScroll, 250); });
 
-        // --- page_engaged (30s of focus, or visible-again after hidden) ------
+        // --- page_engaged + v1 active foreground attention -------------------
         var engaged = false;
+        var activeAttentionSent = false;
+        var foregroundStartedAt = document.hidden ? 0 : Date.now();
+        var foregroundElapsedMs = 0;
+        var attentionTimer = 0;
         function markEngaged(reason) {
           if (engaged) return;
           engaged = true;
           send('page_engaged', { reason: reason });
+        }
+        function foregroundAttentionMs() {
+          return foregroundElapsedMs + (foregroundStartedAt ? Date.now() - foregroundStartedAt : 0);
+        }
+        function markActiveAttention() {
+          if (activeAttentionSent || foregroundAttentionMs() < 30000) return;
+          activeAttentionSent = true;
           send('mdg_active_attention', { schema_version: 'v1', attention_seconds_bucket: 30, transport_type: 'beacon' });
         }
-        window.setTimeout(function () {
-          if (!document.hidden) markEngaged('timer_30s_visible');
-        }, 30000);
+        function scheduleActiveAttention() {
+          if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
+          if (activeAttentionSent || !foregroundStartedAt) return;
+          attentionTimer = window.setTimeout(function () {
+            attentionTimer = 0;
+            markActiveAttention();
+            if (!engaged) markEngaged('timer_30s_visible');
+          }, Math.max(0, 30000 - foregroundAttentionMs()));
+        }
+        scheduleActiveAttention();
         document.addEventListener('visibilitychange', function () {
-          if (!engaged && document.visibilityState === 'visible') {
-            markEngaged('visibility_returned');
+          if (document.visibilityState === 'hidden') {
+            foregroundElapsedMs = foregroundAttentionMs();
+            foregroundStartedAt = 0;
+            if (attentionTimer) { window.clearTimeout(attentionTimer); attentionTimer = 0; }
+          } else {
+            foregroundStartedAt = Date.now();
+            // Retain the legacy page_engaged signal, but do not let a tab
+            // return satisfy the v1 foreground-attention threshold by itself.
+            if (!engaged) markEngaged('visibility_returned');
+            markActiveAttention();
+            scheduleActiveAttention();
           }
         });
 
@@ -481,15 +508,29 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           // the loaded client to use beacon where available. Never await this.
           send(name, Object.assign({ schema_version: 'v1', transport_type: 'beacon' }, metadata, extra || {}));
         }
+        var exposedActions = new WeakSet();
+        function legacyCtaView(target) {
+          send('cta_view', {
+            cta_id: target.getAttribute('data-cta-id') || '',
+            cta_destination: target.getAttribute('href') || '',
+            cta_text: (target.textContent || '').trim()
+          });
+        }
+        function exposeAction(target) {
+          if (exposedActions.has(target)) return;
+          exposedActions.add(target);
+          sendAction('mdg_action_exposure', actionMetadata(target));
+          // Keep the v0 reach report populated until it is explicitly migrated.
+          legacyCtaView(target);
+        }
         function observeActions() {
           if (!('IntersectionObserver' in window)) return;
-          var exposed = new WeakSet();
           var timers = new WeakMap();
           var io = new IntersectionObserver(function (entries) {
             for (var i = 0; i < entries.length; i++) {
               var entry = entries[i];
               var el = entry.target;
-              if (exposed.has(el)) continue;
+              if (exposedActions.has(el)) continue;
               if (!entry.isIntersecting || entry.intersectionRatio < 0.5) {
                 var pending = timers.get(el);
                 if (pending) { window.clearTimeout(pending); timers.delete(el); }
@@ -499,10 +540,9 @@ const breadcrumbListJsonLd = breadcrumbListSchema
               var timer = window.setTimeout(function (target) {
                 return function () {
                   timers.delete(target);
-                  if (exposed.has(target)) return;
-                  exposed.add(target);
+                  if (exposedActions.has(target)) return;
                   io.unobserve(target);
-                  sendAction('mdg_action_exposure', actionMetadata(target));
+                  exposeAction(target);
                 };
               }(el), 750);
               timers.set(el, timer);
@@ -516,6 +556,9 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           if (!target) return;
           var metadata = actionMetadata(target);
           var path = destinationPath(target, metadata.destination_family);
+          // A deliberate selection qualifies the action even when the 750ms
+          // viewport dwell has not elapsed or IntersectionObserver is absent.
+          exposeAction(target);
           sendAction('mdg_action_select', metadata, path ? { destination_path: path } : {});
           // Deliberately do not preventDefault or await analytics: links and
           // form-control actions must remain reliable even when tracking fails.
@@ -762,4 +805,3 @@ const breadcrumbListJsonLd = breadcrumbListSchema
     background: #152F23;
   }
 </style>
-
