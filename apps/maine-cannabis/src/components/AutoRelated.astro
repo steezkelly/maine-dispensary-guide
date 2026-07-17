@@ -20,9 +20,10 @@ interface Props {
   currentTopics: string[];
   section?: string;
   limit?: number;  // default 5
+  headingId?: string;
 }
 
-const { currentPath, currentTopics = [], section = '', limit = 5 } = Astro.props;
+const { currentPath, currentTopics = [], section = '', limit = 5, headingId } = Astro.props;
 
 const ALL_ITEMS = autoRelatedData.items as Array<{
   title: string;
@@ -70,7 +71,7 @@ const sectionTitle = section === 'City Guides' ? 'Nearby Towns & Related Guides'
 ---
 
 <aside class="auto-related" aria-label={sectionTitle}>
-  <h2>{sectionTitle}</h2>
+  <h2 id={headingId}>{sectionTitle}</h2>
   <ul class="auto-related-list">
     {finalItems.map(item => (
       <li>
