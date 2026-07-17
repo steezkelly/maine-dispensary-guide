@@ -22,6 +22,60 @@ const DIST = path.resolve(process.env.CONTENT_HEALTH_DIST || rootDist);
 const PUBLIC_DIR = path.resolve(process.env.CONTENT_HEALTH_PUBLIC || publicDir);
 const ADMIN_DIRS = new Set(['admin', 'experiments']);
 
+function parseOptions(argv) {
+  const flags = new Set(argv);
+  const sourceOnly = flags.has('--source-only');
+  const renderedOnly = flags.has('--rendered-only');
+  if (sourceOnly && renderedOnly) {
+    throw new Error('Cannot combine --source-only and --rendered-only');
+  }
+  const build = flags.has('--build');
+  const noBuild = flags.has('--no-build');
+  if (build && noBuild) {
+    throw new Error('Cannot combine --build and --no-build');
+  }
+  return {
+    sourceOnly,
+    renderedOnly,
+    build,
+    noBuild,
+  };
+}
+
+let OPTIONS;
+try {
+  OPTIONS = parseOptions(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
+  process.exit(2);
+}
+
+// A single audit invokes overlapping source checks. Cache immutable source
+// inputs at the I/O boundary so each path is read once while callers retain
+// Node's usual string versus Buffer return contract. Do not cache sitemap or
+// rendered-output reads: a build can replace those artifacts between the CSS
+// preflight and the rendered checks below.
+const originalReadFileSync = fs.readFileSync.bind(fs);
+const auditReadCache = new Map();
+function isWithin(directory, candidate) {
+  const relative = path.relative(directory, candidate);
+  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
+}
+
+function isCacheableSourceInput(file) {
+  return isWithin(SOURCE_ROOT, file) || isWithin(PUBLIC_DIR, file);
+}
+
+fs.readFileSync = (file, options) => {
+  if (typeof file !== 'string' && !Buffer.isBuffer(file)) return originalReadFileSync(file, options);
+  const resolved = path.resolve(String(file));
+  if (!isCacheableSourceInput(resolved)) return originalReadFileSync(resolved, options);
+  if (!auditReadCache.has(resolved)) auditReadCache.set(resolved, originalReadFileSync(resolved));
+  const content = auditReadCache.get(resolved);
+  const encoding = typeof options === 'string' ? options : options?.encoding;
+  return encoding ? content.toString(encoding) : Buffer.from(content);
+};
+
 // ─── Check 1: no href="#" ───────────────────────────────────────────────────
 function checkHrefHash() {
   const results = [];
@@ -141,7 +195,9 @@ function checkTypoLiterals() {
 function checkDeadInternalLinks() {
   // Build list of valid pages from sitemap
   const validPages = new Set();
-  if (fs.existsSync(SITEMAP)) {
+  // Source-only mode deliberately ignores sitemap entries: they are build
+  // artifacts and can be stale relative to the current page corpus.
+  if (!OPTIONS.sourceOnly && fs.existsSync(SITEMAP)) {
     const xml = fs.readFileSync(SITEMAP, 'utf8');
     const locMatches = xml.matchAll(/<loc>https:\/\/mainedispensaryguide\.com([^<]*)<\/loc>/g);
     for (const m of locMatches) {
@@ -349,7 +405,7 @@ function checkOGImageDimensions() {
 // ─── Check 9: CSS build warnings ─────────────────────────────────────────────
 // Runs `astro build` and scans stdout/stderr for CSS warnings
 function checkCSSBuildWarnings() {
-  if (process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1' || ROOT !== DEFAULT_ROOT) return [];
+  if (OPTIONS.noBuild || (!OPTIONS.build && (ROOT !== DEFAULT_ROOT || process.env.CONTENT_HEALTH_SKIP_CSS_BUILD === '1'))) return [];
 
   const { execSync } = require('node:child_process');
   try {
@@ -963,29 +1019,27 @@ function checkYMYLReviewerCoverage() {
 }
 
 const CHECKS = [
-  { name: 'bare href="#" links', fn: checkHrefHash },
-  { name: 'malformed frontmatter', fn: checkFrontmatter },
-  { name: 'fake anchor buttons', fn: checkFakeAnchorsInStores },
-  { name: 'typo literals', fn: checkTypoLiterals },
-  { name: 'dead internal links', fn: checkDeadInternalLinks },
-  { name: 'malformed \\1 hrefs', fn: checkMalformedBackrefHrefs },
-  { name: 'trailing-slash internal links', fn: checkTrailingSlashInternalLinks },
-  // Build before rendered-output checks so a clean checkout can run this script
-  // end-to-end without a pre-existing dist/sitemap from a previous session.
-  { name: 'CSS build warnings', fn: checkCSSBuildWarnings },
-  { name: 'noindex pages in sitemap', fn: checkNoindexInSitemap },
-  { name: 'OG image dimensions', fn: checkOGImageDimensions },
-  { name: 'sitemap XML entities', fn: checkSitemapXmlEntities },
-  { name: 'rendered crawl basics', fn: checkRenderedCrawlBasics },
-  { name: 'duplicate hero image content', fn: checkDuplicateHeroImages },
-  { name: 'duplicate FAQPage JSON-LD', fn: checkDuplicateFaqPageSchema },
-  { name: 'title not truncated mid-sentence', fn: checkTitleTruncation },
-  { name: 'og:type matches page role', fn: checkOgTypeMatchesRole },
-  { name: 'orphan pages (no inbound link)', fn: checkOrphanPages },
-  { name: 'sitemap lastmod coverage', fn: checkSitemapLastmod },
-  { name: 'meta description uniqueness', fn: checkMetaDescriptionUniqueness },
-  { name: 'YMYL reviewer-byline coverage', fn: checkYMYLReviewerCoverage },
-  { name: 'body-internal-link minimum (Sprint 84)', fn: checkBodyInternalLinkMinimum },
+  { name: 'bare href="#" links', phase: 'source', fn: checkHrefHash },
+  { name: 'malformed frontmatter', phase: 'source', fn: checkFrontmatter },
+  { name: 'fake anchor buttons', phase: 'source', fn: checkFakeAnchorsInStores },
+  { name: 'typo literals', phase: 'source', fn: checkTypoLiterals },
+  { name: 'dead internal links', phase: 'source', fn: checkDeadInternalLinks },
+  { name: 'malformed \\1 hrefs', phase: 'source', fn: checkMalformedBackrefHrefs },
+  { name: 'trailing-slash internal links', phase: 'source', fn: checkTrailingSlashInternalLinks },
+  { name: 'CSS build warnings', phase: 'preflight', fn: checkCSSBuildWarnings },
+  { name: 'noindex pages in sitemap', phase: 'rendered', fn: checkNoindexInSitemap },
+  { name: 'OG image dimensions', phase: 'rendered', fn: checkOGImageDimensions },
+  { name: 'sitemap XML entities', phase: 'rendered', fn: checkSitemapXmlEntities },
+  { name: 'rendered crawl basics', phase: 'rendered', fn: checkRenderedCrawlBasics },
+  { name: 'duplicate hero image content', phase: 'source', fn: checkDuplicateHeroImages },
+  { name: 'duplicate FAQPage JSON-LD', phase: 'rendered', fn: checkDuplicateFaqPageSchema },
+  { name: 'title not truncated mid-sentence', phase: 'rendered', fn: checkTitleTruncation },
+  { name: 'og:type matches page role', phase: 'rendered', fn: checkOgTypeMatchesRole },
+  { name: 'orphan pages (no inbound link)', phase: 'rendered', fn: checkOrphanPages },
+  { name: 'sitemap lastmod coverage', phase: 'rendered', fn: checkSitemapLastmod },
+  { name: 'meta description uniqueness', phase: 'rendered', fn: checkMetaDescriptionUniqueness },
+  { name: 'YMYL reviewer-byline coverage', phase: 'source', fn: checkYMYLReviewerCoverage },
+  { name: 'body-internal-link minimum (Sprint 84)', phase: 'rendered', fn: checkBodyInternalLinkMinimum },
 ];
 
 // ─── Check 21: body-internal-link minimum ──────────────────────────────
@@ -1070,15 +1124,23 @@ console.log(`📁 content-health source root: ${ROOT}`);
 console.log(`📁 content-health rendered output: ${DIST}${process.env.CONTENT_HEALTH_DIST ? ' (CONTENT_HEALTH_DIST override)' : ''}`);
 console.log(`📁 content-health sitemap: ${SITEMAP}${process.env.CONTENT_HEALTH_SITEMAP ? ' (CONTENT_HEALTH_SITEMAP override)' : ''}`);
 console.log(`📁 content-health public dir: ${PUBLIC_DIR}${process.env.CONTENT_HEALTH_PUBLIC ? ' (CONTENT_HEALTH_PUBLIC override)' : ''}`);
-try {
-  warnIfRenderedOutputStale({ distDir: DIST, sitemap: SITEMAP, label: 'content-health rendered output' });
-} catch (err) {
-  console.log(`⚠️   rendered output freshness: ERROR — ${err.message}`);
-  totalWarnings++;
+if (!OPTIONS.sourceOnly) {
+  try {
+    warnIfRenderedOutputStale({ distDir: DIST, sitemap: SITEMAP, label: 'content-health rendered output' });
+  } catch (err) {
+    console.log(`⚠️   rendered output freshness: ERROR — ${err.message}`);
+    totalWarnings++;
+  }
 }
 console.log('');
 
-CHECKS.forEach(({ name, fn }) => {
+const activeChecks = CHECKS.filter(({ phase }) => {
+  if (OPTIONS.sourceOnly) return phase === 'source';
+  if (OPTIONS.renderedOnly) return phase === 'preflight' || phase === 'rendered';
+  return true;
+});
+
+activeChecks.forEach(({ name, fn }) => {
   try {
     const issues = fn();
     if (issues.length === 0) {
