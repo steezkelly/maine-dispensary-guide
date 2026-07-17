@@ -9,6 +9,8 @@ on:
       - 'scripts/link/add-nearby-markets.cjs'
       - 'scripts/link/add-nearby-markets.test.cjs'
       - 'scripts/check/lib/paths.cjs'
+      - 'scripts/admin/regenerate-llms.cjs'
+      - 'scripts/admin/tests/regenerate-llms.test.cjs'
       - '.github/workflows/maintenance-script-tests.yml'
   push:
     branches: [main]
@@ -18,6 +20,8 @@ on:
       - 'scripts/link/add-nearby-markets.cjs'
       - 'scripts/link/add-nearby-markets.test.cjs'
       - 'scripts/check/lib/paths.cjs'
+      - 'scripts/admin/regenerate-llms.cjs'
+      - 'scripts/admin/tests/regenerate-llms.test.cjs'
       - '.github/workflows/maintenance-script-tests.yml'
 
 permissions:
@@ -25,7 +29,7 @@ permissions:
 
 jobs:
   test:
-    name: Link maintenance fixtures
+    name: Maintenance script fixtures
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,5 +40,5 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Run real-script fixture tests
-        run: node --test scripts/link/add-nearby-markets.test.cjs scripts/link/link-architect.test.cjs
+      - name: Run maintenance-script fixture tests
+        run: node --test scripts/link/add-nearby-markets.test.cjs scripts/link/link-architect.test.cjs scripts/admin/tests/regenerate-llms.test.cjs
