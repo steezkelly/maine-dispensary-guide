@@ -24,12 +24,12 @@
  *      require the explicit --update-baseline maintenance flag)
  */
 
-const { execSync } = require('node:child_process');
+const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
 const SCRIPT_DIR = __dirname;
-const CHECK_SCRIPT = path.join(SCRIPT_DIR, 'check-content-health.cjs');
+const CHECK_SCRIPT = path.join(SCRIPT_DIR, 'content-health.cjs');
 const BASELINE_FILE = path.join(SCRIPT_DIR, '.content-health-baseline.json');
 const UPDATE_BASELINE = process.argv.includes('--update-baseline');
 
@@ -49,19 +49,13 @@ if (fs.existsSync(BASELINE_FILE)) {
   }
 }
 
-let stdout = '';
-let checkFailed = false;
-try {
-  stdout = execSync(`node ${JSON.stringify(CHECK_SCRIPT)}`, {
-    encoding: 'utf-8',
-    maxBuffer: 20 * 1024 * 1024,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-} catch (err) {
-  // check-content-health exits 1 on any failure. Capture output anyway.
-  checkFailed = true;
-  stdout = (err.stdout || '') + (err.stderr || '');
-}
+const checkResult = spawnSync(process.execPath, [CHECK_SCRIPT], {
+  encoding: 'utf-8',
+  maxBuffer: 20 * 1024 * 1024,
+  stdio: ['ignore', 'pipe', 'pipe'],
+});
+const stdout = checkResult.stdout || '';
+const stderr = checkResult.stderr || '';
 
 // Parse ❌  <check name>: N issue(s) lines
 const failureLineRe = /^❌\s+(.+?):\s+(\d+)\s+issue/;
@@ -71,6 +65,26 @@ for (const line of stdout.split(/\r?\n/)) {
   if (m) {
     current[m[1].trim()] = parseInt(m[2], 10);
   }
+}
+
+const summaryMatch = stdout.match(/^Total:\s+(\d+) failure\(s\),\s+(\d+) warning\(s\)$/m);
+const reportedFailures = summaryMatch ? parseInt(summaryMatch[1], 10) : null;
+const reportedWarnings = summaryMatch ? parseInt(summaryMatch[2], 10) : null;
+const parsedFailures = Object.values(current).reduce((sum, count) => sum + count, 0);
+const expectedStatus = reportedFailures === 0 ? 0 : 1;
+const completedCheckResult = !checkResult.error
+  && checkResult.signal === null
+  && summaryMatch !== null
+  && reportedWarnings === 0
+  && reportedFailures === parsedFailures
+  && checkResult.status === expectedStatus;
+
+if (!completedCheckResult) {
+  console.error('❌  content-health checker did not complete with a valid check result; baseline left unchanged.');
+  if (checkResult.error) console.error(`   ${checkResult.error.message}`);
+  if (stdout) process.stderr.write(stdout);
+  if (stderr) process.stderr.write(stderr);
+  process.exit(1);
 }
 
 const allKeys = new Set([...Object.keys(baseline), ...Object.keys(current)]);
@@ -137,6 +151,12 @@ if (improvements.length > 0) {
   }
 }
 
+if (UPDATE_BASELINE && (regressions.length > 0 || newChecks.length > 0)) {
+  baseline = current;
+  fs.writeFileSync(BASELINE_FILE, JSON.stringify(current, null, 2) + '\n');
+  console.log('   → Baseline replaced with the current findings.');
+}
+
 if (newChecks.length === 0 && regressions.length === 0 && improvements.length === 0) {
   console.log('✅  No change from baseline. All checks holding steady.');
 }
@@ -146,12 +166,12 @@ const totalBaseline = Object.values(baseline).reduce((a, b) => a + b, 0);
 const totalCurrent = Object.values(current).reduce((a, b) => a + b, 0);
 console.log(`Total: baseline=${totalBaseline} current=${totalCurrent}`);
 
-if (regressions.length > 0 || newChecks.length > 0) {
+if (!UPDATE_BASELINE && (regressions.length > 0 || newChecks.length > 0)) {
   console.log('');
   console.log('❌  content-health regression detected. Fix the new failures or update the baseline if intentional.');
   process.exit(1);
 }
 
 console.log('');
-console.log('✅  content-health: no regressions.');
+console.log(UPDATE_BASELINE ? '✅  content-health: baseline updated.' : '✅  content-health: no regressions.');
 process.exit(0);
