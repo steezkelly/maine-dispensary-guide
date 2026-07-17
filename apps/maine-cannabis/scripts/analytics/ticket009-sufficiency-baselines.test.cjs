@@ -116,6 +116,13 @@ test('peer selection excludes every observation for the target page', () => {
   const out = b.selectPeers(target, [target, priorWindow, peer], b.POLICIES.gsc_ctr, 1);
   assert.deepEqual(out.peers.map((row) => row.canonical_page_path), ['/peer']);
 });
+test('duplicate observations from one peer page cannot satisfy the minimum peer count', () => {
+  const target = { canonical_page_path: '/target', metric_family: 'gsc_ctr', query_intent: 'how_to', branded_status: 'nonbranded', position_band: '1-3', device: 'mobile', serp_promise_family: 'generic', primary_task_family: 'how_to', numerator: 1, denominator: 10, task_contract_status: 'CONFIRMED', window_start: '2026-07-01', window_end: '2026-07-07' };
+  const onlyPeer = { ...target, canonical_page_path: '/only-peer', numerator: 2, denominator: 10 };
+  const out = b.selectPeers(target, [target, onlyPeer, { ...onlyPeer }, { ...onlyPeer }], b.POLICIES.gsc_ctr, 3);
+  assert.equal(out.level, 'insufficient');
+  assert.deepEqual(out.peers, []);
+});
 test('missing peer context is explicitly insufficient when no peers exist', () => {
   const target = { metric_family: 'progression_rate', numerator: 1, denominator: 10 };
   const out = b.selectPeers(target, [target], b.POLICIES.progression_rate, 3);
@@ -185,5 +192,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/43 passed.`);
+console.log(`Tests: ${pass}/44 passed.`);
 if (process.exitCode) process.exit(1);

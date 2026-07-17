@@ -179,8 +179,25 @@ function matchesTargetWindow(target, peer) {
   return targetStart === peerStart && targetEnd === peerEnd;
 }
 
+function peerEvidenceIdentity(peer) {
+  return [
+    clean(peer.canonical_page_path) || '(unknown-page)',
+    clean(peer.window_start || peer.start_date || peer.date) || '(unknown-start)',
+    clean(peer.window_end || peer.end_date || peer.date || peer.window_start || peer.start_date) || '(unknown-end)',
+  ].join('|');
+}
+
+function uniquePeerEvidence(peers) {
+  const counts = new Map();
+  for (const peer of peers) {
+    const key = peerEvidenceIdentity(peer);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return peers.filter((peer) => counts.get(peerEvidenceIdentity(peer)) === 1);
+}
+
 function selectPeers(target, observations, policy, minPeerCount) {
-  const peers = observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row) && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family)));
+  const peers = uniquePeerEvidence(observations.filter((row) => row !== target && clean(row.canonical_page_path) !== clean(target.canonical_page_path) && row.metric_family === target.metric_family && row.denominator > 0 && row.numerator != null && isEligiblePeer(row) && matchesTargetWindow(target, row) && (!policy.required_task_compatibility || clean(row.primary_task_family) === clean(target.primary_task_family))));
   for (let level = 0; level < policy.fallback.length; level++) {
     const dims = policy.fallback[level];
     const candidate = peers.filter((peer) => dims.every((d) => clean(peer[d]) === clean(target[d])));
