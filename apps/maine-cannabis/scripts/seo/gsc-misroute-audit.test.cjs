@@ -20,6 +20,12 @@ function dailyRecord(overrides = {}) {
   };
 }
 
+test('rejects raw-query misroute audit output paths outside private GSC storage', () => {
+  const { privateOutputPath } = require('./gsc-misroute-audit.cjs');
+  assert.match(privateOutputPath('/home/steve/.hermes/data/mdg-gsc/reports/misroute.md'), /mdg-gsc\/reports\/misroute\.md$/);
+  assert.throws(() => privateOutputPath('docs/analytics/misroute.md'), /private GSC data root/);
+});
+
 test('filters by finalized source dates across the Los Angeles DST transition', () => {
   const now = new Date('2026-03-09T19:00:00Z'); // March 9 in Los Angeles, after DST begins.
   const records = [

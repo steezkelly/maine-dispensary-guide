@@ -16,6 +16,14 @@ const MANIFEST = path.join(ROOT, 'docs', 'analytics', 'page_task_manifest.v1.jso
 const CANONICALS = path.join(ROOT, 'src', 'data', 'canonical-overrides.json');
 const SITE = 'https://mainedispensaryguide.com';
 
+function privateOutputPath(target) {
+  const output = path.resolve(target);
+  const root = path.resolve(PRIVATE_DATA_ROOT);
+  if (output !== root && !output.startsWith(`${root}${path.sep}`)) {
+    throw new Error(`Raw-query reports must be written under the private GSC data root: ${root}`);
+  }
+  return output;
+}
 function readJsonl(file) { return fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : []; }
 function latestSnapshot(file = SNAPSHOTS) { return readJsonl(file).at(-1) || null; }
 function normalizePage(url) { try { const u = new URL(url); return u.pathname.replace(/\/$/, '') || '/'; } catch { return url; } }
@@ -76,7 +84,7 @@ function main() {
   const flags = Object.fromEntries(process.argv.slice(2).filter(a => a.startsWith('--')).map(a => { const [k, v] = a.slice(2).split('='); return [k, v || true]; }));
   const snapshot = latestSnapshot(flags.input || SNAPSHOTS); if (!snapshot) throw new Error('No query-by-page aggregate snapshot found; run seo:gsc-search-analytics first.');
   const report = buildReport(snapshot, loadManifest(), canonicalTargets(), Number(flags['minimum-impressions'] || 20));
-  const output = markdown(report); if (flags.output) fs.writeFileSync(path.resolve(flags.output), output); else process.stdout.write(output);
+  const output = markdown(report); if (flags.output) fs.writeFileSync(privateOutputPath(flags.output), output); else process.stdout.write(output);
 }
 if (require.main === module) main();
-module.exports = { buildReport, clusterFor, markdown, normalizePage, PRIVATE_DATA_ROOT, SNAPSHOTS };
+module.exports = { buildReport, clusterFor, markdown, normalizePage, privateOutputPath, PRIVATE_DATA_ROOT, SNAPSHOTS };

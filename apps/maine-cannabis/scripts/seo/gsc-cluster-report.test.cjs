@@ -2,7 +2,10 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const { buildReport, markdown } = require('./gsc-cluster-report.cjs');
 
-test('reads query-by-page snapshots from the private GSC data root by default', () => {
+test('rejects raw-query cluster report output paths outside private GSC storage', () => {
+  const { privateOutputPath } = require('./gsc-cluster-report.cjs');
+  assert.match(privateOutputPath('/home/steve/.hermes/data/mdg-gsc/reports/cluster.md'), /mdg-gsc\/reports\/cluster\.md$/);
+  assert.throws(() => privateOutputPath('docs/analytics/cluster.md'), /private GSC data root/);
   assert.match(require('./gsc-cluster-report.cjs').SNAPSHOTS, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics-snapshots\/query-by-page\.jsonl$/);
 });
 

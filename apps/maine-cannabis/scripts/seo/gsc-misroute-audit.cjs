@@ -47,6 +47,15 @@ const path = require('node:path');
 const PRIVATE_DATA_ROOT = process.env.MDG_GSC_DATA_ROOT || path.join(process.env.HOME || '', '.hermes', 'data', 'mdg-gsc');
 const JSONL_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 
+function privateOutputPath(target) {
+  const output = path.resolve(target);
+  const root = path.resolve(PRIVATE_DATA_ROOT);
+  if (output !== root && !output.startsWith(`${root}${path.sep}`)) {
+    throw new Error(`Raw-query reports must be written under the private GSC data root: ${root}`);
+  }
+  return output;
+}
+
 const args = process.argv.slice(2);
 const flags = Object.fromEntries(
   args.filter(a => a.startsWith('--')).map(a => {
@@ -322,7 +331,7 @@ async function main() {
   const md = renderMarkdown(stats);
 
   if (OUT_PATH) {
-    const out = path.resolve(OUT_PATH);
+    const out = privateOutputPath(OUT_PATH);
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, md);
     logOk(`Wrote audit report to ${out}`);
@@ -346,4 +355,5 @@ module.exports = {
   isFinalizedDailyRecord,
   PRIVATE_DATA_ROOT,
   JSONL_PATH,
+  privateOutputPath,
 };
