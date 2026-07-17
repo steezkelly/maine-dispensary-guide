@@ -169,6 +169,11 @@ test('page-window join preserves each R1 metric and R3 event observation for one
   assert.deepEqual(rows.filter((row) => row.metric_family === 'pageviews').map((row) => row.metric_name).sort(), ['screenPageViews', 'sessions', 'totalUsers']);
   assert.deepEqual(rows.filter((row) => row.metric_family === 'custom_events').map((row) => row.event_name).sort(), ['affiliate_click', 'lead_capture']);
 });
+test('R3 eventCount falls back to custom-event source policy and retains the canonical BQ value', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R3_event_count_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x', event_name: 'lead_capture', metric_name: 'eventCount' }, metric_name: 'eventCount', data_api_value: 2, bq_value: 5 }] }] }, vercelRows: [] });
+  assert.equal(rows[0].ga4_r1.value, 5);
+  assert.equal(rows[0].canonical_metric_source, 'ga4_bigquery');
+});
 
 test('page-window join retains every FAQ and CTA observation for one page-day', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [

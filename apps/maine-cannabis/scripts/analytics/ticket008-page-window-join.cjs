@@ -85,10 +85,15 @@ function sourceFamily(reportKey) {
   return 'pageviews';
 }
 
+function preferredMetricSource(row, report) {
+  const metric = canonicalComparableMetricName(first(row, ['metric_name', 'metricName', 'metric']));
+  return METRIC_SOURCES[metric] || METRIC_SOURCES[sourceFamily(report?.report_key || report?.report_id || '')] || null;
+}
+
 function metricValue(row, report) {
   if (row.value !== undefined) return row.value;
 
-  const preferredSource = METRIC_SOURCES[canonicalComparableMetricName(first(row, ['metric_name', 'metricName', 'metric'])) || sourceFamily(report?.report_key || report?.report_id || '')];
+  const preferredSource = preferredMetricSource(row, report);
   if (row.data_api_value !== undefined || row.bq_value !== undefined) {
     if (preferredSource === 'ga4_bigquery') {
       if (row.bq_value !== undefined && row.bq_value !== null) return row.bq_value;
@@ -112,7 +117,7 @@ function metricValue(row, report) {
 }
 
 function metricSource(row, report) {
-  const preferredSource = METRIC_SOURCES[canonicalComparableMetricName(first(row, ['metric_name', 'metricName', 'metric'])) || sourceFamily(report?.report_key || report?.report_id || '')];
+  const preferredSource = preferredMetricSource(row, report);
   if (preferredSource === 'ga4_bigquery') return row.bq_value != null ? 'ga4_bigquery' : (row.data_api_value != null ? 'ga4_data_api_fallback' : null);
   if (preferredSource === 'ga4_data_api') return row.data_api_value != null ? 'ga4_data_api' : (row.bq_value != null ? 'ga4_bigquery_fallback' : null);
   return null;
