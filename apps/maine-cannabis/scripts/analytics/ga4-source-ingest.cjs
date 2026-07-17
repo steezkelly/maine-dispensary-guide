@@ -643,6 +643,7 @@ async function main() {
     JSON.stringify({
       canonical_release_id: canonicalReleaseId,
       acquisition_release_id: acquisitionReleaseId,
+      release_status: allPass ? 'VALID' : 'INVALID',
       from: args.from,
       to: args.to,
       report_count: joinedRows.length,

@@ -91,6 +91,8 @@ const REPORTS = {
   }
 };
 
+function reportCompleteness(rowCount, fetchedRows) { return Number(rowCount) > Number(fetchedRows) ? 'partial' : 'ok'; }
+
 /**
  * Run a single named report against the GA4 Data API.
  *
@@ -128,8 +130,9 @@ async function runReport(authClient, reportKey, opts) {
       });
       return { dimensions: dimObj, metrics: metricObj };
     });
+    const completeness = reportCompleteness(data.rowCount || rows.length, rows.length);
     return {
-      status: 'ok',
+      status: completeness === 'ok' ? 'ok' : 'failed',
       report_id: def.report_id,
       report_key: reportKey,
       grain: def.grain,
@@ -139,6 +142,7 @@ async function runReport(authClient, reportKey, opts) {
       to: opts.to,
       rowCount: data.rowCount || rows.length,
       rows,
+      ...(completeness === 'partial' ? { error: { code: 'TRUNCATED_RESPONSE', message: `GA4 returned ${data.rowCount} rows but only ${rows.length} were fetched` } } : {}),
       fetched_at_utc: new Date().toISOString()
     };
   } catch (e) {
@@ -197,6 +201,7 @@ async function runAllReports(from, to) {
 module.exports = {
   PROPERTY_ID,
   REPORTS,
+  reportCompleteness,
   getAuthClient,
   runReport,
   runAllReports
