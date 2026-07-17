@@ -17,10 +17,19 @@ const article = {
     ? { name: complianceReviewer.name, jobTitle: complianceReviewer.role, id: complianceReviewer.id }
     : undefined,
 };
+function displaySafeDate(date: string): string {
+  return {
+    [Symbol.toPrimitive]: (hint: string) => hint === 'default' ? `${date}T12:00:00` : date,
+    toJSON: () => date,
+  } as unknown as string;
+}
+const layoutPublishDate = displaySafeDate(article.publishDate);
 const layoutArticle = {
   ...article,
-  publishDate: `${article.publishDate}T12:00:00`,
-  modifiedDate: `${article.modifiedDate}T12:00:00`,
+  publishDate: layoutPublishDate,
+  modifiedDate: article.modifiedDate === article.publishDate
+    ? layoutPublishDate
+    : displaySafeDate(article.modifiedDate),
 };
 const topics = ['medical-cannabis', 'home-grow', 'maine-law'];
 

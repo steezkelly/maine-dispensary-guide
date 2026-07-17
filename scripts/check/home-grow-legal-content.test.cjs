@@ -75,6 +75,14 @@ test('built article metadata preserves calendar dates', () => {
   assert.match(pillarHtml, /Published April 18, 2026/);
   assert.match(pillarHtml, /Updated July 16, 2026/);
   assert.doesNotMatch(pillarHtml, /Published April 17, 2026|Updated July 15, 2026/);
+  assert.match(pillarHtml, /property="og:article:published_time" content="2026-04-18"/);
+  assert.match(pillarHtml, /property="og:article:modified_time" content="2026-07-16"/);
+  assert.match(pillarHtml, /"datePublished":"2026-04-18"/);
+  assert.match(pillarHtml, /"dateModified":"2026-07-16"/);
   assert.match(medicalHtml, /Published July 16, 2026/);
   assert.doesNotMatch(medicalHtml, /Published July 15, 2026/);
+  assert.match(medicalHtml, /property="og:article:published_time" content="2026-07-16"/);
+  assert.match(medicalHtml, /property="og:article:modified_time" content="2026-07-16"/);
+  assert.match(medicalHtml, /"datePublished":"2026-07-16"/);
+  assert.match(medicalHtml, /"dateModified":"2026-07-16"/);
 });

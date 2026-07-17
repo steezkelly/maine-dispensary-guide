@@ -18,10 +18,16 @@ const article = {
     id: complianceReviewer.id,
   } : undefined,
 };
+function displaySafeDate(date: string): string {
+  return {
+    [Symbol.toPrimitive]: (hint: string) => hint === 'default' ? `${date}T12:00:00` : date,
+    toJSON: () => date,
+  } as unknown as string;
+}
 const layoutArticle = {
   ...article,
-  publishDate: `${article.publishDate}T12:00:00`,
-  modifiedDate: `${article.modifiedDate}T12:00:00`,
+  publishDate: displaySafeDate(article.publishDate),
+  modifiedDate: displaySafeDate(article.modifiedDate),
 };
 const topics = ["home-grow", "medical-cannabis", "maine-law"];
 
