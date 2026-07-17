@@ -12,6 +12,7 @@ test('CiteThis emits only the bounded source-select event vocabulary', () => {
   assert.match(citeThis, /data-mdg-source-id/);
   assert.match(citeThis, /'mdg_source_select'/);
   assert.match(citeThis, /schema_version: 'v1'/);
+  assert.match(citeThis, /instrumented_at: new Date\(\)\.toISOString\(\)/);
   assert.match(citeThis, /source_family: link\.dataset\.mdgSourceFamily/);
   assert.doesNotMatch(citeThis, /source_url:/);
 });
