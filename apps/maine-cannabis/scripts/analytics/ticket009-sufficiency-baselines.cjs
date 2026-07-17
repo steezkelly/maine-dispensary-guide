@@ -156,16 +156,15 @@ function dominantIntent(dist) {
 function peerCellId(metric, level, values) { return `${metric}:${level}:${stableKey(values)}`; }
 
 function isEligiblePeer(row) {
-  const settlement = String(row.settlement_state || row.window_status || '').toLowerCase();
-  const measurement = String(row.measurement_status || row.measurement_health || '').toUpperCase();
+  const settled = row.settlement_state === 'settled' || row.window_status === 'settled' || row.settled === true;
+  const healthy = row.measurement_status === 'MEASURED' || row.measurement_status === 'HEALTHY' || row.measurement_health === 'HEALTHY' || row.measurement_health_status === 'PASS';
   const change = String(row.change_contamination_status || row.change_status || '').toUpperCase();
   const task = String(row.task_contract_status || '').toUpperCase();
-  if (settlement && settlement !== 'settled') return false;
-  if (measurement.startsWith('MEASUREMENT_BLOCKED') || ['SOURCE_UNAVAILABLE', 'WINDOW_NOT_COMPARABLE', 'WINDOW_MEASUREMENT_DEGRADED'].includes(measurement)) return false;
+  if (!settled || !healthy) return false;
   if (row.window_comparable === false) return false;
+  if (row.change_context_evaluated !== true) return false;
   if (change === 'CONTAMINATED' || change === 'CHANGE_CONTAMINATED') return false;
-  if (['UNRESOLVED', 'NEEDS_EDITORIAL_REVIEW'].includes(task)) return false;
-  return true;
+  return ['CONFIRMED', 'RESOLVED'].includes(task) && row.measurement_status !== 'MEASUREMENT_BLOCKED: TASK_CONTRACT_UNRESOLVED';
 }
 
 function selectPeers(target, observations, policy, minPeerCount) {
