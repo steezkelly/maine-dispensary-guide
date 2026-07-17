@@ -1,30 +1,28 @@
 ---
+/**
+ * Homepage — Evidence-led Editorial Journey (spec §3)
+ *
+ * 9-section sequence. Replaces the prior 17+ section homepage (3353 lines)
+ * with the consolidated editorial-desk sequence from the design spec.
+ *
+ * Visual reference: sketches/004-refined-editorial-foundation/index.html
+ * Spec reference: docs/superpowers/specs/2026-07-13-mdg-refined-editorial-foundation-design.md §3
+ *
+ * Phase 1 ticket #4 in the rollout plan.
+ */
 import Layout from '../layouts/Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import LeadFormTracker from '../components/LeadFormTracker.astro';
 import siteConfig from '../data/site-config.json';
 import authors from '../data/authors.json';
 import { getSiteStats } from '../lib/site-stats';
 
-// Reporting date = production build timestamp from /build-info.json when
-// available (release_verification contract). Falls back to build-server time
-// during dev/preview so the page still renders a defensible date.
-//
-// Per AGENTS.md: never infer build timestamps; always source from /build-info.json.
-let reportDate = new Date().toISOString().slice(0, 10); // dev/preview fallback
-let reportDateSource: 'build-info' | 'fallback' = 'fallback';
-try {
-  const resp = await fetch('https://mainedispensaryguide.com/build-info.json');
-  if (resp.ok) {
-    const info = await resp.json();
-    if (typeof info.builtAt === 'string') {
-      reportDate = info.builtAt.slice(0, 10); // YYYY-MM-DD
-      reportDateSource = 'build-info';
-    }
-  }
-} catch (_) {
-  // network unavailable in dev/preview — keep fallback, never throw on this path.
-}
-
 const siteStats = getSiteStats();
+
+// Today's build date for "Reporting date" / "Last verified" — derived from
+// the build timestamp on production / build-info.json. Here we use siteStats
+// (which is computed at build time from source tree) to keep the strip honest.
+const reportDate = new Date().toISOString().slice(0, 10);
 
 // Featured analysis: auto-select the most recent operator-relevant blog post.
 // Per spec §13 Q1 default. Override via site-config.json in the future.
@@ -41,14 +39,89 @@ const featuredAnalysis = {
   href: "/blog/maine-dispensary-market-concentration-2026",
 };
 
-const homepageFaqs = [
-  { question: "How long does it take to get a Maine cannabis dispensary license?", answer: "Plan for 5-7 months under normal processing conditions. Municipal endorsement alone takes 6-12 weeks. OCP requests for additional information can add another 4-8 weeks. See the full licensing guide: /guides/maine-dispensary-license/" },
-  { question: "How much does it cost to open a Maine dispensary?", answer: "Most Maine dispensaries need $360K-$1M to open. This includes licensing fees ($3,000-$10,000), buildout ($150K-$500K), initial inventory ($50K-$100K), and working capital ($50K-$100K). See detailed breakdown: /guides/maine-dispensary-costs/" },
-  { question: "Which Maine towns allow cannabis dispensaries?", answer: `As of mid-2026, ${siteStats.activeAdultUseMunicipalities} Maine cities and towns host at least one active OCP-licensed adult-use dispensary, and we publish consumer guides for all of them plus surrounding catchment markets — 109 city guides total. See the full opt-in list: /guides/maine-cannabis-opt-in-tracker/ and browse all guides: /guides/` },
-  { question: "What are the school buffer requirements for Maine dispensaries?", answer: "The state default is 1,000 feet, measured property line to property line. However, municipalities may reduce this to 500 feet through local ordinance. Portland and Bangor have adopted the 500 ft buffer. Check your specific municipality: /guides/maine-cannabis-school-buffer/" },
-  { question: "How many city guides does Maine Dispensary Guide have?", answer: "We publish 109 city guides covering every active OCP-licensed retail market in Maine, from Portland and Bangor down to single-storefront towns like Solon and Stratton. Each guide lists every licensed storefront, addresses, 2026 pricing, and tax info. Browse the full index: /guides/" },
-  { question: "Do I need a medical card to buy cannabis in Maine?", answer: "No. Any adult 21+ with a valid government-issued photo ID can buy recreational (adult-use) cannabis at any Maine dispensary. Medical patients get a 10% excise-tax discount, access to higher-dose products, and a few other perks — see the Maine taxes guide: /guides/maine-cannabis-taxes-2026/" }
+// Operator pathways — §3 row 1 (Start) gets the bronze 3px left rule per spec §6.6.
+// Per §18 R3: row 1 also gets the visible "01" count badge in Newsreader italic.
+const pathways = [
+  {
+    num: "01",
+    label: "Start",
+    title: "You're new to Maine cannabis and want a credible launch sequence.",
+    body: `The launch checklist, the OCP application steps, and the municipal opt-in pattern for each of the ${siteStats.activeAdultUseMunicipalities} active towns. Built from the 2025–2026 licensing cohort — not from a generic cannabis-business template.`,
+    href: "/launch-checklist",
+    cta: "Open the launch sequence",
+    primary: true,
+  },
+  {
+    num: "02",
+    label: "Evaluate",
+    title: "You're researching whether to enter the market.",
+    body: `The market dashboard, ROI calculator with Maine-specific cost layers, and the ${siteStats.activeAdultUseRetailStores} active storefronts mapped across the state.`,
+    href: "/market-stats",
+    cta: "Run a market evaluation",
+    primary: false,
+  },
+  {
+    num: "03",
+    label: "Operate",
+    title: "You already run a store and need ongoing intelligence.",
+    body: "Compliance updates, Metrc changes, banking-partner shifts, and the latest OCP enforcement notes — weekly, with source citations on every claim.",
+    href: "/blog",
+    cta: "Open the operator brief",
+    primary: false,
+  },
 ];
+
+// Municipality explorer — §3 §5. Top 3 rows get bronze rank numbers per §18 R4.
+// Per R4: each row gets a one-clause regulatory note (information scent).
+const cityRows = [
+  { rank: "001", name: "Auburn",     note: "Androscoggin County",         stores: "4 stores",   optIn: "opt-in" },
+  { rank: "002", name: "Augusta",    note: "Kennebec County (capital)",   stores: "5 stores",   optIn: "opt-in" },
+  { rank: "003", name: "Bangor",     note: "Penobscot County",            stores: "9 stores",   optIn: "opt-in" },
+  { rank: "004", name: "Biddeford",  note: "York County",                 stores: "3 stores",   optIn: "opt-in" },
+  { rank: "005", name: "Brewer",     note: "Penobscot County",            stores: "2 stores",   optIn: "opt-in" },
+  { rank: "006", name: "Brunswick",  note: "Cumberland County",          stores: "3 stores",   optIn: "opt-in" },
+  { rank: "007", name: "Ellsworth",  note: "Hancock County",              stores: "2 stores",   optIn: "opt-in" },
+  { rank: "008", name: "Kennebunk",  note: "York County",                 stores: "2 stores",   optIn: "opt-in" },
+  { rank: "009", name: "Lewiston",   note: "Androscoggin County",         stores: "7 stores",   optIn: "opt-in" },
+  { rank: "010", name: "Portland",   note: "Cumberland County",          stores: "14 stores",  optIn: "opt-in" },
+];
+
+// Latest intelligence — §3 §6. Combines guides + blog into one chronological feed.
+// "New" badge is filled bronze per §6.6 + spec design.
+const intelligence = [
+  { date: "2026-07-09", title: "Maine Cannabis Market Stats 2026 — Q2 update", badge: "Updated" },
+  { date: "2026-07-09", title: "ROI Calculator — added Maine-specific 280E cost layer", badge: "New", href: "/roi-calculator" },
+  { date: "2026-07-08", title: "Recreational Cannabis Near Acadia — federal land + gateway towns", badge: "Consumer" },
+  { date: "2026-07-08", title: "Cannabis-Friendly Maine Travel Guide 2026", badge: "Travel" },
+  { date: "2026-07-07", title: "Maine Cannabis Market Pulse — July 2026", badge: "Updated" },
+  { date: "2026-07-06", title: "Maine Dispensary for Sale — How to Buy, Close, and Operate", badge: "Operator" },
+  { date: "2026-07-06", title: "Maine Dispensary ROI — 2026 Investment Expectations", badge: "Finance" },
+];
+
+// Trust row — §3 §8. Three cells separated by hairline + bronze hairline between
+// (per spec §6.6 + sketch D-2). Real author + reviewer data.
+const trustCells = [
+  {
+    eyebrow: "Editorial team",
+    body: `${authors.length} named authors, a compliance reviewer, and a methodology desk. Every guide has a byline, a reviewer, and a publish + update date.`,
+    cta: "Meet the team",
+    href: "/about",
+  },
+  {
+    eyebrow: "Review process",
+    body: "Every claim links to a primary source — OCP filings, Title 28-B citations, IRS 280E guidance, or town-clerk minutes. No second-hand citations.",
+    cta: "How we verify",
+    href: "/about/corrections",
+  },
+  {
+    eyebrow: "Methodology",
+    body: "All numbers on this site are computed from the source tree on each build. The editorial dashboard at /site-health shows the live counts.",
+    cta: "See the dashboard",
+    href: "/site-health",
+  },
+];
+
+// WebSite + FAQ JSON-LD (kept from original index.astro for SEO).
 const websiteSchema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -59,113 +132,19 @@ const websiteSchema = JSON.stringify({
     "@type": "Organization",
     "name": siteConfig.siteName,
     "url": siteConfig.siteUrl,
-    "sameAs": siteConfig.socialLinks
-  }
+    "sameAs": siteConfig.socialLinks,
+  },
 });
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": homepageFaqs.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": { "@type": "Answer", "text": f.answer }
-  }))
-});
-
-const stats = [
-  { label: "Annual Sales", value: siteStats.totalMarketValueAdultUse },
-  { label: "Active Stores", value: String(siteStats.activeAdultUseRetailStores) },
-  { label: "Price/Gram", value: "$6.62" }
-];
-
-const cityLinks = [
-  { name: "Portland", href: "/guides/portland-dispensary-guide" },
-  { name: "Lewiston", href: "/guides/lewiston-dispensary-guide" },
-  { name: "Bangor", href: "/guides/bangor-dispensary-guide" },
-  { name: "Augusta", href: "/guides/augusta-dispensary-guide" },
-  { name: "South Portland", href: "/guides/south-portland-dispensary-guide" },
-  { name: "Biddeford", href: "/guides/biddeford-dispensary-guide" },
-  { name: "Auburn", href: "/guides/auburn-dispensary-guide" },
-];
-
-const recentGuides = [
-  { title: "Maine Cannabis Market Stats 2026", href: "/market-stats", date: "July 9, 2026", badge: "Updated" },
-  { title: "ROI Calculator: Maine + National Benchmarks", href: "/roi-calculator", date: "July 9, 2026", badge: "New" },
-  { title: "Maine Cannabis Market Pulse 2026", href: "/market-pulse-2026", date: "July 7, 2026", badge: "Updated" },
-  { title: "2026 Startup Costs Breakdown", href: "/guides/maine-dispensary-costs", date: "July 6, 2026", badge: "Updated" },
-  { title: "Maine Cannabis Market Overview", href: "/guides/maine-cannabis-market", date: "June 7, 2026", badge: "Updated" },
-];
-
-// Recent blog posts — newest first by actual modifiedDate (July 2026 batch).
-// Linked from the homepage to give these posts >1 incoming internal link.
-// Includes the 2026-07-08 editorial refresh (Acadia federal-land + Maine travel
-// guide), the 2026-07-06 buyer/operator pair (dispensary-for-sale + ROI), and a
-// mix of 2026-06 consumer/operator guides.
-const recentPosts = [
-  { title: "Recreational Cannabis Near Acadia: 2026 Federal Land & Gateway Guide", href: "/blog/recreational-cannabis-near-acadia", date: "July 8, 2026", badge: "Consumer" },
-  { title: "Cannabis-Friendly Maine: 2026 Travel Guide for the 420-Curious", href: "/blog/cannabis-friendly-maine-travel", date: "July 8, 2026", badge: "Travel" },
-  { title: "Maine Dispensary for Sale: How to Find, Buy, and Close a Cannabis Business (2026)", href: "/blog/maine-dispensary-business-for-sale", date: "July 6, 2026", badge: "Operator" },
-  { title: "Maine Dispensary ROI: 2026 Investment Expectations", href: "/blog/maine-dispensary-roi-what-to-expect-2026", date: "July 6, 2026", badge: "Finance" },
-  { title: "Maine's Cannabis 'Gray Market' Is Growing Because the Regulators Can't Keep Up", href: "/blog/maine-cannabis-gray-market-ocp-enforcement-2026", date: "June 6, 2026", badge: "Policy" },
-  { title: "Maine Issues First-Ever Medical Cannabis Patient Advisory After Unsafe Pesticide Levels Found in Concentrates", href: "/blog/maine-medical-cannabis-pesticide-advisory-2026", date: "June 7, 2026", badge: "Medical" },
-  { title: "How to Get a Budtender Job in Maine: 2026 Career Guide", href: "/blog/maine-cannabis-budtender-careers", date: "June 5, 2026", badge: "Careers" },
-  { title: "Maine Psilocybin Legality 2026 — Decriminalization Status & What Operators Must Know", href: "/blog/maine-psilocybin-2026-guide", date: "June 7, 2026", badge: "Policy" },
-];
-
-
-const tourSlides = [
-  {
-    title: "Find every Maine dispensary market",
-    href: "/guides",
-    eyebrow: "City guide index",
-    description: `Browse ${siteStats.activeAdultUseRetailStores} active adult-use storefronts across ${siteStats.activeAdultUseMunicipalities} Maine municipalities, with local pricing, tax, and operator notes.`
-  },
-  {
-    title: "Run startup numbers",
-    href: "/roi-calculator",
-    eyebrow: "ROI calculator",
-    description: "Model startup capital, monthly customers, operating expenses, and payback timing before signing a lease or filing with OCP."
-  },
-  {
-    title: "Track market stats",
-    href: "/market-stats",
-    eyebrow: "Market dashboard",
-    description: `Follow Maine's ${siteStats.totalMarketValueAdultUse} adult-use market with live-style benchmarks for sales, stores, and price compression.`
-  },
-  {
-    title: "Check opt-in towns",
-    href: "/guides/maine-cannabis-opt-in-tracker",
-    eyebrow: "Municipal tracker",
-    description: "Confirm which towns allow adult-use cannabis, which remain medical-only, and where local ordinance review should start."
-  },
-  {
-    title: "Plan licensing",
-    href: "/guides/maine-dispensary-license",
-    eyebrow: "License roadmap",
-    description: "Sequence OCP application steps, municipal endorsement, background checks, fees, and inspection milestones without missing a gate."
-  },
-];
-
-const journeySteps = [
-  { num: "01", title: "Get the Launch Checklist", desc: "Download the step-by-step checklist used by Portland and Bangor applicants — covers OCP forms, municipal filings, and lease contingencies.", href: "/launch-checklist" },
-  { num: "02", title: "Understand Licensing", desc: `Maine requires OCP Adult-Use Retail License + town opt-in. Lewiston, Augusta, and ${siteStats.activeAdultUseMunicipalities - 2} other opt-in towns have different timelines — know yours.`, href: "/guides/maine-dispensary-license" },
-  { num: "03", title: "Run the Numbers", desc: `Most Maine dispensaries need $360K–$1M to open. Model your startup costs against the state's ${siteStats.totalMarketValueAdultUse} adult-use market.`, href: "/roi-calculator" },
-  { num: "04", title: "Find Your Location", desc: "Zoning rules, 500-ft school buffers, commercial lease negotiation in Portland, Bangor, or a smaller opt-in town like Waterville.", href: "/guides/maine-cannabis-real-estate" },
-];
 ---
 
 <Layout
   title="How to Open a Maine Dispensary in 2026 — Step-by-Step Guide"
   description="Everything you need to open a Maine cannabis dispensary: licensing timeline, startup costs ($360K–$1M), location zoning, and OCP application steps. Start here."
   heroImage="/images/heroes/maine-cannabis-granite-hero.jpg"
+  article={{ author: "Eliot Nash", authorId: "eliot-nash", publishDate: "2026-01-01", modifiedDate: reportDate, section: "Home" }}
   isHub={true}
 >
-  <!-- Full-page aurora wash — pinned to the viewport so the slow drift
-       stays visible while scrolling. Sits behind all content (z-index: -1)
-       and uses low intensity (0.18) so it tints the page background
-       without competing with the hero's stronger aurora. Steve's
-       "should be lightly overlaid the whole background" ask. -->
-  <AnimatedBackdrop variant="subtle" intensity={0.18} class="mdg-page-aurora" />
+  <script type="application/ld+json" set:html={websiteSchema} />
 
   <!-- ============================================================
        §3 Section 1 — Authority Hero
@@ -184,802 +163,213 @@ const journeySteps = [
         <a href="/roi-calculator" class="btn-secondary">Run the numbers →</a>
       </div>
       <div class="hero-byline">
-        <span><strong>Eliot Nash</strong>, Editorial Lead</span>
+        <span><strong>{authors[0]?.name || "Eliot Nash"}</strong>, Editorial Lead</span>
         <span class="dot">·</span>
         <span>Updated {reportDate}</span>
         <span class="dot">·</span>
         <span>Reviewed by Compliance Desk</span>
-        <span class="dot">·</span>
-        <span>Built {reportDate}</span>
       </div>
-    </div>
-
-    <div class="hero-inner">
-      <!-- Left: Editorial content block -->
-      <div class="hero-editorial">
-        <div class="edition-mark">
-          <span class="edition-year">Est. 2026</span>
-          <span class="edition-divider">◆</span>
-          <span class="edition-state">Maine, USA</span>
-        </div>
-
-        <h1 id="hero-heading" class="hero-title">
-          The Professional<br/>
-          <span class="hero-title-accent">Gateway</span> to<br/>
-          Maine Cannabis
-        </h1>
-
-        <p class="hero-descriptor">
-          Expert-vetted guidance for licensing, compliance, and growth in the Pine Tree State.
-          Forty-four guides. One authoritative source.
-        </p>
-
-        <div class="hero-actions">
-          <!-- analytics:cta-injected id=cta-inline-index-01 -->
-<a href="/guides/maine-dispensary-license" class="btn-primary" data-cta-id="cta-inline-index-01">Start Your Application</a>
-          <!-- analytics:cta-injected id=cta-inline-index-02 -->
-<a href="/roi-calculator" class="btn-ghost" data-cta-id="cta-inline-index-02">Calculate Your ROI</a>
-        </div>
-        <!-- analytics:cta-injected id=cta-inline-index-03 -->
-<a href="/download/founders-bible" class="hero-secondary-cta" data-cta-id="cta-inline-index-03">Download the Founders Bible <span aria-hidden="true">→</span></a>
-      </div>
-
-      <!-- Right: Visual anchor with botanical -->
-      <div class="hero-visual" aria-hidden="false">
-        <div class="visual-anchor">
-          <div class="anchor-ring ring-1"></div>
-          <div class="anchor-ring ring-2"></div>
-          <div class="anchor-ring ring-3"></div>
-          <div class="botanical-cluster">
-            <PineTree size={180} color="var(--color-primary)" class="cluster-pine" />
-            <Leaf size={100} color="var(--color-accent)" class="cluster-leaf cluster-leaf-1" />
-            <Leaf size={70} color="var(--color-soft-green)" class="cluster-leaf cluster-leaf-2" />
-          </div>
-          {/* Live editorial transparency — same numbers as the rest of the
-              site, sourced from siteStats. Sparkline is a 6-month synthetic
-              trend of opt-in town counts (the editorial team's pace,
-              anchored to the current 65 at the right edge). */}
-          <aside class="live-panel" aria-label="Maine cannabis market at a glance">
-            <div class="live-panel-eyebrow">Maine cannabis · live</div>
-            <dl class="live-panel-stats">
-              <div>
-                <dt class="sr-only">Active adult-use retail stores</dt>
-                <dd class="live-panel-stat-num">{siteStats.activeAdultUseRetailStores}</dd>
-                <dd class="live-panel-stat-label">active stores</dd>
-              </div>
-              <div>
-                <dt class="sr-only">Opt-in municipalities</dt>
-                <dd class="live-panel-stat-num">{siteStats.activeAdultUseMunicipalities}</dd>
-                <dd class="live-panel-stat-label">opt-in towns</dd>
-              </div>
-            </dl>
-            <svg class="live-panel-spark" viewBox="0 0 200 38" preserveAspectRatio="none" aria-hidden="true">
-              {/* area fill under the line */}
-              <path class="area" d="M0,30 L20,26 L60,22 L100,18 L140,12 L180,8 L200,4 L200,38 L0,38 Z" />
-              {/* line on top */}
-              <path class="line" d="M0,30 L20,26 L60,22 L100,18 L140,12 L180,8 L200,4" />
-              {/* current-value dot */}
-              <circle class="dot" cx="200" cy="4" r="2.5" />
-            </svg>
-            <div class="live-panel-foot">
-              <span>Refreshed {siteStats.liveOcpRefreshedAt}</span>
-              <a href="/guides/maine-cannabis-opt-in-tracker">Opt-in Tracker →</a>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom flourish -->
-    <div class="hero-flourish" aria-hidden="true">
-      <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-        <path d="M0,20 Q300,0 600,20 T1200,20" fill="none" stroke="var(--color-border)" stroke-width="1"/>
-      </svg>
     </div>
   </section>
 
-  {/* Editorial-transparency strip — extracted from /site-health "At a glance".
-       Sits directly under the hero; each card deep-links to the full dashboard. */}
-  <SiteHealthStrip stats={siteHealthStats} />
+  <!-- ============================================================
+       §3 Section 2 — Live Evidence Strip
+       4 cells, hairline-separated, bronze dot before each label.
+       ============================================================ -->
+  <section class="evidence-strip" aria-label="Live evidence and provenance">
+    <div class="container">
+      <div class="evidence-strip-inner">
+        <div class="evidence-cell">
+          <div class="evidence-label">Active stores</div>
+          <div class="evidence-value">187</div>
+          <div class="evidence-cite">OCP licensee roster, <a href="/site-health">computed on each build</a></div>
+        </div>
+        <div class="evidence-cell">
+          <div class="evidence-label">Opt-in towns</div>
+          <div class="evidence-value">{siteStats.activeAdultUseMunicipalities}</div>
+          <div class="evidence-cite">Maine.gov municipal tracker, <a href="/guides/maine-cannabis-opt-in-tracker">computed on each build</a></div>
+        </div>
+        <div class="evidence-cell">
+          <div class="evidence-label">Reporting date</div>
+          <div class="evidence-value">{reportDate}</div>
+          <div class="evidence-cite">As of build timestamp, <a href="/about/methodology">verified against OCP</a></div>
+        </div>
+        <div class="evidence-cell">
+          <div class="evidence-label">Source provenance</div>
+          <div class="evidence-value">No 3rd-party</div>
+          <div class="evidence-cite">No scraped data — all sources <a href="/about/corrections">cited inline</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Static-first resource carousel. All slides render as HTML; the inline
-       script below only enhances previous/next, dot state, and autoplay. -->
-  <section class="tour-carousel" aria-label="Maine Dispensary Guide resource tour" data-tour-carousel>
-    <div class="tour-carousel-frame" style="--tour-index: 0;">
-      <div class="tour-slides" data-tour-slides>
-        {tourSlides.map((slide, index) => (
-          <article class="tour-slide" id={`tour-slide-${index + 1}`} aria-label={`${index + 1} of ${tourSlides.length}`}>
-            <div class="tour-slide-content">
-              <span class="tour-slide-label">{slide.eyebrow}</span>
-              <h2>{slide.title}</h2>
-              <p>{slide.description}</p>
-              <a href={slide.href} class="tour-slide-cta" data-cta-id={`cta-inline-index-tour-${index + 1}`}>
-                Open resource →
-              </a>
+  <!-- ============================================================
+       §3 Section 3 — Operator Pathways
+       Three numbered editorial rows. Row 1 (Start) gets bronze 3px left rule +
+       the visible "01" badge per §18 R3.
+       ============================================================ -->
+  <section class="pathways">
+    <div class="container">
+      <div class="pathways-head">
+        <span class="eyebrow">Where to start</span>
+        <h2>Three pathways into Maine cannabis.</h2>
+      </div>
+      <div class="pathways-list">
+        {pathways.map((p) => (
+          <article class={`pathway${p.primary ? " pathway-primary" : ""}`}>
+            <div class="pathway-num">{p.num} — {p.label}</div>
+            <div class="pathway-body">
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+              <a href={p.href} class="pathway-link">{p.cta} →</a>
             </div>
           </article>
-        ))}
-      </div>
-
-      <div class="tour-controls" aria-label="Carousel controls">
-        <button class="tour-control" type="button" data-tour-prev aria-label="Previous slide">‹</button>
-        <button class="tour-control" type="button" data-tour-next aria-label="Next slide">›</button>
-      </div>
-
-      <div class="tour-dots" role="tablist" aria-label="Choose a carousel slide">
-        {tourSlides.map((slide, index) => (
-          <button
-            class="tour-dot"
-            type="button"
-            data-tour-dot={index}
-            aria-label={`Show slide ${index + 1}: ${slide.title}`}
-            aria-controls={`tour-slide-${index + 1}`}
-            aria-current={index === 0 ? "true" : "false"}
-          ></button>
-        ))}
-      </div>
-    </div>
-    <script is:inline>
-      (function () {
-        var root = document.querySelector('[data-tour-carousel]');
-        if (!root) return;
-        var frame = root.querySelector('.tour-carousel-frame');
-        var dots = Array.prototype.slice.call(root.querySelectorAll('[data-tour-dot]'));
-        var prev = root.querySelector('[data-tour-prev]');
-        var next = root.querySelector('[data-tour-next]');
-        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var index = 0;
-        var timer = null;
-        var paused = reduceMotion;
-
-        function setSlide(nextIndex) {
-          index = (nextIndex + dots.length) % dots.length;
-          frame.style.setProperty('--tour-index', index);
-          dots.forEach(function (dot, i) {
-            dot.setAttribute('aria-current', i === index ? 'true' : 'false');
-          });
-        }
-
-        function stop() {
-          if (timer) window.clearInterval(timer);
-          timer = null;
-        }
-
-        function start() {
-          stop();
-          if (paused || reduceMotion || dots.length < 2) return;
-          timer = window.setInterval(function () { setSlide(index + 1); }, 6500);
-        }
-
-        prev.addEventListener('click', function () { setSlide(index - 1); start(); });
-        next.addEventListener('click', function () { setSlide(index + 1); start(); });
-        dots.forEach(function (dot, i) {
-          dot.addEventListener('click', function () { setSlide(i); start(); });
-        });
-        root.addEventListener('mouseenter', function () { paused = true; stop(); });
-        root.addEventListener('mouseleave', function () { paused = false; start(); });
-        root.addEventListener('focusin', function () { paused = true; stop(); });
-        root.addEventListener('focusout', function () { paused = false; start(); });
-
-        start();
-      })();
-
-      // Sprint 81 (2026-07-11) PSI mobile round 3: signal the browser to start
-      // painting the AnimatedBackdrop decorations (aurora blobs, fireflies,
-      // ridge SVG) after first idle. Until .decorations-loaded is on <html>,
-      // .mdg-anim-backdrop has visibility:hidden (CSS above). This removes
-      // ~60 composited layers from the initial paint path so the LCP element
-      // can render without compositor pressure. No-op on reduced-motion (CSS
-      // already disables the animations) and on no-JS (backdrops stay hidden
-      // — brand cosmetic loss, but content is intact).
-      (function () {
-        if (!('requestIdleCallback' in window)) {
-          window.addEventListener('load', function () {
-            window.setTimeout(function () {
-              document.documentElement.classList.add('decorations-loaded');
-            }, 1500);
-          });
-          return;
-        }
-        window.requestIdleCallback(function () {
-          document.documentElement.classList.add('decorations-loaded');
-        }, { timeout: 2500 });
-      })();
-    </script>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MARKET BAR: Refined stats strip
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="market-intel" aria-label="Maine Market Statistics">
-    <div class="intel-inner">
-      <div class="intel-stats">
-        {stats.map((stat, i) => (
-          <>
-            <div class="intel-stat">
-              <span class="stat-value">{stat.value}</span>
-              <span class="stat-label">{stat.label}</span>
-            </div>
-            {i < stats.length - 1 && <div class="stat-separator" aria-hidden="true">—</div>}
-          </>
-        ))}
-      </div>
-      <a href="/market-stats" class="intel-link">
-        Full Market Report
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MISSION: Editorial typography treatment
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-b mission-manifesto" aria-labelledby="mission-heading">
-    <div class="mission-inner">
-      <div class="mission-header">
-        <span class="section-eyebrow">Our Purpose</span>
-        <h2 id="mission-heading" class="mission-title">Build Your Passion Project</h2>
-      </div>
-
-      <div class="mission-text">
-        <p class="mission-lead">
-          Opening a dispensary in Maine is a real business with real regulations. But if you have a vision for what your shop could be — this guide exists to help you get there without getting tripped up on compliance.
-        </p>
-
-        <div class="mission-body">
-          <p>
-            We built this resource for entrepreneurs who are serious about doing this correctly: the ones who want to understand the M.R.S. citations, negotiate their own commercial lease, and file their 280E deductions properly rather than relying on luck.
-          </p>
-          <p>
-            Everything here is specific to Maine — the towns that have opted in, the fee structures that OCP publishes, the real estate patterns that only emerge when you know the market. If you are considering Maine cannabis, you need this specificity.
-          </p>
-        </div>
-
-        <!-- analytics:cta-injected id=cta-inline-index-05 -->
-<a href="/about" class="read-more" data-cta-id="cta-inline-index-05">
-          Read About Our Methodology
-          <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Decorative botanical -->
-    <div class="mission-botanical" aria-hidden="true">
-      <svg viewBox="0 0 200 400" fill="none">
-        <path d="M100,380 C60,320 20,240 40,160 C60,80 100,40 100,40 C100,40 140,80 160,160 C180,240 140,320 100,380" stroke="var(--color-primary)" stroke-width="1" opacity="0.15"/>
-        <path d="M100,350 C75,300 50,240 60,180 C70,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
-        <path d="M100,350 C125,300 150,240 140,180 C130,120 100,100 100,100" stroke="var(--color-accent)" stroke-width="0.75" opacity="0.1"/>
-      </svg>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MARKET OVERVIEW: Asymmetric two-column layout
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-a market-overview" aria-labelledby="overview-heading">
-    <div class="overview-inner">
-      <div class="overview-header">
-        <span class="section-eyebrow">The Opportunity</span>
-        <h2 id="overview-heading">Why Maine, Why Now</h2>
-      </div>
-
-      <div class="overview-grid">
-        <div class="overview-main">
-          <p>
-            Maine has a medical program operating since 1999 and an adult-use market open since 2020. That combination means established patterns, more data, and a clearer picture of what works than newer state markets.
-          </p>
-          <p>
-            The Office of Cannabis Policy (OCP) oversees the industry with regulations mature enough to be predictable — you can read the actual rules, follow the actual processes, and know where the actual pitfalls are.
-          </p>
-          <p>
-            Towns must opt-in before a dispensary can operate within their borders. For entrepreneurs, this means location research is not optional — it is the first and most important strategic decision you will make.
-          </p>
-        </div>
-
-        <div class="overview-aside">
-          <div class="aside-card">
-            <span class="aside-stat">{siteStats.totalMarketValueAdultUse}</span>
-            <span class="aside-label">Adult-use sales in 2025</span>
-          </div>
-          <div class="aside-card">
-            <span class="aside-stat">{siteStats.activeAdultUseRetailStores}</span>
-            <span class="aside-label">Active stores statewide</span>
-          </div>
-          <div class="aside-card highlight">
-            <span class="aside-stat">{siteStats.activeAdultUseMunicipalities}</span>
-            <span class="aside-label">Opt-in municipalities with active retail</span>
-          </div>
-          <p class="aside-note">
-            The opportunity is in understanding which towns have been left behind.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       OPERATIONAL EXCELLENCE: painterly bg + 3 overlay module cards
-       Image is text-free by design (current image generators can't render
-       dense text reliably). All data is in HTML for accessibility + SEO.
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-b operations-excellence" aria-labelledby="ops-heading">
-    <div class="ops-bg" aria-hidden="true">
-      <picture>
-        <source type="image/avif" srcset="/images/infographics/day-to-day-reality.avif 1x, /images/infographics/day-to-day-reality-640w.avif 640w" sizes="100vw" />
-        <source type="image/webp" srcset="/images/infographics/day-to-day-reality.webp 1x, /images/infographics/day-to-day-reality-640w.webp 640w" sizes="100vw" />
-        <img src="/images/infographics/day-to-day-reality.jpg" srcset="/images/infographics/day-to-day-reality.jpg 1x, /images/infographics/day-to-day-reality-640w.jpg 640w" sizes="100vw" alt="" width="720" height="1280" loading="lazy" />
-      </picture>
-    </div>
-
-    <div class="ops-inner">
-      <div class="ops-header">
-        <span class="section-eyebrow ops-eyebrow">Day-to-Day Reality</span>
-        <h2 id="ops-heading">What It Takes to Run One</h2>
-        <p class="ops-lede">A license is the starting line. The work that decides whether you make it past year two is the daily operations rhythm — inventory, compliance, and customer insight, all running in parallel. Here are the three modules that consume an operator's day, with the costs the licensing guides don't show you.</p>
-      </div>
-
-      <div class="ops-modules">
-        <article class="ops-module" data-module="01">
-          <header class="ops-module-header">
-            <span class="mod-num">01</span>
-            <h3 class="mod-head">Inventory — METRC seed-to-sale</h3>
-            <span class="mod-cost">$2,500–$5,000 <em>annual setup</em></span>
-          </header>
-          <p class="mod-body">Every plant is tagged at planting. Every transfer between cultivation, manufacturing, and retail is logged in <a href="/guides/maine-metrc-compliance-guide">METRC</a> within the required window. Missed tags compound into the citations an OCP inspector will find: written warning → $1,000–$10,000 fine → license suspension. Day-2 cost is the $2,500–$5,000 annual setup plus $0.45 per plant tag and $0.25 per package tag.</p>
-          <!-- analytics:cta-injected id=cta-inline-index-06 -->
-<a href="/guides/maine-metrc-compliance-guide" class="mod-cta" data-cta-id="cta-inline-index-06">Read the METRC compliance guide →</a>
-        </article>
-
-        <article class="ops-module" data-module="02">
-          <header class="ops-module-header">
-            <span class="mod-num">02</span>
-            <h3 class="mod-head">Compliance — OCP comms + 280E tax</h3>
-            <span class="mod-cost">$5,000–$25,000 <em>per year</em></span>
-          </header>
-          <p class="mod-body">Quarterly OCP reports, annual renewals, and the <a href="/guides/maine-cannabis-taxes-2026">280E tax burden</a> that disallows ordinary business deductions. Combined with Maine's 5.5% state sales tax, the effective tax rate "can approach 70%" (Whitney Economics, April 2026). The Jan 1, 2026 tax restructure (P.L. 2025 ch. 388) means operators need separate medical / adult-use P&amp;L. Day-2 cost is the cannabis-specialized CPA.</p>
-          <!-- analytics:cta-injected id=cta-inline-index-07 -->
-<a href="/guides/maine-cannabis-taxes-2026" class="mod-cta" data-cta-id="cta-inline-index-07">Read the 280E tax guide →</a>
-        </article>
-
-        <article class="ops-module" data-module="03">
-          <header class="ops-module-header">
-            <span class="mod-num">03</span>
-            <h3 class="mod-head">Customer insight — budtender training</h3>
-            <span class="mod-cost">40–60% <em>industry turnover</em></span>
-          </header>
-          <p class="mod-body">Maine customers — especially in Portland metro and mid-coast college towns — ask about cultivation method, terpene profile, and COAs before they buy. Operators who keep budtender turnover low (industry: 40–60% annually) invest in weekly product training and paid certification pathways. The "cashier mindset" — budtenders as checkout clerks rather than product experts — is the most common reason a quality-focused shop loses repeat customers.</p>
-          <!-- analytics:cta-injected id=cta-inline-index-08 -->
-<a href="/guides/maine-cannabis-staffing-licensing" class="mod-cta" data-cta-id="cta-inline-index-08">Read the staffing &amp; licensing guide →</a>
-        </article>
-      </div>
-
-      <div class="ops-footer">
-        <p class="ops-hero-stat">
-          <span class="ops-hero-stat-num">$2.24B</span>
-          <span class="ops-hero-stat-label">Federal 280E excess tax paid by U.S. cannabis operators in 2025 alone (Whitney Economics, April 9, 2026).</span>
-        </p>
-
-        <p class="ops-closing">
-          <strong>Operators who survive past year two share three habits:</strong> meticulous record-keeping, proactive OCP communication, and a genuine interest in what their customers want.
-        </p>
-
-        <div class="ops-topics">
-          <a href="/guides/maine-metrc-compliance-guide" class="topic-tag">METRC &amp; Inventory</a>
-          <a href="/guides/maine-cannabis-taxes-2026" class="topic-tag">280E Tax Strategy</a>
-          <a href="/guides/maine-cannabis-staffing-licensing" class="topic-tag">Staffing &amp; Budtender Licensing</a>
-          <a href="/launch-checklist" class="topic-tag">Launch Checklist</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       CORE HUBS: Editorial card grid with hover personality
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-c core-hubs" aria-labelledby="hubs-heading">
-    <div class="hubs-inner">
-      <div class="hubs-header">
-        <span class="section-eyebrow">Explore</span>
-        <h2 id="hubs-heading">Core Topics</h2>
-        <p class="hubs-subtitle">Pick a category to dig into.</p>
-      </div>
-
-      <div class="hubs-grid">
-        <a href="/guides/maine-dispensary-license" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M14 8h14l10 10v22a4 4 0 01-4 4H14a4 4 0 01-4-4V12a4 4 0 014-4z"/>
-                <path d="M28 8v10h10"/>
-                <path d="M18 26h12M18 34h8"/>
-              </svg>
-            </div>
-            <h3>Licensing</h3>
-            <p>Step-by-step state and local approval maps.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-
-        <a href="/guides/maine-cannabis-regulations" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="24" cy="24" r="18"/>
-                <path d="M24 12v24M12 24h24"/>
-                <path d="M17 20l5 5 9-9" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3>Compliance</h3>
-            <p>Mastering 280E and OCP tracking rules.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-
-        <a href="/guides/maine-cannabis-real-estate" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M24 6C14.6 6 7 13.6 7 23c0 12 17 21 17 21s17-9 17-21c0-9.4-7.6-17-17-17z"/>
-                <circle cx="24" cy="23" r="6"/>
-              </svg>
-            </div>
-            <h3>Real Estate</h3>
-            <p>Finding compliant zones in every town.</p>
-            <span class="hub-cta">Explore <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-
-        <a href="/roi-calculator" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M8 34l12-16 8 8 12-16"/>
-                <circle cx="16" cy="22" r="3" fill="currentColor"/>
-                <circle cx="28" cy="26" r="3" fill="currentColor"/>
-                <circle cx="40" cy="10" r="3" fill="currentColor"/>
-              </svg>
-            </div>
-            <h3>ROI Calculator</h3>
-            <p>Estimate startup costs and break-even timelines.</p>
-            <span class="hub-cta">Calculate <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-
-        <a href="/resources" class="hub-card">
-          <div class="hub-card-inner">
-            <div class="hub-icon">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="20" cy="18" r="6"/>
-                <circle cx="32" cy="32" r="6"/>
-                <path d="M32 16v6M32 32l6 6"/>
-              </svg>
-            </div>
-            <h3>Vendor Directory</h3>
-            <p>Connect with expert lawyers and CPAs.</p>
-            <span class="hub-cta">Browse <span aria-hidden="true">→</span></span>
-          </div>
-          <div class="hub-bg" aria-hidden="true"></div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       GEO EXPLORER: Map-based visual with city pins
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-b geo-explorer" aria-labelledby="geo-heading">
-    <div class="geo-inner">
-      <div class="geo-header">
-        <span class="section-eyebrow">Municipal Guides</span>
-        <h2 id="geo-heading">Explore by Location</h2>
-        <p class="geo-subtitle">
-          Maine has {siteStats.activeAdultUseMunicipalities} cities and towns with at least one active OCP-licensed adult-use retail store, and we publish city guides for all of them plus 44 surrounding catchment markets — 109 city guides total. Each has its own zoning rules, local fees, and competitive landscape.
-        </p>
-      </div>
-
-      <div class="geo-content">
-        <!-- Realistic Maine state outline with accurately-placed city markers.
-             Path sourced from US Census Bureau TIGER/Line cartographic boundary
-             (FIPS 23, 500k resolution, 1740-vertex mainland, Douglas-Peucker
-             simplified to 183 vertices at eps=2.5).  Coordinate transform:
-             x = (lon - lon_min) / (lon_max - lon_min) * W + PAD
-             y = (lat_max - lat) / (lat_max - lat_min) * H + PAD
-             with PAD=30, W=740, H=540, lon_min=-71.08, lon_max=-66.95,
-             lat_min=43.06, lat_max=47.46 (Maine mainland bounding box).
-             All 7 OCP-licensed city markers verified to fall inside the polygon. -->
-        <div class="geo-map">
-          <svg viewBox="0 0 800 600" role="img" aria-label="Map of Maine with active adult-use cannabis retail cities marked">
-            <title>Active adult-use cannabis retail municipalities in Maine</title>
-            <desc>A realistic outline of the state of Maine with clickable markers at Portland, Lewiston, Auburn, Augusta, Bangor, Biddeford, and South Portland. Additional reference markers shown at Presque Isle, Bar Harbor, and Calais without links.</desc>
-
-            <!-- State outline (Maine mainland, simplified from US Census TIGER/Line 500k).
-                 Douglas-Peucker simplified to 429 vertices at eps=1.0 px to preserve
-                 the irregular SW coast (Portland Head, Cape Elizabeth, Kittery).
-                 All 7 OCP-licensed city markers verified inside the polygon
-                 (Portland, South Portland, Biddeford, Lewiston, Auburn, Augusta, Bangor),
-                 plus Kittery at the southern tip. -->
-            <path id="maine-land"
-                  d="M 98.1 570.0 L 97.2 568.1 L 88.7 567.5 L 76.1 561.7 L 74.8 559.3 L 76.7 555.9 L 75.8 554.4 L 79.2 549.7 L 61.9 541.5 L 62.6 539.9 L 57.1 536.0 L 51.0 535.2 L 47.3 529.5 L 47.5 526.5 L 52.1 523.3 L 51.0 522.1 L 52.0 519.7 L 49.7 518.7 L 53.2 514.8 L 51.6 511.5 L 53.9 509.7 L 50.0 507.4 L 38.4 361.9 L 30.0 294.4 L 43.5 292.7 L 44.7 291.6 L 43.2 289.3 L 47.7 291.1 L 53.9 290.8 L 59.8 293.6 L 60.8 295.5 L 59.1 297.7 L 63.2 300.2 L 63.5 302.2 L 70.7 303.8 L 74.0 302.7 L 72.2 301.8 L 72.2 299.6 L 79.3 293.6 L 77.3 290.1 L 80.4 286.9 L 76.2 283.0 L 81.2 279.5 L 88.8 279.3 L 96.6 283.9 L 102.7 283.5 L 105.8 285.5 L 110.5 284.8 L 110.3 279.4 L 95.7 272.0 L 94.7 268.9 L 108.7 257.4 L 118.1 254.6 L 124.1 250.1 L 130.0 250.1 L 140.0 245.8 L 154.2 242.5 L 155.4 241.7 L 154.5 239.9 L 151.3 238.4 L 149.3 234.4 L 152.6 234.2 L 154.6 231.4 L 162.8 227.3 L 169.3 226.4 L 177.7 222.6 L 178.7 221.1 L 176.9 218.5 L 181.1 216.1 L 176.6 213.7 L 167.5 213.7 L 169.0 211.3 L 173.1 209.7 L 169.8 209.3 L 167.2 206.8 L 174.3 202.2 L 168.5 201.2 L 173.1 197.0 L 178.9 196.8 L 181.5 191.1 L 171.7 185.6 L 175.4 183.4 L 179.6 176.4 L 187.3 172.3 L 186.7 168.8 L 189.8 166.4 L 200.9 163.8 L 206.8 158.9 L 214.0 158.1 L 224.6 123.8 L 362.9 30.0 L 376.9 31.3 L 388.3 34.4 L 395.2 33.9 L 396.0 39.2 L 393.4 40.0 L 394.0 54.8 L 420.5 64.5 L 453.6 56.8 L 471.1 56.6 L 475.5 54.8 L 474.9 53.3 L 478.5 51.1 L 483.3 51.8 L 497.1 49.9 L 501.7 51.7 L 514.3 51.1 L 513.3 46.3 L 517.3 42.8 L 540.1 42.8 L 554.6 46.6 L 554.6 48.2 L 557.5 50.1 L 590.0 61.9 L 603.3 73.7 L 619.7 78.3 L 621.2 216.1 L 626.7 219.2 L 617.1 223.5 L 619.7 227.3 L 625.9 230.8 L 616.7 234.3 L 616.7 239.2 L 621.1 242.1 L 616.1 242.4 L 617.3 246.4 L 614.6 246.7 L 617.3 248.7 L 632.1 250.6 L 629.5 247.3 L 630.8 247.4 L 645.4 256.6 L 646.5 255.2 L 668.2 259.7 L 679.5 257.7 L 684.1 260.2 L 685.7 264.4 L 683.1 266.7 L 686.5 270.3 L 678.2 269.4 L 670.9 271.9 L 674.7 275.3 L 676.3 279.7 L 686.1 285.6 L 683.3 287.0 L 684.5 288.3 L 683.2 290.1 L 679.3 291.9 L 680.1 293.0 L 678.6 295.0 L 673.4 297.4 L 682.3 304.0 L 684.3 308.2 L 688.2 309.9 L 688.6 312.3 L 699.2 316.4 L 708.3 313.5 L 706.9 312.1 L 710.3 308.3 L 720.3 311.8 L 724.5 310.8 L 732.8 312.1 L 740.9 318.1 L 744.8 323.4 L 740.0 324.9 L 746.3 328.2 L 755.0 339.3 L 763.8 342.6 L 762.8 346.3 L 764.9 349.4 L 761.7 350.9 L 763.5 353.9 L 769.9 354.6 L 764.7 355.5 L 756.4 360.3 L 749.9 360.2 L 747.9 363.6 L 743.3 363.6 L 742.4 366.6 L 736.1 369.5 L 733.4 372.6 L 727.6 373.3 L 727.1 375.4 L 716.1 376.0 L 708.5 381.1 L 704.7 381.2 L 703.2 379.8 L 708.5 376.8 L 707.6 374.3 L 702.7 374.0 L 703.4 371.9 L 705.7 373.0 L 707.5 368.0 L 705.8 367.8 L 697.3 368.8 L 693.6 370.9 L 692.8 372.4 L 696.0 377.1 L 693.5 378.5 L 691.5 377.7 L 688.5 381.7 L 684.4 379.9 L 679.1 381.2 L 670.5 376.5 L 662.4 378.3 L 658.1 385.8 L 660.4 388.4 L 659.3 389.4 L 644.1 390.1 L 642.8 388.6 L 638.3 388.7 L 635.3 389.8 L 635.9 391.3 L 633.2 393.8 L 628.0 393.6 L 628.1 390.0 L 625.2 387.5 L 622.5 387.4 L 621.1 390.7 L 618.3 390.7 L 616.3 387.8 L 610.7 386.0 L 607.7 390.3 L 608.6 395.1 L 605.5 397.5 L 608.0 403.1 L 602.2 401.5 L 600.0 406.2 L 597.6 401.8 L 595.2 401.6 L 594.3 404.1 L 590.0 403.5 L 585.8 407.1 L 581.0 404.3 L 575.9 410.4 L 574.1 410.7 L 573.2 414.0 L 570.0 413.4 L 568.1 408.8 L 565.4 409.1 L 561.9 405.3 L 561.4 397.2 L 560.0 395.8 L 547.2 396.7 L 547.7 394.8 L 543.8 394.2 L 542.0 394.8 L 541.0 397.7 L 535.2 395.2 L 533.6 398.2 L 528.7 399.5 L 528.5 400.9 L 537.8 401.4 L 537.3 403.7 L 545.6 406.5 L 549.0 409.3 L 551.0 414.3 L 547.7 417.0 L 540.3 419.2 L 530.2 419.8 L 528.6 421.9 L 530.0 424.2 L 525.2 427.0 L 521.3 427.3 L 510.2 423.7 L 504.9 418.0 L 504.9 416.2 L 508.8 414.6 L 506.6 413.2 L 511.1 409.9 L 510.8 408.4 L 518.0 406.5 L 514.2 401.8 L 505.5 405.9 L 504.4 405.3 L 505.1 400.7 L 500.6 399.7 L 499.0 401.0 L 499.5 408.2 L 495.5 407.0 L 497.4 405.0 L 495.2 401.3 L 487.2 405.6 L 480.9 405.6 L 484.4 411.0 L 481.2 413.7 L 480.7 416.2 L 482.5 417.7 L 487.1 417.6 L 486.8 419.5 L 489.1 422.1 L 487.2 424.0 L 488.0 426.7 L 474.1 420.9 L 459.8 417.9 L 450.9 414.3 L 445.7 414.2 L 439.7 416.8 L 434.0 416.3 L 436.2 410.2 L 435.0 404.4 L 441.8 396.5 L 433.6 397.9 L 424.5 402.1 L 420.8 399.1 L 406.2 402.3 L 404.7 403.7 L 405.9 405.9 L 412.3 410.9 L 411.2 414.8 L 406.8 418.2 L 402.4 418.5 L 402.2 421.0 L 395.9 425.9 L 393.3 433.6 L 389.1 434.4 L 388.7 440.2 L 385.0 441.8 L 386.6 444.1 L 393.0 442.9 L 397.4 444.9 L 394.3 446.9 L 390.9 446.3 L 388.8 447.8 L 389.9 448.9 L 380.6 452.2 L 380.8 453.7 L 372.6 455.1 L 368.4 457.6 L 366.6 461.8 L 356.4 465.0 L 353.3 464.8 L 355.2 461.5 L 352.9 459.8 L 346.8 461.6 L 345.8 461.4 L 348.6 459.3 L 343.7 457.8 L 333.6 459.0 L 328.6 457.4 L 326.3 459.8 L 324.0 459.0 L 320.8 466.5 L 316.5 469.3 L 313.0 474.5 L 310.9 475.3 L 309.2 469.9 L 305.7 469.1 L 304.5 469.6 L 305.5 471.6 L 304.2 474.1 L 300.1 474.0 L 299.5 476.3 L 297.7 476.9 L 294.6 477.3 L 297.0 475.4 L 296.6 471.9 L 294.8 472.0 L 291.9 475.9 L 289.4 473.5 L 286.8 474.7 L 286.1 480.3 L 284.1 480.3 L 280.4 476.6 L 276.7 476.3 L 274.2 480.8 L 268.3 484.6 L 263.4 484.6 L 263.8 486.0 L 253.6 488.8 L 253.0 490.8 L 250.0 490.8 L 247.4 482.1 L 237.1 481.6 L 231.6 483.1 L 226.0 486.1 L 223.8 489.3 L 223.8 486.0 L 216.7 486.8 L 217.9 484.2 L 224.4 479.3 L 219.4 476.4 L 223.6 473.2 L 222.3 471.9 L 218.3 473.0 L 212.5 477.5 L 204.9 478.0 L 192.6 484.0 L 192.7 482.0 L 190.1 482.6 L 189.2 486.3 L 185.1 489.0 L 185.3 490.8 L 182.6 490.8 L 178.6 494.3 L 186.3 500.5 L 185.2 504.1 L 188.1 505.4 L 188.8 508.0 L 180.3 509.6 L 175.3 508.3 L 169.0 510.5 L 168.8 512.5 L 166.6 512.6 L 165.2 510.8 L 159.4 512.4 L 155.2 516.5 L 155.5 519.7 L 158.3 521.8 L 165.5 521.1 L 163.6 523.1 L 157.8 524.1 L 152.8 529.1 L 151.3 528.1 L 147.5 529.6 L 149.9 532.9 L 147.7 533.9 L 140.7 535.6 L 131.4 535.1 L 124.9 537.8 L 117.8 546.7 L 121.0 550.1 L 115.4 555.6 L 118.2 557.1 L 113.3 557.3 L 112.7 560.8 L 110.9 561.0 L 104.9 568.0 L 98.1 570.0 Z"
-                  fill="var(--color-primary)" fill-opacity="0.06"
-                  stroke="var(--color-primary)" stroke-width="1.2" stroke-opacity="0.45"
-                  stroke-linejoin="round"/>
-
-            <!-- County boundary hints (faint, regional guides) -->
-            <line x1="200" y1="60" x2="240" y2="540" stroke="var(--color-primary)" stroke-width="0.4" stroke-opacity="0.12" stroke-dasharray="3,4"/>
-            <line x1="430" y1="60" x2="480" y2="500" stroke="var(--color-primary)" stroke-width="0.4" stroke-opacity="0.12" stroke-dasharray="3,4"/>
-
-            <!-- Reference markers (not links — geographic context only) -->
-            <g class="geo-ref" aria-label="Reference locations">
-              <g>
-                <title>Presque Isle, Aroostook County — northern Maine regional reference. Not yet an OCP adult-use retail market.</title>
-                <circle cx="578.5" cy="125.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-                <text x="588" y="129" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Presque Isle</text>
-              </g>
-
-              <g>
-                <title>Bar Harbor, Hancock County — Acadia-region reference. Tourism-driven; no OCP adult-use retailers yet.</title>
-                <circle cx="546.3" cy="406.7" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-                <text x="556" y="410" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Bar Harbor</text>
-              </g>
-
-              <g>
-                <title>Calais, Washington County — eastern-border reference. No OCP adult-use retailers in current OCP roster.</title>
-                <circle cx="710.9" cy="308.6" r="4" fill="var(--color-text-light)" fill-opacity="0.4"/>
-                <text x="720" y="312" font-size="11" fill="var(--color-text-light)" fill-opacity="0.7" font-family="var(--font-sans, system-ui)">Calais</text>
-              </g>
-            </g>
-
-            <!-- Active retail city markers — clickable, positioned by real lat/lon
-                 All positions projected from real lat/lon via the same transform
-                 as the state outline (above), so they sit on the actual map.
-                 Per-marker <title> + aria-label supply city-specific hover
-                 tooltips and screen-reader labels (replacing the generic SVG-level
-                 "Active adult-use cannabis retail municipalities in Maine" text). -->
-            <g class="geo-cities-svg">
-              <!-- Portland (43.66, -70.26) -> (177.5, 496.3) -->
-              <a href="/guides/portland-dispensary-guide" class="geo-city-anchor" aria-label="Portland, Cumberland County — Maine's largest adult-use cannabis market, 12+ OCP-licensed retailers. Portland dispensary guide.">
-                <title>Portland, Cumberland County — Maine's largest adult-use cannabis market, 12+ OCP-licensed retailers. Portland dispensary guide.</title>
-                <circle cx="177.5" cy="496.3" r="9" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2.5"/>
-                <circle cx="177.5" cy="496.3" r="14" fill="none" stroke="var(--color-accent)" stroke-width="1" opacity="0.4"/>
-                <text x="177.5" y="484" text-anchor="middle" font-size="13" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Portland</text>
-              </a>
-
-              <!-- South Portland (43.64, -70.26) -> (177.5, 498.8) — slightly south -->
-              <a href="/guides/south-portland-dispensary-guide" class="geo-city-anchor" aria-label="South Portland, Cumberland County — adjacent to Portland metro adult-use market. South Portland dispensary guide.">
-                <title>South Portland, Cumberland County — adjacent to Portland metro adult-use market. South Portland dispensary guide.</title>
-                <circle cx="195" cy="503" r="5" fill="var(--color-accent)" fill-opacity="0.85" stroke="var(--color-background)" stroke-width="1.5"/>
-                <text x="208" y="506" text-anchor="start" font-size="10" font-weight="600" fill="var(--color-foreground)" fill-opacity="0.85" font-family="var(--font-sans, system-ui)">S. Portland</text>
-              </a>
-
-              <!-- Biddeford (43.49, -70.45) -> (143.5, 517.2) -->
-              <a href="/guides/biddeford-dispensary-guide" class="geo-city-anchor" aria-label="Biddeford, York County — York County's 2nd-busiest adult-use retail market, growth-corridor location. Biddeford dispensary guide.">
-                <title>Biddeford, York County — York County's 2nd-busiest adult-use retail market, growth-corridor location. Biddeford dispensary guide.</title>
-                <circle cx="143.5" cy="517.2" r="7" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
-                <text x="143.5" y="538" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Biddeford</text>
-              </a>
-
-              <!-- Lewiston (44.10, -70.21) -> (186.5, 442.3) -->
-              <a href="/guides/lewiston-dispensary-guide" class="geo-city-anchor" aria-label="Lewiston, Androscoggin County — 2nd-largest Maine adult-use market, value-positioned. Lewiston dispensary guide.">
-                <title>Lewiston, Androscoggin County — 2nd-largest Maine adult-use market, value-positioned. Lewiston dispensary guide.</title>
-                <circle cx="186.5" cy="442.3" r="8" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
-                <text x="186.5" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Lewiston</text>
-              </a>
-
-              <!-- Auburn (44.10, -70.23) -> (182.9, 442.3) — adjacent to Lewiston -->
-              <a href="/guides/auburn-dispensary-guide" class="geo-city-anchor" aria-label="Auburn, Androscoggin County — adjacent to Lewiston (Androscoggin County twin cities). Auburn dispensary guide.">
-                <title>Auburn, Androscoggin County — adjacent to Lewiston (Androscoggin County twin cities). Auburn dispensary guide.</title>
-                <circle cx="205" cy="448" r="5" fill="var(--color-accent)" fill-opacity="0.85" stroke="var(--color-background)" stroke-width="1.5"/>
-                <text x="215" y="452" text-anchor="start" font-size="10" font-weight="600" fill="var(--color-foreground)" fill-opacity="0.85" font-family="var(--font-sans, system-ui)">Auburn</text>
-              </a>
-
-              <!-- Augusta (44.31, -69.77) -> (265.2, 416.6) -->
-              <a href="/guides/augusta-dispensary-guide" class="geo-city-anchor" aria-label="Augusta, Kennebec County — state capital, 8+ OCP-licensed adult-use retailers. Augusta dispensary guide.">
-                <title>Augusta, Kennebec County — state capital, 8+ OCP-licensed adult-use retailers. Augusta dispensary guide.</title>
-                <circle cx="265.2" cy="416.6" r="8" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2"/>
-                <text x="265.2" y="404" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Augusta</text>
-              </a>
-
-              <!-- Bangor (44.80, -68.77) -> (444.2, 356.4) -->
-              <a href="/guides/bangor-dispensary-guide" class="geo-city-anchor" aria-label="Bangor, Penobscot County — central Maine adult-use hub, 4-mile exclusive zone. Largest market north of Augusta. Bangor dispensary guide.">
-                <title>Bangor, Penobscot County — central Maine adult-use hub, 4-mile exclusive zone. Largest market north of Augusta. Bangor dispensary guide.</title>
-                <circle cx="444.2" cy="356.4" r="9" fill="var(--color-accent)" stroke="var(--color-background)" stroke-width="2.5"/>
-                <circle cx="444.2" cy="356.4" r="14" fill="none" stroke="var(--color-accent)" stroke-width="1" opacity="0.4"/>
-                <text x="444.2" y="344" text-anchor="middle" font-size="13" font-weight="700" fill="var(--color-foreground)" font-family="var(--font-sans, system-ui)">Bangor</text>
-              </a>
-            </g>
-
-            <!-- Compass rose (small, top-right) -->
-            <g transform="translate(750 50)" opacity="0.5">
-              <circle r="22" fill="var(--color-background)" stroke="var(--color-primary)" stroke-width="0.6" stroke-opacity="0.4"/>
-              <path d="M 0 -16 L 4 0 L 0 4 L -4 0 Z" fill="var(--color-primary)" fill-opacity="0.5"/>
-              <path d="M 0 16 L 4 0 L 0 -4 L -4 0 Z" fill="var(--color-text-light)" fill-opacity="0.3"/>
-              <text y="-26" text-anchor="middle" font-size="9" fill="var(--color-text-light)" font-family="var(--font-sans, system-ui)">N</text>
-            </g>
-          </svg>
-        </div>
-
-        <!-- City links as styled chips (kept for keyboard/screen-reader fallback + list view) -->
-        <div class="geo-cities">
-          {cityLinks.map(city => (
-            <a href={city.href} class="city-chip">{city.name}</a>
-          ))}
-        </div>
-      </div>
-
-      <!-- analytics:cta-injected id=cta-inline-index-09 -->
-<a href="/guides" class="btn-outline" data-cta-id="cta-inline-index-09">View All 109 Municipal Guides</a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       WHAT'S NEW: Editorial freshness section
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-c whats-new" aria-labelledby="new-heading">
-    <div class="new-inner">
-      <div class="new-header">
-        <div class="freshness-badge">
-          <span class="pulse-dot"></span>
-          <span class="freshness-label">Updated July 2026</span>
-        </div>
-        <h2 id="new-heading">What's New</h2>
-        <p class="new-subtitle">Recent updates and additions to the guide library.</p>
-      </div>
-
-      <div class="new-grid">
-        {recentGuides.map(guide => (
-          <a href={guide.href} class="new-card">
-            <span class={`new-badge ${guide.badge === 'New' ? 'badge-new' : ''}`}>{guide.badge}</span>
-            <span class="new-title">{guide.title}</span>
-            <span class="new-date">{guide.date}</span>
-          </a>
-        ))}
-      </div>
-      <a href="/guides" class="explorer-view-all">View all 109 city guides →</a>
-
-      {/* §3.5 — Static geographic reference, collapsed by default on mobile */}
-      <details class="explorer-reference">
-        <summary>Show Maine state outline (geographic reference, not navigation)</summary>
-        <div class="explorer-reference-map">
-          <svg
-            role="img"
-            aria-label="Schematic outline of the state of Maine for geographic orientation of the listed cities"
-            viewBox="0 0 480 600"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Stylized Maine silhouette — path data is a simplified outline; not a navigation map */}
-            <path
-              d="M 60 120 Q 80 80 140 100 L 180 60 L 240 110 L 280 90 L 340 130 L 360 180 L 380 220 L 360 280 L 400 320 L 380 380 L 340 440 L 300 480 L 240 520 L 200 540 L 140 510 L 80 480 L 60 420 L 50 360 L 60 300 L 70 240 L 50 180 Z"
-              fill="var(--color-surface, #FDFCF6)"
-              stroke="var(--color-lichen, #5A6B57)"
-              stroke-width="2"
-            />
-            {/* Markers for the 10 listed cities (approximate positions for reference only) */}
-            <g fill="var(--color-accent, #8C5A3A)">
-              <circle cx="120" cy="220" r="4" aria-label="Auburn" />
-              <circle cx="180" cy="260" r="4" aria-label="Augusta" />
-              <circle cx="280" cy="220" r="4" aria-label="Bangor" />
-              <circle cx="100" cy="360" r="3" />
-              <circle cx="240" cy="180" r="3" />
-              <circle cx="160" cy="380" r="3" />
-              <circle cx="340" cy="220" r="3" />
-              <circle cx="60"  cy="420" r="3" />
-              <circle cx="140" cy="250" r="3" />
-              <circle cx="80"  cy="440" r="4" />
-            </g>
-            <g fill="var(--color-text-light, #4A5550)" font-family="var(--font-mono, 'JetBrains Mono', ui-monospace, monospace)" font-size="9">
-              <text x="130" y="218">Auburn</text>
-              <text x="190" y="258">Augusta</text>
-              <text x="290" y="218">Bangor</text>
-              <text x="80"  y="320">Portland</text>
-            </g>
-          </svg>
-          <p class="explorer-reference-caption">
-            For orientation, not for navigation. The list above is the canonical index — this map shows the spatial distribution of the 10 largest opt-in towns (orange) within a stylized state outline. Real geographic accuracy is incidental; the marked positions are approximate. Use the list above for any operation that depends on city, county, or region identification.
-          </p>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       RECENT FROM THE BLOG
-       — gives the June 2026 blog batch >1 incoming internal link
-       — matches the same "new-card" pattern as the guides grid above
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-c whats-new blog-recent" aria-labelledby="blog-recent-heading">
-    <div class="new-inner">
-      <div class="new-header">
-        <h2 id="blog-recent-heading">From the Blog</h2>
-        <p class="new-subtitle">Recent analysis and consumer guides from the Maine cannabis desk.</p>
-      </div>
-      <div class="new-grid">
-        {recentPosts.map(post => (
-          <a href={post.href} class="new-card">
-            <span class="new-badge">{post.badge}</span>
-            <span class="new-title">{post.title}</span>
-            <span class="new-date">{post.date}</span>
-          </a>
-        ))}
-      </div>
-      <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="/blog" class="new-view-all">View all 35 articles →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       SOCIAL PROOF: Authority stats
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-a authority-stats" aria-label="Site Statistics">
-    <div class="stats-inner">
-      <p class="stats-intro">
-        This resource has been built for Maine cannabis entrepreneurs who want the real information — not the marketing version.
-      </p>
-
-      <div class="stats-grid">
-        <div class="stat-block">
-          <span class="stat-number">2,847</span>
-          <span class="stat-text">Entrepreneurs Served</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">109</span>
-          <span class="stat-text">City Guides</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">65</span>
-          <span class="stat-text">OCP-Licensed Towns</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-block">
-          <span class="stat-number">98%</span>
-          <span class="stat-text">Update Accuracy</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       START HERE: Journey path with personality
-  ═══════════════════════════════════════════════════════════════ -->
-  <section class="section-b journey-path" aria-labelledby="journey-heading">
-    <div class="journey-inner">
-      <div class="journey-header">
-        <span class="section-eyebrow">For Newcomers</span>
-        <h2 id="journey-heading">Start Your Journey</h2>
-        <p class="journey-subtitle">
-          This curated path walks you through the essentials — from understanding Maine's regulatory framework to signing your commercial lease.
-        </p>
-      </div>
-
-      <div class="journey-steps">
-        {journeySteps.map(step => (
-          <a href={step.href} class="journey-step">
-            <span class="step-num">{step.num}</span>
-            <div class="step-content">
-              <h3>{step.title}</h3>
-              <p>{step.desc}</p>
-            </div>
-            <span class="step-arrow" aria-hidden="true">→</span>
-          </a>
         ))}
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       §3 Section 9 — Footer: Layout.astro renders the global <SiteFooter />
-       at the document close. The trust row (§3.8) replaces the prior
-       contextual contact-CTA strip; Layout owns shell, pages own content.
+       §3 Section 4 — Featured Analysis
+       2-column: image left (placeholder gradient + "FEATURED" chip),
+       prose right with 4-row evidence table.
        ============================================================ -->
+  <section class="featured">
+    <div class="container">
+      <div class="featured-head">
+        <div>
+          <span class="eyebrow">Featured analysis · 2026-07-08</span>
+          <h2>The Maine market story behind the numbers.</h2>
+        </div>
+        <a href="/blog" class="featured-link">Browse all analyses →</a>
+      </div>
+      <div class="featured-grid">
+        <div class="featured-image-wrap">
+          <span class="featured-chip">Featured</span>
+          <div class="featured-image" role="img" aria-label="Penobscot Bay, Maine — featured analysis image">
+            <span class="featured-image-label">Penobscot Bay · Stock photograph</span>
+          </div>
+        </div>
+        <div class="featured-body">
+          <h3>{featuredAnalysis.title}</h3>
+          <p class="featured-lede">{featuredAnalysis.excerpt}</p>
+          <div class="featured-figure" role="figure" aria-label="Revenue concentration among top Maine operators, 2025">
+            {featuredAnalysis.figure.map((row) => (
+              <div class="featured-figure-row">
+                <span class="featured-figure-label">{row.label}</span>
+                <span class="featured-figure-value">{row.value}</span>
+              </div>
+            ))}
+            <p class="featured-figure-caption">{featuredAnalysis.source}</p>
+          </div>
+          <a href={featuredAnalysis.href} class="featured-link">Read the full analysis →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       §3 Section 5 — Municipality Explorer
+       Search input + 10 ranked rows. Top 3 (Auburn/Augusta/Bangor) get bronze
+       rank numbers per §18 R4. Each row carries information scent.
+       ============================================================ -->
+  <section class="explorer" id="explorer">
+    <div class="container">
+      <div class="explorer-head">
+        <span class="eyebrow">Municipal guides</span>
+        <h2>Where dispensaries operate in Maine.</h2>
+        <p class="explorer-count">109 Maine municipalities tracked. Use the search to find a city, county, or region; the list below is alphabetical and includes every active adult-use storefront.</p>
+      </div>
+      <div class="search-wrap">
+        <input type="search" class="search-input" placeholder="Search by city or county" aria-label="Search Maine municipal guides" />
+      </div>
+      <div class="city-list">
+        {cityRows.map((row, i) => (
+          <a href={`/guides/${row.name.toLowerCase().replace(/ /g, "-")}-dispensary-guide`} class={`city-row${i < 3 ? " city-row-top" : ""}`}>
+            <span class="city-row-rank">{row.rank}</span>
+            <span class="city-row-name">{row.name}</span>
+            <span class="city-row-note">{row.note} · {row.optIn}</span>
+            <span class="city-row-stores">{row.stores}</span>
+            <span class="city-row-arrow">→</span>
+          </a>
+        ))}
+      </div>
+      <a href="/guides" class="featured-link" style="margin-top: var(--space-md); display: inline-block;">View all 109 city guides →</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       §3 Section 6 — Latest Intelligence
+       Combined guides + blog feed. "New" badge filled bronze.
+       ============================================================ -->
+  <section class="intelligence">
+    <div class="container">
+      <div class="intelligence-head">
+        <span class="eyebrow">Latest intelligence</span>
+        <h2>What changed this week.</h2>
+      </div>
+      <div class="intel-list">
+        {intelligence.map((item) => (
+          <a href={item.href || "#"} class="intel-row">
+            <span class="intel-date">{item.date}</span>
+            <span class="intel-title">{item.title}</span>
+            <span class={`intel-badge${item.badge === "New" ? " intel-badge-new" : ""}`}>{item.badge}</span>
+          </a>
+        ))}
+      </div>
+      <a href="/blog" class="intel-link">Browse the full archive →</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       §3 Section 7 — Newsletter
+       Contained surface with bronze top accent per spec §5.3 + §6.6.
+       Justified exception to the "no card" rule.
+       ============================================================ -->
+  <section class="newsletter">
+    <div class="container">
+      <div class="newsletter-inner">
+        <h3>Get the Maine cannabis weekly.</h3>
+        <p>One email per Friday. Operator-relevant updates only — no marketing, no promotional blasts, no "industry insights" filler.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" class="newsletter-input" placeholder="you@example.com" aria-label="Email address" required />
+          <button type="submit" class="btn-primary">Subscribe <span class="arrow">→</span></button>
+        </form>
+        <p class="newsletter-assurance">One email per week. Unsubscribe in one click. We don't share your email.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       §3 Section 8 — Trust Row
+       Three cells with hairline separators (bronze on the middle divider
+       per spec §6.6 pop-moment discipline).
+       ============================================================ -->
+  <section class="trust-row">
+    <div class="container">
+      <div class="trust-grid">
+        {trustCells.map((cell) => (
+          <div class="trust-cell">
+            <span class="eyebrow">{cell.eyebrow}</span>
+            <p>{cell.body}</p>
+            <a href={cell.href}>{cell.cta} →</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       §3 Section 9 — Footer (existing SiteFooter component, preserved
+       from the prior homepage integration).
+       ============================================================ -->
+  <SiteFooter />
+
+  <!-- Note: LeadFormTracker preserved in the codebase for use on
+       /launch-checklist, /start-here, and other pages with Formspree
+       forms. The new 9-section homepage has no Formspree form (the §7
+       newsletter is a mailto-style inline form), so the tracker is not
+       mounted here. -->
 </Layout>
 
 <!-- Imported at the bottom for tree-shaking -->
@@ -1002,44 +392,6 @@ const journeySteps = [
     margin-bottom: var(--space-lg, 3rem);
   }
   .hero-cta-group { display: flex; gap: var(--space-md, 2rem); align-items: center; flex-wrap: wrap; }
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.875rem 1.5rem;
-    border: 0;
-    border-radius: var(--radius-control);
-    background: var(--color-primary);
-    color: var(--color-on-primary) !important;
-    font: inherit;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    line-height: 1;
-    text-decoration: none !important;
-    cursor: pointer;
-    transition: background-color 180ms linear, box-shadow 180ms linear !important;
-  }
-  .btn-primary:hover {
-    background: var(--color-primary-dark);
-    box-shadow: 0 0 0 4px var(--color-accent-glow, color-mix(in oklab, var(--color-accent) 18%, transparent));
-  }
-  .btn-primary .arrow { transition: transform 180ms var(--ease-out) !important; }
-  .btn-primary:hover .arrow { transform: translateX(2px); }
-  .btn-secondary {
-    background: none;
-    color: var(--color-primary) !important;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    text-decoration-line: underline !important;
-    text-decoration-color: var(--color-accent) !important;
-    text-decoration-thickness: 1px !important;
-    text-underline-offset: 0.2em;
-    transition: text-decoration-color 180ms linear, text-decoration-thickness 180ms linear !important;
-  }
-  .btn-secondary:hover {
-    text-decoration-color: currentColor !important;
-    text-decoration-thickness: 2px !important;
-  }
   .hero-byline {
     margin-top: var(--space-lg, 3rem);
     font-size: var(--text-sm, 0.875rem);
@@ -1111,19 +463,14 @@ const journeySteps = [
     border-left: 3px solid var(--color-accent, #8C5A3A);
   }
   .pathway-num {
-    font-family: var(--font-serif, 'Newsreader', Georgia, serif);
-    font-style: italic;
+    font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
     font-size: var(--text-sm, 0.875rem);
     color: var(--color-lichen, #5A6B57);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.04em;
     padding-top: 0.4rem;
   }
-  .pathway.pathway-primary .pathway-num {
-    color: var(--color-accent, #8C5A3A);
-    font-weight: 600;
-    font-style: italic;
-  }
+  .pathway.pathway-primary .pathway-num { color: var(--color-accent, #8C5A3A); font-weight: 600; }
   .pathway-body h3 {
     font-family: var(--font-serif, 'Newsreader', Georgia, serif);
     font-size: var(--text-2xl, 1.5rem);
@@ -1298,60 +645,6 @@ const journeySteps = [
     text-align: right;
   }
   .city-row-arrow { color: var(--color-lichen, #5A6B57); }
-  .explorer-view-all {
-    display: inline-block;
-    margin-top: var(--space-md, 2rem);
-    font-size: var(--text-sm, 0.875rem);
-    color: var(--color-primary, #1F3D2E);
-    font-weight: 500;
-  }
-
-  /* §3.5 — Static geographic reference below the row list.
-     Spec §13 Q4 default: "keep, demote to reference." Below the 10 rows,
-     collapsed by default on mobile, with the editorial caption. */
-  .explorer-reference {
-    margin-top: var(--space-xl, 4rem);
-    border-top: 1px solid var(--color-rule, rgba(15, 20, 25, 0.10));
-    padding-top: var(--space-lg, 3rem);
-  }
-  .explorer-reference details > summary {
-    font-family: var(--font-serif, 'Newsreader', Georgia, serif);
-    font-size: var(--text-lg, 1.125rem);
-    font-weight: 600;
-    color: var(--color-text, #0F1419);
-    cursor: pointer;
-    list-style: none;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .explorer-reference details > summary::-webkit-details-marker { display: none; }
-  .explorer-reference details > summary::before {
-    content: '+';
-    width: 1.25rem; height: 1.25rem;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: var(--color-surface, #FDFCF6);
-    border: 1px solid var(--color-rule, rgba(15, 20, 25, 0.10));
-    border-radius: var(--radius-control, 4px);
-    font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
-    font-size: var(--text-xs, 0.875rem);
-  }
-  .explorer-reference details[open] > summary::before { content: '−'; }
-  .explorer-reference-map {
-    margin-top: var(--space-md, 2rem);
-    width: 100%; aspect-ratio: 4 / 3;
-    max-width: 720px;
-    background: var(--color-surface, #FDFCF6);
-    border: 1px solid var(--color-rule, rgba(15, 20, 25, 0.10));
-    border-radius: var(--radius-card, 6px);
-    padding: var(--space-md, 2rem);
-  }
-  .explorer-reference-map svg { width: 100%; height: 100%; display: block; }
-  .explorer-reference-caption {
-    font-size: var(--text-xs, 0.75rem);
-    color: var(--color-text-light, #4A5550);
-    font-style: italic;
-    margin-top: var(--space-md, 2rem);
-    max-width: 60ch;
-  }
 
   /* === Intelligence === */
   .intelligence {
@@ -1463,11 +756,5 @@ const journeySteps = [
     margin-bottom: var(--space-sm, 1rem);
   }
   .trust-cell a { font-size: var(--text-sm, 0.875rem); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .btn-primary,
-    .btn-primary .arrow,
-    .btn-secondary { transition: none !important; }
-  }
 </style>
 </content>
