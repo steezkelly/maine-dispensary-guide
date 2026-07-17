@@ -76,7 +76,7 @@ const faqs = [
   .form-group textarea { width: 100%; padding: 0.875rem 1rem; font-family: var(--font-sans); font-size: 1rem; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 0.75rem; transition: border-color 0.2s, box-shadow 0.2s; }
   .form-group input:focus,
   .form-group select:focus,
-  .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(13, 78, 80, 0.15); }
+  .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 15%, transparent); }
   .form-group textarea { min-height: 140px; resize: vertical; }
   .form-submit { display: inline-block; background: #143027; color: #fff; border: none; padding: 1rem 2.5rem; font-size: 1rem; font-weight: 700; border-radius: 0.75rem; cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .form-submit:hover { background: var(--color-accent); transform: translateY(-1px); }
@@ -88,7 +88,7 @@ const faqs = [
   .quick-links-section > p { color: var(--color-text-light); margin-bottom: 3rem; }
   .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
   .quick-link-card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.5rem 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem; text-decoration: none; transition: all 0.2s; }
-  .quick-link-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 78, 80, 0.08); }
+  .quick-link-card:hover { border-color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px color-mix(in oklab, var(--color-primary) 8%, transparent); }
   .ql-icon { font-size: 2rem; }
   .ql-label { font-size: 0.875rem; font-weight: 700; color: var(--color-text); text-align: center; }
 
