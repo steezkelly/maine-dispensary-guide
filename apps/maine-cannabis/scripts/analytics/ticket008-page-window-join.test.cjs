@@ -121,12 +121,30 @@ test('page-window join retains separate metrics for the same page-day', () => {
     ] },
     vercelRows: [
       { day: '2026-07-12', requestPath: '/x', value: 8, source_family: 'pageviews' },
-      { day: '2026-07-12', requestPath: '/x', value: 2, source_family: 'custom_events' },
+      { day: '2026-07-12', requestPath: '/x', value: 2, source_family: 'custom_events', event_name: 'lead_capture' },
     ],
   });
   assert.equal(rows.length, 2);
   assert.deepEqual(rows.map((row) => row.metric_family), ['custom_events', 'pageviews']);
   assert.deepEqual(rows.map((row) => row.reconciliation_status), ['matched', 'matched']);
+});
+
+test('page-window join preserves each R1 metric and R3 event observation for one page-day', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [
+    { report_key: 'R1_pageview_daily', sanitized_rows: [
+      { row_key: { date: '20260712', page_path: '/x', metric_name: 'screenPageViews' }, metric_name: 'screenPageViews', data_api_value: 8 },
+      { row_key: { date: '20260712', page_path: '/x', metric_name: 'totalUsers' }, metric_name: 'totalUsers', data_api_value: 5 },
+      { row_key: { date: '20260712', page_path: '/x', metric_name: 'sessions' }, metric_name: 'sessions', data_api_value: 6 },
+    ] },
+    { report_key: 'R3_event_count_daily', sanitized_rows: [
+      { row_key: { date: '20260712', page_path: '/x', event_name: 'lead_capture', metric_name: 'eventCount' }, metric_name: 'eventCount', data_api_value: 2 },
+      { row_key: { date: '20260712', page_path: '/x', event_name: 'affiliate_click', metric_name: 'eventCount' }, metric_name: 'eventCount', data_api_value: 3 },
+    ] },
+  ] }, vercelRows: [] });
+  assert.equal(rows.length, 5);
+  assert.deepEqual(rows.map((row) => row.ga4_r1.value).sort((a, b) => a - b), [2, 3, 5, 6, 8]);
+  assert.deepEqual(rows.filter((row) => row.metric_family === 'pageviews').map((row) => row.metric_name).sort(), ['screenPageViews', 'sessions', 'totalUsers']);
+  assert.deepEqual(rows.filter((row) => row.metric_family === 'custom_events').map((row) => row.event_name).sort(), ['affiliate_click', 'lead_capture']);
 });
 
 test('page-window join retains every FAQ and CTA observation for one page-day', () => {
@@ -154,5 +172,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/38 passed.`);
+console.log(`Tests: ${pass}/39 passed.`);
 if (process.exitCode) process.exit(1);
