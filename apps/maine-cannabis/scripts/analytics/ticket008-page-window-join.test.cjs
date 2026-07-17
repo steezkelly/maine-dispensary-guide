@@ -67,6 +67,25 @@ test('source delta preserves both values', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 8 }] }] }, vercelRows: [{ day: '2026-07-12', requestPath: '/x', value: 6 }] });
   assert.equal(rows[0].reconciliation_status, 'source_delta'); assert.equal(rows[0].ga4_r1.value, 8); assert.equal(rows[0].vercel_a4.value, 6); assert.equal(rows[0].delta_fields.value.absolute, 2);
 });
+
+test('GA4 screenPageViews reconcile with Vercel pageviews while Vercel visits remain distinct', () => {
+  const rows = join.joinPageWindow({
+    ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{
+      row_key: { date: '20260712', page_path: '/x', metric_name: 'screenPageViews' }, metric_name: 'screenPageViews', data_api_value: 8,
+    }] }] },
+    vercelRows: [
+      { day: '2026-07-12', requestPath: '/x', metric_name: 'pageviews', value: 6 },
+      { day: '2026-07-12', requestPath: '/x', metric_name: 'visits', value: 4 },
+    ],
+  });
+  const pageviews = rows.find((row) => row.observation_identity === 'metric:pageviews');
+  const visits = rows.find((row) => row.observation_identity === 'metric:visits');
+  assert.equal(rows.length, 2);
+  assert.equal(pageviews.source_presence, 'both');
+  assert.equal(pageviews.reconciliation_status, 'source_delta');
+  assert.equal(pageviews.delta_fields.value.absolute, 2);
+  assert.equal(visits.source_presence, 'vercel_only');
+});
 test('page manifest identity is attached', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 1 }] }] }, vercelRows: [], manifestRows: [{ page_id: 'page-x', canonical_path: '/x' }] });
   assert.equal(rows[0].page_manifest_row_key, 'page-x');
@@ -172,5 +191,5 @@ test('joined rows are deterministic in sort order', () => {
   assert.deepEqual(rows.map((r) => r.canonical_page_path), ['/a', '/z']);
 });
 
-console.log(`Tests: ${pass}/39 passed.`);
+console.log(`Tests: ${pass}/40 passed.`);
 if (process.exitCode) process.exit(1);

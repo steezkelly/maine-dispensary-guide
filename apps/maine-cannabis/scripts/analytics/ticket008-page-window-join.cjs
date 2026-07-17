@@ -206,9 +206,20 @@ function deltaFields(ga4, vercel) {
   return { value: { ga4: ga4.value, vercel: vercel.value, absolute: ga4.value - vercel.value } };
 }
 
+function canonicalComparableMetricName(metricName) {
+  if (metricName == null || metricName === '') return null;
+  const normalized = String(metricName).trim().replace(/[\s_-]+/g, '').toLowerCase();
+  // GA4's screenPageViews and Vercel A4's pageviews describe the comparable
+  // page-view count. Keep the original metric name in output evidence, but use
+  // this shared identity so the observations reconcile in one page-day group.
+  if (['screenpageviews', 'pageviews', 'pageview'].includes(normalized)) return 'pageviews';
+  return String(metricName);
+}
+
 function observationIdentity(record) {
-  if (record.metric_name && record.event_name) return `metric:${record.metric_name}|event:${record.event_name}`;
-  if (record.metric_name) return `metric:${record.metric_name}`;
+  const metricName = canonicalComparableMetricName(record.metric_name);
+  if (metricName && record.event_name) return `metric:${metricName}|event:${record.event_name}`;
+  if (metricName) return `metric:${metricName}`;
   if (record.event_name) return `event:${record.event_name}`;
   // R7/R8 rows have additional event dimensions (for example FAQ or CTA IDs)
   // that distinguish observations sharing a page, day, and event report.
@@ -320,6 +331,6 @@ function main() {
   console.log(`Ticket 008 join: ${rows.length} rows written to ${args.out}`);
 }
 
-module.exports = { CONTRACT_VERSION, CSP_FIX_DATE, canonicalizePagePath, normalizeDate, normalizeGa4Release, normalizeVercelRows, joinPageWindow, buildEvidenceManifest, classifyPresence, classifyReconciliation, measurementStatus };
+module.exports = { CONTRACT_VERSION, CSP_FIX_DATE, canonicalizePagePath, canonicalComparableMetricName, normalizeDate, normalizeGa4Release, normalizeVercelRows, joinPageWindow, buildEvidenceManifest, classifyPresence, classifyReconciliation, measurementStatus };
 
 if (require.main === module) main();
