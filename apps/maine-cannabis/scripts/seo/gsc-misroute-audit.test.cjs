@@ -21,8 +21,8 @@ function dailyRecord(overrides = {}) {
 }
 
 test('rejects raw-query misroute audit output paths outside private GSC storage', () => {
-  const { privateOutputPath } = require('./gsc-misroute-audit.cjs');
-  assert.match(privateOutputPath('/home/steve/.hermes/data/mdg-gsc/reports/misroute.md'), /mdg-gsc\/reports\/misroute\.md$/);
+  const { privateOutputPath, PRIVATE_DATA_ROOT } = require('./gsc-misroute-audit.cjs');
+  assert.match(privateOutputPath(`${PRIVATE_DATA_ROOT}/reports/misroute.md`), /mdg-gsc\/reports\/misroute\.md$/);
   assert.throws(() => privateOutputPath('docs/analytics/misroute.md'), /private GSC data root/);
 });
 
