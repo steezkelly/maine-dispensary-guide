@@ -184,7 +184,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 
 <section id="search-demand">
   <h2>Search Demand — Aggregate Signal</h2>
-  <p>MDG's public research summary records <strong>{totalQueries.toLocaleString()} unique queries</strong>, {totalImpressions.toLocaleString()} impressions, and {totalClicks} clicks from its GSC export. Individual query text remains private operational data and is not published in this report.</p>
+  <p>MDG's public research summary combines {gscSummary.snapshotCount} historical GSC exports, recording <strong>{totalQueries.toLocaleString()} unique queries</strong>, {totalImpressions.toLocaleString()} impressions, and {totalClicks} clicks. It is a multi-snapshot aggregate, not a single reporting window. Individual query text remains private operational data and is not published in this report.</p>
 
   <div class="stat-grid">
     <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique queries in the aggregate snapshot</div></div>
@@ -201,7 +201,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     <p><strong>Opt-in data:</strong> Compiled from MDG's ongoing municipal records review, cross-referenced with the Maine OCP public docket and individual town clerk records. Updated quarterly. Last refresh: April 2026. Next refresh: October 2026.</p>
     <p><strong>License fees:</strong> Pulled from individual municipal ordinances and town-clerk fee schedules. May not reflect the most recent revision; confirm with town clerk before relying on a specific number for a business decision.</p>
     <p><strong>Dispensary counts:</strong> Compiled from OCP license filings and direct outreach to operators. Estimates only — actual operating counts may vary by ±20%.</p>
-    <p><strong>Search demand data:</strong> A reviewed aggregate from MDG's Google Search Console export, published {gscSummary.publishedAt}. It reports counts only; raw query text is retained in private operational storage and is not published. The figures describe impressions on MDG, not total Maine-cannabis search volume.</p>
+    <p><strong>Search demand data:</strong> A reviewed multi-snapshot aggregate from MDG's Google Search Console exports, published {gscSummary.publishedAt}; it is not a single reporting window. It reports counts only; raw query text is retained in private operational storage and is not published. The figures describe impressions on MDG, not total Maine-cannabis search volume.</p>
     <p><strong>License:</strong> All data in this report is released under CC BY 4.0. Cite as: Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026.</p>
     <p><strong>Caveats:</strong> This is observational data, not a controlled study. Numbers are point-in-time snapshots. Maine's regulatory environment changes frequently; verify current status with the OCP and individual town clerks before relying on any specific figure for a business decision.</p>
   </div>
