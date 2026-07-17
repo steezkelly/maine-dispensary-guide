@@ -25,7 +25,7 @@ const cityNeighbors = {
   'bangor': [
     { city: 'Waterville', distance: '30 miles', href: '/guides/waterville-dispensary-guide', notes: 'Central Maine hub' },
     { city: 'Lewiston', distance: '50 miles', href: '/guides/lewiston-dispensary-guide', notes: 'Second-largest market' },
-    { city: 'Brewer', distance: '3 miles', href: '/guides/bangor-dispensary-guide', notes: 'Part of Bangor metro' }
+    { city: 'Brewer', distance: '3 miles', href: '/guides/brewer-dispensary-guide', notes: 'Part of Bangor metro' }
   ],
   'biddeford': [
     { city: 'Saco', distance: '4 miles', href: '/guides/saco-dispensary-guide', notes: 'Adjacent coastal market' },

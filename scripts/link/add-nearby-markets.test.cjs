@@ -66,6 +66,12 @@ test('nearby-market insertion preserves the preceding section close tag', (t) =>
     'Kittery must point to Portland at 50 miles with the required relationship label',
   );
 
+  const bangor = firstRun.get('bangor-dispensary-guide');
+  assert.ok(
+    bangor.includes('<tr><td>Brewer</td><td>3 miles</td><td><a href="/guides/brewer-dispensary-guide">Brewer Guide</a></td><td>Part of Bangor metro</td></tr>'),
+    'Bangor must label and link the Brewer guide consistently',
+  );
+
   const secondResult = spawnSync(process.execPath, [scriptPath], { cwd: root, encoding: 'utf8' });
   assert.equal(secondResult.status, 0, secondResult.stderr || secondResult.stdout);
   for (const slug of TARGET_GUIDES) {

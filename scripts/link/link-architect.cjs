@@ -33,7 +33,7 @@ const glossaryMap = {
 console.log("🚀 Starting Node.js Link Architect (Body-Only Sync)...");
 
 function replaceOutsideProtectedBlocks(content, pattern, replacement) {
-    const protectedBlockPattern = /<(style|script)\b[^>]*>[\s\S]*?<\/\1>/gi;
+    const protectedBlockPattern = /<(style|script|a)\b[^>]*>[\s\S]*?<\/\1>/gi;
     let cursor = 0;
 
     for (const match of content.matchAll(protectedBlockPattern)) {
