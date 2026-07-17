@@ -37,3 +37,16 @@ test('writes finalized one-day provenance onto every GSC row', () => {
     position: 4,
   }]);
 });
+
+test('separate page snapshot exposes a row-limit truncation and site-total coverage', () => {
+  const snapshot = producer.snapshotFromRows({
+    name: 'page', dimensions: ['page'], sourceWindow: { sourceStartDate: '2026-03-06', sourceEndDate: '2026-03-06' },
+    extractedAt: '2026-03-09T20:00:00.000Z', siteTotals: { clicks: 10, impressions: 100, ctr: .1, position: 2 },
+    rows: Array.from({ length: 1000 }, (_, index) => ({ keys: [`https://example.test/${index}`], clicks: 0, impressions: 0.05, ctr: 0, position: 5 })),
+  });
+  assert.equal(snapshot.snapshotKind, 'page');
+  assert.equal(snapshot.completeness.status, 'top_rows_truncated_or_unknown');
+  assert.equal(snapshot.completeness.rowLimitReached, true);
+  assert.ok(Math.abs(snapshot.coverageOfSiteTotals.impressions - 0.5) < 1e-10);
+  assert.equal(snapshot.filters.country, null);
+});
