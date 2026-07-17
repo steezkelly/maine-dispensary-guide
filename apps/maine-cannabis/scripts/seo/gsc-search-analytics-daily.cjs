@@ -3,8 +3,9 @@
  * gsc-search-analytics-daily.cjs
  *
  * Daily GSC Search Analytics dump for MDG. Pulls finalized query+page rows
- * for a non-overlapping source window and appends them to
- * apps/maine-cannabis/data/gsc-search-analytics.jsonl. Each row records its
+ * for a non-overlapping source window and appends them to a private ledger at
+ * `$MDG_GSC_DATA_ROOT/gsc-search-analytics.jsonl` (default
+ * `~/.hermes/data/mdg-gsc/gsc-search-analytics.jsonl`). Each row records its
  * extraction date plus source-window provenance.
  *
  * Usage:
@@ -63,8 +64,10 @@ const path = require('node:path');
 const { google } = require('googleapis');
 
 const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
-const OUTPUT_PATH = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics.jsonl');
-const SNAPSHOT_DIR = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics-snapshots');
+const PRIVATE_DATA_ROOT = process.env.MDG_GSC_DATA_ROOT || path.join(process.env.HOME || '', '.hermes', 'data', 'mdg-gsc');
+const OUTPUT_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
+const SNAPSHOT_DIR = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics-snapshots');
+const PUBLIC_PAGE_SNAPSHOT_DIR = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-page-analytics-snapshots');
 const SITE_URL = 'https://mainedispensaryguide.com/';
 
 const CRED_PATHS = [
@@ -285,9 +288,9 @@ async function main() {
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   const lines = records.map(r => JSON.stringify(r)).join('\n') + '\n';
   fs.appendFileSync(OUTPUT_PATH, lines);
-  aggregateSnapshots.forEach(appendSnapshot);
+  aggregateSnapshots.forEach(snapshot => appendSnapshot(snapshot, snapshot.snapshotKind === 'page' ? PUBLIC_PAGE_SNAPSHOT_DIR : SNAPSHOT_DIR));
   logOk(`Appended ${records.length} rows to ${OUTPUT_PATH}`);
-  logOk(`Appended separate query, page, and query-by-page aggregate snapshots to ${SNAPSHOT_DIR}`);
+  logOk(`Appended page-level snapshots to ${PUBLIC_PAGE_SNAPSHOT_DIR}; query-level snapshots remain private at ${SNAPSHOT_DIR}`);
   logInfo(`Daily cron-friendly. Re-run tomorrow for trend delta.`);
 }
 
@@ -305,4 +308,8 @@ module.exports = {
   snapshotFromRows,
   totals,
   requestBody,
+  PRIVATE_DATA_ROOT,
+  OUTPUT_PATH,
+  SNAPSHOT_DIR,
+  PUBLIC_PAGE_SNAPSHOT_DIR,
 };

@@ -34,6 +34,11 @@ test('filters by finalized source dates across the Los Angeles DST transition', 
   assert.deepEqual(filtered.map(record => record.sourceEndDate), ['2026-03-03', '2026-03-09']);
 });
 
+test('reads raw query-level ledgers from the private GSC data root by default', () => {
+  assert.match(audit.JSONL_PATH, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics\.jsonl$/);
+  assert.doesNotMatch(audit.JSONL_PATH, /apps\/maine-cannabis\/data/);
+});
+
 test('deduplicates a repeated source day and aggregates compatible daily facts', () => {
   const records = [
     dailyRecord(),

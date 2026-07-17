@@ -22,6 +22,12 @@ test('uses Los Angeles calendar arithmetic for a finalized daily window across D
   });
 });
 
+test('keeps raw query-level GSC ledgers outside the repository by default', () => {
+  assert.match(producer.OUTPUT_PATH, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics\.jsonl$/);
+  assert.match(producer.SNAPSHOT_DIR, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics-snapshots$/);
+  assert.doesNotMatch(producer.OUTPUT_PATH, /apps\/maine-cannabis\/data/);
+});
+
 test('writes finalized one-day provenance onto every GSC row', () => {
   const records = producer.recordsFromRows([
     { keys: ['maine dispensaries', 'https://mainedispensaryguide.com/guides/maine-dispensary-guide/'], clicks: 2, impressions: 10, ctr: 0.2, position: 4 },

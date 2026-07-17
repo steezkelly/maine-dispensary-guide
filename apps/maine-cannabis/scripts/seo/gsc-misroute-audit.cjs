@@ -44,8 +44,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
-const JSONL_PATH = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-search-analytics.jsonl');
+const PRIVATE_DATA_ROOT = process.env.MDG_GSC_DATA_ROOT || path.join(process.env.HOME || '', '.hermes', 'data', 'mdg-gsc');
+const JSONL_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 
 const args = process.argv.slice(2);
 const flags = Object.fromEntries(
@@ -344,4 +344,6 @@ module.exports = {
   dedupeDailyRecords,
   filterByDays,
   isFinalizedDailyRecord,
+  PRIVATE_DATA_ROOT,
+  JSONL_PATH,
 };
