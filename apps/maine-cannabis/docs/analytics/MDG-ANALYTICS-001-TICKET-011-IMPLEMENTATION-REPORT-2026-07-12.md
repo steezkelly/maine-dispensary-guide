@@ -54,6 +54,12 @@ verify:iterate: clean
 
 The CLI was exercised with local Ticket 010-shaped fixture evidence. No production analytics data was fabricated or committed.
 
+## 2026-07-17 reconciliation amendment
+
+- Final packets now require the upstream `detected_at` timestamp and preserve Ticket 010 top-level canonical/acquisition release IDs in the immutable snapshot.
+- Diagnostic, resolution, and proposal APIs require explicit operation timestamps instead of substituting wall-clock time.
+- Identical timestamped evidence produces byte-identical final packets; the focused suite now passes 45/45 tests.
+
 ## Authority boundary
 
 - Investigation packets: A1 read-only authority.

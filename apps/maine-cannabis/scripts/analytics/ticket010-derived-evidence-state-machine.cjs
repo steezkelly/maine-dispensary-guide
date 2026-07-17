@@ -19,6 +19,10 @@ const BLOCKED_REASONS = Object.freeze({ HEALTH: 'MEASUREMENT_BLOCKED', UNSETTLED
 function clean(v) { return v == null || v === '' ? null : String(v); }
 function bool(v, fallback = false) { return v == null ? fallback : Boolean(v); }
 function hash(value) { return crypto.createHash('sha256').update(String(value)).digest('hex').slice(0, 16); }
+function requireTimestamp(value, field) {
+  if (!value || Number.isNaN(Date.parse(value))) throw new Error(`${field} must be an explicit ISO-8601 timestamp`);
+  return String(value);
+}
 function stableDeduplicationKey(row) {
   return `oppkey_${hash([row.page_id || '(page)', row.canonical_page_path || row.canonical_path || '(path)', row.primary_task_family || '(task)', row.metric_family || '(metric)', row.signal_family || signalFamily(row)].join('|'))}`;
 }
@@ -144,11 +148,13 @@ function cwvEvidence(row) {
 function makeOpportunitySnapshot(row, transition) {
   if (transition.state !== 'INVESTIGATION_ELIGIBLE') return null;
   const deduplicationKey = stableDeduplicationKey(row);
+  const detectedAt = requireTimestamp(row.detected_at, 'detected_at');
   return {
     opportunity_id: opportunityId({ ...row, deduplication_key: deduplicationKey }),
     opportunity_schema_version: 'opportunity.v0.5',
-    created_at: row.detected_at || new Date().toISOString(),
-    updated_at: row.detected_at || new Date().toISOString(),
+    created_at: detectedAt,
+    updated_at: detectedAt,
+    detected_at: detectedAt,
     state: 'INVESTIGATION_ELIGIBLE', state_version: 1, deduplication_key: deduplicationKey,
     page_id: row.page_id || null, canonical_path: row.canonical_page_path || row.canonical_path || null,
     settlement_state: row.settlement_state || row.window_status || null,
@@ -203,9 +209,11 @@ function parseArgs(argv) { const out = {}; for (const a of argv) { const m = /^-
 function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  if (!args.baselines || !args.out) { console.error('Usage: --baselines=Ticket009.json --out=Ticket010.json'); process.exitCode = 2; return; }
+  if (!args.baselines || !args.out) { console.error('Usage: --baselines=Ticket009.json --out=Ticket010.json [--detected_at=ISO-8601]'); process.exitCode = 2; return; }
   const input = readJson(args.baselines);
-  const rows = Array.isArray(input) ? input : (input.baselines || input.rows || []);
+  const inputRows = Array.isArray(input) ? input : (input.baselines || input.rows || []);
+  const detectedAt = args.detected_at ? requireTimestamp(args.detected_at, 'detected_at') : null;
+  const rows = inputRows.map((row) => ({ ...row, detected_at: row.detected_at || detectedAt }));
   const result = deriveEvidence(rows, { required_settled_windows: args.required_settled_windows ? Number(args.required_settled_windows) : 2 });
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, JSON.stringify(result, null, 2) + '\n');

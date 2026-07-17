@@ -52,6 +52,12 @@ The CLI was exercised with local fixture baseline evidence. Fixture output is no
 
 `INVESTIGATION_ELIGIBLE` means diagnostic effort is justified. It is not a recommendation or edit instruction.
 
+## 2026-07-17 reconciliation amendment
+
+- Durable opportunity output now requires an explicit `detected_at` timestamp; the CLI can inject it with `--detected_at=ISO-8601`.
+- Identical inputs plus the same timestamp produce byte-identical Ticket 010 JSON artifacts.
+- The focused suite now passes 43/43 tests, including a durable-file byte-stability regression.
+
 ## Invariants preserved
 
 - No raw-rate leaderboard classifier.

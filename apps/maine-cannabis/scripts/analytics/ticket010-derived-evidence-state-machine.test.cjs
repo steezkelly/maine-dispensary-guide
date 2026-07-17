@@ -1,10 +1,14 @@
 'use strict';
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const s = require('./ticket010-derived-evidence-state-machine.cjs');
 const ticket011 = require('./ticket011-opportunity-engine.cjs');
 let pass = 0;
 function test(name, fn) { try { fn(); pass++; console.log(`PASS ${name}`); } catch (e) { console.error(`FAIL ${name}: ${e.message}`); process.exitCode = 1; } }
-function row(overrides = {}) { return { page_id: 'page-x', canonical_page_path: '/x', primary_task_family: 'how_to_task', metric_family: 'gsc_ctr', signal_family: 'acquisition_discovery', window_start: '2026-07-01', window_end: '2026-07-01', settlement_state: 'settled', measurement_status: 'MEASURED', window_comparable: true, change_context_evaluated: true, task_contract_status: 'CONFIRMED', sample_state: 'directional', probability_above_practical_delta: 0.9, probability_below_practical_delta: 0.05, peer_policy_version: 'metric-peer-policy.v1', peer_cell_id: 'gsc_ctr:0:how_to', peer_fallback_level: 0, peer_count: 4, posterior_mean: 0.1, posterior_interval_80_low: 0.05, posterior_interval_80_high: 0.15, posterior_interval_95_low: 0.02, posterior_interval_95_high: 0.2, practical_delta: 0.02, ...overrides }; }
+function row(overrides = {}) { return { page_id: 'page-x', canonical_page_path: '/x', primary_task_family: 'how_to_task', metric_family: 'gsc_ctr', signal_family: 'acquisition_discovery', window_start: '2026-07-01', window_end: '2026-07-01', detected_at: '2026-07-17T20:00:00.000Z', settlement_state: 'settled', measurement_status: 'MEASURED', window_comparable: true, change_context_evaluated: true, task_contract_status: 'CONFIRMED', sample_state: 'directional', probability_above_practical_delta: 0.9, probability_below_practical_delta: 0.05, peer_policy_version: 'metric-peer-policy.v1', peer_cell_id: 'gsc_ctr:0:how_to', peer_fallback_level: 0, peer_count: 4, posterior_mean: 0.1, posterior_interval_80_low: 0.05, posterior_interval_80_high: 0.15, posterior_interval_95_low: 0.02, posterior_interval_95_high: 0.2, practical_delta: 0.02, ...overrides }; }
 function eligibleRows() { return [row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', independent_source_corroborated: true })]; }
 
 test('required states exist', () => { for (const x of ['NORMAL','WATCH','PERSISTENT_SHIFT_CANDIDATE','INVESTIGATION_ELIGIBLE','MEASUREMENT_BLOCKED']) assert.ok(s.STATES.includes(x)); });
@@ -58,6 +62,27 @@ test('corroboration can promote a single settled window', () => { const out = s.
 test('unchanged WATCH does not emit duplicate operator item', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-02', window_end: '2026-07-02', independent_source_corroborated: false })], { required_settled_windows: 3 }); assert.equal(out.derived_evidence[0].state, 'WATCH'); assert.equal(out.derived_evidence[1].state, 'WATCH'); assert.equal(out.derived_evidence[1].operator_item_emitted, false); });
 test('state transition ledger records only emitted items', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-02', window_end: '2026-07-02' })], { required_settled_windows: 3 }); assert.equal(out.state_transitions.length, 1); });
 test('opportunity snapshot is not a recommendation', () => { const out = s.deriveEvidence(eligibleRows()); assert.equal(out.opportunities.length, 1); assert.equal(out.opportunities[0].recommendation_or_edit_instruction, null); assert.equal(out.opportunities[0].causal_language_allowed, false); });
+test('opportunity emission requires an explicit detected_at timestamp', () => {
+  assert.throws(() => s.deriveEvidence(eligibleRows().map((entry) => ({ ...entry, detected_at: null }))), /detected_at/);
+});
+test('Ticket 010 durable output is byte-stable for the same explicit timestamp', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ticket010-determinism-'));
+  try {
+    const input = path.join(dir, 'baselines.json');
+    const first = path.join(dir, 'first.json');
+    const second = path.join(dir, 'second.json');
+    fs.writeFileSync(input, JSON.stringify({ baselines: eligibleRows().map(({ detected_at, ...entry }) => entry) }));
+    const script = path.join(__dirname, 'ticket010-derived-evidence-state-machine.cjs');
+    const common = [`--baselines=${input}`, '--detected_at=2026-07-17T20:00:00.000Z'];
+    const a = spawnSync(process.execPath, [script, ...common, `--out=${first}`], { encoding: 'utf8' });
+    const b = spawnSync(process.execPath, [script, ...common, `--out=${second}`], { encoding: 'utf8' });
+    assert.equal(a.status, 0, a.stderr);
+    assert.equal(b.status, 0, b.stderr);
+    assert.equal(fs.readFileSync(first, 'utf8'), fs.readFileSync(second, 'utf8'));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
 test('stable opportunity deduplication key is emitted', () => { const out = s.deriveEvidence(eligibleRows()); assert.match(out.opportunities[0].deduplication_key, /^oppkey_[0-9a-f]+$/); });
 test('opportunity ID remains stable across refreshes', () => { const a = s.deriveEvidence(eligibleRows()).opportunities[0]; const b = s.deriveEvidence(eligibleRows().map((r, i) => i === 2 ? { ...r, posterior_mean: 0.2 } : r)).opportunities[0]; assert.equal(a.opportunity_id, b.opportunity_id); });
 test('release provenance survives Ticket 010 into Ticket 011 immutable packets', () => {
@@ -81,5 +106,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/41 passed.`);
+console.log(`Tests: ${pass}/43 passed.`);
 if (process.exitCode) process.exit(1);

@@ -205,7 +205,8 @@ function measurementStatus(date, records) {
 
 function settlementState(date, asOf) {
   const observed = normalizeDate(date);
-  const reference = normalizeDate(asOf) || new Date().toISOString().slice(0, 10);
+  const reference = normalizeDate(asOf);
+  if (!reference) throw new Error('a deterministic as-of date is required for settlement');
   if (!observed) return 'fresh';
   const cutoff = new Date(`${reference}T00:00:00.000Z`);
   cutoff.setUTCDate(cutoff.getUTCDate() - SETTLEMENT_LAG_DAYS);
