@@ -60,8 +60,13 @@ test('both sources produce one joined row', () => {
   assert.equal(rows.length, 1); assert.equal(rows[0].source_presence, 'both'); assert.equal(rows[0].reconciliation_status, 'matched');
 });
 test('GA4-only rows are explicit', () => {
-  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 4 }] }] }, vercelRows: [] });
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 3 }] }] }, vercelRows: [] });
   assert.equal(rows[0].source_presence, 'ga4_only'); assert.equal(rows[0].reconciliation_status, 'missing_vercel');
+});
+test('GA4-only rows are blocked until the required Vercel counterpart is available', () => {
+  const rows = join.joinPageWindow({ ga4Release: { rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, data_api_value: 3 }] }] }, vercelRows: [], asOf: '2026-07-16' });
+  assert.equal(rows[0].measurement_status, 'MEASUREMENT_BLOCKED');
+  assert.equal(rows[0].measurement_block_reason, 'VERCEL_A4_COUNTERPART_MISSING');
 });
 test('Vercel-only rows are explicit', () => {
   const rows = join.joinPageWindow({ ga4Release: { rows: [] }, vercelRows: [{ day: '2026-07-12', requestPath: '/x', value: 4 }] });
@@ -252,5 +257,5 @@ test('R7 observations retain distinct FAQ IDs even with metric names', () => { c
 test('Data API fallback is labeled as fallback rather than BigQuery', () => assert.equal(join.metricSource({ bq_value: null, data_api_value: 4 }, { report_key: 'R1_pageview_daily' }), 'ga4_data_api_fallback'));
 test('release provenance rejects invalid status and mismatched manifest IDs', () => { assert.throws(() => join.validateReleaseProvenance({ release_status: 'INVALID' }, {}, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /VALID/); assert.throws(() => join.validateReleaseProvenance({ release_status: 'VALID' }, { canonical_release_id: 'rel_ffffffffffffffff', acquisition_release_id: 'run_0123456789abcdef' }, { canonical_release_id: 'rel_0123456789abcdef', acquisition_release_id: 'run_0123456789abcdef' }), /match/); });
 
-console.log(`Tests: ${pass}/50 passed.`);
+console.log(`Tests: ${pass}/51 passed.`);
 if (process.exitCode) process.exit(1);

@@ -120,9 +120,7 @@ function buildQueryIntentDistributions(queryRows, options = {}) {
 }
 
 function getPolicy(metric) {
-  const p = POLICIES[metric];
-  if (!p) throw new Error(`Unsupported metric family: ${metric}`);
-  return p;
+  return POLICIES[metric] || null;
 }
 
 function normalizeObservation(row, queryDistributions, manifestByPath) {
@@ -130,8 +128,8 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
   const manifest = manifestByPath.get(page) || {};
   const metric = clean(row.metric_family || row.metric || row.metric_name);
   const policy = getPolicy(metric);
-  const numerator = num(row.numerator ?? row[policy.numerator] ?? row.successes);
-  const denominator = num(row.denominator ?? row[policy.denominator] ?? row.exposures);
+  const numerator = num(row.numerator ?? (policy ? row[policy.numerator] : null) ?? row.successes);
+  const denominator = num(row.denominator ?? (policy ? row[policy.denominator] : null) ?? row.exposures);
   const rowStart = row.window_start || row.start_date || row.date;
   const rowEnd = row.window_end || row.end_date || row.date || rowStart;
   const q = queryDistributions.find((x) => x.canonical_page_path === page && x.window_start === rowStart && x.window_end === rowEnd);
@@ -301,6 +299,24 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
   const queryDistributions = buildQueryIntentDistributions(queries, config);
   const normalized = observations.map((row) => normalizeObservation(row, queryDistributions, manifestByPath));
   const outputs = normalized.map((target) => {
+    if (!target.policy) {
+      return {
+        ...target,
+        window_start: target.window_start || target.date || null,
+        window_end: target.window_end || target.date || null,
+        peer_policy_version: POLICY_VERSION,
+        peer_cell_id: peerCellId(target.metric_family || 'unknown', 'unsupported', []),
+        peer_fallback_level: 'blocked',
+        peer_dimensions: [],
+        peer_count: 0,
+        peer_exclusions: ['unsupported_metric_family'],
+        sample_state: 'insufficient',
+        sample_state_reason: 'rate numerator and denominator semantics are unavailable for this source observation',
+        raw_rate_leaderboard_eligible: false,
+        measurement_status: 'MEASUREMENT_BLOCKED: RATE_SEMANTICS_UNAVAILABLE',
+        provenance: { source: target.source || 'supplied_observation', contract_version: CONTRACT_VERSION },
+      };
+    }
     if (target.task_contract_status === 'UNRESOLVED' || target.task_contract_status === 'NEEDS_EDITORIAL_REVIEW') {
       return { ...target, peer_policy_version: POLICY_VERSION, sample_state: 'insufficient', measurement_status: 'MEASUREMENT_BLOCKED: TASK_CONTRACT_UNRESOLVED', peer_fallback_level: 'blocked', peer_count: 0, metric_family: target.metric_family };
     }

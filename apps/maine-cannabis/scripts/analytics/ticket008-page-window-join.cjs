@@ -286,8 +286,13 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
     const ve = aggregate(group.vercel);
     const a5 = group.a5[0] || null;
     const records = [...group.ga4, ...group.vercel, ...group.a5];
-    const blocked = Boolean(a5 || ga?.aggregation_blocked || ve?.aggregation_blocked);
-    const primaryStatus = blocked ? 'MEASUREMENT_BLOCKED' : classifyReconciliation(ga, ve);
+    // Vercel A4 is the required counterpart for pageview validation. Other
+    // GA4 families (for example, custom conversion events) do not have an
+    // A4-equivalent and remain governed by their own measurement contracts.
+    const missingRequiredVercel = Boolean(ga && !ve && group.metric_family === 'pageviews');
+    const reconciliationBlocked = Boolean(a5 || ga?.aggregation_blocked || ve?.aggregation_blocked);
+    const measurementBlocked = reconciliationBlocked || missingRequiredVercel;
+    const primaryStatus = reconciliationBlocked ? 'MEASUREMENT_BLOCKED' : classifyReconciliation(ga, ve);
     rows.push({
       canonical_page_path: group.canonical_page_path,
       metric_family: group.metric_family,
@@ -302,16 +307,16 @@ function joinPageWindow({ ga4Release, vercelRows, manifestRows = [], windowStart
       vercel_a4: ve ? { row_key: ve.row_key, value: ve.value, report_key: ve.report_key, observed: ve.observed } : null,
       page_manifest_row_key: manifest.get(group.canonical_page_path)?.page_id || null,
       source_presence: classifyPresence(ga, ve),
-      reconciliation_status: blocked ? 'measurement_blocked' : primaryStatus,
-      measurement_status: blocked ? 'MEASUREMENT_BLOCKED' : measurementStatus(group.date, records),
+      reconciliation_status: reconciliationBlocked ? 'measurement_blocked' : primaryStatus,
+      measurement_status: measurementBlocked ? 'MEASUREMENT_BLOCKED' : measurementStatus(group.date, records),
       delta_fields: deltaFields(ga, ve),
-      canonical_metric_source: blocked ? null : ga?.metric_source || METRIC_SOURCES[ga?.source_family || ve?.source_family] || null,
+      canonical_metric_source: measurementBlocked ? null : ga?.metric_source || METRIC_SOURCES[ga?.source_family || ve?.source_family] || null,
       canonical_release_id: sourceReleaseIds.canonical_release_id || null,
       acquisition_release_id: sourceReleaseIds.acquisition_release_id || null,
       privacy_redaction_status: 'asserted_no_user_level_join',
       join_contract_version: CONTRACT_VERSION,
       settlement_state: settlementState(group.date, asOf),
-      measurement_block_reason: a5 ? 'A5_SPEED_INSIGHTS_DEFERRED' : ((ga?.aggregation_blocked || ve?.aggregation_blocked) ? 'NON_ADDITIVE_TITLE_VARIANT_AMBIGUITY' : null),
+      measurement_block_reason: a5 ? 'A5_SPEED_INSIGHTS_DEFERRED' : ((ga?.aggregation_blocked || ve?.aggregation_blocked) ? 'NON_ADDITIVE_TITLE_VARIANT_AMBIGUITY' : (missingRequiredVercel ? 'VERCEL_A4_COUNTERPART_MISSING' : null)),
     });
   }
   rows.sort((a, b) => `${a.measurement_date}|${a.canonical_page_path}|${a.metric_family}|${a.observation_identity || ''}`.localeCompare(`${b.measurement_date}|${b.canonical_page_path}|${b.metric_family}|${b.observation_identity || ''}`));

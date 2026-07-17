@@ -163,6 +163,13 @@ test('build output has metric-specific fallback metadata', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'action_selection_rate', numerator: 2, denominator: 10, action_family: 'map', primary_task_family: 'local_store_discovery' }], manifest: [] });
   assert.ok('peer_policy_version' in out.baselines[0]); assert.ok('peer_dimensions' in out.baselines[0]);
 });
+test('Ticket 008 pageview observations are retained as blocked until a rate adapter provides numerator and denominator semantics', () => {
+  const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'pageviews', measurement_date: '2026-07-12', settlement_state: 'settled', measurement_status: 'MEASURED', ga4_r1: { value: 8 }, vercel_a4: { value: 8 } }], manifest: [] });
+  assert.equal(out.baselines.length, 1);
+  assert.equal(out.baselines[0].metric_family, 'pageviews');
+  assert.equal(out.baselines[0].measurement_status, 'MEASUREMENT_BLOCKED: RATE_SEMANTICS_UNAVAILABLE');
+  assert.equal(out.baselines[0].peer_count, 0);
+});
 test('baseline output retains contamination state for downstream evidence gating', () => {
   const out = b.buildBaselines({ observations: [{ canonical_page_path: '/x', metric_family: 'gsc_ctr', numerator: 2, denominator: 10, change_contamination_status: 'CONTAMINATED' }], manifest: [] });
   assert.equal(out.baselines[0].change_contamination_status, 'CONTAMINATED');
@@ -192,5 +199,5 @@ test('posterior practical probabilities are bounded', () => {
 test('query intent set is stable', () => assert.deepEqual(b.QUERY_INTENTS, ['named_operator','local_store_discovery','visitor_local','market_entry','licensing_regulatory','how_to','data_research','unknown']));
 test('policy version is explicit', () => assert.equal(b.POLICY_VERSION, 'metric-peer-policy.v1'));
 
-console.log(`Tests: ${pass}/44 passed.`);
+console.log(`Tests: ${pass}/45 passed.`);
 if (process.exitCode) process.exit(1);
