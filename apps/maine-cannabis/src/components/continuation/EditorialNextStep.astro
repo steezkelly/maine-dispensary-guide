@@ -16,6 +16,10 @@ const rule = getEditorialNextStep(currentPath);
     data-continuation-id={rule.id}
     data-continuation-slot="editorial"
     data-continuation-relationship={rule.relationship}
+    data-action-id={`editorial-next-${rule.id}`}
+    data-action-family="cta_navigate"
+    data-placement-id="editorial_next_step"
+    data-destination-family="internal_route"
   >
     <p class="editorial-next-step__eyebrow">{rule.eyebrow}</p>
     <h2 id={`next-step-${rule.id}`}>{rule.title}</h2>
@@ -24,6 +28,10 @@ const rule = getEditorialNextStep(currentPath);
       class="editorial-next-step__link"
       href={rule.destinationPath}
       data-cta-id={`editorial-next-${rule.id}`}
+      data-action-id={`editorial-next-${rule.id}`}
+      data-action-family="cta_navigate"
+      data-placement-id="editorial_next_step"
+      data-destination-family="internal_route"
     >
       Continue to the next step <span aria-hidden="true">→</span>
     </a>

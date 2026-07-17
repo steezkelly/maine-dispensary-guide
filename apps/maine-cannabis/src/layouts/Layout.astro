@@ -415,6 +415,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           if (engaged) return;
           engaged = true;
           send('page_engaged', { reason: reason });
+          send('mdg_active_attention', { schema_version: 'v1', attention_seconds_bucket: 30, transport_type: 'beacon' });
         }
         window.setTimeout(function () {
           if (!document.hidden) markEngaged('timer_30s_visible');
@@ -446,28 +447,83 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           });
         }, true);
 
-        // --- cta_view (IntersectionObserver on [data-cta-id]) ---------------
-        if ('IntersectionObserver' in window) {
-          var seen = new WeakSet();
+        // --- v1 action exposure/select (queued and beacon-safe) --------------
+        // CTA metadata is authored where an ICA module knows it. Existing CTA
+        // IDs get stable defaults here so the rollout does not require link
+        // navigation to wait for analytics.
+        function destinationFamily(el) {
+          var explicit = el.getAttribute('data-destination-family');
+          if (explicit) return explicit;
+          var href = el.getAttribute('href') || '';
+          if (href.indexOf('mailto:') === 0) return 'mailto_open';
+          if (href.indexOf('tel:') === 0) return 'tel_open';
+          if (href && (href.charAt(0) === '/' || href.indexOf(window.location.origin) === 0)) return 'internal_route';
+          if (href) return 'external_url';
+          return 'other';
+        }
+        function destinationPath(el, family) {
+          if (family !== 'internal_route') return '';
+          try { return new URL(el.getAttribute('href') || '', window.location.origin).pathname; }
+          catch (_) { return ''; }
+        }
+        function actionMetadata(el) {
+          var ctaId = el.getAttribute('data-cta-id') || '';
+          var placementMatch = /^cta-([a-z-]+)-/.exec(ctaId);
+          return {
+            action_id: el.getAttribute('data-action-id') || ctaId,
+            action_family: el.getAttribute('data-action-family') || 'cta_navigate',
+            placement_id: el.getAttribute('data-placement-id') || (placementMatch ? placementMatch[1] : 'inline'),
+            destination_family: destinationFamily(el)
+          };
+        }
+        function sendAction(name, metadata, extra) {
+          // gtag queues before its network library loads; transport_type asks
+          // the loaded client to use beacon where available. Never await this.
+          send(name, Object.assign({ schema_version: 'v1', transport_type: 'beacon' }, metadata, extra || {}));
+        }
+        function observeActions() {
+          if (!('IntersectionObserver' in window)) return;
+          var exposed = new WeakSet();
+          var timers = new WeakMap();
           var io = new IntersectionObserver(function (entries) {
             for (var i = 0; i < entries.length; i++) {
-              var e = entries[i];
-              if (!e.isIntersecting) continue;
-              var el = e.target;
-              if (seen.has(el)) continue;
-              seen.add(el);
-              io.unobserve(el);
-              send('cta_view', {
-                cta_id: el.getAttribute('data-cta-id') || '',
-                cta_destination: el.getAttribute('href') || '',
-                cta_text: (el.textContent || '').trim().slice(0, 80)
-              });
+              var entry = entries[i];
+              var el = entry.target;
+              if (exposed.has(el)) continue;
+              if (!entry.isIntersecting || entry.intersectionRatio < 0.5) {
+                var pending = timers.get(el);
+                if (pending) { window.clearTimeout(pending); timers.delete(el); }
+                continue;
+              }
+              if (timers.has(el)) continue;
+              var timer = window.setTimeout(function (target) {
+                return function () {
+                  timers.delete(target);
+                  if (exposed.has(target)) return;
+                  exposed.add(target);
+                  io.unobserve(target);
+                  sendAction('mdg_action_exposure', actionMetadata(target));
+                };
+              }(el), 750);
+              timers.set(el, timer);
             }
-          }, { threshold: 0.5 });
-          document.addEventListener('DOMContentLoaded', function () {
-            var ctas = document.querySelectorAll('[data-cta-id]');
-            for (var j = 0; j < ctas.length; j++) io.observe(ctas[j]);
-          });
+          }, { threshold: [0, 0.5] });
+          var ctas = document.querySelectorAll('[data-cta-id]');
+          for (var j = 0; j < ctas.length; j++) io.observe(ctas[j]);
+        }
+        document.addEventListener('click', function (ev) {
+          var target = ev.target && ev.target.closest ? ev.target.closest('[data-cta-id]') : null;
+          if (!target) return;
+          var metadata = actionMetadata(target);
+          var path = destinationPath(target, metadata.destination_family);
+          sendAction('mdg_action_select', metadata, path ? { destination_path: path } : {});
+          // Deliberately do not preventDefault or await analytics: links and
+          // form-control actions must remain reliable even when tracking fails.
+        }, true);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', observeActions);
+        } else {
+          observeActions();
         }
       })();
     </script>
