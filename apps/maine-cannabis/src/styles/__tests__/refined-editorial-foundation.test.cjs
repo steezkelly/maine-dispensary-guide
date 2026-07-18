@@ -17,6 +17,10 @@ const sharedStylesheets = [
     source: fs.readFileSync(path.join(STYLES_ROOT, file), 'utf8'),
   }));
 const sharedStyles = sharedStylesheets.map(({ source }) => source).join('\n');
+const searchSource = fs.readFileSync(
+  path.resolve(__dirname, '../../../../../packages/ui/src/components/Search.astro'),
+  'utf8',
+);
 
 const requiredTokens = [
   '--font-mono',
@@ -27,6 +31,7 @@ const requiredTokens = [
   '--radius-editorial-sm',
   '--radius-editorial-md',
   '--control-min-size',
+  '--duration-interface',
 ];
 
 const requiredUtilitySelectors = [
@@ -74,13 +79,52 @@ for (const token of requiredTokens) {
   });
 }
 
+test('interface duration is root-authoritative at 220ms and drives mobile transitions', () => {
+  assert.ok(
+    globalRootDeclarationBlocks(sharedStylesheets).some(({ declarations }) =>
+      /--duration-interface\s*:\s*220ms\s*;?/i.test(declarations),
+    ),
+    '--duration-interface must be declared as 220ms in a global :root rule',
+  );
+  assert.match(
+    sharedStyles,
+    /transition\s*:\s*transform\s+var\(\s*--duration-interface\s*\)\s+cubic-bezier/i,
+  );
+  assert.match(
+    sharedStyles,
+    /transition\s*:\s*opacity\s+var\(\s*--duration-interface\s*\)\s*,\s*transform\s+var\(\s*--duration-interface\s*\)/i,
+  );
+});
+
 for (const selector of requiredUtilitySelectors) {
   test(`${selector} exists and remains shadowless`, () => {
     const declarations = declarationBlock(sharedStyles, selector);
-    assert.doesNotMatch(
-      declarations,
-      /\bbox-shadow\s*:\s*(?!none\b)[^;]+/i,
+    const shadow = declarations.match(/\bbox-shadow\s*:\s*([^;]+)/i);
+    assert.ok(
+      !shadow || shadow[1].trim().toLowerCase() === 'none',
       `${selector} must not apply a box shadow`,
     );
   });
 }
+
+test('shared buttons and form fields use the 44px control baseline', () => {
+  assert.match(
+    sharedStyles,
+    /button\s*,\s*\.btn\s*\{[^}]*min-block-size\s*:\s*var\(\s*--control-min-size\s*\)/i,
+  );
+  assert.match(
+    sharedStyles,
+    /input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\)\s*,\s*select\s*,\s*textarea\s*\{[^}]*min-block-size\s*:\s*var\(\s*--control-min-size\s*\)/i,
+  );
+});
+
+test('shared Search input retains global keyboard focus visibility', () => {
+  assert.match(
+    sharedStyles,
+    /input:focus-visible\s*,[\s\S]*?outline\s*:\s*2px\s+solid\s+var\(\s*--color-accent\s*\)/i,
+  );
+  assert.doesNotMatch(
+    stripCssComments(searchSource),
+    /input:focus\s*\{[^}]*outline\s*:\s*none/i,
+  );
+});

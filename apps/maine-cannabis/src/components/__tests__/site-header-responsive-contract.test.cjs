@@ -6,9 +6,11 @@ const path = require('node:path');
 const test = require('node:test');
 
 const HEADER = path.resolve(__dirname, '..', 'SiteHeader.astro');
+const COMPONENTS = path.resolve(__dirname, '..', '..', 'styles', 'components.css');
 const header = fs.readFileSync(HEADER, 'utf8');
 const liveHeader = stripComments(header);
 const headerStyles = extractStyleBlocks(liveHeader);
+const componentStyles = fs.readFileSync(COMPONENTS, 'utf8');
 const menuAndThemeControls = ['.nav-toggle-label', '.theme-toggle'];
 const shrinkableFlexChild = '.logo';
 
@@ -85,13 +87,19 @@ test('site header menu and theme controls expose a 44px block touch target', () 
 
 test('site header owns its 768px responsive contract', () => {
   const responsiveStyles = mediaBlock(
-    headerStyles,
+    componentStyles,
     /@media\s*\(max-width\s*:\s*768px\)/i,
   );
   assert.match(
     responsiveStyles,
     /\.nav-toggle-label\b/,
     'the 768px header media block must control the actual menu trigger',
+  );
+  assert.match(responsiveStyles, /\.nav-links\s*\{[^}]*position\s*:\s*fixed/i);
+  assert.doesNotMatch(
+    componentStyles,
+    /@media\s*\(max-width\s*:\s*(?:769|[89]\d\d|1\d{3,})px\)\s*\{[\s\S]*?\.nav-toggle-label\s*\{[^}]*display\s*:/i,
+    'no wider breakpoint may activate the mobile menu mode before 768px',
   );
 });
 

@@ -114,6 +114,10 @@ section('2. BaseHead.astro loads Newsreader + Source Sans 3 from Google Fonts');
     !head.includes('family=Plus+Jakarta+Sans'),
     'BaseHead.astro should no longer load Plus Jakarta Sans',
   );
+  assert(
+    !head.includes('Plus Jakarta Sans'),
+    'BaseHead.astro should not describe Plus Jakarta Sans as the current body font',
+  );
 }
 
 // ---------------------------------------------------------------------------
