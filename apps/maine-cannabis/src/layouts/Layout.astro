@@ -22,12 +22,18 @@ import AutoRelated from '../components/AutoRelated.astro';
 import LegacyLeadCapture from '../components/LegacyLeadCapture.astro';
 import EditorialNextStep from '../components/continuation/EditorialNextStep.astro';
 import ContextualAction from '../components/continuation/ContextualAction.astro';
+import OnThisPage from '../components/OnThisPage.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import BaseHead from './BaseHead.astro';
 import AffiliateClickTracker from '../components/AffiliateClickTracker.astro';
 import siteConfig from '../data/site-config.json';
 import Analytics from '@vercel/analytics/astro';
+
+interface TocItem {
+  id: string;
+  label: string;
+}
 import SpeedInsights from '@vercel/speed-insights/astro';
 // Design system — split into tokens / globals / components for maintainability.
 // Theme 2026 (theme-2026.css) is loaded separately in step 4 to win specificity.
@@ -83,6 +89,7 @@ interface Props {
   topics?: string[];
   tags?: string[];
   continuationMode?: 'legacy' | 'pilot';
+  toc?: TocItem[];
   /**
    * Optional cross-page canonical. When set, the rendered `<link rel="canonical">`
    * (and hreflang alternates) point at this URL instead of the page's own
@@ -107,7 +114,8 @@ const {
   topics = [],
   tags = [],
   continuationMode = 'legacy',
-  canonicalOverride
+  canonicalOverride,
+  toc = [],
 } = Astro.props;
 
 // Site Metadata & State
@@ -703,7 +711,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
               </aside>
             )}
           </div>
-          <aside class="guide-sidebar-container" aria-label="Guide Navigation"><GuideSidebar currentPath={Astro.url.pathname} currentTopics={topics} /></aside>
+          <aside class="guide-sidebar-container" aria-label="Guide Navigation">{toc.length > 0 && <OnThisPage headings={toc} />}<GuideSidebar currentPath={Astro.url.pathname} currentTopics={topics} /></aside>
         </div>
       ) : (
         <>

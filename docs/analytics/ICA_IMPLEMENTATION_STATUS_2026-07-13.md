@@ -324,3 +324,28 @@ existing baseline files establish *that* the pilot is deployed but do not give
 a single clear answer to: what is already connected, what is awaiting
 measurement, and what is intentionally deferred. It does not alter pilot
 scope, mappings, analytics events, or production behavior.
+
+## Update — 2026-07-18 (Refined Editorial visual restyle)
+
+The Refined Editorial Foundation work on
+`design/refined-editorial-ica-completion` (HEAD `2e633bc5`) restyled
+`EditorialNextStep` and `ContextualAction` into one visual family. The
+visual change is observable in rendered output and was verified via the
+visual matrix (48 captures, 0 horizontal scroll, 0 duplicate IDs, 1 H1
+per page, 0 controls < 36 px after the 44 px fix).
+
+**This update does not establish behavioral lift.** ICA measurement
+remains observational and the conservative measurement-clock start
+(`2026-07-13T17:17:25Z`) is unchanged. The visual restyle is a posture
+change, not a treatment; do not claim causal lift from this rollout.
+
+The release-1 contract, mapping registries, ten-route pilot, render
+order, and analytics attributes are unchanged. The bounding invariants
+on cohort expansion, school-buffer exclusion, and "do not rank by
+conversion" are also unchanged.
+
+If the operator later asks for an expanded cohort, the measurement
+review section above applies unchanged. No source files outside
+`continuation/EditorialNextStep.astro`, `continuation/ContextualAction.astro`,
+the related contract tests, and the spec authority doc were touched by
+the visual restyle.

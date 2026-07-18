@@ -245,6 +245,15 @@ test('continuation components keep editorial and action slots distinct and crawl
   assert.match(action, /data-cta-id=/);
   assert.match(action, /href=\{rule\.href\}/);
   assert.doesNotMatch(editorial, /affiliate|lead_magnet|conversion/i, 'editorial slot must not carry commercial ranking metadata');
+
+  // Refined editorial visual family: no page-local hex literals, no
+  // elevated shadows, semantic rule hairlines, 44px interactive controls.
+  for (const source of [editorial, action]) {
+    assert.doesNotMatch(source, /#[0-9a-f]{3,8}\b/i, 'ICA slots must not hardcode hex color literals');
+    assert.doesNotMatch(source, /box-shadow\s*:/, 'ICA slots must not introduce page-local box-shadows; shadows are reserved for overlays');
+    assert.match(source, /var\(--color-rule\)/, 'ICA slots must use the shared --color-rule hairline token');
+    assert.match(source, /min-(?:height|block-size):\s*(?:var\(--control-min-size[^)]*\)|44px)/, 'ICA slots must render interactive controls at the shared 44px minimum');
+  }
 });
 
 test('Layout defaults to legacy and renders pilot slots in the approved order', () => {

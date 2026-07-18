@@ -172,6 +172,46 @@ summary:focus-visible,
   border-radius: 4px;
 }
 
+button,
+.btn {
+  min-block-size: var(--control-min-size);
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  min-block-size: var(--control-min-size);
+}
+
+/* === Refined editorial primitives === */
+.editorial-section {
+  margin-block: var(--space-section);
+}
+
+.editorial-rule-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid var(--color-rule);
+}
+
+.editorial-rule-list > * + * {
+  border-top: 1px solid var(--color-rule);
+}
+
+.editorial-text-link {
+  color: var(--color-link);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.editorial-surface {
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-editorial-md);
+  box-shadow: none;
+}
+
 /* === Scroll-triggered reveal animation === */
 @media (prefers-reduced-motion: no-preference) {
   html.reveal-enhanced .reveal {

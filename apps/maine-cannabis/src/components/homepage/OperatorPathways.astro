@@ -1,0 +1,42 @@
+---
+interface Pathway {
+  number: string;
+  title: string;
+  description: string;
+  href: string;
+  cta: string;
+  ctaId: string;
+}
+
+interface Props {
+  pathways: Pathway[];
+}
+
+const { pathways } = Astro.props;
+---
+
+<section class="operator-pathways editorial-section" aria-labelledby="pathways-title">
+  <p class="section-eyebrow">Choose a starting point</p>
+  <h2 id="pathways-title">A clearer path through Maine cannabis operations.</h2>
+  <ol class="operator-pathways__list">
+    {pathways.map((pathway) => (
+      <li class="operator-pathways__item">
+        <p class="operator-pathways__number" aria-hidden="true">{pathway.number}</p>
+        <div class="operator-pathways__body">
+          <h3>{pathway.title}</h3>
+          <p>{pathway.description}</p>
+          <a class="editorial-text-link" href={pathway.href} data-cta-id={pathway.ctaId}>{pathway.cta} <span aria-hidden="true">→</span></a>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .operator-pathways__list { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  .operator-pathways__item { display: grid; grid-template-columns: 4rem 1fr; gap: 1.25rem; padding-block: 1.5rem; border-block-start: 1px solid var(--color-rule); }
+  .operator-pathways__item:last-child { border-block-end: 1px solid var(--color-rule); }
+  .operator-pathways__number { margin: 0; color: var(--color-text-light); font-family: var(--font-serif); font-size: 1.75rem; font-variant-numeric: tabular-nums; }
+  .operator-pathways__body h3 { margin: 0; font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; }
+  .operator-pathways__body p { margin: 0.5rem 0 0.75rem; color: var(--color-text-light); }
+</style>

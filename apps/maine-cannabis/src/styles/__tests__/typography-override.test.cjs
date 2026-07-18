@@ -32,6 +32,14 @@ const VERTICALS = path.join(
   REPO_ROOT,
   'packages/config/src/verticals.ts',
 );
+const PACKAGE_LAYOUT = path.join(
+  REPO_ROOT,
+  'packages/layouts/src/Layout.astro',
+);
+const GUIDE_SIDEBAR = path.join(
+  REPO_ROOT,
+  'packages/ui/src/components/GuideSidebar.astro',
+);
 const AGENTS_MD = path.join(REPO_ROOT, 'AGENTS.md');
 
 let passed = 0;
@@ -50,6 +58,12 @@ function assert(cond, msg) {
 
 function section(name) {
   console.log('\n' + name);
+}
+
+function stripComments(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
 }
 
 // ---------------------------------------------------------------------------
@@ -99,6 +113,10 @@ section('2. BaseHead.astro loads Newsreader + Source Sans 3 from Google Fonts');
   assert(
     !head.includes('family=Plus+Jakarta+Sans'),
     'BaseHead.astro should no longer load Plus Jakarta Sans',
+  );
+  assert(
+    !head.includes('Plus Jakarta Sans'),
+    'BaseHead.astro should not describe Plus Jakarta Sans as the current body font',
   );
 }
 
@@ -156,6 +174,24 @@ section('5. AGENTS.md design-system line is updated');
     !/Design System:[^\n]*Plus Jakarta Sans/i.test(md),
     'AGENTS.md should no longer call out Plus Jakarta Sans in the design system rule',
   );
+}
+
+// ---------------------------------------------------------------------------
+// TEST 6 - governed package surfaces do not load or hardcode retired families
+// ---------------------------------------------------------------------------
+section('6. Shared package surfaces contain no retired typography declarations');
+
+{
+  const retiredTypography =
+    /(?:family=(?:Fraunces|Plus\+Jakarta\+Sans)\b|font-family\s*:\s*['"]?(?:Fraunces|Plus Jakarta Sans)\b)/i;
+
+  for (const file of [PACKAGE_LAYOUT, GUIDE_SIDEBAR]) {
+    const source = stripComments(fs.readFileSync(file, 'utf8'));
+    assert(
+      !retiredTypography.test(source),
+      `${file} loads or hardcodes retired Fraunces/Plus Jakarta Sans typography`,
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------

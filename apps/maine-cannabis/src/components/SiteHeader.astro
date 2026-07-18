@@ -252,4 +252,41 @@ const siteName = siteConfig.siteName;
   #progress-container { position: relative; z-index: 3; }
   /* Reading-progress bar — 60% per spec §6.7 */
   #progress-bar { opacity: 0.6; }
+
+  #site-nav { min-width: 0; }
+  .logo {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--control-min-size, 44px);
+    padding-inline: 0.5rem;
+  }
+  .logo > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav-actions { flex: 0 0 auto; }
+  .nav-toggle-label,
+  .theme-toggle {
+    inline-size: var(--control-min-size);
+    block-size: var(--control-min-size);
+    min-inline-size: var(--control-min-size);
+    min-block-size: var(--control-min-size);
+  }
+  .nav-toggle-label {
+    place-items: center;
+  }
+  .nav-toggle-label span,
+  .nav-toggle-label span::before,
+  .nav-toggle-label span::after {
+    width: 20px;
+    left: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .nav-toggle-label { display: inline-grid; }
+    .nav-search-desktop { display: none; }
+  }
 </style>

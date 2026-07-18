@@ -55,7 +55,7 @@ const faqPageSchema = {
   topics={topics}
 >
 <style>
-  article { max-width: 760px; margin: 0 auto; }
+  article { max-width: var(--reading-column, 60ch); margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 3rem; scroll-margin-top: 80px; }
@@ -68,7 +68,7 @@ const faqPageSchema = {
   li { margin-bottom: 0.75rem; }
   .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
   .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: var(--color-text); }
   .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
   .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
   .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2.5rem; }

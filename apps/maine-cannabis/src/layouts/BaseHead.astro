@@ -94,13 +94,13 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
 {/*
   Sprint 81 (2026-07-11) PSI mobile follow-up: switched from display=swap to
   display=optional. The LCP element is the .hero-descriptor body paragraph
-  (Plus Jakarta Sans). With swap, the page renders in the system fallback
+  (Source Sans 3). With swap, the page renders in the system fallback
   and re-flows when the webfont loads — pushing the LCP element's effective
   render time later than necessary. With optional, the browser uses the
   fallback if the webfont doesn't load within ~100ms, no swap, no late LCP
   re-layout. Trade-off: slow-network users see system fonts for body copy,
-  but the brand still reads correctly (system sans is close enough to Plus
-  Jakarta for body, system serif is acceptable for Newsreader headings).
+  but the brand still reads correctly (system sans is close enough to Source
+  Sans 3 for body, system serif is acceptable for Newsreader headings).
 */}
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Source+Sans+3:wght@300;400;500;600;700&display=optional" rel="stylesheet" media="print" onload="this.media='all'" />
 <noscript><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Source+Sans+3:wght@300;400;500;600;700&display=optional" rel="stylesheet" /></noscript>

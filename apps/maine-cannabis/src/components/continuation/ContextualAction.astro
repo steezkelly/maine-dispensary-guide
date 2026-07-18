@@ -57,12 +57,10 @@ const familyLabels = {
     align-items: center;
     gap: var(--space-lg);
     margin-block: var(--space-lg) 0;
-    padding: var(--space-xl);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-top: 4px solid var(--color-accent);
-    border-radius: 0.75rem;
-    box-shadow: var(--elev-1-shadow);
+    padding: var(--space-lg);
+    border-block: 1px solid var(--color-rule);
+    border-left: 4px solid var(--color-accent);
+    background: transparent;
   }
 
   .contextual-action__copy {
@@ -104,14 +102,13 @@ const familyLabels = {
 
   .contextual-action .contextual-action__link {
     display: inline-flex;
-    min-height: 44px;
+    min-height: var(--control-min-size, 44px);
     align-items: center;
     justify-content: center;
     gap: var(--space-xs);
     padding: var(--space-sm) var(--space-md);
     background: var(--color-primary);
     border: 2px solid var(--color-primary);
-    border-radius: 0.4rem;
     color: var(--color-on-primary);
     font-weight: 800;
     line-height: var(--leading-snug);

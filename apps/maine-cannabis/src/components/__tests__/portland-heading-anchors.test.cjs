@@ -119,32 +119,31 @@ test('Portland rendered article heading contract covers literal and mounted comp
   assert.ok(ids.every((id) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)), 'IDs must be stable lowercase kebab-case');
 });
 
-test('Portland mounts one OnThisPage with the complete rendered heading inventory', () => {
+test('Portland declares portlandToc and passes it to Layout (Layout owns the OnThisPage mount)', () => {
   const page = readFileSync(PAGE, 'utf8');
-  const imports = page.match(
-    /^\s*import\s+OnThisPage\s+from\s+['"]\.\.\/\.\.\/components\/OnThisPage\.astro['"];\s*$/gm,
-  ) || [];
-  const mounts = page.match(/<OnThisPage\b/g) || [];
-
-  assert.strictEqual(imports.length, 1, 'Portland guide must import OnThisPage exactly once');
-  assert.strictEqual(mounts.length, 1, 'Portland guide must mount OnThisPage exactly once');
-
-  const invocation = getInvocation(page, 'OnThisPage');
-  const headingsSource = invocation.match(/\bheadings=\{(\[[\s\S]*\])\}/)?.[1];
-  assert.ok(headingsSource, 'Portland OnThisPage must receive a headings array');
-
-  const passedHeadings = [...headingsSource.matchAll(
-    /\{\s*id:\s*(['"])(.*?)\1,\s*label:\s*(['"])(.*?)\3\s*\}/g,
-  )].map((match) => [match[4], match[2]]);
-
-  assert.deepStrictEqual(
-    passedHeadings,
-    EXPECTED_HEADINGS,
-    'OnThisPage headings must match all 13 rendered article headings in order',
+  assert.match(
+    page,
+    /const\s+portlandToc\s*=\s*\[/,
+    'Portland must declare a portlandToc array that it passes to Layout',
   );
-  assert.deepStrictEqual(
-    passedHeadings.map(([, id]) => id),
-    EXPECTED_HEADINGS.map(([, id]) => id),
-    'every OnThisPage ID must correspond to the asserted rendered-heading inventory',
+
+  const layoutInvocation = page.match(/<Layout\b[\s\S]*?>/);
+  assert.ok(layoutInvocation, 'Portland must mount <Layout>');
+  const invocation = layoutInvocation[0];
+  assert.match(
+    invocation,
+    /toc=\{portlandToc\}/,
+    'Layout invocation must pass toc={portlandToc}',
+  );
+
+  assert.doesNotMatch(
+    page,
+    /<OnThisPage\b/,
+    'Portland must not mount OnThisPage directly; Layout is the single owner',
+  );
+  assert.doesNotMatch(
+    page,
+    /^\s*import\s+OnThisPage\s+from\s+['"]\.\.\/\.\.\/components\/OnThisPage\.astro['"];?\s*$/m,
+    'Portland must not import OnThisPage directly',
   );
 });

@@ -1,0 +1,44 @@
+---
+interface IntelligenceItem {
+  title: string;
+  href: string;
+  date: string;
+  label: string;
+}
+
+interface Props {
+  items: IntelligenceItem[];
+}
+
+const { items } = Astro.props;
+const allItems = items.slice(0, 8);
+---
+
+<section class="latest-intelligence editorial-section" aria-labelledby="latest-intelligence-title">
+  <p class="section-eyebrow">Research desk</p>
+  <h2 id="latest-intelligence-title">Latest intelligence</h2>
+  <ol class="latest-intelligence__list">
+    {allItems.map((item) => {
+      const displayDate = new Date(`${item.date}T12:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+      return (
+        <li class="latest-intelligence__row">
+          <time class="latest-intelligence__date" datetime={item.date}>{displayDate}</time>
+          <a class="latest-intelligence__link" href={item.href}>{item.title}</a>
+          <span class="latest-intelligence__label">{item.label}</span>
+        </li>
+      );
+    })}
+  </ol>
+  <a class="editorial-text-link" href="/blog">Browse the research desk <span aria-hidden="true">→</span></a>
+</section>
+
+<style>
+  .latest-intelligence__list { list-style: none; margin: 1.5rem 0; padding: 0; }
+  .latest-intelligence__row { display: grid; grid-template-columns: 8rem 1fr auto; gap: 1rem; align-items: center; padding-block: 1.15rem; border-block-start: 1px solid var(--color-rule); }
+  .latest-intelligence__row:last-child { border-block-end: 1px solid var(--color-rule); }
+  .latest-intelligence__date { color: var(--color-text-light); font-variant-numeric: tabular-nums; font-size: 0.875rem; }
+  .latest-intelligence__link { color: var(--color-text); font-family: var(--font-serif); font-size: 1.125rem; text-decoration: none; display: flex; align-items: center; min-block-size: var(--control-min-size, 44px); }
+  .latest-intelligence__link:hover { text-decoration: underline; }
+  .latest-intelligence__label { color: var(--color-text-light); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  @media (max-width: 640px) { .latest-intelligence__row { grid-template-columns: 1fr; } .latest-intelligence__label { justify-self: start; } }
+</style>

@@ -1,0 +1,86 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede: string;
+  primaryCtaId: string;
+  secondaryCtaId: string;
+  renderTitle?: boolean;
+  sectionId?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  primaryCtaId,
+  secondaryCtaId,
+  renderTitle = true,
+  sectionId = 'authority-hero',
+} = Astro.props;
+---
+
+<section id={sectionId} class="authority-hero editorial-section" aria-labelledby={renderTitle ? 'authority-title' : undefined} aria-label={renderTitle ? undefined : title}>
+  <div class="authority-hero__inner">
+    <p class="section-eyebrow">{eyebrow}</p>
+    {renderTitle && <h1 id="authority-title">{title}</h1>}
+    <p class="authority-hero__lede">{lede}</p>
+    <div class="authority-hero__actions">
+      <a class="btn btn-primary" href="/guides" data-cta-id={primaryCtaId}>Explore the city guides</a>
+      <a class="editorial-text-link" href="/roi-calculator" data-cta-id={secondaryCtaId}>Run the numbers <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .authority-hero {
+    display: grid;
+    align-items: center;
+    min-block-size: 20rem;
+  }
+
+  .authority-hero__inner {
+    max-inline-size: 60ch;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-serif);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+
+  .authority-hero__lede {
+    margin: 1.25rem 0 0;
+    color: var(--color-text-light);
+    font-size: clamp(1.0625rem, 1.8vw, 1.25rem);
+    line-height: 1.55;
+  }
+
+  .authority-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding: 0.5rem 1rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .authority-hero {
+      min-block-size: 17.5rem;
+    }
+  }
+</style>

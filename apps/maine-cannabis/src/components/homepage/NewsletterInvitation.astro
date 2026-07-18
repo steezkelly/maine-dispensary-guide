@@ -1,0 +1,48 @@
+---
+import LeadFormTracker from '../LeadFormTracker.astro';
+
+interface Props {
+  submitCtaId: string;
+}
+
+const { submitCtaId } = Astro.props;
+---
+
+<section class="newsletter-invitation editorial-section" aria-labelledby="newsletter-title">
+  <p class="section-eyebrow">Monthly field notes</p>
+  <div class="newsletter-invitation__inner">
+    <div class="newsletter-invitation__lede">
+      <h2 id="newsletter-title">Maine cannabis research, without the noise.</h2>
+      <p>One practical email each month on licensing, local markets, and operating decisions. Unsubscribe anytime.</p>
+    </div>
+    <form class="newsletter-form" action="https://formspree.io/f/xvgzlowz" method="POST">
+      <label class="newsletter-form__field">
+        <span>Email address</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label class="newsletter-form__field">
+        <span>What are you working on? (optional)</span>
+        <select name="stage">
+          <option value="">Select one</option>
+          <option value="researching">Researching a market</option>
+          <option value="launching">Launching an operation</option>
+          <option value="operating">Operating an existing business</option>
+          <option value="following">Following Maine cannabis</option>
+        </select>
+      </label>
+      <input type="hidden" name="_subject" value="MDG homepage newsletter signup" />
+      <button class="btn btn-primary newsletter-form__submit" type="submit" data-cta-id={submitCtaId}>Get the field notes</button>
+    </form>
+  </div>
+  <LeadFormTracker formSelector=".newsletter-form" formName="newsletter_homepage" />
+</section>
+
+<style>
+  .newsletter-invitation__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: start; margin-top: 1.5rem; }
+  .newsletter-form { display: grid; gap: 1rem; }
+  .newsletter-form__field { display: grid; gap: 0.35rem; }
+  .newsletter-form__field span { color: var(--color-text-light); font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .newsletter-form input, .newsletter-form select { min-block-size: 44px; padding: 0.5rem 0.75rem; border: 1px solid var(--color-rule); background: var(--color-surface); color: var(--color-text); font: inherit; }
+  .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-block-size: 44px; padding: 0.5rem 1rem; background: var(--color-primary); color: var(--color-on-primary); border: 0; cursor: pointer; }
+  @media (max-width: 768px) { .newsletter-invitation__inner { grid-template-columns: 1fr; } }
+</style>
