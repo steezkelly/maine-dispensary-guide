@@ -755,3 +755,29 @@ html[data-theme="dark"] .author-footer-role {
     justify-content: center;
   }
 }
+
+/* Guide reading shell: article column + sidebar column.
+   Collapses to a single column under the desktop breakpoint so the
+   sidebar (and OnThisPage when added by the Layout) stacks below the
+   article at 360px / mobile widths. */
+.guide-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.guide-content {
+  min-width: 0;
+  max-inline-size: var(--reading-column, 60ch);
+}
+
+.guide-sidebar-container {
+  min-width: 0;
+}
+
+@media (max-width: 64rem) {
+  .guide-layout {
+    grid-template-columns: 1fr;
+  }
+}
