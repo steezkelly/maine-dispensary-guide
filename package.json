@@ -11,6 +11,7 @@
     "build": "npm run data:blog-index && turbo run build",
     "data:blog-index": "node scripts/data/regen-blog-index.cjs",
     "data:blog-index:check": "node scripts/data/regen-blog-index.cjs --check",
+    "test:axe": "node scripts/check/axe-built-routes.cjs",
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "health-check": "turbo run health-check",
