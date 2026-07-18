@@ -39,6 +39,9 @@ jobs:
       - name: Install Chromium for ICA continuation guardrails
         run: npx playwright install chromium --with-deps
 
+      - name: Test GA4 analytics integrity suite
+        run: npm --workspace @network/maine-cannabis run data:mdg:analytics:test
+
       - name: Test image pipeline hero variants
         run: npm run test:image-pipeline
 

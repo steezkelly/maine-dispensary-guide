@@ -1,0 +1,51 @@
+{
+  "G1": {
+    "status": "FAIL",
+    "failed_bq_reports": [
+      "R2_session_metrics_daily"
+    ],
+    "failed_data_api_reports": [],
+    "notes": "A failed source report leaves the run incomplete; inspect report_status and bq_report_status before relying on this release"
+  },
+  "G2": {
+    "status": "PASS",
+    "notes": "sanitizeEventParams() rejects blocklisted keys; row_key/metrics gates checked"
+  },
+  "G3": {
+    "status": "PASS",
+    "notes": "See run manifest event_date distribution vs today; freshness field written per row"
+  },
+  "G4": {
+    "status": "PASS",
+    "blocklist_hits_found": 0,
+    "notes": "No prohibited fields in raw_record_json samples (sanitized at query layer)"
+  },
+  "G5": {
+    "status": "PASS",
+    "unique_keys": 55,
+    "duplicate_count": 0,
+    "notes": "Same source produces same canonical_release_id; duplicates within this run: 0 (asserted by signature equality)"
+  },
+  "G6": {
+    "status": "FAIL",
+    "both_null_count": 1157,
+    "notes": "Recalculated 2026-07-17: 1,157 both-null rows require metric/source remediation; this release is invalid."
+  },
+  "G7": {
+    "status": "PASS",
+    "raw_pseudo_id_in_sanitized_rows": 0,
+    "notes": "user_pseudo_id is replaced with [REDACTED-PSEUDO] in the sanitized layer; session_id with [REDACTED-SESSION]"
+  },
+  "G8": {
+    "status": "PASS",
+    "notes": "A5 fields not asserted in this run (no expected A5 rows in normalized artifact)"
+  },
+  "G9": {
+    "status": "PASS",
+    "notes": "Every BQ row carries source_provenance with bq_table"
+  },
+  "G10": {
+    "status": "PASS",
+    "notes": "No raw tokens in any persisted file (data_api.hashed_token_id per provenance)"
+  }
+}

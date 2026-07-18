@@ -41,8 +41,13 @@
     "data:mdg:derive": "node ./scripts/data/mdg-data/commands/derive.cjs",
     "data:mdg:release": "node ./scripts/data/mdg-data/commands/release.cjs",
     "data:mdg:verify": "node ./scripts/data/mdg-data/commands/verify.cjs",
-    "data:mdg:test": "node ./scripts/data/mdg-data/tests/registry.test.cjs && node ./scripts/data/mdg-data/tests/store.test.cjs && node ./scripts/data/mdg-data/tests/ocp-licenses.test.cjs && node ./scripts/data/mdg-data/tests/census-acs5.test.cjs && node ./scripts/data/mdg-data/tests/crosswalk.test.cjs && node ./scripts/data/mdg-data/tests/ocp-license-normalizer.test.cjs && node ./scripts/data/mdg-data/tests/atomic-promote.test.cjs && node ./scripts/data/mdg-data/tests/ocp-dashboard-discovery.test.cjs && node ./scripts/data/mdg-data/tests/manual-ingest.test.cjs",
-    "ci-check": "node ./scripts/ci-checks.js"
+    "data:mdg:test": "node ./scripts/data/mdg-data/tests/registry.test.cjs && node ./scripts/data/mdg-data/tests/store.test.cjs && node ./scripts/data/mdg-data/tests/ocp-licenses.test.cjs && node ./scripts/data/mdg-data/tests/census-acs5.test.cjs && node ./scripts/data/mdg-data/tests/crosswalk.test.cjs && node ./scripts/data/mdg-data/tests/ocp-license-normalizer.test.cjs && node ./scripts/data/mdg-data/tests/atomic-promote.test.cjs && node ./scripts/data/mdg-data/tests/ocp-dashboard-discovery.test.cjs && node ./scripts/data/mdg-data/tests/manual-ingest.test.cjs && npm run data:mdg:analytics:test",
+    "ci-check": "node ./scripts/ci-checks.js",
+    "data:mdg:analytics:test": "node ./scripts/analytics/ga4-bigquery-r2.test.cjs && node ./scripts/analytics/ga4-data-api.test.cjs && node ./scripts/analytics/ga4-deep-pull.test.cjs && node ./scripts/analytics/ga4-source-ingest.test.cjs && node ./scripts/analytics/ga4-source-ingest-gates.test.cjs && node ./scripts/analytics/ticket008-page-window-join.test.cjs && node ./scripts/analytics/ticket009-sufficiency-baselines.test.cjs && node ./scripts/analytics/ticket010-derived-evidence-state-machine.test.cjs && node ./scripts/analytics/ticket011-opportunity-engine.test.cjs",
+    "data:mdg:analytics:ingest": "node ./scripts/analytics/ga4-source-ingest.cjs",
+    "data:mdg:analytics:baselines": "node ./scripts/analytics/ticket009-sufficiency-baselines.cjs",
+    "data:mdg:analytics:derived": "node ./scripts/analytics/ticket010-derived-evidence-state-machine.cjs",
+    "data:mdg:analytics:opportunities": "node ./scripts/analytics/ticket011-opportunity-engine.cjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",
@@ -50,6 +55,7 @@
     "@astrojs/sitemap": "^3.7.1",
     "@astrojs/vercel": "^11.0.2",
     "@fal-ai/client": "^1.9.5",
+    "@google-cloud/bigquery": "^8.3.1",
     "@network/config": "*",
     "@network/content-types": "*",
     "@network/design-system": "*",

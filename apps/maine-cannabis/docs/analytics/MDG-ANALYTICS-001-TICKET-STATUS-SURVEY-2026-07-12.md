@@ -6,11 +6,13 @@
 **Repo:** `/home/steve/projects/maine-dispensary-guide` @ `7bb51d55`
 **Scope of this survey:** v0.5 ticket sequence 000–012. The dispensary-directory / firecrawl-ingest / optin / menu-price workstreams shipped under `MDG-DATA-001` and `MDG-ANALYTICS-001` commits are **preserved as-is** and **parked separately** per operator instruction 2026-07-12.
 
+**Historical gate note:** The operator-gate instructions below are retained for audit history. Current Ticket 012 truth is authoritative: GA4 is operational; Vercel A4 credential/reachability is available but the probe observed zero events; A5 is deferred; no production optimization is authorized.
+
 ---
 
 ## Summary
 
-The v0.5 analytics workstream has reached **Ticket 006** with three explicitly authorized surfaces shipped (A: `data-page-type`, B: `data-faq`, C: `data-cta-id`). The Ticket 006 proposal itself remains `DRAFT → AWAITING_AUTHORIZATION` for the broader instrumentation scope. Tickets 007–012 are **not started**. The 4 handback artifacts required by Ticket 012 are missing.
+The v0.5 analytics workstream has cleanly rebased Tickets 007–012 onto current `origin/main`, but it is not ready to claim an end-to-end passing ingestion gate. Ticket 007 is **partially complete**: its R2 BigQuery report is failed and the source-failure gate must be repaired before the workflow can be relied on. Tickets 008–011 remain read-only observation/investigation modules, and Ticket 012 handback documents are present but remain subject to the Ticket 007 gate repair; no autonomous optimization authority is granted.
 
 ---
 
@@ -25,12 +27,12 @@ The v0.5 analytics workstream has reached **Ticket 006** with three explicitly a
 | 004 | Event taxonomy v1 | **complete** | `docs/analytics/MDG-ANALYTICS-001-ticket-004-event-taxonomy-v1.md`; schema defined, emission gated by A3/A4 per reconciliation D6 |
 | 005 | Measurement health probes | **complete** | `docs/analytics/MDG-ANALYTICS-001-ticket-005-measurement-health-probes.md`; protocol design shipped, probe-runner code deferred to scoped follow-up |
 | 006 | Instrumentation v1 | **partially complete** | Proposal drafted + scope-hashed (`cdc2fdbe…`) + 3 surfaces authorized and shipped: `data-page-type` (90a6f031), `data-faq` (9ae7712f), `data-cta-id` (d189dc43). Verify mode added (5c162667). Remaining surfaces still AWAITING_AUTHORIZATION |
-| 007 | Behavioral source ingestion | **not started — BLOCKED** | Requires GA4 BigQuery link (operator action) + Vercel API token (operator action). See Gates 1 & 2 below |
-| 008 | Cross-source page-window join | **not started** | Blocked by 007 |
-| 009 | Sufficiency + archetype baselines | **not started** | Blocked by 007, 008 |
-| 010 | Derived evidence + state machine | **not started** | Blocked by 009 |
-| 011 | Opportunity engine | **not started** | Blocked by 010 |
-| 012 | Commissioning + handback | **not started** | **Required stopping boundary**; 4 handback artifacts missing |
+| 007 | Behavioral source ingestion | **partially complete — gate repair required** | `MDG-ANALYTICS-001-TICKET-007-IMPLEMENTATION-REPORT-2026-07-12.md`; R2 BigQuery failure must propagate as partial/failed rather than passing |
+| 008 | Cross-source page-window join | **implementation rebased — pending 007 gate repair** | `MDG-ANALYTICS-001-TICKET-008-IMPLEMENTATION-REPORT-2026-07-12.md`; read-only evidence join |
+| 009 | Sufficiency + archetype baselines | **implementation rebased — pending 007 gate repair** | `MDG-ANALYTICS-001-TICKET-009-IMPLEMENTATION-REPORT-2026-07-12.md`; read-only evidence baseline |
+| 010 | Derived evidence + state machine | **implementation rebased — pending 007 gate repair** | `MDG-ANALYTICS-001-TICKET-010-IMPLEMENTATION-REPORT-2026-07-12.md`; no optimization authority |
+| 011 | Opportunity engine | **implementation rebased — pending 007 gate repair** | `MDG-ANALYTICS-001-TICKET-011-IMPLEMENTATION-REPORT-2026-07-12.md`; produces investigation candidates only |
+| 012 | Commissioning + handback | **documents present — pending 007 gate repair** | Four handback artifacts are included; this remains a stopping boundary, not release authority |
 
 ---
 
