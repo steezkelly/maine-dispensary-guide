@@ -180,6 +180,13 @@ function buildBqSql(reportKey, from, to, propertyDate) {
     WHERE ${rangeFilter}
       AND _TABLE_SUFFIX = ${currentDaySuffix}
   )`;
+  const completedDailyTab = `(
+    SELECT *, CONCAT('${PROJECT_ID}.${DATASET_ID}.events_', _TABLE_SUFFIX) AS _mdg_source_table
+    FROM \`${PROJECT_ID}.${DATASET_ID}.events_*\`
+    WHERE REGEXP_CONTAINS(_TABLE_SUFFIX, r'^[0-9]{8}$')
+      AND ${rangeFilter}
+      AND _TABLE_SUFFIX < ${currentDaySuffix}
+  )`;
   const pageLocationSql = `(SELECT value.string_value FROM UNNEST(event_params) WHERE key='page_location')`;
   const pagePathSql = `IF(
     REGEXP_CONTAINS(${pageLocationSql}, r'^[a-zA-Z][a-zA-Z0-9+.-]*://'),
@@ -208,9 +215,40 @@ function buildBqSql(reportKey, from, to, propertyDate) {
       `;
     }
     case 'R2_session_metrics_daily': {
-      // GA4 does not populate session-scoped attribution in events_intraday_*.
-      // Do not manufacture a non-equivalent BQ channel dimension for reconciliation.
-      throw new Error('R2 session-scoped attribution is not available from events_intraday_*; BigQuery reconciliation is intentionally unavailable for this report');
+      // Session attribution is populated only in completed daily exports.  Do
+      // not fabricate intraday attribution; completed dates remain reconciled.
+      return `
+        WITH session_events AS (
+          SELECT
+            event_date,
+            COALESCE(NULLIF(session_traffic_source_last_click.cross_channel_campaign.default_channel_group, ''), '(not set)') AS sessionDefaultChannelGroup,
+            CONCAT(user_pseudo_id, ':', CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') AS STRING)) AS session_key,
+            MAX(IF(
+              COALESCE(
+                (SELECT value.string_value FROM UNNEST(event_params) WHERE key='session_engaged'),
+                CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key='session_engaged') AS STRING)
+              ) = '1',
+              1,
+              0
+            )) AS session_engaged,
+            SUM(COALESCE((SELECT value.int_value FROM UNNEST(event_params) WHERE key='engagement_time_msec'), 0)) AS engagement_time_msec,
+            ANY_VALUE(_mdg_source_table) AS bq_source_table
+          FROM ${completedDailyTab}
+          WHERE (SELECT value.int_value FROM UNNEST(event_params) WHERE key='ga_session_id') IS NOT NULL
+          GROUP BY event_date, sessionDefaultChannelGroup, session_key
+        )
+        SELECT
+          event_date,
+          sessionDefaultChannelGroup,
+          COUNT(*) AS sessions,
+          COUNTIF(session_engaged = 1 OR engagement_time_msec > 10000) AS engagedSessions,
+          SAFE_DIVIDE(COUNTIF(session_engaged = 1 OR engagement_time_msec > 10000), NULLIF(COUNT(*), 0)) AS engagementRate,
+          SAFE_DIVIDE(SUM(engagement_time_msec) / 1000, NULLIF(COUNT(*), 0)) AS averageSessionDuration,
+          1 - SAFE_DIVIDE(COUNTIF(session_engaged = 1 OR engagement_time_msec > 10000), NULLIF(COUNT(*), 0)) AS bounceRate,
+          ANY_VALUE(bq_source_table) AS bq_source_table
+        FROM session_events
+        GROUP BY event_date, sessionDefaultChannelGroup
+      `;
     }
     case 'R3_event_count_daily': {
       return `
@@ -327,23 +365,7 @@ function buildBqSql(reportKey, from, to, propertyDate) {
  * @param {string} propertyDate - frozen GA4 property-local date for this ingestion run
  * @returns {Promise<{ report_key, report_id, from, to, rowCount, rows, sanitization: { dropped_params: number }, fetched_at_utc }>}
  */
-async function queryBqReport(reportKey, from, to, propertyDate) {
-  if (reportKey === 'R2_session_metrics_daily') {
-    return {
-      status: 'unavailable_intraday',
-      compat_status: 'not_comparable',
-      report_key: reportKey,
-      report_id: reportKey.replace(/^R\d+_/, ''),
-      from, to,
-      property_date_snapshot: propertyDate,
-      rowCount: 0,
-      rows: [],
-      sanitization: { dropped_params: 0, sanitized_rows: 0 },
-      reason: 'session-scoped attribution is unavailable from events_intraday_*',
-      fetched_at_utc: new Date().toISOString()
-    };
-  }
-  const client = getClient();
+async function queryBqReport(reportKey, from, to, propertyDate, client = getClient()) {
   const sql = buildBqSql(reportKey, from, to, propertyDate);
 
   try {

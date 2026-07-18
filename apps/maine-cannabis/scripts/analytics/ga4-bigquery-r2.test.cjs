@@ -7,26 +7,32 @@ const test = require('node:test');
 
 const { buildBqSql, queryBqReport } = require('./ga4-bigquery.cjs');
 
-test('R2 is explicitly unavailable from the intraday-only BigQuery source', () => {
-  assert.throws(
-    () => buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12', '2026-07-12'),
-    /not available from events_intraday/,
-  );
+test('R2 uses completed daily shards without reading intraday attribution', () => {
+  const sql = buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12', '2026-07-12');
+  assert.match(sql, /session_traffic_source_last_click\.cross_channel_campaign\.default_channel_group/);
+  assert.match(sql, /events_\*`/);
+  assert.match(sql, /_TABLE_SUFFIX < REPLACE\('2026-07-12','-',''\)/);
+  assert.doesNotMatch(sql, /events_intraday_/);
 });
 
-test('R2 does not claim to mirror session-scoped Data API attribution from intraday data', () => {
-  assert.throws(
-    () => buildBqSql('R2_session_metrics_daily', '2026-07-10', '2026-07-12', '2026-07-12'),
-    /session-scoped attribution/,
-  );
-});
-
-test('R2 is recorded as unavailable without constructing a BigQuery client', async () => {
-  const result = await queryBqReport('R2_session_metrics_daily', '2026-07-10', '2026-07-12', '2026-07-12');
-  assert.equal(result.status, 'unavailable_intraday');
-  assert.equal(result.compat_status, 'not_comparable');
-  assert.equal(result.property_date_snapshot, '2026-07-12');
-  assert.deepEqual(result.rows, []);
+test('R2 returns reconciled completed-day rows through an injected BigQuery client', async () => {
+  const client = { query: async ({ query }) => {
+    assert.doesNotMatch(query, /events_intraday_/);
+    return [[{
+      event_date: '20260710',
+      sessionDefaultChannelGroup: 'Organic Search',
+      sessions: 2,
+      engagedSessions: 1,
+      engagementRate: 0.5,
+      averageSessionDuration: 12,
+      bounceRate: 0.5,
+      bq_source_table: 'maine-dispensary-guide.analytics_532778727.events_20260710',
+    }]];
+  }};
+  const result = await queryBqReport('R2_session_metrics_daily', '2026-07-10', '2026-07-12', '2026-07-12', client);
+  assert.equal(result.status, 'ok');
+  assert.equal(result.rows[0].row_key.sessionDefaultChannelGroup, 'Organic Search');
+  assert.equal(result.rows[0].metrics.sessions, 2);
 });
 
 test('R6 mirrors engagedSessions alongside users and sessions', () => {

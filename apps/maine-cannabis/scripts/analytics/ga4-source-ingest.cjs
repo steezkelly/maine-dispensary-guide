@@ -100,6 +100,15 @@ function daysBetween(from, to) {
   return Math.max(0, Math.floor((b - a) / 86400000) + 1);
 }
 
+function writeReleaseArtifact(outDir, release, allPass) {
+  const canonicalPath = path.join(outDir, 'canonical_release.json');
+  const rejectedPath = path.join(outDir, 'rejected_release.json');
+  const currentPath = allPass ? canonicalPath : rejectedPath;
+  const stalePath = allPass ? rejectedPath : canonicalPath;
+  fs.rmSync(stalePath, { force: true });
+  fs.writeFileSync(currentPath, JSON.stringify(release, null, 2));
+}
+
 // --------------------- Data floor detection (added 2026-07-12) ----------------
 
 /**
@@ -714,19 +723,16 @@ async function main() {
     }, null, 2)
   );
 
-  fs.writeFileSync(
-    path.join(args.out, 'canonical_release.json'),
-    JSON.stringify({
-      canonical_release_id: canonicalReleaseId,
-      acquisition_release_id: acquisitionReleaseId,
-      release_status: allPass ? 'VALID' : 'INVALID',
-      from: routingResult.effectiveFrom,
-      to: args.to,
-      report_count: joinedRows.length,
-      total_rows: joinedRows.reduce((acc, r) => acc + r.row_count, 0),
-      rows: joinedRows
-    }, null, 2)
-  );
+  writeReleaseArtifact(args.out, {
+    canonical_release_id: canonicalReleaseId,
+    acquisition_release_id: acquisitionReleaseId,
+    release_status: allPass ? 'VALID' : 'INVALID',
+    from: routingResult.effectiveFrom,
+    to: args.to,
+    report_count: joinedRows.length,
+    total_rows: joinedRows.reduce((acc, r) => acc + r.row_count, 0),
+    rows: joinedRows
+  }, allPass);
 
   fs.writeFileSync(
     path.join(args.out, 'gate-result.json'),
@@ -773,5 +779,6 @@ module.exports = {
   computeCanonicalReleaseIdForRouting,
   computeAcquisitionReleaseId,
   runGates,
-  joinDataForReport
+  joinDataForReport,
+  writeReleaseArtifact
 };
