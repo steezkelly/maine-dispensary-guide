@@ -1,0 +1,74 @@
+---
+import type { MunicipalityRow } from '../../lib/homepage-editorial-data';
+
+interface Props {
+  rows: MunicipalityRow[];
+}
+
+const { rows } = Astro.props;
+const sortedRows = [...rows].sort((left, right) => left.name.localeCompare(right.name));
+---
+
+<section class="municipality-explorer editorial-section" aria-labelledby="municipality-title">
+  <p class="section-eyebrow">Municipal guide index</p>
+  <h2 id="municipality-title">Find the local rules behind the market.</h2>
+  <p class="municipality-explorer__lede">Search the published municipal guides by place or county. Every guide remains available without search.</p>
+  <div class="municipality-explorer__controls">
+    <label class="municipality-explorer__search">
+      <span>Search municipal guides</span>
+      <input type="search" data-municipality-search placeholder="Try Portland or Cumberland" autocomplete="off" />
+    </label>
+    <p class="municipality-explorer__count" data-municipality-count aria-live="polite">{sortedRows.length} municipal guides</p>
+  </div>
+  <ol class="municipality-explorer__list">
+    {sortedRows.map((row) => (
+      <li class="municipality-explorer__row" data-municipality-row data-search-value={`${row.name} ${row.county}`.toLowerCase()}>
+        <a class="municipality-explorer__link" href={row.href}>{row.name}, {row.county}</a>
+        <p class="municipality-explorer__note">{row.regulatoryNote}</p>
+        <p class="municipality-explorer__licenses"><span class="municipality-explorer__count-value">{row.activeStoreLicenses}</span> active store licenses</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<script is:inline>
+  (function () {
+    var input = document.querySelector('[data-municipality-search]');
+    var rows = [].slice.call(document.querySelectorAll('[data-municipality-row]'));
+    var count = document.querySelector('[data-municipality-count]');
+    if (!input || rows.length === 0) return;
+    var totalLabel = count ? count.textContent : '';
+    input.addEventListener('input', function () {
+      var query = (input.value || '').trim().toLowerCase();
+      var visible = 0;
+      rows.forEach(function (row) {
+        var matches = (row.dataset.searchValue || '').indexOf(query) !== -1;
+        if (matches) { row.hidden = false; visible++; } else { row.hidden = true; }
+      });
+      if (count) {
+        count.textContent = visible === 1 ? '1 municipal guide' : visible + ' municipal guides';
+      }
+    });
+    if (count && totalLabel) count.textContent = totalLabel;
+  })();
+</script>
+
+<style>
+  .municipality-explorer__lede { margin: 0.5rem 0 1.25rem; color: var(--color-text-light); max-inline-size: 60ch; }
+  .municipality-explorer__controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; align-items: end; margin-block: 1rem; }
+  .municipality-explorer__search { display: grid; gap: 0.35rem; }
+  .municipality-explorer__search span { color: var(--color-text-light); font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .municipality-explorer__search input { min-block-size: 44px; padding: 0.5rem 0.75rem; border: 1px solid var(--color-rule); background: var(--color-surface); color: var(--color-text); font: inherit; }
+  .municipality-explorer__count { margin: 0; color: var(--color-text-light); font-size: 0.875rem; }
+  .municipality-explorer__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .municipality-explorer__row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 1rem; align-items: baseline; padding-block: 0.9rem; border-block-start: 1px solid var(--color-rule); }
+  .municipality-explorer__row:last-child { border-block-end: 1px solid var(--color-rule); }
+  .municipality-explorer__link { color: var(--color-text); font-family: var(--font-serif); font-size: 1.125rem; text-decoration: none; }
+  .municipality-explorer__link:hover { text-decoration: underline; }
+  .municipality-explorer__note { margin: 0; color: var(--color-text-light); font-size: 0.875rem; }
+  .municipality-explorer__licenses { margin: 0; color: var(--color-text-light); font-size: 0.875rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .municipality-explorer__controls { grid-template-columns: 1fr; }
+    .municipality-explorer__row { grid-template-columns: 1fr; }
+  }
+</style>

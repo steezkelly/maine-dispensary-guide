@@ -1,0 +1,28 @@
+---
+interface SourceLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  sourceLinks: SourceLink[];
+}
+
+const { sourceLinks } = Astro.props;
+---
+
+<section class="trust-layer editorial-section" aria-labelledby="trust-title">
+  <p class="section-eyebrow">How this guide is maintained</p>
+  <h2 id="trust-title">Useful evidence, with its receipts.</h2>
+  <p class="trust-layer__lede">Our editorial team checks operating guidance against public OCP materials, municipal records, and the primary sources cited in each guide.</p>
+  <ul class="trust-layer__list">
+    {sourceLinks.map((link) => (
+      <li><a class="editorial-text-link" href={link.href}>{link.label} <span aria-hidden="true">→</span></a></li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .trust-layer__lede { margin: 0.75rem 0 1rem; color: var(--color-text-light); max-inline-size: 60ch; }
+  .trust-layer__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+</style>
