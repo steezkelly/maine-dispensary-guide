@@ -42,6 +42,7 @@
 | `docs/analytics/` | GA4/GSC/ICA evidence and implementation status | Current only when date and evidence are explicit. |
 | `docs/recovery/` | Worktree/branch recovery inventories | Use during reconciliation; preserve until dispositions are complete. |
 | `docs/session-handoff-tokens/` | Focused handoff prompts | Resume aids, not authority for current priorities. |
+| `docs/superpowers/specs/2026-07-17-mdg-refined-editorial-ica-completion.md` | Current Refined Editorial Foundation + Intent Continuity Architecture completion authority | Operational design/ICA contract; current `main` remains implementation authority. For the Refined Editorial/ICA completion workstream, this dated authority supersedes `docs/governance/AGENT_WORKING_ORDERS.md` line 32 and conflicting design/typography/branch passages in `PROJECT_STATE.md` until those records are separately reconciled. |
 | `docs/superpowers/specs/` | Scoped specifications and policy research | Use when executing its named workstream. |
 | `docs/archive/` | Historical copies and moved documents | Read only for provenance. Root `# Moved` files intentionally preserve old lookup paths. |
 | `docs/research/`, `docs/plans/`, `docs/memos/` | Supporting research, plans, and operator decisions | Inputs; validate date/source before acting. |
