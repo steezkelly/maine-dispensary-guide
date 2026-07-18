@@ -12,6 +12,8 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 const CONTRACT_VERSION = 'ticket-010.v1';
+const DEFAULT_WINDOW_CADENCE_DAYS = 7;
+const DAY_MS = 24 * 60 * 60 * 1000;
 const STATES = Object.freeze(['NORMAL', 'WATCH', 'PERSISTENT_SHIFT_CANDIDATE', 'INVESTIGATION_ELIGIBLE', 'MEASUREMENT_BLOCKED']);
 const PERFORMANCE_LABELS = Object.freeze(['WINNER_CANDIDATE', 'SERP_PACKAGING_OPPORTUNITY', 'INTENT_OR_LANDING_RISK', 'WEAK_OR_IMMATURE_ASSET', 'HIGH_SATISFACTION_LOW_PROGRESSION', 'HIGH_SATISFACTION_LOW_DISCOVERY', 'EXPERIENCE_CORRELATED_RISK', 'CONTENT_DECAY_CANDIDATE']);
 const BLOCKED_REASONS = Object.freeze({ HEALTH: 'MEASUREMENT_BLOCKED', UNSETTLED: 'WINDOW_UNSETTLED', INCOMPARABLE: 'WINDOW_NOT_COMPARABLE', CHANGE: 'CHANGE_CONTAMINATED', CHANGE_CONTEXT: 'CHANGE_CONTEXT_UNEVALUATED', TASK: 'TASK_CONTRACT_UNRESOLVED', SOURCE: 'SOURCE_UNAVAILABLE' });
@@ -54,6 +56,26 @@ function practicalDirection(row) {
   return above >= below ? 'above_peer' : 'below_peer';
 }
 function opportunityId(row) { return `opp_${String(row.window_end || row.window_start || 'unknown').replaceAll('-', '')}_${hash(row.deduplication_key || stableDeduplicationKey(row))}`; }
+function isoDayMs(value) {
+  const day = String(value || '');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
+  const timestamp = Date.parse(`${day}T00:00:00.000Z`);
+  return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === day ? timestamp : null;
+}
+function configuredWindowCadenceDays(row, config = {}) {
+  const cadence = Number(config.window_cadence_days ?? row.window_cadence_days ?? DEFAULT_WINDOW_CADENCE_DAYS);
+  return Number.isInteger(cadence) && cadence > 0 ? cadence : null;
+}
+function windowsAreConsecutive(previous, current, cadenceDays) {
+  if (!Number.isInteger(cadenceDays) || cadenceDays <= 0) return false;
+  const previousStart = isoDayMs(previous.window_start || previous.date);
+  const previousEnd = isoDayMs(previous.window_end || previous.date || previous.window_start);
+  const currentStart = isoDayMs(current.window_start || current.date);
+  const currentEnd = isoDayMs(current.window_end || current.date || current.window_start);
+  if ([previousStart, previousEnd, currentStart, currentEnd].some((value) => value == null)) return false;
+  if (previousStart > previousEnd || currentStart > currentEnd || currentStart <= previousEnd) return false;
+  return currentStart - previousStart === cadenceDays * DAY_MS;
+}
 function hasOverlappingPriorWindow(row, history) {
   const start = String(row.window_start || row.date || '');
   const end = String(row.window_end || row.date || row.window_start || '');
@@ -117,10 +139,12 @@ function transitionForEvidence(row, history = [], config = {}) {
   // settled normal window starts a new run.
   const directionalRun = [];
   const evidenceHistory = [...history, { ...row, signal }];
+  const cadenceDays = configuredWindowCadenceDays(row, config);
   for (let i = evidenceHistory.length - 1; i >= 0; i--) {
     const candidate = evidenceHistory[i];
     if (!isSettled(candidate)) break;
     if (!candidate.signal?.practical_effect_plausible || candidate.signal.direction !== signal.direction) break;
+    if (directionalRun.length && !windowsAreConsecutive(candidate, directionalRun[0], cadenceDays)) break;
     directionalRun.unshift(candidate);
   }
   const requiredSettled = Number(config.required_settled_windows || 2);
@@ -137,7 +161,7 @@ function transitionForEvidence(row, history = [], config = {}) {
     state = 'INVESTIGATION_ELIGIBLE'; reason = 'settled persistence/corroboration and change context evaluated';
   }
   const operatorItem = !prior || prior.state !== state || (prior.state !== 'INVESTIGATION_ELIGIBLE' && state === 'INVESTIGATION_ELIGIBLE');
-  return { state, reason, signal, evidence, operator_item_emitted: operatorItem, persistence: { settled_signal_windows: directionalRun.length, required_settled_windows: requiredSettled, corroborated, change_context_evaluated: changeEvaluated } };
+  return { state, reason, signal, evidence, operator_item_emitted: operatorItem, persistence: { settled_signal_windows: directionalRun.length, required_settled_windows: requiredSettled, window_cadence_days: cadenceDays, corroborated, change_context_evaluated: changeEvaluated } };
 }
 
 function cwvEvidence(row) {
@@ -215,17 +239,20 @@ function parseArgs(argv) { const out = {}; for (const a of argv) { const m = /^-
 function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  if (!args.baselines || !args.out) { console.error('Usage: --baselines=Ticket009.json --out=Ticket010.json [--detected_at=ISO-8601]'); process.exitCode = 2; return; }
+  if (!args.baselines || !args.out) { console.error('Usage: --baselines=Ticket009.json --out=Ticket010.json [--detected_at=ISO-8601] [--window_cadence_days=7]'); process.exitCode = 2; return; }
   const input = readJson(args.baselines);
   const inputRows = Array.isArray(input) ? input : (input.baselines || input.rows || []);
   const detectedAt = args.detected_at ? requireTimestamp(args.detected_at, 'detected_at') : null;
   const rows = inputRows.map((row) => ({ ...row, detected_at: row.detected_at || detectedAt }));
-  const result = deriveEvidence(rows, { required_settled_windows: args.required_settled_windows ? Number(args.required_settled_windows) : 2 });
+  const result = deriveEvidence(rows, {
+    required_settled_windows: args.required_settled_windows ? Number(args.required_settled_windows) : 2,
+    ...(args.window_cadence_days === undefined ? {} : { window_cadence_days: Number(args.window_cadence_days) }),
+  });
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, JSON.stringify(result, null, 2) + '\n');
   fs.writeFileSync(args.out.replace(/\.json$/, '.manifest.json'), JSON.stringify({ schema_version: CONTRACT_VERSION, derived_row_count: result.derived_evidence.length, transition_count: result.state_transitions.length, opportunity_count: result.opportunities.length, state_counts: result.derived_evidence.reduce((a, r) => { a[r.state] = (a[r.state] || 0) + 1; return a; }, {}), no_recommendations_assertion: result.no_recommendations_assertion, output_hash: hash(JSON.stringify(result.derived_evidence)) }, null, 2) + '\n');
   console.log(`Ticket 010 derived evidence: ${result.derived_evidence.length} rows written to ${args.out}`);
 }
 
-module.exports = { CONTRACT_VERSION, STATES, PERFORMANCE_LABELS, stableDeduplicationKey, signalFamily, measurementBlockReason, requiredEvidence, classifySignal, transitionForEvidence, cwvEvidence, makeOpportunitySnapshot, deriveEvidence };
+module.exports = { CONTRACT_VERSION, STATES, PERFORMANCE_LABELS, DEFAULT_WINDOW_CADENCE_DAYS, stableDeduplicationKey, signalFamily, measurementBlockReason, requiredEvidence, classifySignal, transitionForEvidence, configuredWindowCadenceDays, windowsAreConsecutive, cwvEvidence, makeOpportunitySnapshot, deriveEvidence };
 if (require.main === module) main();

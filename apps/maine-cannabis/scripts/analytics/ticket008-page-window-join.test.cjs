@@ -40,6 +40,10 @@ test('R1 sessions use the Data API canonical value at metric granularity', () =>
   const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, metric_name: 'sessions', data_api_value: 4, bq_value: 7 }] }] });
   assert.equal(rows[0].value, 4); assert.equal(rows[0].metric_source, 'ga4_data_api');
 });
+test('R1 totalUsers use the Data API canonical value at metric granularity', () => {
+  const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R1_pageview_daily', sanitized_rows: [{ row_key: { date: '20260712', page_path: '/x' }, metric_name: 'totalUsers', data_api_value: 4, bq_value: 7 }] }] });
+  assert.equal(rows[0].value, 4); assert.equal(rows[0].metric_source, 'ga4_data_api');
+});
 
 test('GA4 release ignores non-page-window rows', () => {
   const rows = join.normalizeGa4Release({ rows: [{ report_key: 'R2_session_metrics_daily', sanitized_rows: [{ row_key: { date: '20260712', channel: 'Organic' }, data_api_value: 4 }] }] });
@@ -315,5 +319,5 @@ test('release provenance rejects VALID GA4 artifacts that omit either release ID
   );
 });
 
-console.log(`Tests: ${pass}/56 passed.`);
+console.log(`Tests: ${pass}/57 passed.`);
 if (process.exitCode) process.exit(1);

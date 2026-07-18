@@ -25,6 +25,7 @@ const CSP_FIX_DATE = '2026-07-12';
 const SETTLEMENT_LAG_DAYS = 3;
 const METRIC_SOURCES = Object.freeze({
   sessions: 'ga4_data_api',
+  totalUsers: 'ga4_data_api',
   engagement_rate: 'ga4_data_api',
   bounce_rate: 'ga4_data_api',
   average_session_duration: 'ga4_data_api',

@@ -82,6 +82,16 @@ function hasInvalidRawRateCount(value) {
 function stableKey(values) { return values.map((v) => clean(v) ?? '(null)').join('|'); }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+function inferWindowCadenceDays(row) {
+  const explicit = Number(row.window_cadence_days);
+  if (Number.isInteger(explicit) && explicit > 0) return explicit;
+  const start = clean(row.window_start || row.start_date || row.date);
+  const end = clean(row.window_end || row.end_date || row.date || start);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(start || '') || !/^\d{4}-\d{2}-\d{2}$/.test(end || '')) return null;
+  const days = Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) + 1;
+  return Number.isInteger(days) && days > 0 ? days : null;
+}
+
 function classifyQueryIntent(query) {
   const q = String(query || '').toLowerCase().trim();
   if (!q) return 'unknown';
@@ -154,7 +164,7 @@ function normalizeObservation(row, queryDistributions, manifestByPath) {
     interaction_structure: row.interaction_structure || row.template_family || 'unknown',
     progression_family: row.progression_family || 'unknown',
   };
-  return { ...context, metric_family: metric, numerator, denominator, raw_rate: denominator > 0 && numerator != null ? numerator / denominator : null, invalid_rate_counts: hasInvalidRawRateCount(rawNumerator) || hasInvalidRawRateCount(rawDenominator), policy };
+  return { ...context, metric_family: metric, numerator, denominator, raw_rate: denominator > 0 && numerator != null ? numerator / denominator : null, invalid_rate_counts: hasInvalidRawRateCount(rawNumerator) || hasInvalidRawRateCount(rawDenominator), window_cadence_days: inferWindowCadenceDays(context), policy };
 }
 
 function hasInvalidRateCounts(row) {
@@ -367,6 +377,7 @@ function buildBaselines({ observations = [], queries = [], manifest = [], config
       change_context_evaluated: target.change_context_evaluated === true,
       change_contamination_status: target.change_contamination_status || target.change_status || null,
       window_comparable: target.window_comparable,
+      window_cadence_days: target.window_cadence_days,
       canonical_release_id: target.canonical_release_id || null,
       acquisition_release_id: target.acquisition_release_id || null,
       reconciliation_status: target.reconciliation_status || null,

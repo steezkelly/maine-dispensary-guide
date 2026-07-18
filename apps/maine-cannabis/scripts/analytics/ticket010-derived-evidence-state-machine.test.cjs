@@ -66,6 +66,42 @@ test('overlapping settled windows cannot manufacture persistence', () => {
   ]);
   assert.ok(out.derived_evidence.every((evidence) => evidence.state !== 'PERSISTENT_SHIFT_CANDIDATE' && evidence.state !== 'INVESTIGATION_ELIGIBLE'));
 });
+test('gaps between settled windows reset directional persistence', () => {
+  const out = s.deriveEvidence([
+    row({ window_start: '2026-07-01', window_end: '2026-07-01' }),
+    row({ window_start: '2026-09-01', window_end: '2026-09-01' }),
+    row({ window_start: '2026-11-01', window_end: '2026-11-01' }),
+  ]);
+  assert.ok(out.derived_evidence.every((evidence) => evidence.state === 'WATCH'));
+  assert.ok(out.derived_evidence.every((evidence) => evidence.persistence.settled_signal_windows === 1));
+  assert.equal(out.opportunities.length, 0);
+});
+test('configured daily cadence permits consecutive daily persistence', () => {
+  const out = s.deriveEvidence([
+    row({ window_start: '2026-07-01', window_end: '2026-07-01' }),
+    row({ window_start: '2026-07-02', window_end: '2026-07-02' }),
+    row({ window_start: '2026-07-03', window_end: '2026-07-03' }),
+  ], { window_cadence_days: 1 });
+  assert.equal(out.derived_evidence[2].state, 'INVESTIGATION_ELIGIBLE');
+});
+test('CLI preserves row-level daily cadence when no override is supplied', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ticket010-daily-cadence-'));
+  try {
+    const input = path.join(dir, 'baselines.json');
+    const output = path.join(dir, 'evidence.json');
+    fs.writeFileSync(input, JSON.stringify({ baselines: [
+      row({ window_start: '2026-07-01', window_end: '2026-07-01', window_cadence_days: 1 }),
+      row({ window_start: '2026-07-02', window_end: '2026-07-02', window_cadence_days: 1 }),
+      row({ window_start: '2026-07-03', window_end: '2026-07-03', window_cadence_days: 1 }),
+    ] }));
+    const script = path.join(__dirname, 'ticket010-derived-evidence-state-machine.cjs');
+    const result = spawnSync(process.execPath, [script, `--baselines=${input}`, `--out=${output}`], { encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(fs.readFileSync(output, 'utf8')).derived_evidence.at(-1).state, 'INVESTIGATION_ELIGIBLE');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
 test('two settled windows with change context become investigation eligible', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' }), row({ window_start: '2026-07-15', window_end: '2026-07-15' })]); assert.equal(out.derived_evidence[2].state, 'INVESTIGATION_ELIGIBLE'); });
 test('custom persistence threshold is honored', () => { const out = s.deriveEvidence([row({ window_end: '2026-07-01' }), row({ window_start: '2026-07-08', window_end: '2026-07-08' })], { required_settled_windows: 3 }); assert.equal(out.derived_evidence[1].state, 'WATCH'); });
 test('corroboration can promote a single settled window', () => { const out = s.deriveEvidence([row({ independent_source_corroborated: true })]); assert.equal(out.derived_evidence[0].state, 'PERSISTENT_SHIFT_CANDIDATE'); });
@@ -116,5 +152,5 @@ test('contract version is explicit', () => assert.equal(s.CONTRACT_VERSION, 'tic
 test('omitted or UNKNOWN task context blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-08', window_end: '2026-07-08', task_contract_status: 'UNKNOWN' }), row({ window_start: '2026-07-15', window_end: '2026-07-15', task_contract_status: 'UNKNOWN' })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 test('omitted change evaluation blocks eligibility', () => { const inputs = [row({ window_end: '2026-07-01', change_context_evaluated: undefined }), row({ window_start: '2026-07-08', window_end: '2026-07-08', change_context_evaluated: undefined }), row({ window_start: '2026-07-15', window_end: '2026-07-15', change_context_evaluated: undefined })]; assert.equal(s.deriveEvidence(inputs).derived_evidence.at(-1).state, 'MEASUREMENT_BLOCKED'); });
 
-console.log(`Tests: ${pass}/45 passed.`);
+console.log(`Tests: ${pass}/48 passed.`);
 if (process.exitCode) process.exit(1);
