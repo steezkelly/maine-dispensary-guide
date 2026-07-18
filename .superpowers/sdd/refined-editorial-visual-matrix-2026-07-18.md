@@ -66,3 +66,21 @@ exactly one H1 on every page, all interactive controls at the
 shared 44px minimum (brand link + all list rows on the homepage
 and proof surfaces). Production smoke (282 routes + 960 images) is
 clean against https://mainedispensaryguide.com.
+
+
+## FAQ schema scope clarification (Stage 1 finding)
+
+The Stage 1 (spec-compliance) review noted that the Portland guide
+still emits 5 visible FAQ `<details>` blocks AND a FAQPage JSON-LD
+entity. Spec section 4 ("Canonical nine-section homepage") states:
+
+> "Visible FAQ removal also removes unmatched FAQ schema."
+
+That sentence governs **the homepage** (§4) — the canonical nine-section
+homepage. Portland (§6.1, consumer long-form guide) makes no mention
+of FAQ removal. The Stage 1 finding is therefore informational: the
+spec's FAQ-removal rule was scoped to §4, not §6.
+
+Homepage check (at HEAD 6c84519b): no FAQPage JSON-LD; the only FAQ
+references are editorial cross-links (e.g. `data-faq` on a
+"Read the full FAQ" link). §4 is satisfied.
