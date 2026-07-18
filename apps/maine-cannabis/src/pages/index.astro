@@ -10,9 +10,14 @@ import LatestIntelligence from '../components/homepage/LatestIntelligence.astro'
 import NewsletterInvitation from '../components/homepage/NewsletterInvitation.astro';
 import TrustLayer from '../components/homepage/TrustLayer.astro';
 import { getSiteStats } from '../lib/site-stats';
-import { buildMunicipalityRows } from '../lib/homepage-editorial-data';
+import {
+  buildLatestIntelligence,
+  buildMunicipalityRows,
+  selectFeaturedAnalysis,
+} from '../lib/homepage-editorial-data';
 import municipalAuthorization from '../data/maine-municipal-authorization.json';
 import directory from '../data/generated/mdg-data/current/products/dispensary-directory.json';
+import blogIndex from '../data/blog-index.json';
 
 const siteStats = getSiteStats();
 const currentRoster = siteStats.currentOcpLicenseeRoster;
@@ -30,14 +35,6 @@ const pathways = [
   { number: '02', title: 'Map the regulatory work', description: 'Use the licensing roadmap before committing to a site, a lease, or application timing.', href: '/guides/maine-dispensary-license', cta: 'Read the licensing roadmap', ctaId: 'cta-inline-index-01' },
   { number: '03', title: 'Stress-test the operating model', description: 'Model capital, customer volume, expenses, and payback against Maine-specific assumptions.', href: '/roi-calculator', cta: 'Calculate your ROI', ctaId: 'cta-inline-index-02' },
 ];
-const featuredStory = {
-  title: 'Cannabis-Friendly Maine: 2026 Travel Guide for the 420-Curious',
-  href: '/blog/cannabis-friendly-maine-travel',
-  date: '2026-07-09',
-  image: { src: '/images/heroes/cannabis-friendly-maine-travel.jpg', alt: 'Maine coastal travel landscape' },
-  paragraphs: ['A practical look at where adult-use cannabis fits into Maine travel, what remains regulated, and how visitors can plan responsibly.', 'The guide connects state rules with local geography so travelers and operators can distinguish useful planning detail from promotional noise.'],
-  figure: { label: 'Modified', value: 'July 9, 2026', source: 'MDG editorial desk', sourceHref: '/blog/cannabis-friendly-maine-travel' },
-};
 const guideRoutes = Object.keys(import.meta.glob('./guides/*-dispensary-guide.astro'))
   .map((path) => {
     const slug = path.split('/').pop()?.replace(/-dispensary-guide\.astro$/, '') ?? '';
@@ -51,16 +48,37 @@ const municipalities = buildMunicipalityRows({
   authorization: municipalAuthorization,
   directory,
 });
-const intelligence = [
-  { title: 'Are Edibles Legal in Maine? 2026 Buyer Guide', href: '/blog/best-maine-edibles-2026', date: '2026-07-16', label: 'Consumer' },
-  { title: 'How to Read a Maine Cannabis COA for Terpenes', href: '/blog/how-to-read-maine-cannabis-coa-terpenes-2026', date: '2026-07-16', label: 'Compliance' },
-  { title: 'Maine Home Grow Cannabis Guide 2026', href: '/blog/maine-home-grow-cannabis-guide-2026', date: '2026-07-16', label: 'Cultivation' },
-  { title: 'Can Maine Medical Cannabis Patients Grow Their Own?', href: '/blog/maine-medical-cannabis-patient-grow-guide', date: '2026-07-16', label: 'Medical' },
-  { title: 'Maine Cannabis Travel Guide', href: '/blog/cannabis-friendly-maine-travel', date: '2026-07-09', label: 'Travel' },
-  { title: 'Recreational Cannabis Near Acadia', href: '/blog/recreational-cannabis-near-acadia', date: '2026-07-08', label: 'Travel' },
-  { title: 'Maine Dispensary for Sale: 2026 Buyer Guide', href: '/blog/maine-dispensary-business-for-sale', date: '2026-07-06', label: 'Operator' },
-  { title: 'Maine Dispensary ROI: 2026 Investment Expectations', href: '/blog/maine-dispensary-roi-what-to-expect-2026', date: '2026-07-06', label: 'Finance' },
-];
+// Featured story: choose from the live blog index; the page owns prose/title
+// beyond what the data boundary can derive. `homepageFeaturedPath` pins the
+// override so the editorial choice is intentional, not "most recent".
+const featuredPost = selectFeaturedAnalysis(blogIndex.items, '/blog/cannabis-friendly-maine-travel');
+const featuredStory = {
+  title: featuredPost.title,
+  href: featuredPost.href,
+  date: featuredPost.date,
+  image: {
+    src: featuredPost.heroImage || '/images/heroes/maine-cannabis-granite-hero.jpg',
+    alt: featuredPost.title,
+  },
+  paragraphs: [
+    'A practical look at where adult-use cannabis fits into Maine travel, what remains regulated, and how visitors can plan responsibly.',
+    'The guide connects state rules with local geography so travelers and operators can distinguish useful planning detail from promotional noise.',
+  ],
+  figure: {
+    label: 'Modified',
+    value: featuredPost.modifiedDate,
+    source: 'MDG editorial desk',
+    sourceHref: featuredPost.href,
+  },
+};
+// Latest intelligence: derive from the live blog index, dated-descending,
+// capped at 8 entries.
+const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => ({
+  title: post.title,
+  href: post.href,
+  date: post.date,
+  label: post.section || 'Editorial',
+}));
 ---
 
 <Layout

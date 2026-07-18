@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "agents:continuity": "node scripts/agent/mdg-continuity-check.cjs",
-    "build": "turbo run build",
+    "build": "npm run data:blog-index && turbo run build",
+    "data:blog-index": "node scripts/data/regen-blog-index.cjs",
+    "data:blog-index:check": "node scripts/data/regen-blog-index.cjs --check",
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "health-check": "turbo run health-check",
