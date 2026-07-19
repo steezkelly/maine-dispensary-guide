@@ -63,12 +63,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { google } = require('googleapis');
 
-const REPO_ROOT = path.join(__dirname, '..', '..', '..', '..');
 const { privateDataRoot } = require('./gsc-private-data-root.cjs');
 const PRIVATE_DATA_ROOT = privateDataRoot();
 const OUTPUT_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 const SNAPSHOT_DIR = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics-snapshots');
-const PUBLIC_PAGE_SNAPSHOT_DIR = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'data', 'gsc-page-analytics-snapshots');
+const PAGE_SNAPSHOT_DIR = SNAPSHOT_DIR;
 const SITE_URL = 'https://mainedispensaryguide.com/';
 
 const CRED_PATHS = [
@@ -289,9 +288,9 @@ async function main() {
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   const lines = records.map(r => JSON.stringify(r)).join('\n') + '\n';
   fs.appendFileSync(OUTPUT_PATH, lines);
-  aggregateSnapshots.forEach(snapshot => appendSnapshot(snapshot, snapshot.snapshotKind === 'page' ? PUBLIC_PAGE_SNAPSHOT_DIR : SNAPSHOT_DIR));
+  aggregateSnapshots.forEach(snapshot => appendSnapshot(snapshot, SNAPSHOT_DIR));
   logOk(`Appended ${records.length} rows to ${OUTPUT_PATH}`);
-  logOk(`Appended page-level snapshots to ${PUBLIC_PAGE_SNAPSHOT_DIR}; query-level snapshots remain private at ${SNAPSHOT_DIR}`);
+  logOk(`Appended aggregate snapshots to private storage at ${SNAPSHOT_DIR}`);
   logInfo(`Daily cron-friendly. Re-run tomorrow for trend delta.`);
 }
 
@@ -312,5 +311,5 @@ module.exports = {
   PRIVATE_DATA_ROOT,
   OUTPUT_PATH,
   SNAPSHOT_DIR,
-  PUBLIC_PAGE_SNAPSHOT_DIR,
+  PAGE_SNAPSHOT_DIR,
 };

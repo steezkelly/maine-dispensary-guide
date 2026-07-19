@@ -22,10 +22,12 @@ test('uses Los Angeles calendar arithmetic for a finalized daily window across D
   });
 });
 
-test('keeps raw query-level GSC ledgers outside the repository by default', () => {
+test('keeps every scheduled GSC snapshot outside the repository by default', () => {
   assert.match(producer.OUTPUT_PATH, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics\.jsonl$/);
   assert.match(producer.SNAPSHOT_DIR, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics-snapshots$/);
+  assert.match(producer.PAGE_SNAPSHOT_DIR, /\.hermes\/data\/mdg-gsc\/gsc-search-analytics-snapshots$/);
   assert.doesNotMatch(producer.OUTPUT_PATH, /apps\/maine-cannabis\/data/);
+  assert.doesNotMatch(producer.PAGE_SNAPSHOT_DIR, /apps\/maine-cannabis\/data/);
 });
 
 test('writes finalized one-day provenance onto every GSC row', () => {
