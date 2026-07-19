@@ -4,8 +4,8 @@
 > It answers: what may start now, what is already owned, what is blocked, and
 > where the evidence lives.
 >
-> **As of:** 2026-07-14
-> **Reconciled:** 2026-07-14 after fetching `origin/main`. Inspect live Git
+> **As of:** 2026-07-19
+> **Reconciled:** 2026-07-19 against current `origin/main`. Inspect live Git
 > state before dispatch; this document is not a commit-status ledger.
 > **Execution state:** `hermes kanban --board mdg-site list --json` is the
 > durable task authority. This document is the navigable priority index, not a
@@ -14,7 +14,7 @@
 ## First five minutes
 
 ```bash
-cd /home/steve/repos/maine-dispensary-guide
+cd <fresh checkout of maine-dispensary-guide>
 git fetch origin --prune
 npm run workflow:status:fetch
 hermes kanban --board mdg-site list --json
@@ -29,30 +29,30 @@ active leases.
 
 | Workstream | Status | Owner / boundary | Next permitted action | Evidence |
 |---|---|---|---|---|
-| Refined Editorial Foundation | Active design/integration composition | `design/refined-editorial-foundation-20260713` | Preserve and isolate; only its integration owner composes overlapping shared pages/components. | `docs/governance/round-17-coordination-decision-memo-2026-07-14.md` |
-| OCP public-data trust reconciliation | Patch candidate exists; source edits deferred | Integration owner after design composition | Revalidate official OCP sources, then apply one composed patch with regression coverage. Do not independently patch overlapping public surfaces. | `docs/audits/round-17-trust-data-reconciliation-2026-07-14.md` |
-| Guide meta-description trim | Candidate branch exists | Candidate/integration review | Inspect `chore/guides-description-trim-2026-07-14` from a clean integration worktree; accept or reject as one bounded candidate. | Git branch and current worktree inventory |
-| Guide title trim | Owner-managed candidate; worktree state is live | Title-trim owner, then integration review | Before any action inspect its worktree status and `origin/main` divergence. Do not touch guide-title paths outside its worktree; resolve/rebase/verify there before handoff. | `chore/guides-title-trim-2026-07-14` worktree |
-| Homepage design-token cleanup | Candidate branch exists | Candidate/integration review | Review `refactor/homepage-design-tokens-2026-07-14` only in the composed design context. | Git branch and current worktree inventory |
-| Repeated inline-CSS extraction | Owner-managed candidate; worktree state is live | CSS-extraction owner | Before action inspect its worktree status and `origin/main` divergence. Complete and verify the shared-style wiring and barrel imports in the owner worktree; check cascade safety before committing. Do not merge partial shared assets. | `refactor/css-extract-top3-2026-07-14` worktree |
+| Refined Editorial Foundation + ICA completion | Released; supersedes the prior Active design/integration composition state on `design/refined-editorial-foundation-20260713` | Closed completion card `t_cfe4f925`; current `main` is implementation authority | Preserve the released contract. Treat later template migration as a separate operator-gated workstream. | PR #91 merge `c6d3d454`; production evidence/tag target `44c67423`; control-size audit target `3e42aed7` |
+| OCP public-data trust reconciliation | Ready for a separately scoped implementation after fresh-source revalidation | Card `t_6541e171`; YMYL/public-data boundary | Revalidate the official annual report and current roster sources, then create a fresh-base source contract. Keep annual-report `180` arithmetic distinct from the dated operational `107/49` roster. | `docs/audits/round-17-trust-data-reconciliation-2026-07-14.md` |
+| Broader template migration | Blocked on operator go/no-go | Card `t_5b8b3a86`; no current branch or worktree is authoritative | Preserve the historical collision evidence. Resume only after explicit operator approval and creation of a fresh-base contract, branch, worktree, and lease. | Live Kanban card `t_5b8b3a86` |
+| Guide meta-description trim | Candidate branch requires fresh inspection | Candidate/integration review | Inspect `chore/guides-description-trim-2026-07-14` from a clean integration worktree; accept or reject as one bounded candidate. | Live Git and Kanban inventory |
+| Guide title trim | Recovery-controlled candidate | Title-trim recovery owner | Inspect the live recovery card and current `origin/main` before deciding whether to recreate a bounded candidate. Do not reuse stale paths for unrelated work. | Live Kanban recovery card and Git inventory |
+| Repeated inline-CSS extraction | Recovery-controlled candidate | CSS-extraction recovery owner | Preserve ownerless worktree evidence; resume only through a fresh scoped recovery contract and cascade review. | Live Kanban recovery card and Git inventory |
 
 ## Ready to specify after preflight
 
 These are priority candidates, not pre-authorized edits. The Coordinator must
-create a card using `docs/governance/templates/mdg-kanban-card-body.md` before
-dispatch.
+create or refresh a card using `docs/governance/templates/mdg-kanban-card-body.md`
+before dispatch.
 
-1. **SEO health and orphan remeasurement.** From a production-aligned checkout
+1. **OCP public-data trust reconciliation.** Freshly revalidate the OCP 2025
+   annual-report tuple and the dated operational roster. If evidence still
+   supports the Round 17 manifest, create one bounded YMYL implementation task
+   for the confirmed data, arithmetic, snapshot-label, and refresh-script defects.
+2. **SEO health and orphan remeasurement.** From a production-aligned checkout
    with build output, capture current content-health and internal-link evidence;
    distinguish live regressions from no-`dist/` worktree noise. If real defects
-   remain, split remediation into scoped cards that do not collide with the
-   design worktree.
-2. **GA4 form-completion reporting.** Confirm the data window and current GA4
+   remain, split remediation into scoped cards.
+3. **GA4 form-completion reporting.** Confirm the data window and current GA4
    event availability, then make a small per-form exploration/dashboard task.
    This is measurement work, not a claim of conversion lift.
-3. **Hero-image variant guardrail.** Specify a small utility/test that prevents
-   incomplete responsive hero-variant sets from publishing. Keep it independent
-   of editorial/design composition.
 4. **Town-cluster Stage 3.** Only begin as an editorial initiative with one
    source pack, one region-hub body, and one independent fact review at a time;
    do not mass-produce thin location pages.
@@ -65,6 +65,7 @@ dispatch.
 
 | Item | Blocker owner | Evidence | Resume trigger |
 |---|---|---|---|
+| Broader template migration | Operator | Card `t_5b8b3a86`; the recorded branch/worktree are absent and the prior run ended with a coordination collision | Explicit operator go/no-go followed by a fresh-base contract, branch, worktree, lease, and representative visual gate |
 | GSC scheduled measurement | Operator/system owner | Crontab entries and wrappers exist, but the host has no `cron.service`; logs stopped advancing. | A functioning scheduler is enabled and a fresh daily/weekly output is observed. |
 | Partnership outreach follow-up | Operator | 2026-07-07 campaign was sent; reply/follow-up is human-led. | Operator supplies reply/next-contact direction or records an outcome. |
 | Lead-magnet PDFs | Operator | The remaining scope is a product choice: fresh PDFs versus routing to existing assets. | Operator chooses Path A or Path B and names the target magnets. |
@@ -75,10 +76,11 @@ dispatch.
 - Do not revive the retired static-site `/api/lead-capture` path without a new
   architecture decision. The canonical current lead route is documented in
   `docs/LEAD_CAPTURE_SETUP.md`.
-- Do not collapse the annual-report and live OCP roster figures into one number.
+- Do not collapse the OCP 2025 annual-report retail count (`180`) and the dated
+  operational roster (`107` stores across `49` municipalities) into one number.
   Round 17 defines the required source/date/definition reconciliation.
 - Do not rewrite or rename the Hub, historical sprint files, sibling clones, or
-  worktrees while the design-integration decision is open.
+  worktrees as part of the OCP or broader-template tasks.
 - Do not treat a candidate branch, an HTTP 200, or a worker self-report as a
   deployed release.
 

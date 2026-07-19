@@ -273,69 +273,36 @@ If this document conflicts with current executable behavior, stop, capture the
 drift in a failing test, and reconcile deliberately. Do not silently weaken the
 Refined Editorial or ICA contracts.
 
-## 8. Completion record (2026-07-18)
+## 9. Release reconciliation (2026-07-19)
 
-**Status:** implementation complete on `design/refined-editorial-ica-completion`
-at HEAD `2e633bc5`. Branch is ready for PR review and merge into `main`. **Not
-yet merged.** Per §25 step 4, production homepage sign-off was obtained from the
-operator on 2026-07-18; this document is closed only against the branch and its
-proven contracts, not against a release artifact.
+**Current status:** complete, merged, and production-verified within the bounded
+scope of this authority.
 
-**Branched commits (14 total since base `3c1e50815ef9c2e72c95daa4bb3b21aee9b85352`):**
+- PR #91 merged the 17-commit candidate to `main` as `c6d3d454` on
+  2026-07-18.
+- Production verification is recorded at `44c67423`. The annotated
+  `release/2026-07-18-refined-editorial-ica-completion` tag resolves to that
+  evidence commit; the original tag target before the verification addendum was
+  the PR #91 merge.
+- The separately deferred project-wide 44px control audit is complete at
+  `3e42aed7` under `release/2026-07-18-control-size-audit`.
+- Stage 1 returned PASS. Stage 2 returned PASS-after-remediation; its first three
+  Important findings were closed in `97f88698`, and the broader control-size
+  finding was closed by `3e42aed7`.
 
-| Commit | Subject |
-|---|---|
-| `cd46a613` | docs(design): establish refined editorial ICA authority |
-| `b120a5ba` | test(refined-editorial): add foundation acceptance contracts |
-| `aad37c94` | feat(design): ship refined editorial foundation |
-| `82445c3f` | feat(homepage): ship refined editorial homepage wave |
-| `f6eee397` | feat(guide): wire OnThisPage TOC and stable heading anchors on Portland guide |
-| `ab345f5b` | feat(guide): wire guide-layout grid, Layout-owned TOC, and breadcrumb/trust gates |
-| `c0c2b211` | feat(ica): restyle EditorialNextStep and ContextualAction as one refined family |
-| `3d7d3ea8` | test(portland): pin refined-editorial migration contract |
-| `fabdd987` | feat(market-stats): replace hardcoded hex with shared tokens |
-| `00055f8c` | feat(resources): migrate theatre hover to shared tokens |
-| `1108a0c8` | feat(travel-article): migrate disclaimer palette and prose width |
-| `018bc639` | docs(sdd): record bounded build + ICA built-output evidence |
-| `6c84519b` | fix(homepage): bring all interactive controls to 44px minimum |
-| `2e633bc5` | docs(sdd): record FAQ schema scope clarification |
+The release preserves the Refined Editorial typography contract: Newsreader for
+display/editorial roles and Source Sans 3 for body, navigation, labels, and
+controls. ICA remains the fixed ten-route release-1 continuation architecture;
+the visual rollout does not establish behavioral lift.
 
-**Verified contracts (at HEAD):**
+**Broader migration remains a separate operator decision.** Page-local migration
+outside the bounded proof surfaces, including the remaining city-guide family,
+`/find-a-dispensary`, and the school-buffer cohort, requires explicit operator
+go/no-go and a fresh-base contract. No historical branch or vanished worktree is
+implementation authority.
 
-- 159 focused tests passing across 20 suites
-- Astro typecheck: 0 errors / 0 warnings (454 files)
-- Production build: 284 routes, 0 errors
-- Production smoke (282 routes × 200) and image smoke (960 same-origin refs × 200) clean against `https://mainedispensaryguide.com`
-- Visual matrix (8 routes × 3 viewports × 2 themes = 48 captures): 0 horizontal scroll, 0 duplicate H2 IDs, 1 H1 per page, 0 interactive controls < 36 px after the `6c84519b` 44 px fix
-- Pilot-route ICA inventory on the built dist: every pilot route renders exactly one `editorial-next-step`, one `contextual-action`, one `auto-related`, zero legacy `RelatedArticles`, one `BreadcrumbList` JSON-LD, in the approved order
-
-**Independent reviews:**
-
-- Stage 1 (spec-compliance): PASS, no merge-blocking gap; one operator-action item (Portland FAQ schema scope) closed in `2e633bc5`.
-- Stage 2 (code-quality + accessibility): review dispatched; verdict will be addressed as a separate remediation wave if any critical findings emerge. Document closure does not require Stage 2 to come back clean — Stage 2 finding remediation happens in a follow-up commit before merge.
-
-**Visual restyle does not establish behavioral lift.** Per §3 of
-`docs/analytics/ICA_IMPLEMENTATION_STATUS_2026-07-13.md`, ICA measurement
-remains observational. The visual restyle is a posture change, not a
-treatment; do not claim causal lift from this rollout.
-
-**Non-migrated template families (deliberate, scope-bounded):**
-
-- 109 city-level dispensary-guide pages beyond Portland: each currently uses
-  the same `Layout.astro` shell and renders AutoRelated / BreadcrumbList /
-  EditorialNextStep / ContextualAction by virtue of Layout ownership, but the
-  page-local style has not been migrated to the Refined Editorial token set.
-- Find-a-dispensary (`/find-a-dispensary`) — out of scope per §5.2 non-goals.
-- The school-buffer cohort remains untouched per §5.2 non-goals.
-
-**Broader migration is a separate decision.** The four proof surfaces
-(Portland, market-stats, resources, travel article) demonstrate that the
-Refined Editorial token set, page-local style migration, and Layout-owned
-discovery rail scale to long-form and data pages without regression. Whether
-to roll the same migration to the remaining 108 city guides is a follow-up
-decision the operator has not yet authorized.
-
-**Release tag:** none. Per §25 step 7, no release tag has been created. If
-the operator later asks for one, use a new truthful identifier tied to the
-actual merged commit, never backfill the absent historical tag
-`release/2026-07-17-design-composition`.
+**OCP trust reconciliation is not part of this visual/ICA release.** A separate
+task must freshly revalidate the official sources and preserve the OCP 2025
+annual-report retail count of `180` as distinct from the dated operational roster
+of `107` stores across `49` municipalities before any public-data, copy,
+arithmetic, or refresh-script edit.

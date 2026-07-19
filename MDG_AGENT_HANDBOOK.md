@@ -16,32 +16,18 @@ business resources. Lives at https://mainedispensaryguide.com.
   `packages/` has shared layouts/ui/design-system; `scripts/`
   is workspace-wide tooling. All paths in the Hub are
   relative-to-`apps/maine-cannabis/` even when they say `src/...`.
-- **Stack**: Astro 6.0, CSS variables (no Tailwind, no design-token framework —
-  the visual system is "Heritage Authority" with Fraunces/Jakarta typography,
-  warm bone #F2F2E2 / deep spruce #061A1B), Vercel adapter (static output),
-  Formspree for lead capture (ID `xvgzlowz`), GA4 (`G-614GHG67ZQ`) + Vercel
-  Analytics + Speed Insights, local hero images in
-  `apps/maine-cannabis/public/images/heroes/` (3-format variants per asset:
-  .jpg + .webp + .avif + -640w mobile variants), Playwright for browser
-  automation (CI-only, not installed on local Linux-mint per
-  `HANDOVER_ADDENDUM_LINUX_MINT.md`).
-- **Verify loop**: 4-pass pre-push gate
-  (`scripts/git/pre-push-verify.cjs`):
-  1. esbuild parse on changed `.astro` frontmatter (~1s)
-  2. `npx astro check` filtered to changed files (~5-15s)
-  3. `apps/maine-cannabis/scripts/build/smoke-200.cjs` against
-     `MDG_BASE` (default: live site) — 225 pages, fails on any non-200
-  4. `apps/maine-cannabis/scripts/build/smoke-img-200.cjs` against
-     `MDG_BASE` — 1213 image refs (img/src, source/srcset, preload as=image,
-     meta og:image), fails on any non-200. Added 2026-07-02 after the
-     `/learn/` consumer hub shipped with a broken hero image.
-- **Content health gate**: 19-check sweep via
-  `apps/maine-cannabis/scripts/content/check-content-health.cjs`. The
-  regression detector (`check-content-health-regression.cjs`) compares
-  current results to `.content-health-baseline.json` and fails on any
-  increase. New pages added without inbound links, hub pages emitting
-  `og:type=article`, titles truncated mid-sentence by the 60-char
-  guard, and sitemap URLs missing `<lastmod>` are all caught.
+- **Stack**: Astro 6.0, semantic CSS variables/tokens (no Tailwind or
+  React), Refined Editorial visual system with Newsreader display/editorial
+  typography and Source Sans 3 body/navigation typography, warm paper / Deep
+  Spruce palette, Vercel adapter (static output), Formspree for lead capture
+  (ID `xvgzlowz`), GA4 (`G-614GHG67ZQ`) + Vercel Analytics + Speed Insights,
+  and local hero images in `apps/maine-cannabis/public/images/heroes/`
+  (`.jpg`, `.webp`, `.avif`, plus `-640w` mobile variants).
+- **Verify loop**: use the repository's canonical staged commands:
+  `npm run verify:iterate` during authoring and `npm run verify:push` once before
+  push/release. The local pre-push hook is diff-scoped; production smoke is an
+  explicit release gate, not an iteration step. See `AGENTS.md` for the current
+  command contract.
 
 ## Vercel ↔ GitHub integration
 
@@ -57,82 +43,36 @@ vercel ls maine-dispensary-guide 2>&1 | head -3
 # Look for: Status=Ready on recent deploys, meta has githubCommitSha
 ```
 
-## Pre-push verify gate (Sprint 76b + 78)
+## Pre-push and release verification
 
-**Installed automatically on this clone** via
-`core.hooksPath=.githooks`. Every `git push` runs 3 passes:
+The repository uses one canonical command per stage:
 
-1. **Pass 1 — esbuild parse (~1s)**: extracts .astro frontmatter
-   JS, pipes to esbuild parse-only. Catches the "Expected ]
-   but found {" class (the 2026-06-07 Sprint 75 cascade) with
-   Vercel's exact error message. **Exits 1 on failure.**
-2. **Pass 2 — astro check (~5-15s)**: `npx astro check` filtered
-   to changed files. Only runs after pass 1 is green.
-   **Exits 2 on failure.**
-3. **Pass 3 — smoke-200 (~5s, Sprint 78)**: hits every published
-   page on the live site (or `MDG_BASE`/`MDG_PREVIEW_URL`
-   override) and fails if any return non-200. Catches the
-   "build green but specific page 404s" failure mode that
-   build-time checks can't see. **Exits 4 on failure.**
+1. **Iteration:** `npm run verify:iterate` runs the diff-scoped local checks
+   without production smoke.
+2. **Push/release:** `npm run verify:push` adds the production page and image
+   smoke checks once the candidate is ready to push.
+3. **Hook:** `.githooks/pre-push` invokes the diff-scoped verifier. Do not
+   describe a hook pass as production-smoke evidence.
 
-Bypass: `git push --no-verify`. Run manually:
-`npm run verify:pre-push` (or `--fast-only` to skip passes 2+3,
-or `--skip-smoke-200` to skip pass 3 only).
+Reinstall the hook on a fresh clone with `npm run hooks:install`. Use
+`--fast-only` only for a sub-second parse check during a single edit session;
+it is partial evidence, not a release gate.
 
-Reinstall on a fresh clone: `npm run hooks:install`.
+## CI gate
 
-### Validated failure modes (2026-06-07)
-
-The gate was empirically proven to catch both real failure classes
-on this repo. Don't trust the design — trust the evidence:
-
-- **Pass 1 (esbuild parse)** — broken-state test: injected
-  `@@@` into `apps/maine-cannabis/src/pages/find-a-dispensary.astro`
-  on the `summary` line of the Peru block. Gate output:
-  `✗ apps/maine-cannabis/src/pages/find-a-dispensary.astro — ✘ [ERROR] Expected "}" but found "@"`
-  then `✗ 1 .astro file(s) failed parse check — push blocked.`
-  Exit code **1**. `git checkout` of the file → all 3 passes
-  green, exit 0. This is the same `},` → `}` class that
-  produced the 2026-06-07 Sprint 75 cascade.
-- **Pass 3 (smoke-200)** — DNS-fail test:
-  `MDG_BASE=https://this-domain-does-not-exist-12345.example.com node scripts/git/pre-push-verify.cjs`
-  → `✗ smoke-200: at least one page returned non-200 — push blocked.`
-  with `getaddrinfo ENOTFOUND` for sample routes. 404 test
-  (against `example.com`, which has no MDG pages):
-  `1 ok, 0 redirects, 222 broken`, exit 1.
-
-What the gate does **not** catch: Vercel build errors caused by
-a missing import (the 7d8bebb class). Vercel's own build pipeline
-catches those — the gate only blocks the post-deploy breakage
-class. See "Sprint 78 wire-up" entry in the Hub for the
-incident.
-
-## CI gate (Sprint 76)
-
-`.github/workflows/ci.yml` runs on every push to main:
-1. `npx astro check` (typecheck)
-2. `npm run build` (turbo monorepo build)
-3. `check:hrefs` (cheap malformed-href pre-build)
-4. `check:build-warnings` (post-build CSS/HTML warning scan)
-5. `check:content-health:regression` (14 invariants vs baseline)
-6. `check:sitemap-xml` (sitemap XML entity/format validation)
-7. Smoke tests (Playwright, if configured)
-
-**CI does NOT block direct pushes to main.** It catches broken
-commits after the fact. The pre-push gate above is the only
-local-only protection.
+`.github/workflows/ci.yml` is the source of truth for current CI wiring. Read it
+and the invoked scripts before naming exact checks or counts. CI complements the
+local verification commands; it does not turn a candidate branch into a release.
 
 ## Verify loop (the standing rule)
 
-Per `AGENTS.md`: "trust the verify loop, log in the Hub, flag
-only on one-way-door / wholesale / irreversible changes." The
-verify loop is now:
-- `npm run verify:pre-push` before push (catches structural)
-- CI after push (catches content)
-- `vercel ls` confirms deploy READY (catches infra)
+Per `AGENTS.md`, use:
+- `npm run verify:iterate` while editing;
+- `npm run verify:push` before a push or release;
+- exact-head CI and production-origin evidence before a release claim.
 
-If all three are green, ship. If any are red, fix before moving
-on.
+If a gate is red, stop and fix it. A Vercel `Ready` label or generic HTTP 200 is
+supporting evidence, not proof that the intended commit is deployed.
 
 ## Sprint numbering quirks
 
@@ -174,19 +114,16 @@ path is "missing", check the apps/ prefix.
 
 ## Parallel session protocol
 
-When 2-3 agents commit to main in parallel (current state):
-1. `git log --oneline -5` before staging — see if a sibling
-   just landed a commit that intersects your work.
-2. Stage ONLY your files (`git add <specific paths>`), never
-   `git add -A` or `git add .`. Watch out: `git commit --amend`
-   picks up **all currently-staged + unstaged changes** in the
-   working tree, not just the commit you wanted to amend. If
-   you need to amend a message, stash uncommitted changes first.
-3. If you see a conflict in a file both you and a sibling
-   edited, stop and ask the user — don't auto-resolve.
-4. The pre-push gate catches structural errors only. Content
-   conflicts (e.g. two agents editing the same paragraph) are
-   a human review.
+When multiple agents are active:
+1. Work in named worktrees from freshly fetched `origin/main`; do not author or
+   integrate in the primary checkout.
+2. Validate a scoped task contract and acquire a shared path lease before edits.
+3. Stage only declared paths (`git add <specific paths>`), never `git add -A` or
+   `git add .`.
+4. Treat overlapping leases, base movement, or another owner's edits as a stop
+   condition. Preserve the evidence and route the conflict through Kanban.
+5. Feature branches push reviewed candidates. Only the integration worktree may
+   update `origin/main`.
 
 ## Video production conventions
 
@@ -226,30 +163,19 @@ audit with 0 errors, 0 warnings. Findings: `~/videos/PRO_WORKFLOW_AUDIT_RESULTS.
 
 ## Quick reference
 
-```
-# Verify locally
-npm run verify:pre-push          # 3 passes: esbuild + astro + smoke-200
-npm run check:hrefs              # malformed hrefs
-npm run check:content-health      # 14 invariants
-npm run check:build-warnings      # post-build CSS warnings
-cd apps/maine-cannabis && npx astro check   # typecheck
-node apps/maine-cannabis/scripts/admin/sprint-score.cjs   # 8-check health snapshot (Sprint 77)
+```bash
+# Verify during authoring
+npm run verify:iterate
+npm run verify:iterate -- --fast-only
 
-# Deploy
-git push origin main             # pre-push gate fires automatically (3 passes)
-vercel ls maine-dispensary-guide # confirm READY
-curl -sS https://mainedispensaryguide.com/status.json | python3 -m json.tool  # machine-readable health
+# Verify once before push/release
+npm run verify:push
 
-# Debug a failed deploy
-vercel inspect <deployment-url>  # get deploymentId
-vercel inspect <deploymentId> --logs  # build log
-
-# Live-site smoke (one-off)
-MDG_BASE=https://mainedispensaryguide.com node apps/maine-cannabis/scripts/build/smoke-200.cjs
-
-# Sprint handoff
-node scripts/git/sprint-handoff.cjs   # generate Hub entry from git history
+# Control plane
+npm run workflow:status:fetch
+hermes kanban --board mdg-site list --json
 ```
 
-Last reconciled: 2026-07-14 (working-orders and state-of-record routing added).
-Edit only for a verified rule the next agent needs before opening its task card.
+Last reconciled: 2026-07-19 (Refined Editorial + ICA release and control-plane
+routing reconciled). Edit only for a verified rule the next agent needs before
+opening its task card.

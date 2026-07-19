@@ -3,8 +3,14 @@
 PR #91 (squashed merge of `design/refined-editorial-ica-completion` →
 `main` at `c6d3d454`) was deployed to production during this session.
 
-Tag: `release/2026-07-18-refined-editorial-ica-completion` (bound to `c6d3d454`,
-pushed to origin).
+Tag history:
+- PR #91 merge: `c6d3d454`.
+- Production evidence commit and current annotated tag target: `44c67423`.
+- Tag: `release/2026-07-18-refined-editorial-ica-completion`, pushed to
+  origin. The tag initially pointed at the merge and was deliberately retargeted
+  to include this production-verification record.
+- Separate project-wide control-size audit target: `3e42aed7`, tagged as
+  `release/2026-07-18-control-size-audit`.
 
 ## Production homepage capture
 

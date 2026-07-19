@@ -1,17 +1,17 @@
 # Project State: Maine Dispensary Guide
 
-> **2026-07-14 reconciliation:** This is the concise state-of-record snapshot.
-> Current agent routing lives in `docs/governance/AGENT_WORKING_ORDERS.md`;
-> execution state is the Hermes `mdg-site` Kanban board; dated findings remain
-> in their evidence records. Do not treat this file as a chronological log.
+> **2026-07-19 reconciliation:** Refined Editorial Foundation + ICA completion
+> is released; current agent routing lives in
+> `docs/governance/AGENT_WORKING_ORDERS.md`; execution state is the Hermes
+> `mdg-site` Kanban board. Dated findings remain in their evidence records and
+> are not automatically current.
 
 ## Current status
 
 - **Product:** Maine-only Astro 6 site on Vercel, serving cannabis business and
   consumer resources.
-- **Canonical checkout:** `/home/steve/repos/maine-dispensary-guide`.
-  `/home/steve/projects/maine-dispensary-guide` is a separate older/dirty
-  checkout and must not be used as the integration source of truth.
+- **Checkout authority:** use a checkout freshly synchronized with current
+  `origin/main`. An absolute local directory is not a durable source of truth.
 - **Deployment:** Vercel production is the release target. A candidate branch,
   local build, or provider “Ready” status alone is not proof of the intended
   production SHA.
@@ -21,13 +21,25 @@
 ## Technical stack
 
 - Astro 6, plain HTML/CSS/JavaScript, Vercel adapter; no Tailwind or React.
-- Visual system: Fraunces display + Plus Jakarta Sans body; warm bone/deep
-  spruce Heritage Authority foundation.
+- Refined Editorial visual system: Newsreader display/editorial type + Source
+  Sans 3 body/navigation type, semantic color tokens, warm paper/Deep Spruce
+  palette, restrained containment, and 44px interactive controls.
 - Lead capture: mailto/manual operator flow documented in
   `docs/LEAD_CAPTURE_SETUP.md`; the retired static `/api/lead-capture` endpoint
   is not an active production requirement.
 - Measurement: GA4, GSC, Vercel Analytics/Speed Insights. GSC wrappers exist,
   but host scheduling is currently blocked pending a functioning cron service.
+
+## Released Refined Editorial + ICA scope
+
+- PR #91 merged to `main` as `c6d3d454`.
+- Production verification is recorded at `44c67423`; the annotated
+  `release/2026-07-18-refined-editorial-ica-completion` tag resolves there.
+- The project-wide 44px control audit is recorded at `3e42aed7` under
+  `release/2026-07-18-control-size-audit`.
+- The release covers the shared foundation, canonical homepage, Portland and
+  the bounded proof surfaces, and the existing ten-route ICA release-1
+  behavior. It does not authorize broad page-local template migration.
 
 ## Source-of-record map
 
@@ -45,32 +57,30 @@
 
 ## Current integration boundaries
 
-1. **Refined Editorial Foundation** is an active design/integration composition.
-   Shared source and public-page edits remain preserve-and-isolate work until its
-   owner chooses the composition base.
-2. **OCP public-data trust reconciliation** has an evidence-backed patch
-   manifest. The 2025 official annual report supports 180 retail stores, while
-   the project’s 107/49 roster is a different dated live snapshot. Apply the
-   correction only as a composed, tested integration patch.
-3. **Existing SEO/design candidates** require independent fresh-base review one
-   at a time before integration; do not merge for cleanup convenience.
-4. **Active owner worktrees** include guide-title and shared-CSS work. Their
-   paths are protected; inspect each worktree's current status and
-   `origin/main` divergence immediately before acting rather than treating this
-   snapshot as a live Git-status ledger.
+1. **OCP public-data trust reconciliation remains open.** Fresh-source
+   revalidation must precede a separately scoped implementation. Preserve the
+   OCP 2025 annual-report retail count of `180` as a different snapshot and
+   definition from the dated operational roster of `107` stores across `49`
+   municipalities.
+2. **Broader template migration remains operator-gated.** The historical card
+   records a coordination collision, and its named branch/worktree are absent.
+   Resume only after an explicit operator go/no-go and fresh worktree contract.
+3. **Existing SEO/design candidates require independent fresh-base review one
+   at a time before integration.** Do not merge for cleanup convenience.
+4. **Recovery cards protect stale ownerless work.** Inspect live card, worktree,
+   lease, and `origin/main` state immediately before any recovery action.
 
 ## Prioritized next work
 
 See `project-todos.md` for full ordering. In short:
 
-1. Complete the active design composition and source-data reconciliation safely.
+1. Revalidate OCP primary sources, then scope the residual trust correction.
 2. Re-measure SEO/content-health from a production-aligned build before creating
    remediation work.
 3. Establish form-completion reporting after verifying the usable GA4 window.
-4. Add an image-variant guardrail and progress regional hubs through controlled,
-   source-backed editorial work.
-5. Keep scheduler, partnership follow-up, and PDF scope decisions explicitly
-   blocked until their named owner/event responds.
+4. Progress regional hubs through controlled, source-backed editorial work.
+5. Keep broader template migration, scheduler, partnership follow-up, and PDF
+   scope decisions explicitly blocked until their named owner/event responds.
 
 ## Evidence rules
 
@@ -86,8 +96,7 @@ See `project-todos.md` for full ordering. In short:
 ## Commands
 
 ```bash
-# Session preflight
-cd /home/steve/repos/maine-dispensary-guide
+# Session preflight — run from a freshly synchronized checkout
 git fetch origin --prune
 npm run workflow:status:fetch
 hermes kanban --board mdg-site list --json
@@ -102,6 +111,6 @@ node apps/maine-cannabis/scripts/admin/sprint-score.cjs --dry-run
 
 ---
 
-*Last reconciled: 2026-07-14 after fetching `origin/main`; inspect live Git
+*Last reconciled: 2026-07-19 against current `origin/main`; inspect live Git
 state before dispatch or integration.*
-*Previous snapshot: 2026-07-13 ICA pilot closeout.*
+*Previous snapshot: 2026-07-14 control-plane reconciliation.*
