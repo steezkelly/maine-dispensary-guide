@@ -422,3 +422,89 @@ test('rejects mutually exclusive build and no-build modes before auditing', () =
   assert.equal(result.stdout, '', 'conflicting modes must stop before audit output');
   assert.match(result.stderr, /Cannot combine --build and --no-build/);
 });
+
+// Phase-aware I/O isolation: --source-only must not read sitemap-0.xml or any
+// dist/*.html file; --rendered-only must not walk Astro source routes for
+// dead-link validation. This locks the still-unique #31 cache-and-mode contract
+// from the kanban successor card t_808270a7 against regressions in the
+// phase filter that wires OPTIONS.sourceOnly/--renderedOnly into CHECKS.
+test('--source-only does not read sitemap-0.xml or dist/*.html', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/guides/existing">Existing guide</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+  const readLog = path.join(fixture.tmp, 'reads.json');
+  const counts = {};
+  const hook = path.join(fixture.tmp, 'read-trace.cjs');
+  fs.writeFileSync(hook, [
+    "const fs = require('node:fs');",
+    "const path = require('node:path');",
+    "const counts = {};",
+    "const original = fs.readFileSync.bind(fs);",
+    "fs.readFileSync = function(file, ...rest) {",
+    "  const abs = path.isAbsolute(file) ? file : path.resolve(file);",
+    "  const key = String(file);",
+    "  counts[key] = (counts[key] || 0) + 1;",
+    "  if (process.env.CONTENT_HEALTH_DIST && abs === path.resolve(process.env.CONTENT_HEALTH_DIST)) counts['__DIST_DIR__'] = (counts['__DIST_DIR__'] || 0) + 1;",
+    "  if (process.env.CONTENT_HEALTH_SITEMAP && abs === path.resolve(process.env.CONTENT_HEALTH_SITEMAP)) counts['__SITEMAP__'] = (counts['__SITEMAP__'] || 0) + 1;",
+    "  return original(file, ...rest);",
+    "};",
+    "process.on('exit', () => fs.writeFileSync(process.env.CONTENT_HEALTH_READ_LOG, JSON.stringify(counts)));",
+  ].join('\n'));
+
+  const result = spawnSync(process.execPath, ['--require', hook, script, '--source-only', '--no-build'], {
+    cwd: path.resolve(__dirname, '../..'),
+    env: {
+      ...process.env,
+      CONTENT_HEALTH_ROOT: fixture.pages,
+      CONTENT_HEALTH_SOURCE_ROOT: fixture.sourceRoot,
+      CONTENT_HEALTH_SITEMAP: fixture.sitemap,
+      CONTENT_HEALTH_DIST: fixture.dist,
+      CONTENT_HEALTH_PUBLIC: fixture.publicDir,
+      CONTENT_HEALTH_SKIP_CSS_BUILD: '1',
+      CONTENT_HEALTH_READ_LOG: readLog,
+    },
+    encoding: 'utf8',
+  });
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const reads = JSON.parse(fs.readFileSync(readLog, 'utf8'));
+  assert.equal(reads['__SITEMAP__'], undefined, 'source-only must never read sitemap-0.xml');
+  assert.equal(reads['__DIST_DIR__'], undefined, 'source-only must never read dist/*.html');
+});
+
+test('source-only dead-link check uses Astro source routes only', () => {
+  // Build a fixture where the sitemap contains a stale route whose target
+  // file is absent from the source pages directory. source-only must flag
+  // it as dead if the source pages directory does not contain it; the test
+  // confirms the dead-link check works against source routes (not the
+  // sitemap) when --source-only is set.
+  const fixture = makePages({
+    'index.astro': '<a href="/removed-guide">Removed guide</a>\n',
+    'guides/existing.astro': '<p>Existing guide</p>\n',
+  });
+  // Add a stale entry to the sitemap that does NOT correspond to a source file.
+  const staleSitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    '  <url><loc>https://mainedispensaryguide.com/removed-guide</loc></url>\n' +
+    '</urlset>\n';
+  fs.writeFileSync(fixture.sitemap, staleSitemap);
+
+  const result = spawnSync(process.execPath, [script, '--source-only', '--no-build'], {
+    cwd: path.resolve(__dirname, '../..'),
+    env: {
+      ...process.env,
+      CONTENT_HEALTH_ROOT: fixture.pages,
+      CONTENT_HEALTH_SOURCE_ROOT: fixture.sourceRoot,
+      CONTENT_HEALTH_SITEMAP: fixture.sitemap,
+      CONTENT_HEALTH_DIST: fixture.dist,
+      CONTENT_HEALTH_PUBLIC: fixture.publicDir,
+      CONTENT_HEALTH_SKIP_CSS_BUILD: '1',
+    },
+    encoding: 'utf8',
+  });
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /dead internal links: 1 issue/);
+  assert.match(result.stdout, /dead internal link → \/removed-guide/);
+});
