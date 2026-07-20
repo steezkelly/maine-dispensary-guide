@@ -303,25 +303,24 @@ function derive(rootDir, inputLock, releaseMeta) {
             // report compares canonical results with legacy
             // site-stats counts without silently overwriting
             // them."
-            activeAdultUseRetailStores_annualReport: 187,
-            currentOcpLicenseeRoster_auRetailStores_liveCSV: 107,
+            activeAdultUseRetailStores_annualReport: 180,
+            currentOcpLicenseeRoster_auRetailStores_liveCSV: 106,
             note: 'Read-only comparison; legacy counts are NOT mutated.'
         },
         delta: {
-            canonical_vs_annualReport: activeStoreAllCount.size - 187,
-            canonical_vs_liveCSV: activeStoreAllCount.size - 107
+            canonical_vs_annualReport: activeStoreAllCount.size - 180,
+            canonical_vs_liveCSV: activeStoreAllCount.size - 106
         },
         notes: [
             'canonical.total_active_store_identities counts distinct LICENSE ' +
                 'values with status=Active and type=Store. Source: OCP 2026-06-01 CSV.',
             'legacy_site_stats.activeAdultUseRetailStores_annualReport is anchored ' +
                 'to the OCP 2025 Annual Report (343 total active AU establishments ' +
-                'of which 187 are retail stores).',
+                'of which 180 are retail stores).',
             'legacy_site_stats.currentOcpLicenseeRoster.auRetailStores is the ' +
                 'legacy Python fetcher count: DBA+city deduped, type=Store, ' +
-                'status=Active. The 107-vs-canonical delta reflects the 23 ' +
-                '(DBA, CITY) collapses the legacy rule silently performs, plus ' +
-                'the difference in identity semantics.',
+                'status=Active. The difference from the canonical count reflects ' +
+                'the live roster\'s DBA+city dedupe and differing snapshot/identity semantics.',
             'Both legacy fields are read-only. A separate migration ticket ' +
                 'must wire canonical results into site-stats.json; that ' +
                 'migration is OUT OF SCOPE for MDG-DATA-001 Sprint 1.'

@@ -7,7 +7,7 @@
  * src/data/site-stats.json. Then logs the refresh to
  * public/data/ocp-stats-history.jsonl for trend monitoring.
  *
- * This is the automation that closes the "187 hardcode across 7 pages" drift
+ * This automation prevents annual-report retailer-count drift across reader pages
  * class. After the first run, the value in site-stats.json is the source of
  * truth and any consumer page that hardcodes a different number triggers a
  * stats-drift CI check (added in Sprint 78).
@@ -70,14 +70,13 @@ function appendLog(entry) {
 }
 
 /**
- * Run fetch-ocp-towns.py and parse its JSON output to count:
- *   - active AU retail stores (sum of c for t=="au")
- *   - unique retail municipalities (length of output array, AU only)
- *   - caregiver storefront count (sum of c for t=="med")
+ * Run fetch-ocp-towns.py and parse its JSON output plus stderr metadata to count:
+ *   - active AU retail stores and unique retail municipalities from display rows
+ *   - complete deduplicated caregiver storefront and municipality counts from
+ *     the script's Counts metadata, including caregiver locations in AU towns
  *
- * Note: the Python script dedupes by (DBA, city) for AU and by
- * (REGISTRANT_DBA, RETAIL_TOWN) for caregivers, so c is the count of unique
- * retail locations per city.
+ * The display gives adult-use rows priority for a shared municipality; it is
+ * therefore not a valid source for the total caregiver count.
  */
 function fetchLiveCounts() {
     if (!fs.existsSync(PY_SCRIPT)) {
@@ -98,7 +97,7 @@ function fetchLiveCounts() {
         log('err', `python script failed: ${(proc.stderr || '').trim().split('\n').slice(0, 3).join(' | ')}`);
         process.exit(2);
     }
-    // The python script prints JSON to stdout and "Total: N cities" to stderr.
+    // The Python script prints JSON to stdout and source metadata to stderr.
     const json = (proc.stdout || '').trim();
     if (!json || !json.startsWith('[')) {
         log('err', 'python script did not emit JSON to stdout');
@@ -114,14 +113,31 @@ function fetchLiveCounts() {
 
     const auStores = parsed.filter(c => c.t === 'au').reduce((sum, c) => sum + c.c, 0);
     const auMunicipalities = parsed.filter(c => c.t === 'au').length;
-    const cgStores = parsed.filter(c => c.t === 'med').reduce((sum, c) => sum + c.c, 0);
+    const stderrLines = (proc.stderr || '').trim().split('\n');
+    const countsLine = stderrLines.find(line => line.startsWith('Counts:'));
+    let counts;
+    try {
+        counts = JSON.parse(countsLine?.slice('Counts:'.length).trim() || '');
+    } catch (e) {
+        log('err', `python script did not report valid count metadata: ${e.message}`);
+        process.exit(2);
+    }
+    if (!Number.isInteger(counts.caregiverStorefronts) || counts.caregiverStorefronts < 0 ||
+        !Number.isInteger(counts.caregiverMunicipalities) || counts.caregiverMunicipalities < 0) {
+        log('err', 'python script reported invalid caregiver count metadata');
+        process.exit(2);
+    }
+    const cgStores = counts.caregiverStorefronts;
+    const cgMunicipalities = counts.caregiverMunicipalities;
+    const sourceDateLine = stderrLines.find(line => line.startsWith('Source date:'));
+    const sourceDate = sourceDateLine?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+    if (!sourceDate) {
+        log('err', 'python script did not report an ISO source date');
+        process.exit(2);
+    }
+    log('info', `python: ${sourceDateLine}`);
 
-    // The python script writes the per-city stderr to a different stream — we
-    // log it for the agent to see.
-    const totalLine = (proc.stderr || '').trim().split('\n').find(l => l.startsWith('Total:'));
-    if (totalLine) log('info', `python: ${totalLine}`);
-
-    return { auStores, auMunicipalities, cgStores, raw: parsed };
+    return { auStores, auMunicipalities, cgStores, cgMunicipalities, asOf: sourceDate, raw: parsed };
 }
 
 function main() {
@@ -133,32 +149,34 @@ function main() {
     }
 
     const stored = readStats();
+    const storedLive = stored.currentOcpLicenseeRoster || {};
     const live = fetchLiveCounts();
 
-    log('info', `live counts: ${live.auStores} active AU retail stores across ${live.auMunicipalities} municipalities (${live.cgStores} caregiver)`);
-    log('info', `stored:      ${stored.activeAdultUseRetailStores} active AU retail stores across ${stored.activeAdultUseMunicipalities} municipalities`);
+    log('info', `live counts: ${live.auStores} active AU retail stores across ${live.auMunicipalities} municipalities (${live.cgStores} caregiver storefronts across ${live.cgMunicipalities} municipalities) as of ${live.asOf}`);
+    log('info', `stored live roster: ${storedLive.auRetailStores ?? 'n/a'} active AU retail stores across ${storedLive.auMunicipalities ?? 'n/a'} municipalities as of ${storedLive.asOf ?? 'n/a'}`);
 
-    const storeDrift = live.auStores - stored.activeAdultUseRetailStores;
-    const muniDrift = live.auMunicipalities - stored.activeAdultUseMunicipalities;
-    const driftPct = stored.activeAdultUseRetailStores
-        ? Math.abs(storeDrift) / stored.activeAdultUseRetailStores
+    const storeDrift = live.auStores - (storedLive.auRetailStores ?? live.auStores);
+    const muniDrift = live.auMunicipalities - (storedLive.auMunicipalities ?? live.auMunicipalities);
+    const driftPct = storedLive.auRetailStores
+        ? Math.abs(storeDrift) / storedLive.auRetailStores
         : 0;
 
-    const today = new Date().toISOString().split('T')[0];
+    const checkedAt = new Date().toISOString().split('T')[0];
     const logEntry = {
-        date: today,
+        date: checkedAt,
+        sourceAsOf: live.asOf,
         liveAuStores: live.auStores,
-        storedAuStores: stored.activeAdultUseRetailStores,
+        storedAuStores: storedLive.auRetailStores,
         storeDrift,
         liveMunis: live.auMunicipalities,
-        storedMunis: stored.activeAdultUseMunicipalities,
+        storedMunis: storedLive.auMunicipalities,
         muniDrift,
         action: CHECK_ONLY ? 'check' : (DRY_RUN ? 'dry-run' : 'write'),
     };
 
     if (CHECK_ONLY) {
         if (driftPct > 0.05) {
-            log('warn', `drift detected: stored=${stored.activeAdultUseRetailStores} live=${live.auStores} (${(driftPct*100).toFixed(1)}% delta)`);
+            log('warn', `drift detected: stored=${storedLive.auRetailStores ?? 'n/a'} live=${live.auStores} (${(driftPct*100).toFixed(1)}% delta)`);
             log('warn', `re-run without --check to update site-stats.json`);
             appendLog({ ...logEntry, status: 'drift-detected' });
             process.exit(1);
@@ -169,39 +187,37 @@ function main() {
     }
 
     if (DRY_RUN) {
-        log('info', `[DRY RUN] would write:`);
-        log('info', `  activeAdultUseRetailStores: ${stored.activeAdultUseRetailStores} → ${live.auStores} (${storeDrift >= 0 ? '+' : ''}${storeDrift})`);
-        log('info', `  activeAdultUseMunicipalities: ${stored.activeAdultUseMunicipalities} → ${live.auMunicipalities} (${muniDrift >= 0 ? '+' : ''}${muniDrift})`);
-        log('info', `  fiscalYearLastUpdated: ${stored.fiscalYearLastUpdated} → ${today}`);
+        log('info', '[DRY RUN] would write:');
+        log('info', `  currentOcpLicenseeRoster.auRetailStores: ${storedLive.auRetailStores ?? 'n/a'} → ${live.auStores} (${storeDrift >= 0 ? '+' : ''}${storeDrift})`);
+        log('info', `  currentOcpLicenseeRoster.auMunicipalities: ${storedLive.auMunicipalities ?? 'n/a'} → ${live.auMunicipalities} (${muniDrift >= 0 ? '+' : ''}${muniDrift})`);
+        log('info', `  currentOcpLicenseeRoster.caregiverStorefronts: ${storedLive.caregiverStorefronts ?? 'n/a'} → ${live.cgStores}`);
+        log('info', `  currentOcpLicenseeRoster.caregiverMunicipalities: ${storedLive.caregiverMunicipalities ?? 'n/a'} → ${live.cgMunicipalities}`);
+        log('info', `  currentOcpLicenseeRoster.asOf: ${storedLive.asOf ?? 'n/a'} → ${live.asOf}`);
         process.exit(0);
     }
 
-    // Write mode: update the JSON, append to history log.
-    // The agent system intentionally separates Annual-Report-anchored stat-card
-    // facts (activeAdultUseRetailStores / activeAdultUseMunicipalities at the
-    // top level, anchored to the OCP 2025 Annual Report Dec 31 2025 figures)
-    // from the live OCP licensee-CSV counts (which move monthly). Live counts
-    // go into currentOcpLicenseeRoster.auRetailStores / auMunicipalities so
-    // both facts are preserved as parallel truths, not collapsed into one.
+    // Preserve Annual-Report-anchored stat-card facts at the top level. Monthly
+    // live OCP licensee-CSV counts belong only in currentOcpLicenseeRoster.
     const updated = {
         ...stored,
         currentOcpLicenseeRoster: {
-            ...(stored.currentOcpLicenseeRoster || {}),
+            ...storedLive,
             auRetailStores: live.auStores,
             auMunicipalities: live.auMunicipalities,
-            caregiverStorefronts: live.caregiverStorefronts,
-            asOf: today,
-            source: 'OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py (live deduped Store-type count)',
-            note: 'Two parallel facts are intentional. The 187 figure on stat cards is the Annual-Report total of active AU retail-store establishments and is preserved as \'state of the market in 2025\'. The 107 figure below is the live OCP licensee-search CSV deduped Store-type count for today, and is what /find-a-dispensary and the OCP-tracker use to drive per-city cards. These should NOT be conflated; both refresh on the schedule documented in nextRefresh.',
+            caregiverStorefronts: live.cgStores,
+            caregiverMunicipalities: live.cgMunicipalities,
+            asOf: live.asOf,
+            source: 'OCP Adult-Use Establishments and Medical-Use Registrant CSVs via scripts/ocp/fetch-ocp-towns.py (live deduped storefront counts)',
+            note: `Two parallel facts are intentional. The ${stored.activeAdultUseRetailStores} figure is the Annual-Report total of active AU retail-store establishments at year-end 2025. The dated live roster records ${live.auStores} deduplicated AU Store entries in ${live.auMunicipalities} municipalities and ${live.cgStores} deduplicated caregiver storefronts in ${live.cgMunicipalities} municipalities as of ${live.asOf}. These sources use different dates and definitions and must not be conflated.`,
         },
-        liveOcpRefreshedAt: today,
-        nextRefresh: 'Annual-Report fields (top-level activeAdultUse*): refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields (currentOcpLicenseeRoster.*): monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.',
-        dataSource: `OCP 2025 Annual Report (anchors stat-card facts) + OCP Adult-Use Establishments CSV fetched ${today} (anchors per-store live facts).`,
+        liveOcpRefreshedAt: checkedAt,
+        nextRefresh: 'Annual-report fields refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields refresh monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.',
+        dataSource: `OCP 2025 Annual Report (stat-card facts) + OCP Adult-Use Establishments and Medical-Use Registrant CSVs fetched ${live.asOf} (dated live-roster facts).`,
     };
     writeStats(updated);
     appendLog({ ...logEntry, status: 'written' });
 
-    log('ok', `site-stats.json updated: live auRetailStores=${live.auStores} (was ${logEntry.storedAuStores}), auMunicipalities=${live.auMunicipalities} (was ${logEntry.storedMunis})`);
+    log('ok', `site-stats.json updated: live auRetailStores=${live.auStores} (was ${logEntry.storedAuStores}), auMunicipalities=${live.auMunicipalities} (was ${logEntry.storedMunis}), sourceAsOf=${live.asOf}`);
 
     if (storeDrift < 0) {
         log('warn', `live store count DROPPED by ${Math.abs(storeDrift)} — investigate before deploying`);

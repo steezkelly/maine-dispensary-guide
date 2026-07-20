@@ -17,7 +17,7 @@ const topics = ["licensing", "market", "compliance"];
 // Annual-report counts (OCP 2025 Annual Report, 2025-12-31). Live roster counts are fetched separately
 // via site-stats.currentOcpLicenseeRoster and kept distinct from these stat-card figures.
 const licenseCounts = {
-  retailer: 187,
+  retailer: 180,
   cultivator: 78,
   manufacturer: 81,
   testing: 4,
@@ -34,7 +34,7 @@ const faqPageJsonLd = JSON.stringify({
       "name": "Where can I find the official Maine OCP licensee list?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The Maine Office of Cannabis Policy publishes an open data licensee list at maine.gov/dafs/ocp/adult-use. This page mirrors that data in a filterable format. For verification, always cross-reference against the official OCP portal before making licensing or investment decisions."
+        "text": "The Maine Office of Cannabis Policy publishes an open data licensee list at maine.gov/dafs/ocp/adult-use. This page summarizes the OCP's December 31, 2025 Annual Report context and is not a live licensee mirror. For verification, always cross-reference against the official OCP portal before making licensing or investment decisions."
       }
     },
     {
@@ -163,8 +163,8 @@ const licenseTypes = [
 ---
 
 <Layout
-  title="Maine Cannabis License Data + Opt-In Tracker (April 2026)"
-  description="Statewide OCP licensee data, county-level market intelligence, and license-density analysis for 343+ active adult-use cannabis businesses across Maine. Data as of April 2026."
+  title="Maine Cannabis License Data + Opt-In Tracker (2025 Annual Report)"
+  description="Statewide OCP 2025 annual-report license counts, the dated live OCP roster, and county-level market intelligence for Maine. Annual-report snapshot: December 31, 2025; live roster: July 8, 2026."
   heroImage="/images/heroes/ocp-license-map.jpg"
   article={article}
   topics={topics}
@@ -572,11 +572,11 @@ const licenseTypes = [
     <div class="article-header">
       <h1>Maine Cannabis License Data + Opt-In Tracker</h1>
       <p class="subtitle">All {licenseCounts.total}+ active adult-use licensees across every county — statewide breakdown, county-level market intelligence, and density-vs-opt-in analysis</p>
-      <p class="last-updated">Data sourced from Maine Office of Cannabis Policy (OCP) Open Data Portal — April 2026</p>
+      <p class="last-updated">Annual-report snapshot: December 31, 2025 · Dated live OCP roster: July 8, 2026</p>
     </div>
 
     <Callout title="Primary Source Verification" type="info">
-      This page mirrors the OCP open data licensee dataset. For any licensing, investment, or partnership decision, verify current status directly at <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">maine.gov/dafs/ocp/adult-use</a>. License status can change between updates.
+      This page provides static annual-report context, anchored to the OCP 2025 Annual Report as of December 31, 2025; it is not a live OCP licensee mirror. For any licensing, investment, or partnership decision, verify current status directly at <a href="https://www.maine.gov/dafs/ocp/adult-use" target="_blank" rel="noopener noreferrer">maine.gov/dafs/ocp/adult-use</a>.
     </Callout>
 
     <section class="license-overview">

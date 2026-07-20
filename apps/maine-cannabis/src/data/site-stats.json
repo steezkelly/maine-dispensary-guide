@@ -1,20 +1,20 @@
 {
-  "activeAdultUseRetailStores": 187,
-  "activeAdultUseRetailStoresSource": "OCP 2025 Annual Report (December 31, 2025): retail-store line of the 343 total active adult-use establishments (retail + cultivator + mfg + testing). Refreshed annually when the OCP publishes its annual report.",
-  "activeAdultUseMunicipalities": 65,
-  "activeAdultUseMunicipalitiesSource": "OCP 2025 Annual Report; matches the AU retail license spread across 65 unique host municipalities. Refreshed annually.",
+  "activeAdultUseRetailStores": 180,
+  "activeAdultUseRetailStoresSource": "OCP 2025 Annual Report (December 31, 2025): retail-store line of the 343 total active adult-use establishments (retail + cultivator + manufacturing + testing). Refreshed annually when OCP publishes its annual report.",
   "currentOcpLicenseeRoster": {
-    "auRetailStores": 107,
-    "auMunicipalities": 49,
+    "auRetailStores": 106,
+    "auMunicipalities": 51,
+    "caregiverStorefronts": 269,
+    "caregiverMunicipalities": 116,
     "asOf": "2026-07-08",
-    "source": "OCP Adult-Use Establishments CSV via scripts/ocp/fetch-ocp-towns.py (live deduped Store-type count)",
-    "note": "Two parallel facts are intentional. The 187 figure on stat cards is the Annual-Report total of active AU retail-store establishments and is preserved as 'state of the market in 2025'. The 107 figure below is the live OCP licensee-search CSV deduped Store-type count for today, and is what /find-a-dispensary and the OCP-tracker use to drive per-city cards. These should NOT be conflated; both refresh on the schedule documented in nextRefresh."
+    "source": "OCP Adult-Use Establishments and Medical-Use Registrant CSVs via scripts/ocp/fetch-ocp-towns.py (live deduped storefront counts)",
+    "note": "Two parallel facts are intentional. The 180 figure on stat cards is the 2025 Annual-Report total of active AU retail-store establishments. The dated July 8, 2026 live roster records 106 deduplicated AU Store entries in 51 municipalities and 269 deduplicated caregiver storefronts in 116 municipalities. These sources use different dates and definitions and must not be conflated."
   },
   "totalMarketValueAdultUse": "$246M+",
   "mainePopulation": 1400000,
   "fiscalYearLastUpdated": "2025-12-31",
-  "dataSource": "OCP 2025 Annual Report (anchors stat-card facts) + OCP Adult-Use Establishments CSV fetched 2026-07-08 (anchors per-store live facts).",
-  "nextRefresh": "Annual-Report fields (top-level activeAdultUse*): refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields (currentOcpLicenseeRoster.*): monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.",
-  "notes": "Single source of truth for stat-card numbers across the site (404.html, index.astro, market.astro, etc.). Run `node scripts/ocp/refresh-site-stats.cjs` after each monthly OCP update to refresh these values. Update all consumers at once.",
+  "dataSource": "OCP 2025 Annual Report (stat-card facts) + OCP Adult-Use Establishments and Medical-Use Registrant CSVs fetched 2026-07-08 (dated live-roster facts).",
+  "nextRefresh": "Annual-report fields refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields refresh monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.",
+  "notes": "Single source of truth for OCP retail-store figures across the site. Preserve the Annual Report and dated live-roster definitions when updating consumers.",
   "liveOcpRefreshedAt": "2026-07-08"
 }

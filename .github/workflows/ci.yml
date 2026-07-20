@@ -141,6 +141,7 @@ jobs:
           node --test scripts/check/lib/rendered-image-refs.test.cjs
           node --test scripts/check/corrections-log-latest-date.test.cjs
           node --test scripts/check/ocp-testing-legal-content.test.cjs
+          node --test scripts/check/ocp-annual-report-reconciliation.test.cjs
           npm run test:home-grow-legal-content
 
       - name: Test pre-push diagnostic filtering contract
