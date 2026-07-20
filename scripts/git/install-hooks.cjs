@@ -52,4 +52,4 @@ if (current === '.githooks' || current === path.relative(REPO_ROOT, HOOKS_DIR)) 
 }
 
 console.log('[install-hooks] Pre-push hook will run `node scripts/git/pre-push-verify.cjs` on every push.');
-console.log('[install-hooks] To skip the hook in an emergency: git push --no-verify');
+console.log('[install-hooks] If the hook fails, treat that as a verifier problem to fix: re-run `node scripts/git/install-hooks.cjs`, repair the verifier, or pull the latest main. Do not bypass with `git push --no-verify` — a fail-open bypass is exactly the failure mode this hook exists to prevent.');

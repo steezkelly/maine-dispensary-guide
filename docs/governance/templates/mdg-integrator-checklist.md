@@ -8,17 +8,48 @@
    (`fresh` means no stale worktree, no dirty tree from prior work, and a single candidate commit sequence).
 4. `git cherry-pick <accepted-candidate-commit>`
 5. `git diff origin/main...HEAD --check`
-6. `npm run verify:iterate`
-7. `npm run verify:push`
+6. `npm run verify:iterate` — smoke-free verification: parse, focused
+   astro check, sitemap-postprocess, docs-vs-code, compressed-frontmatter,
+   hero-image-naming, autoRelated-freshness. Confirms the candidate
+   itself, not the live site.
+7. **Pre-transport smoke is forbidden.** The legacy
+   `npm run verify:push` (which smoked `https://mainedispensaryguide.com`
+   before any candidate was deployed) has been retired. See
+   `docs/governance/verifier-governance-migration-notes-2026-07-20.md`
+   for the rationale.
 8. `git push origin HEAD:refs/heads/main`
-9. Wait for Vercel Ready
-10. Verify expected deployment and production route
-11. After production verification, execute release ordering exactly:
+9. Wait for Vercel Ready on the **exact pushed SHA**. Read the remote
+   SHA back with `git ls-remote origin main` to confirm; do not
+   trust local branch state alone.
+10. **Post-transport smoke**: with `MDG_PREVIEW_URL` set to the Vercel
+    preview deployment URL (matching `*.vercel.app`), run
+    `npm run verify:post-deploy` to smoke the exact preview deployment.
+    This is the only valid smoke step for the new candidate. For an
+    explicit post-deploy production smoke of the live site, set
+    `MDG_ALLOW_PROD_SMOKE=1` plus `MDG_BASE=https://mainedispensaryguide.com`.
+11. Verify expected deployment and production route.
+12. After production verification, execute release ordering exactly:
     1. Release the feature lease.
     2. Close the candidate card.
-    3. Attach final release metadata record with `status: released`, final main SHA, Vercel ID/URL, validation commands, deferred work, and closeout evidence.
+    3. Attach final release metadata record with `status: released`, final main SHA, Vercel ID/URL, route, commands, deferred work, and closeout evidence.
 
-12. Record `closeout_evidence` in the final metadata record immediately after step 11, not before.
+13. Record `closeout_evidence` in the final metadata record immediately after step 12, not before.
+
+## Bypass ban
+
+`git push --no-verify` is forbidden. The pre-push verifier can fail
+in ways that look like a developer-experience papercut (e.g. transient
+slowAstroCheck timeout). When the verifier reports a failure, fix the
+underlying cause or fix the verifier itself; do not bypass. The
+`scripts/git/install-hooks.cjs` post-install message documents the same
+requirement.
+
+The verifier may also fail closed when an **adjacent release contract**
+cannot be honored, for example when the pre-transport smoke was attempted
+without `MDG_PREVIEW_URL`, when the autoRelatedData registry is stale
+relative to changed pages, or when the hooksPath setup is missing the
+verifier binary. Treat each of those as a verifier problem to fix before
+integration.
 
 ## Mandatory release metadata draft (Kanban)
 
@@ -31,7 +62,9 @@ Before deployment push, create only a `release-pending` draft record on the cand
   "validation_commands": [
     "git diff origin/main...HEAD --check",
     "npm run verify:iterate",
-    "npm run verify:push"
+    "git push origin HEAD:refs/heads/main",
+    "vercel ready wait on the exact pushed SHA",
+    "MDG_PREVIEW_URL=<preview-url> npm run verify:post-deploy"
   ],
   "deferred_work": [
     "list of deferred or follow-up tasks",
@@ -40,7 +73,7 @@ Before deployment push, create only a `release-pending` draft record on the cand
 }
 ```
 
-Attach the final deployment metadata only after the sequence in step 11 is complete:
+Attach the final deployment metadata only after the sequence in step 12 is complete:
 
 ```json
 {
@@ -52,7 +85,9 @@ Attach the final deployment metadata only after the sequence in step 11 is compl
   "validation_commands": [
     "git diff origin/main...HEAD --check",
     "npm run verify:iterate",
-    "npm run verify:push",
+    "git push origin HEAD:refs/heads main",
+    "vercel ready wait on final-main-sha",
+    "MDG_PREVIEW_URL=<preview-url> npm run verify:post-deploy",
     "vercel production probe command or equivalent"
   ],
   "deferred_work": [
