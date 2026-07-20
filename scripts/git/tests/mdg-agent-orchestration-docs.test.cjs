@@ -55,8 +55,9 @@ test('MDG agent orchestration protocol makes role boundaries independently enfor
 
   assert.match(protocol, /Integrator[\s\S]*?cherry-pick one accepted candidate/i);
   assert.match(protocol, /Integrator[\s\S]*?npm run\s+verify:iterate/i);
-  assert.match(protocol, /Integrator[\s\S]*?npm run\s+verify:push/i);
+  assert.match(protocol, /Integrator[\s\S]*?verify:post-deploy/i);
   assert.match(protocol, /Integrator[\s\S]*?deploy verification/i);
+  assert.match(protocol, /Integrator[\s\S]*?Pre-transport smoke against[\s\S]*?is forbidden/i);
   assert.match(protocol, /Integrator[\s\S]*?must\s+not\s+merge[\s\S]*?unverified batch work/i);
   assert.match(protocol, /Integrator[\s\S]*?must\s+not[\s\S]*?primary checkout/i);
 

@@ -65,8 +65,9 @@ if [ -z "$REMOTE_REF" ]; then
 fi
 
 if [ ! -f "$VERIFY" ]; then
-    echo "[pre-push] WARNING: $VERIFY not found, skipping verification"
-    exit 0
+    echo "[pre-push] ERROR: $VERIFY not found — refusing to push without verification"
+    echo "[pre-push] Remediation: regenerate scripts/git/pre-push-verify.cjs (it appears missing or not executable), or run \`node scripts/git/install-hooks.cjs\` to confirm hooks are installed. Do not use \`git push --no-verify\` to bypass this gate; a missing verifier is a verifier problem to fix."
+    exit 1
 fi
 
 echo "[pre-push] diffing against $REMOTE_REF"

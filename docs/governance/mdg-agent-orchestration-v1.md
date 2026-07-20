@@ -67,12 +67,15 @@ The Integrator is the sole writer for integration. Only the integration worktree
 may update `origin/main`; the Integrator must not use the primary checkout. The
 Integrator must cherry-pick one accepted candidate, recheck base compatibility,
 lease status, verification evidence, and scope, then run `npm run
-verify:iterate`, `npm run verify:push`, and deploy verification. The Integrator
-must not merge unverified batch work. For release readiness, the Integrator
-must execute `docs/governance/templates/mdg-integrator-checklist.md`
-in exact order and record final SHA, Vercel deployment ID/URL, validation
-commands, and deferred work metadata before release. No author, verifier, or
-coordinator may independently write to `origin/main`.
+verify:iterate` (smoke-free) and execute deploy verification on the
+post-transport Vercel preview deployment — `npm run verify:post-deploy` with
+`MDG_PREVIEW_URL` set. Pre-transport smoke against the currently-deployed
+production site is forbidden by the 2026-07-20 governance change; see
+`docs/governance/verifier-governance-migration-notes-2026-07-20.md`. The
+Integrator must not merge unverified batch work. For release readiness, record
+final SHA, Vercel deployment ID/URL, validation commands, and deferred work
+metadata before release. No author, verifier, or coordinator may independently
+write to `origin/main`.
 
 ### Continuity Watcher
 

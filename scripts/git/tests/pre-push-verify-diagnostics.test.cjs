@@ -33,6 +33,7 @@ function runPrePush(env = {}) {
       '--skip-docs-vs-code',
       '--skip-compressed-frontmatter',
       '--skip-hero-image-naming',
+      '--skip-autoRelated-freshness',
     ],
     { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } },
   );

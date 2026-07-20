@@ -21,19 +21,23 @@
  * hardcoded Windows projectRoot and was never wired into any hook.
  *
  * Exit codes:
- *   0  clean
- *   1  parse error in changed .astro file (fast pass failed)
- *   2  astro check error in changed file (slow pass failed)
- *   3  tool/env error (esbuild missing, not in a git repo, etc.)
- *   4  smoke-200: a built page returns non-200 against the live site
- *   5  smoke-img-200: a page references an image that 404s
- *   6  sitemap-postprocess: a sitemap unit/integration assertion fails
- *   7  docs-vs-code: a doc claims a check runs that isn't wired in CI or the pre-push gate
- *   8  compressed-frontmatter: a .astro page imports AutoRelated outside its frontmatter fence
- *   9  hero-image-naming: a hero/infographic file uses a Layout-incompatible suffix
- *   10 node --check: a changed root Node script has invalid syntax
- *      (e.g. -1280x720.jpg) — the bug class closed by commit cff15405 on
- *      2026-07-06. Re-introduction guard (Pass 9); see scripts/image/check-hero-naming.cjs.
+ *   0   clean
+ *   1   parse error in changed .astro file (fast pass failed)
+ *   2   astro check error in changed file (slow pass failed)
+ *   3   tool/env error (esbuild missing, not in a git repo, etc.)
+ *   4   (legacy) smoke-200: a built page returns non-200 against the live site
+ *   5   (legacy) smoke-img-200: a page references an image that 404s
+ *   6   sitemap-postprocess: a sitemap unit/integration assertion fails
+ *   7   docs-vs-code: a doc claims a check runs that isn't wired in CI or the pre-push gate
+ *   8   compressed-frontmatter: a .astro page imports AutoRelated outside its frontmatter fence
+ *   9   hero-image-naming: a hero/infographic file uses a Layout-incompatible suffix
+ *   10  node --check: a changed root Node script has invalid syntax
+ *   11  --data-only: at least one file changed non-data-attribute content
+ *   12  --with-smoke: no acceptable smoke base (MDG_PREVIEW_URL missing or MDG_ALLOW_PROD_SMOKE not set)
+ *   13  autoRelated-freshness required check absent or stale; or a maintained
+ *       checker script is missing.
+ *   14  (reserved) verifier discovered the working tree was mutated
+ *   15  (reserved) killOrphanedTsServers could not enumerate
  *
  * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
  * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
@@ -47,25 +51,36 @@
  * Pass 4 (smoke-img-200) was added on 2026-07-02. It walks every rendered
  * HTML file in dist/, extracts every <img src>, <source srcset>,
  * <link rel="preload" as="image" href>, and <meta property="og:image"
- * content> reference, HEADs each same-origin URL against MDG_BASE, and
- * fails the push if any return non-200. Catches the "shipped with a
+ * content> reference, HEADs each same-origin URL against the smoke base,
+ * and fails the push if any return non-200. Catches the "shipped with a
  * broken hero/OG image" bug class — see the 2026-07-02 /learn/ consumer
  * hub regression (heroImage pointed at a 404 path; build green, smoke-200
  * green, but the social-share preview was a 404 image and the browser
  * was preloading a 404). Runs ~30s against the live site. OPT-IN ONLY as
  * of 2026-07-13 — bundled with smoke-200 behind --with-smoke.
  *
+ * Smoke base contract (2026-07-20 governance):
+ *   - The verifier must never run smoke against the currently-deployed
+ *     production site by default. The allowed targets are: (a) the
+ *     exact Vercel preview deployment for this candidate (via
+ *     MDG_PREVIEW_URL, which must match *.vercel.app), or (b) an
+ *     explicit post-deploy production smoke via MDG_ALLOW_PROD_SMOKE=1
+ *     + MDG_BASE set to the production URL.
+ *   - Anything else: --with-smoke refuses to run and exits 12.
+ *
  * Usage:
- *   node scripts/git/pre-push-verify.cjs                        # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
- *   node scripts/git/pre-push-verify.cjs --with-smoke           # add smoke-200 + smoke-img-200 against production
- *   node scripts/git/pre-push-verify.cjs --with-smoke --ignore-unrelated
- *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
- *   node scripts/git/pre-push-verify.cjs --data-only            # parse-only + assertion that every diff hunk
- *                                                              #     adds only data-* attributes; skips slow astro check.
- *                                                              #     Exits 11 (violation) or 0 (data-only confirmed).
- *   node scripts/git/pre-push-verify.cjs --fast-only            # parse-only (~1s)
- *   node scripts/git/pre-push-verify.cjs --skip-smoke-200       # legacy: still works, see below
- *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200   # legacy: still works
+ *   node scripts/git/pre-push-verify.cjs                                 # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
+ *   MDG_PREVIEW_URL=https://<hash>.vercel.app \
+ *     node scripts/git/pre-push-verify.cjs --with-smoke                   # smoke against the exact preview deployment
+ *   node scripts/git/pre-push-verify.cjs --with-smoke --ignore-unrelated  # smoke preview + restrict to changed pages
+ *   MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com \
+ *     node scripts/git/pre-push-verify.cjs --with-smoke                   # explicit post-deploy production smoke
+ *   node scripts/git/pre-push-verify.cjs --fast-only                      # parse-only (~1s)
+ *   node scripts/git/pre-push-verify.cjs --data-only                      # parse-only + assertion that every diff hunk
+ *                                                                       #     adds only data-* attributes; skips slow astro check.
+ *                                                                       #     Exits 11 (violation) or 0 (data-only confirmed).
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-200                 # legacy: still works, see below
+ *   node scripts/git/pre-push-verify.cjs --skip-smoke-img-200             # legacy: still works
  *
  * Legacy flag note: --skip-smoke-200 / --skip-smoke-img-200 are deprecated. They still
  * work for callers that pass them, but smoke checks now default OFF; --with-smoke is
@@ -97,6 +112,44 @@ const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
 const NODE_SCRIPT_RE = /\.(cjs|mjs|js)$/;
 const ANSI_ESCAPE_RE = /\u001B\[[0-?]*[ -/]*[@-~]/g;
+
+/**
+ * Resolve the base URL for smoke checks.
+ *
+ * Returns:
+ *   - the resolved base URL string when an acceptable target is configured
+ *   - null when the request cannot be honored (caller logs and returns ok:false)
+ *
+ * Contract (2026-07-20 governance):
+ *   - `MDG_PREVIEW_URL` (preferred): a Vercel preview deployment URL, e.g.
+ *     https://maine-dispensary-guide-<hash>-steezkellys-projects.vercel.app
+ *     This is the only path that pre-transport smoke against an
+ *     untrafficked deployment must use, because the URL routes to a
+ *     fresh preview deployment created by Vercel for the exact
+ *     candidate SHA.
+ *   - `MDG_ALLOW_PROD_SMOKE=1` + `MDG_BASE`: an explicit acknowledgement
+ *     that the caller intends to smoke the currently-deployed production
+ *     host. Required for post-deploy production smoke, forbidden for
+ *     pre-transport smoke.
+ *   - Anything else (default to mainedispensaryguide.com hostname, or
+ *     `MDG_BASE` set without `MDG_ALLOW_PROD_SMOKE=1`): returns null and
+ *     the smoke gate reports a remediation hint. This prevents the
+ *     pre-transport smoke-against-old-deployment failure mode the
+ *     2026-07-20 governance change documented.
+ *
+ * @returns {string|null}
+ */
+function resolveSmokeBase() {
+    const preview = process.env.MDG_PREVIEW_URL;
+    if (preview && /\.vercel\.app$/.test(preview)) {
+        return preview;
+    }
+    if (process.env.MDG_ALLOW_PROD_SMOKE === '1') {
+        const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL;
+        if (base) return base;
+    }
+    return null;
+}
 
 function log(level, msg) {
     const tags = { info: '\x1b[36mi\x1b[0m', ok: '\x1b[32m✓\x1b[0m', warn: '\x1b[33m!\x1b[0m', err: '\x1b[31m✗\x1b[0m' };
@@ -284,6 +337,12 @@ function slowAstroCheck(files) {
         maxBuffer: 16 * 1024 * 1024,
         timeout: 240_000,
     });
+    // Capture the spawned PID for descendant cleanup if the parent
+    // dies before its children (tsserver.js outlives `astro check`
+    // when the parent shell wraps the call). The killOrphanedTsServers
+    // function uses this to ensure a reparented tsserver.js is still
+    // reaped even after the astro-check parent has exited.
+    if (res.pid) lastSlowAstroChildPid = res.pid;
 
     const output = (res.stdout || '') + (res.stderr || '');
     if (res.status === 0) {
@@ -362,18 +421,76 @@ function nodeSyntaxCheck(files) {
     return { ok: true };
 }
 
+/**
+ * autoRelatedData freshness check. The relationship-registry data file
+ * must exist and be no older than the newest changed .astro page.
+ * Required-check absent or stale → error string returned; main() routes
+ * this to exit code 13. This is a fail-closed replacement for the
+ * 2026-07-05 "auto-regen and auto-stage" behavior (which mutated the
+ * working tree from inside the verifier).
+ *
+ * @param {string[]} files changed files from changedFiles()
+ * @returns {{ ok: boolean, error: string|null }}
+ */
+function autoRelatedFreshnessCheck(files) {
+    const astroPageFiles = files.filter(f => f.includes('apps/maine-cannabis/src/pages/') && ASTRO_FILE_RE.test(f));
+    if (astroPageFiles.length === 0) {
+        // No .astro page changes → the relationship registry is
+        // irrelevant to the diff → no error.
+        return { ok: true, error: null };
+    }
+    const dataFile = path.join(REPO_ROOT, 'apps/maine-cannabis/src/data/autoRelatedData.json');
+    if (!fs.existsSync(dataFile)) {
+        return {
+            ok: false,
+            error: `autoRelated-freshness: required data file missing at ${path.relative(REPO_ROOT, dataFile)} — push blocked. Run the dedicated regen-and-stage step before committing.`,
+        };
+    }
+    let newestPageMtime = 0;
+    for (const rel of astroPageFiles) {
+        const abs = path.join(REPO_ROOT, rel);
+        try {
+            const stat = fs.statSync(abs);
+            if (stat.mtimeMs > newestPageMtime) newestPageMtime = stat.mtimeMs;
+        } catch {}
+    }
+    const dataStat = fs.statSync(dataFile);
+    if (dataStat.mtimeMs < newestPageMtime) {
+        return {
+            ok: false,
+            error: `autoRelated-freshness: ${path.relative(REPO_ROOT, dataFile)} is older than at least one changed .astro page — push blocked. Run the dedicated regen step (pre-commit / prepush:data) and stage the data file before push.`,
+        };
+    }
+    log('ok', `autoRelated-freshness: ${astroPageFiles.length} .astro page file(s) check out — data file is current`);
+    return { ok: true, error: null };
+}
+
 function smoke200Check() {
-    // Pass 3: hit every published page on the live site, fail on any non-200.
-    // Wraps scripts/check/smoke-200.cjs (Sprint 77
+    // Pass 3: hit every published page on a verify-target base, fail on any
+    // non-200. Wraps scripts/check/smoke-200.cjs (Sprint 77
     // observability). Catches the "build green but specific page 404s" mode.
     // Sprint 78: wire-up.
+    //
+    // Required smoke base (2026-07-20 governance):
+    //   - For pre-transport verification the verifier must never smoke the
+    //     currently-deployed production site, because that test cannot
+    //     validate the not-yet-deployed candidate.
+    //   - MDG_PREVIEW_URL must be set to a Vercel preview deployment URL
+    //     (matching *.vercel.app) before --with-smoke is honored.
+    //   - MDG_ALLOW_PROD_SMOKE=1 may be set to bypass this guard for an
+    //     explicit post-deploy production smoke; this is the only path
+    //     that permits the production hostname.
     const smokeScript = path.join(REPO_ROOT, 'scripts', 'check', 'smoke-200.cjs');
     if (!fs.existsSync(smokeScript)) {
-        log('warn', `smoke-200.cjs not found at ${smokeScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: smoke-200.cjs not found at ${smokeScript} — push blocked.`);
+        return { ok: false };
     }
 
-    const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL || 'https://mainedispensaryguide.com';
+    const base = resolveSmokeBase();
+    if (base === null) {
+        log('err', '--with-smoke requires MDG_PREVIEW_URL (or MDG_ALLOW_PROD_SMOKE=1 with MDG_BASE set to production). Run `npm run verify:iterate` (smoke-free) instead, or wait for Vercel preview deployment and re-run with MDG_PREVIEW_URL set.');
+        return { ok: false };
+    }
     log('info', `smoke-200 against ${base}…`);
 
     const res = spawnSync('node', [smokeScript], {
@@ -398,18 +515,24 @@ function smoke200Check() {
 function smokeImg200Check(args) {
     // Pass 4: walk every rendered HTML in dist/, extract every image
     // reference (img src, source srcset, link rel=preload as=image,
-    // meta property=og:image), HEAD each same-origin URL against
-    // MDG_BASE, fail on any non-200. Catches the "shipped with a broken
+    // meta property=og:image), HEAD each same-origin URL against the
+    // smoke base, fail on any non-200. Catches the "shipped with a broken
     // hero/OG image" bug class that smoke-200 misses (image requests
     // are client-side, so the page renders 200 even when the image 404s).
     // Added 2026-07-02 after the /learn/ consumer hub regression.
+    //
+    // Same MDG_PREVIEW_URL / MDG_ALLOW_PROD_SMOKE gate as smoke-200Check.
     const smokeScript = path.join(REPO_ROOT, 'scripts', 'check', 'smoke-img-200.cjs');
     if (!fs.existsSync(smokeScript)) {
-        log('warn', `smoke-img-200.cjs not found at ${smokeScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: smoke-img-200.cjs not found at ${smokeScript} — push blocked.`);
+        return { ok: false };
     }
 
-    const base = process.env.MDG_BASE || process.env.MDG_PREVIEW_URL || 'https://mainedispensaryguide.com';
+    const base = resolveSmokeBase();
+    if (base === null) {
+        log('err', '--with-smoke requires MDG_PREVIEW_URL (or MDG_ALLOW_PROD_SMOKE=1 with MDG_BASE set to production). Run `npm run verify:iterate` (smoke-free) instead, or wait for Vercel preview deployment and re-run with MDG_PREVIEW_URL set.');
+        return { ok: false };
+    }
     const ignoreUnrelated = (args || []).includes('--ignore-unrelated');
 
     const env = { ...process.env, MDG_BASE: base };
@@ -597,6 +720,11 @@ function heroImageNamingCheck() {
     return { ok: false };
 }
 
+// Verifier PID used to scope process-tree kill to only those descendants
+// spawned by this script. We rely on the parent's PID rather than a
+// name substring so we cannot terminate an unrelated user's tsserver.
+const VERIFIER_PID = process.pid;
+
 function killOrphanedTsServers() {
   // `npx astro check` from apps/maine-cannabis spawns a TypeScript LSP
   // (tsserver.js) that does not always exit cleanly when the parent shell
@@ -604,17 +732,37 @@ function killOrphanedTsServers() {
   // orphan holds ~2 GB resident; repeated verify runs leak RAM until the
   // OS reclaims the pages.
   //
-  // Run this after slowAstroCheck() so a successful pass leaves no
-  // children behind. pkill returns 1 if no matches were found, which is
-  // the desired outcome — swallow the error and log an info line.
+  // Hard rule: never use `pkill -f tsserver.js` — that command-line
+  // substring match would terminate any tsserver process on the host,
+  // including ones owned by other users or other agents. Instead, only
+  // kill processes whose immediate parent is this verifier (or a
+  // descendant of it). `pkill -P <pid>` matches descendants only;
+  // combined with `-f tsserver.js` it scopes to descendants named
+  // tsserver.js.
   try {
-    execSync('pkill -f tsserver.js', { stdio: 'ignore' });
-    log('info', 'cleaned up any orphaned tsserver.js LSP processes');
+    execSync(`pkill -P ${VERIFIER_PID} -f tsserver.js`, { stdio: 'ignore' });
+    log('info', 'cleaned up descendant tsserver.js LSP processes');
   } catch (_) {
     // exit code 1 from pkill means "no processes matched" — that's the
     // happy path on a clean run. No log line; nothing to report.
   }
+
+  // Belt-and-suspenders: if a tsserver.js was spawned by a child of
+  // ours but is now reparented (parent died), its PPID no longer
+  // equals VERIFIER_PID. Track the most recent slowAstroCheck PID and
+  // kill its descendants.
+  if (lastSlowAstroChildPid !== null) {
+    try {
+      execSync(`pkill -P ${lastSlowAstroChildPid} -f tsserver.js`, { stdio: 'ignore' });
+    } catch (_) {}
+  }
 }
+
+// Track the immediate child PID of the most recent slowAstroCheck
+// (typically the `npx astro check` process). Used as a fallback parent
+// for descendant cleanup so we can still reap grandchildren that
+// outlive the parent process.
+let lastSlowAstroChildPid = null;
 
 // Belt-and-suspenders: if main() exits through an unexpected path
 // (uncaught exception, signal), the tsserver.js child is still reaped.
@@ -715,27 +863,26 @@ function main() {
         log('info', '--data-only: skipping slow astro check (data-attribute additions only)');
     }
 
-    // Inreach pass 2026-07-05: if any changed file is an .astro page,
-    // auto-regenerate autoRelatedData.json before the verify runs. The
-    // regenerated data file is restaged so the commit captures the
-    // fresh data (the alternative — silently shipping stale data when
-    // a new guide is added — was the failure mode that motivated this).
-    const astroPageFiles = files.filter(f => f.includes('apps/maine-cannabis/src/pages/') && ASTRO_FILE_RE.test(f));
-    if (astroPageFiles.length > 0) {
-        log('info', `autoRelated: ${astroPageFiles.length} .astro page file(s) changed — regenerating data file…`);
-        const regenScript = path.join(REPO_ROOT, 'scripts', 'data', 'regen-auto-related.cjs');
-        if (fs.existsSync(regenScript)) {
-            const regen = spawnSync('node', [regenScript], { encoding: 'utf8', cwd: REPO_ROOT, timeout: 60_000 });
-            const tail = ((regen.stdout || '') + (regen.stderr || '')).trim().split('\n').slice(-3).join('\n');
-            if (regen.status === 0) {
-                log('ok', `autoRelated: data file regenerated. ${tail}`);
-                // Stage the regenerated data file if it's part of the repo
-                try { git('git add apps/maine-cannabis/src/data/autoRelatedData.json'); } catch {}
-            } else {
-                log('warn', `autoRelated: regen script failed (exit ${regen.status}) — verify continues.`);
-                if (tail) console.log(tail);
-            }
+    // Inreach pass (2026-07-05 → fail-closed 2026-07-20): the verifier
+    // used to auto-regenerate apps/maine-cannabis/src/data/autoRelatedData.json
+    // and `git add` it as part of "verification". That is forbidden: a
+    // verifier must not mutate the working tree. The correct place for
+    // regeneration is a dedicated pre-commit step or a standalone
+    // `prepush:data` job, owned by the data-registry lane. The verifier's
+    // job here is to fail closed if the data file is missing or stale
+    // relative to changed pages.
+    //
+    // The check is treated as a maintained gate; `--skip-autoRelated-freshness`
+    // is the documented bypass for legacy or test-only invocations.
+    if (!args.includes('--skip-autoRelated-freshness')) {
+        const autoRelatedFreshness = autoRelatedFreshnessCheck(files);
+        if (autoRelatedFreshness.error) {
+            console.log(`    ${autoRelatedFreshness.error}`);
+            log('err', 'autoRelated-freshness: required check absent or stale — push blocked. Run the dedicated regen-and-stage step before committing, do not bypass.');
+            process.exit(13);
         }
+    } else {
+        log('info', 'autoRelated-freshness skipped (--skip-autoRelated-freshness)');
     }
 
     const fast = fastParseCheck(files);
@@ -775,25 +922,35 @@ function main() {
     // Smoke checks default OFF — they hit production URLs and were
     // documented as slow + bandwidth-hungry (GSC_QUERIES_3MO_ACTION_PLAN_2026-07-04.md,
     // Round 103). Iterate-fast uses default; pre-push uses --with-smoke to opt in.
+    //
+    // --with-smoke contracts (2026-07-20 governance):
+    //   - The verifier must never run smoke against the currently-deployed
+    //     production site by default. The allowed targets are: (a) the
+    //     exact Vercel preview deployment for this candidate (via
+    //     MDG_PREVIEW_URL), or (b) an explicit post-deploy production
+    //     smoke via MDG_ALLOW_PROD_SMOKE=1.
+    //   - resolveSmokeBase() returns null in any other case; the smoke
+    //     check reports the remediation hint and returns ok:false.
+    //     main() then exits with code 12.
     if (args.includes('--with-smoke')) {
         const smoke = smoke200Check();
-        if (!smoke.ok) process.exit(4);
+        if (!smoke.ok) process.exit(12);
         const smokeImg = smokeImg200Check(args);
-        if (!smokeImg.ok) process.exit(5);
+        if (!smokeImg.ok) process.exit(12);
     } else if (args.includes('--skip-smoke-200') || args.includes('--skip-smoke-img-200')) {
         // Back-compat: old --skip-* flags still work but emit a deprecation note.
         log('info', '--skip-smoke-* flags are deprecated; smoke checks now default OFF. Use --with-smoke to enable.');
         if (!args.includes('--skip-smoke-200')) {
             const smoke = smoke200Check();
-            if (!smoke.ok) process.exit(4);
+            if (!smoke.ok) process.exit(12);
         }
         if (!args.includes('--skip-smoke-img-200')) {
             const smokeImg = smokeImg200Check(args);
-            if (!smokeImg.ok) process.exit(5);
+            if (!smokeImg.ok) process.exit(12);
         }
     } else {
-        log('info', 'smoke-200 skipped (default; pass --with-smoke to enable production smoke)');
-        log('info', 'smoke-img-200 skipped (default; pass --with-smoke to enable production smoke)');
+        log('info', 'smoke-200 skipped (default; pass --with-smoke + MDG_PREVIEW_URL to enable preview smoke)');
+        log('info', 'smoke-img-200 skipped (default; pass --with-smoke + MDG_PREVIEW_URL to enable preview smoke)');
     }
 
     if (!args.includes('--skip-sitemap-postprocess')) {
