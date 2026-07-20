@@ -35,9 +35,21 @@ test('annual-report facts stay distinct from dated live OCP roster facts', () =>
   assert.equal(stats.currentOcpLicenseeRoster.auMunicipalities, 50);
   assert.equal(stats.currentOcpLicenseeRoster.caregiverStorefronts, 269);
   assert.equal(stats.currentOcpLicenseeRoster.caregiverMunicipalities, 116);
-  assert.match(stats.dataSource, /Medical-Use Registrant CSVs/);
-  assert.match(stats.currentOcpLicenseeRoster.source, /Medical-Use Registrant CSVs/);
+  assert.equal(stats.currentOcpLicenseeRoster.auAsOf, '2026-07-08');
+  assert.equal(stats.currentOcpLicenseeRoster.caregiverAsOf, '2026-07-08');
+  assert.equal(stats.currentOcpLicenseeRoster.asOf, '2026-07-08');
+  assert.match(stats.dataSource, /Adult-Use Establishments CSV fetched 2026-07-08/);
+  assert.match(stats.dataSource, /Medical-Use Registrant CSV fetched 2026-07-08/);
+  assert.match(stats.currentOcpLicenseeRoster.source, /Adult-Use Establishments CSV/);
+  assert.match(stats.currentOcpLicenseeRoster.source, /Medical-Use Registrant CSV/);
   assert.match(stats.currentOcpLicenseeRoster.note, /Two parallel facts are intentional/);
+
+  const refresh = source(paths.refresh);
+  const statsAccessor = source('apps/maine-cannabis/src/lib/site-stats.ts');
+  assert.match(refresh, /auAsOf:\s*live\.auAsOf/);
+  assert.match(refresh, /caregiverAsOf:\s*live\.caregiverAsOf/);
+  assert.match(statsAccessor, /auAsOf:\s*string/);
+  assert.match(statsAccessor, /caregiverAsOf:\s*string/);
 });
 
 test('approved reader surfaces do not preserve the false annual-report 187 or unsupported annual 65 claims', () => {
@@ -198,6 +210,32 @@ printf 'Counts: {"auStores": 1, "auMunicipalities": 1, "caregiverStorefronts": 2
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /2 caregiver storefronts across 2 municipalities/);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('refresh writer preserves distinct adult-use and medical source dates', () => {
+  const tempDir = fs.mkdtempSync(path.join('/tmp', 'ocp-refresh-date-fixture-'));
+  const pythonShim = path.join(tempDir, 'python3-fixture');
+  fs.writeFileSync(pythonShim, `#!/usr/bin/env sh
+if [ "$1" = "--version" ]; then
+  echo 'Python 3 fixture'
+  exit 0
+fi
+printf '[{"n":"North","t":"au","c":1,"s":["North AU"]},{"n":"South","t":"med","c":1,"s":["South Care"]}]'
+printf 'Source date: 2026-07-08 (adult-use), 2026-07-05 (medical)\\n' >&2
+printf 'Counts: {"auStores": 1, "auMunicipalities": 1, "caregiverStorefronts": 2, "caregiverMunicipalities": 2}\\n' >&2
+`, { mode: 0o755 });
+  try {
+    const result = spawnSync('node', [path.join(repoRoot, paths.refresh), '--dry-run'], {
+      encoding: 'utf8',
+      env: { ...process.env, PYTHON: pythonShim },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /currentOcpLicenseeRoster\.auAsOf: .* → 2026-07-08/);
+    assert.match(result.stdout, /currentOcpLicenseeRoster\.caregiverAsOf: .* → 2026-07-05/);
+    assert.match(result.stdout, /currentOcpLicenseeRoster\.asOf: .* → 2026-07-05 \(older common date\)/);
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }

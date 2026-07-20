@@ -130,14 +130,16 @@ function fetchLiveCounts() {
     const cgStores = counts.caregiverStorefronts;
     const cgMunicipalities = counts.caregiverMunicipalities;
     const sourceDateLine = stderrLines.find(line => line.startsWith('Source date:'));
-    const sourceDate = sourceDateLine?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
-    if (!sourceDate) {
-        log('err', 'python script did not report an ISO source date');
+    const sourceDates = sourceDateLine?.match(/^Source date: (\d{4}-\d{2}-\d{2}) \(adult-use\), (\d{4}-\d{2}-\d{2}) \(medical\)$/);
+    if (!sourceDates) {
+        log('err', 'python script did not report distinct adult-use and medical ISO source dates');
         process.exit(2);
     }
+    const [, auAsOf, caregiverAsOf] = sourceDates;
+    const commonAsOf = [auAsOf, caregiverAsOf].sort()[0];
     log('info', `python: ${sourceDateLine}`);
 
-    return { auStores, auMunicipalities, cgStores, cgMunicipalities, asOf: sourceDate, raw: parsed };
+    return { auStores, auMunicipalities, cgStores, cgMunicipalities, auAsOf, caregiverAsOf, asOf: commonAsOf, raw: parsed };
 }
 
 function main() {
@@ -152,8 +154,8 @@ function main() {
     const storedLive = stored.currentOcpLicenseeRoster || {};
     const live = fetchLiveCounts();
 
-    log('info', `live counts: ${live.auStores} active AU retail stores across ${live.auMunicipalities} municipalities (${live.cgStores} caregiver storefronts across ${live.cgMunicipalities} municipalities) as of ${live.asOf}`);
-    log('info', `stored live roster: ${storedLive.auRetailStores ?? 'n/a'} active AU retail stores across ${storedLive.auMunicipalities ?? 'n/a'} municipalities as of ${storedLive.asOf ?? 'n/a'}`);
+    log('info', `live counts: ${live.auStores} active AU retail stores across ${live.auMunicipalities} municipalities as of ${live.auAsOf}; ${live.cgStores} caregiver storefronts across ${live.cgMunicipalities} municipalities as of ${live.caregiverAsOf}`);
+    log('info', `stored live roster: ${storedLive.auRetailStores ?? 'n/a'} active AU retail stores across ${storedLive.auMunicipalities ?? 'n/a'} municipalities as of ${storedLive.auAsOf ?? storedLive.asOf ?? 'n/a'}; caregiver source as of ${storedLive.caregiverAsOf ?? storedLive.asOf ?? 'n/a'}`);
 
     const storeDrift = live.auStores - (storedLive.auRetailStores ?? live.auStores);
     const muniDrift = live.auMunicipalities - (storedLive.auMunicipalities ?? live.auMunicipalities);
@@ -165,6 +167,8 @@ function main() {
     const logEntry = {
         date: checkedAt,
         sourceAsOf: live.asOf,
+        auSourceAsOf: live.auAsOf,
+        caregiverSourceAsOf: live.caregiverAsOf,
         liveAuStores: live.auStores,
         storedAuStores: storedLive.auRetailStores,
         storeDrift,
@@ -192,7 +196,9 @@ function main() {
         log('info', `  currentOcpLicenseeRoster.auMunicipalities: ${storedLive.auMunicipalities ?? 'n/a'} → ${live.auMunicipalities} (${muniDrift >= 0 ? '+' : ''}${muniDrift})`);
         log('info', `  currentOcpLicenseeRoster.caregiverStorefronts: ${storedLive.caregiverStorefronts ?? 'n/a'} → ${live.cgStores}`);
         log('info', `  currentOcpLicenseeRoster.caregiverMunicipalities: ${storedLive.caregiverMunicipalities ?? 'n/a'} → ${live.cgMunicipalities}`);
-        log('info', `  currentOcpLicenseeRoster.asOf: ${storedLive.asOf ?? 'n/a'} → ${live.asOf}`);
+        log('info', `  currentOcpLicenseeRoster.auAsOf: ${storedLive.auAsOf ?? 'n/a'} → ${live.auAsOf}`);
+        log('info', `  currentOcpLicenseeRoster.caregiverAsOf: ${storedLive.caregiverAsOf ?? 'n/a'} → ${live.caregiverAsOf}`);
+        log('info', `  currentOcpLicenseeRoster.asOf: ${storedLive.asOf ?? 'n/a'} → ${live.asOf} (older common date)`);
         process.exit(0);
     }
 
@@ -206,18 +212,20 @@ function main() {
             auMunicipalities: live.auMunicipalities,
             caregiverStorefronts: live.cgStores,
             caregiverMunicipalities: live.cgMunicipalities,
+            auAsOf: live.auAsOf,
+            caregiverAsOf: live.caregiverAsOf,
             asOf: live.asOf,
-            source: 'OCP Adult-Use Establishments and Medical-Use Registrant CSVs via scripts/ocp/fetch-ocp-towns.py (live deduped storefront counts)',
-            note: `Two parallel facts are intentional. The ${stored.activeAdultUseRetailStores} figure is the Annual-Report total of active AU retail-store establishments at year-end 2025. The dated live roster records ${live.auStores} deduplicated AU Store entries in ${live.auMunicipalities} municipalities and ${live.cgStores} deduplicated caregiver storefronts in ${live.cgMunicipalities} municipalities as of ${live.asOf}. These sources use different dates and definitions and must not be conflated.`,
+            source: 'OCP Adult-Use Establishments CSV and OCP Medical-Use Registrant CSV via scripts/ocp/fetch-ocp-towns.py (live deduped storefront counts; source dates stored separately)',
+            note: `Two parallel facts are intentional. The ${stored.activeAdultUseRetailStores} figure is the Annual-Report total of active AU retail-store establishments at year-end 2025. The dated live roster records ${live.auStores} deduplicated AU Store entries in ${live.auMunicipalities} municipalities as of ${live.auAsOf}, and ${live.cgStores} deduplicated caregiver storefronts in ${live.cgMunicipalities} municipalities as of ${live.caregiverAsOf}. The roster-level asOf is ${live.asOf}, the older common date. These sources use different dates and definitions and must not be conflated.`,
         },
         liveOcpRefreshedAt: checkedAt,
         nextRefresh: 'Annual-report fields refresh when OCP publishes its annual report (typically Q1 the following year). OCP-CSV fields refresh monthly via `node apps/maine-cannabis/scripts/ocp/refresh-site-stats.cjs` when OCP publishes new CSVs.',
-        dataSource: `OCP 2025 Annual Report (stat-card facts) + OCP Adult-Use Establishments and Medical-Use Registrant CSVs fetched ${live.asOf} (dated live-roster facts).`,
+        dataSource: `OCP 2025 Annual Report (stat-card facts) + OCP Adult-Use Establishments CSV fetched ${live.auAsOf} and OCP Medical-Use Registrant CSV fetched ${live.caregiverAsOf} (dated live-roster facts).`,
     };
     writeStats(updated);
     appendLog({ ...logEntry, status: 'written' });
 
-    log('ok', `site-stats.json updated: live auRetailStores=${live.auStores} (was ${logEntry.storedAuStores}), auMunicipalities=${live.auMunicipalities} (was ${logEntry.storedMunis}), sourceAsOf=${live.asOf}`);
+    log('ok', `site-stats.json updated: live auRetailStores=${live.auStores} (was ${logEntry.storedAuStores}), auMunicipalities=${live.auMunicipalities} (was ${logEntry.storedMunis}), auSourceAsOf=${live.auAsOf}, caregiverSourceAsOf=${live.caregiverAsOf}, commonSourceAsOf=${live.asOf}`);
 
     if (storeDrift < 0) {
         log('warn', `live store count DROPPED by ${Math.abs(storeDrift)} — investigate before deploying`);

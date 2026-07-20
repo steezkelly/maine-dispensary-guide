@@ -22,6 +22,9 @@ export interface SiteStats {
         auMunicipalities: number;
         caregiverStorefronts: number;
         caregiverMunicipalities: number;
+        auAsOf: string;
+        caregiverAsOf: string;
+        /** Older of the two source dates; safe for combined-roster freshness labels. */
         asOf: string;
         source: string;
         note: string;
