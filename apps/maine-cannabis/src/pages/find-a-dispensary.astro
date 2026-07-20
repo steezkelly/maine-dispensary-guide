@@ -822,9 +822,9 @@ const allGuides = guideRegions.flatMap((region) => region.guides);
 
 // OCP-licensed cities not yet covered by a published guide.
 // Pulled from the OCP July 8, 2026 data pull:
-// - adult-use: 51 unique cities w/ active "Store" license (deduped by brand+city)
-// - caregiver retail: 77 unique towns without an adult-use Store entry
-// Combined: 128 OCP-licensed towns; the page filters towns already covered by MDG guides.
+// - adult-use: 50 unique cities w/ active "Store" license (deduped by brand+city and known OCP municipality aliases)
+// - medical: 77 cities w/ caregiver dispensary storefronts
+// Combined: 127 OCP-licensed towns; the page filters towns already covered by MDG guides.
 const ocpCities = [
   {
     "n": "Amity",
@@ -865,17 +865,10 @@ const ocpCities = [
   {
     "n": "Baring Plantation",
     "t": "au",
-    "c": 1,
+    "c": 2,
     "s": [
+      "PINE ISLAND REC",
       "PURPLE HAZE BY GOOSE RIVER"
-    ]
-  },
-  {
-    "n": "Baring Plt",
-    "t": "au",
-    "c": 1,
-    "s": [
-      "PINE ISLAND REC"
     ]
   },
   {

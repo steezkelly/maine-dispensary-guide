@@ -32,7 +32,7 @@ test('annual-report facts stay distinct from dated live OCP roster facts', () =>
   assert.match(stats.activeAdultUseRetailStoresSource, /2025 Annual Report/);
   assert.doesNotMatch(stats.activeAdultUseRetailStoresSource, /\b187\b/);
   assert.equal(stats.currentOcpLicenseeRoster.auRetailStores, 106);
-  assert.equal(stats.currentOcpLicenseeRoster.auMunicipalities, 51);
+  assert.equal(stats.currentOcpLicenseeRoster.auMunicipalities, 50);
   assert.equal(stats.currentOcpLicenseeRoster.caregiverStorefronts, 269);
   assert.equal(stats.currentOcpLicenseeRoster.caregiverMunicipalities, 116);
   assert.match(stats.dataSource, /Medical-Use Registrant CSVs/);
@@ -71,6 +71,7 @@ test('approved reader surfaces do not preserve the false annual-report 187 or un
   assert.doesNotMatch(marketStats, /County-level active AU retailer distribution \(OCP 2025 Annual Report snapshots\)/);
   assert.match(marketStats, /canonical June 1, 2026 active Store-license snapshot/);
   assert.match(marketStats, /not a 2025 Annual Report retail-store distribution or the July 8, 2026 live storefront roster/);
+  assert.match(marketStats, /95 of the state's 187 distinct active Store-license identities/);
   const roiBlog = source(paths.roiBlog);
   assert.match(roiBlog, /343 \(2025 OCP Annual Report/);
   assert.match(roiBlog, /180 active cannabis retail stores/);
@@ -144,6 +145,40 @@ test('town fetch counts caregiver storefronts in towns that also have adult-use 
   ]);
 });
 
+test('town fetch canonicalizes known OCP municipality aliases before grouping', () => {
+  const fixture = {
+    au: [
+      { LICENSE_STATUS: 'Active', LICENSE_TYPE: 'Store', DBA: 'Goose River', LICENSE_CITY: 'Baring Plantation' },
+      { LICENSE_STATUS: 'Active', LICENSE_TYPE: 'Store', DBA: 'Pine Island', LICENSE_CITY: 'Baring Plt' },
+    ],
+    cg: [
+      { RETAIL_TOWN: 'Baring Plantation', REGISTRANT_DBA: 'Baring Care' },
+      { RETAIL_TOWN: 'Baring Plt', REGISTRANT_DBA: 'Baring Care Two' },
+    ],
+  };
+  const python = [
+    'import importlib.util, json, sys',
+    'spec = importlib.util.spec_from_file_location("ocp_towns", sys.argv[1])',
+    'mod = importlib.util.module_from_spec(spec)',
+    'spec.loader.exec_module(mod)',
+    'data = json.load(sys.stdin)',
+    'towns, counts = mod.build_town_data(data["au"], data["cg"])',
+    'print(json.dumps({"towns": towns, "counts": counts}))',
+  ].join('; ');
+  const result = spawnSync('python3', ['-c', python, path.join(repoRoot, paths.fetchTowns)], {
+    encoding: 'utf8',
+    input: JSON.stringify(fixture),
+  });
+  assert.equal(result.status, 0, result.stderr);
+  const actual = JSON.parse(result.stdout);
+
+  assert.equal(actual.counts.auMunicipalities, 1);
+  assert.equal(actual.counts.caregiverMunicipalities, 1);
+  assert.deepEqual(actual.towns, [
+    { n: 'Baring Plantation', t: 'au', c: 2, s: ['Goose River', 'Pine Island'] },
+  ]);
+});
+
 test('refresh writer reads complete caregiver counts rather than medical-only display rows', () => {
   const tempDir = fs.mkdtempSync(path.join('/tmp', 'ocp-refresh-fixture-'));
   const pythonShim = path.join(tempDir, 'python3-fixture');
@@ -174,8 +209,13 @@ test('embedded directory roster is deduplicated and matches the generated medica
   assert.ok(match, 'ocpCities array is present');
   const cities = JSON.parse(match[1]);
   const medical = cities.filter(city => city.t === 'med');
+  const adultUse = cities.filter(city => city.t === 'au');
 
   assert.equal(medical.reduce((sum, city) => sum + city.c, 0), 128);
+  assert.equal(adultUse.length, 50);
+  assert.deepEqual(adultUse.filter(city => city.n.startsWith('Baring')), [
+    { n: 'Baring Plantation', t: 'au', c: 2, s: ['PINE ISLAND REC', 'PURPLE HAZE BY GOOSE RIVER'] },
+  ]);
   const byTown = new Map(medical.map(city => [city.n, city]));
   assert.deepEqual(byTown.get('Corinth'), { n: 'Corinth', t: 'med', c: 1, s: ['THE NEON PIPE LLC'] });
   assert.deepEqual(byTown.get('Eastport'), { n: 'Eastport', t: 'med', c: 1, s: ['SNOW GROW LLC'] });

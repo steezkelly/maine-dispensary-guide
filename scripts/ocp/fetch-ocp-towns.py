@@ -44,8 +44,16 @@ def fetch_csv(page_url):
     return io.StringIO(fetch_text(csv_url)), csv_url, updated
 
 
+# OCP source rows use both the official municipality name and this abbreviation.
+# Canonicalize before deduplicating or counting so one place is never rendered twice.
+TOWN_ALIASES = {
+    "Baring Plt": "Baring Plantation",
+}
+
+
 def norm(value):
-    return value.strip().lower().replace("-", " ").title()
+    normalized = value.strip().lower().replace("-", " ").title()
+    return TOWN_ALIASES.get(normalized, normalized)
 
 
 def build_town_data(au_rows, cg_rows):
