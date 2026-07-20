@@ -35,7 +35,31 @@ This branch fixes all of those defects and updates the policy + verifier + hook 
 | `docs/governance/templates/mdg-integrator-checklist.md` | prescribed `npm run verify:push` after `verify:iterate` and before push (smokes old deployment) | `verify:iterate` (smoke-free), then push exact-candidate SHA, then wait for Vercel Ready on that SHA, then run `verify:post-deploy` against `MDG_PREVIEW_URL` (or equivalent Vercel-preview smoke), then changed-route production smoke. |
 | `docs/governance/mdg-agent-orchestration-v1.md` Integrator section | `npm run verify:iterate`, `npm run verify:push`, deploy verification | `npm run verify:iterate`; commit-only stop, OR push-and-deploy-and-`verify:post-deploy` against Vercel preview URL. |
 | `scripts/git/tests/mdg-agent-orchestration-docs.test.cjs` pattern matches | `verify:push` literal | relaxed to require the post-transport contract phrase; the old literal moved into `verify:post-deploy`. Test still pins the protocol contract. |
-| `scripts/git/tests/pre-push-verify-governance.test.cjs` (NEW) | not present | TDD coverage for the four governance behaviors below. |
+| `docs/governance/verifier-governance-migration-notes-2026-07-20.md` (NEW) | not present | TDD coverage for the four governance behaviors below. |
+
+## Post-merge follow-up: prepush-data wrapper (branch `chore/prepush-data-regen-20260720`)
+
+PR #97 left an exit-only contract: `--with-smoke` and the autoRelated-freshness check fail closed, but the only way to recover was "manually run `node scripts/data/regen-auto-related.cjs` then `git add autoRelatedData.json`." That left the freshness gate as a manual step at best and a forgotten blocker at worst.
+
+This branch adds a focused wrapper at `scripts/data/prepush-data.cjs` plus a TDD suite at `scripts/data/tests/prepush-data.test.cjs`. It is **not** part of the verifier — the verifier remains read-only and fail-closed. The wrapper:
+
+- Default mode: runs the canonical regen script, then `git add -- apps/maine-cannabis/src/data/autoRelatedData.json`. Exits 0 only on success.
+- `--check`: thin pass-through to the regen script's `--check` mode (0 fresh / 1 stale). Read-only.
+- `--dry-run`: thin pass-through to `--dry-run`. Read-only, no staging.
+
+NPM aliases:
+- root: `npm run data:regen:prepush` (and `data:regen`)
+- `apps/maine-cannabis`: `npm run data:regen:prepush`
+
+Why this matters: after a new `.astro` page is added, `npm run verify:iterate -- --skip-autoRelated-freshness` followed by `npm run data:regen:prepush` updates + stages the data file. The verifier's autoRelated-freshness check (PR #97) now passes because the data file is current.
+
+The wrapper honors three environment overrides so the focused test suite can run against an isolated temp repo:
+
+- `MDG_PREPUSH_REGEN_OVERRIDE`: alternate regen script path (used by the focused suite to drive a deterministic stub).
+- `MDG_PREPUSH_ROOT`: alternate project root for relative-path computation.
+- `MDG_PREPUSH_STAGE_TARGET`: alternate absolute path; used only when override is set so the test fixture can stay outside the project root directory tree.
+
+These overrides exist exclusively for the test suite — production callers should not set them.
 
 ## New focused test (`scripts/git/tests/pre-push-verify-governance.test.cjs`)
 
