@@ -821,97 +821,1098 @@ const guideRegions = [
 const allGuides = guideRegions.flatMap((region) => region.guides);
 
 // OCP-licensed cities not yet covered by a published guide.
-// Pulled from the OCP April 2026 data pull:
-// - adult-use: 49 unique cities w/ active "Store" license (deduped by brand+city)
-// - caregiver retail: 115 unique towns w/ active RETAIL_TOWN registration
-// Combined: 127 OCP-licensed towns; 41 overlap w/ existing MDG; 86 to add.
+// Pulled from the OCP July 8, 2026 data pull:
+// - adult-use: 50 unique cities w/ active "Store" license (deduped by brand+city and known OCP municipality aliases)
+// - medical: 77 cities w/ caregiver dispensary storefronts
+// Combined: 127 OCP-licensed towns; the page filters towns already covered by MDG guides.
 const ocpCities = [
-  {"n":"Amity","t":"med","c":1,"s":["BOYETT FAMILY FARM MAINE, INC."]},
-  {"n":"Baring Plantation","t":"med","c":1,"s":["PINE ISLAND CANNABIS"]},
-  {"n":"Bath","t":"au","c":1,"s":["BROTHERS CANNABIS BATH"]},
-  {"n":"Berwick","t":"au","c":3,"s":["SILVER THERAPAUTICS BERWICK","KIND FARM RESERVE","JAR CANNABIS CO."]},
-  {"n":"Bingham","t":"med","c":1,"s":["GANJA WORLD"]},
-  {"n":"Bowdoinham","t":"med","c":1,"s":["OLD SCHOOL GUY OF MAINE, LLC"]},
-  {"n":"Brewer","t":"au","c":1,"s":["BROTHERS"]},
-  {"n":"Brooks","t":"med","c":1,"s":["ROARING ACRES SMOKE SHOP"]},
-  {"n":"Buckfield","t":"med","c":1,"s":["BACK ROAD BUDS LLC"]},
-  {"n":"Carrabassett Valley","t":"au","c":2,"s":["CANNABIS CURED RETAIL","JAR CANNABIS CO."]},
-  {"n":"Chelsea","t":"au","c":1,"s":[]},
-  {"n":"China","t":"med","c":1,"s":[]},
-  {"n":"Columbia","t":"au","c":1,"s":[]},
-  {"n":"Corinth","t":"med","c":2,"s":[]},
-  {"n":"Dedham","t":"med","c":1,"s":[]},
-  {"n":"Detroit","t":"au","c":1,"s":[]},
-  {"n":"Dexter","t":"med","c":2,"s":[]},
-  {"n":"Dixfield","t":"med","c":1,"s":[]},
-  {"n":"Dresden","t":"med","c":1,"s":[]},
-  {"n":"Eastport","t":"med","c":2,"s":[]},
-  {"n":"Eliot","t":"au","c":5,"s":[]},
-  {"n":"Enfield","t":"med","c":1,"s":[]},
-  {"n":"Fairfield","t":"au","c":1,"s":[]},
-  {"n":"Farmingdale","t":"med","c":1,"s":[]},
-  {"n":"Fort Kent","t":"med","c":2,"s":[]},
-  {"n":"Grand Isle","t":"med","c":2,"s":[]},
-  {"n":"Greenville Junction","t":"med","c":1,"s":[]},
-  {"n":"Guilford","t":"au","c":1,"s":[]},
-  {"n":"Hallowell","t":"med","c":1,"s":[]},
-  {"n":"Hammond","t":"med","c":1,"s":[]},
-  {"n":"Hampden","t":"med","c":1,"s":[]},
-  {"n":"Hollis Center","t":"au","c":1,"s":[]},
-  {"n":"Howland","t":"med","c":1,"s":[]},
-  {"n":"Jackman","t":"med","c":1,"s":[]},
-  {"n":"Jefferson","t":"med","c":3,"s":[]},
-  {"n":"Kenduskeag","t":"med","c":2,"s":[]},
-  {"n":"Lebanon","t":"au","c":4,"s":[]},
-  {"n":"Livermore Falls","t":"med","c":5,"s":[]},
-  {"n":"Lubec","t":"med","c":1,"s":[]},
-  {"n":"Madawaska","t":"med","c":1,"s":[]},
-  {"n":"Madison","t":"med","c":4,"s":[]},
-  {"n":"Manchester","t":"au","c":1,"s":[]},
-  {"n":"Mechanic Falls","t":"au","c":1,"s":[]},
-  {"n":"Medway","t":"au","c":1,"s":[]},
-  {"n":"Mexico","t":"med","c":3,"s":[]},
-  {"n":"Milo","t":"au","c":1,"s":[]},
-  {"n":"New Portland","t":"med","c":1,"s":[]},
-  {"n":"Newry","t":"au","c":2,"s":[]},
-  {"n":"Norridgewock","t":"med","c":1,"s":[]},
-  {"n":"North Anson","t":"med","c":1,"s":[]},
-  {"n":"North Berwick","t":"med","c":1,"s":[]},
-  {"n":"Northport","t":"au","c":2,"s":[]},
-  {"n":"Old Town","t":"med","c":1,"s":[]},
-  {"n":"Orland","t":"med","c":1,"s":[]},
-  {"n":"Oxford","t":"au","c":2,"s":[]},
-  {"n":"Parkman","t":"med","c":1,"s":[]},
-  {"n":"Peru","t":"au","c":1,"s":[]},
-  {"n":"Readfield","t":"med","c":1,"s":[]},
-  {"n":"Richmond","t":"med","c":3,"s":[]},
-  {"n":"Rockwood","t":"med","c":1,"s":[]},
-  {"n":"Rome","t":"med","c":1,"s":[]},
-  {"n":"Rumford","t":"med","c":3,"s":[]},
-  {"n":"Shirley Mills","t":"med","c":1,"s":[]},
-  {"n":"Smithfield","t":"med","c":1,"s":[]},
-  {"n":"Somerville","t":"au","c":1,"s":[]},
-  {"n":"South Berwick","t":"med","c":2,"s":[]},
-  {"n":"South China","t":"med","c":2,"s":[]},
-  {"n":"South Paris","t":"med","c":1,"s":[]},
-  {"n":"Steuben","t":"med","c":1,"s":[]},
-  {"n":"Thomaston","t":"au","c":2,"s":[]},
-  {"n":"Topsham","t":"med","c":2,"s":[]},
-  {"n":"Trenton","t":"med","c":2,"s":[]},
-  {"n":"Turner","t":"au","c":3,"s":[]},
-  {"n":"Unity","t":"med","c":2,"s":[]},
-  {"n":"Verona Island","t":"med","c":1,"s":[]},
-  {"n":"Waldoboro","t":"med","c":2,"s":[]},
-  {"n":"Warren","t":"med","c":2,"s":[]},
-  {"n":"West Gardiner","t":"med","c":1,"s":[]},
-  {"n":"West Paris","t":"med","c":1,"s":[]},
-  {"n":"Wilton","t":"med","c":3,"s":[]},
-  {"n":"Winslow","t":"med","c":4,"s":[]},
-  {"n":"Winthrop","t":"med","c":1,"s":[]},
-  {"n":"Wiscasset","t":"au","c":1,"s":[]},
-  {"n":"Woodstock","t":"med","c":1,"s":[]},
-  {"n":"Woolwich","t":"au","c":1,"s":[]},
-  {"n":"Yarmouth","t":"med","c":1,"s":[]},
+  {
+    "n": "Amity",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "BOYETT FAMILY FARM MAINE, INC."
+    ]
+  },
+  {
+    "n": "Auburn",
+    "t": "au",
+    "c": 5,
+    "s": [
+      "MYSTIQUE OF MAINE",
+      "CANNABIS HAVEN AUBURN 20 UNION ST AU",
+      "CANNABIS HAVEN AUBURN 1150 CENTER ST AU"
+    ]
+  },
+  {
+    "n": "Augusta",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "CANNABIS HAVEN AUGUSTA 265 WESTERN AVE"
+    ]
+  },
+  {
+    "n": "Bangor",
+    "t": "au",
+    "c": 6,
+    "s": [
+      "BROTHERS",
+      "CANNABIS CURED RETAIL",
+      "PHO KING GREAT CANNABIS"
+    ]
+  },
+  {
+    "n": "Baring Plantation",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "PINE ISLAND REC",
+      "PURPLE HAZE BY GOOSE RIVER"
+    ]
+  },
+  {
+    "n": "Bath",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "BROTHERS CANNABIS BATH"
+    ]
+  },
+  {
+    "n": "Belfast",
+    "t": "med",
+    "c": 5,
+    "s": [
+      "YOUR COASTAL CONNECTION LLC",
+      "SAVAGE FARMS LLC",
+      "PUFFIN RELIEF LLC"
+    ]
+  },
+  {
+    "n": "Berwick",
+    "t": "au",
+    "c": 3,
+    "s": [
+      "SILVER THERAPAUTICS WEED DISPENSARY & DELIVERY BERWICK",
+      "KIND FARM RESERVE",
+      "JAR CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Bethel",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "CANNABIS CURED RETAIL",
+      "BRILLIANT BUDS BETHEL"
+    ]
+  },
+  {
+    "n": "Biddeford",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "LANDRACE CANNABIS CO"
+    ]
+  },
+  {
+    "n": "Bingham",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GANJA WORLD"
+    ]
+  },
+  {
+    "n": "Bowdoinham",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "OLD SCHOOL GUY OF MAINE, LLC"
+    ]
+  },
+  {
+    "n": "Brewer",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "BROTHERS"
+    ]
+  },
+  {
+    "n": "Bridgton",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "THE GREAT ATLANTIC PUFFIN COMPANY ADULT USE"
+    ]
+  },
+  {
+    "n": "Brooks",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "ROARING ACRES SMOKE SHOP"
+    ]
+  },
+  {
+    "n": "Brunswick",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "RIVER DRIVER CANNABIS CO.",
+      "WILSHIRE MADISON"
+    ]
+  },
+  {
+    "n": "Buckfield",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "BACK ROAD BUDS LLC"
+    ]
+  },
+  {
+    "n": "Buxton",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE CORNER STORE"
+    ]
+  },
+  {
+    "n": "Calais",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "THE HIGHER CLASS",
+      "SMOKE ON THE WATER"
+    ]
+  },
+  {
+    "n": "Carrabassett Valley",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "CANNABIS CURED RETAIL",
+      "JAR CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Casco",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "BLUE LOBSTER CANNABIS",
+      "LANDRACE CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Chelsea",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "ZERO GRAVITY CANNABIS"
+    ]
+  },
+  {
+    "n": "China",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "SIXTY SIXTY MEDICAL CANNABIS"
+    ]
+  },
+  {
+    "n": "Columbia",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "COLUMBIA RECREATIONAL MARIJUANA"
+    ]
+  },
+  {
+    "n": "Corinth",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE NEON PIPE LLC"
+    ]
+  },
+  {
+    "n": "Cornish",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "VALLEY PURVEYORS"
+    ]
+  },
+  {
+    "n": "Damariscotta",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "GADA CANNABIC CURED RETAIL",
+      "BLUE SKY"
+    ]
+  },
+  {
+    "n": "Dedham",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE HAPPIER CHOICE"
+    ]
+  },
+  {
+    "n": "Detroit",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "CLOUDS OF CANNABIS"
+    ]
+  },
+  {
+    "n": "Dexter",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "DELTA SOLUTIONS",
+      "PUFFERS PLACE"
+    ]
+  },
+  {
+    "n": "Dixfield",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "EARTH KEEPER CANNABIS"
+    ]
+  },
+  {
+    "n": "Dresden",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "SMOOTH REMEDIES LLC"
+    ]
+  },
+  {
+    "n": "Eastport",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "SNOW GROW LLC"
+    ]
+  },
+  {
+    "n": "Eliot",
+    "t": "au",
+    "c": 5,
+    "s": [
+      "EAST COAST CANNABIS",
+      "CANNABIS CURED RETAIL",
+      "OG CANNABIS"
+    ]
+  },
+  {
+    "n": "Ellsworth",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "MAIN STREET MEDICAL"
+    ]
+  },
+  {
+    "n": "Enfield",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE GRASS STATION, LLC"
+    ]
+  },
+  {
+    "n": "Fairfield",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "CANNABIS CURED RETAIL"
+    ]
+  },
+  {
+    "n": "Farmingdale",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THOMAS EUGENE CATCHINGS"
+    ]
+  },
+  {
+    "n": "Farmington",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "CANNA CABANA"
+    ]
+  },
+  {
+    "n": "Fort Kent",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NORTH WOODS SMOKE LLC"
+    ]
+  },
+  {
+    "n": "Fryeburg",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "WHITE MOUNTAIN CRAFT CANNABIS"
+    ]
+  },
+  {
+    "n": "Gardiner",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "MEDCO"
+    ]
+  },
+  {
+    "n": "Grand Isle",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "GREENCROSS COMMPASSION INC",
+      "CLOUD 9 MAINE GRAND ISLE RETAIL LLC"
+    ]
+  },
+  {
+    "n": "Gray",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "ANDRE L JENKINS",
+      "BRANDON POLLARD",
+      "HIGH ROAD LLC"
+    ]
+  },
+  {
+    "n": "Greenville Junction",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "MOOSEHEAD MEDICINE, LLC"
+    ]
+  },
+  {
+    "n": "Guilford",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "GREENLIFE GUILFORD"
+    ]
+  },
+  {
+    "n": "Hallowell",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE FROST FACTORY"
+    ]
+  },
+  {
+    "n": "Hammond",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "COUNTY CANNABIS CONNECTION"
+    ]
+  },
+  {
+    "n": "Hampden",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "CANNABIS CAVEMAN"
+    ]
+  },
+  {
+    "n": "Hollis Center",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "LANDRACE CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Houlton",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "BILLS AND BINKS",
+      "VARGAS FARM, LLC",
+      "LIFTED"
+    ]
+  },
+  {
+    "n": "Howland",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "DOWN EAST CONSULTING LLC"
+    ]
+  },
+  {
+    "n": "Jackman",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GREEN VAULT, LLC"
+    ]
+  },
+  {
+    "n": "Jefferson",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "CAPE HILL CANNABIS LLC",
+      "ELEVATION STATION",
+      "SNOW TREE FARMS LLC."
+    ]
+  },
+  {
+    "n": "Kenduskeag",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "RUBBA DUCKY FARMS; THE QUACK SHACK 420",
+      "ALTERNATIVE HOLISTIC GARDENS, LLC"
+    ]
+  },
+  {
+    "n": "Kittery",
+    "t": "med",
+    "c": 4,
+    "s": [
+      "OGC LLC DBA INDICO",
+      "YOUR GREEN THUMB CAREGIVER, LLC",
+      "MARK'S ORGANIX INC."
+    ]
+  },
+  {
+    "n": "Lebanon",
+    "t": "au",
+    "c": 4,
+    "s": [
+      "EAST COAST CANNABIS",
+      "NORTH COUNTRY CANNABIS ME",
+      "POT OF GOLD"
+    ]
+  },
+  {
+    "n": "Lewiston",
+    "t": "au",
+    "c": 6,
+    "s": [
+      "HUMBLE FAMILY FARMS",
+      "THE HEALING COMMUNITY MEDCO",
+      "HARVEST CANNABIS COMPANY"
+    ]
+  },
+  {
+    "n": "Limerick",
+    "t": "med",
+    "c": 5,
+    "s": [
+      "DRG GROUP LLC/SWEET LEAF",
+      "GREEN XTRAX",
+      "FOUNDING FARMERS 207"
+    ]
+  },
+  {
+    "n": "Lincoln",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "JUST BAKED"
+    ]
+  },
+  {
+    "n": "Lisbon",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "RIVER DRIVER CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Livermore Falls",
+    "t": "med",
+    "c": 5,
+    "s": [
+      "DEAT MED",
+      "MEND CANNABIS CO., LLC",
+      "TREETOP CROPS OF MAINE, LLC"
+    ]
+  },
+  {
+    "n": "Lubec",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "WEST LUBEC WELLNESS"
+    ]
+  },
+  {
+    "n": "Lyman",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "PETER G NIKIFORAKIS"
+    ]
+  },
+  {
+    "n": "Machias",
+    "t": "med",
+    "c": 4,
+    "s": [
+      "IT FARM INC",
+      "LAKE SMOKE FARMS LLC",
+      "MEGAN C PRESCOTT"
+    ]
+  },
+  {
+    "n": "Madawaska",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "RICHARDSON REMEDIES"
+    ]
+  },
+  {
+    "n": "Madison",
+    "t": "med",
+    "c": 4,
+    "s": [
+      "WICKED LETTUCE",
+      "LAKEWOOD CANNABIS",
+      "PRAVDA CANNABIS COMPANY"
+    ]
+  },
+  {
+    "n": "Manchester",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "HIGHBROW"
+    ]
+  },
+  {
+    "n": "Mechanic Falls",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "HIGH ROLLERS LLC"
+    ]
+  },
+  {
+    "n": "Medway",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "BUDZ EMPORIUM"
+    ]
+  },
+  {
+    "n": "Mexico",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "MAINE MED MAN",
+      "HEAL YOURSELF NATURALLY, LLC"
+    ]
+  },
+  {
+    "n": "Millinocket",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "HIGH NORTH GARDENS",
+      "OUTER LIMITS",
+      "WEST BRANCH WELLNESS LLC"
+    ]
+  },
+  {
+    "n": "Milo",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "CHEECH & CHONG RETAIL"
+    ]
+  },
+  {
+    "n": "New Portland",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "SUGAR LEAF CO."
+    ]
+  },
+  {
+    "n": "Newport",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "GRAM'S FIVE AND DIME CANNABIS CO"
+    ]
+  },
+  {
+    "n": "Newry",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "THE HEALING COMMUNITY MEDCO",
+      "JAR CANNABIS CO"
+    ]
+  },
+  {
+    "n": "Norridgewock",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NORRIDGEWOCK SPRINGS"
+    ]
+  },
+  {
+    "n": "North Anson",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "BUZZIES"
+    ]
+  },
+  {
+    "n": "North Berwick",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GREEN TRUCK FARMS I, LLC"
+    ]
+  },
+  {
+    "n": "Northport",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "SWEET RELIEF SHOP",
+      "BAYSIDE BUD SHACK AUS"
+    ]
+  },
+  {
+    "n": "Old Orchard Beach",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "BEACH BOYS CANNABIS"
+    ]
+  },
+  {
+    "n": "Old Town",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NEW ENGLAND RESERVE"
+    ]
+  },
+  {
+    "n": "Orland",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "THE HERBALIST"
+    ]
+  },
+  {
+    "n": "Orono",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "FIRESTORM OF ORONO"
+    ]
+  },
+  {
+    "n": "Oxford",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "T.L.C'S THE HIDEAWAY",
+      "ALTERNATIVE ESSENCE OXFORD"
+    ]
+  },
+  {
+    "n": "Parkman",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "JOSEPH W DELO"
+    ]
+  },
+  {
+    "n": "Peru",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "GARDEN LITES"
+    ]
+  },
+  {
+    "n": "Portland",
+    "t": "au",
+    "c": 17,
+    "s": [
+      "MYSTIQUE OF MAINE",
+      "GRM SHOP",
+      "CANNABIS CURED PORTLAND"
+    ]
+  },
+  {
+    "n": "Presque Isle",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "ROYAL LEAF APOTHECARY"
+    ]
+  },
+  {
+    "n": "Raymond",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "JEFFREY S BUCKLEY",
+      "MOON ENTERPRISES, LLC"
+    ]
+  },
+  {
+    "n": "Readfield",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "MARIJUANAVILLE"
+    ]
+  },
+  {
+    "n": "Richmond",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "LITTLE BUDDY FARM",
+      "MEDICINAL GARDEN PRODUCTION",
+      "MARY'S SMOKE SHOP LLC"
+    ]
+  },
+  {
+    "n": "Rockland",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "FOLIAGE"
+    ]
+  },
+  {
+    "n": "Rockwood",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NORTHERN REMEDIES LLC"
+    ]
+  },
+  {
+    "n": "Rome",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "STICKY DIAMOND, LLC"
+    ]
+  },
+  {
+    "n": "Rumford",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "BOLDUC FAMILY FARM",
+      "HBC MAINE",
+      "MYSTIC MOUNTAIN"
+    ]
+  },
+  {
+    "n": "Saco",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "BRIGID LLC"
+    ]
+  },
+  {
+    "n": "Sanford",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "FRIENDLY FIRE",
+      "LANDRACE CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Scarborough",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "ROSE SMOKE LLC",
+      "SHANNON'S BEST BUDS"
+    ]
+  },
+  {
+    "n": "Shirley Mills",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NORTHWOODS CAREGIVER, LLC"
+    ]
+  },
+  {
+    "n": "Skowhegan",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "NUGGIES CANNABIS LLC"
+    ]
+  },
+  {
+    "n": "Smithfield",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GARDENGIRL 420, LLC"
+    ]
+  },
+  {
+    "n": "Somerville",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "ATLANTIC FARMS"
+    ]
+  },
+  {
+    "n": "South Berwick",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "AURAZ MEDICAL",
+      "CABERSKI INDUSTRIES/HIDDEN GREENS"
+    ]
+  },
+  {
+    "n": "South China",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "BLACK MARKET CANNABIS PROFESSIONAL CO.",
+      "MEDICAL MAINE"
+    ]
+  },
+  {
+    "n": "South Paris",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "FLOWER HAUS CANNABIS COMPANY"
+    ]
+  },
+  {
+    "n": "South Portland",
+    "t": "au",
+    "c": 4,
+    "s": [
+      "THEORY WELLNESS",
+      "FOLIAGE ME",
+      "JAR CANNABIS CO"
+    ]
+  },
+  {
+    "n": "Steuben",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "HIGH&MIGHTY LLC"
+    ]
+  },
+  {
+    "n": "Thomaston",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "CANNABIS CURED RETAIL",
+      "ATLANTIC FARMS"
+    ]
+  },
+  {
+    "n": "Topsham",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "4207",
+      "HIGHER LIVING LLC"
+    ]
+  },
+  {
+    "n": "Trenton",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "SNARE CREEK FARMS",
+      "THE HAPPIER CHOICE"
+    ]
+  },
+  {
+    "n": "Turner",
+    "t": "au",
+    "c": 3,
+    "s": [
+      "45 NORTH CANNABIS COMPANY",
+      "CAMP CANNABIS",
+      "CWORX & CO."
+    ]
+  },
+  {
+    "n": "Unity",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GOOSE RIVER CANNABIS LLC"
+    ]
+  },
+  {
+    "n": "Verona Island",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "GREEN ISLAND HERB INC"
+    ]
+  },
+  {
+    "n": "Waldoboro",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "FINEST KIND MEDICINALS LLC",
+      "HILL & BOG CANNABIS COMPANY"
+    ]
+  },
+  {
+    "n": "Warren",
+    "t": "med",
+    "c": 2,
+    "s": [
+      "THE STRAIN STATION",
+      "THE FLOWER FARM"
+    ]
+  },
+  {
+    "n": "Waterville",
+    "t": "au",
+    "c": 2,
+    "s": [
+      "HIGH VALUE CANNABIS",
+      "CANNABIS HAVEN WATERVILLE 341 MAIN ST"
+    ]
+  },
+  {
+    "n": "West Gardiner",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "STREAMSIDE REMEDIES LLC"
+    ]
+  },
+  {
+    "n": "West Paris",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "WEST PARIS PROVISIONS LLC"
+    ]
+  },
+  {
+    "n": "Wilton",
+    "t": "med",
+    "c": 3,
+    "s": [
+      "EARTH KEEPER CANNABIS",
+      "THE HONEY COMB FARM",
+      "CANNATOPIA LLC"
+    ]
+  },
+  {
+    "n": "Windham",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "JAR CANNABIS CO"
+    ]
+  },
+  {
+    "n": "Winslow",
+    "t": "med",
+    "c": 4,
+    "s": [
+      "CANNABIS KINGDOM",
+      "KRILLY",
+      "THE STONER BAR"
+    ]
+  },
+  {
+    "n": "Winthrop",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "EARTH KEEPER"
+    ]
+  },
+  {
+    "n": "Wiscasset",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "JAR CANNABIS CO."
+    ]
+  },
+  {
+    "n": "Woodstock",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "WOODSTOCK FARMACY LLC"
+    ]
+  },
+  {
+    "n": "Woolwich",
+    "t": "au",
+    "c": 1,
+    "s": [
+      "LANDRACE CANNABIS"
+    ]
+  },
+  {
+    "n": "Yarmouth",
+    "t": "med",
+    "c": 1,
+    "s": [
+      "ELEVATE MAINE"
+    ]
+  }
 ];
 
 const allGuideNames = new Set(allGuides.map(g => g.name.toLowerCase()));
@@ -948,7 +1949,7 @@ const directoryJsonLd = {
   title="Dispensary Near Me in Maine — Find a Local Dispensary by Town (2026)"
   description="Browse 61 Maine city, town, and regional dispensary guides with local market notes, map search links, and internal guide links."
   heroImage="/images/heroes/find-a-dispensary.jpg"
-  article={{ author: "Eliot Nash", authorId: "eliot-nash", publishDate: "2026-01-10", modifiedDate: "2026-05-14", section: "Reference" }}
+  article={{ author: "Eliot Nash", authorId: "eliot-nash", publishDate: "2026-01-10", modifiedDate: "2026-07-19", section: "Reference" }}
   isHub={true}
 >
   <style>
@@ -1041,7 +2042,7 @@ const directoryJsonLd = {
   <section class="ocp-section" aria-labelledby="ocp-region">
     <h2 id="ocp-region">All OCP-Licensed Maine Cities ({ocpAuCities.length + ocpMedCities.length} additional towns)</h2>
     <p class="ocp-intro">Maine Dispensary Guide publishes a curated local guide for the highest-traffic towns. Below are the {ocpAuCities.length + ocpMedCities.length} additional Maine towns with at least one active adult-use store or caregiver storefront licensed by the Maine Office of Cannabis Policy. Each row links to a map search and the OCP licensee search for that town. <strong>Recently added full guides:</strong> <a href="/guides/bath-dispensary-guide">Bath</a>, <a href="/guides/brewer-dispensary-guide">Brewer</a>, <a href="/guides/berwick-dispensary-guide">Berwick</a>. Local guides for other towns are in the editorial queue; submit your town as a <a href="/contact">suggested guide</a> if you want it prioritized.</p>
-    <p class="ocp-source">Source: <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (April 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (April 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
+    <p class="ocp-source">Source: <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP Adult-Use Licensee CSV (July 8, 2026)</a> + <a href="https://www11.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP Medical Registrant CSV (July 8, 2026)</a>. {ocpAuCities.length} towns have adult-use retail access, {ocpMedCities.length} have medical caregiver storefronts only.</p>
     <div class="ocp-grid">
       {[...ocpAuCities, ...ocpMedCities].sort((a, b) => a.n.localeCompare(b.n)).map((city, cityIndex) => (
         <article class="ocp-card">

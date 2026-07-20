@@ -1,106 +1,128 @@
 #!/usr/bin/env python3
-"""
-Regenerate the OCP-licensed-towns data block for src/pages/find-a-dispensary.astro
-from the latest monthly OCP CSV drops.
+"""Regenerate the OCP-licensed-towns block for /find-a-dispensary.
 
-Usage:
-  node scripts/ocp/fetch-ocp-towns.cjs
-
-Outputs:
-  1. Downloads Adult-Use + Medical Caregiver CSVs from maine.gov/dafs/ocp
-  2. Deduplicates and normalizes to "unique cities with retail access"
-  3. Prints a JSON array ready to paste into find-a-dispensary.astro as `ocpCities`
-
-Schedule: Run monthly when OCP publishes new CSVs (first week of each month).
-Source: http://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search
-
-The schema for the data block is:
-  {"n": "CityName", "t": "au"|"med", "c": <count>, "s": ["Sample Store 1", ...]}
-  - n: city/town name as it appears in the OCP CSV (title-cased)
-  - t: "au" = adult-use retail store, "med" = caregiver storefront
-  - c: count of active licensed retailers
-  - s: optional array of up to 3 sample business names (for the card UI)
-
-Dedup rules:
-  - Adult-Use: dedup by (DBA lower, CITY lower) — same brand+city = one store
-  - Caregiver: dedup by (REGISTRANT_DBA lower, RETAIL_TOWN lower)
-  - Filter: only cities NOT already in the MDG /find-a-dispensary curated list
+The script discovers the current CSV links from the official OCP adult-use and
+medical-use search pages. OCP updates those links monthly, so no dated inline
+file URL is hard-coded here.
 """
 import csv
 import io
 import json
+import re
 import sys
 import urllib.request
 from collections import defaultdict
+from datetime import datetime
+from urllib.parse import urljoin
 
-OCP_AU_URL = "http://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Adult_Use_Establishments_And_Contacts_2026_04_01.csv"
-OCP_CG_URL = "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Maine_Medical_Use_Caregivers_2026_04_01%20.csv"
+OCP_AU_PAGE_URL = "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search"
+OCP_CG_PAGE_URL = "https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search"
+CSV_HREF_RE = re.compile(r'''href=["']([^"']+\.csv)["']''', re.IGNORECASE)
+LAST_UPDATED_RE = re.compile(r"last updated\s*([^<)]+)", re.IGNORECASE)
 
-def fetch(url):
+
+def fetch_text(url):
     print(f"Fetching {url} ...", file=sys.stderr)
-    with urllib.request.urlopen(url, timeout=30) as resp:
-        return io.StringIO(resp.read().decode("utf-8"))
+    with urllib.request.urlopen(url, timeout=30) as response:
+        return response.read().decode("utf-8")
 
-def norm(s):
-    return s.strip().lower().replace("-", " ").title()
 
-def main():
-    # Adult-use stores
+def discover_csv(page_url):
+    html = fetch_text(page_url)
+    match = CSV_HREF_RE.search(html)
+    if not match:
+        raise RuntimeError(f"No CSV link found on {page_url}")
+    updated = LAST_UPDATED_RE.search(html)
+    if not updated:
+        raise RuntimeError(f"No published update date found on {page_url}")
+    published = updated.group(1).strip().rstrip(".")
+    return urljoin(page_url, match.group(1)), datetime.strptime(published, "%B %d, %Y").date().isoformat()
+
+
+def fetch_csv(page_url):
+    csv_url, updated = discover_csv(page_url)
+    return io.StringIO(fetch_text(csv_url)), csv_url, updated
+
+
+# OCP source rows use both the official municipality name and this abbreviation.
+# Canonicalize before deduplicating or counting so one place is never rendered twice.
+TOWN_ALIASES = {
+    "Baring Plt": "Baring Plantation",
+}
+
+
+def norm(value):
+    normalized = value.strip().lower().replace("-", " ").title()
+    return TOWN_ALIASES.get(normalized, normalized)
+
+
+def build_town_data(au_rows, cg_rows):
+    """Build display rows plus complete, deduplicated source counts.
+
+    The display intentionally gives adult-use stores priority when a municipality
+    has both program types. Aggregate caregiver metrics must nevertheless count
+    every caregiver storefront, including those in adult-use municipalities.
+    """
     au_stores = defaultdict(list)
     au_seen = set()
-    for row in csv.DictReader(fetch(OCP_AU_URL)):
-        if row["LICENSE_STATUS"] != "Active":
+    for row in au_rows:
+        if row.get("LICENSE_STATUS") != "Active" or row.get("LICENSE_TYPE", "").strip() != "Store":
             continue
-        if row.get("LICENSE_TYPE", "").strip() != "Store":
-            continue
-        dba = row["DBA"].strip()
+        dba = row.get("DBA", "").strip()
         if not dba:
             continue
-        city = norm(row["LICENSE_CITY"])
+        city = norm(row.get("LICENSE_CITY", ""))
         key = (dba.lower(), city.lower())
-        if key in au_seen:
+        if not city or key in au_seen:
             continue
         au_seen.add(key)
         au_stores[city].append(dba)
 
-    # Caregiver retail storefronts
     cg_stores = defaultdict(list)
-    for row in csv.DictReader(fetch(OCP_CG_URL)):
-        r = row.get("RETAIL_TOWN", "").strip()
-        if not r:
+    cg_seen = set()
+    for row in cg_rows:
+        town = row.get("RETAIL_TOWN", "").strip()
+        if not town:
             continue
         dba = row.get("REGISTRANT_DBA", "").strip() or row.get("REGISTRANT_NAME", "").strip()
-        if dba:
-            cg_stores[norm(r)].append(dba)
-
-    # Cities with retail access (either AU or CG storefronts)
-    retail_cities = set(au_stores.keys()) | set(cg_stores.keys())
-
-    # Note: We don't auto-merge with MDG curated list here. The .astro file
-    # already has logic to filter out cities that match existing guide names.
-    # Operator runs this script, copies the array, and pastes into .astro.
+        city = norm(town)
+        key = (dba.lower(), city.lower())
+        if not dba or key in cg_seen:
+            continue
+        cg_seen.add(key)
+        cg_stores[city].append(dba)
 
     output = []
-    for city in sorted(retail_cities):
+    for city in sorted(set(au_stores) | set(cg_stores)):
         au_list = au_stores.get(city, [])
         cg_list = cg_stores.get(city, [])
         if au_list:
-            output.append({
-                "n": city,
-                "t": "au",
-                "c": len(au_list),
-                "s": au_list[:3],
-            })
+            output.append({"n": city, "t": "au", "c": len(au_list), "s": au_list[:3]})
         elif cg_list:
-            output.append({
-                "n": city,
-                "t": "med",
-                "c": len(cg_list),
-                "s": cg_list[:3],
-            })
+            output.append({"n": city, "t": "med", "c": len(cg_list), "s": cg_list[:3]})
 
-    print(json.dumps(output, indent=2), file=sys.stdout)
-    print(f"\nTotal: {len(output)} cities ({sum(1 for c in output if c['t']=='au')} AU, {sum(1 for c in output if c['t']=='med')} caregiver)", file=sys.stderr)
+    counts = {
+        "auStores": sum(len(stores) for stores in au_stores.values()),
+        "auMunicipalities": len(au_stores),
+        "caregiverStorefronts": sum(len(stores) for stores in cg_stores.values()),
+        "caregiverMunicipalities": len(cg_stores),
+    }
+    return output, counts
+
+
+def main():
+    au_csv, au_url, au_updated = fetch_csv(OCP_AU_PAGE_URL)
+    cg_csv, cg_url, cg_updated = fetch_csv(OCP_CG_PAGE_URL)
+    output, counts = build_town_data(csv.DictReader(au_csv), csv.DictReader(cg_csv))
+
+    print(json.dumps(output, indent=2))
+    print(f"Source date: {au_updated} (adult-use), {cg_updated} (medical)", file=sys.stderr)
+    print(f"Counts: {json.dumps(counts, sort_keys=True)}", file=sys.stderr)
+    print(
+        f"Adult-use CSV: {au_url}; medical CSV: {cg_url}; {len(output)} towns total",
+        file=sys.stderr,
+    )
+
 
 if __name__ == "__main__":
     main()
