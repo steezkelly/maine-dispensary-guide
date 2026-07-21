@@ -176,10 +176,10 @@ html[data-theme] body {
    dark-spruce-on-pale-sage or cream-on-dark-green for .hero-secondary-cta,
    dark-spruce-on-white for .btn-cta) and the link rule's pale-sage or
    mid-green text otherwise bleeds through and breaks WCAG-AA. */
-html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link):not(.home-link),
+html[data-theme] main a:not(.btn):not(.button):not([class*="badge"]):not(.nav-links a):not(.dropdown-content a):not(.skip-link):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link),
 html[data-theme] .article-content a,
 html[data-theme] .guide-content a,
-html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link):not(.home-link) {
+html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero-secondary-cta):not(.btn-cta):not(.lcb-cta):not(.lcb-link):not(.lead-cta-link):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link) {
   color: var(--color-link);
   text-decoration: underline;
   text-decoration-color: color-mix(in oklab, var(--color-link) 35%, transparent);
@@ -187,8 +187,8 @@ html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero
   text-underline-offset: 0.2em;
   transition: color .18s, text-decoration-color .18s;
 }
-html[data-theme] main a:hover:not(.btn):not(.button):not(.home-link),
-html[data-theme] section a:hover:not(.btn):not(.button):not(.home-link) {
+html[data-theme] main a:hover:not(.btn):not(.button):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link),
+html[data-theme] section a:hover:not(.btn):not(.button):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link) {
   color: var(--color-link-hover);
   text-decoration-color: currentColor;
   text-decoration-thickness: 2px;
