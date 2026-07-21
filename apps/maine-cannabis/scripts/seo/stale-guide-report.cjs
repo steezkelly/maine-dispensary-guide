@@ -1,0 +1,348 @@
+#!/usr/bin/env node
+'use strict';
+/**
+ * apps/maine-cannabis/scripts/seo/stale-guide-report.cjs
+ *
+ * Read-only report that ranks MDG guide + blog pages by recency gap × GSC
+ * impression volume. Emits a list of pages where `days_since_modified > 90`
+ * AND `impressions_28d > 50`, sorted by impressions descending.
+ *
+ * Source for impressions: a GSC CSV exported via the OpenSEO MCP (see the
+ * sibling runbook for the exact procedure). Source for modifiedDate: the
+ * `const article = { ... modifiedDate: "YYYY-MM-DD" ... }` block in each
+ * Astro page's frontmatter-style prelude.
+ *
+ * Card: docs/governance/cards/2026-07-21-stale-guide-dashboard.md
+ *
+ * Usage:
+ *   node stale-guide-report.cjs --help
+ *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --json
+ *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --md
+ *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --limit 10 --md
+ *
+ * Exit codes:
+ *   0 success
+ *   2 usage / argument error
+ *   1 file-not-found / parse error
+ */
+
+const fs = require('node:fs');
+const path = require('node:path');
+
+// ---- configuration ---------------------------------------------------------
+
+const TODAY = '2026-07-21'; // operator-pinned; see runbook
+const SOURCES = [
+  { kind: 'guides', dir: path.join('apps', 'maine-cannabis', 'src', 'pages', 'guides') },
+  { kind: 'blog',   dir: path.join('apps', 'maine-cannabis', 'src', 'pages', 'blog') },
+];
+const SKIP_FILENAMES = new Set([
+  'index.astro',
+  'all-cities.astro',
+  'all-guides.astro',
+]);
+const MOD_DATE_RE = /modifiedDate\s*:\s*"(\d{4}-\d{2}-\d{2})"/;
+const TITLE_RE = /<h1[^>]*>([\s\S]*?)<\/h1>/;
+const SITE_HOSTS = [
+  'https://mainedispensaryguide.com',
+  'http://mainedispensaryguide.com',
+];
+
+// ---- argv ------------------------------------------------------------------
+
+function parseArgs(argv) {
+  const out = { help: false, json: false, md: false, limit: null, gscCsv: './gsc-last-28d.csv' };
+  for (let i = 0; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === '--help' || a === '-h') out.help = true;
+    else if (a === '--json') out.json = true;
+    else if (a === '--md') out.md = true;
+    else if (a === '--limit') {
+      const v = argv[++i];
+      const n = Number(v);
+      if (!Number.isInteger(n) || n < 1) throw new Error(`--limit must be a positive integer, got "${v}"`);
+      out.limit = n;
+    } else if (a === '--gsc-csv') {
+      out.gscCsv = argv[++i];
+      if (!out.gscCsv) throw new Error('--gsc-csv requires a path argument');
+    } else if (a === '--today') {
+      // undocumented override for future automation
+      const v = argv[++i];
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new Error(`--today must be YYYY-MM-DD, got "${v}"`);
+      out.today = v;
+    } else {
+      throw new Error(`unknown argument: ${a}`);
+    }
+  }
+  return out;
+}
+
+function printHelp() {
+  process.stdout.write(`stale-guide-report.cjs — rank MDG guides by impressions × recency gap
+
+USAGE
+  node stale-guide-report.cjs [--gsc-csv <path>] [--json|--md] [--limit N] [--help]
+
+OPTIONS
+  --gsc-csv <path>   Path to the GSC CSV export (default: ./gsc-last-28d.csv)
+  --json             Emit a JSON object (default if neither --json nor --md is set)
+  --md               Emit a markdown table
+  --limit N          Keep only the top N rows after filter+sort
+  --help             Print this help and exit 0
+
+FILTER
+  Keep pages where impressions_28d > 50 AND days_since_modified > 90.
+  Sort by impressions_28d descending.
+
+EXIT CODES
+  0  success
+  1  file/parse error
+  2  usage error
+`);
+}
+
+// ---- helpers ---------------------------------------------------------------
+
+function parseCsvLine(line) {
+  // Minimal CSV parser: no embedded commas in any field per our schema.
+  return line.split(',');
+}
+
+function loadGsc(csvPath) {
+  const raw = fs.readFileSync(csvPath, 'utf8');
+  const lines = raw.split(/\r?\n/).filter((l) => l.length > 0);
+  if (lines.length < 1) throw new Error(`empty GSC CSV: ${csvPath}`);
+  const header = parseCsvLine(lines[0]);
+  const expected = ['page', 'clicks', 'impressions', 'ctr', 'position'];
+  for (let i = 0; i < expected.length; i += 1) {
+    if (header[i] !== expected[i]) {
+      throw new Error(`unexpected GSC CSV header at column ${i}: got "${header[i]}", expected "${expected[i]}"`);
+    }
+  }
+  const out = new Map(); // page-url basename (no .astro) -> row
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = parseCsvLine(lines[i]);
+    if (cols.length < 5) continue;
+    const [page, clicks, impressions, ctr, position] = cols;
+    const base = pathToSlug(page);
+    if (!base) continue;
+    out.set(base, {
+      page,
+      clicks: Number(clicks),
+      impressions: Number(impressions),
+      ctr: Number(ctr),
+      position: Number(position),
+    });
+  }
+  return out;
+}
+
+// Map a GSC page URL to the local .astro filename (without .astro).
+// We only have .astro sources under /guides/ and /blog/ (plus a few misc
+// pages like /directory that we intentionally ignore here).
+function pathToSlug(pageUrl) {
+  if (!pageUrl) return null;
+  for (const host of SITE_HOSTS) {
+    if (pageUrl === `${host}/` || pageUrl === host) return '__home__';
+    if (!pageUrl.startsWith(`${host}/`)) continue;
+    let tail = pageUrl.slice(`${host}/`.length);
+    tail = stripTrailingSlash(tail);
+    // Strip the leading /guides/ or /blog/ segment so we match the basename.
+    const slash = tail.indexOf('/');
+    return slash === -1 ? tail : tail.slice(slash + 1);
+  }
+  return null;
+}
+
+function stripTrailingSlash(s) {
+  return s.endsWith('/') ? s.slice(0, -1) : s;
+}
+
+function walkPages(root, kind, out) {
+  if (!fs.existsSync(root)) return out;
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      if (entry.name === 'admin') continue;
+      walkPages(path.join(root, entry.name), kind, out);
+      continue;
+    }
+    if (!entry.isFile()) continue;
+    if (!entry.name.endsWith('.astro')) continue;
+    if (SKIP_FILENAMES.has(entry.name)) continue;
+    const full = path.join(root, entry.name);
+    const slug = entry.name.replace(/\.astro$/, '');
+    out.push({ full, slug, kind });
+  }
+  return out;
+}
+
+function readArticle(file) {
+  const src = fs.readFileSync(file, 'utf8');
+  const dateMatch = src.match(MOD_DATE_RE);
+  if (!dateMatch) return { modifiedDate: null };
+  const titleMatch = src.match(TITLE_RE);
+  const title = titleMatch ? stripTags(titleMatch[1]).trim() : null;
+  return { modifiedDate: dateMatch[1], title };
+}
+
+function stripTags(s) {
+  return s.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function daysBetween(fromYmd, toYmd) {
+  const a = Date.parse(`${fromYmd}T00:00:00Z`);
+  const b = Date.parse(`${toYmd}T00:00:00Z`);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  return Math.round((b - a) / 86400000);
+}
+
+// ---- main ------------------------------------------------------------------
+
+function main() {
+  let args;
+  try {
+    args = parseArgs(process.argv.slice(2));
+  } catch (err) {
+    process.stderr.write(`error: ${err.message}\n`);
+    process.exit(2);
+  }
+
+  if (args.help) {
+    printHelp();
+    process.exit(0);
+  }
+
+  if (!args.json && !args.md) args.json = true;
+  const today = args.today || TODAY;
+
+  // Resolve GSC CSV (relative to cwd if not absolute)
+  const csvPath = path.resolve(process.cwd(), args.gscCsv);
+  if (!fs.existsSync(csvPath)) {
+    process.stderr.write(`error: GSC CSV not found at ${csvPath}\n`);
+    process.exit(1);
+  }
+  let gsc;
+  try {
+    gsc = loadGsc(csvPath);
+  } catch (err) {
+    process.stderr.write(`error: failed to parse ${csvPath}: ${err.message}\n`);
+    process.exit(1);
+  }
+
+  // Walk pages
+  const files = [];
+  for (const src of SOURCES) {
+    walkPages(path.resolve(process.cwd(), src.dir), src.kind, files);
+  }
+
+  // Build report rows
+  const rows = [];
+  let skippedNoDate = 0;
+  let skippedNoGsc = 0;
+  let skippedLowImp = 0;
+  let skippedFresh = 0;
+  for (const f of files) {
+    const meta = readArticle(f.full);
+    if (!meta.modifiedDate) {
+      skippedNoDate += 1;
+      continue;
+    }
+    const daysOld = daysBetween(meta.modifiedDate, today);
+    if (daysOld === null || daysOld <= 90) {
+      if (daysOld !== null) skippedFresh += 1;
+      continue;
+    }
+    const g = gsc.get(f.slug);
+    if (!g) {
+      skippedNoGsc += 1;
+      continue;
+    }
+    if (g.impressions <= 50) {
+      skippedLowImp += 1;
+      continue;
+    }
+    rows.push({
+      slug: f.slug,
+      kind: f.kind,
+      title: meta.title,
+      modifiedDate: meta.modifiedDate,
+      days_old: daysOld,
+      url: g.page,
+      clicks_28d: g.clicks,
+      impressions_28d: g.impressions,
+      ctr: g.ctr,
+      position: g.position,
+    });
+  }
+
+  rows.sort((a, b) => b.impressions_28d - a.impressions_28d);
+  const limited = args.limit ? rows.slice(0, args.limit) : rows;
+
+  const filter = {
+    impressions_28d_min: 50,
+    days_since_modified_min: 91,
+    today,
+    sources: SOURCES.map((s) => s.dir),
+    gsc_csv: path.relative(process.cwd(), csvPath),
+  };
+
+  if (args.md) {
+    printMarkdown(limited, filter, {
+      total: files.length,
+      skippedNoDate,
+      skippedNoGsc,
+      skippedLowImp,
+      skippedFresh,
+    });
+    return;
+  }
+
+  const payload = {
+    generated_at: new Date().toISOString(),
+    filter,
+    counts: {
+      total_pages_scanned: files.length,
+      kept: rows.length,
+      limited_to: args.limit || null,
+      skipped_missing_modifiedDate: skippedNoDate,
+      skipped_missing_gsc_row: skippedNoGsc,
+      skipped_low_impressions: skippedLowImp,
+      skipped_fresh: skippedFresh,
+    },
+    pages: limited,
+  };
+  process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+}
+
+function printMarkdown(pages, filter, counts) {
+  const lines = [];
+  lines.push('# Stale-guide report');
+  lines.push('');
+  lines.push(`Generated: ${new Date().toISOString()}`);
+  lines.push(`Filter: impressions_28d > ${filter.impressions_28d_min} AND days_since_modified > ${filter.days_since_modified_min} (today = ${filter.today})`);
+  lines.push(`GSC CSV: \`${filter.gsc_csv}\``);
+  lines.push(`Sources: ${filter.sources.map((s) => '`' + s + '`').join(', ')}`);
+  lines.push('');
+  lines.push(`Pages scanned: ${counts.total}. Kept: ${pages.length}. Skipped: ${counts.skippedMissingModifiedDate || counts.skippedNoDate} missing modifiedDate, ${counts.skippedNoGsc} no GSC row, ${counts.skippedLowImp} low impressions, ${counts.skippedFresh} fresh.`);
+  lines.push('');
+  lines.push('| Page | Modified | Days old | Impressions (28d) | Position | CTR |');
+  lines.push('|---|---|---:|---:|---:|---:|');
+  for (const p of pages) {
+    const title = p.title ? p.title.replace(/\|/g, '\\|') : p.slug;
+    lines.push(`| [${p.slug}](${p.url}) — ${title} | ${p.modifiedDate} | ${p.days_old} | ${p.impressions_28d} | ${p.position.toFixed(1)} | ${(p.ctr * 100).toFixed(2)}% |`);
+  }
+  lines.push('');
+  process.stdout.write(`${lines.join('\n')}\n`);
+}
+
+// Only run main when executed directly (not when require'd for tests).
+if (require.main === module) {
+  try {
+    main();
+  } catch (err) {
+    process.stderr.write(`error: ${err && err.message ? err.message : err}\n`);
+    process.exit(1);
+  }
+}
+
+module.exports = { parseArgs, loadGsc, walkPages, readArticle, daysBetween, pathToSlug };
