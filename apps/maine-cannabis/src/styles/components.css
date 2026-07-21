@@ -632,6 +632,21 @@ footer .disclaimer {
   border: none;
   display: none;
   z-index: 999;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+/* Fade out while the user is actively scrolling so it never
+   occludes body text mid-read; JS re-shows it after scroll idle. */
+.back-to-top.is-scrolling {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .back-to-top {
+    width: 40px; height: 40px;
+    bottom: 1rem; right: 1rem;
+    font-size: 1rem;
+  }
 }
 
 /* ============================================================

@@ -793,7 +793,14 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           if (pb) pb.style.width = progress + "%";
 
           const btt = document.getElementById('back-to-top');
-          if (btt) btt.style.display = winScroll > 500 ? "block" : "none";
+          if (btt) {
+            btt.style.display = winScroll > 500 ? "block" : "none";
+            // Fade the button out while actively scrolling so it never
+            // covers body text; re-show once scrolling pauses.
+            btt.classList.add('is-scrolling');
+            clearTimeout(window.__bttIdleTimer);
+            window.__bttIdleTimer = setTimeout(() => btt.classList.remove('is-scrolling'), 700);
+          }
         };
 
         // Check for reduced motion preference
