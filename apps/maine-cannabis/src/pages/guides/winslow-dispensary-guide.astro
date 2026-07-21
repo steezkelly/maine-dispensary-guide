@@ -1,19 +1,23 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Winslow, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Winslow has 1 licensed adult-use cannabis storefront, Daily Buds Dispensary, on China Rd, plus access to the broader Kennebec County retail network. The storefront is licensed for both recreational (21+) and medical sales."}},{"@type":"Question","name":"Can I buy recreational cannabis in Winslow, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Winslow permits adult-use cannabis retail and the storefront in town is licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Winslow dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Winslow tracks the central Maine Kennebec County market. As of 2026, an eighth of flower runs $30-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only the 5.5% state sales tax."}},{"@type":"Question","name":"What is Winslow Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Winslow is a Kennebec County town of approximately 7,800 residents on the Kennebec River, directly across from Waterville. The town is part of the central Maine Kennebec Valley region and shares the greater Waterville-area economy."}}]});
 ---
-<Layout title="Winslow, ME Dispensary Guide — Kennebec County 2026" description="Winslow, Maine dispensary guide. 1 adult-use storefront: Daily Buds Dispensary on China Rd. 2026 consumer guide for the greater Waterville area." heroImage="/images/heroes/winslow-dispensary-guide.jpg" article={article} topics={topics} >
+<CityGuide title="Winslow, ME Dispensary Guide — Kennebec County 2026" description="Winslow, Maine dispensary guide. 1 adult-use storefront: Daily Buds Dispensary on China Rd. 2026 consumer guide for the greater Waterville area." heroImage="/images/heroes/winslow-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}section{margin-bottom:2.5rem}section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}section h3{font-size:1.15rem;margin-top:1.5rem}ul,ol{padding-left:1.5rem}li{margin-bottom:0.5rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background);font-weight:600}section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
+  .subtitle{font-size:1.125rem;color:var(--color-text-light);font-style:italic;margin-top:0.5rem}
+  section h2{font-family:var(--font-serif);font-size:1.5rem;margin-top:0;padding-top:1rem;border-top:1px solid var(--color-border)}
+  section h3{font-size:1.15rem;margin-top:1.5rem}
+  li{margin-bottom:0.5rem}
+  .disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:0.5rem;font-size:0.875rem;color:var(--color-disclaimer-text);margin-top:2rem}
+  th,td{padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--color-border)}
+  th{background:var(--color-background);font-weight:600}
+  section.fact-box{background:linear-gradient(135deg,var(--color-background) 0%,#fff 100%);border-top:3px solid var(--color-primary);padding:1.5rem;border-radius:0.5rem;margin:1.5rem 0}
 </style>
 
-<article>
   <div class="article-header">
     <h1>Winslow, ME Dispensary Guide — Kennebec County 2026</h1>
     <p class="subtitle">One China Rd storefront in the greater Waterville area — Daily Buds Dispensary</p>
@@ -127,5 +131,5 @@ const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"F
 <!-- see-also-nearby-peers -->
   </section>
 
-</article>
-</Layout>
+
+</CityGuide>

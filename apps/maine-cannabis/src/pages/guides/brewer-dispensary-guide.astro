@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -15,23 +15,9 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are there cannabis dispensaries in Brewer, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Brewer has at least one licensed adult-use cannabis dispensary (Brothers Cannabis) operating in the city, and the Bangor metro (immediately across the Penobscot River) has 6+ additional adult-use stores. Brewer functions as part of the greater Bangor retail market."
-      }
-    }
-  ]
-});
 ---
 
-<Layout title="Brewer, ME Dispensary Guide — Bangor Metro Cannabis"
+<CityGuide title="Brewer, ME Dispensary Guide — Bangor Metro Cannabis"
   description="Brewer, Maine cannabis dispensary guide. Brothers Cannabis and the Bangor metro market."
   heroImage="/images/heroes/brewer-dispensary-guide.jpg"
   article={article}
@@ -145,5 +131,5 @@ const faqPageJsonLd = JSON.stringify({
 <!-- see-also-nearby-peers -->
   </section>
 
-</article>
-</Layout>
+
+</CityGuide>

@@ -1,19 +1,13 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-07", modifiedDate: "2026-06-07", section: "City Guides" };
 const topics = ["city", "market"];
-const faqPageJsonLd = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are there cannabis dispensaries in Eliot, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Eliot has 5 licensed adult-use cannabis storefronts plus access to the broader York County retail network. The storefronts are located along the main commercial corridor."}},{"@type":"Question","name":"Can I buy recreational cannabis in Eliot, Maine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Eliot permits adult-use cannabis retail and the storefronts in town are licensed for both recreational (21+) and medical sales. Customers do not need a medical card to purchase."}},{"@type":"Question","name":"What should I expect to pay at a Eliot dispensary?","acceptedAnswer":{"@type":"Answer","text":"Pricing in Eliot tracks the York County. As of 2026, an eighth of flower runs $35-50, an edible gummy pack (100mg THC) runs $20-35, and a 1g distillate cartridge runs $35-50. Adult-use customers pay Maine's 10% excise plus 5.5% sales tax on top of sticker; medical patients pay only 5.5%."}},{"@type":"Question","name":"What is Eliot Maine known for?","acceptedAnswer":{"@type":"Answer","text":"Eliot is a York County town of approximately 7,000 residents, in the Southern Maine / NH border region of Maine. The town is part of the Southern Maine / NH border region and the local economy reflects that mix."}}]});
 ---
-<Layout title="Eliot, ME Dispensary Guide — York County 2026" description="Eliot, Maine dispensary guide. 5 adult-use storefronts in Eliot: East Coast Cannabis, Cannabis Cured Retail, OG Cannabis. 2026 consumer guide with addresses, pricing, and hours." heroImage="/images/heroes/eliot-dispensary-guide.jpg" article={article} topics={topics} >
-<style>
-  article{max-width:720px;margin:0 auto}.article-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--color-border)}.subtitle{font-size:1.125rem;color:var(--color-text-light)}section{margin-bottom:2.5rem}section h2,section h3{margin-top:1.5rem}section h2:first-child{margin-top:0}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--color-border)}th{background:var(--color-background)}ul,ol{padding-left:1.5rem}li{margin-bottom:.4rem}.disclaimer{background:var(--color-disclaimer-bg);border:1px solid var(--color-disclaimer-border);padding:1rem;border-radius:.5rem;font-size:.875rem;color:var(--color-disclaimer-text)}.fact-box{background:color-mix(in oklab, var(--color-soft-green) 10%, transparent);padding:1.75rem;border-radius:1rem;border-left:4px solid var(--color-primary)}.fact-box h2{margin-top:0;font-size:1.25rem}.fact-box table{margin:0}.further-reading{background:color-mix(in oklab, var(--color-soft-green) 5%, transparent);padding:1.5rem;border-radius:1rem;margin-top:3rem}.further-reading h2{margin-top:0;font-size:1.25rem}
-</style>
+<CityGuide title="Eliot, ME Dispensary Guide — York County 2026" description="Eliot, Maine dispensary guide. 5 adult-use storefronts in Eliot: East Coast Cannabis, Cannabis Cured Retail, OG Cannabis. 2026 consumer guide with addresses, pricing, and hours." heroImage="/images/heroes/eliot-dispensary-guide.jpg" article={article} topics={topics} >
 
-<article>
   <div class="article-header">
     <h1>Eliot, ME Dispensary Guide — York County 2026</h1>
     <p class="subtitle">Five adult-use storefronts on the New Hampshire border — East Coast Cannabis, Cannabis Cured, OG Cannabis, JAR, and AURAZ</p>

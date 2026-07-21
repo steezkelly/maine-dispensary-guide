@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -14,42 +14,12 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many dispensaries are in Fryeburg, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Fryeburg has 4 active dispensaries: White Mountain Craft Cannabis (recreational at 285 Main St Ste 8, 207-256-3082), The Glass Cook (medical + glassblowing at 295 Bridgton Rd, 207-890-8871), Above All Greenery North (medical at 48 Fair St Unit 4, 207-256-3340), and The Great Atlantic Puffin Company (medical at 235 Bridgton Rd, 207-935-5444)." }},
-    { "@type": "Question", "name": "What are the hours for White Mountain Craft Cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "White Mountain Craft Cannabis hours vary — verify current hours on their Google Business Profile or Apple Maps listing as they update seasonally. Yelp shows Mon-Sat 8am-6pm as of May 2026. Website: whitemountaincraftcannabis.com. Phone: 207-256-3082." }},
-    { "@type": "Question", "name": "Is Fryeburg opted in to recreational cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Fryeburg has authorized recreational cannabis dispensaries. The town is notable for having the first recreational dispensary in western Maine, White Mountain Craft Cannabis at 285 Main St Ste 8. White Mountain became licensed for recreational sales in May 2025." }},
-    { "@type": "Question", "name": "What makes The Glass Cook unique?", "acceptedAnswer": { "@type": "Answer", "text": "The Glass Cook at 295 Bridgton Rd (207-890-8871) combines a medical cannabis dispensary with an on-site glassblowing studio and an on-site cannabis kitchen (Cured) producing edibles. Open Mon-Sat 11am-7pm, closed Sundays." }}
-  ]
-});
 ---
 
-<Layout
+<CityGuide
   title="Fryeburg ME Dispensaries: 4 Stores, Rec & Medical (2026)"
   description="Fryeburg, Maine dispensary guide — 4 stores, addresses, hours, rec-vs-medical status. White Mountain, Glass Cook, Above All, Puffin Co. Verified 2026." >
-<style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-</style>
 
-<article>
   <div class="article-header">
     <h1>Fryeburg Maine Dispensary Guide</h1>
     <p class="subtitle">Cannabis dispensaries in Fryeburg, Maine — including Puffin Co. Fryeburg, Above All Greenery, The Glass Cook, and White Mountain Craft Cannabis</p>
@@ -169,5 +139,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

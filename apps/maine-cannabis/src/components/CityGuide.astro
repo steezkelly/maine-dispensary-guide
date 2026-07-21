@@ -1,0 +1,65 @@
+---
+/**
+ * CityGuide.astro — shared editorial wrapper for city dispensary guides.
+ *
+ * Consolidates the 17 base CSS rules that were duplicated across all 108 city
+ * guides. Page-specific extras remain inline in each guide's own <style> block.
+ *
+ * Uses :global() selectors scoped under .city-guide-article so the generic
+ * element styles (article, section, table, etc.) reach into slotted page content
+ * and child components (AutoRelated, Faq, Callout) — matching the current
+ * behavior where each page's inline <style> applied to its own elements.
+ */
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  heroImage?: string;
+  article?: any; // ArticleData from Layout.astro (not exported)
+  topics?: string[];
+  canonicalOverride?: string;
+  continuationMode?: 'legacy' | 'pilot';
+  toc?: { id: string; label: string }[];
+}
+
+const { title, description, heroImage, article, topics, canonicalOverride, continuationMode, toc } = Astro.props;
+---
+
+<Layout
+  title={title}
+  description={description}
+  heroImage={heroImage}
+  article={article}
+  topics={topics}
+  canonicalOverride={canonicalOverride}
+  continuationMode={continuationMode}
+  toc={toc}
+>
+  <article class="city-guide-article">
+    <slot />
+  </article>
+</Layout>
+
+<style>
+  /* Base editorial chrome — shared across all city guides.
+     The <article> element itself carries .city-guide-article, so style it directly.
+     Child elements use :global() so the styles reach into slotted content. */
+  .city-guide-article { max-width: 720px; margin: 0 auto; }
+  .city-guide-article :global(.article-header) { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .city-guide-article :global(.subtitle) { font-size: 1.125rem; color: var(--color-text-light); }
+  .city-guide-article :global(section) { margin-bottom: 2.5rem; }
+  .city-guide-article :global(section h2), .city-guide-article :global(section h3) { margin-top: 1.5rem; }
+  .city-guide-article :global(section h2:first-child) { margin-top: 0; }
+  .city-guide-article :global(table) { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .city-guide-article :global(th), .city-guide-article :global(td) { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  .city-guide-article :global(th) { background: var(--color-background); }
+  .city-guide-article :global(ul), .city-guide-article :global(ol) { padding-left: 1.5rem; }
+  .city-guide-article :global(li) { margin-bottom: 0.4rem; }
+  .city-guide-article :global(.disclaimer) { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  .city-guide-article :global(.fact-box) { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
+  .city-guide-article :global(.fact-box h2) { margin-top: 0; font-size: 1.25rem; }
+  .city-guide-article :global(.fact-box table) { margin: 0; }
+  .city-guide-article :global(.further-reading) { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+  .city-guide-article :global(.further-reading h2) { margin-top: 0; font-size: 1.25rem; }
+</style>
