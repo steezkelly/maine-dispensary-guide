@@ -47,11 +47,11 @@
 Create a Node test that reads the TypeScript source and a generated JSON-safe export check. Assert:
 
 ```js
-assert.equal(entries.length, 13);
-assert.equal(new Set(entries.map((entry) => entry.slug)).size, 13);
+assert.equal(entries.length, 12);
+assert.equal(new Set(entries.map((entry) => entry.slug)).size, 12);
 assert.deepEqual(
   entries.filter((entry) => entry.kind === 'category').map((entry) => entry.slug).sort(),
-  ['cannabis-compliance','cannabis-crm-loyalty','cannabis-market-intelligence','cannabis-pos-systems','cannabis-wholesale-marketplaces','dispensary-ecommerce-menus','seed-to-sale-erp'].sort(),
+  ['cannabis-compliance','cannabis-crm-loyalty','cannabis-market-intelligence','cannabis-wholesale-marketplaces','dispensary-ecommerce-menus','seed-to-sale-erp'].sort(),
 );
 assert.equal(entries.filter((entry) => entry.kind === 'vendor').length, 6);
 for (const entry of entries) {
@@ -100,7 +100,7 @@ export interface SoftwareEntry {
 }
 ```
 
-Populate the seven category and six vendor slugs from the design. Use current official sources for Flowhub, Dutchie, Cova, AIQ, Canix, and Flourish. Describe public referral terms without implying MDG enrollment.
+Populate the six category and six vendor slugs from the design. The hub links to the existing POS comparison rather than creating a second POS route. Use current official sources for Flowhub, Dutchie, Cova, AIQ, Canix, and Flourish. Describe public referral terms without implying MDG enrollment.
 
 - [ ] **Step 4: Run the test and confirm GREEN**
 
@@ -228,7 +228,7 @@ npm run verify:iterate
 npm run build
 ```
 
-Expected: all commands exit 0; fourteen `/software` routes exist in static output.
+Expected: all commands exit 0; thirteen new `/software` routes exist in static output, including the hub.
 
 - [ ] **Step 2: Serve the static build and inspect representative pages**
 

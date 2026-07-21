@@ -19,22 +19,23 @@ The product is an editorial decision layer:
 
 ## Release shape
 
-The first release contains fourteen routes:
+The first release contains thirteen new routes:
 
 1. `/software` — operator-software hub.
-2. `/software/cannabis-pos-systems` — routes to and summarizes the existing detailed POS comparison rather than duplicating it.
-3. `/software/cannabis-crm-loyalty`.
-4. `/software/dispensary-ecommerce-menus`.
-5. `/software/seed-to-sale-erp`.
-6. `/software/cannabis-compliance`.
-7. `/software/cannabis-market-intelligence`.
-8. `/software/cannabis-wholesale-marketplaces`.
-9. `/software/flowhub`.
-10. `/software/dutchie`.
-11. `/software/cova`.
-12. `/software/aiq`.
-13. `/software/canix`.
-14. `/software/flourish`.
+2. `/software/cannabis-crm-loyalty`.
+3. `/software/dispensary-ecommerce-menus`.
+4. `/software/seed-to-sale-erp`.
+5. `/software/cannabis-compliance`.
+6. `/software/cannabis-market-intelligence`.
+7. `/software/cannabis-wholesale-marketplaces`.
+8. `/software/flowhub`.
+9. `/software/dutchie`.
+10. `/software/cova`.
+11. `/software/aiq`.
+12. `/software/canix`.
+13. `/software/flourish`.
+
+The existing `/guides/maine-cannabis-pos-comparison` remains the canonical POS category guide and is linked directly from the hub. No second POS-intent route is created.
 
 The category and vendor routes are statically generated from one typed data registry. A shared Astro page component provides consistent layout, disclosures, source handling, comparison links, and responsive styling.
 
@@ -121,7 +122,7 @@ No React, Tailwind, authentication, billing, database, or client-side applicatio
 
 ## Success criteria
 
-- Fourteen unique static routes build successfully.
+- Thirteen new unique static routes build successfully, alongside the existing canonical POS comparison.
 - Hub routes readers by operational problem.
 - Every vendor/category page contains meaningful Maine-specific decision support.
 - Referral claims match official public sources and are clearly classified.
