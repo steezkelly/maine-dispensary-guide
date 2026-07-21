@@ -295,6 +295,10 @@
 @media (max-width: 768px) {
   .nav-toggle-label { display: block; }
   .nav-search-desktop { display: none; }
+  /* Hide the brand wordmark on small screens — the logo icon + aria-label
+     carry identity; the text truncated to "Maine Dispens…" and crowded
+     the header row. */
+  .logo > span { display: none; }
   .nav-search-mobile { display: block; width: 100%; margin-bottom: 2rem; }
   .nav-links {
     position: fixed;
