@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
@@ -14,72 +14,23 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are there cannabis dispensaries in Standish, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Standish has at least one active recreational dispensary: Lakewood Cannabis at 234 Northeast Road. Additional options are available in nearby Gorham and Windham."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does Standish allow cannabis dispensaries?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Standish has opted in to permit cannabis retail. Lakewood Cannabis operates at 234 Northeast Road with a 4.3+ star rating."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the cannabis market like in Standish?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Standish has limited cannabis retail (1 dispensary) for a growing community of 10,400+ residents. The town sits between Portland and the Lakes Region, drawing from commuter traffic and seasonal visitors to Sebago Lake and the Saco River. This creates opportunity for operators seeking a smaller-market entry point with Portland spillover demand."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does Standish compare to Gorham for cannabis business?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Standish has lower population (10,400 vs Gorham's 18,000) but also lower competition (1 dispensary vs several in Gorham). Commercial rents in Standish run $10-14/sq ft compared to Gorham's $14-20/sq ft. Both towns serve Portland commuters, but Standish's Lakes Region proximity adds a seasonal tourism dimension."
-      }
-    }
-  ]
-});
 ---
-<Layout
+<CityGuide
   title="How to Open a Dispensary in Standish, Maine: License, Costs & 2026 Plan"
   description="How to open a cannabis dispensary in Standish, Maine: OCP license process, costs, school buffer, zoning, and real-estate site selection. 2026 operator plan." heroImage="/images/heroes/standish-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
   .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
   details { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Standish Dispensary Guide</h1>
     <p class="subtitle">How to open a cannabis dispensary in Standish, Maine</p>
@@ -204,5 +155,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

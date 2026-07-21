@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -14,43 +14,14 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many cannabis dispensaries are in Dover-Foxcroft, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Public directories and listings disagree on the actual count. The medicalmarijuanadispensaries.co directory returns 0 results for Dover-Foxcroft, ME 04426 as of mid-2026, while Yelp and other directories list operators that appear in the Dover-Foxcroft search results but are physically located elsewhere (Bass Harbor, Howland, etc.). The earlier round-4 guide cited DabBars.org as the source for 'Dab Bar operating since 2020,' but that domain is now a parked GoDaddy placeholder and may not reflect current operating status. Verify current Dover-Foxcroft dispensaries directly with the Piscataquis County Chamber or the Maine OCP municipal authorization list." }},
-    { "@type": "Question", "name": "Is Dab Bar still operating in Dover-Foxcroft?", "acceptedAnswer": { "@type": "Answer", "text": "Uncertain as of mid-2026. The dabbars.org domain that previously hosted operator information is now a parked GoDaddy placeholder, suggesting the operator's web presence has lapsed or been abandoned. The 'Dab Bar' name does not appear in Yelp's 2026 list of Dover-Foxcroft dispensaries. Confirm directly with the Piscataquis County Chamber or call the City of Dover-Foxcroft." }},
-    { "@type": "Question", "name": "Does Dover-Foxcroft allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Per the Maine Cannabis Opt-In Tracker, Dover-Foxcroft is on the opt-in list (year opted in 2021, $500 local license fee). The town's current dispensary count is uncertain due to directory conflicts. For current opt-in status and any municipal changes, see the Maine Cannabis Opt-In Tracker or contact the Dover-Foxcroft town office." }},
-    { "@type": "Question", "name": "Where can Piscataquis County residents buy legal cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Piscataquis County residents have several options: GreenLife Recreational Dispensary at 19 Park Street, Milo, ME 04463 (phone 207-943-9005, opened April 2023 by Bob Ade, Piscataquis Chamber's 2022 Business of the Year for his Pat's Pizza franchises). For medical cannabis, Puffers Place at 50 Johnson Road, Dexter, ME 04930 (phone 207-270-1064) serves a 33-town catchment that includes Dover-Foxcroft, Milo, Brownville, and surrounding Piscataquis towns per the operator's site. Hazy Moose Medical Cannabis Dispensary at 22 Main St, Howland also serves the Piscataquis region with craft cannabis products. For Bangor-area dispensaries, Bangor is ~45 min south with multiple storefronts." }},
-    { "@type": "Question", "name": "What is Dover-Foxcroft Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Dover-Foxcroft is the county seat of Piscataquis County, Maine. The town sits along the Piscataquis River at the outlet of Sebec Lake, in the central Maine interior. Population ~4,200. Dover-Foxcroft is on US Route 6 / Route 7, midway between Bangor (45 min south) and Greenville / Moosehead Lake (60 min north). Dover-Foxcroft is known for the Piscataquis River, the historic downtown, and as the access point for the Moosehead Lake tourism corridor." }}
-  ]
-});
 ---
 
-<Layout title="Dover-Foxcroft Maine Cannabis Dispensary Guide (2026)" description="Dover-Foxcroft is the Piscataquis County seat with opt-in status for cannabis retail (per the Maine Cannabis Opt-In Tracker). The local dispensary market status is uncertain as of mid-2026 — see the guide for caveats and the broader Piscataquis County cannabis market." heroImage="/images/heroes/dover-foxcroft-dispensary-guide.jpg" article={article} topics={topics} >
+<CityGuide title="Dover-Foxcroft Maine Cannabis Dispensary Guide (2026)" description="Dover-Foxcroft is the Piscataquis County seat with opt-in status for cannabis retail (per the Maine Cannabis Opt-In Tracker). The local dispensary market status is uncertain as of mid-2026 — see the guide for caveats and the broader Piscataquis County cannabis market." heroImage="/images/heroes/dover-foxcroft-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
   .verification { background: color-mix(in oklab, var(--color-primary) 4%, transparent); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
   .verification strong { color: var(--color-text); }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Dover-Foxcroft Maine Cannabis Dispensary Guide</h1>
     <p class="subtitle">Piscataquis County seat — opt-in status confirmed; local dispensary market status uncertain as of mid-2026</p>
@@ -166,5 +137,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

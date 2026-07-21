@@ -1,7 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -15,43 +14,14 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many cannabis dispensaries are in Caribou, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Per The County's September 2024 reporting on Aroostook's cannabis market, Caribou has 2 medical cannabis dispensaries: Safe Alternatives on the Presque Isle Road and Richardson's Remedies on the Bog Road (which also has a second location in Presque Isle). Caribou voted to ban retail adult-use marijuana shops within city limits, so there are no adult-use storefronts in town — the dispensary listings in some directories reflect historical or incorrectly geocoded entries. Always verify by contacting the operator directly." }},
-    { "@type": "Question", "name": "Can adults 21+ buy recreational cannabis in Caribou?", "acceptedAnswer": { "@type": "Answer", "text": "No. Per The County's reporting, Caribou voted to ban retail marijuana shops within city limits. Adult-use customers in Caribou travel to Presque Isle, which has approved recreational retail. For medical patients, the two Caribou dispensaries serve registered MMMP cardholders." }},
-    { "@type": "Question", "name": "What dispensaries are in Caribou?", "acceptedAnswer": { "@type": "Answer", "text": "Two medical cannabis dispensaries per The County's September 2024 reporting: Safe Alternatives on the Presque Isle Road, and Richardson's Remedies on the Bog Road (Richardson Remedies also operates a second location in Presque Isle). Confirm current operator names and addresses directly with the operators." }},
-    { "@type": "Question", "name": "Where is the closest adult-use dispensary to Caribou?", "acceptedAnswer": { "@type": "Answer", "text": "Presque Isle is the closest adult-use retail option. Per The County, Presque Isle is 'one of few Aroostook municipalities to approve recreational pot sales' and has become 'Aroostook's cannabis capital.' Drive time from Caribou to Presque Isle is 15-20 minutes south on US Route 1." }},
-    { "@type": "Question", "name": "What is the service area for Caribou medical dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Caribou medical dispensaries serve the central Aroostook County seat and the surrounding county, including Presque Isle, Fort Fairfield, Limestone, Washburn, Van Buren, and the broader St. John Valley. For adult-use shopping, Presque Isle dispensaries serve the same customer base plus Aroostook's broader adult-use population." }}
-  ]
-});
 ---
 
-<Layout title="Caribou Maine Cannabis Dispensary Guide (2026)" description="Caribou, Maine has 2 medical cannabis dispensaries per The County reporting: Safe Alternatives and Richardson's Remedies (which also operates in Presque Isle). Adult-use retail is banned in Caribou — the closest adult-use dispensaries are in Presque Isle, 15-20 min south." heroImage="/images/heroes/presque-isle-dispensary-guide.jpg" article={article} topics={topics} >
+<CityGuide title="Caribou Maine Cannabis Dispensary Guide (2026)" description="Caribou, Maine has 2 medical cannabis dispensaries per The County reporting: Safe Alternatives and Richardson's Remedies (which also operates in Presque Isle). Adult-use retail is banned in Caribou — the closest adult-use dispensaries are in Presque Isle, 15-20 min south." heroImage="/images/heroes/presque-isle-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
   .verification { background: color-mix(in oklab, var(--color-primary) 4%, transparent); padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 3px solid var(--color-accent); font-size: 0.875rem; margin: 1.5rem 0; }
   .verification strong { color: var(--color-text); }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Caribou Maine Cannabis Dispensary Guide (2026)</h1>
     <p class="subtitle">Aroostook County's largest city — 2 medical cannabis dispensaries, with adult-use retail in neighboring Presque Isle</p>
@@ -189,5 +159,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

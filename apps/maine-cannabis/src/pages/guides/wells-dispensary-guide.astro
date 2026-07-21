@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -14,40 +14,10 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How many dispensaries are in Wells, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "Wells has 2 medical dispensaries: Hazy Hill Farm (medical at 1614 Post Road, farm-to-shelf model) and Curaleaf Wells (medical on Route 1, MMMP patients). Wells voters rejected adult-use retail in June 2025, so no recreational storefronts operate in town — both dispensaries serve MMMP medical patients only." }},
-    { "@type": "Question", "name": "Does Wells allow recreational cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Wells voters rejected adult-use cannabis retail sales on June 10, 2025 (Article 17), per the York County Star / Seacoast Online. Wells has MMMP-authorized medical dispensaries (Hazy Hill Farm and Curaleaf Wells) but no adult-use retail storefronts. The two dispensaries serve medical patients with valid MMMP cards." }},
-    { "@type": "Question", "name": "What makes Hazy Hill Farm unique?", "acceptedAnswer": { "@type": "Answer", "text": "Hazy Hill Farm operates a farm-to-shelf model, meaning they cultivate their own cannabis and sell directly to consumers from their Post Road location. This vertical integration provides product freshness and quality control that many dispensaries lack." }},
-    { "@type": "Question", "name": "Why does Wells serve Ogunquit visitors?", "acceptedAnswer": { "@type": "Answer", "text": "Ogunquit has not opted in to cannabis retail (medical or adult-use), so the many visitors to Ogunquit's beaches, Marginal Way, and Perkins Cove have no local dispensary option. They typically travel to nearby Wells (approximately 5 minutes) to purchase medical cannabis from Hazy Hill Farm or Curaleaf." }}
-  ]
-});
 ---
 
-<Layout title="Wells, ME Dispensary Guide — Hazy Hill Farm & Curaleaf (Medical-Only, 2026)" description="Wells, Maine dispensary guide. Wells voters rejected adult-use retail in June 2025 — the two in-town dispensaries (Hazy Hill Farm and Curaleaf Wells) are MMMP medical-only on Post Road (Route 1)." heroImage="/images/heroes/wells-dispensary-guide.jpg" article={article} topics={topics} >
-<style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-</style>
+<CityGuide title="Wells, ME Dispensary Guide — Hazy Hill Farm & Curaleaf (Medical-Only, 2026)" description="Wells, Maine dispensary guide. Wells voters rejected adult-use retail in June 2025 — the two in-town dispensaries (Hazy Hill Farm and Curaleaf Wells) are MMMP medical-only on Post Road (Route 1)." heroImage="/images/heroes/wells-dispensary-guide.jpg" article={article} topics={topics} >
 
-<article>
   <div class="article-header">
     <h1>Wells, ME Dispensary Guide</h1>
     <p class="subtitle">Medical-only cannabis dispensaries — York County's MMMP destination</p>
@@ -152,5 +122,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

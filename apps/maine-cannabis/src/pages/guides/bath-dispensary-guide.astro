@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -15,23 +15,9 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are there cannabis dispensaries in Bath, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Bath has at least one licensed adult-use cannabis dispensary (Brothers Cannabis) plus caregiver retail storefronts serving the city and surrounding Sagadahoc County towns."
-      }
-    }
-  ]
-});
 ---
 
-<Layout title="Bath, ME Dispensary Guide — Midcoast Cannabis Market 2026"
+<CityGuide title="Bath, ME Dispensary Guide — Midcoast Cannabis Market 2026"
   description="Bath, Maine cannabis dispensary guide. Brothers Cannabis and the Midcoast retail market."
   heroImage="/images/heroes/bath-dispensary-guide.jpg"
   article={article}
@@ -143,5 +129,5 @@ const faqPageJsonLd = JSON.stringify({
 <!-- see-also-nearby-peers -->
   </section>
 
-</article>
-</Layout>
+
+</CityGuide>

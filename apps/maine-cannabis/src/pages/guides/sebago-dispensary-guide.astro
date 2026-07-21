@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
@@ -14,70 +14,21 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are there cannabis dispensaries in Sebago, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "As of 2026, Sebago does not have a dedicated cannabis dispensary in town. The nearest dispensaries are in Casco (8 miles), Raymond (10 miles), and Standish (12 miles). This makes Sebago a primary delivery service opportunity — patients and recreational consumers must travel to neighboring towns or use delivery to access cannabis products."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Has Sebago opted in to cannabis retail?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Check with the Town of Sebago for the current opt-in status. Even if Sebago has not opted in to hosting retail dispensaries within town limits, Maine law permits licensed delivery services to deliver cannabis to residential addresses in any municipality regardless of opt-in status."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Where is the nearest dispensary to Sebago, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The closest dispensaries to Sebago are in Casco (Blue Lobster Cannabis and Landrace Cannabis Co. on Route 302, approximately 8 miles), Raymond (Eclipse Cannabis Company, approximately 10 miles), and standish (Lakewood Cannabis, approximately 12 miles). Windham's Green Mile corridor has 4-5 dispensaries and is about 15 miles away."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can medical cannabis be delivered to Sebago, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Maine-licensed medical and adult-use delivery services can deliver to Sebago regardless of the town's opt-in status. Services like Trichome Traders deliver to most of Maine with zone-based pricing. Check with individual delivery providers for their specific coverage of the Sebago area."
-      }
-    }
-  ]
-});
 ---
-<Layout title="Sebago, Maine Cannabis Dispensary Guide (2026)" description="Sebago, Maine cannabis guide — nearest dispensaries, delivery services, and market access for one of Maine's Lakes Region towns without its own dispensary." heroImage="/images/heroes/sebago-dispensary-guide.jpg" article={article} topics={topics} >
+<CityGuide title="Sebago, Maine Cannabis Dispensary Guide (2026)" description="Sebago, Maine cannabis guide — nearest dispensaries, delivery services, and market access for one of Maine's Lakes Region towns without its own dispensary." heroImage="/images/heroes/sebago-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
   .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
   details { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Sebago Dispensary Guide</h1>
     <p class="subtitle">Cannabis access and market overview for Sebago, Maine</p>
@@ -209,5 +160,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -13,42 +13,14 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Denmark, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No. Denmark has explicitly prohibited retail marijuana establishments and retail marijuana social clubs through a town ordinance adopted March 28, 2017. One of Maine's earliest opt-out municipalities, there are no cannabis dispensaries of any type operating in Denmark." }},
-    { "@type": "Question", "name": "Does Denmark allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "No. Denmark adopted an ordinance prohibiting retail marijuana establishments and retail marijuana social clubs on March 28, 2017 — very early in Maine's post-legalization timeline. This opt-out was one of the first in the state, reflecting the town's conservative stance on cannabis." }},
-    { "@type": "Question", "name": "Where do Denmark residents buy legal cannabis?", "acceptedAnswer": { "@type": "Answer", "text": "Denmark residents must travel to neighboring Fryeburg (~10-15 min) for legal cannabis purchases. White Mountain Craft Cannabis (285 Main St, 207-256-3082) serves recreational customers. Medical patients should use The Glass Cook (295 Bridgton Rd, 207-890-8871) or the other medical dispensaries." }},
-    { "@type": "Question", "name": "What is Denmark Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Denmark is a small Oxford County town of approximately 1,100 residents in western Maine, close to the New Hampshire border. It is known for its rural character, proximity to outdoor recreation, and its early decision to opt out of cannabis retail — one of the first Maine towns to do so." }}
-  ]
-});
 ---
 
-<Layout title="Denmark, ME Dispensary Guide — Opted Out Since 2017 2026" description="Denmark, Maine cannabis guide. Denmark banned cannabis retail in 2017 — earliest opt-outs in Maine. Nearest dispensaries are in Fryeburg (~10-15 min)." heroImage="/images/heroes/denmark-dispensary-guide.jpg" article={article} topics={topics} >
+<CityGuide title="Denmark, ME Dispensary Guide — Opted Out Since 2017 2026" description="Denmark, Maine cannabis guide. Denmark banned cannabis retail in 2017 — earliest opt-outs in Maine. Nearest dispensaries are in Fryeburg (~10-15 min)." heroImage="/images/heroes/denmark-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
   .opt-out-box { background: rgba(200, 80, 80, 0.06); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--color-border); margin-top: 1rem; }
   .opt-out-box h3 { margin-top: 0; color: var(--color-error); }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Denmark, ME Dispensary Guide</h1>
     <p class="subtitle">Cannabis access for Denmark, Maine residents — Nearest dispensaries in Fryeburg</p>
@@ -147,5 +119,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

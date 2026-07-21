@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
@@ -13,40 +13,10 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Are there any cannabis dispensaries in Norway, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "No confirmed dispensaries operate within Norway town itself. The county seat has no cannabis storefronts, possibly because Norway has not formally opted in to recreational cannabis. Residents are served by West Paris Provisions in West Paris (~10 min, 207-674-0015) and The Hideaway in Oxford (~15 min)." }},
-    { "@type": "Question", "name": "Does Norway allow cannabis dispensaries?", "acceptedAnswer": { "@type": "Answer", "text": "Norway is not documented as opted in on the MDG Opt-In Tracker or the OCP municipal authorization list as of April 2026. Verify directly with the Norway town office before assuming either direction." }},
-    { "@type": "Question", "name": "What dispensaries serve Norway residents?", "acceptedAnswer": { "@type": "Answer", "text": "West Paris Provisions (253 Bethel Rd, West Paris, 207-674-0015, Mon-Fri 8am-8pm, Sat 10am-6pm) is ~10 minutes from Norway. The Hideaway in Oxford (1192 Main St) is ~15 minutes. Note: Norway Smoke Shop at 61 Main St is a tobacco shop only." }},
-    { "@type": "Question", "name": "What is Norway Maine known for?", "acceptedAnswer": { "@type": "Answer", "text": "Norway is the Oxford County seat with ~4,200 residents — the largest town in the Norway-Paris area and commercial center for western Oxford County." }}
-  ]
-});
 ---
 
-<Layout title="Norway, ME Dispensary Guide — Served by Oxford & West Paris 2026" description="Norway, Maine cannabis guide. No dispensaries confirmed within Norway town itself. Served by The Hideaway (Oxford) and West Paris Provisions. Likely opted in." heroImage="/images/heroes/norway-dispensary-guide.jpg" article={article} topics={topics} >
-<style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.125rem; color: var(--color-text-light); }
-  section { margin-bottom: 2.5rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
-  li { margin-bottom: 0.4rem; }
-  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.75rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
-</style>
+<CityGuide title="Norway, ME Dispensary Guide — Served by Oxford & West Paris 2026" description="Norway, Maine cannabis guide. No dispensaries confirmed within Norway town itself. Served by The Hideaway (Oxford) and West Paris Provisions. Likely opted in." heroImage="/images/heroes/norway-dispensary-guide.jpg" article={article} topics={topics} >
 
-<article>
   <div class="article-header">
     <h1>Norway, ME Dispensary Guide</h1>
     <p class="subtitle">Cannabis access for Norway, Maine residents — Served by Oxford and West Paris</p>
@@ -135,5 +105,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>

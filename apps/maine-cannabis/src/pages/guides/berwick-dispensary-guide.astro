@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -15,23 +15,9 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are there cannabis dispensaries in Berwick, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Berwick has 3+ licensed adult-use cannabis dispensaries (Silver Therapeautics, Kind Farm Reserve, JAR Cannabis Co., and others) plus a strong caregiver network. Berwick is one of the more saturated small-town markets in Maine, driven by its position on the New Hampshire border."
-      }
-    }
-  ]
-});
 ---
 
-<Layout title="Berwick, ME Dispensary Guide — NH Border Market"
+<CityGuide title="Berwick, ME Dispensary Guide — NH Border Market"
   description="Berwick, Maine cannabis dispensary guide. NH-border retail market and store directory."
   heroImage="/images/heroes/berwick-dispensary-guide.jpg"
   article={article}
@@ -158,5 +144,5 @@ const faqPageJsonLd = JSON.stringify({
 <!-- see-also-nearby-peers -->
   </section>
 
-</article>
-</Layout>
+
+</CityGuide>

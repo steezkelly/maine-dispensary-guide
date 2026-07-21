@@ -1,6 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import Layout from '../../layouts/Layout.astro';
+import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 
 const article = {
@@ -14,80 +14,23 @@ const article = {
 
 const topics = ["city", "market"];
 
-const faqPageJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How many dispensaries are in Windham, Maine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Windham has 4-5 active dispensaries serving both medical and adult-use markets, including Maine's Alternative Caring, JAR Cannabis Co., and Alternative Essence. Route 302 through Windham has earned the nickname 'The Green Mile' for its concentration of cannabis businesses."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Why is Route 302 in Windham called The Green Mile?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Windham's stretch of Route 302 has earned the nickname 'The Green Mile' because of its dense concentration of cannabis dispensaries and related businesses. Maine's Alternative Caring led the way as the town's first dispensary, and several others followed, creating a natural cannabis corridor."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Windham oversaturated with cannabis dispensaries?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Windham has 4-5 dispensaries for roughly 17,000 residents with strong regional draw from the Lakes Region. While Route 302 has noticeable clustering, the overall market supports current operators. New entrants need clear differentiation — whether through delivery, specialty products, or a brand that appeals to a specific demographic."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the licensing requirements for a Windham dispensary?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Windham requires both Maine OCP state licensing and local municipal authorization. OCP application fees are $250 with annual licensing of $500-$1,500. Town-level fees are estimated at $2,000-$2,500 annually. Total first-year licensing costs run approximately $3,000-$4,000."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I run a delivery operation from Windham?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Licensed Windham dispensaries can deliver to any municipality in Maine regardless of opt-in status. This allows serving smaller Lakes Region towns like Naples, Sebago, Harrison, and even Fryeburg that lack their own dispensary coverage."
-      }
-    }
-  ]
-});
 ---
-<Layout
+<CityGuide
   title="How to Open a Dispensary in Windham, Maine: License, Costs & 2026 Plan"
   description="How to open a cannabis dispensary in Windham, Maine: OCP license process, costs, school buffer, zoning, and real-estate site selection. 2026 operator plan." heroImage="/images/heroes/windham-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
-  article { max-width: 720px; margin: 0 auto; }
   .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
   .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
   section { margin-bottom: 2rem; }
-  section h2, section h3 { margin-top: 1.5rem; }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
   th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); }
-  ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.5rem; }
   .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.850rem; color: var(--color-disclaimer-text); }
   .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .fact-box table { margin: 0; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
   details { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
 
-<article>
   <div class="article-header">
     <h1>Windham Dispensary Guide</h1>
     <p class="subtitle">How to open a cannabis dispensary in Windham, Maine</p>
@@ -231,5 +174,5 @@ const faqPageJsonLd = JSON.stringify({
   </section>
 <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
   <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
-</Layout>
+  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+</CityGuide>
