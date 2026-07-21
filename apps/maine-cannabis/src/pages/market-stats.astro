@@ -448,6 +448,14 @@ Source page: https://mainedispensaryguide.com/market-stats`;
     overflow: hidden;
     background: var(--color-text); /* matches the video's first frame */
   }
+  /* The video's first frame is dark, so the letterbox background must stay
+     dark in BOTH themes. --color-text inverts to light cream in dark mode,
+     which produced a glaring light bar around the video. Override with the
+     dark surface token. :global() because data-theme lives on <html>,
+     outside this component's scoping. */
+  :global([data-theme="dark"]) .page-video {
+    background: var(--color-surface);
+  }
   .page-video video {
     display: block;
     width: 100%;
