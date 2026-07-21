@@ -177,6 +177,41 @@ test('passes when hero images are all unique content', () => {
   assert.match(result.stdout, /All content health checks passed/);
 });
 
+test('flags a heroImage reference that resolves to a missing file', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    // References a hero that does NOT exist on disk.
+    'guides/broken-hero.astro': '---\nconst heroImage = "/images/heroes/does-not-exist.jpg";\n---\n<Layout heroImage="/images/heroes/does-not-exist.jpg"><h1>x</h1></Layout>\n',
+  });
+  // A different hero exists, but not the one referenced above.
+  makeHeroes(fixture.publicDir, {
+    'town-a-dispensary-guide.jpg': Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0xAA, 0xBB]),
+  });
+
+  const result = runCheck(fixture);
+
+  assert.notEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /missing hero image references: 1 issue/);
+  assert.match(result.stdout, /guides\/broken-hero\.astro: heroImage "\/images\/heroes\/does-not-exist\.jpg" not found on disk/);
+});
+
+test('passes when every heroImage reference resolves to an existing file', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    'guides/good-hero.astro': '---\n---\n<Layout heroImage="/images/heroes/town-a-dispensary-guide.jpg"><h1>x</h1></Layout>\n',
+    // External http heroes must be skipped, not flagged as missing.
+    'guides/external-hero.astro': '---\n---\n<Layout heroImage="https://example.com/hero.jpg"><h1>x</h1></Layout>\n',
+  });
+  makeHeroes(fixture.publicDir, {
+    'town-a-dispensary-guide.jpg': Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0xAA, 0xBB]),
+  });
+
+  const result = runCheck(fixture);
+
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /missing hero image references: OK/);
+});
+
 test('flags OG image dimensions that do not match the actual image file', () => {
   const jpeg1280x720 = Buffer.concat([
     Buffer.from([0xff, 0xd8]),
