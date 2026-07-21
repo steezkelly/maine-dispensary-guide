@@ -280,6 +280,28 @@ function testHookFailsClosedWhenVerifierMissing() {
 }
 
 // ----------------------------------------------------------------------------
+// Contract 7: canonical verifier usage does not advertise partial smoke as a
+// release-gate shortcut. The legacy `--ignore-unrelated` behavior may remain
+// for compatibility, but operator-facing command examples must require the
+// full exact-candidate smoke scan.
+// ----------------------------------------------------------------------------
+function testVerifierUsageDoesNotAdvertiseIgnoreUnrelated() {
+  const src = readFileSafe(VERIFIER);
+  const usageMatch = src.match(/\* Usage:[\s\S]*?\*\//);
+  const usageBlock = usageMatch ? usageMatch[0] : '';
+  const advertisesPartialSmoke = usageBlock
+    .split('\n')
+    .some((line) => /node\s+scripts\/git\/pre-push-verify\.cjs[^\n]*--ignore-unrelated/.test(line));
+
+  if (advertisesPartialSmoke) {
+    logFail('verifier usage does not advertise `--ignore-unrelated`',
+      'pre-push-verify.cjs still publishes a partial-smoke command as canonical usage. Release guidance must require the full exact-candidate smoke scan.');
+    return;
+  }
+  logPass('verifier usage does not advertise `--ignore-unrelated`');
+}
+
+// ----------------------------------------------------------------------------
 // Contract 6: install-hooks.cjs no longer teaches `git push --no-verify` as
 // an escape hatch.
 //
@@ -320,6 +342,7 @@ function runAll() {
   testWithSmokeRequiresPreviewUrl();
   testHookFailsClosedWhenVerifierMissing();
   testInstallHooksDoesNotTeachNoVerify();
+  testVerifierUsageDoesNotAdvertiseIgnoreUnrelated();
   console.log(`\n  summary: ${failures === 0 ? 'OK' : `${failures} failure(s)`}\n`);
   process.exit(failures === 0 ? 0 : 1);
 }

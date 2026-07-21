@@ -72,7 +72,7 @@
  *   node scripts/git/pre-push-verify.cjs                                 # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
  *   MDG_PREVIEW_URL=https://<hash>.vercel.app \
  *     node scripts/git/pre-push-verify.cjs --with-smoke                   # smoke against the exact preview deployment
- *   node scripts/git/pre-push-verify.cjs --with-smoke --ignore-unrelated  # smoke preview + restrict to changed pages
+ *   Do not use `--ignore-unrelated` for candidate/release verification; it is legacy compatibility only.
  *   MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com \
  *     node scripts/git/pre-push-verify.cjs --with-smoke                   # explicit post-deploy production smoke
  *   node scripts/git/pre-push-verify.cjs --fast-only                      # parse-only (~1s)
