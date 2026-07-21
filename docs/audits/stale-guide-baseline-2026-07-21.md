@@ -1,105 +1,90 @@
-# Stale-guide baseline audit — 2026-07-21
+# Stale-guide baseline audit v2 — 2026-07-21 (two-tier model)
 
 **Generated:** 2026-07-21 (operator-pinned `today` for the report)
+**Branch:** `feat/stale-guide-dashboard-2026-07-21` (same as v1; supersedes the original baseline)
 **GSC window:** 2026-06-20 → 2026-07-18 (265 rows, exported via OpenSEO MCP project `4b687621-d649-420a-9e3a-7af5a9354297`)
-**Sources walked:** `apps/maine-cannabis/src/pages/guides/` (recursive) and `apps/maine-cannabis/src/pages/blog/` (recursive); `admin/`, `index.astro`, `all-cities.astro`, `all-guides.astro` skipped. **232 .astro files scanned.**
-**Filter:** `impressions_28d > 50 AND days_since_modified > 90` (today = 2026-07-21)
-**Script:** [`apps/maine-cannabis/scripts/seo/stale-guide-report.cjs`](../../apps/maine-cannabis/scripts/seo/stale-guide-report.cjs)
+**Sources walked:** `apps/maine-cannabis/src/pages/guides/` and `apps/maine-cannabis/src/pages/blog/`; `admin/`, `index.astro`, `all-cities.astro`, `all-guides.astro` skipped. **232 .astro files scanned.**
+**Script:** [`apps/maine-cannabis/scripts/seo/stale-guide-report.cjs`](../../apps/maine-cannabis/scripts/seo/stale-guide-report.cjs) (two-tier model)
 **Runbook:** [`apps/maine-cannabis/docs/analytics/stale-guide-runbook.md`](../../apps/maine-cannabis/docs/analytics/stale-guide-runbook.md)
 
-## Ranked list — top 10 stale high-impression pages (card-mandated filter)
+## What changed from v1
 
-**Result: 0 pages match.** No Astro page in `guides/` or `blog/` has a
-`modifiedDate` more than 90 days old AND more than 50 GSC impressions over
-the 28-day window. The script's `--json --limit 10` output:
+The v1 baseline (commit `2711d2ad`) used a flat 90-day threshold inherited
+from the WhiteSpark 2026 review-velocity data. On operator review, that
+data point is about *GBP reviews*, not *content recency*, and the threshold
+was producing 0 matches. The v2 model uses two tiers:
 
-```json
-{
-  "generated_at": "2026-07-21T18:32:56.528Z",
-  "filter": {
-    "impressions_28d_min": 50,
-    "days_since_modified_min": 91,
-    "today": "2026-07-21",
-    "sources": [
-      "apps/maine-cannabis/src/pages/guides",
-      "apps/maine-cannabis/src/pages/blog"
-    ],
-    "gsc_csv": "gsc-last-28d.csv"
-  },
-  "counts": {
-    "total_pages_scanned": 232,
-    "kept": 0,
-    "limited_to": 10,
-    "skipped_missing_modifiedDate": 8,
-    "skipped_missing_gsc_row": 0,
-    "skipped_low_impressions": 0,
-    "skipped_fresh": 224
-  },
-  "pages": []
-}
+- **Time-sensitive** (slug matches one of the 15 high-signal patterns: `*-2026`,
+  `psilocybin`, `conditional-license`, `staffing-licensing`,
+  `edibles-compliance`, `ld-1840`, `regulations`, `opt-in-tracker`,
+  `license-denied`, `schedule-iii`, `280e`, `extraction-licensing`,
+  `school-buffer`, `zoning-requirements`, `caregiver-trade-show`) — **30-day
+  threshold**.
+- **Evergreen** (everything else) — **90-day threshold**.
+
+Each page is classified at scan time and the threshold for that tier is
+applied. Tier is filterable via `--threshold-mode evergreen|time-sensitive|both`.
+
+## v2 results
+
+```
+Pages scanned: 232. Kept: 14 (time-sensitive=14, evergreen=0). Skipped:
+8 missing modifiedDate, 0 tier-filtered, 3 no GSC row, 14 low
+impressions, 193 fresh.
 ```
 
-The `--md --limit 10` output renders the empty table the same way (header row
-plus zero data rows). Both runs **exited 0**, confirming the script runs
-end-to-end without error and the GSC CSV is parseable.
+**Time-sensitive tier — top 14 by impressions (28d):**
 
-## Context — closest-to-threshold cohort (top 10 by `days_old`)
+| # | Slug | Modified | Days old | Imp (28d) | Position | CTR |
+|---|---|---|---:|---:|---:|---:|
+| 1 | `maine-psilocybin-2026-guide`                 | 2026-06-07 | 44 | 583 | 5.5  | 2.57% |
+| 2 | `maine-cannabis-taxes-2026`                   | 2026-06-05 | 46 | 493 | 8.6  | 1.42% |
+| 3 | `best-maine-dispensaries-2026`                | 2026-06-05 | 46 | 382 | 7.1  | 3.66% |
+| 4 | `maine-cannabis-staffing-licensing`           | 2026-06-07 | 44 | 371 | 9.6  | 4.58% |
+| 5 | `best-cannabis-strains-maine-outdoor-2026`    | 2026-06-05 | 46 | 346 | 8.6  | 3.76% |
+| 6 | `terpene-preservation-drying-curing-2026`     | 2026-06-06 | 45 | 289 | 7.4  | 0.35% |
+| 7 | `portland-maine-cannabis-rules-2026`          | 2026-05-18 | 64 | 257 | 7.8  | 0.39% |
+| 8 | `maine-cannabis-schedule-iii-dual-license-280e` | 2026-06-07 | 44 | 176 | 12.6 | 2.27% |
+| 9 | `autoflower-vs-feminized-maine-2026`          | 2026-06-06 | 45 | 150 | 10.7 | 2.67% |
+| 10 | `maine-cannabis-delivery-business-guide-2026` | 2026-06-07 | 44 | 141 | 7.1  | 2.84% |
+| 11 | `maine-cannabis-2026-operator-cost-update`    | 2026-06-07 | 44 | 136 | 8.0  | 0.00% |
+| 12 | `cannabis-clones-vs-seeds-maine-2026`         | 2026-06-06 | 45 | 113 | 11.3 | 0.00% |
+| 13 | `maine-cannabis-caregiver-trade-show-sales`   | 2026-06-07 | 44 | 90  | 9.4  | 0.00% |
+| 14 | `indoor-cannabis-grow-setup-maine-cost-2026`  | 2026-06-06 | 45 | 53  | 23.2 | 0.00% |
 
-To make this audit actionable for the next sprint, the same script's logic
-was re-run with the freshness threshold relaxed to `days_since_modified >= 60`
-and `impressions_28d > 50`. This is **not** the script's authoritative output
-— it is a planning aid, and is reproduced here so the operator can see which
-pages will trip the canonical 90-day filter first if the May sweep is not
-refreshed. None of these pages is in the canonical report.
-
-| # | Page slug | Kind | Modified | Days old (vs 2026-07-21) | Impressions (28d) | Position | CTR |
-|---|---|---|---|---:|---:|---:|---:|
-| 1 | `bridgton-dispensary-guide`     | guide | 2026-05-13 | 69 | 447  | 9.4  | 0.45% |
-| 2 | `buxton-dispensary-guide`       | guide | 2026-05-13 | 69 | 609  | 7.7  | 0.49% |
-| 3 | `casco-dispensary-guide`        | guide | 2026-05-13 | 69 | 363  | 7.9  | 0.28% |
-| 4 | `cornish-dispensary-guide`      | guide | 2026-05-13 | 69 | 65   | 13.0 | 1.54% |
-| 5 | `fryeburg-dispensary-guide`     | guide | 2026-05-13 | 69 | 2144 | 8.5  | 0.42% |
-| 6 | `gray-dispensary-guide`         | guide | 2026-05-13 | 69 | 864  | 7.4  | 0.46% |
-| 7 | `raymond-dispensary-guide`      | guide | 2026-05-13 | 69 | 681  | 7.1  | 0.59% |
-| 8 | `ogunquit-dispensary-guide`     | guide | 2026-05-13 | 69 | 536  | 10.7 | 0.37% |
-| 9 | `limerick-dispensary-guide`     | guide | 2026-05-13 | 69 | 618  | 7.2  | 0.97% |
-| 10 | `maine-cannabis-events-2026`    | guide | 2026-06-05 | 46 | 254  | 8.6  | 5.91% |
-
-All nine `2026-05-13` entries are part of the same sweep cohort that bumped
-the city-guide template in May; they will cross the 90-day threshold around
-**2026-08-11** if not refreshed. The single `2026-06-05` entry
-(`maine-cannabis-events-2026`) is the early-warning page: it is the only
-high-impression page already 46 days old with a low `position` (8.6) and
-sub-6% CTR, suggesting the cohort that needs refresh first.
-
-The full 65-day cohort (i.e. everything still under 90 days on 2026-07-21)
-contains 50 pages with impressions, all of which become eligible for the
-canonical report on the same ~2026-08-11 cliff unless a mid-July refresh is
-applied to the `2026-05-13` cohort.
+**Evergreen tier — 0 matches.** All 109 city guides are within the
+90-day freshness window as of 2026-07-21. The 2026-05-13 cohort (9 city
+guides at 69 days, documented in v1) will cross 90 days around 2026-08-11.
 
 ## What this means
 
-The 2026-05-13 sweep that updated the city-guide cohort was *just* enough to
-keep every high-impression page out of the 90-day staleness band for two
-more weeks. The card-mandated filter (`days > 90 AND impressions > 50`)
-surfaces an empty list, which is the correct, honest output of the script —
-not a sign that the script is broken. The pages that are closest to the
-threshold are all part of the same template-driven cohort and become
-ineligible for protection simultaneously around 2026-08-11. The next
-content-sprint planning should treat the 2026-05-13 cohort as a single
-batch and bump `modifiedDate` on the entire `guides/*.astro` set in one
-sweep; refreshing only the top-10-by-impressions would leave the rest of
-the cohort visibly stale one sprint later and re-create the same dashboard
-output a month from now.
+The 30-day threshold does not flag the time-sensitive guides as "wrong" — it
+flags them as "the kind of page where a refresh is visibly overdue." Five
+of the 14 (rows 1, 2, 3, 4, 8) are also in the YMYL E-E-A-T audit's
+operator-decision set, so a single coordinated refresh of those five pages
+clears two workstreams at once. The remaining 9 are time-sensitive by topic
+but lower-impression; they are appropriate for the same 30-day rotation
+cadence but not blocking.
 
-The 8 pages with no `modifiedDate` (`skipped_missing_modifiedDate`) are
-operational hygiene rather than freshness risk — they are pages whose
-frontmatter uses a non-standard `const article = { ... }` shape or omits the
-field entirely; the script intentionally skips them so the report stays
-honest about what it can verify. A separate frontmatter-conformance audit
-is the right follow-up for those, not a content-refresh.
+The 90-day evergreen threshold continues to be the right bar for city
+guides. The cliff is 2026-08-11. Plan the May 2026 city-guide sweep refresh
+accordingly.
 
-The empty result is the *evidence* the script works end-to-end against the
-live GSC export and the live file-modified timestamps. The fact that 0 pages
-match the 90-day threshold is a finding about MDG's content cadence, not a
-bug in the report.
+## Operator signoff recorded (in chat, 2026-07-21)
+
+The two-tier model with 30-day time-sensitive / 90-day evergreen
+thresholds is approved. Override flags `--evergreen-days`,
+`--time-sensitive-days`, and `--threshold-mode` are the operator's escape
+hatch for any future calibration.
+
+## What this script does NOT do
+
+- Does not modify any Astro file under `src/pages/`.
+- Does not push any branch (this branch is not pushed; per the v1 card
+  instruction, cron + dashboard visual layer remain operator-gated).
+- Does not add a cron entry. Per `docs/governance/AGENT_WORKING_ORDERS.md`
+  line 69, GSC scheduled measurement is blocked (no `cron.service` on
+  this host).
+- Does not invent GSC data. All impressions / clicks / CTR / position
+  numbers are quoted from the OpenSEO MCP export for 2026-06-20 →
+  2026-07-18.
