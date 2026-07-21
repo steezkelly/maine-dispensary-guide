@@ -25,7 +25,7 @@
  * `const article = { ... modifiedDate: "YYYY-MM-DD" ... }` block in each
  * Astro page's frontmatter-style prelude.
  *
- * Card: docs/governance/cards/2026-07-21-stale-guide-dashboard.md
+ * Integration task: t_e88b0645
  *
  * Usage:
  *   node stale-guide-report.cjs --help
@@ -47,6 +47,7 @@ const path = require('node:path');
 // ---- configuration ---------------------------------------------------------
 
 const TODAY = '2026-07-21'; // operator-pinned; see runbook
+const REPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..');
 const SOURCES = [
   { kind: 'guides', dir: path.join('apps', 'maine-cannabis', 'src', 'pages', 'guides') },
   { kind: 'blog',   dir: path.join('apps', 'maine-cannabis', 'src', 'pages', 'blog') },
@@ -122,7 +123,6 @@ function parseArgs(argv) {
       out.gscCsv = argv[++i];
       if (!out.gscCsv) throw new Error('--gsc-csv requires a path argument');
     } else if (a === '--today') {
-      // undocumented override for future automation
       const v = argv[++i];
       if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new Error(`--today must be YYYY-MM-DD, got "${v}"`);
       out.today = v;
@@ -165,6 +165,7 @@ OPTIONS
   --threshold-mode <mode>   One of evergreen|time-sensitive|both (default: both)
   --evergreen-days N        Override the evergreen threshold (default: ${EVERGREEN_DAYS_DEFAULT})
   --time-sensitive-days N   Override the time-sensitive threshold (default: ${TIME_SENSITIVE_DAYS_DEFAULT})
+  --today YYYY-MM-DD        Override the operator-pinned replay date (default: ${TODAY})
   --help                    Print this help and exit 0
 
 FILTER
@@ -221,51 +222,72 @@ function loadGsc(csvPath) {
       throw new Error(`unexpected GSC CSV header at column ${i}: got "${header[i]}", expected "${expected[i]}"`);
     }
   }
-  const out = new Map(); // page-url basename (no .astro) -> row
+  const out = new Map(); // guides/<route> or blog/<route> -> aggregated row
   for (let i = 1; i < lines.length; i += 1) {
     const cols = parseCsvLine(lines[i]);
     if (cols.length < 5) continue;
     const [page, clicks, impressions, ctr, position] = cols;
-    const base = pathToSlug(page);
-    if (!base) continue;
-    out.set(base, {
-      page,
+    const routeKey = pathToRouteKey(page);
+    if (!routeKey) continue;
+    const row = {
+      page: canonicalPageUrl(page),
       clicks: Number(clicks),
       impressions: Number(impressions),
       ctr: Number(ctr),
       position: Number(position),
+    };
+    const prior = out.get(routeKey);
+    if (!prior) {
+      out.set(routeKey, row);
+      continue;
+    }
+
+    // GSC can report slash and slash-less variants as separate page rows.
+    // Aggregate them into the one local source route instead of silently
+    // letting the last CSV row win.
+    const clicksTotal = prior.clicks + row.clicks;
+    const impressionsTotal = prior.impressions + row.impressions;
+    out.set(routeKey, {
+      page: prior.page,
+      clicks: clicksTotal,
+      impressions: impressionsTotal,
+      ctr: impressionsTotal > 0 ? clicksTotal / impressionsTotal : 0,
+      position: impressionsTotal > 0
+        ? ((prior.position * prior.impressions) + (row.position * row.impressions)) / impressionsTotal
+        : 0,
     });
   }
   return out;
 }
 
-// Map a GSC page URL to the local .astro filename (without .astro).
-// We only have .astro sources under /guides/ and /blog/ (plus a few misc
-// pages like /directory that we intentionally ignore here).
-function pathToSlug(pageUrl) {
+// Map a GSC page URL to its local route key. Keeping the guides/blog prefix
+// prevents a same-named guide and blog page from overwriting one another.
+function pathToRouteKey(pageUrl) {
   if (!pageUrl) return null;
   for (const host of SITE_HOSTS) {
-    if (pageUrl === `${host}/` || pageUrl === host) return '__home__';
     if (!pageUrl.startsWith(`${host}/`)) continue;
     let tail = pageUrl.slice(`${host}/`.length);
     tail = stripTrailingSlash(tail);
-    // Strip the leading /guides/ or /blog/ segment so we match the basename.
-    const slash = tail.indexOf('/');
-    return slash === -1 ? tail : tail.slice(slash + 1);
+    if (!tail.startsWith('guides/') && !tail.startsWith('blog/')) return null;
+    return tail;
   }
   return null;
+}
+
+function canonicalPageUrl(pageUrl) {
+  return pageUrl.endsWith('/') ? pageUrl.slice(0, -1) : pageUrl;
 }
 
 function stripTrailingSlash(s) {
   return s.endsWith('/') ? s.slice(0, -1) : s;
 }
 
-function walkPages(root, kind, out) {
+function walkPages(root, kind, out, sourceRoot = root) {
   if (!fs.existsSync(root)) return out;
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       if (entry.name === 'admin') continue;
-      walkPages(path.join(root, entry.name), kind, out);
+      walkPages(path.join(root, entry.name), kind, out, sourceRoot);
       continue;
     }
     if (!entry.isFile()) continue;
@@ -273,7 +295,8 @@ function walkPages(root, kind, out) {
     if (SKIP_FILENAMES.has(entry.name)) continue;
     const full = path.join(root, entry.name);
     const slug = entry.name.replace(/\.astro$/, '');
-    out.push({ full, slug, kind });
+    const relativeRoute = path.relative(sourceRoot, full).replace(/\\/g, '/').replace(/\.astro$/, '');
+    out.push({ full, slug, kind, routeKey: `${kind}/${relativeRoute}` });
   }
   return out;
 }
@@ -334,7 +357,7 @@ function main() {
   // Walk pages
   const files = [];
   for (const src of SOURCES) {
-    walkPages(path.resolve(process.cwd(), src.dir), src.kind, files);
+    walkPages(path.resolve(REPO_ROOT, src.dir), src.kind, files);
   }
 
   // Build report rows
@@ -365,7 +388,7 @@ function main() {
       skippedFresh += 1;
       continue;
     }
-    const g = gsc.get(f.slug);
+    const g = gsc.get(f.routeKey);
     if (!g) {
       skippedNoGsc += 1;
       continue;
@@ -503,4 +526,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, loadGsc, walkPages, readArticle, daysBetween, pathToSlug, classifyTier };
+module.exports = { parseArgs, loadGsc, walkPages, readArticle, daysBetween, pathToRouteKey, classifyTier };

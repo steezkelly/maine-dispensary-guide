@@ -1,9 +1,9 @@
 # Stale-guide baseline audit v2 — 2026-07-21 (two-tier model)
 
 **Generated:** 2026-07-21 (operator-pinned `today` for the report)
-**Branch:** `feat/stale-guide-dashboard-2026-07-21` (same as v1; supersedes the original baseline)
+**Candidate branch:** `feat/stale-guide-dashboard-2026-07-21` (same as v1; supersedes the original baseline)
 **GSC window:** 2026-06-20 → 2026-07-18 (265 rows, exported via OpenSEO MCP project `4b687621-d649-420a-9e3a-7af5a9354297`)
-**Sources walked:** `apps/maine-cannabis/src/pages/guides/` and `apps/maine-cannabis/src/pages/blog/`; `admin/`, `index.astro`, `all-cities.astro`, `all-guides.astro` skipped. **232 .astro files scanned.**
+**Sources walked:** `apps/maine-cannabis/src/pages/guides/` and `apps/maine-cannabis/src/pages/blog/`; `admin/`, `index.astro`, `all-cities.astro`, `all-guides.astro` skipped. **233 .astro files scanned on integration base `571fd84c`.**
 **Script:** [`apps/maine-cannabis/scripts/seo/stale-guide-report.cjs`](../../apps/maine-cannabis/scripts/seo/stale-guide-report.cjs) (two-tier model)
 **Runbook:** [`apps/maine-cannabis/docs/analytics/stale-guide-runbook.md`](../../apps/maine-cannabis/docs/analytics/stale-guide-runbook.md)
 
@@ -28,9 +28,9 @@ applied. Tier is filterable via `--threshold-mode evergreen|time-sensitive|both`
 ## v2 results
 
 ```
-Pages scanned: 232. Kept: 14 (time-sensitive=14, evergreen=0). Skipped:
+Pages scanned: 233. Kept: 14 (time-sensitive=14, evergreen=0). Skipped:
 8 missing modifiedDate, 0 tier-filtered, 3 no GSC row, 14 low
-impressions, 193 fresh.
+impressions, 194 fresh.
 ```
 
 **Time-sensitive tier — top 14 by impressions (28d):**
@@ -80,8 +80,9 @@ hatch for any future calibration.
 ## What this script does NOT do
 
 - Does not modify any Astro file under `src/pages/`.
-- Does not push any branch (this branch is not pushed; per the v1 card
-  instruction, cron + dashboard visual layer remain operator-gated).
+- Does not perform Git operations. Transport and integration are handled by
+  the separately authorized integrator; cron + dashboard visual layer remain
+  operator-gated.
 - Does not add a cron entry. Per `docs/governance/AGENT_WORKING_ORDERS.md`
   line 69, GSC scheduled measurement is blocked (no `cron.service` on
   this host).
