@@ -35,7 +35,11 @@ const {
 <style>
   .authority-hero {
     display: grid;
-    align-items: center;
+    /* Top-align so the eyebrow/lede/CTA sit directly under the headline.
+       align-items:center pushed the whole block down ~65px inside the
+       320px min-block-size hero, which dropped the primary CTA below the
+       fold on a 768px-tall laptop viewport. */
+    align-items: start;
     min-block-size: 20rem;
   }
 
