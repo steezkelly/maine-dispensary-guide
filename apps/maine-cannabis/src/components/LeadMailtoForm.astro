@@ -109,6 +109,11 @@ const {
   data-success-path={successPath}
   data-track-fields={trackFields.join(',')}
 >
+  <!-- Honeypot: invisible to humans, bots fill it. If populated, submission is silently dropped. -->
+  <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;">
+    <label for={`${formId}-website`}>Website</label>
+    <input type="text" id={`${formId}-website`} name="website" tabindex="-1" autocomplete="off" />
+  </div>
   <slot />
 </form>
 
@@ -181,6 +186,12 @@ const {
 
       // Require at least the email field — same as Formspree's email-required contract.
       if (!values.email) {
+        return;
+      }
+
+      // Honeypot: if the hidden "website" field is filled, it's a bot. Silently drop.
+      if (values.website) {
+        if (successPath) { window.location.href = successPath; }
         return;
       }
 
