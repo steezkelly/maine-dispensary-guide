@@ -74,6 +74,16 @@ const suggestions = [
     margin-bottom: 0;
     letter-spacing: -0.05em;
   }
+  /* The global drop-cap rule (globals.css `article > p:first-of-type::first-letter`)
+     would float the leading "4" of "404" and recolor it, splitting the numeral.
+     .error-code is a display element, not editorial prose — disable the drop cap. */
+  .error-code::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+    color: inherit;
+  }
 
   .error-label {
     display: inline-block;
