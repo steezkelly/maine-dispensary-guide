@@ -90,10 +90,29 @@ function extractTitle(text, fm) {
     const m2 = fm.match(/title:\s*['"]([^'"]+)['"]/);
     if (m2) return m2[1];
     const h1 = text.match(/<h1[^>]*>([^<]+)<\/h1>/);
-    if (h1) return h1[1].trim();
+    // The H1 is raw HTML, so decode entities (e.g. &amp; -> &). AutoRelated
+    // renders item.title as text and Astro escapes it again, so storing the
+    // already-escaped form would show a literal "&amp;" on related cards.
+    if (h1) return decodeHtmlEntities(h1[1].trim());
     const layout = text.match(/<Layout\b[^>]*\btitle\s*=\s*(['"])(.*?)\1/);
     if (layout) return layout[2];
     return path.basename(text, '.astro').replace(/-/g, ' ');
+}
+
+/**
+ * Decode the common named/numeric HTML entities that appear in extracted
+ * <h1> text. Keeps the stored title as literal text so downstream renderers
+ * (which escape again) don't double-encode.
+ */
+function decodeHtmlEntities(s) {
+    return s
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&apos;/g, "'")
+        .replace(/&nbsp;/g, ' ');
 }
 
 /**
