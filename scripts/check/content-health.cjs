@@ -928,7 +928,10 @@ function checkDuplicateHeroImages() {
 function checkMissingHeroReferences() {
   const results = [];
   if (!fs.existsSync(ROOT)) return results;
-  const heroRe = /heroImage=["']([^"']+)["']/g;
+  // Allow optional whitespace around `=` so `<Layout heroImage = "...">`
+  // (valid Astro attribute spacing) is not silently skipped.
+  const heroRe = /heroImage\s*=\s*["']([^"']+)["']/g;
+  const seen = new Set();
   for (const file of walk(ROOT)) {
     const text = fs.readFileSync(file, 'utf8');
     let m;
@@ -936,9 +939,17 @@ function checkMissingHeroReferences() {
       const ref = m[1];
       if (/^https?:\/\//i.test(ref)) continue; // external hero, not our asset
       if (!ref.startsWith('/images/')) continue; // non-asset or dynamic, skip
-      const onDisk = path.join(PUBLIC_DIR, ref.replace(/^\//, ''));
+      // Strip query/fragment suffixes so a cache-busted local hero such as
+      // `/images/heroes/foo.jpg?v=2` resolves to the real file `foo.jpg`.
+      const cleanRef = ref.split(/[?#]/)[0];
+      const onDisk = path.join(PUBLIC_DIR, cleanRef.replace(/^\//, ''));
       if (!fs.existsSync(onDisk)) {
         const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+        // A page can reference the same missing hero in both its frontmatter
+        // and its <Layout> attribute; report each (file, ref) pair once.
+        const key = `${rel}::${ref}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
         results.push(`${rel}: heroImage "${ref}" not found on disk`);
       }
     }

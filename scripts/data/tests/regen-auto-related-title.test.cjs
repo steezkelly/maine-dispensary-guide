@@ -22,3 +22,8 @@ for (const fixture of cases) {
         assert.equal(extractTitle(source, 'const unrelated = true;'), fixture.title);
     });
 }
+
+test('decodes HTML entities in h1 fallback', () => {
+    const source = `---\n---\n<h1>Is Cannabis Legal in Maine? Yes &amp; Here&#39;s Why</h1>\n`;
+    assert.equal(extractTitle(source, ''), "Is Cannabis Legal in Maine? Yes & Here's Why");
+});
