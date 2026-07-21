@@ -106,6 +106,13 @@ const hashInput = `${page.page_url}|${page.publish_date}`;
 const sha = createHash('sha256').update(hashInput).digest('hex');
 const shortHash = sha.slice(0, 6);
 
+// Whether this route instance is the bare form (/cite/<slug>) or the
+// DOI-style hash form (/cite/<slug>-<hash>). The bare form is a convenience
+// alias; the hash form is the permanent permalink, so the bare form carries
+// a cross-page canonical pointing at it and a differentiated description to
+// avoid duplicate-meta signals between the two URL forms.
+const isBareForm = Astro.params.rest === page.slug;
+
 // Year + month-short + day for BibTeX
 const [year, month, day] = page.publish_date.split('-');
 const monthShort = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'][parseInt(month, 10) - 1];
@@ -156,7 +163,12 @@ const bibtex = `@misc{${bibKey},
 
 <Layout
   title={`Cite: ${page.title} | Maine Dispensary Guide`}
-  description={`DOI-style permalink and full citation for "${page.title}" — Maine Dispensary Guide, ${page.publish_date}. CC BY 4.0.`}
+  description={
+    isBareForm
+      ? `Convenience alias for the DOI-style citation of "${page.title}" — Maine Dispensary Guide, ${page.publish_date}. Canonical permalink: ${citeUrl}. CC BY 4.0.`
+      : `DOI-style permalink and full citation for "${page.title}" — Maine Dispensary Guide, ${page.publish_date}. CC BY 4.0.`
+  }
+  canonicalOverride={isBareForm ? citeUrl : undefined}
   heroImage="/images/heroes/ocp-license-map.jpg"
   article={{
     author: page.authors[0].full,
