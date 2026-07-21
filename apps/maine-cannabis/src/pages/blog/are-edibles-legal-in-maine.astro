@@ -1,0 +1,172 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import authors from '../../data/authors.json';
+const complianceReviewer = authors.find(a => a.id === 'margaret-finch');
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-21",
+  modifiedDate: "2026-07-21",
+  section: "Policy & Legislation"
+};
+const topics = ["policy", "legislation", "edibles", "consumer-guide"];
+
+const faqItems = [
+  { question: "Are edibles legal in Maine?", answer: "Yes. Cannabis edibles are legal in Maine for adults 21 and older, sold only through state-licensed adult-use dispensaries and registered medical dispensaries. The Maine Office of Cannabis Policy (OCP) regulates edibles under Title 28-B of the Maine Revised Statutes. You must show a valid government-issued photo ID proving you are 21+ to buy them." },
+  { question: "Where can I legally buy edibles in Maine?", answer: "Only at a licensed Maine adult-use dispensary or a registered medical dispensary. Edibles sold at gas stations, convenience stores, smoke shops, or online are not part of the regulated program and are illegal in Maine. As of the OCP 2025 annual report, Maine has roughly 180 active adult-use retail stores across 78 retail-authorized municipalities." },
+  { question: "What is the THC limit on Maine edibles?", answer: "Maine caps a single serving at 10mg of THC and a single package at 200mg of THC, with a 10% allowable variance per Title 28-B §703(1)(F). A standard 10mg gummy can be split in half for a 5mg starting dose." },
+  { question: "Do I need a medical card to buy edibles in Maine?", answer: "No. Adults 21+ can buy adult-use edibles with just a valid photo ID, no medical card required. A Maine medical cannabis card (or a valid out-of-state card from a reciprocity state) lets you buy at medical dispensaries, which may carry higher-dose products than the 200mg adult-use package ceiling." },
+  { question: "Are hemp-derived THC gummies from a smoke shop legal in Maine?", answer: "No. Hemp-derived THC products sold outside the licensed dispensary system are not regulated by the OCP, are not METRC-tracked, and have been the subject of OCP and Department of Agriculture enforcement actions in 2024-2026. Their labeling is unreliable and they are illegal in Maine regardless of packaging claims." },
+  { question: "Can I make edibles at home to sell in Maine?", answer: "No. Commercial edibles must be produced in a licensed Products Manufacturing facility that meets OCP food-safety standards. Home kitchens do not qualify. Selling homemade edibles is illegal. For the full operator rules, see the Maine cannabis edibles compliance guide." },
+  { question: "Can I consume edibles in public in Maine?", answer: "No. Maine law prohibits public consumption of cannabis, including edibles. Consume only on private property with the owner's consent. Cannabis remains illegal on all federal land, including Acadia National Park." },
+  { question: "How much does a Maine edible cost?", answer: "A single 10mg gummy typically runs $3-6, and a 100mg multi-serving package runs $20-35 depending on the operator and format. Prices vary by brand, potency, and whether the product uses full-spectrum distillate or RSO versus bulk distillate." }
+];
+
+---
+
+<Layout
+  title="Are Edibles Legal in Maine? Yes — 2026 Law, THC Limits & Where to Buy"
+  description="Yes, cannabis edibles are legal in Maine for adults 21+ at licensed dispensaries. 2026 guide to the 10mg/serving THC limit, packaging rules, medical vs adult-use, and where to buy legally."
+  heroImage="/images/heroes/maine-cannabis-edibles-compliance.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Are Edibles Legal in Maine?</h1>
+    <p class="subtitle">Yes — for adults 21+ at licensed dispensaries. Here is exactly what Maine law allows in 2026.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
+      <p class="last-updated">Published July 21, 2026</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule"><strong>Yes. Cannabis edibles are legal in Maine</strong> for adults 21 and older, sold only through state-licensed adult-use dispensaries and registered medical dispensaries. The Maine Office of Cannabis Policy (OCP) regulates edibles under <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Title 28-B of the Maine Revised Statutes</a>. You need a valid government-issued photo ID proving you are 21+ — no medical card required for adult-use purchases.</p>
+
+  <section>
+    <h2>The Short Answer: Yes, With Rules</h2>
+    <p>Maine voters legalized adult-use cannabis in 2016, and edibles have been sold legally through the licensed dispensary system ever since. Today, gummies, chocolates, baked goods, beverages, and tinctures are all legal when produced by a licensed manufacturer and sold by a licensed dispensary.</p>
+    <p>The legality has two conditions that matter for buyers:</p>
+    <ul>
+      <li><strong>You must be 21 or older</strong> and show a valid government-issued photo ID at purchase.</li>
+      <li><strong>You must buy from a licensed dispensary.</strong> Edibles sold anywhere else — gas stations, smoke shops, online — are not part of the regulated program and are illegal in Maine.</li>
+    </ul>
+    <p>Edibles bought outside the licensed system, including unregulated hemp-derived THC gummies, have been the target of multiple OCP and Department of Agriculture, Conservation and Forestry enforcement actions in 2024-2026. Those products are not lab-tested to Maine's standards and their labeling is unreliable.</p>
+  </section>
+
+  <Callout title="Where Edibles Are Legal vs. Illegal in Maine" type="warning">
+    <strong>Legal:</strong> any licensed adult-use dispensary or registered medical dispensary, for adults 21+ with ID, consumed on private property.<br/>
+    <strong>Illegal:</strong> gas stations, convenience stores, smoke shops, online sellers, homemade sales, public consumption, and all federal land (including Acadia National Park).
+  </Callout>
+
+  <section>
+    <h2>Maine Edible THC Limits in 2026</h2>
+    <p>Maine sets clear potency ceilings on every edible product. These limits apply per serving and per package, and licensed products must fall within a 10% variance of the labeled amount.</p>
+    <table aria-label="Maine cannabis edible THC limits 2026">
+      <thead>
+        <tr><th>Rule</th><th>Limit</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Max THC per serving</td><td>10mg</td></tr>
+        <tr><td>Max THC per package (adult-use)</td><td>200mg</td></tr>
+        <tr><td>Allowable potency variance</td><td>±10%</td></tr>
+        <tr><td>Legal purchase age</td><td>21+</td></tr>
+        <tr><td>Child-resistant packaging</td><td>Required</td></tr>
+        <tr><td>Universal THC symbol</td><td>Required on packaging</td></tr>
+      </tbody>
+    </table>
+    <p>These limits come from <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Title 28-B §703(1)(F)</a>. A standard 10mg gummy can be split in half for a true 5mg starting dose, which is the recommended starting point for anyone new to edibles.</p>
+  </section>
+
+  <section class="stat-block">
+    <h3>Maine Edibles — 2026 Snapshot</h3>
+    <ul>
+      <li><strong>Legal since:</strong> adult-use legalization (2016 ballot; retail sales from 2020)</li>
+      <li><strong>Regulator:</strong> Maine Office of Cannabis Policy (OCP)</li>
+      <li><strong>Governing law:</strong> Title 28-B, Maine Revised Statutes</li>
+      <li><strong>Active adult-use retail stores:</strong> ~180 (OCP 2025 annual report)</li>
+      <li><strong>Retail-authorized municipalities:</strong> 78 of 485 (OCP opt-in data, refreshed 2026-07-17)</li>
+      <li><strong>Edible share of adult-use sales:</strong> ~15-20%</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Adult-Use vs. Medical Edibles</h2>
+    <p>You do not need a medical card to buy edibles in Maine, but having one changes what you can access:</p>
+    <ul>
+      <li><strong>Adult-use (21+, ID only):</strong> sold at licensed adult-use dispensaries, capped at 200mg THC per package, subject to the 14% retail cannabis sales tax effective January 1, 2026 (up from 10% under P.L. 2025, ch. 388).</li>
+      <li><strong>Medical (Maine MMMP card or reciprocity-state card):</strong> sold at registered medical dispensaries, may carry higher-dose products, and pays the lower 5.5% state sales tax. The medical program is governed by <a href="https://legislature.maine.gov/statutes/22/title22ch558-C.html" target="_blank" rel="noopener noreferrer">Title 22 ch. 558-C</a>.</li>
+    </ul>
+    <p>For most adults, the adult-use route is the simplest: walk into any licensed dispensary with your ID and you can buy edibles the same day.</p>
+  </section>
+
+  <section>
+    <h2>Where to Buy Edibles Legally in Maine</h2>
+    <p>Maine has roughly 180 active adult-use retail stores spread across 78 retail-authorized municipalities. Not every town allows retail cannabis — about 407 municipalities have no recorded retail authorization — so the nearest dispensary may be in a neighboring town. Use our <a href="/find-a-dispensary">dispensary finder</a> to locate a licensed store near you, or browse our city guides for dispensary-by-dispensary details.</p>
+    <p>When you buy, ask for the Certificate of Analysis (COA) on the specific batch. Licensed products are lab-tested; the COA confirms potency and that the product passed the applicable testing for its category.</p>
+  </section>
+
+  <section>
+    <h2>What Is Still Illegal</h2>
+    <p>Edibles are legal, but several things around them are not:</p>
+    <ul>
+      <li><strong>Public consumption</strong> of any cannabis product, including edibles, is prohibited.</li>
+      <li><strong>Federal land</strong> — cannabis remains a Schedule I substance federally, so edibles are illegal in national parks (including Acadia), national forests, and other federal property.</li>
+      <li><strong>Unlicensed sales</strong> — homemade edibles, gas-station gummies, and online hemp-THC products are not legal.</li>
+      <li><strong>Driving impaired</strong> — operating a vehicle under the influence of cannabis is a crime, and edibles' delayed onset makes timing especially risky.</li>
+    </ul>
+  </section>
+
+  <Callout title="First Time Buying Edibles in Maine?" type="tip">
+    Start at 2.5-5mg of THC and wait a full two hours before taking more. Edibles take 30-90 minutes to kick in, and the most common mistake is taking a second piece too early. For product recommendations and dose tiers, see our <a href="/blog/best-maine-edibles-2026">best Maine edibles buyer's guide</a>.
+  </Callout>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This article is for informational purposes only and does not constitute legal advice. Cannabis regulations change frequently. Verify current requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> before making any purchase or business decision.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-21</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, the Maine Legislature, and the primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/are-edibles-legal-in-maine" currentTopics={["policy", "legislation", "edibles", "consumer-guide"]} section="Policy & Legislation" limit={6} />
+</article>
+</Layout>

@@ -1,0 +1,143 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import authors from '../../data/authors.json';
+const marketReviewer = authors.find(a => a.id === 'margaret-finch');
+const article = {
+  author: "Eliot Nash",
+  authorId: "eliot-nash",
+  authorTitle: "Market & Real Estate Analyst",
+  publishDate: "2026-07-21",
+  modifiedDate: "2026-07-21",
+  section: "Market Data"
+};
+const topics = ["market-data", "policy", "business"];
+
+const faqItems = [
+  { question: "How many dispensaries are in Maine?", answer: "It depends on which count you mean. The OCP 2025 Annual Report counted 180 active adult-use retail stores as of December 31, 2025. The dated live OCP licensee roster records 106 deduplicated adult-use Store entries in 50 municipalities as of July 8, 2026. A separate June 1, 2026 canonical snapshot counted 187 distinct active Store-license identities. These are different definitions and dates, not contradictions — the annual report is a year-end total, the live roster is a point-in-time deduplicated count, and the license-identity snapshot counts distinct licenses rather than storefronts." },
+  { question: "Why do different sources give different Maine dispensary counts?", answer: "Because they measure different things on different dates. The OCP 2025 Annual Report's 180 is a December 31, 2025 year-end total of active retail-store establishments. The live OCP roster's 106 (as of July 8, 2026) is a deduplicated point-in-time count of active Store entries, which excludes conditional approvals still pending and reflects normal license turnover. The 187 figure counts distinct Store-license identities in a June 1, 2026 snapshot. Always check the date and definition behind any single number." },
+  { question: "How many Maine towns allow dispensaries?", answer: "As of OCP opt-in data refreshed July 17, 2026, 78 of Maine's 485 municipalities have recorded retail authorization. The remaining 407 have no recorded retail authorization. Note that a municipality can authorize retail without yet having an active store, so the authorized-town count (78) and the active-storefront count are different measures." },
+  { question: "How many medical cannabis dispensaries are in Maine?", answer: "Maine's medical program operates through registered dispensaries and a large caregiver network. The dated live OCP roster records 269 deduplicated caregiver storefronts in 116 municipalities as of July 8, 2026, in addition to registered medical dispensaries. Medical patients can also purchase from registered adult-use stores that serve the medical market." },
+  { question: "Is the number of Maine dispensaries growing or shrinking?", answer: "By dollars the market is flat-to-slightly-up; by active operator count it has tightened modestly. The active retail-store count moved from the 180 year-end 2025 annual-report peak to 106 deduplicated live-roster entries by July 8, 2026 — a gap that reflects normal license turnover (closures and conditional approvals still pending) rather than a market crash. Maine's 2026 adult-use market is on pace for roughly $244-248M, a plateau year." },
+  { question: "Where are most Maine dispensaries located?", answer: "Adult-use sales and storefronts are heavily concentrated in southern Maine. York and Cumberland counties together account for nearly 60% of all Maine adult-use retail sales, and they host the densest cluster of stores. The remaining sales spread across the other 14 counties, with Penobscot (Bangor), Androscoggin (Lewiston-Auburn), and Kennebec (Augusta-Waterville) rounding out the top five." },
+  { question: "How big is Maine's cannabis market overall?", answer: "Maine's adult-use market generated $246.4 million in retail sales across 4.84 million transactions in calendar year 2025, a 1.0% increase over 2024. Through the first half of 2026, sales totaled $119.95M, putting the state on pace for $244-248M for the full year. The market serves a state population of roughly 1.4 million plus significant cross-border demand from New Hampshire and Massachusetts." },
+  { question: "How do I find a dispensary near me in Maine?", answer: "Use our dispensary finder to locate licensed stores by town, or browse our city-by-city dispensary guides for detailed coverage of each market. Because only 78 of 485 municipalities authorize retail, your nearest dispensary may be in a neighboring town — the finder shows what is actually open near you." }
+];
+---
+
+<Layout
+  title="How Many Dispensaries Are in Maine? 2026 Count by the Numbers"
+  description="How many dispensaries are in Maine in 2026? 180 active adult-use stores (OCP 2025 Annual Report), 106 on the live roster, across 78 authorized towns. Full breakdown of the numbers and why they differ."
+  heroImage="/images/heroes/find-a-dispensary.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>How Many Dispensaries Are in Maine?</h1>
+    <p class="subtitle">The honest answer requires separating three different counts. Here is what each one means.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#eliot-nash"><strong>Eliot Nash</strong></a>, Market &amp; Real Estate Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
+      <p class="last-updated">Published July 21, 2026</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule"><strong>Maine has roughly 180 active adult-use retail dispensaries</strong> per the OCP 2025 Annual Report (as of December 31, 2025). A dated live OCP roster counts 106 deduplicated adult-use Store entries in 50 municipalities as of July 8, 2026, and a separate June 1, 2026 snapshot counted 187 distinct Store-license identities. These are not conflicting numbers — they measure different things on different dates. The single most useful figure for "how many towns can I buy in" is 78: the number of Maine municipalities that have authorized retail cannabis.</p>
+
+  <section>
+    <h2>Why There Is No Single Number</h2>
+    <p>Anyone who searches "how many dispensaries in Maine" runs into a confusing spread of figures: 180, 187, 106, 78. Each is correct — for a specific definition and date. Conflating them produces nonsense, so here is what each one actually counts.</p>
+    <table aria-label="Maine dispensary counts by definition and date">
+      <thead>
+        <tr><th>Figure</th><th>What It Counts</th><th>As Of</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>180</strong></td><td>Active adult-use retail-store establishments (year-end total)</td><td>Dec 31, 2025</td><td>OCP 2025 Annual Report</td></tr>
+        <tr><td><strong>187</strong></td><td>Distinct active Store-license identities</td><td>Jun 1, 2026</td><td>Canonical license snapshot</td></tr>
+        <tr><td><strong>106</strong></td><td>Deduplicated active Store entries (point-in-time roster)</td><td>Jul 8, 2026</td><td>Live OCP licensee roster</td></tr>
+        <tr><td><strong>78</strong></td><td>Municipalities with recorded retail authorization</td><td>Jul 17, 2026</td><td>OCP opt-in data</td></tr>
+      </tbody>
+    </table>
+    <p>The gap between 180 and 106 is not a market collapse. The annual report is a year-end total of active establishments; the live roster is a deduplicated point-in-time count that excludes conditional approvals still pending and reflects normal license turnover — closures, ownership changes, and stores mid-approval. The 187 figure counts distinct licenses rather than storefronts, so a single operator with multiple licenses can appear more than once.</p>
+  </section>
+
+  <Callout title="The Number That Matters Most for Buyers" type="info">
+    If your real question is "can I buy cannabis near where I live?", the figure that matters is <strong>78</strong> — the number of Maine municipalities that have authorized retail cannabis out of 485 total. A town can authorize retail without yet having an open store, so the authorized-town count and the active-storefront count are different measures. Use our <a href="/find-a-dispensary">dispensary finder</a> to see what is actually open near you.
+  </Callout>
+
+  <section class="stat-block">
+    <h3>Maine Dispensary Landscape — 2026 Snapshot</h3>
+    <ul>
+      <li><strong>Active adult-use retail stores:</strong> 180 (OCP 2025 Annual Report, Dec 31, 2025)</li>
+      <li><strong>Live roster Store entries:</strong> 106 in 50 municipalities (Jul 8, 2026)</li>
+      <li><strong>Distinct Store-license identities:</strong> 187 (Jun 1, 2026 snapshot)</li>
+      <li><strong>Retail-authorized municipalities:</strong> 78 of 485 (Jul 17, 2026)</li>
+      <li><strong>Caregiver storefronts (medical):</strong> 269 in 116 municipalities (Jul 8, 2026)</li>
+      <li><strong>2025 adult-use market:</strong> $246.4M across 4.84M transactions</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Where the Dispensaries Actually Are</h2>
+    <p>Maine's dispensaries — and its sales — are heavily concentrated in the south. York and Cumberland counties together account for nearly 60% of all Maine adult-use retail sales, and they host the densest cluster of stores. Those two counties alone held 95 of the state's distinct active Store-license identities in the June 1, 2026 snapshot.</p>
+    <p>The remaining sales spread across the other 14 counties. The next-largest markets are Penobscot County (the Bangor metro, ~9% of state sales), Androscoggin County (Lewiston-Auburn, ~7%), and Kennebec County (Augusta-Waterville, ~5%). This concentration reflects both population density and cross-border demand from New Hampshire and Massachusetts residents who drive into Maine for legal adult-use purchases.</p>
+  </section>
+
+  <section>
+    <h2>Medical Dispensaries and Caregivers</h2>
+    <p>Maine's medical cannabis program — one of the oldest in the country, operating since 1999 — runs through registered medical dispensaries and a large caregiver network. The dated live OCP roster records 269 deduplicated caregiver storefronts across 116 municipalities as of July 8, 2026, in addition to registered medical dispensaries. Roughly 100,000-110,000 Maine residents hold active medical cards. For the patient route, see our <a href="/blog/maine-medical-marijuana-patient-guide">Maine medical marijuana patient guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Is the Count Growing or Shrinking?</h2>
+    <p>Both, depending on the metric. By dollars, Maine's market is flat-to-slightly-up: $246.4M in 2025 (a 1.0% increase over 2024), and on pace for $244-248M in 2026 — a plateau year. By active operator count, the roster has tightened modestly from the 180 year-end 2025 peak to 106 live-roster entries by mid-2026, which reflects normal license turnover rather than a crash.</p>
+    <p>The 2026 outlook factors in a January 1, 2026 tax restructure that raised the adult-use retail sales tax from 10% to 14% (lifting shelf prices unless operators absorb it), and the P.L. 2025, ch. 764 testing reform effective April 19, 2026 that reduced manufacturing friction for edibles. For the full market picture, see our <a href="/market-stats">Maine cannabis market statistics</a> page.</p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This article is for informational purposes only. Dispensary counts change as licenses are issued, renewed, and closed. The figures here reflect specific source dates noted above; verify current status with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> licensee search before relying on a specific count.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-21</strong> by <strong>Eliot Nash + Margaret Finch</strong> against the OCP annual report, the live OCP licensee roster, and the primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/how-many-dispensaries-in-maine" currentTopics={["market-data", "policy", "business"]} section="Market Data" limit={6} />
+</article>
+</Layout>
