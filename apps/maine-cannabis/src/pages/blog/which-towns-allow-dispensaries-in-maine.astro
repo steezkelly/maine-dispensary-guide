@@ -1,0 +1,196 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import authors from '../../data/authors.json';
+import municipalData from '../../data/maine-municipal-authorization.json';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-21",
+  modifiedDate: "2026-07-21",
+  section: "Policy & Legislation"
+};
+const topics = ["policy", "legislation", "municipal", "operator-guide"];
+
+// Compute stats from our proprietary dataset
+const municipalities = municipalData.municipalities;
+const totalMunicipalities = municipalities.length;
+const authorized = municipalities.filter(m => m.status === 'retail_authorized');
+const optedOut = municipalities.filter(m => m.retail === 'N');
+const unknown = municipalities.filter(m => m.retail === 'unknown');
+const authorizedCount = authorized.length;
+const optedOutCount = optedOut.length;
+const unknownCount = unknown.length;
+const authorizedPct = Math.round((authorizedCount / totalMunicipalities) * 100);
+
+// Group authorized towns by county
+const byCounty: Record<string, string[]> = {};
+for (const m of authorized) {
+  if (!byCounty[m.county]) byCounty[m.county] = [];
+  byCounty[m.county].push(m.name);
+}
+const countyEntries = Object.entries(byCounty).sort((a, b) => b[1].length - a[1].length);
+
+// Top 10 counties for the table
+const topCounties = countyEntries.slice(0, 10);
+
+const faqItems = [
+  { question: "How many towns in Maine allow dispensaries?", answer: `As of the OCP opt-in data refreshed ${municipalData.meta.ocp_model_refreshed_at.split('T')[0]}, ${authorizedCount} of Maine's ${totalMunicipalities} municipalities (${authorizedPct}%) have authorized adult-use retail cannabis sales. Another ${optedOutCount} have explicitly opted out, and ${unknownCount} have no recorded authorization decision.` },
+  { question: "Does my town allow a dispensary?", answer: "Check our Municipal Authorization Tracker, which lists every Maine municipality's retail authorization status. If your town shows 'no recorded retail authorization,' it has not affirmatively opted in — you cannot open a dispensary there until the town votes to allow it." },
+  { question: "Can a town ban dispensaries after allowing them?", answer: "Yes. Maine municipalities can reverse their opt-in decision through a local vote or ordinance change. However, existing licensed operators are typically grandfathered or given a transition period. Always confirm current authorization status before signing a lease." },
+  { question: "What does 'no recorded authorization' mean?", answer: "It means the OCP has no record of the municipality affirmatively voting to allow retail cannabis sales. This is NOT the same as an explicit ban — the town simply hasn't taken action. Many of these towns may allow dispensaries if an applicant petitions the local government." },
+  { question: "Which county has the most dispensary-friendly towns?", answer: `York County leads with ${byCounty['York']?.length || 0} authorized municipalities, followed by Kennebec (${byCounty['Kennebec']?.length || 0}), Penobscot (${byCounty['Penobscot']?.length || 0}), and Oxford (${byCounty['Oxford']?.length || 0}). Southern and central Maine counties are generally more permissive than rural northern counties.` },
+  { question: "Do I need both town approval AND a state license?", answer: "Yes. Maine requires dual authorization: (1) written municipal authorization from your host town, AND (2) a state OCP adult-use dispensary license. Operating without both is a criminal offense. The municipal letter must be submitted with your OCP application." },
+  { question: "How do I get my town to opt in?", answer: "Petition your local planning board or town council. Most towns require a formal application, public hearing, and vote. Some towns have pre-written cannabis ordinances; others evaluate case-by-case. Budget 4-12 weeks for the municipal approval process, and consider hiring a local land-use attorney." },
+  { question: "Are there towns with moratoriums on dispensaries?", answer: "Some Maine towns have enacted temporary moratoriums while they develop cannabis regulations. A moratorium is not a permanent ban — it pauses new applications until the town adopts rules. Check with your town clerk for current moratorium status." }
+];
+---
+
+<Layout
+  title="Which Towns Allow Dispensaries in Maine? 78 of 485 (2026 Data)"
+  description="78 of Maine's 485 municipalities have authorized retail cannabis sales. Full county-by-county breakdown from OCP opt-in data, plus how to check your town and get municipal approval."
+  heroImage="/images/heroes/ocp-license-map.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  h3 { font-size: 1.2rem; color: var(--color-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+  .county-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .county-card { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem; }
+  .county-card h4 { margin: 0 0 0.5rem; color: var(--color-primary); font-size: 1rem; }
+  .county-card ul { margin: 0; padding-left: 1.25rem; font-size: 0.9rem; }
+  .county-card li { margin-bottom: 0.25rem; line-height: 1.4; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Which Towns Allow Dispensaries in Maine? {authorizedCount} of {totalMunicipalities} ({authorizedPct}%)</h1>
+    <p class="subtitle">The complete county-by-county breakdown of Maine's cannabis opt-in system — from OCP open data, refreshed {municipalData.meta.ocp_model_refreshed_at.split('T')[0]}</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing & Compliance Analyst. <strong>Data reviewed by the Maine Cannabis editorial team.</strong></p>
+      <p>Published {article.publishDate} · Updated {article.modifiedDate}</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule">
+    <strong>{authorizedCount} of Maine's {totalMunicipalities} municipalities ({authorizedPct}%) have authorized adult-use retail cannabis sales</strong> as of the OCP opt-in data refreshed {municipalData.meta.ocp_model_refreshed_at.split('T')[0]}. Another {optedOutCount} have explicitly opted out, and {unknownCount} have no recorded authorization decision. Maine is an opt-in state — a dispensary can only open in a town that has affirmatively voted to allow it.
+  </p>
+
+  <section>
+    <h2>The Numbers at a Glance</h2>
+    <div class="stat-block">
+      <h3>Maine Municipal Cannabis Authorization ({municipalData.meta.ocp_model_refreshed_at.split('T')[0]})</h3>
+      <ul>
+        <li><strong>Total municipalities tracked:</strong> {totalMunicipalities} (23 cities, 431 towns, 31 plantations)</li>
+        <li><strong>Retail authorized:</strong> {authorizedCount} ({authorizedPct}%)</li>
+        <li><strong>Explicitly opted out:</strong> {optedOutCount} ({Math.round((optedOutCount / totalMunicipalities) * 100)}%)</li>
+        <li><strong>No recorded decision:</strong> {unknownCount} ({Math.round((unknownCount / totalMunicipalities) * 100)}%)</li>
+        <li><strong>Active adult-use stores:</strong> ~180 (OCP 2025 Annual Report)</li>
+        <li><strong>Data source:</strong> <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities" target="_blank" rel="noopener noreferrer">OCP Opt-In Communities Open Data</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>How Maine's Opt-In System Works</h2>
+    <p>Maine's adult-use cannabis framework (Title 28-B, Chapter 1) gives municipalities the power to decide whether cannabis businesses can operate within their borders. This is an <strong>opt-in system</strong>: a town must affirmatively vote to allow retail cannabis sales before any dispensary can open there.</p>
+    <p>The practical implication: <strong>you cannot open a dispensary in a town that hasn't opted in</strong>, regardless of whether you hold a state license. The OCP will not process your application without written municipal authorization.</p>
+    <Callout title="No Recorded Authorization ≠ Banned" type="info">
+      {unknownCount} municipalities ({Math.round((unknownCount / totalMunicipalities) * 100)}% of Maine) show "no recorded retail authorization." This does NOT mean they've banned cannabis — it means they haven't taken a formal vote. Many of these towns will approve a dispensary if an applicant petitions the local planning board or town council.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Top Counties by Authorized Municipalities</h2>
+    <p>Southern and central Maine counties are the most dispensary-friendly. Here are the top 10:</p>
+    <table aria-label="Top Maine counties by number of retail-authorized municipalities">
+      <thead>
+        <tr><th>County</th><th>Authorized Towns</th><th>Notable Municipalities</th></tr>
+      </thead>
+      <tbody>
+        {topCounties.map(([county, towns]) => (
+          <tr>
+            <td><strong>{county}</strong></td>
+            <td>{towns.length}</td>
+            <td>{towns.slice(0, 4).join(', ')}{towns.length > 4 ? ` +${towns.length - 4} more` : ''}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>All {authorizedCount} Retail-Authorized Municipalities by County</h2>
+    <p>The complete list, grouped by county. Use our <a href="/guides/maine-cannabis-opt-in-tracker">interactive Municipal Authorization Tracker</a> to search for a specific town.</p>
+    <div class="county-grid">
+      {countyEntries.map(([county, towns]) => (
+        <div class="county-card">
+          <h4>{county} County ({towns.length})</h4>
+          <ul>
+            {towns.sort().map(town => <li>{town}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2>How to Check If Your Town Allows Dispensaries</h2>
+    <ol>
+      <li><strong>Search our tracker:</strong> The <a href="/guides/maine-cannabis-opt-in-tracker">Municipal Authorization Tracker</a> lists all {totalMunicipalities} municipalities with their current retail authorization status.</li>
+      <li><strong>Verify with the town clerk:</strong> OCP data can lag behind local votes. Call or email your town clerk to confirm current status.</li>
+      <li><strong>Check for pending votes:</strong> Some towns have cannabis ordinances on upcoming town meeting agendas. A "no recorded authorization" town may vote within weeks.</li>
+      <li><strong>Confirm zoning:</strong> Even in an authorized town, your specific address must meet zoning requirements (commercial zone, 500-foot buffer from schools, etc.).</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>How to Get Your Town to Opt In</h2>
+    <p>If your town hasn't authorized retail cannabis, you can petition for a vote:</p>
+    <ol>
+      <li><strong>Research local process:</strong> Some towns require a citizen petition; others let the planning board initiate. Ask your town clerk.</li>
+      <li><strong>Prepare a proposal:</strong> Include your business plan, security plan, community impact statement, and proposed location.</li>
+      <li><strong>Attend a public hearing:</strong> Most towns require at least one public hearing before voting.</li>
+      <li><strong>Budget 4-12 weeks:</strong> Municipal approval timelines range from one month to six months depending on the town's process and hearing schedule.</li>
+      <li><strong>Consider legal counsel:</strong> A Maine land-use attorney experienced in cannabis can navigate local ordinances and represent you at hearings.</li>
+    </ol>
+    <p>For the full step-by-step process, see our <a href="/guides/maine-cannabis-municipal-opt-in-guide">Municipal Opt-In Guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This data is sourced from the Maine Office of Cannabis Policy's open-data opt-in communities list, refreshed {municipalData.meta.ocp_model_refreshed_at.split('T')[0]}. Municipal authorization status can change between data refreshes. Always verify current status with your town clerk and the OCP before making business decisions. This is not legal advice.</em></p>
+  </section>
+
+  <AutoRelated currentPath="/blog/which-towns-allow-dispensaries-in-maine" currentTopics={topics} section="Policy & Legislation" limit={6} />
+</article>
+</Layout>
