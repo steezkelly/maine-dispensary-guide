@@ -106,7 +106,12 @@ const { withData = true } = Astro.props as { withData?: boolean };
 <style>
   .search-container {
     position: relative;
-    width: 280px;
+    /* Fluid: fill the width the nav flex allocates (min-width 120px,
+       max-width 280px are set on the .nav-search-desktop wrapper in
+       components.css). A hardcoded 280px here overflowed the wrapper
+       (~129px at 1440px) and the input bled ~114px over the nav links. */
+    width: 100%;
+    max-width: 280px;
   }
 
   .search-input-wrapper {
