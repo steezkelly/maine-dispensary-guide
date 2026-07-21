@@ -261,16 +261,15 @@ const siteName = siteConfig.siteName;
 
   #site-nav { min-width: 0; }
   .logo {
-    min-width: 0;
-    flex: 1 1 auto;
+    /* Brand never truncates — it is the identity. Let the search (a
+       utility with its own min-width) absorb header compression instead. */
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     min-block-size: var(--control-min-size, 44px);
     padding-inline: 0.5rem;
   }
   .logo > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
   .nav-actions { flex: 0 0 auto; }
