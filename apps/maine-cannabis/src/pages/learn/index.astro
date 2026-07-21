@@ -87,6 +87,13 @@ const faqPageJsonLd = JSON.stringify({
   ul, ol { padding-left: 1.5rem; }
   li { margin-bottom: 0.75rem; line-height: 1.5; }
   p { line-height: 1.7; }
+  /* Body paragraphs need breathing room. The global reset (* { margin: 0 })
+     zeroes them, and unlike the blog/guide pages this page never restored it,
+     so consecutive paragraphs merged into a wall of text. Scoped to direct
+     section children so .topic-card p and .answer-capsule p keep their own
+     spacing. */
+  section > p { margin-bottom: 1.25rem; }
+  section > p:last-child { margin-bottom: 0; }
   .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
   .answer-capsule strong { color: var(--color-text); }
   .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2.5rem 0; }
