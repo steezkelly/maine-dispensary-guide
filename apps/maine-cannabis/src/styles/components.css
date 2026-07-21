@@ -269,6 +269,12 @@
 .nav-toggle-label span::before { content: ''; top: -8px; }
 .nav-toggle-label span::after { content: ''; top: 8px; }
 
+/* The close button only belongs to the mobile drawer. Without a base
+   display:none it rendered on desktop with default <button> chrome — a
+   stray 4px×44px bright bar inside the nav row. The mobile media query
+   re-enables it (display:block) when the drawer is open. */
+.mobile-close-btn { display: none; }
+
 @media (max-width: 768px) {
   .nav-toggle-label { display: block; }
   .nav-search-desktop { display: none; }
