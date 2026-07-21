@@ -4,8 +4,21 @@
  * apps/maine-cannabis/scripts/seo/stale-guide-report.cjs
  *
  * Read-only report that ranks MDG guide + blog pages by recency gap × GSC
- * impression volume. Emits a list of pages where `days_since_modified > 90`
- * AND `impressions_28d > 50`, sorted by impressions descending.
+ * impression volume. Uses a TWO-TIER freshness model:
+ *
+ *   - Time-sensitive pages (slug matches TIME_SENSITIVE_SLUG_PATTERNS, e.g.
+ *     *-2026, *psilocybin*, *conditional-license*, *edibles-compliance*,
+ *     *staffing-licensing*, *ld-1840*, *regulations*, *opt-in-tracker*,
+ *     *license-denied*, *schedule-iii*, *280e*, *extraction-licensing*,
+ *     *school-buffer*, *zoning-requirements*, *caregiver-trade-show*) use
+ *     a 30-day threshold by default.
+ *   - Evergreen pages use a 90-day threshold by default.
+ *
+ * Rationale: the original 90-day flat threshold came from WhiteSpark 2026
+ * review-velocity data, which is about GBP *reviews*, not content recency.
+ * Time-sensitive MDG pages (taxes, events, ld-1840, psilocybin) drift
+ * visibly in 30-45 days and Google's query-dependent freshness score
+ * penalises them sooner. Evergreen city guides tolerate 90+ days.
  *
  * Source for impressions: a GSC CSV exported via the OpenSEO MCP (see the
  * sibling runbook for the exact procedure). Source for modifiedDate: the
@@ -19,6 +32,8 @@
  *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --json
  *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --md
  *   node stale-guide-report.cjs --gsc-csv ./gsc-last-28d.csv --limit 10 --md
+ *   node stale-guide-report.cjs --threshold-mode time-sensitive --limit 20 --md
+ *   node stale-guide-report.cjs --evergreen-days 120 --time-sensitive-days 45
  *
  * Exit codes:
  *   0 success
@@ -48,10 +63,51 @@ const SITE_HOSTS = [
   'http://mainedispensaryguide.com',
 ];
 
+// Two-tier threshold model (replaces the flat 90-day card-mandated threshold).
+// Rationale lives in the runbook and the 2026-07-21 stale-guide baseline audit:
+//   - "Time-sensitive" pages (year in slug, regulatory keywords, events) are
+//     the AI-Overview / ChatGPT citation targets. They drift visibly in 30-45
+//     days, and Google's query-dependent freshness score penalises them
+//     sooner than evergreen guides.
+//   - "Evergreen" pages (city guides, caregiver how-to, retail-flow guides)
+//     tolerate 90+ days. WhiteSpark 2026 review-velocity data — which the
+//     90-day threshold originally came from — applies to *reviews*, not
+//     *content*, so the evergreen bar is set deliberately longer.
+//
+// Override at the command line with --evergreen-days / --time-sensitive-days.
+const EVERGREEN_DAYS_DEFAULT = 90;
+const TIME_SENSITIVE_DAYS_DEFAULT = 30;
+
+// Substring match on the slug (lowercased) for the "time-sensitive" tier.
+// Keep this list short and high-signal; an over-broad list will mark
+// every guide as time-sensitive and erode the tier's signal.
+const TIME_SENSITIVE_SLUG_PATTERNS = [
+  /2026/,                              // year in title: "events-2026", "taxes-2026", etc.
+  /psilocybin/,
+  /conditional-license/,
+  /staffing-licensing/,
+  /edibles-compliance/,
+  /ld-1840/,                           // explicit bill number
+  /regulations/,
+  /opt-in-tracker/,
+  /license-denied/,
+  /schedule-iii/,
+  /280e/,
+  /extraction-licensing/,
+  /school-buffer/,
+  /zoning-requirements/,
+  /caregiver-trade-show/,
+];
+
 // ---- argv ------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const out = { help: false, json: false, md: false, limit: null, gscCsv: './gsc-last-28d.csv' };
+  const out = {
+    help: false, json: false, md: false, limit: null, gscCsv: './gsc-last-28d.csv',
+    thresholdMode: 'both',
+    evergreenDays: EVERGREEN_DAYS_DEFAULT,
+    timeSensitiveDays: TIME_SENSITIVE_DAYS_DEFAULT,
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--help' || a === '-h') out.help = true;
@@ -70,6 +126,22 @@ function parseArgs(argv) {
       const v = argv[++i];
       if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new Error(`--today must be YYYY-MM-DD, got "${v}"`);
       out.today = v;
+    } else if (a === '--threshold-mode') {
+      const v = argv[++i];
+      if (!['evergreen', 'time-sensitive', 'both'].includes(v)) {
+        throw new Error(`--threshold-mode must be one of evergreen|time-sensitive|both, got "${v}"`);
+      }
+      out.thresholdMode = v;
+    } else if (a === '--evergreen-days') {
+      const v = argv[++i];
+      const n = Number(v);
+      if (!Number.isInteger(n) || n < 1) throw new Error(`--evergreen-days must be a positive integer, got "${v}"`);
+      out.evergreenDays = n;
+    } else if (a === '--time-sensitive-days') {
+      const v = argv[++i];
+      const n = Number(v);
+      if (!Number.isInteger(n) || n < 1) throw new Error(`--time-sensitive-days must be a positive integer, got "${v}"`);
+      out.timeSensitiveDays = n;
     } else {
       throw new Error(`unknown argument: ${a}`);
     }
@@ -82,23 +154,53 @@ function printHelp() {
 
 USAGE
   node stale-guide-report.cjs [--gsc-csv <path>] [--json|--md] [--limit N] [--help]
+                              [--threshold-mode <mode>] [--evergreen-days N]
+                              [--time-sensitive-days N]
 
 OPTIONS
-  --gsc-csv <path>   Path to the GSC CSV export (default: ./gsc-last-28d.csv)
-  --json             Emit a JSON object (default if neither --json nor --md is set)
-  --md               Emit a markdown table
-  --limit N          Keep only the top N rows after filter+sort
-  --help             Print this help and exit 0
+  --gsc-csv <path>          Path to the GSC CSV export (default: ./gsc-last-28d.csv)
+  --json                    Emit a JSON object (default if neither --json nor --md is set)
+  --md                      Emit a markdown table
+  --limit N                 Keep only the top N rows after filter+sort
+  --threshold-mode <mode>   One of evergreen|time-sensitive|both (default: both)
+  --evergreen-days N        Override the evergreen threshold (default: ${EVERGREEN_DAYS_DEFAULT})
+  --time-sensitive-days N   Override the time-sensitive threshold (default: ${TIME_SENSITIVE_DAYS_DEFAULT})
+  --help                    Print this help and exit 0
 
 FILTER
-  Keep pages where impressions_28d > 50 AND days_since_modified > 90.
-  Sort by impressions_28d descending.
+  Default: two-tier, no overlap.
+    Time-sensitive pages  (slug matches TIME_SENSITIVE_SLUG_PATTERNS, e.g. *-2026, *psilocybin*,
+                            *conditional-license*, *edibles-compliance*, *staffing-licensing*,
+                            *ld-1840*, *regulations*, *opt-in-tracker*, *license-denied*,
+                            *schedule-iii*, *280e*, *extraction-licensing*, *school-buffer*,
+                            *zoning-requirements*, *caregiver-trade-show*):
+      kept if impressions_28d > 50 AND days_since_modified > ${TIME_SENSITIVE_DAYS_DEFAULT}
+    Evergreen pages  (everything else):
+      kept if impressions_28d > 50 AND days_since_modified > ${EVERGREEN_DAYS_DEFAULT}
+
+  --threshold-mode evergreen filters to evergreen pages only;
+  --threshold-mode time-sensitive filters to time-sensitive pages only.
+
+  Sort by impressions_28d descending within each tier.
 
 EXIT CODES
   0  success
   1  file/parse error
   2  usage error
 `);
+}
+
+// Classify a slug as "time-sensitive" or "evergreen" using the substring
+// patterns above. Returns the tier name. Pattern list is intentionally
+// short — false negatives (an actually-time-sensitive page misclassified as
+// evergreen) are recoverable on the next operator review; false positives
+// (an evergreen page marked time-sensitive) erode the tier's signal.
+function classifyTier(slug) {
+  const lower = slug.toLowerCase();
+  for (const re of TIME_SENSITIVE_SLUG_PATTERNS) {
+    if (re.test(lower)) return 'time-sensitive';
+  }
+  return 'evergreen';
 }
 
 // ---- helpers ---------------------------------------------------------------
@@ -241,6 +343,7 @@ function main() {
   let skippedNoGsc = 0;
   let skippedLowImp = 0;
   let skippedFresh = 0;
+  let skippedTier = 0;
   for (const f of files) {
     const meta = readArticle(f.full);
     if (!meta.modifiedDate) {
@@ -248,8 +351,18 @@ function main() {
       continue;
     }
     const daysOld = daysBetween(meta.modifiedDate, today);
-    if (daysOld === null || daysOld <= 90) {
-      if (daysOld !== null) skippedFresh += 1;
+    if (daysOld === null) {
+      skippedNoDate += 1;
+      continue;
+    }
+    const tier = classifyTier(f.slug);
+    if (args.thresholdMode !== 'both' && tier !== args.thresholdMode) {
+      skippedTier += 1;
+      continue;
+    }
+    const threshold = tier === 'time-sensitive' ? args.timeSensitiveDays : args.evergreenDays;
+    if (daysOld <= threshold) {
+      skippedFresh += 1;
       continue;
     }
     const g = gsc.get(f.slug);
@@ -264,9 +377,11 @@ function main() {
     rows.push({
       slug: f.slug,
       kind: f.kind,
+      tier,
       title: meta.title,
       modifiedDate: meta.modifiedDate,
       days_old: daysOld,
+      threshold_days: threshold,
       url: g.page,
       clicks_28d: g.clicks,
       impressions_28d: g.impressions,
@@ -280,7 +395,9 @@ function main() {
 
   const filter = {
     impressions_28d_min: 50,
-    days_since_modified_min: 91,
+    threshold_mode: args.thresholdMode,
+    evergreen_days: args.evergreenDays,
+    time_sensitive_days: args.timeSensitiveDays,
     today,
     sources: SOURCES.map((s) => s.dir),
     gsc_csv: path.relative(process.cwd(), csvPath),
@@ -293,7 +410,8 @@ function main() {
       skippedNoGsc,
       skippedLowImp,
       skippedFresh,
-    });
+      skippedTier,
+    }, rows);
     return;
   }
 
@@ -304,7 +422,12 @@ function main() {
       total_pages_scanned: files.length,
       kept: rows.length,
       limited_to: args.limit || null,
+      kept_by_tier: rows.reduce((acc, r) => {
+        acc[r.tier] = (acc[r.tier] || 0) + 1;
+        return acc;
+      }, {}),
       skipped_missing_modifiedDate: skippedNoDate,
+      skipped_tier_filter: skippedTier,
       skipped_missing_gsc_row: skippedNoGsc,
       skipped_low_impressions: skippedLowImp,
       skipped_fresh: skippedFresh,
@@ -314,24 +437,59 @@ function main() {
   process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
 }
 
-function printMarkdown(pages, filter, counts) {
+function printMarkdown(pages, filter, counts, allRows) {
   const lines = [];
   lines.push('# Stale-guide report');
   lines.push('');
   lines.push(`Generated: ${new Date().toISOString()}`);
-  lines.push(`Filter: impressions_28d > ${filter.impressions_28d_min} AND days_since_modified > ${filter.days_since_modified_min} (today = ${filter.today})`);
+  lines.push(
+    `Filter: impressions_28d > ${filter.impressions_28d_min}, `
+    + `threshold_mode=${filter.threshold_mode}, `
+    + `evergreen_days=${filter.evergreen_days}, `
+    + `time_sensitive_days=${filter.time_sensitive_days}, `
+    + `today=${filter.today}`
+  );
   lines.push(`GSC CSV: \`${filter.gsc_csv}\``);
   lines.push(`Sources: ${filter.sources.map((s) => '`' + s + '`').join(', ')}`);
   lines.push('');
-  lines.push(`Pages scanned: ${counts.total}. Kept: ${pages.length}. Skipped: ${counts.skippedMissingModifiedDate || counts.skippedNoDate} missing modifiedDate, ${counts.skippedNoGsc} no GSC row, ${counts.skippedLowImp} low impressions, ${counts.skippedFresh} fresh.`);
+  lines.push(
+    `Pages scanned: ${counts.total}. `
+    + `Kept: ${(allRows || pages).length} `
+    + (allRows ? `(time-sensitive=${(allRows || pages).filter((p) => p.tier === 'time-sensitive').length}, `
+      + `evergreen=${(allRows || pages).filter((p) => p.tier === 'evergreen').length}). `
+      + `Limited to: ${pages.length}. ` : '')
+    + `Skipped: ${counts.skippedNoDate} missing modifiedDate, ${counts.skippedTier} tier-filtered, `
+    + `${counts.skippedNoGsc} no GSC row, ${counts.skippedLowImp} low impressions, `
+    + `${counts.skippedFresh} fresh.`
+  );
   lines.push('');
-  lines.push('| Page | Modified | Days old | Impressions (28d) | Position | CTR |');
-  lines.push('|---|---|---:|---:|---:|---:|');
-  for (const p of pages) {
-    const title = p.title ? p.title.replace(/\|/g, '\\|') : p.slug;
-    lines.push(`| [${p.slug}](${p.url}) — ${title} | ${p.modifiedDate} | ${p.days_old} | ${p.impressions_28d} | ${p.position.toFixed(1)} | ${(p.ctr * 100).toFixed(2)}% |`);
+  if ((allRows || pages).length === 0) {
+    lines.push('No pages match the current filter.');
+    lines.push('');
+    process.stdout.write(`${lines.join('\n')}\n`);
+    return;
   }
-  lines.push('');
+  // Group by tier for readability when --threshold-mode is "both".
+  const groups = new Map();
+  for (const p of pages) {
+    if (!groups.has(p.tier)) groups.set(p.tier, []);
+    groups.get(p.tier).push(p);
+  }
+  const tierOrder = ['time-sensitive', 'evergreen'];
+  for (const tier of tierOrder) {
+    const rows = groups.get(tier);
+    if (!rows || rows.length === 0) continue;
+    const threshold = tier === 'time-sensitive' ? filter.time_sensitive_days : filter.evergreen_days;
+    lines.push(`## ${tier} (threshold: > ${threshold} days, ${rows.length} page${rows.length === 1 ? '' : 's'})`);
+    lines.push('');
+    lines.push('| Page | Modified | Days old | Impressions (28d) | Position | CTR |');
+    lines.push('|---|---|---:|---:|---:|---:|');
+    for (const p of rows) {
+      const title = p.title ? p.title.replace(/\|/g, '\\|') : p.slug;
+      lines.push(`| [${p.slug}](${p.url}) — ${title} | ${p.modifiedDate} | ${p.days_old} | ${p.impressions_28d} | ${p.position.toFixed(1)} | ${(p.ctr * 100).toFixed(2)}% |`);
+    }
+    lines.push('');
+  }
   process.stdout.write(`${lines.join('\n')}\n`);
 }
 
@@ -345,4 +503,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, loadGsc, walkPages, readArticle, daysBetween, pathToSlug };
+module.exports = { parseArgs, loadGsc, walkPages, readArticle, daysBetween, pathToSlug, classifyTier };
