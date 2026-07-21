@@ -329,3 +329,34 @@ to the scope already authorized by this audit's `allowed_paths`.
   #2 (tiered primary-source mix).
 - Re-pull the 28-day GSC window at the same dimensions after 14-21 days
   to validate the E-E-A-T hypothesis per the Reddit playbook.
+
+---
+
+## Operator signoff (2026-07-21)
+
+Decisions confirmed by the operator in chat on 2026-07-21:
+
+1. **Reviewer schema — Option C (hybrid).** Real named CPA / attorney /
+   licensed clinician reviews the YMYL page once at (re)publication; the
+   in-house editor pair refreshes between full reviews and the page
+   carries a "Reviewed by [real reviewer] on [date]; refreshed by
+   [pseudonymous pair]" attribution. Scoped to the four legal / tax /
+   regulatory pages in this audit; Option B (editor-pair only) applies
+   to the one consumer-facing page (best-maine-edibles-2026) where the
+   existing byline already matches the actual page content.
+2. **Primary-source definition — Option D (tiered mix per page class).**
+   YMYL-legal pages cite OCP rules + statutes; YMYL-tax pages cite
+   statutes + IRS / Maine Revenue Services publications; YMYL-health
+   pages cite peer-reviewed papers + OCP rules; consumer-facing blog
+   posts cite statutes + operator-disclosed sources + product-page
+   references.
+3. **Retroactive vs forward-only — Option C (tiered retro).** Retro
+   applies to the 12 YMYL-adjacent operator guides whose card is
+   already on the kanban board; pages with no current sprint remain
+   in the pre-this-audit state until they get touched.
+
+The implementation child card is now unblocked on operator decisions
+1, 2, 3. It remains blocked on the `chore/city-guide-component-20260721`
+lease on `apps/maine-cannabis/src/pages/guides/` and
+`apps/maine-cannabis/src/pages/blog/` per `npm run workflow:status`
+2026-07-21. Dispatch when that workstream releases.
