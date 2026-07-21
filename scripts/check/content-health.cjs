@@ -912,6 +912,40 @@ function checkDuplicateHeroImages() {
   return results;
 }
 
+// ─── Check 20: hero image references that resolve to a missing file ─────────
+//
+// Companion to Check 14 (duplicate hero content). Check 14 catches the same
+// image saved under many filenames; this catches the opposite failure: a page
+// whose `heroImage="/images/heroes/foo.jpg"` points at a file that does not
+// exist on disk. Astro does NOT validate heroImage existence at build time —
+// `getHeroImageDimensions` falls back to default dimensions and the page
+// renders with a broken <img src> and a broken og:image URL. The build passes
+// green while the live page 404s its hero. This check closes that gap.
+//
+// Scans every .astro source for `heroImage="/images/..."` and confirms the
+// referenced file exists under public/. Absolute http(s) heroes are skipped
+// (external). Reports the source file and the missing path.
+function checkMissingHeroReferences() {
+  const results = [];
+  if (!fs.existsSync(ROOT)) return results;
+  const heroRe = /heroImage=["']([^"']+)["']/g;
+  for (const file of walk(ROOT)) {
+    const text = fs.readFileSync(file, 'utf8');
+    let m;
+    while ((m = heroRe.exec(text)) !== null) {
+      const ref = m[1];
+      if (/^https?:\/\//i.test(ref)) continue; // external hero, not our asset
+      if (!ref.startsWith('/images/')) continue; // non-asset or dynamic, skip
+      const onDisk = path.join(PUBLIC_DIR, ref.replace(/^\//, ''));
+      if (!fs.existsSync(onDisk)) {
+        const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+        results.push(`${rel}: heroImage "${ref}" not found on disk`);
+      }
+    }
+  }
+  return results;
+}
+
 // ─── Run all checks ───────────────────────────────────────────────────────────
 // ─── Check 13: duplicate FAQPage JSON-LD ─────────────────────────────────────
 //
@@ -1032,6 +1066,7 @@ const CHECKS = [
   { name: 'sitemap XML entities', phase: 'rendered', fn: checkSitemapXmlEntities },
   { name: 'rendered crawl basics', phase: 'rendered', fn: checkRenderedCrawlBasics },
   { name: 'duplicate hero image content', phase: 'source', fn: checkDuplicateHeroImages },
+  { name: 'missing hero image references', phase: 'source', fn: checkMissingHeroReferences },
   { name: 'duplicate FAQPage JSON-LD', phase: 'rendered', fn: checkDuplicateFaqPageSchema },
   { name: 'title not truncated mid-sentence', phase: 'rendered', fn: checkTitleTruncation },
   { name: 'og:type matches page role', phase: 'rendered', fn: checkOgTypeMatchesRole },
