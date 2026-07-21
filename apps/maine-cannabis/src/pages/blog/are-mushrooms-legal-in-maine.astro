@@ -1,0 +1,165 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import authors from '../../data/authors.json';
+const complianceReviewer = authors.find(a => a.id === 'margaret-finch');
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-21",
+  modifiedDate: "2026-07-21",
+  section: "Policy & Legislation"
+};
+const topics = ["policy", "legislation", "psychedelics"];
+
+const faqItems = [
+  { question: "Are mushrooms legal in Maine?", answer: "It depends on the mushroom. Psilocybin mushrooms (so-called magic mushrooms) are illegal in Maine — psilocybin is a Schedule X controlled substance under 17-A M.R.S. §1102, and possession is a Class D crime punishable by up to 364 days in jail and a $2,000 fine. Amanita muscaria mushrooms, which contain muscimol rather than psilocybin, are not scheduled under Maine or federal law and are sold commercially in most states. The two are chemically and legally distinct." },
+  { question: "Is psilocybin legal in Maine?", answer: "No. Psilocybin is classified as a Schedule X controlled substance under Maine law (17-A M.R.S. §1102). Possession is a Class D crime, punishable by up to 364 days in jail and a $2,000 fine. This status has not changed as a result of any recent federal or state action, including the April 2026 federal executive order on psychedelics." },
+  { question: "Are psychedelic mushrooms legal in Maine?", answer: "No. Psilocybin and psilocin — the psychoactive compounds in psychedelic Psilocybe mushrooms — are controlled substances in Maine (Schedule X under 17-A M.R.S. §1102) and federally (Schedule I). Possession, sale, and cultivation are illegal. A decriminalization bill (LD 1034) passed both chambers in 2025 but was pulled by its own sponsor; a state commission is now studying the issue." },
+  { question: "Are mushroom gummies legal in Maine?", answer: "It depends on what is in them. Gummies containing psilocybin are illegal in Maine. Gummies made from Amanita muscaria (containing muscimol, not psilocybin) are not scheduled under Maine or federal law and are sold commercially, though the FDA has stated that Amanita muscaria does not meet the safety standard for food or dietary supplements. Read the label: a legal product lists muscimol or Amanita muscaria extract, never psilocybin." },
+  { question: "Did the Trump executive order legalize psilocybin in Maine?", answer: "No. The executive order signed in April 2026 directs the FDA to fast-track review of certain psychedelic substances for therapeutic use; it does not reschedule psilocybin or change its legal status in Maine or under federal law. Psilocybin remains Schedule I federally and Schedule X in Maine." },
+  { question: "What is the LD 1034 psilocybin commission in Maine?", answer: "LD 1034 created the Commission to Study Pathways for Creating a Psilocybin Services Program in Maine. It is examining the scientific evidence on psilocybin for mental health and end-of-life care, how Oregon and Colorado built regulated psilocybin services programs, and what steps Maine would need to take. The commission must submit its report, findings, and any proposed legislation by November 4, 2026." },
+  { question: "Could psilocybin become legal in Maine soon?", answer: "Not yet, and nothing is guaranteed. The LD 1034 commission reports by November 4, 2026, and the Legislature could act on its recommendations in 2027 — but that is a separate political question. As of now, psilocybin possession remains a crime in Maine. This is a monitoring situation, not a prediction." },
+  { question: "Is Amanita muscaria the same as a magic mushroom?", answer: "No. Magic mushroom is a colloquial term for Psilocybe mushrooms containing psilocybin, which acts on serotonin (5-HT2A) receptors. Amanita muscaria contains muscimol and ibotenic acid, which act on the GABA system and produce a sedative, dream-like effect rather than classic psychedelia. The chemistry, effects, and legal status are all different." }
+];
+---
+
+<Layout
+  title="Are Mushrooms Legal in Maine? Psilocybin vs. Amanita Muscaria (2026)"
+  description="Are mushrooms legal in Maine? Psilocybin mushrooms are illegal (Schedule X, 17-A M.R.S. §1102), but Amanita muscaria (muscimol) is not scheduled. 2026 guide to the law, LD 1034, and mushroom gummies."
+  heroImage="/images/heroes/trump-psychedelic-executive-order-maine-psilocybin-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Are Mushrooms Legal in Maine?</h1>
+    <p class="subtitle">It depends on the mushroom. Psilocybin is illegal; Amanita muscaria is not scheduled. Here is the exact 2026 law.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
+      <p class="last-updated">Published July 21, 2026</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule"><strong>It depends on which mushroom you mean.</strong> Psilocybin mushrooms ("magic mushrooms") are <strong>illegal in Maine</strong> — psilocybin is a Schedule X controlled substance under <a href="https://legislature.maine.gov/statutes/17-a/title17-Asec1102.html" target="_blank" rel="noopener noreferrer">17-A M.R.S. §1102</a>, and possession is a Class D crime punishable by up to 364 days in jail and a $2,000 fine. But <strong>Amanita muscaria</strong> mushrooms — which contain muscimol, not psilocybin — are not scheduled under Maine or federal law and are sold commercially in most states. The two are chemically and legally distinct, and that distinction is the source of most confusion.</p>
+
+  <section>
+    <h2>The Two Kinds of "Mushroom" People Ask About</h2>
+    <p>When people search "are mushrooms legal in Maine," they are usually asking about one of two very different things. Getting them mixed up leads to bad legal conclusions.</p>
+    <table aria-label="Psilocybin vs Amanita muscaria legal status in Maine 2026">
+      <thead>
+        <tr><th>Feature</th><th>Psilocybin Mushrooms</th><th>Amanita Muscaria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Active compound</td><td>Psilocybin / psilocin</td><td>Muscimol / ibotenic acid</td></tr>
+        <tr><td>How it acts</td><td>Serotonin (5-HT2A) — classic psychedelic</td><td>GABA system — sedative, dream-like</td></tr>
+        <tr><td>Maine status</td><td>Schedule X (17-A M.R.S. §1102)</td><td>Not scheduled</td></tr>
+        <tr><td>Federal status</td><td>Schedule I</td><td>Not scheduled</td></tr>
+        <tr><td>Possession in Maine</td><td>Class D crime</td><td>Not prohibited by scheduling</td></tr>
+        <tr><td>Sold commercially?</td><td>No (illegal)</td><td>Yes, in most states</td></tr>
+      </tbody>
+    </table>
+    <p>The rest of this page covers both, because the law treats them completely differently.</p>
+  </section>
+
+  <section>
+    <h2>Psilocybin Mushrooms: Illegal in Maine</h2>
+    <p>Psilocybin and psilocin — the psychoactive compounds in Psilocybe "magic" mushrooms — are controlled substances at both the state and federal level.</p>
+    <ul>
+      <li><strong>Maine:</strong> Schedule X controlled substance under <a href="https://legislature.maine.gov/statutes/17-a/title17-Asec1102.html" target="_blank" rel="noopener noreferrer">17-A M.R.S. §1102</a>.</li>
+      <li><strong>Possession penalty:</strong> Class D crime — up to 364 days in jail and a $2,000 fine.</li>
+      <li><strong>Federal:</strong> Schedule I under the Controlled Substances Act.</li>
+    </ul>
+    <p>This status has <strong>not</strong> changed as a result of any recent federal or state action. The April 2026 federal executive order on psychedelics directs the FDA to fast-track therapeutic review of certain substances; it does not reschedule psilocybin or change its legal status in Maine.</p>
+  </section>
+
+  <Callout title="The April 2026 Executive Order Does Not Legalize Psilocybin" type="warning">
+    The executive order signed in April 2026 directs the FDA to expedite review of psychedelic substances for medical use. It is a regulatory-process directive, not a rescheduling. Psilocybin remains Schedule I federally and Schedule X in Maine. Anyone telling you the order "legalized mushrooms" is mistaken.
+  </Callout>
+
+  <section>
+    <h2>Amanita Muscaria: Not Scheduled</h2>
+    <p>Amanita muscaria — the iconic red-and-white-spotted mushroom — is a different organism with different chemistry. Its active compounds, muscimol and ibotenic acid, are not psilocybin and are not listed on any DEA schedule or in Maine's controlled-substances tables. That is why Amanita muscaria products (gummies, tinctures, capsules) are sold openly in most U.S. states.</p>
+    <p>Two important caveats:</p>
+    <ul>
+      <li><strong>Not scheduled is not the same as approved.</strong> The FDA has stated that Amanita muscaria and its constituents do not meet the safety standard for use in food or dietary supplements. Products are typically sold as novelty or ceremonial items, not as foods or drugs.</li>
+      <li><strong>Read the label.</strong> A legal Amanita product lists muscimol or Amanita muscaria extract. If a "mushroom gummy" contains psilocybin, it is illegal in Maine regardless of where it was sold.</li>
+    </ul>
+  </section>
+
+  <section class="stat-block">
+    <h3>Maine Mushroom Legality — 2026 Snapshot</h3>
+    <ul>
+      <li><strong>Psilocybin (Maine):</strong> Schedule X, 17-A M.R.S. §1102</li>
+      <li><strong>Psilocybin possession:</strong> Class D crime — up to 364 days, $2,000 fine</li>
+      <li><strong>Psilocybin (federal):</strong> Schedule I</li>
+      <li><strong>Amanita muscaria:</strong> not scheduled (Maine or federal)</li>
+      <li><strong>LD 1034 commission report due:</strong> November 4, 2026</li>
+      <li><strong>Current legal status of psilocybin:</strong> unchanged — still illegal</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What Maine Is Studying: LD 1034</h2>
+    <p>Maine is not legalizing psilocybin, but it is studying the question. LD 1034 created the Commission to Study Pathways for Creating a Psilocybin Services Program in Maine. The commission is examining:</p>
+    <ul>
+      <li>The scientific evidence on psilocybin for mental health and end-of-life care;</li>
+      <li>How Oregon and Colorado created regulated psilocybin services programs;</li>
+      <li>What steps Maine would need to take to establish a similar program.</li>
+    </ul>
+    <p>The commission must submit its report — including findings, recommendations, and any proposed legislation — by <strong>November 4, 2026</strong>. The Legislature could act on those recommendations in 2027, but that is a separate political question. Nothing in this process changes the current law: psilocybin possession remains a crime in Maine today.</p>
+    <p>For the full legislative history, the commission's mandate, and a realistic timeline, see our <a href="/blog/maine-psilocybin-2026-guide">Maine psilocybin 2026 monitoring guide</a>.</p>
+  </section>
+
+  <Callout title="This Is a Monitoring Situation, Not a Prediction" type="info">
+    The policy environment is shifting, but the law has not. If you are a Maine cannabis operator watching the psilocybin space, treat this as monitoring content. Do not build a business plan around psilocybin services in Maine — nothing is legal, licensed, or guaranteed.
+  </Callout>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This article is for informational purposes only and does not constitute legal advice. Drug scheduling and psychedelic policy change frequently. Verify current law with the <a href="https://legislature.maine.gov/statutes/17-a/title17-Asec1102.html" target="_blank" rel="noopener noreferrer">Maine Revised Statutes</a> and consult a qualified attorney before acting on any of this information.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-21</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the Maine Legislature, the OCP, and the primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/are-mushrooms-legal-in-maine" currentTopics={["policy", "legislation", "psychedelics"]} section="Policy & Legislation" limit={6} />
+</article>
+</Layout>
