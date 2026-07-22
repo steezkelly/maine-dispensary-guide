@@ -84,20 +84,22 @@ function extractFrontmatter(text) {
 }
 
 /**
- * Extract title: prefer frontmatter `title:` field; fall back to first <h1>.
+ * Extract title: prefer a literal page <h1>, then frontmatter `title:`.
+ * A page-level H1 must win because collection/search frontmatter often contains
+ * nested item objects with unrelated `title:` keys.
  */
 function extractTitle(text, fm) {
+    const h1 = text.match(/<h1[^>]*>([^<]+)<\/h1>/);
+    // The H1 is raw HTML, so decode entities (e.g. &amp; -> &). AutoRelated
+    // renders item.title as text and Astro escapes it again, so storing the
+    // already-escaped form would show a literal "&amp;" on related cards.
+    if (h1) return decodeHtmlEntities(h1[1].trim());
     const m = fm.match(/^\s*title:\s*['"]([^'"]+)['"]/m);
     if (m) return m[1];
     // Compressed form: title might be inline. Look for "title:" followed by
     // a quoted string anywhere in the fm.
     const m2 = fm.match(/title:\s*['"]([^'"]+)['"]/);
     if (m2) return m2[1];
-    const h1 = text.match(/<h1[^>]*>([^<]+)<\/h1>/);
-    // The H1 is raw HTML, so decode entities (e.g. &amp; -> &). AutoRelated
-    // renders item.title as text and Astro escapes it again, so storing the
-    // already-escaped form would show a literal "&amp;" on related cards.
-    if (h1) return decodeHtmlEntities(h1[1].trim());
     const layout = text.match(/<Layout\b[^>]*\btitle\s*=\s*(['"])(.*?)\1/);
     if (layout) return layout[2];
     return path.basename(text, '.astro').replace(/-/g, ' ');

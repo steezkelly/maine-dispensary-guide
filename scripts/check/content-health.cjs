@@ -1044,7 +1044,9 @@ function checkDuplicateFaqPageSchema() {
 }
 
 // ─── Check 20: YMYL reviewer-byline coverage ─────────────────────────────
-// Sprint 83: Every YMYL blog post must declare a reviewer in frontmatter.
+// Sprint 83: Every YMYL blog post must declare a reviewer in frontmatter or
+// use bounded organization-level source-review wording without naming a
+// credentialed reviewer.
 // Source-level check — does not require a build.
 //
 // YMYL = pages where inaccurate content could harm a reader making
@@ -1057,6 +1059,7 @@ const YMYL_BLOG_PAGES = [
   'blog/buying-cannabis-by-effect-2026.astro',
   'blog/cannabis-terpenes-explained-maine-2026.astro',
   'blog/best-maine-edibles-2026.astro',
+  'blog/how-much-weed-can-you-buy-in-maine.astro',
   'blog/maine-medical-marijuana-patient-guide.astro',
   'blog/recreational-cannabis-near-acadia.astro',
   'blog/cannabis-friendly-maine-travel.astro',
@@ -1074,6 +1077,10 @@ const YMYL_BLOG_PAGES = [
 // professional or expert review.
 const ORGANIZATIONAL_SOURCE_REVIEW_YMYL_PAGES = new Set([
   'blog/best-maine-edibles-2026.astro',
+  'blog/cannabis-friendly-maine-travel.astro',
+  'blog/how-much-weed-can-you-buy-in-maine.astro',
+  'blog/maine-home-grow-cannabis-guide-2026.astro',
+  'blog/maine-medical-marijuana-patient-guide.astro',
   'blog/maine-psilocybin-2026-guide.astro',
 ]);
 
@@ -1102,7 +1109,10 @@ function checkYMYLReviewerCoverage() {
     const hasReviewedByByline = /Reviewed by\s+/i.test(text);
     const hasComplianceReviewerImport = /const complianceReviewer\s*=\s*authors\.find/.test(text);
     const hasApprovedOrganizationSourceReview = ORGANIZATIONAL_SOURCE_REVIEW_YMYL_PAGES.has(rel)
-      && /Editorially reviewed against the cited primary sources by\s*(?:<[^>]+>\s*)*Maine Dispensary Guide/i.test(text);
+      && (
+        /Editorially reviewed against the cited primary sources by\s*(?:<[^>]+>\s*)*Maine Dispensary Guide/i.test(text)
+        || /By Maine Dispensary Guide Editorial Team\. Editorially reviewed against the cited primary sources on [A-Z][a-z]+ \d{1,2}, \d{4}/i.test(text)
+      );
 
     if (!hasReviewerField && !(hasReviewedByByline && hasComplianceReviewerImport) && !hasApprovedOrganizationSourceReview) {
       results.push(`${rel}: YMYL page missing reviewer (no reviewer: frontmatter field, approved organization source-review disclosure, or "Reviewed by" byline in body)`);

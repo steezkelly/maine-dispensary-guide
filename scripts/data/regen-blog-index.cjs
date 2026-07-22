@@ -114,9 +114,13 @@ function main() {
   const next = JSON.stringify(payload, null, 2) + '\n';
 
   if (check) {
-    let current = '';
-    try { current = fs.readFileSync(DATA_FILE, 'utf8'); } catch { current = ''; }
-    if (current !== next) {
+    let currentPayload = null;
+    try { currentPayload = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); } catch { currentPayload = null; }
+    const currentSemantic = currentPayload
+      ? JSON.stringify({ count: currentPayload.count, items: currentPayload.items })
+      : '';
+    const nextSemantic = JSON.stringify({ count: items.length, items });
+    if (currentSemantic !== nextSemantic) {
       console.error(`blog-index.json is stale (${items.length} posts). Run: node scripts/data/regen-blog-index.cjs`);
       process.exit(1);
     }

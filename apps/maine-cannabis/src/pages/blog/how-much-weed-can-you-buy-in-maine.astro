@@ -1,0 +1,138 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+const article = {
+  publishDate: '2026-07-22',
+  modifiedDate: '2026-07-22',
+  section: 'Consumer Guide',
+};
+const topics = ['consumer', 'law', 'purchase limits'];
+const faqItems = [
+  { question: 'Is the Maine cannabis limit per day or per transaction?', answer: 'The store limit applies to each transaction, while the possession limit applies to the cannabis you possess. A second purchase does not permit you to possess more than the legal total.' },
+  { question: 'How much concentrate can I buy in Maine?', answer: 'No more than 10 grams of concentrate may be included within the combined 2.5-ounce adult-use transaction limit.' },
+  { question: 'Do edibles have a separate purchase allowance?', answer: 'No. Edibles and other products count toward the same combined limit through Maine product-equivalency rules.' },
+  { question: 'Can a tourist buy cannabis in Maine?', answer: 'Yes. An adult age 21 or older may buy from a licensed adult-use store with acceptable government-issued photo identification. Maine residency is not required.' },
+  { question: 'Can I give cannabis to another adult?', answer: 'Maine law permits limited transfers without remuneration to an adult age 21 or older. A sale or exchange for money, services, donations, or another thing of value is not a gift and requires the authorization provided by law.' },
+];
+---
+
+<Layout
+  title="How Much Weed Can You Buy in Maine? 2026 Limits"
+  description="Adults 21+ can buy up to 2.5 ounces total in one Maine adult-use transaction, including no more than 10 grams of concentrate. See flower, concentrate, edible, and possession rules."
+  heroImage="/images/heroes/maine-cannabis-purchase-limits.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    .article-hero { display: block; margin: 1.5rem 0 2rem; }
+    .article-hero img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1rem; border: 1px solid var(--color-border); }
+    .answer-capsule {
+      margin: 1.5rem 0 2rem;
+      padding: 1.5rem;
+      border: 2px solid var(--color-primary);
+      border-radius: 1rem;
+      background: var(--color-surface);
+    }
+    .answer-capsule h2 { margin: 0 0 0.65rem; font-size: 1.35rem; }
+    .answer-capsule p { margin: 0; font-size: 1.08rem; }
+    .limit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .limit-card {
+      padding: 1.25rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.85rem;
+      background: var(--color-surface);
+    }
+    .limit-card strong { display: block; color: var(--color-primary); font-size: 1.45rem; }
+    .source-note {
+      margin: 2rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--color-accent);
+      background: var(--color-surface);
+      font-size: 0.95rem;
+    }
+  </style>
+
+  <article class="article-content">
+    <div class="eyebrow">Maine cannabis law · Updated July 22, 2026</div>
+    <h1>How Much Weed Can You Buy in Maine?</h1>
+    <p class="byline">By Maine Dispensary Guide Editorial Team. Editorially reviewed against the cited primary sources on July 22, 2026.</p>
+
+    <section class="answer-capsule" aria-labelledby="short-answer">
+      <h2 id="short-answer">The short answer</h2>
+      <p><strong>An adult age 21 or older can buy up to 2.5 ounces of adult-use cannabis in one Maine retail transaction.</strong> That total may include no more than <strong>10 grams of cannabis concentrate</strong>. A store may sell less, and product equivalency can make a mixed cart reach the limit before it looks like 2.5 ounces of flower.</p>
+    </section>
+
+    <p class="lead">Maine uses one combined adult-use limit for flower, concentrate, and other cannabis products. The concentrate amount is part of—not added on top of—the total.</p>
+
+    <picture class="article-hero">
+      <source media="(max-width: 700px)" srcset="/images/heroes/maine-cannabis-purchase-limits-640w.avif" type="image/avif" />
+      <source media="(max-width: 700px)" srcset="/images/heroes/maine-cannabis-purchase-limits-640w.webp" type="image/webp" />
+      <source srcset="/images/heroes/maine-cannabis-purchase-limits.avif" type="image/avif" />
+      <source srcset="/images/heroes/maine-cannabis-purchase-limits.webp" type="image/webp" />
+      <img src="/images/heroes/maine-cannabis-purchase-limits.jpg" width="1280" height="720" alt="A brass balance scale weighing cannabis flower beside two amber jars on a Maine-inspired wooden table" loading="eager" fetchpriority="high" />
+    </picture>
+
+    <div class="limit-grid" aria-label="Maine adult-use cannabis limits">
+      <div class="limit-card"><strong>2.5 oz total</strong><span>Maximum adult-use cannabis in one transaction</span></div>
+      <div class="limit-card"><strong>10 g concentrate</strong><span>Maximum concentrate within that combined total</span></div>
+      <div class="limit-card"><strong>21+</strong><span>Minimum age with valid photo identification</span></div>
+    </div>
+
+    <h2>Is the purchase limit the same as the possession limit?</h2>
+    <p>For ordinary adult-use purchases, yes. Maine law prohibits a cannabis store from selling more than the personal adult-use limits in a single transaction, and adults 21 or older may possess up to the same 2.5-ounce combined amount away from the place where they lawfully grow cannabis.</p>
+    <p>The home-grow exception is different: at the adult's residence or cultivation location, Maine law permits possession of all cannabis produced by that adult's lawful plants. Once cannabis leaves that location, the ordinary 2.5-ounce possession limit applies.</p>
+
+    <h2>How do flower, concentrates, and edibles count?</h2>
+    <ul>
+      <li><strong>Flower and pre-rolls:</strong> count toward the 2.5-ounce combined total.</li>
+      <li><strong>Concentrates and vape oil:</strong> count toward the total and cannot exceed 10 grams of concentrate.</li>
+      <li><strong>Edibles and infused products:</strong> count through Maine's product-equivalency rules. The retail system calculates the equivalent amount for the cart.</li>
+      <li><strong>Mixed purchases:</strong> do not create separate limits for each category. A cart can combine products only up to the equivalent of the single legal maximum.</li>
+    </ul>
+    <p>There is no separate statewide rule allowing another 100 milligrams of edible THC after a shopper has reached the combined limit. If a menu or older article gives different concentrate or edible figures, ask the licensed store to confirm the current equivalency calculation before checkout.</p>
+
+    <h2>Can you visit another dispensary the same day?</h2>
+    <p>Maine's store rule applies to each individual sales transaction, but the possession limit applies to what you possess. Visiting more than one store does not authorize you to carry more than 2.5 ounces total, including no more than 10 grams of concentrate. Buying again while already at the possession limit can put you over the legal limit.</p>
+
+    <h2>Can you gift cannabis in Maine?</h2>
+    <p>Maine law allows limited transfers without remuneration to another adult age 21 or older. Selling home-grown or purchased cannabis—or tying a transfer to money, services, donations, admission, or another thing of value—is not a gift. Review the transfer language in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html" rel="noopener noreferrer">28-B M.R.S. §1501</a> before relying on this exception.</p>
+
+    <h2>Do tourists have the same adult-use limit?</h2>
+    <p>Yes. Maine adult-use stores serve adults 21 or older who present acceptable government-issued photo identification; Maine residency is not required. Tourists have the same purchase and possession limits and the same ban on public consumption. Cannabis cannot legally cross state lines or the international border.</p>
+
+    <h2>What changes for medical cannabis patients?</h2>
+    <p>Medical purchases follow Maine's medical-use law rather than the adult-use retail statute. Maine qualifying patients and approved visiting patients have separate documentation and transaction rules. If you are using an out-of-state patient credential, read the <a href="/guides/maine-out-of-state-patient-reciprocity">visiting-patient guide</a> and verify that your issuing jurisdiction remains on Maine's current approved list.</p>
+
+    <h2>What should a first-time buyer bring?</h2>
+    <p>Bring an unexpired, government-issued photo ID showing you are at least 21. Decide whether you want an adult-use store or qualify for the separate medical program, check the store's payment options, and leave enough room in your budget for Maine's 14% adult-use cannabis sales tax. Our <a href="/guides/first-time-maine-dispensary-buyer">first-time Maine dispensary buyer guide</a> covers the full visit flow.</p>
+
+    <aside class="source-note">
+      <strong>Primary-source check:</strong> The transaction rule is in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec504.html" rel="noopener noreferrer">28-B M.R.S. §504(2)(B)</a>. The personal possession limits are in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html" rel="noopener noreferrer">28-B M.R.S. §1501</a>. Maine's <a href="https://www.maine.gov/dafs/ocp/resources/faq" rel="noopener noreferrer">Office of Cannabis Policy FAQ</a> summarizes the consumer rules. Statutes and agency guidance can change; verify before relying on a limit.
+    </aside>
+
+    <section>
+      <h2>Frequently asked questions</h2>
+      <Faq faqs={faqItems} />
+    </section>
+
+    <section>
+      <h2>Related Maine cannabis guides</h2>
+      <ul>
+        <li><a href="/guides/first-time-maine-dispensary-buyer">First-Time Maine Dispensary Buyer Guide</a></li>
+        <li><a href="/blog/cannabis-friendly-maine-travel">Cannabis-Friendly Maine Travel Guide</a></li>
+        <li><a href="/guides/maine-out-of-state-patient-reciprocity">Out-of-State Medical Patient Reciprocity</a></li>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Laws</a></li>
+        <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations Guide</a></li>
+        <li><a href="/learn">Browse All Maine Cannabis Learning Resources</a></li>
+      </ul>
+    </section>
+
+    <AutoRelated currentPath="/blog/how-much-weed-can-you-buy-in-maine" currentTopics={topics} section="Consumer Guide" limit={6} />
+  </article>
+</Layout>
