@@ -70,15 +70,13 @@ test('does not create a link when the primary TypeScript installation is unavail
   }
 });
 
-test('post-checkout automatically bootstraps dependencies for a newly added worktree', () => {
+test('a newly added worktree does not execute a dependency bootstrap hook', () => {
   const primary = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-worktree-hook-'));
   const linked = `${primary}-linked`;
   const git = (...args) => execFileSync('git', ['-C', primary, ...args], { encoding: 'utf8' });
   try {
-    fs.mkdirSync(path.join(primary, '.githooks'), { recursive: true });
     fs.mkdirSync(path.join(primary, 'scripts', 'git'), { recursive: true });
     fs.mkdirSync(path.join(primary, 'node_modules', 'typescript', 'lib'), { recursive: true });
-    fs.copyFileSync(path.join(repoRoot, '.githooks', 'post-checkout'), path.join(primary, '.githooks', 'post-checkout'));
     fs.copyFileSync(
       path.join(repoRoot, 'scripts', 'git', 'mdg-worktree-bootstrap.cjs'),
       path.join(primary, 'scripts', 'git', 'mdg-worktree-bootstrap.cjs'),
@@ -88,14 +86,11 @@ test('post-checkout automatically bootstraps dependencies for a newly added work
     git('init', '--initial-branch=main');
     git('config', 'user.name', 'Test User');
     git('config', 'user.email', 'test@example.com');
-    git('config', 'core.hooksPath', '.githooks');
-    git('add', '.githooks/post-checkout', 'scripts/git/mdg-worktree-bootstrap.cjs');
+    git('add', 'scripts/git/mdg-worktree-bootstrap.cjs');
     git('commit', '-m', 'fixture');
     git('worktree', 'add', '-b', 'linked', linked);
 
-    assert.equal(fs.lstatSync(path.join(linked, 'node_modules')).isDirectory(), true);
-    assert.equal(fs.lstatSync(path.join(linked, 'node_modules', 'typescript')).isSymbolicLink(), true);
-    assert.equal(fs.existsSync(path.join(linked, 'node_modules', 'typescript', 'lib', 'tsserver.js')), true);
+    assert.equal(fs.existsSync(path.join(linked, 'node_modules')), false);
   } finally {
     try {
       git('worktree', 'remove', '--force', linked);
