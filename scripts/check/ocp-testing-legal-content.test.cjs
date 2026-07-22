@@ -52,10 +52,11 @@ for (const relativePath of consumerPages) {
   });
 }
 
-test('best Maine edibles verification badge reflects the legal-review date', () => {
+test('best Maine edibles attribution records the organizational primary-source editorial review date', () => {
   const source = read('apps/maine-cannabis/src/pages/blog/best-maine-edibles-2026.astro');
-  assert.match(source, /Last reviewed <strong>2026-07-16<\/strong>/);
-  assert.doesNotMatch(source, /Last reviewed <strong>2026-07-06<\/strong>/);
+  assert.match(source, /Editorially reviewed against the cited primary sources by\s*<strong>Maine Dispensary Guide<\/strong> on\s*<strong>2026-07-21<\/strong>/);
+  assert.doesNotMatch(source, /Last reviewed <strong>2026-07-16<\/strong>/);
+  assert.doesNotMatch(source, /professionally reviewed|expert reviewed|independently verified/i);
 });
 
 test('corrections log records the statute/rule/guidance distinction', () => {

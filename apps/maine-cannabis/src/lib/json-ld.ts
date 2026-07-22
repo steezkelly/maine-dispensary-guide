@@ -154,20 +154,21 @@ export function buildJsonLdGraph(
     const authorImage = article.authorPhoto;
     const authorKnowsAbout = article.authorKnowsAbout;
 
-    const author = buildPersonNode(siteUrl, article.authorId
-      ? {
-          // article.author is optional in the schema interface; fall back to
-          // siteName when omitted. This preserves the pre-Sprint-83 behavior
-          // where an Article with no author still rendered an Organization
-          // node in the graph.
-          name: article.author || siteName,
-          jobTitle: article.authorTitle,
-          id: article.authorId,
-          description: authorDescription,
-          image: authorImage ?? null,
-          knowsAbout: authorKnowsAbout,
-        }
-      : { name: article.author || siteName });
+    // A declared individual author emits as Person. When no individual is
+    // declared, reference the existing Organization node instead of inventing
+    // a Person whose name is the site name.
+    const author = article.author
+      ? buildPersonNode(siteUrl, article.authorId
+          ? {
+              name: article.author,
+              jobTitle: article.authorTitle,
+              id: article.authorId,
+              description: authorDescription,
+              image: authorImage ?? null,
+              knowsAbout: authorKnowsAbout,
+            }
+          : { name: article.author })
+      : { '@id': orgId };
 
     const articleNode: GraphNode = {
       '@type': 'Article',

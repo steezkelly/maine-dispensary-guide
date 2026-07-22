@@ -1,340 +1,178 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
-import authors from '../../data/authors.json';
-const editorialAuthor = authors.find(a => a.id === 'eliot-nash');
-const complianceReviewer = authors.find(a => a.id === 'thalia-greene');
+
 const article = {
-  author: "Eliot Nash",
-  authorId: "eliot-nash",
-  authorTitle: "Market & Real Estate Analyst",
-  publishDate: "2026-06-05",
-  modifiedDate: "2026-07-16",
-  section: "Consumer Guide"
+  publishDate: '2026-06-05',
+  modifiedDate: '2026-07-21',
+  section: 'Consumer Guide',
 };
-const topics = ["edibles", "consumer-guide", "best-of"];
+const topics = ['edibles', 'consumer-guide'];
 
 const faqItems = [
-  { question: "How many mg of THC should a beginner take in a Maine edible?", answer: "If you have not used a THC edible before, start at 2.5-5mg of THC total and wait a full two hours before taking more. Maine Revised Statutes Title 28-B §703(1)(F) caps a single serving of a cannabis edible at 10mg of THC, and a single package at 200mg of THC, with a 10% allowable variance. A 10mg gummy can be split in half for a true 5mg starting dose. The most common edible mistake in Maine is taking a second piece at the one-hour mark because the first has not kicked in; two hours is the realistic onset window for most gummies on a full stomach." },
-  { question: "Are Maine dispensary edibles lab tested?", answer: "Yes. Every adult-use edible batch must complete the mandatory testing that applies to it. P.L. 2025, ch. 764 became effective April 19, 2026. OCP's April 28, 2026 implementation guidance provides that a qualifying finished edible is not subject to additional mandatory contaminant testing when every cannabis concentrate used to make the edible has already passed all required mandatory contaminant testing. The finished edible still requires THC-potency, cannabinoid-profile, and homogeneity testing. The applicable COA and testing records therefore depend on the input-testing history; do not assume every finished edible has the same contaminant panel." },
-  { question: "How long do Maine cannabis gummies take to kick in?", answer: "Most Maine cannabis gummies take 30-90 minutes to take effect when eaten on a light snack, and 60-120 minutes when eaten on a full meal. The peak effect arrives roughly 2-3 hours after consumption, and the total duration runs 4-8 hours depending on dose, individual metabolism, and tolerance. Sublingual formats (mints, lozenges, oral strips) absorb faster, with onset at 5-15 minutes and duration of 2-4 hours. Beverages typically onset at 15-30 minutes and last 2-4 hours. The single most common edible problem in Maine is impatience; wait the full two hours before redosing." },
-  { question: "What is the best edible for sleep in Maine?", answer: "For sleep specifically, a 1:1 or 2:1 THC:CBN edible is the most reliable option. The Maine Lab Snooze Sleep Tablets (100mg THC:200mg CBN, 4-count, ~50mg THC + 100mg CBN per tablet) are the highest-dose sleep edible produced by a Maine operator and are widely stocked across the state. For a milder starting dose, Theory Wellness' Rest line and Sola's RSO Sleep gummies (4:1 CBN:THC) are both effective at 10-20mg THC. CBN is a degraded-THC cannabinoid with sedating properties, and the 1:1 or 2:1 THC:CBN ratio is the most-researched combination for sleep onset and duration. Avoid caffeine and high-sugar edible formats within four hours of bedtime." },
-  { question: "Can I have a Maine edible delivered to my home?", answer: "Medical-use delivery is well-established in Maine, but adult-use delivery is limited. Several caregivers and a small number of dispensaries offer delivery to registered MMMP cardholders within a defined service radius (typically 15-30 miles). For adult-use customers, in-store pickup is the default; a small number of operators in the Portland and Bangor metros offer same-day or next-day adult-use delivery through Dutchie, Leafly, or their own e-commerce platform. The OCP has been expanding the adult-use delivery framework in 2025-2026, and statewide adult-use delivery is expected to roll out more broadly through 2026-2027." }
+  {
+    question: 'Are cannabis edibles legal in Maine?',
+    answer: 'Yes. Adults 21 or older may buy adult-use cannabis edibles from a licensed Maine cannabis store. Maine caps an adult-use edible at 10 mg THC per serving and 200 mg THC per package, subject to the statutory variance. Medical cannabis follows a separate program.',
+  },
+  {
+    question: 'How long can a cannabis edible take to have an effect?',
+    answer: 'CDC says edible intoxicating effects can take 30 minutes to 2 hours to appear and can last longer than expected. Response varies with the amount consumed, food, medications, alcohol, and individual factors. Avoid taking more simply because effects have not appeared quickly.',
+  },
+  {
+    question: 'Does every finished Maine adult-use edible receive contaminant testing?',
+    answer: 'Not necessarily. Under P.L. 2025, ch. 764, effective April 19, 2026, a qualifying finished edible is not subject to additional mandatory contaminant testing when every cannabis concentrate used to make it has already passed all required mandatory contaminant testing and the statutory documentation and tracking conditions are met. The finished edible still requires THC-potency, cannabinoid-profile, and homogeneity testing.',
+  },
+  {
+    question: 'What should I compare when choosing an edible?',
+    answer: 'Compare the labeled THC per serving and per package, serving count, cannabinoid content, ingredients, allergens, package condition, batch or tracking information, and whether the seller appears in OCP’s active-license search. Do not rely on a brand ranking or an unapproved treatment claim.',
+  },
 ];
 
 const faqPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": f.answer.replace(/<[^>]+>/g, "")
-    }
-  }))
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
 };
 ---
 
 <Layout
-  title="Are Edibles Legal in Maine? Yes — 2026 Buyer's Guide to Gummies, Chocolates, & Beverages"
-  description="Yes, cannabis edibles are legal in Maine for adults 21+ at licensed dispensaries. 2026 guide to the best gummies, chocolates, and beverages, with dose tiers, lab testing, and where to buy legally."
+  title="Maine Cannabis Edibles: A 2026 Buyer-Safety Guide"
+  description="A neutral Maine cannabis edibles guide covering legal purchase, label checks, testing, delayed effects, storage, and when to seek help."
   heroImage="/images/heroes/best-maine-edibles-2026.jpg"
   article={article}
   topics={topics}
- continuationMode="pilot">
-<style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
-  section { margin-bottom: 3rem; }
-  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
-  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); font-weight: 700; }
-  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
-  li { margin-bottom: 0.75rem; }
-  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
-  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  continuationMode="pilot"
+>
+  <style>
+    article { max-width: 720px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.2rem; color: var(--color-text-light); }
+    .byline { font-size: 0.9rem; color: var(--color-text-light); margin-top: 1rem; }
+    section { margin-bottom: 2.5rem; }
+    h2 { margin-top: 0; color: var(--color-primary); }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: 0.8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); }
+    th { background: var(--color-background); }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin-bottom: 0.65rem; }
+    .sources, .disclaimer { padding: 1.25rem 1.5rem; border-radius: 0.75rem; }
+    .sources { background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); }
+    .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); color: var(--color-disclaimer-text); font-size: 0.9rem; }
+    .review-note { font-size: 0.875rem; color: var(--color-text-light); border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
+  </style>
 
-  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
-  .operator-card { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0; }
-  .operator-card h3 { margin-top: 0; color: var(--color-text); font-family: var(--font-serif); }
-  .operator-card .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.75rem 0 1rem; font-size: 0.875rem; color: var(--color-text-light); }
-  .operator-card .meta span { background: var(--color-background); padding: 0.25rem 0.625rem; border-radius: 1rem; border: 1px solid var(--color-border); }
-  .operator-card p { margin-bottom: 0.75rem; line-height: 1.65; }
-  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
-  .byline p { margin: 0.25rem 0; }
-  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
-  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
-  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
-</style>
+  <article>
+    <header class="article-header">
+      <h1>Maine cannabis edibles: a buyer-safety guide</h1>
+      <p class="subtitle">How to check the seller, read the label, understand testing, and avoid common edible risks.</p>
+      <p class="byline">Published and editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide</strong>.</p>
+    </header>
 
-<article class="blog-post">
-  <div class="article-header">
-    <h1>Are Edibles Legal in Maine? Yes — A 2026 Buyer's Guide to Gummies, Chocolates, and Beverages</h1>
-    <p class="subtitle">Yes. Cannabis edibles are legal in Maine for adults 21+ at licensed dispensaries. Here's what actually works, what to avoid, and which Maine operators make the strongest edible lineup in 2026.</p>
-    <div class="byline">
-      <p>By <a href="/about/authors#eliot-nash"><strong>Eliot Nash</strong></a>, Market &amp; Real Estate Analyst. <strong>Reviewed by <a href="/about/authors#thalia-greene">Thalia Greene</a>, Cultivation &amp; Horticulture Reviewer.</strong></p>
-      <p class="last-updated">Published June 5, 2026 · Last updated July 16, 2026</p>
-    </div>
-  </div>
+    <Callout title="This guide does not rank products" type="warning">
+      Product menus and formulations change. This page does not endorse a brand, recommend an edible for sleep, pain, anxiety, or another condition, or promise an effect from a cannabinoid ratio. Compare the current package and seller instead.
+    </Callout>
 
-  <section class="intro">
-    <p>Maine's edible market is smaller and more curated than mature West Coast markets, but the operator base has matured to the point where the state's best 2026 edible lineups are genuinely competitive with Colorado, Washington, and California at the same price tier. The reason is structural: Maine's vertical-integration mandate keeps the largest operators in-house across cultivation, extraction, infusion, and retail, which produces a tighter feedback loop between the kitchen and the consumer than states with deep wholesale markets.</p>
-    <p>That said, Maine's edible market is not uniform. The gap between a serious operator's gummy line and a thin-house-brand white-label product is wider than in most other categories. The serious operators use full-spectrum distillate or RSO as the infusion base, with a pectin or vegan gummy matrix, real fruit puree where the format allows, and a published Certificate of Analysis (COA) for every batch. The weaker operators use distillate from a third-party bulk supplier, gelatin, and vague "natural flavor" labelling that does not survive a careful read.</p>
-    <p>This guide covers what the Maine edible market looks like in 2026, the dose tiers that matter, the lab-testing framework that protects buyers, the operators making the strongest edible lineups, effect-driven recommendations, the first-time-buyer checklist, and a candid look at the products and formats that are not worth the money. For the underlying operator economics that shape Maine's edible pricing, see the <a href="/guides/maine-cannabis-edibles-compliance">Maine cannabis edibles compliance guide</a>; for the statewide market context, the <a href="/guides/maine-cannabis-market">Maine cannabis market guide</a>.</p>
-  </section>
+    <section>
+      <h2>Buy through Maine's regulated program</h2>
+      <p>Adults 21 or older may buy adult-use cannabis edibles from a licensed Maine cannabis store. Use OCP's <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">adult-use licensee search</a> to check whether a seller is active. The medical-use program is separate and has different eligibility and product rules.</p>
+      <p>A familiar package design, QR code, or online menu is not proof that a seller or product is part of Maine's regulated cannabis system. Do not buy an intoxicating product for a minor, and do not take cannabis across state lines.</p>
+      <p>Use the <a href="/find-a-dispensary">Maine dispensary finder</a> as a starting point, then verify the current license with OCP.</p>
+    </section>
 
-  <Callout title="Maine Edible Strengths vs. West Coast" type="passion">
-    Maine operators are smaller-batch and vertically integrated, which means a tighter kitchen-to-customer feedback loop but more variance between operators. The strongest Maine lines (Glaze, Sola, The Maine Lab, Theory house brand) rival the best Colorado and California craft lines on flavor and dose accuracy. The weaker lines are generic white-label distillate gummies dressed up in branded packaging. Always ask for the COA on the specific batch you are buying; potency variance of 15-25% from label claim is real in the lower tier, and the OCP does not enforce individual-batch tolerance the way California's BCC does.
-  </Callout>
+    <section>
+      <h2>Read the THC numbers before choosing a format</h2>
+      <p><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">Title 28-B, §703(1)(F)</a> caps an adult-use edible at 10 mg THC per serving and 200 mg THC per package, subject to the statutory variance. A package can contain many servings, so the total package number is not the same as the amount in one serving.</p>
+      <table aria-label="Edible label checks">
+        <thead><tr><th scope="col">Check</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>THC per serving</td><td>This is the labeled amount in one defined serving, not necessarily one whole package or piece.</td></tr>
+          <tr><td>Servings per package</td><td>Multiplying servings by THC per serving helps confirm the labeled package total.</td></tr>
+          <tr><td>Other cannabinoids</td><td>CBD, CBN, and other cannabinoid labels do not establish that the product treats a condition or will produce a promised effect.</td></tr>
+          <tr><td>Ingredients and allergens</td><td>Check the current package for dietary restrictions and allergens. Do not assume every product from a brand uses the same formulation.</td></tr>
+          <tr><td>Package and batch details</td><td>Avoid damaged or unsealed packaging. Ask the store how the package connects to its testing and tracking records.</td></tr>
+        </tbody>
+      </table>
+      <p>If a piece is not clearly designed or labeled to be divided, do not assume cutting it creates equal portions. Maine requires homogeneity, but the package's serving instructions remain the safest reference.</p>
+    </section>
 
-  <section>
-    <h2>Are Edibles Legal in Maine?</h2>
-    <p>Yes. Cannabis edibles are legal in Maine for adults 21 and older, sold exclusively through state-licensed adult-use dispensaries and registered medical dispensaries. The Maine Office of Cannabis Policy (OCP) regulates edibles under Title 28-B and the adult-use and medical program rules.</p>
-    <p>Legal purchase requires a valid government-issued photo ID showing you are 21 or older. Medical patients with a Maine medical cannabis card (or a valid out-of-state card from a reciprocity state) can also purchase at medical dispensaries, which carry higher-dose edibles than the 200mg-per-package adult-use ceiling. Maine Revised Statutes Title 22 ch. 558-C governs the medical program; medical dispensaries operate under separate rules from adult-use dispensaries.</p>
-    <p>Edibles purchased outside the licensed dispensary system — including unlicensed "gummy" products sold in convenience stores or online — are illegal in Maine and have been the subject of several OCP enforcement actions in 2024-2026 against unregulated hemp-derived THC products that exceed the 10mg per-serving limit.</p>
-  </section>
+    <section>
+      <h2>What Maine's testing rule means</h2>
+      <p><strong>P.L. 2025, ch. 764, effective April 19, 2026</strong>, changed mandatory testing for adult-use edibles. Under <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/OCP%20Guidance%20for%20Mandatory%20Testing%20of%20Adult%20Use%20Edibles%20April%202026.pdf" target="_blank" rel="noopener noreferrer">OCP's April 28, 2026 implementation guidance</a>:</p>
+      <ul>
+        <li>every cannabis concentrate used to make the edible must already have passed all required mandatory contaminant testing for the exception to apply;</li>
+        <li>the prior testing, documentation, tracking, and no-contaminant-increase conditions in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec605.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §605</a> must be met;</li>
+        <li>the qualifying finished edible is <strong>not subject to additional mandatory contaminant testing</strong>; and</li>
+        <li>the finished edible still requires <strong>THC-potency, cannabinoid-profile, and homogeneity testing</strong>.</li>
+      </ul>
+      <p>Testing records for two products can therefore show different panels. Ask about the specific batch and input-testing history rather than assuming every finished edible received the same contaminant tests. The <a href="/guides/maine-cannabis-edibles-compliance">Maine edibles compliance guide</a> covers the operator-facing rule.</p>
+    </section>
 
-  <section>
-    <h2>How Maine Edibles Are Regulated</h2>
-    <p>The Maine Office of Cannabis Policy (OCP) regulates cannabis edibles under Title 28-B and the adult-use and medical program rules. Title 28-B §703(1)(F), as amended by PL 2023 c. 396 §19, sets the adult-use cap at 10mg THC per single serving and 200mg THC per package, with a 10% allowable variance (floor 0.6 mg, ceiling 5 mg). Medical dispensaries operate under separate rules (Title 22 ch. 558-C; 18-691 CMR ch. 2); the medical program does not impose a per-package edible cap in the same statutory form, and the practical ceiling for medical products varies by operator. Packaging must be child-resistant, opaque, resealable, and labeled with the universal THC symbol, the OCP tracking number, the total THC and CBD content per serving and per package, the ingredient list, allergen disclosures, and a printed batch or lot number that links to the lab COA.</p>
-    <p>Edible infusion in Maine must use a regulated cannabis concentrate — typically a distillate, RSO, or a solventless extract. The OCP bans several infusion ingredients that some states permit, including alcohol-based tinctures above a defined ABV and any non-cannabis-derived psychoactive additives. The full ingredient and processing rules are covered in the <a href="/guides/maine-cannabis-edibles-compliance">Maine cannabis edibles compliance guide</a>; the practical takeaway for buyers is that any edible on a Maine dispensary shelf has cleared a basic safety and labeling bar, but the quality range above that bar is wide.</p>
-  </section>
+    <section>
+      <h2>Delayed effects are the main consumer hazard</h2>
+      <p>The <a href="https://www.cdc.gov/cannabis/health-effects/poisoning.html" target="_blank" rel="noopener noreferrer">CDC says edible intoxicating effects can take 30 minutes to 2 hours to appear</a> and can last longer than expected. <a href="https://www.maine.gov/dhhs/mecdc/healthy-living/substance-use-and-behavioral-health/substance-use/cannabis" target="_blank" rel="noopener noreferrer">Maine CDC</a> likewise warns that edibles take longer than inhaled cannabis and can make accidental overconsumption easier. The amount consumed, food, medications, alcohol, and individual response can all change the timing and intensity.</p>
+      <p>A <a href="https://pubmed.ncbi.nlm.nih.gov/32585912/" target="_blank" rel="noopener noreferrer">systematic review of human oral-THC pharmacokinetics</a> also found high variability in absorption and delayed peak plasma concentrations compared with other routes. That evidence supports caution about timing; it does not supply an individualized dose or predict how a specific product will affect a person.</p>
+      <ul>
+        <li>Follow the package serving information and avoid taking more simply because effects have not appeared quickly.</li>
+        <li>Do not mix cannabis with alcohol or other intoxicants.</li>
+        <li>Do not drive, operate machinery, or perform safety-sensitive work after using cannabis.</li>
+        <li>If you take prescription medicines, are pregnant or breastfeeding, or have a health condition, discuss cannabis with a qualified healthcare professional.</li>
+      </ul>
+      <p>FDA warns that CBD can interact with medications and can cause side effects. CBD is not a reliable “antidote” for too much THC, and a retail cannabis product should not be treated as an FDA-approved therapy.</p>
+    </section>
 
-  <section>
-    <h2>Dose Tiers: What the Milligram Numbers Actually Mean</h2>
-    <p>The dose tier framework is the single most important thing an edible buyer needs to internalize. Maine's 10mg per serving / 200mg per package limits (Title 28-B §703(1)(F)) produce a specific dose taxonomy that maps to real physiological effect ranges. The categories below are how budtenders and edible manufacturers actually talk about dose.</p>
+    <section>
+      <h2>Store edibles securely and know when to get help</h2>
+      <p>Keep edibles in their original child-resistant package, locked and out of sight and reach of children and pets. Do not place them in an ordinary candy or snack container.</p>
+      <p>For a possible cannabis poisoning, call Poison Control at <a href="tel:18002221222">1-800-222-1222</a>. Call 911 for an emergency, including trouble breathing, collapse, or inability to wake. Children can become very sick after consuming THC and may require emergency care.</p>
+      <p>A <a href="https://pubmed.ncbi.nlm.nih.gov/36594224/" target="_blank" rel="noopener noreferrer"><em>Pediatrics</em> analysis of U.S. poison-center data</a> documented 7,043 edible-cannabis exposures in children younger than six from 2017 through 2021; most occurred in residences. The study supports locked household storage and rapid poison-center consultation after a suspected exposure.</p>
+    </section>
 
-    <h3>Microdose (1-5mg THC)</h3>
-    <p>The microdose tier is for first-time users, low-tolerance users, daytime functional use, and buyers who want a sub-perceptible effect for anxiety or focus. At 1-2mg, most adults feel little or no subjective effect. At 2-5mg, the effect is mild — a slight relaxation, a soft body feel, a small mood lift — without impairment. Microdose products in Maine are typically sold as 2.5mg gummies in a 20-40 count package, or as low-dose mints and lozenges. The microdose category has grown fastest in 2024-2026 as more older and medical-adjacent buyers enter the market.</p>
+    <section>
+      <h2>A neutral comparison checklist</h2>
+      <ol>
+        <li>Verify the seller's active status with OCP.</li>
+        <li>Compare THC per serving, total THC, and number of servings.</li>
+        <li>Read the current ingredient and allergen list.</li>
+        <li>Check the seal, package condition, batch information, and expiration or best-by information if provided.</li>
+        <li>Ask what testing applies to that batch and how the store can provide the relevant record.</li>
+        <li>Reject claims that the product cures, treats, or reliably fixes a medical condition.</li>
+      </ol>
+      <p>Flavor, texture, and price are personal preferences. They do not establish safety, dose accuracy, or medical benefit.</p>
+    </section>
 
-    <h3>Standard Dose (5-15mg THC)</h3>
-    <p>Standard is the dose tier that covers most adult recreational use. A 10mg dose is the OCP-defined single serving (Title 28-B §703(1)(F)) and the most common starting recommendation. A 10mg gummy is the workhorse of the category — strong enough to produce a clear effect for most users with some tolerance, light enough to remain functional for daytime use. Maine's 10mg per serving cap means a 200mg package contains 20 servings, and most operators mark the gummy shape clearly to make serving division easy.</p>
+    <section class="faq-section">
+      <h2>Frequently asked questions</h2>
+      <Faq faqs={faqItems} />
+    </section>
 
-    <h3>High Dose (20-50mg THC)</h3>
-    <p>High dose is for experienced users with established tolerance. A 20-50mg dose produces a pronounced psychoactive effect that runs 4-8 hours, with significant impairment for the first 2-3 hours. The high-dose tier in Maine is most often sold as 10mg-per-piece gummies where the recommendation is two pieces, or as 25-50mg "edible shots" in beverage form. High-dose products are popular with medical patients managing chronic pain, severe insomnia, and chemotherapy-related nausea.</p>
+    <section class="sources">
+      <h2>Evidence and official sources</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §703: edible product requirements</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec605.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §605: prior-testing conditions</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/OCP%20Guidance%20for%20Mandatory%20Testing%20of%20Adult%20Use%20Edibles%20April%202026.pdf" target="_blank" rel="noopener noreferrer">OCP guidance on adult-use edible testing, April 28, 2026</a></li>
+        <li><a href="https://www.cdc.gov/cannabis/health-effects/poisoning.html" target="_blank" rel="noopener noreferrer">CDC: cannabis and poisoning</a></li>
+        <li><a href="https://www.maine.gov/dhhs/mecdc/healthy-living/substance-use-and-behavioral-health/substance-use/cannabis" target="_blank" rel="noopener noreferrer">Maine CDC: cannabis health and accidental ingestion</a></li>
+        <li><a href="https://www.fda.gov/consumers/consumer-updates/what-you-need-know-and-what-were-working-find-out-about-products-containing-cannabis-or-cannabis" target="_blank" rel="noopener noreferrer">FDA: cannabis-derived products and CBD risks</a></li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/32585912/" target="_blank" rel="noopener noreferrer">Poyatos et al.: systematic review of oral cannabis and THC pharmacokinetics</a></li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/36594224/" target="_blank" rel="noopener noreferrer">Tweet et al.: pediatric edible-cannabis exposures and acute toxicity, 2017–2021</a></li>
+      </ul>
+    </section>
 
-    <h3>Therapeutic Dose (100-250mg+ THC)</h3>
-    <p>Therapeutic is the medical-grade dose tier. At 100mg+, the products are typically sold as 4-count 100mg tablets (effectively 25mg per tablet for daytime use, or 1-2 tablets for severe symptoms), as RSO syringes (where dosing is measured in grain-of-rice increments), or as 10-count 25mg capsules. Medical dispensaries in Maine operate under Title 22 ch. 558-C and 18-691 CMR ch. 2, which do not impose the same statutory per-package edible cap as the adult-use program; the practical ceiling for medical products varies by operator and is documented on each product's Certificate of Analysis. Recreational buyers should not start at this tier; the right way in is the standard tier, then escalate based on actual response.</p>
+    <section class="disclaimer">
+      <p><strong>Health and legal notice:</strong> This page provides general buyer-safety information, not medical, legal, dosing, or purchasing advice. Cannabis affects people differently. Product availability and labels change; verify the current package and seller.</p>
+    </section>
 
-    <table aria-label="Maine edible dose tiers">
-      <thead>
-        <tr><th>Tier</th><th>Dose (mg THC)</th><th>Effect</th><th>Best For</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Microdose</td><td>1-5mg</td><td>Subtle, functional</td><td>First-time, daytime, low-tolerance</td></tr>
-        <tr><td>Standard</td><td>5-15mg</td><td>Clear effect, mild impairment</td><td>Most adult-use, beginner-friendly start</td></tr>
-        <tr><td>High</td><td>20-50mg</td><td>Strong, several hours</td><td>Experienced users, chronic pain</td></tr>
-        <tr><td>Therapeutic</td><td>100mg+</td><td>Intense, medical-grade</td><td>Severe symptoms, medical patients</td></tr>
-      </tbody>
-    </table>
-  </section>
+    <p class="review-note">Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide</strong> on <strong>2026-07-21</strong>. This is organizational editorial review, not medical, legal, tax, or other professional review, and this page is not individualized health guidance. See the <a href="/about/corrections">editorial corrections log</a>.</p>
 
-  <section>
-    <h2>Lab Testing: What the COA Tells You</h2>
-    <p>Every adult-use edible sold at a licensed Maine dispensary must complete the mandatory testing that applies to its product matrix and input history before sale. Under <a href="https://legislature.maine.gov/backend/App/services/getDocument.aspx?documentId=124398" target="_blank" rel="noopener noreferrer">P.L. 2025, ch. 764, effective April 19, 2026</a> and <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/OCP%20Guidance%20for%20Mandatory%20Testing%20of%20Adult%20Use%20Edibles%20April%202026.pdf" target="_blank" rel="noopener noreferrer">OCP's April 28, 2026 implementation guidance</a>:</p>
-    <ul>
-      <li><strong>Finished edible batch:</strong> THC-potency, cannabinoid-profile, and homogeneity testing remain mandatory.</li>
-      <li><strong>Concentrate input:</strong> To use the exception, every cannabis concentrate used to make the edible must already have passed all required mandatory contaminant testing, with the prior testing, documentation, and tracking required by 28-B M.R.S. § 605.</li>
-      <li><strong>Additional contaminant testing:</strong> A qualifying finished edible is not subject to additional mandatory contaminant testing. Voluntary or research-and-development testing is still permitted, so the analytes shown on a COA can vary.</li>
-    </ul>
-    <p>Ask the dispensary for the batch's applicable COA or testing records, but do not assume every finished edible has the same contaminant panel. See the <a href="/guides/maine-cannabis-edibles-compliance">Maine cannabis edibles compliance guide</a> for the operator-facing detail.</p>
-  </section>
+    <AutoRelated currentPath="/blog/best-maine-edibles-2026" currentTopics={topics} section="Consumer Guide" limit={6} />
+  </article>
 
-  <section>
-    <h2>Maine Edible Operators Worth Knowing in 2026</h2>
-    <p>The operators below are the ones making the strongest edible lineups in the state as of 2026. The list is opinionated — there are several other credible edible producers, but these are the ones we keep coming back to. Each operator's signature format, dose positioning, and best product are noted.</p>
-
-    <h3>Glaze Edibles — Portland</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Greater Portland (in-store statewide distribution)</span>
-        <span><strong>Signature format:</strong> Pectin gummies, fruit-forward</span>
-        <span><strong>Dose positioning:</strong> 5mg and 10mg per piece, 100mg packages</span>
-      </div>
-      <p>Glaze is the strongest independent edible brand in Maine. The Portland-based operation produces small-batch pectin gummies with a flavor profile that survives direct comparison with California craft lines — real fruit puree, no high-fructose corn syrup, full-spectrum distillate as the infusion base. The packaging is the best in the state: child-resistant, matte-finish, with the COA accessible via a QR code on the back. The 5mg Tropical and 10mg Berry lines are the workhorses, and the limited-edition 1:1 THC:CBD Calm gummies are the best 1:1 option in Maine.</p>
-    </div>
-
-    <h3>Sola Edibles — Maine-wide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Distributed statewide</span>
-        <span><strong>Signature format:</strong> RSO-infused gummies and 4:1 sleep gummies</span>
-        <span><strong>Dose positioning:</strong> 10mg THC, 4:1 THC:CBN, 10mg RSO</span>
-      </div>
-      <p>Sola is the edible line from The Maine Cannabis Company, and the 4:1 THC:CBN Sleep gummies (250mg total, 25mg THC + 100mg CBN per pack of 10) are the best high-dose sleep edible in Maine. The infusion base is a true RSO rather than distillate, which preserves the minor cannabinoids and produces a more physical, sedating effect than a comparable distillate gummy. The 10mg RSO gummies are the best entry point for buyers who want full-spectrum effect without the high-dose commitment.</p>
-    </div>
-
-    <h3>The Maine Lab — Maine-wide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Distributed statewide</span>
-        <span><strong>Signature format:</strong> Snooze Sleep Tablets (100mg THC:200mg CBN)</span>
-        <span><strong>Dose positioning:</strong> Therapeutic — 100mg per tablet</span>
-      </div>
-      <p>The Maine Lab's Snooze Sleep Tablets are the headline product: a 4-count package of 100mg THC:200mg CBN tablets (a 1:2 ratio favoring CBN), totaling 400mg CBN and 200mg THC across the package. This is one of the highest-dose single-product sleep formulations in the Maine market, and it is genuinely effective for severe insomnia at half a tablet (~50mg THC + 100mg CBN). The tablets are not for beginners; the right buyer is a medical patient with established tolerance and a clear sleep indication.</p>
-    </div>
-
-    <h3>Tastefully Baked — Southern Maine</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Southern Maine, in-store distribution</span>
-        <span><strong>Signature format:</strong> Baked goods, seltzers, small-batch confections</span>
-        <span><strong>Dose positioning:</strong> 5-10mg per serving, 50-100mg packages</span>
-      </div>
-      <p>Tastefully Baked is a small-batch baked-goods and seltzer operation out of southern Maine. The cookies, brownies, and rice-krispie treats are the strongest traditional baked format in the state — denser than mass-market alternatives, with a real butter and sugar matrix and a clear dose per piece. The seltzer line (5mg THC, 12oz cans) is the best low-dose beverage option in Maine, with a flavor profile that does not telegraph cannabis on the palate. The limitation is distribution: Tastefully Baked is in roughly 30-40 stores statewide, mostly in the southern counties.</p>
-    </div>
-
-    <h3>Purple Co. — Portland</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Greater Portland (Portland retail open)</span>
-        <span><strong>Signature format:</strong> Edibles and infused pre-rolls</span>
-        <span><strong>Dose positioning:</strong> 5-10mg per piece</span>
-      </div>
-      <p>Purple Co. is a Portland-headquartered operation that recently opened its own retail store and is scaling up edible and infused pre-roll production. The edible line is built around 5mg and 10mg pectin gummies with a flavor-forward profile (mango-habanero, watermelon-mint, blueberry-lavender) and a full-spectrum distillate infusion. The newness of the operation means distribution is still concentrated in Cumberland and York counties, but the quality is competitive with Glaze at the same price point.</p>
-    </div>
-
-    <h3>OMG Cannabis Co. — Delivery, Statewide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Delivery, statewide (medical primary)</span>
-        <span><strong>Signature format:</strong> Broad edible catalog, multi-brand</span>
-        <span><strong>Dose positioning:</strong> 5-100mg range</span>
-      </div>
-      <p>OMG is a Maine-licensed delivery operator that aggregates a broad edible catalog from multiple producers — including several of the brands named above — and delivers to MMMP cardholders statewide. The service is most useful for medical patients in rural counties without a nearby dispensary. The adult-use delivery channel is still limited; OMG is one of the few operators actively working both channels.</p>
-    </div>
-
-    <h3>Highbrow / The Maine Cannabis Company — Statewide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Statewide distribution</span>
-        <span><strong>Signature format:</strong> Edibles, topicals, RSO</span>
-        <span><strong>Dose positioning:</strong> 5-25mg per serving</span>
-      </div>
-      <p>Highbrow and The Maine Cannabis Company share production infrastructure and produce a broad cannabis catalog that includes a strong topical salve line and a respectable 5mg and 10mg gummy range. The edible line is more functional than the Glaze or Tastefully Baked flagship products, but the distribution is wider and the products are reliably stocked at most Maine dispensaries.</p>
-    </div>
-
-    <h3>Sweet Dirt — Statewide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Statewide (multiple dispensaries)</span>
-        <span><strong>Signature format:</strong> Beverages, gummies, mints</span>
-        <span><strong>Dose positioning:</strong> 5-10mg per serving</span>
-      </div>
-      <p>Sweet Dirt is a vertically integrated operator with a broad edible program. The beverage line (5mg THC sparkling waters) is the strongest in the state for low-dose social use, and the gummy line covers the standard 5mg and 10mg categories with a clean flavor profile. The Sweet Dirt products are widely available at both Sweet Dirt-owned stores and third-party dispensaries.</p>
-    </div>
-
-    <h3>Cannabis Cured — Bangor + Statewide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Bangor retail + statewide distribution</span>
-        <span><strong>Signature format:</strong> Edibles, multi-format</span>
-        <span><strong>Dose positioning:</strong> 5-25mg per serving</span>
-      </div>
-      <p>Cannabis Cured is a Bangor-anchored operator with a broad edible program covering gummies, chocolates, and beverages. The menu runs 70-90 SKUs at the Bangor store and the edible selection rotates weekly. The value positioning (frequent 20% off loyalty signup and $99 ounce rotation) makes it the most reliable source of mid-tier edibles in eastern Maine.</p>
-    </div>
-
-    <h3>Theory Wellness — Statewide</h3>
-    <div class="operator-card">
-      <div class="meta">
-        <span><strong>Region:</strong> Statewide (Kittery flagship + distribution)</span>
-        <span><strong>Signature format:</strong> Rest, Rise, Recreate, Relief lines</span>
-        <span><strong>Dose positioning:</strong> 5-10mg per piece, 100mg packages</span>
-      </div>
-      <p>Theory Wellness is the Massachusetts-headquartered MSO that has anchored its Maine retail presence in Kittery. The in-house edible line is segmented by effect (Rest, Rise, Recreate, Relief) at 5mg and 10mg per piece, with a flavor profile that prioritizes approachability over the bold fruit-forward notes of Glaze. The 100mg package format and the 20% off Saturday first-time patient deal make Theory the most accessible premium edible line for new buyers in southern Maine.</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>Effect-Driven Recommendations</h2>
-    <p>The right edible depends on the effect you are trying to produce. The recommendations below are matched to the most common use cases, with the specific operator and product that fits each scenario best.</p>
-
-    <h3>For Sleep</h3>
-    <p>For severe insomnia, <strong>The Maine Lab Snooze Sleep Tablets</strong> at half a tablet (50mg THC + 100mg CBN) is the highest-impact option. For moderate sleep issues, <strong>Sola's 4:1 THC:CBN gummies</strong> at one 25mg piece 60-90 minutes before bed is the most reliable mid-dose option. For mild sleep support, a 5-10mg full-spectrum gummy from Glaze or Theory's Rest line is a reasonable starting point. The CBN:THC ratio matters; a 1:1 or 1:2 ratio favoring CBN produces meaningfully more sedation than THC alone at the same dose.</p>
-
-    <h3>For Daytime Focus and Anxiety</h3>
-    <p>For daytime focus, the right format is a microdose (2-5mg) gummy or a 1:1 THC:CBD edible. <strong>Glaze's 1:1 Calm gummies</strong> at one 5mg piece are the strongest 1:1 option in Maine. For social anxiety, a 2.5mg THC + 2.5mg CBD microdose taken 90 minutes before a stressful event produces a meaningful anxiolytic effect without the cognitive fog of a higher THC dose.</p>
-
-    <h3>For Pain Management</h3>
-    <p>For chronic pain, a 10-25mg full-spectrum or RSO-infused edible produces the most reliable analgesic effect. <strong>Sola's 10mg RSO gummies</strong> are the best RSO option at the standard dose. For breakthrough pain, a 25mg THC capsule taken with food produces 6-8 hours of relief. Avoid distillate-only edibles for pain; the full-spectrum and RSO formats consistently outperform at the same dose because of the minor cannabinoid contribution.</p>
-
-    <h3>For Appetite Stimulation</h3>
-    <p>For appetite (medical, chemotherapy-adjacent, or general), a 5-10mg distillate or RSO edible 60-90 minutes before a meal is the standard approach. THC reliably stimulates appetite through CB1 receptor action. The flavor profile matters more here than for sleep — buyers who do not enjoy the edible taste will not take it consistently, so a fruit-forward 5mg gummy (Glaze, Purple Co.) is more likely to produce the desired outcome than a high-CBN sleep formulation.</p>
-
-    <h3>For Social Use</h3>
-    <p>For social use, the right format is a low-dose beverage or a 2.5-5mg gummy. <strong>Sweet Dirt's 5mg sparkling waters</strong> and <strong>Tastefully Baked's 5mg seltzers</strong> are the best social formats because they mimic the ritual of an alcoholic drink without the dose commitment. The onset is faster than a gummy (15-30 minutes) and the duration is shorter (2-4 hours), which makes the format easier to calibrate.</p>
-  </section>
-
-  <section>
-    <h2>Onset Times and Duration by Format</h2>
-    <p>The format determines the absorption route, which determines the onset and the duration. The table below summarizes the realistic time ranges for the formats available in Maine. These are averages; individual response varies with body weight, metabolism, recent food intake, and tolerance.</p>
-
-    <table aria-label="Maine edible onset and duration by format">
-      <thead>
-        <tr><th>Format</th><th>Onset</th><th>Peak</th><th>Duration</th><th>Best Use</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Sublingual (mints, strips, lozenges)</td><td>5-15 min</td><td>30-60 min</td><td>2-4 hr</td><td>Fast onset, short duration</td></tr>
-        <tr><td>Beverage (seltzer, soda)</td><td>15-30 min</td><td>60-90 min</td><td>2-4 hr</td><td>Social, controllable</td></tr>
-        <tr><td>Gummy (pectin or gelatin)</td><td>30-90 min</td><td>2-3 hr</td><td>4-8 hr</td><td>Standard recreational use</td></tr>
-        <tr><td>Chocolate</td><td>30-90 min</td><td>2-3 hr</td><td>4-8 hr</td><td>Indulgent, slower onset</td></tr>
-        <tr><td>Baked good (brownie, cookie)</td><td>45-120 min</td><td>2-4 hr</td><td>5-8 hr</td><td>Long duration, classic format</td></tr>
-        <tr><td>Capsule</td><td>45-90 min</td><td>2-3 hr</td><td>6-8 hr</td><td>Consistent dose, medical</td></tr>
-        <tr><td>RSO syringe (oral)</td><td>45-90 min</td><td>2-4 hr</td><td>6-10 hr</td><td>Therapeutic, high-dose</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>First-Time Buyer Checklist</h2>
-    <p>For a buyer who has never used a cannabis edible before, the following sequence produces the safest and most predictable outcome. The list is short; the discipline is real.</p>
-    <ol>
-      <li><strong>Start at 2.5-5mg of THC.</strong> One piece of a 5mg gummy, or half a piece of a 10mg gummy. The 10mg cap is the legal single-serving ceiling in Maine (Title 28-B §703(1)(F)) and 2.5–5mg is the right starting dose for most adults new to edible THC.</li>
-      <li><strong>Wait a full two hours before considering more.</strong> The 30-90 minute onset is the average, but the realistic time-to-peak-effect is two to three hours. Most negative edible experiences come from re-dosing at the one-hour mark because the first dose has not yet peaked.</li>
-      <li><strong>Do not combine with alcohol.</strong> Alcohol amplifies THC absorption and produces a meaningfully more intense and longer-lasting effect. The combination also increases the risk of nausea and orthostatic hypotension (the "spins" on standing up).</li>
-      <li><strong>Track in a journal.</strong> A simple 30-second note — what you took, what dose, when, what you felt, when it kicked in, when it wore off — produces a personal reference card after two or three sessions that is more useful than any online dose chart.</li>
-      <li><strong>Have CBD on hand.</strong> A 25-50mg CBD capsule or a high-CBD edible taken at the first sign of an uncomfortable high reduces the psychoactive effect within 30-60 minutes. CBD counteracts the anxiety spike that drives most negative edible experiences.</li>
-      <li><strong>Buy from a licensed dispensary.</strong> The Maine OCP testing and packaging framework means a licensed dispensary product is safer than any gray-market alternative. The <a href="/find-a-dispensary">Maine dispensary finder</a> lists every licensed store in the state.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>What to Avoid in Maine Edibles</h2>
-    <p>Three categories of product are not worth the money in the 2026 Maine market. The first is the ultra-cheap white-label distillate gummy that several discount operators stock at 100mg packages for $12-15. The price is appealing; the product is a thin gelatin matrix with generic fruit flavor and a distillate that has been cut with coconut oil or MCT to stretch the THC content. The COA is technically compliant but the dose variance from the label claim is typically 20-30%, and the effect is harsh and short.</p>
-    <p>The second category is "hemp-derived" THC edibles sold outside the licensed dispensary channel. These products — sold at gas stations, smoke shops, and online — are not regulated by the OCP, do not undergo METRC tracking, and have been the subject of multiple OCP and Department of Agricultural and Forestry enforcement actions in 2024-2025 for products that contain more THC than the federal hemp limit (0.3% by dry weight) but less than a dispensary-grade dose. The labeling is unreliable, the COA is often fabricated, and the products are illegal in Maine regardless of what the packaging claims.</p>
-    <p>The third category is the "wow, 500mg in one gummy" novelty edible that some online gray-market sellers promote. These products are not legal in Maine (the OCP adult-use package ceiling is 200mg per Title 28-B §703(1)(F)), and the dose is high enough to produce a medical-grade psychoactive effect that no first-time user should encounter. Maine dispensaries do not stock these products; if you see one, it is gray-market and unregulated.</p>
-  </section>
-
-  <section>
-    <h2>Where to Buy: Dispensary vs. Delivery</h2>
-    <p>For most Maine buyers, in-store dispensary purchase is the right answer. The retail experience allows the buyer to read the COA, ask the budtender about a specific batch, and compare the product visually and by smell. The menu at a serious Maine dispensary lists 30-50+ edible SKUs at any given time, which gives a meaningful range of dose, format, and effect options.</p>
-    <p>Delivery is the right answer for medical patients in rural counties without a nearby dispensary. Operators like OMG Cannabis Co., Clean Slate Cannabis, and Odyssey Cannabis offer MMMP delivery within a defined service radius (typically 15-30 miles from the operator's location). The medical delivery framework is well-established; the adult-use delivery framework is still rolling out through 2026-2027, and statewide adult-use delivery is not yet available.</p>
-    <p>For a state-licensed dispensary near you, the <a href="/find-a-dispensary">Maine dispensary finder</a> lists every active operator by region. For a curated list of the dispensaries that are worth the drive regardless of what you buy, the <a href="/blog/best-maine-dispensaries-2026">best Maine dispensaries 2026 guide</a> covers twelve stores across seven regions. For the cheapest prices on ounces, eighths, and pre-rolls, see the <a href="/blog/cheapest-maine-dispensary-2026">cheapest Maine dispensary guide</a>.</p>
-  </section>
-
-  <section class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-    <Faq faqs={faqItems} />
-  </section>
-
-
-  <section class="disclaimer">
-    <p><em><strong>Disclaimer:</strong> This article is for informational and educational purposes only and does not constitute medical, legal, or purchasing advice. Cannabis edibles affect individuals differently based on body chemistry, tolerance, food intake, and other factors. Start with a low dose (2.5-5mg THC) and wait at least two hours before considering more. Do not drive or operate machinery after consuming cannabis. Consult a qualified physician before combining cannabis with any prescription medication. Cannabis products and operator menus change frequently; verify current availability and dosing directly with the dispensary before purchasing. Maine Dispensary Guide has no commercial relationship with any operator or brand mentioned in this article. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent.</em></p>
-  </section>
-
-    <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-16</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
-    </div>
-  </section>
-<p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
+  <script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
 </Layout>
