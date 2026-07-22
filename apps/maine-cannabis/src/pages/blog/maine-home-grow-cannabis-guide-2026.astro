@@ -71,6 +71,9 @@ const faqItems = [
       background: var(--color-surface);
     }
     .plant-card strong { display: block; color: var(--color-primary); font-size: 1.45rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    th { background: var(--color-background); font-weight: 700; }
     .source-note, .compliance-note {
       padding: 1rem 1.25rem;
       border: 1px solid var(--color-border);
@@ -99,10 +102,24 @@ const faqItems = [
       <div class="plant-card"><strong>Unlimited seedlings</strong><span>As defined by Maine law</span></div>
     </div>
 
-    <section>
+    <section id="definitions">
+      <h2>Definitions that control the count</h2>
+      <p>Maine law distinguishes a <strong>mature plant</strong>, an <strong>immature plant</strong>, a <strong>seedling</strong>, and a <strong>cultivation area</strong>. Medical law separately defines a <strong>qualifying patient</strong>. Those categories determine which limit applies; do not count every plant at every growth stage as though it were mature.</p>
+      <p>For exact statutory definitions, use <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec102.html" rel="noopener noreferrer">28-B M.R.S. §102</a> and the medical definitions in <a href="https://legislature.maine.gov/statutes/22/title22sec2422.html" rel="noopener noreferrer">22 M.R.S. §2422</a>.</p>
+    </section>
+
+    <section id="common-scenarios">
       <h2>Where can an adult grow?</h2>
       <p>Under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html" rel="noopener noreferrer">28-B M.R.S. §1502</a>, an adult may cultivate on land the adult owns or is domiciled on. Written landowner permission is required when the cultivator <strong>neither owns nor is domiciled on</strong> the land. These are three distinct statutory paths: ownership, domicile, or written permission.</p>
-      <p>A lease, condominium declaration, homeowners-association rule, or federal housing requirement may still affect a tenant or resident. Check the current documents governing the property without treating landowner permission as a statutory requirement for every rented domicile.</p>
+      <p>A tenant's domicile can satisfy the statutory location path, but that does not resolve every lease, condominium, federal-housing, or other private-property restriction. Check the current documents governing the property without treating landowner permission as a statutory requirement for every rented domicile.</p>
+      <table aria-label="Common Maine home-grow property scenarios">
+        <thead><tr><th scope="col">Rule</th><th scope="col">Common scenario</th><th scope="col">What to verify</th></tr></thead>
+        <tbody>
+          <tr><td>Ownership</td><td>The cultivator owns the land.</td><td>Plant, visibility, access, tagging, and generally applicable local rules.</td></tr>
+          <tr><td>Domicile</td><td>The cultivator lives at the property but does not own it.</td><td>Lease, condominium, federal-housing, and other private restrictions.</td></tr>
+          <tr><td>Written permission</td><td>The cultivator neither owns nor is domiciled on the land.</td><td>Written landowner permission plus every other statutory condition.</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
