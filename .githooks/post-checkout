@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
-# .githooks/post-checkout / post-merge hint
-# Not strictly needed; pre-push handles the verify gate.
+set -u
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+bootstrap="$repo_root/scripts/git/mdg-worktree-bootstrap.cjs"
+
+if [[ -f "$bootstrap" ]]; then
+  node "$bootstrap" --quiet || printf '%s\n' \
+    '[post-checkout] warning: worktree dependency bootstrap failed; run npm run workflow:bootstrap' >&2
+fi
+
 exit 0
