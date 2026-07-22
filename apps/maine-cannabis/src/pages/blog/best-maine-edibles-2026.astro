@@ -1,6 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import AutoRelated from '../../components/AutoRelated.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
@@ -171,7 +170,6 @@ const faqPageSchema = {
 
     <p class="review-note">Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide</strong> on <strong>2026-07-21</strong>. This is organizational editorial review, not medical, legal, tax, or other professional review, and this page is not individualized health guidance. See the <a href="/about/corrections">editorial corrections log</a>.</p>
 
-    <AutoRelated currentPath="/blog/best-maine-edibles-2026" currentTopics={topics} section="Consumer Guide" limit={6} />
   </article>
 
   <script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)}></script>
