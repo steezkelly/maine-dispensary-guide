@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import AuthorityHero from '../components/homepage/AuthorityHero.astro';
 import EvidenceStrip from '../components/homepage/EvidenceStrip.astro';
 import OperatorPathways from '../components/homepage/OperatorPathways.astro';
+import SiteTour from '../components/SiteTour.astro';
 import FeaturedAnalysis from '../components/homepage/FeaturedAnalysis.astro';
 import MunicipalityExplorer from '../components/homepage/MunicipalityExplorer.astro';
 import MaineMapReference from '../components/homepage/MaineMapReference.astro';
@@ -95,6 +96,7 @@ const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => (
     </section>
     <section id="evidence-strip" class="homepage-editorial__section"><EvidenceStrip items={evidence} /></section>
     <section id="operator-pathways" class="homepage-editorial__section"><OperatorPathways pathways={pathways} /></section>
+    <section id="site-tour" class="homepage-editorial__section"><SiteTour /></section>
     <section id="featured-analysis" class="homepage-editorial__section"><FeaturedAnalysis story={featuredStory} /></section>
     <section id="municipality-explorer" class="homepage-editorial__section"><MunicipalityExplorer rows={municipalities} /><MaineMapReference /></section>
     <section id="latest-intelligence" class="homepage-editorial__section"><LatestIntelligence items={intelligence} /></section>

@@ -1,0 +1,100 @@
+---
+/**
+ * A short orientation to the site's primary research paths.
+ * The separate picture is the reduced-motion alternative and also uses the
+ * responsive poster variants when a browser cannot play the video.
+ */
+---
+
+<section class="site-tour editorial-section" aria-labelledby="site-tour-title">
+  <div class="site-tour__heading">
+    <p class="section-eyebrow">Orientation</p>
+    <h2 id="site-tour-title">How to use Maine Dispensary Guide.</h2>
+    <p>Take a brief look at the research paths for municipal rules, licensing, and operating decisions—or use the transcript beside the video.</p>
+  </div>
+
+  <div class="site-tour__content">
+    <div class="site-tour__media">
+      <video
+        data-site-tour-video
+        controls
+        playsinline
+        preload="metadata"
+        poster="/videos/site-tour.poster-960.avif"
+        aria-label="Maine Dispensary Guide site tour"
+        aria-describedby="site-tour-transcript"
+      >
+        <source src="/videos/site-tour.mp4" type="video/mp4" />
+        Your browser does not support the site-tour video. Use the transcript for the same overview.
+      </video>
+      <picture class="site-tour__static-poster" aria-hidden="true">
+        <source media="(max-width: 640px)" srcset="/videos/site-tour.poster-640.avif" type="image/avif" />
+        <source srcset="/videos/site-tour.poster-960.avif" type="image/avif" />
+        <source media="(max-width: 640px)" srcset="/videos/site-tour.poster-640.webp" type="image/webp" />
+        <source srcset="/videos/site-tour.poster-960.webp" type="image/webp" />
+        <img src="/videos/site-tour.poster-960.jpg" srcset="/videos/site-tour.poster-640.jpg 640w, /videos/site-tour.poster-960.jpg 960w" sizes="(max-width: 640px) 100vw, 50vw" alt="" />
+      </picture>
+      <p class="site-tour__motion-note">The tour does not play automatically. A static preview and transcript are shown when reduced motion is preferred.</p>
+    </div>
+
+    <div class="site-tour__transcript" id="site-tour-transcript">
+      <h3>Tour transcript</h3>
+      <p>The tour introduces the homepage as a starting point for Maine cannabis research, then points to these destinations:</p>
+      <ol>
+        <li><a href="/guides">Municipal guides</a> to compare local rules, conditions, and nearby competition.</li>
+        <li><a href="/guides/maine-dispensary-license">The licensing roadmap</a> to map state and local application work.</li>
+        <li><a href="/roi-calculator">The ROI calculator</a> to test operating assumptions before committing capital.</li>
+        <li><a href="/find-a-dispensary">Find a dispensary</a> to locate adult-use businesses across Maine.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var video = document.querySelector('[data-site-tour-video]');
+    if (!video) return;
+
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function setPoster() {
+      video.poster = window.matchMedia('(max-width: 640px)').matches
+        ? '/videos/site-tour.poster-640.avif'
+        : '/videos/site-tour.poster-960.avif';
+    }
+    setPoster();
+
+    video.addEventListener('play', function () {
+      if (prefersReducedMotion.matches) {
+        video.pause();
+        return;
+      }
+      if (video.dataset.siteTourTracked === 'true' || typeof window.gtag !== 'function') return;
+      video.dataset.siteTourTracked = 'true';
+      window.gtag('event', 'site_tour_play', {
+        tour_id: 'homepage_site_tour',
+        page_path: window.location.pathname,
+        page_title: document.title,
+      });
+    });
+  })();
+</script>
+
+<style>
+  .site-tour { padding-block: clamp(3rem, 7vw, 6rem); }
+  .site-tour__heading { max-inline-size: 62ch; }
+  .site-tour__heading h2 { margin: 0.35rem 0 0; font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; }
+  .site-tour__heading > p:last-child { margin: 0.85rem 0 0; color: var(--color-text-light); }
+  .site-tour__content { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(16rem, 0.7fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; margin-top: 1.75rem; }
+  .site-tour__media { position: relative; }
+  .site-tour video, .site-tour__static-poster img { display: block; inline-size: 100%; block-size: auto; border: 1px solid var(--color-rule); background: var(--color-surface); }
+  .site-tour__static-poster { display: none; }
+  .site-tour__motion-note { margin: 0.65rem 0 0; color: var(--color-text-light); font-size: 0.875rem; }
+  .site-tour__transcript { padding: clamp(1rem, 2.5vw, 1.5rem); border-block: 1px solid var(--color-rule); background: var(--color-surface); }
+  .site-tour__transcript h3 { margin: 0; font-family: var(--font-serif); font-size: 1.5rem; }
+  .site-tour__transcript p { margin: 0.6rem 0 0; color: var(--color-text-light); }
+  .site-tour__transcript ol { margin: 1rem 0 0; padding-inline-start: 1.25rem; }
+  .site-tour__transcript li + li { margin-top: 0.65rem; }
+  .site-tour__transcript a { color: var(--color-text); font-weight: 600; }
+  @media (max-width: 760px) { .site-tour__content { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .site-tour video { display: none; } .site-tour__static-poster { display: block; } }
+</style>

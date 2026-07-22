@@ -13,7 +13,7 @@
 //
 // Versioning: schema_version is mandatory on every emit. v1 is the first
 // versioned taxonomy. v0 events (scroll_depth, page_engaged, faq_open, cta_view,
-// lead_capture, affiliate_click) emit under schema_version='v0' for compatibility
+// site_tour_play, lead_capture, affiliate_click) emit under schema_version='v0' for compatibility
 // with the existing 2026-07-11 instrumentation layer; they remain legacy signals
 // per EVENT-TAXONOMY.md and the reconciliation report D1/D5/D6.
 //
@@ -37,6 +37,7 @@ export type EventSchemaV0 =
   | 'page_engaged'
   | 'faq_open'
   | 'cta_view'
+  | 'site_tour_play'
   | 'lead_capture'
   | 'affiliate_click';
 
