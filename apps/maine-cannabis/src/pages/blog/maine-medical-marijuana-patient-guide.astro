@@ -1,286 +1,158 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
-import authors from '../../data/authors.json';
-const editorialAuthor = authors.find(a => a.id === 'calvin-waters');
-const complianceReviewer = authors.find(a => a.id === 'steve-kelly');
 const article = {
-  author: "Calvin Waters",
-  authorId: "calvin-waters",
-  authorTitle: "Licensing & Compliance Analyst",
-  publishDate: "2026-06-05",
-  modifiedDate: "2026-06-05",
-  section: "Medical & Wellness",
-  // Sprint 83 — propagate reviewer to JSON-LD Article graph
-  reviewer: complianceReviewer ? {
-    name: complianceReviewer.name,
-    jobTitle: complianceReviewer.role,
-    id: complianceReviewer.id,
-  } : undefined,
+  publishDate: '2026-06-05',
+  modifiedDate: '2026-07-22',
+  section: 'Medical & Wellness',
 };
-const topics = ["medical", "patient-guide", "mmmp"];
+const topics = ['medical', 'patient-guide', 'certification'];
 
 const faqItems = [
-  { question: "How do I get a medical marijuana card in Maine?", answer: "Four steps. First, schedule an appointment with a Maine-licensed physician, nurse practitioner, or physician assistant who is willing to provide a written certification for medical cannabis. The certification must state that you have a qualifying medical condition and that the provider believes cannabis may provide relief. Second, register online with the Maine Office of Cannabis Policy at apps.web.maine.gov/online/medcannabis. You'll need a Maine photo ID or driver's license, the certification from your provider, and the $100 annual registration fee (or $0 if you qualify for the veteran, SSI, or income-based fee waiver). Third, wait 2-3 weeks for your Registry Identification Card to arrive by mail. Fourth, visit any licensed Maine medical dispensary with your card and a photo ID. The full process typically takes 3-4 weeks from the first provider appointment to the first dispensary visit." },
-  { question: "What are the qualifying conditions for medical marijuana in Maine?", answer: "Maine's qualifying conditions are broader than most states. The Office of Cannabis Policy lists the following: chronic pain, PTSD (post-traumatic stress disorder), cancer, glaucoma, HIV/AIDS, ALS (amyotrophic lateral sclerosis), Crohn's disease, multiple sclerosis, epilepsy or other seizure disorders, severe nausea, persistent muscle spasms (including those characteristic of multiple sclerosis), Alzheimer's disease, hepatitis C, and any other medical condition for which a physician, nurse practitioner, or physician assistant believes cannabis may provide relief. The catch-all 'any other medical condition' clause is the one most patients use, and it gives Maine providers more latitude than states with stricter lists. Anxiety, insomnia, and chronic migraines are commonly approved under that clause." },
-  { question: "Does Maine accept out-of-state medical marijuana cards?", answer: "Yes. Maine is one of a small number of states that explicitly accepts out-of-state medical cannabis cards for purchases at Maine dispensaries. The reciprocity rules require that your home state have a medical cannabis program that Maine recognizes, and you must have a valid registry identification card from your home state. Practically, this means a New Hampshire medical cardholder can visit a Maine dispensary and purchase on the same terms as a Maine cardholder. The reverse — Maine cardholders purchasing in another state — varies by state; some states accept Maine cards, most do not. The cannabis stays in Maine; transporting it across state lines is still a federal violation regardless of medical status." },
-  { question: "What does a medical marijuana card save me in Maine?", answer: "Significant money. Medical cardholders avoid the 14% adult-use retail excise tax that took effect January 1, 2026, and pay only the 5.5% state sales tax on their purchases. For a patient spending $300/month on cannabis, that saves roughly $48/month in retail excise tax, plus the differential on sales tax. The annual math works out to about $500-600/year in tax savings for a moderate user, which means a $100 card pays for itself in 2-3 months. Medical patients also get higher possession limits (up to 8 ounces of prepared cannabis versus 2.5 ounces for adult-use), access to medical-only products like RSO syringes and high-CBD formulations, and the caregiver support system if they need help with cultivation or transport." },
-  { question: "How many medical marijuana patients are there in Maine?", answer: "As of the most recent OCP Medical Use of Cannabis Program annual report, Maine has roughly 100,000-110,000 active registered medical patients, making it one of the larger state medical programs in the country by raw count. The patient base has grown steadily each year since 2018, when the program was substantially expanded to include more qualifying conditions and the home cultivation rules were relaxed. The OCP also tracks roughly 1,500-1,800 active caregivers (people authorized to grow or transport cannabis for registered patients), and 8-10 medical-only dispensaries operate in the state alongside the much larger adult-use market. The annual report is published each spring and is the authoritative source for the program statistics." }
+  {
+    question: 'How do I become a medical cannabis patient in Maine?',
+    answer: 'Schedule an assessment with a Maine-licensed physician, nurse practitioner, or physician assistant. After a full medical-history assessment in a bona fide provider-patient relationship, the provider may issue and provide a written certification if the provider believes medical cannabis may provide therapeutic or palliative benefit.',
+  },
+  {
+    question: 'Does Maine issue a medical marijuana card to ordinary patients?',
+    answer: 'Maine qualifying patients generally use the written certification issued by their medical provider with government-issued photo identification. The Office of Cannabis Policy says it does not maintain a patient registry. An Individual Identification Card, or IIC, is an adult-use program worker credential and is not the ordinary patient credential.',
+  },
+  {
+    question: 'Does Maine have a fixed list of qualifying conditions?',
+    answer: 'Maine law focuses on the medical provider’s professional judgment. A provider may certify a patient when, after the required assessment, the provider believes the patient may receive therapeutic or palliative benefit for a medical diagnosis. The provider may decline to certify and is responsible for meeting the applicable standard of care.',
+  },
+  {
+    question: 'Can a medical cannabis certification be issued through telehealth?',
+    answer: 'Maine law allows telehealth subject to specific conditions. The provider must use a synchronous encounter before issuing or renewing a certification and must follow the standards of the provider’s licensing board. If the certifying provider is not the patient’s primary care provider and the patient does not provide the primary provider’s contact information, Maine law requires an in-person consultation before certification.',
+  },
+  {
+    question: 'How long is a Maine written certification valid?',
+    answer: 'A written certification is valid for the term specified by the medical provider, up to one year. The provider may issue a digital image only when it is identical to the tamper-resistant paper certification and remains legible.',
+  },
+  {
+    question: 'Can an out-of-state medical cannabis patient buy in Maine?',
+    answer: 'Some visiting patients can. The visitor must be a resident of an OCP-approved jurisdiction, possess the patient credential issued under that jurisdiction’s law, and present photo identification or a driver’s license from the same jurisdiction. Check OCP’s current visiting-patient list before traveling because approval can change.',
+  },
 ];
-
-const faqPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": { "@type": "Answer", "text": f.answer.replace(/<[^>]+>/g, "") }
-  }))
-};
 ---
 
-<Layout 
-  title="Maine Medical Marijuana IIC Card: How to Apply (2026)"
-  description="How to get your Maine IIC card (Individual Identification Card) — eligibility, application process, MMMP reciprocity, costs, and patient rights. 2026 guide."
+<Layout
+  title="How to Get a Maine Medical Cannabis Card in 2026"
+  description="How to get what is commonly called a Maine medical cannabis card: provider certification, written documentation, renewals, visiting-patient rules, and official sources."
   heroImage="/images/heroes/maine-medical-marijuana-patient-guide.jpg"
   article={article}
   topics={topics}
 >
-<style>
-  article { max-width: 720px; margin: 0 auto; }
-  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
-  section { margin-bottom: 3rem; }
-  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
-  section h2:first-child { margin-top: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
-  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { background: var(--color-background); font-weight: 700; }
-  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
-  li { margin-bottom: 0.75rem; }
-  .faq-list h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-text); }
-  .faq-list p { margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
-  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
-  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
-  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
-  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
-  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
-  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
-  .answer-capsule strong { color: var(--color-text); }
-  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
-  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
-  .byline p { margin: 0.25rem 0; }
-  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
-  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
-  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
-  ol.steps { counter-reset: step; list-style: none; padding-left: 0; }
-  ol.steps li { counter-increment: step; padding-left: 3rem; position: relative; margin-bottom: 1.5rem; }
-  ol.steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 2rem; height: 2rem; background: #143027; color: var(--color-background); border-radius: 50%; text-align: center; line-height: 2rem; font-weight: 700; }
-</style>
+  <style>
+    article { max-width: 760px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.2rem; color: var(--color-text-light); }
+    section { margin-bottom: 2.75rem; }
+    section h2, section h3 { color: var(--color-text); font-family: var(--font-serif); }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin-bottom: 0.75rem; }
+    .answer-capsule {
+      background: color-mix(in oklab, var(--color-soft-green) 8%, transparent);
+      border-left: 4px solid var(--color-primary);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 2rem;
+      border-radius: 0 0.75rem 0.75rem 0;
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+    .answer-capsule h2 { margin: 0 0 0.6rem; font-size: 1.3rem; }
+    .steps { counter-reset: step; list-style: none; padding: 0; }
+    .steps li { counter-increment: step; position: relative; padding: 0 0 1.5rem 3rem; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 0;
+      width: 2rem; height: 2rem; line-height: 2rem;
+      border-radius: 50%; text-align: center; font-weight: 700;
+      color: white; background: var(--color-primary);
+    }
+    .correction-note, .source-note {
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      background: var(--color-surface);
+    }
+    .byline, .last-updated { color: var(--color-text-light); font-size: 0.9rem; }
+  </style>
 
-<article>
-  <div class="article-header">
-    <h1>Maine Medical Marijuana IIC Card: How to Apply (2026)</h1>
-    <p class="subtitle">Eligibility, the application process, MMMP reciprocity, and what to do once you're a registered Maine medical cannabis patient</p>
-    <div class="byline">
-      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst. <strong>Reviewed by the Maine Cannabis editorial team.</strong></p>
-      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
-    </div>
-  </div>
+  <article>
+    <header class="article-header">
+      <h1>How to Get a Maine Medical Cannabis Card in 2026</h1>
+      <p class="subtitle">What Maine calls written provider certification—and how it differs from an adult-use IIC</p>
+      <p class="byline">By Maine Dispensary Guide Editorial Team. Editorially reviewed against the cited primary sources on July 22, 2026.</p>
+      <p class="last-updated">Published June 5, 2026 · Corrected and editorially updated July 22, 2026</p>
+    </header>
 
-  <section class="intro">
-    <p>Maine's medical cannabis program is one of the oldest in the country — it was established by citizen initiative in 1998 and operational by 1999, well before any other New England state. The 2018 expansion broadened the qualifying conditions list, raised possession limits, and integrated the program with the eventual adult-use rollout in 2020. As of 2026, roughly 100,000-110,000 Maine residents hold active medical cards, and the program is administered by the Office of Cannabis Policy (OCP), the same agency that oversees adult-use retail.</p>
-    <p>This guide is the practical handbook for becoming a registered Maine medical cannabis patient in 2026. It covers the eligibility rules, the four-step application process, where to find a certifying provider, what the program costs, the tax advantages of being a cardholder versus an adult-use buyer, and what changes for patients once the card is in hand. If you're already a cardholder, skip to the reciprocity and tax sections; if you're a caregiver or considering becoming one, the Maine Cannabis Caregiver Guide covers that separately.</p>
-  </section>
+    <section class="answer-capsule" aria-labelledby="patient-answer">
+      <h2 id="patient-answer">The short answer</h2>
+      <p><strong>A Maine resident becomes a qualifying medical cannabis patient by receiving a written certification from a Maine-licensed physician, nurse practitioner, or physician assistant.</strong> The certification must follow a full medical-history assessment within a bona fide provider-patient relationship. Maine's Office of Cannabis Policy does not maintain an ordinary patient registry, and patients do not apply for an adult-use Individual Identification Card.</p>
+    </section>
 
-  <Callout title="The Cost-Benefit Math" type="insight">
-    The annual registration fee for a Maine MMMP card is $100 (waived for veterans, SSI recipients, and patients below a state-defined income threshold). A medical cardholder spends roughly $300-500/month on cannabis in 2026, and the savings from avoiding the 14% adult-use retail excise tax plus the medical-specific product access typically pay back the $100 fee within 2-3 months. For chronic-pain, cancer, PTSD, and other high-frequency users, the math is decisive: medical registration is essentially free in the first year and saves meaningful money in every subsequent year.
-  </Callout>
+    <aside class="correction-note">
+      <strong>Important terminology correction:</strong> An <em>Individual Identification Card (IIC)</em> is an adult-use cannabis worker credential. It is not the ordinary Maine medical-patient credential. Patient status is based on the provider-issued written certification described in Title 22.
+    </aside>
 
-  <section>
-    <h2>Eligibility: Who Qualifies for Medical Marijuana in Maine</h2>
-    <p>Maine's qualifying conditions list is broader than most states, and the catch-all "any other medical condition" clause gives providers meaningful discretion. As of 2026, the OCP's published list of qualifying conditions includes:</p>
+    <section>
+      <h2>The Maine patient-certification process</h2>
+      <ol class="steps">
+        <li><strong>Choose an eligible Maine provider.</strong> Maine law authorizes a physician, certified nurse practitioner, or physician assistant licensed to prescribe drugs in Maine to issue a certification.</li>
+        <li><strong>Complete a real medical assessment.</strong> The provider must review the patient's full medical history in a bona fide medical provider-patient relationship. A certification is not automatic, and the provider may decline.</li>
+        <li><strong>Receive the written certification.</strong> If the provider believes the patient may receive therapeutic or palliative benefit, the provider may issue the state-required certification on tamper-resistant paper. The form does not require the provider to state the patient's specific diagnosis.</li>
+        <li><strong>Use the certification with identification.</strong> Keep the current certification and government-issued photo ID available when accessing Maine's medical program. Confirm documentation requirements with the registered caregiver or dispensary before the visit.</li>
+        <li><strong>Renew before it expires.</strong> The provider chooses the certification term, which may not exceed one year. Renewal requires another qualifying provider encounter.</li>
+      </ol>
+    </section>
 
-    <ul>
-      <li><strong>Chronic pain</strong> — the most common qualifying condition, accounting for roughly 60% of new certifications. Maine providers interpret this broadly, including musculoskeletal pain, neuropathic pain, and pain from chronic conditions.</li>
-      <li><strong>PTSD (post-traumatic stress disorder)</strong> — explicitly listed since 2018. Veterans and first responders make up a disproportionate share of PTSD certifications.</li>
-      <li><strong>Cancer</strong> — including active treatment and remission. Cannabis is commonly used for chemotherapy-induced nausea, pain, and appetite stimulation.</li>
-      <li><strong>Glaucoma</strong></li>
-      <li><strong>HIV/AIDS</strong></li>
-      <li><strong>ALS (amyotrophic lateral sclerosis)</strong></li>
-      <li><strong>Crohn's disease</strong></li>
-      <li><strong>Multiple sclerosis</strong></li>
-      <li><strong>Epilepsy and other seizure disorders</strong></li>
-      <li><strong>Severe nausea</strong> — interpreted broadly, including nausea from chronic conditions, pregnancy-related nausea, and treatment-induced nausea.</li>
-      <li><strong>Persistent muscle spasms</strong></li>
-      <li><strong>Alzheimer's disease</strong></li>
-      <li><strong>Hepatitis C</strong></li>
-      <li><strong>Any other medical condition for which a provider believes cannabis may provide relief</strong> — the catch-all clause, which Maine providers use for anxiety, insomnia, migraines, arthritis, and other common conditions.</li>
-    </ul>
+    <section>
+      <h2>Does Maine use a list of qualifying conditions?</h2>
+      <p>Maine's current statute does not make patient access depend on a short, closed checklist of named conditions. The controlling question is whether a licensed provider, after the required assessment, believes the patient's medical diagnosis may be alleviated by the therapeutic or palliative use of cannabis.</p>
+      <p>That does not mean every diagnosis is automatically approved. The provider must use professional judgment, explain risks and benefits, follow the applicable standard of care, and may decline to issue a certification.</p>
+    </section>
 
-    <p>The catch-all clause is the most-used path for new certifications, and it gives Maine providers more latitude than states with stricter lists. Anxiety, insomnia, chronic migraines, and IBS are commonly approved under that clause. A provider who is uncomfortable with the catch-all can refer a patient to a cannabis-specialized clinician, several of whom practice in Maine (Dustin Sulak in Falmouth is the most-cited name nationally).</p>
-  </section>
+    <section>
+      <h2>Can the appointment happen by telehealth?</h2>
+      <p>Yes, under Maine's statutory conditions. A provider using telehealth must conduct a synchronous encounter before issuing or renewing the certification and must follow the provider's licensing-board standards.</p>
+      <p>There is an additional guardrail when the certifying provider is not the patient's primary care provider. If the patient does not give that provider the name and contact information of the primary care provider, the certifying provider must conduct an in-person consultation before issuing the certification.</p>
+    </section>
 
-  <section>
-    <h2>The Four-Step Application Process</h2>
-    <p>Getting a Maine medical cannabis card in 2026 is a four-step process that typically takes 3-4 weeks from the first provider appointment to the first dispensary visit.</p>
+    <section>
+      <h2>What does a valid written certification contain?</h2>
+      <p>The certification must use tamper-resistant paper supplied by the department and the form required by rule. It is valid for the term specified by the provider, up to one year. Maine law also allows the provider to give the patient a digital image when it is identical to the paper document and all information is legible.</p>
+      <p>Do not confuse this patient document with registry cards issued to caregivers, dispensary personnel, or other registered participants. Those registration processes have different applications, fees, and timelines.</p>
+    </section>
 
-    <ol class="steps">
-      <li>
-        <strong>Get a written certification from a Maine-licensed provider.</strong> The certification must come from a Maine-licensed physician (MD or DO), nurse practitioner (NP), or physician assistant (PA). The provider must be the patient's treating provider for the qualifying condition, or be willing to perform a certification visit specifically for medical cannabis. The certification is a standardized OCP form that includes the provider's license number, the qualifying condition, and the provider's attestation that cannabis may provide therapeutic benefit. The certification is valid for one year from the date of issuance; patients must recertify annually to maintain their card.
-      </li>
-      <li>
-        <strong>Register online with the Office of Cannabis Policy.</strong> The OCP's online registration portal is at apps.web.maine.gov/online/medcannabis. The application requires a Maine photo ID or driver's license (the address on the ID must match the registration), the certification from the provider (uploaded as a PDF or image), proof of Maine residency if the ID is from another state, and payment of the $100 annual fee (or a fee waiver application if the patient qualifies for the veteran, SSI, or income-based exemption). The portal is open 24/7, and most applications are processed within 5-10 business days.
-      </li>
-      <li>
-        <strong>Receive your Registry Identification Card.</strong> The OCP mails the Registry Identification Card to the patient's address on file within 2-3 weeks of approval. The card includes the patient's name, photo, Registry ID number, and card expiration date. The card is the patient's proof of medical cannabis patient status and must be presented at the dispensary along with a valid photo ID at every purchase. Lost or stolen cards can be replaced through the OCP portal for a small fee; the process takes roughly 2 weeks.
-      </li>
-      <li>
-        <strong>Visit any licensed Maine medical dispensary.</strong> Maine has both medical-only dispensaries and dual-licensed (medical + adult-use) stores. Medical-only stores include Northeast Alliance Dispensary, American ReLeaf (Bangor), Maine's Alternative Caring (Windham), High Road 207, and roughly 5-8 others. Dual-licensed stores include most of the major MSOs: Curaleaf, Cannabis Cured, Cannabis Haven, Theory Wellness, East Coast Cannabis, HIGHLY Cannaco, SeaWeed Co., and others. The dual-licensed stores typically have a separate medical menu with higher-potency products, RSO syringes, and caregiver-grade flower.
-      </li>
-    </ol>
-  </section>
+    <section>
+      <h2>What should a visiting patient bring?</h2>
+      <p>Maine recognizes patient credentials from jurisdictions on OCP's current approved list. A visiting patient must carry the patient credential issued under the home jurisdiction's law and photo identification or a driver's license from that same jurisdiction. A card from one state paired with identification from another does not satisfy OCP's stated rule.</p>
+      <p>Check the <a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients" rel="noopener noreferrer">OCP visiting-patient page</a> before the trip. Maine's approval list and the visitor's home-jurisdiction rules can change. Cannabis must remain in Maine; federal law prohibits taking it across state or international borders.</p>
+    </section>
 
-  <section>
-    <h2>Finding a Certifying Provider</h2>
-    <p>Not every Maine provider is willing to certify patients for medical cannabis. The state's allopathic and osteopathic medical associations have historically taken a cautious approach, and many primary care providers will refer patients out rather than complete the certification themselves. The two most common paths for new certifications:</p>
+    <section>
+      <h2>What this guide does not promise</h2>
+      <ul>
+        <li>No guaranteed certification: the decision belongs to the licensed provider.</li>
+        <li>No universal appointment price: providers set their own fees.</li>
+        <li>No fixed OCP patient-application timeline: ordinary patients are not applying to an OCP patient registry.</li>
+        <li>No medical efficacy claim: discuss risks, interactions, pregnancy, impairment, and treatment choices with a qualified clinician.</li>
+        <li>No cross-border protection: a state certification does not override federal interstate rules.</li>
+      </ul>
+    </section>
 
-    <h3>1. Established Cannabis Clinics</h3>
-    <p>Maine has several clinics that specialize in medical cannabis certifications. The most-cited is Dr. Dustin Sulak's practice in Falmouth (Healer.com and Integr8 Health), which has been a national reference for medical cannabis since 2009. Other Maine clinics include Cannabis Care Maine (multiple locations), GreenNurse Group, and various naturopathic providers. The certification visit at a dedicated cannabis clinic typically costs $150-300, and the clinic handles the OCP paperwork. Wait times are usually 1-2 weeks for a new patient appointment.</p>
+    <aside class="source-note">
+      <strong>Primary sources:</strong> <a href="https://legislature.maine.gov/statutes/22/title22sec2423-B.html" rel="noopener noreferrer">22 M.R.S. §2423-B</a> governs provider certification, expiration, form, professional judgment, and telehealth. The <a href="https://www.maine.gov/dafs/ocp/resources/faq" rel="noopener noreferrer">OCP FAQ</a> explains the program and credential categories. Verify current requirements before acting.
+    </aside>
 
-    <h3>2. Telehealth Platforms</h3>
-    <p>National telehealth platforms (Leafwell, NuggMD, Cannabis Clinicians, Veriheal) have become the most common path for new certifications since the pandemic-era telehealth flexibilities were made permanent. The process is straightforward: schedule a video visit with a Maine-licensed provider, discuss your qualifying condition, receive the certification by email within hours if approved. Costs range from $100-200 for the certification visit. The certification is then uploaded to the OCP portal as part of the application. Telehealth is especially useful for patients in rural Maine without a local cannabis-knowledgeable provider.</p>
+    <Faq items={faqItems} />
 
-    <h3>3. Primary Care Providers</h3>
-    <p>A growing share of Maine primary care providers are willing to certify established patients for medical cannabis, particularly when the patient has a documented qualifying condition (chronic pain, PTSD, cancer, etc.) in the provider's records. This is the lowest-cost path — most PCPs complete the certification as part of a regular visit with no extra charge — but it requires the patient to ask, and not every PCP will agree. Veterans receiving care through the VA system often get certifications through VA-affiliated providers; the VA does not prescribe cannabis but does not prohibit providers from completing state certification forms.</p>
-  </section>
-
-  <section>
-    <h2>The Caregiver Program</h2>
-    <p>Maine's caregiver program is one of the most flexible in the country. A registered caregiver is authorized to cultivate cannabis on behalf of a registered patient, transport the patient to and from dispensaries, and in some cases assist with administration. The program is administered by the OCP, and the registration is separate from the patient's MMMP card.</p>
-
-    <p>Key caregiver rules as of 2026:</p>
-    <ul>
-      <li>Up to 30 mature flowering plants and 30 immature plants per patient for whom the caregiver is registered.</li>
-      <li>Caregivers may serve up to 5 patients simultaneously (this was raised from 3 in 2024).</li>
-      <li>Caregiver registration is $100 annually, with the same veteran/SSI/income waivers as patient registration.</li>
-      <li>Caregivers must be 21+, pass a criminal background check, and complete a state-approved Responsible Vendor training.</li>
-      <li>Caregivers may also register as medical dispensaries if they meet the operational requirements, allowing them to sell excess product to other registered patients. This is the origin of many of Maine's small caregiver-store dispensaries.</li>
-    </ul>
-
-    <p>For patients who can't easily visit a dispensary (mobility issues, rural location, immunocompromised), the caregiver program is the most reliable way to maintain access. For patients who want to grow their own medicine, registering as a self-caregiver is the simplest path (a patient may designate themselves as their own caregiver for cultivation purposes).</p>
-  </section>
-
-  <section>
-    <h2>Medical Dispensaries vs. Adult-Use Stores</h2>
-    <p>Maine's dispensary market is split between medical-only stores and dual-licensed stores that serve both medical patients and 21+ adult-use customers. The split matters because the product selection, pricing, and experience are different.</p>
-
-    <h3>Medical-Only Dispensaries</h3>
-    <p>These stores are licensed only to serve registered medical patients. The product menus tend to be more therapeutically focused: high-CBD flower, RSO syringes, topical formulations, and caregiver-grade cultivars. The budtenders are typically more clinically trained, and many medical-only stores have a pharmacist or nurse consultant on staff or on call. Examples: Northeast Alliance Dispensary (medical-only, multiple Maine locations), American ReLeaf (Bangor), Maine's Alternative Caring (Windham), High Road 207. The medical-only stores are smaller in scale and produce lower volume, which translates to higher prices on some products, but the medical-specific offerings and the clinical expertise justify the premium for many patients.</p>
-
-    <h3>Dual-Licensed Dispensaries</h3>
-    <p>Most of Maine's larger dispensaries are dual-licensed, serving both medical and adult-use customers from the same storefront. The dual-licensed stores typically have a separate medical menu section (or a separate medical-only hours window) with higher-potency products and medical-specific formats. The dual-licensed operators include Curaleaf, Cannabis Cured, Cannabis Haven, Theory Wellness, East Coast Cannabis, HIGHLY Cannaco, SeaWeed Co., Firestorm Cannabis, and most of the other major MSOs. For most patients, the dual-licensed stores offer the best of both worlds: the medical tax advantage, the broader product selection, and the operational scale that drives competitive pricing.</p>
-
-    <h3>What Medical Patients Get That Adult-Use Buyers Don't</h3>
-    <ul>
-      <li>Tax savings (no 14% adult-use excise, only 5.5% state sales tax)</li>
-      <li>Higher possession limits (8 ounces of prepared cannabis vs 2.5 ounces for adult-use)</li>
-      <li>Access to medical-only products and higher-potency formulations</li>
-      <li>Caregiver support for cultivation, transport, and administration</li>
-      <li>Priority access during product shortages (operators reserve medical inventory first)</li>
-      <li>Reciprocity with other states that accept Maine medical cards (varies by state)</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>Reciprocity: Using Your Maine Card in Other States (and Vice Versa)</h2>
-    <p>Maine is one of a small number of states that explicitly accepts out-of-state medical cannabis cards at Maine dispensaries. The reciprocal rule works like this: a New Hampshire, Vermont, Massachusetts, Rhode Island, or other-state medical cardholder with a valid Registry Identification Card from their home state can visit a Maine dispensary and purchase on the same terms as a Maine cardholder. The cardholder must present their home-state card plus a valid photo ID at the dispensary.</p>
-
-    <p>The reverse — Maine cardholders purchasing at dispensaries in other states — varies by state. As of 2026, the following states explicitly accept out-of-state medical cards (subject to each state's rules):</p>
-    <ul>
-      <li><strong>Arizona</strong> — accepts out-of-state medical cards</li>
-      <li><strong>Arkansas</strong> — accepts out-of-state medical cards for 30 days per visit</li>
-      <li><strong>California</strong> — accepts valid out-of-state medical recommendations (not Registry ID cards specifically, but the underlying physician certification)</li>
-      <li><strong>Hawaii</strong> — accepts out-of-state medical cards for in-state purchases</li>
-      <li><strong>Maine</strong> — accepts out-of-state medical cards (the rule this guide covers)</li>
-      <li><strong>Michigan</strong> — accepts out-of-state medical cards</li>
-      <li><strong>Nevada</strong> — accepts out-of-state medical cards</li>
-      <li><strong>New Hampshire</strong> — accepts out-of-state medical cards for therapeutic cannabis dispensaries (not the alternative treatment centers, which are NH-only)</li>
-      <li><strong>New Mexico</strong> — accepts out-of-state medical cards</li>
-      <li><strong>Oklahoma</strong> — accepts out-of-state medical card applications</li>
-      <li><strong>Pennsylvania</strong> — accepts out-of-state medical cards at dispensaries</li>
-      <li><strong>Rhode Island</strong> — accepts out-of-state medical cards</li>
-      <li><strong>Utah</strong> — accepts out-of-state medical cards with prior registration</li>
-      <li><strong>Washington</strong> — accepts out-of-state medical cards at dispensaries</li>
-    </ul>
-
-    <p>Note that the reciprocity list shifts regularly as states adjust their rules. The information above reflects 2026 published policies; always confirm with the destination state's cannabis regulatory agency before traveling with medical cannabis. The cannabis purchased under reciprocity must stay in the purchasing state — transporting cannabis across state lines is a federal violation regardless of medical status, even between two states with reciprocity.</p>
-  </section>
-
-  <section>
-    <h2>2025-2026 Program Updates and Recent Changes</h2>
-    <p>Maine's medical cannabis program has been substantially stable since the 2018 expansion, but a few notable updates have rolled out in 2025 and 2026:</p>
-
-    <ul>
-      <li><strong>Caregiver patient cap raised from 3 to 5</strong> (2024 rule change, fully implemented in 2025). Caregivers can now serve up to 5 patients simultaneously, expanding the addressable market for caregiver-store dispensaries.</li>
-      <li><strong>Telehealth certification made permanent</strong> (2024 rule change). The pandemic-era flexibility allowing telehealth certifications was made permanent, and telehealth platforms are now the most common path for new patient certifications.</li>
-      <li><strong>Plant tag tracking system</strong> (2026 rollout). The OCP is implementing a plant-tag tracking system for caregiver cultivation, similar to the METRC seed-to-sale tracking required for adult-use cultivators. The rollout is staged through 2026 and 2027, with full enforcement expected by 2028.</li>
-      <li><strong>Updated pesticide testing standards</strong> (May 2026). The OCP tightened the medical program's pesticide testing requirements, requiring all medical dispensary products to pass the same panel as adult-use. The change adds roughly $30-50/lot to testing costs but closes a long-standing patient-safety gap.</li>
-      <li><strong>Online application portal upgrade</strong> (2025). The OCP upgraded the online registration portal to handle higher application volume, and the median approval time dropped from 14 days to 7 days.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>Medical Patient Statistics and Market Context</h2>
-    <p>Per the OCP's most recent annual report, Maine's medical cannabis program in 2026 looks like this:</p>
-
-    <div class="fact-box">
-      <h2>Maine MMCP by the Numbers (2026)</h2>
-      <table aria-label="Maine medical cannabis program statistics 2026">
-        <tbody>
-          <tr><td><strong>Active Registered Patients</strong></td><td>~100,000-110,000</td></tr>
-          <tr><td><strong>Active Caregivers</strong></td><td>~1,500-1,800</td></tr>
-          <tr><td><strong>Medical-Only Dispensaries</strong></td><td>~8-10</td></tr>
-          <tr><td><strong>Dual-Licensed Dispensaries Serving Medical</strong></td><td>~80-100</td></tr>
-          <tr><td><strong>Annual Patient Growth</strong></td><td>~6-8%</td></tr>
-          <tr><td><strong>Top Qualifying Condition</strong></td><td>Chronic pain (~60% of new certifications)</td></tr>
-          <tr><td><strong>Average Patient Age</strong></td><td>52</td></tr>
-          <tr><td><strong>Annual Card Fee</strong></td><td>$100 (waivers for veteran, SSI, low-income)</td></tr>
-          <tr><td><strong>Patient Possession Limit</strong></td><td>8 ounces of prepared cannabis</td></tr>
-        </tbody>
-      </table>
+    <div class="further-reading">
+      <AutoRelated currentPath="/blog/maine-medical-marijuana-patient-guide" currentTopics={topics} section="Medical & Wellness" limit={6} />
     </div>
 
-    <p>The medical program continues to grow modestly each year, driven by new patient certifications, the ongoing stigma reduction around medical cannabis, and the operational improvements (telehealth, faster approvals). The dual-licensed dispensary model is now dominant — the largest medical patient volume is at the MSO storefronts, not the medical-only caregiver stores — and the OCP's regulatory focus has shifted to ensuring that the dual-licensed operators maintain medical-grade product standards and inventory.</p>
-  </section>
-
-  <div class="further-reading">
-    <AutoRelated currentPath="/blog/maine-medical-marijuana-patient-guide" currentTopics={['medical', 'patient-guide', 'mmmp']} section="Medical & Wellness" limit={6} />
-  </div>
-
-  <section class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-    <div class="faq-list">
-      {faqItems.map(f => (
-        <div>
-          <h3>{f.question}</h3>
-          <p>{f.answer}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <p class="disclaimer"><strong>Disclaimer:</strong> This guide reflects the Maine medical cannabis program as administered by the Office of Cannabis Policy in June 2026. Program rules, fees, qualifying conditions, and reciprocity agreements change. Always verify current rules directly with the OCP at maine.gov/dafs/ocp or by calling the program information line. Nothing in this guide is medical or legal advice; consult a qualified provider for medical decisions and an attorney for legal questions.</p>
-
-    <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-06</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
-    </div>
-  </section>
-<p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside></article>
+    <p class="editorial-note"><strong>Editorial correction.</strong> The July 21, 2026 revision removed an incorrect adult-use IIC application workflow, unsupported patient fees and processing times, unsupported patient counts, named-provider endorsements, and unsupported tax-savings calculations. See the <a href="/about/corrections">corrections policy</a>.</p>
+  </article>
 </Layout>

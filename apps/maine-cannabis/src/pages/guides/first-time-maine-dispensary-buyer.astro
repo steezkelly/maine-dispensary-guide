@@ -1,182 +1,170 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
-import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
-
 const article = {
-  author: "Eliot Nash",
-  authorId: "eliot-nash",
-  reviewer: { name: "Calvin Waters", jobTitle: "Licensing & Compliance Analyst", id: "calvin-waters" },
-  authorTitle: "Founder & Publisher",
-  publishDate: "2026-07-05",
-  modifiedDate: "2026-07-05",
-  section: "Learn"
+  publishDate: '2026-07-05',
+  modifiedDate: '2026-07-22',
+  section: 'Learn',
 };
-
-const topics = ["first-time", "consumer-guide", "dispensary", "how-to"];
-
-const firstTimeFaqs = [
-  { question: "What do I need to bring to a Maine dispensary on my first visit?", answer: "Bring one valid government-issued photo ID showing you are 21 or older — Maine accepts a driver's license, passport, or state ID from any US state. Maine dispensaries do not require a medical card for adult-use purchases. If you are a registered medical patient from Maine or a reciprocity state, also bring your medical card to access the medical program (saves the 14% adult-use excise tax). Payment is cash or debit — most Maine dispensaries do not accept credit cards because of banking restrictions on the cannabis industry." },
-  { question: "Can I go to a Maine dispensary if I'm from out of state?", answer: "Yes. Maine's adult-use program allows any adult 21+ with valid photo ID from any US state to purchase at any licensed adult-use dispensary. Out-of-state residents do not pay a special non-resident tax — the 5.5% state sales tax and 14% adult-use excise tax apply equally. If you hold a valid medical cannabis card from one of the 28 OCP-approved states, you can additionally use it at Maine registered dispensaries (often a better value). See the Out-of-State Medical Cannabis Patients in Maine reciprocity guide for the full details." },
-  { question: "What happens when I walk in — is it like a pharmacy?", answer: "Not exactly. Maine dispensaries typically have a reception area where you show ID, then either enter the retail floor directly or wait in a lobby before being admitted by a budtender. The reception staff verifies your age and lets you in. Many stores have security cameras, locked display cases, and product menus on tablets or printed sheets rather than self-service browsing. The budtender (the staff member who helps you) is trained to walk you through products, recommend starting doses, and answer questions. Tell them it is your first visit — they will slow down and explain." },
-  { question: "How much cannabis can I buy at one time in Maine?", answer: "Under Title 28-B §1501, a Maine adult 21+ can purchase up to 2.5 ounces of cannabis or a combination of cannabis and cannabis concentrate that includes no more than 10 grams of concentrate per transaction. Maine dispensaries also impose their own per-transaction limits (typically 1-2 ounces for first-time buyers) — but you can return the same day for additional purchases as long as you're under the 2.5-ounce cap. Possession limits in public are the same: 2.5 ounces total. There is no legal limit on how much you can store at home." },
-  { question: "Should I tell the budtender it's my first time?", answer: "Yes — explicitly. Maine budtenders are trained to handle first-time customers and will slow their recommendations, explain dose basics, and steer you away from products that produce the most common first-time negative experiences (very high-THC concentrates, untested edibles, etc.). Many Maine dispensaries also offer first-time-buyer promotions — ask at the register or check the operator's website before you go. Telling the budtender your experience level also helps them recommend products for what you actually want (relaxation, sleep, social, focus) rather than just selling you what's most expensive on the menu." },
-  { question: "How do I choose between flower, edibles, vapes, and tinctures on my first visit?", answer: "Different formats produce different effects on different timelines. The choice depends on what you want and how much time you have to evaluate the effect: Inhaled (flower or vape) — onset in 5-15 minutes, duration 2-3 hours, easy to titrate by waiting between puffs. Best for first-time buyers who want predictable control. Edibles (gummies, chocolates, baked goods) — onset 60-120 minutes, duration 4-8 hours, harder to titrate because the effect arrives all at once. Maine caps a single serving at 10mg THC and a package at 200mg THC. Best for users who want a long, sustained effect and are willing to wait. Tinctures (sublingual) — onset 15-30 minutes, duration 2-4 hours, easy to titrate via dropper. Best for users who want predictable dose control without smoking or vaping. For a true first visit where you want to evaluate effect within the same day, inhaled or sublingual is the most predictable format." },
-  { question: "How do I pay, and is there a tip expectation?", answer: "Payment: cash or debit (PIN-based) — most Maine dispensaries do not accept credit cards. Some have on-site ATMs (with typical $2-3 ATM fees). Maine imposes a 5.5% state sales tax on every cannabis purchase plus a 14% adult-use excise tax (effective 2026, raised from 10% per PL 2023 c. 2). The budtender usually adds these at the register and shows the post-tax total before you pay. Tipping is appreciated but not expected — most Maine dispensaries do not have a digital tipping system, so cash tips in the budtender's tip jar are the norm. $5-10 for a routine visit is generous; skip if cash is tight." },
-  { question: "Can I consume cannabis at the dispensary or in public?", answer: "No. Maine law prohibits public consumption of cannabis (Title 28-B §1501(2)). Consumption is restricted to private residences (including curtilage) and explicitly-permitted private property. You cannot consume in your car, on the sidewalk outside the dispensary, in a hotel room (most hotels prohibit it regardless), in a state or national park, or in any public space. The Maine adult-use program does not have licensed consumption lounges as of 2026, although several operator proposals are pending. Smoking in a vehicle is a civil violation regardless of consumption; driving under the influence of cannabis is a criminal offense (OUI) with per-se THC blood limits." },
-];
-
+const topics = ['first-time', 'consumer guide', 'dispensary'];
 const breadcrumbs = [
   { label: 'Home', href: '/' },
   { label: 'Guides', href: '/all-guides' },
   { label: 'First-Time Maine Dispensary Buyer Guide', href: '/guides/first-time-maine-dispensary-buyer' },
 ];
+
+const faqItems = [
+  {
+    question: 'What should I bring to a Maine adult-use dispensary?',
+    answer: 'Bring an unexpired government-issued photo ID showing that you are at least 21. Check the store’s current payment methods and hours before leaving. Adult-use stores do not require Maine residency or a medical credential.',
+  },
+  {
+    question: 'Can an out-of-state visitor buy adult-use cannabis in Maine?',
+    answer: 'Yes. Maine adult-use stores may serve an adult age 21 or older after verifying acceptable government-issued photo identification. The same purchase, possession, consumption, vehicle, and border rules apply to visitors.',
+  },
+  {
+    question: 'How much cannabis can a first-time buyer purchase?',
+    answer: 'A store may not sell more than Maine’s personal adult-use limit in one transaction: up to 2.5 ounces total, including no more than 10 grams of concentrate. Flower, concentrates, edibles, and other cannabis products share one combined equivalency limit.',
+  },
+  {
+    question: 'What tax applies to Maine adult-use cannabis in 2026?',
+    answer: 'For sales on or after January 1, 2026, Maine law applies a 14% sales-tax rate to adult-use cannabis and adult-use cannabis products. It is one cannabis rate, not the general sales-tax rate stacked on top of 14%.',
+  },
+  {
+    question: 'Can I consume cannabis at the dispensary or in public?',
+    answer: 'No. Maine restricts adult-use consumption to a private residence or explicitly permitted private property that is not generally accessible by the public. The property owner may prohibit cannabis. Drivers and passengers may not consume in a vehicle on a public way.',
+  },
+];
 ---
 
-<Layout title="First-Time Maine Dispensary Buyer Guide: Pre-Visit Prep, Day-Of Flow, and What to Buy" description="A primary-source-anchored guide for first-time cannabis buyers in Maine — what to bring, how the visit works, how to choose a product, how to pay, and the day-of mistakes to avoid." heroImage="/images/heroes/first-time-maine-dispensary-buyer-2026.jpg" article={article} topics={topics} breadcrumbs={breadcrumbs}>
+<Layout
+  title="First-Time Maine Dispensary Buyer Guide: What to Bring"
+  description="Your first Maine adult-use dispensary visit: photo ID, store selection, the visit flow, purchase limits, the single 14% cannabis tax rate, payment, labels, storage, and consumption rules."
+  heroImage="/images/heroes/first-time-maine-dispensary-buyer-2026.jpg"
+  article={article}
+  topics={topics}
+  breadcrumbs={breadcrumbs}
+>
+  <style>
+    article { max-width: 760px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { color: var(--color-text-light); font-size: 1.2rem; }
+    section { margin-bottom: 2.75rem; }
+    section h2, section h3 { color: var(--color-text); font-family: var(--font-serif); }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin-bottom: 0.75rem; }
+    .answer-capsule {
+      margin: 1.5rem 0 2rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 0.75rem 0.75rem 0;
+      background: color-mix(in oklab, var(--color-soft-green) 8%, transparent);
+      line-height: 1.65;
+      font-size: 1.03rem;
+    }
+    .answer-capsule h2 { margin: 0 0 0.6rem; font-size: 1.3rem; }
+    .prep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .prep-card { padding: 1.15rem; border: 1px solid var(--color-border); border-radius: 0.85rem; background: var(--color-surface); }
+    .prep-card strong { display: block; color: var(--color-primary); margin-bottom: 0.35rem; }
+    .source-note, .safety-note { padding: 1rem 1.25rem; border: 1px solid var(--color-border); border-radius: 0.75rem; background: var(--color-surface); }
+    .byline { color: var(--color-text-light); font-size: 0.9rem; }
+  </style>
 
-<article class="guide">
-  <header class="article-header">
-    <h1>First-Time Maine Dispensary Buyer Guide: Pre-Visit Prep, Day-Of Flow, and What to Buy</h1>
-    <p class="subtitle">A primary-source-anchored walkthrough of your first Maine cannabis purchase — what to bring, how the visit works, how to choose a product, how to pay, and the day-of mistakes to avoid.</p>
-    <div class="byline">
-      <p><strong>By {article.author}.</strong> Reviewed by {article.reviewer.name}, {article.reviewer.jobTitle}. Published {article.publishDate}.</p>
+  <article>
+    <header class="article-header">
+      <h1>First-Time Maine Dispensary Buyer Guide</h1>
+      <p class="subtitle">What to bring, what happens inside, and which rules matter after checkout</p>
+      <p class="byline">By Maine Dispensary Guide Editorial Team. Editorially reviewed against the cited primary sources on July 22, 2026.</p>
+    </header>
+
+    <section class="answer-capsule" aria-labelledby="first-visit-answer">
+      <h2 id="first-visit-answer">The short answer</h2>
+      <p><strong>For a first adult-use visit, bring an unexpired government-issued photo ID showing you are at least 21.</strong> Confirm the store is licensed for adult use, check its hours and payment methods, decide on a budget before arriving, and ask staff to explain the product label. Maine residency and a medical credential are not required for an adult-use purchase.</p>
+    </section>
+
+    <div class="prep-grid" aria-label="First dispensary visit essentials">
+      <div class="prep-card"><strong>Valid photo ID</strong><span>The store must verify every purchaser is 21 or older.</span></div>
+      <div class="prep-card"><strong>Payment plan</strong><span>Methods vary; check the store before the trip.</span></div>
+      <div class="prep-card"><strong>Legal destination</strong><span>Buying does not create a lawful place to consume.</span></div>
     </div>
-  </header>
 
-  <Callout title="Editorial standard" type="info">
-    This guide is part of the Maine Dispensary Guide editorial corpus. Every claim is anchored to a primary source with publication date. Cannabis is a YMYL (health-affecting) topic — readers should consult a Maine-licensed healthcare provider for personal guidance. Maine's Office of Cannabis Policy regulates product safety; OCP does not endorse cannabis as a treatment for any specific medical condition.
-  </Callout>
+    <section>
+      <h2>1. Choose the correct kind of store</h2>
+      <p>Maine operates separate adult-use and medical cannabis programs. A first-time adult buyer should choose a licensed adult-use cannabis store. A medical caregiver retail store or registered dispensary follows different patient-documentation rules and may not serve an ordinary adult-use customer.</p>
+      <p>Use the <a href="/find-a-dispensary">Maine dispensary directory</a>, then verify the store's current program, address, hours, ordering process, accessibility, and payment methods on the operator's own site or by phone.</p>
+    </section>
 
-  <section class="intro">
-    <h2>Who this guide is for</h2>
-    <p>You are 21 or older (or 18+ with a valid Maine medical cannabis card), you hold a valid photo ID, and you are planning your first visit to a Maine cannabis dispensary. You may be a Maine resident who has never purchased cannabis, an out-of-state visitor, or a new medical patient. You want to know exactly what to expect — what to bring, what happens when you walk in, how to choose a product, how to pay, and the day-of mistakes that first-timers commonly make. This guide covers all of it, anchored on the actual Title 28-B and Title 22 statutes, the Maine OCP consumer guidance, and the standard operating practices of Maine dispensaries.</p>
-  </section>
+    <section>
+      <h2>2. What happens when you arrive</h2>
+      <ol>
+        <li><strong>ID verification:</strong> staff check acceptable government-issued photo identification before the sale.</li>
+        <li><strong>Menu review:</strong> products may appear on a printed menu, screen, website, or display. Inventory and prices can change throughout the day.</li>
+        <li><strong>Questions:</strong> tell the employee it is your first visit and ask about product type, THC and CBD label information, serving size, package total, ingredients, allergens, testing information, storage, and return policy.</li>
+        <li><strong>Checkout:</strong> confirm the item, quantity, subtotal, tax, and payment method before completing the transaction.</li>
+        <li><strong>Secure transport:</strong> keep the product closed, out of reach of minors and pets, and do not open or consume it in a vehicle.</li>
+      </ol>
+    </section>
 
-  <section>
-    <h2>1. Before you go — pre-visit prep (15 minutes)</h2>
-    <p>Most first-time dispensary anxiety comes from not knowing what to expect. A few minutes of preparation removes 90% of it.</p>
+    <section>
+      <h2>3. How much can you buy?</h2>
+      <p>A Maine adult-use store may not sell more than the personal adult-use limit in one transaction: up to 2.5 ounces total, including no more than 10 grams of cannabis concentrate. Product equivalency means a mixed cart can reach the limit without resembling 2.5 ounces of flower.</p>
+      <p>Do not treat flower, concentrate, and edibles as separate allowances. Our focused guide, <a href="/blog/how-much-weed-can-you-buy-in-maine">How Much Weed Can You Buy in Maine?</a>, explains the combined limit, multiple-store visits, possession, and the home-grow harvest exception with the current statutes.</p>
+    </section>
 
-    <h3>Pick the right store for what you want</h3>
-    <p>Maine dispensaries differ in atmosphere, product selection, and price point. Most towns have 2-5 options. Use the <a href="/find-a-dispensary">Find a Dispensary</a> directory to compare stores in your town. Read the operator's website or Google listing for: hours, address, accepted payment methods (some are cash-only), first-time-buyer promotions, and whether they have a budtender on staff who can walk you through products.</p>
+    <section>
+      <h2>4. What tax should appear at checkout?</h2>
+      <p>For adult-use cannabis sales on or after January 1, 2026, <a href="https://legislature.maine.gov/statutes/36/title36sec1811.html" rel="noopener noreferrer">36 M.R.S. §1811</a> sets the applicable sales-tax rate at <strong>14%</strong>. It is one adult-use cannabis sales-tax rate. The general sales-tax rate should not be added to 14% as a second statewide sales tax on the same cannabis item.</p>
+      <p>Ask for an itemized receipt and review any non-tax fee separately. Delivery, ATM, debit-processing, or other store charges are not the same thing as the statutory cannabis sales-tax rate.</p>
+    </section>
 
-    <h3>Decide your format in advance</h3>
-    <p>Formats differ in onset, duration, and how hard they are to titrate. For most first-time buyers, inhaled (flower or low-dose vape) or sublingual tincture is the most predictable starting point because the effect arrives in minutes and is short enough to evaluate within the same day. If you specifically want a long, sustained effect, an edible (gummy or capsule) is appropriate — but budget 90-120 minutes for onset and don't redose prematurely. See <a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator — Maine</a> for the math.</p>
+    <section>
+      <h2>5. How to compare products without guessing</h2>
+      <p>Start with the label and your intended use, not the most prominent THC number. Compare the same fields across products:</p>
+      <ul>
+        <li>product form and net quantity;</li>
+        <li>THC and CBD amount per serving and per package where applicable;</li>
+        <li>number of servings;</li>
+        <li>ingredients and allergens;</li>
+        <li>test or batch information;</li>
+        <li>manufacture or package date where shown; and</li>
+        <li>storage and warning instructions.</li>
+      </ul>
+      <p>Employees can explain the menu and label, but they are not a substitute for a licensed healthcare professional. If pregnancy, a medical condition, another medication, substance-use history, or mental-health risk affects the decision, consult an appropriate clinician before using cannabis.</p>
+    </section>
 
-    <h3>Decide your budget</h3>
-    <p>A typical first-time visit runs $30-$80 for a small amount of product plus tax. Maine imposes a 5.5% state sales tax and a 14% adult-use excise tax (raised from 10% effective January 2026) on every adult-use purchase. Budget more than you think you'll spend — first-timers often end up buying slightly more than they planned because of the on-site selection.</p>
+    <section>
+      <h2>6. Where can you consume after the visit?</h2>
+      <p>Maine prohibits public consumption. Adult use is limited to a private residence or private property where the owner has explicitly permitted consumption and the property is not generally accessible to the public. A landlord, hotel, rental host, campground, business, or venue may prohibit cannabis.</p>
+      <p>Drivers and passengers may not consume cannabis in a vehicle on a public way. Never drive while impaired. Cannabis purchased in Maine may not legally cross a state or international border.</p>
+    </section>
 
-    <h3>Check the town's hours and the town's opt-in status</h3>
-    <p>Maine municipalities individually opt in or out of adult-use retail. Not every town has a dispensary. The <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> lists opt-in status by town. Most dispensaries operate 9 AM-10 PM weekdays and 10 AM-8 PM weekends, but hours vary — confirm before driving.</p>
-  </section>
+    <section>
+      <h2>7. First-visit mistakes to avoid</h2>
+      <ul>
+        <li>Arriving with an expired, damaged, or non-photo ID.</li>
+        <li>Choosing a medical-only location when you intend to shop adult use.</li>
+        <li>Assuming every store accepts the same payment methods.</li>
+        <li>Comparing packages without checking serving and package totals.</li>
+        <li>Adding the limits for flower, concentrate, and edibles as if each were separate.</li>
+        <li>Assuming a hotel, rental, porch, parking lot, or vehicle is a legal consumption location.</li>
+        <li>Leaving products accessible to children or pets.</li>
+        <li>Driving after consumption or carrying products across a border.</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>2. Day-of flow — what actually happens at the dispensary</h2>
-    <p>The visit has a consistent structure across most Maine dispensaries. Knowing the sequence removes the social anxiety of the first five minutes.</p>
+    <aside class="safety-note">
+      <strong>Best first-visit question:</strong> “Can you walk me through this product's label, including the amount per serving and per package?” That creates a concrete comparison without asking retail staff for medical advice.
+    </aside>
 
-    <h3>Step 1: Reception and ID check (1-2 minutes)</h3>
-    <p>You enter a reception area (often behind a locked door or security vestibule). A reception staff member — not the budtender — checks your ID. They verify (a) you are 21 or older, (b) the ID is real and not expired, and (c) the photo matches you. Some dispensaries check against a state ID database or scan your ID. The ID is returned to you and you are admitted to the retail floor or the budtender area.</p>
+    <Faq items={faqItems} />
 
-    <h3>Step 2: Menu browsing and consultation (5-20 minutes)</h3>
-    <p>On the retail floor, you will see product displays (often in locked cases), a menu (printed sheet, tablet, or large wall display), and one or more budtenders. Tell the budtender it is your first visit and what you want to feel — relaxation, sleep, social, focus, pain relief. They will walk you through the menu, recommend 2-3 starting options, and explain dosing.</p>
+    <aside class="source-note">
+      <strong>Primary sources:</strong> <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec504.html" rel="noopener noreferrer">28-B M.R.S. §504</a> covers adult-use stores, transaction limits, and age verification. <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html" rel="noopener noreferrer">§1501</a> covers possession and consumption. <a href="https://legislature.maine.gov/statutes/36/title36sec1811.html" rel="noopener noreferrer">36 M.R.S. §1811</a> sets the current tax rate.
+    </aside>
 
-    <Callout title="Pro tip: ask the budtender what they personally use" type="info">
-    First-time buyers are sometimes shy about being honest about experience level. Don't be — budtenders at Maine dispensaries see this daily. They will recommend differently for a first-time 21-year-old than for a returning 65-year-old medical patient. The single best question: "If you were buying for a first-timer who wants [X effect], what would you pick?" The budtender's personal recommendation will almost always be more useful than the menu's bestseller list, because they've actually tried the products.
-    </Callout>
+    <AutoRelated currentPath="/guides/first-time-maine-dispensary-buyer" currentTopics={topics} section="Learn" limit={6} />
 
-    <h3>Step 3: Selection and weighing (2-5 minutes)</h3>
-    <p>You tell the budtender what you want. They pull the product, weigh flower (if applicable), and bring it to the register. Maine dispensaries are required to weigh cannabis products in view of the customer and to use child-resistant opaque packaging.</p>
-
-    <h3>Step 4: Register and payment (3-5 minutes)</h3>
-    <p>The budtender or a separate cashier rings you up. The register shows the pre-tax subtotal, the 5.5% state sales tax, and the 14% adult-use excise tax separately. Medical patients see only the 5.5% sales tax. You pay (cash or debit) and receive a printed receipt plus your bagged product. Some stores provide a digital receipt via email — this is the moment to ask whether they're tracking your purchase for loyalty points or first-time-buyer promotions.</p>
-
-    <h3>Step 5: Exit and consumption</h3>
-    <p>You walk out. You cannot consume on dispensary property or in any public space (Title 28-B §1501(2)). Consumption is restricted to private residences and explicitly-permitted private property. Driving under the influence of cannabis is a criminal offense (OUI) — Maine has per-se THC blood limits that are stricter than the alcohol DUI equivalents.</p>
-  </section>
-
-  <section>
-    <h2>3. Product selection — what to actually buy</h2>
-    <p>The right first-time product depends on what you want to feel, how much time you have to evaluate, and whether you want to smoke, vaporize, eat, or use a tincture. Here's a decision framework.</p>
-
-    <h3>If you want predictable, fast, controllable effect</h3>
-    <p><strong>Inhaled flower</strong> is the most common first-time choice. Onset is 5-10 minutes, peak at 30 minutes, and duration 2-3 hours. A single 0.5 gram pre-roll or a single bowl at 5-10 mg THC-equivalent is a reasonable first session. Most Maine dispensaries label flower with THC percentage; 18-22% THC is a moderate range. Avoid concentrates (wax, shatter, live resin) on your first visit — they typically test at 60-90% THC and are easy to overconsume.</p>
-
-    <h3>If you want a long, sustained effect and don't mind waiting</h3>
-    <p><strong>Edibles</strong> are appropriate, but you must respect the dose. Maine caps a single edible serving at 10 mg THC and a package at 200 mg (Title 28-B §703(1)(F), amended PL 2023 c. 396). For first-time users, 2.5-5 mg is the standard recommendation. Onset is 60-120 minutes, peak at 2-3 hours, duration 4-8 hours. The most common first-time edible mistake is taking a second dose at the one-hour mark because the first has not yet peaked. Do not redose before 2 hours.</p>
-
-    <h3>If you want dose precision and don't want to smoke</h3>
-    <p><strong>Tinctures</strong> are the easiest format to titrate. A 30 mL bottle at 2.5 mg/ml gives you 75 mg of THC total in a precisely dropper-measured format. Sublingual onset is 15-30 minutes, duration 2-4 hours. For daytime functional use, a balanced THC:CBD tincture (1:1, 5:1, or 10:1 ratios are common at Maine dispensaries) is generally the easiest product to dose precisely. See <a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures & Sublingual Use — Maine Guide</a> for full details.</p>
-
-    <h3>If you specifically want to explore low-dose or anxiety-relevant products</h3>
-    <p>See <a href="/guides/cannabis-microdosing-anxiety-maine">Cannabis Microdosing for Anxiety — Maine Guide</a>. Maine dispensaries commonly stock 2.5 mg gummies, 1 mg mints, and low-dose tinctures designed for sub-psychoactive use.</p>
-
-    <Callout title="If you are a medical patient from Maine or a reciprocity state" type="info">
-    Bring your medical card. Registered dispensaries carry higher-dose products (often 100-250 mg per package for therapeutic use) and skip the 14% adult-use excise. See the <a href="/guides/maine-out-of-state-patient-reciprocity">Out-of-State Medical Cannabis Patients in Maine</a> guide if you are visiting from one of the 28 OCP-approved states.
-    </Callout>
-  </section>
-
-  <section>
-    <h2>4. Common first-time mistakes to avoid</h2>
-
-    <ul>
-      <li><strong>Redosing edibles before 2 hours.</strong> The single most common mistake. Edible onset is genuinely slow. If you don't feel anything at 60 minutes, the answer is to wait, not to take more.</li>
-      <li><strong>Starting with high-THC concentrates.</strong> 60-90% THC products are not first-time-appropriate. The biphasic dose-response means high doses reliably worsen anxiety and can produce acute panic in low-tolerance users.</li>
-      <li><strong>Mixing cannabis with alcohol on the first session.</strong> Alcohol amplifies THC absorption and produces a meaningfully more intense and longer-lasting effect. The combination also increases nausea and orthostatic hypotension. Don't combine on your first session.</li>
-      <li><strong>Driving within 6-8 hours of consuming.</strong> Maine has per-se THC blood limits for OUI (Driving Under the Influence) that are stricter than alcohol equivalents. Edibles in particular can affect driving for 8+ hours after consumption. Plan your consumption for times when you don't need to drive.</li>
-      <li><strong>Not asking the budtender about first-time-buyer promotions.</strong> Most Maine dispensaries run first-time-buyer promotions (typically 10-20% off or a free pre-roll with purchase). The budtender may not mention it unless you ask.</li>
-      <li><strong>Bringing credit cards.</strong> Most Maine dispensaries do not accept credit cards due to banking restrictions on the cannabis industry. Bring cash or a debit card with a PIN. Some stores have on-site ATMs with a $2-3 fee.</li>
-      <li><strong>Consuming in public.</strong> Title 28-B §1501(2) prohibits public consumption. Consume only at private residences or explicitly-permitted private property. Smoking in a vehicle is a separate civil violation.</li>
-      <li><strong>Treating the budtender like a retail cashier.</strong> Maine dispensaries are service businesses, not dispensaries. The budtender's job is to consult, not just transact. The more context you give them about what you want, the better their recommendations will be.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>5. After your visit — tracking what worked</h2>
-    <p>A simple 30-second note after your first session produces a personal reference card that's more useful than any online dose chart.</p>
-
-    <p>Note the following in a phone note or paper journal:</p>
-    <ul>
-      <li>Date and time of purchase</li>
-      <li>Dispensary name and budtender (so you can request the same product or same budtender next time)</li>
-      <li>Product name and dose (e.g., "Glaze 5mg Tropical gummy, 1 piece")</li>
-      <li>Time you felt the first effect</li>
-      <li>Time of peak effect</li>
-      <li>When the effect wore off</li>
-      <li>How you felt (mood, energy, sleep quality that night)</li>
-    </ul>
-
-    <p>After 2-3 sessions, you will have a personal reference that tells you: (a) what dose to start at, (b) what format works best for the effect you want, (c) which products and which budtender to ask for next time. This is the highest-leverage habit a new buyer can build — it's how you go from "uncertain and guessing" to "informed and choosing" within a month.</p>
-  </section>
-
-  <section>
-    <h2>6. Frequently asked questions</h2>
-    <Faq items={firstTimeFaqs} />
-  </section>
-
-  <section class="related-content">
-    <h2>Continue reading</h2>
-    <ul>
-      <li><a href="/guides/cannabis-edible-dose-calculator-maine">Cannabis Edible Dose Calculator — Maine</a> — interactive dose math anchored on Maine's 10mg/serving and 200mg/package caps.</li>
-      <li><a href="/guides/cannabis-coa-maine-how-to-read">How to Read a Cannabis COA in Maine</a> — verify the dose and safety of any product before you buy.</li>
-      <li><a href="/guides/cannabis-microdosing-anxiety-maine">Cannabis Microdosing for Anxiety — Maine Guide</a> — research-anchored guide to 1–5 mg THC use for anxiety and functional use.</li>
-      <li><a href="/guides/maine-out-of-state-patient-reciprocity">Out-of-State Medical Cannabis Patients in Maine</a> — if you hold a medical card from one of 28 OCP-approved states.</li>
-      <li><a href="/guides/cannabis-tinctures-sublingual-maine">Cannabis Tinctures & Sublingual Use — Maine Guide</a> — the easiest format to titrate precisely.</li>
-      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — how the 14% adult-use excise and 5.5% sales tax apply.</li>
-      <li><a href="/learn">Maine Dispensary Guide Consumer Hub</a> — every consumer guide on one page.</li>
-      <li><a href="/download/first-timer-field-guide">Free PDF: Maine First-Timer's Field Guide</a> — the 9-page printable cheat sheet version of this guide.</li>
-      <li><a href="/about/corrections">Editorial Corrections Log</a> — every material correction to MDG content, with primary-source verification.</li>
-    </ul>
-  </section>
-
-  <AutoRelated currentPath="/guides/first-time-maine-dispensary-buyer" currentTopics={['first-time', 'consumer-guide', 'dispensary', 'how-to']} section="Learn" limit={6} />
-
-</article>
-
-  <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-06</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
-    </div>
-  </section>
+    <p class="editorial-note"><strong>Editorial correction.</strong> The July 21, 2026 revision removed stacked tax rates, unsupported product-effect and dosing claims, unsupported store practices and prices, and inaccurate possession language. See the <a href="/about/corrections">corrections policy</a>.</p>
+  </article>
 </Layout>

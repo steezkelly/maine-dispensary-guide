@@ -37,3 +37,9 @@ test('decodes HTML entities in h1 fallback', () => {
     const source = `---\n---\n<h1>Is Cannabis Legal in Maine? Yes &amp; Here&#39;s Why</h1>\n`;
     assert.equal(extractTitle(source, ''), "Is Cannabis Legal in Maine? Yes & Here's Why");
 });
+
+test('prefers the page h1 over nested frontmatter object titles', () => {
+    const fm = `const posts = [\n  { title: 'How Much Weed Can You Buy in Maine?' },\n];`;
+    const source = `---\n${fm}\n---\n<main><h1>Maine Cannabis Blog</h1></main>\n`;
+    assert.equal(extractTitle(source, fm), 'Maine Cannabis Blog');
+});

@@ -663,10 +663,10 @@ const breadcrumbListJsonLd = breadcrumbListSchema
               <div class="article-meta">
                 <span class="article-byline">By {article.author || siteConfig.siteName + " Editorial Team"}</span>
                 {article.publishDate && (
-                  <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</span>
                 )}
                 {article.modifiedDate && article.modifiedDate !== article.publishDate && (
-                  <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
+                  <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time></span>
                 )}
                 {tags.length > 0 && (
                   <span class="article-tags">
@@ -720,10 +720,10 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             <div class="article-meta">
               <span class="article-byline">By {article.author || siteConfig.siteName + " Editorial Team"}</span>
               {article.publishDate && (
-                <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span class="article-date">Published {new Date(article.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</span>
               )}
               {article.modifiedDate && article.modifiedDate !== article.publishDate && (
-                <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></span>
+                <span class="article-updated"><time datetime={article.modifiedDate}>Updated {new Date(article.modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time></span>
               )}
               {tags.length > 0 && (
                 <span class="article-tags">
