@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 const { REPO_ROOT, privateDataRoot, privateOutputPath } = require('./gsc-private-data-root.cjs');
 
@@ -60,4 +60,33 @@ test('rejects an output whose existing symlink ancestor escapes the private root
   fs.symlinkSync(escape, path.join(root, 'reports'), 'dir');
 
   assert.throws(() => privateOutputPath(path.join(root, 'reports', 'audit.md'), root), /private GSC data root/);
+});
+
+test('tracked repository state contains no serialized GSC query rows or generated misroute reports', () => {
+  const schemaExampleFiles = new Set([
+    'apps/maine-cannabis/docs/analytics/MDG-ANALYTICS-001-ticket-001-gsc-extractor-contract.md',
+  ]);
+  const sanitizedLegacyReports = new Set([
+    'apps/maine-cannabis/data/audit-2026-07-06-28d.md',
+    'apps/maine-cannabis/data/audit-2026-07-06.md',
+  ]);
+  const tracked = execFileSync('git', ['ls-files'], { cwd: REPO_ROOT, encoding: 'utf8' })
+    .split('\n')
+    .filter(Boolean)
+    .filter(file => /\.(?:csv|json|jsonl|md)$/.test(file))
+    .filter(file => !/\.test\.[^.]+$/.test(file))
+    .filter(file => !schemaExampleFiles.has(file));
+  const serializedQueryRow = /^\s*\{[^\n]*"query"\s*:[^\n]*(?:"clicks"|"impressions")/m;
+  const generatedMisrouteReport = /^# GSC Misroute Audit\b/m;
+  const offenders = [];
+
+  for (const file of tracked) {
+    const absolute = path.join(REPO_ROOT, file);
+    const source = fs.readFileSync(absolute, 'utf8');
+    const generatedReportIsUnsafe = generatedMisrouteReport.test(source)
+      && (!sanitizedLegacyReports.has(file) || !source.includes('## Privacy disposition'));
+    if (serializedQueryRow.test(source) || generatedReportIsUnsafe) offenders.push(file);
+  }
+
+  assert.deepEqual(offenders, []);
 });

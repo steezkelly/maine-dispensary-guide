@@ -61,6 +61,16 @@ function activeCronIncludes(crontab, command) {
   });
 }
 
+function privateTreeHasSecureModes(target) {
+  const stat = fs.lstatSync(target);
+  if (stat.isSymbolicLink()) return false;
+  if (stat.isDirectory()) {
+    if ((stat.mode & 0o777) !== 0o700) return false;
+    return fs.readdirSync(target).every(entry => privateTreeHasSecureModes(path.join(target, entry)));
+  }
+  return stat.isFile() && (stat.mode & 0o777) === 0o600;
+}
+
 function inspectPrivateFile(filePath, label, inspect, failures) {
   let stat;
   try {
@@ -108,6 +118,7 @@ function inspectGscHealth({
       } catch {
         failures.push('private data root contains a symlink');
       }
+      if (!privateTreeHasSecureModes(dataRoot)) failures.push('private tree permissions must be owner-only (files 0600; directories 0700)');
     }
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
