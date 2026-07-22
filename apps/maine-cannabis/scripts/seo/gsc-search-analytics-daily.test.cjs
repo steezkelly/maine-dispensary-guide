@@ -1,5 +1,9 @@
 const Module = require('node:module');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 
 const originalLoad = Module._load;
@@ -75,4 +79,36 @@ test('separate page snapshot exposes a row-limit truncation and site-total cover
   assert.equal(snapshot.completeness.rowLimitReached, true);
   assert.ok(Math.abs(snapshot.coverageOfSiteTotals.impressions - 0.5) < 1e-10);
   assert.equal(snapshot.filters.country, null);
+});
+
+test('dry-run collection summary never includes query or page values', () => {
+  const summary = producer.collectionSummary([
+    {
+      query: 'never print this query',
+      page: 'https://mainedispensaryguide.com/guides/never-print-this',
+      clicks: 2,
+      impressions: 10,
+    },
+  ], [{ snapshotKind: 'query', rowCount: 1, completeness: { status: 'top_rows_truncated_or_unknown' }, coverageOfSiteTotals: { impressions: 0.5 } }]);
+
+  assert.deepEqual(summary, {
+    rows: 1,
+    clicks: 2,
+    impressions: 10,
+    snapshots: [{ kind: 'query', rows: 1, completeness: 'top_rows_truncated_or_unknown', impressionCoveragePercent: 50 }],
+  });
+  assert.doesNotMatch(JSON.stringify(summary), /never print this query|never-print-this/);
+});
+
+test('missing-credential failure does not print credential paths or identifiers', () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-no-creds-'));
+  const sentinel = path.join(home, 'private-credential-name.json');
+  const result = spawnSync(process.execPath, [path.join(__dirname, 'gsc-search-analytics-daily.cjs')], {
+    encoding: 'utf8',
+    env: { ...process.env, HOME: home, GOOGLE_APPLICATION_CREDENTIALS: sentinel },
+  });
+
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /No GSC service-account credentials found/);
+  assert.doesNotMatch(result.stdout + result.stderr, /private-credential-name|gcp-mdg-reader|\.hermes\/secrets/);
 });

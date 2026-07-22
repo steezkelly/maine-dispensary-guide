@@ -10,33 +10,53 @@
 #   - GSC service-account JSON at ~/.hermes/secrets/gcp-mdg-reader.json
 #     (mdg-analytics-reader@maine-dispensary-guide.iam.gserviceaccount.com,
 #      added as a Search Console user on the MDG property)
-#   - wrapper scripts at ~/.local/bin/mdg-gsc-daily.sh and mdg-gsc-weekly.sh
+#   - versioned wrapper templates beside this installer
 #
 # Idempotent: re-running reports existing entries without duplicating them.
 # Run: bash scripts/seo/install-gsc-cron.sh
 
 set -euo pipefail
 
-DAILY_LINE="0 6 * * * /home/steve/.local/bin/mdg-gsc-daily.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="${MDG_REPO_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+BIN_DIR="${HOME}/.local/bin"
+CONFIG_DIR="${HOME}/.config/mdg-gsc"
+DAILY_LINE="0 6 * * * $BIN_DIR/mdg-gsc-daily.sh"
 DAILY_MARKER="# mdg-gsc: daily 06:00 search-analytics dump"
-WEEKLY_LINE="0 7 * * 1 /home/steve/.local/bin/mdg-gsc-weekly.sh"
+WEEKLY_LINE="0 7 * * 1 $BIN_DIR/mdg-gsc-weekly.sh"
 WEEKLY_MARKER="# mdg-gsc: weekly Mon 07:00 indexing + misroute audit"
+CREDENTIAL_PATH="${GOOGLE_APPLICATION_CREDENTIALS:-$HOME/.hermes/secrets/gcp-mdg-reader.json}"
 
 # Preflight checks
-if ! systemctl is-active --quiet cron 2>/dev/null && ! systemctl is-active --quiet crond 2>/dev/null; then
-  echo "WARNING: cron service is not active. Enable it first:"
-  echo "  sudo systemctl enable --now cron.service"
-fi
-if [ ! -f /home/steve/.hermes/secrets/gcp-mdg-reader.json ]; then
-  echo "ERROR: GSC service-account JSON not found at ~/.hermes/secrets/gcp-mdg-reader.json"
+if [ ! -d "$REPO_ROOT/apps/maine-cannabis" ]; then
+  echo "ERROR: durable MDG checkout not found at $REPO_ROOT"
   exit 1
 fi
-for w in /home/steve/.local/bin/mdg-gsc-daily.sh /home/steve/.local/bin/mdg-gsc-weekly.sh; do
-  if [ ! -x "$w" ]; then
-    echo "ERROR: wrapper not executable: $w (chmod +x it first)"
+if ! systemctl is-active --quiet cron 2>/dev/null && ! systemctl is-active --quiet crond 2>/dev/null; then
+  echo "ERROR: cron service is not active. Enable it first:"
+  echo "  sudo systemctl enable --now cron.service"
+  exit 1
+fi
+if [ ! -f "$CREDENTIAL_PATH" ]; then
+  echo "ERROR: GSC service-account JSON not found at $CREDENTIAL_PATH"
+  exit 1
+fi
+for template in mdg-gsc-daily.sh mdg-gsc-weekly.sh mdg-gsc-health-check.sh; do
+  if [ ! -f "$SCRIPT_DIR/$template" ]; then
+    echo "ERROR: wrapper template missing: $SCRIPT_DIR/$template"
     exit 1
   fi
 done
+
+mkdir -p "$BIN_DIR"
+mkdir -p "$CONFIG_DIR"
+chmod 700 "$CONFIG_DIR"
+printf '%s\n' "$REPO_ROOT" > "$CONFIG_DIR/repo-root"
+chmod 600 "$CONFIG_DIR/repo-root"
+install -m 700 "$SCRIPT_DIR/mdg-gsc-daily.sh" "$BIN_DIR/mdg-gsc-daily.sh"
+install -m 700 "$SCRIPT_DIR/mdg-gsc-weekly.sh" "$BIN_DIR/mdg-gsc-weekly.sh"
+install -m 700 "$SCRIPT_DIR/mdg-gsc-health-check.sh" "$BIN_DIR/mdg-gsc-health-check.sh"
+echo "Installed fail-closed wrappers in $BIN_DIR for $REPO_ROOT"
 
 add_entry() {
   local marker="$1" line="$2"
@@ -62,3 +82,4 @@ echo "Current MDG GSC crontab entries:"
 crontab -l | grep -F "mdg-gsc" -A1
 echo ""
 echo "Verify logs after next run: tail ~/.hermes/data/mdg-gsc/cron.log"
+echo "Privacy-safe health check: ~/.local/bin/mdg-gsc-health-check.sh"
