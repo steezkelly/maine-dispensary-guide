@@ -102,9 +102,12 @@ npm run verify:iterate
   confirmed 111/111 HTTP 200 responses, one section per route, and five
   distinct expected operator-guide links per section.
 - **GSC remeasurement scheduled.** Kanban task `t_3af60717` and one-shot
-  cron job `79d4f81fae8f` will compare the exact 28-day pre/post windows on
-  2026-08-22. This is three days after the nominal +28 checkpoint so the
-  post window can use final GSC data despite the normal reporting lag. The
+  Hermes scheduler job `79d4f81fae8f` will compare the exact 28-day pre/post
+  windows on 2026-08-22. The Hermes scheduler was verified advancing with a
+  successful recurring run at 2026-07-21 21:30 ET; this does not claim that
+  the separately documented legacy host `cron.service` blocker is fixed. The
+  measurement date is three days after the nominal +28 checkpoint so the post
+  window can use final GSC data despite the normal reporting lag. The
   hypothesis remains a 30%+ aggregate impressions lift across the five
   linked-to operator guides; the report must state that pre/post movement is
   observational rather than proof of causality.
