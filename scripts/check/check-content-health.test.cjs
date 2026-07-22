@@ -86,6 +86,36 @@ test('allows admin placeholders while still scanning production pages', () => {
   assert.match(result.stdout, /All content health checks passed/);
 });
 
+test('checks concrete rendered routes produced by parameterized Astro templates for orphans', () => {
+  const fixture = makePages({
+    'index.astro': '<a href="/">Home</a>\n',
+    'software/[slug].astro': '<p>Generated from getStaticPaths</p>\n',
+  });
+  const renderedPage = (title, description, body = '') =>
+    `<html><head><title>${title}</title><meta name="description" content="${description}"><meta property="og:image" content="/og-image.svg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></head><body>${body}</body></html>`;
+  for (const slug of ['linked', 'unlinked', 'also-unlinked']) {
+    const routeDir = path.join(fixture.dist, 'software', slug);
+    fs.mkdirSync(routeDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(routeDir, 'index.html'),
+      renderedPage(`Software ${slug}`, `Software ${slug} description`),
+    );
+  }
+  fs.writeFileSync(
+    path.join(fixture.dist, 'index.html'),
+    renderedPage('Fixture', 'Fixture page', '<a href="/software/linked">Linked software</a>'),
+  );
+
+  const result = runCheck(fixture, { enableFixtureOrphanCheck: true });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stdout, /orphan pages \(no inbound link\): 1 issue/);
+  assert.match(result.stdout, /\/software\/\[slug\]: 2 concrete route\(s\) have no inbound link/);
+  assert.match(result.stdout, /\/software\/also-unlinked/);
+  assert.match(result.stdout, /\/software\/unlinked/);
+  assert.doesNotMatch(result.stdout, /\/software\/linked(?:,|\))/);
+});
+
 test('flags trailing-slash internal route strings because production uses trailingSlash never', () => {
   const fixture = makePages({
     'index.astro': 'const cards = [{ href: "/guides/existing/" }];\n<a href={cards[0].href}>Redirecting guide link</a>\n',
