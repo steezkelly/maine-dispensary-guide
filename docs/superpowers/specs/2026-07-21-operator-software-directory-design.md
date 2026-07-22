@@ -81,9 +81,9 @@ Profiles are independent assessments, not endorsements or fabricated firsthand r
 
 B2B cannabis software monetization is primarily lead referral, not conventional passive affiliate commerce. This release distinguishes:
 
-- **Public cash referral:** e.g. Flowhub and Dutchie currently publish cash rewards for qualifying conversions.
+- **Public cash referral:** e.g. Flowhub, Dutchie, and AIQ currently publish cash rewards for qualifying conversions.
 - **Customer account credit:** e.g. Cova currently describes bill credit for eligible customers; this is not an open cash affiliate arrangement for MDG.
-- **Partner application:** e.g. Flourish, Treez, and AIQ advertise partner/referral programs whose acceptance or terms may require direct approval.
+- **Partner application:** e.g. Flourish and Treez advertise partner/referral programs whose acceptance or terms may require direct approval.
 - **No verified program:** vendor receives an ordinary editorial outbound link with no monetization claim.
 
 No referral form or partner application will be submitted in this change. Until MDG has an approved tracking link or recorded referral agreement, pages link to official vendor information and describe the opportunity accurately without claiming MDG receives compensation.
