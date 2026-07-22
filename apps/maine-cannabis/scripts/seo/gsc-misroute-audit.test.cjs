@@ -1,4 +1,8 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 
 const audit = require('./gsc-misroute-audit.cjs');
@@ -24,6 +28,33 @@ test('rejects raw-query misroute audit output paths outside private GSC storage'
   const { privateOutputPath, PRIVATE_DATA_ROOT } = require('./gsc-misroute-audit.cjs');
   assert.match(privateOutputPath(`${PRIVATE_DATA_ROOT}/reports/misroute.md`), /mdg-gsc\/reports\/misroute\.md$/);
   assert.throws(() => privateOutputPath('docs/analytics/misroute.md'), /private GSC data root/);
+});
+
+test('CLI refuses to render a query-bearing report to stdout when --output is omitted', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-audit-private-'));
+  fs.writeFileSync(path.join(root, 'gsc-search-analytics.jsonl'), `${JSON.stringify(dailyRecord({ query: 'never emit this query' }))}\n`);
+  const result = spawnSync(process.execPath, [path.join(__dirname, 'gsc-misroute-audit.cjs')], {
+    encoding: 'utf8',
+    env: { ...process.env, MDG_GSC_DATA_ROOT: root },
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /--output.*required/i);
+  assert.doesNotMatch(result.stdout + result.stderr, /never emit this query/);
+});
+
+test('CLI writes query-bearing reports with owner-only permissions', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-audit-mode-'));
+  const output = path.join(root, 'reports', 'audit.md');
+  fs.writeFileSync(path.join(root, 'gsc-search-analytics.jsonl'), `${JSON.stringify(dailyRecord())}\n`);
+  const result = spawnSync(process.execPath, [path.join(__dirname, 'gsc-misroute-audit.cjs'), `--output=${output}`], {
+    encoding: 'utf8',
+    env: { ...process.env, MDG_GSC_DATA_ROOT: root },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.statSync(path.dirname(output)).mode & 0o777, 0o700);
+  assert.equal(fs.statSync(output).mode & 0o777, 0o600);
 });
 
 test('filters by finalized source dates across the Los Angeles DST transition', () => {

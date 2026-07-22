@@ -12,9 +12,8 @@
  * over time.
  *
  * Usage:
- *   node scripts/seo/gsc-misroute-audit.cjs                    # full report to stdout
- *   node scripts/seo/gsc-misroute-audit.cjs --output=audit.md  # write to file
- *   node scripts/seo/gsc-misroute-audit.cjs --days=7           # only last 7d rows
+ *   node scripts/seo/gsc-misroute-audit.cjs --output="$MDG_GSC_DATA_ROOT/reports/audit.md"
+ *   node scripts/seo/gsc-misroute-audit.cjs --days=7 --output="$MDG_GSC_DATA_ROOT/reports/audit.md"
  *
  * Why this exists:
  *   The v2 analytics dump gives us query+page attribution. By itself, that's
@@ -305,6 +304,7 @@ function renderMarkdown(stats) {
 }
 
 async function main() {
+  if (!OUT_PATH) throw new Error('--output is required because misroute reports contain private query data.');
   const loaded = loadJsonl();
   const records = filterByDays(loaded, days);
   const excluded = loaded.length - records.length;
@@ -322,14 +322,12 @@ async function main() {
   const stats = aggregate(aggregated);
   const md = renderMarkdown(stats);
 
-  if (OUT_PATH) {
-    const out = privateOutputPath(OUT_PATH);
-    fs.mkdirSync(path.dirname(out), { recursive: true });
-    fs.writeFileSync(out, md);
-    logOk(`Wrote audit report to ${out}`);
-  } else {
-    console.log(md);
-  }
+  const out = privateOutputPath(OUT_PATH);
+  fs.mkdirSync(path.dirname(out), { recursive: true, mode: 0o700 });
+  fs.chmodSync(path.dirname(out), 0o700);
+  fs.writeFileSync(out, md, { mode: 0o600 });
+  fs.chmodSync(out, 0o600);
+  logOk(`Wrote audit report to ${out}`);
 }
 
 if (require.main === module) {

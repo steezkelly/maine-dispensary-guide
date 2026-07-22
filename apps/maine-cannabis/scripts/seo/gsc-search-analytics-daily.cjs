@@ -3,7 +3,7 @@
  * gsc-search-analytics-daily.cjs
  *
  * Daily GSC Search Analytics dump for MDG. Pulls finalized query+page rows
- * for a non-overlapping source window and appends them to a private ledger at
+ * for a non-overlapping source window and upserts them into a private ledger at
  * `$MDG_GSC_DATA_ROOT/gsc-search-analytics.jsonl` (default
  * `~/.hermes/data/mdg-gsc/gsc-search-analytics.jsonl`). Each row records its
  * extraction date plus source-window provenance.
@@ -64,6 +64,7 @@ const path = require('node:path');
 const { google } = require('googleapis');
 
 const { privateDataRoot } = require('./gsc-private-data-root.cjs');
+const { storePrivateCollection } = require('./gsc-ledger.cjs');
 const PRIVATE_DATA_ROOT = privateDataRoot();
 const OUTPUT_PATH = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics.jsonl');
 const SNAPSHOT_DIR = path.join(PRIVATE_DATA_ROOT, 'gsc-search-analytics-snapshots');
@@ -206,11 +207,6 @@ function snapshotFromRows({ name, dimensions, rows, sourceWindow, siteTotals, ex
   };
 }
 
-function appendSnapshot(snapshot, outputDir = SNAPSHOT_DIR) {
-  fs.mkdirSync(outputDir, { recursive: true });
-  fs.appendFileSync(path.join(outputDir, `${snapshot.snapshotKind}.jsonl`), `${JSON.stringify(snapshot)}\n`);
-}
-
 async function collectAggregateSnapshots(sc, sourceWindow, extractedAt = new Date().toISOString()) {
   const kinds = [
     ['query', ['query']],
@@ -243,23 +239,34 @@ function recordsFromRows(rows, sourceWindow, snapshotDate = ymd(new Date())) {
   }));
 }
 
+function collectionSummary(records, aggregateSnapshots) {
+  return {
+    rows: records.length,
+    clicks: records.reduce((sum, record) => sum + record.clicks, 0),
+    impressions: records.reduce((sum, record) => sum + record.impressions, 0),
+    snapshots: aggregateSnapshots.map(snapshot => ({
+      kind: snapshot.snapshotKind,
+      rows: snapshot.rowCount,
+      completeness: snapshot.completeness.status,
+      impressionCoveragePercent: Math.round((snapshot.coverageOfSiteTotals.impressions || 0) * 100),
+    })),
+  };
+}
+
 async function main() {
   const credPath = findCreds();
   if (!credPath) {
     logErr('\n✗ No GSC service-account credentials found.\n');
-    logErr('Tried these paths:');
-    CRED_PATHS.forEach(p => logErr(`  ${p}${fs.existsSync(p) ? ' (exists)' : ' (missing)'}`));
-    logErr('\nSetup instructions: see gsc-indexing-check.cjs header.\n');
+    logErr('Configure the documented private service-account credential.');
+    logErr('Setup instructions: see gsc-indexing-check.cjs header.\n');
     process.exit(2);
   }
-  logInfo(`Using credentials: ${credPath}`);
-
   const auth = new google.auth.GoogleAuth({
     keyFile: credPath,
     scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
   });
   const client = await auth.getClient();
-  logInfo(`Authenticated as: ${client.email}`);
+  logInfo('Authenticated to Google Search Console');
 
   const sc = google.searchconsole({ version: 'v1', auth: client });
   const sourceWindow = getSourceWindow();
@@ -267,30 +274,31 @@ async function main() {
   const records = recordsFromRows(rows, sourceWindow);
   const aggregateSnapshots = await collectAggregateSnapshots(sc, sourceWindow);
 
-  const totalClicks = records.reduce((s, r) => s + r.clicks, 0);
-  const totalImpressions = records.reduce((s, r) => s + r.impressions, 0);
-  logOk(`Got ${records.length} query rows: ${totalClicks} clicks, ${totalImpressions} impressions`);
+  const summary = collectionSummary(records, aggregateSnapshots);
+  logOk(`Got ${summary.rows} private rows: ${summary.clicks} clicks, ${summary.impressions} impressions`);
   if (records.length === 0 && !flags['allow-no-data']) {
-    logErr(`No GSC rows returned for ${sourceWindow.sourceStartDate} → ${sourceWindow.sourceEndDate}; refusing to append an empty success snapshot. Re-run with --allow-no-data only when the absence is expected.`);
+    logErr(`No GSC rows returned for ${sourceWindow.sourceStartDate} → ${sourceWindow.sourceEndDate}; refusing to store an empty success snapshot. Re-run with --allow-no-data only when the absence is expected.`);
     process.exit(4);
   }
 
   if (DRY_RUN) {
-    logInfo('Dry-run: would append to ' + OUTPUT_PATH);
+    logInfo('Dry-run: would upsert into ' + OUTPUT_PATH);
     logInfo('Source window: ' + JSON.stringify(sourceWindow));
-    logInfo('First 3 rows:');
-    records.slice(0, 3).forEach(r => logInfo('  ' + JSON.stringify(r)));
-    aggregateSnapshots.forEach(snapshot => logInfo(`Would append ${snapshot.snapshotKind} snapshot: ${snapshot.rowCount} rows; ${snapshot.completeness.status}; ${Math.round((snapshot.coverageOfSiteTotals.impressions || 0) * 100)}% impression coverage.`));
+    logInfo('Privacy-safe collection summary: ' + JSON.stringify(summary));
     return;
   }
 
-  // Append to JSONL (one snapshot per day). Use append mode so re-runs don't clobber history.
-  fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-  const lines = records.map(r => JSON.stringify(r)).join('\n') + '\n';
-  fs.appendFileSync(OUTPUT_PATH, lines);
-  aggregateSnapshots.forEach(snapshot => appendSnapshot(snapshot, SNAPSHOT_DIR));
-  logOk(`Appended ${records.length} rows to ${OUTPUT_PATH}`);
-  logOk(`Appended aggregate snapshots to private storage at ${SNAPSHOT_DIR}`);
+  const stored = storePrivateCollection({
+    root: PRIVATE_DATA_ROOT,
+    ledgerPath: OUTPUT_PATH,
+    records,
+    snapshotDir: SNAPSHOT_DIR,
+    snapshots: aggregateSnapshots,
+  });
+  const ledgerWrite = stored.ledger;
+  const snapshotWrites = stored.snapshots;
+  logOk(`Stored ${ledgerWrite.totalRows} normalized daily facts (${ledgerWrite.insertedRows} inserted, ${ledgerWrite.replacedRows} replaced) at ${OUTPUT_PATH}`);
+  logOk(`Stored ${snapshotWrites.length} deduplicated aggregate snapshot kinds at ${SNAPSHOT_DIR}`);
   logInfo(`Daily cron-friendly. Re-run tomorrow for trend delta.`);
 }
 
@@ -303,6 +311,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  collectionSummary,
   getSourceWindow,
   recordsFromRows,
   snapshotFromRows,
