@@ -751,24 +751,44 @@ function checkOrphanPages() {
     }
     return '';
   }
+  function listRenderedHtmlFiles(dir, out = []) {
+    if (!fs.existsSync(dir)) return out;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) listRenderedHtmlFiles(full, out);
+      else if (entry.isFile() && full.endsWith('.html')) out.push(full);
+    }
+    return out;
+  }
+  function renderedRouteForFile(file) {
+    const rel = path.relative(DIST, file).replace(/\\/g, '/');
+    if (rel === 'index.html') return '/';
+    return '/' + rel.replace(/\/index\.html$/, '').replace(/\.html$/, '');
+  }
+  function parameterizedRouteRegex(relRaw) {
+    let pattern = '^';
+    for (const segment of relRaw.split('/')) {
+      if (/^\[\[\.\.\..+\]\]$/.test(segment)) pattern += '(?:/.*)?';
+      else if (/^\[\.\.\..+\]$/.test(segment)) pattern += '/.+';
+      else if (/^\[.+\]$/.test(segment)) pattern += '/[^/]+';
+      else pattern += '/' + segment.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+    return new RegExp(pattern + '$');
+  }
+  function renderedRouteIsNoindex(file) {
+    try {
+      const html = fs.readFileSync(file, 'utf8');
+      return /<meta\b[^>]*\bname=["']robots["'][^>]*\bcontent=["'][^"']*noindex/i.test(html)
+        || /<meta\b[^>]*\bcontent=["'][^"']*noindex[^"']*["'][^>]*\bname=["']robots["']/i.test(html);
+    } catch { return false; }
+  }
   function findInboundFromRendered(needle) {
     const escaped = needle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const re = new RegExp(`href\\s*=\\s*["']\\/?${escaped}(?:["'/#?]|$)`, 'm');
-    const distBase = DIST;
-    const distPath = path.join(distBase, needle, 'index.html');
-    function walk(dir, out) {
-      out = out || [];
-      if (!fs.existsSync(dir)) return out;
-      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-        const full = path.join(dir, entry.name);
-        if (entry.isDirectory()) walk(full, out);
-        else if (entry.isFile() && full.endsWith('.html')) out.push(full);
-      }
-      return out;
-    }
-    const htmlFiles = walk(distBase);
+    const route = '/' + needle;
+    const htmlFiles = listRenderedHtmlFiles(DIST);
     for (const f of htmlFiles) {
-      if (f === distPath) continue;
+      if (renderedRouteForFile(f) === route) continue;
       let text;
       try { text = fs.readFileSync(f, 'utf8'); } catch { continue; }
       if (re.test(text)) return f;
@@ -779,6 +799,23 @@ function checkOrphanPages() {
   for (const f of files) {
     if (isNoindex(f)) continue;
     const relRaw = path.relative(PAGES_DIR, f).replace(/\\/g, '/').replace(/\.astro$/, '');
+    if (relRaw.split('/').some((segment) => segment.startsWith('[') && segment.endsWith(']'))) {
+      const routePattern = parameterizedRouteRegex(relRaw);
+      const orphanRoutes = [];
+      for (const renderedFile of listRenderedHtmlFiles(DIST)) {
+        const renderedRoute = renderedRouteForFile(renderedFile);
+        if (!routePattern.test(renderedRoute) || renderedRouteIsNoindex(renderedFile)) continue;
+        const needle = renderedRoute.replace(/^\//, '');
+        const foundSrc = findInboundLink(needle, f);
+        const foundDist = findInboundFromRendered(needle);
+        if (!foundSrc && !foundDist) orphanRoutes.push(renderedRoute);
+      }
+      if (orphanRoutes.length > 0) {
+        const templateRoute = '/' + relRaw.replace(/\/index$/, '');
+        results.push(`${templateRoute}: ${orphanRoutes.length} concrete route(s) have no inbound link (${orphanRoutes.join(', ')})`);
+      }
+      continue;
+    }
     // Map `path/to/index` → `path/to` (Astro's index.astro = parent route).
     const rel = '/' + (relRaw === 'index' ? '' : relRaw.replace(/\/index$/, ''));
     if (rel === '/') continue;

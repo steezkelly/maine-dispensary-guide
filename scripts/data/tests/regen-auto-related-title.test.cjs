@@ -3,7 +3,17 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { extractTitle } = require('../regen-auto-related.cjs');
+const { extractTitle, isConcretePageUrl } = require('../regen-auto-related.cjs');
+
+test('excludes parameterized Astro route templates from related-page data', () => {
+    assert.equal(isConcretePageUrl('/software/[slug]'), false);
+    assert.equal(isConcretePageUrl('/cite/[...rest]'), false);
+});
+
+test('keeps concrete static routes in related-page data', () => {
+    assert.equal(isConcretePageUrl('/software'), true);
+    assert.equal(isConcretePageUrl('/software/aiq'), true);
+});
 
 const cases = [
     {

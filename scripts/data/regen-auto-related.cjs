@@ -63,6 +63,10 @@ function getUrl(absPath) {
     return rel;
 }
 
+function isConcretePageUrl(url) {
+    return !url.split('/').some((segment) => segment.startsWith('[') && segment.endsWith(']'));
+}
+
 /**
  * Extract the frontmatter block. Returns text between the opening `---`
  * and the next line that starts with `---`. Handles both proper and
@@ -297,9 +301,10 @@ function buildItems() {
     const files = listAstroFiles(PAGES_DIR);
     const items = [];
     for (const f of files) {
+        const url = getUrl(f);
+        if (!isConcretePageUrl(url)) continue;
         const text = fs.readFileSync(f, 'utf8');
         const fm = extractFrontmatter(text);
-        const url = getUrl(f);
         const title = extractTitle(text, fm);
         const section = inferSection(url, fm);
         const topics = inferTopics(url, fm);
@@ -359,4 +364,4 @@ if (require.main === module) {
     main();
 }
 
-module.exports = { extractTitle };
+module.exports = { extractTitle, isConcretePageUrl };

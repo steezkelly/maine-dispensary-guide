@@ -1,0 +1,27 @@
+---
+import OperatorSoftwarePage from '../../components/OperatorSoftwarePage.astro';
+import { softwareEntries, type SoftwareEntry } from '../../data/operator-software';
+
+// Static hints for the repository's AutoRelated generator. Runtime pages still
+// receive their exact titles and content from the typed registry below.
+const autoRelatedMetadata = {
+  title: 'Maine Cannabis Software Guides',
+  section: 'Operations & Technology',
+};
+const topics = ['operator-guide', 'software'];
+
+export function getStaticPaths() {
+  return softwareEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: SoftwareEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<OperatorSoftwarePage entry={entry} />
