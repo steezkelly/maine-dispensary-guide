@@ -25,6 +25,7 @@ export const GA4_EVENT = {
   PAGE_ENGAGED: 'page_engaged',
   FAQ_OPEN: 'faq_open',
   CTA_VIEW: 'cta_view',
+  SITE_TOUR_PLAY: 'site_tour_play',
   // Existing events owned by other components — referenced here only so
   // future authors discover them via autocomplete.
   LEAD_CAPTURE: 'lead_capture',
