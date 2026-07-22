@@ -2,7 +2,7 @@
 
 **Audit base:** `a0f0d5a4433eae5202fe62866eb955cd04e32bbd`
 **Remediation card:** `t_a2868161`
-**Status:** Decisions recorded; safe implementation is partially blocked.
+**Status:** Updated 2026-07-21 by operator decision. The five-page cohort uses a truthful organizational primary-source editorial-review standard; it must not imply credentialed or independent professional review.
 
 This is a source-state audit of five Maine Dispensary Guide pages containing
 legal, tax, licensing, health, or safety claims. It records the operator's
@@ -89,21 +89,21 @@ confirmed; otherwise signals and measurement belong to the canonical target.
 
 ## Operator decisions recorded on 2026-07-21
 
-### C — Hybrid professional review
+### C — Organizational primary-source editorial review
 
-- Legal, tax, regulatory, and health pages receive a real, named qualified
-  reviewer at publication or substantive republication.
-- Publisher-managed editors may perform interim freshness checks, clearly
-  labeled as editorial updates rather than professional review.
-- The consumer-facing best-edibles page uses organizational/editorial review
-  unless a qualified health reviewer actually reviews the health claims.
+- These five pages may be published only with organization-level language such
+  as “Editorially reviewed against the cited primary sources on [date].”
+- The review date must reflect a substantive source and body review, and every
+  material claim must retain nearby, relevant primary or authoritative sources.
+- Pages may not claim or imply medical review, legal review, tax review, expert
+  review, independent verification, or review by a named professional.
+- Publisher-managed pseudonyms remain ineligible for `Person` reviewer schema
+  or professional-review attribution.
 
-**Hard gate:** no real reviewer may be published until the operator provides
-or approves the reviewer's legal name, relevant qualification/license,
-jurisdiction and current status, professional role, review scope, review date,
-permission to publish name/credentials, and conflict disclosure. No such
-verified reviewer record is available in the repository or current task
-context.
+**Separate real-person rule:** a named professional may be published only after
+current credential verification, page-specific scope approval, permission to
+publish the attribution, and conflict disclosure. No such record is available
+for this cohort; this editorial standard does not substitute for one.
 
 ### D — Tiered primary-source mix
 
@@ -139,7 +139,8 @@ plane.
 4. Reconcile emitted article metadata, visible update dates, and review badges
    only after substantive review; delete the psilocybin page's dormant
    `ldJson` object instead of treating it as emitted schema.
-5. Add a real reviewer only after the Option C identity/credential/consent gate
+5. Use only the organization-level editorial-review attribution for this cohort.
+   Add a real reviewer only after the separate identity/credential/consent gate
    is satisfied.
 6. Create a separate bounded manifest/card before expanding beyond these five
    pages.
@@ -153,8 +154,11 @@ plane.
   patch.
 - **Decision D claim-level source work:** unblocked but requires primary-source
   research and page-by-page factual verification.
-- **Decision C real-person reviewer implementation:** BLOCKED on verified
-  identity, credentials, consent, scope, date, and conflict disclosure.
+- **Decision C organizational editorial review:** unblocked for this five-page
+  cohort when every visible, metadata, and JSON-LD attribution is coherent and
+  the claim-level primary-source work is complete.
+- **Any real-person reviewer implementation:** BLOCKED on verified identity,
+  credentials, consent, scope, date, and conflict disclosure.
 - **12-page retro rollout:** BLOCKED on an explicit live Kanban manifest.
 - **Blind `CiteThis` rollout:** REJECTED as a substitute for contextual
   evidence.
