@@ -52,16 +52,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| dispensary fryeburg maine | 272 | 7.1 | 0 |
-| fryeburg maine dispensary | 196 | 8.1 | 0 |
-| puffin co fryeburg maine | 185 | 8.8 | 0 |
-| puffin co fryeburg | 128 | 7.0 | 2 |
-| above all greenery fryeburg | 126 | 9.7 | 1 |
-| dispensary in fryeburg maine | 75 | 7.0 | 0 |
-| the glass cook | 56 | 7.6 | 0 |
-| dispensary near fryeburg maine | 55 | 11.5 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 41 unique queries in 60d. The page is **ranking on page 1** for 41 queries but **not converting**. Top 2 are generic "dispensary fryeburg maine" searches — title/meta may be off.
 
@@ -71,13 +62,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| founding farmers limerick maine | 522 | 5.6 | 0 |
-| founding farmers limerick | 143 | 5.6 | 0 |
-| founding farmers | 139 | 1.0 | 0 |
-| limerick dispensaries | 119 | 12.5 | 0 |
-| limerick weed dispensary | 58 | 15.0 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 **Critical finding:** 522 impressions for "founding farmers limerick maine" (a brand-specific query) at avg position 5.6 with **zero clicks**. The brand "Founding Farmers" likely has the top 3 positions and we're getting impressions from users who want a different result entirely. This is a brand-disambiguation dead-end (GSC notes: "Brand-disambiguation queries look like 0% CTR forever").
 
@@ -87,13 +72,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| high road gray | 413 | 8.0 | 0 |
-| high road gray maine | 291 | 9.0 | 0 |
-| high roads gray maine | 82 | 7.7 | 0 |
-| high road dispensary maine | 40 | 5.6 | 0 |
-| token cannabis co | 37 | 9.5 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 10 unique queries, all brand-specific (High Road, Token Cannabis Co.). 0% CTR across the board suggests Google is showing our guide on page 1-2 for these brand queries but users want the brand's own site.
 
@@ -103,12 +82,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| hidden greens buxton | 316 | 6.8 | 0 |
-| hidden greens maine | 202 | 7.5 | 0 |
-| hidden greens buxton maine | 146 | 6.0 | 2 |
-| dispensary buxton maine | 113 | 9.1 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 8 unique queries. The 2 clicks came from "hidden greens buxton maine" (pos 6.0) — the only non-brand query. **This is the actual play**: optimize for "dispensary buxton maine" and "buxton maine weed delivery" rather than chasing brand queries.
 
@@ -118,13 +92,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| cannabis business licensing in maine | 89 | 19.5 | 0 |
-| how to open a dispensary in maine | 47 | 12.4 | 0 |
-| how to start a dispensary in maine | 42 | 14.1 | 0 |
-| maine recreational cultivation license application | 22 | 20.2 | 0 |
-| selling to dispensaries in maine | 21 | 19.5 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 **This is the misroute problem the GSC audit keeps flagging.** The blog post (`/blog/maine-dispensary-how-to-open`) is ranking above the canonical guide (`/guides/maine-dispensary-license`) for buyer-intent queries, but at position 12-20 the CTR is 0 because users want the guide not the blog. OpenSEO can show us whether the buyer-intent SERPs are winnable from the guide's URL (vs. the blog), and which competitor ranks #1.
 
@@ -134,13 +102,7 @@ These are the highest-impression / lowest-CTR pages in MDG as of 2026-07-10. Eac
 
 **Top 60d GSC queries (sample):**
 
-| Query | Imp | Avg pos | Click? |
-|-------|----:|--------:|--------|
-| how to start a dispensary in maine | 52 | 19.0 | 0 |
-| how much money do you need to open a dispensary | 48 | 82.6 | 0 |
-| how much does it cost to start a dispensary | 37 | 93.2 | 0 |
-| how to open a dispensary in maine | 30 | 25.1 | 0 |
-| how much does it cost to start up a dispensary | 16 | 81.3 | 0 |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 22 unique queries, mostly cost-framing national queries (not Maine-specific). 287 imp / 0% CTR because the page is mis-targeting the SERP. Position 82-95 for "how much does it cost to start a dispensary" is essentially nowhere.
 

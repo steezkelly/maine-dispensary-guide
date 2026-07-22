@@ -14,6 +14,9 @@ current tree on 2026-07-22. The original bytes remain in Git history; rewriting
 shared history is a separate one-way-door decision. Historical derived decision
 records may retain aggregate metrics or named editorial intent, but they are not
 operational ledgers and must not be regenerated from raw rows in the repository.
+The same redaction boundary applies to historical Markdown query/metric tables:
+retain the decision and aggregate conclusion, not literal query rows paired with
+clicks, impressions, CTR, or position.
 
 The scheduled ledger is a set of finalized, non-overlapping one-day facts in the Search Console source timezone (`America/Los_Angeles`). Re-running a source day replaces the matching source-day/query/page fact; it never appends a duplicate. Rolling or non-final windows remain investigation artifacts and are quarantined from the composable ledger.
 
