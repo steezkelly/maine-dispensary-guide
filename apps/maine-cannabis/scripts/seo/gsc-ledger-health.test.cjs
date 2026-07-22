@@ -46,10 +46,11 @@ function aggregateSnapshot(kind, sourceDate = '2026-07-18') {
 
 function fixture(sourceDate = '2026-07-18') {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-health-'));
+  const wrapperRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-health-wrappers-'));
   const ledger = path.join(root, 'gsc-search-analytics.jsonl');
   const log = path.join(root, 'cron.log');
-  const daily = path.join(root, 'mdg-gsc-daily.sh');
-  const weekly = path.join(root, 'mdg-gsc-weekly.sh');
+  const daily = path.join(wrapperRoot, 'mdg-gsc-daily.sh');
+  const weekly = path.join(wrapperRoot, 'mdg-gsc-weekly.sh');
   const snapshotDir = path.join(root, 'gsc-search-analytics-snapshots');
   fs.mkdirSync(snapshotDir, { mode: 0o700 });
   fs.writeFileSync(ledger, `${JSON.stringify(dailyRecord(sourceDate))}\n`, { mode: 0o600 });
@@ -123,6 +124,22 @@ test('health fails closed when the private data root is accessible to group or o
   assert.ok(health.failures.some(failure => failure.includes('0700')));
 });
 
+test('health fails closed when a nested private directory is accessible to group or other users', () => {
+  const f = fixture();
+  fs.chmodSync(f.snapshotDir, 0o755);
+  const health = inspectGscHealth({
+    dataRoot: f.root,
+    now: new Date('2026-07-22T04:00:00.000Z'),
+    cronActive: true,
+    crontab: `0 6 * * * ${f.daily}\n0 7 * * 1 ${f.weekly}\n`,
+    dailyWrapper: f.daily,
+    weeklyWrapper: f.weekly,
+  });
+
+  assert.equal(health.ok, false);
+  assert.ok(health.failures.some(failure => /private tree.*0700/i.test(failure)));
+});
+
 test('health fails closed without following a symlinked ledger outside private storage', () => {
   const f = fixture();
   const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-gsc-health-outside-'));
@@ -191,4 +208,24 @@ test('health ignores commented crontab entries and rejects a permissive cron log
   assert.equal(health.scheduler.dailyCronRegistered, false);
   assert.equal(health.scheduler.weeklyCronRegistered, false);
   assert.ok(health.failures.some(failure => /cron log.*0600/i.test(failure)));
+});
+
+test('health fails closed when any private-tree file or directory has permissive mode', () => {
+  const f = fixture();
+  const quarantineDir = path.join(f.root, 'quarantine');
+  const exposedRows = path.join(quarantineDir, 'legacy-private-rows.jsonl');
+  fs.mkdirSync(quarantineDir, { mode: 0o700 });
+  fs.writeFileSync(exposedRows, 'private fixture bytes\n', { mode: 0o644 });
+
+  const health = inspectGscHealth({
+    dataRoot: f.root,
+    now: new Date('2026-07-22T04:00:00.000Z'),
+    cronActive: true,
+    crontab: `0 6 * * * ${f.daily}\n0 7 * * 1 ${f.weekly}\n`,
+    dailyWrapper: f.daily,
+    weeklyWrapper: f.weekly,
+  });
+
+  assert.equal(health.ok, false);
+  assert.ok(health.failures.some(failure => /private tree.*owner-only/i.test(failure)));
 });

@@ -16,48 +16,21 @@
 ### 1. Page-2 landmines — push 12 specific pages into top-3
 These queries already have impressions (Google thinks the page is relevant) but rank 8-20. A targeted on-page edit (H1/title tag tightening, internal-link addition, FAQ block) typically bumps 3-6 positions.
 
-| Query | Imp | Pos | Target page |
-|---|---:|---:|---|
-| high road gray | 132 | 8.2 | NEW: `/guides/high-road-gray-dispensary` or merge into existing `/guides/gray-dispensary-guide` |
-| high road gray maine | 129 | 8.9 | same |
-| are edibles legal in maine | 81 | 17.3 | Edit `/blog/best-maine-edibles-2026` — add H2 "Are edibles legal in Maine?" + statute citation block |
-| hidden greens maine | 74 | 8.2 | NEW: `/guides/hidden-greens-dispensary` (small-town guide) |
-| how to start a dispensary in maine | 72 | 18.5 | Edit `/blog/maine-dispensary-how-to-open` — rewrite title as exact query match |
-| fryeburg maine dispensary | 65 | 8.9 | Edit `/guides/fryeburg-dispensary-guide` — add H1 "Fryeburg Maine Dispensary" |
-| landrace casco | 59 | 8.8 | Edit `/guides/casco-dispensary-guide` — add "Landrace" brand callout |
-| fryeburg dispensary | 58 | 9.0 | same page as above |
-| dispensary bridgton maine | 56 | 9.9 | Edit `/guides/bridgton-dispensary-guide` (or create) |
-| eclipse raymond maine | 54 | 8.9 | NEW: small-town brand page |
-| limerick dispensaries | 54 | 14.1 | Edit `/guides/limerick-dispensary-guide` |
-| puffin co fryeburg maine | 51 | 8.5 | Edit `/guides/fryeburg-dispensary-guide` — add "Puffin Co." brand subsection |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 **Combined impression haul of this list:** ~885. Pushing even half into top-3 would 5-10x site clicks.
 
 ### 2. Position 1-3 with 0% CTR — title/meta rewrite
 Currently ranking where users see us, but they don't click. Title tag doesn't match intent.
 
-| Query | Imp | Pos | Action |
-|---|---:|---:|---|
-| founding farmers | 49 | 1.0 | No matching page exists. **Content gap.** Either create `/guides/founding-farms-dispensary` or accept we're a poor answer for this brand query |
-| what regulator you need for cannabis worker | 26 | 2.5 | The page we rank for isn't an exact match. Either create `/guides/maine-cannabis-worker-permit-regulator` or rewrite an existing OCP page to include this exact phrasing |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 Both are positioning wins we're leaving on the table.
 
 ### 3. Position 4-7 easy wins — meta description + internal-link push
 One rank promotion puts these on page-1 top, where CTR jumps 3-5x.
 
-| Query | Imp | Pos | Action |
-|---|---:|---:|---|
-| founding farmers limerick maine | 272 | 5.6 | Highest single impression haul in the file. Need a Founding Farmers brand page or deeper coverage in `/guides/limerick-dispensary-guide` |
-| hidden greens buxton maine | 70 | 6.5 | Add to `/guides/buxton-dispensary-guide` (or create) |
-| "old orchard beach" "3-4 million" visitors | 64 | 4.2 | Niche tail. Could ignore. |
-| founding farmers limerick | 63 | 6.3 | Same brand page gap |
-| dispensary near me | 46 | 6.5 | Edit `/find-a-dispensary` — title and meta need to literally contain "dispensary near me in Maine" |
-| puffin co fryeburg | 34 | 6.9 | Same as puffin co fryeburg maine above |
-| eclipse dispensary | 29 | 6.9 | Brand page gap |
-| best rosin in maine | 11 | 4.7 | `/blog/best-live-rosin-maine` — meta description isn't pulling the click |
-| psilocybin legality maine 2026 | 6 | 4.0 | Trim title to exact query match — likely `/blog/maine-psilocybin-...` |
-| maine psilocybin decriminalization status 2026 | 5 | 4.2 | same |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 ### 4. Brand-page gap (5.6% of impressions, almost no coverage)
 **23 queries, 282 impressions** for dispensary brands that have no dedicated page. Top gaps:
@@ -94,17 +67,7 @@ This isn't an on-page fix — it's a brand-build problem. Until people search th
 
 ## Cluster Breakdown (impressions)
 
-| Cluster | Queries | Impressions | CTR | Share |
-|---|---:|---:|---:|---:|
-| City guide | 98 | 2,403 | 0.17% | 47.5% |
-| Other tail | 291 | 889 | 0.45% | 17.6% |
-| B2B / YMYL | 57 | 756 | 0.26% | 14.9% |
-| Product/consumer | 29 | 341 | 0.59% | 6.7% |
-| Brand-page gap | 23 | 282 | 0.35% | 5.6% |
-| Brand | 17 | 110 | 0.91% | 2.2% |
-| Local-intent | 23 | 110 | 2.73% | 2.2% |
-| Vendor | 2 | 104 | 0.00% | 2.1% |
-| Tourism/region | 2 | 67 | 0.00% | 1.3% |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 ## Recommended Sprint Sequence
 
@@ -186,11 +149,7 @@ Total page-2 landmine impression haul covered by these edits: ~1,200+ impression
 
 ### Content gap identified (NOT auto-built — flagged for user decision)
 
-| Query | Impressions | Gap |
-|---|---:|---|
-| founding farmers | 49 | No dedicated page. Referenced in Limerick guide but no standalone. Flagged for user — see Sprint 87. |
-| founding farmers limerick maine | 272 | Same gap. Highest single impression haul in the data file. |
-| founding farmers limerick | 63 | Same gap. |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 User decision (2026-07-04): Build standalone page. Implemented in Sprint 87.
 
@@ -243,14 +202,7 @@ Created `guides/founding-farmers-dispensary.astro` — standalone operator guide
 
 ### B2B gaps remaining (not auto-built)
 
-| Query | Impressions | Status |
-|---|---:|---|
-| cannabis web design maine | 71 | Vendor page. Existing `maine-cannabis-vendor-directory.astro` is the right surface. Needs a "Web Design" subsection if any vendor is publishing for it. |
-| cannabis industry training maine | 34 | No dedicated page. Existing `maine-cannabis-staffing-licensing.astro` covers the regulatory side but not "industry training" as a service. |
-| cannabis marketing agency maine | 33 | Vendor directory surface, same as web design. |
-| iic card | 42 | Surface: `maine-cannabis-staffing-licensing.astro`. Page mentions IIC/AIC cards but doesn't lead with that phrase in title. |
-| cannabis workers permit | 5 | Same page; covered indirectly by FAQ entry added in Sprint 86. |
-| adult only weed camp in maine | 29 | No clear page. Niche tail. |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 These five gaps add up to 184 more impressions — material, but lower-priority than the brand-page work already shipped. Recommend a focused Sprint 89 if any of them prove sticky in next GSC export.
 

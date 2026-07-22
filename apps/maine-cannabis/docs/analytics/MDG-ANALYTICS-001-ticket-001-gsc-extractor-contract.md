@@ -241,23 +241,10 @@ $ wc -l gsc-search-analytics.jsonl
 2880 gsc-search-analytics.jsonl
 ```
 
-**First 5 lines** (note: v1 schema, no `page` field — these rows are pre-2026-07-13):
-```
-{"snapshotDate":"2026-07-06","query":"420 mules bar harbor","clicks":1,"impressions":23,"ctr":0.043478260869565216,"position":9.73913043478261}
-{"snapshotDate":"2026-07-06","query":"best rosin in maine","clicks":1,"impressions":11,"ctr":0.09090909090909091,"position":4.727272727272727}
-{"snapshotDate":"2026-07-06","query":"best weed in maine","clicks":1,"impressions":1,"ctr":1,"position":3}
-{"snapshotDate":"2026-07-06","query":"cannabis workers permit","clicks":1,"impressions":3,"ctr":0.3333333333333333,"position":31.666666666666668}
-{"snapshotDate":"2026-07-06","query":"cannabis?","clicks":1,"impressions":1,"ctr":1,"position":3}
-```
-
-**Last 5 lines** (v2 schema with `page` — these rows are 2026-07-10 post-v2 cutover):
-```
-{"snapshotDate":"2026-07-10","query":"yes","page":"https://mainedispensaryguide.com/blog/best-maine-dispensaries-2026","clicks":0,"impressions":1,"ctr":0,"position":1}
-{"snapshotDate":"2026-07-10","query":"yes","page":"https://mainedispensaryguide.com/guides/maine-dispensary-license","clicks":0,"impressions":1,"ctr":0,"position":2}
-{"snapshotDate":"2026-07-10","query":"yes maine","page":"https://mainedispensaryguide.com/guides/maine-cannabis-2026-operator-cost-update","clicks":0,"impressions":1,"ctr":0,"position":5}
-{"snapshotDate":"2026-07-10","query":"yes maine","page":"https://mainedispensaryguide.com/market-stats","clicks":0,"impressions":1,"ctr":0,"position":6}
-{"snapshotDate":"2026-07-10","query":"york maine dispensary","page":"https://mainedispensaryguide.com/guides/york-dispensary-guide","clicks":0,"impressions":18,"ctr":0,"position":15.444444444444445}
-```
+The original forensic included literal first/last JSONL rows to demonstrate the
+v1-to-v2 schema cutover. Those serialized query rows were removed from the
+current repository tree on 2026-07-22. The retained finding is unchanged: the
+first observed rows lacked `page`, while the last observed rows included it.
 
 **Schema drift visible inline:** first 5 rows lack `page`; last 5 rows have it. Same file. The JSONL is **schizophrenic** across the v1→v2 cutover. Consumers must handle both shapes (and the misroute-audit already does, via `'page' in r` check at line 88).
 
@@ -309,23 +296,10 @@ $ wc -l apps/maine-cannabis/data/gsc-spike-investigation-2026-07-07.jsonl
 126 gsc-spike-investigation-2026-07-07.jsonl
 ```
 
-**First 5 lines** (operator-name spike diagnostic, v2 schema with `date`):
-```
-{"date":"2026-07-07","query":"above all greenery fryeburg","page":"https://mainedispensaryguide.com/guides/fryeburg-dispensary-guide","clicks":1,"impressions":5,"ctr":0.2,"position":10}
-{"date":"2026-07-07","query":"280e consultant nyc","page":"https://mainedispensaryguide.com/guides/maine-cannabis-schedule-iii-dual-license-280e","clicks":0,"impressions":1,"ctr":0,"position":76}
-{"date":"2026-07-07","query":"420 mules","page":"https://mainedispensaryguide.com/guides/420-mules-bar-harbor","clicks":0,"impressions":2,"ctr":0,"position":7.5}
-{"date":"2026-07-07","query":"above all greenery","page":"https://mainedispensaryguide.com/guides/above-all-greenery-dispensary","clicks":0,"impressions":4,"ctr":0,"position":7}
-{"date":"2026-07-07","query":"above all greenery fryeburg","page":"https://mainedispensaryguide.com/guides/above-all-greenery-dispensary","clicks":0,"impressions":2,"ctr":0,"position":6}
-```
-
-**Last 5 lines**:
-```
-{"date":"2026-07-07","query":"white mountain craft cannabis fryeburg maine","page":"https://mainedispensaryguide.com/guides/white-mountain-craft-cannabis","clicks":0,"impressions":1,"ctr":0,"position":9}
-{"date":"2026-07-07","query":"yes","page":"https://mainedispensaryguide.com/blog/best-cannabis-strains-maine-outdoor-2026","clicks":0,"impressions":1,"ctr":0,"position":3}
-{"date":"2026-07-07","query":"yes maine","page":"https://mainedispensaryguide.com/guides/maine-cannabis-2026-operator-cost-update","clicks":0,"impressions":1,"ctr":0,"position":5}
-{"date":"2026-07-07","query":"yes maine","page":"https://mainedispensaryguide.com/market-stats","clicks":0,"impressions":1,"ctr":0,"position":6}
-{"date":"2026-07-07","query":"york maine dispensary","page":"https://mainedispensaryguide.com/guides/york-dispensary-guide","clicks":0,"impressions":1,"ctr":0,"position":13}
-```
+The original forensic also reproduced first/last serialized rows from the
+126-row spike diagnostic. Those query-bearing examples were removed from the
+current tree on 2026-07-22. The retained evidence is the row count and the
+observed v2 shape (`date`, query, page, clicks, impressions, CTR, position).
 
 ### 3.2 Spec audit claims vs. reality
 

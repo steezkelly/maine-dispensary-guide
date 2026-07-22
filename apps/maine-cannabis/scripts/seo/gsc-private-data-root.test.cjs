@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 const { REPO_ROOT, privateDataRoot, privateOutputPath } = require('./gsc-private-data-root.cjs');
 
@@ -60,4 +60,41 @@ test('rejects an output whose existing symlink ancestor escapes the private root
   fs.symlinkSync(escape, path.join(root, 'reports'), 'dir');
 
   assert.throws(() => privateOutputPath(path.join(root, 'reports', 'audit.md'), root), /private GSC data root/);
+});
+
+function containsQueryMetricTable(source) {
+  const metricHeaders = new Set(['imp', 'impressions', 'position', 'pos', 'avg pos', 'click', 'click?', 'clicks', 'ctr', 'share']);
+  const lines = source.split('\n');
+  for (let index = 0; index < lines.length - 1; index += 1) {
+    if (!lines[index].trimStart().startsWith('|') || !/^\s*\|?\s*:?-{3,}/.test(lines[index + 1])) continue;
+    const headers = lines[index].trim().replace(/^\||\|$/g, '').split('|').map(value => value.trim().toLowerCase());
+    if (headers.some(value => value === 'query' || value === 'queries')
+      && headers.some(value => metricHeaders.has(value))) return true;
+  }
+  return false;
+}
+
+test('tracked repository state contains no serialized or tabular GSC query rows or unsafe generated reports', () => {
+  const sanitizedLegacyReports = new Set([
+    'apps/maine-cannabis/data/audit-2026-07-06-28d.md',
+    'apps/maine-cannabis/data/audit-2026-07-06.md',
+  ]);
+  const tracked = execFileSync('git', ['ls-files'], { cwd: REPO_ROOT, encoding: 'utf8' })
+    .split('\n')
+    .filter(Boolean)
+    .filter(file => /\.(?:csv|json|jsonl|md)$/.test(file))
+    .filter(file => !/\.test\.[^.]+$/.test(file));
+  const serializedQueryRow = /^\s*\{[^\n]*"query"\s*:[^\n]*(?:"clicks"|"impressions")/m;
+  const generatedMisrouteReport = /^# GSC Misroute Audit\b/m;
+  const offenders = new Set();
+
+  for (const file of tracked) {
+    const absolute = path.join(REPO_ROOT, file);
+    const source = fs.readFileSync(absolute, 'utf8');
+    const generatedReportIsUnsafe = generatedMisrouteReport.test(source)
+      && (!sanitizedLegacyReports.has(file) || !source.includes('## Privacy disposition'));
+    if (serializedQueryRow.test(source) || containsQueryMetricTable(source) || generatedReportIsUnsafe) offenders.add(file);
+  }
+
+  assert.deepEqual([...offenders], []);
 });

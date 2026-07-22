@@ -35,13 +35,7 @@ lead-magnet measurement status is recorded in
 
 ### 2. Page-1 ranking on operator-name queries pointing to town-guide pages (intent mismatch)
 
-| Query | Ranking URL | Position | Impressions | Clicks | Issue |
-|---|---|---|---|---|---|
-| `high road gray maine` | `/guides/gray-dispensary-guide` | pos 7.9 | 250 | 0 | Operator-name query → town-guide page |
-| `founding farmers limerick maine` | `/guides/limerick-dispensary-guide` | pos 5.4 | 256 | 0 | Operator-name query → town-guide page |
-| `puffin co fryeburg maine` | `/guides/fryeburg-dispensary-guide` | pos 8.6 | 118 | 0 | Operator-name query → town-guide page |
-| `landrace casco` | `/guides/casco-dispensary-guide` | pos 8.9 | 180 | 0 | Operator-name → town-guide page |
-| `hidden greens buxton` | `/guides/buxton-dispensary-guide` | pos 6.3 | 132 | 0 | Operator-name → town-guide page |
+> Privacy redaction (2026-07-22): this table previously listed literal GSC query rows with row-level metrics. The current tree retains the surrounding analysis and aggregate conclusions; query-bearing evidence is private under `MDG_GSC_DATA_ROOT`.
 
 **Pattern:** The town-guide pages earn impressions on both informational queries ("where to buy cannabis in <town>") and commercial operator-name queries ("<Operator> <town>"). For the operator-name queries, searchers want the operator's own page. **Operator-profile pages do not exist for most of these** (only 11 of 18 prominent operators have a profile). The town-page ranks #1 by default because Google matches town name; but searchers don't click because they don't see the operator's name in the title.
 
