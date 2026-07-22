@@ -20,7 +20,12 @@ export function truncateMetaDescription(value: string): string {
   if (value.length <= MAX_META_DESCRIPTION_LENGTH) return value;
   const trimmed = value.slice(0, MAX_META_DESCRIPTION_LENGTH - 1).trimEnd();
   const lastSpace = trimmed.lastIndexOf(' ');
-  return `${trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '')}.`;
+  let result = trimmed.slice(0, lastSpace > 110 ? lastSpace : trimmed.length).replace(/[,:;—-]+$/, '');
+  const connector = /\s+(?:and|or|the|for|to|of|a|an|in|with|on|by|at|from|is|are|was|were|be|been)$/i;
+  for (let i = 0; i < 3 && connector.test(result); i++) {
+    result = result.replace(connector, '');
+  }
+  return `${result.replace(/[,:;—-]+$/, '')}.`;
 }
 
 /**
