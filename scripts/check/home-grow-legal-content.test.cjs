@@ -49,6 +49,9 @@ test('mandatory routing, definitions, property, and scenario sections remain pre
   const pillar = read(pillarPath);
   const medical = read(medicalPath);
   assert.match(pillar, /id="definitions"/);
+  assert.match(pillar, /title28-Bsec102-A\.html/);
+  assert.match(pillar, /title22sec2421-A\.html/);
+  assert.doesNotMatch(pillar, /title28-Bsec102\.html|title22sec2422\.html/);
   assert.match(pillar, /mature plant[\s\S]*immature plant[\s\S]*seedling[\s\S]*cultivation area[\s\S]*qualifying patient/i);
   assert.match(pillar, /id="common-scenarios"/);
   assert.match(pillar, /tenant(?:’|')s domicile[\s\S]*does not[\s\S]*resolve every/i);
