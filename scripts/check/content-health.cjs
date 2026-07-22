@@ -1068,6 +1068,15 @@ const YMYL_BLOG_PAGES = [
   'blog/maine-home-grow-cannabis-guide-2026.astro',
 ];
 
+// These pages have a documented organization-owned source-review record. They
+// intentionally name no individual reviewer: the visible disclosure identifies
+// Maine Dispensary Guide and its cited primary-source review without implying
+// professional or expert review.
+const ORGANIZATIONAL_SOURCE_REVIEW_YMYL_PAGES = new Set([
+  'blog/best-maine-edibles-2026.astro',
+  'blog/maine-psilocybin-2026-guide.astro',
+]);
+
 function checkYMYLReviewerCoverage() {
   // Custom source roots are isolated fixtures, not a partial copy of the
   // repository's fixed YMYL inventory.
@@ -1092,9 +1101,11 @@ function checkYMYLReviewerCoverage() {
     // but the human-readable byline is in place.
     const hasReviewedByByline = /Reviewed by\s+/i.test(text);
     const hasComplianceReviewerImport = /const complianceReviewer\s*=\s*authors\.find/.test(text);
+    const hasApprovedOrganizationSourceReview = ORGANIZATIONAL_SOURCE_REVIEW_YMYL_PAGES.has(rel)
+      && /Editorially reviewed against the cited primary sources by\s*(?:<[^>]+>\s*)*Maine Dispensary Guide/i.test(text);
 
-    if (!hasReviewerField && !(hasReviewedByByline && hasComplianceReviewerImport)) {
-      results.push(`${rel}: YMYL page missing reviewer (no reviewer: frontmatter field AND no "Reviewed by" byline in body)`);
+    if (!hasReviewerField && !(hasReviewedByByline && hasComplianceReviewerImport) && !hasApprovedOrganizationSourceReview) {
+      results.push(`${rel}: YMYL page missing reviewer (no reviewer: frontmatter field, approved organization source-review disclosure, or "Reviewed by" byline in body)`);
     }
   });
   return results;

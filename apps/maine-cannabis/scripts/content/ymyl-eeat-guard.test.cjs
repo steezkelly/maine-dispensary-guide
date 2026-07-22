@@ -67,6 +67,18 @@ test('staffing page preserves its established canonical override', () => {
   );
 });
 
+test('cohort pages with an explicit FAQPage schema suppress duplicate component schema', () => {
+  for (const page of [
+    'apps/maine-cannabis/src/pages/blog/best-maine-edibles-2026.astro',
+    'apps/maine-cannabis/src/pages/blog/maine-psilocybin-2026-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-cannabis-staffing-licensing.astro',
+  ]) {
+    const source = read(page);
+    assert.match(source, /<Faq\s+faqs=\{[^}]+\}\s+withoutSchema=\{true\}\s*\/>/);
+    assert.match(source, /@type': 'FAQPage'/);
+  }
+});
+
 function loadTypeScriptModule(relativePath) {
   const filename = path.join(repoRoot, relativePath);
   const source = fs.readFileSync(filename, 'utf8');
