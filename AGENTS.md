@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 193 guide route sources and 37 blog posts (36 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
+Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 193 guide route sources and 43 blog posts (42 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
 
 **SCOPE: Maine Only** — Do NOT propose or build state-specific hubs for other states.
 
@@ -102,7 +102,7 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 22 reusable components (see below)
+│   ├── components/               # 23 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
@@ -120,7 +120,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
-**Components** (22, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
+**Components** (23, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
 
 ---
 
