@@ -120,7 +120,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
-**Components** (23, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
+**Components** (23, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `CityGuide`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`.
 
 ---
 
