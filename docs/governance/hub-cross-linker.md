@@ -1,10 +1,13 @@
 # Hub-to-Hub Internal Linker
 
-**Branch:** `fix/hub-cross-linker-remediation-20260721`
+**Status:** Tooling merged in PR #133; the 111-page canonical city-guide
+application merged in PR #134 and was production-verified on 2026-07-22.
+**Original tooling branch:** `fix/hub-cross-linker-remediation-20260721`
 **Author:** Hermes (`opus-hub-cross-links`)
 **Date:** 2026-07-21
-**Lease:** `apps/maine-cannabis/scripts/link` and this document only. The
-remediation does not lease or edit `src/pages/guides/`.
+**Original tooling lease:** `apps/maine-cannabis/scripts/link` and this
+document only. The remediation did not lease or edit `src/pages/guides/`;
+the later application used a separate exact-corpus lease.
 
 ## Why
 
@@ -20,7 +23,7 @@ both a clean re-crawl path and a strong relevance signal on
 "operator wants to know about city" / "tourist wants to know about
 rules" cross-intent queries.
 
-## What this PR adds
+## What the original tooling PR added
 
 1. `apps/maine-cannabis/scripts/link/hub-cross-linker.cjs` —
    idempotent, dry-run-by-default body injector for city guides.
@@ -28,14 +31,14 @@ rules" cross-intent queries.
    curated, topic-keyed catalogue of 32 operator guides + a 5-entry
    `alwaysRelevant` list chosen from the GSC top-15 impressions.
 
-## What this PR does NOT do
+## What the original tooling PR did not do
 
-- **Does not edit any city guide file.** This change adds and verifies the
-  tool. Running `--apply` against the live corpus remains a separate reviewed
+- **Did not edit any city guide file.** That change added and verified the
+  tool. Running `--apply` against the live corpus remained a separate reviewed
   action with its own source-path lease.
-- **Does not edit any operator guide file.**
-- **Does not add a new component, layout change, or shared CSS.**
-- **Does not modify `AutoRelated` or any existing cross-link
+- **Did not edit any operator guide file.**
+- **Did not add a new component, layout change, or shared CSS.**
+- **Did not modify `AutoRelated` or any existing cross-link
   machinery.** The new section is a standalone `<section
   id="hub-cross-links">` block, discoverable as a separate
   semantic unit so the existing post-content related-links pipeline
@@ -91,13 +94,23 @@ node apps/maine-cannabis/scripts/link/hub-cross-linker.cjs --dry-run
 npm run verify:iterate
 ```
 
-## Open follow-ups (not in this PR)
+## Rollout status and follow-ups
 
-- **Run the apply pass** only under a separate source-path lease and review.
-  Until then, the script and map sit in the tree ready to run.
-- **GSC remeasurement** at +28 days after the apply lands. The
-  Reddit play we are validating: 30%+ impressions lift on the
-  linked-from operator guides, with no new content added.
+- **Application complete.** PR #134 applied one idempotent
+  `hub-cross-links` section to exactly 111 canonical city guides under a
+  separate source-path lease and independent review. Production verification
+  confirmed 111/111 HTTP 200 responses, one section per route, and five
+  distinct expected operator-guide links per section.
+- **GSC remeasurement scheduled.** Kanban task `t_3af60717` and one-shot
+  Hermes scheduler job `79d4f81fae8f` will compare the exact 28-day pre/post
+  windows on 2026-08-22. The Hermes scheduler was verified advancing with a
+  successful recurring run at 2026-07-21 21:30 ET; this does not claim that
+  the separately documented legacy host `cron.service` blocker is fixed. The
+  measurement date is three days after the nominal +28 checkpoint so the post
+  window can use final GSC data despite the normal reporting lag. The
+  hypothesis remains a 30%+ aggregate impressions lift across the five
+  linked-to operator guides; the report must state that pre/post movement is
+  observational rather than proof of causality.
 - **Stale-guide rotation** (separate workstream per the gap-analysis
   synthesis). This linker is complementary, not a substitute — the
   linker adds the link graph; the stale-guide rotation adds the

@@ -66,7 +66,7 @@ before dispatch.
 | Item | Blocker owner | Evidence | Resume trigger |
 |---|---|---|---|
 | Broader template migration | Operator | Card `t_5b8b3a86`; the recorded branch/worktree are absent and the prior run ended with a coordination collision | Explicit operator go/no-go followed by a fresh-base contract, branch, worktree, lease, and representative visual gate |
-| GSC scheduled measurement | Operator/system owner | Crontab entries and wrappers exist, but the host has no `cron.service`; logs stopped advancing. | A functioning scheduler is enabled and a fresh daily/weekly output is observed. |
+| Legacy host-cron GSC daily/weekly measurement | Operator/system owner | Crontab entries and wrappers exist, but the host has no `cron.service`; those logs stopped advancing. This does not cover the separate Hermes scheduler, which had a fresh successful `agent-harvest` run at 2026-07-21 21:30 ET and owns one-shot hub-cross-link measurement job `79d4f81fae8f`. | A functioning host scheduler is enabled and a fresh daily/weekly output is observed. |
 | Partnership outreach follow-up | Operator | 2026-07-07 campaign was sent; reply/follow-up is human-led. | Operator supplies reply/next-contact direction or records an outcome. |
 | Lead-magnet PDFs | Operator | The remaining scope is a product choice: fresh PDFs versus routing to existing assets. | Operator chooses Path A or Path B and names the target magnets. |
 | Legacy theme/readability branch disposition | Operator/integration owner | Old branches may contain overlapping or already-landed work. | Fresh branch-reconciliation evidence identifies unique commits and a chosen disposition. |
