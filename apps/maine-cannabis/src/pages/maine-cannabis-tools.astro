@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const article = {
+  author: 'Eliot Nash',
+  authorId: 'eliot-nash',
+  reviewer: { name: 'Margaret Finch', jobTitle: 'Finance & Taxation Analyst', id: 'margaret-finch' },
+  authorTitle: 'Founder & Publisher',
+  publishDate: '2026-07-22',
+  modifiedDate: '2026-07-22',
+  section: 'Tools',
+};
+
+const tools = [
+  {
+    task: 'Assess a prospective market',
+    title: 'Maine Cannabis License Data + Opt-In Tracker',
+    href: '/guides/maine-ocp-license-map',
+    description: 'Start with statewide license counts, regional density context, and the local-authorization question before treating a town as an opportunity.',
+    owner: 'Maine Office of Cannabis Policy (OCP); regional interpretation by Maine Dispensary Guide.',
+    asOf: 'OCP 2025 annual-report snapshot: December 31, 2025. Dated OCP roster context: July 8, 2026.',
+    limitation: 'It is not a live licensee mirror and cannot establish a current license status, a site’s municipal approval, or future demand.',
+  },
+  {
+    task: 'Verify municipal authorization',
+    title: 'Maine Cannabis Municipal Authorization Tracker',
+    href: '/guides/maine-cannabis-opt-in-tracker',
+    description: 'Search incorporated Maine municipalities by OCP-recorded adult-use authorization and keep “no recorded retail authorization” separate from an explicit opt-out.',
+    owner: 'Maine OCP, joined with Maine GeoLibrary municipality geography; presented by Maine Dispensary Guide.',
+    asOf: 'Directory retrieved July 17, 2026; OCP report model refreshed July 9, 2026.',
+    limitation: 'It cannot determine a municipality’s intent when OCP records no retail authorization, or replace confirmation with the local clerk and current ordinance.',
+  },
+  {
+    task: 'Inspect license context',
+    title: 'Maine Cannabis License Data + Opt-In Tracker',
+    href: '/guides/maine-ocp-license-map',
+    description: 'Use the same source-led license view to distinguish annual-report totals from the dated operational roster before comparing operators or planning outreach.',
+    owner: 'Maine OCP; Maine Dispensary Guide keeps the annual-report and roster definitions distinct.',
+    asOf: 'Annual-report figures are as of December 31, 2025; roster context is dated July 8, 2026.',
+    limitation: 'It cannot confirm that a particular license is currently active, transferable, compliant, or available for acquisition.',
+  },
+  {
+    task: 'Find local dispensary guidance',
+    title: 'Find a Dispensary in Maine',
+    href: '/find-a-dispensary',
+    description: 'Choose a published city, town, or regional guide, then use the linked map search and OCP search for a local starting point.',
+    owner: 'Maine Dispensary Guide editorial directory; OCP supplies the adult-use and medical licensee CSV context.',
+    asOf: 'OCP CSV context: July 8, 2026; page last reviewed July 6, 2026.',
+    limitation: 'It cannot guarantee live store hours, inventory, accessibility, licensing status, or coverage for every Maine municipality.',
+  },
+  {
+    task: 'Model operating assumptions',
+    title: 'Maine Dispensary ROI Calculator',
+    href: '/roi-calculator',
+    description: 'Stress-test capital, revenue, expenses, margins, and payback against the page’s Maine and national benchmark assumptions before committing to a lease.',
+    owner: 'Maine Dispensary Guide, using Maine OCP annual reports and cited industry benchmark publishers.',
+    asOf: 'Maine annual-report inputs: 2025; national benchmarks: 2025–2026; page last reviewed July 9, 2026.',
+    limitation: 'It cannot forecast a specific store’s revenue, tax outcome, financing terms, regulatory change, or profitability.',
+  },
+];
+---
+
+<Layout
+  title="Maine Cannabis Decision Tools: Market, Authorization & ROI"
+  description="Choose the Maine-specific research tool for market context, municipal authorization, license context, local dispensary guidance, or operating assumptions."
+  heroImage="/images/heroes/ocp-license-map.jpg"
+  article={article}
+  topics={['market', 'licensing', 'compliance', 'finance', 'operations']}
+  isHub={true}
+>
+  <main class="tools-hub">
+    <header class="tools-hub__header">
+      <p class="eyebrow">Maine-only decision tools</p>
+      <h1>Choose the evidence you need before the next decision.</h1>
+      <p class="lede">These routes remain their own source-led tools. This page is a task-based index: choose a question, review the source boundary, then continue to the original tool.</p>
+    </header>
+
+    <section aria-labelledby="tools-title">
+      <h2 id="tools-title" class="sr-only">Maine cannabis decision tools</h2>
+      <ol class="tool-grid">
+        {tools.map((tool, index) => (
+          <li class="tool-card">
+            <p class="tool-card__number" aria-hidden="true">0{index + 1}</p>
+            <div class="tool-card__body">
+              <p class="tool-card__task">{tool.task}</p>
+              <h2><a href={tool.href}>{tool.title}</a></h2>
+              <p>{tool.description}</p>
+              <dl class="tool-card__disclosure">
+                <div><dt>Data owner</dt><dd>{tool.owner}</dd></div>
+                <div><dt>As of</dt><dd>{tool.asOf}</dd></div>
+                <div><dt>What it cannot determine</dt><dd>{tool.limitation}</dd></div>
+              </dl>
+              <a class="editorial-text-link" href={tool.href}>Open the tool <span aria-hidden="true">→</span></a>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <aside class="tools-hub__note" aria-label="How to use these tools">
+      <p><strong>Use the direct path when you already know the question.</strong> The homepage still links directly to municipal guides and the ROI calculator; this index adds a way to select among those existing paths, rather than replacing them. Confirm time-sensitive licensing and municipal facts with OCP and the relevant local authority before acting.</p>
+    </aside>
+  </main>
+</Layout>
+
+<style>
+  .tools-hub { max-inline-size: 76rem; margin: 0 auto; padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 8vw, 6rem); }
+  .tools-hub__header { max-inline-size: 54rem; margin-block-end: clamp(2.5rem, 6vw, 5rem); }
+  .eyebrow, .tool-card__task { margin: 0; color: var(--color-text-light); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .tools-hub h1 { margin: 0.75rem 0 1rem; font-family: var(--font-serif); font-size: clamp(2.75rem, 6vw, 5.25rem); line-height: 0.98; letter-spacing: -0.04em; }
+  .lede { max-inline-size: 48rem; margin: 0; color: var(--color-text-light); font-size: clamp(1.125rem, 2vw, 1.35rem); line-height: 1.6; }
+  .tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .tool-card { display: grid; grid-template-columns: 2.75rem 1fr; gap: 0.75rem; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--color-rule); background: var(--color-surface); }
+  .tool-card:first-child { grid-column: 1 / -1; }
+  .tool-card__number { margin: 0; color: var(--color-text-light); font-family: var(--font-serif); font-size: 1.35rem; }
+  .tool-card__body > p:not(.tool-card__task) { color: var(--color-text-light); line-height: 1.6; }
+  .tool-card h2 { margin: 0.5rem 0; font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 2rem); line-height: 1.1; }
+  .tool-card h2 a { color: var(--color-text); text-decoration: none; }
+  .tool-card h2 a:hover, .tool-card h2 a:focus-visible { text-decoration: underline; text-underline-offset: 0.16em; }
+  .tool-card__disclosure { display: grid; gap: 0.75rem; margin: 1.5rem 0; padding-top: 1rem; border-top: 1px solid var(--color-rule); }
+  .tool-card__disclosure div { display: grid; gap: 0.2rem; }
+  .tool-card__disclosure dt { color: var(--color-text-light); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tool-card__disclosure dd { margin: 0; line-height: 1.5; }
+  .tools-hub__note { max-inline-size: 62rem; margin: clamp(2.5rem, 6vw, 5rem) auto 0; padding: 1.25rem 1.5rem; border-inline-start: 3px solid var(--color-primary); background: color-mix(in oklab, var(--color-primary) 6%, transparent); }
+  .tools-hub__note p { margin: 0; line-height: 1.65; }
+  @media (max-width: 700px) { .tool-grid { grid-template-columns: 1fr; } .tool-card:first-child { grid-column: auto; } }
+</style>
