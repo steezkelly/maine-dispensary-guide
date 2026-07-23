@@ -10,6 +10,7 @@ import MaineMapReference from '../components/homepage/MaineMapReference.astro';
 import LatestIntelligence from '../components/homepage/LatestIntelligence.astro';
 import NewsletterInvitation from '../components/homepage/NewsletterInvitation.astro';
 import TrustLayer from '../components/homepage/TrustLayer.astro';
+import CrossLinkFromGuide from '../components/signal/CrossLinkFromGuide.astro';
 import { getSiteStats } from '../lib/site-stats';
 import {
   buildLatestIntelligence,
@@ -95,6 +96,12 @@ const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => (
       <h1>Maine cannabis intelligence for decisions that need evidence.</h1>
       <AuthorityHero eyebrow="Maine Dispensary Guide" title="Maine cannabis intelligence for decisions that need evidence." lede="Licensing, local market, and operating research organized around the questions operators must answer before they commit capital." primaryCtaId="cta-inline-index-04" secondaryCtaId="cta-inline-index-02" renderTitle={false} sectionId="authority-hero-content" />
     </section>
+    <section id="signal-cta" class="homepage-editorial__section">
+      <div class="signal-cross-link-wrap">
+        <CrossLinkFromGuide slug="portland" city="Portland" nofollow={false} />
+        <p class="signal-cross-link-note">MDG Signal is a read-only research workspace drawing from the current MDG-DATA release. Use it to compare municipalities, inspect source evidence, and preview the planned change-alert surface before you commit to a paid tier.</p>
+      </div>
+    </section>
     <section id="evidence-strip" class="homepage-editorial__section"><EvidenceStrip items={evidence} /></section>
     <section id="operator-pathways" class="homepage-editorial__section"><OperatorPathways pathways={pathways} /></section>
     <section id="site-tour" class="homepage-editorial__section"><SiteTour /></section>
@@ -110,6 +117,14 @@ const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => (
   .homepage-editorial { overflow: clip; }
   .homepage-editorial__section { padding-inline: clamp(1rem, 4vw, 3rem); }
   .homepage-editorial__section > :global(.editorial-section), .homepage-editorial__section > :global(.maine-map-reference) { max-inline-size: 76rem; margin-inline: auto; }
+  .signal-cross-link-wrap > :global(.signal-cross-link) { max-inline-size: 76rem; margin-inline: auto; }
+  .signal-cross-link-wrap .signal-cross-link-note {
+    max-inline-size: 76rem;
+    margin: 10px auto 0;
+    color: var(--color-text-muted, #555);
+    font-size: 13px;
+    line-height: 1.55;
+  }
   .homepage-editorial__section--hero > h1 { max-inline-size: 76rem; margin: 0 auto; padding-top: clamp(1.5rem, 4vw, 3rem); font-family: var(--font-serif); font-size: clamp(2.5rem, 6vw, 5.5rem); line-height: 0.96; letter-spacing: -0.04em; }
   .homepage-editorial__section--hero :global(.authority-hero) { padding-top: 0.75rem; }
   @media (max-width: 640px) { .homepage-editorial__section { padding-inline: 1rem; } }

@@ -1,5 +1,6 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
+import CrossLinkFromGuide from '../../components/signal/CrossLinkFromGuide.astro';
 import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
@@ -81,6 +82,7 @@ const topics = ["city", "market"];
 <section>
     <div class="further-reading">
       <AutoRelated currentPath="/guides/orono-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
+<CrossLinkFromGuide slug="orono" city="Orono" />
     </div>
   </section>
 
