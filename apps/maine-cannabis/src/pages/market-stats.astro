@@ -4,6 +4,10 @@ import Callout from '../components/Callout.astro';
 import Faq from '../components/Faq.astro';
 import CiteThis from '../components/CiteThis.astro';
 import LeadMailtoForm from '../components/LeadMailtoForm.astro';
+import ChartBar from '../components/ChartBar.astro';
+import ChartStackedBar from '../components/ChartStackedBar.astro';
+import ChartTierList from '../components/ChartTierList.astro';
+import { chartById } from '../data/market-stats/chart-lookup.ts';
 import { getSiteStats } from '../lib/site-stats';
 const siteStats = getSiteStats();
 // site-stats.json guarantees currentOcpLicenseeRoster when activeAdultUseRetailStores is set;
@@ -106,7 +110,12 @@ const nationalMarket = [
   { metric: "U.S. cannabis market (2024 actual)",       value: "$30.1B",    source: "Whitney Economics + BDSA consensus 2024 actual" },
   { metric: "U.S. cannabis market (2025 BDSA actual)",  value: "$31.5B",    source: "BDSA 2025 — $23.9B adult-use + $7.6B medical (per Flowhub)" },
   { metric: "U.S. cannabis market (2025 Whitney revised forecast)", value: "$29.1–29.6B", source: "Whitney Economics Dec 2025 downward revision" },
-  { metric: "Total U.S. economic contribution (2025)",  value: "$149B",     source: "Flowhub citing aggregated economic-impact studies" },
+  // §8.2 #1 (2026-07-23): the prior $149B "Total U.S. economic contribution" row was a
+  // Flowhub-derived multiplier (no defensible primary URL per the national-context
+  // source matrix). It is intentionally omitted from the §8.2 prose and from
+  // Table 8. Re-add only if a primary-source aggregate (BEA RIMS, state GDP
+  // derivation) becomes available. Source-matrix §8.3 classifies the figure as
+  // "Flowhub, derived multiplier" — preserved here as the audit citation.
   { metric: "U.S. legal-cannabis states (adult-use)",   value: "24 states + DC + 3 territories", source: "NCSL (June 26, 2025); NORML cross-check" },
   { metric: "U.S. legal-cannabis states (medical, comprehensive)", value: "41 states + DC + 3 territories", source: "NCSL (June 26, 2025)" },
   { metric: "U.S. past-month cannabis users (age 12+, 2024)", value: "44.3M (15.4%)", source: "SAMHSA NSDUH 2024 (HHS Pub PEP25-07-007)" },
@@ -133,7 +142,11 @@ const nationalPricing = [
   { state: "Maine (per cannabispromotions.com 2025)", pricePerGram: "$8.60",   source: "Cannabis Promotions 2025 (aggregator)" },
   { state: "Maine (per OCP CY2025, weighted all-pkg)", pricePerGram: "$6.62",   source: "OCP 2025 Annual Report" },
   { state: "Ohio (most expensive tracked eighth)", pricePerGram: "n/a (8th = $31.11)", source: "Headset June 2026" },
-  { state: "U.S. national wholesale spot (Nov 21, 2025)", pricePerGram: "$2.40 ($1,087/lb)", source: "Cannabis Benchmarks Nov 21, 2025 weekly report" }
+  // §8.2 #4 (2026-07-23): wholesale spot intentionally omitted. The Nov 21, 2025
+  // Cannabis Benchmarks weekly pull is ~8 months old as of publication and
+  // wholesale spot changes weekly; re-pulling is a separate card. We preserve
+  // the Headset retail-price comparand above instead.
+  { state: "Wholesale spot (intentionally omitted)", pricePerGram: "see source matrix §8.3", source: "Re-pulled quarterly; latest 2026-07-22 matrix §8.3 keeps retail comparand" }
 ];
 
 // Federal regulatory status — three-tier current as of 2026-07-09
@@ -141,8 +154,8 @@ const federalStatus = [
   { item: "FDA-approved marijuana products (e.g., Marinol, Epidiolex analogues)", status: "Schedule III (effective Apr 22, 2026)",  source: "DEA marijuana rescheduling page; 91 FR doc 2026-08176" },
   { item: "State-licensed medical cannabis (incl. Maine MMCP)", status: "Schedule III (effective Apr 22, 2026)",  source: "DEA; DOJ OPA media 1437441" },
   { item: "Adult-use (recreational) cannabis — all 24 legal states", status: "Schedule I (unchanged at federal level)",  source: "21 U.S.C. §812; 21 CFR §1308.11" },
-  { item: "Hemp / CBD / delta-8 THC products", status: "Federally legal under 0.3% delta-9 THC — changing Nov 12, 2026 to total-THC standard + 0.4 mg/container cap", source: "2018 Farm Bill §10113; 2026 Appropriations §781" },
-  { item: "Broader Schedule I → III rescheduling NPRM (covers all marijuana)", status: "PENDING — DEA ALJ hearing Jun 29 – Jul 15, 2026",  source: "DEA Hearing Facility; 91 FR 22777" }
+  { item: "Hemp / CBD / delta-8 THC products", status: "Federally legal under 0.3% delta-9 THC — changing Nov 12, 2026 to total-THC standard + 0.4 mg/container cap, contested by H.R. 7024 / H.R. 7010 / Senate delay bills", source: "2018 Farm Bill §10113; 2026 Appropriations §781; CRS IF13136" },
+  { item: "Broader Schedule I → III rescheduling NPRM (covers all marijuana)", status: "PENDING — DEA ALJ hearing concluded Jul 15, 2026; post-hearing briefs due Aug 17, 2026; ALJ has no deadline; DEA Administrator final rule has no deadline",  source: "DEA Hearing Facility; 91 FR 22777" }
 ];
 
 // Criminal-justice context — federal marijuana arrest trend
@@ -1014,6 +1027,16 @@ Source page: https://mainedispensaryguide.com/market-stats`;
       Sources: U.S. 2026E ($47B) — Statista cannabis market outlook (free page is paywalled; figure cited via Flowhub 2026, accessed 2026-07-09). U.S. 2030E ($55.4B at 3.36% CAGR) — Statista, same citation trail. U.S. 2024 actual ($30.1B) — Whitney Economics + BDSA consensus. 2025 actuals diverge: BDSA back-cast $31.5B ($23.9B AU + $7.6B medical, per Flowhub); Whitney revised its 2025 forecast DOWN to $29.1–29.6B in December 2025, marking the first-ever annual YoY decline in U.S. legal cannabis revenue. Jobs data: Vangst 2025 Jobs Report counts 425,002 direct FTE jobs (down 3.4% YoY); Leafly+Whitney 2026 (cited via cannabispromotions.com) counts 445,800 FTE jobs (up 1.2% YoY, includes ancillary). The discrepancy is methodology, not contradiction: Vangst = direct cannabis; Leafly+Whitney = direct + ancillary. Tax burden: Whitney Economics' April 9, 2026 brief estimates cannabis businesses paid $2.24B in excess federal tax due to 280E in 2025 alone; $27B cumulative federal tax since 2018, of which $15B is excess 280E tax. The IRS Statistics of Income division does NOT publish a 280E-specific line in its public data products — Whitney is the de facto citation standard for this metric.
     </p>
 
+    {/* §8.1 visual: 280E cumulative-tax stacked bar (after Table 8) */}
+    {(() => {
+      const chart = chartById('280e-cumulative-tax');
+      return chart && chart.kind === 'stacked_bar' ? (
+        <div class="mdg-chart-section">
+          <ChartStackedBar chart={chart} />
+        </div>
+      ) : null;
+    })()}
+
     <Callout title="Maine is ~0.5% of the U.S. cannabis market" type="info">
       With a $246.4M adult-use market and a 1.4M population, Maine represents roughly 0.5% of total U.S. legal cannabis spend — comparable to its 0.4% share of U.S. population. Maine is a per-capita-consistent market, not an over- or under-performer. The state ranks in the top 15 nationally on per-capita adult-use spend (~$176/resident) and in the top 20 on transactions-per-resident. The implied takeaway: Maine is a meaningful regional market, not a national-tier market — and decisions made on "the cannabis industry is growing" national framing don't necessarily apply to a state in its 6th year of operations.
     </Callout>
@@ -1043,6 +1066,16 @@ Source page: https://mainedispensaryguide.com/market-stats`;
       Pricing data caveats: The Headset June 2026 figures ($8.94/g single-gram, $3.62/g equivalized) are the cleanest direct national comparison and come from a 12-market retail-POS panel (not all 24 adult-use states). The previously-cited $8.92/g national average (in earlier versions of this page) traces to Cannabis Benchmarks 2025 via Cannabis Promotions (an aggregator); Headset's $8.94 is the same data point with a one-step-fresher primary trail. State-specific prices: Michigan at $3.80/g (cheapest) and Illinois at $15.80/g (most expensive) per Cannabis Promotions 2025. The Maine OCP-weighted $6.62/g sits 26% below the $8.94 single-gram national average and 83% above the $3.62 equivalized average — the gap reflects Maine's heavier weighting toward bulk-gram sales (where wholesale-to-retail margins are tighter than on eighths or ounces). Headset's June 2026 eighth spread runs $11.55 (Oregon) to $31.11 (Ohio) — a 2.7x cross-state range.
     </p>
 
+    {/* §8.1 visual: Maine vs national pricing bar (after Table 9) */}
+    {(() => {
+      const chart = chartById('maine-vs-national-pricing');
+      return chart && chart.kind === 'bar' ? (
+        <div class="mdg-chart-section">
+          <ChartBar chart={chart} />
+        </div>
+      ) : null;
+    })()}
+
     <h3>Where Maine sits among the 24 adult-use states</h3>
     <table class="year-table" aria-label="Maine cannabis market context among the 24 adult-use legal states">
       <caption>Table 10 — Maine vs comparable New England + national adult-use legal states. Sources: state OCP/regulator annual reports; NCSL state-taxation tracker; Headset June 2026.</caption>
@@ -1068,6 +1101,16 @@ Source page: https://mainedispensaryguide.com/market-stats`;
       </tbody>
     </table>
 
+    {/* §8.1 visual: state-context tax-rates horizontal bar (after Table 10) */}
+    {(() => {
+      const chart = chartById('state-context-tax-rates');
+      return chart && chart.kind === 'bar' ? (
+        <div class="mdg-chart-section">
+          <ChartBar chart={chart} />
+        </div>
+      ) : null;
+    })()}
+
     <h3>Federal regulatory status — three-tier transitional</h3>
     <table class="year-table" aria-label="Federal cannabis regulatory status as of July 2026">
       <caption>Table 11 — Federal cannabis regulatory status, July 9, 2026. Sources: DEA marijuana rescheduling page; Federal Register (91 FR 22777, 91 FR doc 2026-08176); 2018 Farm Bill §10113; 2026 Appropriations Act §781.</caption>
@@ -1089,12 +1132,22 @@ Source page: https://mainedispensaryguide.com/market-stats`;
       </tbody>
     </table>
 
+    {/* §8.1 visual: federal regulatory status tier-list (after Table 11) */}
+    {(() => {
+      const chart = chartById('federal-regulatory-tier-list');
+      return chart && chart.kind === 'tier_list' ? (
+        <div class="mdg-chart-section">
+          <ChartTierList chart={chart} />
+        </div>
+      ) : null;
+    })()}
+
     <p class="stat-source">
-      Sources: DEA marijuana rescheduling page (dea.gov/marijuana-rescheduling-regulatory-actions); Federal Register notice of hearing (91 FR 22777, April 28, 2026); Federal Register final rule placing state-licensed medical marijuana in Schedule III (91 FR doc 2026-08176, effective April 22, 2026); 2018 Farm Bill §10113 (7 U.S.C. §1639o); 2026 Appropriations Act §781 (changing the federal hemp definition to a total-THC standard with 0.4 mg/container cap effective November 12, 2026). The DEA ALJ hearing on the broader Schedule I → III rescheduling NPRM ran June 29 – July 15, 2026; outcome pending as of page publish date. Adult-use cannabis remains Schedule I at the federal level — 21 U.S.C. §812; 21 CFR §1308.11.
+      Sources: DEA marijuana rescheduling page (dea.gov/marijuana-rescheduling-regulatory-actions); Federal Register notice of hearing (91 FR 22777, April 28, 2026); Federal Register final rule placing state-licensed medical marijuana in Schedule III (91 FR doc 2026-08176, effective April 22, 2026); 2018 Farm Bill §10113 (7 U.S.C. §1639o); 2026 Appropriations Act §781 (changing the federal hemp definition to a total-THC standard with 0.4 mg/container cap effective November 12, 2026, contested by H.R. 7024 / H.R. 7010 / Senate delay bills). The DEA ALJ hearing on the broader Schedule I → III rescheduling NPRM concluded Jul 15, 2026; post-hearing briefs due Aug 17, 2026; ALJ has no deadline; DEA Administrator final rule has no deadline. Adult-use cannabis remains Schedule I at the federal level — 21 U.S.C. §812; 21 CFR §1308.11.
     </p>
 
     <Callout title="What federal status means for Maine operators" type="note">
-      The April 22, 2026 reclassification of state-licensed medical marijuana to Schedule III is a structural change for Maine's Medical Use of Cannabis Program operators: they can now take ordinary business deductions (Cost of Goods Sold, rent, payroll) on federal tax filings — the 280E barrier that forced cannabis operators into effective tax rates of up to 70% per Whitney Economics is lifted for medical revenue. Adult-use operators remain 280E-blocked. The DEA ALJ hearing outcome (June 29 – July 15, 2026) will determine whether adult-use revenue also receives Schedule III treatment. Until then, the cleanest operator guidance is: <strong>separate the medical and adult-use P&amp;L lines</strong> so the eventual reclassification can be applied without retro-engineering the books.
+      The April 22, 2026 reclassification of state-licensed medical marijuana to Schedule III is a structural change for Maine's Medical Use of Cannabis Program operators: they can now take ordinary business deductions (Cost of Goods Sold, rent, payroll) on federal tax filings — the 280E barrier that forced cannabis operators into effective tax rates of up to 70% per Whitney Economics is lifted for medical revenue. Adult-use operators remain 280E-blocked. The DEA ALJ hearing concluded Jul 15, 2026; post-hearing briefs due Aug 17, 2026; outcome pending as of page publish date. Until then, the cleanest operator guidance is: <strong>separate the medical and adult-use P&amp;L lines</strong> so the eventual reclassification can be applied without retro-engineering the books.
     </Callout>
 
     <h3>Federal marijuana arrests — the post-legalization trend</h3>
@@ -1120,6 +1173,16 @@ Source page: https://mainedispensaryguide.com/market-stats`;
       </tbody>
     </table>
 
+    {/* §8.1 visual: federal-arrests bar (after Table 12) */}
+    {(() => {
+      const chart = chartById('federal-arrests-2007-2022-2023');
+      return chart && chart.kind === 'bar' ? (
+        <div class="mdg-chart-section">
+          <ChartBar chart={chart} />
+        </div>
+      ) : null;
+    })()}
+
     <p class="stat-source">
       Sources: NORML press release (Sept 25, 2024) analyzing FBI Crime Data Explorer data. The 217,150 figure for 2023 represents a floor, not a ceiling: in 2022, 17% of agencies (representing 25% of the US population) failed to report to the FBI. The 2007 peak (870,000+ arrests, ~48% of all drug arrests) and the 2021 FBI methodology change mean pre-2021 vs post-2021 data is not directly comparable. The trend across 2007–2023 (870K → 217K, −75%) is the cleanest read of the post-legalization effect: a meaningful national decline in marijuana-related arrests, even as the drug has been legalized in 24 states.
     </p>
@@ -1128,7 +1191,7 @@ Source page: https://mainedispensaryguide.com/market-stats`;
     <ul>
       <li><strong>Market position.</strong> Maine is a mature, plateau-state by national 2026 standards — adult-use growth has flattened at ~1% YoY while mature states (Colorado, California, Oregon) are now showing YoY declines. Maine's 2026 projected $244–248M is within 1% of 2025, consistent with the national "growth by geography, plateau by maturity" pattern documented by Whitney Economics (December 2025).</li>
       <li><strong>Price position.</strong> Maine flower at $6.62/g (OCP-weighted) is 26% below the $8.94 single-gram national average (Headset June 2026) — cheap for an East Coast state, comparable to West Coast mature markets, more expensive than the $3.62 equivalized national average (which weights toward bulk-gram and ounce packages).</li>
-      <li><strong>Federal exposure.</strong> Maine's 24 adult-use stores + 90 medical dispensaries are split between Schedule III (medical) and Schedule I (adult-use) at the federal level as of July 9, 2026. The DEA ALJ hearing outcome (June 29 – July 15, 2026) will determine whether adult-use also gets Schedule III treatment; Maine operators should plan for both outcomes and consider medical/adult-use P&amp;L segregation as a defensive practice.</li>
+      <li><strong>Federal exposure.</strong> Maine's 24 adult-use stores + 90 medical dispensaries are split between Schedule III (medical) and Schedule I (adult-use) at the federal level as of July 9, 2026. The DEA ALJ hearing concluded Jul 15, 2026; post-hearing briefs due Aug 17, 2026; outcome pending as of page publish date. Maine operators should plan for both outcomes and consider medical/adult-use P&amp;L segregation as a defensive practice.</li>
       <li><strong>Operator economics.</strong> National cannabis-supported FTE jobs declined 3.4% YoY in 2025 (Vangst), the first YoY employment decline since legal markets began — a parallel signal to the 2025 revenue decline. Maine's own data shows a similar pattern: adult-use store count flat at 180, OCP roster tightening. The labor-market signal confirms the maturation read.</li>
       <li><strong>For consumer guides:</strong> if you're a shopper, the <a href="/guides/cannabis-terpenes-effects-maine">cannabis terpenes &amp; effects guide</a> covers what to look for; the <a href="/guides/cannabis-tinctures-sublingual-maine">tinctures guide</a> covers lower-risk entry formats; the <a href="/guides/cannabis-edible-dose-calculator-maine">edible dose calculator</a> helps with the most common 280E-irrelevant consumer math problem (over-consumption).</li>
       <li><strong>For operators:</strong> if you're modeling a new license, the <a href="/roi-calculator">ROI calculator</a> uses national and Maine benchmarks to project per-store economics; the <a href="/maine-cannabis-tax-calculator">tax calculator</a> handles the Jan 1, 2026 tax reset; the <a href="/guides/maine-cannabis-market">Maine market analysis guide</a> gives the operator-facing context; the <a href="/guides/maine-dispensary-license">license requirements guide</a> walks the application step-by-step.</li>

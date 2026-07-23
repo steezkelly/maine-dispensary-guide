@@ -1,0 +1,96 @@
+{
+  "last_rechecked_at": "2026-07-22",
+  "retrieval_date": "2026-07-22",
+  "charts": [
+    {
+      "id": "federal-arrests-2007-2022-2023",
+      "title": "U.S. federal marijuana arrests, 2007–2023",
+      "kind": "bar",
+      "source": "NORML analysis of FBI UCR / Crime Data Explorer data, 2024-09-25",
+      "observation_period": "2007, 2022, 2023 calendar years",
+      "y_axis_label": "Arrests",
+      "data": [
+        { "label": "2007 (peak)", "value": 870000, "kind": "peak" },
+        { "label": "2022",        "value": 227108, "kind": "under_count" },
+        { "label": "2023",        "value": 217150, "kind": "under_count" }
+      ],
+      "caption": "Floor not ceiling: 17% of agencies failed to report in 2022. The 2021 FBI methodology change means pre-2021 and post-2021 data is not directly comparable."
+    },
+    {
+      "id": "maine-vs-national-pricing",
+      "title": "Maine retail price vs national benchmarks, June 2026",
+      "kind": "bar",
+      "source": "Headset June 2026 retail POS data (12-market panel); OCP 2025 Annual Report; Cannabis Promotions 2025 state table",
+      "observation_period": "June 2026",
+      "y_axis_label": "$ per gram",
+      "data": [
+        { "label": "Maine (OCP 2025, all-pkg)", "value": 6.62, "kind": "maine" },
+        { "label": "U.S. national (single-gram pkg)", "value": 8.94, "kind": "national_single" },
+        { "label": "U.S. national (all-pkg, equivalized)", "value": 3.62, "kind": "national_equiv" },
+        { "label": "Michigan (cheapest, all-pkg)", "value": 3.80, "kind": "low" },
+        { "label": "Illinois (most expensive, all-pkg)", "value": 15.80, "kind": "high" }
+      ],
+      "caption": "Maine's OCP-weighted price ($6.62) is 26% below the $8.94 national single-gram average and 83% above the $3.62 national equivalized average — the gap reflects Maine's heavier weighting toward bulk-gram sales. Wholesale spot intentionally omitted; re-pulled quarterly per the national-context matrix §8.3."
+    },
+    {
+      "id": "federal-regulatory-tier-list",
+      "title": "Federal cannabis regulatory status, three tiers (July 2026)",
+      "kind": "tier_list",
+      "source": "DEA marijuana rescheduling page; 91 FR doc 2026-08176; 2018 Farm Bill §10113; 2026 Appropriations §781; CRS IF13136",
+      "observation_period": "as of 2026-07-22",
+      "tiers": [
+        {
+          "label": "Schedule III",
+          "status": "Effective Apr 22, 2026",
+          "covers": "FDA-approved marijuana products AND state-licensed medical cannabis (incl. Maine MMCP)",
+          "kind": "schedule_iii"
+        },
+        {
+          "label": "Schedule I",
+          "status": "Unchanged at federal level",
+          "covers": "Adult-use (recreational) cannabis — all 24 legal states including Maine AUP",
+          "kind": "schedule_i"
+        },
+        {
+          "label": "Pending federal change",
+          "status": "Nov 12, 2026 (contested by H.R. 7024 / H.R. 7010 / Senate delay bills)",
+          "covers": "Hemp / CBD / delta-8 THC products — switching to total-THC standard + 0.4 mg/container cap",
+          "kind": "hemp_pending"
+        }
+      ],
+      "caption": "The DEA ALJ hearing on the broader Schedule I → III rescheduling concluded Jul 15, 2026; post-hearing briefs due Aug 17, 2026; ALJ has no deadline; DEA Administrator final rule has no deadline."
+    },
+    {
+      "id": "280e-cumulative-tax",
+      "title": "Cumulative federal cannabis tax burden since 2018",
+      "kind": "stacked_bar",
+      "source": "Whitney Economics federal-tax-impact brief, 2026-04-09 (republished verbatim by Yahoo Finance, Cannabis Law Report, Cannabis Business Times, July 2026)",
+      "observation_period": "2018–2025 cumulative",
+      "y_axis_label": "$ billion",
+      "data": [
+        { "label": "Baseline federal tax (would have applied absent 280E)", "value": 12, "kind": "baseline" },
+        { "label": "Excess 280E tax (Section 280E disallowance)",              "value": 15, "kind": "excess_280e" }
+      ],
+      "caption": "Cumulative $27B in federal cannabis tax since 2018; $15B is the 280E excess that cannabis operators cannot deduct. 2025 alone added $2.24B in excess 280E. The IRS Statistics of Income division does not publish a 280E-specific line; Whitney is the de facto citation standard."
+    },
+    {
+      "id": "state-context-tax-rates",
+      "title": "Maine vs comparable legal states — adult-use tax rate",
+      "kind": "horizontal_bar",
+      "source": "NCSL state-taxation tracker; state Cannabis Control Commissions; Maine Morning Star 2025-12-31 (P.L. 2025 ch. 388)",
+      "observation_period": "as of 2026-07-22",
+      "y_axis_label": "Combined tax rate (%)",
+      "data": [
+        { "label": "Maine (post-Jan 1, 2026)", "value": 14.0, "kind": "maine" },
+        { "label": "Colorado",                 "value": 30.0, "kind": "high" },
+        { "label": "California",               "value": 15.0, "kind": "high" },
+        { "label": "Vermont",                  "value": 14.0, "kind": "neutral" },
+        { "label": "Connecticut",              "value": 13.0, "kind": "neutral" },
+        { "label": "Michigan",                 "value": 20.0, "kind": "neutral" },
+        { "label": "Illinois",                 "value": 17.0, "kind": "neutral" },
+        { "label": "Massachusetts",             "value": 10.75, "kind": "low" }
+      ],
+      "caption": "Maine's 14.0% adult-use retail + excise rate (post-Jan 1, 2026) sits in the upper tier for adult-use legal states. CO and CA retain higher combined rates; MA remains the lower-tax peer. Tax-rate, not total per-gram price, is what differs most across these eight states."
+    }
+  ]
+}

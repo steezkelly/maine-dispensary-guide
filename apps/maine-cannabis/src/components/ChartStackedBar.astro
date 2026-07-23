@@ -1,0 +1,81 @@
+---
+/**
+ * ChartStackedBar.astro
+ *
+ * Shared chart component for the §8.1 stacked-bar visual on /market-stats
+ * (280E cumulative-tax chart). Renders inline SVG with the same payload
+ * shape as the renderer at scripts/build/render-market-stats-charts.cjs.
+ *
+ * Props:
+ *   chart       REQUIRED. A chart object with kind === 'stacked_bar' and
+ *               an array of { label, value, kind? } data points that sum
+ *               to the total reported in the caption.
+ */
+
+interface Props {
+  chart: {
+    id: string;
+    title: string;
+    source: string;
+    caption: string;
+    observation_period?: string;
+    data: Array<{ label: string; value: number; kind?: string }>;
+  };
+}
+
+const { chart } = Astro.props;
+
+if (!chart || !Array.isArray(chart.data) || chart.data.length < 2) {
+  throw new Error(`ChartStackedBar: chart.id="${chart?.id}" must have >= 2 data points`);
+}
+const values = chart.data.map((d: { label: string; value: number; kind?: string }) => Number(d.value));
+if (values.some((v: number) => !Number.isFinite(v) || v < 0)) {
+  throw new Error(`ChartStackedBar: chart.id="${chart.id}" data contains non-finite or negative values`);
+}
+const total = values.reduce((a: number, b: number) => a + b, 0) || 1;
+
+const fillFor = (kind: string | undefined): string => {
+  if (kind === 'baseline') return '#3D5A40';
+  if (kind === 'excess_280e') return '#8C5A3A';
+  return '#3D5A40';
+};
+
+const padding = 16;
+const rowH = 56;
+const labelW = 220;
+const barW = 520;
+const valueW = 80;
+const width = padding * 2 + labelW + barW + valueW;
+const height = padding * 2 + rowH;
+
+let cursor = padding + labelW;
+---
+<figure class="mdg-chart mdg-chart-stacked" data-chart-id={chart.id} aria-labelledby={`chart-title-${chart.id}`}>
+  <figcaption class="mdg-chart-title" id={`chart-title-${chart.id}`}>{chart.title}</figcaption>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-labelledby={`chart-title-${chart.id} chart-caption-${chart.id}`}
+  >
+    <title id={`chart-title-${chart.id}`}>{chart.title}</title>
+    <desc id={`chart-caption-${chart.id}`}>{chart.caption}</desc>
+    <text x={padding} y={padding + 28} font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="600" fill="#0E1A14">
+      ${total}B total
+    </text>
+    {chart.data.map((d: { label: string; value: number; kind?: string }) => {
+      const w = (Number(d.value) / total) * barW;
+      const x = cursor;
+      cursor += w;
+      return (
+        <g>
+          <rect x={x.toFixed(1)} y={padding + 8} width={w.toFixed(1)} height={rowH - 16} fill={fillFor(d.kind)}>
+            <title>{d.label}: ${d.value}B</title>
+          </rect>
+        </g>
+      );
+    })}
+  </svg>
+  <p class="mdg-chart-caption" id={`chart-caption-${chart.id}`}>{chart.caption}</p>
+  <p class="mdg-chart-source"><small>Source: {chart.source}</small></p>
+</figure>

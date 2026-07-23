@@ -1,0 +1,70 @@
+---
+/**
+ * ChartTierList.astro
+ *
+ * Shared component for the §8.1 tier-list visual on /market-stats
+ * (Federal regulatory status, three tiers). Renders inline SVG with
+ * the same payload shape as the renderer at
+ * scripts/build/render-market-stats-charts.cjs.
+ *
+ * Props:
+ *   chart       REQUIRED. A chart object with kind === 'tier_list' and a
+ *               tiers array of { label, status, covers, kind? } objects.
+ */
+
+interface Props {
+  chart: {
+    id: string;
+    title: string;
+    source: string;
+    caption: string;
+    observation_period?: string;
+    tiers: Array<{ label: string; status: string; covers: string; kind?: string }>;
+  };
+}
+
+const { chart } = Astro.props;
+
+if (!chart || !Array.isArray(chart.tiers) || chart.tiers.length < 2) {
+  throw new Error(`ChartTierList: chart.id="${chart?.id}" must have >= 2 tiers`);
+}
+
+const fillFor = (kind: string | undefined): string => {
+  if (kind === 'schedule_iii') return '#1F4D3A';
+  if (kind === 'schedule_i')  return '#8C5A3A';
+  if (kind === 'hemp_pending') return '#B85C3A';
+  return '#3D5A40';
+};
+
+const padding = 16;
+const rowH = 84;
+const gap = 12;
+const width = 720;
+const height = padding * 2 + chart.tiers.length * rowH + (chart.tiers.length - 1) * gap;
+---
+<figure class="mdg-chart mdg-chart-tier-list" data-chart-id={chart.id} aria-labelledby={`chart-title-${chart.id}`}>
+  <figcaption class="mdg-chart-title" id={`chart-title-${chart.id}`}>{chart.title}</figcaption>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-labelledby={`chart-title-${chart.id} chart-caption-${chart.id}`}
+  >
+    <title id={`chart-title-${chart.id}`}>{chart.title}</title>
+    <desc id={`chart-caption-${chart.id}`}>{chart.caption}</desc>
+    {chart.tiers.map((t: { label: string; status: string; covers: string; kind?: string }, i: number) => {
+      const y = padding + i * (rowH + gap);
+      const fill = fillFor(t.kind);
+      return (
+        <g>
+          <rect x={padding} y={y} width={width - padding * 2} height={rowH} rx="6" fill={fill} />
+          <text x={padding + 16} y={y + 26} font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#F2F2E2">{t.label}</text>
+          <text x={padding + 16} y={y + 46} font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="600" fill="#F2F2E2" opacity="0.85">{t.status}</text>
+          <text x={padding + 16} y={y + 66} font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#F2F2E2" opacity="0.9">{t.covers}</text>
+        </g>
+      );
+    })}
+  </svg>
+  <p class="mdg-chart-caption" id={`chart-caption-${chart.id}`}>{chart.caption}</p>
+  <p class="mdg-chart-source"><small>Source: {chart.source}</small></p>
+</figure>

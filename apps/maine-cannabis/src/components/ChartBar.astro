@@ -1,0 +1,88 @@
+---
+/**
+ * ChartBar.astro
+ *
+ * Shared chart component for the §8.1 horizontal-bar visuals on
+ * /market-stats. Renders inline SVG using the same payload shape as the
+ * renderer at scripts/build/render-market-stats-charts.cjs so the page
+ * and the renderer share one source of truth (public/data/market-stats-chart-sources.json).
+ *
+ * Props:
+ *   chart       REQUIRED. A chart object with kind === 'bar' | 'horizontal_bar'
+ *               and an array of { label, value, kind? } data points.
+ *
+ * The bar geometry is hand-built (no chart library). The component is
+ * server-rendered, so there is no client JS.
+ */
+
+interface Props {
+  chart: {
+    id: string;
+    title: string;
+    source: string;
+    caption: string;
+    y_axis_label?: string;
+    observation_period?: string;
+    data: Array<{ label: string; value: number; kind?: string }>;
+  };
+  orientation?: 'horizontal' | 'vertical';
+}
+
+const { chart, orientation = 'horizontal' } = Astro.props;
+
+if (!chart || !Array.isArray(chart.data) || chart.data.length < 2) {
+  throw new Error(`ChartBar: chart.id="${chart?.id}" must have >= 2 data points`);
+}
+const values = chart.data.map((d: { label: string; value: number; kind?: string }) => Number(d.value));
+if (values.some((v: number) => !Number.isFinite(v) || v < 0)) {
+  throw new Error(`ChartBar: chart.id="${chart.id}" data contains non-finite or negative values`);
+}
+const max = Math.max.apply(null, values) || 1;
+
+const fillFor = (kind: string | undefined): string => {
+  if (kind === 'maine') return '#1F4D3A';
+  if (kind === 'peak')  return '#8C5A3A';
+  if (kind === 'low' || kind === 'national_equiv' || kind === 'baseline') return '#3D5A40';
+  if (kind === 'high' || kind === 'under_count' || kind === 'national_single' || kind === 'excess_280e') return '#B85C3A';
+  return '#3D5A40';
+};
+
+const rowH = 36;
+const gap = 8;
+const padding = 16;
+const labelW = 220;
+const valueW = 80;
+const barAreaW = 360;
+const width = padding * 2 + labelW + barAreaW + valueW;
+const height = padding * 2 + chart.data.length * (rowH + gap);
+---
+<figure class="mdg-chart mdg-chart-bar" data-chart-id={chart.id} aria-labelledby={`chart-title-${chart.id}`}>
+  <figcaption class="mdg-chart-title" id={`chart-title-${chart.id}`}>{chart.title}</figcaption>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-labelledby={`chart-title-${chart.id} chart-caption-${chart.id}`}
+  >
+    <title id={`chart-title-${chart.id}`}>{chart.title}</title>
+    <desc id={`chart-caption-${chart.id}`}>{chart.caption}</desc>
+    {chart.data.map((d, i) => {
+      const y = padding + i * (rowH + gap);
+      const barW = (Number(d.value) / max) * barAreaW;
+      const fill = fillFor(d.kind);
+      return (
+        <g>
+          <text x={padding} y={y + rowH * 0.65} font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#0E1A14">{d.label}</text>
+          <rect x={padding + labelW} y={y + 4} width={barW.toFixed(1)} height={rowH - 8} rx="2" fill={fill} />
+          <text x={padding + labelW + barAreaW + 8} y={y + rowH * 0.65} font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#0E1A14">
+            {orientation === 'horizontal' && chart.y_axis_label?.includes('%')
+              ? `${Number(d.value).toFixed(1)}%`
+              : Number(d.value).toLocaleString('en-US')}
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+  <p class="mdg-chart-caption" id={`chart-caption-${chart.id}`}>{chart.caption}</p>
+  <p class="mdg-chart-source"><small>Source: {chart.source}</small></p>
+</figure>
