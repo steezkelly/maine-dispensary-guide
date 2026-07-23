@@ -50,6 +50,7 @@ export type EventSchemaV1 =
   | 'mdg_faq_open'                   // Versioned faq_open
   | 'mdg_action_exposure'            // CTA exposure (v1 pairing)
   | 'mdg_action_select'              // CTA selection (v1 pairing — production meaningful)
+  | 'mdg_partner_referral'           // Explicit dispensary/operator website or menu handoff
   | 'mdg_site_search'                // MDG-own search
   | 'mdg_search_result_select'       // MDG search result click
   | 'mdg_directory_interact'         // Filter / map / list
@@ -147,6 +148,14 @@ export interface MdgActionSelectEvent extends EventEnvelope {
   destination_family: MdgActionExposureEvent['destination_family'];
   /** Canonical same-site path only; omitted for external, mailto, and non-route actions. */
   destination_path?: string;
+  privacy_classification: 'anonymous_aggregate';
+}
+
+export interface MdgPartnerReferralEvent extends EventEnvelope {
+  event_name: 'mdg_partner_referral';
+  partner_id: string;          // stable operator/dispensary slug
+  referral_kind: 'dispensary';
+  referral_surface: 'operator_profile' | 'city_guide' | 'directory_list' | 'menu_snapshot' | 'other';
   privacy_classification: 'anonymous_aggregate';
 }
 
@@ -292,6 +301,7 @@ export type AnyEvent =
   | MdgFaqOpenEvent
   | MdgActionExposureEvent
   | MdgActionSelectEvent
+  | MdgPartnerReferralEvent
   | MdgSiteSearchEvent
   | MdgSearchResultSelectEvent
   | MdgDirectoryInteractEvent
@@ -331,6 +341,7 @@ export const PRIVACY_CLASS_FOR_EVENT: { [E in AnyEvent['event_name']]: PrivacyCl
   mdg_faq_open: 'anonymous_aggregate',
   mdg_action_exposure: 'anonymous_aggregate',
   mdg_action_select: 'anonymous_aggregate',
+  mdg_partner_referral: 'anonymous_aggregate',
   mdg_site_search: 'anonymous_aggregate',
   mdg_search_result_select: 'anonymous_aggregate',
   mdg_directory_interact: 'anonymous_aggregate',
@@ -371,6 +382,7 @@ export const DECISION_QUESTION_FOR_EVENT: { [E in AnyEvent['event_name']]: strin
   mdg_faq_open: 'Which explicit questions are users trying to answer?',
   mdg_action_exposure: 'Was a defined next-step action actually visible?',
   mdg_action_select: 'Did a visitor choose an exposed next step?',
+  mdg_partner_referral: 'Did a visitor intentionally leave MDG for a dispensary or operator website/menu?',
   mdg_site_search: 'Did the visitor use MDG\'s own search/navigation tool?',
   mdg_search_result_select: 'Which search results are visitors choosing?',
   mdg_directory_interact: 'How do visitors engage with the directory listing?',

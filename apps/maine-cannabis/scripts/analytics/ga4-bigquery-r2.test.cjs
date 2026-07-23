@@ -96,6 +96,7 @@ test('R3 BigQuery mirror includes emitted conversion and action-intent events', 
   assert.match(sql, /'lead_capture'/);
   assert.match(sql, /'affiliate_click'/);
   assert.match(sql, /'mdg_action_select'/);
+  assert.match(sql, /'mdg_partner_referral'/);
 });
 
 test('BQ reconciliation requires an explicit frozen property-day snapshot', () => {

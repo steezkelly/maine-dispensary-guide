@@ -611,6 +611,17 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           // viewport dwell has not elapsed or IntersectionObserver is absent.
           exposeAction(target);
           sendAction('mdg_action_select', metadata, path ? { destination_path: path } : {});
+          if (target.getAttribute('data-referral-kind') === 'dispensary') {
+            var partnerId = target.getAttribute('data-partner-id') || '';
+            var referralSurface = target.getAttribute('data-referral-surface') || '';
+            if (partnerId && referralSurface && metadata.destination_family === 'external_url') {
+              sendAction('mdg_partner_referral', {
+                partner_id: partnerId,
+                referral_kind: 'dispensary',
+                referral_surface: referralSurface
+              });
+            }
+          }
           // Deliberately do not preventDefault or await analytics: links and
           // form-control actions must remain reliable even when tracking fails.
         }, true);
