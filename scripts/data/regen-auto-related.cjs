@@ -235,6 +235,8 @@ const URL_TOPIC_HINTS = [
     ['/find-a-dispensary', ['finder', 'consumer']],
     ['/about/corrections', ['editorial', 'corrections']],
     ['/about/authors', ['editorial', 'authors']],
+    ['/blog/greenhouse-cannabis-maine-2026', ['home-growing', 'outdoor', 'maine-climate', 'season-extension']],
+    ['/resources/buy-cannabis-seeds-maine', ['home-growing', 'seeds', 'maine-vendors', 'genetics']],
 ];
 
 const URL_SECTION_HINTS = [
@@ -271,12 +273,14 @@ const URL_SECTION_HINTS = [
     ['/blog/ibogaine', 'Policy & Legislation'],
     ['/blog/trump-psychedelic', 'Policy & Legislation'],
     ['/blog/maine-cannabis-pesticide', 'Policy & Legislation'],
+    ['/blog/greenhouse-cannabis-maine-2026', 'Home Cultivation'],
     ['/learn', 'Consumer Guide'],
     ['/all-guides', 'Library'],
     ['/find-a-dispensary', 'Finder'],
     ['/about/corrections', 'Editorial Standards'],
     ['/about/', 'About'],
     ['/experiments/', 'Experiments'],
+    ['/resources/buy-cannabis-seeds-maine', 'Resources'],
 ];
 
 function inferTopics(url, fm) {

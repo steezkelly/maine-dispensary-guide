@@ -1,0 +1,142 @@
+{
+  "$schema": "https://mainedispensaryguide.com/schemas/keyword-tracker-v1.json",
+  "version": 1,
+  "description": "Tracked keyword clusters for MDG content production. Each entry groups related long-tail queries and tracks which MDG page owns the intent. Maintained as the single source of truth for 'are we tracking this keyword yet'.",
+  "clusters": [
+    {
+      "id": "home-grow-maine",
+      "label": "Maine home grow / cultivation",
+      "research_artifact": "research-homegrow-keywords-2026.md",
+      "added": "2026-07-06",
+      "owner": "feat/fast-keyword-posts-20260723",
+      "intent_clusters": [
+        "Maine-Law / Compliance",
+        "Buying-Seeds (transactional)",
+        "Short-Season / Cold-Climate Genetics",
+        "Timing / Calendar (decision)",
+        "Indoor Setup",
+        "Outdoor / Climate",
+        "Training / Technique",
+        "Harvest / Drying / Curing",
+        "Cost / ROI",
+        "Problem-Cluster (evergreen)"
+      ],
+      "keywords_total": 88,
+      "owners": {
+        "/blog/maine-home-grow-cannabis-guide-2026": {
+          "type": "pillar",
+          "owned_queries": [
+            "home grow cannabis Maine",
+            "how many cannabis plants can I grow in Maine",
+            "Maine cannabis home grow laws 2026",
+            "Maine home grow caregiver rules"
+          ]
+        },
+        "/blog/best-cannabis-strains-maine-outdoor-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "best cannabis seeds for Maine climate",
+            "mold resistant cannabis strains",
+            "fast flowering cannabis seeds outdoor",
+            "autoflower seeds for cold climate"
+          ]
+        },
+        "/blog/when-to-start-cannabis-seeds-maine-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "when to start cannabis seeds indoors Maine",
+            "Maine cannabis planting calendar",
+            "last frost date Maine cannabis",
+            "when to plant cannabis outdoors Maine"
+          ]
+        },
+        "/blog/indoor-cannabis-grow-setup-maine-cost-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "indoor grow setup cost Maine",
+            "best grow tent for cannabis 2026",
+            "Maine cannabis electricity cost",
+            "best LED grow light cannabis beginner"
+          ]
+        },
+        "/blog/drying-cannabis-maine-humidity-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "drying cannabis Maine humidity",
+            "cannabis curing jars burp schedule",
+            "harvest cannabis trichomes loupe",
+            "freeze dry cannabis"
+          ]
+        },
+        "/blog/autoflower-vs-feminized-maine-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "autoflower vs feminized Maine",
+            "cannabis autoflower short summer",
+            "feminized seeds short season"
+          ]
+        },
+        "/blog/cannabis-clones-vs-seeds-maine-2026": {
+          "type": "spoke",
+          "owned_queries": [
+            "cannabis clones Maine",
+            "Maine cannabis clones for sale",
+            "clones vs seeds Maine"
+          ]
+        },
+        "/blog/greenhouse-cannabis-maine-2026": {
+          "type": "spoke (planned)",
+          "owned_queries": [
+            "greenhouse cannabis Maine",
+            "cannabis greenhouse Maine winter",
+            "hoop house cannabis Maine",
+            "season extension cannabis Maine"
+          ]
+        },
+        "/resources/buy-cannabis-seeds-maine": {
+          "type": "resource-hub (planned)",
+          "owned_queries": [
+            "buy cannabis seeds Maine",
+            "cannabis seeds for sale Maine",
+            "best cannabis seed bank for Maine",
+            "Maine cannabis seed bank",
+            "Maine cannabis dispensary sells seeds"
+          ]
+        }
+      },
+      "status": "in_progress",
+      "open_questions": [
+        "ILGM / MSNL / Seed Connect affiliate programs: Seed Connect 20-30% rate unconfirmed",
+        "Maine electricity rates (CMP / Versant) need verification",
+        "Federal hemp reclassification (Nov 2026) - flag for editorial review"
+      ]
+    }
+  ],
+  "open_clusters": [
+    {
+      "id": "b2b-operator-2026",
+      "label": "B2B operator / YMYL cluster",
+      "source": "3MO Action Plan Sprint 89 deferred list",
+      "added": "2026-07-23",
+      "notes": "5 B2B gaps from GSC; specific query list redacted in current tree. Defer until live GSC export available to enumerate.",
+      "keywords_total": null,
+      "owners": {}
+    },
+    {
+      "id": "buyer-intent-paa-2026",
+      "label": "Buyer-intent PAA clusters",
+      "source": "MDG_KEYWORD_GAP_ANALYSIS_2026-07-06.md",
+      "added": "2026-07-06",
+      "notes": "13 buyer-intent query categories. Gaps 1-3 (conditional license, business for sale, transfer ownership) closed 2026-07-21 via /guides/maine-cannabis-conditional-license, /blog/maine-dispensary-business-for-sale, /guides/maine-cannabis-business-transfer. Remaining 10 categories have owners.",
+      "keywords_total": 13,
+      "owners": {}
+    }
+  ],
+  "changelog": [
+    {
+      "date": "2026-07-23",
+      "by": "feat/fast-keyword-posts-20260723",
+      "change": "Schema established. home-grow-maine cluster wired with 9 owners (2 planned, 7 existing). Two open clusters documented for future tracking."
+    }
+  ]
+}

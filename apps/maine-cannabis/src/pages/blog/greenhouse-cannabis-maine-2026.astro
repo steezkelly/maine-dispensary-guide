@@ -1,0 +1,213 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-23",
+  modifiedDate: "2026-07-23",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "outdoor", "maine-climate", "season-extension"];
+---
+<Layout
+  title="Greenhouse Cannabis in Maine 2026 — Season Extension, Hoop House vs Heated, and Compliance"
+  description="Maine's 110–160 frost-free day window is the limiting factor for outdoor cannabis. A greenhouse extends it by 2–4 weeks on either end. Here's the Maine-specific build, cost, and compliance picture for hoop house vs heated greenhouse cultivation in 2026."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Greenhouse Cannabis in Maine 2026: Season Extension, Hoop House vs Heated, and Compliance</h1>
+    <p class="subtitle">Maine's 110–160 frost-free day window is the limiting factor for outdoor cannabis. A greenhouse extends it by 2–4 weeks on either end — long enough to flip from a photoperiod variety to a faster-finishing one, or to run an autoflower rotation in the shoulder season. Here's the Maine-specific build, cost, and compliance picture for 2026.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-23 · Last reviewed 2026-07-23</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Maine's short outdoor season (110–160 frost-free days, depending on zone) makes greenhouse growing attractive for two reasons: a 2–4 week head start on the spring planting window, and a 2–4 week extension on the fall harvest window. For photoperiod varieties that need 8–10 weeks of flower, that translates to a real shift in strain selection. For autoflower growers, it opens a second shoulder-season rotation.</p>
+    <p>This guide covers the Maine-specific picture: which greenhouse type fits the climate and your scale, what 28-B M.R.S. §1502 says about cultivation location and municipal authority, how a greenhouse interacts with Maine's adult-use home grow plant limit, and what to budget for a basic hoop house vs a heated greenhouse in 2026 dollars.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> Yes, you can grow cannabis in a greenhouse in Maine as a registered adult cultivator (six mature / twelve immature / unlimited seedlings per adult 21+, per 28-B M.R.S. §1502 as amended by P.L. 2023 c. 220). A hoop house is the lowest-cost option and suits most home-grow needs; a heated greenhouse is a meaningful cost step up and only pays off if you're running a rotation or growing a photoperiod variety that won't finish in Maine's outdoor window.
+  </div>
+
+  <section>
+    <h2>How a greenhouse extends Maine's growing season</h2>
+    <p>Maine's frost dates vary substantially by region. The University of Maine Cooperative Extension publishes county-level averages; use those, not USDA hardiness-zone data, when you're scheduling around frost.</p>
+    <table aria-label="Maine frost dates by region (UMaine Cooperative Extension)">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Average last spring frost</th>
+          <th>Average first fall frost</th>
+          <th>Approximate frost-free days</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Southern coast (York, Cumberland)</td><td>May 5 – May 15</td><td>Oct 5 – Oct 15</td><td>~150 days</td></tr>
+        <tr><td>Central / Midcoast (Sagadahoc, Lincoln, Knox)</td><td>May 15 – May 25</td><td>Sep 25 – Oct 5</td><td>~135 days</td></tr>
+        <tr><td>Central inland (Kennebec, Androscoggin)</td><td>May 20 – May 30</td><td>Sep 20 – Sep 30</td><td>~125 days</td></tr>
+        <tr><td>Bangor area / Penobscot</td><td>May 25 – June 5</td><td>Sep 15 – Sep 25</td><td>~115 days</td></tr>
+        <tr><td>Aroostook / Caribou</td><td>June 5 – June 15</td><td>Sep 1 – Sep 10</td><td>~110 days</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: University of Maine Cooperative Extension frost-date guidance. Local microclimate and elevation shift these averages by 7–14 days.</p>
+
+    <p>A hoop house (unheated, plastic-covered, passive solar) typically gains 3–5°F of frost protection on either end, which translates to roughly 2 weeks earlier planting and 2 weeks later harvest in most Maine locations. A heated greenhouse with a modest propane or electric heater (set to 45°F overnight) gains 4–6 weeks on the spring side and 3–4 weeks on the fall side.</p>
+    <p>For photoperiod varieties that need 60+ days of flower and finish in early-to-mid October, a hoop house can move your harvest from a frost-risk week in late September to a safe window in mid-October. That single change is what makes a hoop house pay for itself in the shortest Maine window (Bangor and north).</p>
+  </section>
+
+  <section>
+    <h2>Hoop house vs heated greenhouse: which fits your scale</h2>
+    <h3>Hoop house (unheated, passive solar)</h3>
+    <p>A 12×24 ft or 14×30 ft hoop house with a single layer of 6 mil greenhouse plastic is the standard Maine home-grow choice. It runs $400–$900 in materials (PVC or steel hoops, plastic, baseboards, end-wall framing) and can be erected in a weekend with a helper. Snow load is the design constraint — Maine's coastal snow loads run 50–70 psf, which means a low-profile design (6:12 or 4:12 roof pitch) and rigid framing if you want it to last more than two winters.</p>
+    <ul>
+      <li><strong>Cost:</strong> $400–$900 DIY, $1,500–$3,000 kit</li>
+      <li><strong>Season extension:</strong> 2–4 weeks on each end</li>
+      <li><strong>Best for:</strong> Photoperiod varieties that need 1–2 weeks of extra fall finish; autoflower rotation in shoulder season</li>
+      <li><strong>Maine-specific concern:</strong> Snow load and wind. Coastal zones need anchored baseboards; inland zones can get away with rebar stakes.</li>
+    </ul>
+
+    <h3>Heated greenhouse (year-round or near-year-round)</h3>
+    <p>A heated greenhouse with HPS or LED supplemental lighting, a 45°F minimum overnight thermostat, and intake/exhaust ventilation runs $3,000–$15,000 for a 10×12 to 12×20 ft structure. Operating cost is the real number: Maine CMP residential winter rates run ~$0.25/kWh and Versant ~$0.22/kWh (verify current rates before budgeting). A small heated greenhouse can draw 200–400 kWh per month from November through March at minimum-temp settings, so $50–$100/month in electricity alone, before supplemental light cost.</p>
+    <ul>
+      <li><strong>Cost:</strong> $3,000–$15,000 build, $50–$400/month operating</li>
+      <li><strong>Season extension:</strong> Effectively year-round with supplemental light</li>
+      <li><strong>Best for:</strong> Continuous autoflower rotations, mother plant holding for clones, year-round personal supply</li>
+      <li><strong>Maine-specific concern:</strong> Humidity control. Winter heating + plant transpiration = 70–80% RH in an unventilated greenhouse, which is botrytis range. A dehumidifier sized for the structure is not optional.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Maine-specific construction notes</h2>
+    <p>Three things that aren't obvious from generic greenhouse guides:</p>
+    <h3>1. Snow load is the design constraint, not wind</h3>
+    <p>Maine coastal zones get 50–70 psf ground snow load per the state building code. A Gothic-arch hoop house sheds snow better than a Quonset shape, but either needs cross-bracing and baseboard anchoring rated for the load. Inland zones get less snow but more ice, which adds to the load asymmetrically.</p>
+    <h3>2. Light transmission drops in December–January</h3>
+    <p>Maine is at 43–47°N. Solar elevation at the winter solstice is ~22–24°. A single-layer poly greenhouse loses another 10–15% of that. If you're growing photoperiod, expect stretch and flowering issues unless you run supplemental light from October through March. Autoflower rotations are more forgiving because they don't depend on photoperiod.</p>
+    <h3>3. Humidity is the silent killer</h3>
+    <p>Coastal Maine morning humidity runs 80–90% year-round. A closed greenhouse during the dark cycle will hit 95%+ RH at the leaf surface, which is the threshold for botrytis (bud rot) on dense flower. Active dehumidification is not optional if you're flowering in a greenhouse during shoulder season.</p>
+  </section>
+
+  <section>
+    <h2>Maine compliance picture for greenhouse cultivation</h2>
+    <p>The home-cultivation framework under 28-B M.R.S. §1502 does not distinguish between indoor, outdoor, and greenhouse growing — the same plant counts and location rules apply. For an adult 21+ in Maine, the limit is six mature plants, twelve immature plants, and unlimited seedlings per person.</p>
+    <div class="answer-capsule">
+      <strong>What stays the same in a greenhouse:</strong>
+      <ul>
+        <li>Six mature / twelve immature / unlimited seedlings per adult 21+</li>
+        <li>Adult must own or be domiciled on the cultivation land (written owner permission required otherwise)</li>
+        <li>Plants must be tagged, not visible from a public way without binoculars or aircraft, secured against access by anyone under 21</li>
+        <li>No sale to anyone except a licensed caregiver, dispensary, or registered caregiver-to-licensee transfer</li>
+      </ul>
+    </div>
+    <p class="source-note">Source: 28-B M.R.S. §1502 (as amended by P.L. 2023 c. 220 / LD 555, raising the mature plant cap from 3 to 6). The municipal preemption clause — that towns may not restrict the areas where personal adult-use cultivation may occur — also applies to greenhouses.</p>
+
+    <p>For caregiver-class cultivation (medical program), greenhouse rules are different and depend on your caregiver registration tier. See the <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> for the full caregiver framework.</p>
+  </section>
+
+  <section>
+    <h2>What you can grow in a Maine greenhouse (calendar)</h2>
+    <p>Assuming a heated greenhouse in central Maine (zone 5a):</p>
+    <table aria-label="Maine greenhouse cultivation calendar (heated, zone 5a)">
+      <thead>
+        <tr>
+          <th>Window</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>January – mid-February</td><td>Start autoflower rotation #1 (germinate under light, 18/6 photoperiod)</td></tr>
+        <tr><td>Mid-February – March</td><td>Transplant seedlings to 1-gal, then 3-gal containers as they root in</td></tr>
+        <tr><td>April</td><td>Start photoperiod seedlings for outdoor transplant; shift to 18/6 light cycle</td></tr>
+        <tr><td>May (after last frost)</td><td>Move photoperiod plants to outdoor location or unheated hoop house</td></tr>
+        <tr><td>Late May – June</td><td>Harvest autoflower rotation #1; start rotation #2</td></tr>
+        <tr><td>August</td><td>Outdoor photoperiod plants start flowering; monitor bud rot risk</td></tr>
+        <tr><td>September – early October</td><td>Outdoor harvest; bring drying/curing into climate-controlled space</td></tr>
+        <tr><td>November – December</td><td>Greenhouse reduced to mother plants and low-light overwintering</td></tr>
+      </tbody>
+    </table>
+    <p>For an unheated hoop house, drop the January and November–December windows and shift the outdoor photoperiod transplant to late May / early June.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Does a greenhouse count toward my Maine home grow plant limit?", answer: "Yes. Title 28-B §1502 doesn't distinguish between indoor, outdoor, and greenhouse growing. The limit is six mature plants, twelve immature, and unlimited seedlings per adult 21+ regardless of where they're grown. A hoop house in your backyard and an indoor tent in your basement share the same six-mature cap." },
+      { question: "Can my town ban cannabis greenhouses?", answer: "No. 28-B M.R.S. §1502 includes a municipal preemption clause: towns may not restrict the areas where personal adult-use cultivation may occur. Local ordinances that try to ban home grow or add greenhouse-specific restrictions are preempted by state law. Towns retain authority over public-safety rules (e.g., blocking a greenhouse on a public right-of-way) and standard building-permit requirements for any structure over a certain size." },
+      { question: "What does it cost to heat a small greenhouse through a Maine winter?", answer: "For a 10×12 ft greenhouse maintained at 45°F overnight from November through March, plan on 200–400 kWh per month. At CMP's residential rate of ~$0.25/kWh, that's $50–$100/month in heating alone. Add dehumidification (~$20–$40/month) and supplemental light if you're running photoperiod (~$40–$80/month). Realistic winter operating cost: $110–$220/month for a small heated greenhouse." },
+      { question: "Do I need a license to build a greenhouse for personal cannabis cultivation?", answer: "For personal use under the home grow framework, no OCP license is required. You may need a standard building permit from your town if the structure exceeds local thresholds (typically 100–200 sq ft, varies by municipality). The 28-B §1502 preemption clause means towns cannot specifically restrict cannabis greenhouses, but general building, setback, and height rules still apply." },
+      { question: "How do I manage odor from a greenhouse in a residential neighborhood?", answer: "For most of the vegetative cycle, cannabis odor is mild. The strong odor window is 3–4 weeks into flower, when trichomes mature. A carbon filter sized to your greenhouse's air volume, paired with an intake/exhaust fan, will eliminate detectable odor at the property line. In dense residential areas, consider a neighbor-relations conversation before construction; in Maine's Right to Farm context, personal cultivation has protections but courtesy goes a long way." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework, plant tagging, and caregiver rules</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a planting calendar</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics for hoop house and outdoor grows</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — Maine's October humidity and the cure protocol that closes the gap</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for Maine's compressed season</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=555&snum=131">P.L. 2023 c. 220 / LD 555</a> — the home grow amendment raising mature plant cap from 3 to 6</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine frost dates, climate data, and agricultural guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — caregiver framework and adult-use personal cultivation FAQ</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before building.</p>
+</article>
+
+<AutoRelated currentPath="/blog/greenhouse-cannabis-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>
