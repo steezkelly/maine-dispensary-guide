@@ -91,10 +91,11 @@ test('R3 groups event counts by normalized page path', () => {
   assert.match(sql, /GROUP BY event_date, pagePath, event_name/);
 });
 
-test('R3 BigQuery mirror includes emitted conversion events', () => {
+test('R3 BigQuery mirror includes emitted conversion and action-intent events', () => {
   const sql = buildBqSql('R3_event_count_daily', '2026-07-10', '2026-07-12', '2026-07-12');
   assert.match(sql, /'lead_capture'/);
   assert.match(sql, /'affiliate_click'/);
+  assert.match(sql, /'mdg_action_select'/);
 });
 
 test('BQ reconciliation requires an explicit frozen property-day snapshot', () => {

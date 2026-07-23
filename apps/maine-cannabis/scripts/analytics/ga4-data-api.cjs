@@ -41,10 +41,10 @@ const REPORTS = {
     report_id: 'event_count_daily',
     dimensions: ['date', 'pagePath', 'eventName'],
     metrics: ['eventCount'],
-    event_names: ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start'],
+    event_names: ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'mdg_action_select', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start'],
     grain: 'day_pagePath_event',
     compat_status: 'VALIDATED',
-    intended_use: 'Per-page custom event totals (page_view, scroll_depth, page_engaged, faq_open, cta_view)'
+    intended_use: 'Per-page event totals, including exposure (`cta_view`) and user intent (`mdg_action_select`)'
   },
   R4_geo_daily: {
     report_id: 'geo_daily',

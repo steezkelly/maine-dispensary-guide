@@ -255,7 +255,7 @@ function buildBqSql(reportKey, from, to, propertyDate) {
         SELECT event_date, ${pagePathSql} AS pagePath, event_name, COUNT(*) AS eventCount,
           ANY_VALUE(_mdg_source_table) AS bq_source_table
         FROM ${tab}
-        WHERE event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start')
+        WHERE event_name IN ('page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'mdg_action_select', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start')
         GROUP BY event_date, pagePath, event_name
       `;
     }
