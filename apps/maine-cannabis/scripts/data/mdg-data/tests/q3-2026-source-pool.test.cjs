@@ -20,7 +20,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const zlib = require('zlib');
 
 const REPO = path.resolve(__dirname, '..', '..', '..', '..', '..', '..');
 // __dirname = .../apps/maine-cannabis/scripts/data/mdg-data/tests
@@ -40,6 +40,51 @@ function readRepoFile(rel) {
     return fs.readFileSync(path.join(REPO, rel), 'utf8');
 }
 
+function readZipEntry(zipPath, entryName) {
+    const archive = fs.readFileSync(zipPath);
+    const eocdSignature = 0x06054b50;
+    const centralSignature = 0x02014b50;
+    const localSignature = 0x04034b50;
+    let eocdOffset = -1;
+    for (let offset = archive.length - 22; offset >= Math.max(0, archive.length - 65557); offset--) {
+        if (archive.readUInt32LE(offset) === eocdSignature) {
+            eocdOffset = offset;
+            break;
+        }
+    }
+    assert.notEqual(eocdOffset, -1, `${zipPath} has no ZIP end-of-central-directory record`);
+
+    const centralOffset = archive.readUInt32LE(eocdOffset + 16);
+    const entryCount = archive.readUInt16LE(eocdOffset + 10);
+    let offset = centralOffset;
+    for (let index = 0; index < entryCount; index++) {
+        assert.equal(archive.readUInt32LE(offset), centralSignature,
+            `${zipPath} has a malformed ZIP central-directory entry at offset ${offset}`);
+        const compressionMethod = archive.readUInt16LE(offset + 10);
+        const compressedSize = archive.readUInt32LE(offset + 20);
+        const fileNameLength = archive.readUInt16LE(offset + 28);
+        const extraLength = archive.readUInt16LE(offset + 30);
+        const commentLength = archive.readUInt16LE(offset + 32);
+        const localOffset = archive.readUInt32LE(offset + 42);
+        const fileName = archive.subarray(offset + 46, offset + 46 + fileNameLength).toString('utf8');
+
+        if (fileName === entryName) {
+            assert.equal(archive.readUInt32LE(localOffset), localSignature,
+                `${zipPath} has a malformed local header for ${entryName}`);
+            const localNameLength = archive.readUInt16LE(localOffset + 26);
+            const localExtraLength = archive.readUInt16LE(localOffset + 28);
+            const dataStart = localOffset + 30 + localNameLength + localExtraLength;
+            const compressed = archive.subarray(dataStart, dataStart + compressedSize);
+            if (compressionMethod === 0) return compressed;
+            if (compressionMethod === 8) return zlib.inflateRawSync(compressed);
+            assert.fail(`${zipPath} uses unsupported ZIP compression method ${compressionMethod} for ${entryName}`);
+        }
+
+        offset += 46 + fileNameLength + extraLength + commentLength;
+    }
+    assert.fail(`${zipPath} is missing ZIP entry ${entryName}`);
+}
+
 // --- 1. Q3 source-pool index and reference doc exist and are well-formed ---
 
 check('docs/research/q3-2026-INDEX.md exists', () => {
@@ -50,18 +95,20 @@ check('docs/research/q3-2026-INDEX.md exists', () => {
 check('q3-2026-INDEX.md distinguishes CSV file lines from data rows', () => {
     const txt = readRepoFile('docs/research/q3-2026-INDEX.md');
     const expectedCounts = [
-        ['ocp-au-licenses-2026-06-01.csv', 1584, 1583],
-        ['ocp-med-caregivers-2026-06-01.csv', 1415, 1414],
-        ['ocp-med-establishments-2026-06-01.csv', 805, 804],
+        ['ocp-au-licenses-2026-06-01.csv', 1584, 1583, '346 unique active licenses after dedupe'],
+        ['ocp-med-caregivers-2026-06-01.csv', 1415, 1414, '1,411 unique registration numbers; 3 duplicate row occurrences'],
+        ['ocp-med-establishments-2026-06-01.csv', 805, 804, '104 unique dispensary licenses after dedupe'],
     ];
 
-    for (const [file, fileLines, dataRows] of expectedCounts) {
+    for (const [file, fileLines, dataRows, identitySummary] of expectedCounts) {
         const indexLine = txt.split('\n').find(line => line.includes(file));
         assert.ok(indexLine, `q3-2026-INDEX.md missing ${file}`);
         assert.ok(indexLine.includes(`${fileLines.toLocaleString('en-US')} file lines`),
             `${file} index entry should state ${fileLines.toLocaleString('en-US')} file lines`);
         assert.ok(indexLine.includes(`${dataRows.toLocaleString('en-US')} data rows + header`),
             `${file} index entry should state ${dataRows.toLocaleString('en-US')} data rows + header`);
+        assert.ok(indexLine.includes(identitySummary),
+            `${file} index entry should state identity/deduplication summary: ${identitySummary}`);
         assert.ok(!/raw rows/i.test(indexLine),
             `${file} index entry must not use ambiguous "raw rows" terminology`);
     }
@@ -167,10 +214,7 @@ for (const [rel, label] of DATA_FILES) {
 
 check('MRS May 2026 XLSX worksheet dimension covers populated cells', () => {
     const rel = 'apps/maine-cannabis/docs/research/q3-2026-data/mrs-may-2026-cannabis-sales.xlsx';
-    const sheetXml = execFileSync('unzip', ['-p', path.join(REPO, rel), 'xl/worksheets/sheet1.xml'], {
-        encoding: 'utf8',
-        maxBuffer: 4 * 1024 * 1024,
-    });
+    const sheetXml = readZipEntry(path.join(REPO, rel), 'xl/worksheets/sheet1.xml').toString('utf8');
     const dimension = sheetXml.match(/<dimension[^>]*ref="([^"]+)"/);
     assert.ok(dimension, 'MRS XLSX sheet1.xml is missing a worksheet dimension');
     assert.ok(/^A1:[A-Z]+[1-9][0-9]*$/.test(dimension[1]),
