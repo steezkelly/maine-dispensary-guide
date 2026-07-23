@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MDG Signal — Municipality Research Workflow</title>
+  <meta name="description" content="Clickable concept for researching Maine cannabis license concentration by municipality." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f5f0e5;
+      --paper-strong: #fffdf7;
+      --paper-soft: #ebe3d3;
+      --ink: #17251f;
+      --ink-soft: #5f6d65;
+      --spruce: #183f31;
+      --spruce-2: #245644;
+      --teal: #217b73;
+      --bronze: #9a633a;
+      --line: #d7cfbf;
+      --positive: #23734f;
+      --warning: #a56b3f;
+      --shadow: 0 20px 60px rgba(34, 48, 40, .11);
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 18px;
+      --header-h: 68px;
+    }
+
+    [data-theme="dark"] {
+      --paper: #102019;
+      --paper-strong: #182b22;
+      --paper-soft: #23372e;
+      --ink: #f5f0e5;
+      --ink-soft: #b9c2bc;
+      --spruce: #a8ceb8;
+      --spruce-2: #c3ddcc;
+      --teal: #7bcec2;
+      --bronze: #dfa574;
+      --line: #3b4e44;
+      --positive: #8edbb0;
+      --warning: #e4aa79;
+      --shadow: 0 22px 60px rgba(0, 0, 0, .30);
+    }
+
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    html[data-theme="dark"] { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Plus Jakarta Sans", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(23, 37, 31, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 37, 31, .025) 1px, transparent 1px),
+        var(--paper);
+      background-size: 32px 32px;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--teal) 68%, transparent);
+      outline-offset: 3px;
+    }
+    a { color: var(--teal); text-underline-offset: 3px; }
+    code { font-size: .92em; }
+
+    .topbar {
+      min-height: var(--header-h);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 24px;
+      background: color-mix(in srgb, var(--paper-strong) 94%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 280px; }
+    .mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--spruce); color: var(--paper-strong); font-family: "Fraunces", Georgia, serif; font-weight: 700; }
+    [data-theme="dark"] .mark { color: #102019; }
+    .brand strong { display: block; font-family: "Fraunces", Georgia, serif; font-size: 19px; }
+    .brand span { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
+    .crumbs { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 13px; margin-right: auto; }
+    .crumbs strong { color: var(--ink); }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .button, .icon-button, .chip, .result-button, .step-button, .select-button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--paper-strong);
+      font-weight: 600;
+    }
+    .button { padding: 0 16px; }
+    .button.primary { background: var(--spruce); border-color: var(--spruce); color: var(--paper-strong); }
+    [data-theme="dark"] .button.primary { color: #102019; }
+    .button.preview { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+    .icon-button { width: 44px; padding: 0; }
+    .button:hover, .icon-button:hover { border-color: var(--teal); }
+
+    .workflow { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
+    .rail { padding: 28px 20px; border-right: 1px solid var(--line); background: color-mix(in srgb, var(--paper-strong) 68%, transparent); }
+    .eyebrow { margin: 0 0 9px; color: var(--bronze); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .rail h1 { margin: 0 0 10px; font-family: "Fraunces", Georgia, serif; font-size: 28px; line-height: 1.05; }
+    .rail-copy { margin: 0 0 24px; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
+    .steps { display: grid; gap: 8px; }
+    .step-button { width: 100%; display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: center; padding: 10px; text-align: left; color: var(--ink-soft); background: transparent; border-color: transparent; }
+    .step-button.active { color: var(--ink); background: var(--paper-strong); border-color: var(--line); border-left: 3px solid var(--teal); }
+    .step-number { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--paper-soft); color: var(--ink-soft); font-size: 12px; }
+    .step-button.active .step-number { background: var(--teal); color: #fff; }
+    .rail-note { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 11px; line-height: 1.6; }
+    .state-key { display: grid; gap: 8px; margin-top: 14px; }
+    .state-row { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--positive); }
+    .dot.partial { background: var(--warning); }
+    .dot.proposed { background: var(--bronze); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bronze) 18%, transparent); }
+
+    main { min-width: 0; padding: 32px clamp(24px, 4vw, 60px) 72px; }
+    .workspace-head { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: 22px; }
+    .workspace-head h2 { margin: 0; max-width: 760px; font-family: "Fraunces", Georgia, serif; font-size: clamp(36px, 4vw, 58px); line-height: 1; letter-spacing: -.025em; font-weight: 600; }
+    .workspace-head p { margin: 13px 0 0; max-width: 760px; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
+    .release-stamp { min-width: 220px; padding: 10px 0 10px 14px; border-left: 2px solid var(--bronze); color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+    .release-stamp strong { display: block; color: var(--ink); font-size: 12px; }
+
+    .search-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-strong); box-shadow: var(--shadow); }
+    .search-box { position: relative; }
+    .search-box label { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+    .search-box input { width: 100%; min-height: 48px; padding: 0 44px 0 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+    .search-icon { position: absolute; right: 14px; bottom: 14px; color: var(--teal); }
+    .quick-picks { align-self: end; display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { min-height: 40px; padding: 0 12px; color: var(--ink-soft); background: var(--paper); }
+    .chip:hover, .chip.active { color: var(--ink); border-color: var(--teal); background: color-mix(in srgb, var(--teal) 10%, var(--paper-strong)); }
+    .search-results { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; min-height: 0; }
+    .result-button { padding: 0 14px; text-align: left; }
+    .empty-result { margin: 0; color: var(--ink-soft); font-size: 12px; }
+
+    .subject-bar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; margin: 18px 0; padding: 18px; background: var(--spruce); color: var(--paper-strong); border-radius: var(--radius); }
+    [data-theme="dark"] .subject-bar { color: #f5f0e5; background: #0d594f; }
+    .subject-bar h3 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 26px; }
+    .subject-bar p { margin: 4px 0 0; color: color-mix(in srgb, currentColor 78%, transparent); font-size: 12px; }
+    .current-badge { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 7px; font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+    .current-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8fe0b4; }
+    .subject-bar .button { background: transparent; color: inherit; border-color: color-mix(in srgb, currentColor 40%, transparent); }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--line); }
+    .metric { min-height: 135px; padding: 18px; background: var(--paper-strong); }
+    .metric-label { color: var(--ink-soft); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .metric-value { margin: 18px 0 7px; font-family: "Fraunces", Georgia, serif; font-size: clamp(27px, 3vw, 40px); line-height: 1; }
+    .metric-note { color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
+    .withheld { color: var(--warning); font-size: 20px; line-height: 1.15; }
+
+    .research-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(330px, .8fr); gap: 18px; margin-top: 18px; }
+    .panel { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-strong); }
+    .panel-head { min-height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    .panel-head h3 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 22px; }
+    .panel-head p { margin: 4px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .comparison-table th, .comparison-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+    .comparison-table th:first-child, .comparison-table td:first-child { text-align: left; }
+    .comparison-table thead th { color: var(--ink-soft); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; }
+    .comparison-table tbody tr:last-child td { border-bottom: 0; }
+    .comparison-table tbody tr.selected { background: color-mix(in srgb, var(--teal) 9%, var(--paper-strong)); }
+    .bar-cell { min-width: 160px; }
+    .density-track { height: 9px; overflow: hidden; border-radius: 2px; background: var(--paper-soft); }
+    .density-fill { display: block; height: 100%; background: var(--teal); }
+    .table-note { padding: 14px 16px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+
+    .evidence-summary { padding: 20px; }
+    .evidence-summary h3 { margin: 0 0 10px; font-family: "Fraunces", Georgia, serif; font-size: 25px; }
+    .evidence-summary p { margin: 0 0 16px; color: var(--ink-soft); font-size: 12px; line-height: 1.6; }
+    .evidence-list { display: grid; gap: 10px; margin-bottom: 18px; }
+    .evidence-row { display: flex; justify-content: space-between; gap: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); font-size: 11px; }
+    .evidence-row span { color: var(--ink-soft); }
+    .evidence-row strong { text-align: right; }
+    .partial-callout { padding: 13px; border-left: 3px solid var(--warning); background: color-mix(in srgb, var(--warning) 10%, var(--paper-strong)); color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+
+    .paid-preview { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(280px, .85fr) minmax(0, 1.5fr) auto; gap: 22px; align-items: center; padding: 22px; color: #f5f0e5; background: #12251d; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .paid-preview h3 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 28px; line-height: 1.05; }
+    .paid-preview p { margin: 7px 0 0; color: #b9c8bf; font-size: 11px; line-height: 1.55; }
+    .preview-flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .preview-item { padding-left: 12px; border-left: 1px solid #4c6257; }
+    .preview-item strong { display: block; font-size: 12px; }
+    .preview-item span { display: block; margin-top: 4px; color: #aebdb4; font-size: 10px; line-height: 1.4; }
+
+    .scrim { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0; background: rgba(7, 17, 12, .42); transition: opacity .18s ease; }
+    .scrim.open { pointer-events: auto; opacity: 1; }
+    .drawer { position: fixed; inset: 0 0 0 auto; z-index: 40; width: min(480px, 100vw); overflow-y: auto; padding: 28px; transform: translateX(105%); transition: transform .22s ease; background: var(--paper-strong); border-left: 1px solid var(--line); box-shadow: -24px 0 70px rgba(0,0,0,.22); }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+    .drawer h2 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 32px; line-height: 1.05; }
+    .drawer-intro { color: var(--ink-soft); font-size: 13px; line-height: 1.65; }
+    .meta-card { margin-top: 14px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper); }
+    .meta-card h3 { margin: 0 0 10px; font-family: "Fraunces", Georgia, serif; font-size: 19px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .meta-grid div { min-width: 0; }
+    .meta-grid span { display: block; color: var(--ink-soft); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
+    .meta-grid strong, .meta-grid a { display: block; margin-top: 4px; overflow-wrap: anywhere; font-size: 11px; line-height: 1.45; }
+    .drawer-boundary { margin-top: 16px; padding: 12px; border-left: 3px solid var(--bronze); background: var(--paper-soft); color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+    .watch-scope { margin: 18px 0; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+    .watch-scope strong { font-family: "Fraunces", Georgia, serif; font-size: 21px; }
+    .watch-scope span { display: block; margin-top: 4px; color: var(--ink-soft); font-size: 11px; }
+    .condition-list { display: grid; gap: 8px; margin: 14px 0 18px; }
+    .select-button { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 13px; text-align: left; color: var(--ink-soft); }
+    .select-button.active { color: var(--ink); border-color: var(--teal); background: color-mix(in srgb, var(--teal) 10%, var(--paper-strong)); }
+    .select-button.active::after { content: "Selected"; color: var(--teal); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+    .alert-preview { padding: 14px; border-radius: var(--radius-sm); background: var(--paper-soft); }
+    .alert-preview strong { display: block; font-size: 12px; }
+    .alert-preview p { margin: 6px 0 0; color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+    .drawer-actions { display: flex; gap: 8px; margin-top: 18px; }
+    .drawer-actions .button { flex: 1; }
+    .toast { position: fixed; left: 50%; bottom: 24px; z-index: 60; transform: translate(-50%, 18px); opacity: 0; pointer-events: none; transition: .18s ease; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--ink); color: var(--paper-strong); box-shadow: var(--shadow); font-size: 12px; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 1120px) {
+      .crumbs { display: none; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .research-grid { grid-template-columns: 1fr; }
+      .paid-preview { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 820px) {
+      .brand { min-width: 0; margin-right: auto; }
+      .brand-copy, .header-actions .button { display: none; }
+      .workflow { grid-template-columns: 1fr; }
+      .rail { padding: 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .rail h1, .rail-copy, .rail-note { display: none; }
+      .steps { grid-template-columns: repeat(5, minmax(44px, 1fr)); }
+      .step-button { display: grid; place-items: center; padding: 6px; }
+      .step-button span:last-child { display: none; }
+      main { padding: 24px 16px 54px; }
+      .workspace-head { display: block; }
+      .release-stamp { margin-top: 16px; }
+      .search-panel { grid-template-columns: 1fr; }
+      .quick-picks, .search-results { grid-column: 1; }
+      .subject-bar { grid-template-columns: 1fr; }
+      .comparison-table th, .comparison-table td { padding: 12px 9px; }
+      .bar-cell { display: none; }
+      .preview-flow { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .metric-grid { grid-template-columns: 1fr; }
+      .workspace-head h2 { font-size: 38px; }
+      .comparison-table th:nth-child(3), .comparison-table td:nth-child(3) { display: none; }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">MDG</div>
+      <div class="brand-copy"><strong>MDG Signal</strong><span>Maine municipality research</span></div>
+    </div>
+    <nav class="crumbs" aria-label="Workflow location"><span>Data explorer</span><span aria-hidden="true">/</span><strong>Municipality research</strong></nav>
+    <div class="header-actions">
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Toggle theme">◐</button>
+      <button class="button preview" type="button" data-open="watch">Preview watchlist</button>
+    </div>
+  </header>
+
+  <div class="workflow">
+    <aside class="rail" aria-label="Research workflow steps">
+      <p class="eyebrow">One complete research path</p>
+      <h1>Research a Maine municipality.</h1>
+      <p class="rail-copy">Move from a current fact to a sourced comparison, then preview how a paid workspace could remember the scope and report a verified change.</p>
+      <div class="steps">
+        <button class="step-button active" type="button" data-step="select"><span class="step-number">1</span><span>Select municipality</span></button>
+        <button class="step-button" type="button" data-step="compare"><span class="step-number">2</span><span>Compare peers</span></button>
+        <button class="step-button" type="button" data-step="source"><span class="step-number">3</span><span>Inspect evidence</span></button>
+        <button class="step-button" type="button" data-step="watch"><span class="step-number">4</span><span>Watchlist preview</span></button>
+        <button class="step-button" type="button" data-step="alert"><span class="step-number">5</span><span>Alert preview</span></button>
+      </div>
+      <div class="rail-note">
+        <strong>Capability key</strong>
+        <div class="state-key">
+          <div class="state-row"><span class="dot"></span><span>Current MDG-DATA release</span></div>
+          <div class="state-row"><span class="dot partial"></span><span>Partial or unavailable</span></div>
+          <div class="state-row"><span class="dot proposed"></span><span>Proposed paid capability</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <section class="workspace-head">
+        <div>
+          <p class="eyebrow">Municipality research · Maine only</p>
+          <h2>Where is adult-use retail concentrated?</h2>
+          <p>Compare active cannabis-store licenses using raw count and ACS population. Keep the release date and original source attached to the answer.</p>
+        </div>
+        <div class="release-stamp"><strong>Current release</strong><code>ded381696bddf56f</code><br>License data as of Jun 1, 2026<br>ACS vintage 2024</div>
+      </section>
+
+      <section class="search-panel" id="selectPanel" aria-labelledby="municipalityLabel">
+        <div class="search-box">
+          <label id="municipalityLabel" for="municipalitySearch">Find a municipality in this release</label>
+          <input id="municipalitySearch" type="search" placeholder="Try Portland, Bangor, Auburn…" autocomplete="off" />
+          <span class="search-icon" aria-hidden="true">⌕</span>
+        </div>
+        <div class="quick-picks" aria-label="Suggested municipalities">
+          <button class="chip active" type="button" data-city="Portland">Portland</button>
+          <button class="chip" type="button" data-city="Bangor">Bangor</button>
+          <button class="chip" type="button" data-city="Auburn">Auburn</button>
+          <button class="chip" type="button" data-city="Waterville">Waterville</button>
+        </div>
+        <div class="search-results" id="searchResults" aria-live="polite"></div>
+      </section>
+
+      <section class="subject-bar" aria-live="polite">
+        <div>
+          <span class="current-badge">Current release</span>
+          <h3 id="subjectName">Portland, Maine</h3>
+          <p id="subjectSummary">27 active adult-use cannabis-store licenses · OCP snapshot dated June 1, 2026</p>
+        </div>
+        <button class="button" type="button" data-open="evidence">Inspect source &amp; freshness</button>
+      </section>
+
+      <section class="metric-grid" aria-label="Selected municipality metrics">
+        <article class="metric"><div class="metric-label">Active store licenses</div><div class="metric-value" id="licenseValue">27</div><div class="metric-note">Active adult-use cannabis-store license identities</div></article>
+        <article class="metric"><div class="metric-label">ACS 2024 population</div><div class="metric-value" id="populationValue">68,854</div><div class="metric-note">Denominator for the normalized rate</div></article>
+        <article class="metric"><div class="metric-label">Licenses per 10K</div><div class="metric-value" id="densityValue">3.92</div><div class="metric-note">Descriptive concentration, not a demand score</div></article>
+        <article class="metric"><div class="metric-label">Municipal authorization</div><div class="metric-value withheld">Partial capture</div><div class="metric-note">No statewide conclusion shown from incomplete opt-in coverage</div></article>
+      </section>
+
+      <div class="research-grid">
+        <section class="panel" id="comparePanel">
+          <div class="panel-head">
+            <div><h3>Peer comparison</h3><p>Selected release-backed municipalities · not a statewide ranking</p></div>
+            <button class="button" id="addPeer" type="button">Add suggested peer</button>
+          </div>
+          <table class="comparison-table">
+            <thead><tr><th>Municipality</th><th>Licenses</th><th>Population</th><th>Per 10K</th><th class="bar-cell">Relative rate</th></tr></thead>
+            <tbody id="comparisonBody"></tbody>
+          </table>
+          <div class="table-note" id="comparisonNote">Portland leads this selected set by raw license count. South Portland has the higher population-normalized rate.</div>
+        </section>
+
+        <aside class="panel evidence-summary" id="sourcePanel">
+          <p class="eyebrow">Evidence stays attached</p>
+          <h3>Current fact, visible limits.</h3>
+          <p>Two published products support this comparison: active store licenses by municipality and licenses per 10,000 residents.</p>
+          <div class="evidence-list">
+            <div class="evidence-row"><span>License date</span><strong>Jun 1, 2026</strong></div>
+            <div class="evidence-row"><span>Population vintage</span><strong>ACS 2024</strong></div>
+            <div class="evidence-row"><span>Preliminary</span><strong>No</strong></div>
+            <div class="evidence-row"><span>Sources</span><strong>Maine OCP + Census</strong></div>
+          </div>
+          <button class="button primary" type="button" data-open="evidence">Open evidence drawer</button>
+          <div class="partial-callout"><strong>Coverage limit:</strong> the current opt-in capture is partial. The prototype does not infer whether a municipality opted out, took no action, or has another policy state.</div>
+        </aside>
+
+        <section class="paid-preview" id="paidPanel" aria-label="Proposed paid workflow">
+          <div><p class="eyebrow">Proposed paid workspace</p><h3>Remember this scope. Report a verified change.</h3><p>Nothing is saved or delivered in this prototype. The controls preview the customer value of persistence and change detection.</p></div>
+          <div class="preview-flow">
+            <div class="preview-item"><strong>1 · Save scope</strong><span id="scopePreview">Portland plus two selected peers</span></div>
+            <div class="preview-item"><strong>2 · Choose condition</strong><span>License count, source refresh, or data-state change</span></div>
+            <div class="preview-item"><strong>3 · Receive evidence</strong><span>Old value, new value, effective date, source, interpretation</span></div>
+          </div>
+          <button class="button preview" type="button" data-open="watch">Preview watchlist &amp; alert</button>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="drawer" id="evidenceDrawer" aria-hidden="true" aria-labelledby="evidenceTitle">
+    <div class="drawer-head"><div><p class="eyebrow">Current release evidence</p><h2 id="evidenceTitle">Source &amp; freshness</h2></div><button class="icon-button" type="button" data-close aria-label="Close evidence drawer">×</button></div>
+    <p class="drawer-intro">These fields come from the checked-in metadata for the two products behind the municipality comparison.</p>
+    <section class="meta-card"><h3>Active licenses by municipality</h3><div class="meta-grid">
+      <div><span>Release ID</span><strong>ded381696bddf56f</strong></div><div><span>Data as of</span><strong>2026-06-01</strong></div>
+      <div><span>Fetched UTC</span><strong>2026-07-12 06:21</strong></div><div><span>Preliminary</span><strong>No</strong></div>
+      <div><span>Source ID</span><strong>ocp_licenses</strong></div><div><span>Transform</span><strong>Version 1</strong></div>
+      <div><span>Source</span><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search">Maine OCP licensee search</a></div><div><span>Methodology</span><strong>/data/methodology/retail-licenses-by-municipality</strong></div>
+    </div></section>
+    <section class="meta-card"><h3>Licenses per 10,000 residents</h3><div class="meta-grid">
+      <div><span>Release ID</span><strong>ded381696bddf56f</strong></div><div><span>ACS vintage</span><strong>2024</strong></div>
+      <div><span>Data as of</span><strong>2026-06-01</strong></div><div><span>Preliminary</span><strong>No</strong></div>
+      <div><span>Source IDs</span><strong>ocp_licenses<br>census_acs5_population</strong></div><div><span>Transform</span><strong>Version 1</strong></div>
+      <div><span>Census source</span><a href="https://www.census.gov/data/developers/data-sets/acs-5year.html">ACS 5-year API</a></div><div><span>Methodology</span><strong>/data/methodology/retail-licenses-per-10k</strong></div>
+    </div></section>
+    <div class="drawer-boundary"><strong>Interpretation boundary:</strong> a per-capita rate describes concentration. It does not establish demand, market viability, unmet need, or an “underserved” municipality.</div>
+  </aside>
+
+  <aside class="drawer" id="watchDrawer" aria-hidden="true" aria-labelledby="watchTitle">
+    <div class="drawer-head"><div><p class="eyebrow">Proposed paid capability</p><h2 id="watchTitle">Watch a Maine market</h2></div><button class="icon-button" type="button" data-close aria-label="Close watchlist preview">×</button></div>
+    <p class="drawer-intro">Preview a saved scope and change condition. This prototype stores nothing, sends nothing, and does not claim that historical change detection exists.</p>
+    <div class="watch-scope"><span>Scope preview</span><strong id="watchScopeName">Portland + selected peers</strong><span>Active licenses · density · source freshness</span></div>
+    <p class="eyebrow">Choose a proposed alert condition</p>
+    <div class="condition-list">
+      <button class="select-button active" type="button" data-condition="license">Active store-license count changes</button>
+      <button class="select-button" type="button" data-condition="refresh">A source receives a newer release</button>
+      <button class="select-button" type="button" data-condition="status">A dataset changes current / partial status</button>
+    </div>
+    <div class="alert-preview" role="status" aria-live="polite"><strong>Alert preview · not an actual change</strong><p id="alertCopy">When a future verified release changes Portland’s active store-license count, a notice would show the previous value, new value, effective date, source record, and MDG interpretation.</p></div>
+    <div class="drawer-actions"><button class="button" type="button" data-close>Cancel</button><button class="button preview" type="button" id="previewAlert">Preview this alert</button></div>
+    <div class="drawer-boundary"><strong>Concept boundary:</strong> no account, billing, persistence, scheduler, historical baseline, or delivery channel is built. A real alert requires two verified releases and explicit change semantics.</div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const municipalities = [
+      { name: 'Portland', licenses: 27, population: 68854, density: 3.92 },
+      { name: 'South Portland', licenses: 11, population: 26930, density: 4.08 },
+      { name: 'Bangor', licenses: 10, population: 31938, density: 3.13 },
+      { name: 'Lewiston', licenses: 8, population: 38324, density: 2.09 },
+      { name: 'Auburn', licenses: 7, population: 24602, density: 2.85 },
+      { name: 'Waterville', licenses: 6, population: 17077, density: 3.51 },
+      { name: 'Sanford', licenses: 4, population: 22247, density: 1.80 },
+      { name: 'Brunswick', licenses: 3, population: 22336, density: 1.34 }
+    ];
+    const peerSets = {
+      Portland: ['Portland', 'South Portland', 'Brunswick'],
+      'South Portland': ['South Portland', 'Portland', 'Brunswick'],
+      Bangor: ['Bangor', 'Waterville', 'Lewiston'],
+      Lewiston: ['Lewiston', 'Auburn', 'Waterville'],
+      Auburn: ['Auburn', 'Lewiston', 'Waterville'],
+      Waterville: ['Waterville', 'Bangor', 'Augusta'],
+      Sanford: ['Sanford', 'South Portland', 'Portland'],
+      Brunswick: ['Brunswick', 'Portland', 'South Portland']
+    };
+    let selected = municipalities[0];
+    let peers = ['Portland', 'South Portland', 'Brunswick'];
+
+    const byName = (name) => municipalities.find((item) => item.name === name);
+    const number = (value) => value.toLocaleString('en-US');
+    const stepButtons = [...document.querySelectorAll('[data-step]')];
+
+    function setStep(step) {
+      stepButtons.forEach((button) => button.classList.toggle('active', button.dataset.step === step));
+    }
+
+    function renderComparison() {
+      const rows = peers.map(byName).filter(Boolean);
+      const max = Math.max(...rows.map((row) => row.density));
+      document.getElementById('comparisonBody').innerHTML = rows.map((row) => `
+        <tr class="${row.name === selected.name ? 'selected' : ''}">
+          <td><strong>${row.name}</strong>${row.name === selected.name ? ' · selected' : ''}</td>
+          <td>${row.licenses}</td><td>${number(row.population)}</td><td>${row.density.toFixed(2)}</td>
+          <td class="bar-cell"><div class="density-track"><span class="density-fill" style="width:${(row.density / max) * 100}%"></span></div></td>
+        </tr>`).join('');
+      const rawLeader = [...rows].sort((a, b) => b.licenses - a.licenses)[0];
+      const densityLeader = [...rows].sort((a, b) => b.density - a.density)[0];
+      document.getElementById('comparisonNote').textContent = `${rawLeader.name} leads this selected set by raw license count. ${densityLeader.name} has the higher population-normalized rate.`;
+      document.getElementById('scopePreview').textContent = `${selected.name} plus ${Math.max(0, rows.length - 1)} selected peers`;
+      document.getElementById('watchScopeName').textContent = `${selected.name} + selected peers`;
+    }
+
+    function selectMunicipality(name) {
+      const match = byName(name);
+      if (!match) return;
+      selected = match;
+      peers = (peerSets[name] || [name]).filter((candidate) => byName(candidate));
+      document.getElementById('subjectName').textContent = `${match.name}, Maine`;
+      document.getElementById('subjectSummary').textContent = `${match.licenses} active adult-use cannabis-store licenses · OCP snapshot dated June 1, 2026`;
+      document.getElementById('licenseValue').textContent = match.licenses;
+      document.getElementById('populationValue').textContent = number(match.population);
+      document.getElementById('densityValue').textContent = match.density.toFixed(2);
+      document.querySelectorAll('[data-city]').forEach((button) => button.classList.toggle('active', button.dataset.city === name));
+      document.getElementById('municipalitySearch').value = '';
+      document.getElementById('searchResults').innerHTML = '';
+      renderComparison();
+      setStep('compare');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    const scrim = document.getElementById('scrim');
+    const drawers = [...document.querySelectorAll('.drawer')];
+    function closeDrawers() {
+      drawers.forEach((drawer) => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); });
+      scrim.classList.remove('open');
+    }
+    function openDrawer(kind) {
+      closeDrawers();
+      const drawer = document.getElementById(kind === 'evidence' ? 'evidenceDrawer' : 'watchDrawer');
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      scrim.classList.add('open');
+      drawer.querySelector('[data-close]').focus();
+      setStep(kind === 'evidence' ? 'source' : 'watch');
+    }
+
+    document.querySelectorAll('[data-city]').forEach((button) => button.addEventListener('click', () => selectMunicipality(button.dataset.city)));
+    document.getElementById('municipalitySearch').addEventListener('input', (event) => {
+      const query = event.target.value.trim().toLowerCase();
+      const matches = query ? municipalities.filter((item) => item.name.toLowerCase().includes(query)) : [];
+      document.getElementById('searchResults').innerHTML = query && !matches.length
+        ? '<p class="empty-result">No municipality in this prototype subset matches that search. No data has been invented.</p>'
+        : matches.map((item) => `<button class="result-button" type="button" data-result="${item.name}">${item.name} · ${item.licenses} active licenses</button>`).join('');
+      document.querySelectorAll('[data-result]').forEach((button) => button.addEventListener('click', () => selectMunicipality(button.dataset.result)));
+      setStep('select');
+    });
+    document.getElementById('addPeer').addEventListener('click', () => {
+      const extra = municipalities.find((item) => !peers.includes(item.name));
+      if (!extra) return showToast('All prototype municipalities are already in the comparison.');
+      peers.push(extra.name);
+      renderComparison();
+      setStep('compare');
+    });
+    document.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => openDrawer(button.dataset.open)));
+    document.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', closeDrawers));
+    scrim.addEventListener('click', closeDrawers);
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeDrawers(); });
+    document.querySelectorAll('[data-condition]').forEach((button) => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-condition]').forEach((candidate) => candidate.classList.toggle('active', candidate === button));
+      const copy = {
+        license: `When a future verified release changes ${selected.name}’s active store-license count, a notice would show the previous value, new value, effective date, source record, and MDG interpretation.`,
+        refresh: `When MDG publishes a newer verified source release for ${selected.name}, a notice would identify the new data date, fetch date, source, and any affected metrics.`,
+        status: `When a dataset supporting ${selected.name} changes between current, partial, or not ready, a notice would explain the coverage change and its effect on available answers.`
+      };
+      document.getElementById('alertCopy').textContent = copy[button.dataset.condition];
+      setStep('alert');
+    }));
+    document.getElementById('previewAlert').addEventListener('click', () => {
+      setStep('alert');
+      showToast('Preview only — no alert was saved or sent.');
+    });
+    stepButtons.forEach((button) => button.addEventListener('click', () => {
+      const step = button.dataset.step;
+      if (step === 'source') return openDrawer('evidence');
+      if (step === 'watch' || step === 'alert') return openDrawer('watch');
+      document.getElementById(step === 'select' ? 'selectPanel' : 'comparePanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setStep(step);
+    }));
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      document.getElementById('themeToggle').setAttribute('aria-label', `Switch to ${next === 'dark' ? 'light' : 'dark'} theme`);
+    });
+
+    renderComparison();
+  </script>
+</body>
+</html>

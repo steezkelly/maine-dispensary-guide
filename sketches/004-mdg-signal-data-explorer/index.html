@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MDG Signal — Maine Cannabis Data Explorer Concept</title>
+  <meta name="description" content="Early product concept for a customer-facing Maine cannabis data explorer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f5f0e5;
+      --paper-strong: #fffdf7;
+      --paper-soft: #ebe3d3;
+      --ink: #17251f;
+      --ink-soft: #5f6d65;
+      --spruce: #183f31;
+      --spruce-2: #245644;
+      --teal: #217b73;
+      --bronze: #a56b3f;
+      --amber-soft: #f0dfbd;
+      --line: #d7cfbf;
+      --positive: #23734f;
+      --negative: #a34236;
+      --shadow: 0 20px 60px rgba(34, 48, 40, .10);
+      --radius-sm: 6px;
+      --radius: 12px;
+      --header-h: 68px;
+    }
+
+    [data-theme="dark"] {
+      --paper: #14221c;
+      --paper-strong: #1b2c24;
+      --paper-soft: #23372e;
+      --ink: #f5f0e5;
+      --ink-soft: #b9c2bc;
+      --spruce: #9ec5af;
+      --spruce-2: #b5d4c1;
+      --teal: #72c3b8;
+      --bronze: #d49a6e;
+      --amber-soft: #40392a;
+      --line: #3a4b43;
+      --positive: #83d4a6;
+      --negative: #f09a8f;
+      --shadow: 0 22px 60px rgba(0, 0, 0, .30);
+    }
+
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    html[data-theme="dark"] { color-scheme: dark; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", Arial, sans-serif;
+      background:
+        linear-gradient(rgba(23, 37, 31, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 37, 31, .025) 1px, transparent 1px),
+        var(--paper);
+      background-size: 32px 32px;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--teal) 65%, transparent);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      min-height: var(--header-h);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 24px;
+      background: color-mix(in srgb, var(--paper-strong) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 250px; }
+    .mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: var(--spruce);
+      color: var(--paper-strong);
+      border-radius: var(--radius-sm);
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+    [data-theme="dark"] .mark { color: #14221c; }
+    .brand strong { display: block; font-family: "Fraunces", Georgia, serif; font-size: 19px; }
+    .brand span { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
+
+    .product-nav { display: flex; align-items: center; gap: 4px; margin-right: auto; }
+    .nav-button, .icon-button, .secondary-button, .primary-button, .seg-button {
+      min-height: 44px;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--ink-soft);
+      font-weight: 600;
+      padding: 0 14px;
+    }
+    .nav-button:hover, .nav-button.active { background: var(--paper-soft); color: var(--ink); }
+    .nav-button.active { box-shadow: inset 0 -2px var(--bronze); }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .icon-button { width: 44px; padding: 0; border: 1px solid var(--line); }
+    .secondary-button { border: 1px solid var(--line); color: var(--ink); background: var(--paper-strong); }
+    .secondary-button:hover { border-color: var(--teal); color: var(--teal); }
+    .primary-button { background: var(--spruce); color: var(--paper-strong); padding: 0 18px; }
+    [data-theme="dark"] .primary-button { color: #14221c; }
+    .primary-button:hover { background: var(--spruce-2); }
+
+    .shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
+    .sidebar {
+      padding: 28px 20px;
+      border-right: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper-strong) 65%, transparent);
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--bronze);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .sidebar h2 { margin: 0 0 8px; font-family: "Fraunces", Georgia, serif; font-size: 22px; line-height: 1.15; }
+    .sidebar-copy { margin: 0 0 20px; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
+    .question-list { display: grid; gap: 8px; }
+    .question-button {
+      min-height: 52px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      color: var(--ink-soft);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .question-button:hover, .question-button.active { background: var(--paper-strong); color: var(--ink); border-color: var(--line); }
+    .question-button.active { border-left: 3px solid var(--teal); }
+    .q-icon { width: 24px; height: 24px; display: grid; place-items: center; color: var(--teal); }
+    .side-divider { height: 1px; background: var(--line); margin: 26px 0; }
+    .dataset-status { display: grid; gap: 11px; }
+    .status-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; }
+    .status-row span:first-child { color: var(--ink-soft); }
+    .status { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: var(--positive); }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status.partial { color: var(--bronze); }
+    .status.locked { color: var(--ink-soft); }
+
+    main { padding: 34px clamp(24px, 4vw, 64px) 72px; min-width: 0; }
+    .hero-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; margin-bottom: 28px; }
+    .hero-row h1 {
+      margin: 0;
+      max-width: 780px;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(34px, 4.5vw, 64px);
+      line-height: .98;
+      letter-spacing: -.035em;
+      font-weight: 600;
+    }
+    .hero-row h1 em { color: var(--teal); font-style: normal; }
+    .hero-row p { max-width: 720px; margin: 16px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.65; }
+    .data-stamp { min-width: 180px; border-left: 2px solid var(--bronze); padding: 8px 0 8px 14px; font-size: 12px; color: var(--ink-soft); }
+    .data-stamp strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 4px; }
+
+    .insight-banner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      background: var(--spruce);
+      color: var(--paper-strong);
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+    [data-theme="dark"] .insight-banner { color: #f5f0e5; background: #0d594f; }
+    .signal-badge { background: var(--bronze); color: #fff; border-radius: 999px; padding: 6px 10px; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .insight-banner p { margin: 0; font-size: 13px; line-height: 1.55; }
+    .insight-banner strong { font-size: 14px; }
+    .source-link { color: inherit; font-size: 11px; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 18px; }
+    .metric { background: var(--paper-strong); padding: 18px; min-height: 132px; }
+    .metric-label { display: flex; justify-content: space-between; gap: 10px; color: var(--ink-soft); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .metric-value { margin: 20px 0 8px; font-family: "Fraunces", Georgia, serif; font-size: clamp(28px, 3vw, 42px); line-height: 1; font-weight: 600; }
+    .metric-note { font-size: 12px; color: var(--ink-soft); }
+    .delta { color: var(--positive); font-weight: 700; }
+    .prelim { color: var(--bronze); font-size: 9px; border: 1px solid currentColor; border-radius: 999px; padding: 3px 6px; }
+
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, .8fr); gap: 18px; }
+    .panel { background: var(--paper-strong); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-width: 0; }
+    .panel-head { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 21px; }
+    .panel-head p { margin: 3px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .segment { display: flex; gap: 2px; padding: 3px; background: var(--paper-soft); border-radius: 8px; }
+    .seg-button { min-height: 36px; padding: 0 10px; font-size: 11px; }
+    .seg-button.active { background: var(--paper-strong); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .chart-wrap { padding: 22px 18px 12px; }
+    .sales-chart { width: 100%; height: 230px; overflow: visible; }
+    .grid-line { stroke: var(--line); stroke-width: 1; }
+    .trend-area { fill: color-mix(in srgb, var(--teal) 15%, transparent); }
+    .trend-line { stroke: var(--teal); stroke-width: 3; fill: none; vector-effect: non-scaling-stroke; }
+    .point { fill: var(--paper-strong); stroke: var(--teal); stroke-width: 2; }
+    .point:hover { fill: var(--bronze); stroke: var(--bronze); }
+    .chart-label { fill: var(--ink-soft); font-family: "Plus Jakarta Sans", sans-serif; font-size: 10px; }
+    .chart-foot { display: flex; justify-content: space-between; gap: 18px; padding: 0 18px 18px; font-size: 11px; color: var(--ink-soft); }
+
+    .mix-body { padding: 22px 18px; display: grid; grid-template-columns: 142px 1fr; gap: 18px; align-items: center; }
+    .donut {
+      width: 138px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--spruce) 0 53.44%, var(--bronze) 53.44% 85.31%, var(--teal) 85.31% 99.85%, var(--line) 99.85% 100%);
+    }
+    .donut::before { content: "June\A 2026"; white-space: pre; width: 76px; aspect-ratio: 1; display: grid; place-items: center; text-align: center; border-radius: 50%; background: var(--paper-strong); font-family: "Fraunces", serif; font-size: 16px; line-height: 1.1; }
+    .legend { display: grid; gap: 10px; }
+    .legend-row { display: grid; grid-template-columns: 10px 1fr auto; gap: 8px; align-items: center; font-size: 11px; }
+    .swatch { width: 9px; height: 9px; border-radius: 2px; }
+    .legend-row span:nth-child(2) { color: var(--ink-soft); }
+    .legend-row strong { font-size: 12px; }
+
+    .geo-panel { grid-column: 1 / -1; }
+    .geo-body { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .65fr); }
+    .bar-list { padding: 20px 18px 24px; display: grid; gap: 13px; border-right: 1px solid var(--line); }
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 56px; align-items: center; gap: 12px; font-size: 12px; }
+    .bar-label { font-weight: 600; }
+    .bar-track { height: 12px; background: var(--paper-soft); border-radius: 2px; overflow: hidden; }
+    .bar-fill { display: block; height: 100%; background: var(--teal); transition: width .25s ease; }
+    .bar-value { text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+    .compare-note { padding: 22px; background: color-mix(in srgb, var(--amber-soft) 50%, var(--paper-strong)); }
+    .compare-note h3 { margin: 0 0 10px; font-family: "Fraunces", serif; font-size: 22px; }
+    .compare-note p { margin: 0 0 16px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+    .compare-callout { border-top: 1px solid var(--line); padding-top: 14px; font-size: 12px; line-height: 1.55; }
+
+    .value-panel { margin-top: 18px; display: grid; grid-template-columns: .85fr 1.6fr auto; gap: 22px; align-items: center; padding: 22px; background: var(--ink); color: var(--paper-strong); border-radius: var(--radius); box-shadow: var(--shadow); }
+    [data-theme="dark"] .value-panel { background: #0d1712; color: #f5f0e5; }
+    .value-panel h2 { margin: 0; font-family: "Fraunces", serif; font-size: 27px; line-height: 1.05; }
+    .value-panel p { margin: 7px 0 0; color: #c5cec8; font-size: 12px; line-height: 1.55; }
+    .value-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .value-item { padding: 10px 0 10px 12px; border-left: 1px solid #536159; }
+    .value-item strong { display: block; font-size: 12px; color: #fff; }
+    .value-item span { display: block; margin-top: 4px; font-size: 10px; color: #aab6af; line-height: 1.45; }
+    .value-panel .primary-button { background: var(--bronze); color: #fff; white-space: nowrap; }
+
+    .drawer {
+      position: fixed;
+      inset: 0 0 0 auto;
+      z-index: 40;
+      width: min(430px, 100vw);
+      padding: 28px;
+      transform: translateX(105%);
+      transition: transform .22s ease;
+      background: var(--paper-strong);
+      border-left: 1px solid var(--line);
+      box-shadow: -24px 0 70px rgba(0,0,0,.18);
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+    .drawer h2 { margin: 0; font-family: "Fraunces", serif; font-size: 31px; line-height: 1.05; }
+    .drawer > p { color: var(--ink-soft); line-height: 1.65; font-size: 13px; }
+    .premium-feature { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .premium-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--amber-soft); color: var(--bronze); font-weight: 700; }
+    .premium-feature strong { display: block; font-size: 13px; }
+    .premium-feature span { display: block; margin-top: 4px; color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
+    .prototype-note { margin-top: 20px; padding: 12px; border-left: 3px solid var(--bronze); background: var(--paper-soft); font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
+    .toast { position: fixed; left: 50%; bottom: 24px; z-index: 60; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: .2s ease; background: var(--ink); color: var(--paper-strong); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 12px; box-shadow: var(--shadow); }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 1100px) {
+      .product-nav { display: none; }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .geo-panel { grid-column: auto; }
+      .value-panel { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 820px) {
+      .brand { min-width: 0; margin-right: auto; }
+      .brand-copy, .header-actions .secondary-button { display: none; }
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      main { padding: 24px 16px 54px; }
+      .hero-row { grid-template-columns: 1fr; align-items: start; }
+      .data-stamp { min-width: 0; }
+      .insight-banner { grid-template-columns: 1fr; }
+      .source-link { white-space: normal; }
+      .geo-body { grid-template-columns: 1fr; }
+      .bar-list { border-right: 0; border-bottom: 1px solid var(--line); }
+      .value-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .metric-grid { grid-template-columns: 1fr; }
+      .panel-head { align-items: start; flex-direction: column; }
+      .mix-body { grid-template-columns: 1fr; justify-items: center; }
+      .legend { width: 100%; }
+      .bar-row { grid-template-columns: 78px 1fr 48px; gap: 8px; }
+      .header-actions .primary-button { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">MDG</div>
+      <div class="brand-copy"><strong>MDG Signal</strong><span>Maine cannabis data explorer</span></div>
+    </div>
+    <nav class="product-nav" aria-label="Product sections">
+      <button class="nav-button active">Overview</button>
+      <button class="nav-button" data-demo="locations">Locations</button>
+      <button class="nav-button" data-demo="licenses">Licenses</button>
+      <button class="nav-button" data-demo="changes">Changes <span class="prelim">planned</span></button>
+      <button class="nav-button" data-demo="library">Data library</button>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button" id="themeToggle" aria-label="Switch to dark theme" title="Toggle theme">◐</button>
+      <button class="secondary-button" id="exportBtn">Export view</button>
+      <button class="primary-button" data-open-drawer>Save this view</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="eyebrow">Explore by question</p>
+      <h2>What do you want to know?</h2>
+      <p class="sidebar-copy">Start with the decision, not the spreadsheet. Each view keeps its source and freshness attached.</p>
+      <div class="question-list">
+        <button class="question-button active" data-question="pulse"><span class="q-icon">↗</span><span>How is the market moving?</span></button>
+        <button class="question-button" data-question="density"><span class="q-icon">◎</span><span>Where is retail concentrated?</span></button>
+        <button class="question-button" data-question="mix"><span class="q-icon">◒</span><span>What products drive sales?</span></button>
+        <button class="question-button" data-question="records"><span class="q-icon">▤</span><span>Which licenses are active?</span></button>
+        <button class="question-button" data-open-drawer><span class="q-icon">⌁</span><span>What changed in my watchlist?</span></button>
+      </div>
+
+      <div class="side-divider"></div>
+      <p class="eyebrow">Data coverage</p>
+      <div class="dataset-status">
+        <div class="status-row"><span>Market sales</span><span class="status">Current</span></div>
+        <div class="status-row"><span>License records</span><span class="status">Current</span></div>
+        <div class="status-row"><span>Municipal status</span><span class="status partial">Partial</span></div>
+        <div class="status-row"><span>Menu prices</span><span class="status locked">Not ready</span></div>
+      </div>
+    </aside>
+
+    <main>
+      <section class="hero-row">
+        <div>
+          <p class="eyebrow">Early concept · real MDG pipeline data</p>
+          <h1>Maine cannabis intelligence, <em>without spreadsheet archaeology.</em></h1>
+          <p>Follow the market, compare municipalities, inspect license density, and keep the original source attached to every answer.</p>
+        </div>
+        <div class="data-stamp"><strong>Latest market period</strong>June 2026 · preliminary<br>License snapshot: June 1, 2026</div>
+      </section>
+
+      <section class="insight-banner" aria-label="Current market signal">
+        <span class="signal-badge">MDG signal</span>
+        <p><strong>June sales reached $20.69M, up 1.9% from May.</strong> Transactions also rose 1.4%, while average flower price registered $6.04 per gram.</p>
+        <a class="source-link" href="#methodology">View source trail →</a>
+      </section>
+
+      <section class="metric-grid" aria-label="Headline market metrics">
+        <article class="metric">
+          <div class="metric-label"><span>Monthly sales</span><span class="prelim">preliminary</span></div>
+          <div class="metric-value">$20.69M</div>
+          <div class="metric-note"><span class="delta">↑ 1.9%</span> from May 2026</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label"><span>Transactions</span><span class="prelim">preliminary</span></div>
+          <div class="metric-value">425,839</div>
+          <div class="metric-note"><span class="delta">↑ 1.4%</span> from May 2026</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label"><span>Active store records</span><span>OCP</span></div>
+          <div class="metric-value">187</div>
+          <div class="metric-note">Directory snapshot · Jun 1, 2026</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label"><span>Average flower price</span><span class="prelim">preliminary</span></div>
+          <div class="metric-value">$6.04</div>
+          <div class="metric-note">Per gram · June 2026</div>
+        </article>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="panel" id="marketPanel">
+          <div class="panel-head">
+            <div><h2>Retail sales pulse</h2><p>Month-over-month adult-use sales · Jul 2025–Jun 2026</p></div>
+            <div class="segment" role="group" aria-label="Trend metric">
+              <button class="seg-button active" data-trend="sales">Sales</button>
+              <button class="seg-button" data-trend="transactions">Transactions</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <svg id="trendChart" class="sales-chart" viewBox="0 0 760 230" role="img" aria-label="Monthly retail sales trend from July 2025 through June 2026"></svg>
+          </div>
+          <div class="chart-foot"><span id="trendRange">Low $17.77M · High $24.01M</span><span>Hover points for detail</span></div>
+        </section>
+
+        <section class="panel" id="mixPanel">
+          <div class="panel-head"><div><h2>Product mix</h2><p>Share of June 2026 sales</p></div></div>
+          <div class="mix-body">
+            <div class="donut" aria-label="Usable cannabis 53.44 percent, concentrates 31.87 percent, infused products 14.54 percent, plants 0.15 percent"></div>
+            <div class="legend">
+              <div class="legend-row"><span class="swatch" style="background:var(--spruce)"></span><span>Usable cannabis</span><strong>53.44%</strong></div>
+              <div class="legend-row"><span class="swatch" style="background:var(--bronze)"></span><span>Concentrates</span><strong>31.87%</strong></div>
+              <div class="legend-row"><span class="swatch" style="background:var(--teal)"></span><span>Infused products</span><strong>14.54%</strong></div>
+              <div class="legend-row"><span class="swatch" style="background:var(--line)"></span><span>Plants</span><strong>0.15%</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel geo-panel" id="geoPanel">
+          <div class="panel-head">
+            <div><h2>Selected municipality comparison</h2><p>Active adult-use store licenses · OCP snapshot + ACS 2024 population</p></div>
+            <div class="segment" role="group" aria-label="Municipality comparison metric">
+              <button class="seg-button active" data-geo="count">License count</button>
+              <button class="seg-button" data-geo="density">Per 10K people</button>
+            </div>
+          </div>
+          <div class="geo-body">
+            <div class="bar-list" id="barList" aria-live="polite"></div>
+            <aside class="compare-note">
+              <p class="eyebrow">What this answers</p>
+              <h3 id="geoHeadline">Portland has the largest raw count in this comparison.</h3>
+              <p id="geoCopy">But raw counts are only one view. Switch to licenses per 10,000 residents to compare relative retail concentration.</p>
+              <div class="compare-callout"><strong>Why a customer pays:</strong> save a municipality set, track it over time, and receive an alert when a license, market statistic, or municipal status changes.</div>
+            </aside>
+          </div>
+        </section>
+      </div>
+
+      <section class="value-panel" aria-label="Premium product value">
+        <div><p class="eyebrow">From useful dashboard to paid product</p><h2>Pay for the change, not the chart.</h2><p>The public view explains today. A subscription remembers what matters to you and tells you when it changes.</p></div>
+        <div class="value-list">
+          <div class="value-item"><strong>Saved watchlists</strong><span>Follow chosen towns, licensees, and datasets.</span></div>
+          <div class="value-item"><strong>Change alerts</strong><span>Receive concise, sourced “what changed” notices.</span></div>
+          <div class="value-item"><strong>Decision-ready exports</strong><span>Download filtered CSVs, charts, and briefing snapshots.</span></div>
+        </div>
+        <button class="primary-button" data-open-drawer>See paid workspace</button>
+      </section>
+
+      <section id="methodology" style="margin-top:18px;padding:16px 2px;color:var(--ink-soft);font-size:11px;line-height:1.6">
+        <strong style="color:var(--ink)">Prototype data note.</strong> Values shown come from MDG-DATA release <code>ded381696bddf56f</code>, using OCP retail-sales and license snapshots plus Census ACS 2024 population. Market observations are labeled preliminary because the current pipeline marks them that way. Municipal comparison includes eight familiar markets—not a statewide ranking. No menu-price data is shown because that product is not ready.
+      </section>
+    </main>
+  </div>
+
+  <aside class="drawer" id="premiumDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head">
+      <div><p class="eyebrow">Paid workspace preview</p><h2 id="drawerTitle">Your Maine market watchlist</h2></div>
+      <button class="icon-button" id="closeDrawer" aria-label="Close paid workspace preview">×</button>
+    </div>
+    <p>The dashboard becomes worth paying for when it remembers your questions and watches for relevant changes.</p>
+    <div class="premium-feature"><span class="premium-icon">1</span><div><strong>Choose the scope</strong><span>Save Portland, Bangor, Auburn, selected operators, or a statewide dataset.</span></div></div>
+    <div class="premium-feature"><span class="premium-icon">2</span><div><strong>Define material changes</strong><span>New or expired licenses, market shifts, municipal status changes, and—when validated—price movement.</span></div></div>
+    <div class="premium-feature"><span class="premium-icon">3</span><div><strong>Get a sourced brief</strong><span>See the previous value, new value, effective date, original source, and MDG interpretation in one place.</span></div></div>
+    <div class="premium-feature"><span class="premium-icon">4</span><div><strong>Export the evidence</strong><span>Create a filtered CSV, shareable chart, or dated briefing for a meeting or client.</span></div></div>
+    <button class="primary-button" style="width:100%;margin-top:18px" id="prototypeCta">Join concept validation</button>
+    <div class="prototype-note"><strong>Concept boundary:</strong> watchlists, alerts, accounts, and billing are not built. This panel shows the proposed paid value—not a claim that those capabilities are live.</div>
+  </aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const sales = [23.31,24.01,21.28,21.37,19.26,20.10,18.90,17.77,19.17,19.18,20.31,20.69];
+    const transactions = [454315,468032,427095,426431,383240,390090,378800,354236,390030,393991,420141,425839];
+    const months = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'];
+    const geo = [
+      { city:'Portland', count:27, density:3.92 },
+      { city:'South Portland', count:11, density:4.08 },
+      { city:'Bangor', count:10, density:3.13 },
+      { city:'Lewiston', count:8, density:2.09 },
+      { city:'Auburn', count:7, density:2.85 },
+      { city:'Waterville', count:6, density:3.51 },
+      { city:'Sanford', count:4, density:1.80 },
+      { city:'Brunswick', count:3, density:1.34 }
+    ];
+
+    function renderTrend(kind='sales') {
+      const svg = document.getElementById('trendChart');
+      const values = kind === 'sales' ? sales : transactions;
+      const min = Math.min(...values), max = Math.max(...values);
+      const left = 28, right = 742, top = 16, bottom = 194;
+      const x = i => left + i * ((right-left)/(values.length-1));
+      const y = value => bottom - ((value-min)/(max-min || 1))*(bottom-top);
+      const points = values.map((v,i) => `${x(i)},${y(v)}`).join(' ');
+      const area = `${left},${bottom} ${points} ${right},${bottom}`;
+      const format = v => kind === 'sales' ? `$${v.toFixed(2)}M` : Math.round(v).toLocaleString();
+      let html = '';
+      [0,.25,.5,.75,1].forEach((p) => {
+        const yy = top + p*(bottom-top);
+        html += `<line class="grid-line" x1="${left}" y1="${yy}" x2="${right}" y2="${yy}"/>`;
+      });
+      html += `<polygon class="trend-area" points="${area}"/><polyline class="trend-line" points="${points}"/>`;
+      values.forEach((v,i) => {
+        html += `<circle class="point" cx="${x(i)}" cy="${y(v)}" r="5"><title>${months[i]}: ${format(v)}</title></circle>`;
+        html += `<text class="chart-label" x="${x(i)}" y="218" text-anchor="middle">${months[i]}</text>`;
+      });
+      svg.innerHTML = html;
+      svg.setAttribute('aria-label', kind === 'sales' ? 'Monthly retail sales trend from July 2025 through June 2026' : 'Monthly transaction trend from July 2025 through June 2026');
+      document.getElementById('trendRange').textContent = `Low ${format(min)} · High ${format(max)}`;
+    }
+
+    function renderGeo(kind='count') {
+      const rows = [...geo].sort((a,b) => b[kind]-a[kind]);
+      const max = Math.max(...rows.map(row => row[kind]));
+      const barList = document.getElementById('barList');
+      barList.innerHTML = rows.map(row => {
+        const value = kind === 'count' ? row.count : row.density;
+        const label = kind === 'count' ? String(value) : value.toFixed(2);
+        return `<div class="bar-row"><span class="bar-label">${row.city}</span><span class="bar-track"><span class="bar-fill" style="width:${(value/max)*100}%"></span></span><span class="bar-value">${label}</span></div>`;
+      }).join('');
+      const top = rows[0];
+      document.getElementById('geoHeadline').textContent = kind === 'count'
+        ? `${top.city} has the largest raw count in this comparison.`
+        : `${top.city} has the highest relative concentration in this comparison.`;
+      document.getElementById('geoCopy').textContent = kind === 'count'
+        ? 'But raw counts are only one view. Switch to licenses per 10,000 residents to compare relative retail concentration.'
+        : `${top.city} registers ${top.density.toFixed(2)} active store licenses per 10,000 residents, compared with Portland at 3.92. This is a selected-market comparison, not a statewide rank.`;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
+    }
+
+    document.querySelectorAll('[data-trend]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-trend]').forEach(b => b.classList.toggle('active', b === button));
+      renderTrend(button.dataset.trend);
+    }));
+    document.querySelectorAll('[data-geo]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-geo]').forEach(b => b.classList.toggle('active', b === button));
+      renderGeo(button.dataset.geo);
+    }));
+    document.querySelectorAll('[data-question]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-question]').forEach(b => b.classList.toggle('active', b === button));
+      const target = { pulse:'marketPanel', density:'geoPanel', mix:'mixPanel', records:'geoPanel' }[button.dataset.question];
+      document.getElementById(target)?.scrollIntoView({ behavior:'smooth', block:'center' });
+    }));
+    document.querySelectorAll('[data-demo]').forEach(button => button.addEventListener('click', () => showToast(`${button.textContent.trim()} is represented as a future product section in this early concept.`)));
+
+    const drawer = document.getElementById('premiumDrawer');
+    function openDrawer() { drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); document.getElementById('closeDrawer').focus(); }
+    function closeDrawer() { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+    document.querySelectorAll('[data-open-drawer]').forEach(button => button.addEventListener('click', openDrawer));
+    document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDrawer(); });
+    document.getElementById('prototypeCta').addEventListener('click', () => showToast('Concept only — no signup has been submitted.'));
+    document.getElementById('exportBtn').addEventListener('click', () => showToast('Export is a proposed paid capability in this concept.'));
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      document.getElementById('themeToggle').setAttribute('aria-label', `Switch to ${next === 'dark' ? 'light' : 'dark'} theme`);
+    });
+
+    renderTrend();
+    renderGeo();
+  </script>
+</body>
+</html>
