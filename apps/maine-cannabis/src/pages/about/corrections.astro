@@ -772,9 +772,10 @@ const correctionListJsonLd = {
     padding-left: 1.25rem;
   }
 
-  /* Filter toolbar (severity/category). JS-free fallback: chips are anchors
-     with :target CSS to highlight the active filter is intentionally
-     skipped in v1 — keep the chips visible-only for now and revisit. */
+  /* Filter toolbar — clickable buttons that filter the entries list via
+     inline <script> below. Each chip's count comes from the same
+     counts.* data, and the chip's pressed state is toggled by the
+     script. */
   .correction-filters {
     display: flex;
     gap: 0.5rem;
@@ -805,15 +806,60 @@ const correctionListJsonLd = {
     color: var(--color-text-light);
     margin-right: 0.15rem;
   }
+  /* Filter chips are real <button>s. Visual rest state matches the v1
+     chip so it doesn't feel like a regression for keyboard-less readers;
+     pressed state adds the accent fill; both states are keyboard-focusable. */
   .filter-chip {
+    font: inherit;
     font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.2rem 0.5rem;
+    padding: 0.2rem 0.55rem;
     border-radius: 999px;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
     color: var(--color-text-light);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    line-height: 1.2;
+    transition: background-color 120ms, color 120ms, border-color 120ms;
   }
+  .filter-chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text);
+  }
+  .filter-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .filter-chip[aria-pressed="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+  .filter-chip[aria-pressed="true"]:hover {
+    /* stay pressed on hover — otherwise the hover rule undoes the selection */
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+  .filter-chip .chip-count {
+    font-size: 0.6875rem;
+    opacity: 0.8;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Empty-state row that the inline script reveals when no entries match
+     the active filter combination. */
+  .corrections-empty {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--color-border);
+    border-radius: 0.75rem;
+    color: var(--color-text-light);
+    font-size: 0.9375rem;
+  }
+  .corrections-empty[hidden] { display: none; }
 </style>
 
 <article>
@@ -838,29 +884,86 @@ const correctionListJsonLd = {
         <div class="summary-label">Primary-source backed</div>
       </div>
     </div>
-    <div class="correction-filters" aria-label="Correction severity and topic distribution">
-      <strong>By topic:</strong>
-      <div class="filter-group">
-        <span class="filter-group-label">Regulation / Statute</span>
-        <span class="filter-chip">{counts.category.regulation}</span>
+    <div
+      class="correction-filters"
+      role="group"
+      aria-label="Filter corrections by severity or topic"
+      data-corrections-filter-root
+    >
+      <strong>Severity:</strong>
+      <div class="filter-group" data-filter-group="severity">
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-severity=""
+          aria-pressed="true"
+        >All<span class="chip-count">{totalCorrections}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-severity="critical"
+          aria-pressed="false"
+        >Critical<span class="chip-count">{counts.severity.critical}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-severity="material"
+          aria-pressed="false"
+        >Material<span class="chip-count">{counts.severity.material}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-severity="minor"
+          aria-pressed="false"
+        >Minor<span class="chip-count">{counts.severity.minor}</span></button>
       </div>
-      <div class="filter-group">
-        <span class="filter-group-label">Compliance Guide</span>
-        <span class="filter-chip">{counts.category.compliance}</span>
-      </div>
-      <div class="filter-group">
-        <span class="filter-group-label">City Guide</span>
-        <span class="filter-chip">{counts.category['city-guide']}</span>
-      </div>
-      <div class="filter-group">
-        <span class="filter-group-label">Operator Data</span>
-        <span class="filter-chip">{counts.category['operator-data']}</span>
-      </div>
-      <div class="filter-group">
-        <span class="filter-group-label">Cross-reference</span>
-        <span class="filter-chip">{counts.category['cross-reference']}</span>
+      <strong>Topic:</strong>
+      <div class="filter-group" data-filter-group="category">
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category=""
+          aria-pressed="true"
+        >All<span class="chip-count">{totalCorrections}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category="regulation"
+          aria-pressed="false"
+        >Regulation<span class="chip-count">{counts.category.regulation}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category="compliance"
+          aria-pressed="false"
+        >Compliance<span class="chip-count">{counts.category.compliance}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category="city-guide"
+          aria-pressed="false"
+        >City Guide<span class="chip-count">{counts.category['city-guide']}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category="operator-data"
+          aria-pressed="false"
+        >Operator Data<span class="chip-count">{counts.category['operator-data']}</span></button>
+        <button
+          type="button"
+          class="filter-chip"
+          data-filter-category="cross-reference"
+          aria-pressed="false"
+        >Cross-reference<span class="chip-count">{counts.category['cross-reference']}</span></button>
       </div>
     </div>
+    <p
+      class="corrections-empty"
+      role="status"
+      aria-live="polite"
+      data-corrections-empty
+      hidden
+    >No corrections match this combination. <button type="button" class="filter-chip" data-corrections-reset>Clear filters</button></p>
   </section>
 
   <Callout title="How to use this page" type="info">
@@ -873,7 +976,12 @@ const correctionListJsonLd = {
       const sev = severityMeta[c.severity];
       const cat = categoryMeta[c.category];
       return (
-        <article class="correction-entry" id={c.slug}>
+        <article
+          class="correction-entry"
+          id={c.slug}
+          data-severity={c.severity}
+          data-category={c.category}
+        >
           <div class="correction-tags">
             <span class={`correction-tag ${sev.tone}`} title={sev.description}>{sev.label}</span>
             <span class={`correction-tag ${cat.tone}`}>{cat.label}</span>
@@ -956,4 +1064,132 @@ const correctionListJsonLd = {
     <p style="margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-light);">Last updated: {today}. This page is the canonical source for corrections published on mainedispensaryguide.com.</p>
   </section>
 </article>
+
+<script>
+  // Corrections-log filter: two-axis (severity x category) interactive
+  // filter. No framework, no build. State is two strings — current
+  // severity + current category — kept on the root element as
+  // data-active-* so URLs can be deep-linked and the DOM stays the
+  // source of truth. Entries are hidden via the standard `hidden`
+  // attribute so they remain in the DOM (and screen-reader-accessible
+  // when re-shown) without layout flicker.
+
+  type FilterState = { severity: string; category: string };
+
+  function readState(root: HTMLElement): FilterState {
+    return {
+      severity: root.dataset.activeSeverity ?? '',
+      category: root.dataset.activeCategory ?? '',
+    };
+  }
+
+  function applyFilter(root: HTMLElement): void {
+    const state = readState(root);
+    const entries = root.querySelectorAll<HTMLElement>('.correction-entry');
+    let visible = 0;
+    entries.forEach((entry) => {
+      const matchSeverity = !state.severity || entry.dataset.severity === state.severity;
+      const matchCategory = !state.category || entry.dataset.category === state.category;
+      const show = matchSeverity && matchCategory;
+      entry.hidden = !show;
+      if (show) visible++;
+    });
+
+    const empty = document.querySelector<HTMLElement>('[data-corrections-empty]');
+    if (empty) empty.hidden = visible !== 0;
+
+    // Reflect pressed state on every chip so keyboard focus + visual
+    // state are in sync.
+    root.querySelectorAll<HTMLButtonElement>('[data-filter-severity]').forEach((btn) => {
+      const v = btn.dataset.filterSeverity ?? '';
+      btn.setAttribute('aria-pressed', String(v === state.severity));
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-filter-category]').forEach((btn) => {
+      const v = btn.dataset.filterCategory ?? '';
+      btn.setAttribute('aria-pressed', String(v === state.category));
+    });
+
+    // Announce the resulting view count for screen-reader users. The
+    // empty-state <p> already has aria-live=polite and is toggled via
+    // the [hidden] attribute above, so when no entries match the
+    // announcement is automatic.
+    if (visible > 0) {
+      const activeSeverity = state.severity ? `severity=${state.severity}` : 'all severities';
+      const activeCategory = state.category ? `topic=${state.category}` : 'all topics';
+      // Set a status message that screen readers will announce on the
+      // next focus, without polluting the visible DOM.
+      let status = document.getElementById('corrections-filter-status');
+      if (!status) {
+        status = document.createElement('p');
+        status.id = 'corrections-filter-status';
+        status.setAttribute('role', 'status');
+        status.setAttribute('aria-live', 'polite');
+        status.className = 'corrections-sr-only';
+        document.body.appendChild(status);
+      }
+      status.textContent = `Showing ${visible} of ${entries.length} corrections (${activeSeverity}, ${activeCategory}).`;
+    }
+  }
+
+  function init(): void {
+    const root = document.querySelector<HTMLElement>('[data-corrections-filter-root]');
+    if (!root) return;
+
+    // Initialize active state from pressed-default chips (the "All"
+    // chips are pressed in markup).
+    const allSevBtn = root.querySelector<HTMLButtonElement>('[data-filter-severity][aria-pressed="true"]');
+    const allCatBtn = root.querySelector<HTMLButtonElement>('[data-filter-category][aria-pressed="true"]');
+    root.dataset.activeSeverity = allSevBtn?.dataset.filterSeverity ?? '';
+    root.dataset.activeCategory = allCatBtn?.dataset.filterCategory ?? '';
+    applyFilter(root);
+
+    root.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement | null)?.closest<HTMLButtonElement>('button');
+      if (!target) return;
+
+      // Severity chip
+      if (target.hasAttribute('data-filter-severity')) {
+        root.dataset.activeSeverity = target.dataset.filterSeverity ?? '';
+        applyFilter(root);
+        return;
+      }
+      // Category chip
+      if (target.hasAttribute('data-filter-category')) {
+        root.dataset.activeCategory = target.dataset.filterCategory ?? '';
+        applyFilter(root);
+        return;
+      }
+      // Reset (in the empty-state row)
+      if (target.hasAttribute('data-corrections-reset')) {
+        root.dataset.activeSeverity = '';
+        root.dataset.activeCategory = '';
+        applyFilter(root);
+        return;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
+
+<style is:global>
+  /* Visually-hidden status line for the live filter announcement. The
+     script writes to #corrections-filter-status; the rule keeps it out
+     of the visual layout but readable by AT. */
+  .corrections-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
 </Layout>
