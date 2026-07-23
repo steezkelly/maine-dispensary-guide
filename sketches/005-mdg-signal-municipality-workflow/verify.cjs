@@ -56,7 +56,7 @@ for (const [index, source] of scripts.entries()) {
       step: document.querySelector('[data-step].active').dataset.step,
       toast: document.getElementById('toast').textContent
     }));
-    if (paidState.theme !== 'dark' || !paidState.watchOpen || paidState.watchAria !== 'false') throw new Error(`paid preview/theme failed: ${JSON.stringify(paidState)}`);
+    if (paidState.theme !== 'dark' || paidState.watchOpen || paidState.watchAria !== 'true') throw new Error(`paid preview/theme failed: ${JSON.stringify(paidState)}`);
     if (!paidState.condition || paidState.step !== 'alert' || !paidState.alertCopy.includes('newer verified source release')) throw new Error(`alert preview failed: ${JSON.stringify(paidState)}`);
     if (!paidState.toast.includes('no alert was saved or sent')) throw new Error(`prototype boundary toast missing: ${paidState.toast}`);
     await page.screenshot({ path: path.join(__dirname, 'desktop-dark-alert-preview.png'), fullPage: true });
