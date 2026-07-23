@@ -18,9 +18,12 @@ allowed_paths:
   - apps/maine-cannabis/public/images/charts/market-stats/federal-regulatory-tier-list.svg
   - apps/maine-cannabis/public/images/charts/market-stats/280e-cumulative-tax.svg
   - apps/maine-cannabis/public/images/charts/market-stats/state-context-tax-rates.svg
-  - apps/maine-cannabis/public/data/market-stats-chart-sources.json
+  - apps/maine-cannabis/src/data/market-stats/chart-sources.json
+  - apps/maine-cannabis/src/data/market-stats/chart-lookup.ts
   - apps/maine-cannabis/scripts/build/render-market-stats-charts.cjs
   - apps/maine-cannabis/scripts/build/__tests__/render-market-stats-charts.test.cjs
+  - apps/maine-cannabis/src/data/autoRelatedData.json
+  - docs/governance/cards/2026-07-23-market-stats-national-source-rewrites.md
   - apps/maine-cannabis/package.json
 acceptance:
   - node apps/maine-cannabis/src/pages/__tests__/market-stats-national-source-matrix.test.cjs passes with all §8.2 prose assertions
