@@ -3,7 +3,20 @@
 ## Current Score: 100/100 (A) ✅ — 0 ERRORS
 
 **Audit note (2026-06-07):** the "100/100" grade is a self-reported internal label — no machine-verified rubric exists for it. The verifiable signal is "0 typecheck errors / 0 typecheck warnings / 259 hints across 286 files" via `npx astro check` and "4 failing checks / 23 total failures" in the content-health baseline. Both are green.
-|**Last updated: 2026-07-13 EDT (ICA release-1 pilot production verification and measurement-clock closeout)**
+|**Last updated: 2026-07-23 EDT (experiments page Cannabis Claim Graveyard germinated, PR #153 merged to origin/main)**
+
+## 📋 EXPERIMENTS PAGE CANNABIS CLAIM GRAVEYARD (Jul 23, 2026 EDT)
+
+- Germinated the page's queued Cannabis Claim Graveyard seed (Sprint 58 "Seed Shelf Experiments", originally named in the 2026-05-13 launch as the next-move prose; same seed sat for 71 days before this sprint).
+- New artifact-card section "Cannabis Claim Graveyard" on /experiments between the Best Dispensary Detox Box and the next-move paragraph; status-pill `◆ Seventh sprout`; 12 hand-authored rows from a JSON fixture (`apps/maine-cannabis/src/data/experiments-graveyard-rows.json`).
+- Banned-substring sanitizer (`scripts/check/experiments-graveyard-rows.cjs`) enforces no-YMYL posture on every `better` field. Six `node --test` cases fail RED on a placeholder row, pass GREEN on the 12 hand-authored rows. Subagent reviewer flagged one Minor (the row `lab-tested for purity` overlapped a Slop Bingo phrase); fixed by swapping to `cleanest solvent` and re-amending the commit.
+- Cannabis Claim Graveyard moved from `seeds` to `germinated`; new seed entry "Cannabis Coupon Code Translator" (promotional-offer-language verification, non-overlapping with the existing six sprouts); next-move paragraph updated.
+- Two changes outside the experiments page: new JSON fixture file, new sanitizer + test files. No Layout, NOINDEX_PATH_PREFIXES, scripts/check/noindex-source.cjs, content-health scripts, or styling changes. Page remains `noindex={true}` and excluded from the public sitemap.
+- Verification: `npm run verify:iterate` green on autoRelated-freshness, esbuild parse, node --check, astro check (0 errors), sitemap-postprocess, docs-vs-code, compressed-frontmatter, hero-image-naming. Pre-push hook approved the push. GitHub Actions on PR #153: Build, Deploy Preview, Smoke Tests (Preview), Vercel, Vercel Preview Comments all SUCCESS. Merge run on main: Build, Deploy Production, Smoke Tests (Production) all SUCCESS.
+- Path: worktree `/home/steve/.cache/mdg-experiments-claim-graveyard` (cleaned up on merge), branch `feat/experiments-germinate-claim-graveyard-20260723` (deleted on merge), lease `apps/maine-cannabis/src/pages/experiments` (released).
+- Plan: `.hermes/plans/2026-07-23_175337-experiments-page-recon-and-next-move.md`. Workstream backstory: page investigation phase surfaced a 71-day stalled seed pipeline (the seeds/sprout metaphor was the original Sprint 58 design language; the next-move paragraph had been pointing at the same seed without germination); the implementation followed the standard subagent-driven-development pipeline (implementer subagent via `delegate_task` → spec + quality reviewer subagent → minor fix → squash merge via `gh pr merge --squash --delete-branch`).
+- **Mnemosyne:** `561bb74b0e170282` (merge-of-record), `9bb81f61e843cca3` (page context, Sprint 58 lineage), `b17d3a06629bc9ec` invalidated as superseded by `561bb74b`, `6b5c2f17ca04d250` (tier-discipline correction: Hub-entry gate is agent-to-agent coordination, not operator-level).
+
 
 ## Current operational state (live pointer)
 
