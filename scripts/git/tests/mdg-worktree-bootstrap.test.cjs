@@ -101,3 +101,28 @@ test('a newly added worktree does not execute a dependency bootstrap hook', () =
     fs.rmSync(linked, { recursive: true, force: true });
   }
 });
+
+test('installs hooks with a literal hooks path when the repo path contains shell syntax', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-hooks-$('));
+  const repo = path.join(root, 'repo`touch SHOULD_NOT_EXIST`');
+  try {
+    fs.mkdirSync(path.join(repo, '.githooks'), { recursive: true });
+    fs.mkdirSync(path.join(repo, 'scripts', 'git'), { recursive: true });
+    fs.copyFileSync(path.join(repoRoot, '.githooks', 'pre-push'), path.join(repo, '.githooks', 'pre-push'));
+    fs.copyFileSync(path.join(repoRoot, 'scripts', 'git', 'install-hooks.cjs'), path.join(repo, 'scripts', 'git', 'install-hooks.cjs'));
+
+    execFileSync('git', ['-C', repo, 'init', '-q']);
+    execFileSync('git', ['-C', repo, 'config', 'user.name', 'Test User']);
+    execFileSync('git', ['-C', repo, 'config', 'user.email', 'test@example.com']);
+    fs.writeFileSync(path.join(repo, 'seed.txt'), 'seed\n');
+    execFileSync('git', ['-C', repo, 'add', '.']);
+    execFileSync('git', ['-C', repo, 'commit', '-qm', 'fixture']);
+
+    execFileSync(process.execPath, [path.join(repo, 'scripts', 'git', 'install-hooks.cjs')], { cwd: repo });
+
+    assert.equal(execFileSync('git', ['-C', repo, 'config', 'core.hooksPath'], { encoding: 'utf8' }).trim(), path.join(repo, '.git', 'hooks'));
+    assert.equal(fs.existsSync(path.join(root, 'SHOULD_NOT_EXIST')), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});

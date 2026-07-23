@@ -9,7 +9,7 @@
  * Usage:  node scripts/git/install-hooks.cjs
  */
 
-const { execSync } = require('child_process');
+const { execFileSync, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -50,7 +50,7 @@ const current = (() => {
 if (current === HOOKS_DIR) {
     console.log(`[install-hooks] core.hooksPath already set to ${HOOKS_DIR} ✓`);
 } else {
-    execSync(`git config core.hooksPath ${JSON.stringify(HOOKS_DIR)}`, { cwd: REPO_ROOT, stdio: 'inherit' });
+    execFileSync('git', ['config', 'core.hooksPath', HOOKS_DIR], { cwd: REPO_ROOT, stdio: 'inherit' });
     console.log(`[install-hooks] core.hooksPath set to ${HOOKS_DIR} ✓`);
 }
 
