@@ -4,7 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 // Routes excluded by configuration regardless of source-file contents.
-const NOINDEX_PATH_PREFIXES = ['/experiments', '/search', '/admin/'];
+// `/signal` is added 2026-07-23: MDG Signal is a read-only research
+// surface (a vertical slice of MDG-DATA with primary-source attribution)
+// that should not be indexed by search engines until at least one
+// external operator reaction is recorded. See docs/audits/mdg-signal-slice-dark-spots-2026-07-23.md.
+const NOINDEX_PATH_PREFIXES = ['/experiments', '/search', '/admin/', '/signal'];
 
 function sourcePathForRoute(route, pagesDir) {
   const pathname = route.replace(/\/$/, '') || '/';

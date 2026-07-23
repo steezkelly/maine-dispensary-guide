@@ -2,6 +2,7 @@
 import SignalLayout from '../../layouts/SignalLayout.astro';
 import manifest from '../../data/signal/manifest';
 import { SIGNAL_PAGE_MODEL } from '../../data/generated/signal/current';
+import RelatedSignal from '../../components/signal/RelatedSignal.astro';
 
 const title = `MDG Signal — Maine cannabis research workspace`;
 const description = `Read-only research view of the current MDG-DATA release: license concentration per municipality, ACS 2024 population density, and source evidence for Maine cannabis.`;
@@ -14,7 +15,7 @@ const topByCount = [...all].sort((a, b) => b.licenses - a.licenses).slice(0, 5);
 const topByDensity = [...all].sort((a, b) => b.density - a.density).slice(0, 5);
 const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'partial' || ds.state === 'not_ready');
 ---
-<SignalLayout title={title} description={description}>
+<SignalLayout title={title} description={description} city={null}>
   <section>
     <p class="eyebrow">MDG Signal · read-only vertical slice</p>
     <h1>Research Maine cannabis license concentration from the current release.</h1>
@@ -114,4 +115,6 @@ const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'parti
       {manifest.prototypeBoundary}
     </p>
   </footer>
+
+  <RelatedSignal />
 </SignalLayout>

@@ -2,6 +2,7 @@
 import SignalLayout from '../../../layouts/SignalLayout.astro';
 import manifest from '../../../data/signal/manifest';
 import { SIGNAL_PAGE_MODEL } from '../../../data/generated/signal/current';
+import RelatedSignal from '../../../components/signal/RelatedSignal.astro';
 
 export function getStaticPaths() {
   return SIGNAL_PAGE_MODEL.municipalities.map((m) => ({ params: { municipality: m.slug }, props: { municipality: m } }));
@@ -17,7 +18,7 @@ const title = `${municipality.city}, Maine — MDG Signal`;
 const description = `${municipality.city} research view: ${municipality.licenses} active store licenses, ${municipality.population.toLocaleString()} residents (ACS ${municipality.acsVintage}), ${municipality.density.toFixed(2)} per 10K.`;
 const datasets = manifest.datasets;
 ---
-<SignalLayout title={title} description={description} selected={municipality.city}>
+<SignalLayout title={title} description={description} selected={municipality.city} city={municipality}>
   <section>
     <p class="eyebrow">geoid {municipality.geoid} · MDG Signal municipality research</p>
     <h1>{municipality.city}, Maine</h1>
@@ -50,8 +51,8 @@ const datasets = manifest.datasets;
           </tr>
         </thead>
         <tbody>
-          <tr data-subject={municipality.slug}>
-            <th scope="row"><strong>{municipality.city} (subject)</strong></th>
+          <tr data-subject={municipality.slug} id="subjectRow">
+            <th scope="row"><strong id="subjectName">{municipality.city} (subject)</strong></th>
             <td>{municipality.licenses}</td>
             <td>{municipality.density.toFixed(2)}</td>
             <td><div class="bar" aria-hidden="true"><span style={`width:${((municipality.licenses / maxLicenses) * 100).toFixed(1)}%`}></span></div></td>
@@ -68,36 +69,26 @@ const datasets = manifest.datasets;
           ))}
         </tbody>
       </table>
+      <div style="margin-top:14px;">
+        <p class="eyebrow" style="margin:0 0 6px;">Swap the third peer</p>
+        <ul style="list-style:none; padding:0; display:flex; gap:8px; flex-wrap:wrap;">
+          {peers.length > 0 && all.filter((m) => m.slug !== municipality.slug && !peers.some((p) => p.slug === m.slug)).slice(0, 4).map((m) => (
+            <li>
+              <button
+                type="button"
+                class="button"
+                data-pool-entry={m.slug}
+                data-pool-licenses={String(m.licenses)}
+                data-pool-density={String(m.density)}
+              >Swap to {m.city}</button>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button
-          type="button"
-          class="button"
-          data-signal-event="peer_add"
-          data-signal-label={municipality.city}
-          data-signal-section="comparison"
-          aria-label={`Add another peer to ${municipality.city} comparison`}
-        >Add peer</button>
-        <button
-          type="button"
-          class="button"
-          data-open-drawer="evidence"
-          aria-haspopup="dialog"
-          aria-controls="evidenceDrawer"
-        >Inspect source &amp; freshness</button>
-        <button
-          type="button"
-          class="button preview"
-          data-open-drawer="watchlist"
-          aria-haspopup="dialog"
-          aria-controls="watchDrawer"
-        >Preview watchlist (proposed paid)</button>
-        <button
-          type="button"
-          class="button preview"
-          data-open-drawer="alert"
-          aria-haspopup="dialog"
-          aria-controls="alertDrawer"
-        >Preview change alert (proposed paid)</button>
+        <button type="button" class="button" data-open-drawer="evidence" aria-haspopup="dialog" aria-controls="evidenceDrawer">Inspect source &amp; freshness</button>
+        <button type="button" class="button preview" data-open-drawer="watchlist" aria-haspopup="dialog" aria-controls="watchDrawer">Preview watchlist (proposed paid)</button>
+        <button type="button" class="button preview" data-open-drawer="alert" aria-haspopup="dialog" aria-controls="alertDrawer">Preview change alert (proposed paid)</button>
       </div>
     </div>
   </section>
@@ -236,6 +227,29 @@ const datasets = manifest.datasets;
     <p class="footnote">
       {datasets.changeAlerts.description}
     </p>
+
+    <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+      <button
+        type="button"
+        class="button"
+        data-signal-alert-condition="refresh"
+        data-default="true"
+        aria-pressed="true"
+      >Source refresh</button>
+      <button
+        type="button"
+        class="button"
+        data-signal-alert-condition="license"
+        aria-pressed="false"
+      >License-count change</button>
+      <button
+        type="button"
+        class="button"
+        data-signal-alert-condition="data"
+        aria-pressed="false"
+      >Data-state change</button>
+    </div>
+    <p class="footnote" style="margin-top:10px;"><span id="alertCopy">When MDG publishes a newer verified source release for {municipality.city}, a notice would identify the new data date, fetch date, source, and any affected metrics.</span></p>
   </aside>
 
   <footer class="evidence" aria-label="Source evidence">
@@ -247,51 +261,11 @@ const datasets = manifest.datasets;
     </p>
   </footer>
 
-  <script is:inline>
-    (function () {
-      try {
-        function open(id) {
-          var el = document.getElementById(id);
-          if (!el) return;
-          el.setAttribute('aria-hidden', 'false');
-          el.classList.add('open');
-          var closeBtn = el.querySelector('[data-close-drawer]');
-          if (closeBtn) closeBtn.focus();
-        }
-        function close(el) {
-          if (!el) return;
-          el.setAttribute('aria-hidden', 'true');
-          el.classList.remove('open');
-        }
-        function init() {
-          document.querySelectorAll('[data-open-drawer]').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-              var target = btn.getAttribute('data-open-drawer');
-              var map = { evidence: 'evidenceDrawer', watchlist: 'watchDrawer', alert: 'alertDrawer' };
-              if (map[target]) open(map[target]);
-            });
-          });
-          document.querySelectorAll('[data-close-drawer]').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-              var drawer = btn.closest('.drawer');
-              close(drawer);
-              var opener = document.querySelector('[data-open-drawer][aria-controls="' + drawer.id + '"]');
-              if (opener) opener.focus();
-            });
-          });
-          document.addEventListener('keydown', function (event) {
-            if (event.key !== 'Escape') return;
-            var open = document.querySelector('.drawer[aria-hidden="false"]');
-            if (open) {
-              close(open);
-              var opener = document.querySelector('[data-open-drawer][aria-controls="' + open.id + '"]');
-              if (opener) opener.focus();
-            }
-          });
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-        else init();
-      } catch (_) {}
-    })();
+  <RelatedSignal slug={municipality.slug} city={municipality.city} />
+
+  <div id="toast" role="status" aria-live="polite" data-visible="false" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 16px;border-radius:8px;background:var(--ink);color:var(--paper);font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity 180ms ease;pointer-events:none;z-index:40;"></div>
+
+  <script>
+    import '../../../components/signal/workspace-client.js';
   </script>
 </SignalLayout>

@@ -80,8 +80,24 @@ test('escapeXml: idempotent on already-escaped input', () => {
   assert.equal(escapeXml('&amp;'), '&amp;amp;');
 });
 
-test('NOINDEX_PATH_PREFIXES: contains the 3 known prefixes', () => {
-  assert.deepEqual(NOINDEX_PATH_PREFIXES, ['/experiments', '/search', '/admin/']);
+test('NOINDEX_PATH_PREFIXES: contains the 4 known prefixes (incl. /signal)', () => {
+  // 2026-07-23: /signal was added for the MDG Signal vertical slice
+  // (read-only research surface that should not be indexed until at
+  // least one external operator reaction is recorded). See
+  // docs/audits/mdg-signal-slice-dark-spots-2026-07-23.md.
+  assert.deepEqual(NOINDEX_PATH_PREFIXES, ['/experiments', '/search', '/admin/', '/signal']);
+});
+
+test('isNoindexSource: /signal matches prefix', () => {
+  // Same as the other prefix tests — even with no source file, the
+  // prefix alone is sufficient to mark the route as noindex.
+  assert.equal(isNoindexSource('/nonexistent', '/signal'), true);
+});
+
+test('isNoindexSource: /signal/portland matches prefix', () => {
+  // The dynamic per-municipality page also resolves to noindex via the
+  // /signal prefix.
+  assert.equal(isNoindexSource('/nonexistent', '/signal/portland'), true);
 });
 
 test('isNoindexSource: /404 is always noindex', () => {

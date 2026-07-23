@@ -7,6 +7,16 @@
  * `.signal-scope` root so the page stays visually separate from the
  * Maine Dispensary Guide chrome.
  *
+ * Indexability policy (dark-spot #2 from 2026-07-23 self-critique):
+ *   - Default: noindex,nofollow until the operator flips the promotion
+ *     flag (set the `?promoted=true` URL parameter, or remove this
+ *     meta tag, after at least one external operator reaction is
+ *     recorded and the card t_8dc65ba5 reactions-loop threshold is met).
+ *   - The `noindex` meta tag is automatically picked up by the
+ *     sitemap-postprocess script (scripts/check/sitemap-postprocess.mjs
+ *     `isNoindexSource` regex), which means the pages also stay out of
+ *     the public sitemap.
+ *
  * The Astro /signal/ pages include this layout instead of the main Layout
  * because MDG Signal is a research product, not a guide. We do NOT carry
  * the SiteHeader/SiteFooter because the prototype explicitly framed the
@@ -14,14 +24,40 @@
  */
 import SignalIntentTracker from '../components/SignalIntentTracker.astro';
 import manifest from '../data/signal/manifest';
+import { buildSignalJsonLd } from '../lib/json-ld-signal';
 
 interface Props {
   title: string;
   description: string;
   selected?: string | null;
+  city?: import('../data/generated/signal/current').SignalPageModel['municipalities'][number] | null;
 }
-const { title, description, selected = null } = Astro.props as Props;
+const { title, description, selected = null, city = null } = Astro.props as Props;
 const evidence = manifest.evidence;
+
+// Astro.url gives us the absolute page URL without needing a base href.
+// We use it for stable WebPage @id / url references in the JSON-LD graph.
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://mainedispensaryguide.com').toString();
+
+// Promotion flag: pages are noindex,nofollow by default. Pass
+// `?promoted=true` on a URL once the operator has approved production
+// indexing. Otherwise the prototype stays out of search engines.
+const isPromoted = Astro.url.searchParams.get('promoted') === 'true';
+const robotsContent = isPromoted ? 'index,follow' : 'noindex,nofollow';
+
+// JSON-LD: Organization + WebSite + Dataset + WebPage graph. Built at
+// SSR time so the page works without JavaScript and is fully testable
+// from a focused unit test (src/lib/__tests__/json-ld-signal.test.cjs).
+const orgConfig = {
+  siteName: 'Maine Dispensary Guide',
+  siteUrl: Astro.site?.toString().replace(/\/$/, '') ?? 'https://mainedispensaryguide.com',
+  socialLinks: ['https://mainedispensaryguide.com/about'],
+};
+const jsonLd = buildSignalJsonLd(
+  orgConfig,
+  evidence,
+  { pageUrl, city },
+);
 ---
 <!doctype html>
 <html lang="en">
@@ -30,7 +66,7 @@ const evidence = manifest.evidence;
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <meta name="robots" content="index,follow" />
+  <meta name="robots" content={robotsContent} />
   <meta name="mdg-signal:release" content={evidence.releaseId} />
   <meta name="mdg-signal:data-as-of" content={evidence.ocpDataAsOf} />
   <meta name="mdg-signal:acs-vintage" content={String(evidence.acsVintage)} />
@@ -144,10 +180,16 @@ const evidence = manifest.evidence;
     .signal-scope .drawer .preview-note { margin-top: 18px; padding: 12px 14px; background: color-mix(in srgb, var(--bronze) 12%, var(--paper-strong)); border: 1px solid color-mix(in srgb, var(--bronze) 45%, var(--line)); border-radius: var(--radius-sm); color: var(--ink); font-size: 13px; }
     .signal-scope .footnote { color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
     .signal-scope footer.evidence { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+    .signal-scope[data-theme="dark"] { --paper: #102019; --paper-strong: #182b22; --paper-soft: #23372e; --ink: #f5f0e5; --ink-soft: #b9c2bc; --spruce: #a8ceb8; --spruce-2: #c3ddcc; --teal: #7bcec2; --bronze: #dfa574; --line: #3b4e44; }
+    .signal-scope[data-theme="dark"] .topbar { background: color-mix(in srgb, var(--paper-strong) 94%, transparent); }
+    .signal-scope .theme-toggle { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-strong); color: var(--ink); font-weight: 600; }
+    .signal-scope .theme-toggle:hover { border-color: var(--teal); }
+    .signal-scope #toast[data-visible="true"] { opacity: 1; }
     @media (prefers-reduced-motion: reduce) {
       .signal-scope .drawer { transition: none; }
     }
   </style>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline></script>
 </head>
 <body>
   <div class="signal-scope">
@@ -162,6 +204,7 @@ const evidence = manifest.evidence;
       <div class="release" aria-label="Current MDG-DATA release">
         <strong>Release {evidence.releaseId.slice(0, 7)}</strong> · data as of {evidence.ocpDataAsOf}
       </div>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Toggle theme">Dark mode</button>
     </header>
     <main id="main" tabindex="-1">
       <slot />

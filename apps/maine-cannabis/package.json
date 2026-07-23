@@ -56,7 +56,7 @@
     "data:mdg:analytics:derived": "node ./scripts/analytics/ticket010-derived-evidence-state-machine.cjs",
     "data:mdg:analytics:opportunities": "node ./scripts/analytics/ticket011-opportunity-engine.cjs",
     "signal:derive": "node ./scripts/derived/signal-page-model.cjs --emit ./src/data/generated/signal/current.ts",
-    "signal:test": "node --test ./scripts/derived/tests/signal-page-model.test.cjs",
+    "signal:test": "node --test ./scripts/derived/tests/signal-page-model.test.cjs ./src/lib/__tests__/json-ld-signal.test.cjs ./src/components/signal/__tests__/workspace.test.cjs ./src/components/signal/__tests__/RelatedSignal.test.cjs",
     "signal:smoke": "node ./scripts/derived/tests/signal-smoke.test.cjs"
   },
   "dependencies": {

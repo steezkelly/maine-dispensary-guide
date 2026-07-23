@@ -59,7 +59,40 @@ function start() {
       // signal intent events must be wired on research pages
       if (route !== '/') {
         const eventCount = await page.locator('[data-signal-event]').count();
-        if (eventCount < 3) throw new Error(`${route}: expected >=3 data-signal-event elements, got ${eventCount}`);
+        if (eventCount < 2) throw new Error(`${route}: expected >=2 data-signal-event elements (drawers + toast), got ${eventCount}`);
+        // workspace interactivity: alert-condition buttons + pool entries
+        const alertBtnCount = await page.locator('[data-signal-alert-condition]').count();
+        if (alertBtnCount !== 3) throw new Error(`${route}: expected 3 alert-condition buttons, got ${alertBtnCount}`);
+        const poolCount = await page.locator('[data-pool-entry]').count();
+        if (poolCount < 1) throw new Error(`${route}: expected >=1 peer-pool entry, got ${poolCount}`);
+        // toast element exists and starts hidden
+        const toastVisible = await page.evaluate(() => {
+          const el = document.getElementById('toast');
+          return el ? el.getAttribute('data-visible') : 'missing';
+        });
+        if (toastVisible !== 'false') throw new Error(`${route}: #toast must start data-visible=false, got ${toastVisible}`);
+        // click the first pool entry (Swap to <city>) — third peer row should change
+        const thirdPeerBefore = await page.evaluate(() => {
+          const rows = Array.from(document.querySelectorAll('[data-peer]'));
+          return rows.length ? rows[rows.length - 1].getAttribute('data-peer') : null;
+        });
+        await page.locator('[data-pool-entry]').first().click();
+        const thirdPeerAfter = await page.evaluate(() => {
+          const rows = Array.from(document.querySelectorAll('[data-peer]'));
+          return rows.length ? rows[rows.length - 1].getAttribute('data-peer') : null;
+        });
+        if (thirdPeerAfter === thirdPeerBefore) {
+          throw new Error(`${route}: clicking a pool entry should change the third peer slot`);
+        }
+        // toast should now be visible
+        const toastVisibleAfter = await page.evaluate(() => document.getElementById('toast').getAttribute('data-visible'));
+        if (toastVisibleAfter !== 'true') throw new Error(`${route}: toast should be visible after swap, got ${toastVisibleAfter}`);
+        // alert-condition buttons: clicking License-count change updates #alertCopy
+        const copyBefore = await page.evaluate(() => document.getElementById('alertCopy').textContent);
+        await page.locator('[data-signal-alert-condition="license"]').click();
+        const copyAfter = await page.evaluate(() => document.getElementById('alertCopy').textContent);
+        if (copyBefore === copyAfter) throw new Error(`${route}: license condition click should update alertCopy`);
+        if (!copyAfter.includes('old and new license counts')) throw new Error(`${route}: alert copy did not change to license text, got: ${copyAfter}`);
       }
       // drawer toggle on a research page only
       if (route !== '/') {
