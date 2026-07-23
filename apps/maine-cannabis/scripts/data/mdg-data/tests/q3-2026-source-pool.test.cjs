@@ -20,6 +20,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const REPO = path.resolve(__dirname, '..', '..', '..', '..', '..', '..');
 // __dirname = .../apps/maine-cannabis/scripts/data/mdg-data/tests
@@ -44,6 +45,26 @@ function readRepoFile(rel) {
 check('docs/research/q3-2026-INDEX.md exists', () => {
     assert.ok(existsRepoRelative('docs/research/q3-2026-INDEX.md'),
         'missing docs/research/q3-2026-INDEX.md');
+});
+
+check('q3-2026-INDEX.md distinguishes CSV file lines from data rows', () => {
+    const txt = readRepoFile('docs/research/q3-2026-INDEX.md');
+    const expectedCounts = [
+        ['ocp-au-licenses-2026-06-01.csv', 1584, 1583],
+        ['ocp-med-caregivers-2026-06-01.csv', 1415, 1414],
+        ['ocp-med-establishments-2026-06-01.csv', 805, 804],
+    ];
+
+    for (const [file, fileLines, dataRows] of expectedCounts) {
+        const indexLine = txt.split('\n').find(line => line.includes(file));
+        assert.ok(indexLine, `q3-2026-INDEX.md missing ${file}`);
+        assert.ok(indexLine.includes(`${fileLines.toLocaleString('en-US')} file lines`),
+            `${file} index entry should state ${fileLines.toLocaleString('en-US')} file lines`);
+        assert.ok(indexLine.includes(`${dataRows.toLocaleString('en-US')} data rows + header`),
+            `${file} index entry should state ${dataRows.toLocaleString('en-US')} data rows + header`);
+        assert.ok(!/raw rows/i.test(indexLine),
+            `${file} index entry must not use ambiguous "raw rows" terminology`);
+    }
 });
 
 check('docs/research/q3-2026-source-pool.md exists', () => {
@@ -143,6 +164,29 @@ for (const [rel, label] of DATA_FILES) {
         assert.ok(stat.size > 0, `${rel} is empty (0 bytes)`);
     });
 }
+
+check('MRS May 2026 XLSX worksheet dimension covers populated cells', () => {
+    const rel = 'apps/maine-cannabis/docs/research/q3-2026-data/mrs-may-2026-cannabis-sales.xlsx';
+    const sheetXml = execFileSync('unzip', ['-p', path.join(REPO, rel), 'xl/worksheets/sheet1.xml'], {
+        encoding: 'utf8',
+        maxBuffer: 4 * 1024 * 1024,
+    });
+    const dimension = sheetXml.match(/<dimension[^>]*ref="([^"]+)"/);
+    assert.ok(dimension, 'MRS XLSX sheet1.xml is missing a worksheet dimension');
+    assert.ok(/^A1:[A-Z]+[1-9][0-9]*$/.test(dimension[1]),
+        `MRS XLSX worksheet dimension should cover its populated range, got ${dimension[1]}`);
+
+    const cellRefs = [...sheetXml.matchAll(/<c[^>]* r="([A-Z]+)([0-9]+)"/g)];
+    assert.ok(cellRefs.length > 0, 'MRS XLSX sheet1.xml contains no cell references');
+    const columnNumber = label => [...label].reduce((total, char) => total * 26 + char.charCodeAt(0) - 64, 0);
+    const dimensionEnd = dimension[1].match(/^A1:([A-Z]+)([0-9]+)$/);
+    const maxColumn = Math.max(...cellRefs.map(match => columnNumber(match[1])));
+    const maxRow = Math.max(...cellRefs.map(match => Number(match[2])));
+    assert.equal(columnNumber(dimensionEnd[1]), maxColumn,
+        `MRS XLSX worksheet dimension ends at column ${dimensionEnd[1]}, but populated cells reach column number ${maxColumn}`);
+    assert.equal(Number(dimensionEnd[2]), maxRow,
+        `MRS XLSX worksheet dimension ends at row ${dimensionEnd[2]}, but populated cells reach row ${maxRow}`);
+});
 
 check('MRS May 2026 CSV contains the Medical and Adult-use columns and Year/Month rows', () => {
     const txt = readRepoFile('apps/maine-cannabis/docs/research/q3-2026-data/mrs-may-2026-cannabis-sales.csv');
