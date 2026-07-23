@@ -80,6 +80,15 @@ jobs:
       - name: Test market-stats video no-autoplay contract
         run: npm run test:market-stats-video
 
+      # Regenerate the MDG Signal page model from MDG-DATA before the
+      # type check and build, so a refreshed MDG-DATA release can ship
+      # without breaking the type references in /signal/ pages. The
+      # generated file is also committed (see .gitignore) so this step
+      # is a no-op on a clean checkout.
+      - name: Derive MDG Signal page model
+        run: npm --workspace @network/maine-cannabis run signal:derive
+        continue-on-error: false
+
       - name: Type check
         run: npx astro check
 
