@@ -39,7 +39,7 @@ const base = {
 test('buildRelatedSignal: city subject links to its dispensary guide', () => {
   const out = buildRelatedSignal({ ...base, slug: 'portland', city: 'Portland' });
   const hrefs = out.links.map((l) => l.href);
-  assert.ok(hrefs.includes('/guides/portland-dispensary-guide/'),
+  assert.ok(hrefs.includes('/guides/portland-dispensary-guide'),
     `expected city guide link; got ${JSON.stringify(hrefs)}`);
 });
 
@@ -60,7 +60,7 @@ test('buildRelatedSignal: always links to the canonical MDG surfaces', () => {
 test('buildRelatedSignal: city slug is slugified (South Portland → south-portland)', () => {
   const out = buildRelatedSignal({ ...base, slug: 'south-portland', city: 'South Portland' });
   const cityGuide = out.links.find((l) => l.href.includes('-dispensary-guide'));
-  assert.equal(cityGuide.href, '/guides/south-portland-dispensary-guide/');
+  assert.equal(cityGuide.href, '/guides/south-portland-dispensary-guide');
 });
 
 test('buildRelatedSignal: when city does not have a guide, the city-guide link is omitted', () => {

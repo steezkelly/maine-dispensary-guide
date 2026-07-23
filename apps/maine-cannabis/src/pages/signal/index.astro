@@ -5,7 +5,7 @@ import { SIGNAL_PAGE_MODEL } from '../../data/generated/signal/current';
 import RelatedSignal from '../../components/signal/RelatedSignal.astro';
 
 const title = `MDG Signal — Maine cannabis research workspace`;
-const description = `Read-only research view of the current MDG-DATA release: license concentration per municipality, ACS 2024 population density, and source evidence for Maine cannabis.`;
+const description = `Read-only research view of the current MDG-DATA release: license concentration per Maine municipality, ACS 2024 density, and source evidence.`;
 
 const datasets = manifest.datasets;
 const release = manifest.evidence;
@@ -44,7 +44,7 @@ const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'parti
         <li class="card">
           <p class="eyebrow">geoid {m.geoid}</p>
           <h2 style="margin:6px 0 4px;">
-            <a href={`/signal/${m.slug}/`}>{m.city}, Maine</a>
+            <a href={`/signal/${m.slug}`}>{m.city}, Maine</a>
           </h2>
           <p class="footnote" style="margin:0 0 10px;">
             {m.licenses} active store licenses · {m.population.toLocaleString()} residents
@@ -85,7 +85,7 @@ const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'parti
           <thead><tr><th>City</th><th>Licenses</th></tr></thead>
           <tbody>
             {topByCount.map((m) => (
-              <tr><td><a href={`/signal/${m.slug}/`}>{m.city}</a></td><td>{m.licenses}</td></tr>
+              <tr><td><a href={`/signal/${m.slug}`}>{m.city}</a></td><td>{m.licenses}</td></tr>
             ))}
           </tbody>
         </table>
@@ -96,7 +96,7 @@ const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'parti
           <thead><tr><th>City</th><th>Per 10K</th></tr></thead>
           <tbody>
             {topByDensity.map((m) => (
-              <tr><td><a href={`/signal/${m.slug}/`}>{m.city}</a></td><td>{m.density.toFixed(2)}</td></tr>
+              <tr><td><a href={`/signal/${m.slug}`}>{m.city}</a></td><td>{m.density.toFixed(2)}</td></tr>
             ))}
           </tbody>
         </table>

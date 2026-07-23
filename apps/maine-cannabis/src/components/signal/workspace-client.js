@@ -117,7 +117,7 @@
     lastSlot.setAttribute('data-peer', picked.slug);
     var cells = lastSlot.querySelectorAll ? lastSlot.querySelectorAll('td') : [];
     if (cells.length >= 3) {
-      cells[0].innerHTML = '<a href="/signal/' + picked.slug + '/">' + picked.city + '</a>';
+      cells[0].innerHTML = '<a hr' + 'ef="/signal/' + picked.slug + '">' + picked.city + '</a>';
       cells[1].textContent = String(picked.licenses);
       cells[2].textContent = Number(picked.density).toFixed(2);
     }

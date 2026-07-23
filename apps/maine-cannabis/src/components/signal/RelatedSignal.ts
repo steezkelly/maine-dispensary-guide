@@ -59,9 +59,10 @@ function cityGuideHref(slug: string): string | null {
   // content corpus has dispensary guides for ~109 cities; this list is
   // restricted to the 11 currently in the Signal slice so we never
   // surface a dead link to a city page that does not exist.
+  // trailingSlash is 'never' on the project — omit the trailing slash.
   if (!slug) return null;
   if (!Object.prototype.hasOwnProperty.call(CITY_GUIDES, slug)) return null;
-  return `/guides/${slug}-dispensary-guide/`;
+  return `/guides/${slug}-dispensary-guide`;
 }
 
 export function buildRelatedSignal(input: RelatedSignalInput): RelatedSignalOutput {

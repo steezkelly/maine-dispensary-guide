@@ -60,7 +60,7 @@ const datasets = manifest.datasets;
           </tr>
           {peers.map((peer) => (
             <tr data-peer={peer.slug}>
-              <th scope="row"><a href={`/signal/${peer.slug}/`}>{peer.city}</a></th>
+              <th scope="row"><a href={`/signal/${peer.slug}`}>{peer.city}</a></th>
               <td>{peer.licenses}</td>
               <td>{peer.density.toFixed(2)}</td>
               <td><div class="bar" aria-hidden="true"><span style={`width:${((peer.licenses / maxLicenses) * 100).toFixed(1)}%`}></span></div></td>
@@ -150,7 +150,7 @@ const datasets = manifest.datasets;
     <div class="field"><strong>Source IDs</strong><span>{evidence.sourceIds.join(', ')}</span></div>
     <div class="field">
       <strong>Methodology</strong>
-      <span><a href="/data/methodology/retail-licenses-by-municipality">retail-licenses-by-municipality</a></span>
+      <span>retail-licenses-by-municipality</span>
     </div>
     <p class="footnote">
       {datasets.licensesByMunicipality.description}

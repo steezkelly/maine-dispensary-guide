@@ -143,10 +143,14 @@ export function buildSignalJsonLd(
           : 'MDG Signal index (HTML)',
       },
       {
+        // Methodology lives in the MDG-DATA product meta; reference it
+        // by the same shape every MDG-DATA product uses (the path
+        // /data/methodology/<product-slug> is the canonical public
+        // methodology surface — see retail-licenses-by-municipality.meta.json).
         '@type': 'DataDownload',
         encodingFormat: 'application/json',
-        contentUrl: `${siteUrl}/data/methodology/retail-licenses-by-municipality`,
-        name: 'retail-licenses-by-municipality methodology',
+        contentUrl: 'https://mainedispensaryguide.com/data/methodology/retail-licenses-by-municipality',
+        name: 'retail-licenses-by-municipality methodology (MDG-DATA meta)',
       },
     ],
   });
