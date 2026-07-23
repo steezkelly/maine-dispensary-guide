@@ -374,6 +374,55 @@ function eventNames(events) {
   return events.map((event) => event[1]);
 }
 
+test('v1 partner referral emits only for explicitly marked dispensary handoffs', async (t) => {
+  const http = require('node:http');
+  const { chromium } = require('playwright');
+  const script = analyticsScript();
+  const events = [];
+  const server = http.createServer((_request, response) => {
+    response.writeHead(200, { 'content-type': 'text/html' });
+    response.end(`<!doctype html><html><head><title>Referral test</title></head><body data-page-type="test">
+      <a id="dispensary" onclick="return false" data-cta-id="cta-referral-lifted" data-referral-kind="dispensary" data-partner-id="lifted-cannabis-maine" data-referral-surface="operator-profile" href="https://dispensary.example/menu">Visit dispensary</a>
+      <a id="citation" onclick="return false" data-cta-id="cta-source-ocp" href="https://www.maine.gov/dafs/ocp/">OCP source</a>
+      <a id="map" onclick="return false" data-cta-id="cta-map-portland" href="https://www.google.com/maps/search/?api=1&query=dispensary">Map</a>
+      <a id="vendor" onclick="return false" data-cta-id="cta-vendor-pos" href="https://vendor.example/">Software vendor</a>
+      <script>window.gtag = (...args) => window.__recordGtag(args); delete window.IntersectionObserver;</script>
+      <script>${script}</script>
+    </body></html>`);
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  const browser = await chromium.launch({ headless: true });
+  t.after(async () => { await browser.close(); });
+  const page = await browser.newPage();
+  await page.exposeBinding('__recordGtag', (_source, args) => events.push(args));
+  await page.goto(origin);
+  for (const id of ['citation', 'map', 'vendor']) {
+    await page.click(`#${id}`);
+  }
+  assert.equal(events.filter((event) => event[1] === 'mdg_partner_referral').length, 0);
+  await page.click('#dispensary');
+  const referral = events.find((event) => event[1] === 'mdg_partner_referral');
+  assert.ok(referral, 'marked dispensary handoff must emit a referral event');
+  assert.deepEqual({
+    schema_version: referral[2].schema_version,
+    transport_type: referral[2].transport_type,
+    partner_id: referral[2].partner_id,
+    referral_kind: referral[2].referral_kind,
+    referral_surface: referral[2].referral_surface,
+  }, {
+    schema_version: 'v1',
+    transport_type: 'beacon',
+    partner_id: 'lifted-cannabis-maine',
+    referral_kind: 'dispensary',
+    referral_surface: 'operator-profile',
+  });
+  assert.equal('href' in referral[2], false);
+  assert.equal('link_url' in referral[2], false);
+  assert.equal('link_text' in referral[2], false);
+});
+
 test('v1 browser instrumentation preserves native actions and enforces dwell, activity, and canonical paths', async (t) => {
   const http = require('node:http');
   const { chromium } = require('playwright');

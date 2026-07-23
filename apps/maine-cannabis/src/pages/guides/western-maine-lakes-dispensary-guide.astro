@@ -124,7 +124,7 @@ const totalStores = towns.reduce((sum, town) => sum + town.adultUseStores.length
                 {store.website && (
                   <>
                     <br />
-                    <a href={store.website} target="_blank" rel="noopener noreferrer nofollow">Website</a>
+                    <a href={store.website} target="_blank" rel="noopener noreferrer nofollow" data-cta-id={`cta-referral-${store.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} data-action-id={`referral-${store.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} data-action-family="cta_navigate" data-placement-id="directory_list" data-referral-kind="dispensary" data-partner-id={store.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')} data-referral-surface="directory_list">Website</a>
                   </>
                 )}
               </li>
