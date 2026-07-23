@@ -470,6 +470,12 @@ const correctionListJsonLd = {
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(correctionListJsonLd)} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Editorial Corrections Log (RSS)"
+      href="/about/corrections/feed.xml"
+    />
   </Fragment>
 
 <style>
@@ -1181,7 +1187,7 @@ const correctionListJsonLd = {
       <p>When two severity definitions could plausibly apply, the more severe wins. The error log is not the place to be generous to ourselves.</p>
     </details>
 
-    <p style="margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-light);">Last updated: {today}. This page is the canonical source for corrections published on mainedispensaryguide.com.</p>
+    <p style="margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-light);">Last updated: {today}. This page is the canonical source for corrections published on mainedispensaryguide.com. <a href="/about/corrections/feed.xml" rel="alternate" type="application/rss+xml">Subscribe via RSS</a>.</p>
   </section>
 </article>
 
