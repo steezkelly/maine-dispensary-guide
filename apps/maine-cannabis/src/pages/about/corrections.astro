@@ -772,6 +772,80 @@ const correctionListJsonLd = {
     padding-left: 1.25rem;
   }
 
+  /* Severity rubric — collapsed by default. The <summary> is the visible
+     label; the table + paragraphs render only when the reader opts in. */
+  .methodology-details {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-bg) 8%);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+  .methodology-details > summary {
+    cursor: pointer;
+    list-style: none;
+    color: var(--color-accent);
+    font-size: 0.9375rem;
+  }
+  .methodology-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .methodology-details > summary::before {
+    content: '+';
+    display: inline-block;
+    width: 1.25rem;
+    margin-right: 0.5rem;
+    color: var(--color-text-light);
+    font-weight: 700;
+  }
+  .methodology-details[open] > summary::before {
+    content: '−';
+  }
+  .methodology-details > summary:hover {
+    text-decoration: underline;
+  }
+  .methodology-details > summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .methodology-details[open] > summary {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .rubric-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    margin: 0.5rem 0 1rem 0;
+  }
+  .rubric-table th,
+  .rubric-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    line-height: 1.5;
+  }
+  .rubric-table th[scope="col"] {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-light);
+    font-weight: 600;
+    background: color-mix(in oklab, var(--color-surface) 70%, var(--color-bg) 30%);
+  }
+  .rubric-table th[scope="row"] {
+    white-space: nowrap;
+    font-weight: 600;
+    width: 9rem;
+  }
+  .rubric-table td a {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
   /* Filter toolbar — clickable buttons that filter the entries list via
      inline <script> below. Each chip's count comes from the same
      counts.* data, and the chip's pressed state is toggled by the
@@ -1061,6 +1135,52 @@ const correctionListJsonLd = {
       <li><strong>No fabrication.</strong> When a house number is unknown or a statute citation is unverified, we say so explicitly in the article — we do not invent a plausible-looking value.</li>
       <li><strong>Reader reports.</strong> Spot an error? Email <a href="mailto:corrections@mainedispensaryguide.com">corrections@mainedispensaryguide.com</a>. Confirmed reports are corrected within five business days; nothing about the reporter is published without consent.</li>
     </ul>
+
+    <details class="methodology-details">
+      <summary><strong>How we classify correction severity — full rubric</strong></summary>
+      <p>The severity tag on each entry is assigned by the editor who files the correction, with peer review by a second editor for Critical entries. The decision is binary: <em>could a reader act on the wrong number?</em> If yes, escalate to Critical. If the wrong value is visible only in a footnote or a link target, it stays Minor.</p>
+
+      <table class="rubric-table" aria-label="Severity rubric">
+        <thead>
+          <tr>
+            <th scope="col">Severity</th>
+            <th scope="col">Reader-impact test</th>
+            <th scope="col">Worked example from this log</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><span class="correction-tag severity-critical">Critical</span></th>
+            <td>A reader could make an irreversible decision on the wrong number (legal limit, statute attribution, vote outcome, fabricated citation). YMYL impact.</td>
+            <td>
+              <a href="#maine-edible-dose-cap">Dose cap 5/100 → 10/200</a> (wrong legal limit a consumer would rely on),
+              <a href="#wells-dispensary-guide">Wells opt-in status</a> (wrong vote outcome),
+              <a href="#maine-cannabis-gray-market-ocp-enforcement-2026">fabricated LD 1995 citation</a> (cited a bill that did not exist).
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="correction-tag severity-material">Material</span></th>
+            <td>The wrong value is visible to the reader but unlikely to drive an irreversible decision on its own (operator address drift, wrong statute session year, missing primary-source hyperlink on a factually correct claim).</td>
+            <td>
+              <a href="#houlton-dispensary-guide">Houlton operator addresses</a> (wrong street, wrong phone),
+              <a href="#maine-metrc-compliance-guide">Metrc LD 1847 session year</a> (131st vs. '2026'),
+              <a href="#maine-cannabis-business-insurance">insurance vs surety bond conflation</a>.
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="correction-tag severity-minor">Minor</span></th>
+            <td>A navigational, formatting, or cross-reference drift. No body-text fact was wrong; readers who followed links got there eventually.</td>
+            <td>
+              <a href="#bridgton denmark limerick dispensary guides">Bridgton/Denmark/Limerick missing citations</a> (claims correct, links absent),
+              <a href="#milo-dispensary-guide dexter-dispensary-guide">Milo/Dexter stale cross-reference</a> (linked to a retracted claim in another guide).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>When two severity definitions could plausibly apply, the more severe wins. The error log is not the place to be generous to ourselves.</p>
+    </details>
+
     <p style="margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-light);">Last updated: {today}. This page is the canonical source for corrections published on mainedispensaryguide.com.</p>
   </section>
 </article>
