@@ -23,6 +23,7 @@ interface Props {
     caption: string;
     y_axis_label?: string;
     observation_period?: string;
+    kind?: 'bar' | 'horizontal_bar';
     data: Array<{ label: string; value: number; kind?: string }>;
   };
   orientation?: 'horizontal' | 'vertical';

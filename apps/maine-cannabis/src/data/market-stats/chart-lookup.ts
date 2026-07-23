@@ -27,7 +27,7 @@ export interface BarChart {
   title: string;
   source: string;
   caption: string;
-  kind: 'bar';
+  kind: 'bar' | 'horizontal_bar';
   observation_period: string;
   y_axis_label: string;
   data: BarDataPoint[];

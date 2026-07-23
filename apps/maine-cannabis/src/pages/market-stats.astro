@@ -1104,7 +1104,10 @@ Source page: https://mainedispensaryguide.com/market-stats`;
     {/* §8.1 visual: state-context tax-rates horizontal bar (after Table 10) */}
     {(() => {
       const chart = chartById('state-context-tax-rates');
-      return chart && chart.kind === 'bar' ? (
+      // Note: this chart is kind === 'horizontal_bar' but renders through
+      // ChartBar (same horizontal geometry). The kind discriminator in the
+      // typed lookup keeps the union clean.
+      return chart && (chart.kind === 'horizontal_bar' || chart.kind === 'bar') ? (
         <div class="mdg-chart-section">
           <ChartBar chart={chart} />
         </div>
