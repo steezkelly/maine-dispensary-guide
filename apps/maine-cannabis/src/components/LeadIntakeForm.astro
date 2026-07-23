@@ -1,0 +1,266 @@
+---
+/**
+ * LeadIntakeForm.astro
+ *
+ * Server-side-aware lead-capture form. Replaces the pure-mailto path of
+ * LeadMailtoForm.astro with a controlled server-side intake. The
+ * `data-endpoint` attribute (Cloudflare Worker URL) is opt-in: if not
+ * set, the form falls back to the same mailto: behavior as
+ * LeadMailtoForm.astro. This means existing call sites keep working
+ * unchanged and the new path can be enabled per-page.
+ *
+ * Architecture (cycle 15 Stage 2):
+ *   Browser POSTs JSON to a Cloudflare Worker (data-endpoint).
+ *   The Worker validates Turnstile + email + honeypot, then HMAC-signs
+ *   the payload and forwards to a private n8n webhook (W13 Lead Intake,
+ *   out of scope of this component).
+ *   The n8n webhook writes to mdg_leads and may send an autoresponder via
+ *   Purelymail SMTP.
+ *   The browser falls back to mailto: on any non-2xx, network error, or
+ *   when data-endpoint is empty.
+ *
+ * Props:
+ *   formId         REQUIRED. The `<form id>` and JS lookup key.
+ *   leadTo         REQUIRED. The mailto: recipient address. Used by the
+ *                  mailto: fallback path.
+ *   leadSubject    REQUIRED. mailto: subject template. Same placeholder
+ *                  convention as LeadMailtoForm (e.g. "{email}").
+ *   leadBody       REQUIRED. mailto: body template. Same convention.
+ *   formName       REQUIRED. snake_case event label. Emitted as
+ *                  lead_capture.form_name in GA4. Keep stable.
+ *   successPath    REQUIRED. Path to redirect to on success (both paths).
+ *   endpoint       OPTIONAL. The server-side intake URL. Empty string
+ *                  (default) forces the mailto: path.
+ *   trackFields    OPTIONAL. Field names included in the GA4 event.
+ *                  Defaults to ['stage', 'interest', 'service'].
+ *   consentText    OPTIONAL. Privacy-policy acceptance text shown next
+ *                  to the consent checkbox. Default is the standard
+ *                  MDG "I agree to receive an email reply..." copy.
+ *
+ * New behavior vs. LeadMailtoForm:
+ *   1. POST to data-endpoint with JSON body. Server replies with a
+ *      redirect URL (data-redirect) on success; we navigate to it
+ *      (or fall back to successPath). On non-2xx or network error, the
+ *      mailto: path runs.
+ *   2. Hidden attribution fields (page_path, utm_*, referrer) are read
+ *      from window.location and document.referrer at submit time and
+ *      included in the POST body.
+ *   3. An explicit consent checkbox gates submit.
+ *   4. The lead_capture GA4 event includes a `transport` field whose
+ *      value is 'server' or 'mailto' depending on the path taken.
+ *
+ * The component name `LeadIntakeForm` is the canonical name for new
+ * call sites. The legacy `LeadMailtoForm.astro` is kept as a thin
+ * compatibility wrapper that renders `LeadIntakeForm` with endpoint=''.
+ */
+
+interface Props {
+  formId: string;
+  leadTo: string;
+  leadSubject: string;
+  leadBody: string;
+  formName: string;
+  successPath: string;
+  endpoint?: string;
+  trackFields?: string[];
+  consentText?: string;
+}
+
+const {
+  formId,
+  leadTo,
+  leadSubject,
+  leadBody,
+  formName,
+  successPath,
+  endpoint = '',
+  trackFields = ['stage', 'interest', 'service'],
+  consentText = 'I agree to receive an email reply with the requested PDF and acknowledge the Privacy Policy.',
+} = Astro.props;
+---
+
+<form
+  id={formId}
+  class="lead-intake-form"
+  data-endpoint={endpoint}
+  data-lead-to={leadTo}
+  data-lead-subject={leadSubject}
+  data-lead-body={leadBody}
+  data-form-name={formName}
+  data-success-path={successPath}
+  data-track-fields={trackFields.join(',')}
+>
+  <!-- Honeypot: invisible to humans, bots fill it. If populated, submission is silently dropped. -->
+  <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;">
+    <label for={`${formId}-website`}>Website</label>
+    <input type="text" id={`${formId}-website`} name="website" tabindex="-1" autocomplete="off" />
+  </div>
+  <slot />
+  <div class="form-group lead-intake-consent">
+    <label for={`${formId}-consent`}>
+      <input type="checkbox" id={`${formId}-consent`} name="consent" required value="1" />
+      <span>{consentText}</span>
+    </label>
+  </div>
+</form>
+
+<script is:inline define:vars={{ formId }}>
+  // LeadIntakeForm inline IIFE. Same pattern as LeadMailtoForm: read all
+  // named fields, intercept submit, dispatch to either the server endpoint
+  // or the mailto: fallback. The lead_capture GA4 event fires before any
+  // navigation so attribution is preserved on both paths.
+  (function () {
+    var form = document.getElementById(formId);
+    if (!form) return;
+
+    function escape(value) {
+      if (value == null) return '';
+      return String(value);
+    }
+
+    function readAttribution() {
+      try {
+        var url = new URL(window.location.href);
+        return {
+          page_path: window.location.pathname,
+          referrer: document.referrer || '',
+          utm_source: url.searchParams.get('utm_source') || '',
+          utm_medium: url.searchParams.get('utm_medium') || '',
+          utm_campaign: url.searchParams.get('utm_campaign') || '',
+        };
+      } catch (_) {
+        return {
+          page_path: window.location.pathname,
+          referrer: document.referrer || '',
+          utm_source: '',
+          utm_medium: '',
+          utm_campaign: '',
+        };
+      }
+    }
+
+    function fireGA4(form, formName, trackFields, transport) {
+      try {
+        if (typeof window.gtag !== 'function') return;
+        var payload = Object.assign(
+          { form_name: formName, page_path: window.location.pathname, transport: transport },
+          readAttribution(),
+        );
+        trackFields.forEach(function (name) {
+          try {
+            var el = form.elements.namedItem(name);
+            if (el && 'value' in el && el.value) {
+              payload[name] = el.value;
+            }
+          } catch (_) {}
+        });
+        window.gtag('event', 'lead_capture', payload);
+      } catch (_) {
+        // Tracking must never break the actual form submit.
+      }
+    }
+
+    function buildMailto(to, subjectTpl, bodyTpl, values) {
+      function interpolate(s) {
+        return s.replace(/\{([a-zA-Z0-9_-]+)\}/g, function (_m, key) {
+          return values[key] != null ? values[key] : '';
+        });
+      }
+      return 'mailto:' + encodeURIComponent(to)
+        + '?subject=' + encodeURIComponent(interpolate(subjectTpl))
+        + '&body=' + encodeURIComponent(interpolate(bodyTpl));
+    }
+
+    function readFields() {
+      var values = {};
+      try {
+        var elements = form.elements;
+        for (var i = 0; i < elements.length; i++) {
+          var el = elements[i];
+          if (!el.name) continue;
+          values[el.name] = escape(el.value);
+        }
+      } catch (_) {}
+      return values;
+    }
+
+    function navigateToSuccess() {
+      var successPath = form.getAttribute('data-success-path') || '';
+      if (successPath) {
+        // 200ms delay so a server response (if any) can be read by GA4 first.
+        setTimeout(function () { window.location.href = successPath; }, 200);
+      }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var endpoint = form.getAttribute('data-endpoint') || '';
+      var to = form.getAttribute('data-lead-to') || '';
+      var subjectTpl = form.getAttribute('data-lead-subject') || '';
+      var bodyTpl = form.getAttribute('data-lead-body') || '';
+      var formName = form.getAttribute('data-form-name') || '';
+      var successPath = form.getAttribute('data-success-path') || '';
+      var trackFields = (form.getAttribute('data-track-fields') || '').split(',').filter(Boolean);
+
+      var values = readFields();
+
+      // Require at least the email field — same as LeadMailtoForm.
+      if (!values.email) {
+        return;
+      }
+      // Require consent checkbox — must be checked.
+      if (values.consent !== '1') {
+        return;
+      }
+      // Honeypot: silently drop.
+      if (values.website) {
+        navigateToSuccess();
+        return;
+      }
+
+      // Path 1: server-side intake.
+      if (endpoint && endpoint.length > 0) {
+        fireGA4(form, formName, trackFields, 'server');
+        var payload = Object.assign({}, values, readAttribution(), { ts: new Date().toISOString() });
+        try {
+          fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          }).then(function (response) {
+            if (response.ok) {
+              return response.json().catch(function () { return {}; });
+            }
+            throw new Error('non-2xx');
+          }).then(function (data) {
+            // Server may return { redirect: '/path' } or fall back to successPath.
+            if (data && typeof data.redirect === 'string' && data.redirect.length > 0) {
+              window.location.href = data.redirect;
+            } else {
+              navigateToSuccess();
+            }
+          }).catch(function () {
+            // Network error or non-2xx: fall back to mailto:.
+            window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
+            setTimeout(function () {
+              if (successPath) { window.location.href = successPath; }
+            }, 800);
+          });
+          return;
+        } catch (_) {
+          // Synchronous fetch failure (rare): fall through to mailto:.
+        }
+      }
+
+      // Path 2: mailto: fallback.
+      fireGA4(form, formName, trackFields, 'mailto');
+      setTimeout(function () {
+        window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
+        setTimeout(function () {
+          if (successPath) { window.location.href = successPath; }
+        }, 800);
+      }, 150);
+    });
+  })();
+</script>
