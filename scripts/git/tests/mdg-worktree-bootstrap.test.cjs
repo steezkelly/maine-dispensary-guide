@@ -70,15 +70,13 @@ test('does not create a link when the primary TypeScript installation is unavail
   }
 });
 
-test('post-checkout automatically bootstraps dependencies for a newly added worktree', () => {
+test('a newly added worktree does not execute a dependency bootstrap hook', () => {
   const primary = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-worktree-hook-'));
   const linked = `${primary}-linked`;
   const git = (...args) => execFileSync('git', ['-C', primary, ...args], { encoding: 'utf8' });
   try {
-    fs.mkdirSync(path.join(primary, '.githooks'), { recursive: true });
     fs.mkdirSync(path.join(primary, 'scripts', 'git'), { recursive: true });
     fs.mkdirSync(path.join(primary, 'node_modules', 'typescript', 'lib'), { recursive: true });
-    fs.copyFileSync(path.join(repoRoot, '.githooks', 'post-checkout'), path.join(primary, '.githooks', 'post-checkout'));
     fs.copyFileSync(
       path.join(repoRoot, 'scripts', 'git', 'mdg-worktree-bootstrap.cjs'),
       path.join(primary, 'scripts', 'git', 'mdg-worktree-bootstrap.cjs'),
@@ -88,14 +86,11 @@ test('post-checkout automatically bootstraps dependencies for a newly added work
     git('init', '--initial-branch=main');
     git('config', 'user.name', 'Test User');
     git('config', 'user.email', 'test@example.com');
-    git('config', 'core.hooksPath', '.githooks');
-    git('add', '.githooks/post-checkout', 'scripts/git/mdg-worktree-bootstrap.cjs');
+    git('add', 'scripts/git/mdg-worktree-bootstrap.cjs');
     git('commit', '-m', 'fixture');
     git('worktree', 'add', '-b', 'linked', linked);
 
-    assert.equal(fs.lstatSync(path.join(linked, 'node_modules')).isDirectory(), true);
-    assert.equal(fs.lstatSync(path.join(linked, 'node_modules', 'typescript')).isSymbolicLink(), true);
-    assert.equal(fs.existsSync(path.join(linked, 'node_modules', 'typescript', 'lib', 'tsserver.js')), true);
+    assert.equal(fs.existsSync(path.join(linked, 'node_modules')), false);
   } finally {
     try {
       git('worktree', 'remove', '--force', linked);
@@ -104,5 +99,30 @@ test('post-checkout automatically bootstraps dependencies for a newly added work
     }
     fs.rmSync(primary, { recursive: true, force: true });
     fs.rmSync(linked, { recursive: true, force: true });
+  }
+});
+
+test('installs hooks with a literal hooks path when the repo path contains shell syntax', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-hooks-$('));
+  const repo = path.join(root, 'repo`touch SHOULD_NOT_EXIST`');
+  try {
+    fs.mkdirSync(path.join(repo, '.githooks'), { recursive: true });
+    fs.mkdirSync(path.join(repo, 'scripts', 'git'), { recursive: true });
+    fs.copyFileSync(path.join(repoRoot, '.githooks', 'pre-push'), path.join(repo, '.githooks', 'pre-push'));
+    fs.copyFileSync(path.join(repoRoot, 'scripts', 'git', 'install-hooks.cjs'), path.join(repo, 'scripts', 'git', 'install-hooks.cjs'));
+
+    execFileSync('git', ['-C', repo, 'init', '-q']);
+    execFileSync('git', ['-C', repo, 'config', 'user.name', 'Test User']);
+    execFileSync('git', ['-C', repo, 'config', 'user.email', 'test@example.com']);
+    fs.writeFileSync(path.join(repo, 'seed.txt'), 'seed\n');
+    execFileSync('git', ['-C', repo, 'add', '.']);
+    execFileSync('git', ['-C', repo, 'commit', '-qm', 'fixture']);
+
+    execFileSync(process.execPath, [path.join(repo, 'scripts', 'git', 'install-hooks.cjs')], { cwd: repo });
+
+    assert.equal(execFileSync('git', ['-C', repo, 'config', 'core.hooksPath'], { encoding: 'utf8' }).trim(), path.join(repo, '.git', 'hooks'));
+    assert.equal(fs.existsSync(path.join(root, 'SHOULD_NOT_EXIST')), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
   }
 });

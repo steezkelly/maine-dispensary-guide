@@ -2,14 +2,14 @@
 /**
  * install-hooks.cjs
  *
- * Sets core.hooksPath to .githooks/ so the pre-push hook ships
- * with the repo. Idempotent. Run on first clone (or whenever a
+ * Installs the repository pre-push hook into Git's untracked hooks directory.
+ * This avoids executing hook code from the checked-out branch. Idempotent. Run on first clone (or whenever a
  * new teammate pulls).
  *
  * Usage:  node scripts/git/install-hooks.cjs
  */
 
-const { execSync } = require('child_process');
+const { execFileSync, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -24,19 +24,22 @@ const REPO_ROOT = (() => {
     return process.cwd();
 })();
 
-const HOOKS_DIR = path.join(REPO_ROOT, '.githooks');
-const PRE_PUSH = path.join(HOOKS_DIR, 'pre-push');
+const VERSIONED_PRE_PUSH = path.join(REPO_ROOT, '.githooks', 'pre-push');
 
 if (!fs.existsSync(path.join(REPO_ROOT, '.git'))) {
     console.error('[install-hooks] not a git repo:', REPO_ROOT);
     process.exit(1);
 }
-if (!fs.existsSync(PRE_PUSH)) {
-    console.error('[install-hooks] hook not found at', PRE_PUSH);
+if (!fs.existsSync(VERSIONED_PRE_PUSH)) {
+    console.error('[install-hooks] hook not found at', VERSIONED_PRE_PUSH);
     process.exit(1);
 }
 
-// Ensure the hook is executable
+const gitCommonDir = execSync('git rev-parse --git-common-dir', { cwd: REPO_ROOT, encoding: 'utf8' }).trim();
+const HOOKS_DIR = path.resolve(REPO_ROOT, gitCommonDir, 'hooks');
+const PRE_PUSH = path.join(HOOKS_DIR, 'pre-push');
+fs.mkdirSync(HOOKS_DIR, { recursive: true });
+fs.copyFileSync(VERSIONED_PRE_PUSH, PRE_PUSH);
 try { fs.chmodSync(PRE_PUSH, 0o755); } catch {}
 
 const current = (() => {
@@ -44,11 +47,11 @@ const current = (() => {
     catch { return ''; }
 })();
 
-if (current === '.githooks' || current === path.relative(REPO_ROOT, HOOKS_DIR)) {
-    console.log('[install-hooks] core.hooksPath already set to .githooks ✓');
+if (current === HOOKS_DIR) {
+    console.log(`[install-hooks] core.hooksPath already set to ${HOOKS_DIR} ✓`);
 } else {
-    execSync('git config core.hooksPath .githooks', { cwd: REPO_ROOT, stdio: 'inherit' });
-    console.log('[install-hooks] core.hooksPath set to .githooks ✓');
+    execFileSync('git', ['config', 'core.hooksPath', HOOKS_DIR], { cwd: REPO_ROOT, stdio: 'inherit' });
+    console.log(`[install-hooks] core.hooksPath set to ${HOOKS_DIR} ✓`);
 }
 
 console.log('[install-hooks] Pre-push hook will run `node scripts/git/pre-push-verify.cjs` on every push.');
