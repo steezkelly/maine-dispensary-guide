@@ -1,0 +1,117 @@
+---
+import SignalLayout from '../../layouts/SignalLayout.astro';
+import manifest from '../../data/signal/manifest';
+import { SIGNAL_PAGE_MODEL } from '../../data/generated/signal/current';
+
+const title = `MDG Signal — Maine cannabis research workspace`;
+const description = `Read-only research view of the current MDG-DATA release: license concentration per municipality, ACS 2024 population density, and source evidence for Maine cannabis.`;
+
+const datasets = manifest.datasets;
+const release = manifest.evidence;
+const all = SIGNAL_PAGE_MODEL.municipalities;
+const totalLicenses = all.reduce((sum, m) => sum + m.licenses, 0);
+const topByCount = [...all].sort((a, b) => b.licenses - a.licenses).slice(0, 5);
+const topByDensity = [...all].sort((a, b) => b.density - a.density).slice(0, 5);
+const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'partial' || ds.state === 'not_ready');
+---
+<SignalLayout title={title} description={description}>
+  <section>
+    <p class="eyebrow">MDG Signal · read-only vertical slice</p>
+    <h1>Research Maine cannabis license concentration from the current release.</h1>
+    <p class="lede">
+      {totalLicenses} active adult-use store licenses across {all.length} municipalities are
+      represented below. Data is sourced from the MDG-DATA release
+      <strong>{release.releaseId}</strong> (data as of {release.ocpDataAsOf}, ACS {release.acsVintage}).
+      Density is descriptive — not a demand or viability score.
+    </p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+      <span class="state-pill" data-state="current">Current release · {all.length} municipalities</span>
+      <span class="state-pill" data-state="partial">Opt-in coverage is partial</span>
+      <span class="state-pill" data-state="not_ready">Menu prices are not ready</span>
+      <span class="state-pill" data-state="proposed_paid">Watchlist & alerts are preview-only</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Choose a municipality</h2>
+    <p class="lede">
+      Pick a subject municipality to open its research page. Each one shows the
+      current-release metric, three peer comparisons, and the evidence drawer.
+    </p>
+    <ul class="grid cards-3" style="list-style:none; padding:0;">
+      {all.map((m) => (
+        <li class="card">
+          <p class="eyebrow">geoid {m.geoid}</p>
+          <h2 style="margin:6px 0 4px;">
+            <a href={`/signal/${m.slug}/`}>{m.city}, Maine</a>
+          </h2>
+          <p class="footnote" style="margin:0 0 10px;">
+            {m.licenses} active store licenses · {m.population.toLocaleString()} residents
+            (ACS {m.acsVintage}) · {m.density.toFixed(2)} per 10K
+          </p>
+          <div class="bar" aria-hidden="true">
+            <span style={`width:${Math.min(100, (m.licenses / 27) * 100).toFixed(1)}%`}></span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section style="margin-top:32px;">
+    <h2>What this slice is honest about</h2>
+    <div class="grid cards-3">
+      {partials.map(([key, ds]) => (
+        <article class="card">
+          <p class="eyebrow">dataset · {key}</p>
+          <span class="state-pill" data-state={ds.state}>{ds.state.replace('_', ' ')}</span>
+          <h2 style="margin:6px 0 6px;">{ds.label}</h2>
+          <p class="footnote" style="margin:0;">{ds.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section style="margin-top:32px;">
+    <h2>Top by raw count vs. top by density</h2>
+    <p class="lede">
+      Raw count and per-10K density answer different questions. Portland leads
+      on raw count; South Portland leads on density among the curated set.
+    </p>
+    <div class="grid cards-3">
+      <article class="card">
+        <p class="eyebrow">Top 5 by raw license count</p>
+        <table>
+          <thead><tr><th>City</th><th>Licenses</th></tr></thead>
+          <tbody>
+            {topByCount.map((m) => (
+              <tr><td><a href={`/signal/${m.slug}/`}>{m.city}</a></td><td>{m.licenses}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Top 5 by licenses per 10K</p>
+        <table>
+          <thead><tr><th>City</th><th>Per 10K</th></tr></thead>
+          <tbody>
+            {topByDensity.map((m) => (
+              <tr><td><a href={`/signal/${m.slug}/`}>{m.city}</a></td><td>{m.density.toFixed(2)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </section>
+
+  <footer class="evidence" aria-label="Source evidence">
+    <p class="eyebrow">Source evidence</p>
+    <p class="footnote">
+      Release <strong>{release.releaseId}</strong>, data as of {release.ocpDataAsOf},
+      ACS {release.acsVintage}, transform version {release.transformVersion}, fetched {release.fetchedAtUtc}.
+    </p>
+    <p class="footnote">Sources: {release.sourceIds.join(', ')}.</p>
+    <p class="footnote">
+      {manifest.prototypeBoundary}
+    </p>
+  </footer>
+</SignalLayout>

@@ -1,0 +1,297 @@
+---
+import SignalLayout from '../../../layouts/SignalLayout.astro';
+import manifest from '../../../data/signal/manifest';
+import { SIGNAL_PAGE_MODEL } from '../../../data/generated/signal/current';
+
+export function getStaticPaths() {
+  return SIGNAL_PAGE_MODEL.municipalities.map((m) => ({ params: { municipality: m.slug }, props: { municipality: m } }));
+}
+
+const { municipality } = Astro.props as { municipality: typeof SIGNAL_PAGE_MODEL.municipalities[number] };
+const all = SIGNAL_PAGE_MODEL.municipalities;
+const peers = all.filter((m) => m.slug !== municipality.slug).slice(0, 3);
+const maxLicenses = Math.max(...all.map((m) => m.licenses));
+const maxDensity = Math.max(...all.map((m) => m.density));
+const evidence = manifest.evidence;
+const title = `${municipality.city}, Maine — MDG Signal`;
+const description = `${municipality.city} research view: ${municipality.licenses} active store licenses, ${municipality.population.toLocaleString()} residents (ACS ${municipality.acsVintage}), ${municipality.density.toFixed(2)} per 10K.`;
+const datasets = manifest.datasets;
+---
+<SignalLayout title={title} description={description} selected={municipality.city}>
+  <section>
+    <p class="eyebrow">geoid {municipality.geoid} · MDG Signal municipality research</p>
+    <h1>{municipality.city}, Maine</h1>
+    <p class="lede">
+      Subject municipality research from MDG-DATA release <strong>{evidence.releaseId}</strong>.
+      Each metric carries its source and freshness label; density is descriptive, not a
+      demand or viability score.
+    </p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+      <span class="state-pill" data-state="current">Current release · {municipality.licenses} licenses · {municipality.population.toLocaleString()} residents</span>
+      <span class="state-pill" data-state="current">Density {municipality.density.toFixed(2)} per 10K</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Compare with peers</h2>
+    <p class="lede">
+      Up to three peers from the curated release. Click <em>Add peer</em> to compare raw
+      license count and density side by side.
+    </p>
+    <div class="card" role="region" aria-label="Comparison table">
+      <table id="comparisonTable">
+        <thead>
+          <tr>
+            <th scope="col">City</th>
+            <th scope="col">Licenses</th>
+            <th scope="col">Per 10K</th>
+            <th scope="col" aria-label="License count bar">Count</th>
+            <th scope="col" aria-label="Density bar">Density</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-subject={municipality.slug}>
+            <th scope="row"><strong>{municipality.city} (subject)</strong></th>
+            <td>{municipality.licenses}</td>
+            <td>{municipality.density.toFixed(2)}</td>
+            <td><div class="bar" aria-hidden="true"><span style={`width:${((municipality.licenses / maxLicenses) * 100).toFixed(1)}%`}></span></div></td>
+            <td><div class="bar" aria-hidden="true"><span style={`width:${((municipality.density / maxDensity) * 100).toFixed(1)}%`}></span></div></td>
+          </tr>
+          {peers.map((peer) => (
+            <tr data-peer={peer.slug}>
+              <th scope="row"><a href={`/signal/${peer.slug}/`}>{peer.city}</a></th>
+              <td>{peer.licenses}</td>
+              <td>{peer.density.toFixed(2)}</td>
+              <td><div class="bar" aria-hidden="true"><span style={`width:${((peer.licenses / maxLicenses) * 100).toFixed(1)}%`}></span></div></td>
+              <td><div class="bar" aria-hidden="true"><span style={`width:${((peer.density / maxDensity) * 100).toFixed(1)}%`}></span></div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button
+          type="button"
+          class="button"
+          data-signal-event="peer_add"
+          data-signal-label={municipality.city}
+          data-signal-section="comparison"
+          aria-label={`Add another peer to ${municipality.city} comparison`}
+        >Add peer</button>
+        <button
+          type="button"
+          class="button"
+          data-open-drawer="evidence"
+          aria-haspopup="dialog"
+          aria-controls="evidenceDrawer"
+        >Inspect source &amp; freshness</button>
+        <button
+          type="button"
+          class="button preview"
+          data-open-drawer="watchlist"
+          aria-haspopup="dialog"
+          aria-controls="watchDrawer"
+        >Preview watchlist (proposed paid)</button>
+        <button
+          type="button"
+          class="button preview"
+          data-open-drawer="alert"
+          aria-haspopup="dialog"
+          aria-controls="alertDrawer"
+        >Preview change alert (proposed paid)</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Active store licenses — {municipality.city}</h2>
+    <p class="lede">
+      List of currently active adult-use store licenses mapped to {municipality.city}.
+      Contact information is intentionally not shown.
+    </p>
+    <div class="card">
+      {municipality.stores.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">License</th>
+              <th scope="col">Legal name</th>
+              <th scope="col">Doing business as</th>
+              <th scope="col">First issued</th>
+            </tr>
+          </thead>
+          <tbody>
+            {municipality.stores.map((s) => (
+              <tr>
+                <td>{s.licenseId}</td>
+                <td>{s.legalName}</td>
+                <td>{s.dba || '—'}</td>
+                <td>{s.firstIssued || '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p class="footnote">No active store licenses were mapped to this municipality in the current release.</p>
+      )}
+    </div>
+  </section>
+
+  <aside
+    id="evidenceDrawer"
+    class="drawer"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="evidenceHeading"
+    aria-hidden="true"
+    data-signal-drawer
+    data-signal-event="source_open"
+    data-signal-label={municipality.city}
+  >
+    <header>
+      <h2 id="evidenceHeading">Source &amp; freshness</h2>
+      <button type="button" class="close" data-close-drawer aria-label="Close evidence drawer">Close</button>
+    </header>
+    <div class="field"><strong>Release</strong><span>{evidence.releaseId}</span></div>
+    <div class="field"><strong>Data as of</strong><span>{evidence.ocpDataAsOf}</span></div>
+    <div class="field"><strong>ACS vintage</strong><span>{evidence.acsVintage}</span></div>
+    <div class="field"><strong>Transform version</strong><span>{evidence.transformVersion}</span></div>
+    <div class="field"><strong>Fetched (UTC)</strong><span>{evidence.fetchedAtUtc}</span></div>
+    <div class="field"><strong>Source IDs</strong><span>{evidence.sourceIds.join(', ')}</span></div>
+    <div class="field">
+      <strong>Methodology</strong>
+      <span><a href="/data/methodology/retail-licenses-by-municipality">retail-licenses-by-municipality</a></span>
+    </div>
+    <p class="footnote">
+      {datasets.licensesByMunicipality.description}
+    </p>
+    <p class="footnote">
+      {datasets.licensesPer10k.description}
+    </p>
+  </aside>
+
+  <aside
+    id="watchDrawer"
+    class="drawer"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="watchHeading"
+    aria-hidden="true"
+    data-signal-drawer
+    data-signal-event="watchlist_open"
+    data-signal-label={municipality.city}
+  >
+    <header>
+      <h2 id="watchHeading">Watchlist preview</h2>
+      <button type="button" class="close" data-close-drawer aria-label="Close watchlist preview">Close</button>
+    </header>
+    <p class="lede">
+      A saved watchlist would let you track changes to {municipality.city}'s
+      license count, opt-in coverage, and product mix. None of this exists yet.
+    </p>
+    <div class="preview-note">
+      Preview only — no scope was saved and no account exists.
+    </div>
+    <ul style="padding-left:18px; line-height:1.7;">
+      <li>License count change</li>
+      <li>New store issuance</li>
+      <li>Opt-in coverage shift</li>
+      <li>Source refresh</li>
+    </ul>
+    <p class="footnote">
+      {datasets.watchlist.description}
+    </p>
+  </aside>
+
+  <aside
+    id="alertDrawer"
+    class="drawer"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="alertHeading"
+    aria-hidden="true"
+    data-signal-drawer
+    data-signal-event="alert_preview"
+    data-signal-label={municipality.city}
+  >
+    <header>
+      <h2 id="alertHeading">Change alert preview</h2>
+      <button type="button" class="close" data-close-drawer aria-label="Close alert preview">Close</button>
+    </header>
+    <p class="lede">
+      An example alert for {municipality.city}. When MDG publishes a newer verified source
+      release, a notice would identify the new data date, fetch date, source, and any
+      affected metric.
+    </p>
+    <div class="card" style="box-shadow:none; padding:14px;">
+      <p class="eyebrow">Condition · license-count change</p>
+      <p style="margin:4px 0;">
+        Old value: <strong>{municipality.licenses}</strong> → New value: <strong>—</strong>
+        (current release has no historical baseline yet)
+      </p>
+      <p class="footnote">Effective date: pending verified historical release.</p>
+    </div>
+    <div class="preview-note">
+      Preview only — no alert was saved, scheduled, or sent.
+    </div>
+    <p class="footnote">
+      {datasets.changeAlerts.description}
+    </p>
+  </aside>
+
+  <footer class="evidence" aria-label="Source evidence">
+    <p class="eyebrow">Source evidence</p>
+    <p class="footnote">
+      License count, ACS population, density, and store list are all sourced from
+      MDG-DATA release <strong>{evidence.releaseId}</strong>. The proposed-paid
+      controls above are explicit previews; nothing was persisted.
+    </p>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      try {
+        function open(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.setAttribute('aria-hidden', 'false');
+          el.classList.add('open');
+          var closeBtn = el.querySelector('[data-close-drawer]');
+          if (closeBtn) closeBtn.focus();
+        }
+        function close(el) {
+          if (!el) return;
+          el.setAttribute('aria-hidden', 'true');
+          el.classList.remove('open');
+        }
+        function init() {
+          document.querySelectorAll('[data-open-drawer]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var target = btn.getAttribute('data-open-drawer');
+              var map = { evidence: 'evidenceDrawer', watchlist: 'watchDrawer', alert: 'alertDrawer' };
+              if (map[target]) open(map[target]);
+            });
+          });
+          document.querySelectorAll('[data-close-drawer]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var drawer = btn.closest('.drawer');
+              close(drawer);
+              var opener = document.querySelector('[data-open-drawer][aria-controls="' + drawer.id + '"]');
+              if (opener) opener.focus();
+            });
+          });
+          document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            var open = document.querySelector('.drawer[aria-hidden="false"]');
+            if (open) {
+              close(open);
+              var opener = document.querySelector('[data-open-drawer][aria-controls="' + open.id + '"]');
+              if (opener) opener.focus();
+            }
+          });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+      } catch (_) {}
+    })();
+  </script>
+</SignalLayout>
