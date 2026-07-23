@@ -179,15 +179,17 @@
     });
     Array.prototype.forEach.call(doc.querySelectorAll('[data-theme-toggle]'), function (btn) {
       btn.addEventListener('click', function () {
-        var html = doc.documentElement;
-        if (!html) return;
-        var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
+        // CSS selectors live on .signal-scope[data-theme="dark"] (see
+        // SignalLayout.astro); set the data-attribute there, not on
+        // documentElement where the rule would not match.
+        var scope = doc.querySelector('.signal-scope');
+        if (!scope) return;
+        var next = scope.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        scope.setAttribute('data-theme', next);
         btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
         btn.textContent = next === 'dark' ? 'Light mode' : 'Dark mode';
       });
     });
-    // Default alert copy on first paint
     var subj = doc.querySelector('#subjectName');
     var initCond = doc.querySelector('[data-signal-alert-condition][data-default="true"]');
     if (initCond) {
