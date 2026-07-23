@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import graveyardRows from '../../data/experiments-graveyard-rows.json';
 
 const article = {
   author: "Eliot Nash", authorId: "eliot-nash",
@@ -51,14 +52,21 @@ const germinated = [
     summary: "A trust-language box that explains why MDG avoids best-of claims unless the method is visible, current, and fair.",
     signal: "Someone trusts the restraint instead of feeling like the page dodged the question.",
     href: "#best-dispensary-detox-box"
+  },
+  {
+    status: "Germinated",
+    title: "Cannabis Claim Graveyard",
+    summary: "A short table of cannabis copy claims that have already crossed the line, with verifiable plain-language rewrites in their place.",
+    signal: "Someone rewrites a generic cannabis claim into a sentence a reader can verify instead of recycling the same paragraph.",
+    href: "#cannabis-claim-graveyard"
   }
 ];
 
 const seeds = [
   {
-    title: "Cannabis Claim Graveyard",
-    summary: "A private/public-safe list of cannabis copy phrases to avoid, with better phrasing that stays factual.",
-    next: "Draft 12 avoid-this / say-this-instead pairs."
+    title: "Cannabis Coupon Code Translator",
+    summary: "A small field card that turns promotional offer language into a checklist of what to verify before a discount is worth the trip.",
+    next: "Draft 8-10 common offer phrasings and the receipts, math, and shop rules worth confirming before counting on the savings."
   }
 ];
 
@@ -1079,10 +1087,44 @@ Verify today: confirm directly with the source before relying on this detail.</p
       </div>
     </section>
 
+    <section id="cannabis-claim-graveyard" class="artifact-card" aria-labelledby="claim-graveyard-heading">
+      <span class="status-pill">◆ Seventh sprout</span>
+      <h2 id="claim-graveyard-heading">Cannabis Claim Graveyard</h2>
+      <p>
+        This is a copy-taste filter for MDG drafts. It is not a public dunk list and it does not judge any shop. It catches generic cannabis copy claims before they turn useful guide pages into the same paragraph readers have already seen everywhere.
+      </p>
+
+      <div class="card-panel">
+        <h4>Why this exists</h4>
+        <p>
+          The Slop Bingo is a 25-card taste check for whatever lands in a draft. The Claim Graveyard is the rotted pile: phrases that have already crossed the line, each paired with a verifiable plain-language rewrite. The rewrite column is tested for banned language so it cannot quietly drift back into hype.
+        </p>
+      </div>
+
+      <table class="slop-table">
+        <thead>
+          <tr>
+            <th>Slop claim</th>
+            <th>Why it graveyards</th>
+            <th>Better plain-language move</th>
+          </tr>
+        </thead>
+        <tbody>
+          {graveyardRows.map((row) => (
+            <tr>
+              <td>{row.phrase}</td>
+              <td>{row.why}</td>
+              <td>{row.better}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
     <section class="next-move" aria-labelledby="next-move-heading">
       <h2 id="next-move-heading">Next small experiment</h2>
       <p>
-        The strongest remaining seed is probably the Cannabis Claim Graveyard: a small avoid-this / say-this-instead table for cannabis copy claims that should be composted before they reach useful guide pages.
+        The strongest remaining seed is probably the Cannabis Coupon Code Translator: a small field card that turns promotional offer language into a checklist of what to verify before a discount is worth the trip.
       </p>
     </section>
   </main>
