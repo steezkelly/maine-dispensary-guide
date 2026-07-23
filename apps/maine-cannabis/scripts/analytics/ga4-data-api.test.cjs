@@ -18,7 +18,12 @@ test('R3 event rows are scoped to their page path', () => {
 });
 test('R3 Data API query uses the same event population as the BigQuery mirror', () => {
   const body = buildReportRequest(REPORTS.R3_event_count_daily, { from: '2026-07-01', to: '2026-07-07' });
-  assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start']);
+  assert.deepEqual(body.dimensionFilter.filter.inListFilter.values, ['page_view', 'scroll', 'scroll_depth', 'click', 'page_engaged', 'fa_open', 'faq_open', 'cta_view', 'mdg_action_select', 'lead_capture', 'affiliate_click', 'user_engagement', 'session_start']);
+});
+
+test('R3 Data API query includes the emitted action-intent event alongside the BigQuery mirror', () => {
+  const body = buildReportRequest(REPORTS.R3_event_count_daily, { from: '2026-07-01', to: '2026-07-07' });
+  assert.ok(body.dimensionFilter.filter.inListFilter.values.includes('mdg_action_select'));
 });
 
 test('R7 Data API query uses the same faq_open population as the BigQuery mirror', () => {
