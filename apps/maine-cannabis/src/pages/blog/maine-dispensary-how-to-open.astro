@@ -3,6 +3,7 @@ import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import authors from '../../data/authors.json';
+import canonicalOverrides from '../../data/canonical-overrides.json';
 import { getSiteStats } from '../../lib/site-stats';
 const siteStats = getSiteStats();
 
@@ -26,7 +27,7 @@ const topics = ["licensing", "how-to", "start-here"];
   heroImage="/images/heroes/maine-compliance-hero.jpg"
   article={article}
   topics={topics}
-  canonicalOverride="https://mainedispensaryguide.com/guides/maine-dispensary-license"
+  canonicalOverride={canonicalOverrides["blog/maine-dispensary-how-to-open"].target}
 >
   <style>
 
