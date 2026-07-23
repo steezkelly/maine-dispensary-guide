@@ -374,6 +374,38 @@ function eventNames(events) {
   return events.map((event) => event[1]);
 }
 
+test('operator profile referral cohort marks every official operator handoff with stable bounded metadata', () => {
+  const cohort = {
+    '/guides/founding-farmers-dispensary': ['founding-farmers'],
+    '/guides/hidden-greens-dispensary': ['hidden-greens'],
+    '/guides/lakewood-cannabis': ['lakewood-cannabis'],
+    '/guides/highbrow-cannabis': ['highbrow-cannabis'],
+    '/guides/landrace-cannabis-casco': ['landrace-cannabis-casco'],
+    '/guides/420-mules-bar-harbor': ['420-mules'],
+    '/guides/botany-cannabis': ['botany-cannabis'],
+    '/guides/bayside-bud-shack': ['bayside-bud-shack'],
+    '/guides/eclipse-cannabis-company': ['eclipse-cannabis'],
+    '/guides/just-baked-maine-lincoln': ['just-baked-maine'],
+    '/guides/white-mountain-craft-cannabis': ['white-mountain-craft-cannabis'],
+    '/guides/great-atlantic-puffin-company': ['great-atlantic-puffin-company'],
+    '/guides/lifted-cannabis-maine': ['lifted-cannabis-maine'],
+    '/guides/the-glass-cook-fryeburg': ['the-glass-cook'],
+    '/guides/above-all-greenery-dispensary': ['above-all-greenery'],
+  };
+  for (const [route, partnerIds] of Object.entries(cohort)) {
+    const source = read(pageFile(route));
+    for (const partnerId of partnerIds) {
+      assert.match(source, new RegExp(`data-referral-kind="dispensary"[^>]*data-partner-id="${partnerId}"|data-partner-id="${partnerId}"[^>]*data-referral-kind="dispensary"`), `${route} must mark ${partnerId}`);
+    }
+    const marked = [...source.matchAll(/<a\b[^>]*data-referral-kind="dispensary"[^>]*>/g)].map((match) => match[0]);
+    assert.ok(marked.length > 0, `${route} must expose at least one referral handoff`);
+    for (const anchor of marked) {
+      assert.match(anchor, /data-partner-id="[a-z0-9]+(?:-[a-z0-9]+)*"/, `${route} partner IDs must be normalized slugs`);
+      assert.match(anchor, /data-referral-surface="operator_profile"/, `${route} must use the operator-profile surface`);
+    }
+  }
+});
+
 test('v1 partner referral emits only for explicitly marked dispensary handoffs', async (t) => {
   const http = require('node:http');
   const { chromium } = require('playwright');
