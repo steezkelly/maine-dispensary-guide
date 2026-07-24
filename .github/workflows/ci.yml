@@ -194,6 +194,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      deployments: read
+      pull-requests: write
+      statuses: read
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 

@@ -5,6 +5,11 @@ const crypto = require('crypto');
 const store = require('../lib/store.cjs');
 const derive = require('../adapters/derive-retail-products.cjs');
 
+function safeParseJSON(filePath) {
+  try { return JSON.parse(fs.readFileSync(filePath, 'utf8')); }
+  catch (e) { throw new Error(`Failed to parse ${filePath}: ${e.message}`); }
+}
+
 function parseArgs(argv) {
     const out = {};
     for (const a of argv) {
@@ -106,12 +111,12 @@ function main() {
     // Determine release metadata
     const ocpSnapDir = path.join(root, 'normalized', 'ocp_licenses',
         inputLock.inputs.find(i => i.source_id === 'ocp_licenses').sha256, 'schema_version=1');
-    const ocpProv = JSON.parse(fs.readFileSync(path.join(ocpSnapDir, 'provenance.json'), 'utf8'));
-    const ocpProf = JSON.parse(fs.readFileSync(path.join(ocpSnapDir, 'profile.json'), 'utf8'));
+    const ocpProv = safeParseJSON(path.join(ocpSnapDir, 'provenance.json'));
+    const ocpProf = safeParseJSON(path.join(ocpSnapDir, 'profile.json'));
     const censusSnapDir = path.join(root, 'normalized', 'census_acs5_population',
         inputLock.inputs.find(i => i.source_id === 'census_acs5_population').sha256, 'schema_version=1');
-    const censusProv = JSON.parse(fs.readFileSync(path.join(censusSnapDir, 'provenance.json'), 'utf8'));
-    const censusProf = JSON.parse(fs.readFileSync(path.join(censusSnapDir, 'profile.json'), 'utf8'));
+    const censusProv = safeParseJSON(path.join(censusSnapDir, 'provenance.json'));
+    const censusProf = safeParseJSON(path.join(censusSnapDir, 'profile.json'));
 
     const releaseId = makeReleaseId(inputLock);
     const releaseDir = path.join(stagingDir, 'release', releaseId);
@@ -252,16 +257,16 @@ products = derive.derive(root, deriveInputLock, {
     // tracked in the source provenance and surfaced via
     // metric_needs_review / activity_needs_review in the data.
     const ocpSalesProv = inputLock.inputs.find(i => i.source_id === 'ocp_retail_sales')
-        ? JSON.parse(fs.readFileSync(
+        ? safeParseJSON(
             path.join(root, 'normalized', 'ocp_retail_sales',
                 inputLock.inputs.find(i => i.source_id === 'ocp_retail_sales').sha256,
-                'schema_version=1', 'provenance.json'), 'utf8'))
+                'schema_version=1', 'provenance.json'))
         : null;
     const ocpOptinProv = inputLock.inputs.find(i => i.source_id === 'ocp_optin')
-        ? JSON.parse(fs.readFileSync(
+        ? safeParseJSON(
             path.join(root, 'normalized', 'ocp_optin',
                 inputLock.inputs.find(i => i.source_id === 'ocp_optin').sha256,
-                'schema_version=1', 'provenance.json'), 'utf8'))
+                'schema_version=1', 'provenance.json'))
         : null;
     const isSalesNonDashboard = ocpSalesProv
         && (ocpSalesProv.origin === 'manual_csv_export'

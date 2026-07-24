@@ -87,7 +87,7 @@ const monthShort = dateParts.length > 1
 const day = dateParts[2] || '';
 
 // BibTeX key — first author surname + year + slug
-const bibKey = `${authors[0].split(',')[0].toLowerCase().replace(/\s+/g, '')}${year}${slug.replace(/-/g, '')}`;
+const bibKey = `${authors.length > 0 ? authors[0].split(',')[0].toLowerCase().replace(/\s+/g, '') : 'mdg'}${year}${slug.replace(/-/g, '')}`;
 
 // BibTeX title needs braces around it to preserve capitalization
 const bibTitle = `{${pageTitle}}`;
