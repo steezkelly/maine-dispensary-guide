@@ -1,0 +1,306 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import LeadMailtoForm from '../../components/LeadMailtoForm.astro';
+import Layout from '../../layouts/Layout.astro';
+import PineTree from '@network/ui/PineTree';
+
+const pdfUrl = "/pdfs/maine-cannabis-industry-report-q3-2026.pdf";
+const leadTo = "leads@mainedispensaryguide.com";
+const leadSubject = "Q3 2026 Industry Report request: {email}";
+const leadBody = "Hi — please send me the Maine Cannabis Industry Report Q3 2026 PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/maine-cannabis-industry-report-q3-2026";
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the Maine Cannabis Industry Report Q3 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A data-driven snapshot of Maine's cannabis market as of Q3 2026, covering adult-use and medical sales, licensing trends, pricing, tax revenue, and federal regulatory developments. All figures are sourced from OCP dashboards, MRS tax filings, and federal records with a data cutoff of July 22, 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How current is the data in this report?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The report uses the latest available data as of July 22, 2026: OCP operational dashboards through June 2026 (preliminary, unaudited) and MRS tax-filer data through May 2026 (filing-period-based, revisable). This is an in-quarter edition, not a final annual report."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this report free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The Maine Cannabis Industry Report Q3 2026 is a free lead magnet from Maine Dispensary Guide. Enter your email to receive it, or download directly without subscribing."
+      }
+    }
+  ]
+});
+
+const article = { publishDate: "2026-07-24", modifiedDate: "2026-07-24" };
+---
+
+<Layout
+  title="Free Maine Cannabis Industry Report — Q3 2026"
+  description="Download the free Q3 2026 Maine Cannabis Industry Report. Adult-use sales, pricing trends, license counts, tax revenue, and federal regulatory updates — all sourced from OCP and MRS data."
+  noindex={false}
+>
+  <style>
+    .download-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .doc-header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--color-surface);
+      border-radius: 2rem;
+      border: 1px solid var(--color-border);
+      margin-bottom: 3rem;
+    }
+
+    .doc-logo { margin-bottom: 1rem; }
+
+    .doc-brand {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-soft-green);
+      margin-bottom: 1rem;
+    }
+
+    .doc-title {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      line-height: 1.2;
+      color: var(--color-text);
+      margin: 0.5rem 0;
+    }
+
+    .doc-subtitle {
+      font-size: 1.125rem;
+      color: var(--color-text-light);
+      margin: 0.75rem 0 1.5rem;
+    }
+
+    .doc-meta {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    :global(.lead-mailto-form) {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .form-group label {
+      color: var(--color-text);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .optional {
+      color: var(--color-text-light);
+      font-weight: 400;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      background: var(--color-background);
+      color: var(--color-text);
+      font: inherit;
+    }
+
+    .cta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .success-card {
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      padding: 1.5rem;
+      border: 1px solid var(--color-primary);
+      border-radius: 1rem;
+      background: var(--color-background);
+    }
+
+    .success-card h2 {
+      margin-top: 0;
+    }
+
+    .success-card a {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .or-download {
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+
+    .or-download a {
+      color: var(--color-text-light);
+      font-size: 0.875rem;
+      text-decoration: underline;
+    }
+
+    .report-highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .highlight-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .highlight-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      color: var(--color-text);
+      margin: 0 0 0.5rem;
+    }
+
+    .highlight-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-light);
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .doc-title { font-size: 1.75rem; }
+      .report-highlights { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script type="application/ld+json" set:html={faqPageJsonLd} />
+
+  <article class="download-page">
+    <div class="doc-header">
+      <div class="doc-logo">
+        <PineTree size={48} color="var(--color-primary)" />
+      </div>
+      <div class="doc-brand">Maine Dispensary Guide</div>
+      <h1 class="doc-title">Maine Cannabis<br/>Industry Report — Q3 2026</h1>
+      <p class="doc-subtitle">Data-driven market snapshot: sales, pricing, licenses, tax revenue &amp; federal regulatory updates</p>
+      <div class="doc-meta">In-quarter edition &bull; Data cutoff July 22, 2026 &bull; 14 pages &bull; Free Download</div>
+      <div class="success-card" id="q3-2026-report-success" style="display: none;">
+        <h2>Check your inbox — the Q3 2026 Industry Report is on its way.</h2>
+        <p>Or <a href={pdfUrl} download>download now without subscribing</a>.</p>
+      </div>
+      <LeadMailtoForm
+        formId="q3-2026-industry-report-lead-form"
+        leadTo={leadTo}
+        leadSubject={leadSubject}
+        leadBody={leadBody}
+        formName="q3_2026_industry_report"
+        successPath="/download/maine-cannabis-industry-report-q3-2026?success=true"
+        trackFields={['stage']}
+      >
+        <div class="form-group">
+          <label for="q3-report-name">Your Name</label>
+          <input type="text" id="q3-report-name" name="name" required placeholder="Jane Smith" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="q3-report-email">Email Address</label>
+          <input type="email" id="q3-report-email" name="email" required placeholder="jane@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="q3-report-business">Business Name <span class="optional">(optional)</span></label>
+          <input type="text" id="q3-report-business" name="business" placeholder="Pine Tree Cannabis LLC" autocomplete="organization" />
+        </div>
+        <div class="form-group">
+          <label for="q3-report-stage">What stage are you at?</label>
+          <select id="q3-report-stage" name="stage" required>
+            <option value="">Select one...</option>
+            <option value="researching">Researching — just exploring</option>
+            <option value="applying">Applying — have my LLC, working on license</option>
+            <option value="operating">Already Operating — looking to grow</option>
+          </select>
+        </div>
+        <!-- analytics:cta-injected id=cta-inline-download--q3-2026-industry-report-01 -->
+        <button type="submit" class="cta-button" data-cta-id="cta-inline-download--q3-2026-industry-report-01">
+          Download Free — Enter Your Email
+        </button>
+      </LeadMailtoForm>
+      <div class="or-download">
+        <a href={pdfUrl} download>Or download now without subscribing</a>
+      </div>
+    </div>
+
+    <section>
+      <h2>What's Inside the Report</h2>
+      <p>The Q3 2026 edition covers eight sections, each grounded in primary-source data from Maine's Office of Cannabis Policy, Maine Revenue Services, and federal regulatory filings.</p>
+
+      <div class="report-highlights">
+        <div class="highlight-card">
+          <h3>Maine Market Snapshot</h3>
+          <p>June 2026 adult-use sales of $20.7M, YTD $119.9M across 2.44M transactions. Average flower price compressed to $6.10/g YTD.</p>
+        </div>
+        <div class="highlight-card">
+          <h3>License Footprint</h3>
+          <p>346 active adult-use licenses (187 stores, 80 manufacturing, 76 cultivation, 3 testing) as of the June 1, 2026 OCP roster.</p>
+        </div>
+        <div class="highlight-card">
+          <h3>Tax Revenue</h3>
+          <p>May 2026 MRS data: $20.3M adult-use taxable sales, $2.7M sales-tax revenue, $1.1M excise revenue. Post-Jan 2026 rate reset analyzed.</p>
+        </div>
+        <div class="highlight-card">
+          <h3>Federal Regulatory Update</h3>
+          <p>Schedule III for medical effective April 22, 2026. Broader rescheduling NPRM in post-hearing-brief phase. Hemp definition change effective Nov 12, 2026.</p>
+        </div>
+        <div class="highlight-card">
+          <h3>Price Compression Trend</h3>
+          <p>Flower price per gram: $12.75 (2021) → $9.23 (2022) → $7.77 (2023) → $7.24 (2024) → $6.62 (2025) → $6.10 YTD 2026.</p>
+        </div>
+        <div class="highlight-card">
+          <h3>Methodology &amp; Sources</h3>
+          <p>Every figure traced to a primary source with retrieval date, status label, and revision caveats. CC BY 4.0 licensed.</p>
+        </div>
+      </div>
+    </section>
+
+    <AutoRelated currentPath="/download/maine-cannabis-industry-report-q3-2026" />
+  </article>
+
+  <script is:inline>
+    if (new URLSearchParams(window.location.search).get('success') === 'true') {
+      document.getElementById('q3-2026-report-success')?.removeAttribute('hidden');
+      document.getElementById('q3-2026-report-success').style.display = 'block';
+    }
+  </script>
+</Layout>
