@@ -12,7 +12,7 @@ const leadBody = "Hi — please send me the Maine First-Timer's Field Guide PDF.
 
 const article = { publishDate: "2026-07-05", modifiedDate: "2026-07-13" };
 
-const success = Astro.url.searchParams.get('success') === 'true';
+// success state is handled client-side (static build can't read query params)
 ---
 
 <Layout
@@ -387,20 +387,19 @@ const success = Astro.url.searchParams.get('success') === 'true';
       </ul>
     </div>
 
-    {success ? (
-      <div class="success-card">
-        <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-          <polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        <h3>Check your inbox — your Field Guide is on its way.</h3>
-        <p>If it doesn't arrive in a few minutes, check spam or use the direct download below.</p>
-        <div class="direct-download">
-          <a href={pdfUrl} target="_blank" rel="noopener">Download the PDF directly</a>
-        </div>
+    <div class="success-card" id="form-success" style="display: none;">
+      <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h3>Check your inbox — your Field Guide is on its way.</h3>
+      <p>If it doesn't arrive in a few minutes, check spam or use the direct download below.</p>
+      <div class="direct-download">
+        <a href={pdfUrl} target="_blank" rel="noopener">Download the PDF directly</a>
       </div>
-    ) : (
-      <section class="capture-section">
+    </div>
+
+    <section class="capture-section" id="capture-section">
         <h2>Send me the free PDF</h2>
         <LeadMailtoForm
           formId="first-timer-lead-form"
@@ -445,7 +444,6 @@ const success = Astro.url.searchParams.get('success') === 'true';
           <a href={pdfUrl} target="_blank" rel="noopener">Or download directly without signing up</a>
         </div>
       </section>
-    )}
 
     <section class="social-proof">
       <p class="proof-text">Written by the Maine Dispensary Guide editorial team. Every claim is anchored to a primary source — Maine Revised Statutes Title 28-B, Maine OCP guidance, and peer-reviewed research.</p>
@@ -461,3 +459,12 @@ const success = Astro.url.searchParams.get('success') === 'true';
     </footer>
   </div>
 </Layout>
+
+<script is:inline>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'true') {
+    document.getElementById('form-success').style.display = 'block';
+    var capture = document.getElementById('capture-section');
+    if (capture) capture.style.display = 'none';
+  }
+</script>
