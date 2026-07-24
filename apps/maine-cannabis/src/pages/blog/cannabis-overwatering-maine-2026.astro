@@ -1,0 +1,222 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "troubleshooting", "watering", "overwatering"];
+---
+<Layout
+  title="Overwatering Cannabis in Maine 2026 — Signs, Recovery & Prevention"
+  description="Overwatering is the most common cause of seedling and veg failure in Maine grows. The fix is counterintuitive: water less, not more. Here's the Maine-specific diagnosis and recovery protocol."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Overwatering Cannabis in Maine 2026 — Signs, Recovery & Prevention</h1>
+    <p class="subtitle">More Maine home-grow plants die from overwatering than from any other single cause. The fix is counterintuitive: stop watering and let the soil dry. Here's the diagnosis, recovery protocol, and prevention framework.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>Overwatering is the #1 killer of Maine seedlings</h2>
+    <p>If you grow cannabis in Maine, you'll overwater at least once. The plant will droop, you'll instinctively water more (thinking it needs water), and within 3-7 days the roots will start dying from lack of oxygen. This is the most common and most preventable failure mode for new growers.</p>
+    <p>The counterintuitive reality: an overwatered plant looks exactly like a thirsty plant — both go limp. The difference is that an under-watered plant recovers within hours of watering. An over-watered plant that has been drowning for 24+ hours may take days or weeks to recover, if it recovers at all.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>The Maine overwatering golden rule:</strong> Water only when the top 2 inches of soil are dry. In Maine's cool spring conditions (50-65°F daytime highs through May and early June), this means waiting 5-7 days between waterings for most plants. Outdoors in July-August heat, you may need every 2-3 days. Ignore calendars. Trust the soil.
+  </div>
+
+  <section>
+    <h2>How to identify overwatering</h2>
+    <p>The challenge is that overwatering and underwatering look almost identical at first. Here's the diagnostic framework.</p>
+    <h3>Stage 1 — Just overwatered (hours)</h3>
+    <p>Leaves are firm but droopy. The plant is wilting despite wet soil. You can check: stick a finger 2 inches into the soil. If it's saturated and the plant is wilting, that's overwatering.</p>
+    <h3>Stage 2 — Days of overwatering (3-7 days)</h3>
+    <p>Leaves curl down at the edges (claw shape). Yellowing starts at the bottom leaves. The stem feels soft at the soil line. The plant is no longer growing new leaves.</p>
+    <h3>Stage 3 — Root rot (1+ weeks)</h3>
+    <p>Lower leaves turn bright yellow and drop. The soil smells sour or rotten. The plant wilts but adding water makes it worse. Brown, mushy roots visible if you lift the plant.</p>
+    <h3>How to distinguish from underwatering</h3>
+    <p>The key test is the soil, not the plant. Stick a finger or moisture meter 2 inches into the soil:</p>
+    <table aria-label="Soil moisture diagnostic">
+      <thead>
+        <tr>
+          <th>Soil 2 inches down</th>
+          <th>Plant looks droopy</th>
+          <th>Diagnosis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Wet, sticks to finger</td><td>Yes</td><td>OVERWATERED — stop watering, improve drainage and airflow</td></tr>
+        <tr><td>Dry, doesn't stick</td><td>Yes</td><td>UNDERWATERED — water thoroughly, then adjust schedule</td></tr>
+        <tr><td>Just moist, slightly damp</td><td>Yes</td><td>Likely overwatering at the root level + underwater at the surface — bottom-water only</td></tr>
+        <tr><td>Wet, sticks to finger</td><td>No</td><td>Plant is fine, just resting</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Maine-specific overwatering problem</h2>
+    <p>Maine's climate creates a different overwatering risk than most growing guides assume. Here's why Maine growers drown plants more than growers in warmer climates do.</p>
+    <h3>The temperature factor</h3>
+    <p>Plants drink more water in hot weather because transpiration pulls moisture through them faster. Maine's typical May-June daytime highs (60-72°F) result in slow transpiration. Plants in Maine veg growth use roughly 30-50% less water than the same plants in California's veg growth (where most growing guides are written).</p>
+    <p>This means the standard "water every 3 days" advice over-waters Maine plants 2-3 times per cycle, leading to chronic over-watering that the grower doesn't recognize as such.</p>
+    <h3>The humidity factor</h3>
+    <p>Maine's 60-80% spring and summer humidity reduces the rate of soil moisture evaporation. Soil that would dry in 48 hours in low-humidity climates takes 5-7 days in Maine. Most guides assume the former; Maine growers live in the latter.</p>
+    <h3>The container size factor</h3>
+    <p>Small seedling pots (4-6 inch diameter) dry out faster than larger veg pots (1-3 gallon). A common Maine over-watering pattern: growers start with small seedling pots, get used to daily watering, then transplant to larger pots without adjusting the schedule. The larger pot holds the same water longer, but the schedule doesn't change → root rot in the new pot.</p>
+  </section>
+
+  <section>
+    <h2>Recovery protocol (after the droop)</h2>
+    <p>If you've caught the overwatering in Stage 1 or early Stage 2, recovery is straightforward. If you're in Stage 3 with root rot, recovery is possible but slow.</p>
+    <h3>Stage 1 recovery (within 24 hours)</h3>
+    <ol>
+      <li>Stop watering immediately.</li>
+      <li>Move the plant to an area with airflow — a small fan running 24/7 helps dry the soil faster.</li>
+      <li>Add drainage holes if your pot doesn't have them (or repot into a well-draining pot).</li>
+      <li>Wait until the top 2 inches of soil are dry before watering again. This may take 5-10 days.</li>
+      <li>Resume watering with smaller volumes — half what you were giving before — and only when soil is dry.</li>
+    </ol>
+    <h3>Stage 2 recovery (3-7 days)</h3>
+    <ol>
+      <li>All Stage 1 steps.</li>
+      <li>Remove yellow lower leaves — they're not coming back and they're draining plant energy.</li>
+      <li>Add perlite to the top 1-2 inches of soil if accessible — this improves surface drainage.</li>
+      <li>If your soil mix doesn't drain (heavy peat without perlite), consider repotting in fresh dry mix. This is a last resort because it stresses the plant more, but it's faster recovery than waiting for the existing soil to dry.</li>
+      <li>Resume watering only when the top 2 inches are completely dry.</li>
+    </ol>
+    <h3>Stage 3 recovery (root rot)</h3>
+    <ol>
+      <li>Repot immediately in fresh dry soil with excellent drainage (50% perlite mix).</li>
+      <li>Cut away any black or mushy roots with sterilized scissors (wipe with rubbing alcohol between cuts).</li>
+      <li>Don't water for 5-7 days to let the new soil dry out and force the plant to grow new roots searching for water.</li>
+      <li>After 7 days, start with light watering (1/4 normal volume) and gradually increase.</li>
+      <li>Expect 2-3 weeks of recovery. The plant will look stressed throughout — don't try to "rescue" it with extra nutrients.</li>
+      <li>If the main stem is mushy or the plant collapses completely, it likely can't be saved. Start over with a new seedling.</li>
+    </ol>
+    <Callout title="Prevention is better than recovery" type="passion">
+      Maine growers can avoid Stage 3 entirely with one rule: water only when the soil is dry 2 inches down. If you stick your finger in and pull it out damp, don't water. Period. Maine's climate gives you hours of extra drying time vs warmer regions, so over-watering is much more common than under-watering.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Tools to prevent overwatering</h2>
+    <table aria-label="Overwatering prevention tools">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Cost</th>
+          <th>Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Your finger</strong></td><td>Free</td><td>The most reliable soil moisture test. Push to the second knuckle; if damp, don't water.</td></tr>
+        <tr><td>Soil moisture meter</td><td>$10-25</td><td>Mechanical probe that gives a relative wetness reading. Calibrate to your pot size.</td></tr>
+        <tr><td>Lift-the-pot test</td><td>Free</td><td>A dry 1-gallon pot weighs noticeably less than a recently watered one. After 1-2 weeks, you'll calibrate by feel.</td></tr>
+        <tr><td>Self-watering pots (Smart Pots, fabric pots)</td><td>$5-15</td><td>Fabric pots dry faster than plastic, reducing overwatering risk for new growers.</td></tr>
+        <tr><td>Perlite amendment</td><td>$5-15</td><td>Mix 30% perlite into your soil for drainage and oxygen. The single best investment for preventing overwatering.</td></tr>
+        <tr><td>Drainage saucer</td><td>$3-5</td><td>Under every pot. Empty standing water within 30 minutes of watering — don't let the pot sit in a puddle.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Maine seasonal watering calendar</h2>
+    <p>Maine watering frequency varies dramatically by month. This is an average for outdoor plants; indoor plants are roughly the same in pot-size-equivalent terms.</p>
+    <table aria-label="Maine watering frequency by month">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Avg high temp (Portland)</th>
+          <th>Avg humidity</th>
+          <th>Typical watering frequency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>May (transplant)</td><td>62°F</td><td>70%</td><td>Every 5-7 days (only when soil is dry)</td></tr>
+        <tr><td>June</td><td>71°F</td><td>72%</td><td>Every 4-6 days</td></tr>
+        <tr><td>July</td><td>78°F</td><td>73%</td><td>Every 3-5 days</td></tr>
+        <tr><td>August (peak)</td><td>77°F</td><td>74%</td><td>Every 2-4 days (largest water consumers)</td></tr>
+        <tr><td>September (flower)</td><td>70°F</td><td>76%</td><td>Every 3-5 days (rain may handle it)</td></tr>
+        <tr><td>October (harvest)</td><td>57°F</td><td>76%</td><td>Every 5-10 days (very little transpiration)</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: NCEI Climate Normals (1991-2020) for Portland, ME. Frequency is for a typical 3-gallon container; smaller pots need more frequent watering, larger pots less.</p>
+    <Callout title="Outdoor rain is rarely enough" type="info">
+      Maine's spring and fall can deliver frequent light rain that wet the surface but doesn't soak the root zone. A half-inch of drizzle doesn't penetrate a 3-gallon pot's full depth. Check soil moisture the day after rain before deciding to water.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "How do I know if I'm overwatering my cannabis plant?", answer: "Check the soil 2 inches down with your finger. If it's damp and the plant is droopy, you have overwatering (not underwatering — both cause drooping). The plant looks like it needs water because leaves droop, but adding more water makes root damage worse. Stop watering for 5-7 days and improve airflow around the pot." },
+      { question: "Can an overwatered cannabis plant recover?", answer: "Yes if caught early (Stage 1 or 2). Most Maine growers can recover Stage 1 within 24-48 hours by stopping watering. Stage 2 takes 1-2 weeks. Stage 3 (root rot) is possible but slow — 2-4 weeks — and may fail. The plant will drop damaged leaves and grow new ones; expect some yield loss even after recovery." },
+      { question: "How often should I water cannabis seedlings in Maine?", answer: "Maine seedling watering is every 4-7 days during May-June, depending on container size and indoor temperature. Don't water on a schedule — check the soil. The cotyledons and seed energy sustain seedlings for the first 7-10 days; you may not need to water at all during that window if the soil is moist from planting." },
+      { question: "Is it better to overwater or underwater cannabis in Maine?", answer: "Underwatering in Maine is much safer than overwatering. Cannabis tolerates dry soil much better than wet soil. Roots in dry soil will grow toward the moisture, developing a stronger root system. Roots in saturated soil cannot access oxygen, die quickly, and can't be revived. When in doubt, wait another day before watering." },
+      { question: "Can pots without drainage holes be used for cannabis in Maine?", answer: "Not recommended — Maine's humid conditions make drainage deficits worse. If you must use a decorative pot without holes, double-pot: keep the cannabis in a plastic nursery pot with drainage, place that inside the decorative pot, and remove the inner pot after each watering so excess drains away. This is a workaround, not a fix — drainage is essential." },
+      { question: "What soil mix prevents overwatering in Maine?", answer: "A well-draining mix with at least 30% perlite by volume. For seedlings, use a sterilized seedling mix with perlite. For veg and flower, a base of coco coir or peat moss mixed with 30% perlite and 10% vermiculite or compost gives both drainage and water retention. Maine's humid climate means you want faster drainage than most guides recommend." }
+    ]} />
+  </section>
+
+  <aside class="source-note">
+    <strong>Primary sources:</strong> NCEI Climate Normals (1991-2020) for Portland monthly temperature and humidity data. <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html" rel="noopener noreferrer">28-B M.R.S. §1502</a> for Maine home cultivation framework. Royal Queen Seeds' watering protocols and the ILGM <em>Beginner's Guide to Drying Cannabis</em> for root-stage overwatering identification.
+  </aside>
+
+  <section>
+    <h2>Where to go next</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering compliance</li>
+      <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soils, perlite amendments, drainage</li>
+      <li><a href="/blog/cannabis-seedling-problems-maine-2026">Cannabis Seedling Problems in Maine 2026</a> — leggy starts, damping off, slow growth</li>
+      <li><a href="/blog/cannabis-yellow-leaves-maine-2026">Cannabis Yellow Leaves in Maine 2026</a> — diagnosis and treatment</li>
+      <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zone selection and planting calendar</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity, water pH testing</li>
+      <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests & Mold in Maine 2026</a> — botrytis, powdery mildew, IPM</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — seed-type decision matrix</li>
+      <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options</li>
+      <li><a href="/blog/cannabis-trimming-maine-2026">Wet Trim vs Dry Trim for Cannabis in Maine 2026</a> — Maine October humidity</li>
+      <li><a href="/blog/cannabis-lst-training-maine-2026">LST Low Stress Training for Cannabis in Maine 2026</a> — recommended training method</li>
+      <li><a href="/blog/cannabis-topping-autoflower-maine-2026">Can You Top Autoflower Cannabis? Maine Guide 2026</a> — autoflower topping risks</li>
+      <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+    </ul>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/cannabis-overwatering-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</article>
+</Layout>

@@ -1,0 +1,189 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "seedling", "troubleshooting", "early-growth"];
+---
+<Layout
+  title="Cannabis Seedling Problems in Maine 2026 — Leggy, Stretching & Early Fixes"
+  description="Seedling problems kill Maine grows before they start. Yellow leaves, leggy stems, damping off, slow growth — what causes each, how to diagnose, and the fix that works in Maine's climate."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cannabis Seedling Problems in Maine 2026 — Leggy, Stretching & Early Fixes</h1>
+    <p class="subtitle">Most Maine home-grow failures happen in the first 2-3 weeks. Yellow cotyledons, leggy stems, damping off — here's what each looks like, what causes it, and the fix that works in Maine's climate.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>The first 21 days decide your grow</h2>
+    <p>Cannabis seedlings are fragile, and Maine's variable spring conditions compound the challenge. Temperature swings from 35°F at night to 75°F during the day are normal in April and May. A cold frame or seed-starting mat solves most of these problems, but not all of them. The most common cannabis seedling problems are predictable, and most have simple fixes once you know what to look for.</p>
+    <p>This guide covers the six problems that kill the most Maine seedlings: leggy stretching, yellow cotyledons, damping off, slow growth, root rot, and nutrient burn. Each section describes the symptom, the cause, and the Maine-appropriate fix.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>The Maine seedling golden rule:</strong> Light and air movement fix most seedling problems. If your seedlings are stretching, give them more light. If they're damping off, give them more airflow. If they're yellow, hold off on feeding and let them use their cotyledon reserves. Reserve nutrient adjustments for after the first 3-4 true leaves.
+  </div>
+
+  <section>
+    <h2>1. Leggy seedlings (stretching toward light)</h2>
+    <p><strong>What it looks like:</strong> Tall, thin stems with widely spaced leaf nodes. The seedling looks like a stretched-out sprout rather than a stocky plant. Eventually the stem can't support the weight and flops over.</p>
+    <p><strong>Cause:</strong> Not enough light intensity, or light too far above the seedling. Cannabis seedlings need 18-24 hours of strong light from day 1. A south-facing windowsill in Maine is almost never enough (the seedlings grow toward the light and stretch).</p>
+    <p><strong>Fix:</strong> Get a T5 fluorescent or LED seed-starting light, mount 4-6 inches above the seedlings, and run it 18-24 hours per day. Cost: $30-80 for a fixture that handles 4-6 seedlings.</p>
+    <p>For outdoor Maine seedlings, the fix is different: get them into the strongest natural sunlight available. A cold frame or greenhouse with east and south exposure gives Maine seedlings 12-14 hours of good light from late March through May. Don't start seedlings in a dim indoor corner and move them outdoors — the shock and stretch damage will set them back more than the extra few days of waiting would have.</p>
+  </section>
+
+  <section>
+    <h2>2. Yellow cotyledons (seed leaves)</h2>
+    <p><strong>What it looks like:</strong> The first set of leaves (round cotyledons, or "seed leaves") turn yellow and may fall off. Usually affects lower leaves while true leaves stay green.</p>
+    <p><strong>Cause:</strong> Normal. The cotyledons are the seedling's stored energy reserves for the first 7-14 days of life. Once true leaves develop, the plant no longer needs the cotyledons and they yellow and drop as the plant redirects energy.</p>
+    <p><strong>Fix:</strong> None usually needed. Don't panic if cotyledons yellow after the first true leaves appear — that's normal. Only worry if true leaves (the spade-shaped cannabis leaves with serrated edges) are yellowing, which suggests a different problem.</p>
+    <h3>When yellow true leaves are a problem</h3>
+    <p>If the spade-shaped true leaves are uniformly yellow, the cause is usually nitrogen deficiency or overwatering. Check your watering schedule — overwatering is more common than underwatering and looks similar to nutrient deficiency at this stage. Allow the top inch of soil to dry between waterings.</p>
+    <p>If yellow cotyledons appear before true leaves develop, the cause is usually insufficient light energy. The seedling is using its cotyledon reserves faster than it can photosynthesize. This is most common in dim indoor setups.</p>
+  </section>
+
+  <section>
+    <h2>3. Damping off (stem at soil line goes soft and falls)</h2>
+    <p><strong>What it looks like:</strong> A healthy seedling suddenly wilts. The stem at the soil line is brown, soft, and pinched — like a thin wire that someone crimped. The seedling topples over.</p>
+    <p><strong>Cause:</strong> A fungal infection (Pythium, Rhizoctonia, or Fusarium) that thrives in cold, wet conditions. Maine's spring soils are cold and damp — exactly the conditions these fungi love. Sterilized seedling mix is essential; garden soil carries the pathogens.</p>
+    <p><strong>Fix (once it happens):</strong> The seedling is usually unrecoverable. Remove it and any others near it. Improve airflow and reduce watering. For the remaining seedlings, water with a light chamomile tea solution (1 tea bag per quart of water, cooled) — chamomile is a mild natural fungicide that helps prevent further spread.</p>
+    <p><strong>Prevention:</strong> Use sterilized seedling mix (not garden soil). Maintain 65-75°F soil temperature with a heat mat if needed. Water from below (in a tray) so the soil surface stays drier. Provide gentle airflow with a small fan. Don't overcrowd seedlings in one cell.</p>
+  </section>
+
+  <section>
+    <h2>4. Slow or no growth</h2>
+    <p><strong>What it looks like:</strong> Seedlings sit and don't grow visibly. The cotyledons stay green and don't drop, but no new true leaves emerge. Or seedlings grow very slowly week over week.</p>
+    <p><strong>Cause:</strong> Usually one of four things: too cold, rootbound (pot too small), insufficient light, or pH problems. Maine spring temperatures in an unheated basement or garage can drop below 60°F at night — cannabis pauses growth below 65°F.</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Check soil temperature with a cheap probe thermometer. If below 65°F, add a heat mat.</li>
+      <li>Check pot size — if the cotyledons are wilting and the plant is yellow but small, the roots may be crowded. Transplant to a 1-gallon pot.</li>
+      <li>Check light duration and intensity — seedlings need 18+ hours of direct light. Move closer to the fixture or upgrade to stronger light.</li>
+      <li>Test pH of your water and runoff. Cannabis prefers 5.5-6.5 in soil. If your tap water is above 7.0, that's slowing nutrient uptake.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>5. Root rot (seedling wilts despite wet soil)</h2>
+    <p><strong>What it looks like:</strong> Seedling wilts even though soil is wet. Roots are brown and mushy instead of white and firm. Often accompanied by a sour smell from the soil.</p>
+    <p><strong>Cause:</strong> Anaerobic conditions in the root zone. Either overwatering, compacted soil that doesn't drain, or a pot without drainage holes. In Maine's humid indoor spring conditions, soil stays wet longer than growers expect.</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Repot in fresh dry seedling mix immediately.</li>
+      <li>Cut away any brown/black roots with sterile scissors (wipe with alcohol).</li>
+      <li>Use a pot with drainage holes — decorative pots without holes are the most common cause.</li>
+      <li>Add perlite to the soil mix if you haven't already (30% perlite is a good starting ratio).</li>
+      <li>Water only when the top inch is dry, not on a schedule.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>6. Nutrient burn (brown leaf tips, yellow margins)</h2>
+    <p><strong>What it looks like:</strong> Brown leaf tips that progress inward, yellow or bronze leaf margins. Usually starts on lower leaves first because nutrient uptake moves upward.</p>
+    <p><strong>Cause:</strong> Overfeeding. Either the soil mix had too much pre-loaded nutrients or you started feeding too early. Seedlings don't need nutrients for the first 2-3 weeks — the cotyledons and seed energy are enough.</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Stop feeding for 7-10 days.</li>
+      <li>Flush with plain pH-balanced water (run 2-3x the pot volume through the soil).</li>
+      <li>Resume feeding at 25-50% of the recommended dose, only after the first 3-4 true leaves are well-developed.</li>
+    </ol>
+    <Callout title="Maine spring rule" type="info">
+      Maine's cool spring temperatures slow root nutrient uptake. If you transplanted from a peat-based seedling mix into a nutrient-loaded hot soil, the result is often nutrient burn. When in doubt, use plain water for the first 2 weeks of veg.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Maine spring seedling calendar</h2>
+    <p>When to start cannabis seedlings in Maine depends on whether you're going outdoor, transplanting into a greenhouse, or running an indoor grow.</p>
+    <table aria-label="Maine seedling start dates by zone">
+      <thead>
+        <tr>
+          <th>Maine region</th>
+          <th>Start indoor</th>
+          <th>Transplant outdoor</th>
+          <th>First frost risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Southern coast</td><td>Mid-March</td><td>Late May</td><td>Oct 5-15</td></tr>
+        <tr><td>Central Maine</td><td>Early April</td><td>Early June</td><td>Sep 20-30</td></tr>
+        <tr><td>Northern / Aroostook</td><td>Mid-April</td><td>Mid-June</td><td>Sep 1-10</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: UMaine Cooperative Extension frost-date guidance for Maine. Indoor start dates assume seeds germinated indoors 6-8 weeks before last frost.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Why are my cannabis seedlings stretching toward the light?", answer: "Insufficient light intensity. Cannabis seedlings need 18-24 hours of direct light from a T5 fluorescent or LED seed-starting fixture mounted 4-6 inches above the canopy. A windowsill in Maine's spring light is rarely enough — seedlings stretch toward the brightest source, which may not be intense enough to prevent leggy growth." },
+      { question: "What does damping off look like on cannabis seedlings?", answer: "A seedling wilts suddenly even though the soil is moist. The stem at the soil line is brown, soft, and pinched. The fungus (Pythium, Rhizoctonia, or Fusarium) thrives in cold wet conditions. Sterilized seedling mix, 65-75°F soil, and gentle airflow are the best prevention." },
+      { question: "Can I save a yellowing cannabis seedling?", answer: "Often yes, if true leaves are still green. Yellow cotyledons are normal — the plant is using stored energy and they will drop on their own. Yellow true leaves indicate nutrient or watering issues that are usually fixable with adjusted feeding or a watering schedule of 'when the top inch is dry'." },
+      { question: "When can I transplant my Maine cannabis seedlings outdoors?", answer: "Southern Maine: late May after last frost (May 5-15 average). Central Maine: early June after last frost (May 15-25 average). Northern/Aroostook: mid-June (June 5-15 average). Check the UMaine Cooperative Extension frost-date guidance for your specific town — microclimate shifts of 7-14 days are common." },
+      { question: "Do cannabis seedlings need nutrients?", answer: "No for the first 2-3 weeks. The cotyledons (seed leaves) and seed energy reserves provide all nutrition until 3-4 true leaves develop. Starting nutrients earlier than that causes nutrient burn in most cases. Use plain pH-balanced water for the first 2 weeks of seedling growth." },
+      { question: "What humidity do cannabis seedlings need in Maine?", answer: "65-75% RH for the first 2 weeks, dropping to 55-65% by week 3-4. Maine's indoor spring humidity typically runs 40-60% by April-May, so you may need a humidity dome for the first 1-2 weeks. Don't exceed 80% — that creates the conditions for damping off and mold." }
+    ]} />
+  </section>
+
+  <aside class="source-note">
+    <strong>Primary sources:</strong> UMaine Cooperative Extension (<a href="https://extension.umaine.edu/" rel="noopener noreferrer">extension.umaine.edu</a>) for Maine-specific frost dates and seedling cold tolerance guidance. <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html" rel="noopener noreferrer">28-B M.R.S. §1502</a> for adult-use personal cultivation framework (6 mature / 12 immature / unlimited seedlings per adult 21+). Royal Queen Seeds' seedling troubleshooting guides and ILGM's Robert Bergman <em>Marijuana Grow Basics</em> for damping off and nutrient burn protocols.
+  </aside>
+
+  <section>
+    <h2>Where to go next</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering 28-B M.R.S. §1502 and compliance</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar and frost dates</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity, and CMP/Versant rates</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — seed-type decision matrix</li>
+      <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options</li>
+      <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — season extension with a hoop house</li>
+      <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zone selection and planting calendar</li>
+      <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soils, pH, raised beds</li>
+      <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests & Mold in Maine 2026</a> — botrytis, powdery mildew, deer, IPM</li>
+      <li><a href="/blog/cannabis-lst-training-maine-2026">LST Low Stress Training for Cannabis in Maine 2026</a> — recommended training method</li>
+      <li><a href="/blog/cannabis-topping-autoflower-maine-2026">Can You Top Autoflower Cannabis? Maine Guide 2026</a> — why autoflower topping is risky</li>
+      <li><a href="/blog/cannabis-trimming-maine-2026">Wet Trim vs Dry Trim for Cannabis in Maine 2026</a> — Maine October humidity and trim timing</li>
+      <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+    </ul>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/cannabis-seedling-problems-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</article>
+</Layout>
