@@ -1,0 +1,227 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "outdoor", "maine-climate", "pests", "mold", "ipm"];
+---
+<Layout
+  title="Cannabis Pests & Mold in Maine 2026 — Botrytis, Mildew, Deer & an Organic IPM Plan"
+  description="Maine's 70–85% summer humidity makes botrytis and powdery mildew the real season-enders — not insects. A Maine-specific integrated pest management guide: bud rot prevention, mildew treatment, deer and rabbit exclusion, aphids and mites, companion planting, and harvest timing to beat fall mold."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cannabis Pests &amp; Mold in Maine 2026: Prevention &amp; Treatment</h1>
+    <p class="subtitle">In most of the country, insects end cannabis seasons. In Maine, humidity does. With summer relative humidity of 70–85% and October mornings at 80–90%, botrytis and powdery mildew are the threats that actually cost Maine growers their harvest — deer and bugs are distant seconds. This is the Maine-specific integrated pest management (IPM) playbook.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Integrated pest management — prevention first, monitoring second, intervention last — is the only sane framework for a Maine home grow, where the plants you're protecting are also something you're going to smoke. This guide ranks the real threats in order of what they cost Maine growers, walks identification and organic treatment for each, covers companion planting and exclusion, and ends with the single highest-leverage decision of the season: harvest timing to beat fall mold.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> Maine's #1 and #2 cannabis threats are fungal — botrytis (bud rot) and powdery mildew — driven by 70–85% summer humidity. Prevention is airflow, spacing, defoliation, and strain choice; there is no rescue treatment for a rotted bud. Deer and rabbits are #3 and are solved with fencing, not repellents. Aphids, spider mites, and fungus gnats are manageable with neem, insecticidal soap, and beneficials. Harvest before the wet October weeks and dry at 60°F / 60% RH.
+  </div>
+
+  <div class="fact-box">
+    <h2>Maine pest &amp; mold threat ranking</h2>
+    <table aria-label="Maine cannabis pest and mold threat ranking">
+      <tbody>
+        <tr><td><strong>1. Botrytis (bud rot)</strong></td><td>Season-ender; thrives at 80%+ RH on dense flower</td></tr>
+        <tr><td><strong>2. Powdery mildew</strong></td><td>Chronic in humid, still air; weakens yield and smokability</td></tr>
+        <tr><td><strong>3. Deer &amp; rabbits</strong></td><td>Can destroy a garden overnight; fencing is the only reliable fix</td></tr>
+        <tr><td><strong>4. Aphids, spider mites, fungus gnats</strong></td><td>Manageable with organic treatment and monitoring</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>The humidity problem: why Maine is a mold state</h2>
+    <p>Maine's coastal and interior air carries far more moisture than most grow guides assume. Summer relative humidity typically runs 70–85%, and during flower season — September into October — morning RH routinely sits at 80–90%, with dew soaking the canopy every night. Both of the state's major fungal pathogens key off exactly these numbers:</p>
+    <ul>
+      <li><strong>Botrytis cinerea (gray mold / bud rot)</strong> infects dense flower when free moisture and humidity above ~80% persist for hours. It spreads from the inside of a bud outward, so by the time you see gray-brown, webby, crumbly tissue, the cola is already lost.</li>
+      <li><strong>Powdery mildew (PM)</strong> needs no free water — just high humidity and still air. It shows as white, flour-like patches on leaves and, late in season, on buds, where it renders flower unusable.</li>
+    </ul>
+    <p>The uncomfortable truth of Maine growing: you will not spray your way out of either one. Fungicides are a preventive at best, a cosmetic fix at worst, and nothing labeled for use on cannabis flower will cure a bud that's already infected. The entire strategy is environmental — and it starts before you plant.</p>
+  </section>
+
+  <section>
+    <h2>Botrytis (bud rot): prevention is the only treatment</h2>
+    <p>Bud rot is the single biggest harvest-loss cause in Maine. It arrives in September, rides in on rain and fog, and works from the inside of the densest colas. There is no cure — the playbook is entirely preventive.</p>
+    <ol class="protocol-steps">
+      <li><strong>Choose open, airy genetics.</strong> Loose-budded, indica-leaning or ruderalis varieties shed moisture; dense, indica-heavy "brick" colas hold it. Strain choice is your first botrytis decision. See our <a href="/blog/best-cannabis-strains-maine-outdoor-2026">Maine outdoor strains</a> guide.</li>
+      <li><strong>Space plants for airflow.</strong> Give each plant room — 4–6 feet between plants for full-season photoperiods — and orient rows with the prevailing southwest wind, not against it.</li>
+      <li><strong>Defoliate before flower.</strong> Strip the lower third of fan leaves and interior growth that shades the bud sites. Less canopy density means faster drying after every rain and dew event.</li>
+      <li><strong>Keep water off the buds.</strong> Water at the base in the morning so foliage dries by nightfall. Never overhead-water after stretch.</li>
+      <li><strong>Inspect daily in September.</strong> Look for the telltale signs: a single fan leaf turning yellow and dying at the bud attachment, gray webbing, or a cola that looks slightly darker and water-soaked. Gently part suspect buds.</li>
+      <li><strong>Remove infected tissue immediately.</strong> Cut the affected cola well below the visible rot, bag it on-site (spores travel), and dispose of it away from the garden. Do not compost it.</li>
+    </ol>
+    <Callout title="A wet September week is a decision point" type="warning">
+      If a multi-day rain or fog event is forecast in late flower and trichomes are mostly milky, many experienced Maine growers harvest early rather than gamble. A slightly early harvest loses a small fraction of peak potency; a botrytis event can lose an entire cola — or the whole plant — and spores will seed next year's garden. The math favors cutting.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Powdery mildew: identification and treatment</h2>
+    <p>PM is the chronic one — it rarely kills a plant outright but steadily weakens it, and on flower it makes the crop unsmokable. Identification is easy: white, powdery, flour-like spots that start on upper leaf surfaces and spread. It favors exactly the conditions Maine provides — 70–85% humidity, still air, and moderate temperatures — plus the microclimates growers create: overcrowded plants, a garden tucked against a solid fence with no breeze, or dense un-defoliated canopy.</p>
+    <p>Treatment, in escalating order:</p>
+    <ul>
+      <li><strong>Prevention:</strong> the same airflow, spacing, and defoliation protocol as botrytis. A plant in moving air with an open canopy rarely develops serious PM.</li>
+      <li><strong>Early leaf infection:</strong> remove and bag the affected leaves. Then treat the remaining canopy with a potassium bicarbonate spray (2–3 tsp per gallon with a spreader) or a diluted hydrogen peroxide spray, applied in the evening to avoid leaf burn. Repeat every 5–7 days while conditions favor it.</li>
+      <li><strong>Neem oil:</strong> effective as a preventive and early treatment on leaves, but do not apply to buds — the residue taints flavor and is not something you want to smoke. Neem is a vegetative-stage tool.</li>
+      <li><strong>Late-flower infection on buds:</strong> there is no safe rescue. Flower with established PM should not be consumed. This is why PM management is a vegetative- and early-flower-stage job.</li>
+    </ul>
+    <p class="source-note">Any product applied to cannabis should be checked against current Maine pesticide rules; the Maine Board of Pesticides Control and OCP maintain guidance on what may be used on cannabis. When in doubt, use the least-toxic option and keep it off flower.</p>
+  </section>
+
+  <section>
+    <h2>Maine's vertebrate pests: deer and rabbits</h2>
+    <p>Maine's deer population has grown steadily, and a whitetail that discovers a cannabis garden in August will return nightly. Rabbits and voles take young plants and stems at ground level. Neither is deterred by anything short of a physical barrier — repellents wash off in Maine rain within days and habituation sets in fast.</p>
+    <ul>
+      <li><strong>Deer:</strong> an 8-foot fence is the standard; deer clear 6 feet easily. Where a full fence isn't practical, a double-layer fence (two 5-foot fences 4 feet apart) works because deer won't jump into a space they can't land in. Electric fencing (two or three strands) is the cheapest effective option for a remote or wooded site.</li>
+      <li><strong>Rabbits and voles:</strong> 2–3 feet of 1-inch-mesh hardware cloth buried 6–8 inches and flared outward stops burrowing. Protect individual young plants with wire cages until stems woody up in July.</li>
+      <li><strong>Plant cages:</strong> a cylinder of concrete reinforcing wire or hardware cloth around each plant through July is cheap insurance and doubles as support for heavy September colas.</li>
+    </ul>
+    <Callout title="Fencing also serves your §1502 compliance" type="info">
+      The home-grow statute requires plants be secured against access by anyone under 21 and not visible from a public way. A locked, opaque 6–8 foot fence around the garden addresses the security requirement, the visibility requirement, and the deer problem in one structure. It's the highest-value single build in a Maine backyard grow.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Insect pests: aphids, spider mites, fungus gnats</h2>
+    <p>Maine's insect pressure is lighter than most of the country's — cool nights keep spider mite and thrips populations in check — but three insects show up reliably enough to plan for.</p>
+    <table aria-label="Common Maine cannabis insect pests and organic treatments">
+      <thead>
+        <tr><th>Pest</th><th>Signs</th><th>Organic treatment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Aphids</td><td>Clusters on new growth and under leaves; sticky honeydew; ants farming them</td><td>Strong water spray, insecticidal soap, ladybugs/lacewings; repeat weekly</td></tr>
+        <tr><td>Spider mites</td><td>Stippled yellow speckling on leaves; fine webbing under heavy infestation</td><td>Neem or insecticidal soap in veg (never on buds); predatory mites; remove heavily infested leaves</td></tr>
+        <tr><td>Fungus gnats</td><td>Tiny black flies at soil surface; larvae feed on roots in wet media</td><td>Let the top inch dry between waterings; yellow sticky traps; BTI (Bacillus thuringiensis israelensis) drench</td></tr>
+      </tbody>
+    </table>
+    <p>The pattern behind all three is the same: they explode in stressed, overcrowded, overwatered gardens. A spaced, airy, properly watered Maine garden rarely reaches damaging insect levels — which is why IPM starts with culture, not chemistry.</p>
+  </section>
+
+  <section>
+    <h2>Companion planting and organic controls</h2>
+    <p>Companion planting is a low-cost layer of deterrence, not a force field — but in a Maine garden it earns its space. Plant companions around the perimeter and between rows, not so densely that they choke airflow (which would defeat the whole point).</p>
+    <ul>
+      <li><strong>Marigolds</strong> — the classic; their root exudates suppress nematodes and their scent confuses some flying insects.</li>
+      <li><strong>Basil</strong> — reported to deter thrips and flies; thrives in the same full sun and warmth as cannabis.</li>
+      <li><strong>Dill, fennel, yarrow, alyssum</strong> — umbel and composite flowers that recruit ladybugs, lacewings, hoverflies, and parasitic wasps, the beneficials that do your aphid and mite control for free.</li>
+      <li><strong>Alliums (garlic, chives)</strong> — sulfur compounds deter aphids and some fungal pressure.</li>
+    </ul>
+    <p>Keep your organic toolkit small and stage-appropriate: insecticidal soap and neem for vegetative-stage insects, potassium bicarbonate for PM on leaves, BTI for gnats, and a few yellow sticky traps for monitoring. Anything applied in flower should be the mildest option that works, applied in the evening, and kept off buds entirely.</p>
+  </section>
+
+  <section>
+    <h2>The IPM loop: monitor, decide, act</h2>
+    <p>Integrated pest management is a weekly rhythm, not a product list:</p>
+    <ol class="protocol-steps">
+      <li><strong>Monitor.</strong> Walk the garden every morning in September. Flip leaves, check undersides, part the top of dense colas, and read sticky traps. Problems found early are manageable; problems found in October are losses.</li>
+      <li><strong>Identify.</strong> Confirm what you're seeing before treating — yellowing from overwatering, nitrogen deficiency, and spider mites all look vaguely similar at a glance. UMaine Cooperative Extension will identify a sample or photo.</li>
+      <li><strong>Decide by threshold.</strong> A few aphids on one plant is not an emergency — it's food for the ladybugs you're trying to recruit. Treat only when a pest is actually increasing and causing damage.</li>
+      <li><strong>Act with the least-toxic effective tool,</strong> then re-check in 3–5 days. Escalate only if the population is still climbing.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Harvest timing: the highest-leverage mold decision</h2>
+    <p>Everything in this guide converges on one decision: when to cut. Maine's October weather — wet weeks, 80–90% morning humidity, cooling nights — is botrytis's ideal environment, and it arrives exactly when late-flowering cannabis is at peak ripeness. The grower's move is to anchor harvest to your strain's flower time and your region's first-frost date, confirm with trichomes (milky with some amber), and treat any forecast multi-day wet event in late flower as a trigger to harvest a few days early.</p>
+    <p>Then protect the investment on the back end: dry at roughly 60°F and 60% RH with gentle airflow, which in Maine almost always means a dehumidifier in the drying room. Our <a href="/blog/drying-cannabis-maine-humidity-2026">drying in Maine humidity</a> guide covers the full dry-and-cure protocol that keeps October's moisture out of your jars.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "What is the biggest pest or disease threat to outdoor cannabis in Maine?", answer: "Fungus, not insects. Botrytis (bud rot) is the leading cause of harvest loss in Maine, driven by 70–85% summer humidity and 80–90% October mornings. Powdery mildew is a close second. Both are prevented through airflow, spacing, defoliation, strain choice, and harvest timing — there is no cure for an infected bud, so the entire strategy is environmental." },
+      { question: "Can I save a plant with bud rot?", answer: "You can save the plant if you catch it early, but you cannot save the infected bud. Cut the affected cola well below the visible rot, bag it on-site so spores don't spread, and dispose of it away from the garden (do not compost it). If rot is widespread in a dense main cola late in flower, harvesting the plant early is usually the right call to protect the rest." },
+      { question: "Is neem oil safe to use on cannabis buds?", answer: "No — keep neem off flower. Neem is a useful vegetative-stage tool for spider mites, aphids, and powdery mildew on leaves, but residue on buds taints flavor and isn't something you want to smoke. In flower, use the least-toxic option that works (e.g., potassium bicarbonate for mildew on leaves), apply in the evening, and avoid buds entirely." },
+      { question: "How do I keep deer out of my cannabis garden?", answer: "With a physical barrier — repellents don't hold up in Maine rain. An 8-foot fence is standard; where that's not practical, a double 5-foot fence spaced 4 feet apart or a two-to-three-strand electric fence works for remote sites. A locked, opaque fence also helps satisfy the 28-B M.R.S. §1502 requirements that plants be secured against access and not visible from a public way." },
+      { question: "What does powdery mildew look like on cannabis?", answer: "White, flour-like powdery spots, usually starting on upper leaf surfaces, that spread and can cover leaves, stems, and eventually buds. It thrives in Maine's 70–85% humidity plus still air and overcrowded canopy. Early leaf infection is treatable (remove affected leaves, then potassium bicarbonate spray); established infection on buds is not salvageable for consumption, which is why PM control is a vegetative- and early-flower-stage job." },
+      { question: "Should I harvest early to avoid mold in Maine?", answer: "Often, yes. If trichomes are mostly milky and a multi-day rain or fog event is forecast in late flower, cutting a few days early loses a small fraction of peak potency while a botrytis event can lose whole colas. Anchor your date to strain flower time and your region's first frost, confirm with trichome color, and let the October forecast make the final call." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — the full outdoor grow: zones, frost dates, site selection, calendar, and the law</li>
+        <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soil types, pH correction, lime rates, raised beds, and fabric pots</li>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework and caregiver rules</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — open, mold-resistant genetics for humid Maine falls</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse and humidity control</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — the 60°F / 60% RH dry-and-cure protocol for October harvests</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, security and visibility)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — pest identification, humidity and climate data, and IPM guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before planting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/cannabis-pests-mold-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>
