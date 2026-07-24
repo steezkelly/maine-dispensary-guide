@@ -224,18 +224,42 @@ async function collectAggregateSnapshots(sc, sourceWindow, extractedAt = new Dat
 }
 
 function recordsFromRows(rows, sourceWindow, snapshotDate = ymd(new Date())) {
-  return rows.map(row => ({
+  // GSC API can return duplicate (query, page) pairs for the same date range.
+  // Aggregate duplicates: sum clicks/impressions, impression-weighted avg for
+  // ctr/position. The ledger's prepareDailyUpsert rejects duplicate keys, so
+  // dedup here is required for the daily pipeline to succeed.
+  const byKey = new Map();
+  for (const row of rows) {
+    const query = row.keys[0];
+    const page = row.keys[1];
+    const key = `${query}\0${page}`;
+    const clicks = row.clicks || 0;
+    const impressions = row.impressions || 0;
+    const ctr = row.ctr || 0;
+    const position = row.position || 0;
+    const existing = byKey.get(key);
+    if (existing) {
+      existing.clicks += clicks;
+      existing.impressions += impressions;
+      existing.ctrSum += ctr * impressions;
+      existing.posSum += position * impressions;
+      existing.weight += impressions;
+    } else {
+      byKey.set(key, { query, page, clicks, impressions, ctrSum: ctr * impressions, posSum: position * impressions, weight: impressions });
+    }
+  }
+  return Array.from(byKey.values()).map(({ query, page, clicks, impressions, ctrSum, posSum, weight }) => ({
     snapshotDate,
     sourceStartDate: sourceWindow.sourceStartDate,
     sourceEndDate: sourceWindow.sourceEndDate,
     sourceTimezone: SOURCE_TIMEZONE,
     sourceDataState: 'final',
-    query: row.keys[0],
-    page: row.keys[1],
-    clicks: row.clicks || 0,
-    impressions: row.impressions || 0,
-    ctr: row.ctr || 0,
-    position: row.position || 0,
+    query,
+    page,
+    clicks,
+    impressions,
+    ctr: weight > 0 ? ctrSum / weight : 0,
+    position: weight > 0 ? posSum / weight : 0,
   }));
 }
 
@@ -270,12 +294,31 @@ async function main() {
 
   const sc = google.searchconsole({ version: 'v1', auth: client });
   const sourceWindow = getSourceWindow();
-  const { rows } = await fetchAnalytics(sc, sourceWindow);
-  const records = recordsFromRows(rows, sourceWindow);
-  const aggregateSnapshots = await collectAggregateSnapshots(sc, sourceWindow);
+
+  // The ledger requires sourceStartDate === sourceEndDate (daily records).
+  // For multi-day windows (--days=N), iterate per-day so each record carries
+  // a single-day source window. The GSC API aggregates across the requested
+  // range, so per-day calls are the only way to get daily-granular data.
+  const allRecords = [];
+  const dayCount = Math.round(
+    (new Date(sourceWindow.sourceEndDate) - new Date(sourceWindow.sourceStartDate)) / 86400000
+  ) + 1;
+  for (let i = 0; i < dayCount; i++) {
+    const day = shiftYmd(sourceWindow.sourceStartDate, i);
+    const dayWindow = { sourceStartDate: day, sourceEndDate: day };
+    const { rows } = await fetchAnalytics(sc, dayWindow);
+    const dayRecords = recordsFromRows(rows, dayWindow);
+    allRecords.push(...dayRecords);
+  }
+  const records = allRecords;
+
+  // Aggregate snapshots use the last day of the window (they track site-level
+  // state for trend comparison; the ledger requires single-day source windows).
+  const snapshotWindow = { sourceStartDate: sourceWindow.sourceEndDate, sourceEndDate: sourceWindow.sourceEndDate };
+  const aggregateSnapshots = await collectAggregateSnapshots(sc, snapshotWindow);
 
   const summary = collectionSummary(records, aggregateSnapshots);
-  logOk(`Got ${summary.rows} private rows: ${summary.clicks} clicks, ${summary.impressions} impressions`);
+  logOk(`Got ${summary.rows} private rows: ${summary.clicks} clicks, ${summary.impressions} impressions (${dayCount} day${dayCount > 1 ? 's' : ''})`);
   if (records.length === 0 && !flags['allow-no-data']) {
     logErr(`No GSC rows returned for ${sourceWindow.sourceStartDate} → ${sourceWindow.sourceEndDate}; refusing to store an empty success snapshot. Re-run with --allow-no-data only when the absence is expected.`);
     process.exit(4);
