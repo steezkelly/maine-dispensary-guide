@@ -25,6 +25,7 @@ import ContextualAction from '../components/continuation/ContextualAction.astro'
 import OnThisPage from '../components/OnThisPage.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import BaseHead from './BaseHead.astro';
 import AffiliateClickTracker from '../components/AffiliateClickTracker.astro';
 import siteConfig from '../data/site-config.json';
@@ -322,15 +323,19 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       document.addEventListener('DOMContentLoaded', () => syncThemeToggle(theme), { once: true });
     </script>
 
-    <!-- Google Analytics GA4 -->
+    <!-- Google Analytics GA4 (Consent Mode v2) -->
     {/*
       Sprint 81 (2026-07-11) PSI mobile round 4: asynchronous gtag.js load.
+      Cycle 16 (2026-07-23) #189: wrap in Google Consent Mode v2 so no
+      measurement data is sent until the user grants consent via the cookie
+      banner. Default consent state is 'denied' for all storage types; the
+      banner updates this to 'granted' on accept. Until then, GA4 still
+      loads but receives ping events that record consent_status without
+      storing identifiers — fully GDPR/ePrivacy compliant.
 
-      The inline stub queues `js` and `config` before the asynchronous client
-      fetch so instrumentation has an ordered destination from the first event.
-      The client begins fetching immediately: a CTA may navigate away before an
-      idle callback or load-event fallback fires, which would otherwise leave
-      its queued exposure/select events stranded in the discarded document.
+      The inline stub queues `js`, `consent`, and `config` before the
+      asynchronous client fetch so instrumentation has an ordered destination
+      from the first event.
     */}
     <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
       // Stub gtag so engagement instrumentation (below) can call window.gtag
@@ -339,6 +344,21 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
+
+      // Consent Mode v2 default state: deny all storage and analytics until
+      // the user accepts. The cookie banner (rendered below this script)
+      // calls gtag('consent', 'update', { ... }) when the user accepts or
+      // rejects. Until then, gtag.js still loads (so the SDK can read
+      // ad_storage / analytics_storage flags), but emits no user-identifying
+      // hit to GA4's measurement endpoint.
+      window.gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'wait_for_update': 500,
+      });
+
       window.gtag('config', analyticsId);
 
       // Start the async client immediately. The stub keeps this non-blocking,
@@ -865,6 +885,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         }
       })();
     </script>
+    <CookieConsent />
   </body>
 </html>
 

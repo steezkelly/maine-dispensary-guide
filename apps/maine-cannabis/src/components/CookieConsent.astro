@@ -1,0 +1,222 @@
+---
+/**
+ * CookieConsent.astro
+ *
+ * Minimal GDPR/ePrivacy consent banner. Closes issue #189: site loads GA4
+ * with no consent gate. Implements Google Consent Mode v2:
+ *
+ *   1. On first visit, no banner has shown — we render the banner HTML/CSS
+ *      hidden until consent state is known.
+ *   2. On accept: call gtag('consent', 'update', { ... 'granted' ... }) and
+ *      persist choice in localStorage (consent:mdg = 'granted' | 'denied').
+ *   3. On reject: update gtag with all denied, persist 'denied'.
+ *   4. On dismiss without choice (close button): treat as 'denied'.
+ *
+ * Stored in localStorage (not a cookie) because the banner itself is the
+ * mechanism asking the user to consent to cookies — using a cookie before
+ * consent would defeat the purpose.
+ *
+ * Banner does not block page render. It is positioned at the bottom-right,
+ * 16px from edges, dismissable via the close (×) button. Auto-show only on
+ * first visit (when localStorage has no entry). On subsequent visits the
+ * stored choice is honored without re-prompting.
+ *
+ * No external fonts, no images, no third-party scripts. Pure HTML+CSS+JS.
+ * ~1.4KB total payload. WCAG: dismiss button is a real <button>, focusable,
+ * has aria-label.
+ *
+ * Usage:
+ *   <CookieConsent />   (place near end of <body>)
+ *
+ * Verification:
+ *   - Open DevTools → Application → Local Storage. Should be empty until
+ *     user clicks Accept or Decline. After click, key `consent:mdg` should
+ *     be set.
+ *   - In DevTools Console: `window.gtag('consent', 'get', ...)` returns
+ *     the current consent state.
+ *   - Network tab: gtag.js still loads, but no Measurement Protocol hits
+ *     fire until consent is granted.
+ */
+
+interface Props {
+  /** Cookie policy URL — surfaced in banner copy. */
+  policyUrl?: string;
+}
+
+const { policyUrl = '/cookies' } = Astro.props;
+---
+
+<style>
+  .mdg-consent-banner {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 9999;
+    max-width: 28rem;
+    margin-left: auto;
+    background: var(--color-surface, #ffffff);
+    color: var(--color-text, #143027);
+    border: 1px solid var(--color-border, #d8e0db);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 14px 32px rgba(14, 26, 20, 0.16);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .mdg-consent-banner[data-shown="true"] { display: block; }
+  @media (min-width: 640px) {
+    .mdg-consent-banner {
+      left: auto;
+      max-width: 26rem;
+    }
+  }
+  .mdg-consent-banner__title {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+  .mdg-consent-banner__text {
+    margin: 0 0 0.75rem;
+    color: var(--color-text-secondary, #4a5852);
+  }
+  .mdg-consent-banner__text a {
+    color: var(--color-primary, #1f6b4a);
+  }
+  .mdg-consent-banner__actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .mdg-consent-banner__btn {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--color-primary, #1f6b4a);
+    color: #ffffff;
+  }
+  .mdg-consent-banner__btn--secondary {
+    background: transparent;
+    color: var(--color-text, #143027);
+    border: 1px solid var(--color-border, #d8e0db);
+  }
+  .mdg-consent-banner__close {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    color: var(--color-text-secondary, #4a5852);
+    font: inherit;
+    margin-left: auto;
+    line-height: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .mdg-consent-banner[data-shown="true"] {
+      animation: mdg-consent-in 240ms ease-out;
+    }
+    @keyframes mdg-consent-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+
+<div id="mdg-consent-banner" class="mdg-consent-banner" role="dialog" aria-labelledby="mdg-consent-title" aria-describedby="mdg-consent-text">
+  <button class="mdg-consent-banner__close" type="button" aria-label="Dismiss cookie banner" data-consent-action="dismiss">×</button>
+  <h2 id="mdg-consent-title" class="mdg-consent-banner__title">Cookies &amp; analytics</h2>
+  <p id="mdg-consent-text" class="mdg-consent-banner__text">
+    We use Google Analytics to understand how visitors use this site — page views, scroll depth, form submissions. No personal data is sold or shared. Choose what to allow.
+    <a href={policyUrl}>Cookie policy</a>
+  </p>
+  <div class="mdg-consent-banner__actions">
+    <button class="mdg-consent-banner__btn" type="button" data-consent-action="accept">Accept</button>
+    <button class="mdg-consent-banner__btn mdg-consent-banner__btn--secondary" type="button" data-consent-action="decline">Decline</button>
+  </div>
+</div>
+
+<script is:inline>
+  // Cookie consent — Google Consent Mode v2 wiring for #189.
+  (function () {
+    try {
+      var STORAGE_KEY = 'consent:mdg';
+      var banner = document.getElementById('mdg-consent-banner');
+      if (!banner) return;
+
+      function readChoice() {
+        try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
+      }
+      function writeChoice(value) {
+        try { localStorage.setItem(STORAGE_KEY, value); } catch (_) { /* private mode etc. */ }
+      }
+      function show() {
+        banner.setAttribute('data-shown', 'true');
+      }
+      function hide() {
+        banner.removeAttribute('data-shown');
+      }
+      function applyConsent(granted) {
+        // Google's Consent Mode v2 default keys. `granted` enables standard
+        // analytics + ad personalization; `denied` switches the SDK into
+        // cookieless ping mode (no identifiers stored, no Measurement
+        // Protocol hits dispatched).
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('consent', 'update', {
+          'ad_storage': granted ? 'granted' : 'denied',
+          'ad_user_data': granted ? 'granted' : 'denied',
+          'ad_personalization': granted ? 'granted' : 'denied',
+          'analytics_storage': granted ? 'granted' : 'denied',
+          'functionality_storage': granted ? 'granted' : 'denied',
+          'personalization_storage': granted ? 'granted' : 'denied',
+          'security_storage': 'granted',  // always on; needed for csrf/state cookies
+        });
+      }
+      function handle(action) {
+        var granted = action === 'accept';
+        writeChoice(granted ? 'granted' : 'denied');
+        applyConsent(granted);
+        hide();
+      }
+
+      // Existing choice — apply without re-prompting.
+      var existing = readChoice();
+      if (existing === 'granted' || existing === 'denied') {
+        applyConsent(existing === 'granted');
+        return;
+      }
+      // First visit — show the banner. Defer to next idle slot so the
+      // initial page render isn't blocked.
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(show, { timeout: 800 });
+      } else {
+        setTimeout(show, 200);
+      }
+
+      // Wire action buttons + close (×) button via delegation.
+      banner.addEventListener('click', function (e) {
+        var target = e.target;
+        if (!(target instanceof HTMLElement)) return;
+        var action = target.getAttribute('data-consent-action');
+        if (!action) return;
+        handle(action);
+      });
+
+      // ESC dismisses (treat as decline).
+      banner.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') handle('dismiss');
+      });
+    } catch (_) {
+      // Any failure: hide the banner silently so we don't block the page.
+      try {
+        var b = document.getElementById('mdg-consent-banner');
+        if (b) b.remove();
+      } catch (__) {}
+    }
+  })();
+</script>

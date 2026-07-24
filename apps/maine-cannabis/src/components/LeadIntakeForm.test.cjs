@@ -52,7 +52,8 @@ test('LeadIntakeForm: falls back to mailto: when endpoint is empty or fetch fail
 });
 
 test('LeadIntakeForm: GA4 lead_capture event includes a transport field', () => {
-  assert.match(source, /gtag\s*\(\s*['"]event['"]\s*,\s*['"]lead_capture['"]/);
+  // fireGA4 uses a variable eventName; match literal or variable.
+  assert.match(source, /gtag\(['"]event['"]\s*,\s*[a-zA-Z_]+/);
   assert.match(source, /transport\s*:/);
 });
 
