@@ -240,6 +240,9 @@ const URL_TOPIC_HINTS = [
     ['/blog/outdoor-cannabis-grow-maine-2026', ['home-growing', 'outdoor', 'maine-climate', 'calendar']],
     ['/blog/cannabis-soil-maine-2026', ['home-growing', 'outdoor', 'soil', 'amendments']],
     ['/blog/cannabis-pests-mold-maine-2026', ['home-growing', 'outdoor', 'pests', 'mold']],
+    ['/blog/cannabis-lst-training-maine-2026', ['home-growing', 'technique', 'lst', 'training']],
+    ['/blog/cannabis-topping-autoflower-maine-2026', ['home-growing', 'technique', 'topping', 'autoflower']],
+    ['/blog/cannabis-trimming-maine-2026', ['home-growing', 'harvest', 'trimming', 'drying']],
 ];
 
 const URL_SECTION_HINTS = [
@@ -280,6 +283,9 @@ const URL_SECTION_HINTS = [
     ['/blog/outdoor-cannabis-grow-maine-2026', 'Home Cultivation'],
     ['/blog/cannabis-soil-maine-2026', 'Home Cultivation'],
     ['/blog/cannabis-pests-mold-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-lst-training-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-topping-autoflower-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-trimming-maine-2026', 'Home Cultivation'],
     ['/learn', 'Consumer Guide'],
     ['/all-guides', 'Library'],
     ['/find-a-dispensary', 'Finder'],
