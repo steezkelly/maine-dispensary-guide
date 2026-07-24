@@ -1,0 +1,255 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "outdoor", "maine-climate", "season-extension", "cannabis-law"];
+---
+<Layout
+  title="Growing Cannabis Outdoors in Maine 2026 — Zones, Frost Dates, Site Setup & the Law"
+  description="A complete Maine-specific outdoor cannabis guide for 2026: hardiness zones 4b–6a, frost dates by region, site selection, soil prep, a month-by-month planting calendar, watering in Maine's variable rainfall, harvest timing, and the 28-B M.R.S. §1502 home-grow rules."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Growing Cannabis Outdoors in Maine 2026: Zones, Frost Dates, Site Setup & the Law</h1>
+    <p class="subtitle">Maine sits at the northern edge of reliable outdoor cannabis cultivation in the United States — a 110–160 frost-free day window, acidic native soils, and October humidity that rewards careful planning. This guide walks the full backyard grow, from choosing a site to harvest, under the 28-B M.R.S. §1502 home-grow framework.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Outdoor is the lowest-cost way to grow cannabis in Maine — no electricity bill, no tent, no dehumidifier running around the clock. But Maine's climate is the constraint that shapes every decision: which strains finish, when you can plant, where you can put a garden, and whether your October harvest beats the first hard frost. Generic grow guides written for California or Colorado will steer you wrong on nearly all of these.</p>
+    <p>This guide covers the Maine-specific picture: USDA hardiness zones 4b–6a and what they actually mean for cannabis, county-level frost dates, how to pick and prepare a site, a month-by-month planting calendar, watering through Maine's uneven summer rainfall, harvest timing, and the state's home-cultivation law — including the visibility rule and the municipal preemption clause that stops towns from banning backyard grows.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> Yes — growing cannabis outdoors in Maine is legal for adults 21+ under 28-B M.R.S. §1502 (six mature, twelve immature, unlimited seedlings per person, as amended by P.L. 2023 c. 220). The practical window runs from late-May transplant in the south to mid-June in Aroostook, with harvest from late September through mid-October. Success hinges on short-season genetics, a full-sun site, and beating October's botrytis-friendly humidity.
+  </div>
+
+  <div class="fact-box">
+    <h2>Maine outdoor grow at a glance</h2>
+    <table aria-label="Maine outdoor cannabis grow summary">
+      <tbody>
+        <tr><td><strong>Hardiness zones</strong></td><td>4b (north) through 6a (southern coast)</td></tr>
+        <tr><td><strong>Frost-free window</strong></td><td>~110 days (Aroostook) to ~150 days (York County)</td></tr>
+        <tr><td><strong>Transplant window</strong></td><td>May 5 – June 15, by region</td></tr>
+        <tr><td><strong>Harvest window</strong></td><td>Late September – mid-October</td></tr>
+        <tr><td><strong>Plant limit (adult 21+)</strong></td><td>6 mature / 12 immature / unlimited seedlings</td></tr>
+        <tr><td><strong>Summer humidity</strong></td><td>70–85% RH; October mornings 80–90%</td></tr>
+        <tr><td><strong>Native soil pH</strong></td><td>Typically 4.5–5.5 (cannabis wants 6.0–7.0)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>Know your zone: Maine runs 4b to 6a</h2>
+    <p>Maine spans USDA Plant Hardiness Zones 4b through 6a. The southern coast (York and Cumberland counties) sits in 5b–6a, central Maine in 5a–5b, and the northern interior and Aroostook in 4b–5a. Zone numbers describe average annual extreme minimum temperature — useful for perennials, but for an annual crop like cannabis the more useful number is your frost-free day count.</p>
+    <p>Cannabis is a frost-sensitive annual. A light frost (29–32°F) damages leaf tissue; a hard frost (below 28°F) kills most plants outright. So the real planning inputs are your average last spring frost and first fall frost, which vary more by microclimate and elevation than by zone line. The University of Maine Cooperative Extension publishes county-level frost-date guidance — use that, not a national zone map, when you schedule.</p>
+    <table aria-label="Maine frost dates by region (UMaine Cooperative Extension)">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Average last spring frost</th>
+          <th>Average first fall frost</th>
+          <th>Approximate frost-free days</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Southern coast (York, Cumberland)</td><td>May 5 – May 15</td><td>Oct 5 – Oct 15</td><td>~150 days</td></tr>
+        <tr><td>Central / Midcoast (Sagadahoc, Lincoln, Knox)</td><td>May 15 – May 25</td><td>Sep 25 – Oct 5</td><td>~135 days</td></tr>
+        <tr><td>Central inland (Kennebec, Androscoggin)</td><td>May 20 – May 30</td><td>Sep 20 – Sep 30</td><td>~125 days</td></tr>
+        <tr><td>Bangor area / Penobscot</td><td>May 25 – June 5</td><td>Sep 15 – Sep 25</td><td>~115 days</td></tr>
+        <tr><td>Aroostook / Caribou</td><td>June 5 – June 15</td><td>Sep 1 – Sep 10</td><td>~110 days</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: University of Maine Cooperative Extension frost-date guidance. Local microclimate and elevation shift these averages by 7–14 days; a low pocket can run a full week later than the county seat ten miles away.</p>
+    <p>These numbers compress strain choice. A photoperiod variety that needs 70 days of flower plus 60–75 days of vegetative growth only finishes reliably in the southern-coast window. In Bangor and north, you're choosing between fast-flowering photoperiod strains (55–60 day flower) and autoflowers, which finish on age rather than day length. Our <a href="/blog/best-cannabis-strains-maine-outdoor-2026">best strains for Maine outdoor</a> guide maps specific genetics to these windows.</p>
+  </section>
+
+  <section>
+    <h2>Site selection: sun, wind, and privacy</h2>
+    <p>A good outdoor site solves three problems at once. Most Maine growers find the sun problem first and the privacy problem last — but the legal visibility rule means you should evaluate all three before you turn a single shovel of soil.</p>
+
+    <h3>Sun exposure</h3>
+    <p>Cannabis wants a minimum of six hours of direct sun, and eight or more for a full yield. At 43–47°N, Maine's sun angle is lower than most grow guides assume, so a southern exposure with no shade from trees or structures to the south, east, or west is the gold standard. Track the site across a full day in April — deciduous trees that look harmless in leafless spring will cast heavy shade by July. A south-facing slope gains a few degrees of soil warmth and drains cold air downhill, which matters in frost pockets.</p>
+
+    <h3>Wind</h3>
+    <p>Coastal Maine and exposed ridgelines carry steady wind that stresses tall plants and can snap main colas in a September gust. A natural windbreak — a hedgerow, a stand of conifers, a fence line — on the prevailing southwest side is worth more than staking. Avoid planting directly against a solid wall, which creates a still, humid microclimate that favors powdery mildew; you want airflow that breaks the wind without deadening it.</p>
+
+    <h3>Privacy and the visibility rule</h3>
+    <p>28-B M.R.S. §1502 requires that home-grown plants not be visible from a public way without the use of binoculars, aircraft, or other optical aids. In practice this means a backyard grow behind a six-foot fence is fine; a garden visible from the road is not. This is the rule that shapes most Maine backyard setups — a fenced side yard, a wooded clearing, or a garden set back behind a treeline.</p>
+    <Callout title="Visibility is a compliance requirement, not a suggestion" type="warning">
+      The "not visible from a public way" condition is part of the statutory protection for personal cultivation. Plants visible from a road or sidewalk without optical aids fall outside §1502's safe harbor. Before planting, walk the public ways around your property at plant-height in July — when plants are tallest — and check sight lines yourself.
+    </Callout>
+    <p>On "guerrilla" growing on land you don't own: §1502 protects cultivation only where the adult owns the land or is domiciled there, or has the landowner's written permission. Planting on public land, a friend's woodlot without written consent, or a leased parcel without the landlord's sign-off is not covered by the home-grow framework and exposes you to trespass and cultivation charges. The compliant version of a remote grow is a written landowner agreement — the statute explicitly contemplates it.</p>
+  </section>
+
+  <section>
+    <h2>Soil prep: fix Maine's acidity before you plant</h2>
+    <p>Maine's native soils run acidic — typically pH 4.5–5.5 — while cannabis absorbs nutrients best between 6.0 and 7.0. Planting directly into unamended Maine ground usually produces stunted, purple-stemmed, phosphorus-locked plants. The fix is a soil test plus lime and organic matter, worked in weeks before transplant.</p>
+    <p>The University of Maine Analytical Laboratory offers a standard soil test for around $15–$20 that reports pH, phosphorus, potassium, calcium, magnesium, and organic matter, with lime and fertilizer recommendations calibrated to Maine soils. It's the single best $20 in the whole grow. Full amendment strategy — lime rates, raised beds, fabric pots, and living soil — is covered in our <a href="/blog/cannabis-soil-maine-2026">cannabis soil in Maine</a> guide.</p>
+    <ol class="protocol-steps">
+      <li>Test the native soil (UMaine lab, or a quality pH meter for a field check).</li>
+      <li>Work in dolomitic lime per the test recommendation — typically 5–10 lb per 100 sq ft to move from 5.0 to 6.5 — ideally in fall, or at least 3–4 weeks before transplant.</li>
+      <li>Add 2–4 inches of finished compost and till or fork it into the top 8–12 inches.</li>
+      <li>Rake into a slight mound or plant into a raised bed so spring saturation drains away from the root zone.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Month-by-month planting calendar (central Maine, zone 5a)</h2>
+    <p>Shift this calendar two weeks earlier for the southern coast and two weeks later for Aroostook. The anchor points are your last spring frost and first fall frost — everything else hangs off those.</p>
+    <table aria-label="Maine outdoor cannabis planting calendar">
+      <thead>
+        <tr><th>Window</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mid-March – April 1</td><td>Germinate photoperiod seeds indoors under 18/6 light; autoflowers can start a week or two later</td></tr>
+        <tr><td>April</td><td>Transplant seedlings to 1-gal, then 3-gal containers; keep vegetative under 18+ hours of light</td></tr>
+        <tr><td>Late April – early May</td><td>Work lime and compost into outdoor beds; set up fencing and windbreaks</td></tr>
+        <tr><td>May 5 – June 15 (by region)</td><td>Harden off over 7–10 days, then transplant outdoors after last frost</td></tr>
+        <tr><td>June – July</td><td>Veg growth, training (topping, LST), weekly deep watering, mulch once soil warms</td></tr>
+        <tr><td>Early – mid August</td><td>Photoperiod plants flip to flower as nights lengthen; stop high-nitrogen feeding</td></tr>
+        <tr><td>September</td><td>Bud swell; monitor daily for botrytis during wet spells; support heavy colas</td></tr>
+        <tr><td>Late Sep – mid Oct</td><td>Harvest before hard frost; dry in a 60°F / 60% RH space</td></tr>
+      </tbody>
+    </table>
+    <p>The hardening-off step is where Maine growers lose plants. A seedling raised at a stable 75°F indoors will sunburn and shock if moved straight to full June sun and 50°F nights. Give it a week of graduated exposure — a few hours of morning sun, then longer, then overnight under cover — before it lives outside full time.</p>
+  </section>
+
+  <section>
+    <h2>Watering through Maine's variable rainfall</h2>
+    <p>Maine averages 40–46 inches of precipitation a year, but it isn't distributed when cannabis wants it. June and July often bring a two-to-three-week dry spell right when vegetative plants drink hardest, and September can swing from a soggy week to a dry one. The rule of thumb is about an inch to an inch and a half of water per week — from rain and irrigation combined — delivered as one or two deep soakings rather than daily sprinkles.</p>
+    <ul>
+      <li><strong>Deep, infrequent watering</strong> drives roots down and builds drought resilience. Shallow daily watering keeps roots at the surface, where they cook in a July dry spell.</li>
+      <li><strong>Mulch</strong> (2–3 inches of straw or wood chips, applied after the soil warms in June) cuts evaporation, keeps soil temperature steady, and stops rain from splashing soil-borne spores onto lower leaves.</li>
+      <li><strong>Rain barrels or drip line</strong> beat hauling jugs. A 55-gallon barrel off a downspout will carry four to six plants through a dry week.</li>
+      <li><strong>In September, flip the concern:</strong> too much water, not too little. Let the medium dry between waterings as harvest approaches, and time final flushes around the weather, not the calendar.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Harvest timing: race the frost and the mold</h2>
+    <p>Maine's harvest window is bounded on both ends. A hard frost kills plants, and October's morning humidity (routinely 80–90%) makes dense, late-finishing flower a botrytis target. The goal is a harvest date that lands after full ripeness but before the first hard frost and the worst of the fall rain.</p>
+    <p>Work backward from your strain's flower time and your region's first-frost date, then check trichomes (milky with some amber, not the calendar) to confirm. In practice: southern coast growers harvest photoperiod plants from late September through mid-October; central Maine from mid-September to early October; northern growers often pull everything by mid-to-late September and favor autoflowers or 55-day-flower genetics. If a wet October week is forecast and trichomes are mostly milky, taking the plant a few days early beats losing the top colas to bud rot. Our <a href="/blog/drying-cannabis-maine-humidity-2026">drying in Maine humidity</a> guide covers what to do with the harvest once it's down.</p>
+  </section>
+
+  <section>
+    <h2>The legal framework: 28-B M.R.S. §1502</h2>
+    <p>Maine's adult-use home-cultivation right is set out in 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 (LD 555), which raised the mature plant cap from three to six. For an adult 21 or older:</p>
+    <table aria-label="Maine home cultivation plant limits under 28-B M.R.S. §1502">
+      <thead>
+        <tr><th>Plant stage</th><th>Limit per adult 21+</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mature (flowering) plants</td><td>6</td></tr>
+        <tr><td>Immature (vegetative) plants</td><td>12</td></tr>
+        <tr><td>Seedlings</td><td>Unlimited</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 / LD 555. Definitions of plant stages are in 28-B M.R.S. §1501. Two adults 21+ in one household may each claim their own limit.</p>
+    <p>The statute conditions that right on four things:</p>
+    <ul>
+      <li><strong>Location:</strong> cultivation must occur on land the adult owns or is domiciled on, or with the landowner's written permission.</li>
+      <li><strong>Visibility:</strong> plants must not be visible from a public way without binoculars, aircraft, or other optical aids.</li>
+      <li><strong>Security:</strong> plants must be secured against access by anyone under 21.</li>
+      <li><strong>No sale:</strong> home-grown cannabis may not be sold; it may only be possessed, used, and shared within the statute's limits (transfers to licensed caregivers or dispensaries are addressed separately in the rules).</li>
+    </ul>
+    <Callout title="Towns can't ban your backyard grow" type="info">
+      §1502 contains a municipal preemption clause: a municipality may not restrict the areas of a municipality where personal adult-use cultivation may occur. Local ordinances that attempt to prohibit home growing, or to zone it out of residential areas, are preempted by state law. Towns retain ordinary authority over building permits, setbacks, and public-safety rules that apply to any structure or garden — but not a cannabis-specific ban.
+    </Callout>
+    <p>Medical caregivers operate under a separate framework with different plant counts and registration requirements — see the <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> for the full caregiver picture and plant-tagging rules.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Is it legal to grow cannabis outdoors in Maine?", answer: "Yes. Under 28-B M.R.S. §1502, an adult 21 or older may cultivate cannabis for personal use at a residence or on land they own or have written permission to use, subject to plant limits, the visibility rule, and security against access by anyone under 21. Outdoor, indoor, and greenhouse growing are all covered by the same framework — the statute does not distinguish by location." },
+      { question: "How many cannabis plants can I grow outdoors in Maine?", answer: "Six mature (flowering) plants, twelve immature (vegetative) plants, and an unlimited number of seedlings per adult 21+, per 28-B M.R.S. §1502 as amended by P.L. 2023 c. 220. Two adults in one household may each claim their own limit. The count applies across all growing locations you control — an outdoor garden and an indoor tent share the same six-mature cap." },
+      { question: "When should I plant cannabis outdoors in Maine?", answer: "Transplant after your region's average last spring frost: roughly May 5–15 on the southern coast, May 15–25 in central and midcoast Maine, May 25–June 5 around Bangor, and June 5–15 in Aroostook. Start photoperiod seeds indoors 6–8 weeks before your transplant date, and harden seedlings off over 7–10 days. Autoflowers can go out a little later since they finish on age rather than day length." },
+      { question: "Can my town or HOA stop me from growing outdoors?", answer: "A town cannot ban personal adult-use cultivation — 28-B M.R.S. §1502 preempts municipal restrictions on where personal cultivation may occur. General rules (building permits for structures, setbacks, fencing codes) still apply. A private HOA or landlord is a different matter: the statute protects cultivation on land you own or have written permission to use, so a lease or covenant restriction is enforceable as a property agreement even though the state allows the grow." },
+      { question: "Do I have to hide my plants from neighbors?", answer: "The statute requires that plants not be visible from a public way without binoculars, aircraft, or other optical aids. A neighbor's yard is not a public way, so visibility from a neighbor's window is not itself a violation — but a six-foot fence or a treeline solves both the legal requirement and the good-neighbor question at once. Check sight lines from the road at peak plant height in July." },
+      { question: "When do I harvest outdoor cannabis in Maine?", answer: "Late September through mid-October for most of the state, anchored by your first-frost date and confirmed by trichome color (milky with some amber). Southern coast growers can run into mid-October; northern growers usually finish by late September. Because October morning humidity runs 80–90%, many Maine growers pull plants a few days before peak ripeness rather than risk botrytis on dense late-flowering colas." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework, plant tagging, and caregiver rules</li>
+        <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soil types, pH correction, lime rates, raised beds, and fabric pots</li>
+        <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests &amp; Mold in Maine 2026</a> — botrytis, powdery mildew, deer and insects, and an organic IPM plan</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics matched to each frost window</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse for season extension</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — beating October humidity through dry and cure</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, visibility, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=555&snum=131">P.L. 2023 c. 220 / LD 555</a> — the home grow amendment raising the mature plant cap from 3 to 6</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine frost dates, climate data, and agricultural guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before planting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/outdoor-cannabis-grow-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>

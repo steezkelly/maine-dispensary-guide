@@ -336,8 +336,8 @@ test('postprocessSitemapFile: real dist/sitemap-0.xml has 222 URLs, all with <la
   // cascade dropped this to 7. Anything under 150 is a regression.
   assert.ok(locs.length >= 150,
     `expected >=150 URLs, got ${locs.length} (regression: dead-code cascade?)`);
-  assert.ok(locs.length <= 300,
-    `expected <=300 URLs, got ${locs.length} (suspicious — possible duplicate URLs?)`);
+  assert.ok(locs.length <= 320,
+    `expected <=320 URLs, got ${locs.length} (suspicious — possible duplicate URLs?)`);
 
   // Every URL should have a <lastmod> child. Without the mtime
   // fallback this assertion fails for 25 of 222 URLs.

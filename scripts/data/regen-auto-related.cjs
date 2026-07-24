@@ -237,6 +237,9 @@ const URL_TOPIC_HINTS = [
     ['/about/authors', ['editorial', 'authors']],
     ['/blog/greenhouse-cannabis-maine-2026', ['home-growing', 'outdoor', 'maine-climate', 'season-extension']],
     ['/resources/buy-cannabis-seeds-maine', ['home-growing', 'seeds', 'maine-vendors', 'genetics']],
+    ['/blog/outdoor-cannabis-grow-maine-2026', ['home-growing', 'outdoor', 'maine-climate', 'calendar']],
+    ['/blog/cannabis-soil-maine-2026', ['home-growing', 'outdoor', 'soil', 'amendments']],
+    ['/blog/cannabis-pests-mold-maine-2026', ['home-growing', 'outdoor', 'pests', 'mold']],
 ];
 
 const URL_SECTION_HINTS = [
@@ -274,6 +277,9 @@ const URL_SECTION_HINTS = [
     ['/blog/trump-psychedelic', 'Policy & Legislation'],
     ['/blog/maine-cannabis-pesticide', 'Policy & Legislation'],
     ['/blog/greenhouse-cannabis-maine-2026', 'Home Cultivation'],
+    ['/blog/outdoor-cannabis-grow-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-soil-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-pests-mold-maine-2026', 'Home Cultivation'],
     ['/learn', 'Consumer Guide'],
     ['/all-guides', 'Library'],
     ['/find-a-dispensary', 'Finder'],
