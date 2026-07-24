@@ -142,13 +142,32 @@ const jsonLd = buildSignalJsonLd(
     }
     .signal-scope .button { padding: 0 16px; }
     .signal-scope .button.primary { background: var(--spruce); border-color: var(--spruce); color: var(--paper-strong); }
-    .signal-scope .button.preview { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+    /* Preview-only "proposed paid" buttons. Per spec, these previews do
+       not persist anything — they must not read as primary CTAs. Match
+       the .state-pill[data-state="proposed_paid"] treatment: outlined,
+       bronze-tinted, secondary weight. Dark mode uses the same rule. */
+    .signal-scope .button.preview {
+      background: color-mix(in srgb, var(--bronze) 10%, var(--paper-strong));
+      border-color: color-mix(in srgb, var(--bronze) 45%, var(--line));
+      color: var(--bronze);
+    }
     .signal-scope .topbar {
       display: flex; align-items: center; gap: 20px;
       padding: 14px 24px;
       border-bottom: 1px solid var(--line);
-      background: color-mix(in srgb, var(--paper-strong) 94%, transparent);
+      /* Sticky topbar: must fully occlude the page content scrolling
+         beneath, or the text shows through (visible on the index
+         page at 1280px where the card grid's first card overlapped
+         the brand text). 94% opacity leaves 6% transparency — too
+         much. Solid background. */
+      background: var(--paper);
       position: sticky; top: 0; z-index: 5;
+      flex-wrap: wrap;
+    }
+    .signal-scope .topbar > .release { flex: 1 1 100%; order: 3; }
+    @media (min-width: 720px) {
+      .signal-scope .topbar { flex-wrap: nowrap; }
+      .signal-scope .topbar > .release { flex: 0 1 auto; order: 0; margin-left: auto; }
     }
     .signal-scope .brand { display: flex; align-items: center; gap: 12px; }
     .signal-scope .mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--spruce); color: var(--paper-strong); font-family: "Fraunces", Georgia, serif; font-weight: 700; }
@@ -191,6 +210,21 @@ const jsonLd = buildSignalJsonLd(
     .signal-scope table { min-width: 0; }
     .signal-scope td, .signal-scope th { white-space: nowrap; }
     .signal-scope td:last-child, .signal-scope th:last-child { white-space: normal; }
+    /* The comparison table has 5 columns; the 2 bar columns are the
+       overflow on a 390px viewport. Give the table a min-width so the
+       bar columns stay visible when the card scrolls horizontally,
+       and surface the scroll affordance with a gradient mask on the
+       right edge. */
+    .signal-scope #comparisonTable { min-width: 560px; }
+    .signal-scope #comparisonTable th:last-child, .signal-scope #comparisonTable td:last-child { white-space: nowrap; }
+    .signal-scope .card:has(> #comparisonTable) {
+      background-image: linear-gradient(to right, var(--paper-strong) 30%, rgba(255,253,247,0)),
+                        linear-gradient(to right, rgba(255,253,247,0), var(--paper-strong) 70%);
+      background-position: left center, right center;
+      background-repeat: no-repeat;
+      background-size: 24px 100%, 24px 100%;
+      background-attachment: local, local;
+    }
     .signal-scope .bar { position: relative; height: 8px; background: var(--paper-soft); border-radius: 999px; overflow: hidden; }
     .signal-scope .bar > span { display: block; height: 100%; background: var(--teal); border-radius: 999px; }
     .signal-scope .drawer {
