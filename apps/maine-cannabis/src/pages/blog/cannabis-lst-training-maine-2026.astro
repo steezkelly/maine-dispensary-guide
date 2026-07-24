@@ -1,0 +1,371 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "training-techniques", "lst", "outdoor", "maine-climate", "cannabis-law"];
+---
+<Layout
+  title="LST Low Stress Training for Cannabis in Maine 2026 — A Beginner's Guide to Bending, Not Breaking"
+  description="A Maine-specific beginner's guide to LST (low stress training) for cannabis in 2026: what LST is and isn't, materials, step-by-step process, when to stop LST before flowering, a gentle approach for autoflowers, SCROG vs LST, and troubleshooting — all under the 28-B M.R.S. §1502 home-grow framework."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>LST Low Stress Training for Cannabis in Maine 2026: A Beginner's Guide to Bending, Not Breaking</h1>
+    <p class="subtitle">Low stress training is the single highest-leverage technique a Maine home grower can learn — it evens out the canopy, pushes more bud sites into direct sun, and adds grams-per-plant without cutting, topping, or shortening the calendar. This guide walks through what LST actually is, what it isn't, the materials that hold up to Maine's humidity, and a step-by-step routine you can run from June through early August.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Low stress training (LST) is the practice of gently bending and tying down cannabis stems so the plant grows horizontally rather than vertically. Done right, it redistributes hormone flow to lower branches, exposes every bud site to roughly equal light, and turns a Christmas-tree-shaped plant into a flat, even canopy that finishes uniformly. Done wrong, you snap a stem and lose a cola.</p>
+    <p>This guide covers what LST actually means in 2026 (and what the internet has started mislabeling as LST), the materials that hold up to Maine's summer rain and humidity, a Maine-specific timing window keyed to your frost zone, a step-by-step bend-and-tie routine, when to stop training before flower, a gentle autoflower protocol, SCROG vs LST for a backyard grow, and a troubleshooting section for the half-dozen things that go wrong.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> LST is bending and tying down stems during the vegetative stage to flatten the canopy — no cutting, no topping, no permanent damage. In Maine's short outdoor season, LST pays off because it gets more bud sites into the low summer sun and lets light reach the whole plant instead of just the top cola. Start once a photoperiod plant has 4–6 nodes (mid-to-late June in most of Maine); stop two to three weeks before you want it to start flowering so the plant can settle into its final shape.
+  </div>
+
+  <div class="fact-box">
+    <h2>LST in Maine at a glance</h2>
+    <table aria-label="LST Maine summary">
+      <tbody>
+        <tr><td><strong>Technique</strong></td><td>Bending and tying down stems — no cutting</td></tr>
+        <tr><td><strong>Best timing (outdoor)</strong></td><td>Late June – early August, vegetative photoperiod plants</td></tr>
+        <tr><td><strong>Stop date</strong></td><td>2–3 weeks before floral initiation, roughly late July in central Maine</td></tr>
+        <tr><td><strong>Materials cost</strong></td><td>$10–$25 for a full backyard season</td></tr>
+        <tr><td><strong>Plant limit (adult 21+)</strong></td><td>6 mature / 12 immature / unlimited seedlings per 28-B M.R.S. §1502</td></tr>
+        <tr><td><strong>Risk to plant</strong></td><td>Low when bent in vegetative growth; never bend a flowering stem</td></tr>
+        <tr><td><strong>Works with autoflowers?</strong></td><td>Yes — gentler bends, fewer tie points, stop by week 3–4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>What LST actually is (and what it isn't)</h2>
+    <p>LST is the controlled, repeated bending of soft vegetative stems to redirect growth horizontally, tied in place with soft ties so the plant commits to the new shape as it lignifies. There is no cutting, no topping, no pinching, no wound. You bend a stem until it points sideways, secure it, and let the auxin (the growth hormone that drives apical dominance) redistribute to the lower branches that were previously shaded.</p>
+    <p>The internet has started using "LST" as a catch-all for any non-pruning training. That's not wrong, but for this guide we use the strict definition: bending only. If you're cutting the apical meristem off the top, that's topping. If you're pinching the newest growth, that's FIMing. If you're snapping a stem on purpose to heal it bent, that's super-cropping (high stress training, HST). LST is the no-cut version, and it's the right starting point for a beginner because the recovery window is essentially zero — you undo a bad bend, the stem springs back, and the plant is unchanged.</p>
+
+    <h3>What LST does to your plant</h3>
+    <ul>
+      <li><strong>Breaks apical dominance.</strong> Cannabis naturally funnels growth hormones to the tallest stem (the main cola). Bending that stem horizontal lets the side branches catch up, so you end up with eight to twelve roughly equal colas instead of one dominant top and several runts.</li>
+      <li><strong>Evens the canopy.</strong> A flat canopy means every bud site sits roughly the same distance from the light source, which means every bud site ripens at the same time and at the same density.</li>
+      <li><strong>Opens the interior.</strong> Pulling the main stem sideways exposes the lower branches to direct light and improves airflow through the canopy, which matters in Maine's humid July and August where still air means powdery mildew.</li>
+      <li><strong>Keeps height manageable.</strong> A bent plant is a short plant. LST is the standard answer for growers who need to keep a six-foot plant under a five-foot fence for the §1502 visibility rule.</li>
+    </ul>
+
+    <h3>What LST doesn't do</h3>
+    <ul>
+      <li>It doesn't increase yield beyond what the light can support — if the plant is light-limited (most home grows are), LST just reallocates the existing energy, it doesn't manufacture more.</li>
+      <li>It doesn't replace topping if you genuinely want to split the main cola into two — that's a cut.</li>
+      <li>It doesn't work on a flowering plant. Once stems stiffen and buds set, bending snaps them.</li>
+      <li>It doesn't fix a bad environment. LST on a nutrient-deficient or root-bound plant just gives you an evenly distributed problem.</li>
+    </ul>
+
+    <Callout title="LST is bending, not breaking" type="info">
+      The cardinal rule: if you hear a crack, you went too far. A healthy vegetative stem should bend like a firm green bean — substantial resistance, but it gives. The moment you feel or hear the fibers separate, ease back. A snapped stem can sometimes be splinted with tape and the plant will heal, but it's a setback you don't need.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Maine-specific timing: when to start, when to stop</h2>
+    <p>LST is a vegetative-stage technique. That means the entire LST window for an outdoor photoperiod plant in Maine is roughly four to six weeks long — the period between "the plant is big enough to bend without damage" and "the plant has started flowering and the stems are too stiff to train." Miss the window and you either start too early (the stems aren't strong enough to hold a tie) or too late (you snap lignified stems trying to bend them).</p>
+
+    <h3>Start date</h3>
+    <p>The plant needs at least four to six nodes (sets of true leaves) before you start bending — younger stems are too floppy and will crease rather than bend cleanly. For an outdoor photoperiod plant in Maine that was started indoors in mid-March and transplanted in late May, that's usually mid-to-late June. The plant is in its third or fourth week of vegetative growth outdoors, the main stem is finger-thick, and the side branches have grown enough that bending the main stem actually does something.</p>
+
+    <h3>Stop date</h3>
+    <p>Stop training two to three weeks before you want the plant to start flowering seriously. In central Maine, that means the last tie-down happens in late July — early August at the latest. Bangor-area growers should stop a week earlier; Aroostook growers should stop two weeks earlier. The reason isn't a calendar, it's plant physiology: once a photoperiod plant commits to flowering, stems lignify (harden) within days and a bend becomes a snap.</p>
+
+    <table aria-label="Maine LST timing by region">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Start LST</th>
+          <th>Stop LST</th>
+          <th>Approximate flower initiation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Southern coast (York, Cumberland)</td><td>Mid-June</td><td>Early August</td><td>Mid-August</td></tr>
+        <tr><td>Central / Midcoast</td><td>Late June</td><td>Late July</td><td>Early August</td></tr>
+        <tr><td>Bangor area / Penobscot</td><td>Late June – early July</td><td>Mid-to-late July</td><td>Late July – early August</td></tr>
+        <tr><td>Aroostook / Caribou</td><td>Early July</td><td>Mid-July</td><td>Late July</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: University of Maine Cooperative Extension regional frost and day-length data; transplant windows cross-referenced with our Maine outdoor planting calendar. These dates shift with weather — a cold late spring pushes everything a week later, a warm spring pulls it earlier.</p>
+
+    <p>The practical signal is day length. Photoperiod plants initiate flower when daily uninterrupted darkness crosses roughly 12 hours, which in Maine happens around August 10–15 depending on latitude. A plant that's still being bent on August 5 has time to settle; a plant being bent on August 20 has stems that are already stiffening. Watch the plant, not the calendar.</p>
+  </section>
+
+  <section>
+    <h2>Materials: what holds up to a Maine summer</h2>
+    <p>The materials list for LST is short — it's the cheapest training technique in cannabis — but the wrong tie can cut into a stem, snap in a thunderstorm, or mildew in August humidity. Here's what works outdoors in Maine.</p>
+
+    <h3>Tie options</h3>
+    <ul>
+      <li><strong>Soft plant ties (velcro or rubber).</strong> The commercial soft-tie garden rolls sold at any hardware store are the gold standard. They stretch with the stem, so as the branch girds up the tie loosens rather than cutting in. A 50-foot roll costs about $8 and will last several seasons.</li>
+      <li><strong>Soft garden wire coated in rubber or plastic.</strong> Wire alone will cut into a thickening stem — don't use bare wire. Coated wire is reusable for years if you don't kink it.</li>
+      <li><strong>Pantyhose or old t-shirt strips.</strong> The classic DIY tie. Cut into 1-inch-wide strips, knotted loosely around the stem. Free, but they degrade in UV and usually need replacement mid-season.</li>
+      <li><strong>What not to use:</strong> fishing line (cuts), thin string (cuts), zip ties (no give, will girdle stems in a week), and wire without coating (cuts and rusts).</li>
+    </ul>
+
+    <h3>Anchors</h3>
+    <p>You need something to tie the bent stem down to. In a fabric pot, the easiest anchors are the pot's own handles or a ring of stakes around the rim. In ground, you can use ground staples (the U-shaped pins sold for landscape fabric) or simply tie to a stake driven into the soil. For a SCROG-style setup, the anchor is the screen itself.</p>
+
+    <h3>Hand tools</h3>
+    <ul>
+      <li>Sharp, clean scissors or snips for any leaves you choose to remove (LST usually doesn't require defoliation, but you'll thin some fan leaves to open the canopy).</li>
+      <li>A spray bottle with water for misting stems before bending — slightly moistened stems bend more cleanly than bone-dry ones.</li>
+      <li>Optional: soft plant yoyos or yo-yo trellis hangers for indoor setups.</li>
+    </ul>
+
+    <Callout title="Maine humidity warning" type="warning">
+      Anything absorbent (cloth strips, untreated twine) holds moisture against the stem and creates a rot entry point in Maine's humid August. If you use cloth ties, replace them every two to three weeks. Non-absorbent soft ties or coated wire are lower-maintenance in a Maine backyard.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Step-by-step: a first LST session</h2>
+    <p>The first bend is the most nerve-wracking. After that the routine is mechanical. Plan on doing this every three to five days during the vegetative window — the plant grows enough between sessions that the previous tie is no longer pulling the stem down hard enough.</p>
+
+    <h3>Before you start</h3>
+    <ol class="protocol-steps">
+      <li>Wait until the plant has at least four to six nodes and the main stem is finger-thick. Younger plants crease; older plants snap.</li>
+      <li>Stop watering 12–24 hours before the bend. A slightly dehydrated stem is more flexible than a fully turgid one.</li>
+      <li>Pick a dry afternoon, not a wet morning. Wet stems bend, but they also tear more easily, and you'll want the plant dry before nightfall to reduce disease entry.</li>
+      <li>Set up your anchors. For a fabric pot, install four stakes around the rim or use the pot's handles. For a ground plant, drive a stake or staple at the spot where each tie will land.</li>
+    </ol>
+
+    <h3>The first bend</h3>
+    <ol class="protocol-steps">
+      <li>Identify the main stem and the top growing tip (the apical meristem — the newest, lightest green growth at the top of the plant).</li>
+      <li>Hold the stem between your thumb and forefinger about two inches below the top. Support, don't squeeze.</li>
+      <li>With your other hand, gently push the top of the stem sideways and slightly down. Go slowly — over five to ten seconds, not a fast snap.</li>
+      <li>Stop the moment you feel significant resistance. The stem should be at a 60–90 degree angle from vertical, not bent in a U.</li>
+      <li>Attach the tie just below the bend point and anchor it to the stake or pot rim. The tie should be snug but not tight — you should be able to slip a finger between the tie and the stem.</li>
+      <li>Check the bend the next morning. If the stem has sprung back partially, re-tighten the tie. If the stem has cracked or creased visibly, remove the tie and let the plant recover for a week before trying again.</li>
+    </ol>
+
+    <h3>Subsequent sessions (every 3–5 days)</h3>
+    <ol class="protocol-steps">
+      <li>Walk the plant. New growth will be heading upward from the side branches — those are the next targets.</li>
+      <li>Repeat the bend-and-tie on each new tall leader, working from the lowest branch up. Always bend above a node, never below — bending below a node can snap the branch off at the joint.</li>
+      <li>Open up the canopy by removing one or two large fan leaves that shade bud sites, especially interior leaves that block airflow. Less is more — don't strip the plant.</li>
+      <li>Tighten, loosen, or move existing ties as stems thicken. A tie that was loose three days ago can start cutting in by day seven.</li>
+      <li>Stop training two to three weeks before expected flower initiation. The final tie-down sets the canopy shape the plant will finish with.</li>
+    </ol>
+
+    <p>You'll know the canopy is "set" when every major bud site sits roughly the same distance from the light source — usually the top of the plant, since this is outdoor. If you can see a clear tiered effect (some branches well above others), keep training for another few days.</p>
+  </section>
+
+  <section>
+    <h2>When to stop LST before flowering</h2>
+    <p>The training window closes for two reasons. First, photoperiod stems lignify as flower initiation approaches — they get stiff and woody, and bending them snaps fibers rather than reshaping them. Second, the plant's energy pivots from vegetative growth (more stems, more leaves) to flower development (bigger buds on existing stems); any stress during this pivot can stall growth or trigger a hermaphroditic response in sensitive cultivars.</p>
+    <p>The rule is to stop training two to three weeks before you expect full flower initiation. In Maine outdoor terms:</p>
+    <ul>
+      <li><strong>Southern coast:</strong> stop by early August</li>
+      <li><strong>Central Maine:</strong> stop by late July</li>
+      <li><strong>Bangor and north:</strong> stop by mid-to-late July</li>
+      <li><strong>Aroostook:</strong> stop by mid-July</li>
+    </ul>
+    <p>You don't have to remove the ties — let them sit in place. The bent stems will lignify in their new position over the next two weeks. You can loosen them gently once the stems feel woody.</p>
+
+    <Callout title="Never bend a stem in flower" type="warning">
+      A stem with visible flower sites (the white pistils starting to show, or pre-flowers at the nodes) is no longer safe to bend. The stem is committing its structure to support the flower weight, and any crack at this stage becomes a botrytis entry point right where the bud is densest. If you missed the training window and the plant is stretching vertically in early flower, your remaining option is super-cropping (HST) — pinching a stem until the fibers loosen — and even that is risky on a plant in week 2 of flower.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>LST for autoflowers: a gentle approach</h2>
+    <p>Autoflowers have a fixed lifecycle — most finish in 70–90 days from seed regardless of light cycle. That compressed timeline is exactly why a beginner's instinct is to skip training, and exactly why gentle LST is worth doing on an autoflower. Without intervention, an autoflower in Maine's short outdoor season tends to grow one tall main cola and a few small side branches, and the side branches don't have time to catch up before the plant flips to flower on its own clock.</p>
+
+    <h3>Why autoflowers need a lighter touch</h3>
+    <ul>
+      <li><strong>Less recovery time.</strong> A photoperiod plant has weeks to recover from any stress; an autoflower has days. Bent too hard, an autoflower can stall for a week and never recover the lost ground.</li>
+      <li><strong>Fewer training events.</strong> An autoflower usually gets two or three training sessions before flower, not the six to ten a photoperiod plant gets. Each session has to count more.</li>
+      <li><strong>Earlier start, gentler bends.</strong> Begin when the autoflower has only four to five nodes, and bend to roughly 45 degrees rather than 90. The goal is to slow the apex, not flatten it.</li>
+    </ul>
+
+    <h3>Autoflower LST protocol</h3>
+    <ol class="protocol-steps">
+      <li>Start when the plant has 4–5 nodes, usually 3–4 weeks after germination for a typical autoflower.</li>
+      <li>Bend the main stem to about 45 degrees, not flat. A gentle tilt is enough to start slowing apical dominance.</li>
+      <li>Use only soft, non-absorbent ties. Cloth strips can rot an autoflower's thinner stems quickly.</li>
+      <li>Train every 4–5 days, not every 3. Give the plant more recovery time between sessions.</li>
+      <li>Stop training by week 4–5 of growth or when pre-flowers appear at the nodes, whichever comes first. After that, just let it flower.</li>
+      <li>Skip any defoliation beyond removing the one or two largest fan leaves shading a major bud site. Autoflowers have less vegetative buffer to spare.</li>
+    </ol>
+
+    <p>The full case for why autoflowers need a different training mindset — and why topping them is usually a bad idea — is in our <a href="/blog/cannabis-topping-autoflower-maine-2026">can you top autoflower cannabis</a> guide. The short version: an autoflower's clock is unforgiving, and LST is one of the only training techniques that gives yield gains without a recovery period the plant doesn't have.</p>
+  </section>
+
+  <section>
+    <h2>SCROG vs LST: which one for a Maine backyard</h2>
+    <p>SCROG (Screen of Green) and LST are often presented as alternatives. They're really the same idea — flatten the canopy and let many bud sites carry the yield — applied at different scales. A SCROG uses a physical screen (usually nylon netting or wire mesh) stretched horizontally across the canopy; you tuck shoots back under the screen as they grow through it, training the plant to grow horizontally across the screen rather than up through it. LST uses individual ties to bend and hold each branch.</p>
+
+    <table aria-label="SCROG vs LST comparison">
+      <thead>
+        <tr>
+          <th>Factor</th>
+          <th>LST (tie-downs)</th>
+          <th>SCROG (screen)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cost</td><td>$10–$25</td><td>$30–$80 (netting + frame)</td></tr>
+        <tr><td>Setup time</td><td>5–10 min per plant per session</td><td>1–2 hours to build the screen</td></tr>
+        <tr><td>Best plant count</td><td>1–6 plants (Maine home-grow max is 6 mature)</td><td>1–4 plants, larger pots</td></tr>
+        <tr><td>Canopy control</td><td>Good; adjusting one branch at a time</td><td>Excellent; the screen sets the height</td></tr>
+        <tr><td>Maine outdoor fit</td><td>Excellent — minimal equipment, weathers storms</td><td>Moderate — wind and rain load on the screen</td></tr>
+        <tr><td>Autoflower compatibility</td><td>High</td><td>Low — autoflowers outgrow the screen too fast</td></tr>
+        <tr><td>Stealth / visibility rule</td><td>Easy to keep under fence height</td><td>Harder — the screen sits at canopy height</td></tr>
+        <tr><td>Recovery from mistakes</td><td>Easy — remove a tie, stem springs back</td><td>Harder — re-tucking an overgrown branch damages it</td></tr>
+      </tbody>
+    </table>
+    <p>For most Maine home growers, LST is the better starting choice. It's cheaper, more forgiving, easier to undo, and the equipment handles a coastal windstorm without falling apart. SCROG wins for an indoor grow or a dedicated greenhouse where you can control the environment and want maximum yield per square foot. Outdoors, the screen adds wind load, has to be anchored against summer storms, and ends up taller than the §1502 visibility rule allows unless you've already got a fenced backyard.</p>
+
+    <h3>Combining the two</h3>
+    <p>There's a middle path that's common in Maine greenhouses: LST the plant until the main stem is horizontal, then install a low screen (a single layer of netting at 18–24 inches above the pot) and tuck new shoots through as they grow. This gives SCROG-style canopy control with the gentleness and low cost of LST during the critical early vegetative phase. Our <a href="/blog/greenhouse-cannabis-maine-2026">greenhouse cannabis in Maine</a> guide covers the structure side of that setup.</p>
+  </section>
+
+  <section>
+    <h2>Troubleshooting</h2>
+    <p>Most LST problems are either timing errors or pressure errors. Here's what goes wrong and how to fix it.</p>
+
+    <h3>Bent stem snapped or creased</h3>
+    <p>A crease (the stem fibers separated but the outer skin held) will usually heal in a week if you splint it with a small piece of tape and don't touch it. A clean break is more serious — the branch above the break will wilt for several days, then either recover or die. Tape it, leave it alone, and remove it if it dies back. The plant will route growth to other branches.</p>
+
+    <h3>Tie cutting into the stem</h3>
+    <p>The tie was too tight or the stem has outgrown it. Remove the tie, reposition it to a softer section of the stem (or to a different branch), and check every three days until the stem has lignified in its new position. Never let a tie bite into bark — that's a wound, not a training cue.</p>
+
+    <h3>Plant stopped growing after a bend</h3>
+    <p>A stalled plant after a bend usually means either too much stress too fast (you bent several major branches in one session) or a coincidental environmental problem (root bound, pH off, light shock). Give the plant five to seven days of normal care without further training. If growth resumes, you bent too hard — next time do half as much per session.</p>
+
+    <h3>Canopy still uneven after weeks of training</h3>
+    <p>Some cultivars have very strong apical dominance and will keep throwing one leader no matter how often you bend it. The workaround is to add a single topping (a clean cut above the fifth or sixth node) once early in vegetative growth to split the apex, then resume LST on the resulting two leaders. Topping is a high-stress technique, but if you're going to add one cut anywhere in the season, it's the cleanest place to put it.</p>
+
+    <h3>Bud sites forming only at the top, lower branches still small</h3>
+    <p>The training happened too late, or the lower branches were too shaded when the plant was young to build the stem structure needed to support a heavy cola. Once the plant is in flower, the lower branches will mostly catch up some, but won't catch up fully. For next season: start LST earlier and bend the main stem harder to redirect more energy downward during vegetative growth.</p>
+
+    <h3>Mold or rot at a tie point</h3>
+    <p>A tie that's holding moisture against the stem in Maine's August humidity can rot the bark. Replace the tie with a non-absorbent material and let the wound dry. Trim any soft rot with clean snips and don't train that branch again this season.</p>
+  </section>
+
+  <section>
+    <h2>The legal framework: 28-B M.R.S. §1502</h2>
+    <p>LST doesn't change the legal framework that governs your grow — it's a training technique, not a different category of cultivation. The relevant rules in Maine are the home-grow limits and conditions in 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 (LD 555), which raised the mature plant cap from three to six.</p>
+    <table aria-label="Maine home cultivation plant limits under 28-B M.R.S. §1502">
+      <thead>
+        <tr><th>Plant stage</th><th>Limit per adult 21+</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mature (flowering) plants</td><td>6</td></tr>
+        <tr><td>Immature (vegetative) plants</td><td>12</td></tr>
+        <tr><td>Seedlings</td><td>Unlimited</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 / LD 555. Definitions of plant stages are in 28-B M.R.S. §1501.</p>
+    <p>Two practical compliance notes for an LST-trained plant:</p>
+    <ul>
+      <li><strong>The visibility rule still applies.</strong> A bent plant is a short plant, which makes the "not visible from a public way without optical aids" condition easier to satisfy. A six-foot fence plus LST keeps most backyard grows well within the rule.</li>
+      <li><strong>The mature count is what matters.</strong> A trained plant with twelve colas is still one plant for §1502's purposes. The statute counts plants by life stage, not by bud sites.</li>
+    </ul>
+    <p>The <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> covers the full caregiver picture, plant-tagging requirements, and the municipal preemption clause that prevents towns from banning backyard cultivation.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "What does LST mean in cannabis growing?", answer: "LST stands for Low Stress Training — the practice of gently bending and tying down cannabis stems during vegetative growth to flatten the canopy and redirect growth hormones to lower branches. It involves no cutting; the stems are bent and held in place with soft ties until they lignify in the new position. The result is an even canopy with multiple roughly equal colas instead of one dominant top." },
+      { question: "When should I start LST on outdoor cannabis in Maine?", answer: "Start LST when the photoperiod plant has 4–6 nodes and the main stem is finger-thick — usually mid-to-late June in central Maine, mid-June on the southern coast, and early July in Aroostook. Earlier and the stems crease; later and the plant is too close to flower initiation. Stop training 2–3 weeks before your region's expected flower initiation (late July in central Maine, early August on the coast)." },
+      { question: "Can I LST autoflowers?", answer: "Yes, but use a lighter touch. Begin when the autoflower has 4–5 nodes, bend the main stem to about 45 degrees rather than flat, train every 4–5 days instead of every 3, and stop by week 4–5 or when pre-flowers appear. Autoflowers have a fixed 70–90 day lifecycle, so they get fewer training sessions than photoperiods and have less recovery time. LST is one of the few training techniques that consistently helps autoflowers without risking the recovery window." },
+      { question: "Is SCROG better than LST for a Maine outdoor grow?", answer: "For most Maine home growers, LST is the better choice. It's cheaper ($10–$25 vs $30–$80), easier to undo when you make a mistake, handles wind and storms better, and keeps the canopy low enough to satisfy the §1502 visibility rule without extra fencing. SCROG is worth considering in a greenhouse or indoor setup where you can control the environment and want maximum yield per square foot, but outdoors the screen adds wind load and height that complicate the setup." },
+      { question: "Can I bend a cannabis stem after flowering has started?", answer: "No — don't bend a stem once the plant is in flower. Stems lignify within days of floral initiation, and bending a stiffened stem will snap it. Snap points during flower become botrytis entry points right at the densest buds, which is the worst possible outcome. If you missed the training window and the plant is stretching vertically in early flower, the only safe option is to leave it alone; further training should wait until the next generation." },
+      { question: "What materials do I need for outdoor LST in Maine?", answer: "Soft plant ties (velcro garden tape or rubber-coated wire), stakes or pot-rim anchors, and clean snips for occasional leaf thinning. Avoid bare wire (cuts into stems), zip ties (no give, will girdle), and absorbent cloth strips in Maine's humid August (hold moisture against stems and cause rot). A 50-foot roll of soft garden tie costs about $8 and lasts several seasons for a six-plant backyard grow." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics matched to each frost window</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — beating October humidity through dry and cure</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse for season extension</li>
+        <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zones, frost dates, site setup, and the law</li>
+        <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soil types, pH correction, lime rates, raised beds, and fabric pots</li>
+        <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests &amp; Mold in Maine 2026</a> — botrytis, powdery mildew, deer and insects, and an organic IPM plan</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+        <li><a href="/blog/cannabis-topping-autoflower-maine-2026">Can You Top Autoflower Cannabis? Maine Guide 2026</a> — why autoflower topping is risky and what to do instead</li>
+        <li><a href="/blog/cannabis-trimming-maine-2026">Wet Trim vs Dry Trim for Cannabis in Maine 2026</a> — Maine October humidity and trim timing</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, visibility, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=555&snum=131">P.L. 2023 c. 220 / LD 555</a> — the home grow amendment raising the mature plant cap from 3 to 6</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine frost dates, climate data, and agricultural guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before planting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/cannabis-lst-training-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>
