@@ -194,7 +194,7 @@ function fmt(n) {
 }
 
 function ratio(numerator, denominator) {
-  if (!denominator) return '0.0%';
+  if (!denominator || !numerator) return '0.0%';
   return ((Number(numerator) / Number(denominator)) * 100).toFixed(1) + '%';
 }
 
