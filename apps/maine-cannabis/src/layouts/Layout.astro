@@ -351,7 +351,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       // rejects. Until then, gtag.js still loads (so the SDK can read
       // ad_storage / analytics_storage flags), but emits no user-identifying
       // hit to GA4's measurement endpoint.
-      gtag('consent', 'default', {
+      window.gtag('consent', 'default', {
         'ad_storage': 'denied',
         'ad_user_data': 'denied',
         'ad_personalization': 'denied',
@@ -359,7 +359,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
         'wait_for_update': 500,
       });
 
-      gtag('config', analyticsId, { anonymize_ip: true });
+      window.gtag('config', analyticsId);
 
       // Start the async client immediately. The stub keeps this non-blocking,
       // while avoiding a deliberate 1.5–2.5 second window where a first CTA
