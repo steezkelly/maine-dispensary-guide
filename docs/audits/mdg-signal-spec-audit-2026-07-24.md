@@ -96,7 +96,7 @@ Spec role:
 | §4 (reduced motion) | ~zero transitions under `prefers-reduced-motion` | SignalLayout CSS | **PARTIAL** — `@media (prefers-reduced-motion: reduce) { .signal-scope .drawer { transition: none } }` covers the drawer only; alerts, toast, and theme toggle still animate. |
 | §5 (prototype 004 dashboard orientation) | statewide dashboard prototype | `sketches/004-...` on disk | **NOT BUILT — OUT OF SCOPE.** Spec lists it as an optional complement; the slice shipped only Prototype 005. |
 | §6 (select → compare → inspect → watchlist → alert) | 5-step path with explicit preview states | workspace tests | VERIFIED |
-| §6 (default scenario: Portland, plus South Portland + Brunswick) | comparison peers present | `index.astro` + dynamic page sorting | VERIFIED (subject + 3 closest-by-density peers auto-selected) |
+| §6 (default scenario: Portland, plus South Portland + Brunswick) | comparison peers present | `index.astro` + dynamic page sorting | **KNOWN DEVIATION** — code selects 3 highest-density peers, not the spec's named peers (South Portland + Brunswick). Density-based selection is more useful as a product choice, but the spec names specific peers. The spec should be amended to document the density-based rule. The self-audit incorrectly marked this "VERIFIED" — it is a deviation, not a match. |
 | §6 (states: success/partial/not_ready/no match/preview) | each state renders | manifest, layout, peer pool | VERIFIED (no-match state would require real search; currently no `municipalitySearch` input — see finding below) |
 | §7 (landmarks) | `<aside>` for drawers, `<section>` for content cards | layout | VERIFIED |
 | §7 (keyboard) | drawer open/close by button or Escape; focus moves to close control | workspace-client.js | VERIFIED |

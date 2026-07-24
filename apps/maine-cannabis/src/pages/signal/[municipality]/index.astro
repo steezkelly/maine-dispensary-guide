@@ -10,7 +10,25 @@ export function getStaticPaths() {
 
 const { municipality } = Astro.props as { municipality: typeof SIGNAL_PAGE_MODEL.municipalities[number] };
 const all = SIGNAL_PAGE_MODEL.municipalities;
-const peers = all.filter((m) => m.slug !== municipality.slug).slice(0, 3);
+
+// Peer selection. Spec §6 "Default scenario" names Portland's comparison
+// peers explicitly (South Portland + Brunswick). Honor that named scenario
+// for Portland; for every other subject, fall back to a deterministic
+// density-ranked top-3 so the comparison is always reproducible.
+const SPEC_NAMED_PEERS: Record<string, string[]> = {
+  portland: ['south-portland', 'brunswick'],
+};
+function selectPeers(subjectSlug: string) {
+  const named = SPEC_NAMED_PEERS[subjectSlug] || [];
+  const namedPeers = named
+    .map((slug) => all.find((m) => m.slug === slug))
+    .filter((m): m is (typeof all)[number] => Boolean(m));
+  const remaining = all
+    .filter((m) => m.slug !== subjectSlug && !named.includes(m.slug))
+    .sort((a, b) => b.density - a.density);
+  return [...namedPeers, ...remaining].slice(0, 3);
+}
+const peers = selectPeers(municipality.slug);
 const maxLicenses = Math.max(...all.map((m) => m.licenses));
 const maxDensity = Math.max(...all.map((m) => m.density));
 const evidence = manifest.evidence;
