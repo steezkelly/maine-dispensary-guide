@@ -107,8 +107,11 @@ export function buildSignalJsonLd(
     { '@type': 'PropertyValue', name: 'rate_per_10k', description: 'Licenses per 10,000 residents (descriptive density, not a demand score).' },
   ];
 
+  // No real lat/long is available for the curated municipalities in the
+  // MDG-DATA release, so we omit `geo` entirely rather than emit an empty
+  // GeoCoordinates object (which is schema.org noise / a Rich-Results wart).
   const spatialCoverage = page.city
-    ? { '@type': 'Place', name: `${page.city.city}, Maine`, geo: { '@type': 'GeoCoordinates', latitude: undefined, longitude: undefined } }
+    ? { '@type': 'Place', name: `${page.city.city}, Maine` }
     : { '@type': 'Place', name: 'Maine' };
 
   // Build the Dataset. Note: Schema.org/Dataset does not have an
@@ -142,16 +145,12 @@ export function buildSignalJsonLd(
           ? `${page.city.city} research page (HTML)`
           : 'MDG Signal index (HTML)',
       },
-      {
-        // Methodology lives in the MDG-DATA product meta; reference it
-        // by the same shape every MDG-DATA product uses (the path
-        // /data/methodology/<product-slug> is the canonical public
-        // methodology surface — see retail-licenses-by-municipality.meta.json).
-        '@type': 'DataDownload',
-        encodingFormat: 'application/json',
-        contentUrl: 'https://mainedispensaryguide.com/data/methodology/retail-licenses-by-municipality',
-        name: 'retail-licenses-by-municipality methodology (MDG-DATA meta)',
-      },
+      // NOTE: a methodology DataDownload was removed here. It pointed at
+      // /data/methodology/retail-licenses-by-municipality, which is NOT a
+      // real route (the methodology lives only in the MDG-DATA product
+      // meta JSON, with no public page). Shipping a DataDownload contentUrl
+      // that 404s is a structured-data defect. Re-add only if/when a real
+      // /data/methodology/<slug> page is built.
     ],
   });
 

@@ -87,12 +87,16 @@ function start() {
         // toast should now be visible
         const toastVisibleAfter = await page.evaluate(() => document.getElementById('toast').getAttribute('data-visible'));
         if (toastVisibleAfter !== 'true') throw new Error(`${route}: toast should be visible after swap, got ${toastVisibleAfter}`);
-        // alert-condition buttons: clicking License-count change updates #alertCopy
+        // alert-condition buttons live inside the alert drawer; open it
+        // first (the drawer is correctly hidden off-screen now that the
+        // scoped-CSS fix applies .drawer { transform: translateX(100%) }).
+        await page.click('[data-open-drawer="alert"]');
         const copyBefore = await page.evaluate(() => document.getElementById('alertCopy').textContent);
         await page.locator('[data-signal-alert-condition="license"]').click();
         const copyAfter = await page.evaluate(() => document.getElementById('alertCopy').textContent);
         if (copyBefore === copyAfter) throw new Error(`${route}: license condition click should update alertCopy`);
         if (!copyAfter.includes('old and new license counts')) throw new Error(`${route}: alert copy did not change to license text, got: ${copyAfter}`);
+        await page.keyboard.press('Escape');
       }
       // drawer toggle on a research page only
       if (route !== '/') {

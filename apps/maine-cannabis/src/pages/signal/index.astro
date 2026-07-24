@@ -11,6 +11,10 @@ const datasets = manifest.datasets;
 const release = manifest.evidence;
 const all = SIGNAL_PAGE_MODEL.municipalities;
 const totalLicenses = all.reduce((sum, m) => sum + m.licenses, 0);
+// Scale the per-card density bar against the actual max in the set, not a
+// hardcoded literal (independent review finding F-8: a future MDG-DATA
+// release that changes Portland's count would silently mis-scale the bars).
+const maxLicenses = Math.max(...all.map((m) => m.licenses));
 const topByCount = [...all].sort((a, b) => b.licenses - a.licenses).slice(0, 5);
 const topByDensity = [...all].sort((a, b) => b.density - a.density).slice(0, 5);
 const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'partial' || ds.state === 'not_ready');
@@ -68,7 +72,7 @@ const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'parti
             (ACS {m.acsVintage}) · {m.density.toFixed(2)} per 10K
           </p>
           <div class="bar" aria-hidden="true">
-            <span style={`width:${Math.min(100, (m.licenses / 27) * 100).toFixed(1)}%`}></span>
+            <span style={`width:${Math.min(100, (m.licenses / maxLicenses) * 100).toFixed(1)}%`}></span>
           </div>
         </li>
       ))}

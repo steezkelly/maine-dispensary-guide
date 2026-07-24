@@ -265,7 +265,9 @@ const datasets = manifest.datasets;
 
   <div id="toast" role="status" aria-live="polite" data-visible="false" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 16px;border-radius:8px;background:var(--ink);color:var(--paper);font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:opacity 180ms ease;pointer-events:none;z-index:40;"></div>
 
-  <script>
-    import '../../../components/signal/workspace-client.js';
-  </script>
+  <!--
+    workspace-client.js is loaded once by SignalLayout.astro (so the
+    theme toggle works on every Signal page). Do not re-import it here —
+    the layout owns the controller.
+  -->
 </SignalLayout>
