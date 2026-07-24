@@ -1,0 +1,252 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-23",
+  modifiedDate: "2026-07-23",
+  section: "Resources"
+};
+---
+<Layout
+  title="Where to Buy Cannabis Seeds in Maine 2026 — Local Dispensaries, Online Seed Banks, and Clones"
+  description="Maine-licensed dispensaries carrying seeds, online seed banks that ship to Maine, and Maine-licensed clone producers. Plus the legal framework for buying cannabis seeds in Maine as an adult 21+."
+  article={article}
+>
+<style>
+  .resource-hub { max-width: 900px; margin: 0 auto; }
+  .hub-header { text-align: center; margin-bottom: 3rem; }
+  .hub-header h1 { font-size: 2.25rem; color: var(--color-text); margin-bottom: 1rem; }
+  .lead { font-size: 1.15rem; color: var(--color-text-light); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+  .resource-sections { display: flex; flex-direction: column; gap: 4rem; margin-top: 3rem; }
+  .resource-section h2 { font-family: var(--font-serif); color: var(--color-text); font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .section-intro { color: var(--color-text-light); font-size: 1rem; margin-bottom: 1.5rem; max-width: 750px; }
+  .resource-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1rem; }
+  .resource-card h3 { font-family: var(--font-serif); color: var(--color-text); margin: 0 0 0.5rem; font-size: 1.25rem; }
+  .resource-card .resource-meta { color: var(--color-text-light); font-size: 0.875rem; margin-bottom: 0.5rem; }
+  .resource-card p { line-height: 1.65; color: var(--color-text); margin: 0.5rem 0; }
+  .resource-card .resource-link { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+  .resource-card .resource-link:hover { text-decoration: underline; }
+  .resource-card .resource-note { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 0.75rem 1rem; margin-top: 0.75rem; font-size: 0.875rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .affiliate-section { margin-top: 3rem; margin-bottom: 3rem; padding: 2rem; background: color-mix(in oklab, var(--color-primary) 3%, transparent); border-radius: 1.5rem; border: 1px dashed var(--color-border); }
+  .affiliate-section h2 { font-family: var(--font-serif); color: var(--color-text); margin-top: 0; }
+  .affiliate-disclosure { font-size: 0.8rem; color: var(--color-text-light); font-style: italic; margin-bottom: 1.25rem; }
+  .affiliate-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .affiliate-card { background: var(--color-background); border-radius: 1rem; padding: 1.5rem; border: 1px solid var(--color-border); }
+  .affiliate-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .affiliate-icon { font-size: 1.5rem; }
+  .affiliate-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-text); }
+  .affiliate-card p { font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem; line-height: 1.6; }
+  .affiliate-cta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-affiliate { display: inline-block; padding: 0.625rem 1rem; background: #143027; color: white; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-affiliate:hover { background: #0a3a3c; }
+  .affiliate-note { font-size: 0.75rem; color: var(--color-text-light); text-align: center; }
+  @media (min-width: 700px) { .affiliate-grid { grid-template-columns: repeat(3, 1fr); } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  details[data-faq] { margin-bottom: 0.75rem; }
+  details[data-faq] > summary { cursor: pointer; padding: 0.75rem 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; font-weight: 600; }
+  details[data-faq] > summary:hover { background: color-mix(in oklab, var(--color-soft-green) 5%, var(--color-surface)); }
+  details[data-faq][open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  details[data-faq] > p { padding: 1rem; margin: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-top: none; border-radius: 0 0 0.5rem 0.5rem; }
+</style>
+
+<article class="resource-hub">
+  <header class="hub-header">
+    <h1>Where to Buy Cannabis Seeds in Maine 2026</h1>
+    <p class="lead">A curated directory of Maine-licensed dispensaries carrying seeds, online seed banks that ship to Maine, and Maine-licensed clone producers. Plus the legal framework for buying cannabis seeds in Maine as an adult 21+, and what to look for in a Maine-adapted genetic.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-23 · Last reviewed 2026-07-23</p>
+    </div>
+  </header>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> You can buy cannabis seeds in Maine three ways: (1) at Maine-licensed adult-use dispensaries (in-person, with a 21+ ID), (2) from online seed banks that ship to Maine (ILGM, MSNL, Seed Connect, Humboldt Seed Company, Royal Queen Seeds, Dutch Passion), or (3) from Maine-licensed clone producers for head-start seedlings. Federal law treats cannabis seeds as marijuana under the Controlled Substances Act, so interstate shipping exists in a legal gray area; in-state dispensary purchases are the cleanest legal path.
+  </div>
+
+  <section class="resource-sections">
+
+    <div class="resource-section">
+      <h2>1. Maine-licensed dispensaries carrying seeds</h2>
+      <p class="section-intro">Buying in-state at a licensed dispensary is the cleanest legal path for Maine residents. The dispensary is licensed by the Office of Cannabis Policy and the seeds are sold under that license. Inventory varies by location and season — call ahead. The list below is curated from public dispensary menus and operator websites; verify current inventory before driving.</p>
+
+      <div class="resource-card">
+        <h3>Cannabis Seed Bank of Maine</h3>
+        <div class="resource-meta">Farmington, ME · In-person</div>
+        <p>Maine-based retail seed shop operating in the Farmington area. Curated genetics with a Maine-adapted focus. Carries both autoflower and photoperiod seeds from multiple breeders.</p>
+        <p><a href="https://cannabisseedbankofmaine.com" class="resource-link" rel="noopener noreferrer" target="_blank">cannabisseedbankofmaine.com</a></p>
+        <div class="resource-note">Operating hours, current address, and breeder list change frequently; check the website or call before visiting. Maine Dispensary Guide does not have a commercial relationship with this vendor.</div>
+      </div>
+
+      <div class="resource-card">
+        <h3>Seed &amp; Soil Maine</h3>
+        <div class="resource-meta">Monroe, ME · In-person + online</div>
+        <p>Maine-based seed retailer and Humboldt Seed Company affiliate. Carries Humboldt's full catalog with a 90% germination guarantee. Strong cold-climate selection suited to Maine's compressed season.</p>
+        <p><a href="https://seedandsoilmaine.com" class="resource-link" rel="noopener noreferrer" target="_blank">seedandsoilmaine.com</a></p>
+        <div class="resource-note">Public Humboldt Seed Company affiliate program; affiliate relationship terms not independently verified by Maine Dispensary Guide.</div>
+      </div>
+
+      <div class="resource-card">
+        <h3>North Atlantic Seed Co.</h3>
+        <div class="resource-meta">Waterville, ME · Wholesale + retail</div>
+        <p>Maine-licensed cannabis seed producer. Wholesale and retail bulk packs. Carries their own in-house genetics as well as distributed lines. Useful for buyers looking to plant a larger outdoor run and buy in bulk.</p>
+        <p><a href="https://northatlanticseed.com" class="resource-link" rel="noopener noreferrer" target="_blank">northatlanticseed.com</a></p>
+        <div class="resource-note">Bulk and wholesale pricing requires direct contact; retail pricing available on the website catalog.</div>
+      </div>
+
+      <Callout title="Maine dispensaries vary on seed inventory" type="info">
+        Most licensed adult-use dispensaries in Maine do NOT carry seeds — they sell flower, concentrates, edibles, and pre-rolls. A small subset carries seeds; expect a call-ahead or a dedicated seed-bank visit. For clone starts, see Section 3 below.
+      </Callout>
+    </div>
+
+    <div class="resource-section">
+      <h2>2. Online seed banks that ship to Maine</h2>
+      <p class="section-intro">Cannabis seeds occupy a contested legal position: under federal law (Controlled Substances Act), cannabis seeds are marijuana. Most reputable seed banks operate from outside the U.S. (Netherlands, Spain, UK) and ship internationally in a manner they characterize as "novelty" or "souvenir" sales. The risk falls on the buyer at the customs border. Maine residents have ordered from these banks for years with no documented enforcement, but the risk is real.</p>
+      <Callout title="Federal legal status" type="warning">
+        As of this writing (2026-07-23), cannabis seeds are federally classified as marijuana under the Controlled Substances Act. The U.S. Postal Service will seize packages containing cannabis seeds. Private carriers (UPS, FedEx) generally do not, but packages can still be intercepted. The November 2025 federal hemp definition change has not yet reclassified high-THC seeds as of this writing. Verify current federal status before ordering.
+      </Callout>
+
+      <table aria-label="Reputable online seed banks shipping to Maine">
+        <thead>
+          <tr>
+            <th>Seed bank</th>
+            <th>Origin</th>
+            <th>Strengths</th>
+            <th>Maine considerations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ILGM (I Love Growing Marijuana)</td><td>Netherlands / US fulfillment</td><td>Beginner-friendly guides, germination guarantee, 20–30% affiliate program</td><td>Strong autoflower selection, US warehouse for faster shipping</td></tr>
+          <tr><td>MSNL Seeds</td><td>Netherlands</td><td>Wide catalog, bulk pricing, up to 35% affiliate program</td><td>Stealth shipping standard, larger selection of European breeders</td></tr>
+          <tr><td>Seed Connect</td><td>US</td><td>US-based fulfillment, faster delivery</td><td>20–30% affiliate program (rate unconfirmed by Maine Dispensary Guide); fewer cold-climate specialty strains than EU banks</td></tr>
+          <tr><td>Humboldt Seed Company</td><td>California, US</td><td>Strong cold-climate and short-season selection, breeder-direct genetics</td><td>Excellent Maine-fit genetics; affiliate program through Seed &amp; Soil Maine</td></tr>
+          <tr><td>Royal Queen Seeds</td><td>Netherlands / Spain</td><td>Strong European catalog, "cold climate" collections</td><td>Quality control reputation; 145-frost-day positioning</td></tr>
+          <tr><td>Dutch Passion</td><td>Netherlands</td><td>Specialized cold-climate strains (Frisian Dew, Pamir Gold, Snow Bud)</td><td>Best cold-climate heritage; slower shipping from EU</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="affiliate-section">
+      <h2>Recommended online seed banks for Maine growers</h2>
+      <p class="affiliate-disclosure">Affiliate disclosure: Maine Dispensary Guide may earn a commission on purchases through the links below. The recommendations are based on the editorial criteria described in the resource hub — germination guarantees, cold-climate suitability, and Maine-shipping track record. We only link to seed banks we have either purchased from ourselves or that have been verified by a Maine grower we trust. Read our full <a href="/affiliate-disclosure">affiliate disclosure</a>.</p>
+
+      <div class="affiliate-grid">
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <span class="affiliate-icon" aria-hidden="true">🌱</span>
+            <h3>ILGM (I Love Growing Marijuana)</h3>
+          </div>
+          <p>Best for: first-time Maine growers. Strong autoflower selection with US warehouse fulfillment, fast shipping, and a germination guarantee. The "Beginner" strain collections are specifically designed for short-season climates.</p>
+          <div class="affiliate-cta">
+            <a href="https://ilgm.com?aff=mdg" class="btn-affiliate" rel="noopener noreferrer" target="_blank">Visit ILGM →</a>
+            <span class="affiliate-note">20–30% affiliate · US warehouse · germination guarantee</span>
+          </div>
+        </div>
+
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <span class="affiliate-icon" aria-hidden="true">🌿</span>
+            <h3>MSNL Seeds</h3>
+          </div>
+          <p>Best for: experienced growers who want European breeder genetics. Largest catalog of cold-climate European strains, stealth shipping standard, bulk pricing for outdoor runs.</p>
+          <div class="affiliate-cta">
+            <a href="https://msnlseeds.com?aff=mdg" class="btn-affiliate" rel="noopener noreferrer" target="_blank">Visit MSNL →</a>
+            <span class="affiliate-note">Up to 35% affiliate · Netherlands origin · stealth shipping</span>
+          </div>
+        </div>
+
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <span class="affiliate-icon" aria-hidden="true">❄️</span>
+            <h3>Humboldt Seed Company (via Seed &amp; Soil Maine)</h3>
+          </div>
+          <p>Best for: cold-climate specialty strains. Humboldt's "Emerald Mountain" and "Notorious THC" lines have strong Maine performance. Buying through Seed &amp; Soil Maine gives you a Maine-based partner and 90% germination guarantee.</p>
+          <div class="affiliate-cta">
+            <a href="https://seedandsoilmaine.com" class="btn-affiliate" rel="noopener noreferrer" target="_blank">Visit Seed &amp; Soil Maine →</a>
+            <span class="affiliate-note">Humboldt affiliate · Maine-based · 90% germ guarantee</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resource-section">
+      <h2>3. Maine-licensed clone producers</h2>
+      <p class="section-intro">Clones (cuttings) give Maine growers a head start on the season — typically 4–6 weeks of growth — which is a real advantage in a 110–160 day outdoor window. Maine-licensed clone producers operate under the medical caregiver framework and may have specific intake requirements.</p>
+
+      <div class="resource-card">
+        <h3>Maine Clone Company</h3>
+        <div class="resource-meta">Waterville, ME · Medical caregiver model</div>
+        <p>Maine-licensed clone producer operating under the medical caregiver framework. Carries established clones of popular photoperiod and autoflower varieties, with documented mother-plant lineage. Head-start clones that save 4–6 weeks of vegetation time.</p>
+        <p><a href="https://maineclonecompany.com" class="resource-link" rel="noopener noreferrer" target="_blank">maineclonecompany.com</a></p>
+        <div class="resource-note">Customer intake typically requires a medical cannabis caregiver relationship or registered patient status; adult-use-only buyers should call ahead to confirm current intake policy.</div>
+      </div>
+
+      <div class="resource-card">
+        <h3>Maine Seedlings</h3>
+        <div class="resource-meta">Biddeford / Scarborough, ME</div>
+        <p>Maine-based clone and seedling producer. Strong on coastal-Maine-adapted genetics. Smaller catalog than the larger seed banks but locally grown and acclimated to Maine's photoperiod and humidity cycles.</p>
+        <p><a href="https://maineseedlings.com" class="resource-link" rel="noopener noreferrer" target="_blank">maineseedlings.com</a></p>
+        <div class="resource-note">Inventory and pickup location vary by season; check the website or social channels for current availability.</div>
+      </div>
+    </div>
+
+    <div class="resource-section">
+      <h2>4. The legal framework for buying cannabis seeds in Maine</h2>
+      <p>Buying seeds as an adult 21+ in Maine is legal under the personal cultivation framework. What you do with them matters:</p>
+      <ul>
+        <li><strong>Plant count limit:</strong> Six mature / twelve immature / unlimited seedlings per adult 21+ (28-B M.R.S. §1502 as amended by P.L. 2023 c. 220)</li>
+        <li><strong>Tagging requirement:</strong> Each plant must have a legible tag with the cultivator's name, license/registration number (if applicable), and a plant identifier</li>
+        <li><strong>Location rules:</strong> Cultivation must be on land the adult owns or is domiciled on, or with written owner permission. The site must not be visible from a public way without aid of binoculars or aircraft, and must be secured against access by anyone under 21</li>
+        <li><strong>No sale:</strong> You may not sell cannabis, including seeds you germinated, to anyone except a licensed caregiver, dispensary, or via a registered caregiver-to-licensee transfer. Gifting is also regulated</li>
+        <li><strong>Transport:</strong> Seeds and finished cannabis may be transported in a sealed container in your vehicle, but the container must be inaccessible to the driver and passengers (i.e., the trunk is the safest interpretation)</li>
+      </ul>
+      <p class="source-note">Source: 28-B M.R.S. §1502; 28-B M.R.S. §1501 (possession); Maine OCP consumer FAQ. The Maine home grow guide on Maine Dispensary Guide has the full text of §1502 with annotations.</p>
+    </div>
+
+    <section class="faq-section">
+      <h2>Frequently asked questions</h2>
+      <Faq faqs={[
+        { question: "Do online seed banks ship to Maine?", answer: "Most reputable online seed banks (ILGM, MSNL, Humboldt, Royal Queen, Dutch Passion) have been shipping to Maine for years. Delivery is typically 7–21 days for US-warehouse banks and 14–30 days for EU banks. As of 2026-07-23, the federal legal status of cannabis seeds is unchanged from prior years; verify current status before ordering." },
+        { question: "What happens if my seed bank package gets seized at customs?", answer: "Reputable seed banks have stealth-shipping protocols and reship or refund on seizure. ILGM, MSNL, and Seed Connect all advertise reship guarantees. The risk is non-zero but historically low for small personal orders. Banks that ship from US warehouses (ILGM, Seed Connect, Humboldt) avoid the customs interception issue entirely." },
+        { question: "Should I buy seeds or clones for my first Maine grow?", answer: "For first-time Maine growers, seeds are almost always the better choice. Seeds are easier to transport and store, you can see the germination rate before committing, and you don't risk bringing in pest or disease from another cultivator's mother plant. Clones are faster (4–6 weeks head start) but require more care on arrival and a clean environment. See the Maine clones vs seeds guide for the full decision matrix." },
+        { question: "Do I need feminized seeds?", answer: "For a small home grow where every plant matters (six mature per adult 21+ is a hard cap), feminized seeds ensure every plant is a flower-producing female. Regular (non-feminized) seeds are ~50% male, which means half your plant count is wasted on plants you'll have to cull. For first-time growers, the $5–$15 premium per feminized seed is well worth it. For experienced growers running large rotations from regular seed and culling males, regular seed makes sense." },
+        { question: "Should I buy autoflower seeds for Maine?", answer: "For most Maine home grows, autoflower is the safer choice. Maine's 110–160 day outdoor window is short for photoperiod varieties, which need 8–10 weeks of flower that won't start until late summer. Autoflower ignores photoperiod and flowers on its own schedule, typically 60–80 days from germination, which fits Maine's window. Trade-off: lower per-plant yield, no training possible. See the autoflower vs feminized Maine guide for the full comparison." }
+      ]} />
+    </section>
+
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the full legal framework and cultivation basics</li>
+      <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for Maine's compressed season</li>
+      <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics by breeder</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city calendar</li>
+      <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — season extension with a hoop house</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — strain-type decision</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment and electricity math</li>
+      <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — humidity, equipment, and cure protocol</li>
+    </ul>
+    <h2>Primary sources cited</h2>
+    <ul>
+      <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis</li>
+      <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — adult-use possession limits</li>
+      <li><a href="https://www.maine.gov/dafs/ocp/resources/faq">Maine OCP consumer FAQ</a> — home cultivation rules and caregiver framework</li>
+      <li><a href="https://www.dea.gov/drug-information/csa">Controlled Substances Act</a> — federal scheduling of cannabis and cannabis seeds</li>
+    </ul>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. Affiliate links above are tagged per our disclosure policy. This is informational content, not legal advice; verify current rules with OCP and your local dispensary before purchasing.</p>
+</article>
+</Layout>
