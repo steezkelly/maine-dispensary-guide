@@ -107,8 +107,9 @@ const {
 <script is:inline define:vars={{ formId }}>
   // LeadIntakeForm inline IIFE. Same pattern as LeadMailtoForm: read all
   // named fields, intercept submit, dispatch to either the server endpoint
-  // or the mailto: fallback. The lead_capture GA4 event fires before any
-  // navigation so attribution is preserved on both paths.
+  // or the mailto: fallback. The lead_capture GA4 event fires after the
+  // server confirms success (server path), or synchronously before the
+  // mailto: navigation (mailto path, where the navigation IS the signal).
   (function () {
     var form = document.getElementById(formId);
     if (!form) return;
@@ -221,7 +222,6 @@ const {
 
       // Path 1: server-side intake.
       if (endpoint && endpoint.length > 0) {
-        fireGA4(form, formName, trackFields, 'server');
         var payload = Object.assign({}, values, readAttribution(), { ts: new Date().toISOString() });
         try {
           fetch(endpoint, {
@@ -234,6 +234,9 @@ const {
             }
             throw new Error('non-2xx');
           }).then(function (data) {
+            // GA4 lead_capture fires AFTER server confirms success — attribution
+            // reflects actual conversions, not submissions that 404'd or 500'd.
+            fireGA4(form, formName, trackFields, 'server');
             // Server may return { redirect: '/path' } or fall back to successPath.
             if (data && typeof data.redirect === 'string' && data.redirect.length > 0) {
               window.location.href = data.redirect;
@@ -253,7 +256,9 @@ const {
         }
       }
 
-      // Path 2: mailto: fallback.
+      // Path 2: mailto: fallback. fireGA4 fires synchronously here because
+      // there is no server response to await — the mailto: navigation IS the
+      // success signal.
       fireGA4(form, formName, trackFields, 'mailto');
       setTimeout(function () {
         window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);

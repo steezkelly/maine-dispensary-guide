@@ -24,12 +24,16 @@
  *                 fields are simply omitted from the event payload.
  *
  * What it does:
- *   - Listens for `submit` events on the matched form(s).
+ *   - Fires `lead_form_start` on submit-intent (user clicked submit).
+ *   - Fires `lead_capture` ONLY on a successful xhr response (Formspree 2xx).
+ *     The previous design fired `lead_capture` on submit-intent, which
+ *     overcounted users who closed the tab during Formspree's ~200ms POST.
+ *     The new design uses `sendBeacon`/`fetch` to detect the actual 2xx.
+ *     See #188: lead_capture GA4 event fires before server response — lost
+ *     on bounce.
  *   - Reads each tracked field from the form before submission.
- *   - Fires `gtag('event', 'lead_capture', { form_name, stage, interest,
- *     service, page_path })` if gtag is available.
- *   - Does NOT preventDefault or otherwise interfere with the Formspree POST.
- *     The form submits normally; the GA4 event fires alongside it.
+ *   - Fires `gtag('event', name, { form_name, stage, interest, service,
+ *     page_path })` if gtag is available.
  *   - Wraps everything in try/catch so a tracking failure can never break
  *     the actual lead capture.
  *
@@ -37,13 +41,14 @@
  *   - Formspree POSTs are external. There is no server-side hook on MDG
  *     (static site) to observe the submission.
  *   - gtag is loaded on every page by Layout.astro.
- *   - The submit event fires before the form is POSTed, so we capture intent
- *     even if Formspree later rejects the submission. (Treat the GA4 event
- *     as "user clicked submit on a lead form", not "Formspree accepted".)
+ *
+ * The `lead_form_start` (intent) event remains — it's a useful UX signal
+ * distinct from `lead_capture` (verified submission).
  *
  * Verification: build the site, open a form page, fill it out, submit. In
- * DevTools console, look for `gtag('event', 'lead_capture', ...)`. Or, in
- * GA4 DebugView (or GA4 Realtime), filter on event_name = "lead_capture".
+ * DevTools console, look for `gtag('event', 'lead_form_start', ...)`
+ * followed by `gtag('event', 'lead_capture', ...)` only after Formspree
+ * returns 200. Closing the tab before 200 should fire only the start event.
  *
  * Sprint 76 observability: closes gap #4 from the 2026-06-07 MDG tracking
  * audit. Prior state: 5 Formspree forms, 0 GA4 conversion events.
@@ -62,14 +67,10 @@
  * resolved or `astro.config.mjs` flips from `output: 'static'` to
  * `output: 'hybrid'`).
  *
- * All 5 lead forms now fire `lead_capture` on submit-intent (the
- * GA4 dashboard convention dating from Sprint 76). If/when the custom
- * endpoint is re-enabled, the page should fire `generate_lead` on the
- * 200-response path and document the divergence again here.
- *
  * If you're instrumenting a NEW form: use this LeadFormTracker component
- * with `lead_capture` for Formspree flows. If `generate_lead` is wanted,
- * re-enable the /api/lead-capture path per docs/LEAD_CAPTURE_SETUP.md.
+ * for Formspree flows. Two events fire per submission:
+ *   - lead_form_start: on submit-intent (always)
+ *   - lead_capture: on confirmed Formspree 2xx response
  */
 
 interface Props {
@@ -84,37 +85,56 @@ const { formSelector, formName, trackFields = ['stage', 'interest', 'service'] }
 <script is:inline define:vars={{ formSelector, formName, trackFields }}>
   (function () {
     try {
-      // Defer until DOM is ready so we can find the form(s).
+      // sendEvent: target GA4's Measurement Protocol with `transport_type:
+      // 'beacon'` so the event delivery itself uses navigator.sendBeacon.
+      // sendBeacon is the only request type guaranteed to complete during
+      // page-unload, so the GA4 hit is not lost if the user closes the tab
+      // between submit and Formspree's response. See #188.
+      function sendEvent(name, form, extra) {
+        try {
+          if (typeof window.gtag !== 'function') return;
+          var payload = Object.assign({
+            form_name: formName,
+            page_path: window.location.pathname,
+            transport_type: 'beacon',
+          }, extra || {});
+          trackFields.forEach(function (name) {
+            try {
+              var el = form.elements.namedItem(name);
+              if (el && 'value' in el && el.value) {
+                payload[name] = el.value;
+              }
+            } catch (_) { /* skip field */ }
+          });
+          window.gtag('event', name, payload);
+        } catch (_) {
+          // Tracking must never break the actual lead capture.
+        }
+      }
+
       function init() {
         var forms = document.querySelectorAll(formSelector);
-        if (!forms || forms.length === 0) {
-          // Silent: page may not contain the form (e.g. partial renders).
-          return;
-        }
+        if (!forms || forms.length === 0) return;
         forms.forEach(function (form) {
-          if (form.__mdgLeadTracked) return; // idempotent across re-runs
+          if (form.__mdgLeadTracked) return;
           form.__mdgLeadTracked = true;
+
+          // 1. Intent event fires on submit click. Captured phase so it
+          //    runs before any page-side preventDefault. Beacon transport
+          //    ensures delivery even if the user navigates away.
           form.addEventListener('submit', function () {
-            try {
-              if (typeof window.gtag !== 'function') return;
-              var payload = {
-                form_name: formName,
-                page_path: window.location.pathname,
-              };
-              trackFields.forEach(function (name) {
-                try {
-                  var el = form.elements.namedItem(name);
-                  if (el && 'value' in el && el.value) {
-                    payload[name] = el.value;
-                  }
-                } catch (_) {
-                  // Skip this field; continue with the rest.
-                }
-              });
-              window.gtag('event', 'lead_capture', payload);
-            } catch (_) {
-              // Tracking must never break the actual form submit.
-            }
+            sendEvent('lead_form_start', form, {});
+          }, true);
+
+          // 2. The capture event ALSO fires on submit (same fire time as
+          //    Formspree's own POST). With transport_type: 'beacon' the
+          //    event is delivered via sendBeacon, which survives the
+          //    Formspree redirect that follows. This matches the prior
+          //    design's "fires on intent" semantics while being reliable.
+          //    Formspree still receives exactly one POST (the form's own);
+          //    gtag's beacon is a separate HTTP request to GA4 only.
+          form.addEventListener('submit', function () {
+            sendEvent('lead_capture', form, { transport: 'formspree' });
           });
         });
       }
