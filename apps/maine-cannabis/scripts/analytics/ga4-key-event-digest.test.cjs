@@ -68,6 +68,43 @@ test('formatReport emits 0.0% for every ratio when denominators are zero', () =>
   }
 });
 
+test('formatReport renders partner referral breakdown when events exist', () => {
+  const totals = ALL_EVENTS.map((eventName) => ({ dimensions: { eventName }, metrics: { eventCount: 1, totalUsers: 1, sessions: 1 } }));
+  const out = formatReport({
+    totals,
+    byKeyEventPage: [],
+    outbound: [],
+    channels: [],
+    keyEventPages: [],
+    partnerReferrals: [
+      { dimensions: { 'customEvent:partner_id': '420-mules', 'customEvent:referral_surface': 'blog_dispensaries_guide' }, metrics: { eventCount: 7, totalUsers: 5 } },
+      { dimensions: { 'customEvent:partner_id': 'curaleaf', 'customEvent:referral_surface': 'city_guide' }, metrics: { eventCount: 3, totalUsers: 2 } },
+    ],
+    from: '2026-07-01',
+    to: '2026-07-07',
+  });
+  assert.match(out, /## 7\. Partner referrals by operator/);
+  assert.match(out, /affiliate-revenue attribution surface/);
+  assert.match(out, /\| 420-mules \| blog_dispensaries_guide \| 7 \| 5 \|/);
+  assert.match(out, /\| curaleaf \| city_guide \| 3 \| 2 \|/);
+});
+
+test('formatReport shows placeholder when no partner referrals exist yet', () => {
+  const totals = ALL_EVENTS.map((eventName) => ({ dimensions: { eventName }, metrics: { eventCount: 0, totalUsers: 0, sessions: 0 } }));
+  const out = formatReport({
+    totals,
+    byKeyEventPage: [],
+    outbound: [],
+    channels: [],
+    keyEventPages: [],
+    partnerReferrals: [],
+    from: '2026-07-01',
+    to: '2026-07-07',
+  });
+  assert.match(out, /## 7\. Partner referrals by operator/);
+  assert.match(out, /No `mdg_partner_referral` events in this window yet/);
+});
+
 test('formatReport does not embed raw URL, link text, or pseudonymous identifier values', () => {
   const totals = ALL_EVENTS.map((eventName) => ({ dimensions: { eventName }, metrics: { eventCount: 1, totalUsers: 1, sessions: 1 } }));
   const out = formatReport({
