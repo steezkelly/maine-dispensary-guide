@@ -184,7 +184,18 @@ async function liveRun() {
     orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
     limit: 20,
   });
-  return formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPages, from: dateRanges[0].startDate, to: dateRanges[0].endDate });
+  // Partner-level referral breakdown. Requires partner_id + referral_surface
+  // registered as event-scoped custom dimensions (2026-07-24). Returns 0 rows
+  // until mdg_partner_referral events land (~2026-07-31 post-deploy lag).
+  const partnerReferrals = await runReport(analytics, {
+    dateRanges,
+    dimensions: [{ name: 'customEvent:partner_id' }, { name: 'customEvent:referral_surface' }],
+    metrics: [{ name: 'eventCount' }, { name: 'totalUsers' }],
+    dimensionFilter: { filter: { fieldName: 'eventName', stringFilter: { value: 'mdg_partner_referral' } } },
+    orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
+    limit: 50,
+  });
+  return formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPages, partnerReferrals, from: dateRanges[0].startDate, to: dateRanges[0].endDate });
 }
 
 function fmt(n) {
@@ -198,7 +209,7 @@ function ratio(numerator, denominator) {
   return ((Number(numerator) / Number(denominator)) * 100).toFixed(1) + '%';
 }
 
-function formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPages, from, to }) {
+function formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPages, partnerReferrals, from, to }) {
   const t = Object.fromEntries(totals.map((r) => [r.dimensions.eventName, r.metrics]));
   const lines = [
     `# GA4 Key-Event Digest — ${todayIso()}`,
@@ -247,23 +258,35 @@ function formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPage
     '|---|---:|',
     ...keyEventPages.map((r) => `| ${r.dimensions.pagePath} | ${fmt(r.metrics.eventCount)} |`),
     '',
-    '## 7. Acquisition by channel',
+    '## 7. Partner referrals by operator (`mdg_partner_referral`)',
+    '',
+    (partnerReferrals && partnerReferrals.length)
+      ? 'Curated dispensary/operator handoffs, broken down by partner_id and referral_surface. This is the affiliate-revenue attribution surface.'
+      : 'No `mdg_partner_referral` events in this window yet. The event deployed 2026-07-23 and the custom dimensions (partner_id, referral_surface) registered 2026-07-24; data lands after GA4 processing lag (~2026-07-31).',
+    '',
+    '| Partner | Surface | Count | Users |',
+    '|---|---|---:|---:|',
+    ...(partnerReferrals && partnerReferrals.length
+      ? partnerReferrals.map((r) => `| ${r.dimensions['customEvent:partner_id'] || '(unset)'} | ${r.dimensions['customEvent:referral_surface'] || '(unset)'} | ${fmt(r.metrics.eventCount)} | ${fmt(r.metrics.totalUsers)} |`)
+      : ['| — | — | 0 | 0 |']),
+    '',
+    '## 8. Acquisition by channel',
     '',
     '| Channel | Sessions | Users | Engaged |',
     '|---|---:|---:|---:|',
     ...channels.map((r) => `| ${r.dimensions.sessionDefaultChannelGroup} | ${fmt(r.metrics.sessions)} | ${fmt(r.metrics.totalUsers)} | ${fmt(r.metrics.engagedSessions)} |`),
     '',
-    '## 8. Findings to flag',
+    '## 9. Findings to flag',
     '',
     '- `cta_view` is overcounted (it fires for every marked CTA on entry, not on click). Treat exposure ratios as upper bounds, not facts.',
     '- The `click` event is dominated by Maps and government citations. Do not mark it as a key event. Use `mdg_partner_referral` for the dispensary referral funnel.',
     '- `page_unload_before_gtag` is a known measurement gap. It is reported by the existing dual-source ingestion; consult that report for the latest count.',
     '- Post-deploy for `mdg_partner_referral` is recent. If the key-event total is 0, the 7-day window has not yet caught the deployment. Widen the window to 28 days or wait.',
     '',
-    '## 9. Privacy boundary',
+    '## 10. Privacy boundary',
     '',
     '- No pseudonymous identifiers (user_pseudo_id, session_id) are written to disk.',
-    '- No raw event parameters are persisted; this digest uses only event names, page paths, and link domains.',
+    '- No raw event parameters are persisted; this digest uses only event names, page paths, link domains, and the registered partner_id / referral_surface custom dimensions (stable slugs, not URLs).',
     '- All values are aggregate counts.',
     '',
   ];
