@@ -2,6 +2,12 @@
   "buildCommand": "bash vercel-build.sh",
   "outputDirectory": "dist",
   "routes": [],
+  "rewrites": [
+    {
+      "source": "/api/lead",
+      "destination": "https://g3nuc.tail1a791f.ts.net/webhook/mdg-lead-intake"
+    }
+  ],
   "redirects": [
     {
       "source": "/guides/maine-cannabis-280e-guide",
