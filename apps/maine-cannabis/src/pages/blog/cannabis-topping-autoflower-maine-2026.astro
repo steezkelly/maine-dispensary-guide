@@ -1,0 +1,289 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "training-techniques", "topping", "autoflower", "maine-climate", "cannabis-law"];
+---
+<Layout
+  title="Can You Top Autoflower Cannabis? Maine Guide 2026 — Why the Answer Is No"
+  description="A Maine-specific 2026 guide to why topping autoflower cannabis is risky: how autoflower's fixed lifecycle makes topping cost more than it returns, what to do instead (LST, selective super-cropping), how to recover if you've already topped, and strain-by-strain behavior — all under 28-B M.R.S. §1502."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Can You Top Autoflower Cannabis? Maine 2026 Guide — Why the Answer Is No</h1>
+    <p class="subtitle">Topping autoflowers is one of the most common beginner mistakes in Maine's short outdoor season. The autoflower's fixed lifecycle leaves almost no room for the recovery period a topping cut requires, and the data from breeder reports is unambiguous: most autoflower topping attempts yield less than leaving the plant alone. Here's the biology, the math, and what to do instead.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Topping a photoperiod cannabis plant — cutting the main apex to split it into two main colas — is a high-yield technique that adds 30–50% to a healthy plant's harvest. The same technique applied to an autoflower is a different story: autoflowers flower on age rather than day length, so they don't have the recovery window topping requires. In Maine's 110–150 day outdoor window, that cost compounds.</p>
+    <p>This guide covers why autoflower topping is risky in Maine specifically, what the breeder-reported yield data actually shows, what to do instead (LST, selective super-cropping on side branches, light defoliation), how to recover if you've already topped, and the few narrow cultivar cases where topping can work — and why none of them are right for a Maine 6-plant home grow.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> No — do not top autoflowers. Maine home growers operating under 28-B M.R.S. §1502's 6-plant cap cannot afford the recovery delay a topping cut imposes. Use LST (low stress training) starting at week 2–3 for canopy management and selective super-cropping on side branches in early July if you want a second cola without sacrificing the main shoot.
+  </div>
+
+  <div class="fact-box">
+    <h2>Autoflower topping at a glance</h2>
+    <table aria-label="Autoflower topping summary">
+      <tbody>
+        <tr><td><strong>Recommended?</strong></td><td>No, for Maine outdoor home growers</td></tr>
+        <tr><td><strong>Photoperiod yield gain from topping</strong></td><td>+30–50% in breeder reports</td></tr>
+        <tr><td><strong>Autoflower yield change from topping</strong></td><td>−10% to +10% (high variance, frequently negative)</td></tr>
+        <tr><td><strong>Recovery time a topping cut needs</strong></td><td>5–7 days of slowed growth</td></tr>
+        <tr><td><strong>Autoflower vegetative window</strong></td><td>Days 14–35 from germination (age-locked)</td></tr>
+        <tr><td><strong>Better alternative</strong></td><td>LST from week 2–3 + selective side-branch super-cropping</td></tr>
+        <tr><td><strong>Maine plant cap</strong></td><td>6 mature / 12 immature / unlimited seedlings</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>Why autoflower topping is risky: the biology</h2>
+    <p>To understand why autoflowers respond badly to topping, you need to understand how they differ from photoperiod plants in three specific ways. Each difference by itself is a problem; together they make topping a near-mistake.</p>
+
+    <h3>1. Fixed lifecycle with no flip day</h3>
+    <p>Photoperiod cannabis transitions from vegetative to flowering based on the light cycle. A grower controls this indoors with a 12/12 light switch, or outdoors by relying on seasonal day length to drop below 14 hours of daylight in mid-August. That means a photoperiod plant has a defined vegetative phase that can be extended at will — if you top and the plant needs 5–7 extra days of recovery, you give it 5–7 extra days by leaving the lights on 18 hours or by starting earlier indoors. No yield penalty.</p>
+    <p>Autoflower cannabis transitions to flower based on age, not light. Most autoflowers switch to flower between days 21 and 35 after germination, regardless of light cycle, temperature, or anything else the grower does. The vegetative window is short and inflexible. A topping cut at day 25 (when the plant has 4–6 nodes) costs recovery time during the period when the plant is supposed to be growing vegetatively to build the frame that will support flower weight. There's no "extend the veg" lever to pull — the clock is already running.</p>
+
+    <h3>2. Reduced recovery reserves</h3>
+    <p>Autoflowers were bred from Cannabis ruderalis, a short-cycle Russian hemp subspecies that evolved at northern latitudes to finish before the first hard frost. Ruderalis plants are small, fast-finishing, and didn't evolve the wound-response reserves that photoperiod indicas and sativas have. When you top a photoperiod plant, the plant re-routes growth energy and biomass to the two new tops within 5–7 days because it has the biological infrastructure for it. Autoflowers don't have that infrastructure — they evolved to put all energy into finishing the lifecycle as fast as possible, not into healing wounds and rebuilding cut biomass.</p>
+
+    <h3>3. Apical dominance is biologically fixed</h3>
+    <p>When you top a photoperiod plant, the lower branches take over as main colas because they have weeks of growing time to compete with the cut apex. When you top an autoflower, the lower branches may not have enough time to develop into full main colas before the plant switches to flower on its internal clock. You often end up with a single small main cola on a weakened plant — the worst of both worlds: smaller than the un-topped plant would have been, and missing the multiple-cola payoff you were hoping for.</p>
+
+    <Callout title="The Maine math is unforgiving" type="warning">
+      A Maine outdoor photoperiod plant has 60–75 days of vegetative growth and 55–70 days of flower. A topping cut at week 4 of veg costs a week of growth but the plant has five more weeks to recover before flower starts. An autoflower in Maine has 21–35 days of vegetative growth total, regardless of light. A topping cut at day 25 costs a week of growth out of a window that has 10 days left. The same cut that adds 30–50% to a photoperiod yield often subtracts 10–20% from an autoflower yield.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>The math: what breeder-reported yield data actually shows</h2>
+    <p>Major autoflower breeders — Royal Queen Seeds, Fast Buds, ILGM, 2Fast4Buds — publish community yield data from thousands of grows. The picture across those datasets is consistent: LST helps autoflowers; topping usually doesn't.</p>
+
+    <table aria-label="Training method yield comparison autoflower vs photoperiod">
+      <thead>
+        <tr>
+          <th>Training method</th>
+          <th>Photoperiod yield change</th>
+          <th>Autoflower yield change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>No training</td><td>Baseline</td><td>Baseline</td></tr>
+        <tr><td>LST only</td><td>+20–30%</td><td>+15–25%</td></tr>
+        <tr><td>LST + selective super-crop on side branches</td><td>+25–35%</td><td>+20–30%</td></tr>
+        <tr><td>Topping + LST (basic mainlining)</td><td>+30–50%</td><td>−10% to +10% (high variance)</td></tr>
+        <tr><td>FIM + LST</td><td>+25–40%</td><td>−20% to 0% (typically a loss)</td></tr>
+        <tr><td>Full mainlining (multiple toppings)</td><td>+40–60%</td><td>Not recommended; almost always a net loss</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: Royal Queen Seeds autoflower guides, ILGM community data, Fast Buds strain reports, and r/cannabiscultivation community yield logs. Maine-specific conditions (short window, high humidity, late transplant) make the autoflower loss cases more pronounced than the average.</p>
+    <p>The pattern is the same across breeders: any technique that requires 5+ days of recovery (topping, FIM, full mainlining) is a net negative on autoflowers; techniques that don't require recovery (LST, leaf tucking, light defoliation) are net positives. The autoflower's clock just doesn't have space for wound response.</p>
+  </section>
+
+  <section>
+    <h2>What to do instead: LST and selective super-cropping</h2>
+    <p>You have three lower-risk options that produce similar canopy benefits without the topping recovery penalty. They're covered in detail in the <a href="/blog/cannabis-lst-training-maine-2026">LST guide</a>, but here's the quick version tuned for autoflowers.</p>
+
+    <h3>LST: the autoflower backbone</h3>
+    <p>Low stress training is the highest-yield, lowest-risk autoflower technique. By tying branches horizontally throughout vegetative and early flower growth, you eliminate the dominant main cola and create a multi-cola canopy without any wound or recovery delay. The technique doesn't cut into the plant, so the plant doesn't need to rebuild biomass before resuming growth. Maine growers running 6 autoflowers can run LST continuously from week 2–3 through flower with no growth penalty and minimal equipment.</p>
+    <p>The autoflower-specific LST protocol: start when the plant has 4–5 nodes (typically week 3 of growth), bend the main stem to about 45 degrees rather than flat, use only soft non-absorbent ties (cloth strips rot in Maine's August humidity), train every 4–5 days instead of every 3, and stop by week 4–5 or when pre-flowers appear. That window is short — only two or three training sessions — but those sessions can re-route 20–30% more energy to lower branches without the plant ever losing a day to recovery.</p>
+
+    <h3>Selective super-cropping on side branches (advanced)</h3>
+    <p>This is the one high-stress technique that does work on autoflowers, with caveats. The technique: super-crop (pinch a lower side branch between thumb and forefinger to soften the stem to about 90% of its rigidity, then bend it to horizontal) on a LOWER branch that you want to become a secondary cola. Unlike topping the main stem:</p>
+    <ul>
+      <li>The plant can redirect energy from many growth points, not just one cut point.</li>
+      <li>Super-cropped branches often produce 2–3 new growing tips from below the bend, creating multiple colas from a single lateral branch.</li>
+      <li>The damage is local rather than apical — the plant's terminal main cola keeps producing while the side branch heals and develops new growth.</li>
+      <li>Recovery time is similar (3–5 days) but the impact is on a single side branch, not the plant's main shoot.</li>
+    </ul>
+
+    <Callout title="Maine humidity warning for super-crop" type="warning">
+      Don't super-crop any part of an autoflower in August or later — Maine's 70%+ humidity makes open wounds a botrytis entry point. Super-crop in early July at the latest if you're running autoflowers for an August–October finish. The wound needs 3–5 days of dry, sunny weather to callus over, and August through October in Maine rarely provides a guaranteed dry stretch that long.
+    </Callout>
+
+    <h3>Selective defoliation (low-risk)</h3>
+    <p>Removing large fan leaves that block light from lower bud sites is not topping — it's light management. Each fan leaf removal opens the canopy slightly for light penetration and air flow. Do this gently, only on lower leaves that are already yellowing or clearly blocking bud sites, and only during early flower when the plant has the energy reserves to recover from leaf removal. Most autoflower plants need no more than 3–5 fan leaves removed across the entire season to maximize yield.</p>
+  </section>
+
+  <section>
+    <h2>The exceptions: when autoflower topping can work</h2>
+    <p>There are a few narrow cases where autoflower topping has been documented to work. None of them are appropriate for a Maine 6-plant home grow, but it's worth knowing what they are so you understand why they aren't standard practice.</p>
+
+    <ol>
+      <li><strong>Very fast autoflowers (under 60 days total).</strong> Some breeder "speed" genetics finish in 50–60 days from seed. These plants don't have time to develop a main cola anyway, so topping can redistribute growth energy better than leaving the plant alone. Maine outdoor summer starts too late for these to fully finish before September's humidity arrives — the southern coast might squeak one in, but Bangor and Aroostook won't.</li>
+      <li><strong>Auto mainlining (advanced breeder technique).</strong> Cultivar-specific topping at day 14 with multiple toppings on F1 hybrids from certain breeders. Yields are mixed and this is experimental, not standard. Even the breeders who publish the technique report it works on maybe 60% of plants, with the rest producing less than untopped controls.</li>
+      <li><strong>Greenhouse with full climate control.</strong> A Maine indoor or heated greenhouse grow where the grower can manipulate light and temperature to extend vegetative time beyond what autoflowers' age-based switch would normally allow. This requires supplemental long-day lighting and increases operating cost significantly, which is why it's rare in a home setup.</li>
+    </ol>
+
+    <p>For a standard Maine home grow on the 6-plant limit, none of these exceptions are worth the risk. Stick with LST and selective super-cropping on side branches.</p>
+  </section>
+
+  <section>
+    <h2>Strain-by-strain behavior</h2>
+    <p>Not all autoflowers respond to topping equally badly. The genetics that respond worst are the ones bred most aggressively for "speed" — the 50–70 day genetics that finish fastest. The genetics that respond best (relatively speaking) are the larger, slower autoflowers bred from photoperiod-leaning parents. Maine outdoor growers tend to plant the slower genetics anyway because the speed genetics don't fully finish in our season, which is a small consolation.</p>
+
+    <table aria-label="Autoflower strain topping tolerance">
+      <thead>
+        <tr>
+          <th>Strain class</th>
+          <th>Typical days to harvest</th>
+          <th>Topping tolerance</th>
+          <th>Maine outdoor fit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Speed autos (under 60 days)</td><td>50–60 days</td><td>Lowest — fastest finishers have the least recovery reserve</td><td>Poor — finish too early, before full sun season</td></tr>
+        <tr><td>Standard autos (65–75 days)</td><td>65–75 days</td><td>Low — most breeder data shows net loss</td><td>Marginal — possible on southern coast with July start</td></tr>
+        <tr><td>Large autos (80–90 days)</td><td>80–90 days</td><td>Lowest risk of the three — more veg time to recover</td><td>Best — Bangor and south, full season finish</td></tr>
+        <tr><td>Photo-leaning auto F1 hybrids</td><td>75–90 days</td><td>Slightly better recovery, but still risky</td><td>Best with greenhouse or hoop house</td></tr>
+      </tbody>
+    </table>
+    <p>The bottom line: even the autoflower class with the best topping tolerance (the 80–90 day large autos) still shows net yield loss in most breeder reports compared to LST alone. Strain tolerance shifts the odds slightly; it doesn't change the conclusion.</p>
+  </section>
+
+  <section>
+    <h2>If you already topped an autoflower: recovery steps</h2>
+    <p>If you topped an autoflower before reading this guide, the plant isn't necessarily lost. Topping in vegetative growth is recoverable in many cases — autoflowers are tougher than the worst-case data suggests. Here's what to do next.</p>
+
+    <ol class="protocol-steps">
+      <li><strong>Do not top again.</strong> Don't try to "fix" the first topping with a second cut. The plant is already stressed; further training will compound the damage. Recovery means leaving the plant alone for at least 7–10 days.</li>
+      <li><strong>Move the plant to optimal conditions.</strong> 70–80°F (21–26°C), 60–70% humidity, full sun if outdoor. Reduce all environmental stressors — no wind, no temperature swings, no transplant shock. If the plant is in a fabric pot, leave it where it is. Moving a recovering plant adds more stress.</li>
+      <li><strong>Water lightly but consistently.</strong> Overwatering a recovering plant is the most common mistake. Water only when the top inch of soil is dry to the touch. Use room-temperature water, not cold well water.</li>
+      <li><strong>No nutrients for 7–10 days.</strong> A stressed plant cannot metabolize nitrogen efficiently and will burn if you continue feeding. Resume light feeding at 25% strength only after new growth visibly appears below the topping cut.</li>
+      <li><strong>Wait and assess at day 35.</strong> By day 35 from germination (about 10 days after a day 25 topping), you'll know if recovery is on track. New shoots should be visible below the cut, the side branches should be developing, and the plant should look generally healthy.</li>
+      <li><strong>If the plant only has one small cola at flower, accept it.</strong> Better one small main cola than no harvest. Don't try to rescue the plant through more stress — let it finish on whatever growth it's produced.</li>
+    </ol>
+
+    <Callout title="The bottom line on a topped autoflower" type="info">
+      If your autoflower has multiple colas developing after topping, you got lucky — most don't, but some will. If it has only one small main cola at week 4 of flower, the topping likely cost you 30–50% of potential yield. Don't beat yourself up; learn and adjust for the next run. Autoflower topping is a low-success-rate gamble for Maine outdoor growers, and most of us only need to make the mistake once.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Autoflower mainlining: why it's almost always a mistake</h2>
+    <p>"Mainlining" is a photoperiod technique that involves topping the main stem, then topping each of the two new main branches, then topping each of the four resulting branches — building a manifold (a symmetrical hub with eight evenly-spaced main colas) over several weeks of vegetative growth. On a photoperiod plant with 60+ days of veg, mainlining is a proven technique that produces 40–60% yield gains in skilled hands.</p>
+    <p>On an autoflower, mainlining is almost always a net loss. The reason is simple arithmetic: each topping cut costs 5–7 days of recovery. A 4-top mainline costs 20–28 days of recovery time — most of the autoflower's entire vegetative window. By the time the plant has rebuilt enough biomass to support eight main colas, it's already flipped to flower on its age clock and is no longer putting energy into vegetative growth. The result is eight small, underdeveloped colas instead of one or two well-developed ones.</p>
+    <p>The few autoflower mainlining success stories come from growers using greenhouse lighting to extend vegetative time artificially, large autoflower strains bred specifically for the technique, or plants that happened to be topped unusually early (day 14 or earlier). None of these apply to a standard Maine outdoor home grow.</p>
+  </section>
+
+  <section>
+    <h2>The legal framework: 28-B M.R.S. §1502</h2>
+    <p>Training technique doesn't change the legal framework that governs your grow, but the §1502 plant cap is exactly why the topping risk is worth taking seriously. The statute, as amended by P.L. 2023 c. 220 (LD 555), limits each adult 21+ in Maine to:</p>
+
+    <table aria-label="Maine home cultivation plant limits under 28-B M.R.S. §1502">
+      <thead>
+        <tr><th>Plant stage</th><th>Limit per adult 21+</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mature (flowering) plants</td><td>6</td></tr>
+        <tr><td>Immature (vegetative) plants</td><td>12</td></tr>
+        <tr><td>Seedlings</td><td>Unlimited</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 / LD 555. Definitions of plant stages are in 28-B M.R.S. §1501.</p>
+    <p>The cap applies to both photoperiod and autoflower plants — the statute doesn't distinguish by lifecycle type, just by growth stage. Losing a plant to a topping mistake on a 6-plant cap means losing one-sixth of your legal harvest, with no replacement once the plant has flipped to flower. A single topped autoflower that produces half its expected yield is the same effective loss as a pest infestation or a bad transplant — it's recoverable next season but not this one.</p>
+    <p>The full picture — caregiver rules, plant-tagging requirements, the municipal preemption clause — is in the <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a>. For the autoflower-versus-photoperiod decision matrix that determines whether autoflowers are even the right choice for your Maine microclimate, see <a href="/blog/autoflower-vs-feminized-maine-2026">autoflower vs feminized for Maine</a>.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Can you top autoflower cannabis plants?", answer: "Strongly discouraged for Maine home growers. Topping autoflowers rarely improves yield and frequently reduces it because autoflowers don't have the 5–7 day recovery window that topping requires. The autoflower's age-based flip from vegetative to flower (typically days 21–35) doesn't give the plant time to rebuild biomass after a cut. Use LST from week 2–3 instead — same canopy benefits, no recovery delay." },
+      { question: "When should you NOT top autoflowers?", answer: "Always, in a Maine home-grow context. The autoflower's fixed lifecycle (no flip day, finite vegetative window of 21–35 days) doesn't allow the recovery period topping requires. The yield risk outweighs any potential benefit. Maine growers operating on a 6-plant cap cannot afford to lose a plant to topping. Even experienced growers report that the majority of autoflower topping attempts produce smaller yields than leaving the plant un-topped." },
+      { question: "Can I FIM autoflower plants instead of topping?", answer: "FIMming (cutting only 60% of the top instead of full topping) is even worse on autoflowers than topping. The partial cut creates a malformed apex that often produces only one weak growing shoot instead of the two you'd get from a clean topping. Skip FIM entirely on autoflowers; if you want multi-cola plants, use LST." },
+      { question: "What's the best training method for autoflower cannabis in Maine?", answer: "LST (low stress training) is the highest-yield, lowest-risk method. Tie branches progressively starting at week 2–3 to flatten the canopy, continuing through flower. Add selective super-cropping on lower side branches in early July for bonus side-cola development without main-stem damage. Skip topping, FIM, and mainlining — the recovery delay costs more than the gain returns." },
+      { question: "How many autoflower plants can I legally grow in Maine?", answer: "Adults 21+ can grow up to 6 mature, 12 immature, and unlimited seedlings per 28-B M.R.S. §1502 as amended by P.L. 2023 c. 220 / LD 555. This applies to all cannabis home cultivation in Maine, both photoperiod and autoflower varieties. Each adult in a household maintains their own allocation, so two adults can each claim a full 6 mature / 12 immature / unlimited seedling count." },
+      { question: "Will topping an autoflower once early in veg still work?", answer: "Rarely, and not in Maine. Some very fast autoflowers (under 60 days total) recover if topped very early (day 14 or earlier) and grown in optimal indoor or greenhouse conditions. Maine outdoor conditions rarely support this — the late-May transplant plus August humidity means even the most aggressive autoflower topping experiment is gambling 30–50% of yield on a technique that succeeds maybe 30% of the time even in optimal setups." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics matched to each frost window</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — beating October humidity through dry and cure</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse for season extension</li>
+        <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zones, frost dates, site setup, and the law</li>
+        <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soil types, pH correction, lime rates, raised beds, and fabric pots</li>
+        <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests &amp; Mold in Maine 2026</a> — botrytis, powdery mildew, deer and insects, and an organic IPM plan</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+        <li><a href="/blog/cannabis-lst-training-maine-2026">LST Low Stress Training for Cannabis in Maine 2026</a> — the recommended autoflower training method</li>
+        <li><a href="/blog/cannabis-trimming-maine-2026">Wet Trim vs Dry Trim for Cannabis in Maine 2026</a> — Maine October humidity and trim timing</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, visibility, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=555&snum=131">P.L. 2023 c. 220 / LD 555</a> — the home grow amendment raising the mature plant cap from 3 to 6</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine frost dates, climate data, and agricultural guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+        <li><a href="https://www.royalqueenseeds.com/blog-cannabis-autoflower">Royal Queen Seeds autoflower training guides</a> — autoflower topping yield data</li>
+        <li><a href="https://2fast4buds.com/">2Fast4Buds breeder reports</a> — autoflower strain finishing times and training outcomes</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before planting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/cannabis-topping-autoflower-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>

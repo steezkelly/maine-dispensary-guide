@@ -1,0 +1,301 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "harvest", "trimming", "drying-and-curing", "maine-climate"];
+---
+<Layout
+  title="Wet Trim vs Dry Trim for Cannabis in Maine 2026 — Humidity, Timing, and the Maine Recommendation"
+  description="A Maine-specific wet trim vs dry trim guide for cannabis harvest: Maine October humidity runs 80–90% in the mornings, which complicates the standard dry trim protocol. How to wet trim, how to dry trim, when each one wins, and why most Maine outdoor home growers should default to wet trim at harvest in October."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Wet Trim vs Dry Trim for Cannabis in Maine 2026: How October Humidity Decides It For You</h1>
+    <p class="subtitle">Maine October morning humidity runs 80–90% — twenty-plus points above the target range for a clean slow dry. Whether to wet trim or dry trim your cannabis at harvest isn't a style choice in this climate; it's a humidity response. This guide covers both techniques, the Maine-specific recommendation, and what to do with the trim either way.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Two things decide how your Maine outdoor harvest turns out: when you cut it down, and what you do in the first 30 minutes after you cut it. Trimming sits between those two decisions and it matters more here than it does in a dry climate. This guide walks through the two trim methods (wet trim and dry trim), the Maine October humidity problem in concrete numbers, the pros and cons of each, and the practical recommendation for a six-plant Maine home garden. The short version: for most Maine outdoor October harvests, wet trim wins. The longer version explains why — and when to break that rule.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> Wet trim (removing fan leaves and roughly half the sugar leaves at harvest) is the right default for Maine outdoor cannabis because October morning humidity routinely runs 80–90% — high enough to invite bud rot in a slow whole-plant hang. Dry trim (whole-plant hang for 12–14 days, then manicure) is the cleaner-tasting method and works fine for indoor grows and for late-September harvests in dry years; for a typical Maine October outdoor garden, wet trim buys you a safer, faster dry.
+  </div>
+
+  <div class="fact-box">
+    <h2>Trim method at a glance (Maine 2026)</h2>
+    <table aria-label="Maine trim method summary">
+      <tbody>
+        <tr><td><strong>Typical October morning humidity (Maine)</strong></td><td>80–90% RH (NOAA NWS Caribou, Gray, Bangor climate normals)</td></tr>
+        <tr><td><strong>Target drying room humidity</strong></td><td>55–62% RH</td></tr>
+        <tr><td><strong>Wet trim timing</strong></td><td>Within 30–60 minutes of harvest</td></tr>
+        <tr><td><strong>Dry trim timing</strong></td><td>After 12–14 days of whole-plant hang at 60°F / 60% RH</td></tr>
+        <tr><td><strong>Wet trim labor</strong></td><td>~30–45 minutes per plant at harvest</td></tr>
+        <tr><td><strong>Dry trim labor</strong></td><td>~45–75 minutes per plant, 2 weeks after harvest</td></tr>
+        <tr><td><strong>Maine recommendation (outdoor October)</strong></td><td>Wet trim — or partial wet trim with a controlled dry room</td></tr>
+        <tr><td><strong>Maine recommendation (indoor / dry year)</strong></td><td>Either method works; dry trim preserves more terpenes</td></tr>
+        <tr><td><strong>Plant limit</strong></td><td>6 mature / 12 immature / unlimited seedlings per adult 21+ (§1502)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>The Maine humidity problem, in numbers</h2>
+    <p>The textbook drying target is 60°F and 60% relative humidity — a number most Maine October mornings blow past before you've finished your coffee. NOAA climate normals from the three main Maine weather stations tell the same story:</p>
+    <table aria-label="Maine October morning relative humidity">
+      <thead>
+        <tr><th>Station</th><th>October morning RH (avg)</th><th>October afternoon RH (avg)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Caribou (Aroostook)</td><td>87%</td><td>63%</td></tr>
+        <tr><td>Bangor (Penobscot)</td><td>84%</td><td>58%</td></tr>
+        <tr><td>Portland (Cumberland)</td><td>82%</td><td>59%</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: NOAA National Centers for Environmental Information, 1991–2020 climate normals for the three primary Maine stations. Morning RH is the average of the daily 7 a.m. observation; afternoon RH is the 1 p.m. average.</p>
+    <p>The morning number is the one that hurts. Cannabis hung wet in a 60°F shed will equilibrate toward the shed's humidity, not the dryer 60% afternoon air. At 80%+ humidity, the surface of a slow-drying cola stays wet long enough for botrytis to colonize — typically 5–9 days into the dry, just as the bud is past the point of being salvageable. Whole-plant dry trim assumes a stable ambient humidity around 55–62% across the 12–14 day hang; in Maine you don't have that unless you build a climate-controlled drying room. The trim method you pick is partly a decision about whether you can build one.</p>
+    <Callout title="The climate-controlled drying room is the alternative, not the rule" type="info">
+      If you have a sealed room with a dehumidifier set to 58–60% RH, an oscillating fan, and a thermometer, you can dry trim in Maine. The room does the climate work that the outdoor air won't. The room has to be sealed, the dehumidifier sized to Maine's actual water load (a 50-pint/day unit handles 4–6 plants), and the door opened as little as possible. Without that setup, plan on wet trim at harvest.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Wet trim: at harvest, on the table</h2>
+    <p>Wet trimming means removing the bulk of the unwanted leaf material within an hour of cutting the plant. It's faster drying, less botrytis risk in humid climates, and a more compact dry since you're hanging buds, not branches. The tradeoff is more aggressive handling of the wet flower (some trichomes come off on your gloves), and a slightly less-developed flavor profile compared with a slow whole-plant dry.</p>
+
+    <h3>What to remove in a wet trim</h3>
+    <ul>
+      <li><strong>All fan leaves</strong> — the large 5- and 7-pointed leaves without visible trichomes. Pull them by hand at the petiole (leaf stem) where they meet the branch.</li>
+      <li><strong>About 50–70% of sugar leaves</strong> — the small leaves growing out of the bud itself. These are the trichome-rich ones. Leave enough to protect the bud during dry; remove the rest with snips.</li>
+      <li><strong>Dead or yellowing leaves anywhere on the plant.</strong> These harbor moisture and have no photosynthetic value left.</li>
+    </ul>
+
+    <h3>Wet trim protocol (six plants, ~3 hours total)</h3>
+    <ol class="protocol-steps">
+      <li>Set up a clean workspace the night before harvest — a folding table covered with parchment paper, two trim bins (one for flower, one for trim/leaf material), a comfortable chair, and good light.</li>
+      <li>Harvest a single plant by cutting the main stem at the base; remove large branches individually.</li>
+      <li>Strip every fan leaf by hand as you go — they snap off cleanly at the petiole when wet.</li>
+      <li>Hang whole branches on a drying line, OR cut individual buds off the branch and lay them on a mesh drying rack. For six plants in Maine October, mesh racks are safer than hanging — airflow is better, and you can move a rack indoors if humidity spikes overnight.</li>
+      <li>Trim the sugar leaves on each cola with curved trimming snips. Aim for a smooth bud shape with no protruding leaf tips. Leave 1–2 mm of sugar leaf at the bud surface to protect it during dry.</li>
+      <li>Move trimmed flower onto the drying rack immediately. Don't pile wet buds on top of each other.</li>
+    </ol>
+    <p>You'll process roughly one plant per 30–45 minutes wet. Six plants is a half-day of focused work — start early in the morning so the trimmed material can begin its dry before nightfall, when humidity peaks.</p>
+  </section>
+
+  <section>
+    <h2>Dry trim: whole-plant hang, then manicure</h2>
+    <p>Dry trimming means hanging the whole plant or large branches for 12–14 days at 60°F / 60% RH, then manicuring the dried flower. It produces a cleaner, more developed flavor because the slow dry keeps the plant's internal moisture working on chlorophyll and starch breakdown. The tradeoff is a longer exposure window to whatever humidity is in your dry room — and in Maine, that's the problem.</p>
+
+    <h3>What stays on through the dry</h3>
+    <ul>
+      <li><strong>All fan leaves</strong> — leave them on; they protect the bud from light damage during the slow dry and slow moisture loss at the bud surface.</li>
+      <li><strong>All sugar leaves</strong> — they cradle the bud, hold humidity around the calyxes, and create the slow-drying micro-environment that produces a smoother smoke.</li>
+    </ul>
+
+    <h3>Dry trim protocol</h3>
+    <ol class="protocol-steps">
+      <li>Cut the plant at the base; remove only the largest fan leaves by hand (the ones you can pull without touching the bud).</li>
+      <li>Hang whole plants upside down on a clothesline, wire, or dedicated drying rack — branches spread out, not touching.</li>
+      <li>Run the dry room at 55–62% RH and 58–62°F. Use a dehumidifier, a small heater or A/C, and an oscillating fan on low.</li>
+      <li>After 7 days, check by feel — outer bud should feel dry to the touch but not brittle; smaller stems should still bend rather than snap.</li>
+      <li>At 12–14 days, the smallest stems snap cleanly when bent. Cut branches off the line; manicure each cola with snips over a trim bin.</li>
+      <li>Cure in glass jars (see our <a href="/blog/drying-cannabis-maine-humidity-2026">drying cannabis in Maine humidity</a> guide for the Maine-specific cure protocol).</li>
+    </ol>
+    <p>Dry trim is also more forgiving on trichomes — you're not handling wet flower with snips, so the glandular heads stay intact. For indoor and late-September harvests in dry years, it's the preferred method.</p>
+  </section>
+
+  <section>
+    <h2>Pros and cons at a glance</h2>
+    <table aria-label="Wet trim vs dry trim comparison">
+      <thead>
+        <tr><th>Factor</th><th>Wet trim</th><th>Dry trim</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Maine October suitability</strong></td><td>Excellent — removes moisture-bearing material before the slow dry</td><td>Risky without a sealed, climate-controlled dry room</td></tr>
+        <tr><td><strong>Speed to dry</strong></td><td>5–8 days to jar-ready</td><td>12–14 days to jar-ready</td></tr>
+        <tr><td><strong>Botrytis risk in Maine October</strong></td><td>Low — fast dry, low moisture load</td><td>High — slow dry in 80%+ morning humidity</td></tr>
+        <tr><td><strong>Trichome preservation</strong></td><td>Good — some loss on gloves and snips</td><td>Excellent — minimal handling until dry</td></tr>
+        <tr><td><strong>Flavor / smoothness</strong></td><td>Slightly less developed</td><td>Smoother, more complex terpene profile</td></tr>
+        <tr><td><strong>Labor timing</strong></td><td>3–4 hours at harvest (front-loaded)</td><td>5–7 hours over two weeks (back-loaded)</td></tr>
+        <tr><td><strong>Equipment</strong></td><td>Trim bin, snips, drying rack</td><td>Hang line, climate-controlled room, trim bin, snips</td></tr>
+        <tr><td><strong>Maine outdoor October default</strong></td><td>Yes</td><td>No (without sealed dry room)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>The Maine recommendation: when to pick which</h2>
+    <p>The decision isn't about preference — it's about what your dry space can hold.</p>
+    <ul>
+      <li><strong>Outdoor October harvest in Maine with no climate-controlled dry room:</strong> wet trim. The morning humidity alone makes a slow whole-plant hang a botrytis risk on dense colas. Wet trim buys you a fast 5–8 day dry that mostly beats the humidity.</li>
+      <li><strong>Outdoor late-September harvest in a dry year:</strong> either works. If September ran 60–70% morning RH and your forecast looks dry into early October, dry trim is the smoother-tasting option.</li>
+      <li><strong>Indoor harvest (any time of year):</strong> dry trim. Indoor humidity is controlled by the room; the slow dry preserves terpene profile and gives the cleanest bag appeal.</li>
+      <li><strong>Greenhouse harvest in Maine:</strong> wet trim if the greenhouse isn't climate-controlled for drying; dry trim if you can close the greenhouse up and run a dehumidifier.</li>
+      <li><strong>Autoflower harvest:</strong> autoflowers tend to finish earlier than photoperiods — many pull in late August or early September, when Maine humidity is lower. Either method works; default to whichever matches the rest of your garden.</li>
+    </ul>
+    <Callout title="Don't wait for a dry day to start trimming" type="warning">
+      A common mistake is to bring the harvest inside and "wait for the humidity to drop" before trimming. Maine October doesn't drop to safe levels for a long enough stretch; if the cut plant is sitting in 85% RH for 24 hours, bud rot can already be starting in the densest colas. Trim wet, dry fast, move into climate-controlled cure as soon as possible.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Tools for trimming six plants</h2>
+    <p>You don't need much — most home growers trim with three or four tools and a comfortable setup.</p>
+    <table aria-label="Trim tool kit for six plants">
+      <thead>
+        <tr><th>Item</th><th>Quantity</th><th>Cost</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Curved trimming snips (spring-loaded)</td><td>2 pairs (one for wet, one for dry)</td><td>$12–$25 each</td><td>The actual trimming tool. Curved tips stay out of the way of buds; spring loading saves hand fatigue.</td></tr>
+        <tr><td>Trim bin (mesh bottom + collection tray)</td><td>1–2</td><td>$20–$40</td><td>Catches kief that falls off during trimming; doubles as a work surface.</td></tr>
+        <tr><td>Nitrile gloves (powder-free)</td><td>2–3 pairs</td><td>$8–$12</td><td>Keep trichomes off your skin and your skin oils off the bud. Change pairs as they get sticky.</td></tr>
+        <tr><td>Mesh drying rack (or hanging line)</td><td>2–3 racks (24" diameter) or 20 ft of line</td><td>$25–$50 each</td><td>Mesh racks work better for wet trim in Maine; hanging lines for dry trim in a controlled room.</td></tr>
+        <tr><td>Folding table + comfortable chair</td><td>1 of each</td><td>You likely own these</td><td>Set the height so your back isn't bent. Trim sessions run 2–4 hours.</td></tr>
+        <tr><td>Good light (5,000–6,500 K LED or CFL)</td><td>1–2 clip-on or standing lights</td><td>$20–$60</td><td>Yellow-tinted household bulbs hide trichomes and fan leaves. Trim under daylight color temperature.</td></tr>
+        <tr><td>Glass mason jars (quart or half-gallon)</td><td>6–12</td><td>$10–$20</td><td>For the cure. Half-gallon works for trimmed buds; quart is more portable for sampling.</td></tr>
+      </tbody>
+    </table>
+    <p>The trim bin earns its cost. The mesh screen catches trichomes that fall off during handling; that material is kief, which can be pressed into hash or sprinkled into joints. Without a trim bin, you lose that material to the table.</p>
+  </section>
+
+  <section>
+    <h2>What to do with the trim</h2>
+    <p>Sugar leaves and small fan leaves from a wet or dry trim still carry trichomes — they're not waste. Common Maine uses for the trim:</p>
+    <ul>
+      <li><strong>Butter or coconut oil infusion</strong> — decarboxylate the trim at 240°F for 40 minutes, then simmer in butter or coconut oil for 2–3 hours. Strain and use for edibles. Maine's adult-use 50mg-per-serving cap and 100mg-per-package cap on retail edibles applies to infused products sold in licensed dispensaries; homemade edibles for personal use aren't subject to those limits, but start low and dose slowly.</li>
+      <li><strong>Dry sift / kief</strong> — freeze the trim, then agitate it across a fine mesh (120–160 micron). The trichomes fall through; the plant material stays on top.</li>
+      <li><strong>Ice-water hash</strong> — the cleanest extraction at home; requires bubble bags, ice, water, and a few rounds of agitation.</li>
+      <li><strong>Compost</strong> — anything you don't extract gets composted. Maine's home-grow framework allows personal use and shared-but-not-sold transfers; the trim is part of the personal-use harvest.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Trim timing relative to harvest</h2>
+    <p>The 30–60 minute wet-trim window is the one timing rule most growers break. A plant cut at 8 a.m. and left on the porch until noon is already four hours into the wet-hang window — enough for surface moisture to start problems in dense colas. Set up your trim station before you cut.</p>
+    <p>A working rhythm:</p>
+    <ol>
+      <li><strong>Day of harvest:</strong> start at sunrise, cut one plant, wet-trim it on the table, move to the dry rack. Repeat for each plant. Six plants takes 3–4 hours with two people, or 5–6 hours solo.</li>
+      <li><strong>Days 1–7:</strong> dry at 58–62°F and 55–62% RH. Check daily; rotate buds on the rack so they dry evenly. Buds are ready when small stems snap rather than bend.</li>
+      <li><strong>Day 7–10:</strong> jar the buds loosely (fill jars 75% full, not packed). Burp daily for 10 minutes for the first week, then every 2–3 days. Full cure takes 4–6 weeks.</li>
+    </ol>
+    <p>For a six-plant garden, harvest day is your hardest physical day. After that, the work is light — daily checks and burping. See the <a href="/blog/drying-cannabis-maine-humidity-2026">drying cannabis in Maine humidity</a> guide for the full cure protocol.</p>
+  </section>
+
+  <section>
+    <h2>The legal framework: trimming under §1502</h2>
+    <p>Trimming is a cultivation step, not a separate regulated activity under Maine law. It falls within the personal-use cultivation right at 28-B M.R.S. §1502. The things §1502 does care about — and trim day doesn't change — are plant counts, visibility, location, and security.</p>
+    <table aria-label="Maine home cultivation plant limits under 28-B M.R.S. §1502">
+      <thead>
+        <tr><th>Plant stage</th><th>Limit per adult 21+</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mature (flowering) plants</td><td>6</td></tr>
+        <tr><td>Immature (vegetative) plants</td><td>12</td></tr>
+        <tr><td>Seedlings</td><td>Unlimited</td></tr>
+      </tbody>
+    </table>
+    <p class="source-note">Source: 28-B M.R.S. §1502, as amended by P.L. 2023 c. 220 / LD 555. Definitions of plant stages are in 28-B M.R.S. §1501.</p>
+    <p><strong>Trim waste.</strong> Trimmed leaf material is part of your personal-use harvest. Composting it at home is fine. Selling it — to a dispensary, processor, or anyone else — falls outside §1502's personal-use framework and requires a caregiver registration or a licensed operator relationship. See the OCP caregiver page for the medical-side rules.</p>
+    <p><strong>Where you trim.</strong> §1502's location rules apply to where the cultivation happens, which the OCP guidance treats as including the harvest and trim areas. A garage, basement, or outbuilding at the same property as the garden is fine; transporting wet flower to a friend's house for trimming is a question the statute doesn't directly answer, so the conservative read is to trim at the cultivation site.</p>
+    <p><strong>Visibility rule and trim.</strong> Once you've cut the plant, the visibility condition in §1502 no longer applies to cut material. Storage of dried flower at home isn't subject to the visibility rule; it is subject to the security rule — keep it out of reach of anyone under 21.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Should I wet trim or dry trim cannabis in Maine?", answer: "Wet trim for most Maine outdoor October harvests, because morning humidity routinely runs 80–90% — high enough to invite bud rot on a slow whole-plant hang. Dry trim if you have a sealed, climate-controlled dry room holding 55–62% RH at 58–62°F; without that setup, the humidity decides for you and the answer is wet trim. Indoor harvests can dry trim year-round since the room controls the climate." },
+      { question: "Why does Maine October humidity matter for trimming cannabis?", answer: "The textbook drying target is 60°F / 60% RH, but NOAA climate normals show Maine October morning RH averages 82–87% depending on station. Cannabis hung wet at 80%+ ambient humidity will hold surface moisture for 5–9 days, which is the botrytis colonization window. Wet trim removes the moisture-bearing sugar leaves before the slow dry starts and gets the buds into a safe humidity range within 24–48 hours." },
+      { question: "How long do you hang cannabis before trimming?", answer: "For a dry trim protocol, hang whole plants or branches for 12–14 days at 60°F and 55–62% RH. Smaller stems should snap cleanly when bent at the end of the hang; if they still bend, give it another 2–3 days. For a wet trim protocol, you're trimming at harvest (within an hour of cutting) and skipping the hang entirely — moving trimmed buds straight to a mesh drying rack for 5–8 days." },
+      { question: "Can you wet trim and dry trim in Maine October?", answer: "You can do either, but the dry trim requires a sealed, dehumidified dry room to control for Maine's October humidity. A practical hybrid is partial wet trim — remove all fan leaves and roughly half the sugar leaves at harvest, then hang the branches (rather than whole plants) in a climate-controlled space. This gets you faster drying than a full dry trim with more flavor preservation than a full wet trim." },
+      { question: "What tools do I need to trim cannabis at home in Maine?", answer: "Two pairs of curved spring-loaded trimming snips (one for wet, one for dry), a trim bin with a mesh bottom, nitrile gloves, a mesh drying rack or hang line, good 5,000–6,500 K light, glass mason jars for curing, and a comfortable trim setup (table and chair). The total cost is roughly $100–$200 for a six-plant garden. Don't skip the trim bin — it catches kief that you'd otherwise lose to the table." },
+      { question: "Is wet trim or dry trim better for Maine outdoor harvest?", answer: "Wet trim is the right default for Maine outdoor harvest in October. It removes the moisture-bearing sugar leaves before the slow dry, cuts drying time roughly in half, and avoids the botrytis risk that comes from hanging whole plants in 80%+ morning humidity. The flavor tradeoff is real — wet-trimmed flower can taste slightly less developed than dry-trimmed flower — but losing a crop to bud rot costs you more than a small flavor difference." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework, plant tagging, and caregiver rules</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — beating October humidity through dry and cure (the step that comes after trim)</li>
+        <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zones, frost dates, site selection, soil prep, and a month-by-month planting calendar</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics matched to each frost window</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse for season extension</li>
+        <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soil types, pH correction, lime rates, raised beds, and fabric pots</li>
+        <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests &amp; Mold in Maine 2026</a> — botrytis, powdery mildew, deer and insects, and an organic IPM plan</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+        <li><a href="/blog/cannabis-lst-training-maine-2026">LST Low Stress Training for Cannabis in Maine 2026</a> — bending and tying technique for Maine's short season</li>
+        <li><a href="/blog/cannabis-topping-autoflower-maine-2026">Can You Top Autoflower Cannabis? Maine Guide 2026</a> — why autoflower topping is risky and what to do instead</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, visibility, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=555&snum=131">P.L. 2023 c. 220 / LD 555</a> — the home grow amendment raising the mature plant cap from 3 to 6</li>
+        <li><a href="https://www.ncei.noaa.gov/access/us-climate-normals/">NOAA National Centers for Environmental Information</a> — 1991–2020 climate normals for Maine stations (Caribou, Bangor, Portland)</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine harvest timing, post-harvest handling, and food preservation guidance</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before harvesting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/cannabis-trimming-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>
