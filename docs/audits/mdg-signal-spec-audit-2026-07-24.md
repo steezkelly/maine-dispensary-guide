@@ -121,6 +121,24 @@ Spec role:
 
 **Fix:** Changed the toggle handler to query `.signal-scope` and set the attribute there. 3 focused tests pin the behavior (`theme-toggle.test.cjs`): click sets `data-theme="dark"` on `.signal-scope`, second click flips back to light, and the handler is a safe no-op when `.signal-scope` is absent.
 
+### CRITICAL 2b — Scoped CSS never reached slotted content — **RESOLVED (found via visual inspection)**
+
+**Bug:** `SignalLayout.astro` defined the entire design system (`.card`, `.grid`, `.state-pill`, link colors, tables) in a default-scoped `<style>` block. Astro appends the layout's `data-astro-cid` to every selector, but the municipality cards/grids/pills live in the PAGE components that slot into the layout and carry a different (or no) cid. Result: **none** of the rules matched — cards rendered borderless, links fell back to raw browser blue, pills were unstyled. Every text test passed while the page rendered unstyled; only a live screenshot exposed it.
+
+**Fix:** Changed the layout's `<style>` to `<style is:global>`. Safe because every selector is namespaced under `.signal-scope`, which only SignalLayout renders — it cannot leak into the rest of the site. Verified visually: cards now have borders/fill/shadow, links are teal, pills render as badges, 3-column grid lays out correctly.
+
+### CRITICAL 2c — Theme toggle dead on `/signal/` index — **RESOLVED (found via visual inspection)**
+
+**Bug:** The theme-toggle button lives in the shared `SignalLayout`, but its handler (`workspace-client.js`) was only imported on the municipality page. On `/signal/` the button did nothing.
+
+**Fix:** Moved the `workspace-client.js` import into `SignalLayout.astro` (loads once on every Signal page; the IIFE no-ops on missing elements) and removed the redundant page-level import. Verified visually: dark mode now toggles on the index page.
+
+### CRITICAL 2d — Mobile horizontal overflow on municipality pages — **RESOLVED (spec §7)**
+
+**Bug:** The 5-column comparison table and 4-column store-license table (long legal names) overflowed a 390px viewport (450px scrollWidth). The smoke test caught it once the scoped-CSS fix made the layout actually render.
+
+**Fix:** Added responsive table rules to the layout (`.card { overflow-x: auto }`, `white-space: nowrap` on cells) so wide tables scroll horizontally instead of pushing page width. Smoke test now passes 4/4 routes including the 390px overflow assertion.
+
 ### CRITICAL 3 — Data table superset vs spec list
 
 **Spec §2** lists 8 municipalities: Portland, South Portland, Bangor, Lewiston, Auburn, Waterville, Sanford, Brunswick. **Implementation** has 11: those plus Augusta, Kittery, Orono. The superset is acceptable as long as the spec's 8 are all present. Spot-check at HEAD:
