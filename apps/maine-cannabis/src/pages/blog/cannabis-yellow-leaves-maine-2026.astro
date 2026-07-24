@@ -1,0 +1,168 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "troubleshooting", "leaves", "nutrients"];
+---
+<Layout
+  title="Cannabis Yellow Leaves in Maine 2026 — Diagnosis & Treatment"
+  description="Yellow leaves on cannabis in Maine usually indicate one of five issues: nitrogen deficiency, overwatering, light burn, pH imbalance, or cold damage. Here's how to diagnose which, and what to do about it."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cannabis Yellow Leaves in Maine 2026 — Diagnosis & Treatment</h1>
+    <p class="subtitle">Yellow leaves are the most common cannabis problem in Maine grows. The causes vary — nitrogen deficiency, overwatering, light burn, pH, or cold damage — but the symptom looks the same. Here's the diagnostic framework.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>Why your cannabis leaves are yellow</h2>
+    <p>Yellow leaves on cannabis plants are a symptom, not a disease. The cause is one of about five things — and the Maine climate introduces some specific considerations that affect each. Diagnosing correctly requires reading the pattern of yellowing (which leaves, what color, where on the plant), checking your feeding and watering history, and knowing your water source.</p>
+    <p>This guide walks through the five most common causes of yellowing cannabis in Maine, in order of frequency. By the time you reach the bottom, you'll have either identified the cause or know what additional data to collect.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>The Maine-specific yellow-leaf diagnostic:</strong> Most Maine yellow-leaf cases are pH or watering, not nitrogen deficiency. Maine's tap water often runs alkaline (above 7.0 pH), and cold spring soil slows root nutrient uptake. Start by checking your water source pH and your soil pH with a $10 meter before assuming nutrient deficiency.
+  </div>
+
+  <section>
+    <h2>1. Nitrogen deficiency (most common in flower)</h2>
+    <p><strong>What it looks like:</strong> Uniform pale green to yellow color on older (lower) leaves first. New growth stays green. Yellow progresses up the plant as the deficiency worsens. The yellow is even — not blotchy or patchy.</p>
+    <p><strong>Cause:</strong> Cannabis is a heavy nitrogen feeder during vegetative growth, then shifts away from nitrogen as it enters flower. By mid-flower, even well-fed plants will pull nitrogen out of lower leaves to support bud development. This is normal senescence and not a problem.</p>
+    <p><strong>Maine-specific consideration:</strong> Maine's short outdoor season means plants don't have time to build up extensive vegetative reserves before flowering. By late August, even healthy plants show this yellow-from-the-bottom pattern.</p>
+    <p><strong>Fix:</strong> If yellow appears during veg or early flower on leaves other than the lowest fan leaves, the plant needs more nitrogen. Add a balanced vegetative-stage nutrient (typically 3-1-2 NPK ratio) at recommended strength. Resume when new growth returns to deep green.</p>
+    <p>If yellow is only on the very bottom leaves and only happens in late flower (September in Maine), leave it alone — the plant is correctly redirecting nutrients to bud production.</p>
+  </section>
+
+  <section>
+    <h2>2. Overwatering (most common in veg)</h2>
+    <p><strong>What it looks like:</strong> Soft, droopy leaves with slight yellowing. The plant looks like it's wilting despite wet soil. Lower leaves show the worst yellowing because they're closest to the saturated root zone.</p>
+    <p><strong>Cause:</strong> Roots in saturated soil can't access oxygen. They slow their nutrient uptake, which manifests as yellow leaves. Maine's cool spring temperatures reduce water uptake from the soil, so plants need less frequent watering than growers expect based on warmer-climate guidance.</p>
+    <p><strong>Maine-specific consideration:</strong> Many Maine growers kill seedlings and veg plants with overwatering in May-June when indoor temperatures are still cool. The soil stays wet longer than the warmth suggests, and watering on a calendar schedule (rather than a soil-check schedule) is the most common cause.</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Stop watering and let the top 2 inches of soil dry out completely.</li>
+      <li>After recovery, switch from a calendar schedule to a soil-check schedule: stick a finger in the soil to the second knuckle. If it feels dry, water. If it feels damp, wait.</li>
+      <li>Check your pot drainage — excess water sitting in a saucer drowns roots. Empty standing water from saucers within 30 minutes of watering.</li>
+      <li>Add perlite to the soil mix (30% perlite to 70% soil is a good target) for better drainage and oxygen availability.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>3. pH imbalance (the hidden cause)</h2>
+    <p><strong>What it looks like:</strong> Yellow with dark green veins (interveinal chlorosis), or yellow with brown spots. Often appears first on upper leaves (iron/manganese issues) or older leaves (nitrogen/potassium issues) depending on which nutrient is locked out.</p>
+    <p><strong>Cause:</strong> When soil or water pH is outside the cannabis-acceptable range (5.5-6.5 in soil), specific nutrients become chemically locked out and unavailable to the roots. The plant appears deficient even though the nutrients are physically present in the soil.</p>
+    <p><strong>Maine-specific consideration:</strong> Many Maine towns have alkaline water (pH 7.0+ from limestone aquifers). Cities and towns in central and northern Maine — Augusta, Bangor, Presque Isle, Caribou, Lewiston, Waterville — tend to have the highest pH. Eastern coastal towns (Bar Harbor, Blue Hill) often have softer water closer to neutral. Portland water is treated to about 7.4 pH.</p>
+    <p>When you water with high-pH water repeatedly, the soil pH creeps up, locking out iron and manganese first (interveinal chlorosis on new growth), then magnesium (older leaves).</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Test your tap water pH with a $10 digital meter. If above 7.0, you need to acidify it for cannabis.</li>
+      <li>Use pH-Down (phosphoric acid) or citric acid to bring water to 6.0-6.5 before watering. Cheap and available at grow shops.</li>
+      <li>Test your soil pH (runoff test). If above 7.0, flush with pH-balanced water and amend with sulfur or acidic organic matter.</li>
+      <li>Re-test 7 days after adjustment. pH corrections take one watering cycle to take effect.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>4. Light burn</h2>
+    <p><strong>What it looks like:</strong> Yellow or white patches on leaves that are closest to the light source. The damage is on the upper leaves only — lower leaves in shade stay green. Bleached or yellow patches are localized, not whole-leaf.</p>
+    <p><strong>Cause:</strong> Light intensity too high at canopy level, or lights too close to the canopy. Modern LED grow lights can damage plants within 24 inches; HPS within 36 inches. Outdoor Maine plants rarely get light burn (the sun is constant but UV intensity caps in our latitude are normal for cannabis).</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Move LED grow lights up 6-12 inches OR dim to 75% power.</li>
+      <li>Tuck lower leaves that have been in shade upward — they'll catch up.</li>
+      <li>Remove the most damaged leaves if they're blocking light to healthy growth below.</li>
+    </ol>
+    <Callout title="Light burn is permanent" type="warning">
+      Damaged leaf tissue doesn't recover. The fix is to prevent further damage and let new growth replace the damaged leaves. Don't remove all damaged leaves at once — the plant still uses them for photosynthesis until new leaves develop.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>5. Cold damage (Maine-specific early-season issue)</h2>
+    <p><strong>What it looks like:</strong> Pale yellow or purple-tinted leaves, often appearing suddenly after a cold night. New growth may be deformed. The yellow has a pale, almost translucent quality — different from the even yellow of nitrogen deficiency or the interveinal pattern of pH issues.</p>
+    <p><strong>Cause:</strong> Cannabis stops actively growing below 55°F, and tissue damage occurs below 45°F for most varieties. Maine's late spring frosts (May 15-25 in central Maine) can damage seedlings and young veg plants. Cold nights in June are also possible above 2,000 ft elevation or in northern Maine pockets.</p>
+    <p><strong>Maine-specific consideration:</strong> Even within the legal 6-plant limit under 28-B M.R.S. §1502, Maine growers can lose their entire season if they transplant outdoor plants before the last frost. The fix is timing, not treatment.</p>
+    <p><strong>Fix:</strong></p>
+    <ol>
+      <li>Bring cold-damaged plants inside if they're in containers.</li>
+      <li>Wait until night temperatures are reliably 50°F+ before transplanting outdoors.</li>
+      <li>For in-ground plants, cover with frost cloth when temperatures dip below 45°F (a sheet or tarp works in a pinch).</li>
+      <li>Don't fertilize cold-damaged plants — let them recover first.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Why are my cannabis leaves turning yellow?", answer: "Most yellow-leaf cases are one of: nitrogen deficiency (older leaves, even yellow), overwatering (yellow + droop), pH imbalance (interveinal yellow), light burn (upper leaves, localized), or cold damage (translucent yellow). Start with the soil-check (overwatering) and pH test, which catch the most cases in Maine. Only adjust nutrients after ruling out the common causes." },
+      { question: "Are yellow leaves on cannabis during flowering normal?", answer: "Yes — by mid-to-late flower, cannabis pulls nitrogen out of lower leaves and redirects to bud development. This is normal senescence. The yellow should start at the very bottom and progress slowly upward. Yellow appearing on upper or mid-plant leaves during flower is not normal senescence and indicates a real problem (typically pH or nutrient deficiency)." },
+      { question: "How do I fix yellow cannabis leaves in Maine?", answer: "The Maine-specific fix order: (1) Check soil moisture — overwatering is the most common cause. (2) Test soil pH and water pH — Maine's tap water is often alkaline. (3) Check light distance — too close causes bleaching. (4) Consider nitrogen only if you're in vegetative growth or early flower and only lower leaves are yellow. (5) Check for cold damage if leaves appear after a cold night." },
+      { question: "What does nitrogen deficiency look like on cannabis?", answer: "Uniform pale green to yellow color starting on older, lower leaves first. New growth stays green. The yellow is even (not blotchy or interveinal). Often first visible 2-3 weeks into flowering when the plant shifts nutrient distribution to bud production. Treat with vegetative-stage nutrients (3-1-2 NPK ratio) only if you're still in active vegetative growth." },
+      { question: "Can yellow cannabis leaves turn green again?", answer: "Light yellow cotyledons or older leaves with reversible nitrogen deficiency can sometimes recover with proper feeding. But heavily yellowed leaves, leaves with brown spots, or leaves damaged by light burn or cold will not recover — they will continue yellowing, brown, and drop. Remove these leaves once they're mostly yellow so the plant redirects energy to healthy growth." },
+      { question: "How often should I water cannabis in Maine?", answer: "Maine watering frequency depends on temperature, plant size, and soil mix. Indoors in 70°F: every 3-5 days for small pots, every 5-7 days for larger pots. Outdoor in June at 60°F nights: maybe every 4-7 days. Always check the top 2 inches of soil — if it feels dry, water. If it's still damp, wait. Maine's cool nights mean soil stays wet longer than most growing guides assume." }
+    ]} />
+  </section>
+
+  <aside class="source-note">
+    <strong>Primary sources:</strong> Maine tap water pH data from municipal water quality reports (Portland Water District, Bangor Water District, Augusta Water District). <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html" rel="noopener noreferrer">28-B M.R.S. §1502</a> for Maine home cultivation framework. Nutrient deficiency identification documented in Robert Bergman's <em>Marijuana Grow Basics</em> (ILGM) and Ed Rosenthal's <em>Marijuana Grower's Handbook</em>. UMaine Cooperative Extension for Maine frost-date guidance.
+  </aside>
+
+  <section>
+    <h2>Where to go next</h2>
+    <ul>
+      <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering compliance</li>
+      <li><a href="/blog/cannabis-soil-maine-2026">Cannabis Soil in Maine 2026</a> — native soils, pH correction, raised beds</li>
+      <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — water quality, pH meters, and water-source testing</li>
+      <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests & Mold in Maine 2026</a> — botrytis, powdery mildew, IPM</li>
+      <li><a href="/blog/cannabis-seedling-problems-maine-2026">Cannabis Seedling Problems in Maine 2026</a> — leggy starts, damping off, slow growth</li>
+      <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city planting calendar</li>
+      <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — seed-type decision matrix</li>
+      <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options</li>
+      <li><a href="/blog/cannabis-trimming-maine-2026">Wet Trim vs Dry Trim for Cannabis in Maine 2026</a> — Maine October humidity and trim timing</li>
+      <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — zone selection and planting calendar</li>
+      <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — season extension with a hoop house</li>
+      <li><a href="/blog/cannabis-lst-training-maine-2026">LST Low Stress Training for Cannabis in Maine 2026</a> — recommended training method</li>
+      <li><a href="/blog/cannabis-topping-autoflower-maine-2026">Can You Top Autoflower Cannabis? Maine Guide 2026</a> — why autoflower topping is risky</li>
+      <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+    </ul>
+  </section>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+
+  <AutoRelated currentPath="/blog/cannabis-yellow-leaves-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</article>
+</Layout>

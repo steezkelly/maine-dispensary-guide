@@ -243,6 +243,9 @@ const URL_TOPIC_HINTS = [
     ['/blog/cannabis-lst-training-maine-2026', ['home-growing', 'technique', 'lst', 'training']],
     ['/blog/cannabis-topping-autoflower-maine-2026', ['home-growing', 'technique', 'topping', 'autoflower']],
     ['/blog/cannabis-trimming-maine-2026', ['home-growing', 'harvest', 'trimming', 'drying']],
+    ['/blog/cannabis-seedling-problems-maine-2026', ['home-growing', 'troubleshooting', 'seedling', 'early-growth']],
+    ['/blog/cannabis-yellow-leaves-maine-2026', ['home-growing', 'troubleshooting', 'leaves', 'nutrients']],
+    ['/blog/cannabis-overwatering-maine-2026', ['home-growing', 'troubleshooting', 'watering', 'overwatering']],
 ];
 
 const URL_SECTION_HINTS = [
@@ -286,6 +289,9 @@ const URL_SECTION_HINTS = [
     ['/blog/cannabis-lst-training-maine-2026', 'Home Cultivation'],
     ['/blog/cannabis-topping-autoflower-maine-2026', 'Home Cultivation'],
     ['/blog/cannabis-trimming-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-seedling-problems-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-yellow-leaves-maine-2026', 'Home Cultivation'],
+    ['/blog/cannabis-overwatering-maine-2026', 'Home Cultivation'],
     ['/learn', 'Consumer Guide'],
     ['/all-guides', 'Library'],
     ['/find-a-dispensary', 'Finder'],
