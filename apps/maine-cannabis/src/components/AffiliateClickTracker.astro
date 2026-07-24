@@ -38,7 +38,7 @@ const { selector = '.btn-affiliate' } = Astro.props;
           try {
             var el = e.target;
             while (el && el !== document.body) {
-              if (el.tagName === 'A' && el.classList && el.classList.contains(selector.replace(/^\./, ''))) {
+              if (el.tagName === 'A' && ((el.classList && el.classList.contains(selector.replace(/^\./, ''))) || (el.getAttribute('rel') || '').indexOf('sponsored') !== -1)) {
                 if (typeof window.gtag !== 'function') return;
                 var href = el.getAttribute('href') || '';
                 var isSponsored = (el.getAttribute('rel') || '').indexOf('sponsored') !== -1;
