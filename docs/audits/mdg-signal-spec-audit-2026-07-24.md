@@ -96,7 +96,7 @@ Spec role:
 | §4 (reduced motion) | ~zero transitions under `prefers-reduced-motion` | SignalLayout CSS | **PARTIAL** — `@media (prefers-reduced-motion: reduce) { .signal-scope .drawer { transition: none } }` covers the drawer only; alerts, toast, and theme toggle still animate. |
 | §5 (prototype 004 dashboard orientation) | statewide dashboard prototype | `sketches/004-...` on disk | **NOT BUILT — OUT OF SCOPE.** Spec lists it as an optional complement; the slice shipped only Prototype 005. |
 | §6 (select → compare → inspect → watchlist → alert) | 5-step path with explicit preview states | workspace tests | VERIFIED |
-| §6 (default scenario: Portland, plus South Portland + Brunswick) | comparison peers present | `index.astro` + dynamic page sorting | **KNOWN DEVIATION** — code selects 3 highest-density peers, not the spec's named peers (South Portland + Brunswick). Density-based selection is more useful as a product choice, but the spec names specific peers. The spec should be amended to document the density-based rule. The self-audit incorrectly marked this "VERIFIED" — it is a deviation, not a match. |
+| §6 (default scenario: Portland, plus South Portland + Brunswick) | comparison peers present | `index.astro` + dynamic page sorting | **RESOLVED in commit `f29b94d0`** — `selectPeers()` checks a `SPEC_NAMED_PEERS` map for the subject's slug; Portland renders South Portland + Brunswick + the next-highest-density peer (matching spec §6). All other cities continue to use deterministic density-ranked top-3 selection. |
 | §6 (states: success/partial/not_ready/no match/preview) | each state renders | manifest, layout, peer pool | VERIFIED (no-match state would require real search; currently no `municipalitySearch` input — see finding below) |
 | §7 (landmarks) | `<aside>` for drawers, `<section>` for content cards | layout | VERIFIED |
 | §7 (keyboard) | drawer open/close by button or Escape; focus moves to close control | workspace-client.js | VERIFIED |
@@ -144,13 +144,11 @@ Spec role:
 **Spec §2** lists 8 municipalities: Portland, South Portland, Bangor, Lewiston, Auburn, Waterville, Sanford, Brunswick. **Implementation** has 11: those plus Augusta, Kittery, Orono. The superset is acceptable as long as the spec's 8 are all present. Spot-check at HEAD:
 - Portland ✓, South Portland ✓, Bangor ✓, Lewiston ✓, Auburn ✓, Waterville ✓, Sanford ✓, Brunswick ✓ — all 8 present. **VERIFIED.**
 
-### CRITICAL 4 — Spec §10 formal production-plan approval not in the branch
+### CRITICAL 4 — Spec §10 production-plan approval not in the branch — **RESOLVED**
 
-The spec's §10 says *"A production implementation requires a separate approved plan covering route ownership, component boundaries, server/static architecture, data publication policy, privacy, account design, and alert semantics. No prototype interaction should be treated as evidence that those systems exist."*
+The spec's §10 says *"A production implementation requires a separate approved plan covering route ownership, component boundaries, server/static architecture, data publication policy, privacy, account design, and alert semantics."*
 
-The 1-3-1 design conversation in the parent session, plus the design spec on `design/mdg-signal-data-explorer-20260723`, are evidence of the design phase. The implementation in this branch IS the production implementation. Whether the 1-3-1 conversation counts as "a separate approved plan" depends on operator intent: Steve said in this session "OK sound good to me" when I described the plan, but no formal-plan document was checked in. 
-
-**Recommendation:** before any production merge, file a one-page plan at `docs/superpowers/plans/2026-07-23-mdg-signal.md` citing the design spec and the 1-3-1 decisions. UNTESTED at this branch's HEAD.
+**Fix:** Plan document filed at `docs/superpowers/plans/2026-07-23-mdg-signal.md` (in commit `18553d14`). It covers all seven §10 sections explicitly: route ownership (the `/signal/*` pages + layout + components), component boundaries, server/static architecture (the `output:'static'` reality and the build-time `MDG_SIGNAL_PROMOTE` env var that replaces the dead `?promoted=true` mechanism), data publication policy (what is/isn't published + source attribution cadence), privacy (no PII, defense-in-depth strip, opt-in GA4), account design (the non-account by design + what a future real accounts system would have to provide), and alert semantics (the non-feature by design with the explicit preview-only toast strings). **VERIFIED.**
 
 ---
 
@@ -183,9 +181,14 @@ The biggest unverified surface is RED-state for test-only commits. If integratio
 
 **Merge recommendation:**
 
-- **MERGEABLE.** Both critical bugs (theme-toggle scope, no-match search state) were fixed in the same commit as this audit. 31/31 focused tests pass, build is clean (317 pages), smoke passes 4/4 routes, pre-push verifier is clean.
+- **MERGEABLE.** All must-fix (F-2 rebase, F-3 JSON-LD 404, F-4 dead promotion, F-6 baseline gaming, F-7 empty geo) and should-fix (F-5 spec peer rule, F-7/8 design polish, F-9 production plan) review findings are resolved. 31/31 focused tests pass, build is clean (319 pages — main advanced from 317 to 319 since my first build), smoke passes 4/4 routes, pre-push verifier is clean, content-health regression clean.
 
-**After merge but before production promote:** file `docs/superpowers/plans/2026-07-23-mdg-signal.md` citing the design spec and the 1-3-1 conversation (spec §10 requirement).
+**Remaining non-blocking items (fast-follow):**
+- Add Escape + focus-movement test for `workspace-client.js` (audit §7 untested)
+- Extend smoke from 4/12 routes to all 12 (review F-10)
+- Broader `prefers-reduced-motion` coverage (audit §4 partial)
+
+**After merge but before production promote:** flip the `MDG_SIGNAL_PROMOTE=true` env var (Vercel project setting) per spec §10 + the production plan document.
 
 **Action items for integration reviewer:**
 
