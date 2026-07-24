@@ -1,0 +1,222 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import authors from '../../data/authors.json';
+
+const article = {
+  author: "Margaret Finch",
+  authorId: "margaret-finch",
+  authorTitle: "Finance & Taxation Analyst",
+  publishDate: "2026-07-24",
+  modifiedDate: "2026-07-24",
+  section: "Home Cultivation"
+};
+const topics = ["home-growing", "outdoor", "maine-climate", "soil", "organic"];
+---
+<Layout
+  title="Cannabis Soil in Maine 2026 — Native Soil, pH Correction, Raised Beds & Fabric Pots"
+  description="Maine's native soils run pH 4.5–5.5; cannabis wants 6.0–7.0. A Maine-specific soil guide: Aroostook loam, coastal sand, central clay, lime rates, raised bed builds, fabric pots, compost, and the living soil approach — plus where to buy soil in Maine."
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 3rem; }
+  section h2, section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+  section h2:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+  li { margin-bottom: 0.75rem; }
+  .disclaimer { background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 1rem; font-size: 0.875rem; margin-top: 3rem; color: #1a1a1a; }
+  .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 2rem; border-radius: 1.5rem; margin-top: 4rem; }
+  .further-reading h2 { margin-top: 0; font-size: 1.5rem; }
+  .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+  .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+  .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+  .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+  .answer-capsule strong { color: var(--color-text); }
+  blockquote { font-style: italic; border-left: 3px solid var(--color-primary); padding: 0.75rem 1.25rem; margin: 2rem 0; background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border-radius: 0 0.5rem 0.5rem 0; }
+  .source-note { font-size: 0.85rem; color: var(--color-text-light); font-style: italic; margin-top: 0.5rem; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .last-updated { font-size: 0.85rem; color: var(--color-text-light); }
+  .faq-section { margin-top: 3rem; margin-bottom: 3rem; }
+  .faq-section h2 { font-family: var(--font-serif); color: var(--color-text); }
+  .protocol-steps { counter-reset: step; }
+  .protocol-steps li { counter-increment: step; position: relative; padding-left: 2rem; }
+  .protocol-steps li::before { content: "Step " counter(step); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--color-text); font-size: 0.85rem; }
+</style>
+<article class="blog-post">
+  <div class="article-header">
+    <h1>Cannabis Soil in Maine 2026: Native Soil, Amendments &amp; Raised Beds</h1>
+    <p class="subtitle">Maine's native soils are famously acidic — pH 4.5–5.5 in most of the state — while cannabis absorbs nutrients best between 6.0 and 7.0. That gap is the single biggest reason Maine outdoor growers fail. This guide covers what's under your feet, how to fix it, and when to skip native soil entirely with raised beds or fabric pots.</p>
+    <div class="byline">
+      <p><strong>By Margaret Finch</strong> · Maine Dispensary Guide editorial team</p>
+      <p class="last-updated">Published 2026-07-24 · Last reviewed 2026-07-24</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What you'll get from this guide</h2>
+    <p>Soil is the cheapest input to get right and the most expensive to get wrong — a season of stunted, purple-stemmed, nutrient-locked plants costs far more than a $15 soil test and a bag of lime. This guide walks Maine's three dominant native soil types, how to test and correct pH the Maine way, lime amendment rates, how to build a raised bed that survives frost heave, why fabric pots have become the default for many Maine growers, and the living-soil approach that lets you skip bottled nutrients entirely.</p>
+  </section>
+
+  <div class="answer-capsule">
+    <strong>Short answer:</strong> Don't plant cannabis directly into unamended Maine ground. Test first (UMaine lab, ~$15–20), then either correct native soil with dolomitic lime to reach pH 6.0–6.5 plus 2–4 inches of compost, or bypass native soil with a raised bed or 10–20 gallon fabric pot filled with a quality amended mix. For most Maine backyard growers, raised beds or fabric pots are the faster, more reliable path.
+  </div>
+
+  <div class="fact-box">
+    <h2>Maine soil at a glance</h2>
+    <table aria-label="Maine cannabis soil summary">
+      <tbody>
+        <tr><td><strong>Typical native pH</strong></td><td>4.5–5.5 (acidic)</td></tr>
+        <tr><td><strong>Cannabis target pH</strong></td><td>6.0–7.0 (6.0–6.5 in soil)</td></tr>
+        <tr><td><strong>Best amendment</strong></td><td>Dolomitic lime, 5–10 lb per 100 sq ft, worked in 3–4+ weeks ahead</td></tr>
+        <tr><td><strong>Organic matter target</strong></td><td>5–10%+ (Maine native soils often run 2–4%)</td></tr>
+        <tr><td><strong>Easiest reliable path</strong></td><td>Raised bed or 10–20 gal fabric pot with amended mix</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2>Know your native soil: three Maine soil regions</h2>
+    <p>Maine soils were shaped by glaciers, and the state's soil map roughly follows its geography. Knowing which region you're in tells you what you're fighting — drainage, acidity, or compaction.</p>
+
+    <h3>Aroostook and the north: glacial loam</h3>
+    <p>Aroostook County's famous potato ground is a well-drained, stone-free glacial loam — arguably the best native agricultural soil in the state. It holds moisture and nutrients well but still runs acidic (typically 5.0–5.8) and needs lime for cannabis. If you're growing in The County, your soil problem is the mildest in Maine: correct pH, add compost, and you have a genuinely good medium.</p>
+
+    <h3>Coastal plain: sandy and fast-draining</h3>
+    <p>The southern coast and midcoast (York, Cumberland, Sagadahoc counties) sit on sandy glacial outwash and marine deposits. Sandy soil drains fast and warms early — a real advantage in a short season — but it also leaches nutrients and dries out during July's dry spells. Cannabis in coastal sand needs frequent feeding, generous compost to hold water and cations, and mulch. pH typically runs 4.8–5.6.</p>
+
+    <h3>Central and western interior: clay and hardpan</h3>
+    <p>Central Maine (Kennebec, Androscoggin, Penobscot) and the western mountains carry heavy clay and glacial hardpan — the dense, gray, slow-draining layer Maine gardeners hit a foot down. Clay holds nutrients but suffocates roots, stays cold into June, and compacts. Cannabis roots need oxygen; in heavy clay they drown. This is the region where raised beds or fabric pots pay for themselves fastest, because amending clay in place takes years, not weeks.</p>
+    <p class="source-note">Soil region generalizations follow USDA NRCS soil survey data for Maine. Your specific lot can differ — a former farm field, a filled lot, or a wooded slope each carries a different profile. Test before you build.</p>
+  </section>
+
+  <section>
+    <h2>pH testing and correction: the Maine-specific problem</h2>
+    <p>Cannabis in soil absorbs nutrients optimally between pH 6.0 and 7.0, with 6.0–6.5 the sweet spot. Below about 5.5, phosphorus, calcium, and magnesium lock up — the classic symptoms are dark or purple stems, stunted growth, and yellowing that doesn't respond to feeding. Above 7.0, iron, manganese, and zinc lock up instead. Most Maine native soils sit at 4.5–5.5, squarely in lockout territory.</p>
+
+    <h3>Test before you amend</h3>
+    <p>The University of Maine Analytical Laboratory and Research Center (Orono) runs the standard soil test Maine growers rely on — roughly $15–20 for the basic panel, reporting pH, buffer pH, phosphorus, potassium, calcium, magnesium, and organic matter, with lime and fertilizer recommendations calibrated to Maine soils. Mail a composite sample (10–15 cores from the root zone, mixed, about a pint). Cheap probe meters give a directional read but drift; a $15 lab test is the best money in the whole grow.</p>
+
+    <h3>Lime: how much and when</h3>
+    <p>Dolomitic lime (calcium-magnesium carbonate) is the standard correction for Maine soils, which are usually low in both calcium and magnesium. The lab report gives you a rate based on buffer pH; a typical correction from 5.0 to 6.5 runs 5–10 lb of dolomitic lime per 100 square feet, worked into the top 6–8 inches.</p>
+    <ul>
+      <li><strong>Timing:</strong> lime moves slowly. Fall application before the ground freezes is ideal — freeze-thaw cycles work it in. If you're correcting in spring, apply at least 3–4 weeks before transplant and water it in.</li>
+      <li><strong>Dolomitic vs. calcitic:</strong> use dolomitic unless your test shows high magnesium. Most Maine soils are magnesium-deficient, which is exactly what dolomitic supplies.</li>
+      <li><strong>Don't overshoot:</strong> more lime is not better. Pushing past pH 7.0 creates the opposite lockout problem, and over-liming takes a full season to reverse.</li>
+      <li><strong>Re-test yearly.</strong> Maine rainfall leaches calcium and magnesium, so pH drifts back down over time. Annual re-testing keeps you honest.</li>
+    </ul>
+    <Callout title="pH correction is a season-long habit, not a one-time fix" type="tip">
+      Maine's 40–46 inches of annual rainfall continuously pull bases out of the soil profile. A bed corrected to 6.5 this spring may read 6.0 by next. Re-test every year, top-dress a light lime application each fall, and keep a log — after two seasons you'll know your soil's drift rate and can correct on a schedule instead of guessing.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Raised beds: the reliable Maine path</h2>
+    <p>A raised bed solves Maine's three soil problems at once — it replaces acidic native soil with a controlled mix, lifts the root zone above cold, saturated spring ground, and drains freely through September's wet weeks. For central-Maine clay especially, it's not a luxury; it's the difference between a crop and a compost pile.</p>
+
+    <h3>Build notes for Maine conditions</h3>
+    <ul>
+      <li><strong>Size:</strong> 4×8 ft is the standard — reachable from both sides. Depth 12–18 inches; cannabis roots will use all of it.</li>
+      <li><strong>Material:</strong> untreated cedar or hemlock lasts 8–15 years in Maine weather. Avoid pressure-treated lumber rated with older copper-arsenate chemistries; modern ACQ is considered acceptable for food crops, but most growers prefer to skip treated wood for cannabis beds.</li>
+      <li><strong>Frost heave:</strong> Maine's freeze-thaw cycle will lift and rack a shallow frame. Set corner posts 18–24 inches into the ground, or accept that a frame sitting on grade may need re-squaring each spring. A bed anchored to driven stakes survives heave.</li>
+      <li><strong>Bottom:</strong> leave it open to native soil (with hardware cloth underneath against voles and moles) so excess water drains and roots can reach down. A sealed-bottom bed becomes a bathtub in September.</li>
+    </ul>
+
+    <h3>Filling the bed</h3>
+    <p>A proven Maine bed mix by volume: roughly 40% quality topsoil or loam, 40% finished compost, and 20% aeration (perlite, rice hulls, or coarse sand). Top-dress with an organic fertilizer blend at transplant and again at first flower. One 4×8×12-inch bed holds about 32 cubic feet of mix — plan delivery or pickup accordingly; bulk loam/compost from a local yard is dramatically cheaper per cubic foot than bagged.</p>
+  </section>
+
+  <section>
+    <h2>Fabric pots: the flexible alternative</h2>
+    <p>Fabric pots (10–20 gallon) have become the default container for Maine outdoor growers, and for reasons specific to this climate:</p>
+    <ul>
+      <li><strong>Air-pruning:</strong> roots hit the fabric wall and branch instead of circling, producing a dense, efficient root ball.</li>
+      <li><strong>Drainage:</strong> overwatering — the top killer of young cannabis — is nearly impossible in fabric. September's wet weeks drain themselves.</li>
+      <li><strong>Soil temperature:</strong> fabric breathes, so the root zone stays closer to air temperature. In a cool Maine June that's a small penalty; in July it prevents the cooked-roots problem black plastic pots suffer in full sun.</li>
+      <li><strong>Season flexibility:</strong> pots can move to chase sun, come under a tarp during a September deluge, or shift into a hoop house for the final weeks of finish. You can't do that with an in-ground bed.</li>
+      <li><strong>Compliance and discretion:</strong> a few fabric pots tucked behind a fence are far less conspicuous than a tilled garden, and easy to relocate if your visibility situation changes.</li>
+    </ul>
+    <p>The tradeoffs: fabric dries faster than ground or raised beds (expect near-daily watering in a July dry spell), and pots need saucers or a gravel base on a deck. Use a minimum of 10 gallons for a full-season photoperiod plant — 20 gallons is better — and fill with the same loam/compost/aeration mix you'd use in a bed.</p>
+  </section>
+
+  <section>
+    <h2>Compost, organic matter, and the living soil approach</h2>
+    <p>Maine native soils typically run 2–4% organic matter; cannabis thrives at 5–10%+. Compost is how you close that gap, and Maine makes it easy: municipal drop-offs often give away finished leaf compost, and every feed store in the state carries bagged composted manure. Your own backyard pile, fed all winter, will be ready by June.</p>
+    <p>The living-soil approach takes this further: instead of feeding the plant with bottled nutrients, you feed a soil food web — compost, worm castings, kelp meal, crab or lobster meal (a Maine coastal staple), rock phosphate, and a fungal-dominated inoculant — and let microbes mineralize nutrition on demand. A properly built living bed needs little more than water and a seasonal top-dress, and the microbial life suppresses root disease in ways sterile bagged soil can't. The catch is lead time: a living soil wants 4–8 weeks of "cooking" before roots go in, so build beds in April for a June transplant, or the prior fall.</p>
+    <Callout title="Maine's lobster and crab meal advantage" type="info">
+      Coastal Maine growers have cheap local access to crab meal, lobster meal, and kelp meal — excellent slow-release sources of nitrogen, calcium, chitin, and micronutrients. Chitin in particular feeds chitinolytic microbes and is associated with improved resistance to fungal pressure, relevant in a state where botrytis ends the season. Check local feed co-ops and fishery suppliers before ordering online.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Where to buy soil and amendments in Maine</h2>
+    <table aria-label="Where to buy cannabis soil inputs in Maine">
+      <thead>
+        <tr><th>Source type</th><th>What to get</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Local landscape supply yards</td><td>Bulk loam, compost, leaf mold</td><td>Cheapest per cubic foot; ask for screened loam and finished compost</td></tr>
+        <tr><td>Feed &amp; farm co-ops (statewide)</td><td>Dolomitic lime, composted manure, crab/lobster meal, kelp meal, organic fertilizer blends</td><td>Best prices on amendments; staff usually know Maine soils</td></tr>
+        <tr><td>Municipal compost sites</td><td>Free or cheap finished leaf compost</td><td>Call ahead for availability and whether it's screened</td></tr>
+        <tr><td>Garden centers / hardware stores</td><td>Bagged potting mix, perlite, worm castings, pH meters, test kits</td><td>Convenient; bagged premium mix is fine for fabric pots</td></tr>
+        <tr><td>UMaine Analytical Lab (Orono)</td><td>Soil testing</td><td>~$15–20 basic panel with Maine-calibrated lime recommendations</td></tr>
+      </tbody>
+    </table>
+    <p>For container growing, a quality bagged "organic potting mix" amended with your own compost (about 20–25% by volume) and a light dose of lime is a perfectly good shortcut — Maine's native ground is the one place you should not cut corners.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={[
+      { question: "Can I grow cannabis directly in Maine's native soil?", answer: "You can, but only after correcting it. Most Maine native soils sit at pH 4.5–5.5, below the 6.0–7.0 range where cannabis absorbs nutrients, and central-Maine clay drains poorly enough to suffocate roots. The workable path is a UMaine soil test, dolomitic lime per the report (typically 5–10 lb per 100 sq ft), and 2–4 inches of compost worked in. In heavy clay, a raised bed or fabric pot is faster and more reliable than amending in place." },
+      { question: "How much lime does Maine soil need for cannabis?", answer: "A typical correction from pH 5.0 to 6.5 runs 5–10 lb of dolomitic lime per 100 square feet, worked into the top 6–8 inches — but base your actual rate on a soil test's buffer pH reading, not a rule of thumb. Apply in fall if possible, or at least 3–4 weeks before spring transplant, and re-test annually because Maine rainfall leaches calcium and magnesium, letting pH drift back down." },
+      { question: "Raised beds or fabric pots — which is better for a Maine outdoor grow?", answer: "Both beat native ground. Raised beds hold moisture longer, hold more soil volume per dollar, and suit multi-plant gardens; they need a frost-heave-aware build and good drainage. Fabric pots (10–20 gal) drain perfectly, air-prune roots, and can move for sun, weather, or discretion — but dry faster and need near-daily water in July. Many Maine growers use beds for the main crop and a few fabric pots for flexibility and backup plants." },
+      { question: "What's the best soil mix for a raised bed or fabric pot in Maine?", answer: "A proven mix by volume: about 40% quality loam or topsoil, 40% finished compost, and 20% aeration (perlite, rice hulls, or coarse sand), plus an organic fertilizer blend and a light lime charge. For living soil, add worm castings, kelp meal, and crab or lobster meal and let the bed cook 4–8 weeks before transplanting." },
+      { question: "How do I know if my soil pH is off?", answer: "Test — the UMaine Analytical Laboratory basic panel (~$15–20) is the reliable answer and comes with Maine-calibrated recommendations. Symptom-level signs of acidic lockout include stunted growth, dark or purple stems, and yellowing leaves that don't respond to feeding. Probe meters give a rough field check but drift over time; treat them as directional, not definitive." },
+      { question: "Is living soil worth the effort for a Maine home grower?", answer: "For growers who want to skip bottled nutrients and build something that improves yearly, yes — a living bed fed with compost, worm castings, kelp, and crab meal needs little beyond water and a seasonal top-dress, and the microbial life suppresses root disease. The catch is lead time: build and let the soil cook 4–8 weeks before roots go in, so plan beds in April for a June transplant or build them the prior fall." }
+    ]} />
+  </section>
+
+  <section>
+    <h2>Where to go next</h2>
+    <div class="further-reading">
+      <h2>Related Maine guides</h2>
+      <ul>
+        <li><a href="/blog/outdoor-cannabis-grow-maine-2026">Growing Cannabis Outdoors in Maine 2026</a> — the full outdoor grow: zones, frost dates, site selection, calendar, and the law</li>
+        <li><a href="/blog/cannabis-pests-mold-maine-2026">Cannabis Pests &amp; Mold in Maine 2026</a> — botrytis, powdery mildew, deer and insects, and an organic IPM plan</li>
+        <li><a href="/blog/maine-home-grow-cannabis-guide-2026">Maine Home Grow Cannabis Guide 2026</a> — the parent guide covering the 6 mature / 12 immature / unlimited seedlings framework and caregiver rules</li>
+        <li><a href="/blog/best-cannabis-strains-maine-outdoor-2026">Best Cannabis Strains for Maine Outdoor 2026</a> — short-season genetics for Maine's frost windows</li>
+        <li><a href="/blog/when-to-start-cannabis-seeds-maine-2026">When to Start Cannabis Seeds in Maine 2026</a> — city-by-city frost dates and a germination calendar</li>
+        <li><a href="/blog/greenhouse-cannabis-maine-2026">Greenhouse Cannabis in Maine 2026</a> — hoop house vs heated greenhouse for season extension</li>
+        <li><a href="/blog/drying-cannabis-maine-humidity-2026">Drying Cannabis in Maine 2026</a> — beating October humidity through dry and cure</li>
+        <li><a href="/blog/indoor-cannabis-grow-setup-maine-cost-2026">Indoor Cannabis Grow Setup in Maine 2026</a> — equipment, electricity math, and CMP/Versant rates</li>
+        <li><a href="/blog/autoflower-vs-feminized-maine-2026">Autoflower vs Feminized for Maine 2026</a> — short-season decision matrix</li>
+        <li><a href="/blog/cannabis-clones-vs-seeds-maine-2026">Cannabis Clones vs Seeds in Maine 2026</a> — head-start options for a compressed season</li>
+        <li><a href="/resources/buy-cannabis-seeds-maine">Where to Buy Cannabis Seeds in Maine 2026</a> — local dispensaries, online seed banks, and clones</li>
+      </ul>
+      <h2>Primary sources cited</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html">28-B M.R.S. §1502</a> — adult-use personal cultivation of cannabis (plant counts, location rules, municipal preemption)</li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1501.html">28-B M.R.S. §1501</a> — definitions (mature plant, immature plant, seedling)</li>
+        <li><a href="https://extension.umaine.edu/">University of Maine Cooperative Extension</a> — Maine soil surveys, frost dates, and agricultural guidance</li>
+        <li><a href="https://umaine.edu/soil-testing/">UMaine Analytical Laboratory and Research Center</a> — soil testing with Maine-calibrated lime and fertilizer recommendations</li>
+        <li><a href="https://www.maine.gov/dafs/ocp/">Maine Office of Cannabis Policy (OCP)</a> — adult-use personal cultivation FAQ and caregiver framework</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="disclaimer"><strong>Editorial note.</strong> This article is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections">Editorial Corrections Log</a> with the primary source that confirms the fix. This is informational content, not legal or cultivation advice; verify current rules with OCP and your town before planting.</p>
+</article>
+
+<AutoRelated currentPath="/blog/cannabis-soil-maine-2026" currentTopics={topics} section="Home Cultivation" limit={6} />
+</Layout>
