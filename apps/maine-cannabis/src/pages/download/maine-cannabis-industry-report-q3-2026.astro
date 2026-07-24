@@ -41,6 +41,7 @@ const faqPageJsonLd = JSON.stringify({
 });
 
 const article = { publishDate: "2026-07-24", modifiedDate: "2026-07-24" };
+void article;
 ---
 
 <Layout
@@ -294,7 +295,7 @@ const article = { publishDate: "2026-07-24", modifiedDate: "2026-07-24" };
       </div>
     </section>
 
-    <AutoRelated currentPath="/download/maine-cannabis-industry-report-q3-2026" />
+    <AutoRelated currentPath="/download/maine-cannabis-industry-report-q3-2026" currentTopics={['industry-report', 'q3-2026', 'ocp', 'mrs', 'cannabis']} />
   </article>
 
   <script is:inline>
