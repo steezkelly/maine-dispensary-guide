@@ -47,8 +47,11 @@ function extractFrontmatter(text) {
   for (let i = 1; i < lines.length; i++) {
     if (lines[i].trim().startsWith('---')) { closeLine = i; break; }
   }
-  if (closeLine === -1) return text;
-  return lines.slice(1, closeLine).join('\n');
+  if (closeLine === -1) return text; // unclosed — return whole file
+  // Handle compressed frontmatter: content after --- on line 0
+  const line0Content = lines[0].trim().slice(3).trim();
+  const bodyLines = lines.slice(1, closeLine);
+  return [line0Content, ...bodyLines].join('\n');
 }
 
 function extractModifiedDate(fm) {
