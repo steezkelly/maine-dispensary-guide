@@ -18,7 +18,8 @@ function loadData() {
   if (!fs.existsSync(TRACKING_FILE)) {
     throw new Error(`Tracking file not found: ${TRACKING_FILE}`);
   }
-  return JSON.parse(fs.readFileSync(TRACKING_FILE, 'utf-8'));
+  try { return JSON.parse(fs.readFileSync(TRACKING_FILE, 'utf-8')); }
+  catch (e) { throw new Error(`Failed to parse ${TRACKING_FILE}: ${e.message}`); }
 }
 
 // Save tracking data

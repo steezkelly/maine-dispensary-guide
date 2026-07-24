@@ -703,7 +703,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
             {authorRecord && (
               <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>
                 <div class="author-footer-card">
-                  <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
+                  {authorPhoto && <img class="author-footer-photo" src={authorPhoto} alt={authorRecord.name} width="64" height="64" loading="lazy" />}
                   <div class="author-footer-meta">
                     <p class="author-footer-name"><a href={`/about/authors#${authorRecord.id}`}>{authorRecord.name}</a></p>
                     <p class="author-footer-role">{authorRecord.role}</p>
@@ -755,7 +755,7 @@ const breadcrumbListJsonLd = breadcrumbListSchema
           {article && authorRecord && (
             <aside class="article-author-footer" id={`author-${authorRecord.id}`} aria-label={`About the author ${authorRecord.name}`}>
               <div class="author-footer-card">
-                <img class="author-footer-photo" src={authorRecord.photo} alt={authorRecord.name} width="64" height="64" loading="lazy" />
+                {authorPhoto && <img class="author-footer-photo" src={authorPhoto} alt={authorRecord.name} width="64" height="64" loading="lazy" />}
                 <div class="author-footer-meta">
                   <p class="author-footer-name"><a href={`/about/authors#${authorRecord.id}`}>{authorRecord.name}</a></p>
                   <p class="author-footer-role">{authorRecord.role}</p>

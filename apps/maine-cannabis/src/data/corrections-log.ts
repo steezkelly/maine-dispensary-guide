@@ -282,7 +282,7 @@ export const CORRECTIONS: Correction[] = [
   },
   {
     date: "2026-07-04",
-    slug: "milo-dispensary-guide dexter-dispensary-guide",
+    slug: "milo-dexter-dispensary-guides",
     title: "Milo & Dexter guides — stale cross-reference to Dover-Foxcroft corrected",
     severity: "minor",
     category: "cross-reference",
@@ -338,7 +338,7 @@ export const CORRECTIONS: Correction[] = [
   },
   {
     date: "2026-07-04",
-    slug: "bridgton denmark limerick dispensary guides",
+    slug: "bridgton-denmark-limerick-dispensary-guides",
     title: "Town guides — three 'since YYYY' operator claims cited without primary source",
     severity: "minor",
     category: "city-guide",
@@ -359,7 +359,7 @@ export const CORRECTIONS: Correction[] = [
   },
   {
     date: "2026-07-04",
-    slug: "naples norway lovell waterford dispensary guides",
+    slug: "naples-norway-lovell-waterford-dispensary-guides",
     title: "Four 'Unclear' town guides — speculative opt-in hedging replaced with primary-source framing",
     severity: "material",
     category: "city-guide",

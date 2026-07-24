@@ -64,6 +64,7 @@ interface Props {
 
 // Narrow props at the call site per the menu-data-pipeline schema.
 const { snapshot, heading } = Astro.props;
+if (!snapshot?.operator || !snapshot?.snapshot) return;
 const categories = (snapshot.categories as Category[]) || [];
 const categoriesCompleted = categories.filter((c: Category) => c.extraction_status === 'complete');
 const categoriesMissing = categories.filter((c: Category) => c.extraction_status !== 'complete');
