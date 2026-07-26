@@ -237,3 +237,62 @@ applied by any agent in this initiative:
   verifier evidence) as a required status check before merge.
 - Restrict force-push and branch deletion on `main`.
 - Require at least one approving review (independent verifier) before merge.
+
+---
+
+## Amendment 2 — Remote-review corrections (OPS-06A-R1, 2026-07-26)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06A-R1 (remote orchestration review of the OPS-06A
+candidate `ce482b78`). The OPS-06A candidate was HELD and NOT merged; this
+amendment records the corrections made on a fresh branch
+(`fix/ops-06a-r1-remote-review-20260726`) from `ce482b78`, evaluated as a
+complete diff against base `6be4b788`.
+
+Remote review found merge-blocking discrepancies between the OPS-06A report, the
+accepted metric contract, and the actual candidate. The corrections:
+
+- **A — Little's Law W is the arithmetic mean.** `readyToReleaseFlowTime` now
+  reports `mean_hours`; Little's Law uses the arithmetic mean flow time, not a
+  percentile. P50/P85/P95 remain descriptive. (CLI-level test proves a skewed
+  1h/2h/9h sample yields W = 4h, not the 2h median.)
+- **B — One common population boundary.** L, λ, and W share the
+  ready → verified-production-release boundary. `accepted`, `card_completed`,
+  `done`, `completed`, an ordinary `released` state, branch creation, merge, and
+  HTTP success do not count as exits. Non-release departures (cancellation,
+  abandonment) make the population incompatible.
+- **C — Fail closed on inadequate coverage.** Little's Law returns
+  `computable=false` / `residual=insufficient_data` when the opening WIP is
+  unknown, left-censored tasks exist at window start, coverage is materially
+  incomplete, the window is sparse/unstable, the population is incompatible, or
+  any component is missing. "At least one event in window" is not complete
+  coverage. Explicit fields: `opening_state_known`, `left_censored_at_start`,
+  `nonrelease_departures`, `coverage_state`, `boundary_compatible`,
+  `computable`, `insufficiency_reasons`.
+- **D — Durable integrity-gate test coverage.** The committed
+  `ops-06a-1-integrity.test.cjs` is restored to a reviewed, self-contained core
+  suite (no reference to any external/foreign test file). Test counts are
+  reported from the committed candidate tree.
+- **E — Git mode/type is bound.** The integrity manifest now binds Git
+  mode/type into every canonical entry and into `canonical_diff_sha256`, and
+  compares it at verification. A chmod (100644 → 100755) or a file→symlink type
+  change (100644 → 120000) is rejected. **The integrity claim is therefore full
+  candidate/tree identity (path + status + mode/type + content), not merely
+  path-and-blob identity.**
+- **F — Hardened detailed private output.** The detailed-output path check is
+  fail-closed (rejects repository-local destinations, symlink-ancestor escapes,
+  output-file symlinks, and lexical `..` escapes), creates 0700 directories,
+  writes through a temporary owner-only file and atomic rename, and enforces
+  0600 even over a pre-existing 0644 file. No task IDs in stdout.
+- **G — Program-gate state compatibility.** The program gate recognizes
+  `card_completed` (the observer's normalized completion state) as a completed
+  predecessor state, in addition to the raw Kanban statuses.
+
+**Concurrency hazard encountered (recorded for the operator).** During OPS-06A
+authoring, the kanban auto-dispatcher spawned worker processes that edited the
+author's worktree directly (because the card was created with a worktree
+reference), overwriting reviewed files and dropping a foreign test file — the
+same hazard that caused finding D. The workers were terminated, the card
+archived, and the corrections were re-authored in an isolated worktree that no
+card references. This reinforces the need for the enforcement gap noted in
+Amendment 1 (the integrity gate is not yet a mechanically mandatory checkpoint).

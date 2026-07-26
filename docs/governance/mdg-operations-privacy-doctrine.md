@@ -88,16 +88,31 @@ the reviewer confirms:
 - Counts and rates cannot be reverse-engineered into a private record.
 - The evidence window and coverage state are stated.
 
-**Tool output redaction (OPS-06A-3).** The default summary and JSON stdout of
-any operations tool (e.g. `ops:metrics`) contain **aggregates only**. Task IDs
-(such as `releaseTaskIds`) and other task-level detail are **never** printed to
-ordinary console output. If detailed task-ID-level output is required, it must
-be behind an explicit detailed/private mode that:
+**Tool output redaction (OPS-06A-3, hardened by OPS-06A-R1 finding F).** The
+default summary and JSON stdout of any operations tool (e.g. `ops:metrics`)
+contain **aggregates only**. Task IDs (such as `releaseTaskIds`) and other
+task-level detail are **never** printed to ordinary console output. If detailed
+task-ID-level output is required, it must be behind an explicit detailed/private
+mode that:
 
 - writes to an output path **validated to be beneath `MDG_OPS_ROOT`** (Tier 0),
 - creates the file with **owner-only permissions** (0600), and
 - still emits **no task IDs in ordinary console output** (stdout carries only
   aggregates plus a pointer to the private file).
+
+**Fail-closed private-output path validation (OPS-06A-R1 finding F).** The
+detailed-output path check is fail-closed and equivalent to the ledger's safety
+model. It must reject:
+
+- a **repository-local** destination (output inside the repo);
+- an output path whose **existing symlink ancestor escapes** `MDG_OPS_ROOT`;
+- an output file that is **itself an unsafe symlink**;
+- a **lexical `..` escape** (caught before touching the filesystem).
+
+It must ensure parent directories remain beneath the real private root, create
+private directories with **0700**, write through a **temporary owner-only file
+and atomic rename**, and enforce the final file as **0600 even when replacing a
+pre-existing 0644 file**.
 
 This keeps task-level operational data in Tier 0 by default; promotion to any
 shared surface still requires the reviewer redaction check above.

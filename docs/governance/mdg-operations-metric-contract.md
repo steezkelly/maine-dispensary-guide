@@ -76,7 +76,10 @@ priority weight.
 
 - **Definition:** `W_i = t(released)_i − t(ready)_i` for tasks with trustworthy
   ready-entry and release timestamps.
-- **Report:** median (P50), P85, P95, with the deterministic quantile method.
+- **Report:** arithmetic `mean_hours` (the value Little's Law uses as `W`), plus
+  median (P50), P85, P95 as descriptive outputs (OPS-06A-R1 finding A). The
+  arithmetic mean and the percentiles are computed over the SAME eligible
+  population; P50/P85/P95 are never substituted for the mean.
 - **Grain:** task. **Window:** stated.
 - **Included:** tasks with non-null, non-censored `ready` entry time and a
   verified release time.
@@ -159,6 +162,31 @@ blocked treatment, and left/right censoring are explicit. Adequate observation
 at the window start must be established; sparse or unstable windows remain
 `insufficient_data`. If trustworthy time-average WIP cannot be calculated, the
 result is `insufficient_data`, **never** an approximation.
+
+**V1 population boundary and fail-closed coverage (OPS-06A-R1 findings B, C).**
+The modeled population is **ready → verified production release**:
+
+- **Entry** is a trustworthy transition into `ready` with a real timestamp.
+- **Exit** is a verified `release_recorded` event with `verifier_pass == true`
+  AND `post_deploy_verified == true`. `accepted`, `card_completed`, `done`,
+  `completed`, an ordinary `released` state, branch creation, merge, and HTTP
+  success do **not** independently count as exits for this population.
+- A task that leaves the system through cancellation, abandonment, or another
+  non-release terminal outcome makes the population/window **incompatible**;
+  such departures are never silently mixed into release throughput.
+
+Little's Law returns `computable=false` and `residual=insufficient_data` when:
+the opening WIP population is unknown; active left-censored tasks exist at the
+window start; no trustworthy opening snapshot exists; observation coverage is
+materially incomplete (window < 7 days or too few distinct timestamps); the
+window is sparse or unstable; L, λ, and W do not share the same population; or
+any required component is `instrumentation_missing` / `insufficient_data`.
+"At least one event occurred in the window" is **not** complete coverage.
+
+The report carries explicit fields: `opening_state_known`,
+`left_censored_at_start`, `nonrelease_departures`, `in_flight_at_end`,
+`released_in_window`, `coverage_state`, `boundary_compatible`, `computable`,
+`insufficiency_reasons`, plus `L`, `lambda_per_week`, `W_hours`, `residual`.
 
 ---
 
