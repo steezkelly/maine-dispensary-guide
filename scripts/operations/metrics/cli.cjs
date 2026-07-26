@@ -121,9 +121,9 @@ function main() {
     arrivals: metrics.arrivals(events, window),
     verified_release_throughput: metrics.verifiedReleaseThroughput(events, { ...window, includeTaskIds, instrumentationCoverage }),
     ready_to_release_flow_time: metrics.readyToReleaseFlowTime(events, window),
-    first_pass_verification_yield: metrics.firstPassVerificationYield(events),
+    first_pass_verification_yield: metrics.firstPassVerificationYield(events, window),
     wip_by_state: metrics.wipByState(events, window),
-    rework_loops: metrics.reworkLoops(events),
+    rework_loops: metrics.reworkLoops(events, window),
     blocked_age: metrics.blockedAge(events, window),
   };
 
@@ -154,10 +154,11 @@ function main() {
 function summarizeReport(r) {
   const lines = [];
   lines.push(`MDG operations metrics — occurrence window ${r.window.from || '-inf'} .. ${r.window.to || 'now'}`);
+  lines.push(`window semantics: ALL metrics below are occurrence-window metrics (basis: occurred_at) unless labeled lifetime; observed_at is used only for coverage`);
   lines.push(`coverage: ${r.coverage.state} (source: ${r.coverage.coverage_source || 'none'}; ${r.coverage.event_count} events, ${r.coverage.events_in_window ?? 0} in window)`);
-  lines.push(`arrivals: ${r.arrivals.count}`);
+  lines.push(`arrivals [windowed]: ${r.arrivals.count} (task_created_observed by occurred_at; excludes task_observed/left-censored preexisting)`);
   const m1 = r.verified_release_throughput;
-  lines.push(`verified releases: ${m1.releases} (rate/week: ${fmt(m1.rate_per_week)}) [${m1.measurement_state}; instrumentation: ${m1.instrumentation_coverage_state}]`);
+  lines.push(`verified releases [windowed]: ${m1.releases} (rate/week: ${fmt(m1.rate_per_week)}) [${m1.measurement_state}; instrumentation: ${m1.instrumentation_coverage_state}]`);
   if (m1.minimum_evidence_warning) {
     lines.push(`  warning: ${m1.minimum_evidence_warning}`);
   }
@@ -165,13 +166,13 @@ function summarizeReport(r) {
     lines.push(`  insufficiency: ${m1.insufficiency_reasons.join('; ')}`);
   }
   const ft = r.ready_to_release_flow_time;
-  lines.push(`flow time hours: mean=${fmt(ft.mean_hours)} p50=${fmt(ft.p50_hours)} p85=${fmt(ft.p85_hours)} p95=${fmt(ft.p95_hours)} (eligible=${ft.eligible}, left-censored=${ft.left_censored_excluded}, right-censored=${ft.right_censored_excluded}, missing-ready=${ft.missing_ready_excluded})`);
-  lines.push(`first-pass yield: ${fmt(r.first_pass_verification_yield.fpy)} (${r.first_pass_verification_yield.first_pass}/${r.first_pass_verification_yield.verified_tasks})`);
-  lines.push(`wip by state: ${JSON.stringify(r.wip_by_state)}`);
-  lines.push(`rework loops: ${r.rework_loops.total} across ${r.rework_loops.tasks_with_rework} tasks`);
-  lines.push(`blocked: ${r.blocked_age.currently_blocked} (oldest hours: ${fmt(r.blocked_age.oldest_hours)})`);
+  lines.push(`flow time hours [windowed]: mean=${fmt(ft.mean_hours)} p50=${fmt(ft.p50_hours)} p85=${fmt(ft.p85_hours)} p95=${fmt(ft.p95_hours)} (eligible=${ft.eligible}, left-censored=${ft.left_censored_excluded}, right-censored=${ft.right_censored_excluded}, missing-ready=${ft.missing_ready_excluded}, entered-after-window=${ft.entered_after_window_excluded}, completed-before-window=${ft.completed_before_window_excluded})`);
+  lines.push(`first-pass yield [windowed]: ${fmt(r.first_pass_verification_yield.fpy)} (${r.first_pass_verification_yield.first_pass}/${r.first_pass_verification_yield.verified_tasks}; first verification in window)`);
+  lines.push(`wip by state [at window-end cutoff]: ${JSON.stringify(r.wip_by_state)}`);
+  lines.push(`rework loops [windowed]: ${r.rework_loops.total} across ${r.rework_loops.tasks_with_rework} tasks (needs_fix/failed-verification by occurred_at in window)`);
+  lines.push(`blocked [at window-end cutoff]: ${r.blocked_age.currently_blocked} (oldest hours: ${fmt(r.blocked_age.oldest_hours)}, unknown-entry: ${r.blocked_age.unknown_entry ?? 0})`);
   const ll = r.littles_law;
-  lines.push(`Little's Law: computable=${ll.computable} L=${fmt(ll.L)} lambda/week=${fmt(ll.lambda_per_week)} W_hours=${fmt(ll.W_hours)} residual=${fmt(ll.residual)}`);
+  lines.push(`Little's Law [windowed]: computable=${ll.computable} L=${fmt(ll.L)} lambda/week=${fmt(ll.lambda_per_week)} W_hours=${fmt(ll.W_hours)} residual=${fmt(ll.residual)}`);
   lines.push(`  population: ${ll.population_definition}`);
   lines.push(`  coverage=${ll.coverage_state} boundary_compatible=${ll.boundary_compatible} opening_state_known=${ll.opening_state_known} carry_in_releases=${ll.carry_in_releases} nonrelease_departures=${ll.nonrelease_departures} left_censored_at_start=${ll.left_censored_at_start} in_flight_at_end=${ll.in_flight_at_end}`);
   if (ll.insufficiency_reasons && ll.insufficiency_reasons.length) {

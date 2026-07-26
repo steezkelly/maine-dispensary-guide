@@ -274,7 +274,7 @@ test('R2-F: unsafe evidence-file symlink rejected on READ (bind-candidate)', () 
     'bind-candidate', '--repo', repo, '--evidence', linkFile, '--candidate', candidate, '--out', path.join(root, 'bound.json'),
   ], root);
   assert.notEqual(bind.status, 0);
-  assert.match(bind.stderr, /OPS_EVIDENCE_SYMLINK_ESCAPE|unsafe symlink/);
+  assert.match(bind.stderr, /OPS_EVIDENCE_SYMLINK|is a symlink/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
   fs.rmSync(outside, { recursive: true, force: true });

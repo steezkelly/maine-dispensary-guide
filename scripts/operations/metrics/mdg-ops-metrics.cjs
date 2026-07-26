@@ -225,11 +225,22 @@ function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs, include
 // ---------------------------------------------------------------------------
 
 /**
- * Flow time W_i = t(released) - t(ready) for tasks with a trustworthy
- * (non-censored) ready-entry time and a verified release time.
- * Left-censored tasks (unknown ready-entry) and right-censored tasks (not yet
- * released) are EXCLUDED from the primary distribution and reported separately.
- * Missing ready time is NEVER substituted with creation time.
+ * Ready-to-release flow time within the occurrence window (OPS-06A-R3 finding D).
+ *
+ * Completed primary cohort: tasks released INSIDE the window
+ * (windowStartMs <= t_release <= windowEndMs). Flow time = t_release - t_ready.
+ *
+ * Right-censored (reported separately, excluded from the primary distribution):
+ *   - tasks ready at or before window_end with NO release by window_end;
+ *   - tasks whose release is AFTER window_end (a release after the cutoff counts
+ *     as right-censored for that historical window — NOT silently dropped).
+ *
+ * Excluded from the historical report:
+ *   - tasks entering ready AFTER window_end (not part of this window's report);
+ *   - tasks completed (released) BEFORE window_start.
+ *
+ * Left-censored (unknown ready-entry) and missing-ready tasks remain explicit
+ * in separate buckets. Missing ready time is NEVER substituted with creation.
  */
 function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
   const byTask = indexByTask(events);
@@ -237,11 +248,11 @@ function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
   let leftCensored = 0;
   let rightCensored = 0;
   let missingReady = 0;
+  let enteredAfterWindow = 0;
+  let completedBeforeWindow = 0;
 
   for (const [, list] of byTask) {
     const censored = isLeftCensored(list);
-    // First trustworthy ready-entry: a task_state_changed/task_observed INTO ready
-    // with a real occurred_at, and NOT left-censored.
     const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
     const releaseEvent = list.find((e) => {
       if (e.event_type !== 'release_recorded') return false;
@@ -254,20 +265,26 @@ function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
       else missingReady += 1;
       continue;
     }
-    if (!releaseEvent) {
-      rightCensored += 1;
-      continue;
-    }
 
     const tReady = parseTime(readyEvent.occurred_at);
-    const tRelease = parseTime(releaseEvent.occurred_at);
-    if (tReady === null || tRelease === null) { missingReady += 1; continue; }
-    if (tRelease < windowStartMs || tRelease > windowEndMs) continue;
+    if (tReady === null) { missingReady += 1; continue; }
+
+    // Task entered ready after the window end -> excluded from this report.
+    if (tReady > windowEndMs) { enteredAfterWindow += 1; continue; }
+
+    const tRelease = releaseEvent ? parseTime(releaseEvent.occurred_at) : null;
+
+    // Completed (released) before the window start -> excluded.
+    if (tRelease !== null && tRelease < windowStartMs) { completedBeforeWindow += 1; continue; }
+
+    // No release, or release after window end -> right-censored for this window.
+    if (tRelease === null || tRelease > windowEndMs) { rightCensored += 1; continue; }
+
+    // Released inside the window -> completed primary cohort.
     flowTimes.push(tRelease - tReady);
   }
 
   const summary = summarize(flowTimes);
-  // Convert ms summaries to hours for readability, preserving INSUFFICIENT_DATA.
   const toHours = (v) => (v === INSUFFICIENT_DATA ? INSUFFICIENT_DATA : v / (3600 * 1000));
   // Arithmetic MEAN flow time (hours) for the same eligible population used by
   // the percentiles. Little's Law requires the arithmetic mean W, NOT a
@@ -280,10 +297,14 @@ function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
     left_censored_excluded: leftCensored,
     right_censored_excluded: rightCensored,
     missing_ready_excluded: missingReady,
+    entered_after_window_excluded: enteredAfterWindow,
+    completed_before_window_excluded: completedBeforeWindow,
     mean_hours: meanHours,
     p50_hours: toHours(summary.p50),
     p85_hours: toHours(summary.p85),
     p95_hours: toHours(summary.p95),
+    windowed: true,
+    basis: 'occurred_at',
   };
 }
 
@@ -293,90 +314,163 @@ function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
 
 /**
  * FPY = (tasks whose FIRST verification is PASS) / (tasks receiving a first
- * verification). Missing verifier evidence is NOT a pass. A repeated
- * verification counts as rework, not a first pass.
+ * verification), within the occurrence window (OPS-06A-R3 finding D).
+ *
+ * - The denominator is tasks whose FIRST verification `occurred_at` is inside
+ *   [windowStartMs, windowEndMs].
+ * - A task whose first verification is AFTER the cutoff is absent from this
+ *   historical report.
+ * - Later verifications do NOT rewrite a historical first-pass result: the
+ *   first verification fixes the outcome for that window.
+ * - Missing verifier evidence is NOT a pass. A repeated verification counts as
+ *   rework, not a first pass.
+ * - Windowed metric.
  */
-function firstPassVerificationYield(events) {
+function firstPassVerificationYield(events, { windowStartMs, windowEndMs }) {
   const byTask = indexByTask(events);
   let verified = 0;
   let firstPass = 0;
   for (const [, list] of byTask) {
     const verifications = list.filter((e) => e.event_type === 'verification_completed');
     if (verifications.length === 0) continue;
+    const first = verifications[0]; // indexByTask sorts per-task timelines by occurred_at
+    const firstAt = parseTime(first.occurred_at);
+    if (firstAt === null || firstAt < windowStartMs || firstAt > windowEndMs) continue; // first verification outside window
     verified += 1;
-    const first = verifications[0];
     if (first.outcome === 'pass') firstPass += 1;
   }
   if (verified === 0) {
-    return { verified_tasks: 0, first_pass: 0, fpy: INSUFFICIENT_DATA };
+    return { verified_tasks: 0, first_pass: 0, fpy: INSUFFICIENT_DATA, windowed: true, basis: 'occurred_at' };
   }
-  return { verified_tasks: verified, first_pass: firstPass, fpy: firstPass / verified };
+  return { verified_tasks: verified, first_pass: firstPass, fpy: firstPass / verified, windowed: true, basis: 'occurred_at' };
 }
 
 // ---------------------------------------------------------------------------
 // Diagnostics
 // ---------------------------------------------------------------------------
 
-/** Arrivals: distinct task_created_observed / task_observed in window. */
+/**
+ * Arrivals within the occurrence window (OPS-06A-R3 finding D).
+ *
+ * - Uses `occurred_at` (NOT `observed_at`) — historical imports are assigned by
+ *   occurred_at, so a card created in-window but imported later still counts.
+ * - Counts `task_created_observed` ONLY. `task_observed` (a left-censored
+ *   preexisting card first seen without a creation event) is EXCLUDED — it is
+ *   not a genuine arrival in the window.
+ * - Windowed metric: only creations whose occurred_at is inside
+ *   [windowStartMs, windowEndMs] count.
+ */
 function arrivals(events, { windowStartMs, windowEndMs }) {
   const seen = new Set();
   for (const e of events) {
-    if (e.event_type !== 'task_created_observed' && e.event_type !== 'task_observed') continue;
-    const t = parseTime(e.observed_at);
+    if (e.event_type !== 'task_created_observed') continue;
+    const t = parseTime(e.occurred_at);
     if (t === null || t < windowStartMs || t > windowEndMs) continue;
     seen.add(e.task_id);
   }
-  return { count: seen.size };
+  return { count: seen.size, windowed: true, basis: 'occurred_at', event_type: 'task_created_observed' };
 }
 
-/** WIP by state at window end: last known normalized state per task. */
+/**
+ * WIP by state at the window-end cutoff (OPS-06A-R3 finding D).
+ *
+ * - Uses the latest state-bearing event at or before `windowEndMs`.
+ * - Skips tasks with NO event at or before the cutoff — future-created tasks
+ *   must not appear as `unknown` in a historical (windowed) report.
+ * - Windowed metric: a future state change does not rewrite the cutoff view.
+ */
 function wipByState(events, { windowEndMs }) {
   const byTask = indexByTask(events);
   const counts = {};
   for (const [, list] of byTask) {
-    let lastState = 'unknown';
+    let lastState = null;
     for (const e of list) {
       const t = parseTime(e.occurred_at);
       if (t !== null && t <= windowEndMs && e.to_state) lastState = e.to_state;
     }
+    if (lastState === null) continue; // no state at/before cutoff -> not in this report
     counts[lastState] = (counts[lastState] || 0) + 1;
   }
   return counts;
 }
 
-/** Rework loops: count of needs_fix / repeated verification per task. */
-function reworkLoops(events) {
+/**
+ * Rework loops within the occurrence window (OPS-06A-R3 finding D).
+ *
+ * - Counts `needs_fix` transitions and failed `verification_completed` events
+ *   whose `occurred_at` is inside [windowStartMs, windowEndMs].
+ * - Reports distinct affected tasks IN THE WINDOW — not lifetime rework under a
+ *   windowed report label.
+ * - Windowed metric: rework after the cutoff is not counted in this report.
+ */
+function reworkLoops(events, { windowStartMs, windowEndMs }) {
   const byTask = indexByTask(events);
   let total = 0;
   const perTask = {};
   for (const [taskId, list] of byTask) {
-    const needsFix = list.filter((e) => e.to_state === 'needs_fix' || (e.event_type === 'verification_completed' && e.outcome === 'fail')).length;
+    const needsFix = list.filter((e) => {
+      const t = parseTime(e.occurred_at);
+      if (t === null || t < windowStartMs || t > windowEndMs) return false;
+      return e.to_state === 'needs_fix' || (e.event_type === 'verification_completed' && e.outcome === 'fail');
+    }).length;
     if (needsFix > 0) {
       perTask[taskId] = needsFix;
       total += needsFix;
     }
   }
-  return { total, tasks_with_rework: Object.keys(perTask).length };
+  return { total, tasks_with_rework: Object.keys(perTask).length, windowed: true, basis: 'occurred_at' };
 }
 
-/** Blocked age (ms) for tasks currently blocked at window end. */
+/**
+ * Blocked age at the window-end cutoff (OPS-06A-R3 finding D).
+ *
+ * - Uses ONLY block/unblock transitions at or before `windowEndMs`.
+ * - A FUTURE unblock (after the cutoff) must NOT rewrite an earlier historical
+ *   report: a task blocked at the cutoff stays blocked in this report.
+ * - A FUTURE block (after the cutoff) is ignored, so it cannot produce a
+ *   negative age.
+ * - Unknown blocked-entry time (blocked at the cutoff but no trustworthy
+ *   task_blocked timestamp, e.g. first observed already blocked) is reported as
+ *   `unknown_entry`, NOT a zero age.
+ * - Windowed metric.
+ */
 function blockedAge(events, { windowEndMs }) {
   const byTask = indexByTask(events);
   const ages = [];
+  let unknownEntry = 0;
   for (const [, list] of byTask) {
     let blockedAt = null;
     let currentlyBlocked = false;
     for (const e of list) {
-      if (e.event_type === 'task_blocked') { blockedAt = parseTime(e.occurred_at); currentlyBlocked = true; }
-      else if (e.event_type === 'task_unblocked') { currentlyBlocked = false; blockedAt = null; }
+      const t = parseTime(e.occurred_at);
+      if (t === null || t > windowEndMs) continue; // only transitions at/before cutoff
+      if (e.event_type === 'task_blocked') {
+        blockedAt = t;
+        currentlyBlocked = true;
+      } else if (e.event_type === 'task_unblocked') {
+        currentlyBlocked = false;
+        blockedAt = null;
+      } else if (e.to_state === 'blocked' && !currentlyBlocked) {
+        // Observed entering blocked without a task_blocked timestamp -> unknown entry.
+        currentlyBlocked = true;
+        blockedAt = null;
+      }
     }
-    if (currentlyBlocked && blockedAt !== null) {
-      ages.push(windowEndMs - blockedAt);
+    if (currentlyBlocked) {
+      if (blockedAt !== null) ages.push(windowEndMs - blockedAt);
+      else unknownEntry += 1; // unknown blocked-entry time -> unknown, not zero
     }
   }
   const summary = summarize(ages);
   const toHours = (v) => (v === INSUFFICIENT_DATA ? INSUFFICIENT_DATA : v / (3600 * 1000));
-  return { currently_blocked: ages.length, oldest_hours: toHours(summary.max === undefined ? INSUFFICIENT_DATA : summary.max), p50_hours: toHours(summary.p50) };
+  return {
+    currently_blocked: ages.length + unknownEntry,
+    unknown_entry: unknownEntry,
+    oldest_hours: toHours(summary.max === undefined ? INSUFFICIENT_DATA : summary.max),
+    p50_hours: toHours(summary.p50),
+    windowed: true,
+    basis: 'occurred_at',
+  };
 }
 
 // ---------------------------------------------------------------------------

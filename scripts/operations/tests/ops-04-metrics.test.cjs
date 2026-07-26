@@ -154,20 +154,20 @@ test('flow time with no eligible tasks returns INSUFFICIENT_DATA percentiles', (
 test('FPY denominator is tasks with first verification; missing evidence is not a pass', () => {
   const events = [
     // t_pass: first verification pass
-    ev({ event_id: 'v_pass', event_type: 'verification_completed', task_id: 't_pass', outcome: 'pass' }),
+    ev({ event_id: 'v_pass', event_type: 'verification_completed', task_id: 't_pass', outcome: 'pass', occurred_at: '2026-07-26T01:00:00Z', observed_at: '2026-07-26T01:00:00Z' }),
     // t_fail: first verification fail (rework)
-    ev({ event_id: 'v_fail', event_type: 'verification_completed', task_id: 't_fail', outcome: 'fail' }),
+    ev({ event_id: 'v_fail', event_type: 'verification_completed', task_id: 't_fail', outcome: 'fail', occurred_at: '2026-07-26T01:00:00Z', observed_at: '2026-07-26T01:00:00Z' }),
     // t_noevidence: no verification event => NOT counted, NOT a pass
-    ev({ event_id: 'noev', event_type: 'task_state_changed', task_id: 't_noevidence', to_state: 'authored' }),
+    ev({ event_id: 'noev', event_type: 'task_state_changed', task_id: 't_noevidence', to_state: 'authored', occurred_at: '2026-07-26T01:00:00Z', observed_at: '2026-07-26T01:00:00Z' }),
   ];
-  const result = metrics.firstPassVerificationYield(events);
+  const result = metrics.firstPassVerificationYield(events, WINDOW);
   assert.equal(result.verified_tasks, 2, 'only tasks with a verification');
   assert.equal(result.first_pass, 1);
   assert.equal(result.fpy, 0.5);
 });
 
 test('FPY with no verifications is INSUFFICIENT_DATA, not zero', () => {
-  const result = metrics.firstPassVerificationYield([]);
+  const result = metrics.firstPassVerificationYield([], WINDOW);
   assert.equal(result.verified_tasks, 0);
   assert.equal(result.fpy, ID);
 });
@@ -177,7 +177,7 @@ test('repeated verification counts as rework, not a first pass', () => {
     ev({ event_id: 'v1', event_type: 'verification_completed', task_id: 't_x', outcome: 'fail', occurred_at: '2026-07-26T01:00:00Z', observed_at: '2026-07-26T01:00:00Z' }),
     ev({ event_id: 'v2', event_type: 'verification_completed', task_id: 't_x', outcome: 'pass', occurred_at: '2026-07-26T02:00:00Z', observed_at: '2026-07-26T02:00:00Z' }),
   ];
-  const result = metrics.firstPassVerificationYield(events);
+  const result = metrics.firstPassVerificationYield(events, WINDOW);
   assert.equal(result.verified_tasks, 1);
   assert.equal(result.first_pass, 0, 'first verification was a fail => not a first pass');
 });
@@ -199,11 +199,11 @@ test('wipByState reports last known state per task at window end', () => {
 
 test('reworkLoops counts needs_fix and failed verifications', () => {
   const events = [
-    ev({ event_id: 'nf1', task_id: 't_a', to_state: 'needs_fix' }),
-    ev({ event_id: 'vf1', event_type: 'verification_completed', task_id: 't_a', outcome: 'fail' }),
-    ev({ event_id: 'ok', event_type: 'verification_completed', task_id: 't_b', outcome: 'pass' }),
+    ev({ event_id: 'nf1', task_id: 't_a', to_state: 'needs_fix', occurred_at: '2026-07-26T01:00:00Z', observed_at: '2026-07-26T01:00:00Z' }),
+    ev({ event_id: 'vf1', event_type: 'verification_completed', task_id: 't_a', outcome: 'fail', occurred_at: '2026-07-26T02:00:00Z', observed_at: '2026-07-26T02:00:00Z' }),
+    ev({ event_id: 'ok', event_type: 'verification_completed', task_id: 't_b', outcome: 'pass', occurred_at: '2026-07-26T03:00:00Z', observed_at: '2026-07-26T03:00:00Z' }),
   ];
-  const result = metrics.reworkLoops(events);
+  const result = metrics.reworkLoops(events, WINDOW);
   assert.equal(result.total, 2);
   assert.equal(result.tasks_with_rework, 1);
 });
