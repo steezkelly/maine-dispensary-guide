@@ -386,3 +386,99 @@ beneath the root, reject unsafe symlinks, and fail closed on group/other perms.
   and will introduce structured lifecycle emission plus its coverage evidence
   (the production source for R2-B's `measured_zero`). Until then, the gate is a
   category-A manual control, not a category-B mandatory checkpoint.
+
+---
+
+## Amendment 4 — Final semantics: windowed diagnostics, coverage-evidence closure, redaction (OPS-06A-R3, 2026-07-26)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06A-R3 (windowed diagnostics and coverage-evidence closure).
+PR #215 (candidate `908f97c7`) is held immutable; this amendment records the
+corrections on a fresh branch `fix/ops-06a-r3-diagnostics-coverage-20260726`
+from `908f97c7`, evaluated as a complete diff against base `6be4b788`.
+
+### Every displayed metric has an occurrence-window rule (R3-D)
+
+All reported metrics are occurrence-window metrics unless explicitly labeled
+lifetime. The operational window (`--from`/`--to`) is applied on `occurred_at`:
+
+- **Arrivals** — `task_created_observed` only, by `occurred_at`; `task_observed`
+  (left-censored preexisting cards) excluded; historical imports assigned by
+  `occurred_at`.
+- **Ready-to-release flow time** — completed primary cohort = released inside the
+  window; a release after `window_end` is right-censored (not silently dropped);
+  ready after `window_end` excluded; completed before `window_start` excluded;
+  left-censored and missing-ready remain explicit.
+- **First-pass verification yield** — denominator = tasks whose FIRST
+  verification `occurred_at` is inside the window; later verifications do not
+  rewrite a historical first-pass result.
+- **Rework** — `needs_fix` / failed-verification events by `occurred_at` inside
+  the window; distinct affected tasks in the window (not lifetime rework).
+- **WIP by state** — latest state at or before `window_end`; tasks with no event
+  at/before the cutoff are skipped (future-created tasks never appear as
+  `unknown`).
+- **Blocked age** — only block/unblock transitions at or before `window_end`; a
+  future unblock does not rewrite an earlier report; a future block cannot
+  produce a negative age; unknown blocked-entry is `unknown`, not zero.
+
+### Observation coverage and opening-state evidence are distinct (R3-A, R3-B)
+
+Coverage evidence is a **versioned, type-specific contract**
+(`mdg-operations-coverage-v1`) with `coverage_kind` ∈ {`observation`,
+`release_emitter`, `opening_state`}. Contracts are structurally validated
+(schema discriminator, kind, state enum, UTC window with start<end, non-empty
+source, kind-mismatch guards, strict field allowlist); `JSON.parse` alone is not
+validation. Observation coverage and opening-state evidence are **distinct
+contracts**:
+
+- Little's Law is computable **only** when validated `observation` coverage is
+  complete for the window **and** validated `opening_state` evidence proves the
+  active in-system set at the window start **and** all other population,
+  censoring, instrumentation, and mathematical preconditions hold.
+- The bare `--opening-state-trustworthy` assertion was **removed**; opening
+  state now comes from validated `--opening-state-evidence`.
+- The top-level `coverage:` line and the Little's Law `coverage_state` derive
+  from the **same** observation contract and cannot disagree.
+
+### Lifecycle-event density is NOT observation coverage (R3-B)
+
+"7 days and 3 timestamps" is a **sample-size diagnostic only**; it cannot
+independently set `coverage_state=adequate`. Without validated observation
+evidence, coverage is `unmeasured` (never `complete`).
+
+### Active left-censored tasks with unknown ready entry prevent reconciliation (R3-C)
+
+`littlesLawComponents` inspects **all** task timelines and never silently drops a
+task without a ready transition. A left-censored / unknown-entry task that may be
+active in the window is reported explicitly (`active_left_censored_without_entry`,
+`unknown_entry_tasks`) and forces `computable=false`. An opening snapshot may
+establish that such a task **exists** for L, but it cannot invent the missing
+full ready-to-release duration needed for W (`flow_time_population_complete`).
+
+### Integrity failure output is redacted (R3-F)
+
+`verify`, `worktree-status`, and `bind-candidate` failures print only **stable
+redacted reason codes** (`{ ok, reason_count, reason_codes }`) to ordinary
+stdout/stderr — never filenames, repository paths, changed paths, SHAs, check
+names, acceptance commands, or evidence bodies. Full detailed reasons are written
+**only** to an explicitly requested, validated Tier-0 private file
+(`--detail-out`). Private-read validation closes the symlink-ancestor escape
+(resolves the final real path beneath the real root, rejects symlinked evidence
+paths entirely, validates ancestor directories are not group/other-writable,
+fails closed on races).
+
+### Enforcement remains manual until OPS-06B (R3-G)
+
+- The integrity gate's evaluation is fail-closed **when invoked**.
+- **Process-level enforcement is still manual.** No canonical integration surface
+  (Integrator checklist, pre-push hook, CI) currently mandates invoking the gate
+  or running the focused operations suite.
+- The phrase **"integration is fail-closed" must not be used without the
+  qualification "when the gate is invoked."**
+- **The full operations suite remains outside current required CI until
+  OPS-06B.** OPS-06B will wire the gate and the operations suite into the
+  canonical procedure and CI as mechanically mandatory checkpoints, and will
+  introduce structured lifecycle emission plus its coverage evidence.
+- This amendment does **not** broaden R3 into scheduler enforcement or lifecycle
+  emission. OPS-07/08/09 remain blocked/gated; no lifecycle emission, no
+  simulation, no live policy, no priority changes, no repository-setting changes.

@@ -41,6 +41,8 @@ function findRepoRoot(startDir = process.cwd()) {
 
 function parseArgs(argv) {
   const args = { _: [], accept: [], authorizedUntracked: [] };
+  // Normalize a flag key to camelCase so both --detail-out and --detailOut work.
+  const toCamel = (key) => key.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--accept' || argument === '--authorized-untracked') {
@@ -53,7 +55,7 @@ function parseArgs(argv) {
     if (argument.startsWith('--')) {
       const value = argv[index + 1];
       if (value === undefined || value.startsWith('--')) throw new Error(`missing value for ${argument}`);
-      args[argument.slice(2)] = value;
+      args[toCamel(argument.slice(2))] = value;
       index += 1;
       continue;
     }

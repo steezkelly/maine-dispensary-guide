@@ -141,6 +141,26 @@ owner-only). A single shared private-output helper
 and integrity tools so there are not two subtly different security
 implementations.
 
+**Private-read symlink-ancestor escape is closed (OPS-06A-R3 finding E).** Read
+validation resolves the **final real path** (`fs.realpathSync`) and proves it is
+beneath the real (symlink-resolved) `MDG_OPS_ROOT`; rejects **symlinked evidence
+paths entirely** (the final component must not be a symlink); inspects each
+existing path component beneath the root and rejects any escaping symlink
+ancestor; validates the final object is a regular owner-only (0600) file;
+validates private ancestor directories are **not group/other-writable**
+(accepted directory rule: `(mode & 0o022) === 0`, permitting conventional
+0755/0700 dirs but rejecting 0775/0777); and **fails closed on races or
+permission errors**.
+
+**Integrity failure output is redacted (OPS-06A-R3 finding F).** `verify`,
+`worktree-status`, and `bind-candidate` failures print only **stable redacted
+reason codes** (`{ ok, reason_count, reason_codes }`) to ordinary stdout/stderr —
+never filenames, repository paths, changed paths, SHAs, check names, acceptance
+commands, or evidence bodies. Full detailed reasons are written **only** to an
+explicitly requested, validated Tier-0 private file (`--detail-out`). The
+top-level error handler likewise emits only a stable code, never the raw
+validation message.
+
 This keeps task-level operational data in Tier 0 by default; promotion to any
 shared surface still requires the reviewer redaction check above.
 

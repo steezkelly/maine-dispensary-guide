@@ -131,12 +131,13 @@ priority weight.
 
 ---
 
-## Window semantics (OPS-06A-R2-A)
+## Window semantics (OPS-06A-R2-A, R3-D)
 
 Two distinct windows must never be conflated:
 
 - **Operational occurrence window** (`--from`/`--to`): applied on event
-  `occurred_at`. Drives rate, release, flow-time, and queue calculations.
+  `occurred_at`. Drives rate, release, flow-time, FPY, rework, WIP-by-state, and
+  blocked-age calculations.
 - **Observation/collection window**: applied on `observed_at`. Drives coverage
   reasoning only.
 
@@ -148,6 +149,47 @@ validated event history** (`ledger.listAll`). An `observed_at`-filtered subset
 whose `occurred_at` is inside the occurrence window but whose `observed_at` is a
 later import date is counted by occurrence metrics on `occurred_at`. A carry-in
 task (ready before the window, released inside) is never silently dropped.
+
+### Per-metric occurrence-window rules (R3-D)
+
+Every displayed metric is an occurrence-window metric unless explicitly labeled
+lifetime. The CLI states which metrics are windowed.
+
+- **Arrivals** — `task_created_observed` only, by `occurred_at`; `task_observed`
+  (left-censored preexisting cards) excluded; historical imports assigned by
+  `occurred_at`.
+- **Ready-to-release flow time** — completed primary cohort = released inside the
+  window; a release after `window_end` is **right-censored** (not silently
+  dropped); ready after `window_end` excluded; completed before `window_start`
+  excluded; left-censored and missing-ready remain explicit buckets.
+- **First-pass verification yield** — denominator = tasks whose FIRST
+  verification `occurred_at` is inside the window; later verifications do not
+  rewrite a historical first-pass result.
+- **Rework** — `needs_fix` / failed-verification events by `occurred_at` inside
+  the window; distinct affected tasks in the window (not lifetime rework).
+- **WIP by state** — latest state at or before `window_end`; tasks with no event
+  at/before the cutoff are skipped (future-created tasks never appear as
+  `unknown`).
+- **Blocked age** — only block/unblock transitions at or before `window_end`; a
+  future unblock does not rewrite an earlier report; a future block cannot
+  produce a negative age; unknown blocked-entry is `unknown`, not zero.
+
+### Coverage-evidence closure (R3-A, R3-B, R3-C)
+
+Coverage evidence is a **versioned, type-specific contract**
+(`mdg-operations-coverage-v1`) with `coverage_kind` ∈ {`observation`,
+`release_emitter`, `opening_state`}, structurally validated (not bare
+`JSON.parse`). Observation coverage and opening-state evidence are **distinct**:
+Little's Law is computable only with validated complete `observation` coverage
+**and** validated `opening_state` evidence **and** all other preconditions.
+**Lifecycle-event density is not observation coverage** — it is a sample-size
+diagnostic only. Active left-censored tasks with an unknown ready entry are
+reported explicitly (`active_left_censored_without_entry`, `unknown_entry_tasks`)
+and prevent reconciliation (`flow_time_population_complete=false`); an opening
+snapshot may establish existence for L but cannot invent the missing
+ready-to-release duration for W. The top-level `coverage:` line and the Little's
+Law `coverage_state` derive from the same observation contract and cannot
+disagree.
 
 ---
 
