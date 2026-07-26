@@ -103,12 +103,15 @@ test('release throughput counts ONLY verified_production_release', () => {
   assert.equal(privateResult.releaseTaskIds, undefined);
 });
 
-test('release throughput over empty events is INSUFFICIENT_DATA rate, not zero', () => {
+test('release throughput over empty events fails closed (instrumentation_missing), rate INSUFFICIENT_DATA', () => {
+  // R2-B: with no releases AND no proven full-window coverage, a zero-release
+  // window must fail closed — not be reported as a measured zero.
   const result = metrics.verifiedReleaseThroughput([], WINDOW);
   assert.equal(result.releases, 0);
-  // rate is computable as 0/weeks = 0 here because window is valid; but with no
-  // releases the meaningful signal is the count. Ensure no crash and a number.
-  assert.ok(typeof result.rate_per_week === 'number');
+  assert.equal(result.measurement_state, 'instrumentation_missing');
+  assert.equal(result.rate_per_week, ID);
+  assert.equal(result.instrumentation_coverage_state, 'unmeasured');
+  assert.ok(result.insufficiency_reasons.length > 0);
 });
 
 // ---------------------------------------------------------------------------
@@ -215,50 +218,56 @@ test('blockedAge reports currently-blocked tasks only', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Little's Law
+// Little's Law (single authoritative API: littlesLawComponents, OPS-06A-R2-C)
 // ---------------------------------------------------------------------------
 
-test('Little\'s Law reports residual and coverage warning', () => {
-  const result = metrics.littlesLaw({
-    avgWip: 5,
-    throughputPerWeek: 2,
-    avgFlowTimeWeeks: 2,
-    populationDefinition: 'tasks ready->released',
-    windowLabel: '2026-07-01 .. 2026-07-28',
-    coverageAdequate: true,
-  });
-  assert.equal(result.computable, true);
-  assert.equal(result.L, 5);
-  assert.equal(result.lambda_times_W, 4);
-  assert.equal(result.residual, 1, 'L - lambda*W = 5 - 4 = 1');
-  assert.ok(result.coverage_warning.includes('population boundary'));
+test('Little\'s Law reconciles (computable) for a clean in-window population', () => {
+  // Three tasks enter ready at window start and release at +1h, +2h, +9h.
+  // Window 7 days. Opening state trustworthy. W = mean(1,2,9) = 4h.
+  const t0 = '2026-07-01T00:00:00Z';
+  const events = [
+    ev({ event_id: 'r1', task_id: 't1', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
+    ev({ event_id: 'rel1', event_type: 'release_recorded', task_id: 't1', occurred_at: '2026-07-01T01:00:00Z', observed_at: '2026-07-01T01:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
+    ev({ event_id: 'r2', task_id: 't2', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
+    ev({ event_id: 'rel2', event_type: 'release_recorded', task_id: 't2', occurred_at: '2026-07-01T02:00:00Z', observed_at: '2026-07-01T02:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
+    ev({ event_id: 'r3', task_id: 't3', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
+    ev({ event_id: 'rel3', event_type: 'release_recorded', task_id: 't3', occurred_at: '2026-07-01T09:00:00Z', observed_at: '2026-07-01T09:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
+  ];
+  const result = metrics.littlesLawComponents(events, { ...WINDOW, openingStateTrustworthy: true });
+  assert.equal(result.computable, true, result.insufficiency_reasons.join('; '));
+  assert.ok(Math.abs(result.W_hours - 4) < 1e-9, `W should be arithmetic mean 4h, got ${result.W_hours}`);
+  assert.equal(result.released_in_window, 3);
+  assert.ok(typeof result.residual === 'number', 'residual computed when computable');
 });
 
-test('Little\'s Law is INSUFFICIENT_DATA when a component is missing', () => {
-  const result = metrics.littlesLaw({
-    avgWip: 5,
-    throughputPerWeek: null,
-    avgFlowTimeWeeks: 2,
-    populationDefinition: 'x',
-    windowLabel: 'y',
-    coverageAdequate: false,
-  });
+test('Little\'s Law is not computable when opening state is untrustworthy', () => {
+  // A carry-in task (ready before window start) without trustworthy opening state.
+  const events = [
+    ev({ event_id: 'r1', task_id: 't1', to_state: 'ready', occurred_at: '2026-06-30T00:00:00Z', observed_at: '2026-06-30T00:00:00Z' }),
+    ev({ event_id: 'rel1', event_type: 'release_recorded', task_id: 't1', occurred_at: '2026-07-02T00:00:00Z', observed_at: '2026-07-02T00:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
+  ];
+  // Window starts 2026-07-01, so the task (ready 2026-06-30) is carry-in.
+  const result = metrics.littlesLawComponents(events, { windowStartMs: Date.parse('2026-07-01T00:00:00Z'), windowEndMs: Date.parse('2026-07-08T00:00:00Z') });
   assert.equal(result.computable, false);
   assert.equal(result.residual, ID);
-  assert.equal(result.lambda, ID);
+  assert.equal(result.carry_in_releases, 1, 'carry-in release is counted, never silently dropped');
+  assert.ok(result.insufficiency_reasons.some((r) => /opening WIP/.test(r)), result.insufficiency_reasons.join('; '));
 });
 
-test('Little\'s Law flags inadequate coverage', () => {
-  const result = metrics.littlesLaw({
-    avgWip: 3, throughputPerWeek: 1, avgFlowTimeWeeks: 3,
-    populationDefinition: 'x', windowLabel: 'y',
-    coverageAdequate: false, coverageNote: 'only 2 days observed',
-  });
-  assert.ok(result.coverage_warning.includes('coverage inadequate') || result.coverage_warning.includes('2 days'));
+test('Little\'s Law fails closed on inadequate coverage (short window)', () => {
+  const t0 = '2026-07-01T00:00:00Z';
+  const events = [
+    ev({ event_id: 'r1', task_id: 't1', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
+    ev({ event_id: 'rel1', event_type: 'release_recorded', task_id: 't1', occurred_at: '2026-07-01T05:00:00Z', observed_at: '2026-07-01T05:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
+  ];
+  // 2-day window -> coverage inadequate.
+  const result = metrics.littlesLawComponents(events, { windowStartMs: Date.parse('2026-07-01T00:00:00Z'), windowEndMs: Date.parse('2026-07-03T00:00:00Z'), openingStateTrustworthy: true });
+  assert.equal(result.computable, false);
+  assert.equal(result.coverage_state, 'inadequate');
 });
 
 // ---------------------------------------------------------------------------
-// Coverage
+// Coverage (evidence-based, OPS-06A-R2-D)
 // ---------------------------------------------------------------------------
 
 test('observationCoverage is INSUFFICIENT_DATA for empty events', () => {
@@ -267,9 +276,19 @@ test('observationCoverage is INSUFFICIENT_DATA for empty events', () => {
   assert.equal(result.event_count, 0);
 });
 
-test('observationCoverage reports complete when events fall in window', () => {
+test('observationCoverage is unmeasured (NOT complete) when events fall in window but no coverage contract', () => {
+  // R2-D: the mere presence of an event in the window must NOT yield complete.
   const events = [ev({ event_id: 'c1', observed_at: '2026-07-26T10:00:00Z' })];
   const result = metrics.observationCoverage(events, WINDOW);
-  assert.equal(result.state, 'complete');
+  assert.equal(result.state, 'unmeasured');
   assert.equal(result.event_count, 1);
+});
+
+test('observationCoverage is complete only with a validated coverage contract spanning the window', () => {
+  const events = [ev({ event_id: 'c1', observed_at: '2026-07-26T10:00:00Z' })];
+  // Contract spans the full WINDOW (0 .. 2026-12-31).
+  const coverageEvidence = { state: 'complete', window_start: '1970-01-01T00:00:00Z', window_end: '2026-12-31T00:00:00Z', source: 'synthetic_test' };
+  const result = metrics.observationCoverage(events, { ...WINDOW, coverageEvidence });
+  assert.equal(result.state, 'complete');
+  assert.equal(result.coverage_source, 'synthetic_test');
 });
