@@ -26,10 +26,10 @@ Verification procedure (in order):
      - `git status --short --untracked-files=all --porcelain=v1 -z | while IFS= read -r -d '' rec; do if [ "${rec:0:2}" = "??" ]; then path=${rec:3}; file --mime-type "$path"; git diff --no-index -- /dev/null "$path"; fi; done`
      - The verifier must treat each `-z` record as opaque, and each `$path` as an independent untracked path for inspection.
    - Confirm every staged, unstaged, and untracked path is inside `allowed_paths`.
-  - For every untracked path, run safe content inspection:
-    - `file --mime-type <path>` and reject non-text/binary unexpected artifacts.
-    - `git diff --no-index -- /dev/null <path>`; exit code `1` is expected for a new file.
-    - If MIME is not text-like, fail unless a text-only exception is explicitly authorized in the contract.
+  - For every untracked path, use the NUL-safe loop above. It runs
+    `file --mime-type "$path"` and `git diff --no-index -- /dev/null "$path"`
+    against the exact opaque path; diff exit code `1` is expected for a new file.
+  - If MIME is not text-like, fail unless a text-only exception is explicitly authorized in the contract.
 3) Re-run acceptance commands from the contract only.
 4) If source code changed (non-doc/gov support paths), rerun:
    - `npm run verify:iterate`

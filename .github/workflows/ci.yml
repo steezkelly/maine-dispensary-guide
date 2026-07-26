@@ -153,8 +153,9 @@ jobs:
           node --test scripts/check/ocp-annual-report-reconciliation.test.cjs
           npm run test:home-grow-legal-content
 
-      - name: Test pre-push diagnostic filtering contract
+      - name: Test pre-push governance and diagnostic contracts
         run: |
+          node scripts/git/tests/pre-push-verify-governance.test.cjs
           node scripts/git/tests/pre-push-verify-diagnostics.test.cjs
 
       - name: Check build warnings (post-build CSS/HTML warnings)

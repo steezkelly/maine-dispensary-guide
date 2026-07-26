@@ -51,9 +51,11 @@ try {
   });
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /diffing against refs\/remotes\/origin\/main/);
-  assert.match(fs.readFileSync(capture, 'utf8'), /--ref=refs\/remotes\/origin\/main/);
-  console.log('pre-push new-branch diff-base regression: PASS');
+  assert.match(result.stdout, new RegExp(`verifying exact update refs/heads/feature/test \\(${sha}\\) against refs/heads/feature/test \\(${sha}\\)`));
+  const capturedArgs = fs.readFileSync(capture, 'utf8');
+  assert.match(capturedArgs, new RegExp(`--ref=${sha}`));
+  assert.match(capturedArgs, new RegExp(`--target=${sha}`));
+  console.log('pre-push new-branch exact-base-and-target regression: PASS');
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
 }

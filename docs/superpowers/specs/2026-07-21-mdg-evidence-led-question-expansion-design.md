@@ -163,7 +163,8 @@ For every wave:
 - `autoRelatedData.json` and other generated indexes are current.
 - `npm run verify:iterate` passes during iteration.
 - Final isolated build passes.
-- `npm run verify:push` passes before release.
+- `node scripts/git/pre-push-verify.cjs --ref=origin/main` passes for the exact candidate range.
+- After a normal push, the exact-SHA Vercel preview is Ready and `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy` passes before merge.
 - Built HTML is inspected for title, H1, canonical, FAQ schema, byline, and trust surface.
 
 ## Measurement

@@ -44,26 +44,34 @@ node scripts/git/install-hooks.cjs            # Install pre-push hook (one-time 
 node scripts/content/audit-fix-loop.cjs --dry-run  # Content quality audit
 ```
 
-### Verify cycle (canonical, as of 2026-07-13)
+### Verify cycle (canonical, as of 2026-07-25)
 
 The right verify pattern is one canonical command per stage, not "run all the things":
 
 ```bash
-# ITERATION — fast, no network. Use between every commit.
-npm run verify:iterate               # esbuild parse + filtered astro check + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
-                                     # (~10-15s, no production URL hits)
-npm run verify:iterate -- --fast-only  # sub-second parse-only check (during a single edit session)
+# ITERATION — fast, no network. Use between coherent edits.
+npm run verify:iterate               # esbuild parse + filtered astro check + required source contracts
+npm run verify:iterate -- --fast-only  # sub-second parse-only check during one edit session
 
-# PUSH / DEPLOY — full verify including production smoke. Run explicitly before pushing.
-npm run verify:push                  # adds smoke-200 + smoke-img-200 against production
-                                     # (~30-45s, hits https://mainedispensaryguide.com)
+# EXACT CANDIDATE — after commit, with the intended base pinned.
+node scripts/git/pre-push-verify.cjs --ref=origin/main
+npm run build:isolated               # one final isolation-aware build
+
+# TRANSPORT / PREVIEW — push normally only after exact-head review passes.
+git push origin HEAD:refs/heads/$BRANCH_NAME
+# Wait until Vercel reports Ready for that exact pushed SHA, then:
+MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy
+
+# PRODUCTION — only after merge and exact production deployment readiness.
+MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy
 ```
 
 **Rules:**
-- Do **NOT** run `npx astro check` directly — it does a full unfiltered project check (~3min) instead of the changed-files filter that `verify:iterate` uses. Use `verify:iterate` instead.
-- Do **NOT** run smoke checks during iteration. They hit production URLs and add 30+s for no iteration value. Run them once before pushing.
-- Do **NOT** run `npm run build` repeatedly. The pre-push verify covers what matters for code correctness. Build once at end of round, or once before deploy if `verify:push` smoke passes.
-- The pre-push hook (`.githooks/pre-push`) runs the diff-scoped pre-push verifier, not production smoke. Run `npm run verify:push` explicitly before a release or when production smoke is required.
+- Do **NOT** run `npx astro check` directly — it does a full unfiltered project check instead of the changed-files filter that `verify:iterate` uses. Use `verify:iterate` instead.
+- Do **NOT** run smoke checks during iteration or before transport. They cannot validate an unpushed candidate.
+- Run the final isolation-aware build once. A direct `npm run build` is useful for iteration but is not exact-candidate release evidence.
+- The pre-push hook (`.githooks/pre-push`) runs the smoke-free diff verifier. Hook failures are release blockers: repair and retry; never bypass them.
+- Preview smoke must target the exact pushed SHA. Production smoke runs only after that merged SHA is deployed and Ready.
 
 ### Autonomous worktree protocol
 
@@ -71,11 +79,13 @@ Before editing, run `npm run workflow:status`; before creating a branch or integ
 
 For changes that touch shared source paths, acquire a lease after task-contract validation and before Codex starts:
 ```bash
-node scripts/git/mdg-worktree-lease.cjs acquire --agent <agent> --branch <branch> --worktree <absolute-worktree> --path <repo-path> --ttl-minutes 120
+export AGENT_NAME=hermes BRANCH_NAME=fix/example REPO_PATH=path/inside/repo
+: "${WORKTREE_PATH:?Set WORKTREE_PATH to the absolute worktree path}"
+node scripts/git/mdg-worktree-lease.cjs acquire --agent "$AGENT_NAME" --branch "$BRANCH_NAME" --worktree "$WORKTREE_PATH" --path "$REPO_PATH" --ttl-minutes 120
 ```
 The shared Git-common lease directory is outside every worktree. A lease conflict or expired lease blocks automatic edits until reconciled. Release a lease only after commit handoff, an explicit block, or expiry:
 ```bash
-node scripts/git/mdg-worktree-lease.cjs release --branch <branch> --worktree <absolute-worktree>
+node scripts/git/mdg-worktree-lease.cjs release --branch "$BRANCH_NAME" --worktree "$WORKTREE_PATH"
 ```
 
 Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
@@ -237,7 +247,8 @@ or execute the equivalent checks manually.
   URLs reachable via HEAD request, disk space > 2 GB free.
 - `file-write` — destination directory exists, not read-only, not
   inside `node_modules/` or `dist/`, git branch is not `main`.
-- `external-tool` — tool binary present (`which <tool>`), `--version`
+- `external-tool` — set `TOOL_BINARY` to the executable name, confirm it is
+  present with `command -v "$TOOL_BINARY"`, and confirm `--version`
   succeeds, credentials resolved (env vars set, no literal placeholders).
 
 **On failure:** stop, report the failed check, do NOT begin the main
@@ -308,7 +319,8 @@ and will waste 5+ minutes per occurrence.
 
 **Use instead:**
 - `npx astro check` for project-wide diagnostics.
-- `npx tsc --noEmit -p <tsconfig>` for pure TS files outside `.astro`.
+- `npx tsc --noEmit -p tsconfig.json` for pure TS files outside `.astro`
+  (use the maintained config directly).
 - Run both after any non-trivial edit to `src/pages`, `src/layouts`,
   or `src/components`.
 

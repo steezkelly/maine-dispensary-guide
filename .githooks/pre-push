@@ -1,75 +1,64 @@
 #!/usr/bin/env bash
 # .githooks/pre-push — MDG pre-push verification
 #
-# Runs the esbuild parse pass + (optionally) astro check against
-# any .astro / .ts files that are about to be pushed. Blocks the
-# push if either pass fails. See scripts/git/pre-push-verify.cjs.
+# Runs the fail-closed release-governance suite whenever governed release
+# surfaces change. For pushed .astro / .ts files it also runs the esbuild parse
+# pass and, when applicable, Astro checks. Blocks the push on any required
+# failure. See scripts/git/pre-push-verify.cjs.
 #
 # Installed automatically via:
 #     git config core.hooksPath .githooks
 # A bootstrap step in scripts/git/install-hooks.sh does this for
 # the local repo. CI is unaffected (it doesn't run git hooks).
 
-set -e
+set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 VERIFY="$REPO_ROOT/scripts/git/pre-push-verify.cjs"
-
-# Read the local ref, local sha, remote ref, and remote sha from stdin.
-# Git passes lines like:
-#   <local-ref> <local-sha> <remote-ref> <remote-sha>
-# We diff against the *remote-tracking* ref (e.g. refs/remotes/origin/main)
-# so we catch what is about to be pushed, not the local branch tip.
-REMOTE_REF=""
-LOCAL_BRANCH=""
-if [ ! -t 0 ]; then
-    while read -r line; do
-        [ -z "$line" ] && continue
-        set -- $line
-        LOCAL_BRANCH="$1"
-        REMOTE_REF="$3"
-        # If git passed us refs/heads/<branch>, resolve to refs/remotes/origin/<branch>
-        if [ -n "$REMOTE_REF" ] && [ "$REMOTE_REF" != "(delete)" ] && [ "$REMOTE_REF" != "(local)" ]; then
-            case "$REMOTE_REF" in
-                refs/heads/*)
-                    # translate refs/heads/main -> refs/remotes/origin/main.
-                    # A first push has no remote-tracking ref yet; do not leave
-                    # the local refs/heads/* value in place because diffing it
-                    # against HEAD produces an empty range.
-                    short="${REMOTE_REF#refs/heads/}"
-                    if git show-ref --verify --quiet "refs/remotes/origin/$short"; then
-                        REMOTE_REF="refs/remotes/origin/$short"
-                    else
-                        REMOTE_REF=""
-                    fi
-                    ;;
-            esac
-        fi
-        break
-    done
-fi
-
-# Fallback: try origin/<current-branch>, then origin/main
-if [ -z "$REMOTE_REF" ] || [ "$REMOTE_REF" = "(delete)" ] || [ "$REMOTE_REF" = "(local)" ]; then
-    CUR=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
-    if git show-ref --verify --quiet "refs/remotes/origin/$CUR"; then
-        REMOTE_REF="refs/remotes/origin/$CUR"
-    elif git show-ref --verify --quiet "refs/remotes/origin/main"; then
-        REMOTE_REF="refs/remotes/origin/main"
-    fi
-fi
-
-if [ -z "$REMOTE_REF" ]; then
-    echo "[pre-push] WARNING: could not determine remote ref; falling back to HEAD~1"
-    REMOTE_REF="HEAD~1"
-fi
+REMOTE_NAME="${1:-origin}"
+ZERO_SHA="0000000000000000000000000000000000000000"
 
 if [ ! -f "$VERIFY" ]; then
     echo "[pre-push] ERROR: $VERIFY not found — refusing to push without verification"
-    echo "[pre-push] Remediation: regenerate scripts/git/pre-push-verify.cjs (it appears missing or not executable), or run \`node scripts/git/install-hooks.cjs\` to confirm hooks are installed. Do not use \`git push --no-verify\` to bypass this gate; a missing verifier is a verifier problem to fix."
+    echo "[pre-push] Remediation: regenerate scripts/git/pre-push-verify.cjs (it appears missing or not executable), or run \`node scripts/git/install-hooks.cjs\` to confirm hooks are installed. Repair the verifier or hook and retry; a missing verifier is a release blocker."
     exit 1
 fi
 
-echo "[pre-push] diffing against $REMOTE_REF"
-node "$VERIFY" --ref="$REMOTE_REF"
-exit $?
+VERIFIED_UPDATES=0
+CHECKED_OUT_HEAD="$(git rev-parse HEAD)"
+while read -r LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA; do
+    [ -z "${LOCAL_REF:-}" ] && continue
+    [ "$LOCAL_SHA" = "$ZERO_SHA" ] && continue
+    if [ "$LOCAL_SHA" != "$CHECKED_OUT_HEAD" ]; then
+        echo "[pre-push] ERROR: $LOCAL_REF points to $LOCAL_SHA, but the checked-out HEAD is $CHECKED_OUT_HEAD"
+        echo "[pre-push] Exact verification reads the checked-out tree. Check out the ref being pushed, ensure the working tree is clean, and retry."
+        exit 2
+    fi
+
+    BASE_SHA="$REMOTE_SHA"
+    if [ "$REMOTE_SHA" = "$ZERO_SHA" ]; then
+        REMOTE_BASE_REF=""
+        if REMOTE_HEAD_REF="$(git symbolic-ref --quiet "refs/remotes/$REMOTE_NAME/HEAD" 2>/dev/null)"; then
+            REMOTE_BASE_REF="$REMOTE_HEAD_REF"
+        elif git show-ref --verify --quiet "refs/remotes/$REMOTE_NAME/main"; then
+            REMOTE_BASE_REF="refs/remotes/$REMOTE_NAME/main"
+        fi
+        if [ -z "$REMOTE_BASE_REF" ]; then
+            echo "[pre-push] ERROR: new branch $REMOTE_REF has no remote base; fetch $REMOTE_NAME and configure refs/remotes/$REMOTE_NAME/HEAD before retrying"
+            exit 2
+        fi
+        if ! BASE_SHA="$(git merge-base "$LOCAL_SHA" "$REMOTE_BASE_REF")" || [ -z "$BASE_SHA" ]; then
+            echo "[pre-push] ERROR: could not determine a merge base for $LOCAL_SHA and $REMOTE_BASE_REF"
+            exit 2
+        fi
+    fi
+
+    echo "[pre-push] verifying exact update $LOCAL_REF ($LOCAL_SHA) against $REMOTE_REF ($BASE_SHA)"
+    node "$VERIFY" --ref="$BASE_SHA" --target="$LOCAL_SHA"
+    VERIFIED_UPDATES=$((VERIFIED_UPDATES + 1))
+done
+
+if [ "$VERIFIED_UPDATES" -eq 0 ]; then
+    echo "[pre-push] no non-deletion ref updates to verify"
+fi
+exit 0

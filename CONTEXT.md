@@ -44,10 +44,12 @@ Source of truth unless an ADR in `docs/adr/NNNN-*.md` supersedes a term. See
 
 ### Build / verify
 
-- **Verify cycle** — `npm run verify:iterate` for fast loops (~10–15 s, no
-  network), `npm run verify:push` before deploy (~30–45 s, smoke checks
-  against `https://mainedispensaryguide.com`). See `AGENTS.md` "Verify cycle"
-  for the canonical rules.
+- **Verify cycle** — `npm run verify:iterate` for fast smoke-free loops; explicit
+  exact-range verification plus `npm run build:isolated` for the committed
+  candidate; normal push; then
+  `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy` after Vercel is
+  Ready for that SHA. Production smoke follows merge and exact production
+  readiness. See `AGENTS.md` "Verify cycle" for the canonical rules.
 - **YMYL** is also a coverage term: any content that fails the SEO or Ads
   YMYL review sits in a separate editorial gate (see `docs/AFFILIATE_OUTREACH.md`
   for the rule chain).

@@ -62,9 +62,11 @@ Until `CONTEXT.md` exists, prefer these terms when describing work:
   186 guide pages
 - **B2B / commerce side** — `/download/first-timer-field-guide` lead
   funnel, vendor directory, affiliate outreach
-- **Verify cycle** — `npm run verify:iterate` for fast loops,
-  `npm run verify:push` before deploy (smoke checks against
-  production). See AGENTS.md "Verify cycle" for full rules.
+- **Verify cycle** — `npm run verify:iterate` for fast loops; exact-range
+  verification plus `npm run build:isolated` before transport; a normal branch
+  push; exact-SHA Vercel readiness and preview smoke; then, only after merge and
+  production readiness, production smoke. See AGENTS.md "Verify cycle" for the
+  canonical commands.
 
 If you find yourself inventing a new term for something that's
 already known by one of these names, **use the known name**.
