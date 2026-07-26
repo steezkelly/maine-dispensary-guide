@@ -97,14 +97,28 @@ function isLeftCensored(events) {
  * A release requires a release_recorded event whose release_evidence has
  * verifier_pass AND post_deploy_verified both true. Card completion, branch
  * creation, commits, and HTTP 200 are NOT releases.
+ *
+ * Returns measurement_state to distinguish:
+ *   - measured_nonzero: releases in the window
+ *   - measured_zero: instrumentation present (release_recorded events exist)
+ *     but none in the window
+ *   - instrumentation_missing: no release_recorded events anywhere in the
+ *     event stream (the signal is absent, not zero activity)
+ *
+ * Also returns evidence_count, coverage_state, instrumentation_state, and
+ * minimum_evidence_warning. Task IDs are gated behind includeTaskIds (default
+ * false) to preserve privacy in ordinary console output.
  */
-function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs }) {
+function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs, includeTaskIds = false }) {
   const byTask = indexByTask(events);
   let releases = 0;
   const releaseTaskIds = [];
+  let anyReleaseRecorded = false;
+
   for (const [taskId, list] of byTask) {
     const releaseEvent = list.find((e) => {
       if (e.event_type !== 'release_recorded') return false;
+      anyReleaseRecorded = true;
       const ev = e.release_evidence;
       return !!(ev && ev.verifier_pass === true && ev.post_deploy_verified === true);
     });
@@ -115,17 +129,50 @@ function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs }) {
       releaseTaskIds.push(taskId);
     }
   }
+
   const windowMs = windowEndMs - windowStartMs;
-  if (windowMs <= 0) {
-    return { releases, rate_per_week: INSUFFICIENT_DATA, window_days: INSUFFICIENT_DATA, releaseTaskIds };
-  }
   const windowWeeks = windowMs / (7 * 24 * 3600 * 1000);
-  return {
+  const ratePerWeek = windowWeeks > 0 ? releases / windowWeeks : INSUFFICIENT_DATA;
+  const windowDays = windowMs / (24 * 3600 * 1000);
+
+  // Measurement state
+  let measurementState;
+  let instrumentationState;
+  if (!anyReleaseRecorded) {
+    measurementState = 'instrumentation_missing';
+    instrumentationState = 'no release_recorded events in event stream';
+  } else if (releases === 0) {
+    measurementState = 'measured_zero';
+    instrumentationState = 'release_recorded events present';
+  } else {
+    measurementState = 'measured_nonzero';
+    instrumentationState = 'release_recorded events present';
+  }
+
+  // Coverage state
+  const coverageState = windowMs > 0 ? 'valid_window' : 'invalid_window';
+
+  // Minimum-evidence warning
+  const minimumEvidenceWarning = releases === 0 && anyReleaseRecorded
+    ? 'zero releases in window; consider extending observation or checking instrumentation'
+    : (releases > 0 && releases < 5 ? 'fewer than 5 releases; rate estimate has high variance' : null);
+
+  const result = {
     releases,
-    rate_per_week: windowWeeks > 0 ? releases / windowWeeks : INSUFFICIENT_DATA,
-    window_days: windowMs / (24 * 3600 * 1000),
-    releaseTaskIds,
+    rate_per_week: ratePerWeek,
+    window_days: windowDays,
+    measurement_state: measurementState,
+    evidence_count: releases,
+    coverage_state: coverageState,
+    instrumentation_state: instrumentationState,
+    minimum_evidence_warning: minimumEvidenceWarning,
   };
+
+  if (includeTaskIds) {
+    result.releaseTaskIds = releaseTaskIds;
+  }
+
+  return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -285,10 +332,110 @@ function blockedAge(events, { windowEndMs }) {
 // ---------------------------------------------------------------------------
 
 /**
+ * Compute time-average WIP (L) over a window from the event trajectory.
+ *
+ * L = (1/T) ∫ WIP(t) dt, where WIP(t) is the count of tasks that have entered
+ * the system (first ready-entry) but not yet exited (verified release or
+ * terminal state) at time t.
+ *
+ * Returns { L, adequate_observation, note }. If the window is too short,
+ * sparse, or unstable (e.g. no events, or all events at a single timestamp),
+ * returns INSUFFICIENT_DATA rather than an approximation.
+ */
+function timeAverageWip(events, { windowStartMs, windowEndMs }) {
+  const byTask = indexByTask(events);
+  const windowMs = windowEndMs - windowStartMs;
+
+  if (windowMs <= 0) {
+    return { L: INSUFFICIENT_DATA, adequate_observation: false, note: 'invalid window (non-positive duration)' };
+  }
+
+  // Build entry/exit times for each task.
+  const taskSpans = [];
+  for (const [, list] of byTask) {
+    // Entry: first ready-entry with a real timestamp.
+    const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
+    if (!readyEvent) continue; // no trustworthy entry
+    const entryTime = parseTime(readyEvent.occurred_at);
+
+    // Exit: verified release OR terminal state (done/completed/accepted/released).
+    let exitTime = null;
+    for (const e of list) {
+      const t = parseTime(e.occurred_at);
+      if (t === null) continue;
+      if (e.event_type === 'release_recorded') {
+        const ev = e.release_evidence;
+        if (ev && ev.verifier_pass === true && ev.post_deploy_verified === true) {
+          exitTime = t;
+          break;
+        }
+      }
+      if (['done', 'completed', 'accepted', 'released'].includes(e.to_state)) {
+        exitTime = t;
+        break;
+      }
+    }
+
+    // Clamp to window.
+    const spanStart = Math.max(entryTime, windowStartMs);
+    const spanEnd = exitTime !== null ? Math.min(exitTime, windowEndMs) : windowEndMs;
+    if (spanStart < spanEnd) {
+      taskSpans.push({ start: spanStart, end: spanEnd });
+    }
+  }
+
+  if (taskSpans.length === 0) {
+    return { L: INSUFFICIENT_DATA, adequate_observation: false, note: 'no tasks with trustworthy entry/exit in window' };
+  }
+
+  // Collect all event timestamps within the window to define time slices.
+  const timestamps = new Set([windowStartMs, windowEndMs]);
+  for (const span of taskSpans) {
+    timestamps.add(span.start);
+    timestamps.add(span.end);
+  }
+  const sortedTimes = [...timestamps].sort((a, b) => a - b);
+
+  // For each slice [t_i, t_{i+1}], count active tasks and weight by duration.
+  let weightedSum = 0;
+  for (let i = 0; i < sortedTimes.length - 1; i++) {
+    const sliceStart = sortedTimes[i];
+    const sliceEnd = sortedTimes[i + 1];
+    const sliceDuration = sliceEnd - sliceStart;
+    if (sliceDuration <= 0) continue;
+
+    // Count tasks active during this slice.
+    let activeCount = 0;
+    for (const span of taskSpans) {
+      if (span.start <= sliceStart && span.end >= sliceEnd) {
+        activeCount += 1;
+      }
+    }
+    weightedSum += activeCount * sliceDuration;
+  }
+
+  const L = weightedSum / windowMs;
+
+  // Adequate observation: at least 7 days, and at least 3 distinct event times.
+  const windowDays = windowMs / (24 * 3600 * 1000);
+  const adequateObservation = windowDays >= 7 && sortedTimes.length >= 3;
+
+  return {
+    L,
+    adequate_observation: adequateObservation,
+    note: adequateObservation
+      ? 'time-average WIP computed from event trajectory'
+      : `window ${windowDays.toFixed(1)} days, ${sortedTimes.length} event times; consider extending observation`,
+  };
+}
+
+/**
  * Little's Law reconciliation. Reports L (avg WIP), lambda (throughput), W
  * (avg flow time), residual L - lambda*W, the population definition, window,
  * and a coverage warning. A mechanically computable triple is NOT presented as
  * confident; if coverage is doubtful the warning says so.
+ *
+ * If L, lambda, or W is INSUFFICIENT_DATA, returns computable=false.
  */
 function littlesLaw({ avgWip, throughputPerWeek, avgFlowTimeWeeks, populationDefinition, windowLabel, coverageAdequate, coverageNote }) {
   const computable =
@@ -362,6 +509,7 @@ module.exports = {
   wipByState,
   reworkLoops,
   blockedAge,
+  timeAverageWip,
   littlesLaw,
   observationCoverage,
 };

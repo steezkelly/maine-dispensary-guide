@@ -1,7 +1,7 @@
 # MDG Operations Metric Contract v1
 
 **Date:** 2026-07-25
-**Status:** Proposed (pending independent verification)
+**Status:** Accepted (operator acceptance 2026-07-26; amended by OPS-06A-3 — see ADR Amendment 1)
 **Authority:** ADR `docs/adr/2026-07-25-mdg-operations-control-plane-v1.md`
 **Source schema:** `mdg-operations-event-v1`, `mdg-operations-snapshot-v1`
 
@@ -63,6 +63,14 @@ priority weight.
 - **Duplicate handling:** distinct `task_id`; one release per task.
 - **Minimum-evidence warning:** fewer than a stated number of releases in the
   window ⇒ report value with `coverage_state: insufficient_data` warning.
+- **Measurement state (OPS-06A-3):** M1 reports one of `measured_nonzero`
+  (releases in window), `measured_zero` (instrumentation present — at least one
+  `release_recorded` event exists — but none in window), or
+  `instrumentation_missing` (no `release_recorded` events anywhere in the event
+  stream). A valid window with no `release_recorded` events is NEVER silently a
+  measured zero; it is `instrumentation_missing`. Each report carries
+  `evidence_count`, `coverage_state`, `instrumentation_state`, and
+  `minimum_evidence_warning`.
 
 ### M2. Ready-to-release flow time (W)
 
@@ -139,6 +147,18 @@ window, and a coverage warning. A confident result is **not** displayed merely
 because all three quantities are mechanically computable; if steady-state
 assumptions are doubtful (e.g. one-time migration, sparse sample), the warning
 must say so.
+
+**L is time-average WIP (OPS-06A-3).** `L` is the time-average number of tasks
+in the system over the stated window, computed from the event trajectory (or
+snapshots): `L = (1/T) ∫ WIP(t) dt`. It is **not** an average of end-of-window
+state-bucket counts (that earlier approximation is removed). `W` is the
+arithmetic **mean** ready-to-release flow time for the same population; P50/P85/
+P95 remain descriptive metrics and are **not** substituted for mean `W`. `λ`
+uses releases for the same population and window. The population boundary,
+blocked treatment, and left/right censoring are explicit. Adequate observation
+at the window start must be established; sparse or unstable windows remain
+`insufficient_data`. If trustworthy time-average WIP cannot be calculated, the
+result is `insufficient_data`, **never** an approximation.
 
 ---
 

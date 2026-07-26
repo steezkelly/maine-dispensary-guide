@@ -1,7 +1,7 @@
 # MDG Operations Privacy and Data-Boundary Doctrine v1
 
 **Date:** 2026-07-25
-**Status:** Proposed (pending independent verification)
+**Status:** Accepted (operator acceptance 2026-07-26; amended by OPS-06A-3 — see ADR Amendment 1)
 **Authority:** ADR `docs/adr/2026-07-25-mdg-operations-control-plane-v1.md`
 
 This doctrine governs what operational data may be stored where, and what may
@@ -87,6 +87,20 @@ the reviewer confirms:
 - No card body, prompt, or personal path appears.
 - Counts and rates cannot be reverse-engineered into a private record.
 - The evidence window and coverage state are stated.
+
+**Tool output redaction (OPS-06A-3).** The default summary and JSON stdout of
+any operations tool (e.g. `ops:metrics`) contain **aggregates only**. Task IDs
+(such as `releaseTaskIds`) and other task-level detail are **never** printed to
+ordinary console output. If detailed task-ID-level output is required, it must
+be behind an explicit detailed/private mode that:
+
+- writes to an output path **validated to be beneath `MDG_OPS_ROOT`** (Tier 0),
+- creates the file with **owner-only permissions** (0600), and
+- still emits **no task IDs in ordinary console output** (stdout carries only
+  aggregates plus a pointer to the private file).
+
+This keeps task-level operational data in Tier 0 by default; promotion to any
+shared surface still requires the reviewer redaction check above.
 
 ---
 

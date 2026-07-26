@@ -95,9 +95,12 @@ test('release throughput counts ONLY verified_production_release', () => {
     releaseEvent('t_c', '2026-07-26T12:00:00Z', { verifierPass: true, postDeploy: false }), // no post-deploy
     ev({ event_id: 'done_d', event_type: 'task_state_changed', task_id: 't_d', to_state: 'card_completed' }), // done is not a release
   ];
-  const result = metrics.verifiedReleaseThroughput(events, WINDOW);
+  const result = metrics.verifiedReleaseThroughput(events, { ...WINDOW, includeTaskIds: true });
   assert.equal(result.releases, 1, 'only t_a is a verified production release');
   assert.deepEqual(result.releaseTaskIds, ['t_a']);
+  // Privacy-by-default: without includeTaskIds, no task IDs are exposed.
+  const privateResult = metrics.verifiedReleaseThroughput(events, WINDOW);
+  assert.equal(privateResult.releaseTaskIds, undefined);
 });
 
 test('release throughput over empty events is INSUFFICIENT_DATA rate, not zero', () => {

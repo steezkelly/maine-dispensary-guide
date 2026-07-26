@@ -1,7 +1,7 @@
 # ADR: MDG Operations Control Plane v1 — Architecture and Authority
 
 **Date:** 2026-07-25
-**Status:** Proposed (pending independent verification and operator acceptance)
+**Status:** Accepted (operator acceptance 2026-07-26; see Amendment 1 below)
 **Program:** MDG-OPS-V1
 **Initiative:** OPS-01 (t_c20be169)
 **Base SHA:** 546ab267347b9bffa5cbf52e98408d8e288a5430
@@ -159,3 +159,81 @@ failure modes or scale require them.
   because it cannot act.
 - A live policy change requires OPS-06 evidence, OPS-07 simulation, and an
   OPS-08 ADR before OPS-09 may implement anything (disabled by default).
+
+---
+
+## Amendment 1 — Operator acceptance and integrity hardening (2026-07-26)
+
+**Accepted by:** operator (Steve), 2026-07-26
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06A (t_ed53ffa6)
+
+The operator accepts the MDG Operations Control Plane v1 architecture **in
+principle**, subject to the integrity and mathematical corrections below. This
+is recorded as a dated amendment rather than a silent rewrite of the original
+rationale; the original "Proposed" status and decisions above are preserved as
+the historical record.
+
+### Accepted invariants (non-negotiable)
+
+1. **Hermes Kanban remains the sole live task authority.** The operations
+   ledger, observer, metrics, and advisor are derived, append-only, and
+   non-authoritative. They inform; they do not command.
+2. **The operations ledger is private, append-only, derived, and
+   non-authoritative.** It lives under `~/.hermes/data/mdg-ops`, never in Git.
+3. **No simulation or production policy may proceed on insufficient evidence.**
+   OPS-07/08/09 are gated on an allowed analytical outcome
+   (BOTTLENECK_IDENTIFIED / POLICY_CANDIDATE / EVIDENCE_SUFFICIENT). Completion
+   alone is insufficient (see OPS-06A-2).
+4. **Raw task-level data remains outside Git.**
+
+### Amendments adopted (OPS-06A)
+
+- **A1 — Verified-candidate integrity gate (OPS-06A-1).** Verifier PASS is bound
+  to exact contents via a content-addressed evidence digest (task ID, base SHA,
+  sorted changed-path manifest, canonical diff SHA-256, per-file blob SHA-256,
+  acceptance commands + exit codes, verification timestamp, verifier outcome,
+  evidence-document SHA-256). Integration is fail-closed: the candidate is
+  accepted only when the recomputed manifest and diff hash exactly match the
+  verifier evidence. This closes the #211/#212 failure class (tested contents
+  diverging from merged contents). See
+  `~/.hermes/data/mdg-ops/OPS-06A-root-cause-211-212-2026-07-26.md`.
+- **A2 — Outcome-aware program gate (OPS-06A-2).** Conditional program
+  dependencies require an allowed analytical outcome, not mere completion. The
+  analytical result is evidence; the authoritative gate decision lives in the
+  Kanban / task-contract control plane. The analytics ledger is never
+  authoritative.
+- **A3 — Metric and privacy corrections (OPS-06A-3).**
+  - M1 distinguishes `measured_zero` / `instrumentation_missing` /
+    `measured_nonzero`, with evidence count, coverage state, instrumentation
+    state, and a minimum-evidence warning. A valid window with no
+    `release_recorded` events is never silently a measured zero.
+  - Default summary and JSON stdout contain aggregates only; task IDs require an
+    explicit detailed/private mode writing to a path validated beneath
+    `MDG_OPS_ROOT` with owner-only permissions.
+  - Little's Law uses time-average WIP (L) computed from the event trajectory,
+    not an end-of-window state-bucket average. If trustworthy time-average WIP
+    cannot be computed, the result is `insufficient_data`, never an
+    approximation. P50/P85/P95 remain descriptive and are not substituted for
+    mean W.
+
+### Author commit prohibition preserved
+
+The existing prohibition on authors committing their own work is preserved.
+Nothing in this amendment changes it; a separate ADR would be required to do so.
+The integrity gate (A1) enforces the binding between verification and
+integration regardless of who commits.
+
+### GitHub branch-protection recommendations (NOT applied)
+
+The following are recommended for explicit operator approval and are **not**
+applied by any agent in this initiative:
+
+- Require status checks to pass before merging (include the focused
+  `node --test scripts/operations/tests/*.test.cjs` suite as a required check,
+  since the #211/#212 breakage was invisible to the `astro build` job).
+- Require linear history / squash-merge only on `main`.
+- Require the integrity-gate `verify` check to pass (candidate identity matches
+  verifier evidence) as a required status check before merge.
+- Restrict force-push and branch deletion on `main`.
+- Require at least one approving review (independent verifier) before merge.
