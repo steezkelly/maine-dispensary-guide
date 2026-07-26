@@ -403,26 +403,32 @@ test('file -> symlink type change after PASS is REJECTED', () => {
 // 17. worktree-status CLI contract (clean + dirty)
 // ---------------------------------------------------------------------------
 
-test('worktree-status CLI reports clean and dirty correctly', () => {
+test('worktree-status CLI reports clean and dirty correctly (redacted, R3-F)', () => {
   const { repo } = makeRepo();
   const clean = runCli('worktree-status', '--repo', repo);
   assert.equal(clean.status, 0, clean.stderr);
-  assert.deepEqual(JSON.parse(clean.stdout), { clean: true, problems: [] });
+  const cleanOut = JSON.parse(clean.stdout);
+  assert.equal(cleanOut.ok, true);
+  assert.equal(cleanOut.reason_count, 0);
 
   write(repo, 'dirty.txt', 'dirty\n');
   const dirty = runCli('worktree-status', '--repo', repo);
   assert.equal(dirty.status, 1);
-  const status = JSON.parse(dirty.stdout);
-  assert.equal(status.clean, false);
-  assert.ok(status.problems.some((p) => p.includes('dirty.txt')));
+  const dirtyOut = JSON.parse(dirty.stdout);
+  assert.equal(dirtyOut.ok, false);
+  assert.ok(dirtyOut.reason_codes.includes('DIRTY_WORKTREE'));
+  // R3-F: the dirty path must NOT appear in ordinary stdout/stderr.
+  assert.ok(!dirty.stdout.includes('dirty.txt'), 'dirty path must be redacted from stdout');
+  assert.ok(!dirty.stderr.includes('dirty.txt'), 'dirty path must be redacted from stderr');
 });
 
 // ---------------------------------------------------------------------------
 // 18. verify CLI fails closed on missing inputs
 // ---------------------------------------------------------------------------
 
-test('verify CLI fails closed when required inputs are missing', () => {
+test('verify CLI fails closed when required inputs are missing (redacted, R3-F)', () => {
   const result = runCli('verify');
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /requires --checks|requires --evidence/);
+  // R3-F: stable redacted code, not a raw message with paths.
+  assert.match(result.stderr, /MISSING_REQUIRED_ARG|MISSING_REQUIRED_OUT/);
 });

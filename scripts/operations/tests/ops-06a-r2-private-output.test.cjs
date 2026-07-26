@@ -153,7 +153,8 @@ test('R2-F: capture-evidence REQUIRES --out (missing --out fails closed)', () =>
     '--accept', 'node --test x.test.cjs=0',
   ], root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /requires --out/);
+  // R3-F: redacted stable code, not the raw message.
+  assert.match(result.stderr, /MISSING_REQUIRED_OUT/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
@@ -211,7 +212,9 @@ test('R2-F CLI: repository-local evidence destination rejected (normal topology)
     '--accept', 'c=0', '--out', repoLocalOut,
   ], root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /OPS_OUTPUT_INSIDE_REPO|OPS_OUTPUT_ESCAPE|inside repository|not beneath private root/);
+  // R3-F: redacted stable code; no path detail in stderr.
+  assert.match(result.stderr, /OUTPUT_PATH_REJECTED/);
+  assert.ok(!result.stderr.includes(repoLocalOut), 'stderr must not contain the rejected path');
   assert.ok(!fs.existsSync(repoLocalOut), 'repo-local file must not be created');
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
@@ -227,7 +230,8 @@ test('R2-F: lexical escape evidence destination rejected', () => {
     '--accept', 'c=0', '--out', escapeOut,
   ], root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /OPS_OUTPUT_ESCAPE|not beneath private root/);
+  // R3-F: redacted stable code.
+  assert.match(result.stderr, /OUTPUT_PATH_REJECTED/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
@@ -245,7 +249,8 @@ test('R2-F: symlink-ancestor escape evidence destination rejected', () => {
     '--accept', 'c=0', '--out', out,
   ], root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /OPS_OUTPUT_ANCESTOR_ESCAPE|OPS_OUTPUT_ESCAPE|outside the private root/);
+  // R3-F: redacted stable code.
+  assert.match(result.stderr, /OUTPUT_PATH_REJECTED/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
   fs.rmSync(outside, { recursive: true, force: true });
@@ -274,7 +279,8 @@ test('R2-F: unsafe evidence-file symlink rejected on READ (bind-candidate)', () 
     'bind-candidate', '--repo', repo, '--evidence', linkFile, '--candidate', candidate, '--out', path.join(root, 'bound.json'),
   ], root);
   assert.notEqual(bind.status, 0);
-  assert.match(bind.stderr, /OPS_EVIDENCE_SYMLINK|is a symlink/);
+  // R3-F: redacted stable code for an evidence-read rejection.
+  assert.match(bind.stderr, /EVIDENCE_READ_REJECTED/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
   fs.rmSync(outside, { recursive: true, force: true });
@@ -297,7 +303,8 @@ test('R2-F: evidence file with group/other perms rejected on READ (fail closed)'
     'bind-candidate', '--repo', repo, '--evidence', out, '--candidate', candidate, '--out', path.join(root, 'bound.json'),
   ], root);
   assert.notEqual(bind.status, 0);
-  assert.match(bind.stderr, /OPS_EVIDENCE_PERM|unsafe permissions/);
+  // R3-F: redacted stable code for an evidence-read rejection (unsafe perms).
+  assert.match(bind.stderr, /EVIDENCE_READ_REJECTED/);
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
