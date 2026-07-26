@@ -1,0 +1,35 @@
+[
+  {
+    "id": "t_synthetic_a",
+    "status": "blocked",
+    "parent": null,
+    "depends_on": [],
+    "branch_name": "feat/synthetic-a",
+    "workspace_path": "/synthetic/wt-a",
+    "blocking_reason": "needs_input"
+  },
+  {
+    "id": "t_synthetic_b",
+    "status": "running",
+    "parent": "t_synthetic_parent",
+    "depends_on": ["t_synthetic_a"],
+    "branch_name": "feat/synthetic-b",
+    "workspace_path": "/synthetic/wt-b"
+  },
+  {
+    "id": "t_synthetic_done",
+    "status": "done",
+    "parent": null,
+    "depends_on": [],
+    "branch_name": null,
+    "workspace_path": null
+  },
+  {
+    "id": "t_synthetic_new",
+    "status": "ready",
+    "parent": null,
+    "depends_on": [],
+    "branch_name": null,
+    "workspace_path": null
+  }
+]
