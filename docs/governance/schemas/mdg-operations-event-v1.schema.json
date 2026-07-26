@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mainedispensaryguide.com/schemas/mdg-operations-event-v1.schema.json",
+  "title": "MDG Operations Event v1",
+  "description": "A single derived, append-only, non-authoritative operations event. Events DESCRIBE what was observed about the live Hermes Kanban system; they never change it. Hermes Kanban remains the sole live task authority. All timestamps are UTC ISO-8601. observation time (observed_at) is distinct from event occurrence time (occurred_at).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "event_type",
+    "occurred_at",
+    "observed_at",
+    "source_system",
+    "source_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "mdg-operations-event-v1",
+      "description": "Schema discriminator. Must equal mdg-operations-event-v1."
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Deterministic, collision-resistant identifier. Immutable once written. Identical re-append of the same event_id+content is idempotent; same event_id with different content fails closed."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "task_observed",
+        "task_created_observed",
+        "task_state_changed",
+        "task_blocked",
+        "task_unblocked",
+        "verification_completed",
+        "lease_acquired_observed",
+        "lease_released_observed",
+        "integration_started",
+        "release_recorded",
+        "dispatch_advice_generated",
+        "dispatch_decision_recorded"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the event is understood to have occurred in the modeled system. For left-censored first observations this MUST equal observed_at and the event MUST set censoring.left_censored=true. NEVER back-fill from card update times, comments, Git commit dates, file mtimes, or prose handoffs."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the observer actually read the source state. Monotonic non-decreasing across observations; out-of-order observed_at is rejected."
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable task/card identifier from the source system. Required for task-scoped event types."
+    },
+    "initiative_id": {
+      "type": ["string", "null"],
+      "description": "Parent initiative identifier, if the task belongs to one."
+    },
+    "from_state": {
+      "type": ["string", "null"],
+      "description": "Normalized prior state for a transition. Null for first observation (unknown prior state)."
+    },
+    "to_state": {
+      "type": ["string", "null"],
+      "description": "Normalized new state. Uses the normalized_state vocabulary, NOT the raw Hermes status."
+    },
+    "actor_role": {
+      "type": ["string", "null"],
+      "enum": [
+        "coordinator",
+        "author",
+        "verifier",
+        "integrator",
+        "analyst",
+        "observer",
+        "operator",
+        null
+      ]
+    },
+    "source_system": {
+      "type": "string",
+      "enum": ["hermes-kanban", "git-worktree", "git-lease", "vercel", "manual"],
+      "description": "Which system the observation was read from."
+    },
+    "source_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque source reference (board slug, worktree path, lease file). Private detail; never a credential."
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the raw source input this event was derived from. Enables idempotent re-observation: identical source hash produces no duplicate events."
+    },
+    "base_sha": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Git base SHA the task was authored against, when known."
+    },
+    "branch": {
+      "type": ["string", "null"]
+    },
+    "worktree": {
+      "type": ["string", "null"]
+    },
+    "lease_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Normalized, sorted lease paths for lease events."
+    },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Dependency task identifiers observed on the task."
+    },
+    "reason_code": {
+      "type": ["string", "null"],
+      "description": "Machine-readable reason (e.g. dependency, capability, needs_input, transient, verification_fail)."
+    },
+    "provenance": {
+      "type": "string",
+      "enum": ["live_observer", "historical_import"],
+      "description": "How this event entered the ledger. 'live_observer' = derived by the OPS-03 observer from a fresh snapshot. 'historical_import' = ingested one-time from the Hermes board SQLite task_events/task_runs log (structured history beginning at a documented cutoff). Imported events MUST also set import_batch and MUST NOT carry inferred timestamps."
+    },
+    "import_batch": {
+      "type": ["string", "null"],
+      "description": "Identifier of the historical-import batch (e.g. 'hermes-task-events-2026-07-14'). Required when provenance is historical_import; null otherwise. Records the source and cutoff so imported data is distinguishable from live observation in every metric."
+    },
+    "outcome": {
+      "type": ["string", "null"],
+      "enum": ["pass", "fail", "blocked", "released", "insufficient_data", null],
+      "description": "Structured outcome. Empty/unsupported measurements resolve to insufficient_data, NEVER to a silent zero or pass."
+    },
+    "censoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Censoring classification for the task at observation time.",
+      "properties": {
+        "left_censored": {
+          "type": "boolean",
+          "description": "True when the task already existed at first trustworthy observation, so its state-entry time is unknown. occurred_at must not claim a real entry time."
+        },
+        "right_censored": {
+          "type": "boolean",
+          "description": "True when the task has not yet reached the terminal state of interest by the end of the window."
+        },
+        "unknown_state_entry_time": {
+          "type": "boolean",
+          "description": "True when the time the task entered its current state cannot be established from trustworthy data."
+        }
+      }
+    },
+    "release_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "REQUIRED for release_recorded. A release is a verified production release per MDG governance, NOT a Hermes done card. Card completion, initiative completion, verification PASS, accepted candidate, and integration completion are each distinct and none alone constitutes a website release.",
+      "properties": {
+        "final_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "integration_evidence_ref": { "type": "string" },
+        "verifier_pass": { "type": "boolean" },
+        "post_deploy_verified": { "type": "boolean" },
+        "production_url": { "type": "string" }
+      },
+      "required": ["final_sha", "verifier_pass", "post_deploy_verified"]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Free-form, redaction-safe aggregates only. MUST NOT contain card bodies, prompts, chain-of-thought, credentials, email, GSC query rows, or personal data."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "event_type": { "const": "release_recorded" } },
+        "required": ["event_type"]
+      },
+      "then": {
+        "required": ["task_id", "release_evidence"],
+        "properties": {
+          "release_evidence": {
+            "properties": {
+              "verifier_pass": { "const": true },
+              "post_deploy_verified": { "const": true }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "task_state_changed",
+              "task_blocked",
+              "task_unblocked",
+              "verification_completed",
+              "integration_started"
+            ]
+          }
+        },
+        "required": ["event_type"]
+      },
+      "then": { "required": ["task_id"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": { "enum": ["lease_acquired_observed", "lease_released_observed"] }
+        },
+        "required": ["event_type"]
+      },
+      "then": { "required": ["lease_paths"] }
+    },
+    {
+      "if": {
+        "properties": { "censoring": { "properties": { "left_censored": { "const": true } } } },
+        "required": ["censoring"]
+      },
+      "then": {
+        "description": "Left-censored events must not assert a from_state.",
+        "properties": { "from_state": { "type": "null" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "provenance": { "const": "historical_import" } },
+        "required": ["provenance"]
+      },
+      "then": {
+        "description": "Historical imports must declare their import batch (source + cutoff).",
+        "required": ["import_batch"],
+        "properties": { "import_batch": { "type": "string", "minLength": 1 } }
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "mdg-operations-snapshot-v1",
+  "snapshot_id": "snap_bad_done_as_released",
+  "observed_at": "2026-07-25T00:00:00Z",
+  "source_sha256": "e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4",
+  "observation": {
+    "is_first_trustworthy_observation": true,
+    "prior_snapshot_id": null,
+    "coverage_state": "complete"
+  },
+  "tasks": [
+    {
+      "task_id": "t_donecard_not_release",
+      "raw_state": "done",
+      "normalized_state": "released",
+      "completion": {
+        "card_completed": true,
+        "initiative_completed": false,
+        "verification_pass": false,
+        "accepted_candidate": false,
+        "integration_completed": false,
+        "verified_production_release": false
+      },
+      "censoring": {
+        "left_censored": true,
+        "right_censored": false,
+        "unknown_state_entry_time": true
+      },
+      "state_entry_time": null
+    }
+  ]
+}

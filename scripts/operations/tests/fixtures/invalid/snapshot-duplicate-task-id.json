@@ -1,0 +1,51 @@
+{
+  "schema": "mdg-operations-snapshot-v1",
+  "snapshot_id": "snap_bad_dup",
+  "observed_at": "2026-07-25T00:00:00Z",
+  "source_sha256": "e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4",
+  "observation": {
+    "is_first_trustworthy_observation": true,
+    "prior_snapshot_id": null,
+    "coverage_state": "complete"
+  },
+  "tasks": [
+    {
+      "task_id": "t_duplicate",
+      "raw_state": "ready",
+      "normalized_state": "ready",
+      "completion": {
+        "card_completed": false,
+        "initiative_completed": false,
+        "verification_pass": false,
+        "accepted_candidate": false,
+        "integration_completed": false,
+        "verified_production_release": false
+      },
+      "censoring": {
+        "left_censored": false,
+        "right_censored": true,
+        "unknown_state_entry_time": false
+      },
+      "state_entry_time": "2026-07-25T00:00:00Z"
+    },
+    {
+      "task_id": "t_duplicate",
+      "raw_state": "running",
+      "normalized_state": "in_progress",
+      "completion": {
+        "card_completed": false,
+        "initiative_completed": false,
+        "verification_pass": false,
+        "accepted_candidate": false,
+        "integration_completed": false,
+        "verified_production_release": false
+      },
+      "censoring": {
+        "left_censored": false,
+        "right_censored": true,
+        "unknown_state_entry_time": false
+      },
+      "state_entry_time": "2026-07-25T00:00:00Z"
+    }
+  ]
+}
