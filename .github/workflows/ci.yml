@@ -193,6 +193,39 @@ jobs:
         run: |
           npm --workspace @network/maine-cannabis run check:compressed-frontmatter
 
+  # OPS-06B-P1 Child 1: dedicated operations-suite status check.
+  #
+  # This is its OWN job (not a step inside `build`) so it surfaces as a stable,
+  # terminal GitHub check context named exactly "Operations Suite" — suitable
+  # for a future branch-protection / ruleset required check (OPS-06B-P1 Child 3).
+  # It runs the operations test suite on synthetic fixtures only; it requires NO
+  # private ledger and NO MDG_OPS_ROOT contents (the suite passes with
+  # MDG_OPS_ROOT unset). It does not deploy and does not duplicate the Vercel
+  # production path. A wiring contract test
+  # (scripts/operations/tests/ops-06b-p1-ci-wiring.test.cjs) asserts this job and
+  # its exact command stay present so it cannot silently disappear in later edits.
+  operations-suite:
+    name: Operations Suite
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run operations suite
+        run: node --test scripts/operations/tests/*.test.cjs
+
   deploy-preview:
     name: Deploy Preview
     needs: build
