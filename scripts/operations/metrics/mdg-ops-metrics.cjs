@@ -510,14 +510,14 @@ function blockedAge(events, { windowEndMs }) {
  *   - observation coverage is inadequate (window < 7 days or too few distinct
  *     timestamps) — "at least one event" is NOT complete coverage;
  *   - any required component is missing.
- *
  * W is the arithmetic mean flow time. Returns explicit fields:
- * opening_state_known, left_censored_at_start, nonrelease_departures,
- * in_flight_at_end, released_in_window, carry_in_releases, coverage_state,
- * boundary_compatible, computable, insufficiency_reasons, plus L,
- * lambda_per_week, W_hours, residual.
+ * opening_state_known, opening_state_complete, flow_time_population_complete,
+ * active_left_censored_without_entry, unknown_entry_tasks,
+ * left_censored_at_start, nonrelease_departures, in_flight_at_end,
+ * released_in_window, carry_in_releases, coverage_state, boundary_compatible,
+ * computable, insufficiency_reasons, plus L, lambda_per_week, W_hours, residual.
  */
-function littlesLawComponents(events, { windowStartMs, windowEndMs, openingStateTrustworthy = false }) {
+function littlesLawComponents(events, { windowStartMs, windowEndMs, openingStateTrustworthy = false, observationCoverageComplete = false }) {
   const byTask = indexByTask(events);
   const windowMs = windowEndMs - windowStartMs;
 
@@ -527,6 +527,8 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs, openingState
   let nonreleaseDepartures = 0;
   let boundaryCompatible = true;
   let carryInReleases = 0;
+  let activeLeftCensoredWithoutEntry = 0;
+  let unknownEntryTasks = 0;
 
   const releaseSpans = [];
   let inFlightAtEnd = 0;
@@ -540,10 +542,9 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs, openingState
   const NONRELEASE_TERMINAL = ['cancelled', 'canceled', 'abandoned', 'archived', 'rejected', 'card_completed', 'done', 'completed', 'accepted', 'released'];
 
   for (const [, list] of byTask) {
-    const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
-    if (!readyEvent) continue; // no trustworthy entry into the modeled population
-    const entryTime = parseTime(readyEvent.occurred_at);
     const leftCensored = isLeftCensored(list);
+    const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
+    const entryTime = readyEvent ? parseTime(readyEvent.occurred_at) : null;
 
     const releaseEvent = list.find((e) => {
       if (e.event_type !== 'release_recorded') return false;
@@ -562,15 +563,38 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs, openingState
         break;
       }
     }
-
-    // Departure time = verified release, else non-release terminal, else null
-    // (still active / right-censored).
     const departureTime = releaseTime !== null ? releaseTime : nonreleaseTerminalTime;
 
     // IGNORE tasks fully completed before the window start: they do not poison
-    // opening state and are not part of the windowed population (finding C).
+    // opening state and are not part of the windowed population (R2-C).
     if (departureTime !== null && departureTime < windowStartMs) {
       continue;
+    }
+
+    // Determine whether the task may be active in the window. With no ready
+    // entry, use the first observed event time as the activity proxy.
+    const firstObserved = list.length ? parseTime(list[0].occurred_at) : null;
+    const activityStart = entryTime !== null ? entryTime : firstObserved;
+    const mayBeActiveInWindow = activityStart !== null && activityStart <= windowEndMs;
+
+    // R3-C: a task with no trustworthy ready entry that may be active in the
+    // window must be reported explicitly and prevents reconciliation.
+    if (entryTime === null) {
+      if (mayBeActiveInWindow) {
+        unknownEntryTasks += 1;
+        if (leftCensored) activeLeftCensoredWithoutEntry += 1;
+        // It may count toward L (if opening evidence establishes it exists), but
+        // its W is unknowable -> flow-time population incomplete; opening state
+        // is not fully accounted for.
+        openingStateKnown = false;
+        // Span from window start (or first observed) to departure/window end so
+        // L can reflect its presence when opening evidence is supplied.
+        const spanStart = Math.max(activityStart !== null ? activityStart : windowStartMs, windowStartMs);
+        const spanEnd = departureTime !== null ? Math.min(departureTime, windowEndMs) : windowEndMs;
+        if (spanStart < spanEnd) releaseSpans.push({ start: spanStart, end: spanEnd });
+        if (departureTime === null || departureTime > windowEndMs) inFlightAtEnd += 1;
+      }
+      continue; // never silently dropped — counted above and reported
     }
 
     const isCarryIn = entryTime < windowStartMs;
@@ -634,22 +658,38 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs, openingState
     L = weightedSum / windowMs;
   }
 
-  // Coverage state: do NOT treat "at least one event in window" as complete.
+  // R3-C explicit completeness fields.
+  // opening_state_complete: opening-state evidence accounts for every in-system
+  // task at the window start. Without trustworthy opening evidence, any carry-in
+  // or unknown-entry task active at start leaves the opening set unaccounted.
+  const openingStateComplete = openingStateTrustworthy && unknownEntryTasks === 0;
+  // flow_time_population_complete: every task contributing to W has a complete
+  // ready-to-release duration (no unknown-entry task contributes to W).
+  const flowTimePopulationComplete = unknownEntryTasks === 0;
+
+  // Coverage state (R3-B): driven by the SAME validated observation-coverage
+  // evidence the CLI passes in — NOT by lifecycle-event density. "7 days and 3
+  // timestamps" is a sample-size diagnostic only; it cannot independently set
+  // coverage_state=adequate. The top-level coverage line and this field derive
+  // from the same contract and cannot disagree.
   const windowDays = windowMs / (24 * 3600 * 1000);
   const distinctTimes = new Set(events.map((e) => parseTime(e.occurred_at)).filter((t) => t !== null && t >= windowStartMs && t <= windowEndMs)).size;
   let coverageState;
   if (windowMs <= 0) coverageState = 'invalid_window';
-  else if (windowDays >= 7 && distinctTimes >= 3 && openingStateKnown) coverageState = 'adequate';
-  else coverageState = 'inadequate';
+  else if (observationCoverageComplete && openingStateKnown) coverageState = 'adequate';
+  else coverageState = observationCoverageComplete ? 'inadequate' : 'unmeasured';
 
   if (!boundaryCompatible) insufficiencyReasons.push(`${nonreleaseDepartures} non-release departure(s) in window; release-population boundary incompatible`);
   if (!openingStateKnown) insufficiencyReasons.push('opening WIP population not trustworthy (carry-in or left-censored task at window start without trustworthy opening evidence)');
-  if (coverageState !== 'adequate') insufficiencyReasons.push(`observation coverage ${coverageState} (window ${windowDays.toFixed(1)} days, ${distinctTimes} distinct timestamps)`);
+  if (activeLeftCensoredWithoutEntry > 0) insufficiencyReasons.push(`${activeLeftCensoredWithoutEntry} active left-censored task(s) without a ready entry; ready-to-release duration unknowable`);
+  if (unknownEntryTasks > 0) insufficiencyReasons.push(`${unknownEntryTasks} task(s) with unknown entry may be active in window; flow-time population incomplete`);
+  if (coverageState !== 'adequate') insufficiencyReasons.push(`observation coverage ${coverageState} (validated observation evidence required; lifecycle density ${windowDays.toFixed(1)} days/${distinctTimes} timestamps is only a sample-size diagnostic)`);
 
   const lambdaPerWeek = windowMs > 0 ? releasedInWindow / (windowMs / (7 * 24 * 3600 * 1000)) : INSUFFICIENT_DATA;
   const WHours = flowTimesMs.length ? flowTimesMs.reduce((a, v) => a + v, 0) / flowTimesMs.length / (3600 * 1000) : INSUFFICIENT_DATA;
 
-  const computable = boundaryCompatible && openingStateKnown && coverageState === 'adequate'
+  const computable = boundaryCompatible && openingStateKnown && openingStateComplete && flowTimePopulationComplete
+    && coverageState === 'adequate'
     && typeof L === 'number' && typeof lambdaPerWeek === 'number' && typeof WHours === 'number';
 
   let residual = INSUFFICIENT_DATA;
@@ -661,6 +701,10 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs, openingState
   return {
     population_definition: 'ready -> verified production release (verifier_pass && post_deploy_verified)',
     opening_state_known: openingStateKnown,
+    opening_state_complete: openingStateComplete,
+    flow_time_population_complete: flowTimePopulationComplete,
+    active_left_censored_without_entry: activeLeftCensoredWithoutEntry,
+    unknown_entry_tasks: unknownEntryTasks,
     left_censored_at_start: leftCensoredAtStart,
     nonrelease_departures: nonreleaseDepartures,
     in_flight_at_end: inFlightAtEnd,

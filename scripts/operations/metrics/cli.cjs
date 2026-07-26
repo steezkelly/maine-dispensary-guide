@@ -6,25 +6,34 @@
  *
  *   npm run ops:metrics -- --from <ISO> --to <ISO> [--format summary|json]
  *     [--detailed <path>] [--instrumentation-coverage <json>]
- *     [--coverage-evidence <json>] [--opening-state-trustworthy]
+ *     [--coverage-evidence <json>] [--opening-state-evidence <json>]
  *
- * Window semantics (OPS-06A-R2 finding A):
+ * Window semantics (OPS-06A-R2-A, R3-D):
  *   - The COMPLETE validated event history is loaded (ledger.listAll). Pre-window
  *     lifecycle history is never silently discarded.
  *   - --from/--to define the OPERATIONAL OCCURRENCE WINDOW, applied on event
- *     occurred_at by the metric functions (rate, release, flow-time, queue).
- *   - observed_at is used ONLY for observation/collection coverage, never to
- *     truncate lifecycle history.
+ *     occurred_at by EVERY reported metric (rate, release, flow-time, FPY,
+ *     rework, WIP-by-state, blocked-age). observed_at is used ONLY for
+ *     observation/collection coverage, never to truncate lifecycle history.
  *
- * Coverage / instrumentation contracts (findings B and D):
- *   - --instrumentation-coverage <json>: a validated coverage contract proving
- *     the release emitter was active across the window. Without it, zero-release
- *     windows fail closed (instrumentation_missing). Production source: OPS-06B.
- *   - --coverage-evidence <json>: a validated observation-coverage contract.
- *     Without it, observation coverage is reported as unmeasured (never
- *     "complete" merely because an event fell in the window).
- *   - --opening-state-trustworthy: asserts a trustworthy opening-WIP snapshot at
- *     window start, allowing carry-in tasks to be reconciled by Little's Law.
+ * Versioned, type-safe coverage contracts (R3-A, R3-B):
+ *   - --instrumentation-coverage <json>: a validated coverage contract of kind
+ *     `release_emitter` proving the release emitter was active across the
+ *     window. Without it, zero-release windows fail closed
+ *     (instrumentation_missing). Production source: OPS-06B.
+ *   - --coverage-evidence <json>: a validated coverage contract of kind
+ *     `observation`. Without it, observation coverage is reported as unmeasured
+ *     (never "complete" merely because an event fell in the window).
+ *   - --opening-state-evidence <json>: a validated coverage contract of kind
+ *     `opening_state` proving the active in-system set at the window start.
+ *     Little's Law may be computable ONLY when validated `observation` coverage
+ *     is complete AND validated `opening_state` evidence proves the opening
+ *     in-system set AND all other population/censoring/math preconditions hold.
+ *     The bare --opening-state-trustworthy assertion was REMOVED (R3-B).
+ *   All contracts are validated against mdg-operations-coverage-v1 (schema
+ *   discriminator, kind, state enum, UTC window with start<end, non-empty
+ *   source, kind-mismatch guards, strict field allowlist). Lifecycle-event
+ *   density is NOT observation coverage.
  *
  * Reads ONLY the validated private event store (OPS-02 ledger). Prints
  * aggregates only (console). Task-level detail is never emitted to stdout
@@ -40,6 +49,7 @@ const fs = require('node:fs');
 const ledger = require('../ledger/mdg-ops-ledger.cjs');
 const metrics = require('./mdg-ops-metrics.cjs');
 const privateOutput = require('../private/mdg-ops-private-output.cjs');
+const coverageContract = require('../coverage/mdg-ops-coverage-contract.cjs');
 
 function findRepoRoot(startDir = process.cwd()) {
   let dir = path.resolve(startDir);
@@ -53,15 +63,10 @@ function findRepoRoot(startDir = process.cwd()) {
 
 function parseArgs(argv) {
   const args = new Map();
-  const flags = new Set(['opening-state-trustworthy']);
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a.startsWith('--')) {
       const key = a.slice(2);
-      if (flags.has(key)) {
-        args.set(key, true);
-        continue;
-      }
       const value = argv[i + 1];
       if (value === undefined || value.startsWith('--')) throw new Error(`missing value for ${a}`);
       args.set(key, value);
@@ -72,16 +77,25 @@ function parseArgs(argv) {
 }
 
 /**
- * Load a validated JSON contract from a private path beneath MDG_OPS_ROOT.
- * Fail-closed: rejects unsafe paths/symlinks/permissions (shared helper).
+ * Load and VALIDATE a versioned coverage contract of a required kind from a
+ * private path beneath MDG_OPS_ROOT (R3-A). Fail-closed: rejects unsafe
+ * paths/symlinks/permissions (shared helper) and any contract that fails
+ * structural validation or the kind-mismatch guard. JSON.parse alone is NOT
+ * validation.
  */
-function loadPrivateContract(root, contractPath, label) {
+function loadCoverageContract(root, contractPath, requiredKind, label) {
   const safePath = privateOutput.validatePrivateReadPath(root, contractPath);
+  let parsed;
   try {
-    return JSON.parse(fs.readFileSync(safePath, 'utf8'));
+    parsed = JSON.parse(fs.readFileSync(safePath, 'utf8'));
   } catch (err) {
-    throw new Error(`OPS_${label}_INVALID: cannot parse ${label} contract at ${contractPath}: ${err.message}`);
+    throw new Error(`OPS_${label}_INVALID: cannot parse ${label} contract: ${err.message}`);
   }
+  const result = coverageContract.requireKind(parsed, requiredKind);
+  if (!result.ok) {
+    throw new Error(`OPS_${label}_INVALID: ${label} contract failed validation: ${result.errors.join('; ')}`);
+  }
+  return result.contract;
 }
 
 function main() {
@@ -92,7 +106,6 @@ function main() {
   const to = args.get('to');
   const format = args.get('format') || 'summary';
   const detailedPath = args.get('detailed');
-  const openingStateTrustworthy = args.get('opening-state-trustworthy') === true;
 
   const windowStartMs = from ? Date.parse(from) : 0;
   const windowEndMs = to ? Date.parse(to) : Date.now();
@@ -102,15 +115,26 @@ function main() {
   const rows = ledger.listAll(root);
   const events = rows.map((r) => r.event);
 
-  // Optional validated coverage contracts (findings B and D).
+  // Optional VALIDATED, type-specific coverage contracts (R3-A, R3-B).
   const instrumentationCoveragePath = args.get('instrumentation-coverage');
   const coverageEvidencePath = args.get('coverage-evidence');
+  const openingStateEvidencePath = args.get('opening-state-evidence');
   const instrumentationCoverage = instrumentationCoveragePath
-    ? loadPrivateContract(root, instrumentationCoveragePath, 'INSTRUMENTATION_COVERAGE')
+    ? loadCoverageContract(root, instrumentationCoveragePath, 'release_emitter', 'INSTRUMENTATION_COVERAGE')
     : null;
   const coverageEvidence = coverageEvidencePath
-    ? loadPrivateContract(root, coverageEvidencePath, 'COVERAGE_EVIDENCE')
+    ? loadCoverageContract(root, coverageEvidencePath, 'observation', 'COVERAGE_EVIDENCE')
     : null;
+  const openingStateEvidence = openingStateEvidencePath
+    ? loadCoverageContract(root, openingStateEvidencePath, 'opening_state', 'OPENING_STATE_EVIDENCE')
+    : null;
+
+  // R3-B: Little's Law binds to the SAME validated evidence. Observation coverage
+  // is complete only with a validated `observation` contract spanning the window;
+  // opening state is trustworthy only with a validated `opening_state` contract
+  // spanning the window. Lifecycle density is never sufficient.
+  const observationCoverageComplete = !!(coverageEvidence && coverageContract.coversWindow(coverageEvidence, windowStartMs, windowEndMs));
+  const openingStateTrustworthy = !!(openingStateEvidence && coverageContract.coversWindow(openingStateEvidence, windowStartMs, windowEndMs));
 
   // Determine whether to include task IDs (only in detailed mode).
   const includeTaskIds = !!detailedPath;
@@ -128,9 +152,10 @@ function main() {
   };
 
   // Little's Law: the single authoritative ready->verified-release
-  // implementation (R2-C). W is the arithmetic mean flow time. Fails closed on
-  // inadequate coverage, untrustworthy opening WIP, or non-release departures.
-  report.littles_law = metrics.littlesLawComponents(events, { ...window, openingStateTrustworthy });
+  // implementation (R2-C, R3-B, R3-C). W is the arithmetic mean flow time.
+  // Computable ONLY with validated complete observation coverage AND validated
+  // opening-state evidence AND all population/censoring/math preconditions.
+  report.littles_law = metrics.littlesLawComponents(events, { ...window, openingStateTrustworthy, observationCoverageComplete });
 
   // Detailed mode: write through the shared fail-closed private-output helper
   // (findings E/F). chmod stops at the private root; 0700 dirs; 0600 file.
@@ -174,7 +199,8 @@ function summarizeReport(r) {
   const ll = r.littles_law;
   lines.push(`Little's Law [windowed]: computable=${ll.computable} L=${fmt(ll.L)} lambda/week=${fmt(ll.lambda_per_week)} W_hours=${fmt(ll.W_hours)} residual=${fmt(ll.residual)}`);
   lines.push(`  population: ${ll.population_definition}`);
-  lines.push(`  coverage=${ll.coverage_state} boundary_compatible=${ll.boundary_compatible} opening_state_known=${ll.opening_state_known} carry_in_releases=${ll.carry_in_releases} nonrelease_departures=${ll.nonrelease_departures} left_censored_at_start=${ll.left_censored_at_start} in_flight_at_end=${ll.in_flight_at_end}`);
+  lines.push(`  coverage=${ll.coverage_state} (derived from the same observation contract as the top-level coverage line) boundary_compatible=${ll.boundary_compatible} opening_state_known=${ll.opening_state_known} opening_state_complete=${ll.opening_state_complete} flow_time_population_complete=${ll.flow_time_population_complete}`);
+  lines.push(`  carry_in_releases=${ll.carry_in_releases} nonrelease_departures=${ll.nonrelease_departures} left_censored_at_start=${ll.left_censored_at_start} active_left_censored_without_entry=${ll.active_left_censored_without_entry} unknown_entry_tasks=${ll.unknown_entry_tasks} in_flight_at_end=${ll.in_flight_at_end}`);
   if (ll.insufficiency_reasons && ll.insufficiency_reasons.length) {
     lines.push(`  insufficiency: ${ll.insufficiency_reasons.join('; ')}`);
   }

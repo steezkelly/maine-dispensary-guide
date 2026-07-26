@@ -169,41 +169,43 @@ test('B: right-censored in-flight task stays in WIP (no release, no terminal)', 
 // C. Fail closed on inadequate coverage
 // ---------------------------------------------------------------------------
 
-test('C: one event in a 28-day window is NOT complete coverage', () => {
+test('C: one event in a 28-day window is NOT complete coverage (R3-B: unmeasured without evidence)', () => {
   const events = [readyEvent('t1', '2026-07-01T00:00:00Z')];
   const window = {
     windowStartMs: Date.parse('2026-07-01T00:00:00Z'),
     windowEndMs: Date.parse('2026-07-29T00:00:00Z'), // 28 days
   };
   const ll = metrics.littlesLawComponents(events, window);
-  assert.equal(ll.coverage_state, 'inadequate');
+  // Density (1 event / 28 days) is NOT coverage; without validated observation
+  // evidence the state is unmeasured, never adequate.
+  assert.equal(ll.coverage_state, 'unmeasured');
   assert.equal(ll.computable, false);
-  assert.ok(ll.insufficiency_reasons.some((r) => /coverage inadequate/.test(r)), ll.insufficiency_reasons.join('; '));
+  assert.ok(ll.insufficiency_reasons.some((r) => /observation coverage/.test(r)), ll.insufficiency_reasons.join('; '));
 });
 
-test('C: 7 days + 3 timestamps is insufficient when opening WIP is unknown', () => {
+test('C: opening WIP unknown -> not computable even if observation evidence complete (R3-B)', () => {
   // Task entered ready BEFORE the window start -> opening WIP unknown.
   const events = [
     readyEvent('t1', '2026-06-30T00:00:00Z'), // before window start
     ev({ event_id: 'wip-t1', task_id: 't1', to_state: 'in_progress', occurred_at: '2026-07-02T00:00:00Z' }),
     releaseEvent('t1', '2026-07-04T00:00:00Z'),
   ];
-  const ll = metrics.littlesLawComponents(events, WINDOW);
+  // Even with complete observation coverage, untrustworthy opening WIP fails closed.
+  const ll = metrics.littlesLawComponents(events, { ...WINDOW, observationCoverageComplete: true });
   assert.equal(ll.opening_state_known, false);
-  assert.equal(ll.coverage_state, 'inadequate');
+  assert.equal(ll.coverage_state, 'inadequate'); // complete coverage but opening unknown -> inadequate
   assert.equal(ll.computable, false);
   assert.ok(ll.insufficiency_reasons.some((r) => /opening WIP/.test(r)), ll.insufficiency_reasons.join('; '));
 });
 
-test('C: coverageAdequate=false produces computable=false and no residual', () => {
-  // Only 2 distinct timestamps in a 7-day window -> inadequate even if opening known.
+test('C: no observation evidence -> unmeasured, computable=false, no residual (R3-B)', () => {
   const t0 = '2026-07-01T00:00:00Z';
   const events = [
     readyEvent('t1', t0),
     releaseEvent('t1', '2026-07-01T05:00:00Z'),
   ];
   const ll = metrics.littlesLawComponents(events, WINDOW);
-  assert.equal(ll.coverage_state, 'inadequate'); // < 3 distinct timestamps
+  assert.equal(ll.coverage_state, 'unmeasured'); // no validated observation evidence
   assert.equal(ll.computable, false);
   assert.equal(ll.residual, metrics.INSUFFICIENT_DATA);
 });

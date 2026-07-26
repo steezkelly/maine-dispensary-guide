@@ -233,7 +233,7 @@ test('Little\'s Law reconciles (computable) for a clean in-window population', (
     ev({ event_id: 'r3', task_id: 't3', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
     ev({ event_id: 'rel3', event_type: 'release_recorded', task_id: 't3', occurred_at: '2026-07-01T09:00:00Z', observed_at: '2026-07-01T09:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
   ];
-  const result = metrics.littlesLawComponents(events, { ...WINDOW, openingStateTrustworthy: true });
+  const result = metrics.littlesLawComponents(events, { ...WINDOW, openingStateTrustworthy: true, observationCoverageComplete: true });
   assert.equal(result.computable, true, result.insufficiency_reasons.join('; '));
   assert.ok(Math.abs(result.W_hours - 4) < 1e-9, `W should be arithmetic mean 4h, got ${result.W_hours}`);
   assert.equal(result.released_in_window, 3);
@@ -254,16 +254,17 @@ test('Little\'s Law is not computable when opening state is untrustworthy', () =
   assert.ok(result.insufficiency_reasons.some((r) => /opening WIP/.test(r)), result.insufficiency_reasons.join('; '));
 });
 
-test('Little\'s Law fails closed on inadequate coverage (short window)', () => {
+test('Little\'s Law fails closed without validated observation coverage (R3-B)', () => {
   const t0 = '2026-07-01T00:00:00Z';
   const events = [
     ev({ event_id: 'r1', task_id: 't1', to_state: 'ready', occurred_at: t0, observed_at: t0 }),
     ev({ event_id: 'rel1', event_type: 'release_recorded', task_id: 't1', occurred_at: '2026-07-01T05:00:00Z', observed_at: '2026-07-01T05:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } }),
   ];
-  // 2-day window -> coverage inadequate.
+  // No observation coverage evidence -> unmeasured -> not computable, even with
+  // many lifecycle timestamps (density is not coverage).
   const result = metrics.littlesLawComponents(events, { windowStartMs: Date.parse('2026-07-01T00:00:00Z'), windowEndMs: Date.parse('2026-07-03T00:00:00Z'), openingStateTrustworthy: true });
   assert.equal(result.computable, false);
-  assert.equal(result.coverage_state, 'inadequate');
+  assert.equal(result.coverage_state, 'unmeasured');
 });
 
 // ---------------------------------------------------------------------------

@@ -93,8 +93,13 @@ function runCli(root, args) {
   });
 }
 
-const FULL_COVERAGE = { state: 'complete', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-08T00:00:00Z', source: 'synthetic_test' };
-const PARTIAL_COVERAGE = { state: 'partial', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-04T00:00:00Z', source: 'synthetic_test' };
+const SCHEMA = 'mdg-operations-coverage-v1';
+// Kind-specific validated coverage contracts (R3-A). Each consumer requires the
+// exact coverage_kind it needs.
+const EMITTER_FULL = { schema: SCHEMA, coverage_kind: 'release_emitter', state: 'complete', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-08T00:00:00Z', source: 'synthetic_test' };
+const EMITTER_PARTIAL = { schema: SCHEMA, coverage_kind: 'release_emitter', state: 'partial', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-04T00:00:00Z', source: 'synthetic_test' };
+const OBSERVATION_FULL = { schema: SCHEMA, coverage_kind: 'observation', state: 'complete', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-08T00:00:00Z', source: 'synthetic_test' };
+const OPENING_FULL = { schema: SCHEMA, coverage_kind: 'opening_state', state: 'complete', window_start: '2026-07-01T00:00:00Z', window_end: '2026-07-08T00:00:00Z', source: 'synthetic_test', opening_snapshot_at: '2026-07-01T00:00:00Z' };
 
 // ===========================================================================
 // R2-A — occurrence window vs observation coverage
@@ -110,14 +115,15 @@ test('R2-A CLI: carry-in task (ready before window, release inside) is NOT dropp
     releaseEvent('t_inner', '2026-07-04T00:00:00Z'),
   ];
   const root = makeLedger(events);
-  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--opening-state-trustworthy']);
+  const opening = writeContract(root, 'opening.json', OPENING_FULL);
+  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--opening-state-evidence', opening]);
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   // Both releases counted (carry-in not dropped).
   assert.equal(report.verified_release_throughput.releases, 2, 'carry-in release must be counted');
   assert.equal(report.littles_law.released_in_window, 2);
   assert.equal(report.littles_law.carry_in_releases, 1, 'exactly one carry-in release');
-  // Opening state trustworthy -> computable (coverage adequate: 7 days, >=3 distinct).
+  // Validated opening-state evidence -> opening state known.
   assert.equal(report.littles_law.opening_state_known, true);
   fs.rmSync(root, { recursive: true, force: true });
 });
@@ -131,7 +137,7 @@ test('R2-A CLI: historical-import event (occurred_at in window, observed_at = la
     releaseEvent('t_imp', '2026-07-03T00:00:00Z', '2026-07-20T00:00:00Z'),
   ];
   const root = makeLedger(events);
-  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--opening-state-trustworthy']);
+  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json']);
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.equal(report.verified_release_throughput.releases, 1, 'occurrence metric uses occurred_at, not observed_at');
@@ -188,7 +194,7 @@ test('R2-B CLI 2: historical release before window, no coverage in window -> ins
 test('R2-B CLI 3: complete synthetic coverage + zero releases -> measured_zero', () => {
   const events = [readyEvent('t1', '2026-07-02T00:00:00Z')]; // no release
   const root = makeLedger(events);
-  const contract = writeContract(root, 'instr.json', FULL_COVERAGE);
+  const contract = writeContract(root, 'instr.json', EMITTER_FULL);
   const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--instrumentation-coverage', contract]);
   assert.equal(result.status, 0, result.stderr);
   const m1 = JSON.parse(result.stdout).verified_release_throughput;
@@ -204,7 +210,7 @@ test('R2-B CLI 4: complete synthetic coverage + nonzero releases -> measured_non
     releaseEvent('t1', '2026-07-03T00:00:00Z'),
   ];
   const root = makeLedger(events);
-  const contract = writeContract(root, 'instr.json', FULL_COVERAGE);
+  const contract = writeContract(root, 'instr.json', EMITTER_FULL);
   const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--instrumentation-coverage', contract]);
   assert.equal(result.status, 0, result.stderr);
   const m1 = JSON.parse(result.stdout).verified_release_throughput;
@@ -216,7 +222,7 @@ test('R2-B CLI 4: complete synthetic coverage + nonzero releases -> measured_non
 test('R2-B CLI 5: partial coverage -> instrumentation_missing (not measured_zero)', () => {
   const events = [readyEvent('t1', '2026-07-02T00:00:00Z')];
   const root = makeLedger(events);
-  const contract = writeContract(root, 'instr.json', PARTIAL_COVERAGE);
+  const contract = writeContract(root, 'instr.json', EMITTER_PARTIAL);
   const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--instrumentation-coverage', contract]);
   assert.equal(result.status, 0, result.stderr);
   const m1 = JSON.parse(result.stdout).verified_release_throughput;
@@ -239,7 +245,7 @@ test('R2-C 1: task entered and released before window does NOT poison opening st
     readyEvent('t_b', t0), releaseEvent('t_b', '2026-07-01T02:00:00Z'),
     readyEvent('t_c', t0), releaseEvent('t_c', '2026-07-01T09:00:00Z'),
   ];
-  const result = metrics.littlesLawComponents(events, { ...WINDOW, openingStateTrustworthy: true });
+  const result = metrics.littlesLawComponents(events, { ...WINDOW, openingStateTrustworthy: true, observationCoverageComplete: true });
   assert.equal(result.opening_state_known, true, 'old completed task must not poison opening state');
   assert.equal(result.computable, true, result.insufficiency_reasons.join('; '));
   assert.equal(result.released_in_window, 3, 'old task excluded; 3 in-window releases');
@@ -287,7 +293,7 @@ test('R2-C 5: one event in 28 days is NOT complete observation coverage', () => 
   const cov = metrics.observationCoverage(events, window28);
   assert.equal(cov.state, 'unmeasured', 'no coverage contract -> never complete');
   const ll = metrics.littlesLawComponents(events, window28);
-  assert.equal(ll.coverage_state, 'inadequate');
+  assert.equal(ll.coverage_state, 'unmeasured', 'density is not coverage; no evidence -> unmeasured');
   assert.equal(ll.computable, false);
 });
 
@@ -304,24 +310,27 @@ test('R2-D CLI: top-level coverage and Little\'s Law coverage never contradict (
   const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json']);
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
-  // Without a coverage contract, top-level coverage is unmeasured and LL
-  // coverage is inadequate — neither claims "complete".
-  assert.notEqual(report.coverage.state, 'complete');
-  assert.notEqual(report.littles_law.coverage_state, 'adequate');
+  // Without a coverage contract, both the top-level coverage and the LL coverage
+  // derive from the same (absent) contract: both unmeasured. They never disagree.
+  assert.equal(report.coverage.state, 'unmeasured');
+  assert.equal(report.littles_law.coverage_state, 'unmeasured');
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('R2-D CLI: with a complete coverage contract, top-level coverage is complete', () => {
+test('R2-D CLI: with a complete observation contract, top-level and LL coverage agree (complete/adequate)', () => {
   const events = [
     readyEvent('t1', '2026-07-01T00:00:00Z'),
     releaseEvent('t1', '2026-07-03T00:00:00Z'),
   ];
   const root = makeLedger(events);
-  const contract = writeContract(root, 'cov.json', FULL_COVERAGE);
-  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--coverage-evidence', contract]);
+  const contract = writeContract(root, 'cov.json', OBSERVATION_FULL);
+  const opening = writeContract(root, 'opening.json', OPENING_FULL);
+  const result = runCli(root, ['--from', '2026-07-01T00:00:00Z', '--to', '2026-07-08T00:00:00Z', '--format', 'json', '--coverage-evidence', contract, '--opening-state-evidence', opening]);
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.equal(report.coverage.state, 'complete');
   assert.equal(report.coverage.coverage_source, 'synthetic_test');
+  // Same contract drives the LL coverage_state -> adequate (both agree).
+  assert.equal(report.littles_law.coverage_state, 'adequate');
   fs.rmSync(root, { recursive: true, force: true });
 });

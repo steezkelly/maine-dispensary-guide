@@ -173,6 +173,7 @@ test('littlesLawComponents: hand-calculated L over the release population', () =
     windowStartMs: Date.parse('2026-07-01T00:00:00Z'),
     windowEndMs: Date.parse('2026-07-08T00:00:00Z'),
     openingStateTrustworthy: true,
+    observationCoverageComplete: true,
   });
   const expectedL = 213 / 168;
   assert.ok(Math.abs(result.L - expectedL) < 0.001, `expected L ≈ ${expectedL}, got ${result.L}`);
@@ -181,16 +182,17 @@ test('littlesLawComponents: hand-calculated L over the release population', () =
   assert.equal(result.released_in_window, 2);
 });
 
-test('littlesLawComponents: L is INSUFFICIENT_DATA when no trustworthy entry', () => {
+test('littlesLawComponents: unknown-entry task reported, L INSUFFICIENT_DATA, not computable (R3-C)', () => {
   const events = [
     { task_id: 't1', event_type: 'task_created_observed', occurred_at: '2026-07-01T00:00:00Z', observed_at: '2026-07-01T00:00:00Z' },
-    // No ready-entry, no release.
+    // No ready-entry, no release -> unknown entry, may be active in window.
   ];
   const result = metrics.littlesLawComponents(events, {
     windowStartMs: Date.parse('2026-07-01T00:00:00Z'),
     windowEndMs: Date.parse('2026-07-08T00:00:00Z'),
   });
-  assert.equal(result.L, metrics.INSUFFICIENT_DATA);
+  assert.equal(result.unknown_entry_tasks, 1, 'unknown-entry task reported, not silently dropped');
+  assert.equal(result.flow_time_population_complete, false);
   assert.equal(result.computable, false);
 });
 
@@ -207,7 +209,7 @@ test('littlesLawComponents: invalid window fails closed', () => {
   assert.equal(result.coverage_state, 'invalid_window');
 });
 
-test('littlesLawComponents: short window -> coverage inadequate, not computable', () => {
+test('littlesLawComponents: no observation coverage evidence -> unmeasured, not computable (R3-B)', () => {
   const events = [
     { task_id: 't1', event_type: 'task_state_changed', to_state: 'ready', occurred_at: '2026-07-01T01:00:00Z' },
     { task_id: 't1', event_type: 'release_recorded', occurred_at: '2026-07-01T12:00:00Z', release_evidence: { verifier_pass: true, post_deploy_verified: true } },
@@ -216,9 +218,10 @@ test('littlesLawComponents: short window -> coverage inadequate, not computable'
     windowStartMs: Date.parse('2026-07-01T00:00:00Z'),
     windowEndMs: Date.parse('2026-07-02T00:00:00Z'),
     openingStateTrustworthy: true,
+    // no observationCoverageComplete -> unmeasured
   });
   assert.ok(typeof result.L === 'number');
-  assert.equal(result.coverage_state, 'inadequate');
+  assert.equal(result.coverage_state, 'unmeasured');
   assert.equal(result.computable, false);
 });
 
