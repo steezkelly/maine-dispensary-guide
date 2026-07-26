@@ -114,6 +114,33 @@ private directories with **0700**, write through a **temporary owner-only file
 and atomic rename**, and enforce the final file as **0600 even when replacing a
 pre-existing 0644 file**.
 
+**chmod stops at the private root (OPS-06A-R2 finding E).** The directory
+permission walk creates/chmods **only `MDG_OPS_ROOT` and the descendants needed
+for the report**, stopping **exactly at the real (symlink-resolved) private
+root**. It **never** chmods the user's home directory, `/home`, `/tmp`, or any
+ancestor above the private root. Permission failures **inside** the private root
+**fail closed** (they throw); they are never silently ignored.
+
+**Integrity evidence is Tier 0 (OPS-06A-R2 finding F).** The integrity CLI
+(`capture-evidence`, `bind-candidate`) treats evidence as Tier 0 operational
+data:
+
+- an explicit `--out` path is **required** (evidence is never printed to stdout);
+- the `--out` path is validated beneath the real `MDG_OPS_ROOT`, rejecting
+  repository-local output, lexical escape, symlink-ancestor escape, and unsafe
+  output-file symlinks;
+- directories are created 0700 (stopping at the private root); the file is
+  written through an owner-only temp file and atomic rename and enforced 0600;
+- stdout carries **only** a redacted confirmation and the evidence SHA-256 —
+  never the task ID, changed-path manifest, acceptance commands, or full body.
+
+Evidence **reads** are validated beneath `MDG_OPS_ROOT`, reject unsafe symlinks,
+and **fail closed** on group/other-readable permissions (Tier 0 evidence must be
+owner-only). A single shared private-output helper
+(`scripts/operations/private/mdg-ops-private-output.cjs`) serves both the metrics
+and integrity tools so there are not two subtly different security
+implementations.
+
 This keeps task-level operational data in Tier 0 by default; promotion to any
 shared surface still requires the reviewer redaction check above.
 

@@ -63,14 +63,22 @@ priority weight.
 - **Duplicate handling:** distinct `task_id`; one release per task.
 - **Minimum-evidence warning:** fewer than a stated number of releases in the
   window ⇒ report value with `coverage_state: insufficient_data` warning.
-- **Measurement state (OPS-06A-3):** M1 reports one of `measured_nonzero`
-  (releases in window), `measured_zero` (instrumentation present — at least one
-  `release_recorded` event exists — but none in window), or
-  `instrumentation_missing` (no `release_recorded` events anywhere in the event
-  stream). A valid window with no `release_recorded` events is NEVER silently a
-  measured zero; it is `instrumentation_missing`. Each report carries
-  `evidence_count`, `coverage_state`, `instrumentation_state`, and
-  `minimum_evidence_warning`.
+- **Measurement state (OPS-06A-3, hardened by OPS-06A-R2-B):** M1 reports one of:
+  - `measured_nonzero` — ≥1 qualifying release in the occurrence window;
+  - `measured_zero` — explicit instrumentation/collector coverage **proves** the
+    release emitter was active throughout the requested window (a supplied,
+    validated coverage contract with state `complete` spanning the window), AND
+    no qualifying release occurred;
+  - `instrumentation_missing` / `insufficient_data` — full-window coverage
+    cannot be proven. **Zero-release windows fail closed.** A single historical
+    `release_recorded` event does NOT prove full-window instrumentation; a
+    release before the window with no in-window coverage evidence is
+    `instrumentation_missing`, never `measured_zero`. The production source of
+    coverage evidence is OPS-06B; until then a synthetic/validated coverage
+    contract is accepted for testing and internal use only.
+  Each report carries `measurement_state`, `releases`, `rate_per_week`,
+  `release_event_count`, `instrumentation_coverage_state`, `coverage_window`,
+  `minimum_evidence_warning`, and `insufficiency_reasons`.
 
 ### M2. Ready-to-release flow time (W)
 
@@ -120,6 +128,26 @@ priority weight.
 | Dependency errors | missing-dependency and cycle counts | from graph analysis (OPS-05) |
 | Dispatch-advice agreement | fraction shadow advisor agrees with first-eligible | `insufficient_scoring_data` markers reported |
 | Observation coverage | fraction of window with trustworthy snapshots | missed intervals reported |
+
+---
+
+## Window semantics (OPS-06A-R2-A)
+
+Two distinct windows must never be conflated:
+
+- **Operational occurrence window** (`--from`/`--to`): applied on event
+  `occurred_at`. Drives rate, release, flow-time, and queue calculations.
+- **Observation/collection window**: applied on `observed_at`. Drives coverage
+  reasoning only.
+
+Calculations that require task lifecycle history (instrumentation state,
+trustworthy ready-entry time, opening WIP, carry-in tasks, historical-import
+events whose `occurred_at` and `observed_at` differ) load the **complete
+validated event history** (`ledger.listAll`). An `observed_at`-filtered subset
+(`ledger.list`) is NEVER used as a lifecycle history. A historical-import event
+whose `occurred_at` is inside the occurrence window but whose `observed_at` is a
+later import date is counted by occurrence metrics on `occurred_at`. A carry-in
+task (ready before the window, released inside) is never silently dropped.
 
 ---
 
@@ -185,8 +213,32 @@ any required component is `instrumentation_missing` / `insufficient_data`.
 
 The report carries explicit fields: `opening_state_known`,
 `left_censored_at_start`, `nonrelease_departures`, `in_flight_at_end`,
-`released_in_window`, `coverage_state`, `boundary_compatible`, `computable`,
-`insufficiency_reasons`, plus `L`, `lambda_per_week`, `W_hours`, `residual`.
+`released_in_window`, `carry_in_releases`, `coverage_state`,
+`boundary_compatible`, `computable`, `insufficiency_reasons`, plus `L`,
+`lambda_per_week`, `W_hours`, `residual`.
+
+**One authoritative API and carry-in rules (OPS-06A-R2-C).** `littlesLawComponents`
+is the single authoritative Little's Law implementation; the older
+`timeAverageWip` and `littlesLaw` helpers are removed from the exported API so
+there are not two mathematical definitions. Carry-in handling:
+
+- A task **fully completed before the window** (released or terminally departed)
+  is ignored — it does not poison opening state.
+- A task **active at the window start** (carry-in) is included. When opening
+  state is trustworthy (a snapshot/coverage proves the in-system set at window
+  start), it is reconciled; otherwise the result fails closed
+  (`computable=false`).
+- A task that **releases inside the window but entered before it** is never
+  silently dropped: its release and flow time are counted (`carry_in_releases`).
+
+**Observation coverage is evidence-based (OPS-06A-R2-D).** `observationCoverage`
+does **not** return `complete` merely because an event fell in the window.
+Coverage must be backed by real expected-observation evidence (normalized
+snapshot observations, observer heartbeat/attempt records, explicit
+schedule/cadence evidence, or a supplied validated coverage contract). Without
+it, coverage is `unmeasured` (or `insufficient_data` when there is nothing at
+all). The CLI's top-level `coverage:` line and the Little's Law coverage field
+are derived from the same evidence and never contradict one another.
 
 ---
 

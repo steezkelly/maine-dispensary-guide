@@ -296,3 +296,93 @@ same hazard that caused finding D. The workers were terminated, the card
 archived, and the corrections were re-authored in an isolated worktree that no
 card references. This reinforces the need for the enforcement gap noted in
 Amendment 1 (the integrity gate is not yet a mechanically mandatory checkpoint).
+
+---
+
+## Amendment 3 — Window semantics, private-evidence hardening, and enforcement status (OPS-06A-R2, 2026-07-26)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06A-R2 (remote-review correction round 2). PR #214
+(candidate `ccabf0ca`) is held immutable; this amendment records the
+corrections on a fresh branch `fix/ops-06a-r2-window-privacy-20260726` from
+`ccabf0ca`, evaluated as a complete diff against base `6be4b788`.
+
+### Window semantics (R2-A)
+
+Calculations that require task lifecycle history load the **complete validated
+event history** (`ledger.listAll`), never an `observed_at`-filtered subset.
+`--from`/`--to` define the **operational occurrence window**, applied on event
+`occurred_at` by the metric functions (rate, release, flow-time, queue).
+`observed_at` is used **only** for observation/collection coverage. Historical-
+import events whose `occurred_at` and `observed_at` differ are handled on
+`occurred_at`; carry-in tasks (ready before the window, released inside) are
+never silently dropped.
+
+### Measurement state (R2-B)
+
+`verifiedReleaseThroughput` distinguishes:
+- `measured_nonzero` — ≥1 qualifying release in the occurrence window;
+- `measured_zero` — explicit instrumentation/collector coverage **proves** the
+  release emitter was active throughout the window AND no qualifying release
+  occurred;
+- `instrumentation_missing` / `insufficient_data` — full-window coverage cannot
+  be proven. **Zero-release windows fail closed.** A single historical release
+  event does NOT prove full-window instrumentation. Explicit fields:
+  `measurement_state`, `releases`, `rate_per_week`, `release_event_count`,
+  `instrumentation_coverage_state`, `coverage_window`,
+  `minimum_evidence_warning`, `insufficiency_reasons`. The production source of
+  coverage evidence is OPS-06B; R2 accepts a synthetic/validated coverage
+  contract for testing and internal use only.
+
+### One authoritative Little's Law API (R2-C)
+
+`littlesLawComponents` is the **single** authoritative implementation. The old
+`timeAverageWip` and `littlesLaw` functions are removed from the exported API.
+Carry-in rules: tasks fully completed before the window are ignored (no
+opening-state poisoning); a task active at window start is included when opening
+state is trustworthy, else the result fails closed; a carry-in release is never
+silently dropped; W is the arithmetic mean; L, λ, and W share one population
+boundary.
+
+### Observation coverage (R2-D)
+
+`observationCoverage` no longer returns `complete` merely because an event fell
+in the window. Coverage is evidence-based (snapshot observations, observer
+heartbeats, schedule/cadence evidence, or a supplied validated coverage
+contract); otherwise it is `unmeasured`/`insufficient_data`. The CLI's top-level
+`coverage:` line and the Little's Law coverage field are consistent.
+
+### Private-output hardening (R2-E, R2-F)
+
+A single shared helper (`scripts/operations/private/mdg-ops-private-output.cjs`)
+serves both the metrics and integrity tools. `writePrivateReport` chmods only
+`MDG_OPS_ROOT` and its descendants, **stopping exactly at the real private
+root** — it never chmods the user's home directory, `/home`, `/tmp`, or any
+ancestor above the root; permission failures inside the root fail closed. The
+integrity CLI requires an explicit `--out` for `capture-evidence`/`bind-candidate`,
+validates it beneath `MDG_OPS_ROOT`, rejects repository-local output / lexical
+escape / symlink-ancestor escape / unsafe output-file symlinks, writes through an
+owner-only temp file and atomic rename (0700 dirs, 0600 file), and prints only a
+redacted confirmation plus the evidence SHA-256 (never the task ID, changed-path
+manifest, acceptance commands, or full body). Evidence reads are validated
+beneath the root, reject unsafe symlinks, and fail closed on group/other perms.
+
+### Enforcement status (R2-G) — read this precisely
+
+- The integrity gate's **evaluation is fail-closed when invoked**: `verify`
+  rejects any candidate that does not match the verifier evidence exactly, and
+  fails closed on a dirty worktree, a missing/failing required check, or a
+  base/head mismatch.
+- **Process-level enforcement is still MANUAL.** No canonical integration
+  surface currently mandates invoking the gate. The Integrator checklist, the
+  pre-push hook, and CI do **not** yet run the integrity gate or the focused
+  operations suite as a required step.
+- Therefore the phrase **"integration is fail-closed" must not be used without
+  the qualification "when the gate is invoked."** Today, correctness depends on
+  the Integrator choosing to run the gate; nothing mechanically blocks a merge
+  that skips it.
+- **OPS-06B** will wire the integrity gate and the operations suite into the
+  canonical integration procedure and CI as mechanically mandatory checkpoints,
+  and will introduce structured lifecycle emission plus its coverage evidence
+  (the production source for R2-B's `measured_zero`). Until then, the gate is a
+  category-A manual control, not a category-B mandatory checkpoint.
