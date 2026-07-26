@@ -1,7 +1,7 @@
 # MDG Operations Metric Contract v1
 
 **Date:** 2026-07-25
-**Status:** Proposed (pending independent verification)
+**Status:** Accepted (operator acceptance 2026-07-26; amended by OPS-06A-3 — see ADR Amendment 1)
 **Authority:** ADR `docs/adr/2026-07-25-mdg-operations-control-plane-v1.md`
 **Source schema:** `mdg-operations-event-v1`, `mdg-operations-snapshot-v1`
 
@@ -63,12 +63,31 @@ priority weight.
 - **Duplicate handling:** distinct `task_id`; one release per task.
 - **Minimum-evidence warning:** fewer than a stated number of releases in the
   window ⇒ report value with `coverage_state: insufficient_data` warning.
+- **Measurement state (OPS-06A-3, hardened by OPS-06A-R2-B):** M1 reports one of:
+  - `measured_nonzero` — ≥1 qualifying release in the occurrence window;
+  - `measured_zero` — explicit instrumentation/collector coverage **proves** the
+    release emitter was active throughout the requested window (a supplied,
+    validated coverage contract with state `complete` spanning the window), AND
+    no qualifying release occurred;
+  - `instrumentation_missing` / `insufficient_data` — full-window coverage
+    cannot be proven. **Zero-release windows fail closed.** A single historical
+    `release_recorded` event does NOT prove full-window instrumentation; a
+    release before the window with no in-window coverage evidence is
+    `instrumentation_missing`, never `measured_zero`. The production source of
+    coverage evidence is OPS-06B; until then a synthetic/validated coverage
+    contract is accepted for testing and internal use only.
+  Each report carries `measurement_state`, `releases`, `rate_per_week`,
+  `release_event_count`, `instrumentation_coverage_state`, `coverage_window`,
+  `minimum_evidence_warning`, and `insufficiency_reasons`.
 
 ### M2. Ready-to-release flow time (W)
 
 - **Definition:** `W_i = t(released)_i − t(ready)_i` for tasks with trustworthy
   ready-entry and release timestamps.
-- **Report:** median (P50), P85, P95, with the deterministic quantile method.
+- **Report:** arithmetic `mean_hours` (the value Little's Law uses as `W`), plus
+  median (P50), P85, P95 as descriptive outputs (OPS-06A-R1 finding A). The
+  arithmetic mean and the percentiles are computed over the SAME eligible
+  population; P50/P85/P95 are never substituted for the mean.
 - **Grain:** task. **Window:** stated.
 - **Included:** tasks with non-null, non-censored `ready` entry time and a
   verified release time.
@@ -112,6 +131,68 @@ priority weight.
 
 ---
 
+## Window semantics (OPS-06A-R2-A, R3-D)
+
+Two distinct windows must never be conflated:
+
+- **Operational occurrence window** (`--from`/`--to`): applied on event
+  `occurred_at`. Drives rate, release, flow-time, FPY, rework, WIP-by-state, and
+  blocked-age calculations.
+- **Observation/collection window**: applied on `observed_at`. Drives coverage
+  reasoning only.
+
+Calculations that require task lifecycle history (instrumentation state,
+trustworthy ready-entry time, opening WIP, carry-in tasks, historical-import
+events whose `occurred_at` and `observed_at` differ) load the **complete
+validated event history** (`ledger.listAll`). An `observed_at`-filtered subset
+(`ledger.list`) is NEVER used as a lifecycle history. A historical-import event
+whose `occurred_at` is inside the occurrence window but whose `observed_at` is a
+later import date is counted by occurrence metrics on `occurred_at`. A carry-in
+task (ready before the window, released inside) is never silently dropped.
+
+### Per-metric occurrence-window rules (R3-D)
+
+Every displayed metric is an occurrence-window metric unless explicitly labeled
+lifetime. The CLI states which metrics are windowed.
+
+- **Arrivals** — `task_created_observed` only, by `occurred_at`; `task_observed`
+  (left-censored preexisting cards) excluded; historical imports assigned by
+  `occurred_at`.
+- **Ready-to-release flow time** — completed primary cohort = released inside the
+  window; a release after `window_end` is **right-censored** (not silently
+  dropped); ready after `window_end` excluded; completed before `window_start`
+  excluded; left-censored and missing-ready remain explicit buckets.
+- **First-pass verification yield** — denominator = tasks whose FIRST
+  verification `occurred_at` is inside the window; later verifications do not
+  rewrite a historical first-pass result.
+- **Rework** — `needs_fix` / failed-verification events by `occurred_at` inside
+  the window; distinct affected tasks in the window (not lifetime rework).
+- **WIP by state** — latest state at or before `window_end`; tasks with no event
+  at/before the cutoff are skipped (future-created tasks never appear as
+  `unknown`).
+- **Blocked age** — only block/unblock transitions at or before `window_end`; a
+  future unblock does not rewrite an earlier report; a future block cannot
+  produce a negative age; unknown blocked-entry is `unknown`, not zero.
+
+### Coverage-evidence closure (R3-A, R3-B, R3-C)
+
+Coverage evidence is a **versioned, type-specific contract**
+(`mdg-operations-coverage-v1`) with `coverage_kind` ∈ {`observation`,
+`release_emitter`, `opening_state`}, structurally validated (not bare
+`JSON.parse`). Observation coverage and opening-state evidence are **distinct**:
+Little's Law is computable only with validated complete `observation` coverage
+**and** validated `opening_state` evidence **and** all other preconditions.
+**Lifecycle-event density is not observation coverage** — it is a sample-size
+diagnostic only. Active left-censored tasks with an unknown ready entry are
+reported explicitly (`active_left_censored_without_entry`, `unknown_entry_tasks`)
+and prevent reconciliation (`flow_time_population_complete=false`); an opening
+snapshot may establish existence for L but cannot invent the missing
+ready-to-release duration for W. The top-level `coverage:` line and the Little's
+Law `coverage_state` derive from the same observation contract and cannot
+disagree.
+
+---
+
 ## Guardrail metrics (alerts, not KPIs)
 
 scope violation; author self-approval; missing verification evidence; failed
@@ -139,6 +220,67 @@ window, and a coverage warning. A confident result is **not** displayed merely
 because all three quantities are mechanically computable; if steady-state
 assumptions are doubtful (e.g. one-time migration, sparse sample), the warning
 must say so.
+
+**L is time-average WIP (OPS-06A-3).** `L` is the time-average number of tasks
+in the system over the stated window, computed from the event trajectory (or
+snapshots): `L = (1/T) ∫ WIP(t) dt`. It is **not** an average of end-of-window
+state-bucket counts (that earlier approximation is removed). `W` is the
+arithmetic **mean** ready-to-release flow time for the same population; P50/P85/
+P95 remain descriptive metrics and are **not** substituted for mean `W`. `λ`
+uses releases for the same population and window. The population boundary,
+blocked treatment, and left/right censoring are explicit. Adequate observation
+at the window start must be established; sparse or unstable windows remain
+`insufficient_data`. If trustworthy time-average WIP cannot be calculated, the
+result is `insufficient_data`, **never** an approximation.
+
+**V1 population boundary and fail-closed coverage (OPS-06A-R1 findings B, C).**
+The modeled population is **ready → verified production release**:
+
+- **Entry** is a trustworthy transition into `ready` with a real timestamp.
+- **Exit** is a verified `release_recorded` event with `verifier_pass == true`
+  AND `post_deploy_verified == true`. `accepted`, `card_completed`, `done`,
+  `completed`, an ordinary `released` state, branch creation, merge, and HTTP
+  success do **not** independently count as exits for this population.
+- A task that leaves the system through cancellation, abandonment, or another
+  non-release terminal outcome makes the population/window **incompatible**;
+  such departures are never silently mixed into release throughput.
+
+Little's Law returns `computable=false` and `residual=insufficient_data` when:
+the opening WIP population is unknown; active left-censored tasks exist at the
+window start; no trustworthy opening snapshot exists; observation coverage is
+materially incomplete (window < 7 days or too few distinct timestamps); the
+window is sparse or unstable; L, λ, and W do not share the same population; or
+any required component is `instrumentation_missing` / `insufficient_data`.
+"At least one event occurred in the window" is **not** complete coverage.
+
+The report carries explicit fields: `opening_state_known`,
+`left_censored_at_start`, `nonrelease_departures`, `in_flight_at_end`,
+`released_in_window`, `carry_in_releases`, `coverage_state`,
+`boundary_compatible`, `computable`, `insufficiency_reasons`, plus `L`,
+`lambda_per_week`, `W_hours`, `residual`.
+
+**One authoritative API and carry-in rules (OPS-06A-R2-C).** `littlesLawComponents`
+is the single authoritative Little's Law implementation; the older
+`timeAverageWip` and `littlesLaw` helpers are removed from the exported API so
+there are not two mathematical definitions. Carry-in handling:
+
+- A task **fully completed before the window** (released or terminally departed)
+  is ignored — it does not poison opening state.
+- A task **active at the window start** (carry-in) is included. When opening
+  state is trustworthy (a snapshot/coverage proves the in-system set at window
+  start), it is reconciled; otherwise the result fails closed
+  (`computable=false`).
+- A task that **releases inside the window but entered before it** is never
+  silently dropped: its release and flow time are counted (`carry_in_releases`).
+
+**Observation coverage is evidence-based (OPS-06A-R2-D).** `observationCoverage`
+does **not** return `complete` merely because an event fell in the window.
+Coverage must be backed by real expected-observation evidence (normalized
+snapshot observations, observer heartbeat/attempt records, explicit
+schedule/cadence evidence, or a supplied validated coverage contract). Without
+it, coverage is `unmeasured` (or `insufficient_data` when there is nothing at
+all). The CLI's top-level `coverage:` line and the Little's Law coverage field
+are derived from the same evidence and never contradict one another.
 
 ---
 
