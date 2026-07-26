@@ -39,6 +39,13 @@ function normalizeState(v) {
   return typeof v === 'string' ? v.trim().toLowerCase() : '';
 }
 
+/** Task status with the SAME fallback as continuity-check: status, else state. */
+function taskStatus(t) {
+  if (!t || typeof t !== 'object') return '';
+  if (Object.prototype.hasOwnProperty.call(t, 'status')) return normalizeState(t.status);
+  return normalizeState(t.state);
+}
+
 /**
  * The set of currently-eligible (dispatchable) tasks, using the SAME rules as
  * continuity-check: status ready, dependencies satisfied (accepted/released),
@@ -51,13 +58,14 @@ function eligibleTasks(tasks) {
     const id = normalizeId(t.id);
     if (id) byId.set(id, t);
   }
-  const inProgress = tasks.filter((t) => normalizeState(t.status) === 'in_progress');
+  const inProgress = tasks.filter((t) => taskStatus(t) === 'in_progress');
 
   const leasePaths = (t) => {
     const cands = [t.lease_paths, t.leasePaths, t.lease, t.leases, t.paths];
     for (const c of cands) {
       if (Array.isArray(c)) {
-        const norm = c.filter((x) => typeof x === 'string').map((x) => x.trim().replace(/\/+$/, '')).filter(Boolean).sort();
+        // Normalize backslashes to forward slashes (matches continuity-check).
+        const norm = c.filter((x) => typeof x === 'string').map((x) => x.trim().replace(/\\/g, '/').replace(/\/+$/, '')).filter(Boolean).sort();
         if (norm.length) return norm;
       }
     }
@@ -80,14 +88,14 @@ function eligibleTasks(tasks) {
     return deps.every((depId) => {
       const d = byId.get(normalizeId(depId));
       if (!d) return false;
-      const s = normalizeState(d.status);
+      const s = taskStatus(d);
       return s === 'accepted' || s === 'released';
     });
   };
 
   return tasks.filter((t) => {
     if (!t || typeof t !== 'object') return false;
-    if (normalizeState(t.status) !== 'ready') return false;
+    if (taskStatus(t) !== 'ready') return false;
     if (!depsSatisfied(Array.isArray(t.depends_on) ? t.depends_on : [])) return false;
     const cp = leasePaths(t);
     return !inProgress.some((active) => collides(cp, active));
@@ -102,31 +110,56 @@ function firstEligibleSelection(tasks, now) {
 }
 
 /**
- * Compute the shadow score for one task. Returns components + score, or
- * insufficient_scoring_data if decision metadata is missing.
+ * Compute the shadow score for one task. Always returns every component so the
+ * rationale is transparent. When decision metadata is missing/incomplete,
+ * scoring is `insufficient_scoring_data`, all components are still shown (with
+ * null for missing inputs), and `missing_fields` lists what is absent. Such a
+ * task can never become the advisory selection.
  */
-function scoreTask(task, { maxUnlock = 1, now = Date.now() } = {}) {
-  const d = task.decision;
-  if (!d || typeof d !== 'object') {
-    return { task_id: normalizeId(task.id), scoring: INSUFFICIENT_SCORING_DATA };
-  }
-  const R = d.trust_risk_reduction;
-  const V = d.user_business_value;
-  const F = d.freshness_urgency;
-  const L = d.learning_value;
-  const E = d.effort_points;
-  const C = d.confidence;
+function scoreTask(task, { maxUnlock = 1, now = Date.now(), unlock = 0 } = {}) {
+  const d = (task.decision && typeof task.decision === 'object') ? task.decision : {};
+  const num = (x) => (typeof x === 'number' && !Number.isNaN(x)) ? x : null;
 
-  const required = [R, V, F, L, E, C];
-  if (required.some((x) => typeof x !== 'number' || Number.isNaN(x))) {
-    return { task_id: normalizeId(task.id), scoring: INSUFFICIENT_SCORING_DATA };
-  }
+  const R = num(d.trust_risk_reduction);
+  const V = num(d.user_business_value);
+  const F = num(d.freshness_urgency);
+  const L = num(d.learning_value);
+  const E = num(d.effort_points);
+  const C = num(d.confidence);
 
-  const unlock = graph.downstreamUnlockCount
-    ? safeUnlock(task, maxUnlock)
-    : 0;
   const U = maxUnlock > 0 ? Math.min(1, unlock / maxUnlock) : 0;
   const A = ageAdjustment(task, now);
+
+  const components = {
+    trust_risk_reduction: R,
+    user_business_value: V,
+    freshness_urgency: F,
+    learning_value: L,
+    downstream_unlock: unlock,
+    normalized_unlock: U,
+    age_adjustment: A,
+    confidence: C,
+    effort_points: E,
+  };
+
+  const missingFields = [];
+  if (R === null) missingFields.push('trust_risk_reduction');
+  if (V === null) missingFields.push('user_business_value');
+  if (F === null) missingFields.push('freshness_urgency');
+  if (L === null) missingFields.push('learning_value');
+  if (E === null) missingFields.push('effort_points');
+  if (C === null) missingFields.push('confidence');
+
+  if (missingFields.length > 0) {
+    return {
+      task_id: normalizeId(task.id),
+      scoring: INSUFFICIENT_SCORING_DATA,
+      components,
+      missing_fields: missingFields,
+      benefit: null,
+      score: null,
+    };
+  }
 
   const benefit = 3 * R + 2 * V + F + L + U + A;
   const score = (C * benefit) / Math.max(1, E);
@@ -134,24 +167,12 @@ function scoreTask(task, { maxUnlock = 1, now = Date.now() } = {}) {
   return {
     task_id: normalizeId(task.id),
     scoring: 'scored',
-    components: {
-      trust_risk_reduction: R,
-      user_business_value: V,
-      freshness_urgency: F,
-      learning_value: L,
-      downstream_unlock: unlock,
-      normalized_unlock: U,
-      age_adjustment: A,
-      confidence: C,
-      effort_points: E,
-    },
+    components,
+    missing_fields: [],
     benefit,
     score,
   };
 }
-
-// unlock is computed by the caller (needs the full task list); placeholder.
-function safeUnlock() { return 0; }
 
 function ageAdjustment(task, now) {
   // Simple, bounded age adjustment: 0..2 based on days waiting, capped.
@@ -182,18 +203,11 @@ function advise(allTasks, { now } = {}) {
     if (u > maxUnlock) maxUnlock = u;
   }
 
-  const scored = eligible.map((t) => {
-    const s = scoreTask(t, { maxUnlock, now: nowMs });
-    if (s.scoring === 'scored') {
-      s.components.downstream_unlock = unlocks.get(s.task_id) || 0;
-      s.components.normalized_unlock = maxUnlock > 0 ? Math.min(1, (unlocks.get(s.task_id) || 0) / maxUnlock) : 0;
-      // recompute benefit/score with the real unlock
-      const c = s.components;
-      s.benefit = 3 * c.trust_risk_reduction + 2 * c.user_business_value + c.freshness_urgency + c.learning_value + c.normalized_unlock + c.age_adjustment;
-      s.score = (c.confidence * s.benefit) / Math.max(1, c.effort_points);
-    }
-    return s;
-  });
+  const scored = eligible.map((t) => scoreTask(t, {
+    maxUnlock,
+    now: nowMs,
+    unlock: unlocks.get(normalizeId(t.id)) || 0,
+  }));
 
   // Rank: scored tasks by score desc, deterministic tie-break by id;
   // insufficient_scoring_data tasks ranked after, by id.
@@ -208,7 +222,10 @@ function advise(allTasks, { now } = {}) {
     return a.task_id < b.task_id ? -1 : a.task_id > b.task_id ? 1 : 0;
   });
 
-  const advisorySelection = ranked.length ? ranked[0].task_id : null;
+  // The advisory selection must be a SCORED task. If nothing is scoreable,
+  // there is no recommendation (missing scores cannot produce one).
+  const topScored = ranked.find((r) => r.scoring === 'scored');
+  const advisorySelection = topScored ? topScored.task_id : null;
   const agrees = advisorySelection === firstEligible;
 
   return {
@@ -218,9 +235,11 @@ function advise(allTasks, { now } = {}) {
     agreement: agrees,
     disagreement_reason: agrees
       ? null
-      : (firstEligible === null
-          ? 'no first-eligible dispatch (board not dispatching)'
-          : 'shadow score ranks a different eligible task higher'),
+      : (advisorySelection === null
+          ? 'no scoreable eligible task (insufficient_scoring_data)'
+          : (firstEligible === null
+              ? 'no first-eligible dispatch (board not dispatching)'
+              : 'shadow score ranks a different eligible task higher')),
     ranking: ranked,
   };
 }

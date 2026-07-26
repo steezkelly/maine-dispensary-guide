@@ -37,14 +37,20 @@ function main() {
   const list = Array.isArray(tasks) ? tasks : (tasks.tasks || []);
 
   const cycles = graph.findCycles(list);
-  const result = {
-    task_count: list.length,
-    missing_dependencies: graph.missingDependencies(list),
-    cycles,
-    topological_order: cycles.length ? null : graph.topologicalOrder(list),
-    longest_chain: cycles.length ? null : graph.longestChain(list),
-    tasks_unlocking_ready_work: graph.tasksUnlockingReadyWork(list),
-  };
+  if (cycles.length) {
+    const result = { task_count: list.length, missing_dependencies: graph.missingDependencies(list), cycles };
+    if (args.get('json') === true) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    } else {
+      process.stdout.write(`tasks: ${result.task_count}\n`);
+      process.stdout.write(`cycles: ${cycles.length}\n`);
+      for (const c of cycles) process.stdout.write(`  ${c.join(' -> ')}\n`);
+    }
+    process.exitCode = 1;
+    return;
+  }
+
+  const result = graph.analyze(list);
 
   if (args.get('json') === true) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
@@ -52,11 +58,14 @@ function main() {
     process.stdout.write(`tasks: ${result.task_count}\n`);
     process.stdout.write(`missing dependencies: ${result.missing_dependencies.length}\n`);
     for (const m of result.missing_dependencies) process.stdout.write(`  ${m.task_id} -> ${m.missing_dependency} (absent)\n`);
-    process.stdout.write(`cycles: ${cycles.length}\n`);
-    for (const c of cycles) process.stdout.write(`  ${c.join(' -> ')}\n`);
-    if (result.topological_order) process.stdout.write(`topological order: ${result.topological_order.join(', ')}\n`);
+    process.stdout.write(`cycles: 0\n`);
+    process.stdout.write(`topological order: ${result.topological_order.join(', ')}\n`);
     if (result.longest_chain) process.stdout.write(`longest chain: ${result.longest_chain.length} hops (deepest: ${result.longest_chain.deepest_task})\n`);
     process.stdout.write(`tasks unlocking ready work: ${result.tasks_unlocking_ready_work.join(', ') || '(none)'}\n`);
+    process.stdout.write('per-task:\n');
+    for (const [id, info] of Object.entries(result.tasks)) {
+      process.stdout.write(`  ${id}: dependents=[${info.direct_dependents.join(',')}] transitive=[${info.transitive_dependents.join(',')}] unlock=${info.downstream_unlock_count} blocked_desc=[${info.blocked_descendants.join(',')}]\n`);
+    }
   }
 }
 
