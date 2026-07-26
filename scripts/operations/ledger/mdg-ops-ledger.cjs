@@ -444,6 +444,40 @@ function list(root, { from, to } = {}) {
     }));
 }
 
+/**
+ * Return the COMPLETE validated event history (no observed_at filtering),
+ * optionally bounded by an observation-collection window on observed_at.
+ *
+ * OPS-06A-R2 finding A: calculations that require task lifecycle history
+ * (instrumentation state, trustworthy ready-entry time, opening WIP, carry-in
+ * tasks, historical-import events whose occurred_at and observed_at differ)
+ * MUST use the full history, not an observed_at-filtered subset. The caller
+ * applies the operational occurrence window (on occurred_at) itself; this
+ * function never silently discards pre-window lifecycle history.
+ *
+ * `observedFrom`/`observedTo` (optional) bound the COLLECTION window on
+ * observed_at only — used to reason about observation coverage, never to
+ * truncate lifecycle history for occurrence metrics.
+ */
+function listAll(root, { observedFrom, observedTo } = {}) {
+  assertInitialized(root);
+  const fromMs = observedFrom ? Date.parse(observedFrom) : -Infinity;
+  const toMs = observedTo ? Date.parse(observedTo) : Infinity;
+  return readAllEvents(root)
+    .filter((w) => {
+      const t = Date.parse(w.observed_at);
+      return t >= fromMs && t <= toMs;
+    })
+    .map((w) => ({
+      seq: w.seq,
+      event_id: w.event_id,
+      observed_at: w.observed_at,
+      appended_at: w.appended_at,
+      event_sha256: w.event_sha256,
+      event: w.event,
+    }));
+}
+
 module.exports = {
   SCHEMA_ID,
   defaultRoot,
@@ -455,5 +489,6 @@ module.exports = {
   check,
   health,
   list,
+  listAll,
   _internal: { atomicWriteJson, readAllEvents, utcParts, canonicalize },
 };

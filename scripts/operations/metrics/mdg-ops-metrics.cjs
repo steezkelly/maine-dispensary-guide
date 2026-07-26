@@ -93,32 +93,39 @@ function isLeftCensored(events) {
 // ---------------------------------------------------------------------------
 
 /**
- * Count distinct tasks with a verified production release in the window.
- * A release requires a release_recorded event whose release_evidence has
- * verifier_pass AND post_deploy_verified both true. Card completion, branch
- * creation, commits, and HTTP 200 are NOT releases.
+ * M1: verified production release throughput (OPS-06A-R2 finding B).
  *
- * Returns measurement_state to distinguish:
- *   - measured_nonzero: releases in the window
- *   - measured_zero: instrumentation present (release_recorded events exist)
- *     but none in the window
- *   - instrumentation_missing: no release_recorded events anywhere in the
- *     event stream (the signal is absent, not zero activity)
+ * The occurrence window (windowStartMs..windowEndMs) is applied on the release
+ * event's occurred_at. `events` is expected to be the FULL validated history
+ * (the caller loads it via ledger.listAll and applies the occurrence window
+ * here); pre-window lifecycle history is therefore available and never silently
+ * dropped (finding A).
  *
- * Also returns evidence_count, coverage_state, instrumentation_state, and
- * minimum_evidence_warning. Task IDs are gated behind includeTaskIds (default
- * false) to preserve privacy in ordinary console output.
+ * Measurement state (do NOT infer full-window instrumentation from a single
+ * historical release event):
+ *   - measured_nonzero: >=1 qualifying release in the occurrence window.
+ *   - measured_zero: explicit instrumentation/collector coverage PROVES the
+ *     release emitter was active throughout the requested window (a supplied,
+ *     validated coverage contract with state 'complete' covering the window),
+ *     AND no qualifying release occurred.
+ *   - instrumentation_missing / insufficient_data: full-window instrumentation
+ *     coverage cannot be proven. Zero-release windows FAIL CLOSED until OPS-06B
+ *     supplies structured lifecycle-emission coverage evidence.
+ *
+ * `instrumentationCoverage` (optional) is a synthetic/validated coverage
+ * contract: { state: 'complete'|'partial'|'unmeasured', window_start,
+ * window_end, source }. The production source of this evidence is OPS-06B; R2
+ * accepts a synthetic contract for testing and internal use only.
  */
-function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs, includeTaskIds = false }) {
+function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs, includeTaskIds = false, instrumentationCoverage = null }) {
   const byTask = indexByTask(events);
   let releases = 0;
+  let releaseEventCount = 0;
   const releaseTaskIds = [];
-  let anyReleaseRecorded = false;
 
   for (const [taskId, list] of byTask) {
     const releaseEvent = list.find((e) => {
       if (e.event_type !== 'release_recorded') return false;
-      anyReleaseRecorded = true;
       const ev = e.release_evidence;
       return !!(ev && ev.verifier_pass === true && ev.post_deploy_verified === true);
     });
@@ -126,46 +133,84 @@ function verifiedReleaseThroughput(events, { windowStartMs, windowEndMs, include
     const t = parseTime(releaseEvent.occurred_at);
     if (t !== null && t >= windowStartMs && t <= windowEndMs) {
       releases += 1;
+      releaseEventCount += 1;
       releaseTaskIds.push(taskId);
     }
   }
 
   const windowMs = windowEndMs - windowStartMs;
   const windowWeeks = windowMs / (7 * 24 * 3600 * 1000);
-  const ratePerWeek = windowWeeks > 0 ? releases / windowWeeks : INSUFFICIENT_DATA;
   const windowDays = windowMs / (24 * 3600 * 1000);
 
-  // Measurement state
-  let measurementState;
-  let instrumentationState;
-  if (!anyReleaseRecorded) {
-    measurementState = 'instrumentation_missing';
-    instrumentationState = 'no release_recorded events in event stream';
-  } else if (releases === 0) {
-    measurementState = 'measured_zero';
-    instrumentationState = 'release_recorded events present';
+  // Instrumentation coverage assessment (finding B).
+  const insufficiencyReasons = [];
+  let instrumentationCoverageState;
+  let coverageWindow = null;
+  let coverageProvesFullWindow = false;
+
+  if (windowMs <= 0) {
+    instrumentationCoverageState = 'invalid_window';
+    insufficiencyReasons.push('invalid window (non-positive duration)');
+  } else if (!instrumentationCoverage || typeof instrumentationCoverage !== 'object') {
+    instrumentationCoverageState = 'unmeasured';
+    insufficiencyReasons.push('no instrumentation/collector coverage evidence supplied');
   } else {
-    measurementState = 'measured_nonzero';
-    instrumentationState = 'release_recorded events present';
+    const cState = instrumentationCoverage.state;
+    const cStart = parseTime(instrumentationCoverage.window_start);
+    const cEnd = parseTime(instrumentationCoverage.window_end);
+    coverageWindow = `${instrumentationCoverage.window_start ?? '-'} .. ${instrumentationCoverage.window_end ?? '-'}`;
+    const coversWindow = cStart !== null && cEnd !== null && cStart <= windowStartMs && cEnd >= windowEndMs;
+    if (cState === 'complete' && coversWindow) {
+      instrumentationCoverageState = 'complete';
+      coverageProvesFullWindow = true;
+    } else if (cState === 'partial') {
+      instrumentationCoverageState = 'partial';
+      insufficiencyReasons.push('instrumentation coverage is partial; full-window emitter activity not proven');
+    } else {
+      instrumentationCoverageState = cState === 'complete' ? 'complete_window_mismatch' : (cState || 'unmeasured');
+      insufficiencyReasons.push(`instrumentation coverage (${instrumentationCoverageState}) does not prove full-window emitter activity`);
+    }
   }
 
-  // Coverage state
-  const coverageState = windowMs > 0 ? 'valid_window' : 'invalid_window';
+  // Measurement state.
+  let measurementState;
+  if (windowMs <= 0) {
+    measurementState = 'insufficient_data';
+  } else if (releases > 0) {
+    measurementState = 'measured_nonzero';
+  } else if (coverageProvesFullWindow) {
+    measurementState = 'measured_zero';
+  } else {
+    measurementState = 'instrumentation_missing';
+    if (!insufficiencyReasons.some((r) => /coverage/.test(r))) {
+      insufficiencyReasons.push('zero releases in window but full-window instrumentation coverage not proven');
+    }
+  }
 
-  // Minimum-evidence warning
-  const minimumEvidenceWarning = releases === 0 && anyReleaseRecorded
-    ? 'zero releases in window; consider extending observation or checking instrumentation'
-    : (releases > 0 && releases < 5 ? 'fewer than 5 releases; rate estimate has high variance' : null);
+  const ratePerWeek = (measurementState === 'measured_nonzero' || measurementState === 'measured_zero') && windowWeeks > 0
+    ? releases / windowWeeks
+    : INSUFFICIENT_DATA;
+
+  // Minimum-evidence warning.
+  let minimumEvidenceWarning = null;
+  if (measurementState === 'measured_nonzero' && releases < 5) {
+    minimumEvidenceWarning = 'fewer than 5 releases; rate estimate has high variance';
+  } else if (measurementState === 'measured_zero') {
+    minimumEvidenceWarning = 'measured zero releases with proven full-window coverage';
+  } else if (measurementState === 'instrumentation_missing') {
+    minimumEvidenceWarning = 'cannot prove instrumentation; zero-release window fails closed (OPS-06B will supply coverage evidence)';
+  }
 
   const result = {
+    measurement_state: measurementState,
     releases,
     rate_per_week: ratePerWeek,
+    release_event_count: releaseEventCount,
+    instrumentation_coverage_state: instrumentationCoverageState,
+    coverage_window: coverageWindow,
     window_days: windowDays,
-    measurement_state: measurementState,
-    evidence_count: releases,
-    coverage_state: coverageState,
-    instrumentation_state: instrumentationState,
     minimum_evidence_warning: minimumEvidenceWarning,
+    insufficiency_reasons: insufficiencyReasons,
   };
 
   if (includeTaskIds) {
@@ -339,107 +384,12 @@ function blockedAge(events, { windowEndMs }) {
 // ---------------------------------------------------------------------------
 
 /**
- * Compute time-average WIP (L) over a window from the event trajectory.
- *
- * L = (1/T) ∫ WIP(t) dt, where WIP(t) is the count of tasks that have entered
- * the system (first ready-entry) but not yet exited (verified release or
- * terminal state) at time t.
- *
- * Returns { L, adequate_observation, note }. If the window is too short,
- * sparse, or unstable (e.g. no events, or all events at a single timestamp),
- * returns INSUFFICIENT_DATA rather than an approximation.
- */
-function timeAverageWip(events, { windowStartMs, windowEndMs }) {
-  const byTask = indexByTask(events);
-  const windowMs = windowEndMs - windowStartMs;
-
-  if (windowMs <= 0) {
-    return { L: INSUFFICIENT_DATA, adequate_observation: false, note: 'invalid window (non-positive duration)' };
-  }
-
-  // Build entry/exit times for each task.
-  const taskSpans = [];
-  for (const [, list] of byTask) {
-    // Entry: first ready-entry with a real timestamp.
-    const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
-    if (!readyEvent) continue; // no trustworthy entry
-    const entryTime = parseTime(readyEvent.occurred_at);
-
-    // Exit: verified release OR terminal state (done/completed/accepted/released).
-    let exitTime = null;
-    for (const e of list) {
-      const t = parseTime(e.occurred_at);
-      if (t === null) continue;
-      if (e.event_type === 'release_recorded') {
-        const ev = e.release_evidence;
-        if (ev && ev.verifier_pass === true && ev.post_deploy_verified === true) {
-          exitTime = t;
-          break;
-        }
-      }
-      if (['done', 'completed', 'accepted', 'released'].includes(e.to_state)) {
-        exitTime = t;
-        break;
-      }
-    }
-
-    // Clamp to window.
-    const spanStart = Math.max(entryTime, windowStartMs);
-    const spanEnd = exitTime !== null ? Math.min(exitTime, windowEndMs) : windowEndMs;
-    if (spanStart < spanEnd) {
-      taskSpans.push({ start: spanStart, end: spanEnd });
-    }
-  }
-
-  if (taskSpans.length === 0) {
-    return { L: INSUFFICIENT_DATA, adequate_observation: false, note: 'no tasks with trustworthy entry/exit in window' };
-  }
-
-  // Collect all event timestamps within the window to define time slices.
-  const timestamps = new Set([windowStartMs, windowEndMs]);
-  for (const span of taskSpans) {
-    timestamps.add(span.start);
-    timestamps.add(span.end);
-  }
-  const sortedTimes = [...timestamps].sort((a, b) => a - b);
-
-  // For each slice [t_i, t_{i+1}], count active tasks and weight by duration.
-  let weightedSum = 0;
-  for (let i = 0; i < sortedTimes.length - 1; i++) {
-    const sliceStart = sortedTimes[i];
-    const sliceEnd = sortedTimes[i + 1];
-    const sliceDuration = sliceEnd - sliceStart;
-    if (sliceDuration <= 0) continue;
-
-    // Count tasks active during this slice.
-    let activeCount = 0;
-    for (const span of taskSpans) {
-      if (span.start <= sliceStart && span.end >= sliceEnd) {
-        activeCount += 1;
-      }
-    }
-    weightedSum += activeCount * sliceDuration;
-  }
-
-  const L = weightedSum / windowMs;
-
-  // Adequate observation: at least 7 days, and at least 3 distinct event times.
-  const windowDays = windowMs / (24 * 3600 * 1000);
-  const adequateObservation = windowDays >= 7 && sortedTimes.length >= 3;
-
-  return {
-    L,
-    adequate_observation: adequateObservation,
-    note: adequateObservation
-      ? 'time-average WIP computed from event trajectory'
-      : `window ${windowDays.toFixed(1)} days, ${sortedTimes.length} event times; consider extending observation`,
-  };
-}
-
-/**
  * Little's Law components for the V1 ready-to-verified-production-release
- * population, with a strict common-population boundary and fail-closed
- * coverage (OPS-06A-R1 findings B and C).
+ * population — the SINGLE authoritative implementation (OPS-06A-R2 finding C).
+ *
+ * `events` is the FULL validated history; the occurrence window
+ * (windowStartMs..windowEndMs) is applied on occurred_at. Pre-window lifecycle
+ * history is available and never silently dropped (finding A).
  *
  * Population boundary (L, lambda, and W share it):
  *   - Entry: trustworthy transition into `ready` with a real timestamp.
@@ -448,21 +398,32 @@ function timeAverageWip(events, { windowStartMs, windowEndMs }) {
  *   - `accepted`, `card_completed`, `done`, `completed`, an ordinary `released`
  *     state, branch creation, merge, and HTTP success do NOT count as exits.
  *
- * Fail-closed (computable=false, residual=insufficient_data) when:
- *   - the opening WIP population is unknown (a task already in-system at the
- *     window start, or left-censored at start);
- *   - any task departs through a non-release terminal outcome (cancellation,
- *     abandonment, or a terminal state without a verified release) — non-release
- *     departures are never silently mixed into release throughput;
- *   - observation coverage is materially incomplete (window < 7 days or too few
- *     distinct timestamps);
+ * Carry-in / opening-state rules (finding C):
+ *   - A task FULLY COMPLETED (released or terminally departed) before the window
+ *     start is IGNORED — it does not poison opening state.
+ *   - A task ACTIVE at the window start (carry-in) is INCLUDED. If opening state
+ *     is trustworthy (`openingStateTrustworthy=true`, i.e. a snapshot/coverage
+ *     proves the in-system set at window start), it is counted without forcing
+ *     computable=false. If opening state is NOT trustworthy, the result fails
+ *     closed (computable=false) — a carry-in release can never silently
+ *     disappear, but it cannot be reconciled without trustworthy opening WIP.
+ *   - A task that releases inside the window but entered before it is NEVER
+ *     silently dropped: its release and flow time are counted.
+ *
+ * Fail closed (computable=false, residual=insufficient_data) when:
+ *   - the opening WIP population is not trustworthy;
+ *   - any task departs through a non-release terminal outcome;
+ *   - observation coverage is inadequate (window < 7 days or too few distinct
+ *     timestamps) — "at least one event" is NOT complete coverage;
  *   - any required component is missing.
  *
- * Returns explicit fields: opening_state_known, left_censored_at_start,
- * nonrelease_departures, coverage_state, boundary_compatible, computable,
- * insufficiency_reasons, plus L, lambda_per_week, W_hours, residual.
+ * W is the arithmetic mean flow time. Returns explicit fields:
+ * opening_state_known, left_censored_at_start, nonrelease_departures,
+ * in_flight_at_end, released_in_window, carry_in_releases, coverage_state,
+ * boundary_compatible, computable, insufficiency_reasons, plus L,
+ * lambda_per_week, W_hours, residual.
  */
-function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
+function littlesLawComponents(events, { windowStartMs, windowEndMs, openingStateTrustworthy = false }) {
   const byTask = indexByTask(events);
   const windowMs = windowEndMs - windowStartMs;
 
@@ -471,6 +432,7 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
   let leftCensoredAtStart = 0;
   let nonreleaseDepartures = 0;
   let boundaryCompatible = true;
+  let carryInReleases = 0;
 
   const releaseSpans = [];
   let inFlightAtEnd = 0;
@@ -496,9 +458,7 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
     });
     const releaseTime = releaseEvent ? parseTime(releaseEvent.occurred_at) : null;
 
-    // Non-release terminal departure: a terminal state reached WITHOUT a
-    // verified release. accepted/card_completed/done/completed/released do not
-    // independently count as releases for this population.
+    // First non-release terminal departure time (without a verified release).
     let nonreleaseTerminalTime = null;
     for (const e of list) {
       if (releaseTime !== null) break; // a verified release supersedes
@@ -509,31 +469,50 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
       }
     }
 
-    // Opening-state detection: was this task already in-system at window start?
-    if (entryTime < windowStartMs) {
-      openingStateKnown = false; // in-system before window; true opening WIP unknown
+    // Departure time = verified release, else non-release terminal, else null
+    // (still active / right-censored).
+    const departureTime = releaseTime !== null ? releaseTime : nonreleaseTerminalTime;
+
+    // IGNORE tasks fully completed before the window start: they do not poison
+    // opening state and are not part of the windowed population (finding C).
+    if (departureTime !== null && departureTime < windowStartMs) {
+      continue;
+    }
+
+    const isCarryIn = entryTime < windowStartMs;
+
+    // Opening-state handling for carry-in / left-censored tasks.
+    if (isCarryIn) {
       if (leftCensored) leftCensoredAtStart += 1;
+      if (!openingStateTrustworthy) {
+        // A task active at window start with untrustworthy opening WIP fails
+        // closed. It is still counted below (never silently dropped), but the
+        // reconciliation cannot be claimed.
+        openingStateKnown = false;
+      }
     } else if (leftCensored) {
       leftCensoredAtStart += 1;
       openingStateKnown = false;
     }
 
-    // Classify the departure.
+    // Classify the departure (carry-in spans start at windowStartMs).
+    const spanStart = Math.max(entryTime, windowStartMs);
     if (releaseTime !== null) {
       if (releaseTime >= windowStartMs && releaseTime <= windowEndMs) {
         releasedInWindow += 1;
+        if (isCarryIn) carryInReleases += 1;
         flowTimesMs.push(releaseTime - entryTime);
-        releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: releaseTime });
+        releaseSpans.push({ start: spanStart, end: releaseTime });
       } else if (releaseTime > windowEndMs) {
         inFlightAtEnd += 1;
-        releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: windowEndMs });
+        releaseSpans.push({ start: spanStart, end: windowEndMs });
       }
     } else if (nonreleaseTerminalTime !== null && nonreleaseTerminalTime >= windowStartMs && nonreleaseTerminalTime <= windowEndMs) {
       nonreleaseDepartures += 1;
       boundaryCompatible = false;
     } else {
       inFlightAtEnd += 1;
-      releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: windowEndMs });
+      releaseSpans.push({ start: spanStart, end: windowEndMs });
     }
   }
 
@@ -570,7 +549,7 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
   else coverageState = 'inadequate';
 
   if (!boundaryCompatible) insufficiencyReasons.push(`${nonreleaseDepartures} non-release departure(s) in window; release-population boundary incompatible`);
-  if (!openingStateKnown) insufficiencyReasons.push('opening WIP population unknown (task in-system at window start or left-censored at start)');
+  if (!openingStateKnown) insufficiencyReasons.push('opening WIP population not trustworthy (carry-in or left-censored task at window start without trustworthy opening evidence)');
   if (coverageState !== 'adequate') insufficiencyReasons.push(`observation coverage ${coverageState} (window ${windowDays.toFixed(1)} days, ${distinctTimes} distinct timestamps)`);
 
   const lambdaPerWeek = windowMs > 0 ? releasedInWindow / (windowMs / (7 * 24 * 3600 * 1000)) : INSUFFICIENT_DATA;
@@ -592,6 +571,7 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
     nonrelease_departures: nonreleaseDepartures,
     in_flight_at_end: inFlightAtEnd,
     released_in_window: releasedInWindow,
+    carry_in_releases: carryInReleases,
     coverage_state: coverageState,
     boundary_compatible: boundaryCompatible,
     computable,
@@ -603,72 +583,73 @@ function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
   };
 }
 
-/**
- * Little's Law reconciliation. Reports L (avg WIP), lambda (throughput), W
- * (avg flow time), residual L - lambda*W, the population definition, window,
- * and a coverage warning. A mechanically computable triple is NOT presented as
- * confident; if coverage is doubtful the warning says so.
- *
- * If L, lambda, or W is INSUFFICIENT_DATA, returns computable=false.
- */
-function littlesLaw({ avgWip, throughputPerWeek, avgFlowTimeWeeks, populationDefinition, windowLabel, coverageAdequate, coverageNote }) {
-  const computable =
-    typeof avgWip === 'number' &&
-    typeof throughputPerWeek === 'number' &&
-    typeof avgFlowTimeWeeks === 'number';
-
-  if (!computable) {
-    return {
-      computable: false,
-      L: avgWip ?? INSUFFICIENT_DATA,
-      lambda: throughputPerWeek ?? INSUFFICIENT_DATA,
-      W: avgFlowTimeWeeks ?? INSUFFICIENT_DATA,
-      residual: INSUFFICIENT_DATA,
-      population_definition: populationDefinition,
-      window: windowLabel,
-      coverage_warning: coverageNote || 'insufficient data to reconcile Little\'s Law',
-    };
-  }
-
-  const expected = throughputPerWeek * avgFlowTimeWeeks;
-  const residual = avgWip - expected;
-  const warnings = [];
-  if (!coverageAdequate) warnings.push(coverageNote || 'coverage inadequate; steady-state assumption doubtful');
-  warnings.push('verify WIP, throughput, and flow time share the same population boundary');
-
-  return {
-    computable: true,
-    L: avgWip,
-    lambda: throughputPerWeek,
-    W: avgFlowTimeWeeks,
-    lambda_times_W: expected,
-    residual,
-    population_definition: populationDefinition,
-    window: windowLabel,
-    coverage_warning: warnings.join('; '),
-  };
-}
-
 // ---------------------------------------------------------------------------
 // Coverage
 // ---------------------------------------------------------------------------
 
-function observationCoverage(events, { windowStartMs, windowEndMs }) {
-  if (!events.length) {
-    return { state: INSUFFICIENT_DATA, first_observed_at: null, last_observed_at: null, event_count: 0 };
-  }
+/**
+ * Observation/collection coverage (OPS-06A-R2 finding D).
+ *
+ * Coverage is about whether the OBSERVATION process actually covered the
+ * window — NOT about whether some event happened to fall in it. The previous
+ * rule "complete when inWindow > 0" is REMOVED: the mere presence of an event
+ * in the window does not prove the observer was active throughout it.
+ *
+ * Coverage must be based on actual expected-observation evidence:
+ *   - normalized snapshot observations;
+ *   - observer heartbeat/attempt records;
+ *   - explicit schedule/cadence evidence;
+ *   - or a supplied, validated coverage contract.
+ *
+ * If the current ledger cannot prove cadence, the state is `unmeasured` (or
+ * `insufficient_data` when there is nothing at all) — NEVER `complete`.
+ *
+ * `coverageEvidence` (optional) is a validated coverage contract:
+ *   { state: 'complete'|'partial'|'unmeasured', window_start, window_end,
+ *     source }. When supplied and it covers the window with state 'complete',
+ *     coverage is reported as complete; otherwise it is partial/unmeasured.
+ *
+ * This keeps the top-level `coverage:` line consistent with the Little's Law
+ * coverage field (both derive from real evidence, never from inWindow > 0).
+ */
+function observationCoverage(events, { windowStartMs, windowEndMs, coverageEvidence = null }) {
+  const windowMs = windowEndMs - windowStartMs;
   const times = events.map((e) => parseTime(e.observed_at)).filter((t) => t !== null);
-  if (!times.length) return { state: INSUFFICIENT_DATA, first_observed_at: null, last_observed_at: null, event_count: events.length };
-  const first = Math.min(...times);
-  const last = Math.max(...times);
+  const first = times.length ? Math.min(...times) : null;
+  const last = times.length ? Math.max(...times) : null;
   const inWindow = times.filter((t) => t >= windowStartMs && t <= windowEndMs).length;
-  return {
-    state: inWindow > 0 ? 'complete' : 'partial',
-    first_observed_at: new Date(first).toISOString(),
-    last_observed_at: new Date(last).toISOString(),
+
+  const base = {
+    first_observed_at: first !== null ? new Date(first).toISOString() : null,
+    last_observed_at: last !== null ? new Date(last).toISOString() : null,
     event_count: events.length,
     events_in_window: inWindow,
   };
+
+  if (windowMs <= 0) {
+    return { ...base, state: 'invalid_window', coverage_source: null };
+  }
+
+  // Evidence-based coverage. Without a validated coverage contract proving
+  // cadence across the window, coverage is unmeasured — never complete.
+  if (coverageEvidence && typeof coverageEvidence === 'object') {
+    const cStart = parseTime(coverageEvidence.window_start);
+    const cEnd = parseTime(coverageEvidence.window_end);
+    const coversWindow = cStart !== null && cEnd !== null && cStart <= windowStartMs && cEnd >= windowEndMs;
+    if (coverageEvidence.state === 'complete' && coversWindow) {
+      return { ...base, state: 'complete', coverage_source: coverageEvidence.source || 'supplied_contract' };
+    }
+    if (coverageEvidence.state === 'partial' || (coverageEvidence.state === 'complete' && !coversWindow)) {
+      return { ...base, state: 'partial', coverage_source: coverageEvidence.source || 'supplied_contract' };
+    }
+    return { ...base, state: 'unmeasured', coverage_source: coverageEvidence.source || 'supplied_contract' };
+  }
+
+  // No coverage contract: the ledger alone cannot prove cadence.
+  if (!events.length) {
+    return { ...base, state: INSUFFICIENT_DATA, coverage_source: null };
+  }
+  return { ...base, state: 'unmeasured', coverage_source: null };
 }
 
 module.exports = {
@@ -683,8 +664,6 @@ module.exports = {
   wipByState,
   reworkLoops,
   blockedAge,
-  timeAverageWip,
   littlesLawComponents,
-  littlesLaw,
   observationCoverage,
 };
