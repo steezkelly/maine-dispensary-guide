@@ -37,8 +37,16 @@ const DISALLOWED_OUTCOMES = Object.freeze([
   'CANCELLED',
 ]);
 
-/** Terminal-success task statuses (completion). */
-const COMPLETED_STATUSES = Object.freeze(['completed', 'done', 'accepted', 'released']);
+/**
+ * Terminal-success task statuses (completion). Includes both raw Kanban
+ * statuses (completed/done/accepted/released) and the observer's normalized
+ * completion state `card_completed` (OPS-06A-R1 finding G), so the gate accepts
+ * either raw or normalized completion input. `card_completed` is the observer's
+ * mapping of Kanban `done`; it is NOT a verified production release, but it IS a
+ * completion for gate purposes (the analytical OUTCOME, not the completion
+ * state, is what unlocks downstream work).
+ */
+const COMPLETED_STATUSES = Object.freeze(['completed', 'done', 'accepted', 'released', 'card_completed']);
 
 function normalize(v) {
   return typeof v === 'string' ? v.trim() : '';

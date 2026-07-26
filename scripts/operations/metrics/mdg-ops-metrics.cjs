@@ -224,11 +224,18 @@ function readyToReleaseFlowTime(events, { windowStartMs, windowEndMs }) {
   const summary = summarize(flowTimes);
   // Convert ms summaries to hours for readability, preserving INSUFFICIENT_DATA.
   const toHours = (v) => (v === INSUFFICIENT_DATA ? INSUFFICIENT_DATA : v / (3600 * 1000));
+  // Arithmetic MEAN flow time (hours) for the same eligible population used by
+  // the percentiles. Little's Law requires the arithmetic mean W, NOT a
+  // percentile (OPS-06A-R1 finding A). P50/P85/P95 remain descriptive only.
+  const meanHours = flowTimes.length
+    ? flowTimes.reduce((acc, v) => acc + v, 0) / flowTimes.length / (3600 * 1000)
+    : INSUFFICIENT_DATA;
   return {
     eligible: flowTimes.length,
     left_censored_excluded: leftCensored,
     right_censored_excluded: rightCensored,
     missing_ready_excluded: missingReady,
+    mean_hours: meanHours,
     p50_hours: toHours(summary.p50),
     p85_hours: toHours(summary.p85),
     p95_hours: toHours(summary.p95),
@@ -430,6 +437,173 @@ function timeAverageWip(events, { windowStartMs, windowEndMs }) {
 }
 
 /**
+ * Little's Law components for the V1 ready-to-verified-production-release
+ * population, with a strict common-population boundary and fail-closed
+ * coverage (OPS-06A-R1 findings B and C).
+ *
+ * Population boundary (L, lambda, and W share it):
+ *   - Entry: trustworthy transition into `ready` with a real timestamp.
+ *   - Exit: a verified `release_recorded` event with verifier_pass == true AND
+ *     post_deploy_verified == true.
+ *   - `accepted`, `card_completed`, `done`, `completed`, an ordinary `released`
+ *     state, branch creation, merge, and HTTP success do NOT count as exits.
+ *
+ * Fail-closed (computable=false, residual=insufficient_data) when:
+ *   - the opening WIP population is unknown (a task already in-system at the
+ *     window start, or left-censored at start);
+ *   - any task departs through a non-release terminal outcome (cancellation,
+ *     abandonment, or a terminal state without a verified release) — non-release
+ *     departures are never silently mixed into release throughput;
+ *   - observation coverage is materially incomplete (window < 7 days or too few
+ *     distinct timestamps);
+ *   - any required component is missing.
+ *
+ * Returns explicit fields: opening_state_known, left_censored_at_start,
+ * nonrelease_departures, coverage_state, boundary_compatible, computable,
+ * insufficiency_reasons, plus L, lambda_per_week, W_hours, residual.
+ */
+function littlesLawComponents(events, { windowStartMs, windowEndMs }) {
+  const byTask = indexByTask(events);
+  const windowMs = windowEndMs - windowStartMs;
+
+  const insufficiencyReasons = [];
+  let openingStateKnown = true;
+  let leftCensoredAtStart = 0;
+  let nonreleaseDepartures = 0;
+  let boundaryCompatible = true;
+
+  const releaseSpans = [];
+  let inFlightAtEnd = 0;
+  let releasedInWindow = 0;
+  const flowTimesMs = [];
+
+  if (windowMs <= 0) {
+    insufficiencyReasons.push('invalid window (non-positive duration)');
+  }
+
+  const NONRELEASE_TERMINAL = ['cancelled', 'canceled', 'abandoned', 'archived', 'rejected', 'card_completed', 'done', 'completed', 'accepted', 'released'];
+
+  for (const [, list] of byTask) {
+    const readyEvent = list.find((e) => e.to_state === 'ready' && parseTime(e.occurred_at) !== null);
+    if (!readyEvent) continue; // no trustworthy entry into the modeled population
+    const entryTime = parseTime(readyEvent.occurred_at);
+    const leftCensored = isLeftCensored(list);
+
+    const releaseEvent = list.find((e) => {
+      if (e.event_type !== 'release_recorded') return false;
+      const ev = e.release_evidence;
+      return !!(ev && ev.verifier_pass === true && ev.post_deploy_verified === true);
+    });
+    const releaseTime = releaseEvent ? parseTime(releaseEvent.occurred_at) : null;
+
+    // Non-release terminal departure: a terminal state reached WITHOUT a
+    // verified release. accepted/card_completed/done/completed/released do not
+    // independently count as releases for this population.
+    let nonreleaseTerminalTime = null;
+    for (const e of list) {
+      if (releaseTime !== null) break; // a verified release supersedes
+      const t = parseTime(e.occurred_at);
+      if (t !== null && NONRELEASE_TERMINAL.includes(e.to_state)) {
+        nonreleaseTerminalTime = t;
+        break;
+      }
+    }
+
+    // Opening-state detection: was this task already in-system at window start?
+    if (entryTime < windowStartMs) {
+      openingStateKnown = false; // in-system before window; true opening WIP unknown
+      if (leftCensored) leftCensoredAtStart += 1;
+    } else if (leftCensored) {
+      leftCensoredAtStart += 1;
+      openingStateKnown = false;
+    }
+
+    // Classify the departure.
+    if (releaseTime !== null) {
+      if (releaseTime >= windowStartMs && releaseTime <= windowEndMs) {
+        releasedInWindow += 1;
+        flowTimesMs.push(releaseTime - entryTime);
+        releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: releaseTime });
+      } else if (releaseTime > windowEndMs) {
+        inFlightAtEnd += 1;
+        releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: windowEndMs });
+      }
+    } else if (nonreleaseTerminalTime !== null && nonreleaseTerminalTime >= windowStartMs && nonreleaseTerminalTime <= windowEndMs) {
+      nonreleaseDepartures += 1;
+      boundaryCompatible = false;
+    } else {
+      inFlightAtEnd += 1;
+      releaseSpans.push({ start: Math.max(entryTime, windowStartMs), end: windowEndMs });
+    }
+  }
+
+  // Time-average WIP (L) over the release-population spans.
+  let L = INSUFFICIENT_DATA;
+  if (windowMs > 0 && releaseSpans.length) {
+    const timestamps = new Set([windowStartMs, windowEndMs]);
+    for (const span of releaseSpans) {
+      timestamps.add(span.start);
+      timestamps.add(span.end);
+    }
+    const sortedTimes = [...timestamps].sort((a, b) => a - b);
+    let weightedSum = 0;
+    for (let i = 0; i < sortedTimes.length - 1; i += 1) {
+      const sliceStart = sortedTimes[i];
+      const sliceEnd = sortedTimes[i + 1];
+      const sliceDuration = sliceEnd - sliceStart;
+      if (sliceDuration <= 0) continue;
+      let activeCount = 0;
+      for (const span of releaseSpans) {
+        if (span.start <= sliceStart && span.end >= sliceEnd) activeCount += 1;
+      }
+      weightedSum += activeCount * sliceDuration;
+    }
+    L = weightedSum / windowMs;
+  }
+
+  // Coverage state: do NOT treat "at least one event in window" as complete.
+  const windowDays = windowMs / (24 * 3600 * 1000);
+  const distinctTimes = new Set(events.map((e) => parseTime(e.occurred_at)).filter((t) => t !== null && t >= windowStartMs && t <= windowEndMs)).size;
+  let coverageState;
+  if (windowMs <= 0) coverageState = 'invalid_window';
+  else if (windowDays >= 7 && distinctTimes >= 3 && openingStateKnown) coverageState = 'adequate';
+  else coverageState = 'inadequate';
+
+  if (!boundaryCompatible) insufficiencyReasons.push(`${nonreleaseDepartures} non-release departure(s) in window; release-population boundary incompatible`);
+  if (!openingStateKnown) insufficiencyReasons.push('opening WIP population unknown (task in-system at window start or left-censored at start)');
+  if (coverageState !== 'adequate') insufficiencyReasons.push(`observation coverage ${coverageState} (window ${windowDays.toFixed(1)} days, ${distinctTimes} distinct timestamps)`);
+
+  const lambdaPerWeek = windowMs > 0 ? releasedInWindow / (windowMs / (7 * 24 * 3600 * 1000)) : INSUFFICIENT_DATA;
+  const WHours = flowTimesMs.length ? flowTimesMs.reduce((a, v) => a + v, 0) / flowTimesMs.length / (3600 * 1000) : INSUFFICIENT_DATA;
+
+  const computable = boundaryCompatible && openingStateKnown && coverageState === 'adequate'
+    && typeof L === 'number' && typeof lambdaPerWeek === 'number' && typeof WHours === 'number';
+
+  let residual = INSUFFICIENT_DATA;
+  if (computable) {
+    const WWeeks = WHours / (24 * 7);
+    residual = L - lambdaPerWeek * WWeeks;
+  }
+
+  return {
+    population_definition: 'ready -> verified production release (verifier_pass && post_deploy_verified)',
+    opening_state_known: openingStateKnown,
+    left_censored_at_start: leftCensoredAtStart,
+    nonrelease_departures: nonreleaseDepartures,
+    in_flight_at_end: inFlightAtEnd,
+    released_in_window: releasedInWindow,
+    coverage_state: coverageState,
+    boundary_compatible: boundaryCompatible,
+    computable,
+    insufficiency_reasons: insufficiencyReasons,
+    L,
+    lambda_per_week: lambdaPerWeek,
+    W_hours: WHours,
+    residual,
+  };
+}
+
+/**
  * Little's Law reconciliation. Reports L (avg WIP), lambda (throughput), W
  * (avg flow time), residual L - lambda*W, the population definition, window,
  * and a coverage warning. A mechanically computable triple is NOT presented as
@@ -510,6 +684,7 @@ module.exports = {
   reworkLoops,
   blockedAge,
   timeAverageWip,
+  littlesLawComponents,
   littlesLaw,
   observationCoverage,
 };

@@ -68,18 +68,38 @@ function resolveSha(repoDir, ref) {
   return gitText(repoDir, ['rev-parse', '--verify', `${ref}^{commit}`]);
 }
 
-function parseNameStatus(raw) {
+/**
+ * Parse `git diff --raw -z` output, capturing the Git mode AND status for each
+ * changed path (OPS-06A-R1 finding E). Binding mode/type detects chmod
+ * (100644 -> 100755) and regular-file/symlink type changes (100644 -> 120000)
+ * that do not alter file content but DO alter the committed tree.
+ *
+ * Raw -z format: ":<oldMode> <newMode> <oldSha> <newSha> <status>\0<path>\0"
+ * (two paths for renames/copies, which are disabled via --no-renames).
+ */
+function parseRawDiff(raw) {
   if (!raw.length) return [];
   const fields = raw.split('\0');
   if (fields.at(-1) === '') fields.pop();
-  if (fields.length % 2 !== 0) throw new Error('unexpected git --name-status output');
+  if (fields.length % 2 !== 0) throw new Error('unexpected git --raw output');
   const entries = [];
   for (let index = 0; index < fields.length; index += 2) {
-    const status = fields[index].slice(0, 1);
+    const meta = fields[index];
+    const changedPath = canonPath(fields[index + 1]);
+    // meta = ":<oldMode> <newMode> <oldSha> <newSha> <status>"
+    const match = meta.match(/^:(\d{6}) (\d{6}) [0-9a-f]+ [0-9a-f]+ ([A-Z])(\d*)$/);
+    if (!match) throw new Error(`unexpected git --raw record: ${meta}`);
+    const oldMode = match[1];
+    const newMode = match[2];
+    let status = match[3];
     if (!['A', 'M', 'D', 'T'].includes(status)) {
-      throw new Error(`unsupported changed-path status: ${fields[index]}`);
+      throw new Error(`unsupported changed-path status: ${status}`);
     }
-    entries.push({ status: status === 'T' ? 'M' : status, path: canonPath(fields[index + 1]) });
+    if (status === 'T') status = 'M';
+    // Bind the effective mode: new mode for A/M/T, old mode for D (the content
+    // digest is null for deletions, but the mode is still part of the tree).
+    const mode = status === 'D' ? oldMode : newMode;
+    entries.push({ status, path: changedPath, mode });
   }
   return entries;
 }
@@ -96,21 +116,38 @@ function readWorktreeBlob(repoDir, relativePath) {
   return fs.readFileSync(absolute);
 }
 
+/**
+ * Compute the Git object mode for a worktree path: 120000 for symlinks,
+ * 100755 for executable regular files, 100644 otherwise (OPS-06A-R1 finding E).
+ */
+function worktreeGitMode(repoDir, relativePath) {
+  const absolute = path.resolve(repoDir, relativePath);
+  const stat = fs.lstatSync(absolute);
+  if (stat.isSymbolicLink()) return '120000';
+  if (!stat.isFile()) throw new Error(`changed path is not a regular file or symlink: ${relativePath}`);
+  return (stat.mode & 0o111) !== 0 ? '100755' : '100644';
+}
+
 function buildSnapshot(baseSha, candidateSha, entries, readBlob, authorizedUntrackedPaths = []) {
   const entryByPath = new Map();
   for (const entry of entries) {
     const normalized = canonPath(entry.path);
     if (entryByPath.has(normalized)) throw new Error(`duplicate changed path: ${normalized}`);
-    entryByPath.set(normalized, { status: entry.status, path: normalized });
+    entryByPath.set(normalized, { status: entry.status, path: normalized, mode: entry.mode ?? null });
   }
   const changedPaths = canonicalizePaths([...entryByPath.keys()]);
   const fileSha256 = {};
+  const gitMode = {};
   const canonicalEntries = [];
   for (const changedPath of changedPaths) {
     const entry = entryByPath.get(changedPath);
     const digest = entry.status === 'D' ? null : sha256Hex(readBlob(changedPath));
     if (digest !== null) fileSha256[changedPath] = digest;
-    canonicalEntries.push({ path: changedPath, status: entry.status, sha256: digest });
+    gitMode[changedPath] = entry.mode;
+    // Bind path, status, mode, AND content digest into the canonical entry so
+    // canonical_diff_sha256 covers Git mode/type changes (chmod, file<->symlink)
+    // that do not alter content (OPS-06A-R1 finding E).
+    canonicalEntries.push({ path: changedPath, status: entry.status, mode: entry.mode ?? null, sha256: digest });
   }
   const canonicalDiffSha256 = sha256Hex(canonicalJson(canonicalEntries));
   const authorizedSet = new Set(canonicalizePaths(authorizedUntrackedPaths));
@@ -124,6 +161,7 @@ function buildSnapshot(baseSha, candidateSha, entries, readBlob, authorizedUntra
     changed_paths: changedPaths,
     canonical_diff_sha256: canonicalDiffSha256,
     file_sha256: fileSha256,
+    git_mode: gitMode,
     authorized_untracked_sha256: authorizedUntrackedSha256,
   };
 }
@@ -131,8 +169,8 @@ function buildSnapshot(baseSha, candidateSha, entries, readBlob, authorizedUntra
 function computeCommitManifest(repoDir, base, candidate, authorizedUntrackedPaths = []) {
   const baseSha = resolveSha(repoDir, base);
   const candidateSha = resolveSha(repoDir, candidate);
-  const entries = parseNameStatus(git(repoDir, [
-    'diff', '--name-status', '-z', '--no-renames', `${baseSha}..${candidateSha}`, '--',
+  const entries = parseRawDiff(git(repoDir, [
+    'diff', '--raw', '-z', '--no-renames', '--no-abbrev', `${baseSha}..${candidateSha}`, '--',
   ]));
   return buildSnapshot(
     baseSha,
@@ -147,8 +185,8 @@ function computeWorktreeManifest(repoDir, base, authorizedUntrackedPaths = []) {
   const baseSha = resolveSha(repoDir, base);
   const authorized = canonicalizePaths(authorizedUntrackedPaths);
   const authorizedSet = new Set(authorized);
-  const trackedEntries = parseNameStatus(git(repoDir, [
-    'diff', '--name-status', '-z', '--no-renames', baseSha, '--',
+  const trackedEntries = parseRawDiff(git(repoDir, [
+    'diff', '--raw', '-z', '--no-renames', '--no-abbrev', baseSha, '--',
   ]));
   const untracked = canonicalizePaths(
     git(repoDir, ['ls-files', '--others', '--exclude-standard', '-z'])
@@ -159,7 +197,14 @@ function computeWorktreeManifest(repoDir, base, authorizedUntrackedPaths = []) {
   if (unauthorized.length) throw new Error(`unauthorized untracked file(s): ${unauthorized.join(', ')}`);
   const absentAuthorized = authorized.filter((changedPath) => !untracked.includes(changedPath));
   if (absentAuthorized.length) throw new Error(`authorized untracked file(s) not present as untracked: ${absentAuthorized.join(', ')}`);
-  const entries = [...trackedEntries, ...untracked.map((changedPath) => ({ status: 'A', path: changedPath }))];
+  // Untracked files are additions; capture their worktree Git mode (100644 /
+  // 100755 / 120000) so the manifest binds mode/type for new files too.
+  const untrackedEntries = untracked.map((changedPath) => ({
+    status: 'A',
+    path: changedPath,
+    mode: worktreeGitMode(repoDir, changedPath),
+  }));
+  const entries = [...trackedEntries, ...untrackedEntries];
   return buildSnapshot(
     baseSha,
     null,
@@ -198,6 +243,7 @@ function captureEvidence(repoDir, verifier, { base, authorizedUntrackedPaths = [
     changed_paths: manifest.changed_paths,
     canonical_diff_sha256: manifest.canonical_diff_sha256,
     file_sha256: manifest.file_sha256,
+    git_mode: manifest.git_mode,
     authorized_untracked_sha256: manifest.authorized_untracked_sha256,
     acceptance_commands: verifier.acceptance_commands,
     verification_timestamp: verifier.verification_timestamp,
@@ -226,6 +272,13 @@ function manifestMismatchReasons(evidence, manifest) {
     const actualDigest = manifest.file_sha256[changedPath];
     if (expectedDigest !== actualDigest) {
       reasons.push(`${changedPath} changed after verification (${expectedDigest ?? 'deleted'} -> ${actualDigest ?? 'deleted'})`);
+    }
+    // Explicit per-file Git mode/type comparison (OPS-06A-R1 finding E). The
+    // canonical diff hash also binds mode, but this yields a precise reason.
+    const expectedMode = evidence.git_mode?.[changedPath] ?? null;
+    const actualMode = manifest.git_mode?.[changedPath] ?? null;
+    if (expectedMode !== actualMode) {
+      reasons.push(`${changedPath} mode/type changed after verification (${expectedMode ?? 'none'} -> ${actualMode ?? 'none'})`);
     }
   }
   return reasons;
