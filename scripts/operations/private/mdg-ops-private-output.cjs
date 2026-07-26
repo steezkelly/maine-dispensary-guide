@@ -170,34 +170,92 @@ function writePrivateFile(root, outputPath, content, repoRoot) {
 }
 
 /**
- * Fail-closed validation of a private READ path (e.g. integrity evidence).
- * Returns the resolved absolute path. Rejects paths not beneath the real root,
- * unsafe symlinks, and files with group/other permission bits set (Tier 0
- * evidence must be owner-only). Fails closed if the file does not exist.
+ * Fail-closed validation of a private READ path (e.g. integrity evidence or a
+ * coverage contract) — OPS-06A-R3 finding E.
+ *
+ * Closes the symlink-ancestor escape:
+ *   - resolves the FINAL real path (fs.realpathSync) and proves it is beneath
+ *     the real (symlink-resolved) MDG_OPS_ROOT — this catches an ancestor that
+ *     is a symlink pointing outside the root even when the lexical path looks
+ *     contained;
+ *   - rejects a symlinked evidence path ENTIRELY (the final component must not
+ *     be a symlink); there is no documented need to permit internal symlinks
+ *     for Tier-0 reads;
+ *   - inspects each existing path component beneath the root and rejects any
+ *     escaping symlink ancestor;
+ *   - validates the final object is a regular owner-only file (no group/other
+ *     bits — strict 0600);
+ *   - validates private ancestor directories beneath the root are not
+ *     group/other-WRITABLE. Accepted directory rule: `(mode & 0o022) === 0`
+ *     for every directory from the file's parent up to and including the real
+ *     root. This permits conventional 0755/0700 private directories but rejects
+ *     any group/other-writable ancestor (e.g. 0775/0777/0757), which is the
+ *     property that would let another local user plant or redirect a symlink.
+ *     The evidence FILE itself is held to the stricter owner-only (0600) rule;
+ *   - fails closed on races or permission errors (any thrown stat/realpath
+ *     error is converted to a fail-closed rejection).
+ *
+ * Returns the resolved real path (beneath the real root). Never returns a path
+ * outside the root.
  */
 function validatePrivateReadPath(root, inputPath) {
   const realRoot = realPrivateRoot(root);
   const resolved = path.resolve(inputPath);
 
+  // Lexical containment first (catches `..` escapes before touching the fs).
   if (resolved !== realRoot && !resolved.startsWith(realRoot + path.sep)) {
     throw new Error(`OPS_EVIDENCE_ESCAPE: evidence path ${inputPath} is not beneath private root ${realRoot}`);
   }
 
+  // The final component must exist and must NOT be a symlink (reject symlinked
+  // evidence paths entirely).
   let lst;
   try {
     lst = fs.lstatSync(resolved);
   } catch (err) {
     throw new Error(`OPS_EVIDENCE_MISSING: evidence file ${inputPath} does not exist: ${err.message}`);
   }
-
   if (lst.isSymbolicLink()) {
-    const linkReal = fs.realpathSync(resolved);
-    if (linkReal !== realRoot && !linkReal.startsWith(realRoot + path.sep)) {
-      throw new Error(`OPS_EVIDENCE_SYMLINK_ESCAPE: evidence file ${inputPath} is an unsafe symlink`);
-    }
+    throw new Error(`OPS_EVIDENCE_SYMLINK: evidence path ${inputPath} is a symlink; symlinked Tier-0 evidence is rejected`);
   }
 
-  const st = fs.statSync(resolved);
+  // Resolve the final REAL path and prove it remains beneath the real root.
+  // This is the core symlink-ancestor-escape closure: if any ancestor is a
+  // symlink pointing outside the root, realpath lands outside and we reject.
+  let realPath;
+  try {
+    realPath = fs.realpathSync(resolved);
+  } catch (err) {
+    throw new Error(`OPS_EVIDENCE_RACE: cannot resolve evidence path ${inputPath}: ${err.message}`);
+  }
+  if (realPath !== realRoot && !realPath.startsWith(realRoot + path.sep)) {
+    throw new Error(`OPS_EVIDENCE_ANCESTOR_ESCAPE: evidence path ${inputPath} resolves outside the private root (symlink ancestor)`);
+  }
+
+  // Inspect each existing path component beneath the root; reject any escaping
+  // symlink ancestor (defense in depth alongside the realpath proof above).
+  let cursor = path.dirname(realPath);
+  while (cursor === realRoot || cursor.startsWith(realRoot + path.sep)) {
+    let compStat;
+    try {
+      compStat = fs.lstatSync(cursor);
+    } catch (err) {
+      throw new Error(`OPS_EVIDENCE_RACE: cannot stat ancestor ${cursor}: ${err.message}`);
+    }
+    if (compStat.isSymbolicLink()) {
+      throw new Error(`OPS_EVIDENCE_ANCESTOR_ESCAPE: ancestor ${cursor} is a symlink beneath the private root`);
+    }
+    if (cursor === realRoot) break;
+    cursor = path.dirname(cursor);
+  }
+
+  // Final object must be a regular owner-only file.
+  let st;
+  try {
+    st = fs.statSync(realPath);
+  } catch (err) {
+    throw new Error(`OPS_EVIDENCE_RACE: cannot stat evidence file ${inputPath}: ${err.message}`);
+  }
   if (!st.isFile()) {
     throw new Error(`OPS_EVIDENCE_NOT_FILE: evidence path ${inputPath} is not a regular file`);
   }
@@ -205,7 +263,25 @@ function validatePrivateReadPath(root, inputPath) {
     throw new Error(`OPS_EVIDENCE_PERM: evidence file ${inputPath} has unsafe permissions (group/other bits set); Tier 0 evidence must be owner-only`);
   }
 
-  return resolved;
+  // Private ancestor directories beneath the root must not be group/other-
+  // writable (documented accepted directory rule: (mode & 0o022) === 0). This
+  // permits conventional 0755/0700 dirs but rejects 0775/0777/0757 ancestors.
+  let dirCursor = path.dirname(realPath);
+  while (dirCursor === realRoot || dirCursor.startsWith(realRoot + path.sep)) {
+    let dirStat;
+    try {
+      dirStat = fs.statSync(dirCursor);
+    } catch (err) {
+      throw new Error(`OPS_EVIDENCE_RACE: cannot stat directory ${dirCursor}: ${err.message}`);
+    }
+    if ((dirStat.mode & 0o022) !== 0) {
+      throw new Error(`OPS_EVIDENCE_DIR_PERM: private directory ${dirCursor} is group/other-writable; Tier 0 ancestor directories must not be group/other-writable`);
+    }
+    if (dirCursor === realRoot) break;
+    dirCursor = path.dirname(dirCursor);
+  }
+
+  return realPath;
 }
 
 module.exports = {
