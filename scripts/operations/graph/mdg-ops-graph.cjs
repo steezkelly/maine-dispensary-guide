@@ -173,6 +173,9 @@ function downstreamUnlockCount(tasks, taskId) {
   for (const t of tasks) {
     const id = normalizeId(t.id);
     if (id === taskId) continue;
+    // Only READY work counts as newly dispatchable. Blocked/terminal
+    // descendants remain graph context but are not newly eligible work.
+    if (normalizeId(t.status).toLowerCase() !== 'ready') continue;
     // Keep ALL deps including absent ones: a missing dependency is never
     // satisfiable (matches continuity-check), so a task with a missing dep
     // can never be newly unlocked.
@@ -232,6 +235,35 @@ function tasksUnlockingReadyWork(tasks) {
   return result.sort();
 }
 
+/**
+ * Complete deterministic analysis: topological order plus per-task direct
+ * dependents, transitive dependents, downstream unlock count, and blocked
+ * descendants, plus the set of tasks unlocking ready work. Throws on cycles
+ * (topological order is undefined).
+ */
+function analyze(tasks) {
+  const byId = buildIndex(tasks);
+  const ids = [...byId.keys()].sort();
+  const order = topologicalOrder(tasks); // throws on cycle
+  const perTask = {};
+  for (const id of ids) {
+    perTask[id] = {
+      direct_dependents: directDependents(tasks, id),
+      transitive_dependents: transitiveDependents(tasks, id),
+      downstream_unlock_count: downstreamUnlockCount(tasks, id),
+      blocked_descendants: blockedDescendants(tasks, id),
+    };
+  }
+  return {
+    task_count: ids.length,
+    missing_dependencies: missingDependencies(tasks),
+    topological_order: order,
+    longest_chain: longestChain(tasks),
+    tasks: perTask,
+    tasks_unlocking_ready_work: tasksUnlockingReadyWork(tasks),
+  };
+}
+
 module.exports = {
   missingDependencies,
   findCycles,
@@ -242,4 +274,5 @@ module.exports = {
   longestChain,
   blockedDescendants,
   tasksUnlockingReadyWork,
+  analyze,
 };
