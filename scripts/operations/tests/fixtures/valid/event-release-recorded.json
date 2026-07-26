@@ -1,0 +1,24 @@
+{
+  "schema": "mdg-operations-event-v1",
+  "event_id": "evt_release_0001",
+  "event_type": "release_recorded",
+  "occurred_at": "2026-07-25T15:30:00Z",
+  "observed_at": "2026-07-25T15:30:10Z",
+  "task_id": "t_synthetic0002",
+  "from_state": "integrating",
+  "to_state": "released",
+  "actor_role": "integrator",
+  "source_system": "vercel",
+  "source_ref": "deployment:production",
+  "source_sha256": "c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2",
+  "base_sha": "546ab267347b9bffa5cbf52e98408d8e288a5430",
+  "outcome": "released",
+  "release_evidence": {
+    "final_sha": "0fd70bc0000000000000000000000000000000aa",
+    "integration_evidence_ref": "pr:#9999",
+    "verifier_pass": true,
+    "post_deploy_verified": true,
+    "production_url": "https://mainedispensaryguide.com/guides/synthetic"
+  },
+  "metadata": { "note": "synthetic verified production release" }
+}

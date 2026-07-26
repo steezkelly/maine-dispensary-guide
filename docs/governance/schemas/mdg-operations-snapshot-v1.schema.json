@@ -1,0 +1,194 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mainedispensaryguide.com/schemas/mdg-operations-snapshot-v1.schema.json",
+  "title": "MDG Operations Snapshot v1",
+  "description": "A normalized, point-in-time observation of MDG operational state, derived from raw private source inputs (Hermes board export, workflow status). The snapshot preserves raw_state verbatim alongside normalized_state so analysis never silently rewrites source meaning. Derived and non-authoritative: Hermes Kanban remains the sole live task authority. A snapshot never changes live state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "snapshot_id",
+    "observed_at",
+    "source_sha256",
+    "observation",
+    "tasks"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "mdg-operations-snapshot-v1"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Deterministic identifier derived from source_sha256 + observed_at. Re-observing identical source at the same observed_at yields the same snapshot_id (idempotent)."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Observation time (UTC). Distinct from any event occurrence time. Monotonic non-decreasing."
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over the canonicalized raw source inputs. Identical hash => no new events on re-observation."
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Observation-window and coverage metadata.",
+      "required": ["is_first_trustworthy_observation", "coverage_state"],
+      "properties": {
+        "is_first_trustworthy_observation": {
+          "type": "boolean",
+          "description": "True for the first snapshot whose inputs are trustworthy. Pre-existing tasks become left-censored at this point; their state-entry times are unknown and must not be inferred."
+        },
+        "prior_snapshot_id": {
+          "type": ["string", "null"],
+          "description": "Identifier of the previous trustworthy snapshot, or null on first observation."
+        },
+        "coverage_state": {
+          "type": "string",
+          "enum": ["complete", "partial", "insufficient_data"],
+          "description": "Honest coverage of this observation. Empty or unsupported measurement resolves to insufficient_data, never zero."
+        },
+        "window_start": { "type": ["string", "null"], "format": "date-time" },
+        "window_end": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "description": "Normalized task records. Duplicate task_id within a snapshot is rejected.",
+      "items": { "$ref": "#/definitions/task" }
+    },
+    "leases": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/lease" }
+    }
+  },
+  "definitions": {
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "raw_state", "normalized_state", "completion", "censoring"],
+      "properties": {
+        "task_id": { "type": "string", "minLength": 1 },
+        "initiative_id": { "type": ["string", "null"] },
+        "raw_state": {
+          "type": "string",
+          "description": "Verbatim status/state string from the source system (e.g. Hermes 'done', 'running', 'ready', 'todo', 'blocked'). Preserved unchanged so normalization is auditable."
+        },
+        "normalized_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "triage",
+            "ready",
+            "in_progress",
+            "authored",
+            "verifying",
+            "needs_fix",
+            "accepted",
+            "integrating",
+            "released",
+            "blocked",
+            "card_completed"
+          ],
+          "description": "Analysis vocabulary. CRITICAL: Hermes raw_state 'done' maps to 'card_completed', NOT to 'released'. 'released' is reserved for a verified production release evidenced separately."
+        },
+        "completion": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Six distinct, non-equivalent completion/release concepts. Each is independently true/false; none implies another without its own evidence.",
+          "required": [
+            "card_completed",
+            "initiative_completed",
+            "verification_pass",
+            "accepted_candidate",
+            "integration_completed",
+            "verified_production_release"
+          ],
+          "properties": {
+            "card_completed": {
+              "type": "boolean",
+              "description": "The Hermes card reached a terminal done state. This is NOT a website release."
+            },
+            "initiative_completed": {
+              "type": "boolean",
+              "description": "The parent initiative's defined outcome was achieved. Distinct from any single card."
+            },
+            "verification_pass": {
+              "type": "boolean",
+              "description": "An independent verifier recorded PASS. Missing verifier evidence is false, never assumed true."
+            },
+            "accepted_candidate": {
+              "type": "boolean",
+              "description": "A reviewed candidate commit was accepted by the coordinator after verifier PASS."
+            },
+            "integration_completed": {
+              "type": "boolean",
+              "description": "The sole integrator merged the candidate to origin/main. A pushed branch is not an integration."
+            },
+            "verified_production_release": {
+              "type": "boolean",
+              "description": "A verified production release per MDG governance: integration + post-deploy verification + release evidence. The ONLY concept that counts toward release throughput. A terminal planning/recon/docs/verification card is NOT a release."
+            }
+          }
+        },
+        "censoring": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["left_censored", "right_censored", "unknown_state_entry_time"],
+          "properties": {
+            "left_censored": {
+              "type": "boolean",
+              "description": "Task existed before first trustworthy observation; entry time to current state is unknown."
+            },
+            "right_censored": {
+              "type": "boolean",
+              "description": "Task has not reached the terminal state of interest by window end."
+            },
+            "unknown_state_entry_time": {
+              "type": "boolean",
+              "description": "The time the task entered its current normalized_state cannot be established from trustworthy data."
+            }
+          }
+        },
+        "state_entry_time": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Trustworthy time the task entered normalized_state, or null when unknown. MUST be null for left-censored tasks. NEVER inferred from card update timestamps, comments, Git commit dates, file mtimes, or prose handoffs."
+        },
+        "depends_on": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "actor_role": {
+          "type": ["string", "null"],
+          "enum": ["coordinator", "author", "verifier", "integrator", "analyst", "observer", "operator", null]
+        },
+        "base_sha": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$" },
+        "branch": { "type": ["string", "null"] },
+        "worktree": { "type": ["string", "null"] },
+        "blocked_reason": { "type": ["string", "null"] },
+        "next_check_at": { "type": ["string", "null"], "format": "date-time" },
+        "verification_evidence_ref": { "type": ["string", "null"] },
+        "integration_evidence_ref": { "type": ["string", "null"] },
+        "release_evidence_ref": { "type": ["string", "null"] }
+      }
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["branch", "worktree", "paths", "expired"],
+      "properties": {
+        "branch": { "type": "string" },
+        "worktree": { "type": "string" },
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "started_at": { "type": ["string", "null"], "format": "date-time" },
+        "expires_at": { "type": ["string", "null"], "format": "date-time" },
+        "expired": { "type": "boolean" }
+      }
+    }
+  }
+}
