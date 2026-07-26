@@ -44,7 +44,8 @@
     "workflow:preflight": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
     "verify:worktree-resolution": "node scripts/build/assert-worktree-isolation.cjs --allow-existing-output",
     "build:isolated": "node scripts/build/assert-worktree-isolation.cjs && bash vercel-build.sh && node scripts/continuation/tests/ica-built-output.test.cjs",
-    "agents:preflight": "node scripts/agent/mdg-task-preflight.cjs"
+    "agents:preflight": "node scripts/agent/mdg-task-preflight.cjs",
+    "ops:integrate": "node scripts/operations/integration/cli.cjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

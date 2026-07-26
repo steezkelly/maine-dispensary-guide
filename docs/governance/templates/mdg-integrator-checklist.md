@@ -17,23 +17,47 @@
    before any candidate was deployed) has been retired. See
    `docs/governance/verifier-governance-migration-notes-2026-07-20.md`
    for the rationale.
-8. `git push origin HEAD:refs/heads/main`
-9. Wait for Vercel Ready on the **exact pushed SHA**. Read the remote
+8. **Canonical integrity gate (mandatory, fail-closed).** Before any merge or
+   push to `main`, run the single canonical integration command:
+
+   ```bash
+   npm run ops:integrate -- \
+     --evidence <private-bound-evidence.json> \
+     --checks <private-required-checks.json> \
+     --candidate <exact-candidate-sha> \
+     --expected-base <exact-expected-base-sha> \
+     --current-head <exact-current-remote-pr-head-sha> \
+     [--detail-out <private-detail.json>]
+   ```
+
+   This wrapper (`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2)
+   composes the verified-candidate integrity checks into one mechanically
+   fail-closed gate. It fails nonzero BEFORE any merge when evidence is missing
+   or its permissions are unsafe, when candidate/head/base identity differs,
+   when the candidate tree differs, when a required check is pending or failing,
+   or when the integration worktree is dirty. Ordinary output is redacted
+   (stable codes only); full reasons are written only to a validated Tier-0
+   `--detail-out` file. **Do not proceed to push if the gate exits nonzero.**
+   The local integration path is mechanically fail-closed when this wrapper is
+   used; GitHub-wide enforcement is not category B until the OPS-06B-P1 Child-3
+   ruleset is operator-enabled.
+9. `git push origin HEAD:refs/heads/main`
+10. Wait for Vercel Ready on the **exact pushed SHA**. Read the remote
    SHA back with `git ls-remote origin main` to confirm; do not
    trust local branch state alone.
-10. **Post-transport smoke**: with `MDG_PREVIEW_URL` set to the Vercel
+11. **Post-transport smoke**: with `MDG_PREVIEW_URL` set to the Vercel
     preview deployment URL (matching `*.vercel.app`), run
     `npm run verify:post-deploy` to smoke the exact preview deployment.
     This is the only valid smoke step for the new candidate. For an
     explicit post-deploy production smoke of the live site, set
     `MDG_ALLOW_PROD_SMOKE=1` plus `MDG_BASE=https://mainedispensaryguide.com`.
-11. Verify expected deployment and production route.
-12. After production verification, execute release ordering exactly:
+12. Verify expected deployment and production route.
+13. After production verification, execute release ordering exactly:
     1. Release the feature lease.
     2. Close the candidate card.
     3. Attach final release metadata record with `status: released`, final main SHA, Vercel ID/URL, route, commands, deferred work, and closeout evidence.
 
-13. Record `closeout_evidence` in the final metadata record immediately after step 12, not before.
+14. Record `closeout_evidence` in the final metadata record immediately after step 13, not before.
 
 ## Bypass ban
 
@@ -62,6 +86,7 @@ Before deployment push, create only a `release-pending` draft record on the cand
   "validation_commands": [
     "git diff origin/main...HEAD --check",
     "npm run verify:iterate",
+    "npm run ops:integrate -- --evidence <private-evidence> --checks <private-checks> --candidate <sha> --expected-base <sha> --current-head <sha>",
     "git push origin HEAD:refs/heads/main",
     "vercel ready wait on the exact pushed SHA",
     "MDG_PREVIEW_URL=<preview-url> npm run verify:post-deploy"
@@ -73,7 +98,7 @@ Before deployment push, create only a `release-pending` draft record on the cand
 }
 ```
 
-Attach the final deployment metadata only after the sequence in step 12 is complete:
+Attach the final deployment metadata only after the sequence in step 13 is complete:
 
 ```json
 {
@@ -85,6 +110,7 @@ Attach the final deployment metadata only after the sequence in step 12 is compl
   "validation_commands": [
     "git diff origin/main...HEAD --check",
     "npm run verify:iterate",
+    "npm run ops:integrate -- --evidence <private-evidence> --checks <private-checks> --candidate <sha> --expected-base <sha> --current-head <sha>",
     "git push origin HEAD:refs/heads main",
     "vercel ready wait on final-main-sha",
     "MDG_PREVIEW_URL=<preview-url> npm run verify:post-deploy",

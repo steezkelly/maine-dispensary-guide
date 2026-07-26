@@ -64,8 +64,8 @@ and records separate `SPEC COMPLIANCE` and `CODE QUALITY` verdicts.
 ### Integrator
 
 The Integrator is the sole writer for integration. Only the integration worktree
-may update `origin/main`; the Integrator must not use the primary checkout. The
-Integrator must cherry-pick one accepted candidate, recheck base compatibility,
+may update `origin/main`; the Integrator must not use the primary checkout.
+The Integrator must cherry-pick one accepted candidate, recheck base compatibility,
 lease status, verification evidence, and scope, then run `npm run
 verify:iterate` (smoke-free) and execute deploy verification on the
 post-transport Vercel preview deployment — `npm run verify:post-deploy` with
@@ -76,6 +76,21 @@ Integrator must not merge unverified batch work. For release readiness, record
 final SHA, Vercel deployment ID/URL, validation commands, and deferred work
 metadata before release. No author, verifier, or coordinator may independently
 write to `origin/main`.
+
+**Canonical integrity gate (mandatory, fail-closed).** Before any merge or push
+to `main`, the Integrator must run the single canonical integration command
+`npm run ops:integrate -- --evidence <private-bound-evidence> --checks
+<private-required-checks> --candidate <exact-candidate-sha> --expected-base
+<exact-base-sha> --current-head <exact-remote-pr-head-sha>` (wrapper:
+`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2). It composes the
+verified-candidate integrity checks into one mechanically fail-closed gate and
+exits nonzero before any merge when evidence is missing/unsafe, candidate/head/base
+identity differs, the candidate tree differs, a required check is pending or
+failing, or the worktree is dirty. Ordinary output is redacted; full reasons go
+only to a validated Tier-0 `--detail-out` file. The Integrator must not push if
+the gate exits nonzero. The local integration path is mechanically fail-closed
+when this wrapper is used; GitHub-wide enforcement is not category B until the
+OPS-06B-P1 Child-3 ruleset is operator-enabled (see ADR Amendment 5).
 
 ### Continuity Watcher
 
