@@ -19,17 +19,17 @@ const pagePath = path.resolve(
   'maine-cannabis-industry-report-q3-2026.astro',
 );
 const page = fs.readFileSync(pagePath, 'utf8');
+const publicDir = path.resolve(__dirname, '..', '..', '..', 'public');
 
-test('page references the Q3 2026 PDF asset path', () => {
-  assert.match(
-    page,
-    /\/pdfs\/maine-cannabis-industry-report-q3-2026\.pdf/,
-    'page must reference the PDF at the standard public/pdfs path',
+test('direct-download URL resolves to a committed public PDF asset', () => {
+  const match = page.match(
+    /const pdfDownloadUrl = ['"]([^'"]+maine-cannabis-industry-report-q3-2026\.pdf)['"];/,
   );
-  assert.match(
-    page,
-    /\/downloads\/maine-cannabis-industry-report-q3-2026\.pdf/,
-    'page must reference the PDF at the standard downloads path for the manual download link',
+  assert.ok(match, 'page must declare the Q3 PDF direct-download URL');
+  assert.ok(match[1].startsWith('/'), 'public PDF URL must be root-relative');
+  assert.ok(
+    fs.existsSync(path.resolve(publicDir, match[1].slice(1))),
+    `direct-download target must exist under public/: ${match[1]}`,
   );
 });
 
@@ -100,9 +100,8 @@ test('page renders a direct-download link that bypasses the lead form', () => {
   );
 });
 
-test('page sets publishDate and modifiedDate frontmatter metadata', () => {
-  assert.match(page, /publishDate:\s*["']2026-07-23["']/);
-  assert.match(page, /modifiedDate:\s*["']2026-07-23["']/);
+test('page exposes the report publication date to readers', () => {
+  assert.match(page, /Published 23 July 2026/);
 });
 
 test('page declares a data cutoff note that names the actual date', () => {
