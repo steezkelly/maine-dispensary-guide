@@ -482,3 +482,98 @@ fails closed on races).
 - This amendment does **not** broaden R3 into scheduler enforcement or lifecycle
   emission. OPS-07/08/09 remain blocked/gated; no lifecycle emission, no
   simulation, no live policy, no priority changes, no repository-setting changes.
+
+---
+
+## Amendment 5 — Mandatory Enforcement Foundation (OPS-06B-P1, 2026-07-26)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06B-P1 (mandatory enforcement foundation). Phase 1 only — no
+structured lifecycle emission, no OPS-07/08/09, no simulation/WIP/policy/scheduler.
+Base: `edf00868081eba6e27108b2feaddd16573a22257`. Full design + threat model:
+`~/.hermes/data/mdg-ops/OPS-06B-P1-C0-enforcement-design-2026-07-26.md`.
+
+### Decision: selected enforcement architecture
+
+**Architecture B — public-safe candidate-bound attestation consumed by CI** — is
+the selected mechanism to convert the integrity gate from category A (manual) to
+category B (mechanically required). It is the smallest of the three evaluated
+architectures that materially achieves this:
+
+- **A (trusted Integrator posts a redacted commit status)** — REJECTED. Trust
+  anchor is a bearer token; forgeable and replayable against another SHA; no
+  cryptographic binding to the candidate; stale statuses are not auto-invalidated.
+- **B (public-safe attestation + CI recompute)** — SELECTED. The local gate emits
+  a redacted attestation (only SHAs, tree SHA, `canonical_diff_sha256`,
+  `evidence_sha256`, outcome — no task ID/command/path/body). A `contents: read`
+  CI job recomputes the canonical diff and tree SHA **from the git objects** and
+  confirms they match, then passes as a required `Integrity Gate` check. Trust
+  anchor is git content + CI recompute, not a token. Self-invalidating on base
+  move, branch mutation, or force-push.
+- **C (trusted GitHub App produces the check)** — DEFERRED. Strongest forgery
+  resistance (separate identity) but disproportionate operational/lockout cost for
+  a single-operator repo. This is the upgrade path if a genuinely separate reviewer
+  identity becomes available.
+
+### Stable required check names
+
+- `Operations Suite` — dedicated `ci.yml` job running
+  `node --test scripts/operations/tests/*.test.cjs` on PR→main and push→main
+  (synthetic fixtures only; no `MDG_OPS_ROOT`).
+- `Integrity Gate` — dedicated `ci.yml` job validating the public-safe attestation
+  by recomputing the candidate manifest from git objects.
+
+Both are job `name:` values that become the GitHub check-run contexts a ruleset
+can require. Names must exactly match the remote check contexts (proven in Child 3
+before any protection is enabled).
+
+### Privacy bridge (Q4)
+
+Private Tier-0 verifier evidence authorizes a GitHub-required status WITHOUT
+leaking by means of the attestation: the public artifact carries only hashes and
+SHAs; the full evidence (task IDs, commands, paths, bodies) remains under
+`MDG_OPS_ROOT` at 0600. The attestation references the private evidence by
+`evidence_sha256` only.
+
+### Candidate-binding / chicken-and-egg resolution
+
+The verified candidate is the code-only tree (`scripts/operations/**` + docs). The
+attestation is committed as a separate subsequent transport commit at
+`.github/integrity-attestations/<candidate-sha>.json`. The CI `Integrity Gate`
+recomputes the canonical diff over the code-only pathset (excluding the
+attestations directory) between `merge-base(origin/main, HEAD)` and the PR head's
+code tree, and confirms it equals the attestation's `canonical_diff_sha256`. The
+attestation commit is outside the verified code diff and does not perturb it.
+
+### Category-B qualification (precision per R3-G)
+
+- The **local** integration path is mechanically fail-closed when the canonical
+  wrapper (Child 2) is used.
+- **GitHub-wide** enforcement is NOT category B until a required status/ruleset
+  prevents bypass through the web interface or another client. Until the ruleset
+  (Child 3) is enabled by the operator, the checks are produced but not required —
+  category A+ (mechanically produced, not yet mechanically required).
+- The phrase "integration is fail-closed" must carry the qualification "when the
+  canonical wrapper is used locally, and when the GitHub ruleset is active for
+  GitHub-side merges."
+
+### Remaining bypasses after P1 (documented, not fixed here)
+1. Web-UI/API merges bypass the local pre-push hook — closed only when the Child-3
+   ruleset is operator-enabled.
+2. An actor with push access can edit `ci.yml` or the attestation in-PR — mitigated
+   by protecting the workflow file (Child 3); fully closed only by Architecture C.
+3. `git push --no-verify` bypasses the local hook — governance ban + CI backstop.
+
+### Phase 2 (design only, NOT implemented in P1)
+Structured lifecycle emission (`verification_completed`,
+`candidate_evidence_captured`, `accepted_candidate_bound`, `integration_started`,
+`integration_completed`, `release_recorded`, observation / release-emitter /
+opening-state coverage) is mapped in the Child-0 design doc with authoritative
+source, emission point, idempotency key, occurred_at/observed_at, actor role, SHA
+fields, evidence reference, retry/failure behavior, prospective-only flag, and
+privacy classification. Production coverage contracts must require versioned kind,
+complete window, immutable source reference, `source_sha256`, and (for
+opening-state) `opening_snapshot_at` tied exactly to the modeled window start — no
+retroactive fabrication from prose, PR timestamps, or Git dates. OPS-07 stays
+blocked until a fresh baseline records `BOTTLENECK_IDENTIFIED`, `POLICY_CANDIDATE`,
+or `EVIDENCE_SUFFICIENT`.
