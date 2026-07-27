@@ -1105,7 +1105,7 @@ function isPreviewFirstReleaseGuidance(section) {
     normalPush: section.indexOf('git push origin HEAD:refs/heads/$BRANCH_NAME'),
     exactReady: section.search(/Vercel reports Ready for that exact (?:candidate|pushed) SHA/i),
     previewSmoke: section.indexOf('MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy'),
-    mergeCommit: section.search(/gh pr merge[^\n]*--merge/i),
+    mergeCommit: section.search(/gh pr merge[^\n]*--merge[^\n]*--match-head-commit[^\n]*\$CANDIDATE_SHA/i),
     reconciliation: section.search(/[Pp]ost-merge reconciliation/),
     mergeReady: section.search(/only after merge and exact production deployment readiness/i),
     productionSmoke: section.indexOf('MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy'),
@@ -1232,7 +1232,7 @@ const RELEASE_PENDING_COMMANDS = Object.freeze([
   'git push origin HEAD:refs/heads/$BRANCH_NAME',
   'vercel ready wait on the exact candidate SHA',
   'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
-  'gh pr merge $PR_NUMBER --merge',
+  'gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA',
 ]);
 const RELEASED_COMMANDS = Object.freeze([
   'npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number $PR_NUMBER --evidence $EVIDENCE_PATH --expect-evidence-sha256 $EVIDENCE_DIGEST --allow-draft',
@@ -1241,7 +1241,7 @@ const RELEASED_COMMANDS = Object.freeze([
   'git push origin HEAD:refs/heads/$BRANCH_NAME',
   'vercel preview ready wait on the exact candidate SHA',
   'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
-  'gh pr merge $PR_NUMBER --merge',
+  'gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA',
   'post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}',
   'node --test scripts/operations/tests/*.test.cjs (on final main)',
   'vercel production ready wait on final-main-sha',
@@ -1283,7 +1283,7 @@ function testIntegratorChecklistClosesOutAfterProductionEvidence() {
     // Inject an iteration command before closeout evidence (breaks evidence-first ordering).
     checklist.replace('    "gather closeout evidence"', '    "npm run verify:iterate",\n    "gather closeout evidence"'),
     // Reorder merge after production-ready (production smoke before the merge commit).
-    checklist.replace('    "gh pr merge $PR_NUMBER --merge",\n    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",', '    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",\n    "gh pr merge $PR_NUMBER --merge",'),
+    checklist.replace('    "gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA",\n    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",', '    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",\n    "gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA",'),
     // Drop the evidence-bound gate (release would bypass the canonical integrity gate).
     checklist.replace('    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number $PR_NUMBER --evidence $EVIDENCE_PATH --expect-evidence-sha256 $EVIDENCE_DIGEST --allow-draft",\n', ''),
   ];
@@ -1395,6 +1395,40 @@ function testActiveReleaseCommandsUseShellSafePlaceholders() {
 }
 
 // ----------------------------------------------------------------------------
+// Merge-command head binding (OPS-06B-P1.1 / t_f7d0ec21)
+// ----------------------------------------------------------------------------
+function testDocumentedMergeCommandRequiresMatchHeadCommit() {
+  const docs = [
+    'docs/governance/templates/mdg-integrator-checklist.md',
+    'docs/governance/mdg-agent-orchestration-v1.md',
+    'AGENTS.md',
+    'scripts/git/pre-push-verify.cjs',
+  ];
+  let ok = true;
+  for (const doc of docs) {
+    const source = readFileSafe(path.join(ROOT, doc));
+    // Every documented `gh pr merge` command line must bind the exact candidate
+    // head with --match-head-commit "$CANDIDATE_SHA".
+    const mergeLines = [...source.matchAll(/gh pr merge[^\n]*/g)].map((m) => m[0]);
+    const allBound = mergeLines.length > 0
+      && mergeLines.every((cmd) => /--merge\b/.test(cmd) && /--match-head-commit[^\n]*\$CANDIDATE_SHA/.test(cmd));
+    if (!allBound) {
+      ok = false;
+      logFail('documented merge command requires --match-head-commit',
+        `${doc}: a documented merge command lacks --match-head-commit "$CANDIDATE_SHA"`);
+    }
+    // Negative: a documented merge command without head binding must not appear.
+    const bareMerge = mergeLines.some((cmd) => /--merge\b/.test(cmd) && !/--match-head-commit/.test(cmd));
+    if (bareMerge) {
+      ok = false;
+      logFail('documented merge command requires --match-head-commit',
+        `${doc}: a bare merge command without --match-head-commit is documented`);
+    }
+  }
+  if (ok) logPass('documented merge command requires --match-head-commit');
+}
+
+// ----------------------------------------------------------------------------
 // Suite runner
 // ----------------------------------------------------------------------------
 function runAll() {
@@ -1422,6 +1456,7 @@ function runAll() {
   testContinuityGuidanceDoesNotFreezeOperationalTime();
   testMigrationNotesAndHookDescribeImplementedBehavior();
   testIntegratorChecklistClosesOutAfterProductionEvidence();
+  testDocumentedMergeCommandRequiresMatchHeadCommit();
   testActiveReleaseCommandsAreExecutable();
   testActiveReleaseCommandsUseShellSafePlaceholders();
   testCanonicalGatesRunGovernanceSuite();

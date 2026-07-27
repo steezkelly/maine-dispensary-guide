@@ -45,35 +45,60 @@ function defaultGhApi(apiPath) {
 }
 
 /**
+ * Hosts accepted as the GitHub origin. Always includes github.com; may include
+ * an explicitly configured GitHub Enterprise hostname via MDG_GITHUB_HOST
+ * (comma-separated). A wrong host (e.g. a fork host or example.invalid) is
+ * rejected so an attacker-controlled or lookalike remote cannot satisfy the
+ * origin binding (t_abf7bf45 origin-host binding).
+ */
+function allowedGitHubHosts() {
+  const hosts = new Set(['github.com']);
+  const extra = String(process.env.MDG_GITHUB_HOST || '')
+    .split(',')
+    .map((h) => h.trim().toLowerCase())
+    .filter(Boolean);
+  for (const h of extra) hosts.add(h);
+  return hosts;
+}
+
+/**
  * Canonicalize a git remote URL to an `owner/repo` full name.
  * Supports:
  *   https://github.com/owner/repo[.git]
  *   git@github.com:owner/repo[.git]            (scp-like)
  *   ssh://git@github.com[:port]/owner/repo[.git]
  *   git://github.com/owner/repo[.git]
- * Returns null when the URL is malformed or does not yield a valid full name.
+ * Returns null when the URL is malformed, the host is not an accepted GitHub
+ * host, or the path does not yield a valid full name.
  */
 function canonicalizeRepoFullName(url) {
   if (typeof url !== 'string') return null;
   const s = url.trim();
   if (!s) return null;
 
+  let host = null;
   let pathPart = null;
   if (/^[A-Za-z][A-Za-z0-9+.-]*:\/\//.test(s)) {
     // Has a scheme:// (https, ssh, git) → parse as a URL.
     try {
       const u = new URL(s);
+      host = u.hostname;
       pathPart = u.pathname;
     } catch (error) {
       return null;
     }
   } else {
     // scp-like: [user@]host:path  (e.g. git@github.com:owner/repo.git)
-    const m = s.match(/^(?:[A-Za-z0-9._-]+@)?[A-Za-z0-9._-]+:(.+)$/);
+    const m = s.match(/^(?:[A-Za-z0-9._-]+@)?([A-Za-z0-9._-]+):(.+)$/);
     if (!m) return null;
-    pathPart = m[1];
+    host = m[1];
+    pathPart = m[2];
   }
-  if (!pathPart) return null;
+  if (!host || !pathPart) return null;
+
+  // Origin-host binding: the host must be an accepted GitHub host. Rejects
+  // wrong hosts such as https://example.invalid/owner/repo.git or fork hosts.
+  if (!allowedGitHubHosts().has(host.toLowerCase())) return null;
 
   let p = pathPart.replace(/^\/+/, '').replace(/\/+$/, '');
   p = p.replace(/\.git$/i, '').replace(/\/+$/, '');

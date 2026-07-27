@@ -581,3 +581,38 @@ test('R1: CLI redacts ordinary output (no sensitive detail) on a failing gate', 
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+// ---------------------------------------------------------------------------
+// P1.3 (t_b7c5d622): check-run pagination robustness — fail closed on
+// malformed / incomplete / inconsistent pagination.
+// ---------------------------------------------------------------------------
+test('P1.3 (t_b7c5d622): parseCheckRunPages flattens multi-page slurp output', () => {
+  const { parseCheckRunPages } = ROLLUP;
+  const slurp = JSON.stringify([
+    { total_count: 3, check_runs: [{ name: 'Build' }, { name: 'Operations Suite' }] },
+    { total_count: 3, check_runs: [{ name: 'Deploy Preview' }] },
+  ]);
+  const result = parseCheckRunPages(slurp);
+  assert.equal(result.pages, 2);
+  assert.equal(result.check_runs.length, 3);
+  assert.deepEqual(result.check_runs.map((r) => r.name), ['Build', 'Operations Suite', 'Deploy Preview']);
+});
+
+test('P1.3 (t_b7c5d622): parseCheckRunPages fails closed on malformed/incomplete/inconsistent pages', () => {
+  const { parseCheckRunPages } = ROLLUP;
+  // Malformed JSON.
+  assert.throws(() => parseCheckRunPages('{not json'), /CHECK_RUNS_PAGE_MALFORMED/);
+  // A page missing check_runs.
+  assert.throws(() => parseCheckRunPages(JSON.stringify([{ total_count: 1 }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // A null page in the slurp array.
+  assert.throws(() => parseCheckRunPages(JSON.stringify([null, { total_count: 1, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // total_count inconsistent across pages.
+  assert.throws(() => parseCheckRunPages(JSON.stringify([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+    { total_count: 5, check_runs: [{ name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // total_count does not match the flattened run count (truncated pagination).
+  assert.throws(() => parseCheckRunPages(JSON.stringify([
+    { total_count: 4, check_runs: [{ name: 'a' }, { name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+});

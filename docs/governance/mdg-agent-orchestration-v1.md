@@ -124,7 +124,9 @@ sequence in order:
 9. Wait until Vercel reports Ready for that exact candidate SHA.
 10. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
 11. Mark the PR ready and merge with a GitHub **merge commit** — run
-    `gh pr merge "$PR_NUMBER" --merge` (not squash, not rebase).
+    `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"`
+    (not squash, not rebase). `--match-head-commit` is mandatory: it refuses to
+    merge any PR head other than the exact verified candidate.
 12. **Post-merge reconciliation (mandatory).** Prove: first parent = the authorized base; second /
     reachable parent = the verified candidate; final-main tree = candidate tree
     (`git rev-parse "$FINAL_MAIN_SHA"^{tree}` == `git rev-parse "$CANDIDATE_SHA"^{tree}`).

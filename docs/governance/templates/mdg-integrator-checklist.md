@@ -71,8 +71,11 @@ sequence is **not** the canonical path (see "Emergency mode" below).
 13. Run `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
     to smoke the exact preview deployment.
 14. Mark the PR ready and merge with a GitHub **merge commit** — run
-    `gh pr merge "$PR_NUMBER" --merge` (not squash, not rebase — the merge commit
-    preserves the verified candidate SHA as a reachable parent).
+    `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"`
+    (not squash, not rebase — the merge commit preserves the verified candidate
+    SHA as a reachable parent). `--match-head-commit` is mandatory: it refuses to
+    merge if the live PR head is not the exact verified candidate, preventing a
+    different or newly pushed head from being merged after the gate decision.
 15. **Post-merge reconciliation (mandatory).** Fetch the new `origin/main` and
     prove:
     - the final commit is a merge commit;
@@ -139,7 +142,7 @@ Before the merge, create only a `release-pending` draft record on the candidate 
     "git push origin HEAD:refs/heads/$BRANCH_NAME",
     "vercel ready wait on the exact candidate SHA",
     "MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy",
-    "gh pr merge $PR_NUMBER --merge"
+    "gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA"
   ],
   "deferred_work": [
     "list of deferred or follow-up tasks",
@@ -168,7 +171,7 @@ Attach the final deployment metadata only after the complete closeout sequence i
     "git push origin HEAD:refs/heads/$BRANCH_NAME",
     "vercel preview ready wait on the exact candidate SHA",
     "MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy",
-    "gh pr merge $PR_NUMBER --merge",
+    "gh pr merge $PR_NUMBER --merge --match-head-commit $CANDIDATE_SHA",
     "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",
     "node --test scripts/operations/tests/*.test.cjs (on final main)",
     "vercel production ready wait on final-main-sha",

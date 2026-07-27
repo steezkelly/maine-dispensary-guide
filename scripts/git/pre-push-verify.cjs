@@ -76,7 +76,7 @@
  *   4. Set BRANCH_NAME, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
  *   5. Wait until Vercel reports Ready for that exact candidate SHA.
  *   6. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
- *   7. `gh pr merge "$PR_NUMBER" --merge` (GitHub merge commit).
+ *   7. `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"` (GitHub merge commit; --match-head-commit binds the exact verified candidate head).
  *   8. Post-merge reconciliation: first parent = base, second/reachable parent =
  *      candidate, and `git rev-parse "$FINAL_MAIN_SHA"^{tree}` ==
  *      `git rev-parse "$CANDIDATE_SHA"^{tree}`.

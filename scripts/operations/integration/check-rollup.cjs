@@ -60,22 +60,58 @@ function defaultGhApi(apiPath) {
 }
 
 /**
- * Paginated check-run retrieval. Uses `gh api --paginate`, which concatenates
- * all pages into a single JSON array of page objects; we flatten check_runs.
+ * Parse + flatten + validate the `--paginate --slurp` output of the check-runs
+ * endpoint (t_b7c5d622 pagination robustness). Pure function so the fail-closed
+ * behavior is directly testable. Fails closed (CHECK_RUNS_PAGE_MALFORMED /
+ * CHECK_RUNS_PAGE_INCOMPLETE / CHECK_RUNS_TOTAL_COUNT_MISMATCH) on malformed
+ * output, an incomplete page, or a total_count that does not match the flattened
+ * run count — so a truncated or partially-fetched pagination cannot silently
+ * drop a conflicting duplicate beyond the first page.
+ * @param {string} rawOutput stdout of `gh api --paginate --slurp .../check-runs`
  * @returns {{ check_runs: object[], pages: number }}
  */
-function defaultGhApiCheckRuns(repoFullName, headSha) {
-  const out = execFileSync('gh', ['api', '--paginate', `repos/${repoFullName}/commits/${headSha}/check-runs`], { encoding: 'utf8' });
-  const parsed = JSON.parse(out);
+function parseCheckRunPages(rawOutput) {
+  let parsed;
+  try {
+    parsed = JSON.parse(rawOutput);
+  } catch (error) {
+    throw new Error('CHECK_RUNS_PAGE_MALFORMED');
+  }
   const pages = Array.isArray(parsed) ? parsed : [parsed];
   const checkRuns = [];
+  let expectedTotal = null;
   for (const page of pages) {
-    if (!page || !Array.isArray(page.check_runs)) {
+    if (!page || typeof page !== 'object' || !Array.isArray(page.check_runs)) {
       throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
+    }
+    if (typeof page.total_count === 'number') {
+      // Every page reports the same total_count; record it for the cross-check.
+      if (expectedTotal === null) expectedTotal = page.total_count;
+      else if (page.total_count !== expectedTotal) throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
     }
     checkRuns.push(...page.check_runs);
   }
+  if (expectedTotal !== null && checkRuns.length !== expectedTotal) {
+    throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
+  }
   return { check_runs: checkRuns, pages: pages.length };
+}
+
+/**
+ * Paginated check-run retrieval (t_b7c5d622 pagination robustness). Uses
+ * `gh api --paginate --slurp`, which produces a single machine-parseable JSON
+ * array of every page object; parsing/validation is delegated to
+ * parseCheckRunPages so a truncated or malformed pagination fails closed.
+ * @returns {{ check_runs: object[], pages: number }}
+ */
+function defaultGhApiCheckRuns(repoFullName, headSha) {
+  let out;
+  try {
+    out = execFileSync('gh', ['api', '--paginate', '--slurp', `repos/${repoFullName}/commits/${headSha}/check-runs`], { encoding: 'utf8' });
+  } catch (error) {
+    throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
+  }
+  return parseCheckRunPages(out);
 }
 
 /**
@@ -322,4 +358,5 @@ module.exports = {
   POLICY_SCHEMA,
   defaultGhApi,
   defaultGhApiCheckRuns,
+  parseCheckRunPages,
 };
