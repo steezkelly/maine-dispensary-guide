@@ -507,13 +507,18 @@ Credentials:
     process.exit(0);
   }
 
-  // --check-config: redacted credential self-check (used by audit script)
+  // --check-config: redacted credential self-check (used by audit script).
+  // Exit zero ONLY when all four are true: source found, format recognized,
+  // required fields present, AND file mode acceptable (600 or 400). An
+  // insecure credential file (e.g. 0644) produces nonzero while still
+  // emitting only redacted JSON.
   if (args.includes('--check-config')) {
     const result = checkConfig();
     console.log(JSON.stringify(result, null, 2));
     const ok = result.credential_source_found &&
                result.format_recognized &&
-               result.required_fields_present;
+               result.required_fields_present &&
+               result.file_mode_acceptable;
     process.exit(ok ? 0 : 1);
   }
 
