@@ -15,6 +15,7 @@ const article = {
 };
 
 const topics = ['compliance'];
+const faqPageJsonLd = "{\"@context\": \"https://***\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"Does Maine issue a cannabis courier license?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"No standalone adult-use courier or delivery-service license appears in Title 28-B. Authorized existing licensees may deliver within their license authority, and cannabis stores may not use a third-party delivery service.\"}}, {\"@type\": \"Question\", \"name\": \"Can adult-use cannabis be delivered to a town without a retail store?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Yes, an authorized licensee may deliver to an eligible destination even when the municipality has not authorized a local adult-use store. The municipality may regulate time, place, and manner but may not prohibit the authorized delivery or require a separate delivery permit.\"}}, {\"@type\": \"Question\", \"name\": \"Can a friend receive my adult-use order?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"No. The employee must verify that the recipient is at least 21 and is the same person who placed the order.\"}}, {\"@type\": \"Question\", \"name\": \"Can a hotel accept delivery?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Only if an authorized hotel representative has given express written permission using the OCP process and the location is otherwise eligible.\"}}, {\"@type\": \"Question\", \"name\": \"Is medical delivery the same as adult-use delivery?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"No. Medical activity is governed by Title 22 and the Maine Medical Use of Cannabis Program; adult-use delivery is governed by Title 28-B and the adult-use rules.\"}}]}";
 ---
 
 <Layout
@@ -150,6 +151,7 @@ const topics = ['compliance'];
 
   <section>
     <h2>Frequently asked questions</h2>
+    <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
     <details data-faq data-faq-id="maine-courier-license"><summary>Does Maine issue a cannabis courier license?</summary><p>No standalone adult-use courier or delivery-service license appears in Title 28-B. Authorized existing licensees may deliver within their license authority, and cannabis stores may not use a third-party delivery service.</p></details>
     <details data-faq data-faq-id="delivery-no-local-store"><summary>Can adult-use cannabis be delivered to a town without a retail store?</summary><p>Yes, an authorized licensee may deliver to an eligible destination even when the municipality has not authorized a local adult-use store. The municipality may regulate time, place, and manner but may not prohibit the authorized delivery or require a separate delivery permit.</p></details>
     <details data-faq data-faq-id="delivery-recipient"><summary>Can a friend receive my adult-use order?</summary><p>No. The employee must verify that the recipient is at least 21 and is the same person who placed the order.</p></details>

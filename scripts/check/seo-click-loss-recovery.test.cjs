@@ -166,6 +166,49 @@ test('rewritten FAQ accordions retain GA4 instrumentation attributes', () => {
   }
 });
 
+test('rewritten FAQ accordions emit one valid FAQPage schema with visible parity', () => {
+  const faqPages = [
+    'apps/maine-cannabis/src/pages/guides/standish-dispensary-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/buxton-dispensary-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-cannabis-delivery-rules.astro',
+    'apps/maine-cannabis/src/pages/blog/maine-medical-patient-delivery-services-2026.astro',
+  ];
+
+  for (const page of faqPages) {
+    const source = read(page);
+    assert.equal(source.match(/FAQPage/g).length, 1, `${page} must emit exactly one FAQPage schema`);
+    assert.match(
+      source,
+      /<script type="application\/ld\+json" set:html=\{faqPageJsonLd\} is:inline><\/script>/,
+      `${page} must inline the FAQPage schema via set:html`,
+    );
+
+    const literal = source.match(/const faqPageJsonLd = ("(?:[^"\\]|\\.)*");/);
+    assert.ok(literal, `${page} missing faqPageJsonLd const`);
+    const schema = JSON.parse(JSON.parse(literal[1]));
+    assert.equal(schema['@type'], 'FAQPage', `${page} schema is not a FAQPage`);
+    assert.ok(Array.isArray(schema.mainEntity) && schema.mainEntity.length > 0, `${page} schema has no questions`);
+
+    const visibleQuestions = [...source.matchAll(/<summary>(.*?)<\/summary>/gs)].map((m) => m[1].trim());
+    const schemaQuestions = schema.mainEntity.map((e) => {
+      assert.equal(e['@type'], 'Question', `${page} mainEntity entry is not a Question`);
+      assert.ok(e.acceptedAnswer && typeof e.acceptedAnswer.text === 'string' && e.acceptedAnswer.text.length > 0, `${page} question lacks an answer`);
+      return e.name;
+    });
+    assert.deepEqual(schemaQuestions, visibleQuestions, `${page} FAQ schema questions diverge from the visible accordions`);
+  }
+});
+
+test('blog index delivery cards reflect the corrected destination pages', () => {
+  const index = read('apps/maine-cannabis/src/pages/blog/index.astro');
+  assert.doesNotMatch(index, /starting a cannabis delivery service/i, 'blog index still implies a standalone delivery startup path');
+  assert.doesNotMatch(index, /rural access solutions/i, 'blog index still advertises removed rural-network content');
+  assert.doesNotMatch(index, /Plan delivery licensing/i, 'blog index crosslink still implies standalone delivery licensing');
+  assert.match(index, /no standalone courier license/i, 'business delivery card must state there is no standalone courier license');
+  assert.match(index, /§504\(9\)/, 'business delivery card must cite the §504(9) delivery authority');
+  assert.match(index, /responsible caregiver or registered dispensary/, 'medical delivery card must name the responsible provider');
+});
+
 test('canonical route policy remains slashless', () => {
   const config = read('apps/maine-cannabis/astro.config.mjs');
   assert.match(config, /trailingSlash:\s*['"]never['"]/);
