@@ -103,7 +103,10 @@ hermes kanban --board mdg-site list --json
 
 # Candidate verification
 npm run verify:iterate
-npm run verify:push
+node scripts/git/pre-push-verify.cjs --ref=origin/main
+npm run build:isolated
+# After normal push and exact-SHA Vercel preview readiness:
+MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy
 
 # Health measurement (requires a checkout with valid build output)
 node apps/maine-cannabis/scripts/admin/sprint-score.cjs --dry-run
@@ -111,6 +114,6 @@ node apps/maine-cannabis/scripts/admin/sprint-score.cjs --dry-run
 
 ---
 
-*Last reconciled: 2026-07-19 against current `origin/main`; inspect live Git
+*Last reconciled: 2026-07-25 against current `origin/main`; inspect live Git
 state before dispatch or integration.*
 *Previous snapshot: 2026-07-14 control-plane reconciliation.*

@@ -36,26 +36,47 @@ node scripts/content/audit-fix-loop.cjs --url https://...  # Custom target
 ## git/ — Git Workflow
 
 ### `pre-push-verify.cjs`
-**Purpose:** Two-pass verification gate for any .astro / .ts file about to be pushed. Replaces the previous `delta-typecheck.cjs` (which had a hardcoded Windows projectRoot and was never wired into any hook).
+**Purpose:** Fail-closed verification and release-governance gate for changed Astro/TypeScript code, root Node scripts, generated-data dependencies, and governed release-policy surfaces. It replaces the previous `delta-typecheck.cjs` and runs the shared governance inventory before any diff-dependent early exit.
 
-**Pass 1 (fast, ~1s):** Extracts the .astro frontmatter JS and pipes it to esbuild for parse-only validation. Catches the Sprint 75 failure class — missing commas between object literals, stray braces in embedded arrays — with the same `Expected "]" but found "{"` error message Vercel reports.
-
-**Pass 2 (slow, ~5-15s):** `npx astro check` filtered to the changed files. Only runs after pass 1 is green.
+**Maintained passes, in order:**
+1. Release-governance contracts for the canonical hook, CI, package-script authorities, verifier, and active operating guidance.
+2. autoRelated-freshness validation without mutating or staging generated files.
+3. Fast esbuild parsing for changed Astro frontmatter.
+4. `--fast-only` / `--data-only` assertions when requested.
+5. Root Node syntax checks.
+6. Changed-file-filtered `npx astro check`.
+7. Optional preview or explicitly authorized production smoke checks.
+8. sitemap-postprocess, docs-vs-code, compressed-frontmatter, and hero-image-naming checks.
 
 **Usage:**
 ```bash
-node scripts/git/pre-push-verify.cjs              # both passes
-node scripts/git/pre-push-verify.cjs --fast-only  # esbuild only
-node scripts/git/pre-push-verify.cjs --ref=origin/main  # diff against a specific ref
+node scripts/git/pre-push-verify.cjs                         # complete non-smoke gate
+node scripts/git/pre-push-verify.cjs --fast-only             # governance + freshness + fast parse
+node scripts/git/pre-push-verify.cjs --ref=origin/main       # exact origin/main..HEAD range
+: "${BASE_SHA:?Set BASE_SHA to the exact base commit}"
+: "${CANDIDATE_SHA:?Set CANDIDATE_SHA to the exact candidate commit}"
+node scripts/git/pre-push-verify.cjs --ref="$BASE_SHA" --target="$CANDIDATE_SHA" # immutable object range used by the hook
+MDG_PREVIEW_URL=https://your-exact-preview.vercel.app node scripts/git/pre-push-verify.cjs --ref=origin/main --with-smoke
 ```
+
+`--ref` always names the base of `<base>..<candidate>`; the candidate defaults to `HEAD`. `--target` is accepted only with `--ref`, must resolve to the checked-out `HEAD`, and requires a clean working tree so all filesystem-based checks inspect that exact object. Empty, bare, duplicate, or unknown options fail closed with exit `2`; a dirty explicit-target worktree exits `3`.
 
 **Exit codes:**
 - `0` clean
-- `1` esbuild parse error (blocks push)
-- `2` astro check error (blocks push)
-- `3` env error (esbuild missing, not in git repo, etc.)
+- `1` esbuild parse error
+- `2` invalid/unknown exact-range option or ref, or Astro check error
+- `3` environment/repository error
+- `6` sitemap-postprocess failure or required checker absent
+- `7` docs-vs-code failure or required checker absent
+- `8` compressed-frontmatter failure or required checker absent
+- `9` hero-image-naming failure or required checker absent
+- `10` root Node syntax failure
+- `11` data-only diff assertion failure
+- `12` smoke target or smoke assertion failure
+- `13` autoRelated-freshness failure or required input absent
+- `16` release-governance failure or required governance input absent
 
-**Notes:** Auto-wired as a pre-push git hook via `core.hooksPath .githooks` (see `install-hooks.cjs`). To bypass in an emergency: `git push --no-verify`.
+**Notes:** Auto-wired as a pre-push git hook via `core.hooksPath .githooks` (see `install-hooks.cjs`). Hook failures are release blockers: repair the verifier or hook, rerun the focused governance contracts, and retry the normal push. Bypassing the hook is forbidden.
 
 ### `install-hooks.cjs`
 **Purpose:** Set `core.hooksPath` to `.githooks/` so the pre-push hook ships with the repo. Idempotent. Run once per clone.
@@ -198,7 +219,7 @@ node scripts/send-email.cjs --to "recipient@example.com" --subject "Subject" --b
 **Purpose:** Track email opens/replies in the email tracking JSON.
 **Usage:**
 ```bash
-node scripts/track-email.cjs --message-id "<abc123>" --opened
+node scripts/track-email.cjs --message-id "abc123" --opened
 ```
 
 ### `add-image-schema.cjs`

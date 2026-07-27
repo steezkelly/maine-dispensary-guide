@@ -66,12 +66,19 @@ and records separate `SPEC COMPLIANCE` and `CODE QUALITY` verdicts.
 The Integrator is the sole writer for integration. Only the integration worktree
 may update `origin/main`; the Integrator must not use the primary checkout. The
 Integrator must cherry-pick one accepted candidate, recheck base compatibility,
-lease status, verification evidence, and scope, then run `npm run
-verify:iterate` (smoke-free) and execute deploy verification on the
-post-transport Vercel preview deployment — `npm run verify:post-deploy` with
-`MDG_PREVIEW_URL` set. Pre-transport smoke against the currently-deployed
-production site is forbidden by the 2026-07-20 governance change; see
-`docs/governance/verifier-governance-migration-notes-2026-07-20.md`. The
+lease status, verification evidence, and scope, then execute the canonical
+release sequence in order:
+
+1. `node scripts/git/pre-push-verify.cjs --ref=origin/main`
+2. `npm run build:isolated`
+3. Set `BRANCH_NAME`, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
+4. Wait until Vercel reports Ready for that exact pushed SHA.
+5. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
+6. Only after merge and exact production deployment readiness, run
+   `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`.
+
+Pre-transport smoke against the currently deployed production site is forbidden;
+see `docs/governance/verifier-governance-migration-notes-2026-07-20.md`. The
 Integrator must not merge unverified batch work. For release readiness, record
 final SHA, Vercel deployment ID/URL, validation commands, and deferred work
 metadata before release. No author, verifier, or coordinator may independently
@@ -134,9 +141,12 @@ not depend on one agent's memory.
 
 ### Deterministic continuity command
 
-Use `npm run agents:continuity -- --board-state <json> [--json] [--now <iso>]`
-to compute the next action from local board state, with no network calls or writes.
-`<json>` may be either raw JSON text or a path to a `.json` file. The command
+Use `npm run agents:continuity -- --board-state board-state.json --json`
+to compute the next action from local board state with the command's current-time
+default, with no network calls or writes. Use the optional `--now` argument only
+for deterministic tests or historical replay; do not pin a past timestamp in live
+operating guidance. The board-state argument may be either raw JSON text or a
+path to a `.json` file. The command
 emits a stable object with:
 
   - `kind`: one of `dispatch`, `continue-reconnaissance`,
@@ -163,7 +173,7 @@ persist between Hermes CLI invocations, so every board operation must name the
 board explicitly. Use commands in this form:
 
 ```bash
-hermes kanban --board mdg-site <operation> ...
+hermes kanban --board mdg-site list --json
 ```
 
 Do not rely on a previously selected board, an implicit default, or a shell

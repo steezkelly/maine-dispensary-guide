@@ -24,10 +24,11 @@ business resources. Lives at https://mainedispensaryguide.com.
   and local hero images in `apps/maine-cannabis/public/images/heroes/`
   (`.jpg`, `.webp`, `.avif`, plus `-640w` mobile variants).
 - **Verify loop**: use the repository's canonical staged commands:
-  `npm run verify:iterate` during authoring and `npm run verify:push` once before
-  push/release. The local pre-push hook is diff-scoped; production smoke is an
-  explicit release gate, not an iteration step. See `AGENTS.md` for the current
-  command contract.
+  `npm run verify:iterate` during authoring, the exact-range verifier plus
+  `npm run build:isolated` for a committed candidate, and
+  `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy` only after the
+  normal push is Vercel Ready for that SHA. Production smoke follows merge and
+  exact production readiness. See `AGENTS.md` for the current command contract.
 
 ## Vercel ↔ GitHub integration
 
@@ -47,11 +48,14 @@ vercel ls maine-dispensary-guide 2>&1 | head -3
 
 The repository uses one canonical command per stage:
 
-1. **Iteration:** `npm run verify:iterate` runs the diff-scoped local checks
-   without production smoke.
-2. **Push/release:** `npm run verify:push` adds the production page and image
-   smoke checks once the candidate is ready to push.
-3. **Hook:** `.githooks/pre-push` invokes the diff-scoped verifier. Do not
+1. **Iteration:** `npm run verify:iterate` runs smoke-free diff-scoped checks.
+2. **Exact candidate:** run the explicit base-to-head verifier, one
+   `npm run build:isolated`, and exact-head independent review.
+3. **Transport/preview:** push normally, wait for Vercel Ready on that SHA, then
+   run `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`.
+4. **Production:** after merge and exact deployment readiness, run explicit
+   production smoke under the allow-list contract in `AGENTS.md`.
+5. **Hook:** `.githooks/pre-push` invokes the diff-scoped verifier. Do not
    describe a hook pass as production-smoke evidence.
 
 Reinstall the hook on a fresh clone with `npm run hooks:install`. Use
@@ -68,7 +72,10 @@ local verification commands; it does not turn a candidate branch into a release.
 
 Per `AGENTS.md`, use:
 - `npm run verify:iterate` while editing;
-- `npm run verify:push` before a push or release;
+- exact-range verification, `npm run build:isolated`, and exact-head review
+  before a normal push;
+- `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy` after that SHA is
+  Vercel Ready;
 - exact-head CI and production-origin evidence before a release claim.
 
 If a gate is red, stop and fix it. A Vercel `Ready` label or generic HTTP 200 is
@@ -118,7 +125,7 @@ When multiple agents are active:
 1. Work in named worktrees from freshly fetched `origin/main`; do not author or
    integrate in the primary checkout.
 2. Validate a scoped task contract and acquire a shared path lease before edits.
-3. Stage only declared paths (`git add <specific paths>`), never `git add -A` or
+3. Stage only declared paths (`git add -- path/one path/two`), never `git add -A` or
    `git add .`.
 4. Treat overlapping leases, base movement, or another owner's edits as a stop
    condition. Preserve the evidence and route the conflict through Kanban.
@@ -135,13 +142,13 @@ recap, future promotional content), follow the pro-workflow established 2026-07-
    `STORYBOARD.md` as a "Motion vocabulary" appendix. Pick eases by feel, not
    by GSAP name.
 2. **Plan beat timing:** in the storyboard phase, run
-   `node ~/videos/.shared/hold-time-calc.mjs <narration.txt>` to set the
+   `node ~/videos/.shared/hold-time-calc.mjs narration.txt` to set the
    minimum per-beat duration. Don't ship a data video with sub-1.5s hold per
    data point — the user has flagged this twice.
 3. **Pre-render audit:** before every `npx hyperframes render`, run
-   `node ~/videos/.shared/pre-render-audit.mjs <project-dir>`. Fix every ERROR.
+   `node ~/videos/.shared/pre-render-audit.mjs ./project-dir`. Fix every ERROR.
    Warnings are advisory but review them.
-4. **Post-render verify:** run `npx hyperframes snapshot . --at "<beat-times>"`
+4. **Post-render verify:** run `npx hyperframes snapshot . --at "0,2.5,5"`
    to confirm each beat reads correctly in still frames.
 5. **Audio fallback:** if TTS deps (Kokoro / transformers) are missing locally,
    use `mmx speech synthesize --text-file narration.txt --voice
@@ -151,8 +158,8 @@ recap, future promotional content), follow the pro-workflow established 2026-07-
 6. **Music:** `mmx music generate --instrumental --prompt "..."` for BGM. Match
    the prompt to the brand mode (editorial-naturalist = warm fingerpicked
    acoustic; 80s-jazz-newsroom = muted smooth jazz with Rhodes + sax).
-7. **Live assets:** videos render in `~/videos/<project>/` and deploy via
-   `cp <video>.mp4 apps/maine-cannabis/public/videos/<name>.mp4` followed
+7. **Live assets:** videos render under `~/videos/`; for example, deploy via
+   `cp ~/videos/mdg-site-tour/mdg-site-tour.mp4 apps/maine-cannabis/public/videos/mdg-site-tour.mp4` followed
    by `git commit && git push`. Vercel serves the file directly from
    `public/videos/` with the standard `Cache-Control: public, s-maxage=3600,
    stale-while-revalidate=86400` headers.
@@ -168,14 +175,16 @@ audit with 0 errors, 0 warnings. Findings: `~/videos/PRO_WORKFLOW_AUDIT_RESULTS.
 npm run verify:iterate
 npm run verify:iterate -- --fast-only
 
-# Verify once before push/release
-npm run verify:push
+# Exact candidate, then post-transport preview
+node scripts/git/pre-push-verify.cjs --ref=origin/main
+npm run build:isolated
+MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy
 
 # Control plane
 npm run workflow:status:fetch
 hermes kanban --board mdg-site list --json
 ```
 
-Last reconciled: 2026-07-19 (Refined Editorial + ICA release and control-plane
+Last reconciled: 2026-07-25 (preview-first verification governance and control-plane
 routing reconciled). Edit only for a verified rule the next agent needs before
 opening its task card.

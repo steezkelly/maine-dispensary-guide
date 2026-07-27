@@ -14,7 +14,8 @@
 ## First five minutes
 
 ```bash
-cd <fresh checkout of maine-dispensary-guide>
+: "${MDG_REPO_ROOT:?Set MDG_REPO_ROOT to the Maine Dispensary Guide checkout path}"
+cd "$MDG_REPO_ROOT"
 git fetch origin --prune
 npm run workflow:status:fetch
 hermes kanban --board mdg-site list --json

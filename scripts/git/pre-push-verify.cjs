@@ -23,7 +23,7 @@
  * Exit codes:
  *   0   clean
  *   1   parse error in changed .astro file (fast pass failed)
- *   2   astro check error in changed file (slow pass failed)
+ *   2   invalid/unknown exact-range option or ref, or astro check error in changed file
  *   3   tool/env error (esbuild missing, not in a git repo, etc.)
  *   4   (legacy) smoke-200: a built page returns non-200 against the live site
  *   5   (legacy) smoke-img-200: a page references an image that 404s
@@ -34,25 +34,25 @@
  *   10  node --check: a changed root Node script has invalid syntax
  *   11  --data-only: at least one file changed non-data-attribute content
  *   12  --with-smoke: no acceptable smoke base (MDG_PREVIEW_URL missing or MDG_ALLOW_PROD_SMOKE not set)
- *   13  autoRelated-freshness required check absent or stale; or a maintained
- *       checker script is missing.
+ *   13  autoRelated-freshness required input absent or stale
  *   14  (reserved) verifier discovered the working tree was mutated
  *   15  (reserved) killOrphanedTsServers could not enumerate
+ *   16  release-governance contract failed or was unavailable
  *
  * Pass 3 (smoke-200) was added in Sprint 78. It hits every published page
- * on https://mainedispensaryguide.com (or MDG_BASE/MDG_PREVIEW_URL) and
- * fails the push if any return non-200. Catches the "build green but
+ * on the explicitly selected preview or post-deploy production target and
+ * fails verification if any return non-200. Catches the "build green but
  * specific page 404s/500s" failure mode that build-time checks can't see.
- * Runs ~5s against the live site. OPT-IN ONLY as of 2026-07-13 (Sprint 78 verify-bloat
- * cleanup) — use --with-smoke to run. Default is OFF because iterating locally should not
- * hammer production URLs; run the full --with-smoke before pushing if the change touched
- * rendered output.
+ * Runs ~5s against the selected target. OPT-IN ONLY as of 2026-07-13 (Sprint 78
+ * verify-bloat cleanup) — use --with-smoke only after a normal branch push and
+ * exact-SHA preview readiness, or after merge and production readiness. Default
+ * is OFF because local verification cannot validate an undeployed candidate.
  *
  * Pass 4 (smoke-img-200) was added on 2026-07-02. It walks every rendered
  * HTML file in dist/, extracts every <img src>, <source srcset>,
  * <link rel="preload" as="image" href>, and <meta property="og:image"
  * content> reference, HEADs each same-origin URL against the smoke base,
- * and fails the push if any return non-200. Catches the "shipped with a
+ * and fails verification if any return non-200. Catches the "shipped with a
  * broken hero/OG image" bug class — see the 2026-07-02 /learn/ consumer
  * hub regression (heroImage pointed at a 404 path; build green, smoke-200
  * green, but the social-share preview was a 404 image and the browser
@@ -68,11 +68,22 @@
  *     + MDG_BASE set to the production URL.
  *   - Anything else: --with-smoke refuses to run and exits 12.
  *
+ * Canonical release sequence:
+ *   1. `node scripts/git/pre-push-verify.cjs --ref=origin/main`
+ *   2. `npm run build:isolated`
+ *   3. Set BRANCH_NAME, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
+ *   4. Wait until Vercel reports Ready for that exact pushed SHA.
+ *   5. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
+ *   6. Only after merge and exact production deployment readiness:
+ *   7. `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`
+ *
  * Usage:
  *   node scripts/git/pre-push-verify.cjs                                 # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
- *   MDG_PREVIEW_URL=https://<hash>.vercel.app \
+ *   node scripts/git/pre-push-verify.cjs --ref=origin/main               # exact range origin/main..HEAD
+ *   node scripts/git/pre-push-verify.cjs --ref="$BASE_SHA" --target="$CANDIDATE_SHA" # immutable exact object range (used by pre-push hook)
+ *   MDG_PREVIEW_URL=https://your-exact-preview.vercel.app \
  *     node scripts/git/pre-push-verify.cjs --with-smoke                   # smoke against the exact preview deployment
- *   Do not use `--ignore-unrelated` for candidate/release verification; it is legacy compatibility only.
+ *   `--ignore-unrelated` is unsupported and rejected; exact-candidate verification has no scope-bypass flag.
  *   MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com \
  *     node scripts/git/pre-push-verify.cjs --with-smoke                   # explicit post-deploy production smoke
  *   node scripts/git/pre-push-verify.cjs --fast-only                      # parse-only (~1s)
@@ -90,6 +101,7 @@
 const { execSync, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { GOVERNANCE_TRIGGER_FILES } = require('./release-governance-surfaces.cjs');
 
 const REPO_ROOT = (() => {
     // Walk up from this file until we find a package.json with "workspaces"
@@ -111,7 +123,17 @@ const APPS = ['apps/maine-cannabis'];
 const ASTRO_FILE_RE = /\.astro$/;
 const TS_FILE_RE = /\.(ts|tsx|mts|cts)$/;
 const NODE_SCRIPT_RE = /\.(cjs|mjs|js)$/;
+const REQUIRED_VERIFIER_INPUTS = new Set([
+    'apps/maine-cannabis/scripts/image/check-hero-naming.cjs',
+    'apps/maine-cannabis/src/data/autoRelatedData.json',
+]);
 const ANSI_ESCAPE_RE = /\u001B\[[0-?]*[ -/]*[@-~]/g;
+function isGovernanceTrigger(filePath) {
+    return GOVERNANCE_TRIGGER_FILES.includes(normalizeRepoPath(filePath));
+}
+function isRequiredVerifierInput(filePath) {
+    return REQUIRED_VERIFIER_INPUTS.has(normalizeRepoPath(filePath));
+}
 
 /**
  * Resolve the base URL for smoke checks.
@@ -122,7 +144,7 @@ const ANSI_ESCAPE_RE = /\u001B\[[0-?]*[ -/]*[@-~]/g;
  *
  * Contract (2026-07-20 governance):
  *   - `MDG_PREVIEW_URL` (preferred): a Vercel preview deployment URL, e.g.
- *     https://maine-dispensary-guide-<hash>-steezkellys-projects.vercel.app
+ *     https://maine-dispensary-guide-example-sha-steezkellys-projects.vercel.app
  *     This is the only path that pre-transport smoke against an
  *     untrafficked deployment must use, because the URL routes to a
  *     fresh preview deployment created by Vercel for the exact
@@ -180,44 +202,108 @@ function isValidRef(s) {
     return typeof s === 'string' && /^[a-zA-Z0-9._/^~:-]+$/.test(s);
 }
 
-function changedFiles(refArg) {
-    // Three sources, deduped:
-    //   a) commits in <range> (used when called as a real pre-push hook with the remote ref,
-    //      OR when --ref=<commit> tests a specific commit)
-    //   b) staged changes (index vs HEAD)
-    //   c) unstaged/uncommitted working-tree changes
-    //
-    // For --ref=<commit>, we diff against the commit's parent so the diff
-    // represents exactly what that commit introduced (otherwise newer work on
-    // the branch would also appear in the file list).
-    const all = new Set();
-    if (refArg) {
-        if (!isValidRef(refArg)) return all;
-        let range;
-        const isCommit = /^[0-9a-f]{7,40}$/.test(refArg);
-        if (isCommit) {
-            range = `${refArg}^..${refArg}`;
-        } else {
-            range = `${refArg}..HEAD`;
-        }
-        try {
-            git(`git diff --name-only ${range}`).split('\n').filter(Boolean).forEach(f => all.add(f));
-        } catch (e) {
-            log('warn', `could not diff against ${refArg}: ${e.message.split('\n')[0]}`);
+const KNOWN_FLAGS = new Set([
+    '--fast-only',
+    '--data-only',
+    '--with-smoke',
+    '--skip-smoke-200',
+    '--skip-smoke-img-200',
+    '--skip-autoRelated-freshness',
+    '--skip-sitemap-postprocess',
+    '--skip-docs-vs-code',
+    '--skip-compressed-frontmatter',
+    '--skip-hero-image-naming',
+]);
+
+function parseCliArgs(args) {
+    let refArg = null;
+    let targetArg = 'HEAD';
+    let targetExplicit = false;
+    for (const arg of args) {
+        if (arg.startsWith('--ref=')) {
+            if (refArg !== null) throw new Error('Duplicate --ref option.');
+            refArg = arg.slice('--ref='.length);
+            if (!refArg) throw new Error('--ref requires a value: use --ref=<base>.');
+        } else if (arg.startsWith('--target=')) {
+            if (targetExplicit) throw new Error('Duplicate --target option.');
+            targetArg = arg.slice('--target='.length);
+            targetExplicit = true;
+            if (!targetArg) throw new Error('--target requires a value: use --target=<candidate>.');
+        } else if (!KNOWN_FLAGS.has(arg)) {
+            throw new Error(`Unknown option: ${arg || '(empty)'}.`);
         }
     }
+    if (targetExplicit && !refArg) throw new Error('--target requires --ref=<base>.');
+    for (const [name, value] of [['--ref', refArg], ['--target', targetArg]]) {
+        if (value && !isValidRef(value)) {
+            throw new Error(`Invalid ${name} value (must match /^[a-zA-Z0-9._/^~:-]+$/): ${value}`);
+        }
+    }
+    return { refArg, targetArg, targetExplicit };
+}
+
+function validateExactTarget({ targetArg, targetExplicit }) {
+    if (!targetExplicit) return;
+    let resolvedTarget;
+    let resolvedHead;
     try {
-        git('git diff --name-only --cached HEAD').split('\n').filter(Boolean).forEach(f => all.add(f));
-    } catch {}
-    try {
-        git('git diff --name-only').split('\n').filter(Boolean).forEach(f => all.add(f));
-    } catch {}
-    // Also pick up untracked-but-tracked-by-intent .astro/.ts files (rare but real)
-    try {
-        const untracked = git('git ls-files --others --exclude-standard').split('\n').filter(Boolean);
-        untracked.forEach(f => { if (ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)) all.add(f); });
-    } catch {}
-    return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f));
+        resolvedTarget = gitExec(['rev-parse', '--verify', `${targetArg}^{commit}`]).trim();
+        resolvedHead = gitExec(['rev-parse', '--verify', 'HEAD^{commit}']).trim();
+    } catch (error) {
+        const targetError = new Error(`could not resolve exact --target=${targetArg}: ${error.message.split('\n')[0]}`);
+        targetError.code = 'INVALID_REF';
+        throw targetError;
+    }
+    if (resolvedTarget !== resolvedHead) {
+        const targetError = new Error(`--target resolves to ${resolvedTarget}, but the checked-out HEAD is ${resolvedHead}`);
+        targetError.code = 'INVALID_REF';
+        throw targetError;
+    }
+    const dirty = gitExec(['status', '--porcelain', '--untracked-files=all']).trim();
+    if (dirty) {
+        const targetError = new Error('explicit --target verification requires a clean working tree so every checker reads the exact candidate object');
+        targetError.code = 'DIRTY_TARGET';
+        throw targetError;
+    }
+}
+
+function changedFiles(refArg, targetArg = 'HEAD') {
+    // Exact-range calls compare <base>..<candidate>. Working-tree iteration
+    // has no --ref and combines staged, unstaged, and untracked trigger files.
+    const all = new Set();
+    if (refArg) {
+        const range = `${refArg}..${targetArg}`;
+        try {
+            // --no-renames preserves both the deleted source and added
+            // destination paths. Required-input or governance removals must
+            // not disappear behind Git's single-destination R100 output.
+            git(`git diff --no-renames --name-only ${range}`).split('\n').filter(Boolean).forEach(f => all.add(f));
+        } catch (e) {
+            const message = `could not diff exact range ${range}: ${e.message.split('\n')[0]}`;
+            const refError = new Error(message);
+            refError.code = 'INVALID_REF';
+            throw refError;
+        }
+    }
+
+    // Only iteration/default HEAD verification includes live working-tree
+    // state. An explicit candidate SHA must remain an immutable object range.
+    if (!refArg || targetArg === 'HEAD') {
+        for (const cmd of ['git diff --no-renames --name-only --cached', 'git diff --no-renames --name-only']) {
+            try {
+                git(cmd).split('\n').filter(Boolean).forEach(f => all.add(f));
+            } catch (_) { /* ignore individual source failure */ }
+        }
+        try {
+            git('git ls-files --others --exclude-standard').split('\n').filter(Boolean).forEach(f => {
+                if (ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)
+                    || isGovernanceTrigger(f) || isRequiredVerifierInput(f)) all.add(f);
+            });
+        } catch (_) { /* no untracked files */ }
+    }
+
+    return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)
+        || isGovernanceTrigger(f) || isRequiredVerifierInput(f));
 }
 
 function normalizeRepoPath(filePath) {
@@ -267,7 +353,7 @@ function fastParseCheck(files) {
     const esbuildBin = path.join(REPO_ROOT, 'node_modules', '.bin', 'esbuild');
     if (!fs.existsSync(esbuildBin)) {
         log('err', `esbuild not found at ${esbuildBin} — run \`npm install\` first`);
-        return { ok: false, errors: [{ file: '(env)', msg: 'esbuild missing' }] };
+        return { ok: false, environmentError: true, errors: [{ file: '(env)', msg: 'esbuild missing' }] };
     }
 
     const errors = [];
@@ -326,8 +412,8 @@ function slowAstroCheck(files) {
     // For the MDG monorepo, the Astro app is apps/maine-cannabis
     const astroApp = path.join(REPO_ROOT, 'apps', 'maine-cannabis');
     if (!fs.existsSync(path.join(astroApp, 'package.json'))) {
-        log('warn', `no Astro app found at ${astroApp} — skipping slow pass`);
-        return { ok: true };
+        log('err', `required check absent: no Astro app package found at ${astroApp} — push blocked`);
+        return { ok: false };
     }
 
     log('info', `astro check (filtered to ${astroCheckFiles.length} changed Astro/app TS file(s))…`);
@@ -337,12 +423,6 @@ function slowAstroCheck(files) {
         maxBuffer: 16 * 1024 * 1024,
         timeout: 240_000,
     });
-    // Capture the spawned PID for descendant cleanup if the parent
-    // dies before its children (tsserver.js outlives `astro check`
-    // when the parent shell wraps the call). The killOrphanedTsServers
-    // function uses this to ensure a reparented tsserver.js is still
-    // reaped even after the astro-check parent has exited.
-    if (res.pid) lastSlowAstroChildPid = res.pid;
 
     const output = (res.stdout || '') + (res.stderr || '');
     if (res.status === 0) {
@@ -421,6 +501,36 @@ function nodeSyntaxCheck(files) {
     return { ok: true };
 }
 
+function governanceCheck(files) {
+    const triggers = files.filter(isGovernanceTrigger);
+    if (triggers.length === 0) {
+        log('info', 'release-governance suite skipped (no governed files changed)');
+        return { ok: true };
+    }
+
+    const testPath = path.join(REPO_ROOT, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs');
+    if (!fs.existsSync(testPath)) {
+        log('err', `release-governance suite missing at ${testPath} — push blocked`);
+        return { ok: false };
+    }
+
+    log('info', `release-governance suite (${triggers.length} governed file(s) changed)…`);
+    const res = spawnSync('node', [testPath], {
+        encoding: 'utf8',
+        cwd: REPO_ROOT,
+        timeout: 120_000,
+    });
+    const output = ((res.stdout || '') + (res.stderr || '')).trim();
+    if (res.status === 0) {
+        if (output) console.log(output);
+        log('ok', 'release-governance suite passed');
+        return { ok: true };
+    }
+    if (output) console.log(output.split('\n').slice(0, 120).join('\n'));
+    log('err', 'release-governance suite failed — push blocked');
+    return { ok: false };
+}
+
 /**
  * autoRelatedData freshness check. The relationship-registry data file
  * must exist and be no older than the newest changed .astro page.
@@ -433,18 +543,22 @@ function nodeSyntaxCheck(files) {
  * @returns {{ ok: boolean, error: string|null }}
  */
 function autoRelatedFreshnessCheck(files) {
+    const dataRelativePath = 'apps/maine-cannabis/src/data/autoRelatedData.json';
     const astroPageFiles = files.filter(f => f.includes('apps/maine-cannabis/src/pages/') && ASTRO_FILE_RE.test(f));
-    if (astroPageFiles.length === 0) {
-        // No .astro page changes → the relationship registry is
-        // irrelevant to the diff → no error.
+    const dataInputChanged = files.some(f => normalizeRepoPath(f) === dataRelativePath);
+    if (astroPageFiles.length === 0 && !dataInputChanged) {
+        // No page or registry-input change → this gate is irrelevant to the diff.
         return { ok: true, error: null };
     }
-    const dataFile = path.join(REPO_ROOT, 'apps/maine-cannabis/src/data/autoRelatedData.json');
+    const dataFile = path.join(REPO_ROOT, dataRelativePath);
     if (!fs.existsSync(dataFile)) {
         return {
             ok: false,
             error: `autoRelated-freshness: required data file missing at ${path.relative(REPO_ROOT, dataFile)} — push blocked. Run the dedicated regen-and-stage step before committing.`,
         };
+    }
+    if (astroPageFiles.length === 0) {
+        return { ok: true, error: null };
     }
     let newestPageMtime = 0;
     for (const rel of astroPageFiles) {
@@ -591,8 +705,8 @@ function sitemapPostprocessCheck() {
     // cascade was caught manually.
     const testScript = path.join(REPO_ROOT, 'scripts', 'check', 'sitemap-postprocess.test.mjs');
     if (!fs.existsSync(testScript)) {
-        log('warn', `sitemap-postprocess.test.mjs not found at ${testScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: sitemap-postprocess.test.mjs not found at ${testScript} — push blocked`);
+        return { ok: false };
     }
     log('info', `sitemap-postprocess…`);
     const res = spawnSync('node', [testScript], {
@@ -628,8 +742,8 @@ function docsVsCodeCheck() {
     // lint on every push from 2026-07-03 onward until caught here.
     const lintScript = path.join(REPO_ROOT, 'scripts', 'check', 'docs-vs-code.cjs');
     if (!fs.existsSync(lintScript)) {
-        log('warn', `docs-vs-code.cjs not found at ${lintScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: docs-vs-code.cjs not found at ${lintScript} — push blocked`);
+        return { ok: false };
     }
     log('info', `docs-vs-code…`);
     const res = spawnSync('node', [lintScript], {
@@ -667,8 +781,8 @@ function compressedFrontmatterCheck() {
     // no network) and cwd-independent.
     const lintScript = path.join(REPO_ROOT, 'scripts', 'check', 'check-compressed-frontmatter.cjs');
     if (!fs.existsSync(lintScript)) {
-        log('warn', `check-compressed-frontmatter.cjs not found at ${lintScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: check-compressed-frontmatter.cjs not found at ${lintScript} — push blocked`);
+        return { ok: false };
     }
     log('info', `compressed-frontmatter check (Pass 7)…`);
     const res = spawnSync('node', [lintScript], {
@@ -700,8 +814,8 @@ function heroImageNamingCheck() {
     // commit time, not at production-smoke time.
     const lintScript = path.join(REPO_ROOT, 'apps', 'maine-cannabis', 'scripts', 'image', 'check-hero-naming.cjs');
     if (!fs.existsSync(lintScript)) {
-        log('warn', `check-hero-naming.cjs not found at ${lintScript} — skipping`);
-        return { ok: true };
+        log('err', `required check absent: check-hero-naming.cjs not found at ${lintScript} — push blocked`);
+        return { ok: false };
     }
     log('info', `hero-image-naming check (Pass 9)…`);
     const res = spawnSync('node', [lintScript], {
@@ -720,52 +834,23 @@ function heroImageNamingCheck() {
     return { ok: false };
 }
 
-// Verifier PID used to scope process-tree kill to only those descendants
-// spawned by this script. We rely on the parent's PID rather than a
-// name substring so we cannot terminate an unrelated user's tsserver.
+// Verifier PID used to scope best-effort cleanup to immediate children only.
+// Parent scoping prevents termination of unrelated users' tsserver processes.
 const VERIFIER_PID = process.pid;
 
 function killOrphanedTsServers() {
-  // `npx astro check` from apps/maine-cannabis spawns a TypeScript LSP
-  // (tsserver.js) that does not always exit cleanly when the parent shell
-  // wraps the call (npm run typecheck, npm run verify:pre-push). Each
-  // orphan holds ~2 GB resident; repeated verify runs leak RAM until the
-  // OS reclaims the pages.
-  //
-  // Hard rule: never use `pkill -f tsserver.js` — that command-line
-  // substring match would terminate any tsserver process on the host,
-  // including ones owned by other users or other agents. Instead, only
-  // kill processes whose immediate parent is this verifier (or a
-  // descendant of it). `pkill -P <pid>` matches descendants only;
-  // combined with `-f tsserver.js` it scopes to descendants named
-  // tsserver.js.
+  // Never use global `pkill -f tsserver.js`. A parent-scoped call may clean up
+  // an immediate child that still exists when this verifier exits; it cannot
+  // and does not claim to reap already-reparented descendants.
   try {
     execSync(`pkill -P ${VERIFIER_PID} -f tsserver.js`, { stdio: 'ignore' });
-    log('info', 'cleaned up descendant tsserver.js LSP processes');
+    log('info', 'cleaned up immediate-child tsserver.js process');
   } catch (_) {
-    // exit code 1 from pkill means "no processes matched" — that's the
-    // happy path on a clean run. No log line; nothing to report.
-  }
-
-  // Belt-and-suspenders: if a tsserver.js was spawned by a child of
-  // ours but is now reparented (parent died), its PPID no longer
-  // equals VERIFIER_PID. Track the most recent slowAstroCheck PID and
-  // kill its descendants.
-  if (lastSlowAstroChildPid !== null) {
-    try {
-      execSync(`pkill -P ${lastSlowAstroChildPid} -f tsserver.js`, { stdio: 'ignore' });
-    } catch (_) {}
+    // pkill exit 1 means no immediate child matched.
   }
 }
 
-// Track the immediate child PID of the most recent slowAstroCheck
-// (typically the `npx astro check` process). Used as a fallback parent
-// for descendant cleanup so we can still reap grandchildren that
-// outlive the parent process.
-let lastSlowAstroChildPid = null;
-
-// Belt-and-suspenders: if main() exits through an unexpected path
-// (uncaught exception, signal), the tsserver.js child is still reaped.
+// Best-effort cleanup on the two signals explicitly handled here.
 process.on('SIGINT', () => { killOrphanedTsServers(); process.exit(130); });
 process.on('SIGTERM', () => { killOrphanedTsServers(); process.exit(143); });
 
@@ -787,25 +872,10 @@ const {
     assertDiffText,
 } = dataOnlyAssert;
 
-function assertAllDiffsAreDataAttributes(files) {
+function assertAllDiffsAreDataAttributes(files, refArg, targetArg) {
     const violations = [];
     let attrsCount = 0;
-    let refArg = null;
-    for (let i = 2; i < process.argv.length; i++) {
-        const a = process.argv[i];
-        if (a.startsWith('--ref=')) { refArg = a.slice('--ref='.length); break; }
-    }
-    let diffRange;
-    if (refArg) {
-        const isCommit = /^[0-9a-f]{7,40}$/.test(refArg);
-        if (isCommit) {
-            diffRange = `${refArg}^..${refArg}`;
-        } else {
-            diffRange = `${refArg}..HEAD`;
-        }
-    } else {
-        diffRange = 'HEAD';
-    }
+    const diffRange = refArg ? `${refArg}..${targetArg}` : 'HEAD';
 
     for (const rel of files) {
         if (!rel.match(/\.(astro|cjs|js|css|md|ts)$/)) continue;
@@ -830,12 +900,15 @@ function assertAllDiffsAreDataAttributes(files) {
 
 function main() {
     const args = process.argv.slice(2);
-    const refArg = (args.find(a => a.startsWith('--ref=')) || '').slice('--ref='.length);
-    if (refArg && !isValidRef(refArg)) {
-        log('err', `Invalid --ref value (must match /^[a-zA-Z0-9._/^~:-]+$/): ${refArg}`);
+    let options;
+    try {
+        options = parseCliArgs(args);
+    } catch (error) {
+        log('err', `${error.message} Exact-range options fail closed.`);
         process.exit(2);
     }
-    
+    const { refArg, targetArg } = options;
+
     const fastOnly = args.includes('--fast-only');
     const dataOnly = args.includes('--data-only');
 
@@ -846,14 +919,27 @@ function main() {
         process.exit(3);
     }
 
-    const files = changedFiles(refArg);
+    let files;
+    try {
+        validateExactTarget(options);
+        files = changedFiles(refArg, targetArg);
+    } catch (error) {
+        log('err', `${error.message} — exact-range verification cannot continue.`);
+        process.exit(error.code === 'INVALID_REF' ? 2 : 3);
+    }
     if (files.length === 0) {
-        log('ok', 'no .astro, .ts, or root Node script files changed — nothing to verify');
+        log('ok', 'no .astro, .ts, root Node script, or governed release files changed — nothing to verify');
         process.exit(0);
     }
     log('info', `changed files: ${files.length}`);
     files.forEach(f => log('info', `  ${f}`));
     console.log();
+
+    // Release governance is the first diff-dependent gate. It must run before
+    // autoRelated freshness, fast-only, data-only, or any other early exit so
+    // a mixed governance/content diff cannot bypass policy enforcement.
+    const governance = governanceCheck(files);
+    if (!governance.ok) process.exit(16);
 
     if (dataOnly && !fastOnly) {
         // Note: --data-only implies cheap-mode behavior (parse-only plus the
@@ -886,14 +972,14 @@ function main() {
     }
 
     const fast = fastParseCheck(files);
-    if (!fast.ok) process.exit(1);
+    if (!fast.ok) process.exit(fast.environmentError ? 3 : 1);
     if (fastOnly || dataOnly) {
         // --data-only implies --fast-only behavior, with the additional
         // data-attribute assertion below.
         log('ok', 'fast pass clean');
 
         if (dataOnly) {
-            const verdict = assertAllDiffsAreDataAttributes(files);
+            const verdict = assertAllDiffsAreDataAttributes(files, refArg, targetArg);
             if (!verdict.ok) {
                 log('err', '--data-only failed: at least one file changed non-data-attribute content:');
                 for (const line of verdict.violations.slice(0, 5)) console.log(`  ${line}`);

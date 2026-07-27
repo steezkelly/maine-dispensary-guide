@@ -29,21 +29,86 @@
  *
  *   5. .githooks/pre-push must exit non-zero when the verifier binary
  *      is absent (refuse silent fall-through).
+ *   6. Active operator guidance must not advertise `git push --no-verify`
+ *      as a remediation path.
+ *   7. Active release guidance must use preview-first, post-transport smoke
+ *      and must not prescribe the removed `verify:push` script.
+ *   8. Approved workstream specifications and continuity/migration guidance
+ *      must stay inside the governed release surface and describe executable,
+ *      current behavior rather than retired commands or frozen clocks.
  *
  * Run with: node scripts/git/tests/pre-push-verify-governance.test.cjs
  * Exits 0 if every contract holds; non-zero with diagnostics otherwise.
  */
 
 const assert = require('node:assert/strict');
-const { spawnSync, execSync } = require('node:child_process');
+
+const { spawnSync } = require('node:child_process');
 const { randomBytes } = require('node:crypto');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
+// Git exports repository-local variables while invoking hooks. Disposable
+// fixture repositories must discover their own .git directories instead of
+// inheriting the caller's object database/index from the real push.
+for (const name of [
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+  'GIT_COMMON_DIR',
+  'GIT_DIR',
+  'GIT_GRAFT_FILE',
+  'GIT_IMPLICIT_WORK_TREE',
+  'GIT_INDEX_FILE',
+  'GIT_INTERNAL_SUPER_PREFIX',
+  'GIT_NO_REPLACE_OBJECTS',
+  'GIT_OBJECT_DIRECTORY',
+  'GIT_PREFIX',
+  'GIT_REPLACE_REF_BASE',
+  'GIT_SHALLOW_FILE',
+  'GIT_WORK_TREE',
+]) {
+  delete process.env[name];
+}
+
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const VERIFIER = path.join(ROOT, 'scripts/git/pre-push-verify.cjs');
 const HOOK = path.join(ROOT, '.githooks/pre-push');
+const SURFACE_INVENTORY = path.join(ROOT, 'scripts/git/release-governance-surfaces.cjs');
+let sharedInventory = null;
+try { sharedInventory = require(SURFACE_INVENTORY); } catch {}
+const FALLBACK_REQUIRED_SURFACES = [
+  '.github/workflows/ci.yml',
+  '.githooks/pre-push',
+  'AGENTS.md',
+  'CONTEXT.md',
+  'MDG_AGENT_HANDBOOK.md',
+  'PROJECT_STATE.md',
+  'SCRIPTS.md',
+  'apps/maine-cannabis/package.json',
+  'apps/maine-cannabis/scripts/seo/city-title-rewriter.cjs',
+  'docs/README.md',
+  'docs/agents/domain.md',
+  'docs/governance/AGENT_WORKING_ORDERS.md',
+  'docs/governance/mdg-agent-orchestration-v1.md',
+  'docs/governance/templates/mdg-integrator-checklist.md',
+  'docs/governance/templates/mdg-kanban-card-body.md',
+  'docs/governance/templates/mdg-verifier-prompt.md',
+  'docs/governance/verifier-governance-migration-notes-2026-07-20.md',
+  'docs/superpowers/specs/2026-07-21-mdg-evidence-led-question-expansion-design.md',
+  'package.json',
+  'project-todos.md',
+  'scripts/git/install-hooks.cjs',
+  'scripts/git/pre-push-verify.cjs',
+];
+const ACTIVE_GUIDANCE = sharedInventory?.REQUIRED_GOVERNANCE_SURFACES || FALLBACK_REQUIRED_SURFACES;
+const GOVERNANCE_TRIGGER_FILES = sharedInventory?.GOVERNANCE_TRIGGER_FILES || [
+  ...FALLBACK_REQUIRED_SURFACES,
+  'scripts/git/release-governance-surfaces.cjs',
+  'scripts/git/tests/pre-push-verify-governance.test.cjs',
+];
+const APPROVED_RELEASE_SPECS = Object.freeze([
+  'docs/superpowers/specs/2026-07-21-mdg-evidence-led-question-expansion-design.md',
+]);
 
 const suiteLabel = `[gov-test ${process.pid}-${Date.now()}-${randomBytes(4).toString('hex')}]`;
 let failures = 0;
@@ -57,51 +122,403 @@ function logFail(name, msg) {
   console.error(`     ${msg}`);
 }
 
-function runVerifier(args, env = {}, opts = {}) {
-  return spawnSync('node', [VERIFIER, ...args], {
-    cwd: opts.cwd || ROOT,
-    encoding: 'utf8',
-    env: { ...process.env, ...env },
-    timeout: opts.timeout || 60_000,
-  });
-}
-
-function runHook(env = {}) {
-  // Pipe empty stdin (Git passes lines; we leave it empty so the hook
-  // falls through to its fallback ref resolution).
-  return spawnSync('bash', [HOOK], {
-    cwd: ROOT,
-    encoding: 'utf8',
-    env: { ...process.env, ...env },
-    input: '',
-    timeout: 30_000,
-  });
-}
-
 function readFileSafe(file) {
   try { return fs.readFileSync(file, 'utf8'); } catch { return ''; }
+}
+
+function containsNoVerifyToken(source) {
+  const normalized = String(source)
+    .replace(/\\\r?\n/g, '')
+    .replace(/\\(?=['"])/g, '')
+    .replace(/['"]/g, '')
+    .replace(/\s+/g, ' ');
+  return normalized.includes('--no-verify');
 }
 
 function chmodSafe(file, mode) {
   try { fs.chmodSync(file, mode); } catch {}
 }
 
+function testSharedGovernanceSurfaceInventory() {
+  const verifier = readFileSafe(VERIFIER);
+  const required = new Set(sharedInventory?.REQUIRED_GOVERNANCE_SURFACES || []);
+  const triggers = new Set(sharedInventory?.GOVERNANCE_TRIGGER_FILES || []);
+  const mandatory = [
+    '.github/workflows/ci.yml',
+    '.githooks/pre-push',
+    'AGENTS.md',
+    'CONTEXT.md',
+    'MDG_AGENT_HANDBOOK.md',
+    'PROJECT_STATE.md',
+    'SCRIPTS.md',
+    'apps/maine-cannabis/package.json',
+    'apps/maine-cannabis/scripts/seo/city-title-rewriter.cjs',
+    'docs/README.md',
+    'docs/agents/domain.md',
+    'docs/governance/AGENT_WORKING_ORDERS.md',
+    'docs/governance/mdg-agent-orchestration-v1.md',
+    'docs/governance/templates/mdg-integrator-checklist.md',
+    'docs/governance/templates/mdg-kanban-card-body.md',
+    'docs/governance/templates/mdg-verifier-prompt.md',
+    'docs/governance/verifier-governance-migration-notes-2026-07-20.md',
+    'docs/superpowers/specs/2026-07-21-mdg-evidence-led-question-expansion-design.md',
+    'package.json',
+    'project-todos.md',
+    'scripts/git/install-hooks.cjs',
+    'scripts/git/pre-push-verify.cjs',
+  ];
+  const sharedModuleIsCanonical = sharedInventory
+    && required.size === mandatory.length
+    && triggers.size === required.size + 2
+    && mandatory.every((relativePath) => required.has(relativePath))
+    && [...required].every((relativePath) => triggers.has(relativePath))
+    && triggers.has('scripts/git/release-governance-surfaces.cjs')
+    && triggers.has('scripts/git/tests/pre-push-verify-governance.test.cjs')
+    && /require\(['"]\.\/release-governance-surfaces\.cjs['"]\)/.test(verifier)
+    && /GOVERNANCE_TRIGGER_FILES/.test(verifier);
+
+  if (!sharedModuleIsCanonical) {
+    logFail('shared governance surface inventory is canonical',
+      'Create scripts/git/release-governance-surfaces.cjs, include every required authority/hook/package surface, and import its trigger set in the verifier and this suite.');
+    return;
+  }
+  logPass('shared governance surface inventory is canonical');
+}
+
+function testRequiredGovernanceInputsAreReadable() {
+  const missing = GOVERNANCE_TRIGGER_FILES.filter((relativePath) => {
+    try {
+      return !fs.statSync(path.join(ROOT, relativePath)).isFile();
+    } catch {
+      return true;
+    }
+  });
+  if (missing.length > 0) {
+    logFail('required governance inputs are readable',
+      `Required governance input(s) missing or unreadable: ${missing.join(', ')}.`);
+    return;
+  }
+  logPass('required governance inputs are readable');
+}
+
+const EXPECTED_ROOT_RELEASE_COMMANDS = Object.freeze({
+  'verify:iterate': 'node scripts/git/pre-push-verify.cjs',
+  'verify:post-deploy': 'node scripts/git/pre-push-verify.cjs --with-smoke',
+  'build:isolated': 'node scripts/build/assert-worktree-isolation.cjs && bash vercel-build.sh && node scripts/continuation/tests/ica-built-output.test.cjs',
+});
+const EXPECTED_APP_RELEASE_COMMANDS = Object.freeze({
+  'verify:post-deploy': 'node ../../scripts/git/pre-push-verify.cjs --with-smoke',
+});
+
+function packageReleaseCommandsAreExact(rootScripts, appScripts) {
+  return Object.entries(EXPECTED_ROOT_RELEASE_COMMANDS)
+    .every(([name, command]) => rootScripts[name] === command)
+    && Object.entries(EXPECTED_APP_RELEASE_COMMANDS)
+      .every(([name, command]) => appScripts[name] === command)
+    && !Object.hasOwn(rootScripts, 'verify:push')
+    && !Object.hasOwn(appScripts, 'verify:push');
+}
+
+function testPackageReleaseCommandsExist() {
+  let rootPackage;
+  let appPackage;
+  try {
+    rootPackage = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+    appPackage = JSON.parse(fs.readFileSync(path.join(ROOT, 'apps/maine-cannabis/package.json'), 'utf8'));
+  } catch (error) {
+    logFail('package release commands exist', `Package authority could not be parsed: ${error.message}`);
+    return;
+  }
+  const rootScripts = rootPackage.scripts || {};
+  const appScripts = appPackage.scripts || {};
+  const invalidMutations = [
+    [{ ...rootScripts, 'verify:iterate': `node unsafe.cjs && ${rootScripts['verify:iterate']}` }, appScripts],
+    [{ ...rootScripts, 'verify:post-deploy': `node unsafe.cjs && ${rootScripts['verify:post-deploy']}` }, appScripts],
+    [{ ...rootScripts, 'verify:post-deploy': 'node scripts/git/pre-push-verify.cjs' }, appScripts],
+    [{ ...rootScripts, 'build:isolated': 'bash vercel-build.sh && node scripts/build/assert-worktree-isolation.cjs && node scripts/continuation/tests/ica-built-output.test.cjs' }, appScripts],
+    [{ ...rootScripts, 'build:isolated': 'echo assert-worktree-isolation.cjs' }, appScripts],
+  ];
+  const mutationsRejected = invalidMutations
+    .every(([mutatedRoot, mutatedApp]) => !packageReleaseCommandsAreExact(mutatedRoot, mutatedApp));
+  const valid = packageReleaseCommandsAreExact(rootScripts, appScripts) && mutationsRejected;
+  if (!valid) {
+    logFail('package release commands exist',
+      `Root/app package authorities must equal the maintained complete command mappings, reject prefixed/dropped/reordered/echo-only stages, and omit the retired smoke-before-push alias. mutations rejected=${mutationsRejected}.`);
+    return;
+  }
+  logPass('package release commands exist');
+}
+
+function testScriptsAuthorityDescribesCurrentVerifier() {
+  const scripts = readFileSafe(path.join(ROOT, 'SCRIPTS.md'));
+  const requiredPasses = [
+    /release[- ]governance/i,
+    /autoRelated[- ]freshness/i,
+    /Node syntax/i,
+    /sitemap-postprocess/i,
+    /docs-vs-code/i,
+    /compressed-frontmatter/i,
+    /hero-image-naming/i,
+  ];
+  const requiredExitCodes = [1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 16];
+  const missingPasses = requiredPasses.filter((pattern) => !pattern.test(scripts)).map(String);
+  const missingExitCodes = requiredExitCodes.filter((code) => !scripts.includes(`- \`${code}\``));
+
+  if (missingPasses.length || missingExitCodes.length || /Two-pass verification gate/.test(scripts)) {
+    logFail('SCRIPTS authority describes the current verifier',
+      `missing passes=${missingPasses.join(', ') || 'none'}, missing exit codes=${missingExitCodes.join(', ') || 'none'}, stale two-pass label=${/Two-pass verification gate/.test(scripts)}.`);
+    return;
+  }
+  logPass('SCRIPTS authority describes the current verifier');
+}
+
+function testExactRangeArgumentsFailClosedAndUseBaseToHead() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-exact-range-'));
+  try {
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const inventoryPath = path.join(tempRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const dataOnlyAssertPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    const baseOnlyPath = path.join(tempRoot, 'scripts/git/base-only.cjs');
+    for (const file of [verifierPath, inventoryPath, dataOnlyAssertPath, baseOnlyPath]) {
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+    }
+    fs.copyFileSync(VERIFIER, verifierPath);
+    fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    fs.writeFileSync(baseOnlyPath, "'use strict';\n");
+
+    const gitCommands = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ];
+    const setupFailure = gitCommands
+      .map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setupFailure) {
+      logFail('exact-range arguments fail closed and use base..HEAD',
+        `Temporary runtime fixture setup failed: ${(setupFailure.stderr || setupFailure.stdout || '').trim()}.`);
+      return;
+    }
+
+    const baseSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+    const candidateOnlyPath = path.join(tempRoot, 'scripts/git/candidate-only.cjs');
+    fs.writeFileSync(candidateOnlyPath, "'use strict';\n");
+    spawnSync('git', ['add', 'scripts/git/candidate-only.cjs'], { cwd: tempRoot, encoding: 'utf8' });
+    const candidateCommit = spawnSync('git', ['commit', '-qm', 'candidate'], { cwd: tempRoot, encoding: 'utf8' });
+    if (candidateCommit.status !== 0) {
+      logFail('exact-range arguments fail closed and use base..HEAD',
+        `Candidate fixture commit failed: ${(candidateCommit.stderr || candidateCommit.stdout || '').trim()}.`);
+      return;
+    }
+    const candidateSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+    const laterOnlyPath = path.join(tempRoot, 'scripts/git/later-only.cjs');
+    fs.writeFileSync(laterOnlyPath, "'use strict';\n");
+    spawnSync('git', ['add', 'scripts/git/later-only.cjs'], { cwd: tempRoot, encoding: 'utf8' });
+    const laterCommit = spawnSync('git', ['commit', '-qm', 'later'], { cwd: tempRoot, encoding: 'utf8' });
+    if (laterCommit.status !== 0) {
+      logFail('exact-range arguments fail closed and use base..HEAD',
+        `Later fixture commit failed: ${(laterCommit.stderr || laterCommit.stdout || '').trim()}.`);
+      return;
+    }
+
+    const commonArgs = ['--fast-only', '--skip-autoRelated-freshness'];
+    const invalidCases = [
+      ['--ref=refs/heads/definitely-missing', ...commonArgs],
+      ['--ref=', ...commonArgs],
+      ['--ref', ...commonArgs],
+      ['--reff=refs/heads/definitely-missing', ...commonArgs],
+      ['--reference=refs/heads/definitely-missing', ...commonArgs],
+    ].map((args) => {
+      const result = spawnSync('node', ['scripts/git/pre-push-verify.cjs', ...args], {
+        cwd: tempRoot,
+        encoding: 'utf8',
+      });
+      return { args, result, output: `${result.stdout || ''}${result.stderr || ''}` };
+    });
+    const invalidPassed = invalidCases.filter(({ result, output }) => result.status !== 2 || !/(?:invalid|unknown|could not diff|requires a value)/i.test(output));
+
+    const rangeResult = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      `--ref=${baseSha}`,
+      ...commonArgs,
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const rangeOutput = `${rangeResult.stdout || ''}${rangeResult.stderr || ''}`;
+    const rangeIsBaseToHead = rangeResult.status === 0
+      && /scripts\/git\/candidate-only\.cjs/.test(rangeOutput)
+      && /scripts\/git\/later-only\.cjs/.test(rangeOutput)
+      && !/scripts\/git\/base-only\.cjs/.test(rangeOutput);
+    const headSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+    const targetResult = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      `--ref=${baseSha}`,
+      `--target=${headSha}`,
+      ...commonArgs,
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const targetOutput = `${targetResult.stdout || ''}${targetResult.stderr || ''}`;
+    const targetMatchesCleanHead = targetResult.status === 0
+      && /scripts\/git\/(?:candidate|later)-only\.cjs/.test(targetOutput)
+      && !/scripts\/git\/base-only\.cjs/.test(targetOutput);
+    const nonHeadTarget = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      `--ref=${baseSha}`,
+      `--target=${candidateSha}`,
+      ...commonArgs,
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    fs.writeFileSync(path.join(tempRoot, 'untracked.txt'), 'dirty\n');
+    const dirtyTarget = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      `--ref=${baseSha}`,
+      `--target=${headSha}`,
+      ...commonArgs,
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const exactTargetFailsClosed = nonHeadTarget.status === 2
+      && /checked-out HEAD/i.test(`${nonHeadTarget.stdout || ''}${nonHeadTarget.stderr || ''}`)
+      && dirtyTarget.status === 3
+      && /clean working tree/i.test(`${dirtyTarget.stdout || ''}${dirtyTarget.stderr || ''}`);
+
+    if (invalidPassed.length > 0 || !rangeIsBaseToHead || !targetMatchesCleanHead || !exactTargetFailsClosed) {
+      logFail('exact-range arguments fail closed and use base..HEAD',
+        `Expected malformed/missing refs to exit 2, full-SHA base to select base..HEAD, and explicit target to require clean checked-out HEAD; invalid cases=${invalidPassed.map(({ args, result }) => `${args[0]}:${result.status}`).join(', ') || 'none'}; range exit=${rangeResult.status}, target exit=${targetResult.status}, non-HEAD exit=${nonHeadTarget.status}, dirty exit=${dirtyTarget.status}.`);
+      return;
+    }
+    logPass('exact-range arguments fail closed and use base..HEAD');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
+function testMissingEsbuildUsesEnvironmentExitCode() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-esbuild-exit-'));
+  try {
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const inventoryPath = path.join(tempRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const dataOnlyAssertPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    const astroPath = path.join(tempRoot, 'apps/maine-cannabis/src/pages/fixture.astro');
+    fs.mkdirSync(path.dirname(verifierPath), { recursive: true });
+    fs.mkdirSync(path.dirname(dataOnlyAssertPath), { recursive: true });
+    fs.mkdirSync(path.dirname(astroPath), { recursive: true });
+    fs.copyFileSync(VERIFIER, verifierPath);
+    fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    fs.writeFileSync(astroPath, "---\nconst title = 'baseline';\n---\n<h1>{title}</h1>\n");
+
+    const gitCommands = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ];
+    const setupFailure = gitCommands
+      .map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setupFailure) {
+      logFail('missing esbuild uses environment exit code 3',
+        `Temporary runtime fixture setup failed: ${(setupFailure.stderr || setupFailure.stdout || '').trim()}.`);
+      return;
+    }
+
+    fs.writeFileSync(astroPath, "---\nconst title = 'changed';\n---\n<h1>{title}</h1>\n");
+    const result = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      '--skip-autoRelated-freshness',
+      '--fast-only',
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const output = `${result.stdout || ''}${result.stderr || ''}`;
+    if (result.status !== 3 || !/esbuild not found/.test(output)) {
+      logFail('missing esbuild uses environment exit code 3',
+        `Expected executable missing-esbuild fixture to exit 3 with remediation; exit=${result.status}, output=${output.trim()}.`);
+      return;
+    }
+    logPass('missing esbuild uses environment exit code 3');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
+function testAutoRelatedStaleFileUsesBlockingExit13() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-auto-related-exit-'));
+  try {
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const inventoryPath = path.join(tempRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const dataOnlyAssertPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    const astroPath = path.join(tempRoot, 'apps/maine-cannabis/src/pages/fixture.astro');
+    const dataPath = path.join(tempRoot, 'apps/maine-cannabis/src/data/autoRelatedData.json');
+    fs.mkdirSync(path.dirname(verifierPath), { recursive: true });
+    fs.mkdirSync(path.dirname(dataOnlyAssertPath), { recursive: true });
+    fs.mkdirSync(path.dirname(astroPath), { recursive: true });
+    fs.mkdirSync(path.dirname(dataPath), { recursive: true });
+    const verifierSource = readFileSafe(VERIFIER);
+    fs.writeFileSync(verifierPath, verifierSource);
+    fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    fs.writeFileSync(astroPath, "---\nconst title = 'baseline';\n---\n<h1>{title}</h1>\n");
+    fs.writeFileSync(dataPath, '{}\n');
+
+    const gitCommands = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ];
+    const setupFailure = gitCommands
+      .map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setupFailure) {
+      logFail('stale autoRelated data uses blocking exit code 13',
+        `Temporary runtime fixture setup failed: ${(setupFailure.stderr || setupFailure.stdout || '').trim()}.`);
+      return;
+    }
+
+    const staleTime = new Date(Date.now() - 60_000);
+    fs.utimesSync(dataPath, staleTime, staleTime);
+    fs.writeFileSync(astroPath, "---\nconst title = 'changed';\n---\n<h1>{title}</h1>\n");
+    const runVerifier = () => spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      '--fast-only',
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const baseline = runVerifier();
+    const baselineOutput = `${baseline.stdout || ''}${baseline.stderr || ''}`;
+
+    const staleStart = verifierSource.indexOf('if (dataStat.mtimeMs < newestPageMtime)');
+    const staleEnd = staleStart < 0 ? -1 : verifierSource.indexOf('\n    }', staleStart);
+    const staleBranch = staleStart < 0 || staleEnd < 0 ? '' : verifierSource.slice(staleStart, staleEnd + 6);
+    const failOpenBranch = staleBranch.replace('ok: false', 'ok: true').replace(/error:\s*`[^`]+`/, 'error: null');
+    const failOpenSource = staleBranch && failOpenBranch !== staleBranch
+      ? verifierSource.replace(staleBranch, failOpenBranch)
+      : verifierSource;
+    fs.writeFileSync(verifierPath, failOpenSource);
+    const failOpenMutation = runVerifier();
+
+    fs.writeFileSync(verifierPath, verifierSource.replace('process.exit(13);', 'process.exit(0);'));
+    const exitMutation = runVerifier();
+
+    const mutationSound = failOpenSource !== verifierSource
+      && failOpenMutation.status !== 13
+      && exitMutation.status !== 13;
+    if (baseline.status !== 13 || !/is older than at least one changed \.astro page/.test(baselineOutput)
+        || !mutationSound) {
+      logFail('stale autoRelated data uses blocking exit code 13',
+        `Expected stale runtime fixture exit=13 and fail-open/exit mutations to change the result; baseline=${baseline.status}, fail-open=${failOpenMutation.status}, exit mutation=${exitMutation.status}, mutation sound=${mutationSound}.`);
+      return;
+    }
+    logPass('stale autoRelated data uses blocking exit code 13');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
 // ----------------------------------------------------------------------------
-// Contract 1: killOrphanedTsServers is scoped to the verifier process tree.
+// Contract 1: killOrphanedTsServers is scoped to immediate verifier children.
 //
-// RED will fire: the unmodified verifier uses `pkill -f tsserver.js`,
-// which matches the heuristic command-line string against every running
-// process. We craft a fake `tsserver.js`-named process owned by some
-// other (fake) project root and assert the verifier (a) does not observe
-// it under the new parent-scoped kill, and (b) only attempts to kill
-// children of its own PID.
-//
-// We do not actually run a competing tsserver.js process in this test
-// (that would be flaky and could affect the host); we instead exercise
-// the source-text contract: the source string MUST contain a parent-PID
-// restriction (e.g. `pkill -P $PID` or `pgrep -P <pid> | xargs kill`),
-// and MUST NOT be the bare global `pkill -f tsserver.js` that matches
-// every process on the host.
+// This is a source-level safety contract: reject the global
+// `pkill -f tsserver.js` form and require a parent-PID restriction. The suite
+// intentionally does not launch a competing tsserver process and does not
+// claim that immediate-child cleanup can reap reparented descendants.
 // ----------------------------------------------------------------------------
 function testKillScopedToVerifierProcessTree() {
   const src = readFileSafe(VERIFIER);
@@ -111,15 +528,21 @@ function testKillScopedToVerifierProcessTree() {
   // The replacement form: parent-scoped kill.
   const hasParentScopedKill =
     /-P\s*(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)/.test(src) && /tsserver\.js/.test(src);
+  const overstatedCleanupClaims = [
+    /reparented[^\n]*(?:still reaped|cleanup succeeds)/i,
+    /matches descendants only/i,
+    /descendant process tree/i,
+    /uncaught exception/i,
+  ].filter((pattern) => pattern.test(src));
 
   if (hasGlobalPkill) {
     logFail('kill scoped to verifier process tree',
       `verifier still contains a global pkill match for tsserver.js without a parent-PID restriction. New contract requires -P <pid> scoping.`);
     return;
   }
-  if (!hasParentScopedKill) {
+  if (!hasParentScopedKill || overstatedCleanupClaims.length > 0) {
     logFail('kill scoped to verifier process tree',
-      `verifier does not appear to use a parent-scoped (-P) kill for tsserver.js. New contract requires -P <pid> scoping.`);
+      `Verifier must use only a best-effort immediate-child (-P) kill and must not claim reparented-descendant or uncaught-exception cleanup; parent scoped=${hasParentScopedKill}, overstated claims=${overstatedCleanupClaims.length}.`);
     return;
   }
   logPass('kill scoped to verifier process tree');
@@ -174,38 +597,215 @@ function testVerifierDoesNotRegenerateOrStageGeneratedFiles() {
 }
 
 // ----------------------------------------------------------------------------
-// Contract 3: required checks fail closed when their script is missing.
-//
-// RED will fire: the unmodified verifier returns `{ ok: true }` from
-// smoke200Check / smokeImg200Check / sitemapPostprocessCheck /
-// docsVsCodeCheck / compressedFrontmatterCheck / heroImageNamingCheck
-// when the respective script does not exist. The new contract requires
-// the required-check variants to return `{ ok: false }` when missing.
+// Contract 3: every maintained checker fails closed when its required script,
+// data file, or governance suite is missing. Function-specific mutation probes
+// make each assertion load-bearing rather than source decoration.
 // ----------------------------------------------------------------------------
 function testRequiredChecksFailClosedWhenScriptIsMissing() {
   const src = readFileSafe(VERIFIER);
+  const requiredChecks = [
+    { fn: 'smoke200Check', existsNeedle: 'if (!fs.existsSync(smokeScript))', missingLabel: 'required check absent: smoke-200.cjs' },
+    { fn: 'smokeImg200Check', existsNeedle: 'if (!fs.existsSync(smokeScript))', missingLabel: 'required check absent: smoke-img-200.cjs' },
+    { fn: 'autoRelatedFreshnessCheck', existsNeedle: 'if (!fs.existsSync(dataFile))', missingLabel: 'required data file missing', requireLog: false },
+    { fn: 'governanceCheck', existsNeedle: 'if (!fs.existsSync(testPath))', missingLabel: 'release-governance suite missing' },
+    { fn: 'slowAstroCheck', existsNeedle: "if (!fs.existsSync(path.join(astroApp, 'package.json')))", missingLabel: 'required check absent: no Astro app package' },
+    { fn: 'sitemapPostprocessCheck', existsNeedle: 'if (!fs.existsSync(testScript))', missingLabel: 'required check absent: sitemap-postprocess.test.mjs' },
+    { fn: 'docsVsCodeCheck', existsNeedle: 'if (!fs.existsSync(lintScript))', missingLabel: 'required check absent: docs-vs-code.cjs' },
+    { fn: 'compressedFrontmatterCheck', existsNeedle: 'if (!fs.existsSync(lintScript))', missingLabel: 'required check absent: check-compressed-frontmatter.cjs' },
+    { fn: 'heroImageNamingCheck', existsNeedle: 'if (!fs.existsSync(lintScript))', missingLabel: 'required check absent: check-hero-naming.cjs' },
+  ];
+  const failures = [];
 
-  // We assert presence of fail-closed markers in the source. Light,
-  // regex-based; the suite above already proves the underlying check
-  // structure by running the verifier. This part locks the contract
-  // into the source so a future regression that re-introduces
-  // warn-and-skip is caught.
-  const failClosedMarker =
-    /(?:check|return)\s*(?:verdict|result|object)?\s*[\s\S]{0,80}?ok:\s*false[\s\S]{0,80}?(?:absent|missing|not found|exists)/i;
-  const requiredCheckAbsentMessage =
-    /required check absent|required.*not\s+found|missing\s+required/i;
+  const branchFailsClosed = (branch, check) => /return\s*\{\s*ok:\s*false/.test(branch)
+    && (check.requireLog === false || /log\(['"]err['"]/.test(branch))
+    && branch.includes(check.missingLabel);
 
-  if (!failClosedMarker.test(src)) {
-    logFail('required checks fail closed when missing',
-      'verifier source does not appear to wire { ok: false } into any required-check absent path.');
-    return;
+  for (const check of requiredChecks) {
+    const start = src.indexOf(`function ${check.fn}(`);
+    const next = start === -1 ? -1 : src.indexOf('\nfunction ', start + 1);
+    const body = start === -1 ? '' : src.slice(start, next === -1 ? src.length : next);
+    const branchStart = body.indexOf(check.existsNeedle);
+    const branchTail = branchStart < 0 ? '' : body.slice(branchStart);
+    const branchEnd = branchTail.indexOf('\n    }');
+    const branch = branchEnd < 0 ? '' : branchTail.slice(0, branchEnd);
+    const mutations = [branch.replace(/ok:\s*false/, 'ok: true')];
+    if (check.requireLog === false) {
+      mutations.push(branch.replace(check.missingLabel, 'missing-check-allowed'));
+    } else {
+      mutations.push(branch.replace(/log\(['"]err['"]/, "log('warn'"));
+    }
+    const mutationsRejected = mutations.every((mutation) => mutation !== branch && !branchFailsClosed(mutation, check));
+    if (!branchFailsClosed(branch, check) || !mutationsRejected) failures.push(check.fn);
   }
-  if (!requiredCheckAbsentMessage.test(src)) {
+
+  if (failures.length > 0) {
     logFail('required checks fail closed when missing',
-      'verifier source does not emit a required-check-absent message; user-facing remediation hint missing.');
+      `Missing-input branches are still fail-open or lack required-check remediation in: ${failures.join(', ')}.`);
     return;
   }
   logPass('required checks fail closed when missing');
+}
+
+function testPublicVerifierSeesDeletedRequiredInputs() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-required-input-'));
+  try {
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const inventoryPath = path.join(tempRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const dataOnlyAssertPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    const heroCheckerPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/image/check-hero-naming.cjs');
+    const dataPath = path.join(tempRoot, 'apps/maine-cannabis/src/data/autoRelatedData.json');
+    for (const file of [verifierPath, inventoryPath, dataOnlyAssertPath, heroCheckerPath, dataPath]) {
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+    }
+    fs.copyFileSync(VERIFIER, verifierPath);
+    fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    fs.writeFileSync(heroCheckerPath, "process.exit(0);\n");
+    fs.writeFileSync(dataPath, '{}\n');
+
+    const gitCommands = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ];
+    const setupFailure = gitCommands
+      .map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setupFailure) {
+      logFail('public verifier sees deleted required inputs',
+        `Temporary runtime fixture setup failed: ${(setupFailure.stderr || setupFailure.stdout || '').trim()}.`);
+      return;
+    }
+
+    fs.rmSync(heroCheckerPath);
+    const heroResult = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      '--skip-autoRelated-freshness',
+      '--skip-sitemap-postprocess',
+      '--skip-docs-vs-code',
+      '--skip-compressed-frontmatter',
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const heroOutput = `${heroResult.stdout || ''}${heroResult.stderr || ''}`;
+
+    spawnSync('git', ['checkout', '--', 'apps/maine-cannabis/scripts/image/check-hero-naming.cjs'], {
+      cwd: tempRoot,
+      encoding: 'utf8',
+    });
+    fs.rmSync(dataPath);
+    const dataResult = spawnSync('node', [
+      'scripts/git/pre-push-verify.cjs',
+      '--fast-only',
+    ], { cwd: tempRoot, encoding: 'utf8' });
+    const dataOutput = `${dataResult.stdout || ''}${dataResult.stderr || ''}`;
+
+    const valid = heroResult.status === 9
+      && /required check absent: check-hero-naming\.cjs/.test(heroOutput)
+      && dataResult.status === 13
+      && /required data file missing/.test(dataOutput);
+    if (!valid) {
+      logFail('public verifier sees deleted required inputs',
+        `Expected public deletion probes to block hero=9 and data=13; hero exit=${heroResult.status}, output=${heroOutput.trim()}; data exit=${dataResult.status}, output=${dataOutput.trim()}.`);
+      return;
+    }
+    logPass('public verifier sees deleted required inputs');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
+function testPublicVerifierSeesRenamedRequiredInputs() {
+  const scenarios = [
+    {
+      source: 'apps/maine-cannabis/scripts/image/check-hero-naming.cjs',
+      destination: 'apps/maine-cannabis/scripts/image/check-hero-naming-retired.cjs',
+      expectedStatus: 9,
+      args: [
+        '--skip-autoRelated-freshness',
+        '--skip-sitemap-postprocess',
+        '--skip-docs-vs-code',
+        '--skip-compressed-frontmatter',
+      ],
+    },
+    {
+      source: 'apps/maine-cannabis/src/data/autoRelatedData.json',
+      destination: 'apps/maine-cannabis/src/data/autoRelatedData-retired.json',
+      expectedStatus: 13,
+      args: ['--fast-only'],
+    },
+    {
+      source: 'AGENTS.md',
+      destination: 'AGENTS-retired.md',
+      expectedStatus: 16,
+      args: ['--fast-only', '--skip-autoRelated-freshness'],
+    },
+  ];
+
+  const failures = [];
+  for (const scenario of scenarios) {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-required-rename-'));
+    try {
+      const fixtureFiles = {
+        'scripts/git/pre-push-verify.cjs': readFileSafe(VERIFIER),
+        'scripts/git/release-governance-surfaces.cjs': readFileSafe(SURFACE_INVENTORY),
+        'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs': readFileSafe(
+          path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'),
+        ),
+        'apps/maine-cannabis/scripts/image/check-hero-naming.cjs': "#!/usr/bin/env node\n'use strict';\nprocess.exit(0);\n",
+        'apps/maine-cannabis/src/data/autoRelatedData.json': '{}\n',
+        'AGENTS.md': '# governed fixture\n',
+        'package.json': '{"private":true,"workspaces":["apps/*"]}\n',
+      };
+      for (const [relativePath, content] of Object.entries(fixtureFiles)) {
+        const absolutePath = path.join(tempRoot, relativePath);
+        fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+        fs.writeFileSync(absolutePath, content);
+      }
+      const setup = [
+        ['init', '-q'],
+        ['config', 'user.name', 'Governance Contract'],
+        ['config', 'user.email', 'governance-contract@example.invalid'],
+        ['add', '.'],
+        ['commit', '-qm', 'baseline'],
+      ].map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+        .find((result) => result.status !== 0);
+      if (setup) {
+        failures.push(`${scenario.source}: setup failed`);
+        continue;
+      }
+      const baseSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+      fs.renameSync(path.join(tempRoot, scenario.source), path.join(tempRoot, scenario.destination));
+      spawnSync('git', ['add', '-A'], { cwd: tempRoot, encoding: 'utf8' });
+      const commit = spawnSync('git', ['commit', '-qm', `rename ${path.basename(scenario.source)}`], {
+        cwd: tempRoot,
+        encoding: 'utf8',
+      });
+      if (commit.status !== 0) {
+        failures.push(`${scenario.source}: rename commit failed`);
+        continue;
+      }
+      const targetSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+      const result = spawnSync('node', [
+        'scripts/git/pre-push-verify.cjs',
+        `--ref=${baseSha}`,
+        `--target=${targetSha}`,
+        ...scenario.args,
+      ], { cwd: tempRoot, encoding: 'utf8' });
+      if (result.status !== scenario.expectedStatus) {
+        const output = `${result.stdout || ''}${result.stderr || ''}`.trim();
+        failures.push(`${scenario.source}: expected ${scenario.expectedStatus}, got ${result.status}; ${output}`);
+      }
+    } finally {
+      fs.rmSync(tempRoot, { recursive: true, force: true });
+    }
+  }
+
+  if (failures.length > 0) {
+    logFail('public verifier sees renamed required inputs', failures.join(' | '));
+    return;
+  }
+  logPass('public verifier sees renamed required inputs');
 }
 
 // ----------------------------------------------------------------------------
@@ -253,6 +853,89 @@ function testWithSmokeRequiresPreviewUrl() {
 // RED will fire: the unmodified hook prints a warning and exits 0 when
 // $VERIFY is missing.
 // ----------------------------------------------------------------------------
+function testHookVerifiesEveryExactLocalSha() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-governance-hook-exact-'));
+  try {
+    const hookPath = path.join(tempRoot, '.githooks/pre-push');
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const capturePath = path.join(tempRoot, 'hook-calls.jsonl');
+    fs.mkdirSync(path.dirname(hookPath), { recursive: true });
+    fs.mkdirSync(path.dirname(verifierPath), { recursive: true });
+    fs.copyFileSync(HOOK, hookPath);
+    fs.writeFileSync(verifierPath, [
+      '#!/usr/bin/env node',
+      "'use strict';",
+      "require('fs').appendFileSync(process.env.MDG_HOOK_CAPTURE, `${JSON.stringify(process.argv.slice(2))}\\n`);",
+      '',
+    ].join('\n'));
+    chmodSafe(hookPath, 0o755);
+    chmodSafe(verifierPath, 0o755);
+    const setup = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ].map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setup) {
+      logFail('pre-push hook verifies every exact local SHA',
+        `Temporary hook fixture setup failed: ${(setup.stderr || setup.stdout || '').trim()}.`);
+      return;
+    }
+
+    const zeros = '0'.repeat(40);
+    const headSha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: tempRoot, encoding: 'utf8' }).stdout.trim();
+    const remoteOne = '2'.repeat(40);
+    const remoteTwo = '4'.repeat(40);
+    const stdin = [
+      `refs/heads/one ${headSha} refs/heads/one ${remoteOne}`,
+      `refs/heads/two ${headSha} refs/heads/two ${remoteTwo}`,
+      `refs/heads/deleted ${zeros} refs/heads/deleted ${remoteTwo}`,
+      '',
+    ].join('\n');
+    const env = { ...process.env, MDG_HOOK_CAPTURE: capturePath };
+    const result = spawnSync('bash', ['.githooks/pre-push', 'origin', 'example.invalid'], {
+      cwd: tempRoot,
+      encoding: 'utf8',
+      input: stdin,
+      env,
+    });
+    const calls = readFileSafe(capturePath).trim().split('\n').filter(Boolean).map((line) => JSON.parse(line));
+    const exactCalls = calls.length === 2
+      && JSON.stringify(calls[0]) === JSON.stringify([`--ref=${remoteOne}`, `--target=${headSha}`])
+      && JSON.stringify(calls[1]) === JSON.stringify([`--ref=${remoteTwo}`, `--target=${headSha}`]);
+
+    fs.rmSync(capturePath, { force: true });
+    const nonHeadSha = '1'.repeat(40);
+    const nonHead = spawnSync('bash', ['.githooks/pre-push', 'origin', 'example.invalid'], {
+      cwd: tempRoot,
+      encoding: 'utf8',
+      input: `refs/heads/non-head ${nonHeadSha} refs/heads/non-head ${remoteOne}\n`,
+      env,
+    });
+    const nonHeadFailedClosed = nonHead.status !== 0 && !fs.existsSync(capturePath);
+
+    fs.rmSync(capturePath, { force: true });
+    const newBranch = spawnSync('bash', ['.githooks/pre-push', 'origin', 'example.invalid'], {
+      cwd: tempRoot,
+      encoding: 'utf8',
+      input: `refs/heads/new ${headSha} refs/heads/new ${zeros}\n`,
+      env,
+    });
+    const newBranchFailedClosed = newBranch.status !== 0 && !fs.existsSync(capturePath);
+
+    if (result.status !== 0 || !exactCalls || !nonHeadFailedClosed || !newBranchFailedClosed) {
+      logFail('pre-push hook verifies every exact local SHA',
+        `Expected one --ref=<remote-sha> --target=<checked-out-head-sha> call per non-deletion update, non-HEAD pushes to fail closed, and a fail-closed new-branch policy; existing exit=${result.status}, calls=${JSON.stringify(calls)}, non-HEAD exit=${nonHead.status}, new-branch exit=${newBranch.status}.`);
+      return;
+    }
+    logPass('pre-push hook verifies every exact local SHA');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
 function testHookFailsClosedWhenVerifierMissing() {
   // We can't easily move the real verify file without affecting other
   // tests in the suite. Instead, point the hook at a definitely-absent
@@ -302,26 +985,19 @@ function testVerifierUsageDoesNotAdvertiseIgnoreUnrelated() {
 }
 
 // ----------------------------------------------------------------------------
-// Contract 6: install-hooks.cjs no longer teaches `git push --no-verify` as
-// an escape hatch.
+// Contract 6: install-hooks.cjs contains no hook-bypass token.
 //
 // The contract is: install-hooks.cjs must NOT contain the legacy advisory
 // "To skip the hook in an emergency: git push --no-verify" or any other
-// text that frames --no-verify as a recommended action. The new wording
-// may MENTION --no-verify as part of a "do not" instruction (e.g.
-// "Do not bypass with git push --no-verify"), but it must not present
-// --no-verify as a usable remediation path.
+// text that names the bypass token. Active guidance uses a zero-token policy
+// so unrelated negation cannot accidentally bless a copyable bypass command.
 //
 // RED will fire: the unmodified installer prints
 // "To skip the hook in an emergency: git push --no-verify".
 // ----------------------------------------------------------------------------
 function testInstallHooksDoesNotTeachNoVerify() {
   const src = readFileSafe(path.join(ROOT, 'scripts/git/install-hooks.cjs'));
-  // Positive: the legacy recommended-bypass sentence. We accept any of
-  // these as the new contract violation marker.
-  const teachesNoVerify =
-    /skip\s+the\s+hook\s+in\s+an\s+emergency/i.test(src) ||
-    /To skip the hook in an emergency:\s*git\s+push\s+--no-verify/i.test(src);
+  const teachesNoVerify = containsNoVerifyToken(src);
 
   if (teachesNoVerify) {
     logFail('install-hooks.cjs does not teach `git push --no-verify` as a bypass',
@@ -332,16 +1008,399 @@ function testInstallHooksDoesNotTeachNoVerify() {
 }
 
 // ----------------------------------------------------------------------------
+// Contract 8: active operator guidance does not teach hook bypasses.
+//
+// Historical records may document old behavior, but active command/reference
+// docs must not contain the bypass token at all. A zero-token policy avoids
+// ambiguity from unrelated negation or wrapped shell commands.
+// ----------------------------------------------------------------------------
+function testActiveGuidanceDoesNotTeachNoVerify() {
+  const violations = ACTIVE_GUIDANCE
+    .filter((relativePath) => containsNoVerifyToken(readFileSafe(path.join(ROOT, relativePath))));
+
+  if (violations.length > 0) {
+    logFail('active operator guidance does not teach `git push --no-verify`',
+      `Active guidance contains the forbidden --no-verify token in: ${violations.join(', ')}. Replace it with fail-closed repair-and-retry guidance.`);
+    return;
+  }
+  logPass('active operator guidance does not teach `git push --no-verify`');
+}
+
+function testNoVerifyClassifierRejectsAdversarialForms() {
+  const unsafe = [
+    'Do not rerun the verifier; use git push --no-verify in an emergency.',
+    'git push \\\n       --no-verify',
+    'git push --no-\\\nverify',
+    'git push --no-"verify"',
+    "git push --no-'verify'",
+    'git push --no-\\"verify\\"',
+  ];
+  const safe = [
+    'Never bypass the hook; repair the verifier and retry.',
+    'Hook failures are release blockers.',
+  ];
+  const missedUnsafe = unsafe.filter((sample) => !containsNoVerifyToken(sample));
+  const rejectedSafe = safe.filter((sample) => containsNoVerifyToken(sample));
+
+  if (missedUnsafe.length > 0 || rejectedSafe.length > 0) {
+    logFail('no-verify classifier rejects adversarial command forms',
+      `Classifier missed ${missedUnsafe.length} unsafe fixture(s) and rejected ${rejectedSafe.length} safe fixture(s).`);
+    return;
+  }
+  logPass('no-verify classifier rejects adversarial command forms');
+}
+
+function verifierRunsBlockingGovernanceFirst(verifier) {
+  const mainStart = verifier.indexOf('function main()');
+  const mainEnd = verifier.lastIndexOf('\nmain();');
+  const mainBody = mainStart < 0 || mainEnd < mainStart ? '' : verifier.slice(mainStart, mainEnd);
+  const callNeedle = 'const governance = governanceCheck(files);';
+  const blockNeedle = 'if (!governance.ok) process.exit(16);';
+  const callIndex = mainBody.indexOf(callNeedle);
+  const freshnessIndex = mainBody.indexOf("if (!args.includes('--skip-autoRelated-freshness'))");
+  const callCount = [...mainBody.matchAll(/\bgovernanceCheck\(files\)/g)].length;
+  const blockingPair = new RegExp(`${callNeedle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*${blockNeedle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
+    .test(mainBody);
+  return callCount === 1 && callIndex >= 0 && freshnessIndex >= 0
+    && callIndex < freshnessIndex && blockingPair;
+}
+
+function testCanonicalGatesRunGovernanceSuite() {
+  const verifier = readFileSafe(VERIFIER);
+  const ci = readFileSafe(path.join(ROOT, '.github/workflows/ci.yml'));
+  const verifierUsesSharedTriggers = /require\(['"]\.\/release-governance-surfaces\.cjs['"]\)/.test(verifier)
+    && /GOVERNANCE_TRIGGER_FILES\.includes\(normalizeRepoPath\(filePath\)\)/.test(verifier)
+    && /files\.filter\(isGovernanceTrigger\)/.test(verifier);
+  const sharedTriggersCoverRequiredSurfaces = ACTIVE_GUIDANCE
+    .every((relativePath) => GOVERNANCE_TRIGGER_FILES.includes(relativePath));
+  const verifierRunsSuite = verifierRunsBlockingGovernanceFirst(verifier)
+    && /pre-push-verify-governance\.test\.cjs/.test(verifier);
+  const invalidMutations = [
+    verifier.replace('if (!governance.ok) process.exit(16);', 'governance.ok;'),
+    verifier.replace('const governance = governanceCheck(files);', 'const governance = { ok: true };'),
+  ];
+  const mutationsRejected = invalidMutations
+    .every((mutation) => mutation !== verifier && !verifierRunsBlockingGovernanceFirst(mutation));
+  const ciRunsSuite = /node\s+scripts\/git\/tests\/pre-push-verify-governance\.test\.cjs/.test(ci);
+
+  if (!verifierUsesSharedTriggers || !sharedTriggersCoverRequiredSurfaces || !verifierRunsSuite
+      || !mutationsRejected || !ciRunsSuite) {
+    logFail('canonical gates execute the governance suite',
+      `shared pre-push triggers=${verifierUsesSharedTriggers}, required-surface coverage=${sharedTriggersCoverRequiredSurfaces}, one blocking pre-push execution before diff-dependent exits=${verifierRunsSuite}, blocking mutations rejected=${mutationsRejected}, CI execution=${ciRunsSuite}.`);
+    return;
+  }
+  logPass('canonical gates execute the governance suite');
+}
+
+function isPreviewFirstReleaseGuidance(section) {
+  const markers = {
+    exactRange: section.indexOf('node scripts/git/pre-push-verify.cjs --ref=origin/main'),
+    isolatedBuild: section.indexOf('npm run build:isolated'),
+    normalPush: section.indexOf('git push origin HEAD:refs/heads/$BRANCH_NAME'),
+    exactReady: section.indexOf('Vercel reports Ready for that exact pushed SHA'),
+    previewSmoke: section.indexOf('MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy'),
+    mergeReady: section.search(/only after merge and exact production deployment readiness/i),
+    productionSmoke: section.indexOf('MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy'),
+  };
+  const ordered = [
+    markers.exactRange,
+    markers.isolatedBuild,
+    markers.normalPush,
+    markers.exactReady,
+    markers.previewSmoke,
+    markers.mergeReady,
+    markers.productionSmoke,
+  ];
+  const smokeCommands = [...section.matchAll(/(?:node\s+scripts\/git\/pre-push-verify\.cjs[^\n]*--with-smoke|npm\s+run\s+verify:post-deploy)/g)]
+    .map((match) => match.index);
+  const earlySmokeCommand = smokeCommands.some((index) => index < markers.exactReady);
+  return ordered.every((index) => index >= 0)
+    && ordered.every((index, position) => position === 0 || index > ordered[position - 1])
+    && !earlySmokeCommand;
+}
+
+function testActiveReleaseGuidanceIsPreviewFirst() {
+  const agents = readFileSafe(path.join(ROOT, 'AGENTS.md'));
+  const verifySection = agents.match(/### Verify cycle[\s\S]*?(?=### Autonomous worktree protocol)/i)?.[0] || '';
+  const integratorChecklist = readFileSafe(path.join(ROOT, 'docs/governance/templates/mdg-integrator-checklist.md'));
+  const orchestration = readFileSafe(path.join(ROOT, 'docs/governance/mdg-agent-orchestration-v1.md'));
+  const integratorGuide = orchestration.match(/### Integrator[\s\S]*?(?=### Continuity Watcher)/i)?.[0] || '';
+  const verifier = readFileSafe(VERIFIER);
+  const verifierHeader = verifier.match(/^#![^\n]*\n\/\*\*[\s\S]*?\*\//)?.[0] || '';
+  const removedScriptGuidance = ACTIVE_GUIDANCE
+    .filter((relativePath) => /npm\s+run\s+verify:push\b/.test(readFileSafe(path.join(ROOT, relativePath))));
+  const productionCommand = 'MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy';
+  const invalidFixtures = [
+    verifySection.replace('git push origin HEAD:refs/heads/$BRANCH_NAME', ''),
+    verifySection.replace('Vercel reports Ready for that exact pushed SHA', 'Preview exists'),
+    `${productionCommand}\n${verifySection}`,
+    `node scripts/git/pre-push-verify.cjs --with-smoke\n${verifySection}`,
+  ];
+  const invalidFixtureAccepted = invalidFixtures.some(isPreviewFirstReleaseGuidance);
+
+  if (removedScriptGuidance.length > 0
+      || !isPreviewFirstReleaseGuidance(verifySection)
+      || !isPreviewFirstReleaseGuidance(verifierHeader)
+      || !isPreviewFirstReleaseGuidance(integratorChecklist)
+      || !isPreviewFirstReleaseGuidance(integratorGuide)
+      || invalidFixtureAccepted) {
+    logFail('active release guidance uses preview-first post-transport smoke',
+      `Active guidance and the verifier header must remove verify:push and order exact-range verify → isolated build → normal push → exact-SHA Vercel Ready → preview smoke → merge/readiness → production smoke. Removed command remains in: ${removedScriptGuidance.join(', ') || 'none'}; adversarial fixture accepted=${invalidFixtureAccepted}.`);
+    return;
+  }
+  logPass('active release guidance uses preview-first post-transport smoke');
+}
+
+function testApprovedReleaseSpecificationsAreGoverned() {
+  const governed = new Set(sharedInventory?.REQUIRED_GOVERNANCE_SURFACES || []);
+  const missingFromInventory = APPROVED_RELEASE_SPECS.filter((relativePath) => !governed.has(relativePath));
+  const retiredCommands = APPROVED_RELEASE_SPECS.filter((relativePath) => (
+    /npm\s+run\s+verify:push\b/.test(readFileSafe(path.join(ROOT, relativePath)))
+  ));
+
+  if (missingFromInventory.length > 0 || retiredCommands.length > 0) {
+    logFail('approved release specifications are governed and executable',
+      `Approved release specifications must be scanned by the shared governance inventory and must not prescribe retired verify:push. Missing from inventory: ${missingFromInventory.join(', ') || 'none'}; retired command remains in: ${retiredCommands.join(', ') || 'none'}.`);
+    return;
+  }
+  logPass('approved release specifications are governed and executable');
+}
+
+function testContinuityGuidanceDoesNotFreezeOperationalTime() {
+  const relativePath = 'docs/governance/mdg-agent-orchestration-v1.md';
+  const source = readFileSafe(path.join(ROOT, relativePath));
+  const command = source.match(/npm run agents:continuity[^\n`]*/)?.[0] || '';
+  const frozenClock = /--now\s+(?:20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z|['"]20\d{2}-)/.test(command);
+
+  if (!command || frozenClock) {
+    logFail('continuity guidance does not freeze operational time',
+      `The canonical continuity command must rely on the command's current-time default or a runtime-computed value, not a historical ISO timestamp. Command: ${command || 'missing'}.`);
+    return;
+  }
+  logPass('continuity guidance does not freeze operational time');
+}
+
+function testMigrationNotesAndHookDescribeImplementedBehavior() {
+  const notes = readFileSafe(path.join(ROOT, 'docs/governance/verifier-governance-migration-notes-2026-07-20.md'));
+  const hook = readFileSafe(HOOK);
+  const verifierHeader = readFileSafe(VERIFIER).match(/^#![^\n]*\n\/\*\*[\s\S]*?\*\//)?.[0] || '';
+  const hookHeader = hook.split('\n').slice(0, 12).join('\n');
+  const overstatements = [
+    /falls back to a documented nuke-gated-by-warning-if-ppid-mismatch strategy/i,
+    /simulates a non-descendant `tsserver\.js` process/i,
+    /invokes the hook with `VERIFY` pointed at a non-existent path/i,
+    /No application code was touched\. No `apps\/` files were touched\./i,
+    /two best-effort `pkill -P "\$VERIFIER_PID"[^\n]*direct verifier children/i,
+    /requires both cleanup commands to use `pkill -P` with the verifier PID/i,
+    /autoRelatedData\.json[^\n]*`--shortstat` output of dirty paths/i,
+    /stubs one of[^\n]*hero-image-naming[^\n]*not exist[^\n]*code \(13\)/i,
+    /invokes the verifier with `--with-smoke` and no env/i,
+    /expected `contracts: kill-scoped,[^`]+` summary/i,
+  ].filter((pattern) => pattern.test(notes));
+  const verifierHeaderOverstatesExit13 = /13[^\n]*maintained[\s\S]{0,80}checker script is missing/i.test(verifierHeader);
+  const hookScopeAccurate = /governed release|release-governance|governance/i.test(hookHeader);
+
+  if (overstatements.length > 0 || verifierHeaderOverstatesExit13 || !hookScopeAccurate) {
+    logFail('migration notes and hook header describe implemented behavior',
+      `Remove claims not supported by implementation/runtime tests and keep the verifier exit map accurate. Unsupported note claims=${overstatements.length}; verifier header overstates exit 13=${verifierHeaderOverstatesExit13}; hook scope accurate=${hookScopeAccurate}.`);
+    return;
+  }
+  logPass('migration notes and hook header describe implemented behavior');
+}
+
+const RELEASE_PENDING_COMMANDS = Object.freeze([
+  'git diff origin/main...HEAD --check',
+  'node scripts/git/pre-push-verify.cjs --ref=origin/main',
+  'npm run build:isolated',
+  'git push origin HEAD:refs/heads/$BRANCH_NAME',
+  'vercel ready wait on the exact pushed SHA',
+  'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
+]);
+const RELEASED_COMMANDS = Object.freeze([
+  'git diff origin/main...HEAD --check',
+  'node scripts/git/pre-push-verify.cjs --ref=origin/main',
+  'npm run build:isolated',
+  'git push origin HEAD:refs/heads/$BRANCH_NAME',
+  'vercel preview ready wait on the exact pushed SHA',
+  'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
+  'merge the reviewed pull request',
+  'vercel production ready wait on final-main-sha',
+  'MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy',
+  'PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error "$PRODUCTION_ROUTE"',
+  'gather closeout evidence',
+]);
+
+function integratorChecklistCloseoutIsValid(checklist) {
+  const markers = [
+    'MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy',
+    'PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error "$PRODUCTION_ROUTE"',
+    'Gather closeout evidence',
+    'Release the feature lease',
+    'Close the candidate card',
+    'Attach one final `status: released` metadata record',
+  ].map((marker) => checklist.indexOf(marker));
+  const ordered = markers.every((index) => index >= 0)
+    && markers.every((index, position) => position === 0 || index > markers[position - 1]);
+  const contradictory = /after the sequence in step 12/i.test(checklist)
+    || /Record `closeout_evidence`[^\n]*after step 15/i.test(checklist);
+  const metadataRecords = [...checklist.matchAll(/```json\s*([\s\S]*?)```/g)]
+    .map((match) => {
+      try { return JSON.parse(match[1]); } catch { return null; }
+    });
+  const pending = metadataRecords.filter((record) => record?.status === 'release-pending');
+  const released = metadataRecords.filter((record) => record?.status === 'released');
+  const arraysExact = pending.length === 1 && released.length === 1
+    && JSON.stringify(pending[0].validation_commands) === JSON.stringify(RELEASE_PENDING_COMMANDS)
+    && JSON.stringify(released[0].validation_commands) === JSON.stringify(RELEASED_COMMANDS);
+  return ordered && !contradictory && arraysExact;
+}
+
+function testIntegratorChecklistClosesOutAfterProductionEvidence() {
+  const checklist = readFileSafe(path.join(ROOT, 'docs/governance/templates/mdg-integrator-checklist.md'));
+  const invalidMutations = [
+    checklist.replace('14. Probe the expected production route after production smoke:', '14. Production route verification omitted:')
+      .replace('    "PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error \\"$PRODUCTION_ROUTE\\"",\n', ''),
+    checklist.replace('    "gather closeout evidence"', '    "npm run verify:iterate",\n    "gather closeout evidence"'),
+    checklist.replace('    "merge the reviewed pull request",\n    "vercel production ready wait on final-main-sha",', '    "vercel production ready wait on final-main-sha",\n    "merge the reviewed pull request",'),
+  ];
+  const mutationsRejected = invalidMutations
+    .every((mutation) => mutation !== checklist && !integratorChecklistCloseoutIsValid(mutation));
+
+  if (!integratorChecklistCloseoutIsValid(checklist) || !mutationsRejected) {
+    logFail('integrator checklist closes out only after production evidence',
+      `Expected exact release arrays and production smoke → route probe → gather evidence → release lease → close card → one final released record; valid=${integratorChecklistCloseoutIsValid(checklist)}, mutations rejected=${mutationsRejected}.`);
+    return;
+  }
+  logPass('integrator checklist closes out only after production evidence');
+}
+
+function findShellPlaceholderViolations(source, relativePath = 'fixture') {
+  const normalized = String(source).replace(/\\\r?\n/g, '');
+  return normalized
+    .split('\n')
+    .map((line, index) => ({ line, number: index + 1, relativePath }))
+    .filter(({ line }) => !line.trimStart().startsWith('#'))
+    .filter(({ line }) => {
+      // Literal paired HTML assertions (for example grep '<title>…</title>')
+      // are data, not shell placeholders. Keep unpaired <path>-style tokens.
+      const shellText = line.replace(/(['"])[^'"]*<([A-Za-z][\w:-]*)[^>]*>[^'"]*<\/\2>[^'"]*\1/g, '');
+      return /(?:^|[\s`'";$|&()])(?:cd|cp|git|npm|npx|node|curl|bash|hermes|which|env|vercel|mmx)\b[^\n]*<[^>]+>/i.test(shellText)
+        || /(?:^|[\s`'";$|&()])file\s+--[A-Za-z0-9-]+[^\n]*<[^>]+>/i.test(shellText)
+        || /\b[A-Z][A-Z0-9_]*=\s*<[^>]+>/.test(shellText)
+        || /https:\/\/[^\s`"']*<[^>]+>[^\s`"']*\.vercel\.app/.test(shellText);
+    });
+}
+
+function findNonExecutableCommandExamples(source, relativePath = 'fixture') {
+  return String(source)
+    .replace(/\\\r?\n/g, '')
+    .split('\n')
+    .flatMap((line, index) => {
+      const violations = [];
+      if (/\/absolute\/path\//.test(line)
+          && /(?:^|[\s`])(?:cd|export|git|npm|npx|node|curl|bash|hermes|env|vercel)\b/.test(line)) {
+        violations.push({ relativePath, number: index + 1, type: 'literal-absolute-placeholder' });
+      }
+      const assignment = line.match(/(?:^|[\s`'"])([A-Z][A-Z0-9_]*)=[^\s;|&]+\s+/);
+      if (assignment) {
+        const variable = assignment[1];
+        const tail = line.slice((assignment.index || 0) + assignment[0].length).split(/[;|&]/, 1)[0];
+        const expandsBeforeAssignment = new RegExp(`\\$(?:\\{${variable}\\}|${variable}\\b)`).test(tail);
+        if (expandsBeforeAssignment) {
+          violations.push({ relativePath, number: index + 1, type: 'same-command-assignment-expansion' });
+        }
+      }
+      return violations;
+    });
+}
+
+function testActiveReleaseCommandsAreExecutable() {
+  const violations = ACTIVE_GUIDANCE.flatMap((relativePath) => findNonExecutableCommandExamples(
+    readFileSafe(path.join(ROOT, relativePath)), relativePath,
+  ));
+  const unsafeFixtures = [
+    'TS_CONFIG_PATH=tsconfig.json npx tsc --noEmit -p "$TS_CONFIG_PATH"',
+    'env BRANCH_NAME=fix/test git push origin HEAD:refs/heads/$BRANCH_NAME',
+    'cd /absolute/path/to/maine-dispensary-guide',
+  ];
+  const safeFixtures = [
+    'TS_CONFIG_PATH=tsconfig.json; npx tsc --noEmit -p "$TS_CONFIG_PATH"',
+    'npx tsc --noEmit -p tsconfig.json',
+    ': "${MDG_REPO_ROOT:?Set MDG_REPO_ROOT}"',
+  ];
+  const missedUnsafe = unsafeFixtures.filter((fixture) => findNonExecutableCommandExamples(fixture).length === 0);
+  const rejectedSafe = safeFixtures.filter((fixture) => findNonExecutableCommandExamples(fixture).length > 0);
+
+  if (violations.length > 0 || missedUnsafe.length > 0 || rejectedSafe.length > 0) {
+    logFail('active release commands are executable',
+      `Active examples contain literal absolute placeholders or same-command assignment expansion: ${violations.map(({ relativePath, number, type }) => `${relativePath}:${number} (${type})`).join(', ') || 'none'}; unsafe fixtures missed=${missedUnsafe.length}; safe fixtures rejected=${rejectedSafe.length}.`);
+    return;
+  }
+  logPass('active release commands are executable');
+}
+
+function testActiveReleaseCommandsUseShellSafePlaceholders() {
+  const violations = ACTIVE_GUIDANCE.flatMap((relativePath) => findShellPlaceholderViolations(
+    readFileSafe(path.join(ROOT, relativePath)), relativePath,
+  ));
+  const unsafeFixtures = [
+    'git push origin \\\n HEAD:refs/heads/<branch>',
+    'MDG_PREVIEW_URL=\\\n <preview-url> npm run verify:post-deploy',
+    'env BRANCH=<branch> git push origin HEAD:refs/heads/$BRANCH',
+    'cp <video>.mp4 "$OUTPUT_DIR/output.mp4"',
+    'file --mime-type <path>',
+    'mmx image --prompt <prompt>',
+    'npx tsc -p <tsconfig>',
+    'vercel inspect <deployment-url> --format json',
+    'which <tool>',
+  ];
+  const safeFixtures = [
+    'A legitimate <tag> in prose is not a shell command.',
+    '<article> is literal HTML markup.',
+    'Use "$PATH_TO_CHECK" as the opaque path.',
+  ];
+  const missedFixtures = unsafeFixtures.filter((fixture) => findShellPlaceholderViolations(fixture).length === 0);
+  const rejectedSafeFixtures = safeFixtures.filter((fixture) => findShellPlaceholderViolations(fixture).length > 0);
+
+  if (violations.length > 0 || missedFixtures.length > 0 || rejectedSafeFixtures.length > 0) {
+    logFail('active release commands use shell-safe placeholders',
+      `Executable examples contain angle-bracket placeholders that a shell treats as redirection: ${violations.map(({ relativePath, number }) => `${relativePath}:${number}`).join(', ') || 'none'}; unsafe fixtures missed=${missedFixtures.length}; safe prose rejected=${rejectedSafeFixtures.length}.`);
+    return;
+  }
+  logPass('active release commands use shell-safe placeholders');
+}
+
+// ----------------------------------------------------------------------------
 // Suite runner
 // ----------------------------------------------------------------------------
 function runAll() {
   console.log(`\n  pre-push verifier governance contracts ${suiteLabel}\n`);
+  testSharedGovernanceSurfaceInventory();
+  testRequiredGovernanceInputsAreReadable();
+  testPackageReleaseCommandsExist();
+  testScriptsAuthorityDescribesCurrentVerifier();
+  testExactRangeArgumentsFailClosedAndUseBaseToHead();
+  testMissingEsbuildUsesEnvironmentExitCode();
+  testAutoRelatedStaleFileUsesBlockingExit13();
   testKillScopedToVerifierProcessTree();
   testVerifierDoesNotRegenerateOrStageGeneratedFiles();
   testRequiredChecksFailClosedWhenScriptIsMissing();
+  testPublicVerifierSeesDeletedRequiredInputs();
+  testPublicVerifierSeesRenamedRequiredInputs();
   testWithSmokeRequiresPreviewUrl();
+  testHookVerifiesEveryExactLocalSha();
   testHookFailsClosedWhenVerifierMissing();
   testInstallHooksDoesNotTeachNoVerify();
+  testActiveGuidanceDoesNotTeachNoVerify();
+  testNoVerifyClassifierRejectsAdversarialForms();
+  testActiveReleaseGuidanceIsPreviewFirst();
+  testApprovedReleaseSpecificationsAreGoverned();
+  testContinuityGuidanceDoesNotFreezeOperationalTime();
+  testMigrationNotesAndHookDescribeImplementedBehavior();
+  testIntegratorChecklistClosesOutAfterProductionEvidence();
+  testActiveReleaseCommandsAreExecutable();
+  testActiveReleaseCommandsUseShellSafePlaceholders();
+  testCanonicalGatesRunGovernanceSuite();
   testVerifierUsageDoesNotAdvertiseIgnoreUnrelated();
   console.log(`\n  summary: ${failures === 0 ? 'OK' : `${failures} failure(s)`}\n`);
   process.exit(failures === 0 ? 0 : 1);
