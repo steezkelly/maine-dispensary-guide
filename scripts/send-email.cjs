@@ -10,9 +10,15 @@
  *   config/credentials/mainedispensaryguide.env (format: EMAIL|APP_PASSWORD or env keys)
  */
 
-const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
+
+// Lazy-load nodemailer so that --check-config and --help work without it installed.
+let _nodemailer = null;
+function getNodemailer() {
+  if (!_nodemailer) _nodemailer = require('nodemailer');
+  return _nodemailer;
+}
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const CREDENTIALS_PATHS = [
@@ -93,6 +99,71 @@ function parseCredentialsFile(content, source) {
   }
 
   return null;
+}
+
+// ---------------------------------------------------------------------------
+// Redacted configuration self-check (--check-config)
+//
+// Validates credential presence, permissions, and format WITHOUT ever
+// outputting email addresses, passwords, credential lines, env-var values,
+// or raw parser exceptions containing source content. Used by the audit
+// script (scripts/email/mdg-leads-audit.cjs) as the sender-owned authority
+// for credential readiness.
+// ---------------------------------------------------------------------------
+
+function getCredentialCandidates() {
+  return [
+    { path: process.env.MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS, source_class: 'env', source_path_id: 'MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS' },
+    { path: process.env.EMAIL_PIPELINE_CREDENTIALS, source_class: 'env', source_path_id: 'EMAIL_PIPELINE_CREDENTIALS' },
+    { path: process.env.PURELYMAIL_CREDENTIALS_FILE, source_class: 'env', source_path_id: 'PURELYMAIL_CREDENTIALS_FILE' },
+    { path: path.join(PROJECT_ROOT, 'config', 'credentials', 'mainedispensaryguide.env'), source_class: 'repo', source_path_id: 'config/credentials/mainedispensaryguide.env' },
+    { path: '/home/steve/Documents/purelymail-smtp.txt', source_class: 'user', source_path_id: 'Documents/purelymail-smtp.txt' },
+  ].filter(c => c.path);
+}
+
+function checkConfig() {
+  const candidates = getCredentialCandidates();
+  const result = {
+    credential_source_found: false,
+    source_class: null,
+    source_path_id: null,
+    file_mode_acceptable: false,
+    format_recognized: false,
+    required_fields_present: false,
+  };
+
+  for (const candidate of candidates) {
+    if (!fs.existsSync(candidate.path)) continue;
+
+    result.credential_source_found = true;
+    result.source_class = candidate.source_class;
+    result.source_path_id = candidate.source_path_id;
+
+    // File mode check (600 or 400 = acceptable)
+    try {
+      const st = fs.statSync(candidate.path);
+      const mode = st.mode & 0o777;
+      result.file_mode_acceptable = (mode === 0o600 || mode === 0o400);
+    } catch {
+      result.file_mode_acceptable = false;
+    }
+
+    // Format validation (reads content internally; never outputs it)
+    try {
+      const content = fs.readFileSync(candidate.path, 'utf-8').trim();
+      const parsed = parseCredentialsFile(content, candidate.path);
+      result.format_recognized = parsed !== null;
+      result.required_fields_present = parsed !== null && !!(parsed.email && parsed.password);
+    } catch {
+      // Sanitize: do not propagate error (may contain file content in message)
+      result.format_recognized = false;
+      result.required_fields_present = false;
+    }
+
+    break; // first existing file wins (same precedence as loadCredentials)
+  }
+
+  return result;
 }
 
 // Warm-up email templates
@@ -237,6 +308,7 @@ function parseArgs(args) {
 async function sendEmail({ to, subject, body, from = DEFAULT_FROM }) {
   const credentials = loadCredentials();
 
+  const nodemailer = getNodemailer();
   // Try port 465 (SSL) first, fallback to port 587 (STARTTLS)
   let transporter;
   try {
@@ -433,6 +505,16 @@ Credentials:
     OR legacy: email|password on one line
 `);
     process.exit(0);
+  }
+
+  // --check-config: redacted credential self-check (used by audit script)
+  if (args.includes('--check-config')) {
+    const result = checkConfig();
+    console.log(JSON.stringify(result, null, 2));
+    const ok = result.credential_source_found &&
+               result.format_recognized &&
+               result.required_fields_present;
+    process.exit(ok ? 0 : 1);
   }
 
   const parsed = parseArgs(args);
