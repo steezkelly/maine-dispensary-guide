@@ -4,497 +4,208 @@ import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
-  author: "Eliot Nash",
-  authorId: "eliot-nash",
-  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
-  authorTitle: "Market & Real Estate Analyst",
-  publishDate: "2026-04-20",
-  modifiedDate: "2026-06-07",
-  section: "Business Essentials"
+  author: 'Eliot Nash',
+  authorId: 'eliot-nash',
+  reviewer: { name: 'Margaret Finch', jobTitle: 'Finance & Taxation Analyst', id: 'margaret-finch' },
+  authorTitle: 'Market & Real Estate Analyst',
+  publishDate: '2026-04-20',
+  modifiedDate: '2026-07-26',
+  section: 'Business Essentials'
 };
-const topics = ["real-estate", "compliance"];
+
+const topics = ['real-estate', 'compliance'];
 ---
 
 <Layout
   title="Maine Cannabis Zoning: 2026 Operator Requirements"
-  description="Complete guide to Maine cannabis zoning requirements: opt-in municipalities, buffers, districts."
+  description="Current Maine adult-use cannabis siting guide: municipal opt-in, local authorization, school buffers, parcel control, zoning due diligence, and OCP licensing sequence."
   heroImage="/images/heroes/maine-cannabis-real-estate.jpg"
   article={article}
   topics={topics}
- continuationMode="pilot">
+  continuationMode="pilot"
+>
   <style>
+    article { max-width: 760px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.2rem; color: var(--color-text-light); }
+    section { margin-bottom: 2.25rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; }
+    th, td { padding: 0.75rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); }
+    li { margin-bottom: 0.55rem; }
+    .step { padding: 1.25rem; margin: 1rem 0; border-left: 4px solid var(--color-primary); background: color-mix(in oklab, var(--color-soft-green) 7%, transparent); }
+    .step h3 { margin-top: 0; }
+    .source-note { font-size: 0.9rem; color: var(--color-text-light); }
+  </style>
 
-  article {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .article-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .subtitle {
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-  }
-  section {
-    margin-bottom: 2rem;
-  }
-  section h2,
-  section h3 {
-    margin-top: 1.5rem;
-    color: var(--color-text);
-    font-family: var(--font-serif);
-  }
-  section h2:first-child,
-  section h3:first-child {
-    margin-top: 0;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-  }
-  th,
-  td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
-  }
-  th {
-    background: var(--color-background);
-    font-weight: 600;
-  }
-  .fact-table tr:nth-child(even) td {
-    background: color-mix(in oklab, var(--color-soft-green) 4%, transparent);
-  }
-  ul,
-  ol {
-    padding-left: 1.5rem;
-  }
-  li {
-    margin-bottom: 0.5rem;
-  }
-  ol li {
-    margin-bottom: 0.75rem;
-  }
-  .external-resources {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
-  }
-  .external-resources ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  .external-resources li {
-    margin-bottom: 0.75rem;
-  }
-  .disclaimer {
-    background: var(--color-background);
-    border: 1px solid var(--color-border);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    margin-top: 2rem;
-    color: var(--color-text);
-  }
+  <article>
+    <header class="article-header">
+      <h1>Maine Cannabis Zoning and Local Authorization</h1>
+      <p class="subtitle">Who decides what, when to control a parcel, and how to verify an adult-use site before committing capital</p>
+    </header>
 
-</style>
-<article>
-    <div class="article-header">
-      <h1>Maine Cannabis Zoning Requirements</h1>
-      <p class="subtitle">What every prospective operator needs to understand about where — and where not — to locate a dispensary in Maine</p>
-    </div>
+    <Callout title="Zoning is local; the license is state-issued" type="warning">
+      OCP issues the conditional and active adult-use license. The municipality decides whether the establishment type is allowed locally and whether a proposed parcel satisfies local approvals, permits, and licenses. An OCP conditional license is not zoning approval, and a zoning opinion is not an active OCP license.
+    </Callout>
 
     <section>
-      <p>
-        Maine's cannabis zoning framework is one of the most municipality-driven in the United States. Under <strong>28-B M.R.S. §301</strong>, the state does not automatically permit dispensaries everywhere — instead, each city and town must affirmatively opt in before the Maine Office of Cannabis Policy (OCP) will consider a license application for a location within its borders. This means <strong>cannabis zoning requirements in Maine are fundamentally a local matter</strong>: the state sets the floor, but your city or town sets the ceiling.
-      </p>
-      <p>
-        For prospective operators, this creates both opportunity and risk. The opportunity is that Maine's opt-in system has produced a diverse landscape of markets — from dense urban zones in Portland (which allows cannabis retail in several commercial districts with a 500-ft school buffer) to more restrictive rural towns that allow only cultivation or processing. The risk is that zoning rules can change, and a site that looks compliant today may be blocked by a municipal ordinance amendment, a newly discovered school buffer conflict, or a local licensing board that takes a narrow view of what the state statute allows.
-      </p>
-      <p>
-        This guide covers every layer of Maine cannabis zoning: the opt-in mechanism, permitted district categories, distance requirements, the two-step local/state licensing process, common restrictions, and a step-by-step compliance verification workflow.
-      </p>
+      <h2>The controlling three-step sequence</h2>
+      <p>OCP's <a href="https://www.maine.gov/dafs/ocp/adult-use/application-process" target="_blank" rel="noopener noreferrer">adult-use application process</a> identifies three stages:</p>
+      <div class="step">
+        <h3>1. Conditional licensure from OCP</h3>
+        <p>OCP vets the applicant and, if requirements are satisfied, issues a nonrenewable conditional license. Under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec402.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §402(1)</a>, an applicant may not request local authorization—and the municipality may not accept the request as complete—before OCP issues that conditional license.</p>
+      </div>
+      <div class="step">
+        <h3>2. Local authorization and municipal approvals</h3>
+        <p>The municipal legislative body must have voted to allow the relevant establishment type. The applicant then must obtain every applicable local approval, permit, or license required for that type and parcel. The municipality sends its local-authorization form directly to OCP.</p>
+      </div>
+      <div class="step">
+        <h3>3. Active licensure from OCP</h3>
+        <p>After local authorization, the applicant returns to OCP with required supplemental materials, including the official facility plan and evidence of electrical and permitting compliance. The establishment may operate only after OCP issues the active license.</p>
+      </div>
     </section>
 
     <section>
-      <h2>Understanding Maine's Opt-In System</h2>
-      <p>
-        The foundational rule of Maine cannabis zoning is simple: <strong>no municipality, no dispensary</strong>. This is not a licensing tier or a conditional use — it is a categorical prohibition. Unless a town has passed a local ordinance permitting adult-use cannabis retail operations, the OCP will not accept an application for a license at a location in that municipality. There is no waiver process, no variance mechanism, and no exception for well-qualified applicants.
-      </p>
-      <p>
-        The legal basis is <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec301.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §301</a>, which establishes that a municipality must affirmatively authorize cannabis retail by local ordinance. This is distinct from the state's licensing authority — even if you hold a state license, you cannot operate in a non-opt-in municipality. The town council or city council must vote to adopt an ordinance, typically after a public hearing process that can take 60–180 days depending on the municipality's legislative calendar.
-      </p>
-      <p>
-        As of 2026, approximately 30 of Maine's 500+ municipalities have opted in to adult-use cannabis retail — about 6% statewide. The opt-in map is highly concentrated: Portland, South Portland, Westbrook, Bangor, Lewiston, Auburn, Biddeford, Sanford, Brunswick, and Augusta represent the bulk of the retail market. Many smaller towns have voted down opt-in measures, sometimes multiple times, and some have active moratoriums that prohibit any cannabis business pending further study. See our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> for the current municipality-by-municipality list (date-stamped to the most recent OCP update).
-      </p>
-      <Callout title="Always Verify Current Opt-In Status" type="warning">
-        Municipal opt-in status can change. Towns that opted in can theoretically opt back out (though existing licensees are typically grandfathered). Always check the current status directly with the municipal clerk or planning office — do not rely on secondhand lists or outdated webpages. See our <a href="/guides/maine-cannabis-opt-in-tracker">Maine Cannabis Opt-In Tracker</a> for the most current municipality-by-municipality breakdown.
-      </Callout>
+      <h2>Municipal opt-in is establishment-type specific</h2>
+      <p>Section 402 requires the municipal legislative body to adopt or amend an ordinance, or approve a warrant article, allowing some or all adult-use establishment types. The vote must include the type the applicant proposes to operate.</p>
+      <p>Do not treat a town as universally “opted in” merely because it allows one category. A municipality may allow a cannabis store but not cultivation, or allow cultivation under conditions without allowing retail. Verify the current vote and the current ordinance for the exact proposed use.</p>
     </section>
 
     <section>
-      <h2>Where Cannabis Businesses Are Permitted</h2>
-      <p>
-        Within opted-in municipalities, cannabis retail is not permitted everywhere — it is restricted to specific zoning districts. The general rule is that cannabis businesses must be in commercially or industrially zoned areas. Residential zones are categorically prohibited in every Maine municipality, regardless of any other site characteristics.
-      </p>
-      <p>
-        The specific commercial and industrial districts that permit cannabis retail vary by municipality. Most opt-in ordinances reference one or more of the following zone designations:
-      </p>
+      <h2>The state school buffer is 1,000 feet unless lawfully reduced</h2>
+      <p>Section 402(2)(A) prevents local authorization when the proposed establishment is within <strong>1,000 feet of the property line</strong> of a preexisting public or private school. The defined school category includes public and private schools, public preschool programs, and other educational facilities serving children from prekindergarten through grade 12.</p>
+      <p>A municipality may adopt a shorter buffer, but it may not be less than <strong>500 feet</strong>. If the local ordinance does not clearly adopt a reduced distance, do not assume 500 feet applies.</p>
       <ul>
-        <li><strong>General Commercial (C-1, C-2, CB):</strong> The most common permitted zone for dispensaries. Typically includes strip malls, downtown corridors, shopping centers, and mixed-use buildings. Most viable urban dispensary locations fall into one of these designations.</li>
-        <li><strong>Highway Commercial (HC):</strong> Auto-oriented commercial zones along major arterials and state routes. Common in southern Maine along Route 1 corridors. Often attractive for free-standing dispensary buildings with dedicated parking.</li>
-        <li><strong>Industrial / Light Industrial (I-1, LI, I-2):</strong> Some municipalities allow retail dispensaries in light industrial zones; others restrict industrial zones to cultivation and manufacturing only and prohibit retail there. Review the specific ordinance text for the target municipality.</li>
-        <li><strong>Cannabis Overlay Districts:</strong> A growing number of Maine municipalities (including Portland and Bangor) have created dedicated cannabis overlay zones that supersede the underlying commercial zoning designation for cannabis-specific rules.</li>
+        <li>Measure property line to property line, not door to door.</li>
+        <li>Use GIS for initial screening, not as final survey evidence.</li>
+        <li>Check whether a school was preexisting and whether all covered educational facilities are mapped.</li>
+        <li>When a parcel is close to the threshold, obtain a surveyor's measurement and a written municipal determination.</li>
       </ul>
-      <p>
-        Some municipalities permit cannabis retail as-of-right in these zones (meaning no special permit beyond the standard cannabis license application), while others require a <strong>Conditional Use Permit (CUP)</strong> or <strong>Special Use Permit</strong>, which involves a public hearing, planning board review, and discretionary approval. CUPs add 45–120 days to the timeline and introduce uncertainty — a planning board can deny a CUP application even when all objective zoning criteria are met.
-      </p>
-      <p>
-        ▲ <strong>Tip:</strong> When scouting a location, pull the municipality's official zoning map AND the full text of its cannabis ordinance. A site that appears to be in a C-2 zone may be explicitly excluded from cannabis retail under the ordinance's specific zone list. Do not rely on a broker's word or a visual inspection of the property.
-      </p>
     </section>
 
     <section>
-      <h2>Distance Requirements</h2>
-      <h3>School Buffer</h3>
-      <p>
-        The state-mandated school buffer is the most consequential distance requirement in Maine cannabis zoning. Under 28-B M.R.S. §301, cannabis retail locations must maintain minimum distance from school properties:
-      </p>
+      <h2>Parcel control is a statutory minimum</h2>
+      <p>Section 402(2)(B) requires the person seeking local authorization to demonstrate possession or entitlement to possession of the proposed licensed premises through ownership, lease, rental agreement, or another arrangement for possession.</p>
+      <p>For an unproven site, use contingencies that address at least:</p>
+      <ul>
+        <li>the exact adult-use establishment type;</li>
+        <li>municipal land-use and cannabis approvals;</li>
+        <li>OCP active licensure;</li>
+        <li>survey and title results;</li>
+        <li>building, fire, electrical, wastewater, and utility feasibility; and</li>
+        <li>a practical exit if approvals fail.</li>
+      </ul>
+      <p>This is legal-document territory. Work with Maine counsel rather than copying a generic cannabis lease clause.</p>
+    </section>
+
+    <section>
+      <h2>What the town must verify</h2>
+      <p>State law does not provide a single statewide use table. Each host municipality applies its own current code. Depending on the town and use, review may include:</p>
       <table>
-        <thead>
-          <tr>
-            <th>Buffer Distance</th>
-            <th>When It Applies</th>
-            <th>Municipalities Using This Standard</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Local layer</th><th>Questions to resolve</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>1,000 ft (state default)</strong></td>
-            <td>Applies in any municipality that has not adopted a local ordinance specifying a different distance</td>
-            <td>Most opted-in Maine municipalities</td>
-          </tr>
-          <tr>
-            <td><strong>500 ft (reduced by local ordinance)</strong></td>
-            <td>Available to municipalities that affirmatively adopt the reduced buffer in their cannabis ordinance</td>
-            <td>Portland, Bangor, and several other larger markets</td>
-          </tr>
+          <tr><td>Adult-use ordinance or warrant article</td><td>Is the exact establishment type allowed? Are licenses capped or competitively awarded?</td></tr>
+          <tr><td>Zoning use table</td><td>Is the use permitted, conditional, special-exception, or prohibited in the parcel's district?</td></tr>
+          <tr><td>Dimensional and buffer rules</td><td>Which property-line, residential, school, daycare, park, or other buffers apply, and how are they measured?</td></tr>
+          <tr><td>Site plan or conditional-use review</td><td>What evidence, notices, hearings, findings, and appeal periods apply?</td></tr>
+          <tr><td>Operating standards</td><td>Are hours, odor, noise, lighting, signage, security, traffic, loading, or parking regulated?</td></tr>
+          <tr><td>Building and infrastructure</td><td>Can the structure, electrical service, fire protection, water, septic, sewer, and ventilation support the proposed operation?</td></tr>
+          <tr><td>Local cannabis license</td><td>Does the municipality require a separate local establishment license or annual renewal for the premises?</td></tr>
         </tbody>
       </table>
-      <p>
-        ◆ <strong>Covered institutions:</strong> The buffer applies to K–12 public and private schools. Some municipal ordinances extend the buffer to include daycare centers, preschool facilities, and playgrounds. Always review the specific ordinance for the full list of protected institutions — do not assume only K-12 schools are covered.
-      </p>
-      <p>
-        ◆ <strong>Measurement method:</strong> The buffer is measured from the nearest <em>property line</em> of the school parcel to the nearest <em>property line</em> of the proposed cannabis retail parcel — not from building entrance to building entrance. A site that looks comfortably distant on Google Maps can fail the buffer if the school's athletic fields, parking lots, or modular classrooms extend the school property line significantly closer to your parcel. Always verify with a formal survey or the municipality's GIS tool before committing to a site.
-      </p>
-      <p>
-        ◆ <strong>No variance available:</strong> The school buffer is a statutory prohibition under Maine law, not a zoning standard subject to local variance. No municipality can grant a variance to allow a dispensary within the required buffer distance. If a site fails the school buffer test, the only solution is to find a different site.
-      </p>
-
-      <h3>Church and Place of Worship Buffer</h3>
-      <p>
-        Maine state law does not impose a mandatory buffer between cannabis retail and churches or places of worship. However, some municipalities have added church buffers as a condition of their local ordinance — typically requiring 200–500 ft separation. This is an increasingly common local rule, particularly in municipalities with strong neighborhood advocacy around land use. Check the specific municipal ordinance for your target town.
-      </p>
-
-      <h3>Residential Proximity</h3>
-      <p>
-        While Maine state law does not impose a residential buffer, some municipalities have adopted residential proximity restrictions that limit how close a dispensary can be to a residential zone or specific residential uses. These rules are highly local and must be reviewed on a municipality-by-municipality basis. In general, locating in or immediately adjacent to a dense residential zone increases the likelihood of neighborhood opposition and potential planning board resistance — even when technically permitted.
-      </p>
+      <p>These are diligence categories, not universal requirements. Only the current local ordinance, official map, adopted amendments, and written decisions establish what applies to a specific parcel.</p>
     </section>
 
     <section>
-      <h2>Local Permit vs. State License: The Two-Step Process</h2>
-      <p>
-        One of the most common and costly mistakes in Maine cannabis real estate is treating local zoning approval and state licensing as a single process. They are not. They are two separate, sequential tracks — and failure in either one kills your project.
-      </p>
-      <table class="fact-table">
-        <thead>
-          <tr>
-            <th>Requirement</th>
-            <th>Issuing Authority</th>
-            <th>What It Confirms</th>
-            <th>When Required</th>
-          </tr>
-        </thead>
+      <h2>Who owns each decision</h2>
+      <table>
+        <thead><tr><th>Decision</th><th>Primary owner</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>Local Cannabis Permit</strong></td>
-            <td>Municipality (planning board, code enforcement, or licensing board)</td>
-            <td>Your specific site meets all local zoning requirements for cannabis retail</td>
-            <td>Before OCP will finalize state license review</td>
-          </tr>
-          <tr>
-            <td><strong>State Adult-Use Retail License</strong></td>
-            <td>Maine Office of Cannabis Policy (OCP)</td>
-            <td>Operator meets all state licensing criteria (background, financials, security plan, etc.)</td>
-            <td>Before you can open for business</td>
-          </tr>
+          <tr><td>Whether the municipality allows the establishment type</td><td>Municipal legislative body through ordinance, amendment, or warrant article</td></tr>
+          <tr><td>Official zoning interpretation and local application completeness</td><td>Municipal code-enforcement or planning authority, subject to local appeal procedures</td></tr>
+          <tr><td>Site-plan, conditional-use, or local licensing approval</td><td>Municipal board or official named in the local code</td></tr>
+          <tr><td>Conditional and active state license</td><td>Maine Office of Cannabis Policy</td></tr>
+          <tr><td>Parcel, title, survey, lease, and feasibility diligence</td><td>Applicant with counsel, surveyor, engineer, architect, and other qualified professionals</td></tr>
+          <tr><td>Unorganized or deorganized-area land-use approval</td><td>Maine Land Use Planning Commission, with the town, plantation, or county roles described in §403</td></tr>
         </tbody>
       </table>
-      <p>
-        The typical sequencing is: (1) secure a signed lease or purchase agreement for your site, (2) apply for the local cannabis permit, (3) receive local permit approval, (4) submit the OCP license application with evidence of local approval, (5) complete OCP review and receive state license. The OCP will not substantively review your application until you have local approval in hand — but local permit applications typically require you to demonstrate site control (a signed lease) as a filing prerequisite.
-      </p>
-      <p>
-        This timing paradox is real and must be managed with proper legal support. Your commercial lease must include contingency provisions making the lease conditional on receipt of all required cannabis permits and licenses within a defined period (typically 180–365 days). Without this language, you could be locked into a lease for a site you cannot legally use.
-      </p>
-      <Callout title="Municipal ordinances change frequently" type="warning">
-        Always verify current zoning with the town planning office before signing any lease. The rules described in this guide reflect general state statute and common municipal patterns, but individual ordinances vary and are subject to amendment. A location that was compliant six months ago may have been affected by a new ordinance.
-      </Callout>
     </section>
 
     <section>
-      <h2>Common Zoning Restrictions</h2>
-      <p>
-        Beyond the foundational opt-in and buffer requirements, Maine municipalities impose a range of operational restrictions through their cannabis ordinances. These vary significantly but appear frequently enough that you should budget for them in your site evaluation:
-      </p>
-
-      <h3>Operating Hours</h3>
-      <p>
-        Maine state law does not restrict dispensary operating hours. However, many municipalities cap hours of operation — typically between 9:00 PM and 10:00 PM. Some restrict Sunday sales or impose early closing requirements (e.g., no sales after 8 PM). Check the municipal ordinance for your location. In Portland, dispensaries may operate until 10 PM; in some smaller towns, earlier curfews apply.
-      </p>
-
-      <h3>Signage</h3>
-      <p>
-        State law prohibits any cannabis leaf symbol or imagery visible from the public way. Local sign ordinances also apply — many municipalities require that dispensary signage conform to standard commercial sign standards (no neon, no animated signage, no rooftop signs). Some towns impose additional restrictions on sign size or illumination. Always pull the municipal sign ordinance before designing your storefront.
-      </p>
-
-      <h3>Parking Minimums</h3>
-      <p>
-        Maine state law does not impose a parking minimum for dispensaries, but most municipalities do — typically 4–8 spaces per 1,000 square feet of retail area, consistent with standard retail parking requirements. In dense urban areas where on-street parking is the norm, some municipalities accept reduced parking in exchange for transit access or pedestrian-friendly site design. Know your municipality's parking ratio requirements before signing a lease on a site that lacks sufficient lot area.
-      </p>
-
-      <h3>Security Requirements</h3>
-      <p>
-        State law requires 24-hour video surveillance covering all entrances, exits, and product storage areas, with 90-day footage retention. Some municipalities add specific security requirements: alarmed entry doors, specific fence or barrier standards for cultivation sites, or minimum lighting requirements for parking areas. The OCP security plan requirements and the local ordinance requirements must both be satisfied — they are separate layers.
-      </p>
-
-      <h3>Retailer Spacing</h3>
-      <p>
-        Some Maine municipalities impose minimum spacing requirements between cannabis retailers — typically 500–1,000 ft — separate from the school buffer. This is intended to prevent over-concentration of dispensaries in a single neighborhood. If your target municipality has a spacing rule, identify existing licensees and confirm your proposed site falls outside the restricted radius around each one.
-      </p>
+      <h2>Do not rely on silence or informal assurances</h2>
+      <p>Municipal failure to act does not satisfy local authorization. Under §402(5), a request may be deemed denied after 90 days, or after 180 days when the municipality gives timely written notice that it cannot process the request within 90 days. The deemed denial may be appealed under Maine Rule of Civil Procedure 80B.</p>
+      <p>Before spending against a municipal timeline, identify:</p>
+      <ul>
+        <li>the date a complete request was submitted;</li>
+        <li>whether the town issued a written extension notice;</li>
+        <li>the board or official with authority to act;</li>
+        <li>the appeal body and deadline for each local decision; and</li>
+        <li>whether a permit remains exposed during an appeal period.</li>
+      </ul>
     </section>
 
     <section>
-      <h2>How to Verify Zoning Compliance: Step-by-Step</h2>
-      <p>
-        Before committing any money to a potential dispensary site, complete this due diligence sequence. Each step exists to prevent a costly mistake:
-      </p>
+      <h2>Parcel due-diligence sequence</h2>
       <ol>
-        <li>
-          <strong>Confirm municipal opt-in status.</strong> Check our <a href="/guides/maine-cannabis-opt-in-tracker">Opt-In Tracker</a>, then call or email the municipal clerk or planning office directly to confirm the current status. Ask specifically whether there is any active moratorium on cannabis licensing.
-        </li>
-        <li>
-          <strong>Pull the current zoning map and cannabis ordinance text.</strong> Obtain both from the municipal planning office or the municipality's website. Confirm the parcel's zone designation matches a zone listed as permitted for cannabis retail in the ordinance.
-        </li>
-        <li>
-          <strong>Verify school buffer compliance.</strong> Identify every school, private school, and day care facility within 1,500 ft of the site. Use the municipality's official GIS mapping tool to measure property-line-to-property-line distances. If the site is within 200 ft of the buffer threshold in either direction, commission a formal survey.
-        </li>
-        <li>
-          <strong>Confirm church buffer compliance if applicable.</strong> If the municipality's ordinance includes a church or place of worship buffer, identify relevant institutions and verify distance.
-        </li>
-        <li>
-          <strong>Check for competing cannabis retailers.</strong> If the municipality has a retailer spacing rule, map the restricted radius around each existing licensee to confirm your site falls outside all such radii.
-        </li>
-        <li>
-          <strong>Review parking, signage, and operational requirements.</strong> Confirm the site can practically satisfy all municipal requirements — or identify what improvements will be needed and factor those costs into your deal.
-        </li>
-        <li>
-          <strong>Schedule a pre-application meeting with code enforcement or planning staff.</strong> Most municipalities offer a free or low-cost pre-application consultation. Use it. Planning staff can identify potential issues before you invest in architectural plans or permit applications. They can often tell you informally whether a site is likely to be approved.
-        </li>
-        <li>
-          <strong>Negotiate lease contingency language.</strong> Your real estate attorney should draft a lease contingency provision making the lease binding only upon receipt of all required cannabis permits and licenses within a defined period (typically 180–365 days). This is standard in cannabis leasing and protects you from losing your deposit on a site that cannot be licensed.
-        </li>
+        <li><strong>Verify the program.</strong> Determine whether the proposed use is adult use or medical; do not apply adult-use §402 automatically to a medical establishment.</li>
+        <li><strong>Verify the allowed type.</strong> Obtain the adopted municipal vote, ordinance, and amendments for the exact establishment type.</li>
+        <li><strong>Confirm conditional-license status.</strong> Align the local request with OCP's three-stage process.</li>
+        <li><strong>Pull authoritative parcel records.</strong> Obtain the tax map, zoning map, deed, easements, existing permits, and code history.</li>
+        <li><strong>Run buffer screening.</strong> Map school property lines and every locally regulated sensitive use; commission a survey when close.</li>
+        <li><strong>Request a written zoning determination.</strong> Ask the municipal authority to identify the use classification, review path, and known dimensional requirements.</li>
+        <li><strong>Test physical feasibility.</strong> Engage the appropriate design, fire, electrical, wastewater, traffic, and environmental professionals.</li>
+        <li><strong>Control the site conditionally.</strong> Do not let a lease or purchase deadline outrun the necessary approvals.</li>
+        <li><strong>Track approvals to finality.</strong> Record conditions, expirations, renewal obligations, and appeal periods.</li>
+        <li><strong>Return to OCP for active licensure.</strong> Local approval is a required stage, not the final license.</li>
       </ol>
     </section>
 
     <section>
-      <h2>Maine Cannabis Zoning Requirements by Municipality</h2>
-      <p>
-        The following table summarizes key cannabis zoning parameters across Maine's major opt-in markets. This is indicative only — always verify current ordinance text directly with each municipality, as rules change:
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Municipality</th>
-            <th>Opt-In Status</th>
-            <th>School Buffer</th>
-            <th>Permitted Zones</th>
-            <th>Local Permit Type</th>
-            <th>Operating Hours</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Portland</strong></td>
-            <td>Active</td>
-            <td>500 ft</td>
-            <td>General Commercial, HC, specified overlay districts</td>
-            <td>Administrative review</td>
-            <td>Until 10 PM</td>
-          </tr>
-          <tr>
-            <td><strong>South Portland</strong></td>
-            <td>Active</td>
-            <td>500 ft</td>
-            <td>Commercial, HC</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Westbrook</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Commercial, LI</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Bangor</strong></td>
-            <td>Active</td>
-            <td>500 ft</td>
-            <td>Downtown District, HC, specified commercial zones</td>
-            <td>Administrative review</td>
-            <td>Until 10 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Lewiston</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>General Commercial, HC</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Auburn</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Commercial, LI</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Biddeford</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Downtown, Commercial</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Sanford</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Commercial</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Brunswick</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Commercial</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 8 PM</td>
-          </tr>
-          <tr>
-            <td><strong>Augusta</strong></td>
-            <td>Active</td>
-            <td>1,000 ft</td>
-            <td>Commercial, HC</td>
-            <td>Conditional Use Permit</td>
-            <td>Until 9 PM</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        ◆ This table is updated periodically but may not reflect the most recent municipal ordinance amendments. Confirm all parameters with the target municipality's planning office before making site decisions.
-      </p>
-    </section>
-
-    <section>
-      <h2>What Happens If the Municipality Opts Out After You Open</h2>
-      <p>
-        Existing licensed dispensaries are typically grandfathered under state law when a municipality opts out of adult-use cannabis. Your state license would theoretically remain valid, and the OCP has historically honored existing licenses even when local ordinances change. However, grandfathering protections are not absolute — they typically cover the existing license and the existing location, but may restrict:
-      </p>
-      <ul>
-        <li><strong>Physical expansion</strong> of the licensed premises</li>
-        <li><strong>Relocation</strong> of the dispensary to a different address</li>
-        <li><strong>License transfer</strong> to a new owner</li>
-        <li><strong>Addition of new product categories</strong> (e.g., adding cultivation or manufacturing to a retail license)</li>
-      </ul>
-      <p>
-        Beyond the legal question, operating in a hostile political environment — where the town council has voted to opt out — creates practical challenges. Inspections may become more aggressive. Permit renewals may face delay. Community relations become strained. Many experienced operators prefer to locate in municipalities with stable, community-supported opt-in ordinances rather than those where the opt-in passed by a narrow margin and could be reversed.
-      </p>
-    </section>
-
-    <section>
-      <h2>Getting Help With Your Zoning Strategy</h2>
-      <p>
-        Navigating Maine cannabis zoning requirements is a specialized skill. Municipal ordinances are not standardized — each town has its own ordinance with its own zone designations, buffer distances, and permitting processes. Operators who try to self-navigate frequently encounter costly surprises after they have signed a lease.
-      </p>
-      <p>
-        Cannabis-experienced real estate attorneys and consultants familiar with Maine's municipal landscape can review a site before you commit, flag ordinance-specific issues, and help you negotiate protective lease language. The upfront cost of proper legal review is a fraction of the cost of a failed site selection decision.
-      </p>
-      <p>
-        For guidance on finding experienced cannabis real estate counsel in Maine, see our <a href="/guides/maine-dispensary-business-plan">Maine Dispensary Business Plan Guide</a>.
-      </p>
-    </section>
-
-    <section>
-      <h2>Frequently Asked Questions</h2>
-      <Faq faqs={[
-        {
-          question: "How do I find out which Maine towns have opted in to allow cannabis retail?",
-          answer: "The Maine Office of Cannabis Policy maintains a municipal opt-in list on its website. Our Maine Cannabis Opt-In Tracker consolidates this data with additional notes on ordinance conditions, spacing requirements, and local permit processes. For the most current status, contact the municipal clerk or planning office directly — the OCP list can lag behind recent votes by 60–90 days."
-        },
-        {
-          question: "What is the school buffer distance for Maine dispensaries?",
-          answer: "The state default is 1,000 ft, measured property line to property line. However, municipalities may reduce this to 500 ft through a local ordinance amendment. Several larger markets — including Portland and Bangor — have adopted the 500 ft buffer. Always check the specific ordinance for your target municipality, as the buffer standard varies."
-        },
-        {
-          question: "Can I open a dispensary in a residential zone in Maine?",
-          answer: "No. Cannabis retail is categorically prohibited in residential zoning districts throughout Maine, regardless of any other site characteristics. You must locate in a commercially or industrially zoned parcel that is specifically listed as a permitted zone in the municipality's cannabis ordinance. Some municipalities further restrict cannabis retail to a subset of commercial zones — for example, allowing it in general commercial but not in neighborhood commercial districts."
-        },
-        {
-          question: "What is the difference between a local permit and a state license for Maine cannabis?",
-          answer: "The local permit is issued by your municipality and confirms your specific site meets all local zoning requirements (correct zone, buffer clearance, parking, signage, hours, etc.). The state license is issued by the Maine OCP and confirms you meet all state licensing criteria (background checks, financial readiness, security plan, etc.). Both are required before you can open, and you generally need the local permit before the OCP will finalize review of your state application. They are separate processes running on separate timelines."
-        },
-        {
-          question: "How long does it take to get a local zoning permit for a Maine dispensary?",
-          answer: "Timelines vary by municipality and permit type. Municipalities with streamlined administrative review (no public hearing) can issue permits in 2–6 weeks for fully compliant applications. Municipalities that require a Conditional Use Permit with a public hearing typically run 45–90 days from submission to decision. If the application is contested or the planning board continues the hearing, the process can extend to 3–6 months. Build for the longer end when creating your launch timeline."
-        },
-        {
-          question: "Can I get a variance to locate within the school buffer in Maine?",
-          answer: "No. The school buffer is a statutory prohibition under 28-B M.R.S. §301, not a zoning standard subject to local variance. No municipality in Maine can grant a variance to allow a dispensary within the required distance of a school. If a site fails the buffer test, you must find a different site. This is one of the most important compliance checkpoints — do not sign a lease on a site that is within or too close to the buffer until you have formal written confirmation from a licensed surveyor or the municipality's GIS system."
-        }
-      ]} />
+      <h2>Medical establishments require a separate analysis</h2>
+      <p>Medical cannabis operates under Title 22, chapter 558-C and municipal home-rule authority rather than the adult-use opt-in sequence in §402. A town may regulate registered caregivers, caregiver retail stores, dispensaries, testing facilities, and manufacturing facilities under its medical-cannabis ordinance and land-use code.</p>
+      <p>Confirm the exact medical registration, local ordinance, and parcel rules instead of treating an adult-use opt-in list as a medical-zoning map.</p>
     </section>
 
     <section class="external-resources">
-      <h2>External Resources</h2>
+      <h2>Primary sources</h2>
       <ul>
-        <li><a href="https://www.maine.gov/dafs/ocp/resources" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy — Resources</a></li>
-        <li><a href="https://www.maine.gov/dafs/ocp/resources/municipal-resources" target="_blank" rel="noopener noreferrer">Maine OCP — Municipal Resources</a></li>
-        <li><a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec301.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §301 — Location Requirements</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec402.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §402 — local authorization within municipalities</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec403.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §403 — unorganized and deorganized areas</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/application-process" target="_blank" rel="noopener noreferrer">OCP adult-use application process</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources/municipal-resources" target="_blank" rel="noopener noreferrer">OCP municipal resources</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/open-data" target="_blank" rel="noopener noreferrer">OCP open data</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/22/title22ch558-Csec0.html" target="_blank" rel="noopener noreferrer">Title 22, chapter 558-C — medical-use program</a></li>
+      </ul>
+      <p class="source-note">Sources reviewed July 26, 2026. Always retrieve the current municipal ordinance, map, amendments, and written approvals for the parcel itself.</p>
+    </section>
+
+    <section id="hub-cross-links">
+      <h2>Related guides</h2>
+      <ul>
+        <li><a href="/guides/maine-dispensary-license">Maine cannabis business licensing</a></li>
+        <li><a href="/guides/maine-cannabis-opt-in-tracker">Municipal adult-use opt-in tracker</a></li>
+        <li><a href="/guides/maine-cannabis-regulations">Maine cannabis regulations</a></li>
+        <li><a href="/guides/maine-cannabis-real-estate">Cannabis real-estate diligence</a></li>
       </ul>
     </section>
 
-    <section class="disclaimer">
-      <p><em><strong>Disclaimer:</strong> This guide is for informational purposes only and does not constitute legal or financial advice. Cannabis zoning requirements in Maine are subject to frequent municipal ordinance changes; always verify current rules with the target municipality's planning office and consult qualified legal counsel before committing to any real estate.</em></p>
-    </section>
+    <h2>Maine cannabis zoning FAQ</h2>
+    <Faq
+      questions={[
+        { q: 'Is the statewide school buffer 500 feet?', a: 'No. Section 402 sets a 1,000-foot property-line buffer. A municipality may adopt a shorter distance, but not less than 500 feet.' },
+        { q: 'Can I seek local authorization before receiving an OCP conditional license?', a: 'No. Section 402 bars the request, and the municipality may not accept it as complete, until OCP issues the conditional license.' },
+        { q: 'Does an OCP conditional license mean my parcel is approved?', a: 'No. The municipality still must authorize the relevant establishment type and the applicant must obtain all applicable local approvals, permits, and licenses.' },
+        { q: 'If a town does not respond, is the application approved?', a: 'No. Municipal silence does not satisfy local authorization. The statute provides deemed-denial and appeal procedures after the applicable 90- or 180-day period.' },
+        { q: 'Does adult-use opt-in prove a medical cannabis use is allowed?', a: 'No. Medical establishments require a separate Title 22 and municipal-ordinance analysis.' }
+      ]}
+    />
+
+    <p class="disclaimer"><strong>Disclaimer:</strong> This guide is general information, not legal, land-use, engineering, or surveying advice. Verify the current state law and every applicable municipal requirement with the responsible authority and qualified professionals.</p>
 
     <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-06</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
-    </div>
-  </section>
-<p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p></article>
+      <div class="verification-badge"><span class="verification-icon">◆</span><span class="verification-text"> Last reviewed <strong>2026-07-26</strong> against 28-B M.R.S. §§402–403, OCP's application-process page, and OCP municipal resources. Editorial methodology and reviewer bios are available at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>.</span></div>
+    </section>
 
+    <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> Material corrections are documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a>.</p>
+    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> See the publisher-managed <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">editorial bylines and reviewer roles</a>.</p>
+  </article>
 </Layout>
-

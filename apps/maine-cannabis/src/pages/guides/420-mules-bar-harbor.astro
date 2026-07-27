@@ -8,7 +8,7 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-07-04",
-  modifiedDate: "2026-07-04",
+  modifiedDate: '2026-07-26',
   section: "City Guides"
 };
 
@@ -21,7 +21,7 @@ const faqPageJsonLd = JSON.stringify({
     { "@type": "Question", "name": "What is 420 Mules in Bar Harbor, Maine?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is a Maine medical cannabis delivery service operating in the Bar Harbor area. The operator is licensed under Maine's medical cannabis program and serves registered patients in the Mount Desert Island region. Contact the operator directly for current service area and ordering." }},
     { "@type": "Question", "name": "Where is 420 Mules located?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is based in Bar Harbor, ME 04609. As a medical cannabis delivery service, the operator does not maintain a public storefront — the customer base is served through delivery to registered patients. Confirm pickup / delivery options with the operator." }},
     { "@type": "Question", "name": "Is 420 Mules a medical or adult-use operator?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules is a medical cannabis delivery service operating under Maine's medical cannabis program. Customers must be registered Maine medical marijuana patients (or hold a valid out-of-state card from a reciprocity state) to place orders." }},
-    { "@type": "Question", "name": "How do I order from 420 Mules?", "acceptedAnswer": { "@type": "Answer", "text": "Contact 420 Mules directly through the operator's website (420mules.com) or via the Weedmaps listing to place an order. Medical delivery in Maine is governed by caregiver and courier licensing rules — the operator will confirm whether your address falls within their service radius." }},
+    { "@type": "Question", "name": "How do I order from 420 Mules?", "acceptedAnswer": { "@type": "Answer", "text": "Contact 420 Mules directly through the operator's website (420mules.com) or via the Weedmaps listing. Maine has no standalone medical courier license; confirm the responsible medical-program registrant and whether your address is served." }},
     { "@type": "Question", "name": "What is the service area for 420 Mules?", "acceptedAnswer": { "@type": "Answer", "text": "420 Mules delivers to medical patients in the Bar Harbor / Mount Desert Island region on the Maine coast. Confirm current service radius and minimum order requirements with the operator." }}
   ]
 });
@@ -117,7 +117,7 @@ void faqPageJsonLd; // emitted by Faq.astro component (not referenced in templat
       <li><strong>Sullivan</strong></li>
       <li><strong>Gouldsboro / Winter Harbor</strong></li>
     </ul>
-    <p>Confirm the current service radius with the operator before placing an order. Maine's medical delivery rules require the patient to be a registered MMMP cardholder and the operator to hold appropriate caregiver or courier licensing.</p>
+    <p>Confirm the current service radius with the operator before placing an order. Maine has no standalone medical courier license; the transfer must be tied to authorized medical-program conduct by the responsible caregiver or dispensary, and the patient must satisfy current program requirements.</p>
   </section>
 
   <section>

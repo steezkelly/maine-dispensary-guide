@@ -1,152 +1,154 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
 import CityGuide from '../../components/CityGuide.astro';
-import Faq from '../../components/Faq.astro';
+import Callout from '../../components/Callout.astro';
 
 const article = {
-  author: "Eliot Nash",
-  authorId: "eliot-nash",
-  authorTitle: "Market & Real Estate Analyst",
-  publishDate: "2026-05-13",
-  modifiedDate: '2026-07-25',
-  section: "City Guides"
+  author: 'Calvin Waters',
+  authorId: 'calvin-waters',
+  reviewer: { name: 'Margaret Finch', jobTitle: 'Finance & Taxation Analyst', id: 'margaret-finch' },
+  authorTitle: 'Licensing & Compliance Analyst',
+  publishDate: '2026-05-13',
+  modifiedDate: '2026-07-26',
+  section: 'City Guides'
 };
 
-const topics = ["city", "market"];
-
+const topics = ['city', 'market'];
+const faqPageJsonLd = "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"Is there a medical cannabis store in Buxton?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Yes. Hidden Greens advertises a medical storefront at 370 Narragansett Trail, and OCP's June medical-establishment snapshot lists active dispensary registration DSP159 under Caberski Industries LLC / Hidden Greens with Buxton as the license city. The state snapshot does not publish a street address, so verify the live registration and operator location before purchase.\"}}, {\"@type\": \"Question\", \"name\": \"What are Hidden Greens' Buxton hours?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"The operator's official Buxton page does not publish hours. Call (207) 298-9111 or check the current operator menu before traveling.\"}}, {\"@type\": \"Question\", \"name\": \"Is there an adult-use dispensary in Buxton?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"No Buxton row appears in OCP's June 1, 2026 adult-use applicant and licensee file. Verify the current OCP search before relying on a directory listing.\"}}, {\"@type\": \"Question\", \"name\": \"Does Hidden Greens deliver from Buxton?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"The company homepage advertises medical delivery, but the Buxton location page does not define the responsible registrant or service area. Confirm those details directly before ordering.\"}}]}";
 ---
+
 <CityGuide
-  title="Buxton, ME Dispensaries: Hidden Greens & Nearby Stores (2026)"
-  description="Buxton, ME dispensaries: addresses, hours, rec vs. medical status, and what each store stocks. Hidden Greens — Medical Cannabis Dispensary — 2026 list." heroImage="/images/heroes/buxton-dispensary-guide.jpg" article={article} topics={topics} >
+  title="Buxton, ME Medical Cannabis Guide"
+  description="Buxton, Maine medical cannabis guide: Hidden Greens operator details, current OCP registry context, town zoning rules, patient verification, and adult-use status."
 
-  <div class="article-header">
-    <h1>Buxton Maine Dispensaries</h1>
-    <p class="subtitle">Cannabis dispensaries in Buxton, Maine — Hidden Greens Buxton medical dispensary & nearby rec</p>
-  </div>
+  heroImage="/images/heroes/buxton-dispensary-guide.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    .fact-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; }
+    .fact-table th, .fact-table td { text-align: left; vertical-align: top; padding: 0.7rem; border-bottom: 1px solid var(--color-border); }
+    .source-note { font-size: 0.9rem; color: var(--color-text-light); }
+  </style>
 
-  <section class="fact-box">
-    <h2>Buxton Cannabis Quick Facts</h2>
-    <table aria-label="Buxton cannabis market overview">
-      <thead><tr><th scope="col">Fact</th><th scope="col">Details</th></tr></thead>
+  <header class="article-header">
+    <h1>Buxton Medical Cannabis Guide</h1>
+    <p class="subtitle">Hidden Greens' advertised Buxton storefront, current state-registry context, and the town rules patients should understand</p>
+  </header>
+
+  <Callout title="Medical storefront, not verified adult-use retail" type="warning">
+    Hidden Greens describes its Buxton location as a medical cannabis dispensary. OCP's June 1, 2026 adult-use establishment file contains no Buxton application or license row. Do not treat this page, a menu, or the fact that adult possession is legal statewide as proof of an adult-use sale.
+  </Callout>
+
+  <section>
+    <h2>Buxton cannabis facts</h2>
+    <table class="fact-table" aria-label="Buxton cannabis facts">
       <tbody>
-        <tr><td><strong>Medical Legal</strong></td><td>Yes</td></tr>
-        <tr><td><strong>Recreational Legal</strong></td><td>Yes — statewide</td></tr>
-        <tr><td><strong>Dispensaries in Town</strong></td><td>1 confirmed (Hidden Greens, medical)</td></tr>
-        <tr><td><strong>Known Dispensary</strong></td><td>Hidden Greens — 370 Narragansett Trail, Buxton, ME 04093, (207) 298-9111</td></tr>
-        <tr><td><strong>Delivery Available</strong></td><td>Yes — Hidden Greens offers delivery</td></tr>
-        <tr><td><strong>Population</strong></td><td>~9,000 (2020 Census)</td></tr>
-        <tr><td><strong>County</strong></td><td>York County</td></tr>
+        <tr><th>Operator-advertised medical storefront</th><td>Hidden Greens, 370 Narragansett Trail</td></tr>
+        <tr><th>Published phone</th><td><a href="tel:+12072989111">(207) 298-9111</a></td></tr>
+        <tr><th>Published program</th><td>Medical cannabis</td></tr>
+        <tr><th>OCP medical dispensary record</th><td>DSP159 — Caberski Industries LLC / Hidden Greens, active, Buxton</td></tr>
+        <tr><th>Adult-use establishment rows in OCP June 2026 file</th><td>None found for Buxton</td></tr>
+        <tr><th>Town zoning category</th><td>Medical marijuana dispensaries are conditional uses in Business/Commercial and Light Commercial districts</td></tr>
+        <tr><th>Municipal registered-dispensary cap</th><td>Three under Buxton Zoning Ordinance §11.27.1</td></tr>
       </tbody>
     </table>
   </section>
 
   <section>
-    <h2>Overview</h2>
-    <p>Buxton has roughly 9,000 residents — one of the larger towns in this expansion wave — and is home to <strong>Hidden Greens</strong>, a medical cannabis dispensary serving the southern York County corridor. With a population nearly three times larger than most towns on this list, Buxton's dispensary scene is notably thin: just one medical operator serving a town of 9,000.</p>
+    <h2>Hidden Greens — Buxton medical cannabis store</h2>
+    <p><strong>Address:</strong> 370 Narragansett Trail, Buxton, ME 04093<br />
+      <strong>Phone:</strong> <a href="tel:+12072989111">(207) 298-9111</a><br />
+      <strong>Official location page:</strong> <a href="https://hiddengreens.com/buxton/" target="_blank" rel="noopener noreferrer">hiddengreens.com/buxton</a><br />
+      <strong>Program advertised by operator:</strong> Medical</p>
+    <p>The official Buxton page lists flower, pre-rolls, edibles, concentrates, beverages, and other medical-cannabis products. It does not publish store hours. Call the number above or use the operator's current menu before making a trip; do not rely on hours copied from an older directory.</p>
+    <p>The company homepage also links a delivery menu, but it does not establish that the Buxton storefront itself performs every delivery or define a service area. Confirm the responsible registered caregiver or dispensary, patient requirements, destination, and current availability before ordering. Maine does not issue a general medical cannabis courier license.</p>
   </section>
 
   <section>
-    <h2>Dispensaries in Buxton</h2>
-
-    <h3>Hidden Greens — Medical Cannabis Dispensary</h3>
-    <p><strong>Address:</strong> 370 Narragansett Trail, Buxton, ME 04093<br>
-    <strong>Phone:</strong> (207) 298-9111<br>
-    <strong>Hours:</strong> Mon-Sat 9am–9pm, Sun 9am–8pm<br>
-    <strong>Type:</strong> Medical-only</p>
-    <p><a href="/guides/hidden-greens-dispensary">Hidden Greens</a> also operates a second location at 438 Main Street, South Berwick, giving them a footprint in both the southern and northern ends of York County. Their delivery service extends to surrounding communities including Limington, Hollis, and other towns without local dispensaries.</p>
+    <h2>Important OCP registry context</h2>
+    <p>OCP's <a href="https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">Medical Use Applicant and Registrant Search</a> says its downloadable data was last updated July 8, 2026 and reflects a June 1, 2026 file date.</p>
+    <p>OCP's medical-establishment snapshot lists active medical dispensary registration <strong>DSP159</strong> under <strong>Caberski Industries LLC</strong>, DBA <strong>Hidden Greens</strong>, with Buxton as the license city. That state record connects Hidden Greens to an active Buxton medical dispensary registration.</p>
+    <p>The establishment snapshot does not publish a street address, so the operator's official page remains the primary source for the advertised 370 Narragansett Trail location. OCP's separate caregiver file also lists The Corner Store (CGR28664) with Buxton as retail town and Caberski Industries/Hidden Greens caregiver registration CGR26972 with South Berwick as retail town. Those are separate caregiver registrations; they do not negate the Buxton dispensary record DSP159.</p>
+    <Callout title="How to read the records" type="info">
+      The operator page supplies the advertised street address, while OCP's establishment file confirms an active Hidden Greens dispensary registration in Buxton. Because the state snapshot does not include a street address, verify DSP159 in OCP's live search and confirm the responsible registration before a transaction or delivery.
+    </Callout>
   </section>
 
   <section>
-    <h2>Nearest Recreational Dispensaries</h2>
-    <p>For adult-use recreational purchases, Buxton residents typically travel to:</p>
+    <h2>What Buxton's current ordinance says</h2>
+    <p>Buxton's June 14, 2025 zoning ordinance expressly regulates medical cannabis:</p>
     <ul>
-      <li><strong>Biddeford</strong> (~15 mi) — Stoner & Co., Canuvo, Undertow Cannabis, Landrace Cannabis</li>
-      <li><strong>Saco</strong> (~15 mi) — The Farm Stand</li>
-      <li><strong>Scarborough</strong> (~15 mi) — Multiple recreational dispensaries along the Portland commuter corridor</li>
+      <li><strong>Districts:</strong> Article 9 lists “Medical Marijuana Dispensaries” as conditional uses in the Business/Commercial and Light Commercial districts and as not permitted in the other listed districts.</li>
+      <li><strong>Cap:</strong> Section 11.27.1 limits registered dispensaries to three within the town.</li>
+      <li><strong>Buffer:</strong> Section 11.27.2 requires at least 500 feet, property line to property line, from schools, libraries, playgrounds, parks, houses of worship, and daycares.</li>
+      <li><strong>Size:</strong> The section limits the facility to 2,500 square feet.</li>
+      <li><strong>Hours:</strong> It allows operation from 8:00 a.m. to 9:00 p.m., Monday through Sunday. Those are the municipal outer limits, not proof of an operator's actual posted hours.</li>
+      <li><strong>Operations:</strong> The ordinance addresses indoor cultivation, alarms, exterior lighting, surveillance, and odor control for registered dispensaries and associated cultivation facilities.</li>
     </ul>
-    <p>This creates a noticeable gap: Buxton has 9,000 residents but no recreational dispensary. An adult-use operator entering Buxton would capture the medical-adjacent customer base currently driving to Biddeford or Scarborough for recreational products.</p>
+    <p>Section 11.30 separately governs medical marijuana caregiver/home-occupation activity. It requires patient distribution in an enclosed building, prohibits drive-through or window service, and limits dispensing to 7:00 a.m.–8:00 p.m. for the caregiver/home-occupation category. Which section applies depends on the operator's actual registration and municipal approval.</p>
   </section>
 
   <section>
-    <h2>Buxton's Market Position</h2>
-    <p>Hidden Greens serves as the nearest medical option for several towns to the north and east that have no dispensaries at all:</p>
-    <ul>
-      <li><strong>Limington</strong> (~6 mi from Hidden Greens)</li>
-      <li><strong>Hollis</strong> (~10 mi from Hidden Greens)</li>
-      <li><strong>Limerick</strong> (~12 mi from Hidden Greens — though with <a href="/guides/founding-farmers-dispensary">Founding Farmers</a> at 16 Main St, Limerick)</li>
-    </ul>
-    <p>For these communities, Buxton's Hidden Greens is the closest medical dispensary — making it the functional anchor for the southern corridor between Biddeford and the lakes region.</p>
+    <h2>Adult-use status</h2>
+    <p>OCP's <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">adult-use establishment file</a>, updated on OCP's page July 8, 2026 with a June 1 file date, contains no Buxton applicant or licensee row. Buxton's cited zoning provisions address medical dispensaries and caregiver activity; they do not establish an approved adult-use cannabis store.</p>
+    <p>Adults may possess cannabis under Maine law, but an adult-use retail sale must come from an active adult-use cannabis store licensee. Verify current state data before relying on a nearby listing.</p>
   </section>
 
   <section>
-    <h2>Buxton Town Context for Operators</h2>
-    <p>Buxton was granted by the Massachusetts General Court in 1728 as Narragansett Number One, one of seven Narragansett Grants awarded to veterans of King Philip's War. Permanent settlement didn't begin until 1750 at Salmon Falls, after the British capture of Quebec in 1759 made frontier settlement safe. The town was incorporated in 1772 as Buxton, named by its minister, the Rev. Paul Coffin, for the English spa town of Buxton in Derbyshire.</p>
-    <p>Buxton's 19th-century economy was anchored by water-powered mills along the Saco River, including sawmills, gristmills, woolen textile mills at West Buxton (Moderation Falls), tanneries, and a bobbin factory at Bar Mills. The river villages of Salmon Falls, Bar Mills, West Buxton, and Bonny Eagle supported dense small-scale industry; a series of 19th-century floods and the construction of the Frank Skelton Dam in 1948 ultimately submerged the original Salmon Falls village, whose surviving houses now form the Salmon Falls East and West Historic Districts.</p>
-    <p>For operators, Buxton is the largest population center of any town in this directory that has only a single medical dispensary. The 2020 Census recorded 8,376 residents — a 4% increase from 2010 — and the town sits less than 10 miles from the edge of the Portland metro. Once considered a bedroom community, Buxton now has a stable base of small businesses, two libraries, and a MSAD#6 school district serving the southern corridor. The commercial node along Route 202 and the Buxton-Hollis line sees regular commuter traffic, but the town has explicitly struggled to attract chain retail — leaving room for a recreational operator willing to navigate a 9,000-resident market with limited local competition.</p>
+    <h2>Patient checklist before visiting</h2>
+    <ol>
+      <li>Confirm the store is open; the operator's Buxton page does not publish hours.</li>
+      <li>Ask which active medical-program registrant is responsible for the Buxton sale.</li>
+      <li>Verify that registrant through OCP's live licensing search or downloadable data.</li>
+      <li>Bring current government identification and the medical documentation required for your patient status.</li>
+      <li>If visiting from another state, review OCP's <a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients" target="_blank" rel="noopener noreferrer">visiting-patient guidance</a> before traveling.</li>
+      <li>Confirm product availability, payment methods, return policy, and delivery responsibility directly with the operator.</li>
+    </ol>
   </section>
 
-  
-  <section class="further-reading">
-    <h2>Related Guides</h2>
+  <section>
+    <h2>Primary sources</h2>
     <ul>
-      <li><a href="/guides/hidden-greens-dispensary">Hidden Greens — full operator guide</a></li>
+      <li><a href="https://hiddengreens.com/buxton/" target="_blank" rel="noopener noreferrer">Hidden Greens — official Buxton location page</a></li>
+      <li><a href="https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP medical-use applicant and registrant search — establishment DSP159 and caregiver records</a></li>
+      <li><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" target="_blank" rel="noopener noreferrer">OCP adult-use applicant and licensee search</a></li>
+      <li><a href="https://www.buxton.me.us/uploads/art9.2024.pdf" target="_blank" rel="noopener noreferrer">Town of Buxton Zoning Ordinance, Article 9 — district regulations</a></li>
+      <li><a href="https://www.buxton.me.us/uploads/art11.2025.pdf" target="_blank" rel="noopener noreferrer">Town of Buxton Zoning Ordinance, Article 11 — cannabis standards</a></li>
+      <li><a href="https://legislature.maine.gov/statutes/22/title22ch558-Csec0.html" target="_blank" rel="noopener noreferrer">Maine Medical Use of Cannabis Act</a></li>
     </ul>
+    <p class="source-note">Operator, OCP, and municipal sources reviewed July 26, 2026. Registry files are snapshots; use OCP's live search for a current transaction.</p>
   </section>
 
+  <section>
+    <h2>Frequently asked questions</h2>
+    <script type="application/ld+json" set:html={faqPageJsonLd} is:inline></script>
+    <details data-faq data-faq-id="buxton-medical-store"><summary>Is there a medical cannabis store in Buxton?</summary><p>Yes. Hidden Greens advertises a medical storefront at 370 Narragansett Trail, and OCP's June medical-establishment snapshot lists active dispensary registration DSP159 under Caberski Industries LLC / Hidden Greens with Buxton as the license city. The state snapshot does not publish a street address, so verify the live registration and operator location before purchase.</p></details>
+    <details data-faq data-faq-id="buxton-hidden-greens-hours"><summary>What are Hidden Greens' Buxton hours?</summary><p>The operator's official Buxton page does not publish hours. Call (207) 298-9111 or check the current operator menu before traveling.</p></details>
+    <details data-faq data-faq-id="buxton-adult-use"><summary>Is there an adult-use dispensary in Buxton?</summary><p>No Buxton row appears in OCP's June 1, 2026 adult-use applicant and licensee file. Verify the current OCP search before relying on a directory listing.</p></details>
+    <details data-faq data-faq-id="buxton-hidden-greens-delivery"><summary>Does Hidden Greens deliver from Buxton?</summary><p>The company homepage advertises medical delivery, but the Buxton location page does not define the responsible registrant or service area. Confirm those details directly before ordering.</p></details>
+  </section>
 
   <section id="hub-cross-links">
-    <h2>Read the operator guide</h2>
-    <p>For the Maine-specific rules and operator context behind the dispensaries above, start with these core and topic-specific references:</p>
+    <h2>Related Maine guides</h2>
     <ul>
-    <li><a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations</a></li>
-    <li><a href="/guides/maine-cannabis-conditional-license">Maine Cannabis Conditional License</a></li>
-    <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes (2026)</a></li>
-    <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a></li>
-    <li><a href="/guides/maine-cannabis-site-selection">Maine Cannabis Site Selection</a></li>
+      <li><a href="/guides/hidden-greens-dispensary">Hidden Greens operator guide</a></li>
+      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine medical cannabis certification guide</a></li>
+      <li><a href="/blog/maine-medical-patient-delivery-services-2026">Medical cannabis delivery</a></li>
+      <li><a href="/guides/maine-cannabis-regulations">Maine cannabis laws</a></li>
     </ul>
   </section>
 
-<section>
-    <h2>See also: Maine dispensary guides nearby</h2>
-    <p>Other York County dispensary guides:</p>
-    <ul>
-      <li><a href="/guides/alfred-dispensary-guide">Alfred</a></li>
-      <li><a href="/guides/arundel-dispensary-guide">Arundel</a></li>
-      <li><a href="/guides/berwick-dispensary-guide">Berwick</a></li>
-      <li><a href="/guides/biddeford-dispensary-guide">Biddeford</a></li>
-    </ul>
-<!-- see-also-nearby-peers -->
+  <section>
+    <AutoRelated currentPath="/guides/buxton-dispensary-guide" currentTopics={topics} section="City Guides" limit={6} />
   </section>
 
-<section>
-    <div class="further-reading">
-      <AutoRelated currentPath="/guides/buxton-dispensary-guide" currentTopics={['city', 'market']} section="City Guides" limit={6} />
-    </div>
+  <p class="disclaimer"><strong>Disclaimer:</strong> This directory guide does not establish licensure or patient eligibility. Verify current operator status, OCP registration, municipal approval, and patient requirements before purchase.</p>
+
+  <section class="content-verification">
+    <div class="verification-badge"><span class="verification-icon">◆</span><span class="verification-text"> Last reviewed <strong>2026-07-26</strong> against Hidden Greens' official Buxton page, OCP's June 2026 medical and adult-use files, and Buxton zoning Articles 9 and 11. Methodology and reviewer roles: <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>.</span></div>
   </section>
 
-  <section class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-    <Faq
-      questions={[
-        { q: "Are there any dispensaries in Buxton, Maine?", a: "Yes. Hidden Greens operates a medical dispensary at 370 Narragansett Trail, Buxton, ME 04093. Phone: (207) 298-9111. Hours: Mon-Sat 9am-9pm, Sun 9am-8pm." },
-        { q: "What is Hidden Greens?", a: "Hidden Greens is a medical cannabis dispensary at 370 Narragansett Trail, Buxton. They also operate a second location in South Berwick. They offer delivery to the surrounding area." },
-        { q: "Does Hidden Greens deliver?", a: "Yes. Hidden Greens offers delivery services to Buxton, Limington, Hollis, and surrounding communities." },
-        { q: "Does Buxton have recreational dispensaries?", a: "As of this writing, Hidden Greens is medical-only. The nearest recreational options are Biddeford (~15 mi), Saco (~15 mi), and Scarborough (~15 mi)."},
-        { q: "What dispensaries are near Buxton?", a: "Medical: Hidden Greens in Buxton (370 Narragansett Trail). Recreational: Biddeford (Stoner & Co, Canuvo), Saco, Scarborough — all ~15 mi." },
-      ]}
-    />
-  </section>
-
-  <p class="disclaimer"><strong>Disclaimer:</strong> Information is provided for general reference only. Dispensary hours, product availability, and delivery service areas can change. Always verify details directly with the dispensary before planning a visit.</p>
-
-    <section class="content-verification">
-    <div class="verification-badge">
-      <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-06</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, legislature, and primary source documents cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
-    </div>
-  </section>
-<p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
-  <aside class="consumer-hub-callout" style="background: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border-left: 3px solid var(--color-primary); padding: 1.25rem 1.5rem; margin: 2.5rem 0; border-radius: 0 0.5rem 0.5rem 0;"><strong>First time buying cannabis in Maine?</strong> Our <a href="/learn" style="color: var(--color-primary); text-decoration: underline; font-weight: 600;">Consumer's Guide</a> covers first-dispensary-visit prep, THC label reading, possession limits, delivery rules, and finding a caregiver — useful background for any resident or visitor.</aside>
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> Material corrections are documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a>.</p>
+  <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> See the publisher-managed <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">editorial bylines and reviewer roles</a>.</p>
 </CityGuide>
-

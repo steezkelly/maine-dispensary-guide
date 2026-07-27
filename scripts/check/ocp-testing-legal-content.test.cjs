@@ -60,7 +60,7 @@ test('best Maine edibles attribution records the organizational primary-source e
 });
 
 test('corrections log records the statute/rule/guidance distinction', () => {
-  const source = read('apps/maine-cannabis/src/pages/about/corrections.astro');
+  const source = read('apps/maine-cannabis/src/data/corrections-log.ts');
   assert.match(source, /P\.L\. 2025, ch\. 764 made it effective April 19, 2026/);
   assert.match(source, /already provides the edible concentrate-input testing exception/);
   assert.match(source, /OCP's April 28, 2026 implementation guidance/);
