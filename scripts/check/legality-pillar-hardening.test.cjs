@@ -79,7 +79,10 @@ test('quick-reference section exists above the fold', () => {
   assert.ok(qrIdx < src.length * 0.6, 'quick-reference must appear early in the page');
 });
 
-test('quick-reference covers required facts', () => {
+test('quick-reference covers required facts (scoped to the .quick-ref section)', () => {
+  const qrMatch = src.match(/<section class="quick-ref">[\s\S]*?<\/section>/);
+  assert.ok(qrMatch, 'must have a .quick-ref section');
+  const qr = qrMatch[0];
   const required = [
     [/21/, 'minimum age'],
     [/2\.5\s*(?:oz|ounces)/, 'possession limit'],
@@ -90,7 +93,7 @@ test('quick-reference covers required facts', () => {
     [/14%/, 'adult-use sales tax'],
   ];
   for (const [pattern, label] of required) {
-    assert.ok(pattern.test(src), `quick-reference must cover: ${label}`);
+    assert.ok(pattern.test(qr), `quick-reference SECTION must cover: ${label} (not just elsewhere in the article)`);
   }
 });
 
