@@ -68,6 +68,7 @@ test('delivery recovery uses current statutory authority and removes courier-lic
   ];
 
   assert.match(deliveryGuide, /28-B M\.R\.S\. §\s*504\(9\)/);
+  assert.match(deliveryGuide, /publishDate:\s*['"]2026-01-22['"]/);
   assert.match(businessGuide, /author:\s*['"]Calvin Waters['"]/);
   assert.match(businessGuide, /authorId:\s*['"]calvin-waters['"]/);
   assert.match(businessGuide, /authorTitle:\s*['"]Licensing & Compliance Analyst['"]/);
@@ -100,6 +101,11 @@ test('zoning, waste, and Buxton corrections retain their primary-source limits',
   assert.match(waste, /former blanket “three years” claim was not the current general standard/);
   assert.match(buxton, /The June file does not clearly connect those records/);
   assert.match(buxton, /We do not infer a license relationship that the public records do not show/);
+  assert.match(buxton, /publishDate:\s*['"]2026-05-13['"]/);
+  assert.match(buxton, /section:\s*['"]City Guides['"]/);
+  assert.match(buxton, /const topics = \[['"]city['"], ['"]market['"]\]/);
+  assert.match(buxton, /title="Buxton, ME Medical Cannabis Guide"/);
+  assert.doesNotMatch(buxton, /1 Medical Store/);
 });
 
 test('canonical route policy remains slashless', () => {

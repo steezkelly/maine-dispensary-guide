@@ -8,16 +8,16 @@ const article = {
   authorId: 'calvin-waters',
   reviewer: { name: 'Margaret Finch', jobTitle: 'Finance & Taxation Analyst', id: 'margaret-finch' },
   authorTitle: 'Licensing & Compliance Analyst',
-  publishDate: '2026-04-20',
+  publishDate: '2026-05-13',
   modifiedDate: '2026-07-26',
-  section: 'City Guide'
+  section: 'City Guides'
 };
 
-const topics = ['city-guides'];
+const topics = ['city', 'market'];
 ---
 
 <CityGuide
-  title="Buxton, ME Dispensaries: 1 Medical Store."
+  title="Buxton, ME Medical Cannabis Guide"
   description="Buxton, Maine medical cannabis guide: Hidden Greens operator details, current OCP registry context, town zoning rules, patient verification, and adult-use status."
 
   heroImage="/images/heroes/buxton-dispensary-guide.jpg"
@@ -136,7 +136,7 @@ const topics = ['city-guides'];
   </section>
 
   <section>
-    <AutoRelated currentPath="/guides/buxton-dispensary-guide" currentTopics={['city-guides']} section="City Guide" limit={6} />
+    <AutoRelated currentPath="/guides/buxton-dispensary-guide" currentTopics={topics} section="City Guides" limit={6} />
   </section>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> This directory guide does not establish licensure or patient eligibility. Verify current operator status, OCP registration, municipal approval, and patient requirements before purchase.</p>
