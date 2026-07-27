@@ -555,3 +555,32 @@ test('R1: canonical npm script ops:integrate is wired to the wrapper', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   assert.equal(pkg.scripts['ops:integrate'], 'node scripts/operations/integration/cli.cjs');
 });
+
+test('R1-C: the canonical integration topology is the GitHub merge commit', () => {
+  const checklist = fs.readFileSync(path.join(ROOT, 'docs/governance/templates/mdg-integrator-checklist.md'), 'utf8');
+  // The canonical topology is stated as the merge commit.
+  assert.match(checklist, /Canonical integration topology: GitHub merge commit/i);
+  // Post-merge reconciliation proves tree byte-identity.
+  assert.match(checklist, /Post-merge reconciliation/);
+  assert.match(checklist, /\^\{tree\}/);
+  // The CANONICAL COMMAND BLOCK uses the new repo+PR identity interface and must
+  // NOT contain the old caller-supplied remote-state flags or a --checks manifest.
+  const cmdBlock = checklist.match(/```bash\n\s*npm run ops:integrate[\s\S]*?```/);
+  assert.ok(cmdBlock, 'canonical ops:integrate command block must exist');
+  const cmd = cmdBlock[0];
+  assert.match(cmd, /--repo-full-name/);
+  assert.match(cmd, /--pr-number/);
+  assert.ok(!/--current-head/.test(cmd), 'canonical command must not accept --current-head');
+  assert.ok(!/--expected-base/.test(cmd), 'canonical command must not accept --expected-base');
+  assert.ok(!/--checks\b/.test(cmd), 'canonical command must not accept a caller-authored --checks flag');
+  // Cherry-pick + direct push is NOT the canonical path (emergency mode only).
+  assert.match(checklist, /Emergency mode/i);
+  assert.ok(!/^4\. `git cherry-pick/m.test(checklist), 'cherry-pick must not be a canonical required-order step');
+});
+
+test('R1-C: orchestration governance documents the merge-commit topology', () => {
+  const orch = fs.readFileSync(path.join(ROOT, 'docs/governance/mdg-agent-orchestration-v1.md'), 'utf8');
+  assert.match(orch, /GitHub merge commit/);
+  assert.match(orch, /--repo-full-name/);
+  assert.match(orch, /derives the actual state independently/i);
+});

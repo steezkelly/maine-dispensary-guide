@@ -63,34 +63,38 @@ and records separate `SPEC COMPLIANCE` and `CODE QUALITY` verdicts.
 
 ### Integrator
 
-The Integrator is the sole writer for integration. Only the integration worktree
-may update `origin/main`; the Integrator must not use the primary checkout.
-The Integrator must cherry-pick one accepted candidate, recheck base compatibility,
-lease status, verification evidence, and scope, then run `npm run
-verify:iterate` (smoke-free) and execute deploy verification on the
-post-transport Vercel preview deployment — `npm run verify:post-deploy` with
-`MDG_PREVIEW_URL` set. Pre-transport smoke against the currently-deployed
-production site is forbidden by the 2026-07-20 governance change; see
-`docs/governance/verifier-governance-migration-notes-2026-07-20.md`. The
-Integrator must not merge unverified batch work. For release readiness, record
-final SHA, Vercel deployment ID/URL, validation commands, and deferred work
-metadata before release. No author, verifier, or coordinator may independently
-write to `origin/main`.
+The Integrator is the sole writer for integration. The canonical integration
+topology is a **GitHub merge commit**: the candidate is the exact remote PR head,
+independent verifier evidence is bound to that candidate, the canonical gate
+verifies the actual remote PR and live checks, the Integrator marks the PR ready,
+GitHub performs the merge commit, and post-merge reconciliation proves the
+candidate is the reachable second parent and that the final main tree is
+byte-identical to the candidate tree. The ordinary cherry-pick + direct-push
+sequence is retained only as a separately named emergency mode with its own
+complete tree/HEAD binding (see the Integrator checklist). The Integrator must
+not validate one commit and permit a different commit or tree to be merged.
 
-**Canonical integrity gate (mandatory, fail-closed).** Before any merge or push
-to `main`, the Integrator must run the single canonical integration command
-`npm run ops:integrate -- --evidence <private-bound-evidence> --checks
-<private-required-checks> --candidate <exact-candidate-sha> --expected-base
-<exact-base-sha> --current-head <exact-remote-pr-head-sha>` (wrapper:
-`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2). It composes the
-verified-candidate integrity checks into one mechanically fail-closed gate and
-exits nonzero before any merge when evidence is missing/unsafe, candidate/head/base
-identity differs, the candidate tree differs, a required check is pending or
-failing, or the worktree is dirty. Ordinary output is redacted; full reasons go
-only to a validated Tier-0 `--detail-out` file. The Integrator must not push if
-the gate exits nonzero. The local integration path is mechanically fail-closed
-when this wrapper is used; GitHub-wide enforcement is not category B until the
-OPS-06B-P1 Child-3 ruleset is operator-enabled (see ADR Amendment 5).
+**Canonical integrity gate (mandatory, fail-closed).** Before marking a PR ready
+or merging, the Integrator must run the single canonical integration command
+`npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide
+--pr-number <number> --evidence <private-bound-evidence>` (wrapper:
+`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2 + R1). The gate
+**derives the actual state independently** — it fetches origin with pruning,
+resolves the live `origin/<base>` SHA, queries the actual PR (state, base
+branch/SHA, head SHA, draft, mergeability), and evaluates the **live**
+required-check rollup for the exact PR head. It never accepts a caller-supplied
+`--current-head`/`--expected-base` as evidence of remote state. It exits nonzero
+before any merge when the remote PR head is not the evidence-bound candidate,
+`origin/<base>` drifted, the PR is closed/merged or targets the wrong branch, the
+local checkout HEAD/tree is not the exact authorized object, the worktree is
+dirty, the candidate is not based on the base, or a required check (Operations
+Suite, Build) is missing/pending/failing/stale/skipped. Ordinary output is
+redacted; full reasons go only to a validated Tier-0 `--detail-out` file. The
+Integrator must not merge if the gate exits nonzero. The local integration path
+is mechanically fail-closed when this wrapper is used; GitHub-wide enforcement is
+not category B until the R1-E ruleset is operator-enabled, and candidate-integrity
+remains category A+ GitHub-wide until an independent trusted producer exists (see
+ADR Amendment 6).
 
 ### Continuity Watcher
 
