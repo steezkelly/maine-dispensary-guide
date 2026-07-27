@@ -68,8 +68,9 @@ test('delivery recovery uses current statutory authority and removes courier-lic
   ];
 
   assert.match(deliveryGuide, /28-B M\.R\.S\. §\s*504\(9\)/);
-  assert.match(businessGuide, /author:\s*['"]Margaret Finch['"]/);
-  assert.match(businessGuide, /authorId:\s*['"]margaret-finch['"]/);
+  assert.match(businessGuide, /author:\s*['"]Calvin Waters['"]/);
+  assert.match(businessGuide, /authorId:\s*['"]calvin-waters['"]/);
+  assert.match(businessGuide, /authorTitle:\s*['"]Licensing & Compliance Analyst['"]/);
   assert.match(businessGuide, /publishDate:\s*['"]2026-04-18['"]/);
   assert.match(medicalGuide, /author:\s*['"]Calvin Waters['"]/);
   assert.match(medicalGuide, /authorId:\s*['"]calvin-waters['"]/);
@@ -77,7 +78,6 @@ test('delivery recovery uses current statutory authority and removes courier-lic
   const registeredAuthorIds = new Set(
     JSON.parse(read('apps/maine-cannabis/src/data/authors.json')).map((author) => author.id),
   );
-  assert.ok(registeredAuthorIds.has('margaret-finch'));
   assert.ok(registeredAuthorIds.has('calvin-waters'));
   assert.doesNotMatch(businessGuide + medicalGuide, /alex-rivera|Alex Rivera/);
   assert.match(businessGuide, /does not create a standalone adult-use cannabis courier or delivery-service license/);
