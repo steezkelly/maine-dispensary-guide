@@ -53,14 +53,22 @@ The right verify pattern is one canonical command per stage, not "run all the th
 npm run verify:iterate               # esbuild parse + filtered astro check + required source contracts
 npm run verify:iterate -- --fast-only  # sub-second parse-only check during one edit session
 
-# EXACT CANDIDATE — after commit, with the intended base pinned.
-node scripts/git/pre-push-verify.cjs --ref=origin/main
+# EVIDENCE-BOUND GATE — before marking the PR ready or merging (fail-closed).
+npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number "$PR_NUMBER" --evidence "$EVIDENCE_PATH" --expect-evidence-sha256 "$EVIDENCE_DIGEST" --allow-draft
+
+# EXACT CANDIDATE — after commit, with the intended base and target pinned.
+node scripts/git/pre-push-verify.cjs --ref="$LOCKED_BASE_SHA" --target="$CANDIDATE_SHA"
 npm run build:isolated               # one final isolation-aware build
 
 # TRANSPORT / PREVIEW — push normally only after exact-head review passes.
 git push origin HEAD:refs/heads/$BRANCH_NAME
-# Wait until Vercel reports Ready for that exact pushed SHA, then:
+# Wait until Vercel reports Ready for that exact candidate SHA, then:
 MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy
+
+# MERGE — GitHub merge commit; reconciliation follows.
+gh pr merge "$PR_NUMBER" --merge
+# Post-merge reconciliation: prove first parent = base, second/reachable parent =
+# candidate, and rev-parse "$FINAL_MAIN_SHA"^{tree} == rev-parse "$CANDIDATE_SHA"^{tree}.
 
 # PRODUCTION — only after merge and exact production deployment readiness.
 MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy

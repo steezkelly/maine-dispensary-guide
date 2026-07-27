@@ -201,6 +201,28 @@ jobs:
         run: |
           npm --workspace @network/maine-cannabis run check:compressed-frontmatter
 
+  operations-suite:
+    name: Operations Suite
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run operations suite
+        run: node --test scripts/operations/tests/*.test.cjs
+
   deploy-preview:
     name: Deploy Preview
     needs: build

@@ -68,14 +68,20 @@
  *     + MDG_BASE set to the production URL.
  *   - Anything else: --with-smoke refuses to run and exits 12.
  *
- * Canonical release sequence:
- *   1. `node scripts/git/pre-push-verify.cjs --ref=origin/main`
- *   2. `npm run build:isolated`
- *   3. Set BRANCH_NAME, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
- *   4. Wait until Vercel reports Ready for that exact pushed SHA.
- *   5. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
- *   6. Only after merge and exact production deployment readiness:
- *   7. `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`
+ * Canonical release sequence (combined: PR #219 release-governance protections
+ * + OPS-06B evidence-bound gate + GitHub merge-commit topology):
+ *   1. `npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number "$PR_NUMBER" --evidence "$EVIDENCE_PATH" --expect-evidence-sha256 "$EVIDENCE_DIGEST" --allow-draft`
+ *   2. `node scripts/git/pre-push-verify.cjs --ref="$LOCKED_BASE_SHA" --target="$CANDIDATE_SHA"`
+ *   3. `npm run build:isolated`
+ *   4. Set BRANCH_NAME, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
+ *   5. Wait until Vercel reports Ready for that exact candidate SHA.
+ *   6. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
+ *   7. `gh pr merge "$PR_NUMBER" --merge` (GitHub merge commit).
+ *   8. Post-merge reconciliation: first parent = base, second/reachable parent =
+ *      candidate, and `git rev-parse "$FINAL_MAIN_SHA"^{tree}` ==
+ *      `git rev-parse "$CANDIDATE_SHA"^{tree}`.
+ *   9. Only after merge and exact production deployment readiness:
+ *   10. `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`
  *
  * Usage:
  *   node scripts/git/pre-push-verify.cjs                                 # DEFAULT (smoke OFF): esbuild parse + astro check filtered + sitemap-postprocess + docs-vs-code + compressed-frontmatter + hero-image-naming
