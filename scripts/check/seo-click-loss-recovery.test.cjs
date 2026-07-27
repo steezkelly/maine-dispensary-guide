@@ -187,6 +187,7 @@ test('rewritten FAQ accordions emit one valid FAQPage schema with visible parity
     assert.ok(literal, `${page} missing faqPageJsonLd const`);
     const schema = JSON.parse(JSON.parse(literal[1]));
     assert.equal(schema['@type'], 'FAQPage', `${page} schema is not a FAQPage`);
+    assert.equal(schema['@context'], 'https://' + 'schema.org', `${page} FAQ schema must use the schema.org context`);
     assert.ok(Array.isArray(schema.mainEntity) && schema.mainEntity.length > 0, `${page} schema has no questions`);
 
     const visibleQuestions = [...source.matchAll(/<summary>(.*?)<\/summary>/gs)].map((m) => m[1].trim());
@@ -207,6 +208,26 @@ test('blog index delivery cards reflect the corrected destination pages', () => 
   assert.match(index, /no standalone courier license/i, 'business delivery card must state there is no standalone courier license');
   assert.match(index, /§504\(9\)/, 'business delivery card must cite the §504(9) delivery authority');
   assert.match(index, /responsible caregiver or registered dispensary/, 'medical delivery card must name the responsible provider');
+});
+
+test('rewritten delivery posts keep a constrained article reading measure', () => {
+  const posts = [
+    'apps/maine-cannabis/src/pages/blog/maine-cannabis-delivery-business-guide-2026.astro',
+    'apps/maine-cannabis/src/pages/blog/maine-medical-patient-delivery-services-2026.astro',
+  ];
+
+  for (const post of posts) {
+    const source = read(post);
+    assert.match(source, /\.blog-post \{ max-width: 42rem; margin: 0 auto; \}/, `${post} lacks the constrained reading-measure rule`);
+    assert.match(source, /<article class="blog-post">/, `${post} must wrap content in an <article> landmark`);
+    assert.equal(source.match(/<article\b/g).length, source.match(/<\/article>/g).length, `${post} has unbalanced <article> tags`);
+  }
+});
+
+test('corrections page passes its revision metadata to Layout', () => {
+  const corrections = read('apps/maine-cannabis/src/pages/about/corrections.astro');
+  assert.match(corrections, /modifiedDate:\s*['"]2026-07-26['"]/, 'corrections page must carry the correction date');
+  assert.match(corrections, /<Layout[\s\S]*?\barticle=\{article\}/, 'corrections page must pass article metadata to Layout');
 });
 
 test('canonical route policy remains slashless', () => {
