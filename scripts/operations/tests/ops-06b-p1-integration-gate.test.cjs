@@ -584,3 +584,42 @@ test('R1-C: orchestration governance documents the merge-commit topology', () =>
   assert.match(orch, /--repo-full-name/);
   assert.match(orch, /derives the actual state independently/i);
 });
+
+test('R1-D: ADR Amendment 6 records the honest attestation trust-model correction', () => {
+  const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/2026-07-25-mdg-operations-control-plane-v1.md'), 'utf8');
+  assert.match(adr, /Amendment 6 — Attestation trust model correction/);
+  // An unsigned author-committed attestation is NOT a category-B authorization artifact.
+  assert.match(adr, /not a category-B authorization\s+artifact/i);
+  // Candidate-integrity remains category A+ (honest decision).
+  assert.match(adr, /Candidate-integrity remains category A\+/);
+  // Integrity Gate branch protection is deferred until a trusted producer exists.
+  assert.match(adr, /Integrity Gate` branch protection remains \*{0,2}DEFERRED/i);
+  // CI recompute proves only self-consistency, not authorization.
+  assert.match(adr, /self-consistency/);
+  // The full threat model covers author-forgery dimensions.
+  assert.match(adr, /Author alters code and attestation together/);
+  assert.match(adr, /Author chooses arbitrary/);
+  // pull_request workflow behavior (merge ref vs PR head, fetch-depth).
+  assert.match(adr, /synthetic PR merge/);
+  assert.match(adr, /fetch-depth/);
+});
+
+test('R1-F: the dedicated Operations Suite job is preserved (not folded into Build)', () => {
+  const ci = fs.readFileSync(path.join(ROOT, '.github/workflows/ci.yml'), 'utf8');
+  // The dedicated job still exists with the exact name and command.
+  assert.match(ci, /^  operations-suite:\n/m);
+  assert.match(ci, /name: Operations Suite/);
+  assert.match(ci, /node --test scripts\/operations\/tests\/\*\.test\.cjs/);
+  // It is NOT folded into the build job: the operations command must not appear in the build job block.
+  const lines = ci.split('\n');
+  const buildStart = lines.findIndex((l) => l === '  build:');
+  const opsStart = lines.findIndex((l) => l === '  operations-suite:');
+  assert.ok(buildStart !== -1 && opsStart !== -1, 'both build and operations-suite jobs must exist');
+  assert.ok(opsStart > buildStart, 'operations-suite must be a separate job after build');
+  const buildBlock = lines.slice(buildStart, opsStart).join('\n');
+  assert.ok(!/node --test scripts\/operations\/tests/.test(buildBlock),
+    'operations suite command must NOT be inside the build job');
+  // The wiring contract test still exists.
+  assert.ok(fs.existsSync(path.join(ROOT, 'scripts/operations/tests/ops-06b-p1-ci-wiring.test.cjs')),
+    'CI-wiring contract test must be preserved');
+});
