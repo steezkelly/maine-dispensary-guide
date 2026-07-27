@@ -400,6 +400,7 @@ module.exports = {
   captureEvidence,
   bindAcceptedCandidate,
   evidenceSelfConsistent,
+  sealEvidence,
   worktreeStatus,
   verifyCandidate,
 };

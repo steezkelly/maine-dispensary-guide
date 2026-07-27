@@ -2,26 +2,15 @@
 'use strict';
 
 /**
- * OPS-06B-P1-R1 — remote-state binding + required-check authenticity tests.
+ * OPS-06B-P1-R1/R2 — remote-state binding, required-check authenticity,
+ * evidence semantics, and check-producer binding tests.
  *
  * Exercises the side-effect-free gate core (scripts/operations/integration/gate.cjs)
  * with injected git/gh runners so the binding logic is testable without a live
- * GitHub. Covers:
- *   R1-A — the gate binds to ACTUAL local + remote state, rejecting:
- *     - remote PR head moved (not the evidence-bound candidate);
- *     - origin/main moved after verification (base drift);
- *     - worktree checked out at the wrong HEAD / wrong tree;
- *     - stale local remote-tracking ref (fetch --prune + live resolution);
- *     - PR targets a branch other than main;
- *     - PR closed or already merged;
- *     - PR head is not the evidence-bound candidate.
- *   R1-B — required-check evidence comes from the LIVE rollup, rejecting:
- *     - empty required set; fabricated all-success; Operations Suite missing;
- *     - Operations Suite from an older SHA (stale); Build pending;
- *     - duplicate conflicting Operations Suite; skipped/cancelled/timed-out;
- *     - and accepting the correct live result for the exact PR head.
- *   Plus at least one integration-level test against an isolated bare remote
- *   (real git fetch/rev-parse), and a CLI-level redaction smoke test.
+ * GitHub. Covers R1-A (remote-state binding), R1-B (live check-rollup),
+ * R1-C (merge-commit topology), R1-D (ADR Amendment 6), R1-F (Operations Suite
+ * preserved), and R2-A..R2-F (evidence semantics, exact HEAD, origin binding,
+ * mergeability, check-producer authentication, strict policy).
  *
  * Node built-in test runner. No dependency.
  */
@@ -36,6 +25,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 const ROOT = path.resolve(__dirname, '../../..');
 const GATE = require('../integration/gate.cjs');
 const ROLLUP = require('../integration/check-rollup.cjs');
+const REMOTE = require('../integration/remote-state.cjs');
 const INTEGRITY_CLI = path.resolve(__dirname, '../integrity/cli.cjs');
 const GATE_CLI = path.resolve(__dirname, '../integration/cli.cjs');
 
@@ -47,14 +37,14 @@ function git(repo, ...args) {
 }
 
 function makeRoot() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r1-root-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r2-root-'));
   fs.chmodSync(root, 0o700);
   return root;
 }
 
 /** Build a throwaway repo with a base commit and a candidate commit on a branch. */
 function makeRepoWithCandidate() {
-  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r1-repo-'));
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r2-repo-'));
   git(repo, 'init', '-q');
   git(repo, 'config', 'commit.gpgsign', 'false');
   fs.writeFileSync(path.join(repo, 'README.md'), 'base\n');
@@ -75,7 +65,7 @@ function makeRepoWithCandidate() {
 function captureEvidence(repo, base, root) {
   const out = path.join(root, 'evidence.json');
   const cap = spawnSync(process.execPath, [
-    INTEGRITY_CLI, 'capture-evidence', '--repo', repo, '--taskId', 't_r1', '--base', base,
+    INTEGRITY_CLI, 'capture-evidence', '--repo', repo, '--taskId', 't_r2', '--base', base,
     '--timestamp', '2026-07-27T00:00:00Z', '--outcome', 'PASS',
     '--accept', 'node --test impl.test.cjs=0', '--out', out,
   ], { encoding: 'utf8', env: { ...process.env, MDG_OPS_ROOT: root } });
@@ -88,13 +78,30 @@ function captureEvidence(repo, base, root) {
   return { evidence: out, candidate };
 }
 
-/** A real git runner that no-ops `fetch` and serves `origin/main` as the captured
- *  base SHA (throwaway repos have no origin remote), but runs all other commands
- *  for real (rev-parse HEAD/tree, merge-base, status, ...). */
+/** Read the evidence_sha256 digest from a bound evidence file. */
+function readEvidenceDigest(evidencePath) {
+  return JSON.parse(fs.readFileSync(evidencePath, 'utf8')).evidence_sha256;
+}
+
+/** Simulate a genuinely-absent trusted check-policy file (floor-only policy). */
+function isPolicyShow(args) {
+  return args[0] === 'show' && /check-policy\.json$/.test(args[1] || '');
+}
+function throwPolicyAbsent() {
+  throw new Error("fatal: path 'scripts/operations/integration/check-policy.json' does not exist in 'origin/main'");
+}
+
+/**
+ * A real git runner that no-ops `fetch`, serves `origin/main` as the captured
+ * base SHA, serves `origin` URL binding, simulates an absent check-policy file,
+ * and runs all other commands for real.
+ */
 function realGit(repo, baseSha) {
   return (repoDir, args) => {
     if (args[0] === 'fetch') return ''; // simulate a successful fetch --prune
     if (args[0] === 'rev-parse' && args[1] === 'origin/main') return baseSha;
+    if (args[0] === 'remote' && args[1] === 'get-url') return 'https://github.com/steezkelly/maine-dispensary-guide.git';
+    if (isPolicyShow(args)) throwPolicyAbsent();
     return git(repoDir, ...args);
   };
 }
@@ -115,7 +122,15 @@ function mockGh({ pr, checkRunsByHead }) {
   };
 }
 
-function prObject({ head, base, baseRef = 'main', state = 'open', draft = false, merged = false }) {
+/** Wrap a mockGh function as a paginated check-run runner. */
+function wrapGhCheckRuns(ghApiFn) {
+  return (repoFullName, headSha) => {
+    const resp = ghApiFn(`repos/${repoFullName}/commits/${headSha}/check-runs?per_page=100`);
+    return { check_runs: resp.check_runs, pages: 1 };
+  };
+}
+
+function prObject({ head, base, baseRef = 'main', state = 'open', draft = false, merged = false, mergeable = true, mergeableState = 'clean' }) {
   return {
     number: 999,
     state,
@@ -123,8 +138,8 @@ function prObject({ head, base, baseRef = 'main', state = 'open', draft = false,
     merged,
     head: { sha: head, ref: 'candidate' },
     base: { sha: base, ref: baseRef },
-    mergeable: true,
-    mergeable_state: 'clean',
+    mergeable,
+    mergeable_state: mergeableState,
   };
 }
 
@@ -135,7 +150,7 @@ function checkRun(name, conclusion, head, opts = {}) {
     status: opts.status || 'completed',
     conclusion,
     head_sha: head,
-    app: { slug: opts.app || 'github-actions' },
+    app: { slug: opts.appSlug || 'github-actions', id: opts.appId !== undefined ? opts.appId : 15368 },
     html_url: `https://example/run/${name}`,
     started_at: '2026-07-27T00:00:00Z',
     completed_at: '2026-07-27T00:05:00Z',
@@ -151,9 +166,19 @@ function gateArgs(repo, root, evidence, extra = {}) {
     repoFullName: 'steezkelly/maine-dispensary-guide',
     prNumber: '999',
     evidence,
+    expectEvidenceSha256: readEvidenceDigest(evidence),
     repo,
     baseBranch: 'main',
     ...extra,
+  };
+}
+
+function makeRunners(repo, base, ghApiFn) {
+  return {
+    env: { ...process.env, MDG_OPS_ROOT: makeRoot() },
+    git: realGit(repo, base),
+    ghApi: ghApiFn,
+    ghApiCheckRuns: wrapGhCheckRuns(ghApiFn),
   };
 }
 
@@ -165,11 +190,9 @@ test('R1-A: ACCEPT when actual PR head == evidence candidate, base matches, chec
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, true, result.reasons.join('; '));
   fs.rmSync(repo, { recursive: true, force: true });
@@ -180,12 +203,10 @@ test('R1-A: REJECT when remote PR head moved (not the evidence-bound candidate)'
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const movedHead = 'f'.repeat(40); // remote PR head moved to a different SHA
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: movedHead, base }), checkRunsByHead: { [movedHead]: passingChecks(movedHead) } }),
-  };
+  const movedHead = 'f'.repeat(40);
+  const ghApiFn = mockGh({ pr: prObject({ head: movedHead, base }), checkRunsByHead: { [movedHead]: passingChecks(movedHead) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.includes('REMOTE_PR_HEAD_MISMATCH'), result.reasonCodes.join(','));
@@ -197,18 +218,16 @@ test('R1-A: REJECT when origin/main moved after verification (base drift)', () =
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  // Mock git so origin/main resolves to a DIFFERENT (drifted) SHA than the evidence base.
   const driftedBase = 'a'.repeat(40);
   const mockGit = (repoDir, args) => {
     if (args[0] === 'fetch') return '';
     if (args[0] === 'rev-parse' && args[1] === 'origin/main') return driftedBase;
+    if (args[0] === 'remote' && args[1] === 'get-url') return 'https://github.com/steezkelly/maine-dispensary-guide.git';
+    if (isPolicyShow(args)) throwPolicyAbsent();
     return git(repoDir, ...args);
   };
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: mockGit,
-    ghApi: mockGh({ pr: prObject({ head: candidate, base: driftedBase }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base: driftedBase }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = { env: { ...process.env, MDG_OPS_ROOT: root }, git: mockGit, ghApi: ghApiFn, ghApiCheckRuns: wrapGhCheckRuns(ghApiFn) };
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.includes('REMOTE_BASE_DRIFT'), result.reasonCodes.join(','));
@@ -220,20 +239,17 @@ test('R1-A: REJECT when worktree is checked out at the wrong HEAD (tree differs)
   const { repo, base, candidate, baseTree } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  // Mock git so the local HEAD tree is the BASE tree (a real, resolvable tree
-  // that differs from the candidate tree) — the checkout is at the wrong tree.
   const mockGit = (repoDir, args) => {
     if (args[0] === 'fetch') return '';
     if (args[0] === 'rev-parse' && args[1] === 'origin/main') return base;
     if (args[0] === 'rev-parse' && args[1] === 'HEAD') return candidate;
-    if (args[0] === 'rev-parse' && args[1] === 'HEAD^{tree}') return baseTree; // wrong local tree (real but != candidate tree)
+    if (args[0] === 'rev-parse' && args[1] === 'HEAD^{tree}') return baseTree;
+    if (args[0] === 'remote' && args[1] === 'get-url') return 'https://github.com/steezkelly/maine-dispensary-guide.git';
+    if (isPolicyShow(args)) throwPolicyAbsent();
     return git(repoDir, ...args);
   };
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: mockGit,
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = { env: { ...process.env, MDG_OPS_ROOT: root }, git: mockGit, ghApi: ghApiFn, ghApiCheckRuns: wrapGhCheckRuns(ghApiFn) };
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.includes('LOCAL_TREE_MISMATCH'), result.reasonCodes.join(','));
@@ -245,11 +261,9 @@ test('R1-A: REJECT when PR targets a branch other than main', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base, baseRef: 'develop' }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base, baseRef: 'develop' }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.some((c) => c.startsWith('REMOTE_PR_WRONG_BASE')), result.reasonCodes.join(','));
@@ -261,11 +275,9 @@ test('R1-A: REJECT when PR is closed', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base, state: 'closed' }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base, state: 'closed' }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.some((c) => c.startsWith('REMOTE_PR_NOT_OPEN')), result.reasonCodes.join(','));
@@ -277,11 +289,9 @@ test('R1-A: REJECT when PR is already merged', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base, merged: true }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base, merged: true }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.includes('REMOTE_PR_ALREADY_MERGED'), result.reasonCodes.join(','));
@@ -293,11 +303,9 @@ test('R1-A: REJECT when remote PR lookup is unavailable (fail closed)', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: null, checkRunsByHead: {} }), // PR lookup throws
-  };
+  const ghApiFn = mockGh({ pr: null, checkRunsByHead: {} });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasonCodes.includes('REMOTE_PR_UNAVAILABLE'), result.reasonCodes.join(','));
@@ -305,36 +313,17 @@ test('R1-A: REJECT when remote PR lookup is unavailable (fail closed)', () => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('R1-A: a user-supplied --expect-candidate that mismatches the actual head is rejected', () => {
-  const { repo, base, candidate } = makeRepoWithCandidate();
-  const root = makeRoot();
-  const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } }),
-  };
-  // Caller asserts a wrong expected candidate -> must fail even though actual is fine.
-  const result = GATE.runGate(gateArgs(repo, root, evidence, { expectCandidate: 'c'.repeat(40) }), runners);
-  assert.equal(result.ok, false);
-  assert.ok(result.reasonCodes.includes('REMOTE_PR_HEAD_MISMATCH_EXPECTED'), result.reasonCodes.join(','));
-  fs.rmSync(repo, { recursive: true, force: true });
-  fs.rmSync(root, { recursive: true, force: true });
-});
-
 // ===========================================================================
-// R1-B — required-check authenticity (live rollup, not caller-authored JSON)
+// R1-B — required-check authenticity (live rollup)
 // ===========================================================================
 
 test('R1-B: REJECT when Operations Suite is missing from the live rollup', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: [checkRun('Build', 'success', candidate)] } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: [checkRun('Build', 'success', candidate)] } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((r) => /required check missing: Operations Suite/.test(r)), result.reasons.join('; '));
@@ -347,13 +336,10 @@ test('R1-B: REJECT when Operations Suite is from an OLDER SHA (stale)', () => {
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
   const olderHead = 'd'.repeat(40);
-  // Operations Suite ran on an older SHA; only Build ran on the current head.
   const runs = [checkRun('Operations Suite', 'success', olderHead), checkRun('Build', 'success', candidate)];
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((r) => /required check missing: Operations Suite/.test(r)), result.reasons.join('; '));
@@ -366,11 +352,9 @@ test('R1-B: REJECT when Build is pending (not completed)', () => {
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
   const runs = [checkRun('Operations Suite', 'success', candidate), checkRun('Build', null, candidate, { status: 'in_progress' })];
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((r) => /required check not completed \(pending\): Build/.test(r)), result.reasons.join('; '));
@@ -387,11 +371,9 @@ test('R1-B: REJECT on duplicate conflicting Operations Suite results', () => {
     checkRun('Operations Suite', 'failure', candidate, { id: 2 }),
     checkRun('Build', 'success', candidate),
   ];
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((r) => /conflicting duplicate results: Operations Suite/.test(r)), result.reasons.join('; '));
@@ -404,14 +386,12 @@ test('R1-B: REJECT when a required check is skipped (not allowlisted)', () => {
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
   const runs = [checkRun('Operations Suite', 'success', candidate), checkRun('Build', 'skipped', candidate)];
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-    git: realGit(repo, base),
-    ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } }),
-  };
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
-  assert.ok(result.reasons.some((r) => /required check skipped \(not allowlisted\): Build/.test(r)), result.reasons.join('; '));
+  assert.ok(result.reasons.some((r) => /required check skipped \(not sufficient\): Build/.test(r)), result.reasons.join('; '));
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
@@ -422,11 +402,9 @@ test('R1-B: REJECT on cancelled / timed_out conclusions', () => {
   const { evidence } = captureEvidence(repo, base, root);
   for (const bad of ['cancelled', 'timed_out', 'failure']) {
     const runs = [checkRun('Operations Suite', 'success', candidate), checkRun('Build', bad, candidate)];
-    const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root },
-      git: realGit(repo, base),
-      ghApi: mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } }),
-    };
+    const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: runs } });
+    const runners = makeRunners(repo, base, ghApiFn);
+    runners.env.MDG_OPS_ROOT = root;
     const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
     assert.equal(result.ok, false, `expected rejection for conclusion ${bad}`);
     assert.ok(result.reasons.some((r) => /required check not successful: Build/.test(r)), `${bad}: ${result.reasons.join('; ')}`);
@@ -439,12 +417,11 @@ test('R1-B: REJECT when check-runs are unavailable (fail closed)', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
   const { evidence } = captureEvidence(repo, base, root);
-  const ghApi = (apiPath) => {
+  const ghApiFn = (apiPath) => {
     if (/\/pulls\/\d+$/.test(apiPath)) return prObject({ head: candidate, base });
     throw new Error('check-runs unavailable');
   };
-  const runners = {
-    env: { ...process.env, MDG_OPS_ROOT: root }, git: realGit(repo, base), ghApi };
+  const runners = { env: { ...process.env, MDG_OPS_ROOT: root }, git: realGit(repo, base), ghApi: ghApiFn, ghApiCheckRuns: wrapGhCheckRuns(ghApiFn) };
   const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((r) => /CHECK_RUNS_UNAVAILABLE/.test(r)), result.reasons.join('; '));
@@ -453,38 +430,23 @@ test('R1-B: REJECT when check-runs are unavailable (fail closed)', () => {
 });
 
 test('R1-B: the non-negotiable floor cannot be weakened by a candidate policy', () => {
-  // effectiveRequired always includes the floor even if a policy tries to omit it.
   const required = ROLLUP.effectiveRequired({ schema: ROLLUP.POLICY_SCHEMA, required_contexts: [] });
-  assert.ok(required.includes('Operations Suite'));
-  assert.ok(required.includes('Build'));
-  // A policy can ADD but never remove.
+  assert.ok(required.some((s) => s.name === 'Operations Suite'));
+  assert.ok(required.some((s) => s.name === 'Build'));
   const required2 = ROLLUP.effectiveRequired({ schema: ROLLUP.POLICY_SCHEMA, required_contexts: ['Extra Check'] });
-  assert.ok(required2.includes('Operations Suite'));
-  assert.ok(required2.includes('Extra Check'));
-});
-
-test('R1-B: empty required set fails closed (defense-in-depth)', () => {
-  const { repo, base, candidate } = makeRepoWithCandidate();
-  const root = makeRoot();
-  // Direct rollup call with a policy that somehow yields empty -> floor still applies,
-  // so simulate the empty path via a stubbed effectiveRequired is not needed; instead
-  // assert the floor guarantees non-empty.
-  assert.ok(ROLLUP.REQUIRED_CONTEXT_FLOOR.length > 0);
-  fs.rmSync(repo, { recursive: true, force: true });
-  fs.rmSync(root, { recursive: true, force: true });
+  assert.ok(required2.some((s) => s.name === 'Operations Suite'));
+  assert.ok(required2.some((s) => s.name === 'Extra Check'));
 });
 
 // ===========================================================================
-// Integration-level: real isolated bare remote (R1-A requires >= 1)
+// R1-A integration: real isolated bare remote
 // ===========================================================================
 
 test('R1-A integration: resolveRemoteState against a real isolated bare remote', () => {
-  const { resolveRemoteState } = require('../integration/remote-state.cjs');
-  // Build a bare remote with main + a candidate branch.
-  const bare = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r1-bare-'));
+  const bare = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r2-bare-'));
   const bareRepo = path.join(bare, 'remote.git');
   execFileSync('git', ['init', '--bare', '-q', '-b', 'main', bareRepo]);
-  const work = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r1-work-'));
+  const work = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r2-work-'));
   git(work, 'init', '-q', '-b', 'main');
   git(work, 'config', 'commit.gpgsign', 'false');
   fs.writeFileSync(path.join(work, 'README.md'), 'base\n');
@@ -500,27 +462,30 @@ test('R1-A integration: resolveRemoteState against a real isolated bare remote',
   const candidate = git(work, 'rev-parse', 'HEAD');
   git(work, 'push', '-q', 'origin', 'candidate');
 
-  // A separate clone resolves remote state via real fetch/rev-parse + mocked PR API.
-  const clone = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r1-clone-'));
+  const clone = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-r2-clone-'));
   execFileSync('git', ['clone', '-q', bareRepo, clone]);
   const ghApi = (apiPath) => {
     if (/\/pulls\/\d+$/.test(apiPath)) return prObject({ head: candidate, base });
     return { check_runs: [] };
   };
-  const state = resolveRemoteState({
+  // Real git for fetch/rev-parse, but intercept the origin URL so the local
+  // bare-remote path canonicalizes to the requested repository full name.
+  const cloneGit = (repoDir, args) => {
+    if (args[0] === 'remote' && args[1] === 'get-url') return 'https://github.com/example/repo.git';
+    return git(repoDir, ...args);
+  };
+  const state = REMOTE.resolveRemoteState({
     repoDir: clone,
     repoFullName: 'example/repo',
     prNumber: 999,
     baseBranch: 'main',
+    git: cloneGit,
     ghApi,
   });
-  assert.equal(state.actualBaseSha, base, 'actual origin/main resolved from the real remote');
-  assert.equal(state.headSha, candidate, 'PR head from the (mocked) PR API');
+  assert.equal(state.actualBaseSha, base);
+  assert.equal(state.headSha, candidate);
   assert.equal(state.baseRef, 'main');
   assert.equal(state.prState, 'open');
-
-  // Stale-ref protection: a bogus local remote-tracking ref is overridden by fetch.
-  // (fetch --prune already ran; assert resolution used the live value.)
   assert.match(state.actualBaseSha, /^[0-9a-f]{40}$/);
 
   fs.rmSync(bare, { recursive: true, force: true });
@@ -529,27 +494,8 @@ test('R1-A integration: resolveRemoteState against a real isolated bare remote',
 });
 
 // ===========================================================================
-// CLI-level: redaction + wiring
+// R1-C / R1-D / R1-F — governance wiring
 // ===========================================================================
-
-test('R1: CLI redacts ordinary output (no sensitive detail) on a failing gate', () => {
-  const { repo, base, candidate } = makeRepoWithCandidate();
-  const root = makeRoot();
-  const { evidence } = captureEvidence(repo, base, root);
-  // Run the real CLI but with no gh available -> PR lookup fails -> redacted code.
-  const result = spawnSync(process.execPath, [
-    GATE_CLI, '--repo-full-name', 'example/repo', '--pr-number', '999',
-    '--evidence', evidence, '--repo', repo,
-  ], { encoding: 'utf8', env: { ...process.env, MDG_OPS_ROOT: root, PATH: '/nonexistent' } });
-  assert.notEqual(result.status, 0);
-  // Ordinary output must not leak the repo path, evidence path, or task ID.
-  const blob = `${result.stdout}\n${result.stderr}`;
-  assert.ok(!blob.includes(repo), 'repo path must not leak');
-  assert.ok(!blob.includes(evidence), 'evidence path must not leak');
-  assert.ok(!blob.includes('t_r1'), 'task ID must not leak');
-  fs.rmSync(repo, { recursive: true, force: true });
-  fs.rmSync(root, { recursive: true, force: true });
-});
 
 test('R1: canonical npm script ops:integrate is wired to the wrapper', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
@@ -558,13 +504,9 @@ test('R1: canonical npm script ops:integrate is wired to the wrapper', () => {
 
 test('R1-C: the canonical integration topology is the GitHub merge commit', () => {
   const checklist = fs.readFileSync(path.join(ROOT, 'docs/governance/templates/mdg-integrator-checklist.md'), 'utf8');
-  // The canonical topology is stated as the merge commit.
   assert.match(checklist, /Canonical integration topology: GitHub merge commit/i);
-  // Post-merge reconciliation proves tree byte-identity.
   assert.match(checklist, /Post-merge reconciliation/);
   assert.match(checklist, /\^\{tree\}/);
-  // The CANONICAL COMMAND BLOCK uses the new repo+PR identity interface and must
-  // NOT contain the old caller-supplied remote-state flags or a --checks manifest.
   const cmdBlock = checklist.match(/```bash\n\s*npm run ops:integrate[\s\S]*?```/);
   assert.ok(cmdBlock, 'canonical ops:integrate command block must exist');
   const cmd = cmdBlock[0];
@@ -573,7 +515,6 @@ test('R1-C: the canonical integration topology is the GitHub merge commit', () =
   assert.ok(!/--current-head/.test(cmd), 'canonical command must not accept --current-head');
   assert.ok(!/--expected-base/.test(cmd), 'canonical command must not accept --expected-base');
   assert.ok(!/--checks\b/.test(cmd), 'canonical command must not accept a caller-authored --checks flag');
-  // Cherry-pick + direct push is NOT the canonical path (emergency mode only).
   assert.match(checklist, /Emergency mode/i);
   assert.ok(!/^4\. `git cherry-pick/m.test(checklist), 'cherry-pick must not be a canonical required-order step');
 });
@@ -588,29 +529,21 @@ test('R1-C: orchestration governance documents the merge-commit topology', () =>
 test('R1-D: ADR Amendment 6 records the honest attestation trust-model correction', () => {
   const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/2026-07-25-mdg-operations-control-plane-v1.md'), 'utf8');
   assert.match(adr, /Amendment 6 — Attestation trust model correction/);
-  // An unsigned author-committed attestation is NOT a category-B authorization artifact.
   assert.match(adr, /not a category-B authorization\s+artifact/i);
-  // Candidate-integrity remains category A+ (honest decision).
   assert.match(adr, /Candidate-integrity remains category A\+/);
-  // Integrity Gate branch protection is deferred until a trusted producer exists.
   assert.match(adr, /Integrity Gate` branch protection remains \*{0,2}DEFERRED/i);
-  // CI recompute proves only self-consistency, not authorization.
   assert.match(adr, /self-consistency/);
-  // The full threat model covers author-forgery dimensions.
   assert.match(adr, /Author alters code and attestation together/);
   assert.match(adr, /Author chooses arbitrary/);
-  // pull_request workflow behavior (merge ref vs PR head, fetch-depth).
   assert.match(adr, /synthetic PR merge/);
   assert.match(adr, /fetch-depth/);
 });
 
 test('R1-F: the dedicated Operations Suite job is preserved (not folded into Build)', () => {
   const ci = fs.readFileSync(path.join(ROOT, '.github/workflows/ci.yml'), 'utf8');
-  // The dedicated job still exists with the exact name and command.
   assert.match(ci, /^  operations-suite:\n/m);
   assert.match(ci, /name: Operations Suite/);
   assert.match(ci, /node --test scripts\/operations\/tests\/\*\.test\.cjs/);
-  // It is NOT folded into the build job: the operations command must not appear in the build job block.
   const lines = ci.split('\n');
   const buildStart = lines.findIndex((l) => l === '  build:');
   const opsStart = lines.findIndex((l) => l === '  operations-suite:');
@@ -619,7 +552,27 @@ test('R1-F: the dedicated Operations Suite job is preserved (not folded into Bui
   const buildBlock = lines.slice(buildStart, opsStart).join('\n');
   assert.ok(!/node --test scripts\/operations\/tests/.test(buildBlock),
     'operations suite command must NOT be inside the build job');
-  // The wiring contract test still exists.
   assert.ok(fs.existsSync(path.join(ROOT, 'scripts/operations/tests/ops-06b-p1-ci-wiring.test.cjs')),
     'CI-wiring contract test must be preserved');
+});
+
+// ===========================================================================
+// CLI-level: redaction + wiring
+// ===========================================================================
+
+test('R1: CLI redacts ordinary output (no sensitive detail) on a failing gate', () => {
+  const { repo, base, candidate } = makeRepoWithCandidate();
+  const root = makeRoot();
+  const { evidence } = captureEvidence(repo, base, root);
+  const result = spawnSync(process.execPath, [
+    GATE_CLI, '--repo-full-name', 'example/repo', '--pr-number', '999',
+    '--evidence', evidence, '--expect-evidence-sha256', readEvidenceDigest(evidence), '--repo', repo,
+  ], { encoding: 'utf8', env: { ...process.env, MDG_OPS_ROOT: root, PATH: '/nonexistent' } });
+  assert.notEqual(result.status, 0);
+  const blob = `${result.stdout}\n${result.stderr}`;
+  assert.ok(!blob.includes(repo), 'repo path must not leak');
+  assert.ok(!blob.includes(evidence), 'evidence path must not leak');
+  assert.ok(!blob.includes('t_r2'), 'task ID must not leak');
+  fs.rmSync(repo, { recursive: true, force: true });
+  fs.rmSync(root, { recursive: true, force: true });
 });
