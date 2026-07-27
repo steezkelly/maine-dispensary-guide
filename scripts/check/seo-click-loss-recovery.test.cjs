@@ -93,14 +93,20 @@ test('zoning, waste, and Buxton corrections retain their primary-source limits',
   const zoning = read('apps/maine-cannabis/src/pages/guides/maine-cannabis-zoning-requirements.astro');
   const waste = read('apps/maine-cannabis/src/pages/guides/maine-cannabis-waste-management.astro');
   const buxton = read('apps/maine-cannabis/src/pages/guides/buxton-dispensary-guide.astro');
+  const buxtonEstablishments = read('apps/maine-cannabis/docs/research/q3-2026-data/ocp-med-establishments-2026-06-01.csv');
+  const corrections = read('apps/maine-cannabis/src/data/corrections-log.ts');
 
   assert.match(zoning, /Section 402\(2\)\(A\)/);
   assert.match(zoning, /1,000 feet of the property line/);
   assert.match(zoning, /may not be less than <strong>500 feet<\/strong>/);
   assert.match(waste, /current tax year and six immediately preceding tax years/);
   assert.match(waste, /former blanket “three years” claim was not the current general standard/);
-  assert.match(buxton, /The June file does not clearly connect those records/);
-  assert.match(buxton, /We do not infer a license relationship that the public records do not show/);
+  assert.match(buxtonEstablishments, /"DSP159","Dispensary","CABERSKI INDUSTRIES LLC","HIDDEN GREENS","Active","Buxton"/);
+  assert.match(buxton, /active medical dispensary registration <strong>DSP159<\/strong>/);
+  assert.match(buxton, /does not publish a street address/);
+  assert.match(buxton, /CGR26972/);
+  assert.match(corrections, /DSP159/);
+  assert.doesNotMatch(buxton, /The June file does not clearly connect those records/);
   assert.match(buxton, /publishDate:\s*['"]2026-05-13['"]/);
   assert.match(buxton, /section:\s*['"]City Guides['"]/);
   assert.match(buxton, /const topics = \[['"]city['"], ['"]market['"]\]/);

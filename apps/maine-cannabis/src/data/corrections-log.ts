@@ -161,12 +161,12 @@ export const CORRECTIONS: Correction[] = [
     severity: "material",
     category: "operator-data",
     what_was_wrong:
-      "The Buxton guide published unsupported Hidden Greens hours, claimed a specific delivery area, treated Hidden Greens as the single state-confirmed Buxton medical operator, supplied estimated drive distances and nearest-store claims, and framed the town as an adult-use market opportunity without reconciling OCP's public registration data.",
+      "The Buxton guide published unsupported Hidden Greens hours, claimed a specific delivery area, supplied estimated drive distances and nearest-store claims, and framed the town as an adult-use market opportunity without reconciling OCP's separate medical-establishment, caregiver, and adult-use datasets.",
     what_is_correct:
-      "Hidden Greens's official page advertises a medical storefront at 370 Narragansett Trail and publishes (207) 298-9111, but no store hours or Buxton-specific delivery area. OCP's June 1, 2026 caregiver file lists one active Buxton retail-town row under The Corner Store and lists the active Caberski Industries/Hidden Greens caregiver registration with South Berwick as retail town. The guide now discloses that mismatch, directs readers to verify the responsible registration, and notes that OCP's June adult-use file has no Buxton row.",
+      "Hidden Greens's official page advertises a medical storefront at 370 Narragansett Trail and publishes (207) 298-9111, but no store hours or Buxton-specific delivery area. OCP's June 1, 2026 medical-establishment snapshot lists active dispensary DSP159 under Caberski Industries LLC / Hidden Greens with Buxton as the license city; the snapshot does not publish a street address. OCP's separate caregiver file lists The Corner Store (CGR28664) with Buxton as retail town and Caberski Industries/Hidden Greens caregiver registration CGR26972 with South Berwick as retail town. The guide now reconciles both medical datasets, directs readers to verify the responsible live registration, and notes that OCP's June adult-use file has no Buxton row.",
     verified_via: [
       { label: "Hidden Greens — official Buxton location page", url: "https://hiddengreens.com/buxton/" },
-      { label: "OCP medical-use applicant and registrant search", url: "https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" },
+      { label: "OCP medical-use applicant and registrant search", url: "https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search", note: "June 1, 2026 establishment record DSP159 and separate caregiver records" },
       { label: "OCP adult-use applicant and licensee search", url: "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" },
       { label: "Town of Buxton Zoning Ordinance, Article 11", url: "https://www.buxton.me.us/uploads/art11.2025.pdf" }
     ],
