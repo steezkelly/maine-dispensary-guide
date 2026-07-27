@@ -132,6 +132,12 @@ test('materially corrected pages expose the July 26 modification date', () => {
   for (const page of correctedPages) {
     assert.match(read(page), /modifiedDate:\s*['"]2026-07-26['"]/, `${page} lacks the correction date`);
   }
+
+  assert.match(
+    read('apps/maine-cannabis/src/pages/download/roadmap.astro'),
+    /<Layout[\s\S]*?\barticle=\{article\}/,
+    'roadmap must pass its correction metadata to Layout',
+  );
 });
 
 test('rewritten FAQ accordions retain GA4 instrumentation attributes', () => {
