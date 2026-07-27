@@ -77,24 +77,35 @@ not validate one commit and permit a different commit or tree to be merged.
 **Canonical integrity gate (mandatory, fail-closed).** Before marking a PR ready
 or merging, the Integrator must run the single canonical integration command
 `npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide
---pr-number <number> --evidence <private-bound-evidence>` (wrapper:
-`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2 + R1). The gate
-**derives the actual state independently** — it fetches origin with pruning,
-resolves the live `origin/<base>` SHA, queries the actual PR (state, base
-branch/SHA, head SHA, draft, mergeability), and evaluates the **live**
+--pr-number <number> --evidence <private-bound-evidence>
+--expect-evidence-sha256 <64-hex-digest> [--allow-draft]` (wrapper:
+`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2 + R1 + R2). The gate
+**derives the actual state independently** — it fetches origin with pruning, binds
+the local origin URL to `--repo-full-name`, resolves the live `origin/<base>` SHA,
+queries the actual PR (state, base branch/SHA, head SHA, draft, mergeability),
+validates complete evidence semantics via the authoritative
+`integrity.verifyCandidate()`, and evaluates the live, producer-authenticated
 required-check rollup for the exact PR head. It never accepts a caller-supplied
-`--current-head`/`--expected-base` as evidence of remote state. It exits nonzero
-before any merge when the remote PR head is not the evidence-bound candidate,
-`origin/<base>` drifted, the PR is closed/merged or targets the wrong branch, the
-local checkout HEAD/tree is not the exact authorized object, the worktree is
-dirty, the candidate is not based on the base, or a required check (Operations
-Suite, Build) is missing/pending/failing/stale/skipped. Ordinary output is
+`--current-head`/`--expected-base` as evidence of remote state.
+`--expect-evidence-sha256` is **required** (R2-A): the local A+ manual trust
+anchor — the operator-authorized digest is compared with the evidence document's
+exact bound `evidence_sha256` (self-consistency alone is insufficient).
+`--allow-draft` (R2-D) is required when the PR is a draft, because the canonical
+order runs the gate before marking the PR ready. It exits nonzero before any merge
+when the evidence digest does not match the operator anchor, the evidence
+schema/outcome/acceptance commands are invalid, the remote PR head is not the
+evidence-bound candidate, `origin/<base>` drifted, the PR is closed/merged/not
+mergeable/targets the wrong branch, the local checkout HEAD/tree is not the exact
+authorized object (a clean different commit with the same tree fails canonical
+mode), the worktree is dirty, or a required check (Operations Suite, Build —
+authenticated to the GitHub Actions producer) is
+missing/pending/failing/stale/from-another-app/skipped. Ordinary output is
 redacted; full reasons go only to a validated Tier-0 `--detail-out` file. The
 Integrator must not merge if the gate exits nonzero. The local integration path
 is mechanically fail-closed when this wrapper is used; GitHub-wide enforcement is
-not category B until the R1-E ruleset is operator-enabled, and candidate-integrity
+not category B until the R1-E/R2 ruleset is operator-enabled, and candidate-integrity
 remains category A+ GitHub-wide until an independent trusted producer exists (see
-ADR Amendment 6).
+ADR Amendments 6 and 7).
 
 ### Continuity Watcher
 

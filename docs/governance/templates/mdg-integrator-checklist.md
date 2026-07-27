@@ -22,30 +22,39 @@ sequence is **not** the canonical path (see "Emergency mode" below).
      --repo-full-name steezkelly/maine-dispensary-guide \
      --pr-number <number> \
      --evidence <private-bound-evidence.json> \
-     [--base-branch main] \
-     [--expect-candidate <sha>] [--expect-base <sha>] \
+     --expect-evidence-sha256 <64-hex-digest> \
+     [--base-branch main] [--allow-draft] \
      [--detail-out <private-detail.json>]
    ```
 
    The wrapper (`scripts/operations/integration/cli.cjs`, OPS-06B-P1 Child 2 +
-   R1) **derives the actual state independently** — it fetches origin with
-   pruning, resolves the live `origin/<base>` SHA, queries the actual PR (state,
-   base branch/SHA, head SHA, draft, mergeability), and evaluates the **live**
-   required-check rollup for the exact PR head. It never accepts a caller-supplied
-   `--current-head`/`--expected-base` as evidence of remote state (explicit values
-   are assertions only). It fails nonzero BEFORE any merge when: the remote PR
-   head is not the evidence-bound candidate; `origin/<base>` drifted from the
-   evidence base; the PR is closed/merged or targets the wrong branch; the local
-   checkout HEAD/tree is not the exact authorized object; the worktree is dirty;
-   the candidate is not based on the base; or a required check (Operations Suite,
-   Build) is missing/pending/failing/stale/skipped. Ordinary output is redacted
-   (stable codes only); full reasons (check names, run IDs, URLs, timestamps,
-   conclusions) are written only to a validated Tier-0 `--detail-out` file.
-   **Do not proceed if the gate exits nonzero.** The local integration path is
-   mechanically fail-closed when this wrapper is used; GitHub-wide enforcement is
-   not category B until the R1-E ruleset is operator-enabled (candidate-integrity
-   remains category A+ GitHub-wide until an independent trusted producer exists —
-   see ADR Amendment 6).
+   R1 + R2) **derives the actual state independently** — it fetches origin with
+   pruning, binds the local origin URL to `--repo-full-name`, resolves the live
+   `origin/<base>` SHA, queries the actual PR (state, base branch/SHA, head SHA,
+   draft, mergeability), validates complete evidence semantics via the
+   authoritative `integrity.verifyCandidate()`, and evaluates the **live,
+   producer-authenticated** required-check rollup for the exact PR head. It never
+   accepts a caller-supplied `--current-head`/`--expected-base` as evidence of
+   remote state. `--expect-evidence-sha256` is **required** (R2-A): the local A+
+   manual trust anchor — the operator-authorized digest is compared with the
+   evidence document's exact bound `evidence_sha256` (self-consistency alone is
+   insufficient). `--allow-draft` (R2-D) is required when the PR is a draft,
+   because the canonical order runs the gate before marking the PR ready. It fails
+   nonzero BEFORE any merge when: the evidence digest does not match the operator
+   anchor; the evidence schema/outcome/acceptance commands are invalid; the remote
+   PR head is not the evidence-bound candidate; `origin/<base>` drifted; the PR is
+   closed/merged, not mergeable, or targets the wrong branch; the local checkout
+   HEAD/tree is not the exact authorized object (a clean different commit with the
+   same tree fails canonical mode); the worktree is dirty; or a required check
+   (Operations Suite, Build — authenticated to the GitHub Actions producer) is
+   missing/pending/failing/stale/from-another-app/skipped. Ordinary output is
+   redacted (stable codes only); full reasons (check names, run IDs, URLs, app
+   id/slug, timestamps, conclusions) are written only to a validated Tier-0
+   `--detail-out` file. **Do not proceed if the gate exits nonzero.** The local
+   integration path is mechanically fail-closed when this wrapper is used;
+   GitHub-wide enforcement is not category B until the R1-E/R2 ruleset is
+   operator-enabled (candidate-integrity remains category A+ GitHub-wide until an
+   independent trusted producer exists — see ADR Amendments 6 and 7).
 5. `npm run verify:iterate` — smoke-free verification of the candidate itself
    (parse, focused astro check, sitemap-postprocess, docs-vs-code,
    compressed-frontmatter, hero-image-naming, autoRelated-freshness).
@@ -117,7 +126,7 @@ Before the merge, create only a `release-pending` draft record on the candidate 
   "status": "release-pending",
   "candidate_sha": "accepted-candidate-sha (= exact remote PR head)",
   "validation_commands": [
-    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number <n> --evidence <private-evidence>",
+    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number <n> --evidence <private-evidence> --expect-evidence-sha256 <64-hex> [--allow-draft]",
     "npm run verify:iterate",
     "gh pr merge <n> --merge",
     "post-merge reconciliation: rev-parse <final-main>^{tree} == rev-parse <candidate>^{tree}",
@@ -145,7 +154,7 @@ Attach the final deployment metadata only after the sequence in step 11 is compl
   "vercel_url": "https://<deployment>.vercel.app",
   "production_route": "https://mainedispensaryguide.com/<expected-route>",
   "validation_commands": [
-    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number <n> --evidence <private-evidence>",
+    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number <n> --evidence <private-evidence> --expect-evidence-sha256 <64-hex> [--allow-draft]",
     "npm run verify:iterate",
     "gh pr merge <n> --merge",
     "post-merge reconciliation: rev-parse <final-main>^{tree} == rev-parse <candidate>^{tree}",

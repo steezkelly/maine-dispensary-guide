@@ -326,7 +326,11 @@ function verifyCandidate(repoDir, evidence, candidateRef, options = {}) {
   if (!evidenceSelfConsistent(evidence)) reasons.push('evidence document is not self-consistent (evidence_sha256 mismatch)');
   if (evidence?.schema !== EVIDENCE_SCHEMA) reasons.push(`unsupported evidence schema: ${evidence?.schema}`);
   if (evidence?.verifier_outcome !== 'PASS') reasons.push(`verifier_outcome is ${JSON.stringify(evidence?.verifier_outcome)}, not "PASS"`);
-  if (evidence?.acceptance_commands?.some((entry) => entry.exit_code !== 0)) {
+  // R2-A: acceptance_commands must be present and non-empty (the contract does
+  // not permit an empty set). A missing or empty array fails closed.
+  if (!Array.isArray(evidence?.acceptance_commands) || evidence.acceptance_commands.length === 0) {
+    reasons.push('acceptance commands are missing or empty');
+  } else if (evidence.acceptance_commands.some((entry) => entry.exit_code !== 0)) {
     reasons.push('one or more acceptance commands did not exit 0');
   }
   if (!evidence?.accepted_candidate_sha) reasons.push('evidence is not bound to an accepted candidate SHA');

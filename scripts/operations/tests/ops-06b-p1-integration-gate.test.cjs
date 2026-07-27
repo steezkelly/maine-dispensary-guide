@@ -512,8 +512,13 @@ test('R1-C: the canonical integration topology is the GitHub merge commit', () =
   const cmd = cmdBlock[0];
   assert.match(cmd, /--repo-full-name/);
   assert.match(cmd, /--pr-number/);
+  // R2: the required manual trust anchor + draft allowance must be documented.
+  assert.match(cmd, /--expect-evidence-sha256/);
+  assert.match(cmd, /--allow-draft/);
   assert.ok(!/--current-head/.test(cmd), 'canonical command must not accept --current-head');
   assert.ok(!/--expected-base/.test(cmd), 'canonical command must not accept --expected-base');
+  assert.ok(!/--expect-candidate\b/.test(cmd), 'canonical command must not list obsolete --expect-candidate');
+  assert.ok(!/--expect-base\b/.test(cmd), 'canonical command must not list obsolete --expect-base');
   assert.ok(!/--checks\b/.test(cmd), 'canonical command must not accept a caller-authored --checks flag');
   assert.match(checklist, /Emergency mode/i);
   assert.ok(!/^4\. `git cherry-pick/m.test(checklist), 'cherry-pick must not be a canonical required-order step');

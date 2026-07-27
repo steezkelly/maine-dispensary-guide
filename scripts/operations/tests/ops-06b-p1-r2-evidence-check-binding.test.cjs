@@ -265,6 +265,34 @@ test('R2-A: REJECT missing accepted candidate', () => {
   cleanup(repo, root);
 });
 
+test('R2-A: REJECT missing acceptance_commands', () => {
+  const { repo, base, candidate } = makeRepoWithCandidate();
+  const root = makeRoot();
+  const { evidence } = captureEvidence(repo, base, root);
+  mutateEvidence(evidence, (ev) => { delete ev.acceptance_commands; });
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
+  const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasonCodes.includes('EVIDENCE_ACCEPTANCE_FAILED'), result.reasonCodes.join(','));
+  cleanup(repo, root);
+});
+
+test('R2-A: REJECT empty acceptance_commands', () => {
+  const { repo, base, candidate } = makeRepoWithCandidate();
+  const root = makeRoot();
+  const { evidence } = captureEvidence(repo, base, root);
+  mutateEvidence(evidence, (ev) => { ev.acceptance_commands = []; });
+  const ghApiFn = mockGh({ pr: prObject({ head: candidate, base }), checkRunsByHead: { [candidate]: passingChecks(candidate) } });
+  const runners = makeRunners(repo, base, ghApiFn);
+  runners.env.MDG_OPS_ROOT = root;
+  const result = GATE.runGate(gateArgs(repo, root, evidence), runners);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasonCodes.includes('EVIDENCE_ACCEPTANCE_FAILED'), result.reasonCodes.join(','));
+  cleanup(repo, root);
+});
+
 test('R2-A: --expect-evidence-sha256 is REQUIRED (missing arg fails closed)', () => {
   const { repo, base, candidate } = makeRepoWithCandidate();
   const root = makeRoot();
