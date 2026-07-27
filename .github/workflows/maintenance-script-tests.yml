@@ -11,6 +11,9 @@ on:
       - 'scripts/check/lib/paths.cjs'
       - 'scripts/admin/regenerate-llms.cjs'
       - 'scripts/admin/tests/regenerate-llms.test.cjs'
+      - 'scripts/admin/data-integrity-check.cjs'
+      - 'scripts/admin/tests/data-integrity-check.test.cjs'
+      - 'AGENTS.md'
       - '.github/workflows/maintenance-script-tests.yml'
   push:
     branches: [main]
@@ -22,6 +25,9 @@ on:
       - 'scripts/check/lib/paths.cjs'
       - 'scripts/admin/regenerate-llms.cjs'
       - 'scripts/admin/tests/regenerate-llms.test.cjs'
+      - 'scripts/admin/data-integrity-check.cjs'
+      - 'scripts/admin/tests/data-integrity-check.test.cjs'
+      - 'AGENTS.md'
       - '.github/workflows/maintenance-script-tests.yml'
 
 permissions:
@@ -41,4 +47,4 @@ jobs:
           node-version: '24'
 
       - name: Run maintenance-script fixture tests
-        run: node --test scripts/link/add-nearby-markets.test.cjs scripts/link/link-architect.test.cjs scripts/admin/tests/regenerate-llms.test.cjs
+        run: node --test scripts/link/add-nearby-markets.test.cjs scripts/link/link-architect.test.cjs scripts/admin/tests/regenerate-llms.test.cjs scripts/admin/tests/data-integrity-check.test.cjs
