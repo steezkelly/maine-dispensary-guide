@@ -224,6 +224,13 @@ test('rewritten delivery posts keep a constrained article reading measure', () =
   }
 });
 
+test('rewritten delivery-rules guide keeps its article landmark', () => {
+  const guide = read('apps/maine-cannabis/src/pages/guides/maine-cannabis-delivery-rules.astro');
+  assert.match(guide, /article \{ max-width: 42rem; margin: 0 auto; \}/, 'delivery-rules guide lacks the constrained reading-measure rule');
+  assert.match(guide, /<article>/, 'delivery-rules guide must wrap content in an <article> landmark');
+  assert.equal(guide.match(/<article\b/g).length, guide.match(/<\/article>/g).length, 'delivery-rules guide has unbalanced <article> tags');
+});
+
 test('corrections page passes its revision metadata to Layout', () => {
   const corrections = read('apps/maine-cannabis/src/pages/about/corrections.astro');
   assert.match(corrections, /modifiedDate:\s*['"]2026-07-26['"]/, 'corrections page must carry the correction date');
