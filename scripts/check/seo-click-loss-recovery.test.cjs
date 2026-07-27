@@ -257,3 +257,44 @@ test('source-review dates do not exceed the approved July 26 access date', () =>
     assert.match(source, /July 26, 2026|2026-07-26/, `${page} lacks the approved review date`);
   }
 });
+
+// ---------------------------------------------------------------------------
+// Content-maintenance follow-up (card t_5b41cd69 + blog-index date metadata)
+// ---------------------------------------------------------------------------
+
+test('corrections methodology fragments map to real ledger slugs and contain no spaces', () => {
+  const page = fs.readFileSync(correctionsPage, 'utf8');
+  const data = fs.readFileSync(correctionsData, 'utf8');
+  const slugs = new Set([...data.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]));
+
+  // Methodology example fragments are the href="#..." anchors in the rubric.
+  const fragments = [...page.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]);
+  assert.ok(fragments.length > 0, 'no methodology fragments found');
+
+  for (const frag of fragments) {
+    assert.ok(!/\s/.test(frag), `methodology fragment contains whitespace: "${frag}"`);
+    assert.ok(slugs.has(frag), `methodology fragment "#${frag}" has no matching corrections-log slug`);
+  }
+
+  // The two repaired fragments are present in their corrected form.
+  assert.ok(fragments.includes('bridgton-denmark-limerick-dispensary-guides'));
+  assert.ok(fragments.includes('milo-dexter-dispensary-guides'));
+  // The stale forms are gone.
+  assert.doesNotMatch(page, /#bridgton denmark limerick/);
+  assert.doesNotMatch(page, /#milo-dispensary-guide dexter/);
+});
+
+test('blog-index delivery-business date agrees with the article canonical publishDate', () => {
+  const index = read('apps/maine-cannabis/src/pages/blog/index.astro');
+  const entry = index.match(/\{[^{}]*url:\s*['"][^'"]*maine-cannabis-delivery-business-guide-2026[^'"]*['"][^{}]*\}/);
+  assert.ok(entry, 'blog-index delivery-business entry not found');
+
+  const indexDate = entry[0].match(/date:\s*['"]([^'"]+)['"]/);
+  assert.ok(indexDate, 'blog-index date missing');
+  assert.equal(indexDate[1], '2026-04-18', 'blog-index date must be the canonical 2026-04-18');
+
+  const article = read('apps/maine-cannabis/src/pages/blog/maine-cannabis-delivery-business-guide-2026.astro');
+  const articleDate = article.match(/publishDate:\s*['"]([^'"]+)['"]/);
+  assert.ok(articleDate, 'article publishDate missing');
+  assert.equal(indexDate[1], articleDate[1], 'blog-index date must equal the article publishDate');
+});
