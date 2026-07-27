@@ -187,6 +187,28 @@ test('exactly one instrumented primary CTA (no second CTA added)', () => {
     `must have exactly one instrumented CTA, found ${ctaIds.length}`);
 });
 
+// --- CTA THEME TOKENS ---
+test('CTA does not use hardcoded pure-white foreground', () => {
+  const ctaBoxRules = src.match(/\.cta-box[^}]*\}/g) || [];
+  assert.ok(ctaBoxRules.length > 0, 'must have .cta-box rules');
+  for (const rule of ctaBoxRules) {
+    assert.ok(!/color:\s*(?:#fff(?:f(?:ff)?)?|white)\b/i.test(rule),
+      `CTA must not hardcode pure-white text: ${rule.slice(0, 100)}`);
+  }
+});
+
+test('.cta-box uses the theme-aware --color-on-primary token', () => {
+  const boxRule = (src.match(/\.cta-box\s*\{[^}]*\}/) || [''])[0];
+  assert.ok(/color:\s*var\(--color-on-primary\)/.test(boxRule),
+    '.cta-box must use color: var(--color-on-primary)');
+});
+
+test('.cta-box a inherits the on-primary foreground', () => {
+  const linkRule = (src.match(/\.cta-box a\s*\{[^}]*\}/) || [''])[0];
+  assert.ok(/color:\s*inherit/.test(linkRule),
+    '.cta-box a must use color: inherit');
+});
+
 // --- EDIBLE LIMIT (current law) ---
 test('edible package limit reflects current 200 mg law', () => {
   assert.ok(/200\s*mg/.test(src), 'must state the current 200 mg per package limit');
