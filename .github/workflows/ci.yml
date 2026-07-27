@@ -46,6 +46,13 @@ jobs:
       - name: Test GA4 analytics integrity suite
         run: npm --workspace @network/maine-cannabis run data:mdg:analytics:test
 
+      - name: Test data-integrity check (AGENTS.md blog/component counts)
+        # Fail-closed gate: stale doc claims against live filesystem.
+        # The maintenance-script-tests workflow also runs this, but
+        # always-on CI catches the case where only blog/component source
+        # files changed (without touching AGENTS.md) before review runs.
+        run: node scripts/admin/data-integrity-check.cjs
+
       - name: Test image pipeline hero variants
         run: npm run test:image-pipeline
 

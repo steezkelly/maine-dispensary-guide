@@ -119,13 +119,24 @@ function extractAllCounts(file, patterns) {
     return out;
 }
 function extractBlogCounts(file) {
+    // The 2026-07-26 follow-up found that the project-tree wording
+    // "54 blog route sources" was outside the historical "blog posts"
+    // pattern. Match both phrasings so the duplicate-count regression
+    // test catches a stale tree claim alongside a current overview claim.
     return extractAllCounts(file, [
         /(\d+)\s*blog\s*posts?/i,
+        /(\d+)\s*blog\s*route\s*sources?/i,
         /Blog\s*posts\s*\((\d+)\s*articles?\)/i,
     ]);
 }
 function extractComponentsCounts(file) {
-    return extractAllCounts(file, [/(\d+)\s*reusable\s*components?/i]);
+    // Match both "30 reusable components" (overview) and the
+    // project-tree header form "**Components** (30, …)" and the
+    // plain "Components (30, …)" form.
+    return extractAllCounts(file, [
+        /(\d+)\s*reusable\s*components?/i,
+        /(?:^|\*\*)\s*Components\s*\*?\*?\s*\((\d+)\s*,/i,
+    ]);
 }
 
 const claims = {

@@ -40,21 +40,34 @@ function countAstroDir(d) {
 // extractBlogCounts / extractComponentsCounts). Drift here between the
 // test and the script invalidates the contract.
 function extractAllBlogCounts(text) {
-    const re = /(\d+)\s*blog\s*posts?/gi;
+    // (1) "54 blog posts" — overview wording
+    // (2) "54 blog route sources" — project-tree wording added 2026-07-26
+    // (3) "Blog posts (53 articles)" — legacy "(N articles)" fallback
+    const patterns = [
+        /(\d+)\s*blog\s*posts?/gi,
+        /(\d+)\s*blog\s*route\s*sources?/gi,
+        /Blog\s*posts\s*\((\d+)\s*articles?\)/g,
+    ];
     const out = [];
-    let m;
-    while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
-    // Second fallback regex (the script tries Blog posts (N articles) too).
-    const re2 = /Blog\s*posts\s*\((\d+)\s*articles?\)/gi;
-    while ((m = re2.exec(text)) !== null) out.push(parseInt(m[1]));
+    for (const re of patterns) {
+        let m;
+        while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
+    }
     return out;
 }
 
 function extractAllComponentsCounts(text) {
-    const re = /(\d+)\s*reusable\s*components?/gi;
+    // (1) "30 reusable components" — overview
+    // (2) "**Components** (30, …)" or "Components (30, …)" — project-tree header
+    const patterns = [
+        /(\d+)\s*reusable\s*components?/gi,
+        /(?:^|\*\*)\s*Components\s*\*?\*?\s*\((\d+)\s*,/gi,
+    ];
     const out = [];
-    let m;
-    while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
+    for (const re of patterns) {
+        let m;
+        while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
+    }
     return out;
 }
 
