@@ -28,6 +28,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { extractBlogCounts, extractComponentsCounts } = require('./data-integrity-extractors.cjs');
+
 const REPO = (() => {
     let dir = __dirname;
     for (let i = 0; i < 6; i++) {
@@ -101,29 +103,10 @@ function findDocClaim(file, pattern) {
     return m ? m[1] : null;
 }
 
-// Claim extractors — return { root, apps } objects with the count claimed
-// in each file (or null if not found). Used to verify the docs match
-// filesystem reality.
-function extractBlogCount(file) {
-    if (!fs.existsSync(file)) return null;
-    const c = fs.readFileSync(file, 'utf8');
-    // matches: "35 blog posts" or "Blog posts (6 articles)" or "# 35 blog posts"
-    // in the project-structure tree, or "157 guide pages ..., 35 blog posts, ..."
-    // in the overview line. Returns the FIRST blog count it finds.
-    // Also matches the old "Blog posts (N articles)" form so drift in the
-    // legacy format is still caught.
-    const m = c.match(/(\d+)\s*blog\s*posts?/i)
-           || c.match(/Blog\s*posts\s*\((\d+)\s*articles?\)/i);
-    return m ? parseInt(m[1]) : null;
-}
-
-function extractComponentsCount(file) {
-    if (!fs.existsSync(file)) return null;
-    const c = fs.readFileSync(file, 'utf8');
-    // matches: "10 reusable components" or "9 reusable components"
-    const m = c.match(/(\d+)\s*reusable\s*components?/i);
-    return m ? parseInt(m[1]) : null;
-}
+// Claim extraction helpers live in scripts/admin/data-integrity-extractors.cjs
+// so the regression test exercises the production regexes verbatim.
+// See that file for the 2026-07-26 follow-up notes (multi-occurrence
+// collection, blog route-sources wording, plain Components-tree header).
 
 const claims = {
     // Single root AGENTS.md (commit 1fbf912f removed the apps/maine-cannabis/
@@ -157,16 +140,18 @@ if (claims['AGENTS.md'] && parseInt(claims['AGENTS.md']) < actual.guides * 0.5) 
 // Blog count drift: catches "Blog posts (6 articles)" / "35 blog posts"
 // claims diverging from actual blog/ directory count.
 const blogClaims = {
-    'AGENTS.md': extractBlogCount(path.join(REPO, 'AGENTS.md')),
+    'AGENTS.md': extractBlogCounts(path.join(REPO, 'AGENTS.md')),
 };
-for (const [where, claim] of Object.entries(blogClaims)) {
-    if (claim !== null && claim !== actual.blog) {
-        report.drift.push({
-            where,
-            claim: `${claim} blog posts`,
-            reality: `${actual.blog} blog posts`,
-            severity: claim < actual.blog * 0.5 ? 'high' : 'medium',
-        });
+for (const [where, claims] of Object.entries(blogClaims)) {
+    for (const claim of claims) {
+        if (claim !== actual.blog) {
+            report.drift.push({
+                where,
+                claim: `${claim} blog posts`,
+                reality: `${actual.blog} blog posts`,
+                severity: claim < actual.blog * 0.5 ? 'high' : 'medium',
+            });
+        }
     }
 }
 
@@ -175,16 +160,18 @@ for (const [where, claim] of Object.entries(blogClaims)) {
 // finding: AGENTS.md was off by one and listed 2 phantom names + 3
 // missing real names — both files were updated in this commit.)
 const componentsClaims = {
-    'AGENTS.md': extractComponentsCount(path.join(REPO, 'AGENTS.md')),
+    'AGENTS.md': extractComponentsCounts(path.join(REPO, 'AGENTS.md')),
 };
-for (const [where, claim] of Object.entries(componentsClaims)) {
-    if (claim !== null && claim !== actual.components) {
-        report.drift.push({
-            where,
-            claim: `${claim} reusable components`,
-            reality: `${actual.components} reusable components`,
-            severity: 'high',
-        });
+for (const [where, claims] of Object.entries(componentsClaims)) {
+    for (const claim of claims) {
+        if (claim !== actual.components) {
+            report.drift.push({
+                where,
+                claim: `${claim} reusable components`,
+                reality: `${actual.components} reusable components`,
+                severity: 'high',
+            });
+        }
     }
 }
 

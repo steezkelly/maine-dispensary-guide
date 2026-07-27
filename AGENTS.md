@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 193 guide route sources and 44 blog posts (43 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
+Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 193 guide route sources and 54 blog posts (53 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
 
 **SCOPE: Maine Only** — Do NOT propose or build state-specific hubs for other states.
 
@@ -112,14 +112,14 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 25 reusable components (see below)
+│   ├── components/               # 30 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
 │       ├── founders/             # 3 founder story pages + index
 │       ├── resources/            # Vendor directory + education/official resource hubs
 │       ├── admin/                # Admin pages (noindex)
-│       ├── blog/                 # 37 blog route sources (36 article posts plus index)
+│       ├── blog/                 # 54 blog route sources (53 article posts plus index)
 │       └── about/                # Team and author pages
 ├── scripts/                      # 43 CLI tools (search, link-architect, health checks)
 ├── .githooks/                    # Pre-push verify hook (esbuild + astro check)
@@ -130,7 +130,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
-**Components** (25, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `CiteThis`, `CityCard`, `CityGrid`, `CityGuide`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `OperatorSoftwarePage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`, `SiteTour`.
+**Components** (30, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `ChartBar`, `ChartStackedBar`, `ChartTierList`, `CiteThis`, `CityCard`, `CityGrid`, `CityGuide`, `CookieConsent`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadIntakeForm`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `OperatorSoftwarePage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`, `SiteTour`.
 
 ---
 
