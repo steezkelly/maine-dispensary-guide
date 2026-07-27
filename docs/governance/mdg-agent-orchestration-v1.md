@@ -65,24 +65,89 @@ and records separate `SPEC COMPLIANCE` and `CODE QUALITY` verdicts.
 
 The Integrator is the sole writer for integration. Only the integration worktree
 may update `origin/main`; the Integrator must not use the primary checkout. The
-Integrator must cherry-pick one accepted candidate, recheck base compatibility,
-lease status, verification evidence, and scope, then execute the canonical
-release sequence in order:
+canonical integration topology is a **GitHub merge commit**: the candidate is the
+exact remote PR head, independent verifier evidence is bound to that candidate,
+the canonical gate verifies the actual remote PR and live checks, the Integrator
+marks the PR ready, GitHub performs the merge commit, and post-merge
+reconciliation proves the candidate is the reachable second parent and that the
+final main tree is byte-identical to the candidate tree. The ordinary
+cherry-pick + direct-push sequence is retained only as a separately named
+emergency mode with its own complete tree/HEAD binding (see the Integrator
+checklist). The Integrator must not validate one commit and permit a different
+commit or tree to be merged.
 
-1. `node scripts/git/pre-push-verify.cjs --ref=origin/main`
-2. `npm run build:isolated`
-3. Set `BRANCH_NAME`, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
-4. Wait until Vercel reports Ready for that exact pushed SHA.
-5. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
-6. Only after merge and exact production deployment readiness, run
-   `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`.
+For each accepted candidate, the Integrator executes the canonical release
+sequence in order:
+
+1. Fetch origin with pruning (`git fetch origin --prune`).
+2. Use a fresh clean checkout at the exact remote PR head.
+3. Confirm the evidence-bound candidate equals the live PR head and that the PR
+   targets the current locked main.
+4. Wait for the live, producer-authenticated required checks on that exact head:
+   **Build** and **Operations Suite** (from the GitHub Actions integration).
+5. Run the evidence-bound canonical gate (mandatory, fail-closed):
+
+   ```bash
+   npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number "$PR_NUMBER" --evidence "$EVIDENCE_PATH" --expect-evidence-sha256 "$EVIDENCE_DIGEST" --allow-draft [--detail-out "$DETAIL_PATH"]
+   ```
+
+   The wrapper (`scripts/operations/integration/cli.cjs`) derives the actual
+   state independently — it binds the local origin URL to `--repo-full-name`,
+   resolves the live `origin/<base>` SHA, queries the actual PR (state, base
+   branch/SHA, head SHA, draft, mergeability), validates complete evidence
+   semantics via the authoritative `integrity.verifyCandidate()`, and evaluates
+   the live, producer-authenticated required-check rollup for the exact PR head.
+   It never accepts a caller-supplied `--current-head`/`--expected-base` as
+   evidence of remote state. `--expect-evidence-sha256` is required: the local
+   A+ manual trust anchor (the operator-authorized digest is compared with the
+   evidence document's exact bound `evidence_sha256`; self-consistency alone is
+   insufficient). `--allow-draft` is required when the PR is a draft, because the
+   canonical order runs the gate before marking the PR ready. It exits nonzero
+   before any merge when the evidence digest does not match the operator anchor,
+   the evidence schema/outcome/acceptance commands are invalid, the remote PR
+   head is not the evidence-bound candidate, `origin/<base>` drifted, the PR is
+   closed/merged/not mergeable/targets the wrong branch, the local checkout
+   HEAD/tree is not the exact authorized object (a clean different commit with the
+   same tree fails canonical mode), the worktree is dirty, or a required check is
+   missing/pending/failing/stale/from-another-app/skipped. Ordinary output is
+   redacted; full reasons go only to a validated Tier-0 `--detail-out` file. The
+   Integrator must not merge if the gate exits nonzero.
+6. Run the exact-candidate pre-push verification with explicit base and target:
+
+   ```bash
+   node scripts/git/pre-push-verify.cjs --ref="$LOCKED_BASE_SHA" --target="$CANDIDATE_SHA"
+   ```
+7. `npm run build:isolated`
+8. Push or confirm the reviewed branch normally (`git push origin HEAD:refs/heads/$BRANCH_NAME`).
+   Hook bypass is forbidden; a failing hook is a release blocker — repair the
+   underlying cause and retry.
+9. Wait until Vercel reports Ready for that exact candidate SHA.
+10. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
+11. Mark the PR ready and merge with a GitHub **merge commit** — run
+    `gh pr merge "$PR_NUMBER" --merge` (not squash, not rebase).
+12. **Post-merge reconciliation (mandatory).** Prove: first parent = the authorized base; second /
+    reachable parent = the verified candidate; final-main tree = candidate tree
+    (`git rev-parse "$FINAL_MAIN_SHA"^{tree}` == `git rev-parse "$CANDIDATE_SHA"^{tree}`).
+13. From a clean final main, re-run: `node --test
+    scripts/operations/tests/*.test.cjs`, `git diff --check`, `npm run
+    verify:iterate`, `npm run build`, and the required exact-governance checks.
+14. Wait for production Ready on the exact final merge SHA.
+15. Only after merge and exact production deployment readiness, run
+    `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`.
+16. Probe the expected production route.
+17. Gather closeout evidence **before** releasing the lease, closing the
+    candidate card, and attaching final released metadata (evidence-first).
 
 Pre-transport smoke against the currently deployed production site is forbidden;
 see `docs/governance/verifier-governance-migration-notes-2026-07-20.md`. The
 Integrator must not merge unverified batch work. For release readiness, record
 final SHA, Vercel deployment ID/URL, validation commands, and deferred work
 metadata before release. No author, verifier, or coordinator may independently
-write to `origin/main`.
+write to `origin/main`. The local integration path is mechanically fail-closed
+when the canonical gate is used; GitHub-wide enforcement is not category B until
+the branch-protection ruleset is operator-enabled, and candidate-integrity
+remains category A+ GitHub-wide until an independent trusted producer exists (see
+ADR Amendments 6 and 7).
 
 ### Continuity Watcher
 

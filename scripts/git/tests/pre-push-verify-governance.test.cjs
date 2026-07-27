@@ -1093,21 +1093,32 @@ function testCanonicalGatesRunGovernanceSuite() {
 }
 
 function isPreviewFirstReleaseGuidance(section) {
+  // Combined canonical sequence (PR #219 release-governance protections +
+  // OPS-06B evidence-bound gate + GitHub merge-commit topology). The ordering
+  // contract: evidence-bound gate → exact-target verify → isolated build →
+  // normal push → exact-SHA Vercel Ready → preview smoke → merge commit →
+  // post-merge reconciliation → production readiness → production smoke.
   const markers = {
-    exactRange: section.indexOf('node scripts/git/pre-push-verify.cjs --ref=origin/main'),
+    opsGate: section.indexOf('npm run ops:integrate'),
+    exactTarget: section.indexOf('node scripts/git/pre-push-verify.cjs --ref="$LOCKED_BASE_SHA" --target="$CANDIDATE_SHA"'),
     isolatedBuild: section.indexOf('npm run build:isolated'),
     normalPush: section.indexOf('git push origin HEAD:refs/heads/$BRANCH_NAME'),
-    exactReady: section.indexOf('Vercel reports Ready for that exact pushed SHA'),
+    exactReady: section.search(/Vercel reports Ready for that exact (?:candidate|pushed) SHA/i),
     previewSmoke: section.indexOf('MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy'),
+    mergeCommit: section.search(/gh pr merge[^\n]*--merge/i),
+    reconciliation: section.search(/[Pp]ost-merge reconciliation/),
     mergeReady: section.search(/only after merge and exact production deployment readiness/i),
     productionSmoke: section.indexOf('MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy'),
   };
   const ordered = [
-    markers.exactRange,
+    markers.opsGate,
+    markers.exactTarget,
     markers.isolatedBuild,
     markers.normalPush,
     markers.exactReady,
     markers.previewSmoke,
+    markers.mergeCommit,
+    markers.reconciliation,
     markers.mergeReady,
     markers.productionSmoke,
   ];
@@ -1131,10 +1142,16 @@ function testActiveReleaseGuidanceIsPreviewFirst() {
     .filter((relativePath) => /npm\s+run\s+verify:push\b/.test(readFileSafe(path.join(ROOT, relativePath))));
   const productionCommand = 'MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy';
   const invalidFixtures = [
+    // Remove a required transport step.
     verifySection.replace('git push origin HEAD:refs/heads/$BRANCH_NAME', ''),
-    verifySection.replace('Vercel reports Ready for that exact pushed SHA', 'Preview exists'),
+    // Degrade exact candidate readiness into an unbound "preview exists" claim.
+    verifySection.replace('Vercel reports Ready for that exact candidate SHA', 'Preview exists'),
+    // Put production smoke before transport readiness.
     `${productionCommand}\n${verifySection}`,
+    // Put a smoke command before transport readiness.
     `node scripts/git/pre-push-verify.cjs --with-smoke\n${verifySection}`,
+    // Drop the evidence-bound canonical gate.
+    verifySection.replace('npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number "$PR_NUMBER" --evidence "$EVIDENCE_PATH" --expect-evidence-sha256 "$EVIDENCE_DIGEST" --allow-draft', ''),
   ];
   const invalidFixtureAccepted = invalidFixtures.some(isPreviewFirstReleaseGuidance);
 
@@ -1209,21 +1226,24 @@ function testMigrationNotesAndHookDescribeImplementedBehavior() {
 }
 
 const RELEASE_PENDING_COMMANDS = Object.freeze([
-  'git diff origin/main...HEAD --check',
-  'node scripts/git/pre-push-verify.cjs --ref=origin/main',
+  'npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number $PR_NUMBER --evidence $EVIDENCE_PATH --expect-evidence-sha256 $EVIDENCE_DIGEST --allow-draft',
+  'node scripts/git/pre-push-verify.cjs --ref=$LOCKED_BASE_SHA --target=$CANDIDATE_SHA',
   'npm run build:isolated',
   'git push origin HEAD:refs/heads/$BRANCH_NAME',
-  'vercel ready wait on the exact pushed SHA',
+  'vercel ready wait on the exact candidate SHA',
   'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
+  'gh pr merge $PR_NUMBER --merge',
 ]);
 const RELEASED_COMMANDS = Object.freeze([
-  'git diff origin/main...HEAD --check',
-  'node scripts/git/pre-push-verify.cjs --ref=origin/main',
+  'npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number $PR_NUMBER --evidence $EVIDENCE_PATH --expect-evidence-sha256 $EVIDENCE_DIGEST --allow-draft',
+  'node scripts/git/pre-push-verify.cjs --ref=$LOCKED_BASE_SHA --target=$CANDIDATE_SHA',
   'npm run build:isolated',
   'git push origin HEAD:refs/heads/$BRANCH_NAME',
-  'vercel preview ready wait on the exact pushed SHA',
+  'vercel preview ready wait on the exact candidate SHA',
   'MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy',
-  'merge the reviewed pull request',
+  'gh pr merge $PR_NUMBER --merge',
+  'post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}',
+  'node --test scripts/operations/tests/*.test.cjs (on final main)',
   'vercel production ready wait on final-main-sha',
   'MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy',
   'PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error "$PRODUCTION_ROUTE"',
@@ -1258,10 +1278,14 @@ function integratorChecklistCloseoutIsValid(checklist) {
 function testIntegratorChecklistClosesOutAfterProductionEvidence() {
   const checklist = readFileSafe(path.join(ROOT, 'docs/governance/templates/mdg-integrator-checklist.md'));
   const invalidMutations = [
-    checklist.replace('14. Probe the expected production route after production smoke:', '14. Production route verification omitted:')
-      .replace('    "PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error \\"$PRODUCTION_ROUTE\\"",\n', ''),
+    // Drop the production route probe (release would close without production evidence).
+    checklist.replace('    "PRODUCTION_ROUTE=https://mainedispensaryguide.com/expected-route; curl --fail --silent --show-error \\"$PRODUCTION_ROUTE\\"",\n', ''),
+    // Inject an iteration command before closeout evidence (breaks evidence-first ordering).
     checklist.replace('    "gather closeout evidence"', '    "npm run verify:iterate",\n    "gather closeout evidence"'),
-    checklist.replace('    "merge the reviewed pull request",\n    "vercel production ready wait on final-main-sha",', '    "vercel production ready wait on final-main-sha",\n    "merge the reviewed pull request",'),
+    // Reorder merge after production-ready (production smoke before the merge commit).
+    checklist.replace('    "gh pr merge $PR_NUMBER --merge",\n    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",', '    "post-merge reconciliation: rev-parse $FINAL_MAIN_SHA^{tree} == rev-parse $CANDIDATE_SHA^{tree}",\n    "gh pr merge $PR_NUMBER --merge",'),
+    // Drop the evidence-bound gate (release would bypass the canonical integrity gate).
+    checklist.replace('    "npm run ops:integrate -- --repo-full-name steezkelly/maine-dispensary-guide --pr-number $PR_NUMBER --evidence $EVIDENCE_PATH --expect-evidence-sha256 $EVIDENCE_DIGEST --allow-draft",\n', ''),
   ];
   const mutationsRejected = invalidMutations
     .every((mutation) => mutation !== checklist && !integratorChecklistCloseoutIsValid(mutation));

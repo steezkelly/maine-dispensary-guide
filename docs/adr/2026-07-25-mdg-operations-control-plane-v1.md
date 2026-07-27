@@ -482,3 +482,272 @@ fails closed on races).
 - This amendment does **not** broaden R3 into scheduler enforcement or lifecycle
   emission. OPS-07/08/09 remain blocked/gated; no lifecycle emission, no
   simulation, no live policy, no priority changes, no repository-setting changes.
+
+---
+
+## Amendment 5 — Mandatory Enforcement Foundation (OPS-06B-P1, 2026-07-26)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-26
+**Initiative:** OPS-06B-P1 (mandatory enforcement foundation). Phase 1 only — no
+structured lifecycle emission, no OPS-07/08/09, no simulation/WIP/policy/scheduler.
+Base: `edf00868081eba6e27108b2feaddd16573a22257`. Full design + threat model:
+`~/.hermes/data/mdg-ops/OPS-06B-P1-C0-enforcement-design-2026-07-26.md`.
+
+### Decision: selected enforcement architecture
+
+**Architecture B — public-safe candidate-bound attestation consumed by CI** — is
+the selected mechanism to convert the integrity gate from category A (manual) to
+category B (mechanically required). It is the smallest of the three evaluated
+architectures that materially achieves this:
+
+- **A (trusted Integrator posts a redacted commit status)** — REJECTED. Trust
+  anchor is a bearer token; forgeable and replayable against another SHA; no
+  cryptographic binding to the candidate; stale statuses are not auto-invalidated.
+- **B (public-safe attestation + CI recompute)** — SELECTED. The local gate emits
+  a redacted attestation (only SHAs, tree SHA, `canonical_diff_sha256`,
+  `evidence_sha256`, outcome — no task ID/command/path/body). A `contents: read`
+  CI job recomputes the canonical diff and tree SHA **from the git objects** and
+  confirms they match, then passes as a required `Integrity Gate` check. Trust
+  anchor is git content + CI recompute, not a token. Self-invalidating on base
+  move, branch mutation, or force-push.
+- **C (trusted GitHub App produces the check)** — DEFERRED. Strongest forgery
+  resistance (separate identity) but disproportionate operational/lockout cost for
+  a single-operator repo. This is the upgrade path if a genuinely separate reviewer
+  identity becomes available.
+
+### Stable required check names
+
+- `Operations Suite` — dedicated `ci.yml` job running
+  `node --test scripts/operations/tests/*.test.cjs` on PR→main and push→main
+  (synthetic fixtures only; no `MDG_OPS_ROOT`).
+- `Integrity Gate` — dedicated `ci.yml` job validating the public-safe attestation
+  by recomputing the candidate manifest from git objects.
+
+Both are job `name:` values that become the GitHub check-run contexts a ruleset
+can require. Names must exactly match the remote check contexts (proven in Child 3
+before any protection is enabled).
+
+### Privacy bridge (Q4)
+
+Private Tier-0 verifier evidence authorizes a GitHub-required status WITHOUT
+leaking by means of the attestation: the public artifact carries only hashes and
+SHAs; the full evidence (task IDs, commands, paths, bodies) remains under
+`MDG_OPS_ROOT` at 0600. The attestation references the private evidence by
+`evidence_sha256` only.
+
+### Candidate-binding / chicken-and-egg resolution
+
+The verified candidate is the code-only tree (`scripts/operations/**` + docs). The
+attestation is committed as a separate subsequent transport commit at
+`.github/integrity-attestations/<candidate-sha>.json`. The CI `Integrity Gate`
+recomputes the canonical diff over the code-only pathset (excluding the
+attestations directory) between `merge-base(origin/main, HEAD)` and the PR head's
+code tree, and confirms it equals the attestation's `canonical_diff_sha256`. The
+attestation commit is outside the verified code diff and does not perturb it.
+
+### Category-B qualification (precision per R3-G)
+
+- The **local** integration path is mechanically fail-closed when the canonical
+  wrapper (Child 2) is used.
+- **GitHub-wide** enforcement is NOT category B until a required status/ruleset
+  prevents bypass through the web interface or another client. Until the ruleset
+  (Child 3) is enabled by the operator, the checks are produced but not required —
+  category A+ (mechanically produced, not yet mechanically required).
+- The phrase "integration is fail-closed" must carry the qualification "when the
+  canonical wrapper is used locally, and when the GitHub ruleset is active for
+  GitHub-side merges."
+
+### Remaining bypasses after P1 (documented, not fixed here)
+1. Web-UI/API merges bypass the local pre-push hook — closed only when the Child-3
+   ruleset is operator-enabled.
+2. An actor with push access can edit `ci.yml` or the attestation in-PR — mitigated
+   by protecting the workflow file (Child 3); fully closed only by Architecture C.
+3. `git push --no-verify` bypasses the local hook — governance ban + CI backstop.
+
+### Phase 2 (design only, NOT implemented in P1)
+Structured lifecycle emission (`verification_completed`,
+`candidate_evidence_captured`, `accepted_candidate_bound`, `integration_started`,
+`integration_completed`, `release_recorded`, observation / release-emitter /
+opening-state coverage) is mapped in the Child-0 design doc with authoritative
+source, emission point, idempotency key, occurred_at/observed_at, actor role, SHA
+fields, evidence reference, retry/failure behavior, prospective-only flag, and
+privacy classification. Production coverage contracts must require versioned kind,
+complete window, immutable source reference, `source_sha256`, and (for
+opening-state) `opening_snapshot_at` tied exactly to the modeled window start — no
+retroactive fabrication from prose, PR timestamps, or Git dates. OPS-07 stays
+blocked until a fresh baseline records `BOTTLENECK_IDENTIFIED`, `POLICY_CANDIDATE`,
+or `EVIDENCE_SUFFICIENT`.
+
+---
+
+## Amendment 6 — Attestation trust model correction (OPS-06B-P1-R1, 2026-07-27)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-27
+**Initiative:** OPS-06B-P1-R1 (remote-state binding and trusted authorization).
+**Supersedes:** the Architecture-B conclusion of Amendment 5 as a *category-B*
+claim. Amendment 5's mechanism is retained only as a self-consistency control.
+
+### The correction
+
+Amendment 5 selected "Architecture B" (a public-safe attestation committed to the
+candidate branch, validated by CI recomputing code hashes) and described it as the
+mechanism to convert the integrity gate to category B. **That claim was wrong.**
+
+An unsigned public attestation committed by the **same actor who changes the code**
+does NOT prove independent verifier authorization. CI recomputing code hashes
+proves only:
+
+```
+code <-> attestation self-consistency
+```
+
+It does NOT prove:
+
+```
+private verifier evidence <-> PASS <-> attestation authorization
+```
+
+An opaque `evidence_sha256` carried in the attestation is **not independently
+verifiable by CI** — CI cannot read the private Tier-0 evidence, cannot re-run the
+independent verifier, and cannot confirm the attestation was produced by anyone
+other than the code author. The author can choose an arbitrary `evidence_sha256`
+and commit a matching attestation alongside their code.
+
+**A normal author-committed unsigned JSON file is not a category-B authorization
+artifact.**
+
+### Honest category decision (no independent trusted producer exists today)
+
+This repository currently has **no** trusted producer unavailable to the candidate
+author (no dedicated GitHub App, no separate signing key held outside the author's
+control, no independent authorization service). Therefore:
+
+- **Operations Suite** can become a required **category-B** CI check now — it is
+  computed by GitHub Actions from the code, independent of any attestation, and
+  cannot be satisfied by an author-committed file. (Wired in OPS-06B-P1 Child 1;
+  proposed as a required check in R1-E.)
+- **Candidate-integrity remains category A+ / manually enforced.** The canonical
+  gate (`npm run ops:integrate`) is mechanically fail-closed **locally** and now
+  binds to actual remote state (R1-A) and the live check rollup (R1-B), but its
+  authorization still depends on the Integrator running it honestly. GitHub-wide,
+  nothing mechanically prevents a web/API merge that skips it.
+- **`Integrity Gate` branch protection remains DEFERRED.** It must not be made a
+  required check until a trusted producer exists and its exact remote check
+  context has been observed.
+- **Architecture C / signed-attestation work remains a future prerequisite** for
+  category-B candidate-integrity.
+
+This decision is recorded honestly rather than selecting a design merely to
+preserve the prior Architecture-B conclusion.
+
+### Category-B designs (future prerequisites)
+
+Acceptable category-B candidate-integrity requires a trusted producer unavailable
+to the candidate author:
+
+- **A. Dedicated GitHub App / narrowly scoped integration identity** posts an
+  `Integrity Gate` check-run against the exact candidate SHA only after the
+  private gate passes. The App's private key is unavailable to the author.
+- **B. Signed attestation:** a public-safe attestation cryptographically signed by
+  a verifier key whose private component is unavailable to the author; CI verifies
+  the signature and the exact candidate binding.
+- **C. Another genuinely independent trusted service** creates the commit-bound
+  authorization.
+
+### Threat model (attestation / authorization)
+
+| Threat | Unsigned author attestation (Amendment 5 "B") | Signed/App producer (future) |
+|---|---|---|
+| Author alters code and attestation together | **VULNERABLE** — both are the author's | Mitigated — signature/check from a separate identity |
+| Author chooses arbitrary `evidence_sha256` | **VULNERABLE** — CI cannot verify it | Mitigated — producer binds evidence it actually verified |
+| Workflow unchanged while attestation forged | **VULNERABLE** — forgery needs no workflow edit | Mitigated — forgery needs the producer key |
+| Replay to another candidate | Partially mitigated (binding) but forgeable | Mitigated — signature/check bound to exact SHA |
+| Stale authorization after force-push | Self-invalidates (recompute) but re-forgeable | Self-invalidates; re-authorization requires the producer |
+| Key/token theft | N/A (no key) — but no real assurance either | New risk — producer key custody becomes critical |
+| Producer identity | None (author) | Distinct, auditable identity |
+| Expected GitHub App/source binding | None | Required — CI must check the check-run's app/source |
+| Revocation and recovery | N/A | Key rotation / App reinstall procedure required |
+| Operator lockout | Low | Medium — producer outage can block merges if required |
+
+### `pull_request` workflow behavior (for the future Integrity Gate)
+
+- GitHub Actions on `pull_request` normally checks out the **synthetic PR merge
+  ref** (`refs/pull/N/merge`), NOT the PR head. Candidate authorization concerns
+  the **PR head SHA** — the future Integrity Gate must deliberately fetch and
+  distinguish base, PR head, and merge candidate, and must not conflate the merge
+  ref's tree with the candidate's tree.
+- Default `fetch-depth: 1` is **insufficient** for arbitrary merge-base/diff
+  reconstruction; the future job must explicitly fetch the needed refs/history
+  (base, PR head, and sufficient depth for `merge-base`).
+- The check-run must be created against the exact PR head SHA, and any required
+  status must reference the check-run's exact context and producing app/source.
+
+### What this amendment changes operationally
+
+- The canonical gate (R1-A/R1-B) is retained and strengthened (binds to actual
+  remote state + live checks) as a **local** fail-closed control.
+- The "category B via Architecture B" language in Amendment 5 is corrected to
+  "category A+ locally; category B GitHub-wide deferred pending a trusted
+  producer."
+- The R1-E branch-protection proposal requires **Operations Suite** (and Build)
+  but explicitly does **not** require `Integrity Gate`.
+
+---
+
+## Amendment 7 — Operations-Suite trust qualification (OPS-06B-P1-R2, 2026-07-27)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-27
+**Initiative:** OPS-06B-P1-R2 (evidence semantics and check-producer binding).
+**Refines:** Amendment 6's statement that Operations Suite "can become a required
+category-B CI check now."
+
+### The qualification
+
+Amendment 6 correctly established that **Operations Suite is a genuine category-B
+mechanical check** — it is computed by GitHub Actions from the code, independent of
+any author-committed attestation, and (once required by branch protection) cannot be
+bypassed by a web/API merge. That claim stands.
+
+However, Operations Suite is **NOT an independent authorization mechanism**, and it
+must not be described as one. Two facts bound what it actually proves:
+
+1. **The workflow definition is candidate-controlled.** The job is defined in
+   `.github/workflows/ci.yml`, which is present in the candidate-controlled PR tree.
+   The same author who changes the code can change what the Operations Suite job
+   runs, asserts, or even whether it runs at all — in the same PR. A required check
+   therefore guarantees only that *a job with the required identity succeeded as
+   defined by the candidate's own workflow*, not that an independent party reviewed
+   the code.
+
+2. **A required check proves execution, not authorization.** Requiring
+   `Operations Suite` (and `Build`) guarantees that jobs with those identities and
+   the trusted producer (GitHub Actions, integration id 15368) reached
+   `conclusion: success` on the exact candidate head. It does **not** prove that an
+   independent verifier examined the change and authorized it.
+
+### Honest standing after R2
+
+- Operations Suite can become a **mechanically required** GitHub check once branch
+  protection is enabled (R1-E/R2 activation package). This is real category-B
+  enforcement of "the candidate's own test suite, as the candidate defines it,
+  passes."
+- **Candidate-integrity remains category A+ GitHub-wide.** The canonical gate is
+  fail-closed locally and now binds to actual remote state, the live authenticated
+  check rollup, complete evidence semantics, and an operator-authorized evidence
+  digest — but its authorization still depends on the Integrator running it
+  honestly, and nothing on GitHub mechanically prevents a merge that skips it until
+  the ruleset is applied.
+- **A trusted producer or signed authorization remains necessary** for a true
+  independent Integrity Gate (Architecture A/B/C from Amendment 6). An unsigned
+  candidate-controlled workflow or attestation is **not** proof of independent
+  review.
+
+### What this amendment changes operationally
+
+- All governance text and PR records must describe Operations Suite as a
+  mechanically required CI check that enforces the candidate's own suite — **not**
+  as independent authorization.
+- The R2 activation package requires Operations Suite + Build from the verified
+  GitHub Actions integration, and explicitly does **not** require Integrity Gate.
+- The category-A+ classification for candidate-integrity is unchanged and
+  reaffirmed.

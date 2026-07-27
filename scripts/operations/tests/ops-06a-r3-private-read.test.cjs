@@ -94,7 +94,8 @@ test('R3-E: a symlinked evidence FILE (even to a safe target) is rejected entire
 test('R3-E: unsafe ancestor directory permissions (group-writable) are rejected', () => {
   const root = makeRoot();
   const sub = path.join(root, 'sub');
-  fs.mkdirSync(sub, { mode: 0o775 }); // group-writable -> unsafe
+  fs.mkdirSync(sub);
+  fs.chmodSync(sub, 0o775); // group-writable -> unsafe (chmod ignores umask, unlike mkdirSync mode)
   const p = path.join(sub, 'evidence.json');
   fs.writeFileSync(p, '{}', { mode: 0o600 });
   assert.throws(
