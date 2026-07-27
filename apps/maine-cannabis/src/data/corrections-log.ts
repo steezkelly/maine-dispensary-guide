@@ -64,6 +64,117 @@ export interface Correction {
 
 export const CORRECTIONS: Correction[] = [
   {
+    date: "2026-07-27",
+    slug: "maine-cannabis-delivery-license-framework",
+    title: "Maine delivery guides — nonexistent courier license and GPS mandate removed",
+    severity: "critical",
+    category: "compliance",
+    what_was_wrong:
+      "Multiple guides said Maine required a separate OCP cannabis courier or delivery license, described a courier endorsement for dispensaries, asserted a state GPS-vehicle mandate, and presented courier as an OCP license category. The delivery business guide also included unsupported fee, timeline, financial, and service-area claims. Those statements could cause patients, consumers, and operators to rely on a licensing category that does not exist.",
+    what_is_correct:
+      "28-B M.R.S. §504(9) authorizes specified existing adult-use licensees—cannabis stores, tier 1 and tier 2 cultivation facilities, nursery cultivation facilities, and products manufacturing facilities—to deliver consumer orders within their license authority. Current 18-691 C.M.R. ch. 30 requires licensee-controlled ordering, trained and credentialed employees, age and identity checks, a sales delivery manifest, an enclosed locked vehicle area, insurance, a manufacturer-installed alarm, tracking-system closeout, and other controls; it does not create a standalone courier license or GPS mandate, and cannabis stores may not use a third-party delivery service. Medical delivery is governed separately by Title 22, chapter 558-C and authorized medical-program conduct, not a general courier license.",
+    verified_via: [
+      { label: "28-B M.R.S. §504(9)", url: "https://legislature.maine.gov/statutes/28-B/title28-Bsec504.html" },
+      { label: "18-691 C.M.R. ch. 30 (effective 2024-11-06)", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch%2030%20Final.pdf" },
+      { label: "OCP adult-use rules and statutes", url: "https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" },
+      { label: "Title 22, chapter 558-C", url: "https://legislature.maine.gov/statutes/22/title22ch558-Csec0.html" },
+      { label: "OCP medical-use rules and statutes", url: "https://www.maine.gov/dafs/ocp/medical-use/rules-statutes" }
+    ],
+    published_in: [
+      { name: "Maine cannabis delivery rules", href: "/guides/maine-cannabis-delivery-rules" },
+      { name: "Cannabis delivery business guide", href: "/blog/maine-cannabis-delivery-business-guide-2026" },
+      { name: "Medical patient delivery guide", href: "/blog/maine-medical-patient-delivery-services-2026" },
+      { name: "Cannabis business FAQ", href: "/guides/faq" },
+      { name: "Great Atlantic Puffin Company guide", href: "/guides/great-atlantic-puffin-company" },
+      { name: "Landrace Cannabis Casco guide", href: "/guides/landrace-cannabis-casco" },
+      { name: "420 Mules Bar Harbor guide", href: "/guides/420-mules-bar-harbor" },
+      { name: "Newsletter archive", href: "/newsletter" },
+      { name: "OCP license map", href: "/guides/maine-ocp-license-map" },
+      { name: "Cannabis POS comparison", href: "/guides/maine-cannabis-pos-comparison" },
+      { name: "Cannabis wholesale guide", href: "/guides/maine-cannabis-wholesale-guide" },
+    ],
+  },
+  {
+    date: "2026-07-27",
+    slug: "maine-cannabis-waste-management-framework",
+    title: "Cannabis waste guide — nonexistent handler license and obsolete retention rule removed",
+    severity: "critical",
+    category: "compliance",
+    what_was_wrong:
+      "The waste guide said every cannabis waste handler needed a Maine cannabis waste-handling license, presented a universal three-year retention period, treated every product-contact item as cannabis waste, and supplied disposal and hazardous-waste instructions without distinguishing OCP cannabis controls from DEP solid-, hazardous-, universal-, and wastewater rules.",
+    what_is_correct:
+      "Current 18-691 C.M.R. ch. 30 §4 requires nonhazardous cannabis waste leaving an establishment to be rendered unusable by grinding and mixing it to at least 50% non-cannabis waste by volume, unless OCP approves an alternate method in the facility plan. The rule contains limited trichome-free plant-material exceptions, requires sample collectors to return samples for wasting, and treats plant material as nonhazardous unless toxic, flammable, or listed under DEP Chapter 850. There is no general cannabis waste-handler license. DEP licensing depends on the waste stream and activity. Chapter 30's general business-record rule is the current tax year plus six preceding tax years unless another provision applies.",
+    verified_via: [
+      { label: "18-691 C.M.R. ch. 30 (effective 2024-11-06)", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch%2030%20Final.pdf" },
+      { label: "OCP adult-use rules and statutes", url: "https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" },
+      { label: "Maine DEP hazardous and universal waste program", url: "https://www.maine.gov/dep/waste/hazardouswaste/index.html", note: "Reports amended hazardous-waste rules effective 2026-07-07" },
+      { label: "DEP cannabis-sector environmental guidance (archived)", url: "https://www.maine.gov/dep/sustainability/compost/archive/depcannabiswaste.pdf" }
+    ],
+    published_in: [
+      { name: "Cannabis waste management guide", href: "/guides/maine-cannabis-waste-management" },
+    ],
+  },
+  {
+    date: "2026-07-27",
+    slug: "maine-cannabis-zoning-local-authorization",
+    title: "Cannabis zoning guide — §402 sequence and school buffer corrected",
+    severity: "critical",
+    category: "regulation",
+    what_was_wrong:
+      "The zoning guide attributed municipal opt-in and school siting to 28-B M.R.S. §301, blurred conditional licensure with local approval, and mixed unsupported nationwide-style zoning assumptions into Maine operator guidance. The sitewide FAQ separately put local authorization before OCP conditional licensure and described a 300-foot entrance-to-entrance school buffer.",
+    what_is_correct:
+      "28-B M.R.S. §402 controls local authorization within municipalities. OCP conditional licensure comes before a person may request local authorization; the applicant then obtains applicable municipal approvals before returning to OCP for active licensure. The statutory school buffer is 1,000 feet property line to property line, and a municipality may adopt a shorter distance only down to 500 feet. Medical establishments require a separate Title 22 and municipal analysis.",
+    verified_via: [
+      { label: "28-B M.R.S. §402", url: "https://legislature.maine.gov/statutes/28-B/title28-Bsec402.html" },
+      { label: "OCP adult-use application process", url: "https://www.maine.gov/dafs/ocp/adult-use/application-process" },
+      { label: "OCP municipal resources", url: "https://www.maine.gov/dafs/ocp/resources/municipal-resources" }
+    ],
+    published_in: [
+      { name: "Maine cannabis zoning requirements", href: "/guides/maine-cannabis-zoning-requirements" },
+      { name: "Maine cannabis FAQ", href: "/guides/faq" },
+      { name: "Founder's roadmap", href: "/download/roadmap" },
+    ],
+  },
+  {
+    date: "2026-07-27",
+    slug: "standish-dispensary-guide-adult-use-status",
+    title: "Standish guide — false adult-use opt-in and operator-opportunity claims removed",
+    severity: "critical",
+    category: "city-guide",
+    what_was_wrong:
+      "The Standish guide said the town had opted in to cannabis retail, encouraged new adult-use operations and a regional delivery hub, and published unsupported rent, population-comparison, and competition claims. It did not distinguish Standish's municipal adult-use prohibition from the medical program or identify the selling program behind Lakewood Cannabis.",
+    what_is_correct:
+      "Standish Code §220-3(A)–(C) prohibits the listed adult-use retail marijuana establishments, including social clubs, stores, product manufacturing facilities, and testing facilities, while stating that the chapter is not intended to prohibit medical use. Lakewood Cannabis's official Standish page describes a medical cannabis store at 234 Northeast Road, and OCP's June 1, 2026 establishment file lists active Standish medical registration DSP184. Any delivery must be tied to the responsible authorized medical registrant or an adult-use licensee acting within Title 28-B; there is no standalone courier license.",
+    verified_via: [
+      { label: "Town of Standish Code §220-3(A)–(C)", url: "https://ecode360.com/32867669" },
+      { label: "Lakewood Cannabis — Standish store", url: "https://lakewood-cannabis.com/standish-store/" },
+      { label: "OCP medical-use establishment file — June 1, 2026", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Maine_Medical_Use_Establishments_2026_06_01.csv", note: "Active Standish registration DSP184" }
+    ],
+    published_in: [
+      { name: "Standish dispensary guide", href: "/guides/standish-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-27",
+    slug: "buxton-dispensary-guide-registry-reconciliation",
+    title: "Buxton guide — unsupported hours, delivery area, and registry certainty corrected",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "The Buxton guide published unsupported Hidden Greens hours, claimed a specific delivery area, treated Hidden Greens as the single state-confirmed Buxton medical operator, supplied estimated drive distances and nearest-store claims, and framed the town as an adult-use market opportunity without reconciling OCP's public registration data.",
+    what_is_correct:
+      "Hidden Greens's official page advertises a medical storefront at 370 Narragansett Trail and publishes (207) 298-9111, but no store hours or Buxton-specific delivery area. OCP's June 1, 2026 caregiver file lists one active Buxton retail-town row under The Corner Store and lists the active Caberski Industries/Hidden Greens caregiver registration with South Berwick as retail town. The guide now discloses that mismatch, directs readers to verify the responsible registration, and notes that OCP's June adult-use file has no Buxton row.",
+    verified_via: [
+      { label: "Hidden Greens — official Buxton location page", url: "https://hiddengreens.com/buxton/" },
+      { label: "OCP medical-use applicant and registrant search", url: "https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" },
+      { label: "OCP adult-use applicant and licensee search", url: "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" },
+      { label: "Town of Buxton Zoning Ordinance, Article 11", url: "https://www.buxton.me.us/uploads/art11.2025.pdf" }
+    ],
+    published_in: [
+      { name: "Buxton dispensary guide", href: "/guides/buxton-dispensary-guide" },
+    ],
+  },
+  {
     date: "2026-07-16",
     slug: "maine-ocp-testing-rule-watch-2026",
     title: "Testing and edibles guides — proposed 2026 OCP rulemaking separated from current requirements",

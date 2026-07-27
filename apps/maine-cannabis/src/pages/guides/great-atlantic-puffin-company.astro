@@ -20,7 +20,7 @@ const faqPageJsonLd = JSON.stringify({
   "mainEntity": [
     { "@type": "Question", "name": "Where is the Puffin Co. dispensary in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "The Great Atlantic Puffin Company operates two Maine locations. The medical dispensary is at 235 Bridgton Road, Fryeburg, ME 04037. The adult-use (recreational) dispensary is at 510 Portland Road, Bridgton, ME 04009. Both are operated by the same company. Phone (207) 935-5444 for both." }},
     { "@type": "Question", "name": "Is Puffin Co. a medical or adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "Both. The Fryeburg storefront is the medical dispensary (Maine MMMP card required). The Bridgton storefront is the adult-use / recreational dispensary (21+ with valid ID). Medical patients get a 20% discount at the Bridgton rec store." }},
-    { "@type": "Question", "name": "Does Puffin Co. deliver or have online ordering?", "acceptedAnswer": { "@type": "Answer", "text": "Online pre-order for in-store pickup is available through the operator's Weedmaps menu at weedmaps.com/dispensaries/the-great-atlantic-puffin-company. Delivery availability varies by location and Maine's courier license rules — confirm with the operator before ordering." }},
+    { "@type": "Question", "name": "Does Puffin Co. deliver or have online ordering?", "acceptedAnswer": { "@type": "Answer", "text": "Online pre-order for in-store pickup is available through the operator's Weedmaps menu at weedmaps.com/dispensaries/the-great-atlantic-puffin-company. Confirm delivery availability and the responsible medical registrant or adult-use licensee directly with the operator." }},
     { "@type": "Question", "name": "What products does Puffin Co. carry?", "acceptedAnswer": { "@type": "Answer", "text": "Puffin Co. carries flower (sativa, indica, and hybrid), THC cartridges, concentrates, edibles, and CBD products including flower, tinctures, and topicals. The menu rotates daily. Verify current availability with the operator." }},
     { "@type": "Question", "name": "Where is Puffin Co.'s adult-use dispensary?", "acceptedAnswer": { "@type": "Answer", "text": "The adult-use / recreational location is at 510 Portland Road, Bridgton, ME 04009. It is a separate storefront from the medical dispensary in Fryeburg. Both share the same phone number: (207) 935-5444." }}
   ]
@@ -130,7 +130,7 @@ void faqPageJsonLd; // emitted by Faq.astro component (not referenced in templat
   <section>
     <h2>Online Ordering and Delivery</h2>
     <p>Puffin Co. lists on Weedmaps for online pre-order and in-store pickup at both locations. Browse the menu at <a href="https://weedmaps.com/dispensaries/the-great-atlantic-puffin-company">weedmaps.com/dispensaries/the-great-atlantic-puffin-company</a>.</p>
-    <p>Delivery availability is governed by Maine's courier license rules. Maine allows medical delivery by registered caregivers and licensed couriers; adult-use delivery is more restricted. Confirm with the operator before relying on delivery for either location.</p>
+    <p>Maine has no standalone cannabis courier-license category. Medical delivery must be tied to authorized medical-program conduct; specified adult-use licensees may deliver within 28-B M.R.S. §504(9). Confirm the program, responsible registrant or licensee, and current availability with the operator.</p>
   </section>
 
   <section>
@@ -174,7 +174,7 @@ void faqPageJsonLd; // emitted by Faq.astro component (not referenced in templat
       questions={[
         { q: "Where is the Puffin Co. dispensary in Maine?", a: "Two locations: medical at 235 Bridgton Road, Fryeburg, ME 04037; adult-use at 510 Portland Road, Bridgton, ME 04009. Both share phone (207) 935-5444." },
         { q: "Is Puffin Co. a medical or adult-use dispensary?", a: "Both. Fryeburg storefront is medical (MMMP card required). Bridgton storefront is adult-use (21+ with valid ID). Medical patients get 20% off at the rec location." },
-        { q: "Does Puffin Co. deliver or have online ordering?", a: "Online pre-order for in-store pickup is available through Weedmaps. Delivery is governed by Maine courier rules — confirm directly with the operator." },
+        { q: "Does Puffin Co. deliver or have online ordering?", a: "Online pre-order for in-store pickup is available through Weedmaps. Confirm delivery availability and the responsible medical registrant or adult-use licensee directly with the operator." },
         { q: "What products does Puffin Co. carry?", a: "Flower, cartridges, concentrates, edibles, CBD. Daily-rotating menu. Confirm current availability by phone." },
         { q: "Where is Puffin Co.'s adult-use dispensary?", a: "510 Portland Road, Bridgton, ME 04009. Separate storefront from the medical Fryeburg location. Same phone: (207) 935-5444." }
       ]}
