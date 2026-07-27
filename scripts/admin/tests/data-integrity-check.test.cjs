@@ -19,7 +19,6 @@
 
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { test } = require('node:test');
@@ -31,50 +30,24 @@ const APPS = path.join(REPO, 'apps/maine-cannabis');
 const BLOG_DIR = path.join(APPS, 'src', 'pages', 'blog');
 const COMPONENTS_DIR = path.join(APPS, 'src', 'components');
 
+// Pull the production extractors from the shared module so the test
+// exercises the same regexes the script uses. (Codex finding 8 on
+// PR #221: the prior probes reimplemented the regexes inline, so a
+// helper regression to first-match behavior would still pass.)
+const {
+    extractBlogCountsFromText,
+    extractComponentsCountsFromText,
+} = require(path.resolve(REPO, 'scripts/admin/data-integrity-extractors.cjs'));
+
 function countAstroDir(d) {
     if (!fs.existsSync(d)) return 0;
     return fs.readdirSync(d).filter((f) => f.endsWith('.astro')).length;
 }
 
-// Verbatim regexes from data-integrity-check.cjs (extractAllCounts /
-// extractBlogCounts / extractComponentsCounts). Drift here between the
-// test and the script invalidates the contract.
-function extractAllBlogCounts(text) {
-    // (1) "54 blog posts" — overview wording
-    // (2) "54 blog route sources" — project-tree wording added 2026-07-26
-    // (3) "Blog posts (53 articles)" — legacy "(N articles)" fallback
-    const patterns = [
-        /(\d+)\s*blog\s*posts?/gi,
-        /(\d+)\s*blog\s*route\s*sources?/gi,
-        /Blog\s*posts\s*\((\d+)\s*articles?\)/g,
-    ];
-    const out = [];
-    for (const re of patterns) {
-        let m;
-        while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
-    }
-    return out;
-}
-
-function extractAllComponentsCounts(text) {
-    // (1) "30 reusable components" — overview
-    // (2) "**Components** (30, …)" or "Components (30, …)" — project-tree header
-    const patterns = [
-        /(\d+)\s*reusable\s*components?/gi,
-        /(?:^|\*\*)\s*Components\s*\*?\*?\s*\((\d+)\s*,/gi,
-    ];
-    const out = [];
-    for (const re of patterns) {
-        let m;
-        while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));
-    }
-    return out;
-}
-
 test('every AGENTS.md blog count claim equals live blog/ directory size', () => {
     const text = fs.readFileSync(AGENTS, 'utf8');
     const actual = countAstroDir(BLOG_DIR);
-    const claims = extractAllBlogCounts(text);
+    const claims = extractBlogCountsFromText(text);
     assert.ok(claims.length >= 1, 'AGENTS.md must contain at least one blog count claim');
     for (const claim of claims) {
         assert.equal(claim, actual,
@@ -85,7 +58,7 @@ test('every AGENTS.md blog count claim equals live blog/ directory size', () => 
 test('every AGENTS.md components count claim equals live components/ directory size', () => {
     const text = fs.readFileSync(AGENTS, 'utf8');
     const actual = countAstroDir(COMPONENTS_DIR);
-    const claims = extractAllComponentsCounts(text);
+    const claims = extractComponentsCountsFromText(text);
     assert.ok(claims.length >= 1, 'AGENTS.md must contain at least one components count claim');
     for (const claim of claims) {
         assert.equal(claim, actual,
@@ -103,62 +76,47 @@ test('data-integrity-check.cjs exits 0 against the current repo (no drift)', () 
         'data-integrity-check.cjs must report zero drift on the current repo');
 });
 
-test('extractBlogCounts helper returns all occurrences (not just the first)', () => {
-    // Probe the helper itself via a tiny script that requires the .cjs
-    // and prints the function output. This does NOT touch the filesystem:
-    // it constructs a controlled string and only reads from AGENTS.md
-    // (which never gets written to).
-    const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-data-int-'));
-    const probe = path.join(scratch, 'probe.cjs');
-    const probeFixture =
+test('production extractBlogCountsFromText returns every occurrence (not just first)', () => {
+    // Direct call to the production helper imported above. If it ever
+    // regresses to first-match behavior, this test fails.
+    const fixture =
         'first claim 54 blog posts on overview.\n' +
         'second claim 99 blog posts on project-tree.\n';
-    // Inject the fixture string via a constructor argument plus a
-    // require()-time helper export. Since data-integrity-check.cjs does
-    // not currently expose helpers on module.exports, the probe verifies
-    // the behavior we need by re-running the same global-regex logic
-    // and printing the result alongside a hash of the script source —
-    // so any source change to the regex is detected.
-    fs.writeFileSync(probe,
-        `const text = ${JSON.stringify(probeFixture)};\n` +
-        `const src = require('fs').readFileSync(${JSON.stringify(SCRIPT)}, 'utf8');\n` +
-        `const re = /(\\d+)\\s*blog\\s*posts?/g;\n` +
-        `const out = []; let m; while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));\n` +
-        `console.log(JSON.stringify({claims: out, hash: src.length, hasGlobal: /new RegExp\\([^)]+'g'\\)/.test(src) || /extractAllCounts/.test(src)}));`
-    );
-    try {
-        const out = execFileSync(process.execPath, [probe], { encoding: 'utf8', stdio: 'pipe' });
-        const result = JSON.parse(out);
-        assert.deepEqual(result.claims.sort(), [54, 99],
-            'replicated extractBlogCounts logic must return both claims');
-        assert.ok(result.hasGlobal,
-            'data-integrity-check.cjs must use a global-regex-based extractor (extractAllCounts)');
-    } finally {
-        fs.rmSync(scratch, { recursive: true, force: true });
-    }
+    const claims = extractBlogCountsFromText(fixture);
+    assert.deepEqual(claims.sort(), [54, 99],
+        'production extractBlogCountsFromText must return both claims');
 });
 
-test('extractComponentsCounts helper returns all occurrences (not just the first)', () => {
-    const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-data-int-'));
-    const probe = path.join(scratch, 'probe.cjs');
-    const probeFixture =
+test('production extractComponentsCountsFromText returns every occurrence', () => {
+    const fixture =
         'first claim 30 reusable components on overview.\n' +
         'second claim 88 reusable components on project-tree.\n';
-    fs.writeFileSync(probe,
-        `const text = ${JSON.stringify(probeFixture)};\n` +
-        `const src = require('fs').readFileSync(${JSON.stringify(SCRIPT)}, 'utf8');\n` +
-        `const re = /(\\d+)\\s*reusable\\s*components?/g;\n` +
-        `const out = []; let m; while ((m = re.exec(text)) !== null) out.push(parseInt(m[1]));\n` +
-        `console.log(JSON.stringify({claims: out, hash: src.length, hasGlobal: /new RegExp\\([^)]+'g'\\)/.test(src) || /extractAllCounts/.test(src)}));`
-    );
-    try {
-        const out = execFileSync(process.execPath, [probe], { encoding: 'utf8', stdio: 'pipe' });
-        const result = JSON.parse(out);
-        assert.deepEqual(result.claims.sort(), [30, 88],
-            'replicated extractComponentsCounts logic must return both claims');
-        assert.ok(result.hasGlobal,
-            'data-integrity-check.cjs must use a global-regex-based extractor (extractAllCounts)');
-    } finally {
-        fs.rmSync(scratch, { recursive: true, force: true });
-    }
+    const claims = extractComponentsCountsFromText(fixture);
+    assert.deepEqual(claims.sort(), [30, 88],
+        'production extractComponentsCountsFromText must return both claims');
 });
+
+test('production extractBlogCountsFromText ignores Blog posts (N articles) parenthetical', () => {
+    // Codex finding 6: the "(53 articles)" parenthetical is a
+    // sub-count for explainability, not a directory-size claim, so it
+    // must NOT be captured. Otherwise an article count of 53 will
+    // always be flagged as drift against the .astro file count of 54.
+    const fixture =
+        '54 blog posts (53 article posts plus the blog index)\n';
+    const claims = extractBlogCountsFromText(fixture);
+    assert.deepEqual(claims, [54],
+        'production extractBlogCountsFromText must not capture the parenthetical article sub-count');
+});
+
+test('production extractComponentsCountsFromText matches plain line-start Components (N, …)', () => {
+    // Codex finding 7: a /m multiline regex is required so ^ matches
+    // the start of any line, not just the start of the file.
+    const fixture =
+        'unrelated prose above.\n' +
+        'Components (88, somewhere): …\n' +
+        'more prose.\n';
+    const claims = extractComponentsCountsFromText(fixture);
+    assert.ok(claims.includes(88),
+        'extractComponentsCountsFromText must match plain Components (N, …) on lines after the file start');
+});
+

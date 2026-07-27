@@ -28,6 +28,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { extractBlogCounts, extractComponentsCounts } = require('./data-integrity-extractors.cjs');
+
 const REPO = (() => {
     let dir = __dirname;
     for (let i = 0; i < 6; i++) {
@@ -101,43 +103,10 @@ function findDocClaim(file, pattern) {
     return m ? m[1] : null;
 }
 
-// Claim extractors — return arrays of every numeric claim found in the
-// doc. The 2026-07-26 incident showed that AGENTS.md can carry duplicate
-// counts (an overview sentence and a project-tree line about the same
-// directory). Validating only the first match allows drift on the
-// second to go undetected, so every occurrence is compared to reality.
-function extractAllCounts(file, patterns) {
-    if (!fs.existsSync(file)) return [];
-    const c = fs.readFileSync(file, 'utf8');
-    const out = [];
-    for (const re of patterns) {
-        const r = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
-        let m;
-        while ((m = r.exec(c)) !== null) out.push(parseInt(m[1]));
-        if (!re.global && m) out.push(parseInt(m[1]));
-    }
-    return out;
-}
-function extractBlogCounts(file) {
-    // The 2026-07-26 follow-up found that the project-tree wording
-    // "54 blog route sources" was outside the historical "blog posts"
-    // pattern. Match both phrasings so the duplicate-count regression
-    // test catches a stale tree claim alongside a current overview claim.
-    return extractAllCounts(file, [
-        /(\d+)\s*blog\s*posts?/i,
-        /(\d+)\s*blog\s*route\s*sources?/i,
-        /Blog\s*posts\s*\((\d+)\s*articles?\)/i,
-    ]);
-}
-function extractComponentsCounts(file) {
-    // Match both "30 reusable components" (overview) and the
-    // project-tree header form "**Components** (30, …)" and the
-    // plain "Components (30, …)" form.
-    return extractAllCounts(file, [
-        /(\d+)\s*reusable\s*components?/i,
-        /(?:^|\*\*)\s*Components\s*\*?\*?\s*\((\d+)\s*,/i,
-    ]);
-}
+// Claim extraction helpers live in scripts/admin/data-integrity-extractors.cjs
+// so the regression test exercises the production regexes verbatim.
+// See that file for the 2026-07-26 follow-up notes (multi-occurrence
+// collection, blog route-sources wording, plain Components-tree header).
 
 const claims = {
     // Single root AGENTS.md (commit 1fbf912f removed the apps/maine-cannabis/
