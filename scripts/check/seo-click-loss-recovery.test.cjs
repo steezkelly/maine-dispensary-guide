@@ -65,6 +65,7 @@ test('delivery recovery uses current statutory authority and removes courier-lic
     read('apps/maine-cannabis/src/pages/guides/maine-cannabis-wholesale-guide.astro'),
     read('apps/maine-cannabis/src/pages/guides/maine-ocp-license-map.astro'),
     read('apps/maine-cannabis/src/pages/newsletter.astro'),
+    read('apps/maine-cannabis/src/pages/contact.astro'),
   ];
 
   assert.match(deliveryGuide, /28-B M\.R\.S\. §\s*504\(9\)/);
@@ -86,6 +87,7 @@ test('delivery recovery uses current statutory authority and removes courier-lic
   for (const source of owners) {
     assert.doesNotMatch(source, /Type 13/i);
     assert.doesNotMatch(source, /independent courier license/i);
+    assert.doesNotMatch(source, /separate OCP Delivery Endorsement/i);
   }
 });
 
@@ -112,6 +114,46 @@ test('zoning, waste, and Buxton corrections retain their primary-source limits',
   assert.match(buxton, /const topics = \[['"]city['"], ['"]market['"]\]/);
   assert.match(buxton, /title="Buxton, ME Medical Cannabis Guide"/);
   assert.doesNotMatch(buxton, /1 Medical Store/);
+});
+
+test('materially corrected pages expose the July 26 modification date', () => {
+  const correctedPages = [
+    'apps/maine-cannabis/src/pages/contact.astro',
+    'apps/maine-cannabis/src/pages/download/roadmap.astro',
+    'apps/maine-cannabis/src/pages/guides/420-mules-bar-harbor.astro',
+    'apps/maine-cannabis/src/pages/guides/great-atlantic-puffin-company.astro',
+    'apps/maine-cannabis/src/pages/guides/landrace-cannabis-casco.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-cannabis-pos-comparison.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-cannabis-wholesale-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-ocp-license-map.astro',
+    'apps/maine-cannabis/src/pages/newsletter.astro',
+  ];
+
+  for (const page of correctedPages) {
+    assert.match(read(page), /modifiedDate:\s*['"]2026-07-26['"]/, `${page} lacks the correction date`);
+  }
+});
+
+test('rewritten FAQ accordions retain GA4 instrumentation attributes', () => {
+  const faqPages = [
+    'apps/maine-cannabis/src/pages/guides/standish-dispensary-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/buxton-dispensary-guide.astro',
+    'apps/maine-cannabis/src/pages/guides/maine-cannabis-delivery-rules.astro',
+    'apps/maine-cannabis/src/pages/blog/maine-medical-patient-delivery-services-2026.astro',
+  ];
+
+  for (const page of faqPages) {
+    const tags = [...read(page).matchAll(/<details\b([^>]*)>/g)];
+    assert.ok(tags.length > 0, `${page} has no FAQ details`);
+    const ids = new Set();
+    for (const [, attrs] of tags) {
+      assert.match(attrs, /\bdata-faq(?:\s|=|$)/, `${page} details missing data-faq`);
+      const id = attrs.match(/\bdata-faq-id=['"]([^'"]+)['"]/);
+      assert.ok(id, `${page} details missing data-faq-id`);
+      assert.ok(!ids.has(id[1]), `${page} repeats data-faq-id ${id[1]}`);
+      ids.add(id[1]);
+    }
+  }
 });
 
 test('canonical route policy remains slashless', () => {
