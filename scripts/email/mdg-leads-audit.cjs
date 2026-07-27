@@ -2,11 +2,11 @@
 /**
  * mdg-leads-audit.cjs — Monitoring baseline for the MDG lead pipeline.
  *
- * Schema version 2.1.0. Replaces the PR #200 v1 audit script.
+ * Schema version 2.2.0. Replaces the PR #200 v1 audit script.
  *
  * Checks:
- *   1. capture                — Vercel /api/lead rewrite present
- *   2. fulfillment_capability — W14 autoresponder workflow marker (structured)
+ *   1. capture                — Vercel /api/lead rewrite (structured JSON parse)
+ *   2. fulfillment_capability — W14 autoresponder marker (strict schema)
  *   3. credential_readiness   — delegates to send-email.cjs --check-config
  *   4. database               — configurable adapter; never embeds secrets
  *   5. sender_script          — scripts/send-email.cjs present + nodemailer
@@ -16,7 +16,11 @@
  *   $XDG_CACHE_HOME/mdg/leads-audit/report.json
  *   Fallback: $HOME/.cache/mdg/leads-audit/report.json
  *   Override: --report-path <path> (rejected if inside web-served trees)
- *   NEVER written to public/ or any web-served tree.
+ *   The forbidden-tree guard applies to the FINAL resolved path regardless of
+ *   source (CLI, XDG_CACHE_HOME, HOME, tmpdir). NEVER in a web-served tree.
+ *
+ * Permissions: report directory is enforced/verified at 0700 and the report
+ * file at 0600; the audit fails closed if those cannot be applied.
  *
  * Atomic write: temp file + fsync + rename.
  * Report-write failure → nonzero exit + REPORT_WRITE_FAILED.
@@ -45,7 +49,7 @@ const { execFileSync, execSync } = require('node:child_process');
 const {
   existsSync, mkdirSync, writeFileSync, renameSync,
   openSync, closeSync, readFileSync, statSync,
-  readdirSync, unlinkSync, fsyncSync
+  readdirSync, unlinkSync, fsyncSync, chmodSync
 } = require('node:fs');
 const { resolve, join, dirname, basename, relative, sep } = require('node:path');
 const { tmpdir } = require('node:os');
@@ -53,7 +57,7 @@ const { tmpdir } = require('node:os');
 const VERBOSE = process.argv.includes('--verbose');
 const PROJECT_ROOT = resolve(__dirname, '..', '..');
 const SENDER_SCRIPT = resolve(PROJECT_ROOT, 'scripts', 'send-email.cjs');
-const SCHEMA_VERSION = '2.1.0';
+const SCHEMA_VERSION = '2.2.0';
 
 function log(msg) {
   if (VERBOSE) process.stderr.write(msg + '\n');
@@ -63,7 +67,7 @@ function log(msg) {
 // Report path resolution + enforcement
 // ---------------------------------------------------------------------------
 
-// Directories that must never contain the runtime report.
+// Directory segments that must never contain the runtime report.
 const FORBIDDEN_REPORT_SEGMENTS = [
   `${sep}public${sep}`,
   `${sep}dist${sep}`,
@@ -75,31 +79,56 @@ function isForbiddenReportPath(absPath) {
   return FORBIDDEN_REPORT_SEGMENTS.some(seg => normalized.includes(seg));
 }
 
+// Resolve the FINAL candidate report path from any source, THEN apply the
+// forbidden-tree guard to that final path. A missing value after
+// --report-path is an explicit argument error, not a silent fallback.
 function resolveReportPath() {
   const idx = process.argv.indexOf('--report-path');
-  if (idx !== -1 && process.argv[idx + 1]) {
-    const requested = resolve(process.argv[idx + 1]);
-    if (isForbiddenReportPath(requested)) {
+  let candidate;
+
+  if (idx !== -1) {
+    const value = process.argv[idx + 1];
+    if (value === undefined || value === '' || value.startsWith('--')) {
       process.stderr.write(
-        `Error: --report-path "${process.argv[idx + 1]}" is inside a ` +
-        `web-served or generated tree (public/, dist/, .vercel/). ` +
-        `Choose a path outside those directories.\n`);
+        'Error: --report-path requires a path argument.\n');
       process.exit(1);
     }
-    return requested;
+    candidate = resolve(value);
+  } else {
+    const cacheBase = process.env.XDG_CACHE_HOME ||
+      join(process.env.HOME || tmpdir(), '.cache');
+    candidate = resolve(join(cacheBase, 'mdg', 'leads-audit', 'report.json'));
   }
-  const cacheBase = process.env.XDG_CACHE_HOME ||
-    join(process.env.HOME || tmpdir(), '.cache');
-  return join(cacheBase, 'mdg', 'leads-audit', 'report.json');
+
+  if (isForbiddenReportPath(candidate)) {
+    process.stderr.write(
+      `Error: report path "${candidate}" resolves inside a web-served or ` +
+      `generated tree (public/, dist/, .vercel/). Choose a location outside ` +
+      `those directories.\n`);
+    process.exit(1);
+  }
+
+  return candidate;
 }
 
 // ---------------------------------------------------------------------------
-// Atomic JSON write
+// Atomic JSON write with enforced permissions
 // ---------------------------------------------------------------------------
 
 function atomicWriteJSON(filePath, data) {
   const dir = dirname(filePath);
   mkdirSync(dir, { recursive: true, mode: 0o700 });
+
+  // Fail closed: enforce directory mode 0700 even if it pre-existed permissive.
+  // Do not silently continue with a world/group-readable directory.
+  chmodSync(dir, 0o700);
+  const dirMode = statSync(dir).mode & 0o777;
+  if (dirMode !== 0o700) {
+    const err = new Error(
+      `report directory mode is 0${dirMode.toString(8)}, expected 0700`);
+    err.code = 'EPERM_DIR_MODE';
+    throw err;
+  }
 
   // Clean stale temp files older than 1 hour
   try {
@@ -120,10 +149,21 @@ function atomicWriteJSON(filePath, data) {
     writeFileSync(fd, JSON.stringify(data, null, 2) + '\n');
     fsyncSync(fd);
     closeSync(fd);
+    // Enforce 0600 on the temp before publishing (umask may have weakened it).
+    chmodSync(tmpPath, 0o600);
     renameSync(tmpPath, filePath);
   } catch (err) {
     try { closeSync(fd); } catch { /* already closed */ }
     try { unlinkSync(tmpPath); } catch { /* best effort */ }
+    throw err;
+  }
+
+  // Fail closed: verify the published report is 0600.
+  const fileMode = statSync(filePath).mode & 0o777;
+  if (fileMode !== 0o600) {
+    const err = new Error(
+      `report file mode is 0${fileMode.toString(8)}, expected 0600`);
+    err.code = 'EPERM_FILE_MODE';
     throw err;
   }
 }
@@ -139,56 +179,137 @@ function checkResult(status, detail, remediation) {
 }
 
 // ---------------------------------------------------------------------------
-// 1. Capture check
+// 1. Capture check (structured JSON parse)
 // ---------------------------------------------------------------------------
 
 function checkCapture() {
+  const vercelJson = resolve(PROJECT_ROOT, 'vercel.json');
+  if (!existsSync(vercelJson)) {
+    return checkResult('not_configured', 'vercel.json not found');
+  }
+
+  let parsed;
   try {
-    const vercelJson = resolve(PROJECT_ROOT, 'vercel.json');
-    if (!existsSync(vercelJson)) {
-      return checkResult('not_configured', 'vercel.json not found');
-    }
-    const content = readFileSync(vercelJson, 'utf8');
-    if (content.includes('/api/lead')) {
-      return checkResult('healthy',
-        'Vercel rewrite /api/lead present in vercel.json');
-    }
-    return checkResult('unhealthy',
-      'Vercel rewrite /api/lead NOT found in vercel.json',
-      'CAPTURE_REWRITE_MISSING');
+    parsed = JSON.parse(readFileSync(vercelJson, 'utf8'));
   } catch (err) {
     return checkResult('unhealthy',
-      `Capture check error: ${err.message}`, 'CAPTURE_CHECK_ERROR');
+      'vercel.json is not valid JSON', 'CAPTURE_CONFIG_MALFORMED');
   }
+
+  const rewrites = Array.isArray(parsed.rewrites) ? parsed.rewrites : [];
+  const match = rewrites.find(r =>
+    r && typeof r === 'object' &&
+    r.source === '/api/lead' &&
+    typeof r.destination === 'string' &&
+    /^https:\/\//.test(r.destination));
+
+  if (match) {
+    return checkResult('healthy',
+      'Vercel rewrite /api/lead present with HTTPS destination');
+  }
+
+  return checkResult('unhealthy',
+    'No vercel.json rewrite with source "/api/lead" and an HTTPS destination',
+    'CAPTURE_REWRITE_MISSING');
 }
 
 // ---------------------------------------------------------------------------
-// 2. Fulfillment capability check (structured marker contract)
+// 2. Fulfillment capability check (strict marker schema)
 //
 // Marker states:
 //   absent                — no marker found
-//   configured_unverified — marker exists but acceptance_status != 'accepted'
-//   verified              — marker exists, valid JSON, acceptance_status='accepted'
-//   invalid               — marker exists but is empty, malformed, or missing
-//                           required fields
+//   configured_unverified — marker exists and is structurally valid but the
+//                           full accepted contract is not satisfied
+//   verified              — marker satisfies the complete accepted contract
+//   invalid               — marker is empty, malformed JSON, or has a
+//                           malformed/incorrectly-typed required value
 //
 // Only 'verified' may contribute to overall healthy.
 // ---------------------------------------------------------------------------
 
 const FULFILLMENT_MARKER_SCHEMA = '1.0';
+const ALLOWED_ACCEPTANCE_STATUSES = ['pending', 'in_review', 'accepted', 'rejected'];
+
+// Strict UTC ISO-8601 timestamp (e.g. 2026-07-27T00:00:00Z or with millis/offset).
+function isValidUtcIso8601(value) {
+  if (typeof value !== 'string' || value.trim() === '') return false;
+  // Require an explicit time component and a UTC designator (Z or offset).
+  const re = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+  if (!re.test(value)) return false;
+  const t = Date.parse(value);
+  return !Number.isNaN(t);
+}
+
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
+// Classify a parsed marker object. Returns { status, detail, remediation? }.
+function classifyMarker(marker) {
+  // schema_version must equal the supported schema exactly.
+  if (!('schema_version' in marker) || marker.schema_version !== FULFILLMENT_MARKER_SCHEMA) {
+    return checkResult('invalid',
+      `fulfillment marker schema_version must equal "${FULFILLMENT_MARKER_SCHEMA}"`,
+      'FULFILLMENT_MARKER_INVALID');
+  }
+
+  // workflow_id must be a non-empty (non-whitespace) string.
+  if (!isNonEmptyString(marker.workflow_id)) {
+    return checkResult('invalid',
+      'fulfillment marker workflow_id must be a non-empty string',
+      'FULFILLMENT_MARKER_INVALID');
+  }
+
+  // acceptance_status must be an allowed value.
+  if (!ALLOWED_ACCEPTANCE_STATUSES.includes(marker.acceptance_status)) {
+    return checkResult('invalid',
+      `fulfillment marker acceptance_status must be one of ` +
+      ALLOWED_ACCEPTANCE_STATUSES.join(', '),
+      'FULFILLMENT_MARKER_INVALID');
+  }
+
+  // Non-accepted statuses are configured but not verified.
+  if (marker.acceptance_status !== 'accepted') {
+    return checkResult('configured_unverified',
+      `Fulfillment workflow ${marker.workflow_id} configured but ` +
+      `acceptance_status="${marker.acceptance_status}" (not "accepted"). ` +
+      `Complete W14 end-to-end acceptance to verify.`,
+      'FULFILLMENT_UNVERIFIED');
+  }
+
+  // Accepted requires the full evidence contract.
+  if (!isValidUtcIso8601(marker.verified_at)) {
+    return checkResult('configured_unverified',
+      'Fulfillment marker accepted but verified_at is missing or not a valid ' +
+      'UTC ISO-8601 timestamp.',
+      'FULFILLMENT_UNVERIFIED');
+  }
+  if (marker.synthetic_test_result !== 'pass') {
+    return checkResult('configured_unverified',
+      'Fulfillment marker accepted but synthetic_test_result is not "pass".',
+      'FULFILLMENT_UNVERIFIED');
+  }
+  if (!isNonEmptyString(marker.acceptance_evidence_id)) {
+    return checkResult('configured_unverified',
+      'Fulfillment marker accepted but acceptance_evidence_id is missing or empty.',
+      'FULFILLMENT_UNVERIFIED');
+  }
+
+  return checkResult('verified',
+    `Fulfillment workflow ${marker.workflow_id} verified ` +
+    `(accepted at ${marker.verified_at}, evidence ${marker.acceptance_evidence_id})`);
+}
 
 function checkFulfillment() {
   const fileMarker = resolve(PROJECT_ROOT, 'config', 'fulfillment.json');
   const envMarker = process.env.MDG_FULFILLMENT_WORKFLOW_ID;
 
-  // Env-var marker: treated as configured_unverified (cannot carry
-  // structured acceptance evidence).
+  // Env-var marker alone cannot carry structured acceptance evidence.
   if (envMarker && !existsSync(fileMarker)) {
     return checkResult('configured_unverified',
       'Fulfillment workflow ID set via env MDG_FULFILLMENT_WORKFLOW_ID, ' +
       'but no structured acceptance marker found at config/fulfillment.json. ' +
-      'Set acceptance_status="accepted" in the marker file after W14 ' +
-      'end-to-end acceptance.',
+      'A complete accepted marker is required to verify.',
       'FULFILLMENT_UNVERIFIED');
   }
 
@@ -199,7 +320,6 @@ function checkFulfillment() {
       'FULFILLMENT_NOT_BUILT');
   }
 
-  // File exists — validate structured marker
   let raw;
   try {
     raw = readFileSync(fileMarker, 'utf8');
@@ -221,26 +341,12 @@ function checkFulfillment() {
       'config/fulfillment.json is not valid JSON', 'FULFILLMENT_MARKER_INVALID');
   }
 
-  // Required non-secret fields
-  const requiredFields = ['schema_version', 'workflow_id', 'acceptance_status'];
-  const missingFields = requiredFields.filter(f => !(f in marker));
-  if (missingFields.length > 0) {
+  if (marker === null || typeof marker !== 'object' || Array.isArray(marker)) {
     return checkResult('invalid',
-      `config/fulfillment.json missing required fields: ${missingFields.join(', ')}`,
-      'FULFILLMENT_MARKER_INVALID');
+      'config/fulfillment.json must be a JSON object', 'FULFILLMENT_MARKER_INVALID');
   }
 
-  if (marker.acceptance_status === 'accepted') {
-    return checkResult('verified',
-      `Fulfillment workflow ${marker.workflow_id} verified ` +
-      `(accepted${marker.verified_at ? ' at ' + marker.verified_at : ''})`);
-  }
-
-  return checkResult('configured_unverified',
-    `Fulfillment workflow ${marker.workflow_id} configured but ` +
-    `acceptance_status="${marker.acceptance_status}" (not "accepted"). ` +
-    `Complete W14 end-to-end acceptance to verify.`,
-    'FULFILLMENT_UNVERIFIED');
+  return classifyMarker(marker);
 }
 
 // ---------------------------------------------------------------------------
@@ -292,6 +398,11 @@ function interpretCheckConfig(stdout) {
     return checkResult('missing',
       'No SMTP credential file found in any expected location', 'CRED_MISSING');
   }
+  if (!parsed.file_mode_acceptable) {
+    return checkResult('invalid',
+      `Credential file found${id} but permissions too permissive (expected 600 or 400)`,
+      'CRED_MODE_INSECURE');
+  }
   if (!parsed.format_recognized) {
     return checkResult('invalid',
       `Credential file found${id} but format not recognized`, 'CRED_FORMAT_INVALID');
@@ -299,11 +410,6 @@ function interpretCheckConfig(stdout) {
   if (!parsed.required_fields_present) {
     return checkResult('invalid',
       `Credential file found${id} but required fields missing`, 'CRED_FIELDS_MISSING');
-  }
-  if (!parsed.file_mode_acceptable) {
-    return checkResult('invalid',
-      `Credential file found${id} but permissions too permissive (expected 600 or 400)`,
-      'CRED_MODE_INSECURE');
   }
 
   return checkResult('ready', `Credential source verified${id}`);
@@ -497,10 +603,9 @@ function main() {
   }
 
   // Determine overall status.
-  // Failure statuses: any state that means the pipeline is broken or
-  // cannot be confirmed working. This includes database unreachable
-  // and query_failed — a database that cannot be inspected must not
-  // produce a healthy overall result.
+  // Failure statuses: any state that means the pipeline is broken or cannot
+  // be confirmed working. This includes database unreachable/query_failed and
+  // a configured-but-unverified fulfillment marker.
   //
   // Non-failing statuses (explicitly optional checks only):
   //   optional_absent — himalaya manual fallback is optional
@@ -544,7 +649,7 @@ function main() {
     log(`Report written to ${reportPath}`);
   } catch (err) {
     reportWriteFailed = true;
-    // Sanitized: only the path identifier, never directory contents or secrets
+    // Sanitized: only the err.code / path identifier, never directory contents
     process.stderr.write(
       `Error: could not write report to ${reportPath}: ${err.code || 'write_failed'}\n`);
     if (!remediationCodes.includes('REPORT_WRITE_FAILED')) {

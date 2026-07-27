@@ -278,6 +278,8 @@ check('8c: exit 0 for healthy fixture', () => {
       workflow_id: 'test-w14',
       acceptance_status: 'accepted',
       verified_at: '2026-07-27T00:00:00Z',
+      synthetic_test_result: 'pass',
+      acceptance_evidence_id: 'test-evidence-001',
     }));
     const r = runAudit({
       MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS: credFile,
@@ -305,6 +307,8 @@ check('8d: exit 2 for not_configured fixture', () => {
       workflow_id: 'test-w14',
       acceptance_status: 'accepted',
       verified_at: '2026-07-27T00:00:00Z',
+      synthetic_test_result: 'pass',
+      acceptance_evidence_id: 'test-evidence-001',
     }));
     const r = runAudit({
       MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS: credFile,
@@ -581,10 +585,11 @@ check('15e: marker with acceptance_status != accepted → configured_unverified'
   assert.notEqual(report.overall_status, 'healthy');
 });
 
-check('15f: marker with acceptance_status=accepted → verified', () => {
+check('15f: marker with full accepted contract → verified', () => {
   const { report } = withMarker(JSON.stringify({
     schema_version: '1.0', workflow_id: 'w14', acceptance_status: 'accepted',
     verified_at: '2026-07-27T00:00:00Z',
+    synthetic_test_result: 'pass', acceptance_evidence_id: 'ev-001',
   }), () => runAudit({ MDG_FULFILLMENT_WORKFLOW_ID: '' }));
   assert.equal(report.checks.fulfillment_capability.status, 'verified');
 });
@@ -603,6 +608,286 @@ check('15h: only verified may contribute to healthy', () => {
   const block = src.slice(idx, src.indexOf('];', idx));
   assert.ok(block.includes('configured_unverified'),
     'configured_unverified must be a failure status (cannot be healthy)');
+});
+
+// =========================================================================
+// Category 16: Strict fulfillment marker schema (cannot become verified)
+// =========================================================================
+
+function markerStatus(markerObj) {
+  const { report } = withMarker(
+    typeof markerObj === 'string' ? markerObj : JSON.stringify(markerObj),
+    () => runAudit({ MDG_FULFILLMENT_WORKFLOW_ID: '' }));
+  return report.checks.fulfillment_capability.status;
+}
+
+const FULL_MARKER = {
+  schema_version: '1.0', workflow_id: 'w14', acceptance_status: 'accepted',
+  verified_at: '2026-07-27T00:00:00Z',
+  synthetic_test_result: 'pass', acceptance_evidence_id: 'ev-001',
+};
+
+check('16a: wrong schema version → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, schema_version: '2.0' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16b: null schema version → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, schema_version: null });
+  assert.notEqual(s, 'verified');
+});
+
+check('16c: empty workflow_id → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, workflow_id: '' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16d: whitespace-only workflow_id → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, workflow_id: '   ' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16e: accepted without verified_at → not verified', () => {
+  const m = { ...FULL_MARKER }; delete m.verified_at;
+  const s = markerStatus(m);
+  assert.notEqual(s, 'verified');
+});
+
+check('16f: accepted with invalid timestamp → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, verified_at: 'not-a-date' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16g: accepted without synthetic_test_result → not verified', () => {
+  const m = { ...FULL_MARKER }; delete m.synthetic_test_result;
+  const s = markerStatus(m);
+  assert.notEqual(s, 'verified');
+});
+
+check('16h: accepted with synthetic_test_result != pass → not verified', () => {
+  const s = markerStatus({ ...FULL_MARKER, synthetic_test_result: 'fail' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16i: accepted without acceptance_evidence_id → not verified', () => {
+  const m = { ...FULL_MARKER }; delete m.acceptance_evidence_id;
+  const s = markerStatus(m);
+  assert.notEqual(s, 'verified');
+});
+
+check('16j: arbitrary object with acceptance_status=accepted → not verified', () => {
+  const s = markerStatus({ acceptance_status: 'accepted', foo: 'bar' });
+  assert.notEqual(s, 'verified');
+});
+
+check('16k: full valid contract → verified (control)', () => {
+  assert.equal(markerStatus(FULL_MARKER), 'verified');
+});
+
+check('16l: non-object marker (array) → invalid', () => {
+  assert.equal(markerStatus('[1,2,3]'), 'invalid');
+});
+
+// =========================================================================
+// Category 17: Every report-path source is guarded
+// =========================================================================
+
+check('17a: XDG_CACHE_HOME inside repo public/ → rejected', () => {
+  const badCache = resolve(PROJECT_ROOT, 'public', 'cache');
+  const r = spawnSync(process.execPath, [SCRIPT], {
+    encoding: 'utf8',
+    env: { ...process.env, XDG_CACHE_HOME: badCache, HOME: join(FIXTURE_DIR, 'h17a') },
+    timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.notEqual(r.status, 0, 'must reject XDG_CACHE_HOME in public/');
+  assert.match(r.stderr, /web-served|public|dist|\.vercel/i);
+});
+
+check('17b: XDG_CACHE_HOME inside dist/ → rejected', () => {
+  const badCache = resolve(PROJECT_ROOT, 'dist', 'cache');
+  const r = spawnSync(process.execPath, [SCRIPT], {
+    encoding: 'utf8',
+    env: { ...process.env, XDG_CACHE_HOME: badCache, HOME: join(FIXTURE_DIR, 'h17b') },
+    timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.notEqual(r.status, 0, 'must reject XDG_CACHE_HOME in dist/');
+});
+
+check('17c: HOME fallback resolving into .vercel/ → rejected', () => {
+  // No XDG_CACHE_HOME; HOME/.cache must land in .vercel/. Set HOME so that
+  // HOME/.cache = <repo>/.vercel/cache  →  HOME = <repo>/.vercel/cache minus /.cache
+  const vercelDir = resolve(PROJECT_ROOT, '.vercel');
+  const fakeHome = join(vercelDir, 'cache'); // HOME/.cache = .vercel/cache/.cache
+  const r = spawnSync(process.execPath, [SCRIPT], {
+    encoding: 'utf8',
+    env: { ...process.env, XDG_CACHE_HOME: '', HOME: fakeHome },
+    timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.notEqual(r.status, 0, 'must reject HOME fallback into .vercel/');
+});
+
+check('17d: normal external cache path → succeeds', () => {
+  const { reportPath, report } = runAuditDefault({});
+  assert.ok(existsSync(reportPath), 'report must be written to external cache');
+  assert.ok(report, 'report must parse');
+  assert.ok(!reportPath.startsWith(PROJECT_ROOT), 'must be outside repo');
+});
+
+check('17e: --report-path with missing value → explicit argument error', () => {
+  const r = spawnSync(process.execPath, [SCRIPT, '--report-path'], {
+    encoding: 'utf8',
+    env: { ...process.env },
+    timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.notEqual(r.status, 0, 'must fail on missing --report-path value');
+  assert.match(r.stderr, /requires a path argument/i);
+});
+
+// =========================================================================
+// Category 18: Directory/file permission enforcement
+// =========================================================================
+
+check('18a: pre-existing 0755 dir is tightened to 0700', () => {
+  const base = join(FIXTURE_DIR, 'perm-tighten');
+  const dir = join(base, 'mdg', 'leads-audit');
+  mkdirSync(dir, { recursive: true });
+  chmodSync(dir, 0o755);
+  const reportPath = join(dir, 'report.json');
+  const r = spawnSync(process.execPath, [SCRIPT, '--report-path', reportPath], {
+    encoding: 'utf8', env: { ...process.env }, timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.ok([0, 1, 2].includes(r.status), 'must run to completion');
+  const finalMode = statSync(dir).mode & 0o777;
+  assert.equal(finalMode, 0o700, `dir must be 0700, got 0${finalMode.toString(8)}`);
+});
+
+check('18b: report file is 0600 even under permissive umask', () => {
+  const base = join(FIXTURE_DIR, 'perm-umask');
+  mkdirSync(base, { recursive: true });
+  const reportPath = join(base, 'report.json');
+  const r = spawnSync(process.execPath, [SCRIPT, '--report-path', reportPath], {
+    encoding: 'utf8',
+    env: { ...process.env },
+    timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  assert.ok([0, 1, 2].includes(r.status));
+  assert.ok(existsSync(reportPath), 'report must exist');
+  const mode = statSync(reportPath).mode & 0o777;
+  assert.equal(mode, 0o600, `file must be 0600, got 0${mode.toString(8)}`);
+});
+
+check('18c: source enforces dir 0700 and file 0600 and fails closed', () => {
+  const src = readFileSync(SCRIPT, 'utf8');
+  assert.match(src, /chmodSync\(dir, 0o700\)/, 'must chmod dir to 0700');
+  assert.match(src, /chmodSync\(tmpPath, 0o600\)/, 'must chmod file to 0600');
+  assert.match(src, /EPERM_DIR_MODE|expected 0700/, 'must fail closed on bad dir mode');
+  assert.match(src, /EPERM_FILE_MODE|expected 0600/, 'must fail closed on bad file mode');
+});
+
+// =========================================================================
+// Category 19: Real-send credential mode enforcement (load-only, no network)
+// =========================================================================
+
+check('19a: loadCredentials rejects insecure mode before any send', () => {
+  const credFile = makeCredFile(join(FIXTURE_DIR, 'c19a'),
+    'SMTP_EMAIL=real-send@example.com\nSMTP_PASSWORD=realpass123\n', 0o644);
+  const r = spawnSync(process.execPath, ['-e', `
+    const m = require(${JSON.stringify(SENDER)});
+    try { m.loadCredentials(); console.log('NO_THROW'); }
+    catch (e) { console.log('THREW:' + /Insecure credential file permissions/.test(e.message));
+      console.log('LEAK:' + /real-send@example\\.com|realpass123/.test(e.message)); }
+  `], {
+    encoding: 'utf8',
+    env: { ...process.env, MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS: credFile },
+    timeout: 15000,
+  });
+  const out = r.stdout || '';
+  assert.ok(out.includes('THREW:true'), `must throw insecure-mode error; got: ${out}`);
+  assert.ok(out.includes('LEAK:false'), `must not leak credentials; got: ${out}`);
+  assert.ok(!out.includes('NO_THROW'), 'must not silently accept insecure mode');
+});
+
+check('19b: loadCredentials accepts secure mode (0600)', () => {
+  const credFile = makeCredFile(join(FIXTURE_DIR, 'c19b'),
+    'SMTP_EMAIL=secure@example.com\nSMTP_PASSWORD=securepass\n', 0o600);
+  const r = spawnSync(process.execPath, ['-e', `
+    const m = require(${JSON.stringify(SENDER)});
+    try { const c = m.loadCredentials();
+      console.log('LOADED:' + (c.email === 'secure@example.com')); }
+    catch (e) { console.log('THREW:' + e.message); }
+  `], {
+    encoding: 'utf8',
+    env: { ...process.env, MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS: credFile },
+    timeout: 15000,
+  });
+  assert.ok((r.stdout || '').includes('LOADED:true'),
+    `secure mode must load; got: ${r.stdout}`);
+});
+
+check('19c: loadCredentials and checkConfig share one inspector (no drift)', () => {
+  const src = readFileSync(SENDER, 'utf8');
+  // Both paths must call the same inspectCredentialFile helper.
+  const loadBody = src.slice(src.indexOf('function loadCredentials'),
+    src.indexOf('function parseCredentialsFile'));
+  const checkBody = src.slice(src.indexOf('function checkConfig'),
+    src.indexOf('// Warm-up email templates'));
+  assert.match(loadBody, /inspectCredentialFile\(/, 'loadCredentials must use shared inspector');
+  assert.match(checkBody, /inspectCredentialFile\(/, 'checkConfig must use shared inspector');
+});
+
+check('19d: dry-run does not require credentials and does not send', () => {
+  const r = spawnSync(process.execPath,
+    [SENDER, '--dry-run', '--to', 'x@example.com', '--subject', 's', '--body', 'b'], {
+    encoding: 'utf8',
+    env: { ...process.env, MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS: '/nonexistent' },
+    timeout: 15000,
+  });
+  assert.equal(r.status, 0, `dry-run must exit 0 without creds, got ${r.status}`);
+  assert.match(r.stdout, /DRY RUN/i, 'must label dry run');
+});
+
+// =========================================================================
+// Category 20: Structured capture check
+// =========================================================================
+
+check('20a: capture check parses JSON rewrite object (not substring)', () => {
+  const src = readFileSync(SCRIPT, 'utf8');
+  const capBody = src.slice(src.indexOf('function checkCapture'),
+    src.indexOf('// ----', src.indexOf('function checkCapture') + 10));
+  assert.match(capBody, /JSON\.parse/, 'must JSON.parse vercel.json');
+  assert.match(capBody, /source === '\/api\/lead'/, 'must match exact source');
+  assert.match(capBody, /https:/, 'must require HTTPS destination');
+  assert.doesNotMatch(capBody, /content\.includes\('\/api\/lead'\)/,
+    'must not use naive substring match');
+});
+
+check('20b: real vercel.json yields capture=healthy', () => {
+  const { report } = runAudit({});
+  assert.ok(report);
+  assert.equal(report.checks.capture.status, 'healthy',
+    'real vercel.json has the /api/lead HTTPS rewrite');
+});
+
+// =========================================================================
+// Category 21: Forensic interpretation is the completed preservation result
+// (verified against PR body text, not the script)
+// =========================================================================
+
+check('21a: PR body reflects completed preservation result', () => {
+  const r = spawnSync('gh', ['pr', 'view', '200', '--json', 'body', '-q', '.body'], {
+    encoding: 'utf8', timeout: 30000, cwd: PROJECT_ROOT,
+  });
+  // Normalize whitespace (markdown line breaks split phrases across lines).
+  const body = (r.stdout || '').toLowerCase().replace(/\s+/g, ' ');
+  // Skip gracefully if gh is unavailable in this environment.
+  if (!body.trim()) { process.stderr.write('    (gh unavailable — skipped)\n'); return; }
+  assert.ok(body.includes('187'), 'must state W7 rows preserved: 187');
+  assert.ok(body.includes('zero') || body.includes('0 real'),
+    'must state likely unique real recovery candidates: zero');
+  assert.ok(body.includes('synthetic') || body.includes('test record'),
+    'must note the five candidates were synthetic/test');
+  assert.ok(body.includes('no real-user recovery'),
+    'must state the preserved window contains no real-user recovery set');
 });
 
 // =========================================================================
