@@ -188,22 +188,30 @@ test('exactly one instrumented primary CTA (no second CTA added)', () => {
 });
 
 // --- CTA THEME TOKENS ---
-test('CTA does not use hardcoded pure-white foreground', () => {
+test('CTA does not use hardcoded pure-white or the on-primary token (renders #FFFFFF in light mode)', () => {
   const ctaBoxRules = src.match(/\.cta-box[^}]*\}/g) || [];
   assert.ok(ctaBoxRules.length > 0, 'must have .cta-box rules');
   for (const rule of ctaBoxRules) {
     assert.ok(!/color:\s*(?:#fff(?:f(?:ff)?)?|white)\b/i.test(rule),
       `CTA must not hardcode pure-white text: ${rule.slice(0, 100)}`);
+    assert.ok(!/color:\s*var\(--color-on-primary\)/.test(rule),
+      `CTA must not use var(--color-on-primary) — it resolves to #FFFFFF in light mode: ${rule.slice(0, 100)}`);
   }
 });
 
-test('.cta-box uses the theme-aware --color-on-primary token', () => {
+test('.cta-box defines a page-local foreground alias backed by --color-background', () => {
   const boxRule = (src.match(/\.cta-box\s*\{[^}]*\}/) || [''])[0];
-  assert.ok(/color:\s*var\(--color-on-primary\)/.test(boxRule),
-    '.cta-box must use color: var(--color-on-primary)');
+  assert.ok(/--cta-foreground:\s*var\(--color-background\)/.test(boxRule),
+    '.cta-box must define --cta-foreground: var(--color-background)');
 });
 
-test('.cta-box a inherits the on-primary foreground', () => {
+test('.cta-box uses the page-local foreground alias', () => {
+  const boxRule = (src.match(/\.cta-box\s*\{[^}]*\}/) || [''])[0];
+  assert.ok(/color:\s*var\(--cta-foreground\)/.test(boxRule),
+    '.cta-box must use color: var(--cta-foreground)');
+});
+
+test('.cta-box a inherits the CTA foreground', () => {
   const linkRule = (src.match(/\.cta-box a\s*\{[^}]*\}/) || [''])[0];
   assert.ok(/color:\s*inherit/.test(linkRule),
     '.cta-box a must use color: inherit');
