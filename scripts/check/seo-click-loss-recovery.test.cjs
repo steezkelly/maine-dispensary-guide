@@ -74,9 +74,13 @@ test('delivery recovery uses current statutory authority and removes courier-lic
   assert.match(businessGuide, /authorId:\s*['"]calvin-waters['"]/);
   assert.match(businessGuide, /authorTitle:\s*['"]Licensing & Compliance Analyst['"]/);
   assert.match(businessGuide, /publishDate:\s*['"]2026-04-18['"]/);
+  assert.match(businessGuide, /const topics = \[['"]business['"], ['"]licensing['"], ['"]operations['"]\]/);
+  assert.match(businessGuide, /<AutoRelated[^>]*currentTopics=\{topics\}[^>]*section=\{article\.section\}/);
   assert.match(medicalGuide, /author:\s*['"]Calvin Waters['"]/);
   assert.match(medicalGuide, /authorId:\s*['"]calvin-waters['"]/);
   assert.match(medicalGuide, /publishDate:\s*['"]2026-05-13['"]/);
+  assert.match(medicalGuide, /const topics = \[['"]medical['"], ['"]operations['"], ['"]compliance['"]\]/);
+  assert.match(medicalGuide, /<AutoRelated[^>]*currentTopics=\{topics\}[^>]*section=\{article\.section\}/);
   const registeredAuthorIds = new Set(
     JSON.parse(read('apps/maine-cannabis/src/data/authors.json')).map((author) => author.id),
   );

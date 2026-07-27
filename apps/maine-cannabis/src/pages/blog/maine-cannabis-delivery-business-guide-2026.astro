@@ -14,7 +14,7 @@ const article = {
   section: 'Business & Operations'
 };
 
-const topics = ['business', 'compliance'];
+const topics = ['business', 'licensing', 'operations'];
 ---
 
 <Layout
@@ -194,7 +194,7 @@ const topics = ['business', 'compliance'];
     </ul>
   </section>
 
-  <section><AutoRelated currentPath="/blog/maine-cannabis-delivery-business-guide-2026" currentTopics={['business', 'compliance']} section="Business" limit={6} /></section>
+  <section><AutoRelated currentPath="/blog/maine-cannabis-delivery-business-guide-2026" currentTopics={topics} section={article.section} limit={6} /></section>
 
   <p class="disclaimer"><strong>Disclaimer:</strong> This guide is educational and is not legal advice. Verify current OCP requirements, your approved facility plan, license conditions, municipal ordinances, and tax obligations before conducting delivery.</p>
 
