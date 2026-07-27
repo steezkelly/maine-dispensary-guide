@@ -10,17 +10,16 @@ const article = {
   authorId: "calvin-waters",
   authorTitle: "Licensing & Compliance Analyst",
   publishDate: "2026-07-21",
-  modifiedDate: "2026-07-21",
+  modifiedDate: "2026-07-27",
   section: "Policy & Legislation"
 };
 const topics = ["policy", "legislation", "consumer-guide"];
 
 const faqItems = [
-  { question: "Is weed legal in Maine?", answer: "Yes. Recreational (adult-use) cannabis is legal in Maine for adults 21 and older. Maine voters legalized it in 2016, and licensed retail sales began in 2020. You can legally buy, possess, and consume cannabis within the limits set by Title 28-B of the Maine Revised Statutes, regulated by the Maine Office of Cannabis Policy (OCP)." },
-
+  { question: "Is weed legal in Maine?", answer: "Yes. Recreational (adult-use) cannabis is legal in Maine for adults 21 and older. Maine voters legalized it in 2016, and licensed retail sales began in October 2020. You can legally buy, possess, and consume cannabis within the limits set by Title 28-B of the Maine Revised Statutes, regulated by the Maine Office of Cannabis Policy (OCP)." },
   { question: "Can I grow cannabis at home in Maine?", answer: "Yes. Adults 21+ may grow up to 6 mature flowering plants, 12 immature plants, and unlimited seedlings per person for personal use under 28-B M.R.S. §1502. The mature-plant limit was raised from 3 to 6 in 2023 under P.L. 2023, ch. 220. Plants must be tagged and grown in a secure space not visible from a public way. Medical patients and caregivers have separate, higher plant limits under the medical program." },
   { question: "Can I smoke weed in public in Maine?", answer: "No. Maine law prohibits consuming cannabis in public places. Consumption is allowed only on private property with the owner's consent. Cannabis is also illegal on all federal land, including Acadia National Park and national forests, regardless of Maine state law." },
-  { question: "Is cannabis legal on federal land in Maine?", answer: "No. Cannabis remains a Schedule I controlled substance under federal law. Possessing or consuming it on federal land — including Acadia National Park, the Appalachian Trail, national wildlife refuges, and federal buildings — is a federal offense even though it is legal under Maine state law." },
+  { question: "Is cannabis legal on federal land in Maine?", answer: "No. Adult-use cannabis remains a Schedule I controlled substance under federal law. Possessing or consuming it on federal land — including Acadia National Park, the Appalachian Trail, national wildlife refuges, and federal buildings — is a federal offense even though it is legal under Maine state law. Note: in April 2026, the DEA moved FDA-approved cannabis pharmaceuticals and state-licensed medical cannabis products to Schedule III (91 FR 22714), but this does not extend to adult-use cannabis or federal land." },
   { question: "Can I drive after using cannabis in Maine?", answer: "No. Operating a vehicle under the influence of cannabis is illegal in Maine and carries OUI penalties. Cannabis impairs reaction time and judgment, and edibles' delayed onset makes timing especially dangerous. Arrange a sober ride before consuming." },
   { question: "Do I need a medical card to buy cannabis in Maine?", answer: "No. Adults 21+ can buy adult-use cannabis at a licensed dispensary with just a valid government-issued photo ID. A Maine medical cannabis card (or a valid reciprocity-state card) is optional and provides access to medical dispensaries, higher-dose products, and tax savings." },
   { question: "Can I take cannabis across state lines from Maine?", answer: "No. Transporting cannabis across state lines is a federal offense, even between two states where it is legal. You must consume or dispose of any cannabis before leaving Maine. The same applies to air travel — cannabis is illegal in airports and on aircraft under federal law." }
@@ -29,7 +28,7 @@ const faqItems = [
 
 <Layout
   title="Is Weed Legal in Maine? Yes — 2026 Laws & Key Rules"
-  description="Yes, recreational cannabis is legal in Maine for adults 21+. This broad 2026 overview covers home grow, public consumption, federal-land exceptions, and links to current purchase limits."
+  description="Yes—recreational cannabis is legal in Maine for adults 21+. See 2026 limits, home-grow and public-use rules, 14% tax, licensed stores, and cited sources."
   heroImage="/images/heroes/maine-cannabis-edibles-compliance.jpg"
   article={article}
   topics={topics}
@@ -53,9 +52,20 @@ const faqItems = [
   .stat-block ul { list-style: none; padding: 0; margin: 0; }
   .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
   .stat-block li:last-child { border-bottom: none; }
+  .quick-ref { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+  .quick-ref h2 { margin-top: 0; margin-bottom: 0.75rem; color: var(--color-primary); font-size: 1.1rem; border-bottom: none; padding-bottom: 0; }
+  .quick-ref dl { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1rem; margin: 0; }
+  .quick-ref dt { font-weight: 700; font-size: 0.9rem; color: var(--color-text); }
+  .quick-ref dd { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+  @media (max-width: 480px) {
+    .quick-ref dl { grid-template-columns: 1fr; gap: 0.25rem; }
+    .quick-ref dt { margin-top: 0.5rem; }
+  }
   .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
   .byline p { margin: 0.25rem 0; }
   .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+  .cta-box { --cta-foreground: var(--color-background); background: var(--color-primary); color: var(--cta-foreground); border-radius: 0.5rem; padding: 1.25rem 1.5rem; margin: 2rem 0; text-align: center; }
+  .cta-box a { color: inherit; font-weight: 700; text-decoration: underline; }
 </style>
 
 <article>
@@ -64,15 +74,45 @@ const faqItems = [
     <p class="subtitle">Yes — for adults 21+. Here is exactly what Maine law allows, and where it still does not.</p>
     <div class="byline">
       <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
-      <p class="last-updated">Published July 21, 2026</p>
+      <p class="last-updated">Published July 21, 2026 · Updated July 27, 2026</p>
     </div>
   </div>
 
   <p class="answer-capsule"><strong>Yes. Recreational cannabis is legal in Maine</strong> for adults 21 and older. Maine voters legalized adult-use cannabis in 2016, and licensed retail sales began in October 2020. You can legally buy, possess, and consume cannabis within the limits set by <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html" target="_blank" rel="noopener noreferrer">Title 28-B of the Maine Revised Statutes</a>, regulated by the Maine Office of Cannabis Policy (OCP). The main exceptions: no public consumption, no federal land, and no driving impaired.</p>
 
+  <section class="quick-ref">
+    <h2>Maine Cannabis — 2026 Quick Reference</h2>
+    <dl>
+      <dt>Minimum age</dt>
+      <dd>21+ for adult-use purchase and possession</dd>
+      <dt>Medical card required?</dt>
+      <dd>No — a valid government-issued photo ID is sufficient for adult-use</dd>
+      <dt>Possession limit</dt>
+      <dd>Up to 2.5 oz of cannabis or a combination of cannabis and concentrate (<a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §1501</a>)</dd>
+      <dt>Concentrate sublimit</dt>
+      <dd>No more than 10 grams of concentrate within the 2.5 oz total</dd>
+      <dt>Home grow</dt>
+      <dd>6 mature plants, 12 immature, unlimited seedlings per adult (<a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1502.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §1502</a>)</dd>
+      <dt>Public consumption</dt>
+      <dd>Prohibited statewide — private property only, with owner consent</dd>
+      <dt>Vehicles</dt>
+      <dd>No consumption by driver or passengers on a public way; OUI penalties apply</dd>
+      <dt>Crossing state lines</dt>
+      <dd>Federal offense — do not transport cannabis out of Maine</dd>
+      <dt>Federal land</dt>
+      <dd>Illegal — Acadia, national forests, refuges, federal buildings</dd>
+      <dt>Valid ID</dt>
+      <dd>Government-issued photo ID (driver's license or passport)</dd>
+      <dt>Adult-use sales tax</dt>
+      <dd>14% effective January 1, 2026 (up from 10% under P.L. 2025, ch. 388)</dd>
+      <dt>Local control</dt>
+      <dd>Municipalities must opt in to allow retail stores; not every town permits them</dd>
+    </dl>
+  </section>
+
   <section>
-    <h2>The Short Answer: Yes, Since 2020</h2>
-    <p>Maine became one of the first states in the Northeast to legalize recreational cannabis. The 2016 ballot measure (Question 1) legalized adult possession and use, and the first licensed adult-use dispensaries opened in October 2020. Today the state has roughly 180 active adult-use retail stores.</p>
+    <h2>Legalized in 2016, Retail Sales Launched in 2020</h2>
+    <p>Maine became one of the first states in the Northeast to legalize recreational cannabis. The 2016 ballot measure (Question 1) legalized adult possession and use effective January 2017, and the first licensed adult-use dispensaries opened in October 2020. Today the state has roughly 180 active adult-use retail stores (OCP 2025 annual report).</p>
     <p>Legal cannabis in Maine covers three activities for adults 21+:</p>
     <ul>
       <li><strong>Buying</strong> from a licensed adult-use dispensary with a valid photo ID.</li>
@@ -82,21 +122,16 @@ const faqItems = [
     <p>Maine also has a long-running medical cannabis program (since 1999) governed by <a href="https://legislature.maine.gov/statutes/22/title22ch558-C.html" target="_blank" rel="noopener noreferrer">Title 22 ch. 558-C</a>, which operates under separate rules and higher possession and grow limits for registered patients and caregivers.</p>
   </section>
 
-  <section class="stat-block">
-    <h3>Maine Cannabis Legality — 2026 Snapshot</h3>
-    <ul>
-      <li><strong>Adult-use legal since:</strong> 2016 ballot; retail sales from October 2020</li>
-      <li><strong>Legal age:</strong> 21+</li>
-      <li><strong>Regulator:</strong> Maine Office of Cannabis Policy (OCP)</li>
-      <li><strong>Governing law:</strong> Title 28-B, Maine Revised Statutes</li>
-      <li><strong>Active adult-use retail stores:</strong> ~180 (OCP 2025 annual report)</li>
-      <li><strong>Retail-authorized municipalities:</strong> 78 of 485 (OCP opt-in data, refreshed 2026-07-17)</li>
-    </ul>
+  <section>
+    <h2>Is Recreational Weed Legal in Maine?</h2>
+    <p>Yes. Recreational—or adult-use—cannabis is legal under Maine law for adults 21 and older, subject to possession, cultivation, consumption, and location restrictions. Adults 21+ with valid government-issued photo identification are eligible to purchase from a licensed adult-use cannabis store.</p>
+    <p>Retail availability is separate from purchasing eligibility. Municipalities must authorize adult-use retail activity, and an opt-in does not necessarily mean an active store operates there — per the Maine Office of Cannabis Policy, "a municipality's opt-in for a given activity does not imply there are licensees in the municipality who are actively engaging in that activity." Your nearest licensed retailer may therefore be in another community. Use our <a href="/find-a-dispensary">dispensary finder</a> to locate an active licensed store.</p>
   </section>
 
   <section>
     <h2>Buying and possessing cannabis legally</h2>
     <p>Maine caps both adult-use store transactions and what an adult may possess. Because product-equivalency and concentrate rules make the calculation more detailed than a simple flower weight, use our focused <a href="/blog/how-much-weed-can-you-buy-in-maine">Maine cannabis purchase-limit guide</a> for current amounts, mixed-cart examples, and the controlling statutes.</p>
+    <p><strong>Can visitors or tourists purchase adult-use cannabis?</strong> Yes. Any adult 21+ with a valid government-issued photo ID may purchase at a licensed Maine dispensary regardless of residency. You do not need a Maine driver's license. However, you cannot transport cannabis across state lines — consume or dispose of it before leaving Maine. For travel-specific guidance, see our <a href="/blog/cannabis-friendly-maine-travel">cannabis-friendly Maine travel guide</a>.</p>
   </section>
 
   <section>
@@ -110,16 +145,22 @@ const faqItems = [
     <p>The mature-plant limit was raised from 3 to 6 in 2023 under P.L. 2023, ch. 220 (LD 555). The limits are per person, so a household of two adults can grow 12 mature and 24 immature plants. Plants must be tagged with your name, ID number, and the notation "Personal Adult Use – Title 28-B, Section 1502," and grown in a secure space not visible from a public way. Medical patients and registered caregivers operate under separate, higher plant limits — see our <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> for the full rules.</p>
   </section>
 
+  <section>
+    <h2>Edibles, Concentrates, and Product Types</h2>
+    <p>All standard cannabis product types — flower, edibles, concentrates, tinctures, and topicals — are legal for adult use in Maine when purchased from a licensed store. Adult-use edibles may contain no more than 10 mg THC per serving and 200 mg THC per package under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §703</a>, subject to the statutory allowable variance. For a detailed breakdown of edible rules, THC limits, and where to buy, see our <a href="/blog/are-edibles-legal-in-maine">edibles legality guide</a>.</p>
+  </section>
+
   <Callout title="Where Cannabis Is Still Illegal in Maine" type="warning">
     <strong>Public consumption</strong> — prohibited statewide.<br/>
-    <strong>Federal land</strong> — illegal in Acadia National Park, national forests, wildlife refuges, and federal buildings (cannabis is still Schedule I federally).<br/>
+    <strong>Federal land</strong> — illegal in Acadia National Park, national forests, wildlife refuges, and federal buildings. Adult-use cannabis remains a Schedule I controlled substance under federal law. In April 2026, the DEA moved FDA-approved cannabis pharmaceuticals and state-licensed medical cannabis products to Schedule III (91 FR 22714), but this limited action does not legalize adult-use cannabis on federal land. The broader rescheduling rulemaking concluded its hearing in July 2026; a final rule is still pending.<br/>
     <strong>Driving impaired</strong> — a cannabis OUI carries the same class of penalties as alcohol.<br/>
     <strong>Crossing state lines</strong> — transporting cannabis out of Maine is a federal offense, even to another legal state.
   </Callout>
 
   <section>
     <h2>Where to Buy Cannabis Legally in Maine</h2>
-    <p>Maine has roughly 180 active adult-use retail stores across 78 retail-authorized municipalities. Not every town allows retail cannabis — about 407 municipalities have no recorded retail authorization — so your nearest dispensary may be in a neighboring town. Use our <a href="/find-a-dispensary">dispensary finder</a> to locate a licensed store, or browse our city-by-city dispensary guides for details on each location.</p>
+    <p>Maine has roughly 180 active adult-use retail stores (OCP 2025 annual report) across 78 retail-authorized municipalities (OCP opt-in data, refreshed 2026-07-17). Not every town allows retail cannabis — about 407 municipalities have no recorded retail authorization — so your nearest dispensary may be in a neighboring town. Use our <a href="/find-a-dispensary">dispensary finder</a> to locate a licensed store, or browse our city-by-city dispensary guides for details on each location.</p>
+    <p><strong>Does legal cannabis mean every Maine town permits dispensaries?</strong> No. Maine law allows municipalities to opt in or opt out of adult-use retail. Roughly 78 of 485 municipalities have authorized retail stores. For Portland-specific rules and store information, see our <a href="/blog/portland-maine-cannabis-rules-2026">Portland cannabis rules guide</a>.</p>
     <p>For first-time buyers, our <a href="/blog/best-maine-edibles-2026">edibles buyer's guide</a> and <a href="/blog/best-maine-dispensaries-2026">best Maine dispensaries</a> roundup cover what to expect and which operators stand out.</p>
   </section>
 
@@ -138,6 +179,11 @@ const faqItems = [
     <Faq faqs={faqItems} />
   </section>
 
+  <div class="cta-box">
+    <p style="margin:0 0 0.5rem; font-size: 1.1rem;"><strong>Ready to shop legally?</strong></p>
+    <p style="margin:0;"><a href="/find-a-dispensary" data-cta-id="cta-inline-blog--is-weed-legal-in-maine-01" data-action-id="legality-pillar-finder" data-action-family="cta_navigate" data-placement-id="legality_pillar_end" data-destination-family="internal_route">Find a licensed adult-use dispensary near you →</a></p>
+  </div>
+
   <section class="disclaimer">
     <p><em>This article is for informational purposes only and does not constitute legal advice. Cannabis regulations change frequently. Verify current requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> before making any purchase or cultivation decision.</em></p>
   </section>
@@ -145,7 +191,7 @@ const faqItems = [
   <section class="content-verification">
     <div class="verification-badge">
       <span class="verification-icon">◆</span>
-      <span class="verification-text"> Last reviewed <strong>2026-07-21</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, the Maine Legislature, and the primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-27</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the OCP, the Maine Legislature, the DEA, and the primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
     </div>
   </section>
 
