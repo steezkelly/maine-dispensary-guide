@@ -64,7 +64,7 @@ export interface Correction {
 
 export const CORRECTIONS: Correction[] = [
   {
-    date: "2026-07-27",
+    date: "2026-07-26",
     slug: "maine-cannabis-delivery-license-framework",
     title: "Maine delivery guides — nonexistent courier license and GPS mandate removed",
     severity: "critical",
@@ -95,7 +95,7 @@ export const CORRECTIONS: Correction[] = [
     ],
   },
   {
-    date: "2026-07-27",
+    date: "2026-07-26",
     slug: "maine-cannabis-waste-management-framework",
     title: "Cannabis waste guide — nonexistent handler license and obsolete retention rule removed",
     severity: "critical",
@@ -115,7 +115,7 @@ export const CORRECTIONS: Correction[] = [
     ],
   },
   {
-    date: "2026-07-27",
+    date: "2026-07-26",
     slug: "maine-cannabis-zoning-local-authorization",
     title: "Cannabis zoning guide — §402 sequence and school buffer corrected",
     severity: "critical",
@@ -136,7 +136,7 @@ export const CORRECTIONS: Correction[] = [
     ],
   },
   {
-    date: "2026-07-27",
+    date: "2026-07-26",
     slug: "standish-dispensary-guide-adult-use-status",
     title: "Standish guide — false adult-use opt-in and operator-opportunity claims removed",
     severity: "critical",
@@ -155,7 +155,7 @@ export const CORRECTIONS: Correction[] = [
     ],
   },
   {
-    date: "2026-07-27",
+    date: "2026-07-26",
     slug: "buxton-dispensary-guide-registry-reconciliation",
     title: "Buxton guide — unsupported hours, delivery area, and registry certainty corrected",
     severity: "material",
