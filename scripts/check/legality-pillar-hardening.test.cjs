@@ -156,6 +156,74 @@ test('has a clear dispensary-finder CTA', () => {
     'must have a clear CTA to find a dispensary');
 });
 
+// --- CTA INSTRUMENTATION ---
+test('primary CTA points to /find-a-dispensary with a stable CTA id', () => {
+  const ctaMatch = src.match(/<a href="\/find-a-dispensary"[^>]*data-cta-id="([^"]+)"/);
+  assert.ok(ctaMatch, 'primary CTA must link to /find-a-dispensary and carry a data-cta-id');
+  assert.ok(/^cta-inline-blog--is-weed-legal-in-maine-\d+$/.test(ctaMatch[1]),
+    `CTA id must follow repo convention cta-inline-blog--<slug>-NN, got: ${ctaMatch[1]}`);
+});
+
+test('primary CTA records an internal-route destination', () => {
+  assert.ok(/data-destination-family="internal_route"/.test(src),
+    'primary CTA must declare data-destination-family="internal_route"');
+});
+
+test('primary CTA has an explicit placement', () => {
+  assert.ok(/data-placement-id="[^"]+"/.test(src),
+    'primary CTA must declare an explicit data-placement-id');
+});
+
+test('primary CTA is enrolled in the cta_navigate action family', () => {
+  assert.ok(/data-action-family="cta_navigate"/.test(src),
+    'primary CTA must declare data-action-family="cta_navigate"');
+  assert.ok(/data-action-id="[^"]+"/.test(src),
+    'primary CTA must declare an explicit data-action-id');
+});
+
+test('exactly one instrumented primary CTA (no second CTA added)', () => {
+  const ctaIds = src.match(/data-cta-id="[^"]+"/g) || [];
+  assert.equal(ctaIds.length, 1,
+    `must have exactly one instrumented CTA, found ${ctaIds.length}`);
+});
+
+// --- EDIBLE LIMIT (current law) ---
+test('edible package limit reflects current 200 mg law', () => {
+  assert.ok(/200\s*mg/.test(src), 'must state the current 200 mg per package limit');
+  assert.ok(/10\s*mg.*per serving/i.test(src), 'must state 10 mg per serving');
+});
+
+test('edible limit links to the §703 primary source', () => {
+  assert.ok(src.includes('https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html'),
+    'edible limit must link to 28-B M.R.S. §703');
+  assert.ok(/§703|sec703|section 703/i.test(src), 'must reference §703');
+});
+
+test('obsolete 100 mg per package wording is absent', () => {
+  assert.ok(!/100\s*mg\s*(?:per package|THC per package|package)/i.test(src),
+    'must not contain the obsolete 100 mg per package limit');
+});
+
+// --- ELIGIBILITY VS RETAIL AVAILABILITY ---
+test('does not conflate purchasing eligibility with store availability', () => {
+  assert.ok(!/eligibility\s+depends on whether a (?:licensed )?store operates nearby/i.test(src),
+    'must not state that purchasing eligibility depends on whether a store operates nearby');
+  assert.ok(!/purchasing eligibility.*depends on whether.*store/i.test(src),
+    'must not tie purchasing eligibility to store presence');
+});
+
+test('distinguishes eligibility from retail availability', () => {
+  assert.ok(/eligible to purchase/i.test(src),
+    'must describe who is eligible to purchase (age + ID)');
+  assert.ok(/retail availability is separate from purchasing eligibility/i.test(src),
+    'must explicitly separate retail availability from purchasing eligibility');
+});
+
+test('uses the OCP opt-in caveat', () => {
+  assert.ok(/opt-in for a given activity does not imply/i.test(src),
+    'must include the OCP opt-in caveat as source of truth');
+});
+
 // --- META DESCRIPTION ---
 test('meta description answers the legality question', () => {
   const descMatch = src.match(/description="([^"]+)"/);
@@ -163,6 +231,17 @@ test('meta description answers the legality question', () => {
   const desc = descMatch[1];
   assert.ok(/legal/i.test(desc), 'meta description must mention legality');
   assert.ok(/21\+|21 and older|adults 21/i.test(desc), 'meta description must identify 21+ audience');
+});
+
+test('meta description is within the 160-char truncation limit (renders complete)', () => {
+  const descMatch = src.match(/description="([^"]+)"/);
+  assert.ok(descMatch, 'must have a meta description');
+  const desc = descMatch[1];
+  assert.ok(desc.length <= 160,
+    `meta description must be <= 160 chars to avoid truncateMetaDescription() cutting it, got ${desc.length}`);
+  // Must retain the cited-sources differentiation at the end
+  assert.ok(/cited sources\.?$/.test(desc),
+    'meta description must end with the cited-sources differentiation (not truncated away)');
 });
 
 // --- STRUCTURED DATA PRESERVATION ---
