@@ -712,3 +712,24 @@ test('R2-F: an incomplete check-run page fails closed', () => {
   assert.ok(result.reasonCodes.includes('CHECK_RUNS_PAGE_INCOMPLETE'), result.reasonCodes.join(','));
   cleanup(repo, root);
 });
+
+// ===========================================================================
+// R2-G — Operations-Suite trust qualification (ADR Amendment 7)
+// ===========================================================================
+
+test('R2-G: ADR Amendment 7 qualifies the Operations-Suite trust claim', () => {
+  const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/2026-07-25-mdg-operations-control-plane-v1.md'), 'utf8');
+  assert.match(adr, /Amendment 7 — Operations-Suite trust qualification/);
+  // Operations Suite is NOT an independent authorization mechanism.
+  assert.match(adr, /NOT an independent authorization mechanism/i);
+  // The workflow definition is candidate-controlled.
+  assert.match(adr, /workflow definition is candidate-controlled/i);
+  // A required check proves execution, not authorization.
+  assert.match(adr, /proves execution, not authorization/i);
+  // Candidate-integrity remains category A+.
+  assert.match(adr, /Candidate-integrity remains category A\+/);
+  // A trusted producer / signed authorization remains necessary.
+  assert.match(adr, /trusted producer or signed authorization remains necessary/i);
+  // The verified GitHub Actions integration id is recorded.
+  assert.match(adr, /integration id 15368/);
+});

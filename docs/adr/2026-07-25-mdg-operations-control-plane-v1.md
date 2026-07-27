@@ -691,3 +691,63 @@ to the candidate author:
   producer."
 - The R1-E branch-protection proposal requires **Operations Suite** (and Build)
   but explicitly does **not** require `Integrity Gate`.
+
+---
+
+## Amendment 7 — Operations-Suite trust qualification (OPS-06B-P1-R2, 2026-07-27)
+
+**Recorded by:** Hermes Agent (Coordinator), 2026-07-27
+**Initiative:** OPS-06B-P1-R2 (evidence semantics and check-producer binding).
+**Refines:** Amendment 6's statement that Operations Suite "can become a required
+category-B CI check now."
+
+### The qualification
+
+Amendment 6 correctly established that **Operations Suite is a genuine category-B
+mechanical check** — it is computed by GitHub Actions from the code, independent of
+any author-committed attestation, and (once required by branch protection) cannot be
+bypassed by a web/API merge. That claim stands.
+
+However, Operations Suite is **NOT an independent authorization mechanism**, and it
+must not be described as one. Two facts bound what it actually proves:
+
+1. **The workflow definition is candidate-controlled.** The job is defined in
+   `.github/workflows/ci.yml`, which is present in the candidate-controlled PR tree.
+   The same author who changes the code can change what the Operations Suite job
+   runs, asserts, or even whether it runs at all — in the same PR. A required check
+   therefore guarantees only that *a job with the required identity succeeded as
+   defined by the candidate's own workflow*, not that an independent party reviewed
+   the code.
+
+2. **A required check proves execution, not authorization.** Requiring
+   `Operations Suite` (and `Build`) guarantees that jobs with those identities and
+   the trusted producer (GitHub Actions, integration id 15368) reached
+   `conclusion: success` on the exact candidate head. It does **not** prove that an
+   independent verifier examined the change and authorized it.
+
+### Honest standing after R2
+
+- Operations Suite can become a **mechanically required** GitHub check once branch
+  protection is enabled (R1-E/R2 activation package). This is real category-B
+  enforcement of "the candidate's own test suite, as the candidate defines it,
+  passes."
+- **Candidate-integrity remains category A+ GitHub-wide.** The canonical gate is
+  fail-closed locally and now binds to actual remote state, the live authenticated
+  check rollup, complete evidence semantics, and an operator-authorized evidence
+  digest — but its authorization still depends on the Integrator running it
+  honestly, and nothing on GitHub mechanically prevents a merge that skips it until
+  the ruleset is applied.
+- **A trusted producer or signed authorization remains necessary** for a true
+  independent Integrity Gate (Architecture A/B/C from Amendment 6). An unsigned
+  candidate-controlled workflow or attestation is **not** proof of independent
+  review.
+
+### What this amendment changes operationally
+
+- All governance text and PR records must describe Operations Suite as a
+  mechanically required CI check that enforces the candidate's own suite — **not**
+  as independent authorization.
+- The R2 activation package requires Operations Suite + Build from the verified
+  GitHub Actions integration, and explicitly does **not** require Integrity Gate.
+- The category-A+ classification for candidate-integrity is unchanged and
+  reaffirmed.
