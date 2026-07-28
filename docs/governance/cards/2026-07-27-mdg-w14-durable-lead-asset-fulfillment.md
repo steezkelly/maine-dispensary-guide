@@ -29,6 +29,26 @@ The full acceptance conditions, rollback, allowed database objects, repository p
 - W13 derives stable asset IDs from exact server-observed `page_path`; client-provided asset IDs are ignored.
 - W7 is not a W14 source and receives a separate decommission/routing disposition.
 
+## Correction (2026-07-28): activation cutover and request-id idempotency
+
+Follow-up to the merged W14 candidate (base `15fc3c2b`), correcting two review
+findings without changing the SMTP-node contract:
+
+- Activation cutover replaces the seven-day backfill proxy. `public.mdg_w14_activation`
+  holds `activation_cutover_at` (initially `NULL`; nothing claimable while NULL).
+  The migration marks every pre-existing row `not_applicable`. `mdg_w14_claim`
+  independently verifies the cutover and `received_at >= activation_cutover_at`.
+  `mdg_w14_activate_cutover(operator, reason, cutover_at)` is transactional,
+  idempotent, operator-only, and never rewrites active/attempted rows.
+- Request-id idempotency replaces FNV-1a/timestamp identity. `LeadIntakeForm`
+  generates a per-submission UUID v4 `request_id`; W13 requires and validates it;
+  `source_message_id = 'api_post:' + request_id` (no PII); the insert is an
+  idempotent upsert (exact replay returns the existing id; a new request_id
+  inserts a new lead). `ts` is observational only.
+- Live activation still requires a separate operator inventory/disposition of any
+  existing pending rows; that live decision is not part of this repository change.
+- W14 remains inactive. No email is sent by this change.
+
 ## Rollback
 
 Deactivate W14 first. Never automatically resend a `sending`, uncertain, or `manual_review` attempt. Restore W13 through n8n version history if its exact-path mapping regresses. Repository changes use a reviewed revert. Database changes are additive; rows/ledger/allowlist remain for auditability unless a later reviewed retention migration says otherwise. Removing or invalidating the final marker must make the PR #200 audit fail closed.

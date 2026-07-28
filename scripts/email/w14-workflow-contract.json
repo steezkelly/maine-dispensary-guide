@@ -69,7 +69,24 @@
   "w13_normalization": {
     "workflow_id": "UdQ56USYaWRcfocT",
     "authority": "derive promised_asset from exact server-observed page_path; ignore client-provided asset identifiers",
-    "unsupported_paths": "promised_asset=null; not eligible for W14"
+    "unsupported_paths": "promised_asset=null; not eligible for W14",
+    "idempotency_key": "request_id (client-generated canonical UUID v4)",
+    "request_id_policy": "required; validated as a canonical UUID; missing or malformed values are rejected before insertion; never derived from email, name, page path, timestamp, IP, or user agent; not stored for cross-page tracking",
+    "source_message_id": "api_post:<request_id> (contains no email, name, page path, or other PII; deterministic for an exact replay; differs for distinct request_ids)",
+    "ts_role": "optional observational submission metadata only; never an idempotency key",
+    "fnv_identity_removed": true,
+    "replay_behavior": "exact replay with the same request_id is deduplicated via ON CONFLICT DO NOTHING and returns the existing lead id; a new request_id inserts a new lead even for identical email/form/page"
+  },
+  "activation_cutover": {
+    "control_table": "postgresql.public.mdg_w14_activation",
+    "initial_state": "activation_cutover_at IS NULL; no lead is claimable for automatic fulfillment",
+    "establish": "public.mdg_w14_activate_cutover(operator, reason, cutover_at) — operator-only, transactional, idempotent",
+    "pre_cutover_rows": "all rows existing at migration time and all rows received before the cutover are not_applicable and never claimable",
+    "post_cutover_rows": "eligible promised-asset leads received at or after the cutover may become pending; non-asset leads remain not_applicable",
+    "claim_defense_in_depth": "mdg_w14_claim independently verifies the cutover and received_at >= activation_cutover_at; an incorrectly marked pre-cutover pending row is rejected",
+    "non_destructive": "rows already claimed, sending, fulfilled, manual_review, terminal, or with an existing attempt are never rewritten by cutover establishment",
+    "seven_day_proxy_removed": true,
+    "live_inventory_at_activation": "operator must inventory the live queue and explicitly disposition any existing pending rows at the activation checkpoint (not part of the repository migration)"
   },
   "w7": {
     "workflow_id": "sqTm36P8WqvP5FXB",

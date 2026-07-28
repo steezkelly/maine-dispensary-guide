@@ -133,3 +133,82 @@ test('migration REVOKE EXECUTE FROM PUBLIC is unconditional', () => {
     assert.doesNotMatch(line, /IF EXISTS/i, 'REVOKE must not be conditional');
   }
 });
+
+// --- request_id idempotency identity (W14 cutover/request-id correction) ---
+
+const { runNormalizeCode } = require('../provision-w14-workflows.cjs');
+const VALID_UUID = '123e4567-e89b-42d3-a456-426614174000';
+const VALID_UUID_2 = '9b2f3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d';
+
+test('W13 normalize requires a canonical UUID request_id', () => {
+  // Valid canonical UUID passes and is lowercased/trimmed.
+  const ok = runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: VALID_UUID });
+  assert.equal(ok.request_id, VALID_UUID);
+  // Uppercase UUID is normalized to lowercase canonical form.
+  const upper = runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: VALID_UUID.toUpperCase() });
+  assert.equal(upper.request_id, VALID_UUID);
+  // Missing request_id is rejected cleanly.
+  assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist' }), /missing_request_id/);
+  // Malformed request_id is rejected cleanly.
+  assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: 'not-a-uuid' }), /invalid_request_id/);
+  assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: '12345' }), /invalid_request_id/);
+});
+
+test('source_message_id is derived solely from the request_id (no PII)', () => {
+  const j = runNormalizeCode({
+    email: 'person@example.com', page_path: '/download-checklist', name: 'Person Name',
+    request_id: VALID_UUID,
+  });
+  assert.equal(j.source_message_id, 'api_post:' + VALID_UUID);
+  // No email, name, or page path appears in the source identity.
+  assert.ok(!j.source_message_id.includes('person@example.com'));
+  assert.ok(!j.source_message_id.includes('Person'));
+  assert.ok(!j.source_message_id.includes('download-checklist'));
+  assert.ok(!j.source_message_id.includes('@'));
+});
+
+test('same UUID yields the same source_message_id; different UUIDs differ', () => {
+  const a = runNormalizeCode({ email: 'x@y.com', page_path: '/download-checklist', request_id: VALID_UUID });
+  const b = runNormalizeCode({ email: 'x@y.com', page_path: '/download-checklist', request_id: VALID_UUID });
+  assert.equal(a.source_message_id, b.source_message_id);
+  const c = runNormalizeCode({ email: 'x@y.com', page_path: '/download-checklist', request_id: VALID_UUID_2 });
+  assert.notEqual(a.source_message_id, c.source_message_id);
+});
+
+test('same email/page/form with a new request_id creates a distinct identity', () => {
+  // A legitimate repeat submission by the same address for the same asset,
+  // carrying a NEW request_id, must produce a different source_message_id so it
+  // inserts as a new lead (not deduplicated against the first).
+  const first = runNormalizeCode({ email: 'repeat@y.com', page_path: '/download/founders-bible', request_id: VALID_UUID });
+  const second = runNormalizeCode({ email: 'repeat@y.com', page_path: '/download/founders-bible', request_id: VALID_UUID_2 });
+  assert.equal(first.promised_asset, second.promised_asset);
+  assert.notEqual(first.source_message_id, second.source_message_id);
+});
+
+test('ts is observational only and not part of the identity', () => {
+  // Two submissions identical except for ts must produce the SAME identity
+  // (proving ts is not part of the idempotency key).
+  const a = runNormalizeCode({ email: 't@y.com', page_path: '/download-checklist', request_id: VALID_UUID, ts: '2026-01-01T00:00:00Z' });
+  const b = runNormalizeCode({ email: 't@y.com', page_path: '/download-checklist', request_id: VALID_UUID, ts: '2026-06-06T06:06:06Z' });
+  assert.equal(a.source_message_id, b.source_message_id);
+});
+
+test('FNV-1a is no longer used for lead identity', () => {
+  const code = buildNormalizeCode();
+  assert.doesNotMatch(code, /fnv1a/);
+  assert.doesNotMatch(code, /0x811c9dc5/);
+  assert.match(code, /api_post:' \+ requestId|api_post:" \+ requestId|'api_post:' \+ requestId/);
+});
+
+test('W13 insert is an idempotent upsert keyed on source_message_id', () => {
+  const insert = updatedInsertContract();
+  // ON CONFLICT DO NOTHING prevents an unhandled uniqueness error on replay.
+  assert.match(insert.query, /ON CONFLICT \(source_message_id\)/);
+  assert.match(insert.query, /DO NOTHING/);
+  // The existing lead id is returned on replay (no second row, no state reset).
+  assert.match(insert.query, /RETURNING id/);
+  assert.match(insert.query, /UNION ALL/);
+  assert.match(insert.query, /NOT EXISTS \(SELECT 1 FROM ins\)/);
+  // The conflict target matches the unique partial index predicate.
+  assert.match(insert.query, /WHERE source_message_id IS NOT NULL AND btrim\(source_message_id\) <> ''/);
+});

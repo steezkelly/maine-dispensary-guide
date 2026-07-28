@@ -65,3 +65,50 @@ test('workflow contract disables retained execution payloads and retry amplifica
   assert.equal(contract.transport.workflow_retry_on_fail, false);
   assert.equal(contract.transport.automatic_send_paths, 1);
 });
+
+// --- activation cutover safety (W14 cutover/request-id correction) ---
+
+test('migration uses an activation cutover, not a seven-day proxy', () => {
+  // The unsafe seven-day backfill proxy must be gone.
+  assert.doesNotMatch(migration, /interval '7 days'/);
+  // An activation control singleton stores the cutover timestamp.
+  assert.match(migration, /CREATE TABLE IF NOT EXISTS public\.mdg_w14_activation/);
+  assert.match(migration, /activation_cutover_at timestamptz/);
+  // The cutover is initially NULL (no lead claimable until the operator sets it).
+  assert.match(migration, /INSERT INTO public\.mdg_w14_activation[\s\S]*?NULL/);
+});
+
+test('migration backfill marks every pre-existing row not_applicable', () => {
+  // All rows present at migration time are excluded from automatic fulfillment.
+  assert.match(migration, /SET fulfillment_status = 'not_applicable',[\s\S]*?WHERE fulfillment_status IS NULL/);
+});
+
+test('mdg_w14_claim independently verifies the cutover (defense in depth)', () => {
+  // The claim function reads the cutover and returns nothing while it is NULL.
+  assert.match(migration, /SELECT activation_cutover_at INTO v_cutover[\s\S]*?FROM public\.mdg_w14_activation/);
+  assert.match(migration, /IF v_cutover IS NULL THEN[\s\S]*?RETURN;/);
+  // Eligibility requires received_at >= cutover, so an incorrectly marked
+  // pre-cutover 'pending' row is still rejected by the claim function.
+  assert.match(migration, /AND l\.received_at >= v_cutover/);
+});
+
+test('mdg_w14_activate_cutover is transactional, idempotent, and non-destructive', () => {
+  assert.match(migration, /CREATE OR REPLACE FUNCTION public\.mdg_w14_activate_cutover/);
+  // Requires operator identity + audited reason.
+  assert.match(migration, /operator identity and an audited reason/);
+  // Locks the singleton for the transaction.
+  assert.match(migration, /FOR UPDATE/);
+  // Idempotent: once set, reports already_active and changes nothing.
+  assert.match(migration, /already_active/);
+  // Never rewrites rows that already have an attempt or are claimed/sent.
+  assert.match(migration, /l\.claimed_at IS NULL/);
+  assert.match(migration, /l\.current_attempt_id IS NULL/);
+  assert.match(migration, /NOT EXISTS \([\s\S]*?mdg_fulfillment_attempts a WHERE a\.lead_id = l\.id/);
+});
+
+test('mdg_w14_activate_cutover REVOKE EXECUTE FROM PUBLIC is unconditional', () => {
+  const revokeLines = migration.split('\n').filter((l) => l.trim().startsWith('REVOKE EXECUTE'));
+  const cutoverRevoke = revokeLines.find((l) => l.includes('mdg_w14_activate_cutover'));
+  assert.ok(cutoverRevoke, 'activate_cutover must have a REVOKE EXECUTE statement');
+  assert.doesNotMatch(cutoverRevoke, /IF EXISTS/i);
+});

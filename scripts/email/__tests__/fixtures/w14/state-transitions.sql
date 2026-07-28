@@ -2,6 +2,39 @@
 -- Every address and source ID is synthetic; no network transport is involved.
 \set ON_ERROR_STOP on
 
+-- Cutover safety: while activation_cutover_at is NULL, NO lead is claimable for
+-- automatic fulfillment, even a well-formed pending asset lead.
+DO $test$
+DECLARE
+  n bigint;
+  t0 timestamptz := clock_timestamp();
+BEGIN
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
+  VALUES ('synthetic:cutover-null', 'w14-cutover-null@example.invalid',
+          'maine_dispensary_roadmap_2026', t0 - interval '1 hour', 'pending');
+  SELECT count(*) INTO n FROM mdg_w14_claim('worker-cutover-null', t0);
+  IF n <> 0 THEN RAISE EXCEPTION 'lead was claimable while activation cutover was null'; END IF;
+  -- Isolate this pre-cutover row from later queue tests: it is received before
+  -- the cutover that is about to be established, so it must never be claimed.
+  -- Park it in manual_review (a state mdg_w14_claim never selects).
+  UPDATE mdg_leads
+  SET fulfillment_status = 'manual_review', next_attempt_at = NULL,
+      manual_review_reason = 'synthetic_cutover_null_isolation'
+  WHERE source_message_id = 'synthetic:cutover-null';
+END
+$test$;
+
+-- Establish the activation cutover (operator-only, transactional, idempotent).
+-- The cutover is set to "now"; every subsequent test row uses received_at =
+-- clock_timestamp() (>= cutover) and is therefore post-cutover. The pre-existing
+-- bootstrap row (30 days old) and the cutover-null row above are pre-cutover and
+-- remain not_applicable.
+SELECT * FROM mdg_w14_activate_cutover(
+  'ops-disposable-suite',
+  'Establish disposable-suite activation cutover for testing',
+  now()
+);
+
 DO $test$
 DECLARE
   c record;
@@ -212,6 +245,95 @@ BEGIN
   SELECT count(*) INTO n FROM mdg_leads
   WHERE source_message_id = 'synthetic:historical' AND fulfillment_status = 'not_applicable';
   IF n <> 1 THEN RAISE EXCEPTION 'historical row was backfilled to pending'; END IF;
+END
+$test$;
+
+-- Cutover classification of EXISTING rows: a post-cutover asset lead is pending
+-- and claimable; a post-cutover non-asset lead stays not_applicable; a recent
+-- pre-cutover row is not_applicable and unclaimable; an incorrectly marked
+-- pre-cutover 'pending' row is rejected by mdg_w14_claim (defense in depth).
+DO $test$
+DECLARE
+  c record;
+  n bigint;
+  v_cutover timestamptz;
+BEGIN
+  SELECT activation_cutover_at INTO v_cutover FROM mdg_w14_activation WHERE singleton = true;
+  IF v_cutover IS NULL THEN RAISE EXCEPTION 'cutover was not established'; END IF;
+
+  -- A recent pre-cutover row (received just before the cutover) is excluded.
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
+  VALUES ('synthetic:recent-precutover', 'w14-recent-pre@example.invalid',
+          'maine_dispensary_roadmap_2026', v_cutover - interval '1 second', 'not_applicable');
+  SELECT count(*) INTO n FROM mdg_w14_claim('worker-recent-pre', v_cutover + interval '5 seconds');
+  -- The claim above must not have claimed the pre-cutover row.
+  SELECT count(*) INTO n FROM mdg_leads
+  WHERE source_message_id = 'synthetic:recent-precutover' AND fulfillment_status = 'not_applicable';
+  IF n <> 1 THEN RAISE EXCEPTION 'recent pre-cutover row was not excluded'; END IF;
+
+  -- An incorrectly marked pre-cutover 'pending' row is still rejected by claim.
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
+  VALUES ('synthetic:bad-precutover-pending', 'w14-bad-pre@example.invalid',
+          'maine_dispensary_roadmap_2026', v_cutover - interval '2 seconds', 'pending');
+  -- Drain any legitimately claimable post-cutover rows first, then confirm the
+  -- bad pre-cutover row is never claimed.
+  PERFORM * FROM mdg_w14_claim('worker-drain-1', v_cutover + interval '10 seconds');
+  PERFORM * FROM mdg_w14_claim('worker-drain-2', v_cutover + interval '10 seconds');
+  PERFORM * FROM mdg_w14_claim('worker-drain-3', v_cutover + interval '10 seconds');
+  SELECT count(*) INTO n FROM mdg_leads
+  WHERE source_message_id = 'synthetic:bad-precutover-pending' AND fulfillment_status = 'pending';
+  IF n <> 1 THEN RAISE EXCEPTION 'incorrectly marked pre-cutover pending row was claimed'; END IF;
+END
+$test$;
+
+-- Post-cutover asset lead becomes pending and is claimable; post-cutover
+-- non-asset lead stays not_applicable.
+DO $test$
+DECLARE
+  c record;
+  n bigint;
+  t0 timestamptz := clock_timestamp();
+BEGIN
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
+  VALUES ('synthetic:postcutover-asset', 'w14-post-asset@example.invalid',
+          'maine_dispensary_roadmap_2026', t0);
+  SELECT * INTO c FROM mdg_w14_claim('worker-post-asset', t0);
+  IF c.source_message_id <> 'synthetic:postcutover-asset' THEN
+    RAISE EXCEPTION 'post-cutover asset lead was not claimable';
+  END IF;
+
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
+  VALUES ('synthetic:postcutover-nonasset', 'w14-post-nonasset@example.invalid', NULL, t0, 'not_applicable');
+  SELECT count(*) INTO n FROM mdg_leads
+  WHERE source_message_id = 'synthetic:postcutover-nonasset' AND fulfillment_status = 'not_applicable';
+  IF n <> 1 THEN RAISE EXCEPTION 'post-cutover non-asset lead did not stay not_applicable'; END IF;
+  SELECT count(*) INTO n FROM mdg_w14_claim('worker-post-nonasset', t0);
+  IF n <> 0 THEN RAISE EXCEPTION 'post-cutover non-asset lead was claimed'; END IF;
+END
+$test$;
+
+-- The activation cutover is idempotent: re-running it reports already_active and
+-- does not move the cutover or reclassify rows.
+DO $test$
+DECLARE
+  r record;
+  v_before timestamptz;
+  v_after timestamptz;
+BEGIN
+  SELECT activation_cutover_at INTO v_before FROM mdg_w14_activation WHERE singleton = true;
+  SELECT * INTO r FROM mdg_w14_activate_cutover(
+    'ops-disposable-suite',
+    'Second idempotent cutover call must change nothing',
+    now()
+  );
+  IF NOT r.already_active THEN RAISE EXCEPTION 'cutover re-run was not idempotent'; END IF;
+  IF r.made_pending <> 0 OR r.made_not_applicable <> 0 THEN
+    RAISE EXCEPTION 'idempotent cutover re-run reclassified rows';
+  END IF;
+  SELECT activation_cutover_at INTO v_after FROM mdg_w14_activation WHERE singleton = true;
+  IF v_before IS DISTINCT FROM v_after THEN
+    RAISE EXCEPTION 'idempotent cutover re-run moved the cutover timestamp';
+  END IF;
 END
 $test$;
 

@@ -55,6 +55,59 @@ An earlier commit (`8aeb75e9`) changed the W14 SMTP node type from `CUSTOM.mdgSm
 
 The original `Unrecognized node type: CUSTOM.mdgSmtpSend` failure was caused by the custom-node package being mounted at the wrong filesystem path, not by the type string. After correcting the Compose mount destination to `<custom-dir>/node_modules/n8n-nodes-mdg-smtp-send` under `N8N_CUSTOM_EXTENSIONS`, n8n's own `CustomDirectoryLoader` discovers the node and registers it under `CUSTOM_NODES_PACKAGE_NAME` (`CUSTOM`) plus `description.name` (`mdgSmtpSend`) — i.e. `CUSTOM.mdgSmtpSend`. The community-package-style type `n8n-nodes-mdg-smtp-send.mdgSmtpSend` is only produced by n8n's package-directory loader for npm-installed community packages, which this deployment does not use. The authoritative workflow type is therefore `CUSTOM.mdgSmtpSend`.
 
+### Correction record (2026-07-28): activation cutover and request-id idempotency
+
+Two review findings on the merged W14 candidate are corrected here, without
+changing the SMTP-node contract above.
+
+**Activation cutover (replaces the seven-day backfill proxy).** The original
+migration marked rows received within seven days as `pending`. "Received within
+seven days" is not a safe proxy for W14 eligibility: while W13 stays live
+between a zero-row checkpoint and migration execution, a recent pre-W14 lead
+could be auto-emailed after activation. The corrected design:
+
+- adds an activation-control singleton `public.mdg_w14_activation` with
+  `activation_cutover_at` initially `NULL`;
+- while the cutover is `NULL`, **no lead is claimable** for automatic
+  fulfillment;
+- the migration backfill marks **every** row that exists at migration time
+  `not_applicable` (no pre-migration row becomes `pending`);
+- `mdg_w14_claim` independently verifies the cutover and requires
+  `received_at >= activation_cutover_at` (defense in depth — an incorrectly
+  marked pre-cutover `pending` row is still rejected);
+- one transactional, idempotent, operator-only function
+  `mdg_w14_activate_cutover(operator, reason, cutover_at)` establishes the
+  cutover and safely classifies existing **unattempted** rows: post-cutover
+  asset leads become `pending`; everything else received before the cutover
+  becomes `not_applicable`. It never rewrites rows already claimed, sending,
+  fulfilled, manual_review, terminal, or with an existing attempt.
+
+At the later activation checkpoint the operator must separately inventory the
+live queue and explicitly disposition any existing pending rows. That live
+decision is not part of the repository migration and is not authorized here.
+
+**Request-id idempotency (replaces FNV-1a/timestamp identity).** The original
+W13 identity was `api_post:` + FNV-1a over `email|page|form|ts`. For any caller
+omitting `ts`, that collapses to email/page/form, so after the unique index a
+legitimate timestamp-less repeat would raise a uniqueness error and never enter
+the queue. The corrected design:
+
+- `LeadIntakeForm` generates one canonical UUID v4 `request_id`
+  (`crypto.randomUUID()`, with a `crypto.getRandomValues` fallback) immediately
+  before building each POST payload; a new deliberate submission gets a new
+  UUID. It is not derived from email, name, page path, timestamp, IP, or user
+  agent, and is not stored for cross-page tracking;
+- W13 requires and validates `request_id` as a canonical UUID, rejecting
+  missing/malformed values cleanly before insertion (never silently replaced);
+- `source_message_id = 'api_post:' + request_id` — contains no PII, is
+  deterministic for an exact replay, and differs for distinct request_ids;
+- the W13 insert is an idempotent upsert (`ON CONFLICT (source_message_id)
+  DO NOTHING` returning the existing id): an exact replay deduplicates with no
+  second row, no state reset, no extra attempt, and no unhandled uniqueness
+  error; a new request_id inserts a new lead even for identical email/form/page;
+- `ts` remains optional observational metadata only and is never an idempotency
+  key. FNV-1a is removed from lead identity.
+
 ### Asset identity
 
 W13 ignores client-supplied asset identifiers and maps only exact server-observed page paths to six stable machine IDs. Non-asset forms and unknown paths remain ineligible. W14 never infers a URL from prose, subject, or legacy W7 labels.

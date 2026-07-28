@@ -78,3 +78,41 @@ test('LeadIntakeForm: honeypot preserved', () => {
   assert.match(source, /name="website"/);
   assert.match(source, /aria-hidden="true"/);
 });
+
+// --- request_id idempotency key (W14 cutover/request-id correction) ---
+
+test('LeadIntakeForm: generates a per-submission UUID v4 request_id', () => {
+  // A request_id is generated immediately before building the POST payload.
+  assert.match(source, /function newRequestId/);
+  assert.match(source, /crypto\.randomUUID/);
+  // The generated request_id is included in the JSON payload.
+  assert.match(source, /request_id:\s*requestId/);
+  // Generation happens per submission attempt (inside the submit handler path).
+  assert.match(source, /var requestId = newRequestId\(\)/);
+});
+
+test('LeadIntakeForm: request_id has a secure crypto fallback', () => {
+  // When crypto.randomUUID is unavailable, fall back to crypto.getRandomValues
+  // and construct an RFC-4122 v4 UUID (version + variant bits set).
+  assert.match(source, /crypto\.getRandomValues/);
+  assert.match(source, /0x40/); // version 4 nibble
+  assert.match(source, /0x80/); // variant 10 nibble
+});
+
+test('LeadIntakeForm: request_id is not derived from PII or tracking signals', () => {
+  // The generator must not read email, name, timestamp, IP, or user agent.
+  const generator = source.slice(source.indexOf('function newRequestId'));
+  const generatorBody = generator.slice(0, generator.indexOf('function navigateToSuccess'));
+  assert.doesNotMatch(generatorBody, /values\.email|raw\.email/);
+  assert.doesNotMatch(generatorBody, /user_agent|userAgent/);
+  assert.doesNotMatch(generatorBody, /Date\.now|toISOString/);
+  // Not persisted for cross-page tracking.
+  assert.doesNotMatch(source, /localStorage/);
+  assert.doesNotMatch(source, /sessionStorage/);
+});
+
+test('LeadIntakeForm: ts remains informational and is not the idempotency key', () => {
+  // ts is still sent as observational metadata, but request_id is the key.
+  assert.match(source, /ts:\s*new Date\(\)\.toISOString\(\)/);
+  assert.match(source, /request_id:\s*requestId/);
+});

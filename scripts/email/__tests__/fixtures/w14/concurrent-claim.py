@@ -42,6 +42,15 @@ def main() -> int:
         migration = (ROOT / "scripts/email/migrations/2026-07-27-w14-fulfillment-state-machine.sql").read_text()
         psql(DB, bootstrap)
         psql(DB, migration)
+        # Establish the activation cutover so post-cutover leads are claimable.
+        # Without a cutover, mdg_w14_claim returns nothing (defense in depth).
+        psql(
+            DB,
+            "SELECT * FROM mdg_w14_activate_cutover("
+            "'ops-disposable-concurrency',"
+            "'Establish cutover for disposable concurrency proof',"
+            "now());",
+        )
         psql(
             DB,
             "INSERT INTO mdg_leads(source_message_id,from_email,promised_asset,next_attempt_at) "

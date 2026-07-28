@@ -60,9 +60,14 @@ curl -sS -m 10 -X POST "https://mainedispensaryguide.com/api/lead" \
     "name":"Verify Test",
     "page_path":"/download/founders-bible",
     "success_path":"/download/founders-bible?success=true",
+    "request_id":"3f2a8c1e-9d4b-4e7a-b6c5-1a2b3c4d5e6f",
     "ts":"2026-07-24T02:30:00.000Z"
   }'
 ```
+
+`request_id` is a client-generated canonical UUID v4 (RFC 4122) and is the
+**idempotency key** for the lead. Generate a fresh one per deliberate
+submission (e.g. `uuidgen` or `crypto.randomUUID()` in the browser).
 
 Expected: `{"ok":true,"id":<n>,"redirect":"..."}`. Then:
 
@@ -73,7 +78,25 @@ WHERE received_at > now() - interval '5 minutes'
 ORDER BY id DESC LIMIT 3;
 ```
 
-Expected: 1 new row with `transport_kind='api_post'`, `source_message_id='api_post:<8 hex>'`.
+Expected: 1 new row with `transport_kind='api_post'`,
+`source_message_id='api_post:3f2a8c1e-9d4b-4e7a-b6c5-1a2b3c4d5e6f'` (the
+`request_id`, prefixed with `api_post:`).
+
+### Idempotency contract
+
+- `request_id` is the idempotency key; `ts` is **not** an idempotency key (it is
+  optional observational metadata only).
+- A transport-level **retry must reuse the same `request_id`** — the insert is an
+  idempotent upsert (`ON CONFLICT (source_message_id) DO NOTHING`), so an exact
+  replay returns the existing lead id and creates no second row, resets no
+  fulfillment state, creates no extra fulfillment attempt, and throws no
+  unhandled uniqueness error.
+- An **intentional new submission must use a new `request_id`** — even for the
+  same email/form/page, a new UUID inserts a new lead.
+- A missing or malformed `request_id` is rejected cleanly before insertion
+  (`missing_request_id` / `invalid_request_id`); it is never silently replaced
+  with a random value or an empty timestamp.
+- `source_message_id` contains no email, name, page path, or other PII.
 
 ## What to do if the pipeline breaks
 
