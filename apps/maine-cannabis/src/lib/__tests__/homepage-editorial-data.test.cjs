@@ -52,7 +52,7 @@ Module._load = function patched(request, parent, isMain) {
     assert.equal(portland.activeStoreLicenses, 27);
     assert.equal(portland.regulatoryNote, 'Adult-use retail authorized');
     const wells = rows.find((row) => row.name === 'Wells');
-    assert.equal(wells.activeStoreLicenses, 0);
+    assert.equal(wells.activeStoreLicenses, null);
     assert.equal(wells.regulatoryNote, 'No OCP-recorded retail authorization');
   });
 
@@ -96,6 +96,59 @@ Module._load = function patched(request, parent, isMain) {
     assert.throws(
       () => selectFeaturedAnalysis([{ href: '/blog/x', date: '2026-07-10' }]),
       /requires an item with a real image/,
+    );
+  });
+
+  await test('buildMunicipalityRows distinguishes absent directory entry from measured zero', () => {
+    const rows = buildMunicipalityRows({
+      guideRoutes: [
+        { name: 'Portland', href: '/guides/portland-dispensary-guide' },
+        { name: 'Nowhere', href: '/guides/nowhere-dispensary-guide' },
+        { name: 'Zero Town', href: '/guides/zero-town-dispensary-guide' },
+      ],
+      authorization: { municipalities: [] },
+      directory: {
+        by_city: [
+          { city_raw: 'Portland', dispensary_count: 27 },
+          { city_raw: 'Zero Town', dispensary_count: 0 },
+        ],
+      },
+    });
+    const portland = rows.find((row) => row.name === 'Portland');
+    assert.equal(portland.activeStoreLicenses, 27);
+    const nowhere = rows.find((row) => row.name === 'Nowhere');
+    assert.equal(nowhere.activeStoreLicenses, null);
+    const zeroTown = rows.find((row) => row.name === 'Zero Town');
+    assert.equal(zeroTown.activeStoreLicenses, 0);
+  });
+
+  await test('MunicipalityExplorer renders null as unavailable and numbers as counts', () => {
+    const fs = require('node:fs');
+    const componentPath = path.resolve(__dirname, '../../components/homepage/MunicipalityExplorer.astro');
+    const source = fs.readFileSync(componentPath, 'utf8');
+    // null branch renders the unavailable label
+    assert.ok(
+      source.includes('Current store count unavailable'),
+      'component must render "Current store count unavailable" for null',
+    );
+    // numeric branch renders the count label
+    assert.ok(
+      source.includes('active store licenses'),
+      'component must render "active store licenses" for numeric values',
+    );
+    // conditional guard prevents unconditional interpolation of nullable value
+    assert.ok(
+      source.includes('row.activeStoreLicenses !== null'),
+      'component must guard on null before interpolating the count',
+    );
+    // the unavailable branch must not interpolate the numeric value
+    const unavailableLine = source
+      .split('\n')
+      .find((line) => line.includes('Current store count unavailable'));
+    assert.ok(unavailableLine, 'unavailable line must exist');
+    assert.ok(
+      !unavailableLine.includes('{row.activeStoreLicenses}'),
+      'unavailable branch must not interpolate activeStoreLicenses',
     );
   });
 })().catch((error) => {
