@@ -76,7 +76,7 @@
  *   4. Set BRANCH_NAME, then `git push origin HEAD:refs/heads/$BRANCH_NAME`
  *   5. Wait until Vercel reports Ready for that exact candidate SHA.
  *   6. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
- *   7. `gh pr merge "$PR_NUMBER" --merge` (GitHub merge commit).
+ *   7. `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"` (GitHub merge commit; --match-head-commit binds the exact verified candidate head).
  *   8. Post-merge reconciliation: first parent = base, second/reachable parent =
  *      candidate, and `git rev-parse "$FINAL_MAIN_SHA"^{tree}` ==
  *      `git rev-parse "$CANDIDATE_SHA"^{tree}`.
@@ -904,6 +904,43 @@ function assertAllDiffsAreDataAttributes(files, refArg, targetArg) {
     return { ok: violations.length === 0, violations, attrsCount };
 }
 
+/**
+ * OPS-06B-HARDEN-R1 (§6.E): candidate commit/push boundary ownership check.
+ * Proves, fail-closed, that the current push is performed by the live owner of
+ * the current branch:
+ *   - resolves the current branch;
+ *   - proves the branch is owned by the exact acquisition_id (unexpired);
+ *   - proves the worktree matches the recorded worktree (when recorded);
+ *   - proves the expected remote head is unchanged (no drift).
+ * Returns { ok: true } or { ok: false, reason }. Never throws.
+ */
+function branchWriterBoundaryCheck(acquisitionId) {
+    try {
+        const WRITER = require(path.join(__dirname, 'mdg-branch-writer.cjs'));
+        let branch;
+        try {
+            branch = gitExec(['rev-parse', '--abbrev-ref', 'HEAD']).trim();
+        } catch (error) {
+            return { ok: false, reason: `cannot determine current branch: ${error.message}` };
+        }
+        if (!branch || branch === 'HEAD') {
+            return { ok: false, reason: 'push boundary requires a named branch (detached HEAD is not owner-verifiable)' };
+        }
+        const worktree = process.env.MDG_BRANCH_WRITER_WORKTREE || undefined;
+        const expectedHead = process.env.MDG_BRANCH_WRITER_EXPECTED_HEAD || undefined;
+        WRITER.verifyPushBoundary(REPO_ROOT, {
+            branch,
+            acquisition_id: acquisitionId,
+            worktree,
+            expected_remote_head: expectedHead,
+        });
+        log('ok', `branch-writer push boundary: ${branch} owned by acquisition ${acquisitionId}`);
+        return { ok: true };
+    } catch (error) {
+        return { ok: false, reason: String(error && error.message ? error.message : error) };
+    }
+}
+
 function main() {
     const args = process.argv.slice(2);
     let options;
@@ -923,6 +960,18 @@ function main() {
     if (!fs.existsSync(path.join(REPO_ROOT, '.git'))) {
         log('err', 'not a git repository — refusing to run');
         process.exit(3);
+    }
+
+    // OPS-06B-HARDEN-R1 (§6.E): candidate commit/push boundary ownership check.
+    // SCOPED: active only when MDG_BRANCH_WRITER_ACQUISITION_ID is set (the
+    // canonical author-launch wrapper sets it). It never imposes a lock on
+    // ordinary non-agent developer work. Proves, fail-closed: current branch,
+    // exact acquisition_id, unexpired ownership, and expected remote head
+    // unchanged. Exit code 17.
+    const bwAcquisition = process.env.MDG_BRANCH_WRITER_ACQUISITION_ID;
+    if (bwAcquisition) {
+        const bw = branchWriterBoundaryCheck(bwAcquisition);
+        if (!bw.ok) process.exit(17);
     }
 
     let files;

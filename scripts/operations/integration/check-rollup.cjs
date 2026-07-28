@@ -60,22 +60,95 @@ function defaultGhApi(apiPath) {
 }
 
 /**
- * Paginated check-run retrieval. Uses `gh api --paginate`, which concatenates
- * all pages into a single JSON array of page objects; we flatten check_runs.
- * @returns {{ check_runs: object[], pages: number }}
+ * The exact `gh api` argument list used to retrieve paginated check runs
+ * (t_b7c5d622 pagination robustness, gh-2.45 compatible).
+ *
+ * `--paginate --jq '<per-page object>'` makes gh run the jq expression once PER
+ * page and emit one compact JSON object per line (NDJSON). This gives
+ * unambiguous page boundaries (each line is exactly one page), works on gh
+ * 2.45.0 (which has NO --slurp flag), and preserves total_count + every
+ * check_run (including producer/app and head_sha fields) on every page.
+ *
+ * Frozen and exported so the deterministic regression test can assert the real
+ * argument list and fail if `--slurp` is ever reintroduced.
  */
-function defaultGhApiCheckRuns(repoFullName, headSha) {
-  const out = execFileSync('gh', ['api', '--paginate', `repos/${repoFullName}/commits/${headSha}/check-runs`], { encoding: 'utf8' });
-  const parsed = JSON.parse(out);
-  const pages = Array.isArray(parsed) ? parsed : [parsed];
+const CHECK_RUNS_JQ = '{total_count: .total_count, check_runs: .check_runs}';
+const CHECK_RUNS_GH_ARGS = Object.freeze(['api', '--paginate', '--jq', CHECK_RUNS_JQ]);
+
+/**
+ * Parse + flatten + validate the NDJSON output of the paginated check-runs
+ * command (t_b7c5d622 pagination robustness; OPS-06B-HARDEN-R1 total_count
+ * enforcement). Each non-empty line must be a self-contained page object
+ * `{ total_count, check_runs: [...] }`. Pure so the fail-closed behavior is
+ * directly testable.
+ *
+ * Every page MUST carry a valid total_count: present, Number.isInteger, >= 0
+ * (missing / null / string / fractional / negative / NaN all fail closed). Every
+ * page must report the SAME total_count, and the flattened check-run count must
+ * equal total_count exactly. Fails closed:
+ *   - CHECK_RUNS_PAGE_MALFORMED        a line is not valid JSON;
+ *   - CHECK_RUNS_PAGE_INCOMPLETE       no pages, a page lacks a check_runs array,
+ *                                      or a page has a missing/invalid total_count;
+ *   - CHECK_RUNS_TOTAL_COUNT_MISMATCH  total_count disagrees across pages, or the
+ *                                      flattened run count != total_count.
+ * A truncated/partial pagination therefore cannot silently drop a conflicting
+ * duplicate that appears on a later page.
+ * @param {string} rawOutput stdout of the paginated check-runs command (NDJSON)
+ * @returns {{ check_runs: object[], pages: number, total_count: number }}
+ */
+function parseCheckRunPages(rawOutput) {
+  if (typeof rawOutput !== 'string') throw new Error('CHECK_RUNS_PAGE_MALFORMED');
+  const lines = rawOutput.split('\n').map((l) => l.trim()).filter(Boolean);
+  if (lines.length === 0) throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
   const checkRuns = [];
-  for (const page of pages) {
-    if (!page || !Array.isArray(page.check_runs)) {
+  let expectedTotal = null;
+  for (const line of lines) {
+    let page;
+    try {
+      page = JSON.parse(line);
+    } catch (error) {
+      throw new Error('CHECK_RUNS_PAGE_MALFORMED');
+    }
+    if (!page || typeof page !== 'object' || Array.isArray(page) || !Array.isArray(page.check_runs)) {
       throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
     }
+    // total_count is REQUIRED on every page and must be a non-negative integer.
+    // Missing, null, string, fractional, negative, or NaN-like fails closed
+    // BEFORE any required check is evaluated.
+    const total = page.total_count;
+    if (typeof total !== 'number' || !Number.isInteger(total) || total < 0) {
+      throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
+    }
+    if (expectedTotal === null) expectedTotal = total;
+    else if (total !== expectedTotal) throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
     checkRuns.push(...page.check_runs);
   }
-  return { check_runs: checkRuns, pages: pages.length };
+  // The flattened count must equal total_count exactly.
+  if (checkRuns.length !== expectedTotal) {
+    throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
+  }
+  return { check_runs: checkRuns, pages: lines.length, total_count: expectedTotal };
+}
+
+/**
+ * Paginated check-run retrieval (t_b7c5d622 pagination robustness). Runs
+ * `gh api --paginate --jq '<per-page object>' <endpoint>` (see CHECK_RUNS_GH_ARGS)
+ * and delegates parsing/validation to parseCheckRunPages so a truncated,
+ * malformed, or inconsistent pagination fails closed. gh-2.45 compatible: it
+ * deliberately does NOT use --slurp (unsupported on gh 2.45.0).
+ * @param {Function} [ghRunner] injectable runner (args[]) => stdout, for tests
+ * @returns {{ check_runs: object[], pages: number }}
+ */
+function defaultGhApiCheckRuns(repoFullName, headSha, ghRunner) {
+  const run = ghRunner || ((args) => execFileSync('gh', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }));
+  const args = [...CHECK_RUNS_GH_ARGS, `repos/${repoFullName}/commits/${headSha}/check-runs`];
+  let out;
+  try {
+    out = run(args);
+  } catch (error) {
+    throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
+  }
+  return parseCheckRunPages(out);
 }
 
 /**
@@ -322,4 +395,7 @@ module.exports = {
   POLICY_SCHEMA,
   defaultGhApi,
   defaultGhApiCheckRuns,
+  parseCheckRunPages,
+  CHECK_RUNS_GH_ARGS,
+  CHECK_RUNS_JQ,
 };

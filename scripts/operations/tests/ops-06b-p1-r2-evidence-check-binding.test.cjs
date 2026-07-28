@@ -366,6 +366,30 @@ test('R2-C: canonicalizeRepoFullName rejects malformed URLs', () => {
   assert.equal(canonicalizeRepoFullName('https://github.com/a/b/c'), null); // too many segments
 });
 
+test('P1.2 (t_abf7bf45): canonicalizeRepoFullName binds the GitHub origin host', () => {
+  const { canonicalizeRepoFullName } = REMOTE;
+  // Wrong hosts must NOT be accepted as github.com, even with a valid owner/repo
+  // path — a lookalike or attacker-controlled remote cannot satisfy the binding.
+  assert.equal(canonicalizeRepoFullName('https://example.invalid/steezkelly/maine-dispensary-guide.git'), null);
+  assert.equal(canonicalizeRepoFullName('https://evil.example.com/owner/repo.git'), null);
+  assert.equal(canonicalizeRepoFullName('git@forkhost.example:owner/repo.git'), null);
+  assert.equal(canonicalizeRepoFullName('ssh://git@notgithub.com/owner/repo.git'), null);
+  assert.equal(canonicalizeRepoFullName('git://attacker.example/owner/repo.git'), null);
+  // github.com remains accepted across all supported URL forms.
+  assert.equal(canonicalizeRepoFullName('https://github.com/owner/repo.git'), 'owner/repo');
+  assert.equal(canonicalizeRepoFullName('git@github.com:owner/repo.git'), 'owner/repo');
+  // An explicitly configured GitHub Enterprise host is accepted (and only that).
+  const prev = process.env.MDG_GITHUB_HOST;
+  process.env.MDG_GITHUB_HOST = 'ghe.example.com';
+  try {
+    assert.equal(canonicalizeRepoFullName('https://ghe.example.com/owner/repo.git'), 'owner/repo');
+    assert.equal(canonicalizeRepoFullName('https://other.example.com/owner/repo.git'), null);
+  } finally {
+    if (prev === undefined) delete process.env.MDG_GITHUB_HOST;
+    else process.env.MDG_GITHUB_HOST = prev;
+  }
+});
+
 test('R2-C: validatePrNumber accepts positive integers, rejects the rest', () => {
   const { validatePrNumber } = REMOTE;
   assert.equal(validatePrNumber('218'), 218);

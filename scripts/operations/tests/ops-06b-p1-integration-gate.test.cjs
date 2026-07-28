@@ -581,3 +581,196 @@ test('R1: CLI redacts ordinary output (no sensitive detail) on a failing gate', 
   fs.rmSync(repo, { recursive: true, force: true });
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+// ---------------------------------------------------------------------------
+// P1.3 (t_b7c5d622): check-run pagination robustness — gh-2.45 compatible.
+//
+// The deterministic suite exercises the ACTUAL argument list passed to `gh`
+// (via an injectable runner that mimics gh 2.45.0, which rejects --slurp), so a
+// future reintroduction of --slurp fails the test. It does NOT merely call
+// parseCheckRunPages with hand-built objects while bypassing the CLI layer.
+// ---------------------------------------------------------------------------
+
+/** Build NDJSON (one page-object per line) the way `gh api --paginate --jq` does. */
+function ndjson(pages) {
+  return pages.map((p) => JSON.stringify(p)).join('\n') + '\n';
+}
+
+/**
+ * Fake gh runner emulating gh 2.45.0: rejects --slurp (unknown flag), and for
+ * the supported `--paginate --jq` form returns the supplied NDJSON. Records the
+ * exact args it was called with so the test can assert the real invocation.
+ */
+function makeFakeGh245(ndjsonOutput) {
+  const calls = [];
+  const runner = (args) => {
+    calls.push(args);
+    if (args.includes('--slurp')) {
+      const err = new Error('unknown flag: --slurp');
+      err.status = 1;
+      throw err;
+    }
+    return ndjsonOutput;
+  };
+  runner.calls = calls;
+  return runner;
+}
+
+test('P1.3 (t_b7c5d622): the gh argument list is gh-2.45 compatible (no --slurp)', () => {
+  const { CHECK_RUNS_GH_ARGS, CHECK_RUNS_JQ } = ROLLUP;
+  // The frozen argument list must not contain --slurp (unsupported on gh 2.45.0).
+  assert.ok(!CHECK_RUNS_GH_ARGS.includes('--slurp'), '--slurp must not be used');
+  // It must use --paginate and a per-page --jq expression that preserves
+  // total_count and every check_run.
+  assert.ok(CHECK_RUNS_GH_ARGS.includes('--paginate'), 'must paginate');
+  const jqIndex = CHECK_RUNS_GH_ARGS.indexOf('--jq');
+  assert.ok(jqIndex >= 0, 'must pass a --jq expression');
+  assert.equal(CHECK_RUNS_GH_ARGS[jqIndex + 1], CHECK_RUNS_JQ);
+  assert.match(CHECK_RUNS_JQ, /total_count/);
+  assert.match(CHECK_RUNS_JQ, /check_runs/);
+});
+
+test('P1.3 (t_b7c5d622): multi-page success preserves a later-page check (via real CLI args)', () => {
+  const { defaultGhApiCheckRuns } = ROLLUP;
+  // Page 1 has the floor checks; page 2 carries a conflicting duplicate that
+  // MUST NOT be silently dropped.
+  const output = ndjson([
+    { total_count: 3, check_runs: [
+      { name: 'Build', conclusion: 'success', app: { slug: 'github-actions', id: 15368 }, head_sha: 'c7740548' },
+      { name: 'Operations Suite', conclusion: 'success', app: { slug: 'github-actions', id: 15368 }, head_sha: 'c7740548' },
+    ] },
+    { total_count: 3, check_runs: [
+      { name: 'Build', conclusion: 'failure', app: { slug: 'github-actions', id: 15368 }, head_sha: 'c7740548' },
+    ] },
+  ]);
+  const fake = makeFakeGh245(output);
+  const result = defaultGhApiCheckRuns('owner/repo', 'c7740548', fake);
+  // The CLI was invoked exactly once with the supported (non --slurp) args.
+  assert.equal(fake.calls.length, 1);
+  assert.ok(!fake.calls[0].includes('--slurp'));
+  assert.ok(fake.calls[0].includes('--paginate'));
+  assert.equal(fake.calls[0][fake.calls[0].length - 1], 'repos/owner/repo/commits/c7740548/check-runs');
+  // Both pages parsed; the later-page conflicting duplicate is preserved.
+  assert.equal(result.pages, 2);
+  assert.equal(result.check_runs.length, 3);
+  const builds = result.check_runs.filter((r) => r.name === 'Build');
+  assert.equal(builds.length, 2, 'later-page duplicate Build must be preserved');
+  assert.deepEqual(builds.map((b) => b.conclusion).sort(), ['failure', 'success']);
+});
+
+test('P1.3 (t_b7c5d622): single-page success (via real CLI args)', () => {
+  const { defaultGhApiCheckRuns } = ROLLUP;
+  const output = ndjson([
+    { total_count: 2, check_runs: [
+      { name: 'Build', conclusion: 'success', app: { slug: 'github-actions', id: 15368 }, head_sha: 'abc' },
+      { name: 'Operations Suite', conclusion: 'success', app: { slug: 'github-actions', id: 15368 }, head_sha: 'abc' },
+    ] },
+  ]);
+  const result = defaultGhApiCheckRuns('owner/repo', 'abc', makeFakeGh245(output));
+  assert.equal(result.pages, 1);
+  assert.equal(result.check_runs.length, 2);
+});
+
+test('P1.3 (t_b7c5d622): fail-closed cases (malformed / incomplete / mismatch / empty)', () => {
+  const { parseCheckRunPages } = ROLLUP;
+  // 5. Malformed page (a line that is not valid JSON).
+  assert.throws(() => parseCheckRunPages('{not json\n'), /CHECK_RUNS_PAGE_MALFORMED/);
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: 1, check_runs: [] }]) + 'garbage-line\n'), /CHECK_RUNS_PAGE_MALFORMED/);
+  // 6. Incomplete page (missing check_runs array) and a non-object page line.
+  assert.throws(() => parseCheckRunPages(JSON.stringify({ total_count: 1 }) + '\n'), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  assert.throws(() => parseCheckRunPages('null\n'), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // A top-level JSON array (the OLD undocumented concatenation form) must be
+  // rejected as incomplete — page boundaries must be unambiguous NDJSON.
+  assert.throws(() => parseCheckRunPages(JSON.stringify([{ total_count: 1, check_runs: [] }]) + '\n'), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // 7. total_count mismatch: flattened count != total_count (truncated page).
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 4, check_runs: [{ name: 'a' }, { name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // 8. Inconsistent total_count across pages.
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+    { total_count: 5, check_runs: [{ name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // 9. Empty pagination output.
+  assert.throws(() => parseCheckRunPages(''), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  assert.throws(() => parseCheckRunPages('\n\n  \n'), /CHECK_RUNS_PAGE_INCOMPLETE/);
+});
+
+test('P1.3 (t_b7c5d622): a gh error (e.g. unknown flag) fails closed as incomplete', () => {
+  const { defaultGhApiCheckRuns } = ROLLUP;
+  // A runner that throws (as gh does for --slurp on 2.45.0) must surface as a
+  // fail-closed CHECK_RUNS_PAGE_INCOMPLETE, never a silent empty success.
+  const throwing = () => { throw new Error('unknown flag: --slurp'); };
+  assert.throws(() => defaultGhApiCheckRuns('owner/repo', 'abc', throwing), /CHECK_RUNS_PAGE_INCOMPLETE/);
+});
+
+// OPS-06B-HARDEN-R1 (§2): total_count is REQUIRED and strictly validated on
+// EVERY page. Missing / null / string / fractional / negative / NaN-like
+// total_count fails closed BEFORE any required check is evaluated; every page
+// must report the same total_count; the flattened count must equal total_count.
+test('R1 §2: total_count is required and strictly validated on every page', () => {
+  const { parseCheckRunPages } = ROLLUP;
+  // missing total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // null total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: null, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // string total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: '3', check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // fractional total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: 2.5, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // negative total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: -1, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // NaN-like total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: NaN, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // inconsistent totals between pages
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+    { total_count: 3, check_runs: [{ name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // flattened count mismatch (total says 2, only 1 run present)
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // valid zero total with an empty check_runs array
+  const zero = parseCheckRunPages(ndjson([{ total_count: 0, check_runs: [] }]));
+  assert.equal(zero.total_count, 0);
+  assert.equal(zero.check_runs.length, 0);
+  assert.equal(zero.pages, 1);
+  // valid single page
+  const single = parseCheckRunPages(ndjson([{ total_count: 2, check_runs: [{ name: 'Build' }, { name: 'Operations Suite' }] }]));
+  assert.equal(single.total_count, 2);
+  assert.equal(single.check_runs.length, 2);
+  // valid multiple pages (totals agree, flattened count matches)
+  const multi = parseCheckRunPages(ndjson([
+    { total_count: 3, check_runs: [{ name: 'Build' }, { name: 'Operations Suite' }] },
+    { total_count: 3, check_runs: [{ name: 'Deploy' }] },
+  ]));
+  assert.equal(multi.total_count, 3);
+  assert.equal(multi.pages, 2);
+  assert.equal(multi.check_runs.length, 3);
+  // a required/conflicting check on a LATER page is preserved (not dropped)
+  const later = parseCheckRunPages(ndjson([
+    { total_count: 3, check_runs: [{ name: 'Build', conclusion: 'success' }, { name: 'Operations Suite', conclusion: 'success' }] },
+    { total_count: 3, check_runs: [{ name: 'Build', conclusion: 'failure' }] },
+  ]));
+  const builds = later.check_runs.filter((r) => r.name === 'Build');
+  assert.equal(builds.length, 2);
+  assert.deepEqual(builds.map((b) => b.conclusion).sort(), ['failure', 'success']);
+});
+
+test('P1.3 (t_b7c5d622): LIVE read-only smoke against the real GitHub API (gh 2.45.0)', { skip: !process.env.MDG_LIVE_PAGINATION_SMOKE }, () => {
+  // Environmental verification only — NOT the sole deterministic test. Enabled
+  // with MDG_LIVE_PAGINATION_SMOKE=1. Proves the real installed gh retrieves and
+  // parses live check runs without CHECK_RUNS_PAGE_INCOMPLETE.
+  const { defaultGhApiCheckRuns } = ROLLUP;
+  const repo = process.env.MDG_LIVE_REPO || 'steezkelly/maine-dispensary-guide';
+  const head = process.env.MDG_LIVE_HEAD || 'c7740548a0f264a39c8d4d672a77c7743bee5bce';
+  const result = defaultGhApiCheckRuns(repo, head);
+  assert.ok(result.pages >= 1, 'at least one page');
+  assert.ok(result.check_runs.length > 0, 'at least one check run');
+  assert.equal(result.check_runs.length, result.check_runs.length); // flattened
+  const names = result.check_runs.map((r) => r.name);
+  assert.ok(names.includes('Build'), 'Build check run present');
+  assert.ok(names.includes('Operations Suite'), 'Operations Suite check run present');
+  console.log(`    live smoke: pages=${result.pages} check_runs=${result.check_runs.length}`);
+});
