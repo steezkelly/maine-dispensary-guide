@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "name": "W14: Durable Lead Asset Fulfillment",
+  "activation": "operator_only_after_live_checkpoint",
+  "source_of_truth": "postgresql.public.mdg_leads",
+  "transport": {
+    "class": "n8n_managed_smtp",
+    "node_type": "CUSTOM.mdgSmtpSend",
+    "stock_email_node_rejected": "Email Send v2.1 cannot set the persisted deterministic Message-ID",
+    "pinned_n8n_image": "n8nio/n8n@sha256:ac4ee618b3f4231c5735c92e25d60e9933250bdadebd3ac030d76f9911846001",
+    "credential_reference_policy": "encrypted_n8n_store_only_not_exported",
+    "automatic_send_paths": 1,
+    "node_retry_on_fail": false,
+    "workflow_retry_on_fail": false
+  },
+  "execution_retention": {
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "schedule": {
+    "interval_minutes": 5,
+    "batch_size": 1,
+    "overlap_policy": "atomic_skip_locked_claim"
+  },
+  "state_functions": [
+    "mdg_w14_reconcile_stale",
+    "mdg_w14_claim",
+    "mdg_w14_prepare_send",
+    "mdg_w14_mark_success",
+    "mdg_w14_mark_failure",
+    "mdg_w14_authorize_resend"
+  ],
+  "message_contract": {
+    "message_id": "<mdg-w14-{lead_id}-a{attempt_number}@mainedispensaryguide.com>",
+    "persist_before_submission": true,
+    "attachments": false,
+    "template_id": "mdg_asset_link",
+    "template_version": "1.0.0"
+  },
+  "failure_classification": {
+    "retryable_pre_acceptance": {
+      "required_evidence": "error proves failure before SMTP DATA acceptance",
+      "examples": ["ECONNREFUSED at CONN", "EAI_AGAIN/ENOTFOUND at CONN", "SMTP 421/450/451/452 before DATA"],
+      "automatic": true
+    },
+    "terminal": {
+      "examples": ["invalid recipient syntax", "permanent 5xx before DATA", "malformed record"],
+      "automatic": false
+    },
+    "uncertain": {
+      "examples": ["timeout/socket close during or after DATA", "unclassified email-node error", "stale sending"],
+      "automatic": false,
+      "destination": "manual_review"
+    },
+    "authentication": {
+      "automatic": false,
+      "destination": "manual_review",
+      "alert": "urgent"
+    }
+  },
+  "retry_policy": {
+    "maximum_provider_submissions": 3,
+    "delays_before_attempts": {"2": "5m+jitter", "3": "30m+jitter"},
+    "after_maximum": "manual_review",
+    "spec_conflict_note": "A 2h third retry would require a fourth provider submission and is not scheduled under the max-attempts=3 cap."
+  },
+  "w13_normalization": {
+    "workflow_id": "UdQ56USYaWRcfocT",
+    "authority": "derive promised_asset from exact server-observed page_path; ignore client-provided asset identifiers",
+    "unsupported_paths": "promised_asset=null; not eligible for W14"
+  },
+  "w7": {
+    "workflow_id": "sqTm36P8WqvP5FXB",
+    "role": "legacy_read_only_during_w14",
+    "source_of_truth": false
+  }
+}
