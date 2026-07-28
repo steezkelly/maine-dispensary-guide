@@ -48,7 +48,7 @@ test('W14 is one-row, one-send-path, two-outcome workflow with no retries', () =
   assert.equal(workflow.settings.saveManualExecutions, false);
   assert.equal(workflow.settings.saveExecutionProgress, false);
 
-  const sendNodes = workflow.nodes.filter((node) => node.type === 'n8n-nodes-mdg-smtp-send.mdgSmtpSend');
+  const sendNodes = workflow.nodes.filter((node) => node.type === 'CUSTOM.mdgSmtpSend');
   assert.equal(sendNodes.length, 1);
   assert.equal(sendNodes[0].retryOnFail, false);
   assert.equal(sendNodes[0].parameters.messageId, '={{ $json.outbound_message_id }}');

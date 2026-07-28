@@ -36,7 +36,7 @@ The authoritative path is n8n-managed SMTP only. Credential values remain in n8n
 
 The stock n8n Email Send v2.1 node was inspected on the pinned image digest and rejected for W14 because its public parameters and `mailOptions` do not expose `messageId`. W14 therefore uses one reviewed custom node, `MDG W14 SMTP Send`, which:
 
-- registers under the n8n community-node type `n8n-nodes-mdg-smtp-send.mdgSmtpSend` (package `n8n-nodes-mdg-smtp-send`, node name `mdgSmtpSend`), loaded via `N8N_CUSTOM_EXTENSIONS`;
+- registers under the n8n custom-directory loader type `CUSTOM.mdgSmtpSend` (the `CUSTOM` prefix is n8n-core's `CUSTOM_NODES_PACKAGE_NAME` applied to every node loaded via `N8N_CUSTOM_EXTENSIONS`; the node's `description.name` is `mdgSmtpSend`; the on-disk npm package name `n8n-nodes-mdg-smtp-send` is a separate concept and does not form the workflow type under this deployment model);
 - calls n8n's own SMTP transport helper and encrypted `smtp` credential schema;
 - accepts only the prepared deterministic Message-ID;
 - validates recipient syntax and the canonical MDG HTTPS PDF URL;
@@ -48,6 +48,12 @@ The stock n8n Email Send v2.1 node was inspected on the pinned image digest and 
 - conservatively maps opaque or post-DATA errors to uncertain/manual review.
 
 The custom node is coupled deliberately to the immutable n8n image digest. A missing transport helper fails closed and blocks W14 rather than silently falling back.
+
+### Correction record (2026-07-28): node-type misdiagnosis
+
+An earlier commit (`8aeb75e9`) changed the W14 SMTP node type from `CUSTOM.mdgSmtpSend` to `n8n-nodes-mdg-smtp-send.mdgSmtpSend`. That change was a misdiagnosis and is superseded (it is preserved in Git history, not erased).
+
+The original `Unrecognized node type: CUSTOM.mdgSmtpSend` failure was caused by the custom-node package being mounted at the wrong filesystem path, not by the type string. After correcting the Compose mount destination to `<custom-dir>/node_modules/n8n-nodes-mdg-smtp-send` under `N8N_CUSTOM_EXTENSIONS`, n8n's own `CustomDirectoryLoader` discovers the node and registers it under `CUSTOM_NODES_PACKAGE_NAME` (`CUSTOM`) plus `description.name` (`mdgSmtpSend`) — i.e. `CUSTOM.mdgSmtpSend`. The community-package-style type `n8n-nodes-mdg-smtp-send.mdgSmtpSend` is only produced by n8n's package-directory loader for npm-installed community packages, which this deployment does not use. The authoritative workflow type is therefore `CUSTOM.mdgSmtpSend`.
 
 ### Asset identity
 

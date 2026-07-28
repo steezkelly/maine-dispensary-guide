@@ -203,7 +203,7 @@ function buildW14Workflow(postgresCredential, smtpCredential) {
     {
       id: '9a34aa36-9b8c-4bd9-9207-001400000007',
       name: 'Submit one SMTP message',
-      type: 'n8n-nodes-mdg-smtp-send.mdgSmtpSend',
+      type: 'CUSTOM.mdgSmtpSend',
       typeVersion: 1,
       position: [200, 80],
       retryOnFail: false,
