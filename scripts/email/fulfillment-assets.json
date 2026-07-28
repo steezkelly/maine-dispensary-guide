@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "transport": "n8n_smtp",
+  "sender_credential_scope": "n8n_encrypted_store",
+  "template": {
+    "id": "mdg_asset_link",
+    "version": "1.0.0",
+    "format": "html_and_text",
+    "attachment_policy": "canonical_https_link_only"
+  },
+  "assets": [
+    {
+      "promised_asset": "maine_dispensary_roadmap_2026",
+      "source_page": "/download-checklist",
+      "form_name": "download_checklist",
+      "canonical_url": "https://mainedispensaryguide.com/downloads/maine-dispensary-roadmap-2026.pdf",
+      "subject": "Your Maine Dispensary Roadmap",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    },
+    {
+      "promised_asset": "maine_cannabis_founders_bible_2026",
+      "source_page": "/download/founders-bible",
+      "form_name": "founders_bible",
+      "canonical_url": "https://mainedispensaryguide.com/downloads/maine-dispensary-founders-bible-2026.pdf",
+      "subject": "Your Maine Cannabis Founders Bible",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    },
+    {
+      "promised_asset": "maine_first_timer_field_guide",
+      "source_page": "/download/first-timer-field-guide",
+      "form_name": "first_timer_field_guide",
+      "canonical_url": "https://mainedispensaryguide.com/downloads/maine-first-timer-field-guide.pdf",
+      "subject": "Your Maine First-Timer Field Guide",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    },
+    {
+      "promised_asset": "maine_metrc_reconciliation_checklist",
+      "source_page": "/download/metrc-reconciliation-checklist",
+      "form_name": "metrc_checklist",
+      "canonical_url": "https://mainedispensaryguide.com/downloads/maine-metrc-reconciliation-checklist.pdf",
+      "subject": "Your Maine METRC Reconciliation Checklist",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    },
+    {
+      "promised_asset": "maine_dispensary_compliance_self_assessment",
+      "source_page": "/download/compliance-self-assessment",
+      "form_name": "compliance_self_assessment",
+      "canonical_url": "https://mainedispensaryguide.com/downloads/maine-dispensary-compliance-self-assessment.pdf",
+      "subject": "Your Maine Dispensary Compliance Self-Assessment",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    },
+    {
+      "promised_asset": "maine_cannabis_industry_report_q3_2026",
+      "source_page": "/download/maine-cannabis-industry-report-q3-2026",
+      "form_name": "q3_2026_industry_report",
+      "canonical_url": "https://mainedispensaryguide.com/pdfs/maine-cannabis-industry-report-q3-2026.pdf",
+      "subject": "Your Maine Cannabis Industry Report — Q3 2026",
+      "sender_identity": "Maine Dispensary Guide <leads@mainedispensaryguide.com>",
+      "active": true
+    }
+  ],
+  "unsupported_forms": [
+    {
+      "form_name": "market_stats_data_request",
+      "reason": "bespoke data request, not a promised downloadable asset",
+      "fulfillment_policy": "manual_review_outside_w14"
+    }
+  ]
+}
