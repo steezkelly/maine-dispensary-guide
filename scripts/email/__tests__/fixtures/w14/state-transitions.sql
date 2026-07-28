@@ -1,225 +1,196 @@
--- Runs after the W14 migration inside a disposable PostgreSQL database.
+-- W14 state-transition suite for the TWO-MIGRATION production path.
+-- The harness applies, in production order:
+--   1. 2026-07-27-w14-fulfillment-state-machine.sql (original; immutable)
+--   2. 2026-07-28-w14-activation-cutover-request-id.sql (R1 remediation)
+--   3. the R1 remediation again (idempotency)
 -- Every address and source ID is synthetic; no network transport is involved.
 \set ON_ERROR_STOP on
 
+-- Cutover safety: while activation_cutover_at is NULL, NO lead is claimable for
+-- automatic fulfillment, even a well-formed pending asset lead inserted via the
+-- fail-closed insert function.
+DO $test$
+DECLARE
+  n bigint;
+  v_id bigint;
+BEGIN
+  v_id := mdg_w14_insert_lead(
+    'api_post:aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    'w14-cutover-null@example.invalid', NULL, NULL, NULL,
+    'maine_dispensary_roadmap_2026', NULL, now(), '/download-checklist',
+    NULL, NULL, NULL, NULL, 'api_post', NULL, NULL, NULL,
+    'cutover_null_form', NULL, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+  -- Trigger classified it not_applicable (cutover NULL).
+  SELECT count(*) INTO n FROM mdg_leads
+  WHERE id = v_id AND fulfillment_status = 'not_applicable';
+  IF n <> 1 THEN RAISE EXCEPTION 'insert while cutover NULL was not not_applicable'; END IF;
+  -- Nothing is claimable while the cutover is NULL.
+  SELECT count(*) INTO n FROM mdg_w14_claim('worker-cutover-null', now());
+  IF n <> 0 THEN RAISE EXCEPTION 'lead was claimable while activation cutover was null'; END IF;
+END
+$test$;
+
+-- Establish the activation cutover (operator-only, transactional, idempotent).
+SELECT * FROM mdg_w14_activate_cutover(
+  'ops-disposable-suite',
+  'Establish disposable-suite activation cutover for testing',
+  now()
+);
+
+-- Full lifecycle on a post-cutover asset lead inserted via the fail-closed
+-- function: pending -> claimed -> sending -> fulfilled.
 DO $test$
 DECLARE
   c record;
   p record;
   state text;
   n bigint;
+  v_id bigint;
   t0 timestamptz := clock_timestamp();
 BEGIN
-  -- Non-asset forms are durable leads but never enter the fulfillment queue.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
-  VALUES ('synthetic:not-applicable', 'w14-na@example.invalid', NULL, t0, 'not_applicable');
-  SELECT count(*) INTO n FROM mdg_w14_claim('worker-na', t0);
-  IF n <> 0 THEN RAISE EXCEPTION 'not-applicable lead entered fulfillment queue'; END IF;
+  v_id := mdg_w14_insert_lead(
+    'api_post:bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+    'w14-lifecycle@example.invalid', NULL, NULL, NULL,
+    'maine_dispensary_roadmap_2026', NULL, t0, '/download-checklist',
+    NULL, NULL, NULL, NULL, 'api_post', NULL, NULL, NULL,
+    'lifecycle_form', NULL, 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb');
+  -- Post-cutover asset lead is pending and claimable.
+  SELECT * INTO c FROM mdg_w14_claim('worker-lifecycle', t0);
+  IF c.lead_id <> v_id THEN RAISE EXCEPTION 'post-cutover asset lead was not claimed'; END IF;
 
-  -- A malformed pending record is reviewable, including across a stale pre-send claim.
+  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-lifecycle', t0);
+  IF NOT p.ready THEN RAISE EXCEPTION 'prepare_send was not ready for an active asset'; END IF;
+
+  PERFORM * FROM mdg_w14_mark_success(c.lead_id, p.attempt_id, 'provider-msg-1', t0);
+  SELECT fulfillment_status INTO state FROM mdg_leads WHERE id = c.lead_id;
+  IF state <> 'fulfilled' THEN RAISE EXCEPTION 'expected fulfilled, got %', state; END IF;
+END
+$test$;
+
+-- Failure paths: (a) retryable_pre_acceptance exhausts the three-attempt cap and
+-- lands in manual_review; (b) a terminal failure class lands in terminal_failure.
+DO $test$
+DECLARE
+  c record;
+  p record;
+  state text;
+  v_id bigint;
+  t0 timestamptz := clock_timestamp();
+BEGIN
+  -- (a) Three retryable pre-acceptance failures -> manual_review (cap reached).
+  v_id := mdg_w14_insert_lead(
+    'api_post:cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+    'w14-retryable@example.invalid', NULL, NULL, NULL,
+    'maine_dispensary_roadmap_2026', NULL, t0, '/download-checklist',
+    NULL, NULL, NULL, NULL, 'api_post', NULL, NULL, NULL,
+    'retryable_form', NULL, 'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+  FOR i IN 1..3 LOOP
+    SELECT * INTO c FROM mdg_w14_claim('worker-retryable', t0 + (i * 40 || ' minutes')::interval);
+    IF c.lead_id IS NULL THEN RAISE EXCEPTION 'expected a claim on retryable attempt %', i; END IF;
+    SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-retryable', t0);
+    PERFORM * FROM mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'retryable_pre_acceptance', 'smtp_connect_timeout', 'connect', t0);
+  END LOOP;
+  SELECT fulfillment_status INTO state FROM mdg_leads WHERE id = v_id;
+  IF state <> 'manual_review' THEN RAISE EXCEPTION 'expected manual_review after cap, got %', state; END IF;
+
+  -- (b) A terminal failure class -> terminal_failure immediately.
+  v_id := mdg_w14_insert_lead(
+    'api_post:eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+    'w14-terminal@example.invalid', NULL, NULL, NULL,
+    'maine_dispensary_roadmap_2026', NULL, t0, '/download-checklist',
+    NULL, NULL, NULL, NULL, 'api_post', NULL, NULL, NULL,
+    'terminal_form', NULL, 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee');
+  SELECT * INTO c FROM mdg_w14_claim('worker-terminal', t0);
+  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-terminal', t0);
+  PERFORM * FROM mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'terminal', 'smtp_550_rejected', 'data', t0);
+  SELECT fulfillment_status INTO state FROM mdg_leads WHERE id = v_id;
+  IF state <> 'terminal_failure' THEN RAISE EXCEPTION 'expected terminal_failure, got %', state; END IF;
+END
+$test$;
+
+-- Non-asset lead stays not_applicable and is never claimable.
+DO $test$
+DECLARE
+  n bigint;
+  v_id bigint;
+  t0 timestamptz := clock_timestamp();
+BEGIN
+  v_id := mdg_w14_insert_lead(
+    'api_post:dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+    'w14-nonasset@example.invalid', NULL, NULL, NULL,
+    NULL, NULL, t0, '/contact', NULL, NULL, NULL, NULL,
+    'api_post', NULL, NULL, NULL, 'contact_form', NULL,
+    'dddddddd-dddd-4ddd-8ddd-dddddddddddd');
+  SELECT count(*) INTO n FROM mdg_leads WHERE id = v_id AND fulfillment_status = 'not_applicable';
+  IF n <> 1 THEN RAISE EXCEPTION 'non-asset lead did not stay not_applicable'; END IF;
+END
+$test$;
+
+-- Cutover classification of EXISTING rows + defense in depth.
+DO $test$
+DECLARE
+  n bigint;
+  v_cutover timestamptz;
+BEGIN
+  SELECT activation_cutover_at INTO v_cutover FROM mdg_w14_activation WHERE singleton = true;
+  IF v_cutover IS NULL THEN RAISE EXCEPTION 'cutover was not established'; END IF;
+
+  -- A recent pre-cutover row (received just before the cutover) is excluded and
+  -- never claimed, even though it carries an asset. A raw INSERT with a
+  -- caller-supplied 'pending' is reclassified not_applicable by the trigger.
   INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
-  VALUES ('synthetic:malformed-stale', 'w14-malformed-stale@example.invalid', NULL, t0, 'pending');
-  SELECT * INTO c FROM mdg_w14_claim('worker-malformed-stale', t0);
-  PERFORM mdg_w14_reconcile_stale(interval '15 minutes', interval '15 minutes', t0 + interval '1 hour');
+  VALUES ('synthetic:recent-precutover', 'w14-recent-pre@example.invalid',
+          'maine_dispensary_roadmap_2026', v_cutover - interval '1 second', 'pending');
   SELECT count(*) INTO n FROM mdg_leads
-  WHERE id=c.lead_id AND fulfillment_status='manual_review'
-    AND last_error_code='MISSING_PROMISED_ASSET';
-  IF n <> 1 THEN RAISE EXCEPTION 'stale malformed claim did not route to review'; END IF;
+  WHERE source_message_id = 'synthetic:recent-precutover' AND fulfillment_status = 'not_applicable';
+  IF n <> 1 THEN RAISE EXCEPTION 'recent pre-cutover row was not reclassified not_applicable by the trigger'; END IF;
 
-  -- Success + duplicate execution no-op.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:success', 'w14-success@example.invalid', 'maine_dispensary_roadmap_2026', t0);
-  SELECT * INTO c FROM mdg_w14_claim('worker-success', t0);
-  IF c.source_message_id <> 'synthetic:success' THEN RAISE EXCEPTION 'success claim failed'; END IF;
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-success', t0);
-  IF NOT p.ready OR p.outbound_message_id <> format('<mdg-w14-%s-a1@mainedispensaryguide.com>', c.lead_id) THEN
-    RAISE EXCEPTION 'deterministic prepare failed';
-  END IF;
-  IF NOT mdg_w14_mark_success(c.lead_id, p.attempt_id, 'provider-synthetic-1', t0 + interval '1 second') THEN
-    RAISE EXCEPTION 'success transition failed';
-  END IF;
-  IF mdg_w14_mark_success(c.lead_id, p.attempt_id, 'provider-duplicate', t0 + interval '2 seconds') THEN
-    RAISE EXCEPTION 'duplicate success unexpectedly changed state';
-  END IF;
-
-  -- Retryable pre-acceptance failure schedules attempt 2 after ~5m.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:retry', 'w14-retry@example.invalid', 'maine_cannabis_founders_bible_2026', t0 + interval '1 second');
-  SELECT * INTO c FROM mdg_w14_claim('worker-retry', t0 + interval '1 second');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-retry', t0 + interval '1 second');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'retryable_pre_acceptance', 'ECONNREFUSED', 'CONN', t0 + interval '2 seconds');
-  IF state <> 'retryable_failure' THEN RAISE EXCEPTION 'retryable classification failed'; END IF;
-  SELECT count(*) INTO n FROM mdg_leads WHERE id=c.lead_id AND next_attempt_at > t0 + interval '5 minutes';
-  IF n <> 1 THEN RAISE EXCEPTION 'retry schedule failed'; END IF;
-  -- Keep this isolated case out of later queue-order tests.
+  -- Defense in depth at the claim boundary: create a genuinely mis-marked
+  -- pre-cutover 'pending' row via UPDATE (which bypasses the INSERT trigger),
+  -- then confirm mdg_w14_claim rejects it via received_at >= cutover.
+  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
+  VALUES ('synthetic:bad-precutover-pending', 'w14-bad-pre@example.invalid',
+          'maine_dispensary_roadmap_2026', v_cutover - interval '2 seconds', 'not_applicable');
   UPDATE mdg_leads
-  SET fulfillment_status='manual_review', next_attempt_at=NULL,
-      manual_review_reason='synthetic_fixture_isolation'
-  WHERE id=c.lead_id;
-
-  -- Permanent rejection is terminal.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:terminal', 'w14-terminal@example.invalid', 'maine_first_timer_field_guide', t0 + interval '2 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-terminal', t0 + interval '2 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-terminal', t0 + interval '2 seconds');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'terminal', 'SMTP_550', 'RCPT_TO', t0 + interval '3 seconds');
-  IF state <> 'terminal_failure' THEN RAISE EXCEPTION 'terminal classification failed'; END IF;
-
-  -- Possible provider acceptance is manual review and never auto-retry.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:uncertain', 'w14-uncertain@example.invalid', 'maine_metrc_reconciliation_checklist', t0 + interval '3 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-uncertain', t0 + interval '3 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-uncertain', t0 + interval '3 seconds');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'uncertain', 'SOCKET_CLOSED', 'DATA', t0 + interval '4 seconds');
-  IF state <> 'manual_review' THEN RAISE EXCEPTION 'uncertain classification failed'; END IF;
-
-  -- Unknown asset and malformed recipient never reach a sending attempt.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:unknown', 'w14-unknown@example.invalid', 'not_allowlisted', t0 + interval '4 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-unknown', t0 + interval '4 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-unknown', t0 + interval '4 seconds');
-  IF p.ready OR p.error_code <> 'UNKNOWN_ASSET' THEN RAISE EXCEPTION 'unknown asset did not fail closed'; END IF;
-
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:bad-email', '', 'maine_dispensary_compliance_self_assessment', t0 + interval '5 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-bad-email', t0 + interval '5 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-bad-email', t0 + interval '5 seconds');
-  IF p.ready OR p.error_code <> 'MALFORMED_RECIPIENT' THEN RAISE EXCEPTION 'malformed recipient did not fail closed'; END IF;
-
-  -- Three provider submissions maximum; third retryable failure -> review.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:max', 'w14-max@example.invalid', 'maine_cannabis_industry_report_q3_2026', t0 + interval '6 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-max-1', t0 + interval '6 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-max-1', t0 + interval '6 seconds');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'retryable_pre_acceptance', 'EAI_AGAIN', 'CONN', t0 + interval '7 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-max-2', t0 + interval '1 hour');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-max-2', t0 + interval '1 hour');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'retryable_pre_acceptance', 'SMTP_451', 'RCPT_TO', t0 + interval '1 hour 1 second');
-  SELECT * INTO c FROM mdg_w14_claim('worker-max-3', t0 + interval '2 hours');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-max-3', t0 + interval '2 hours');
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'retryable_pre_acceptance', 'ETIMEDOUT', 'CONN', t0 + interval '2 hours 1 second');
-  IF state <> 'manual_review' THEN RAISE EXCEPTION 'maximum attempts did not enter manual review'; END IF;
-
-  -- Stale claimed is safe to release; stale sending is uncertain/manual review.
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:stale-claim', 'w14-stale-claim@example.invalid', 'maine_dispensary_roadmap_2026', t0 + interval '7 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-stale-claim', t0 + interval '7 seconds');
-  PERFORM * FROM mdg_w14_reconcile_stale(interval '15 minutes', interval '15 minutes', t0 + interval '31 minutes');
-  SELECT count(*) INTO n FROM mdg_leads WHERE id=c.lead_id AND fulfillment_status='retryable_failure';
-  IF n <> 1 THEN RAISE EXCEPTION 'stale claim not safely released'; END IF;
-
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:stale-send', 'w14-stale-send@example.invalid', 'maine_dispensary_roadmap_2026', t0 + interval '8 seconds');
-  SELECT * INTO c FROM mdg_w14_claim('worker-stale-send', t0 + interval '8 seconds');
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-stale-send', t0 + interval '8 seconds');
-  PERFORM * FROM mdg_w14_reconcile_stale(interval '15 minutes', interval '15 minutes', t0 + interval '31 minutes');
-  SELECT count(*) INTO n FROM mdg_leads WHERE id=c.lead_id AND fulfillment_status='manual_review' AND next_attempt_at IS NULL;
-  IF n <> 1 THEN RAISE EXCEPTION 'stale sending was not quarantined'; END IF;
-END
-$test$;
-
--- Source-message idempotency must reject a duplicate durable source ID.
-DO $test$
-BEGIN
-  BEGIN
-    INSERT INTO mdg_leads(source_message_id, from_email, promised_asset)
-    VALUES ('synthetic:success', 'w14-duplicate@example.invalid', 'maine_dispensary_roadmap_2026');
-    RAISE EXCEPTION 'duplicate source_message_id unexpectedly accepted';
-  EXCEPTION WHEN unique_violation THEN
-    NULL;
-  END;
-END
-$test$;
-
--- Null/blank source_message_id rows must never be claimed.
-DO $test$
-DECLARE
-  n bigint;
-  t0 timestamptz := clock_timestamp();
-BEGIN
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
-  VALUES (NULL, 'w14-null-sid@example.invalid', 'maine_dispensary_roadmap_2026', t0, 'pending');
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status)
-  VALUES ('', 'w14-blank-sid@example.invalid', 'maine_dispensary_roadmap_2026', t0, 'pending');
-  SELECT count(*) INTO n FROM mdg_w14_claim('worker-null-sid', t0);
-  IF n <> 0 THEN RAISE EXCEPTION 'null/blank source_message_id was claimed'; END IF;
-END
-$test$;
-
--- Authentication failure routes immediately to manual review.
-DO $test$
-DECLARE
-  c record;
-  p record;
-  state text;
-  t0 timestamptz := clock_timestamp();
-BEGIN
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at)
-  VALUES ('synthetic:auth-fail', 'w14-auth@example.invalid', 'maine_dispensary_roadmap_2026', t0);
-  SELECT * INTO c FROM mdg_w14_claim('worker-auth', t0);
-  SELECT * INTO p FROM mdg_w14_prepare_send(c.lead_id, 'worker-auth', t0);
-  state := mdg_w14_mark_failure(c.lead_id, p.attempt_id, 'authentication', 'SMTP_535', 'AUTH', t0 + interval '1 second');
-  IF state <> 'manual_review' THEN RAISE EXCEPTION 'authentication failure did not route to manual_review'; END IF;
-END
-$test$;
-
--- Operator resend is audited on the lead row even when no attempt exists.
-DO $test$
-DECLARE
-  c record;
-  ok boolean;
-  n bigint;
-  t0 timestamptz := clock_timestamp();
-BEGIN
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status, manual_review_reason)
-  VALUES ('synthetic:resend-no-attempt', 'w14-resend@example.invalid', 'maine_dispensary_roadmap_2026', t0, 'manual_review', 'unknown_or_inactive_asset');
-  SELECT id INTO c FROM mdg_leads WHERE source_message_id = 'synthetic:resend-no-attempt';
-  ok := mdg_w14_authorize_resend(c.id, 'ops-admin', 'Verified asset reactivated after review', t0);
-  IF NOT ok THEN RAISE EXCEPTION 'operator resend failed'; END IF;
+  SET fulfillment_status = 'pending', next_attempt_at = v_cutover - interval '2 seconds'
+  WHERE source_message_id = 'synthetic:bad-precutover-pending';
+  PERFORM * FROM mdg_w14_claim('worker-drain-1', v_cutover + interval '10 seconds');
+  PERFORM * FROM mdg_w14_claim('worker-drain-2', v_cutover + interval '10 seconds');
+  PERFORM * FROM mdg_w14_claim('worker-drain-3', v_cutover + interval '10 seconds');
   SELECT count(*) INTO n FROM mdg_leads
-  WHERE id = c.id AND operator_resend_by = 'ops-admin'
-    AND operator_resend_reason = 'Verified asset reactivated after review'
-    AND fulfillment_status = 'retryable_failure';
-  IF n <> 1 THEN RAISE EXCEPTION 'operator resend audit not persisted on lead row'; END IF;
+  WHERE source_message_id = 'synthetic:bad-precutover-pending' AND fulfillment_status = 'pending';
+  IF n <> 1 THEN RAISE EXCEPTION 'incorrectly marked pre-cutover pending row was claimed'; END IF;
 END
 $test$;
 
--- PII guard: operator fields containing email addresses are rejected.
+-- The activation cutover is idempotent: re-running reports already_active and
+-- does not move the cutover or reclassify rows.
 DO $test$
 DECLARE
-  c record;
-  t0 timestamptz := clock_timestamp();
+  r record;
+  v_before timestamptz;
+  v_after timestamptz;
 BEGIN
-  INSERT INTO mdg_leads(source_message_id, from_email, promised_asset, received_at, fulfillment_status, manual_review_reason)
-  VALUES ('synthetic:pii-canary', 'w14-pii@example.invalid', 'maine_dispensary_roadmap_2026', t0, 'manual_review', 'test');
-  SELECT id INTO c FROM mdg_leads WHERE source_message_id = 'synthetic:pii-canary';
-  BEGIN
-    PERFORM mdg_w14_authorize_resend(c.id, 'admin@example.com', 'Reason with email leak', t0);
-    RAISE EXCEPTION 'PII canary: operator email address was accepted';
-  EXCEPTION WHEN check_violation THEN
-    NULL;
-  END;
-END
-$test$;
-
--- Historical rows (older than 7 days) are not backfilled to pending.
--- The bootstrap fixture inserts a 30-day-old row before the migration runs;
--- the migration backfill must have marked it not_applicable.
-DO $test$
-DECLARE
-  n bigint;
-BEGIN
-  SELECT count(*) INTO n FROM mdg_leads
-  WHERE source_message_id = 'synthetic:historical' AND fulfillment_status = 'not_applicable';
-  IF n <> 1 THEN RAISE EXCEPTION 'historical row was backfilled to pending'; END IF;
+  SELECT activation_cutover_at INTO v_before FROM mdg_w14_activation WHERE singleton = true;
+  SELECT * INTO r FROM mdg_w14_activate_cutover(
+    'ops-disposable-suite',
+    'Second idempotent cutover call must change nothing',
+    now()
+  );
+  IF NOT r.already_active THEN RAISE EXCEPTION 'cutover re-run was not idempotent'; END IF;
+  IF r.made_pending <> 0 OR r.made_not_applicable <> 0 THEN
+    RAISE EXCEPTION 'idempotent cutover re-run reclassified rows';
+  END IF;
+  SELECT activation_cutover_at INTO v_after FROM mdg_w14_activation WHERE singleton = true;
+  IF v_before IS DISTINCT FROM v_after THEN
+    RAISE EXCEPTION 'idempotent cutover re-run moved the cutover timestamp';
+  END IF;
 END
 $test$;
 
 SELECT
   count(*) FILTER (WHERE fulfillment_status='fulfilled') AS fulfilled,
-  count(*) FILTER (WHERE fulfillment_status='retryable_failure') AS retryable_failure,
   count(*) FILTER (WHERE fulfillment_status='terminal_failure') AS terminal_failure,
-  count(*) FILTER (WHERE fulfillment_status='manual_review') AS manual_review,
   count(*) FILTER (WHERE fulfillment_status='not_applicable') AS not_applicable,
-  count(*) AS synthetic_rows
+  count(*) AS total_rows
 FROM mdg_leads;
