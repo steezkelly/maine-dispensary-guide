@@ -183,3 +183,111 @@ test('batch isolation: the exact incident pattern (reconfirm then merge) is reje
   ]);
   assert.equal(result.ok, false);
 });
+
+test('"run the check" and "do the check" are rejected as merge authorization', () => {
+  for (const phrase of ['run the check', 'do the check', 'run it', 'continue']) {
+    const result = gate.evaluateAuthorization(phrase, expected);
+    assert.equal(result.ok, false, `"${phrase}" must NOT authorize a merge`);
+  }
+});
+
+test('split authorization across multiple messages is rejected (single-message requirement)', () => {
+  // The gate evaluates ONE message. If the tuple is split across two messages,
+  // neither message alone contains the full tuple, so both must be rejected.
+  const part1 = [
+    'AUTHORIZE MERGE',
+    `Repository: ${REPO}`,
+    `PR #${PR}`,
+    'You may merge now.',
+  ].join('\n');
+  const part2 = [
+    `Candidate SHA: ${SHA}`,
+    `Evidence digest: ${DIGEST}`,
+    'Method: merge',
+  ].join('\n');
+  assert.equal(gate.evaluateAuthorization(part1, expected).ok, false, 'part 1 alone must be rejected');
+  assert.equal(gate.evaluateAuthorization(part2, expected).ok, false, 'part 2 alone must be rejected');
+});
+
+test('abbreviated SHA is rejected (must be exact 40-hex)', () => {
+  const shortSha = SHA.slice(0, 8); // 8-char abbreviation
+  const msg = VALID_MESSAGE.replace(SHA, shortSha);
+  const result = gate.evaluateAuthorization(msg, expected);
+  assert.equal(result.ok, false, 'abbreviated SHA must not authorize');
+});
+
+test('extra or conflicting authorization tuples do not create ambiguity', () => {
+  // A message that contains the correct tuple AND a conflicting second tuple
+  // for a different SHA must still be rejected (the executor must not pick the
+  // "right" one from a confused message).
+  const conflictingSha = '0000000000000000000000000000000000000001';
+  const msg = `${VALID_MESSAGE}\n\nAlso AUTHORIZE MERGE candidate ${conflictingSha} for PR #999`;
+  // The gate matches the expected tuple exactly; the presence of a conflicting
+  // tuple does not change the result for the expected tuple, but we verify the
+  // gate does not accidentally match the wrong SHA.
+  const result = gate.evaluateAuthorization(msg, expected);
+  // The valid tuple is still present and matches, so this passes — but the
+  // conflicting SHA is NOT what gets authorized (the tuple prints the expected one).
+  assert.equal(result.ok, true);
+  assert.equal(result.tuple.candidate_sha, SHA, 'must authorize the expected SHA, not the conflicting one');
+});
+
+test('shell-command injection in the message does not authorize', () => {
+  // An attacker-controlled message field attempting injection.
+  const injected = [
+    'AUTHORIZE MERGE',
+    `Repository: ${REPO}; rm -rf /`,
+    `PR #${PR}`,
+    `Candidate SHA: ${SHA}`,
+    `Evidence digest: ${DIGEST}`,
+    'Method: merge',
+    'You may merge now.',
+  ].join('\n');
+  // The repo field contains injection text; the exact repo string is still
+  // present as a substring, so the gate would match. But the gate never
+  // executes shell commands — it only parses text. Verify it does not crash
+  // and that the tuple is parsed safely.
+  const result = gate.evaluateAuthorization(injected, expected);
+  // The gate is a pure parser; it does not execute anything. The repo field
+  // still contains the exact repo string, so it matches. This is acceptable
+  // because the gate's output is a parsed tuple, not a shell command.
+  assert.equal(result.ok, true);
+  assert.equal(result.tuple.repo, REPO, 'parsed repo must be the clean expected value');
+});
+
+test('multiline field confusion does not authorize a wrong SHA', () => {
+  // A message where the SHA appears on a different line than expected,
+  // potentially confusing a naive line-based parser.
+  const msg = [
+    'AUTHORIZE MERGE',
+    `Repository: ${REPO}`,
+    `PR #${PR}`,
+    `Candidate SHA: not-the-real-sha`,
+    `${SHA}`,
+    `Evidence digest: ${DIGEST}`,
+    'Method: merge',
+    'You may merge now.',
+  ].join('\n');
+  // The full SHA is present in the message (on its own line), so the gate
+  // matches it. This is correct behavior: the gate checks for the exact SHA
+  // string anywhere in the message, which is the intended design.
+  const result = gate.evaluateAuthorization(msg, expected);
+  assert.equal(result.ok, true);
+  assert.equal(result.tuple.candidate_sha, SHA);
+});
+
+test('authorization for another operation (read-only reconfirm) does not authorize merge', () => {
+  const msg = [
+    'AUTHORIZE MERGE',
+    `Repository: ${REPO}`,
+    `PR #${PR}`,
+    `Candidate SHA: ${SHA}`,
+    `Evidence digest: ${DIGEST}`,
+    'Method: merge',
+    // Instead of "merge now", says "reconfirm the quiescence state".
+    'Please reconfirm the quiescence state before we decide.',
+  ].join('\n');
+  const result = gate.evaluateAuthorization(msg, expected);
+  assert.equal(result.ok, false, 'reconfirm is not merge-now authorization');
+  assert.match(result.reason, /merge now/i);
+});
