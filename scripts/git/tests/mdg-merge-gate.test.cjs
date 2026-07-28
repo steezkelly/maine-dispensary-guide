@@ -276,6 +276,39 @@ test('multiline field confusion does not authorize a wrong SHA', () => {
   assert.equal(result.tuple.candidate_sha, SHA);
 });
 
+test('the documented field-label authorization format is accepted', () => {
+  // This is the exact format the authorization template instructs operators to
+  // send (repo:/pr:/candidate:/evidence:/method: field labels). The gate must
+  // accept it — a false negative here blocks every legitimate authorization.
+  const fieldFormat = [
+    'AUTHORIZE MERGE',
+    `repo: ${REPO}`,
+    `pr: ${PR}`,
+    `candidate: ${SHA}`,
+    `evidence: ${DIGEST}`,
+    'method: merge',
+    'merge now',
+  ].join('\n');
+  const result = gate.evaluateAuthorization(fieldFormat, expected);
+  assert.equal(result.ok, true, result.ok ? '' : result.reason);
+  assert.equal(result.tuple.pr, 228);
+  assert.equal(result.tuple.candidate_sha, SHA);
+});
+
+test('a wrong PR number in the documented field format is still rejected', () => {
+  const fieldFormat = [
+    'AUTHORIZE MERGE',
+    `repo: ${REPO}`,
+    'pr: 999',
+    `candidate: ${SHA}`,
+    `evidence: ${DIGEST}`,
+    'method: merge',
+    'merge now',
+  ].join('\n');
+  const result = gate.evaluateAuthorization(fieldFormat, expected);
+  assert.equal(result.ok, false, 'pr: 999 must not authorize PR 228');
+});
+
 test('authorization for another operation (read-only reconfirm) does not authorize merge', () => {
   const msg = [
     'AUTHORIZE MERGE',

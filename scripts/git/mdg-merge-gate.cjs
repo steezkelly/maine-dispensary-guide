@@ -146,8 +146,14 @@ function evaluateAuthorization(message, expected) {
     return { ok: false, reason: `exact repository "${expected.repo}" not stated in the message` };
   }
 
-  // 5. Exact PR number (as a standalone token, e.g. "PR 228" or "#228").
-  const prToken = new RegExp(`(#|PR\\s*|pull\\s+request\\s*#?\\s*)${expected.pr}\\b`, 'i');
+  // 5. Exact PR number. Accept the documented field format ("pr: 229") as well
+  //    as natural-language forms ("PR 229", "#229", "pull request 229"). The
+  //    field-label form is what the authorization template instructs operators
+  //    to send, so it must be accepted.
+  const prToken = new RegExp(
+    `(pr\\s*[:=]\\s*|#|PR\\s*#?|pull\\s+request\\s*#?\\s*)${expected.pr}\\b`,
+    'i',
+  );
   if (!prToken.test(text)) {
     return { ok: false, reason: `exact PR number "${expected.pr}" not stated in the message` };
   }
