@@ -10,37 +10,95 @@
  *   config/credentials/mainedispensaryguide.env (format: EMAIL|APP_PASSWORD or env keys)
  */
 
-const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 
+// Lazy-load nodemailer so that --check-config and --help work without it installed.
+let _nodemailer = null;
+function getNodemailer() {
+  if (!_nodemailer) _nodemailer = require('nodemailer');
+  return _nodemailer;
+}
+
 const PROJECT_ROOT = path.resolve(__dirname, '..');
-const CREDENTIALS_PATHS = [
-  process.env.MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS,
-  process.env.EMAIL_PIPELINE_CREDENTIALS,
-  process.env.PURELYMAIL_CREDENTIALS_FILE,
-  path.join(PROJECT_ROOT, 'config', 'credentials', 'mainedispensaryguide.env'),
-  '/home/steve/Documents/purelymail-smtp.txt'
-].filter(Boolean);
+// Single source of truth for credential locations, derived live from
+// getCredentialCandidates() (declared below, hoisted) so the real-send path
+// and the --check-config path can never drift apart. Computed at call time so
+// env-supplied paths reflect the current environment.
+function credentialPaths() {
+  return getCredentialCandidates().map((c) => c.path);
+}
 const DEFAULT_FROM = 'Steve <steve@mainedispensaryguide.com>';
 const TRACKING_FILE = path.join(PROJECT_ROOT, 'public', 'data', 'email-tracking.json');
 const SENT_MAIL_DIR = path.join(PROJECT_ROOT, 'public', 'data', 'sent-mail');
 
 // Load credentials from secure file
-function loadCredentials() {
-  for (const credentialsPath of CREDENTIALS_PATHS) {
-    if (!fs.existsSync(credentialsPath)) {
-      continue;
-    }
-    const content = fs.readFileSync(credentialsPath, 'utf-8').trim();
-    const parsed = parseCredentialsFile(content, credentialsPath);
-    if (parsed) {
-      return parsed;
-    }
-    throw new Error(`Invalid credentials format in ${credentialsPath}.`);
+// Shared credential-file inspection used by BOTH the real-send path
+// (loadCredentials) and the redacted self-check (checkConfig). Keeping one
+// inspector means the two paths cannot drift on what counts as an acceptable
+// credential file. Reads content internally; callers must never emit the
+// returned email/password or the raw file content.
+function inspectCredentialFile(credentialsPath) {
+  const result = {
+    exists: false,
+    mode_acceptable: false,
+    format_recognized: false,
+    fields_present: false,
+    email: null,
+    password: null,
+  };
+  if (!fs.existsSync(credentialsPath)) return result;
+  result.exists = true;
+
+  // File mode must be 0600 or 0400. Insecure modes are rejected here so the
+  // real-send path fails closed exactly like --check-config does.
+  try {
+    const mode = fs.statSync(credentialsPath).mode & 0o777;
+    result.mode_acceptable = (mode === 0o600 || mode === 0o400);
+  } catch {
+    result.mode_acceptable = false;
   }
 
-  const searched = CREDENTIALS_PATHS.map((p) => `  - ${p}`).join('\n');
+  // Format validation (reads content internally; never returned to output).
+  try {
+    const content = fs.readFileSync(credentialsPath, 'utf-8').trim();
+    const parsed = parseCredentialsFile(content, credentialsPath);
+    result.format_recognized = parsed !== null;
+    result.fields_present = parsed !== null && !!(parsed.email && parsed.password);
+    if (parsed) {
+      result.email = parsed.email;
+      result.password = parsed.password;
+    }
+  } catch {
+    // Sanitize: swallow errors (message may contain file content).
+    result.format_recognized = false;
+    result.fields_present = false;
+  }
+
+  return result;
+}
+
+function loadCredentials() {
+  const paths = credentialPaths();
+  for (const credentialsPath of paths) {
+    const insp = inspectCredentialFile(credentialsPath);
+    if (!insp.exists) continue;
+
+    // Fail closed on insecure permissions BEFORE any transport/network work.
+    // Diagnostic stays redacted: path only, never credential content.
+    if (!insp.mode_acceptable) {
+      throw new Error(
+        `Insecure credential file permissions at ${credentialsPath}. ` +
+        `Expected mode 600 or 400. Run: chmod 600 ${credentialsPath}`
+      );
+    }
+    if (!insp.format_recognized || !insp.fields_present) {
+      throw new Error(`Invalid credentials format in ${credentialsPath}.`);
+    }
+    return { email: insp.email, password: insp.password, source: credentialsPath };
+  }
+
+  const searched = paths.map((p) => `  - ${p}`).join('\n');
   throw new Error(
     `No valid credentials file found.\n` +
     `Checked the following locations:\n${searched}\n\n` +
@@ -93,6 +151,55 @@ function parseCredentialsFile(content, source) {
   }
 
   return null;
+}
+
+// ---------------------------------------------------------------------------
+// Redacted configuration self-check (--check-config)
+//
+// Validates credential presence, permissions, and format WITHOUT ever
+// outputting email addresses, passwords, credential lines, env-var values,
+// or raw parser exceptions containing source content. Used by the audit
+// script (scripts/email/mdg-leads-audit.cjs) as the sender-owned authority
+// for credential readiness.
+// ---------------------------------------------------------------------------
+
+function getCredentialCandidates() {
+  return [
+    { path: process.env.MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS, source_class: 'env', source_path_id: 'MAINE_DISPENSARYGUIDE_SMTP_CREDENTIALS' },
+    { path: process.env.EMAIL_PIPELINE_CREDENTIALS, source_class: 'env', source_path_id: 'EMAIL_PIPELINE_CREDENTIALS' },
+    { path: process.env.PURELYMAIL_CREDENTIALS_FILE, source_class: 'env', source_path_id: 'PURELYMAIL_CREDENTIALS_FILE' },
+    { path: path.join(PROJECT_ROOT, 'config', 'credentials', 'mainedispensaryguide.env'), source_class: 'repo', source_path_id: 'config/credentials/mainedispensaryguide.env' },
+    { path: '/home/steve/Documents/purelymail-smtp.txt', source_class: 'user', source_path_id: 'Documents/purelymail-smtp.txt' },
+  ].filter(c => c.path);
+}
+
+function checkConfig() {
+  const candidates = getCredentialCandidates();
+  const result = {
+    credential_source_found: false,
+    source_class: null,
+    source_path_id: null,
+    file_mode_acceptable: false,
+    format_recognized: false,
+    required_fields_present: false,
+  };
+
+  for (const candidate of candidates) {
+    // Shared inspector — identical logic to the real-send path.
+    const insp = inspectCredentialFile(candidate.path);
+    if (!insp.exists) continue;
+
+    result.credential_source_found = true;
+    result.source_class = candidate.source_class;
+    result.source_path_id = candidate.source_path_id;
+    result.file_mode_acceptable = insp.mode_acceptable;
+    result.format_recognized = insp.format_recognized;
+    result.required_fields_present = insp.fields_present;
+
+    break; // first existing file wins (same precedence as loadCredentials)
+  }
+
+  return result;
 }
 
 // Warm-up email templates
@@ -237,6 +344,7 @@ function parseArgs(args) {
 async function sendEmail({ to, subject, body, from = DEFAULT_FROM }) {
   const credentials = loadCredentials();
 
+  const nodemailer = getNodemailer();
   // Try port 465 (SSL) first, fallback to port 587 (STARTTLS)
   let transporter;
   try {
@@ -435,6 +543,21 @@ Credentials:
     process.exit(0);
   }
 
+  // --check-config: redacted credential self-check (used by audit script).
+  // Exit zero ONLY when all four are true: source found, format recognized,
+  // required fields present, AND file mode acceptable (600 or 400). An
+  // insecure credential file (e.g. 0644) produces nonzero while still
+  // emitting only redacted JSON.
+  if (args.includes('--check-config')) {
+    const result = checkConfig();
+    console.log(JSON.stringify(result, null, 2));
+    const ok = result.credential_source_found &&
+               result.format_recognized &&
+               result.required_fields_present &&
+               result.file_mode_acceptable;
+    process.exit(ok ? 0 : 1);
+  }
+
   const parsed = parseArgs(args);
   const { values } = parsed;
 
@@ -540,4 +663,11 @@ Credentials:
   }
 }
 
-main();
+// Run main() only when executed directly, not when required (e.g. by tests).
+// This lets the load-only credential test exercise loadCredentials() without
+// triggering argument parsing, network activity, or a real send.
+if (require.main === module) {
+  main();
+}
+
+module.exports = { loadCredentials, inspectCredentialFile, parseCredentialsFile };
