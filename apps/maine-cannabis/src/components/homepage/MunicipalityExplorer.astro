@@ -25,7 +25,11 @@ const sortedRows = [...rows].sort((left, right) => left.name.localeCompare(right
       <li class="municipality-explorer__row" data-municipality-row data-search-value={`${row.name} ${row.county}`.toLowerCase()}>
         <a class="municipality-explorer__link" href={row.href}>{row.name}, {row.county}</a>
         <p class="municipality-explorer__note">{row.regulatoryNote}</p>
-        <p class="municipality-explorer__licenses"><span class="municipality-explorer__count-value">{row.activeStoreLicenses}</span> active store licenses</p>
+        {row.activeStoreLicenses !== null ? (
+          <p class="municipality-explorer__licenses"><span class="municipality-explorer__count-value">{row.activeStoreLicenses}</span> active store licenses</p>
+        ) : (
+          <p class="municipality-explorer__licenses municipality-explorer__licenses--unavailable">Current store count unavailable</p>
+        )}
       </li>
     ))}
   </ol>
