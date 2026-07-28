@@ -53,13 +53,27 @@ test('MDG agent orchestration protocol makes role boundaries independently enfor
   assert.match(protocol, /Verifier[\s\S]*?must\s+not\s+author fixes/i);
   assert.match(protocol, /Verifier[\s\S]*?must\s+not\s+waive[\s\S]*?acceptance criteria/i);
 
-  assert.match(protocol, /Integrator[\s\S]*?cherry-pick one accepted candidate/i);
+  assert.match(protocol, /Integrator[\s\S]*?GitHub\s+\*\*merge commit\*\*/i);
+  assert.match(protocol, /Integrator[\s\S]*?--match-head-commit/i);
   assert.match(protocol, /Integrator[\s\S]*?npm run\s+verify:iterate/i);
   assert.match(protocol, /Integrator[\s\S]*?verify:post-deploy/i);
-  assert.match(protocol, /Integrator[\s\S]*?deploy verification/i);
+  assert.match(protocol, /Integrator[\s\S]*?production deployment readiness/i);
   assert.match(protocol, /Integrator[\s\S]*?Pre-transport smoke against[\s\S]*?is forbidden/i);
   assert.match(protocol, /Integrator[\s\S]*?must\s+not\s+merge[\s\S]*?unverified batch work/i);
   assert.match(protocol, /Integrator[\s\S]*?must\s+not[\s\S]*?primary checkout/i);
+
+  // Explicit merge-authorization gate (added 2026-07-28 after incident).
+  assert.match(protocol, /Explicit merge authorization \(mandatory gate\)/i);
+  assert.match(protocol, /AUTHORIZE MERGE/i);
+  assert.match(protocol, /mdg-merge-gate\.cjs/i);
+  assert.match(protocol, /Ambiguous[\s\S]*?NEVER authorizes a merge/i);
+  assert.match(protocol, /merge command must never be grouped in the same[\s\S]*?batch/i);
+
+  // Canonical integration is merge-commit; cherry-pick is emergency-only.
+  assert.match(protocol, /canonical integration topology is a \*\*GitHub merge commit\*\*/i);
+  assert.match(protocol, /cherry-pick[\s\S]*?emergency mode/i);
+  // The canonical topology statement must not name cherry-pick as the method.
+  assert.doesNotMatch(protocol, /canonical integration topology is[\s\S]{0,40}cherry-pick/i);
 
   assert.match(protocol, /Continuity Watcher[\s\S]*?may unblock[\s\S]*?create\s+next ready work/i);
   assert.match(protocol, /Continuity Watcher[\s\S]*?must\s+not\s+claim[\s\S]*?implementation task[\s\S]*?another\s+worker/i);

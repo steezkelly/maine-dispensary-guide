@@ -158,21 +158,39 @@ sequence in order:
    underlying cause and retry.
 9. Wait until Vercel reports Ready for that exact candidate SHA.
 10. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
-11. Mark the PR ready and merge with a GitHub **merge commit** — run
+11. **Explicit merge authorization (mandatory gate).** Before any merge command,
+    obtain and parse an explicit authorization from a single owner message using
+    `scripts/git/mdg-merge-gate.cjs validate`. The message must contain ALL of:
+    (1) the literal phrase `AUTHORIZE MERGE`; (2) the exact repository full name;
+    (3) the exact PR number; (4) the exact candidate SHA (40-hex); (5) the exact
+    bound evidence digest (64-hex); (6) the intended merge method on a `method:`
+    line; and (7) an explicit "merge now" statement (e.g. "you may merge now").
+    The gate prints the parsed tuple and must exit 0 before any merge. Ambiguous
+    language — "go ahead", "proceed", "continue", "run it", "do the check",
+    "reconfirm", "looks good", "okay", "ok", "yes", "sure", "lgtm", "ship it" —
+    NEVER authorizes a merge. Authorization may not be inferred from earlier
+    messages, nearby context, implied consent, or authorization for a different
+    operation (e.g. a read-only reconfirmation). The standing "commit and push
+    reviewed work by default" preference covers branch push only, NOT merging to
+    `main`. A merge command must never be grouped in the same shell/API batch as
+    readiness or read-only verification commands (enforced by
+    `mdg-merge-gate.cjs check-batch-isolation`). See
+    `docs/postmortems/2026-07-28-w14-unauthorized-merge-incident.md`.
+12. Mark the PR ready and merge with a GitHub **merge commit** — run
     `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"`
     (not squash, not rebase). `--match-head-commit` is mandatory: it refuses to
     merge any PR head other than the exact verified candidate.
-12. **Post-merge reconciliation (mandatory).** Prove: first parent = the authorized base; second /
+13. **Post-merge reconciliation (mandatory).** Prove: first parent = the authorized base; second /
     reachable parent = the verified candidate; final-main tree = candidate tree
     (`git rev-parse "$FINAL_MAIN_SHA"^{tree}` == `git rev-parse "$CANDIDATE_SHA"^{tree}`).
-13. From a clean final main, re-run: `node --test
+14. From a clean final main, re-run: `node --test
     scripts/operations/tests/*.test.cjs`, `git diff --check`, `npm run
     verify:iterate`, `npm run build`, and the required exact-governance checks.
-14. Wait for production Ready on the exact final merge SHA.
-15. Only after merge and exact production deployment readiness, run
+15. Wait for production Ready on the exact final merge SHA.
+16. Only after merge and exact production deployment readiness, run
     `MDG_ALLOW_PROD_SMOKE=1 MDG_BASE=https://mainedispensaryguide.com npm run verify:post-deploy`.
-16. Probe the expected production route.
-17. Gather closeout evidence **before** releasing the lease, closing the
+17. Probe the expected production route.
+18. Gather closeout evidence **before** releasing the lease, closing the
     candidate card, and attaching final released metadata (evidence-first).
 
 Pre-transport smoke against the currently deployed production site is forbidden;
