@@ -40,11 +40,46 @@ their diff unstaged for review.
 Before launching an author, the Coordinator must have a validated contract,
 completed the scoped preflight, created a fresh worktree, and acquired the
 allowed-path lease. Then render the bounded author prompt at
-`/tmp/mdg-task-{{id}}-prompt.txt` and launch it with:
+`/tmp/mdg-task-{{id}}-prompt.txt`.
+
+**Canonical launch (required).** Launch the bounded author through the
+branch-writer guard, which atomically acquires single-writer ownership of the
+branch (a unique `acquisition_id`), validates the expected live remote head,
+launches the author in the declared worktree, and releases ownership on exit:
 
 ```bash
-codex --yolo exec "$(cat /tmp/mdg-task-{{id}}-prompt.txt)"
+npm run agents:author-launch -- \
+  --contract /tmp/mdg-task-{{id}}-contract.json \
+  --repo "$REPO_ROOT" \
+  -- exec "$(cat /tmp/mdg-task-{{id}}-prompt.txt)"
 ```
+
+The contract must carry `branch`, `worktree`, `expected_remote_head` (use
+`"absent"` for a brand-new branch), and `writer_label`. The wrapper **fails
+without launching Codex** when acquisition fails (another live owner, remote-head
+drift, or malformed writer state). The author executable is injectable via
+`MDG_AUTHOR_BIN` for testing.
+
+**Noncanonical (debugging only).** A bare `codex --yolo exec "..."` is documented
+solely as noncanonical debugging guidance. It is **not** the normal author path:
+it bypasses the branch-writer guard and must never be used for candidate work.
+
+#### Enforcement scope (honest)
+
+Single-writer branch ownership is:
+
+- **mechanically enforced within the canonical repository workflow** — the
+  author-launch wrapper, the scoped task preflight (`agents:preflight`), the
+  continuity dispatch decision (`agents:continuity`), and the candidate push
+  boundary (`pre-push-verify.cjs` when `MDG_BRANCH_WRITER_ACQUISITION_ID` is set)
+  all consult and obey the writer state;
+- **manually bypassable** through direct external Hermes/Codex/Git commands;
+- **not GitHub-wide enforcement** (it does not replace server-side branch
+  protection);
+- **not a security boundary** against an actor deliberately deleting lock files.
+
+Do not claim "auto-dispatch is blocked" except insofar as the actual
+continuity/launch path consults and obeys the writer state, as wired above.
 
 Run the author in a PTY or background process. Monitor its logs without typing
 into the process unless the contract is amended; an amended contract requires a
@@ -124,7 +159,9 @@ sequence in order:
 9. Wait until Vercel reports Ready for that exact candidate SHA.
 10. `MDG_PREVIEW_URL=https://your-exact-preview.vercel.app npm run verify:post-deploy`
 11. Mark the PR ready and merge with a GitHub **merge commit** — run
-    `gh pr merge "$PR_NUMBER" --merge` (not squash, not rebase).
+    `gh pr merge "$PR_NUMBER" --merge --match-head-commit "$CANDIDATE_SHA"`
+    (not squash, not rebase). `--match-head-commit` is mandatory: it refuses to
+    merge any PR head other than the exact verified candidate.
 12. **Post-merge reconciliation (mandatory).** Prove: first parent = the authorized base; second /
     reachable parent = the verified candidate; final-main tree = candidate tree
     (`git rev-parse "$FINAL_MAIN_SHA"^{tree}` == `git rev-parse "$CANDIDATE_SHA"^{tree}`).

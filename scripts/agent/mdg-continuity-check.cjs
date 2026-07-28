@@ -4,6 +4,11 @@
 const { readFileSync } = require('node:fs');
 const { resolve: resolvePath, isAbsolute } = require('node:path');
 
+// OPS-06B-HARDEN-R1 (§6.D): a ready task targeting an actively owned branch or
+// worktree is NOT dispatchable. The writer-state snapshot is passed in (or read
+// through the CLI boundary) so the decision stays deterministic and testable.
+const { taskBlocker } = require(resolvePath(__dirname, '../git/mdg-branch-writer.cjs'));
+
 function normalizeId(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
@@ -148,9 +153,10 @@ function getBlockedHandoffProblem(task) {
   };
 }
 
-function nextAction(tasks, now) {
+function nextAction(tasks, now, writerSnapshot) {
   const nowDate = now ? toDateTime(now) : new Date();
   const taskList = Array.isArray(tasks) ? tasks : [];
+  const snapshot = Array.isArray(writerSnapshot) ? writerSnapshot : [];
 
   const byId = new Map();
   for (const task of taskList) {
@@ -168,7 +174,11 @@ function nextAction(tasks, now) {
       if (normalizeTaskStatus(task) !== 'ready') return false;
       if (!isDependencySatisfied(Array.isArray(task.depends_on) ? task.depends_on : [], byId)) return false;
       const candidatePaths = getLeasePaths(task);
-      return !inProgressTasks.some((activeTask) => hasLeaseCollision(candidatePaths, activeTask));
+      if (inProgressTasks.some((activeTask) => hasLeaseCollision(candidatePaths, activeTask))) return false;
+      // OPS-06B-HARDEN-R1 (§6.D): do not dispatch a ready task whose
+      // branch/worktree is actively owned by another acquisition.
+      if (taskBlocker(task, snapshot, task.acquisition_id)) return false;
+      return true;
     });
 
   if (dispatchable.length > 0) {
@@ -406,7 +416,32 @@ function runCli() {
     return;
   }
 
-  const decision = nextAction(tasks, parsedNow);
+  // OPS-06B-HARDEN-R1 (§6.D): read the branch-writer snapshot through the CLI
+  // boundary so the dispatch decision can refuse actively-owned branches.
+  // Malformed writer state fails closed.
+  let writerSnapshot = [];
+  try {
+    const { snapshot } = require(resolvePath(__dirname, '../git/mdg-branch-writer.cjs'));
+    writerSnapshot = snapshot(process.cwd());
+  } catch (error) {
+    if (error && /BRANCH_WRITER_RECORD/.test(String(error.message))) {
+      if (useJson) {
+        outputJson({
+          kind: 'blocked',
+          action: 'blocked',
+          taskId: null,
+          details: { reason: `BRANCH_WRITER_STATE_MALFORMED: ${error.message}` },
+        }, 1);
+        return;
+      }
+      console.error(error.message);
+      process.exitCode = 1;
+      return;
+    }
+    writerSnapshot = [];
+  }
+
+  const decision = nextAction(tasks, parsedNow, writerSnapshot);
   const payload = {
     schema: 'mdg-agent-continuity/v1',
     now: parsedNow.toISOString(),
