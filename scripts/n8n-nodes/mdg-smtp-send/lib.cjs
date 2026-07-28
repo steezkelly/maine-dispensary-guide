@@ -48,7 +48,7 @@ function classifySmtpFailure(error) {
   const responseCode = Number(error && error.responseCode);
 
   if (code === 'EAUTH' || stage === 'AUTH' || responseCode === 535) {
-    return { outcome: 'auth_failure', failure_class: 'uncertain', error_code: code, error_stage: stage };
+    return { outcome: 'auth_failure', failure_class: 'authentication', error_code: code, error_stage: stage };
   }
 
   const connectionStage = stage === 'CONN' || stage === 'UNKNOWN';

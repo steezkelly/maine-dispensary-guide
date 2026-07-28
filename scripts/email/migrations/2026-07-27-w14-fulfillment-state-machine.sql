@@ -696,16 +696,17 @@ $function$;
 
 -- Restrict execution to the n8n application role. PUBLIC must not call state
 -- functions directly; the n8n Postgres credential role is the only intended
--- caller. Adjust the role name if the deployment uses a different one.
+-- caller. REVOKE is unconditional; GRANT is conditional on the role existing.
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_claim(text, timestamptz) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_prepare_send(bigint, text, timestamptz) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_success(bigint, bigint, text, timestamptz) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_failure(bigint, bigint, text, text, text, timestamptz) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_reconcile_stale(interval, interval, timestamptz) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mdg_w14_authorize_resend(bigint, text, text, timestamptz) FROM PUBLIC;
+
 DO $w14$
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n8n') THEN
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_claim(text, timestamptz) FROM PUBLIC;
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_prepare_send(bigint, text, timestamptz) FROM PUBLIC;
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_success(bigint, bigint, text, timestamptz) FROM PUBLIC;
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_failure(bigint, bigint, text, text, text, timestamptz) FROM PUBLIC;
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_reconcile_stale(interval, interval, timestamptz) FROM PUBLIC;
-    REVOKE EXECUTE ON FUNCTION public.mdg_w14_authorize_resend(bigint, text, text, timestamptz) FROM PUBLIC;
     GRANT EXECUTE ON FUNCTION public.mdg_w14_claim(text, timestamptz) TO n8n;
     GRANT EXECUTE ON FUNCTION public.mdg_w14_prepare_send(bigint, text, timestamptz) TO n8n;
     GRANT EXECUTE ON FUNCTION public.mdg_w14_mark_success(bigint, bigint, text, timestamptz) TO n8n;

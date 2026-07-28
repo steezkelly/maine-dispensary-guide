@@ -120,3 +120,16 @@ test('W13 normalization documents trust boundary and rejects unknown paths', () 
   const insert = updatedInsertContract();
   assert.match(insert.queryReplacement, /\$json\.promised_asset \? 'pending' : 'not_applicable'/);
 });
+
+test('migration REVOKE EXECUTE FROM PUBLIC is unconditional', () => {
+  const migration = fs.readFileSync(
+    path.resolve(__dirname, '../migrations/2026-07-27-w14-fulfillment-state-machine.sql'),
+    'utf8',
+  );
+  // REVOKE must appear outside any DO block / IF EXISTS guard.
+  const revokeLines = migration.split('\n').filter((l) => l.trim().startsWith('REVOKE EXECUTE'));
+  assert.ok(revokeLines.length >= 6, 'expected at least six unconditional REVOKE statements');
+  for (const line of revokeLines) {
+    assert.doesNotMatch(line, /IF EXISTS/i, 'REVOKE must not be conditional');
+  }
+});

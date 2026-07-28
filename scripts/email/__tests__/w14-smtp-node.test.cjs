@@ -63,7 +63,9 @@ test('permanent pre-DATA rejection is terminal', () => {
 });
 
 test('authentication, DATA-stage, timeout-after-connect, and unknown failures do not retry', () => {
-  assert.equal(classifySmtpFailure({ code: 'EAUTH', command: 'AUTH' }).outcome, 'auth_failure');
+  const auth = classifySmtpFailure({ code: 'EAUTH', command: 'AUTH' });
+  assert.equal(auth.outcome, 'auth_failure');
+  assert.equal(auth.failure_class, 'authentication');
   assert.equal(classifySmtpFailure({ code: 'ETIMEDOUT', command: 'DATA' }).failure_class, 'uncertain');
   assert.equal(classifySmtpFailure({ code: 'ECONNRESET', command: 'DATA' }).failure_class, 'uncertain');
   assert.equal(classifySmtpFailure(new Error('opaque')).failure_class, 'uncertain');
