@@ -86,16 +86,20 @@ const successPath = pagePath || '/';
 if (!email || !pagePath) throw new Error('missing_required');
 if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) throw new Error('invalid_email');
 
-function fnv1a(s) {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = (h * 0x01000193) >>> 0;
-  }
-  return ('00000000' + h.toString(16)).slice(-8);
-}
+// Idempotency identity: a client-generated canonical RFC-4122 UUID v4
+// request_id travels unchanged with the POST body. It is the SOLE source-message
+// identity. It is NOT derived from email, page path, name, timestamp, IP, or
+// user agent, so an exact transport replay deduplicates while a new deliberate
+// submission (new UUID) inserts normally. ts is retained only as optional
+// observational metadata and is never part of the identity. FNV-1a is not used.
+const requestId = (raw.request_id || '').toString().trim().toLowerCase();
+// Canonical RFC-4122 UUID v4: version nibble fixed to 4, variant nibble in
+// [89ab]. Equivalent to xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx.
+const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+if (!requestId) throw new Error('missing_request_id');
+if (!UUID_V4_RE.test(requestId)) throw new Error('invalid_request_id');
 
-const sourceMessageId = 'api_post:' + fnv1a(email + '|' + pagePath + '|' + formName + '|' + (raw.ts || ''));
+const sourceMessageId = 'api_post:' + requestId;
 return [{ json: {
   email,
   from_name: fromName,
@@ -111,6 +115,7 @@ return [{ json: {
   utm_campaign: utmCampaign,
   consent_ts: consentTs,
   asset_id: assetId,
+  request_id: requestId,
   source_message_id: sourceMessageId,
   transport_kind: 'api_post',
   form_name: formName,
@@ -119,24 +124,52 @@ return [{ json: {
 } }];`;
 }
 
+/**
+ * Execute the generated W13 "Normalize & Validate" code against a mock n8n
+ * `$input` so tests exercise the ACTUAL provisioned code (not a reimplementation).
+ * Returns the single normalized item's json. Throws the same errors the n8n
+ * Code node would throw (missing_required, invalid_email, missing_request_id,
+ * invalid_request_id).
+ */
+function runNormalizeCode(body) {
+  const code = buildNormalizeCode();
+  const $input = { first: () => ({ json: { body } }) };
+  // eslint-disable-next-line no-new-func
+  const fn = new Function('$input', `${code}\n`);
+  const out = fn($input);
+  if (!Array.isArray(out) || out.length !== 1) {
+    throw new Error('normalize code must return exactly one item');
+  }
+  return out[0].json;
+}
+
 function updatedInsertContract() {
   return {
-    query: `INSERT INTO mdg_leads (
-  from_email, from_name, subject, lead_type, promised_asset, message_body,
-  received_at, page_path, referrer, user_agent, consent_ts, asset_id,
-  source_message_id, transport_kind, utm_source, utm_medium, utm_campaign,
-  form_name, success_path, fulfillment_status
-) VALUES (
-  $1, $2, $3, $4, $5, $6,
-  $7, $8, $9, $10, $11, $12,
-  $13, $14, $15, $16, $17,
-  $18, $19, $20
-) RETURNING id;`,
+    // Fail-closed idempotent insert via the restricted database function
+    // mdg_w14_insert_lead (added by the 2026-07-28 R1 remediation migration).
+    // The function resolves the idempotency key (source_message_id =
+    // 'api_post:' + request_id) and:
+    //   * exact replay (same request_id AND same immutable request identity:
+    //     normalized email, page_path, form_name, promised_asset,
+    //     transport_kind) -> returns the existing lead id; no new row; no
+    //     fulfillment-state change; no attempt;
+    //   * same request_id with DIFFERENT immutable request data -> raises
+    //     request_id_reuse_mismatch (the surrounding W13 workflow fails rather
+    //     than returning a false successful lead response); no row; no mutation;
+    //   * new request_id -> inserts normally; the BEFORE INSERT trigger
+    //     classifies fulfillment_status database-authoritatively (the caller
+    //     value passed here is intentionally ignored and overridden).
+    // The 20th argument is a placeholder fulfillment_status; the trigger
+    // overrides it, so its value is irrelevant.
+    query: `SELECT mdg_w14_insert_lead(
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+  $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+) AS id;`,
     queryReplacement: `={{ [
-  $json.email, $json.from_name, $json.subject, $json.lead_type, $json.promised_asset, $json.message_body,
+  $json.source_message_id, $json.email, $json.from_name, $json.subject, $json.lead_type, $json.promised_asset, $json.message_body,
   $json.received_at, $json.page_path, $json.referrer, $json.user_agent, $json.consent_ts, $json.asset_id,
-  $json.source_message_id, $json.transport_kind, $json.utm_source, $json.utm_medium, $json.utm_campaign,
-  $json.form_name, $json.success_path, $json.promised_asset ? 'pending' : 'not_applicable'
+  $json.transport_kind, $json.utm_source, $json.utm_medium, $json.utm_campaign, $json.form_name, $json.success_path,
+  $json.request_id
 ].map(v => v === undefined ? null : v) }}`,
   };
 }
@@ -447,6 +480,7 @@ module.exports = {
   buildNormalizeCode,
   buildW14Workflow,
   privacySettings,
+  runNormalizeCode,
   sha256,
   updatedInsertContract,
 };

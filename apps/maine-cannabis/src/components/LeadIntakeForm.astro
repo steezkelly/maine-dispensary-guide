@@ -193,6 +193,36 @@ const {
       return values;
     }
 
+    // Generate a fresh, random request_id (UUID v4) for ONE deliberate
+    // submission. It is the server-side idempotency key: an exact transport
+    // replay reuses the same request_id (and deduplicates), while a new
+    // deliberate submission generates a new one. It is NOT derived from email,
+    // page path, name, timestamp, IP, or user agent, and it is NOT persisted to
+    // browser storage or used to track the user across page views.
+    function newRequestId() {
+      try {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+          return window.crypto.randomUUID();
+        }
+      } catch (_) {}
+      // Secure fallback: build an RFC-4122 v4 UUID from crypto.getRandomValues.
+      try {
+        var bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+        bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+        var hex = [];
+        for (var i = 0; i < 16; i++) {
+          hex.push(('0' + bytes[i].toString(16)).slice(-2));
+        }
+        return hex[0] + hex[1] + hex[2] + hex[3] + '-' + hex[4] + hex[5] + '-' +
+          hex[6] + hex[7] + '-' + hex[8] + hex[9] + '-' +
+          hex[10] + hex[11] + hex[12] + hex[13] + hex[14] + hex[15];
+      } catch (_) {
+        return '';
+      }
+    }
+
     function navigateToSuccess() {
       var successPath = form.getAttribute('data-success-path') || '';
       if (successPath) {
@@ -233,7 +263,15 @@ const {
         // #188: lead_form_start on intent; lead_capture already fires inside
         // the .then() after 2xx (see #197). Both use beacon transport.
         fireGA4(form, formName, trackFields, 'lead_form_start');
-        var payload = Object.assign({}, values, readAttribution(), { ts: new Date().toISOString() });
+        // One fresh request_id per deliberate submission attempt. It travels in
+        // the JSON body as the server-side idempotency key. A transport-level
+        // retry of THIS fetch reuses the same payload (same request_id) so it
+        // deduplicates; the next deliberate submit generates a new request_id.
+        var requestId = newRequestId();
+        var payload = Object.assign({}, values, readAttribution(), {
+          request_id: requestId,
+          ts: new Date().toISOString(),
+        });
         try {
           fetch(endpoint, {
             method: 'POST',

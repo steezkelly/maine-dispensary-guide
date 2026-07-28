@@ -60,9 +60,16 @@ curl -sS -m 10 -X POST "https://mainedispensaryguide.com/api/lead" \
     "name":"Verify Test",
     "page_path":"/download/founders-bible",
     "success_path":"/download/founders-bible?success=true",
+    "request_id":"3f2a8c1e-9d4b-4e7a-b6c5-1a2b3c4d5e6f",
     "ts":"2026-07-24T02:30:00.000Z"
   }'
 ```
+
+`request_id` is a client-generated canonical **RFC-4122 UUID v4** (version nibble
+`4`, variant nibble in `[89ab]`) and is the **idempotency key** for the lead.
+Generate a fresh one per deliberate submission (e.g. `uuidgen` or
+`crypto.randomUUID()` in the browser). The server validates the version and
+variant bits and lowercases the value before use.
 
 Expected: `{"ok":true,"id":<n>,"redirect":"..."}`. Then:
 
@@ -73,7 +80,31 @@ WHERE received_at > now() - interval '5 minutes'
 ORDER BY id DESC LIMIT 3;
 ```
 
-Expected: 1 new row with `transport_kind='api_post'`, `source_message_id='api_post:<8 hex>'`.
+Expected: 1 new row with `transport_kind='api_post'`,
+`source_message_id='api_post:3f2a8c1e-9d4b-4e7a-b6c5-1a2b3c4d5e6f'` (the
+`request_id`, prefixed with `api_post:`).
+
+### Idempotency contract
+
+- `request_id` is the idempotency key; `ts` is **not** an idempotency key (it is
+  optional observational metadata only).
+- The insert is handled by the restricted database function
+  `mdg_w14_insert_lead`. An idempotency key resolves to an existing row **only
+  when the immutable request identity matches** (normalized email, `page_path`,
+  `form_name`, `promised_asset`, `transport_kind`).
+- **Exact replay** (same `request_id` AND same immutable identity): returns the
+  existing lead id; creates no second row; resets no fulfillment state; creates
+  no fulfillment attempt; throws no unhandled uniqueness error. A transport-level
+  retry must reuse the same `request_id`.
+- **Same `request_id` with different immutable data**: fails closed with
+  `request_id_reuse_mismatch`; creates no row; mutates no existing row; the
+  surrounding W13 workflow fails rather than returning a false successful lead
+  response.
+- **New `request_id`** (even for identical email/form/page): inserts a new lead.
+- A missing or malformed `request_id` (including a non-v4 UUID) is rejected
+  cleanly before insertion (`missing_request_id` / `invalid_request_id`); it is
+  never silently replaced with a random value or an empty timestamp.
+- `source_message_id` contains no email, name, page path, or other PII.
 
 ## What to do if the pipeline breaks
 
