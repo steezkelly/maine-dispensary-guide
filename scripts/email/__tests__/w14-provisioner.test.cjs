@@ -27,14 +27,22 @@ test('W13 normalization derives allowlisted assets from exact page paths', () =>
   assert.doesNotMatch(code, /invalid_email.*\+.*email/);
 });
 
-test('W13 insert preserves nullable fields and marks non-assets not applicable', () => {
+test('W13 insert preserves nullable fields and delegates classification to the database', () => {
   const insert = updatedInsertContract();
-  assert.match(insert.query, /form_name, success_path, fulfillment_status/);
-  assert.match(insert.queryReplacement, /\$json\.form_name, \$json\.success_path/);
-  assert.match(insert.queryReplacement, /\$json\.promised_asset \? 'pending' : 'not_applicable'/);
+  // Nullable request fields are still passed through (undefined -> null), so the
+  // database function receives explicit NULLs rather than the string 'undefined'.
   assert.match(insert.queryReplacement, /v === undefined \? null : v/);
   assert.doesNotMatch(insert.queryReplacement, /v === null \? '' : v/);
-  assert.match(insert.query, /\$18, \$19, \$20/);
+  // The nullable identity/asset fields are present in the replacement list.
+  assert.match(insert.queryReplacement, /\$json\.from_name/);
+  assert.match(insert.queryReplacement, /\$json\.message_body/);
+  assert.match(insert.queryReplacement, /\$json\.form_name, \$json\.success_path/);
+  // The caller no longer marks non-assets not_applicable: classification is
+  // database-authoritative (BEFORE INSERT trigger), so the caller value is gone.
+  assert.doesNotMatch(insert.queryReplacement, /promised_asset \? 'pending' : 'not_applicable'/);
+  // The function call carries all 20 positional parameters.
+  assert.match(insert.query, /\$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9, \$10/);
+  assert.match(insert.query, /\$11, \$12, \$13, \$14, \$15, \$16, \$17, \$18, \$19, \$20/);
 });
 
 test('W14 is one-row, one-send-path, two-outcome workflow with no retries', () => {
@@ -116,9 +124,11 @@ test('W13 normalization documents trust boundary and rejects unknown paths', () 
   assert.match(code, /routeContract\[pagePath\] \|\| null/);
   assert.doesNotMatch(code, /raw\.promised_asset/);
   assert.doesNotMatch(code, /raw\.asset_id/);
-  // The pending/not_applicable routing lives in the insert contract, not normalize.
+  // The pending/not_applicable routing is database-authoritative (BEFORE INSERT
+  // trigger), reached via the fail-closed insert function — not the caller.
   const insert = updatedInsertContract();
-  assert.match(insert.queryReplacement, /\$json\.promised_asset \? 'pending' : 'not_applicable'/);
+  assert.match(insert.query, /SELECT mdg_w14_insert_lead\(/);
+  assert.doesNotMatch(insert.queryReplacement, /promised_asset \? 'pending' : 'not_applicable'/);
 });
 
 test('migration REVOKE EXECUTE FROM PUBLIC is unconditional', () => {
@@ -137,11 +147,12 @@ test('migration REVOKE EXECUTE FROM PUBLIC is unconditional', () => {
 // --- request_id idempotency identity (W14 cutover/request-id correction) ---
 
 const { runNormalizeCode } = require('../provision-w14-workflows.cjs');
+// Canonical RFC-4122 UUID v4 (version nibble 4, variant nibble in [89ab]).
 const VALID_UUID = '123e4567-e89b-42d3-a456-426614174000';
 const VALID_UUID_2 = '9b2f3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d';
 
-test('W13 normalize requires a canonical UUID request_id', () => {
-  // Valid canonical UUID passes and is lowercased/trimmed.
+test('W13 normalize requires a canonical UUID v4 request_id', () => {
+  // Valid canonical UUID v4 passes and is lowercased/trimmed.
   const ok = runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: VALID_UUID });
   assert.equal(ok.request_id, VALID_UUID);
   // Uppercase UUID is normalized to lowercase canonical form.
@@ -152,6 +163,22 @@ test('W13 normalize requires a canonical UUID request_id', () => {
   // Malformed request_id is rejected cleanly.
   assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: 'not-a-uuid' }), /invalid_request_id/);
   assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/download-checklist', request_id: '12345' }), /invalid_request_id/);
+});
+
+test('W13 normalize enforces RFC-4122 v4 version and variant bits', () => {
+  // Wrong version nibble (v1: version=1) is rejected even though it is a
+  // well-formed canonical UUID.
+  const v1 = '123e4567-e89b-12d3-a456-426614174000';
+  assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/x', request_id: v1 }), /invalid_request_id/);
+  // Wrong variant nibble (variant not in [89ab]) is rejected.
+  const badVariant = '123e4567-e89b-42d3-0456-426614174000';
+  assert.throws(() => runNormalizeCode({ email: 'a@b.com', page_path: '/x', request_id: badVariant }), /invalid_request_id/);
+  // A correct v4 with each allowed variant nibble is accepted.
+  for (const variant of ['8', '9', 'a', 'b']) {
+    const uuid = `123e4567-e89b-42d3-${variant}456-426614174000`;
+    const j = runNormalizeCode({ email: 'a@b.com', page_path: '/x', request_id: uuid });
+    assert.equal(j.request_id, uuid);
+  }
 });
 
 test('source_message_id is derived solely from the request_id (no PII)', () => {
@@ -200,15 +227,20 @@ test('FNV-1a is no longer used for lead identity', () => {
   assert.match(code, /api_post:' \+ requestId|api_post:" \+ requestId|'api_post:' \+ requestId/);
 });
 
-test('W13 insert is an idempotent upsert keyed on source_message_id', () => {
+test('W13 insert routes through the fail-closed mdg_w14_insert_lead function', () => {
   const insert = updatedInsertContract();
-  // ON CONFLICT DO NOTHING prevents an unhandled uniqueness error on replay.
-  assert.match(insert.query, /ON CONFLICT \(source_message_id\)/);
-  assert.match(insert.query, /DO NOTHING/);
-  // The existing lead id is returned on replay (no second row, no state reset).
-  assert.match(insert.query, /RETURNING id/);
-  assert.match(insert.query, /UNION ALL/);
-  assert.match(insert.query, /NOT EXISTS \(SELECT 1 FROM ins\)/);
-  // The conflict target matches the unique partial index predicate.
-  assert.match(insert.query, /WHERE source_message_id IS NOT NULL AND btrim\(source_message_id\) <> ''/);
+  // The insert is a single call to the restricted database function, which
+  // resolves the idempotency key and fails closed on mismatch.
+  assert.match(insert.query, /SELECT mdg_w14_insert_lead\(/);
+  assert.match(insert.query, /AS id/);
+  // The raw ON CONFLICT upsert is gone (classification + idempotency now live
+  // in the database function + BEFORE INSERT trigger).
+  assert.doesNotMatch(insert.query, /ON CONFLICT/);
+  // The queryReplacement passes source_message_id first and request_id last,
+  // matching the function's (p_source_message_id, ..., p_request_id) signature.
+  assert.match(insert.queryReplacement, /\$json\.source_message_id/);
+  assert.match(insert.queryReplacement, /\$json\.request_id/);
+  // The caller no longer supplies a meaningful fulfillment_status (the trigger
+  // classifies database-authoritatively).
+  assert.doesNotMatch(insert.queryReplacement, /promised_asset \? 'pending' : 'not_applicable'/);
 });

@@ -108,6 +108,57 @@ the queue. The corrected design:
 - `ts` remains optional observational metadata only and is never an idempotency
   key. FNV-1a is removed from lead identity.
 
+### Correction record (2026-07-28, R1): deployable remediation + race-safe cutover
+
+A bounded R1 correction makes the artifact deployable against an
+already-migrated production database and makes the activation cutover race-safe,
+without changing the SMTP-node contract.
+
+**Two-migration production path (historical migration is immutable).** The
+production database already applied the 2026-07-27 migration; that file is not
+edited as the remediation mechanism (its seven-day proxy remains as historical
+record). A new additive, independently idempotent migration
+`scripts/email/migrations/2026-07-28-w14-activation-cutover-request-id.sql` is
+applied AFTER it. Its backfill sets every pre-remediation **unattempted** row
+`not_applicable` regardless of current status, so no pre-W14 row is
+auto-fulfillable after activation. Active/attempted rows are never rewritten.
+
+**Race-safe cutover via a database-authoritative BEFORE INSERT trigger.** The
+insertion boundary participates in the cutover lock. `mdg_w14_classify_insert`
+reads the activation singleton `FOR SHARE`, which blocks behind
+`mdg_w14_activate_cutover`'s `FOR UPDATE` singleton-row lock; after the cutover
+transaction commits, the trigger classifies the new row using the committed
+cutover and **overrides any unsafe caller-supplied `fulfillment_status`**: no
+asset / NULL cutover / `received_at` before cutover → `not_applicable`;
+`received_at` at or after cutover with an eligible asset → `pending`. A
+concurrent insert whose `received_at` is before the cutover, held so it commits
+during the cutover transaction, becomes `not_applicable` (proven by a true
+two-session concurrency test); the inverse (`received_at` after cutover) becomes
+`pending` and claimable. `mdg_w14_claim` (superseded by R1, same signature)
+retains the independent cutover + `received_at >= cutover` defense in depth.
+
+**Fail-closed request-id reuse.** The W13 insert node calls the restricted
+function `public.mdg_w14_insert_lead`. An idempotency key resolves to an existing
+row only when the immutable request identity matches (normalized email,
+`page_path`, `form_name`, `promised_asset`, `transport_kind`). Exact replay
+returns the existing id (no new row, no state change, no attempt). Same
+`request_id` with different immutable data fails closed with
+`request_id_reuse_mismatch` (no row, no mutation; the surrounding W13 workflow
+fails rather than returning a false successful lead response). A new
+`request_id` inserts a new lead even for identical email/form/page.
+
+**UUID v4 enforcement.** W13 validation requires a canonical RFC-4122 UUID v4
+(version nibble `4`, variant nibble in `[89ab]`), lowercased before producing
+`api_post:<request_id>`. Wrong-version or wrong-variant UUIDs are rejected before
+insertion.
+
+**Privilege boundary.** All state-changing functions (`mdg_w14_claim`,
+`mdg_w14_activate_cutover`, `mdg_w14_insert_lead`) are `REVOKE`d `FROM PUBLIC`
+unconditionally. The trigger function `mdg_w14_classify_insert` is the documented
+exception: a BEFORE INSERT trigger function must be executable by the inserting
+role, and it can only classify the inserted row (never send email or mutate other
+rows).
+
 ### Asset identity
 
 W13 ignores client-supplied asset identifiers and maps only exact server-observed page paths to six stable machine IDs. Non-asset forms and unknown paths remain ineligible. W14 never infers a URL from prose, subject, or legacy W7 labels.

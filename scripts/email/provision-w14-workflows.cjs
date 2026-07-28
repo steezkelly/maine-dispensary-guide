@@ -86,16 +86,18 @@ const successPath = pagePath || '/';
 if (!email || !pagePath) throw new Error('missing_required');
 if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) throw new Error('invalid_email');
 
-// Idempotency identity: a client-generated canonical UUID v4 request_id travels
-// unchanged with the POST body. It is the SOLE source-message identity. It is
-// NOT derived from email, page path, name, timestamp, IP, or user agent, so an
-// exact transport replay deduplicates while a new deliberate submission (new
-// UUID) inserts normally. ts is retained only as optional observational
-// metadata and is never part of the identity. FNV-1a is no longer used.
+// Idempotency identity: a client-generated canonical RFC-4122 UUID v4
+// request_id travels unchanged with the POST body. It is the SOLE source-message
+// identity. It is NOT derived from email, page path, name, timestamp, IP, or
+// user agent, so an exact transport replay deduplicates while a new deliberate
+// submission (new UUID) inserts normally. ts is retained only as optional
+// observational metadata and is never part of the identity. FNV-1a is not used.
 const requestId = (raw.request_id || '').toString().trim().toLowerCase();
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+// Canonical RFC-4122 UUID v4: version nibble fixed to 4, variant nibble in
+// [89ab]. Equivalent to xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx.
+const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 if (!requestId) throw new Error('missing_request_id');
-if (!UUID_RE.test(requestId)) throw new Error('invalid_request_id');
+if (!UUID_V4_RE.test(requestId)) throw new Error('invalid_request_id');
 
 const sourceMessageId = 'api_post:' + requestId;
 return [{ json: {
@@ -143,40 +145,31 @@ function runNormalizeCode(body) {
 
 function updatedInsertContract() {
   return {
-    // Idempotent insert keyed on the unique partial index over nonblank
-    // source_message_id. An exact transport replay (same request_id ->
-    // source_message_id 'api_post:<request_id>') conflicts and inserts nothing;
-    // the SELECT then returns the existing lead id. No second row is created,
-    // fulfillment state is never reset, no fulfillment attempt is created, and
-    // no unhandled uniqueness error is thrown. A new request_id inserts
-    // normally even for identical email/form/page.
-    query: `WITH ins AS (
-  INSERT INTO mdg_leads (
-    from_email, from_name, subject, lead_type, promised_asset, message_body,
-    received_at, page_path, referrer, user_agent, consent_ts, asset_id,
-    source_message_id, transport_kind, utm_source, utm_medium, utm_campaign,
-    form_name, success_path, fulfillment_status
-  ) VALUES (
-    $1, $2, $3, $4, $5, $6,
-    $7, $8, $9, $10, $11, $12,
-    $13, $14, $15, $16, $17,
-    $18, $19, $20
-  )
-  ON CONFLICT (source_message_id) WHERE source_message_id IS NOT NULL AND btrim(source_message_id) <> ''
-  DO NOTHING
-  RETURNING id
-)
-SELECT id FROM ins
-UNION ALL
-SELECT id FROM mdg_leads
-WHERE source_message_id = $13
-  AND NOT EXISTS (SELECT 1 FROM ins)
-LIMIT 1;`,
+    // Fail-closed idempotent insert via the restricted database function
+    // mdg_w14_insert_lead (added by the 2026-07-28 R1 remediation migration).
+    // The function resolves the idempotency key (source_message_id =
+    // 'api_post:' + request_id) and:
+    //   * exact replay (same request_id AND same immutable request identity:
+    //     normalized email, page_path, form_name, promised_asset,
+    //     transport_kind) -> returns the existing lead id; no new row; no
+    //     fulfillment-state change; no attempt;
+    //   * same request_id with DIFFERENT immutable request data -> raises
+    //     request_id_reuse_mismatch (the surrounding W13 workflow fails rather
+    //     than returning a false successful lead response); no row; no mutation;
+    //   * new request_id -> inserts normally; the BEFORE INSERT trigger
+    //     classifies fulfillment_status database-authoritatively (the caller
+    //     value passed here is intentionally ignored and overridden).
+    // The 20th argument is a placeholder fulfillment_status; the trigger
+    // overrides it, so its value is irrelevant.
+    query: `SELECT mdg_w14_insert_lead(
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+  $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+) AS id;`,
     queryReplacement: `={{ [
-  $json.email, $json.from_name, $json.subject, $json.lead_type, $json.promised_asset, $json.message_body,
+  $json.source_message_id, $json.email, $json.from_name, $json.subject, $json.lead_type, $json.promised_asset, $json.message_body,
   $json.received_at, $json.page_path, $json.referrer, $json.user_agent, $json.consent_ts, $json.asset_id,
-  $json.source_message_id, $json.transport_kind, $json.utm_source, $json.utm_medium, $json.utm_campaign,
-  $json.form_name, $json.success_path, $json.promised_asset ? 'pending' : 'not_applicable'
+  $json.transport_kind, $json.utm_source, $json.utm_medium, $json.utm_campaign, $json.form_name, $json.success_path,
+  $json.request_id
 ].map(v => v === undefined ? null : v) }}`,
   };
 }

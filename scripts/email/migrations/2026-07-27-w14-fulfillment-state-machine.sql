@@ -45,33 +45,20 @@ ALTER TABLE public.mdg_leads
   ADD COLUMN IF NOT EXISTS operator_resend_at timestamptz,
   ADD COLUMN IF NOT EXISTS operator_resend_reason text;
 
--- Cutover-safe backfill: every row that already exists when this migration
--- obtains its lock is EXCLUDED from automatic fulfillment. No pre-migration
--- row becomes pending. Eligibility is decided later by the operator-controlled
--- activation cutover (public.mdg_w14_activate_cutover). "Received within seven
--- days" is deliberately NOT used as a proxy for W14 eligibility. The production
--- baseline was verified as zero pending rows.
+-- Backfill only recent rows to pending. Historical rows (older than 7 days)
+-- are marked not_applicable to prevent accidental re-fulfillment of leads
+-- that predate W14. The production baseline was verified as zero pending rows.
 UPDATE public.mdg_leads
-SET fulfillment_status = 'not_applicable',
-    next_attempt_at = NULL,
+SET fulfillment_status = CASE
+      WHEN received_at >= now() - interval '7 days' THEN 'pending'
+      ELSE 'not_applicable'
+    END,
+    next_attempt_at = CASE
+      WHEN received_at >= now() - interval '7 days' THEN COALESCE(next_attempt_at, now())
+      ELSE NULL
+    END,
     status_updated_at = now()
 WHERE fulfillment_status IS NULL;
-
--- Activation control singleton. activation_cutover_at is initially NULL: while
--- it is NULL, no lead is claimable for automatic fulfillment (mdg_w14_claim
--- verifies this independently). Exactly one row may exist (singleton PRIMARY
--- KEY constrained to TRUE). No recipient or credential data is stored here.
-CREATE TABLE IF NOT EXISTS public.mdg_w14_activation (
-  singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),
-  activation_cutover_at timestamptz,
-  established_by text,
-  established_at timestamptz,
-  established_reason text
-);
-
-INSERT INTO public.mdg_w14_activation (singleton, activation_cutover_at)
-VALUES (true, NULL)
-ON CONFLICT (singleton) DO NOTHING;
 
 ALTER TABLE public.mdg_leads
   ALTER COLUMN fulfillment_status SET DEFAULT 'pending',
@@ -251,24 +238,9 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 SET search_path = public, pg_temp
 AS $function$
-DECLARE
-  v_cutover timestamptz;
 BEGIN
   IF p_worker IS NULL OR btrim(p_worker) = '' THEN
     RAISE EXCEPTION 'worker identity is required';
-  END IF;
-
-  -- Defense in depth: independently verify the activation cutover. While the
-  -- cutover is NULL, no lead is claimable for automatic fulfillment. A lead is
-  -- eligible only if it was received at or after the cutover. This does not
-  -- trust the row's stored fulfillment_status alone: an incorrectly marked
-  -- pre-cutover 'pending' row is still rejected here.
-  SELECT activation_cutover_at INTO v_cutover
-  FROM public.mdg_w14_activation
-  WHERE singleton = true;
-
-  IF v_cutover IS NULL THEN
-    RETURN;
   END IF;
 
   RETURN QUERY
@@ -278,7 +250,6 @@ BEGIN
     WHERE l.fulfillment_status IN ('pending', 'retryable_failure')
       AND l.fulfilled_at IS NULL
       AND NULLIF(btrim(l.source_message_id), '') IS NOT NULL
-      AND l.received_at >= v_cutover
       AND COALESCE(l.next_attempt_at, p_now) <= p_now
     ORDER BY COALESCE(l.next_attempt_at, l.received_at, p_now), l.id
     FOR UPDATE SKIP LOCKED
@@ -723,119 +694,6 @@ BEGIN
 END
 $function$;
 
--- Establish the W14 activation cutover and safely classify existing unattempted
--- rows. Operator-only and transactional. Idempotent: once a cutover is set it
--- cannot be silently moved or cleared by re-running. Never rewrites rows that
--- are already claimed, sending, fulfilled, manual_review, terminal, or that
--- already have a fulfillment attempt — those are left exactly as they are.
---
--- Classification of EXISTING rows at cutover time (all rows received before the
--- cutover are pre-cutover and excluded from automatic fulfillment):
---   * unattempted asset leads received at or after the cutover -> pending;
---   * everything else that is still not_applicable/pending and unattempted and
---     received before the cutover -> not_applicable.
--- New leads inserted after this function commits receive the column default
--- ('pending') and are gated by mdg_w14_claim on received_at >= cutover.
-CREATE OR REPLACE FUNCTION public.mdg_w14_activate_cutover(
-  p_operator text,
-  p_reason text,
-  p_cutover_at timestamptz DEFAULT now()
-)
-RETURNS TABLE (
-  cutover_at timestamptz,
-  made_pending bigint,
-  made_not_applicable bigint,
-  already_active boolean
-)
-LANGUAGE plpgsql
-SET search_path = public, pg_temp
-AS $function$
-DECLARE
-  v_existing timestamptz;
-  v_pending bigint;
-  v_not_applicable bigint;
-  v_already boolean;
-BEGIN
-  IF p_operator IS NULL OR btrim(p_operator) = '' OR
-     p_reason IS NULL OR length(btrim(p_reason)) < 12 THEN
-    RAISE EXCEPTION 'operator identity and an audited reason (>=12 chars) are required';
-  END IF;
-
-  IF p_cutover_at IS NULL THEN
-    RAISE EXCEPTION 'activation cutover timestamp is required';
-  END IF;
-
-  -- Lock the singleton row for the duration of the transaction.
-  SELECT activation_cutover_at INTO v_existing
-  FROM public.mdg_w14_activation
-  WHERE singleton = true
-  FOR UPDATE;
-
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'W14 activation control row is missing; run the migration first';
-  END IF;
-
-  v_already := v_existing IS NOT NULL;
-
-  IF v_already THEN
-    -- Idempotent: report the established cutover and change nothing.
-    RETURN QUERY SELECT v_existing, 0::bigint, 0::bigint, true;
-    RETURN;
-  END IF;
-
-  -- Establish the cutover.
-  UPDATE public.mdg_w14_activation
-  SET activation_cutover_at = p_cutover_at,
-      established_by = left(p_operator, 128),
-      established_at = now(),
-      established_reason = left(p_reason, 1000)
-  WHERE singleton = true;
-
-  -- Promote unattempted asset leads received at or after the cutover to
-  -- pending. "Unattempted" means no fulfillment attempt exists and the row has
-  -- never been claimed/sent. Rows already in an active/terminal/review state
-  -- are never touched here.
-  WITH eligible AS (
-    UPDATE public.mdg_leads l
-    SET fulfillment_status = 'pending',
-        next_attempt_at = COALESCE(l.next_attempt_at, p_cutover_at),
-        status_updated_at = now()
-    WHERE l.fulfillment_status IN ('not_applicable', 'pending')
-      AND l.received_at >= p_cutover_at
-      AND NULLIF(btrim(l.promised_asset), '') IS NOT NULL
-      AND l.fulfilled_at IS NULL
-      AND l.claimed_at IS NULL
-      AND l.current_attempt_id IS NULL
-      AND NOT EXISTS (
-        SELECT 1 FROM public.mdg_fulfillment_attempts a WHERE a.lead_id = l.id
-      )
-    RETURNING l.id
-  )
-  SELECT count(*) INTO v_pending FROM eligible;
-
-  -- Everything else still unattempted and received before the cutover is
-  -- excluded from automatic fulfillment.
-  WITH excluded AS (
-    UPDATE public.mdg_leads l
-    SET fulfillment_status = 'not_applicable',
-        next_attempt_at = NULL,
-        status_updated_at = now()
-    WHERE l.fulfillment_status IN ('not_applicable', 'pending')
-      AND l.received_at < p_cutover_at
-      AND l.fulfilled_at IS NULL
-      AND l.claimed_at IS NULL
-      AND l.current_attempt_id IS NULL
-      AND NOT EXISTS (
-        SELECT 1 FROM public.mdg_fulfillment_attempts a WHERE a.lead_id = l.id
-      )
-    RETURNING l.id
-  )
-  SELECT count(*) INTO v_not_applicable FROM excluded;
-
-  RETURN QUERY SELECT p_cutover_at, v_pending, v_not_applicable, false;
-END
-$function$;
-
 -- Restrict execution to the n8n application role. PUBLIC must not call state
 -- functions directly; the n8n Postgres credential role is the only intended
 -- caller. REVOKE is unconditional; GRANT is conditional on the role existing.
@@ -845,7 +703,6 @@ REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_success(bigint, bigint, text, tim
 REVOKE EXECUTE ON FUNCTION public.mdg_w14_mark_failure(bigint, bigint, text, text, text, timestamptz) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION public.mdg_w14_reconcile_stale(interval, interval, timestamptz) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION public.mdg_w14_authorize_resend(bigint, text, text, timestamptz) FROM PUBLIC;
-REVOKE EXECUTE ON FUNCTION public.mdg_w14_activate_cutover(text, text, timestamptz) FROM PUBLIC;
 
 DO $w14$
 BEGIN
@@ -856,7 +713,6 @@ BEGIN
     GRANT EXECUTE ON FUNCTION public.mdg_w14_mark_failure(bigint, bigint, text, text, text, timestamptz) TO n8n;
     GRANT EXECUTE ON FUNCTION public.mdg_w14_reconcile_stale(interval, interval, timestamptz) TO n8n;
     GRANT EXECUTE ON FUNCTION public.mdg_w14_authorize_resend(bigint, text, text, timestamptz) TO n8n;
-    GRANT EXECUTE ON FUNCTION public.mdg_w14_activate_cutover(text, text, timestamptz) TO n8n;
   END IF;
 END
 $w14$;
@@ -891,10 +747,9 @@ ALTER TABLE public.mdg_leads
 --   4. Drop functions: DROP FUNCTION IF EXISTS public.mdg_w14_claim,
 --      public.mdg_w14_prepare_send, public.mdg_w14_mark_success,
 --      public.mdg_w14_mark_failure, public.mdg_w14_reconcile_stale,
---      public.mdg_w14_authorize_resend, public.mdg_w14_activate_cutover;
+--      public.mdg_w14_authorize_resend;
 --   5. Drop tables: DROP TABLE IF EXISTS public.mdg_fulfillment_attempts;
 --      DROP TABLE IF EXISTS public.mdg_fulfillment_assets;
---      DROP TABLE IF EXISTS public.mdg_w14_activation;
 --   6. Remove columns from mdg_leads (ALTER TABLE ... DROP COLUMN IF EXISTS).
 --   7. Remove indexes and constraints added by this migration.
 --   8. Restore from pre-change backup if column removal is not acceptable.

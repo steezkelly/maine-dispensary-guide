@@ -31,20 +31,43 @@ The full acceptance conditions, rollback, allowed database objects, repository p
 
 ## Correction (2026-07-28): activation cutover and request-id idempotency
 
-Follow-up to the merged W14 candidate (base `15fc3c2b`), correcting two review
-findings without changing the SMTP-node contract:
+Follow-up to the merged W14 candidate, correcting two review findings without
+changing the SMTP-node contract:
 
 - Activation cutover replaces the seven-day backfill proxy. `public.mdg_w14_activation`
   holds `activation_cutover_at` (initially `NULL`; nothing claimable while NULL).
-  The migration marks every pre-existing row `not_applicable`. `mdg_w14_claim`
-  independently verifies the cutover and `received_at >= activation_cutover_at`.
+  `mdg_w14_claim` independently verifies the cutover and `received_at >= cutover`.
   `mdg_w14_activate_cutover(operator, reason, cutover_at)` is transactional,
   idempotent, operator-only, and never rewrites active/attempted rows.
 - Request-id idempotency replaces FNV-1a/timestamp identity. `LeadIntakeForm`
   generates a per-submission UUID v4 `request_id`; W13 requires and validates it;
-  `source_message_id = 'api_post:' + request_id` (no PII); the insert is an
-  idempotent upsert (exact replay returns the existing id; a new request_id
-  inserts a new lead). `ts` is observational only.
+  `source_message_id = 'api_post:' + request_id` (no PII); `ts` is observational
+  only.
+
+## R1 correction (2026-07-28): deployable remediation + race-safe cutover
+
+Bounded R1 follow-up (reconciled onto current main `23d54593`), still without
+changing the SMTP-node contract:
+
+- **Two-migration path.** The 2026-07-27 migration is immutable (production
+  applied it). A new additive, independently idempotent migration
+  `scripts/email/migrations/2026-07-28-w14-activation-cutover-request-id.sql`
+  is applied AFTER it; its backfill excludes every pre-remediation unattempted
+  row from automatic fulfillment.
+- **Race-safe cutover.** A BEFORE INSERT trigger (`mdg_w14_classify_insert`)
+  reads the singleton `FOR SHARE` (blocking behind `mdg_w14_activate_cutover`'s
+  `FOR UPDATE` lock) and classifies new rows database-authoritatively, overriding
+  unsafe caller-supplied status. A pre-cutover insert racing the cutover becomes
+  `not_applicable`; a post-cutover asset insert becomes `pending` and claimable.
+- **Fail-closed request-id reuse.** The W13 insert calls the restricted function
+  `mdg_w14_insert_lead`: exact replay returns the existing id; same `request_id`
+  with different immutable data fails closed (`request_id_reuse_mismatch`); a new
+  `request_id` inserts a new lead.
+- **UUID v4 enforcement.** W13 requires a canonical RFC-4122 UUID v4 (version +
+  variant bits), lowercased before `api_post:<request_id>`.
+- **Privilege boundary.** State-changing functions are REVOKE'd FROM PUBLIC; the
+  trigger function is the documented exception (must be executable by the
+  inserting role; can only classify the inserted row).
 - Live activation still requires a separate operator inventory/disposition of any
   existing pending rows; that live decision is not part of this repository change.
 - W14 remains inactive. No email is sent by this change.
