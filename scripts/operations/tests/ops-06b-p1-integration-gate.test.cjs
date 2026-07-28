@@ -704,6 +704,60 @@ test('P1.3 (t_b7c5d622): a gh error (e.g. unknown flag) fails closed as incomple
   assert.throws(() => defaultGhApiCheckRuns('owner/repo', 'abc', throwing), /CHECK_RUNS_PAGE_INCOMPLETE/);
 });
 
+// OPS-06B-HARDEN-R1 (§2): total_count is REQUIRED and strictly validated on
+// EVERY page. Missing / null / string / fractional / negative / NaN-like
+// total_count fails closed BEFORE any required check is evaluated; every page
+// must report the same total_count; the flattened count must equal total_count.
+test('R1 §2: total_count is required and strictly validated on every page', () => {
+  const { parseCheckRunPages } = ROLLUP;
+  // missing total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // null total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: null, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // string total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: '3', check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // fractional total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: 2.5, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // negative total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: -1, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // NaN-like total_count
+  assert.throws(() => parseCheckRunPages(ndjson([{ total_count: NaN, check_runs: [] }])), /CHECK_RUNS_PAGE_INCOMPLETE/);
+  // inconsistent totals between pages
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+    { total_count: 3, check_runs: [{ name: 'b' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // flattened count mismatch (total says 2, only 1 run present)
+  assert.throws(() => parseCheckRunPages(ndjson([
+    { total_count: 2, check_runs: [{ name: 'a' }] },
+  ])), /CHECK_RUNS_TOTAL_COUNT_MISMATCH/);
+  // valid zero total with an empty check_runs array
+  const zero = parseCheckRunPages(ndjson([{ total_count: 0, check_runs: [] }]));
+  assert.equal(zero.total_count, 0);
+  assert.equal(zero.check_runs.length, 0);
+  assert.equal(zero.pages, 1);
+  // valid single page
+  const single = parseCheckRunPages(ndjson([{ total_count: 2, check_runs: [{ name: 'Build' }, { name: 'Operations Suite' }] }]));
+  assert.equal(single.total_count, 2);
+  assert.equal(single.check_runs.length, 2);
+  // valid multiple pages (totals agree, flattened count matches)
+  const multi = parseCheckRunPages(ndjson([
+    { total_count: 3, check_runs: [{ name: 'Build' }, { name: 'Operations Suite' }] },
+    { total_count: 3, check_runs: [{ name: 'Deploy' }] },
+  ]));
+  assert.equal(multi.total_count, 3);
+  assert.equal(multi.pages, 2);
+  assert.equal(multi.check_runs.length, 3);
+  // a required/conflicting check on a LATER page is preserved (not dropped)
+  const later = parseCheckRunPages(ndjson([
+    { total_count: 3, check_runs: [{ name: 'Build', conclusion: 'success' }, { name: 'Operations Suite', conclusion: 'success' }] },
+    { total_count: 3, check_runs: [{ name: 'Build', conclusion: 'failure' }] },
+  ]));
+  const builds = later.check_runs.filter((r) => r.name === 'Build');
+  assert.equal(builds.length, 2);
+  assert.deepEqual(builds.map((b) => b.conclusion).sort(), ['failure', 'success']);
+});
+
 test('P1.3 (t_b7c5d622): LIVE read-only smoke against the real GitHub API (gh 2.45.0)', { skip: !process.env.MDG_LIVE_PAGINATION_SMOKE }, () => {
   // Environmental verification only — NOT the sole deterministic test. Enabled
   // with MDG_LIVE_PAGINATION_SMOKE=1. Proves the real installed gh retrieves and

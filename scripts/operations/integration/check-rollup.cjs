@@ -77,17 +77,24 @@ const CHECK_RUNS_GH_ARGS = Object.freeze(['api', '--paginate', '--jq', CHECK_RUN
 
 /**
  * Parse + flatten + validate the NDJSON output of the paginated check-runs
- * command (t_b7c5d622 pagination robustness). Each non-empty line must be a
- * self-contained page object `{ total_count, check_runs: [...] }`. Pure so the
- * fail-closed behavior is directly testable. Fails closed:
- *   - CHECK_RUNS_PAGE_MALFORMED      a line is not valid JSON;
- *   - CHECK_RUNS_PAGE_INCOMPLETE     no pages, or a page lacks a check_runs array;
- *   - CHECK_RUNS_TOTAL_COUNT_MISMATCH total_count disagrees across pages, or the
- *                                     flattened run count != total_count.
+ * command (t_b7c5d622 pagination robustness; OPS-06B-HARDEN-R1 total_count
+ * enforcement). Each non-empty line must be a self-contained page object
+ * `{ total_count, check_runs: [...] }`. Pure so the fail-closed behavior is
+ * directly testable.
+ *
+ * Every page MUST carry a valid total_count: present, Number.isInteger, >= 0
+ * (missing / null / string / fractional / negative / NaN all fail closed). Every
+ * page must report the SAME total_count, and the flattened check-run count must
+ * equal total_count exactly. Fails closed:
+ *   - CHECK_RUNS_PAGE_MALFORMED        a line is not valid JSON;
+ *   - CHECK_RUNS_PAGE_INCOMPLETE       no pages, a page lacks a check_runs array,
+ *                                      or a page has a missing/invalid total_count;
+ *   - CHECK_RUNS_TOTAL_COUNT_MISMATCH  total_count disagrees across pages, or the
+ *                                      flattened run count != total_count.
  * A truncated/partial pagination therefore cannot silently drop a conflicting
  * duplicate that appears on a later page.
  * @param {string} rawOutput stdout of the paginated check-runs command (NDJSON)
- * @returns {{ check_runs: object[], pages: number }}
+ * @returns {{ check_runs: object[], pages: number, total_count: number }}
  */
 function parseCheckRunPages(rawOutput) {
   if (typeof rawOutput !== 'string') throw new Error('CHECK_RUNS_PAGE_MALFORMED');
@@ -105,16 +112,22 @@ function parseCheckRunPages(rawOutput) {
     if (!page || typeof page !== 'object' || Array.isArray(page) || !Array.isArray(page.check_runs)) {
       throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
     }
-    if (typeof page.total_count === 'number') {
-      if (expectedTotal === null) expectedTotal = page.total_count;
-      else if (page.total_count !== expectedTotal) throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
+    // total_count is REQUIRED on every page and must be a non-negative integer.
+    // Missing, null, string, fractional, negative, or NaN-like fails closed
+    // BEFORE any required check is evaluated.
+    const total = page.total_count;
+    if (typeof total !== 'number' || !Number.isInteger(total) || total < 0) {
+      throw new Error('CHECK_RUNS_PAGE_INCOMPLETE');
     }
+    if (expectedTotal === null) expectedTotal = total;
+    else if (total !== expectedTotal) throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
     checkRuns.push(...page.check_runs);
   }
-  if (expectedTotal !== null && checkRuns.length !== expectedTotal) {
+  // The flattened count must equal total_count exactly.
+  if (checkRuns.length !== expectedTotal) {
     throw new Error('CHECK_RUNS_TOTAL_COUNT_MISMATCH');
   }
-  return { check_runs: checkRuns, pages: lines.length };
+  return { check_runs: checkRuns, pages: lines.length, total_count: expectedTotal };
 }
 
 /**

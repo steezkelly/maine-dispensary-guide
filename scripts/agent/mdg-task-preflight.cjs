@@ -10,6 +10,11 @@ const {
   readLeases,
 } = require(path.resolve(__dirname, '../git/mdg-worktree-status.cjs'));
 
+// OPS-06B-HARDEN-R1: branch-writer ownership guard. A task whose branch/worktree
+// is actively owned by another acquisition is blocked before dispatch. Malformed
+// writer state fails closed.
+const { taskBlocker } = require(path.resolve(__dirname, '../git/mdg-branch-writer.cjs'));
+
 const statusScriptPath = path.resolve(__dirname, '../git/mdg-worktree-status.cjs');
 const scriptPath = path.resolve(__dirname, 'mdg-task-preflight.cjs');
 
@@ -75,6 +80,7 @@ function evaluateTaskPreflight({
   originMain,
   candidateBase,
   boardState,
+  writerSnapshot,
 }) {
   const blockers = [];
   const warnings = [];
@@ -82,6 +88,23 @@ function evaluateTaskPreflight({
   if (!contract || typeof contract !== 'object') {
     blockers.push({ code: 'MALFORMED_INPUT', message: 'contract must be an object' });
     return { verdict: 'blocked', blockers, warnings };
+  }
+
+  // OPS-06B-HARDEN-R1 (§6.C): block before dispatch when the contract's
+  // branch/worktree is actively owned by another acquisition. A writerSnapshot
+  // of [] means "no active owners". Malformed snapshot fails closed (throws).
+  if (writerSnapshot !== undefined) {
+    const owned = taskBlocker(
+      { branch: contract.branch, worktree: contract.worktree },
+      writerSnapshot,
+      contract.acquisition_id,
+    );
+    if (owned) {
+      blockers.push({
+        code: 'BRANCH_WRITER_HELD',
+        message: `${owned.branch} is actively owned by ${owned.owner_label} (acquisition ${owned.owner_acquisition_id})`,
+      });
+    }
   }
 
   const allowedPaths = Array.isArray(contract.allowed_paths)
@@ -294,12 +317,31 @@ function main() {
       leases: leaseReportFromStatus,
       worktrees: status.worktrees || [],
     };
+    // OPS-06B-HARDEN-R1 (§6.C): read the branch-writer snapshot through the CLI
+    // boundary. Malformed writer state fails closed (snapshot() throws).
+    let writerSnapshot;
+    try {
+      writerSnapshot = require(path.resolve(__dirname, '../git/mdg-branch-writer.cjs')).snapshot(repoRoot);
+    } catch (error) {
+      writerSnapshot = undefined; // no writer directory / unreadable -> not blocked here
+      if (error && /BRANCH_WRITER_RECORD/.test(String(error.message))) {
+        // Malformed writer state must fail closed.
+        if (useJson) {
+          writeInputErrorResult('json', 'BRANCH_WRITER_STATE_MALFORMED', error.message);
+          return;
+        }
+        console.error(error.message);
+        process.exitCode = 1;
+        return;
+      }
+    }
     const result = evaluateTaskPreflight({
       contract,
       leases: leasesReport,
       originMain: status.originMain,
       candidateBase: status.originMain,
       boardState,
+      writerSnapshot,
     });
 
     if (useJson) {
