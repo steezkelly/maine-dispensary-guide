@@ -40,13 +40,29 @@ def main() -> int:
     try:
         bootstrap = (ROOT / "scripts/email/__tests__/fixtures/w14/bootstrap.sql").read_text()
         migration = (ROOT / "scripts/email/migrations/2026-07-27-w14-fulfillment-state-machine.sql").read_text()
+        remediation = (ROOT / "scripts/email/migrations/2026-07-28-w14-activation-cutover-request-id.sql").read_text()
         psql(DB, bootstrap)
         psql(DB, migration)
+        psql(DB, remediation)
+        # Establish the activation cutover so post-cutover leads are claimable.
+        # Without a cutover, mdg_w14_claim returns nothing (defense in depth).
         psql(
             DB,
-            "INSERT INTO mdg_leads(source_message_id,from_email,promised_asset,next_attempt_at) "
-            "VALUES ('synthetic:concurrent','w14-concurrent@example.invalid',"
-            "'maine_dispensary_roadmap_2026',now());",
+            "SELECT * FROM mdg_w14_activate_cutover("
+            "'ops-disposable-concurrency',"
+            "'Establish cutover for disposable concurrency proof',"
+            "now());",
+        )
+        # Insert a post-cutover asset lead via the fail-closed insert function so
+        # the BEFORE INSERT trigger classifies it pending and it is claimable.
+        psql(
+            DB,
+            "SELECT mdg_w14_insert_lead("
+            "'api_post:99999999-9999-4999-8999-999999999999',"
+            "'w14-concurrent@example.invalid',NULL,NULL,NULL,"
+            "'maine_dispensary_roadmap_2026',NULL,now(),'/download-checklist',"
+            "NULL,NULL,NULL,NULL,'api_post',NULL,NULL,NULL,"
+            "'concurrent_form',NULL,'99999999-9999-4999-8999-999999999999');",
         )
 
         a_sql = (

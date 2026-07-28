@@ -7,7 +7,7 @@ export interface MunicipalityRow {
   name: string;
   county: string;
   href: string;
-  activeStoreLicenses: number;
+  activeStoreLicenses: number | null;
   regulatoryNote: string;
 }
 
@@ -63,7 +63,9 @@ export function buildMunicipalityRows({
         name: route.name,
         county: record?.county ?? 'Maine',
         href: route.href,
-        activeStoreLicenses: storesByName.get(key) ?? 0,
+        activeStoreLicenses: storesByName.has(key)
+          ? storesByName.get(key)!
+          : null,
         regulatoryNote: record?.status === 'retail_authorized'
           ? 'Adult-use retail authorized'
           : 'No OCP-recorded retail authorization',
