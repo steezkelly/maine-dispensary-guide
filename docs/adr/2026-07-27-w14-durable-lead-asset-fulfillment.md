@@ -36,7 +36,7 @@ The authoritative path is n8n-managed SMTP only. Credential values remain in n8n
 
 The stock n8n Email Send v2.1 node was inspected on the pinned image digest and rejected for W14 because its public parameters and `mailOptions` do not expose `messageId`. W14 therefore uses one reviewed custom node, `MDG W14 SMTP Send`, which:
 
-- uses the n8n custom-directory loader type `CUSTOM.mdgSmtpSend`;
+- registers under the n8n community-node type `n8n-nodes-mdg-smtp-send.mdgSmtpSend` (package `n8n-nodes-mdg-smtp-send`, node name `mdgSmtpSend`), loaded via `N8N_CUSTOM_EXTENSIONS`;
 - calls n8n's own SMTP transport helper and encrypted `smtp` credential schema;
 - accepts only the prepared deterministic Message-ID;
 - validates recipient syntax and the canonical MDG HTTPS PDF URL;
