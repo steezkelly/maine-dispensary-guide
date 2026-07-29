@@ -14,6 +14,15 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
+// The corrections page's modifiedDate/today must track the newest entry in the
+// shared ledger. Derive it from the data file so this test self-maintains
+// instead of hardcoding a date that breaks on every legitimate correction.
+const ledgerDates = [...read('apps/maine-cannabis/src/data/corrections-log.ts').matchAll(/date:\s*['"](\d{4}-\d{2}-\d{2})['"]/g)].map((m) => m[1]);
+const latestCorrectionDate = ledgerDates.sort().pop();
+if (!latestCorrectionDate) {
+  throw new Error('corrections-log.ts has no dated entries; cannot derive expected corrections-page date');
+}
+
 const recoverySlugs = [
   'maine-cannabis-delivery-license-framework',
   'maine-cannabis-waste-management-framework',
@@ -36,8 +45,8 @@ test('public corrections page renders the shared correction ledger', () => {
     /const\s+corrections\s*:[^=]+\=\s*\[/,
     'the public page must not keep a second embedded correction ledger',
   );
-  assert.match(page, /modifiedDate:\s*["']2026-07-26["']/);
-  assert.match(page, /const\s+today\s*=\s*["']2026-07-26["']/);
+  assert.match(page, new RegExp(`modifiedDate:\\s*["']${latestCorrectionDate}["']`));
+  assert.match(page, new RegExp(`const\\s+today\\s*=\\s*["']${latestCorrectionDate}["']`));
 
   for (const slug of recoverySlugs) {
     assert.match(data, new RegExp(`slug:\\s*["']${slug}["']`), `shared ledger missing ${slug}`);
@@ -233,7 +242,7 @@ test('rewritten delivery-rules guide keeps its article landmark', () => {
 
 test('corrections page passes its revision metadata to Layout', () => {
   const corrections = read('apps/maine-cannabis/src/pages/about/corrections.astro');
-  assert.match(corrections, /modifiedDate:\s*['"]2026-07-26['"]/, 'corrections page must carry the correction date');
+  assert.match(corrections, new RegExp(`modifiedDate:\\s*['"]${latestCorrectionDate}['"]`), 'corrections page must carry the latest correction date');
   assert.match(corrections, /<Layout[\s\S]*?\barticle=\{article\}/, 'corrections page must pass article metadata to Layout');
 });
 
