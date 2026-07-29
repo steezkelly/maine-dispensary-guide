@@ -14,7 +14,7 @@ const article = {
 
 <Layout 
   title="Maine Cannabis Tax + 280E Cost Calculator (2026)" 
-  description="Free calculator for Maine cannabis operators. Compute the 10% state excise tax, 5.5% state sales tax, 10% cultivation excise, and the IRC §280E effective federal tax burden. The most detailed Maine-specific cannabis tax tool available."
+  description="Free calculator for Maine cannabis operators. Compute the 14% adult-use sales tax (effective Jan 1, 2026), the weight-based cultivation excise (Title 36 §4923), and the IRC §280E effective federal tax burden. The most detailed Maine-specific cannabis tax tool available."
   heroImage="/images/heroes/roi-calculator.jpg"
   article={article}
   isHub={true}
@@ -63,11 +63,11 @@ const article = {
 
 <div class="article-header">
   <h1>Maine Cannabis Tax + 280E Cost Calculator</h1>
-  <p class="lead">Compute the state excise tax, sales tax, cultivation excise, and the federal IRC §280E effective tax burden for any Maine cannabis scenario. Built for operators, CPAs, and journalists who need exact numbers, not estimates.</p>
+  <p class="lead">Compute the adult-use sales tax, the cultivation excise, and the federal IRC §280E effective tax burden for any Maine cannabis scenario. Built for operators, CPAs, and journalists who need exact numbers, not estimates.</p>
 </div>
 
 <Callout title="Why this calculator exists" type="passion">
-  Most online cannabis tax calculators ignore Maine-specific rules or treat 280E as a single line item. The actual Maine tax stack has four layers (cultivation excise, retail excise, sales tax, federal income tax under 280E), each with different mechanics. This tool breaks them out so you can see exactly where the money goes.
+  Most online cannabis tax calculators ignore Maine-specific rules or treat 280E as a single line item. Maine's tax structure has a retail-level adult-use sales tax, a separate cultivation-level excise tax set by weight, and the federal income tax under 280E — each with different mechanics. This tool breaks them out so you can see exactly where the money goes.
 </Callout>
 
 <section>
@@ -84,25 +84,19 @@ const article = {
     </thead>
     <tbody>
       <tr>
-        <td>1. Cultivation excise</td>
-        <td>10% on wholesale transfer</td>
-        <td><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1001.html" target="_blank" rel="noopener noreferrer">Title 28-B §1001(1)(A)</a></td>
-        <td>Cultivator to retailer transfer</td>
+        <td>1. Adult-use sales tax</td>
+        <td>14% on retail sale (effective Jan 1, 2026; 10% before)</td>
+        <td><a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">Title 36 §1811</a></td>
+        <td>Retailer to consumer sale (adult-use cannabis)</td>
       </tr>
       <tr>
-        <td>2. Retail excise</td>
-        <td>10% on retail sale</td>
-        <td><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec1001.html" target="_blank" rel="noopener noreferrer">Title 28-B §1001(1)(B)</a></td>
-        <td>Retailer to consumer sale</td>
+        <td>2. Cultivation excise</td>
+        <td>Weight-based: $223/lb flower, $63/lb trim, $23/mature plant, $1/immature plant or seedling, $0.20/seed (effective Jan 1, 2026)</td>
+        <td><a href="https://legislature.maine.gov/legis/statutes/36/title36sec4923-2.html" target="_blank" rel="noopener noreferrer">Title 36 §4923</a></td>
+        <td>Cultivator (paid at cultivation, not at retail)</td>
       </tr>
       <tr>
-        <td>3. State sales tax</td>
-        <td>5.5% on retail sale</td>
-        <td><a href="https://legislature.maine.gov/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">Title 36 §1811</a></td>
-        <td>Retailer to consumer sale (cannabis included)</td>
-      </tr>
-      <tr>
-        <td>4. Federal income tax (280E)</td>
+        <td>3. Federal income tax (280E)</td>
         <td>~21% federal corp rate, but on GROSS PROFIT not net</td>
         <td><a href="https://www.irs.gov/publications/p535" target="_blank" rel="noopener noreferrer">IRC §280E</a></td>
         <td>Cannabis operators' federal return</td>
@@ -110,7 +104,7 @@ const article = {
     </tbody>
   </table>
 
-  <p>The first three are state-level and show up in the price. The fourth is federal and is where most operators get surprised. <strong>Under 280E, normal business deductions (rent, marketing, salaries, insurance) are not deductible — only Cost of Goods Sold is.</strong> This makes the effective federal tax much higher than the 21% statutory rate.</p>
+  <p>The first two are state-level; the sales tax shows up in the consumer price, while the cultivation excise is paid by the cultivator by weight. The third is federal and is where most operators get surprised. <strong>Under 280E, normal business deductions (rent, marketing, salaries, insurance) are not deductible — only Cost of Goods Sold is.</strong> This makes the effective federal tax much higher than the 21% statutory rate. Note: medical cannabis is taxed at the standard 5.5% state sales tax, not the 14% adult-use rate.</p>
 </section>
 
 <section>
@@ -163,20 +157,12 @@ const article = {
       
       <div class="results">
         <div class="result-row info">
-          <span class="result-label">Per-Unit Gross Revenue</span>
+          <span class="result-label">Per-Unit Gross Revenue (pre-tax)</span>
           <span class="result-value">$<span id="grossRevenue">100.00</span></span>
         </div>
         <div class="result-row">
-          <span class="result-label">− Cultivation excise (10%, paid by cultivator but passed to retailer)</span>
-          <span class="result-value">$<span id="cultExcise">5.50</span></span>
-        </div>
-        <div class="result-row">
-          <span class="result-label">− Retail excise (10% on retail sale)</span>
-          <span class="result-value">$<span id="retailExcise">10.00</span></span>
-        </div>
-        <div class="result-row">
-          <span class="result-label">− State sales tax (5.5%, collected for MRS)</span>
-          <span class="result-value">$<span id="salesTax">5.50</span></span>
+          <span class="result-label">+ Adult-use sales tax (14%, collected from consumer for MRS)</span>
+          <span class="result-value">$<span id="salesTax">14.00</span></span>
         </div>
         <div class="result-row">
           <span class="result-label">− Wholesale cost (COGS)</span>
@@ -184,7 +170,11 @@ const article = {
         </div>
         <div class="result-row primary">
           <span class="result-label">Per-Unit Gross Profit (per IRS 280E definition)</span>
-          <span class="result-value">$<span id="perUnitGP">29.50</span></span>
+          <span class="result-value">$<span id="perUnitGP">45.00</span></span>
+        </div>
+        <div class="result-row info" style="font-size: 0.85rem; opacity: 0.85;">
+          <span class="result-label">Consumer total (pre-tax price + 14% sales tax)</span>
+          <span class="result-value">$<span id="consumerTotal">114.00</span></span>
         </div>
       </div>
 
@@ -263,14 +253,14 @@ const article = {
 <section>
   <h2>Maine-Specific Quirks (That Most Calculators Miss)</h2>
   
-  <h3>Cultivation excise can be credited against retail excise</h3>
-  <p>Under Title 28-B §1001(1)(B), a retailer that also holds a cultivation license can credit cultivation excise paid against the retail excise owed. The calculator above shows the 10% cultivation excise paid by a separate cultivator; vertically integrated operations (cultivator + retailer under one license) net this out.</p>
+  <h3>The 14% rate is a sales tax, not a separate excise</h3>
+  <p>Effective January 1, 2026, <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">Title 36 §1811</a> sets the state sales-tax rate on adult-use cannabis at 14% (up from the prior 10%). This is the applicable sales-tax rate for adult-use cannabis — it is not a separate cannabis excise stacked on top of the general 5.5% sales tax. The general 5.5% rate continues to apply to medical cannabis and to non-cannabis goods.</p>
 
-  <h3>Medical cannabis is exempt from retail excise</h3>
-  <p>Under Title 28-B §1001(2), sales to registered medical patients are exempt from the 10% retail excise (but the 5.5% sales tax still applies). This is significant for caregiver-style operations serving the medical market.</p>
+  <h3>The cultivation excise is separate and weight-based</h3>
+  <p>Under <a href="https://legislature.maine.gov/legis/statutes/36/title36sec4923-2.html" target="_blank" rel="noopener noreferrer">Title 36 §4923</a>, a separate excise tax applies at the cultivation level, set by weight: $223 per pound of flower, $63 per pound of trim, $23 per mature plant, $1 per immature plant or seedling, and $0.20 per seed (effective January 1, 2026). This is paid by the cultivator, not added at the retail counter, so it is not part of the consumer price the calculator models. Vertically integrated operators (cultivator + retailer under one license) account for it on the cultivation side of their books.</p>
 
-  <h3>Sales tax is collected on the EXCISE-INCLUSIVE price</h3>
-  <p>The state sales tax (5.5%) is applied to the retail price INCLUDING the 10% retail excise. So on a $100 pre-tax sale: $100 + $10 retail excise = $110 taxable, and 5.5% sales tax = $6.05. Many calculators miss this and apply sales tax to the pre-excise price, under-stating the actual sales tax by ~$0.55.</p>
+  <h3>Medical cannabis is taxed at 5.5%, not 14%</h3>
+  <p>Sales to registered medical patients under the Maine Medical Cannabis Program are taxed at the standard 5.5% state sales-tax rate, not the 14% adult-use rate. This 8.5-point gap is a real, recurring saving for medical patients and is significant for caregiver-style operations serving the medical market.</p>
 </section>
 
 <section>
@@ -278,7 +268,7 @@ const article = {
   
   <p class="citation">Maine Dispensary Guide's Cannabis Tax + 280E Cost Calculator. mainedispensaryguide.com/maine-cannabis-tax-calculator. Updated July 2026.</p>
   
-  <p class="citation">Maine's cannabis tax stack totals approximately 27% on a typical retail sale: 10% cultivation excise, 10% retail excise, 5.5% state sales tax, and an effective federal tax rate of 14-21% under IRC §280E (Maine Dispensary Guide, 2026).</p>
+  <p class="citation">Maine's adult-use cannabis is subject to a 14% state sales tax (effective January 1, 2026, Title 36 §1811), a separate weight-based cultivation excise (Title 36 §4923), and an effective federal tax rate of 14-21% under IRC §280E (Maine Dispensary Guide, 2026).</p>
 </section>
 
 <Callout title="Need deeper analysis?" type="info">
@@ -303,11 +293,15 @@ const article = {
     document.getElementById('volumeDisplay').textContent = volume.toLocaleString();
 
     // Per-unit calculations
-    const cultExcise = wholesale * 0.10;  // 10% cultivation excise on wholesale transfer
-    const retailExcise = retail * 0.10;  // 10% retail excise
-    const salesTaxBase = retail + retailExcise;  // 5.5% sales tax on excise-inclusive price
-    const salesTax = salesTaxBase * 0.055;
-    const perUnitGP = retail - cultExcise - retailExcise - salesTax - wholesale;
+    // Adult-use sales tax is 14% of the pre-tax retail price (effective Jan 1, 2026,
+    // 36 M.R.S. §1811). It is collected from the consumer and remitted to MRS — it is
+    // NOT operator revenue and NOT deductible. The cultivation excise (Title 36 §4923)
+    // is weight-based and paid by the cultivator, so it is not modeled per retail unit here.
+    const salesTax = retail * 0.14;
+    const consumerTotal = retail + salesTax;
+    // Operator gross profit per unit = pre-tax retail revenue minus COGS (wholesale).
+    // Sales tax passes through to the state and does not affect operator gross profit.
+    const perUnitGP = retail - wholesale;
 
     // 280E monthly
     const monthlyGP = perUnitGP * volume;
@@ -323,11 +317,10 @@ const article = {
     const afterTax = monthlyGP - federalTax;
 
     document.getElementById('grossRevenue').textContent = formatUSD(retail);
-    document.getElementById('cultExcise').textContent = formatUSD(cultExcise);
-    document.getElementById('retailExcise').textContent = formatUSD(retailExcise);
     document.getElementById('salesTax').textContent = formatUSD(salesTax);
     document.getElementById('wholesale').textContent = formatUSD(wholesale);
     document.getElementById('perUnitGP').textContent = formatUSD(perUnitGP);
+    document.getElementById('consumerTotal').textContent = formatUSD(consumerTotal);
     document.getElementById('monthlyGP').textContent = formatUSD0(monthlyGP);
     document.getElementById('cogsTotal').textContent = formatUSD0(cogsTotal);
     document.getElementById('opexTotal').textContent = formatUSD0(opex);
