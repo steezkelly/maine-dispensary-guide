@@ -1,0 +1,157 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+export const title = "Maine Cannabis Business Licensing: All License Types & Fees (2026)";
+
+const article = {
+  author: "Eliot Nash",
+  authorTitle: "Editorial",
+  authorId: "eliot-nash",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  publishDate: "2026-07-29",
+  modifiedDate: "2026-07-29",
+  section: "Business Essentials",
+};
+
+const topics = ["licensing", "business", "compliance"];
+
+const faqItems = [
+  { question: "What types of cannabis licenses does Maine issue?", answer: "Maine's Office of Cannabis Policy (OCP) issues adult-use licenses under 28-B M.R.S. Chapter 1 in these categories: Tier 1–4 Cultivation Facilities (tiered by canopy size), Nursery Cultivation Facility, Products Manufacturing Facility, Cannabis Store (adult-use retail), Testing Facility, and Sample Collector. Maine also runs a separate medical program with its own licensing. Most businesses hold one primary license and may add endorsements or additional licenses as they grow." },
+  { question: "How much does a Maine cannabis license cost?", answer: "Fees are set by 28-B M.R.S. §207. Application fees range from $60 (nursery) to $500 (Tier 2–4 cultivation). Annual license fees range from $250 (sample collector) to $30,000 (Tier 4 indoor cultivation). A Cannabis Store (retail) pays a $250 application fee and up to $2,500 annually. A Products Manufacturing Facility pays $250 to apply and $2,500 annually. A Testing Facility pays $250 to apply and $1,000 annually. These are state fees only; municipalities may add local licensing fees." },
+  { question: "Does Maine require residency to get a cannabis license?", answer: "No. Maine has no residency requirement for cannabis license applicants. Out-of-state individuals and entities may apply. However, the applicant must register a business entity with the Maine Secretary of State and maintain a registered agent in Maine. All principals with a sufficient ownership interest must pass OCP background checks regardless of state of residence." },
+  { question: "How long does it take to get a Maine cannabis license?", answer: "For a complete application, OCP review typically runs 60–120 days. The end-to-end timeline — including municipal authorization, application preparation, OCP review, and pre-operation inspection — commonly runs 10–18 months for a retail store, largely because municipal approval timelines vary widely by town. Cultivation and manufacturing timelines follow a similar pattern but depend on facility build-out." },
+  { question: "What is the difference between a conditional and an active license?", answer: "A conditional license is OCP's first approval, granted after your application passes initial review. It is valid for 12 months and is the only license you can hold before your facility is built and inspected. An active license is granted after your facility passes OCP's pre-operation inspection. You must hold an active license to legally operate. See the Maine Cannabis Conditional License guide for the full progression." },
+  { question: "Can one business hold multiple Maine cannabis licenses?", answer: "Yes, Maine permits vertical integration and multiple license holdings subject to statutory limits and OCP rules. A single entity may, for example, hold both a cultivation and a manufacturing license, or a retail license with a medical endorsement. Ownership caps and control restrictions apply to certain license combinations; consult OCP rules and qualified counsel before structuring a multi-license operation." },
+  { question: "Where do I apply for a Maine cannabis license?", answer: "Applications are submitted through the Office of Cannabis Policy (OCP) portal at maine.gov/dafs/ocp. OCP is a division of the Department of Administrative and Financial Services and administers both the adult-use and medical cannabis programs. You must secure municipal authorization for your proposed location before OCP will process your application." },
+];
+---
+
+<Layout
+  title="Maine Cannabis Business Licensing: All License Types & Fees (2026)"
+  description="Complete reference to every Maine cannabis license type — cultivation (Tier 1–4), nursery, manufacturing, retail, testing, sample collector — with OCP application and annual fees from 28-B M.R.S. §207. Updated 2026-07-29."
+  heroImage="/images/heroes/maine-compliance-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; padding-top: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { background: var(--color-background); }
+  section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Maine Cannabis Business Licensing: Every License Type & Fee (2026)</h1>
+    <p class="subtitle">The complete reference to Maine's cannabis license categories, OCP fees, and statutes — for cultivators, manufacturers, retailers, testers, and nurseries</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Licensing at a Glance</h2>
+    <table aria-label="Maine cannabis licensing key facts">
+      <tbody>
+        <tr><td><strong>Licensing Authority</strong></td><td>Maine Office of Cannabis Policy (OCP)</td></tr>
+        <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. Chapter 1 (Cannabis Legalization Act)</td></tr>
+        <tr><td><strong>Fee Schedule</strong></td><td>28-B M.R.S. §207 (application + license fees)</td></tr>
+        <tr><td><strong>Residency Requirement</strong></td><td>None — out-of-state ownership permitted; Maine business entity required</td></tr>
+        <tr><td><strong>Mandatory Tracking</strong></td><td>Metrc seed-to-sale for all licensees</td></tr>
+        <tr><td><strong>License Term</strong></td><td>One year (28-B M.R.S. §208); renewal application due at least 30 days before expiration (§209); OCP notifies licensees 90 days prior</td></tr>
+        <tr><td><strong>OCP Portal</strong></td><td><a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">maine.gov/dafs/ocp</a></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>What licenses does Maine issue?</h2>
+    <p class="answer-capsule">Maine's Office of Cannabis Policy issues adult-use licenses in six categories under 28-B M.R.S. Chapter 1: Tier 1–4 Cultivation Facilities, Nursery Cultivation Facility, Products Manufacturing Facility, Cannabis Store (retail), Testing Facility, and Sample Collector. Fees are set by 28-B M.R.S. §207 and range from a $60 nursery application fee to a $30,000 Tier 4 indoor cultivation annual fee.</p>
+    <p>Maine's adult-use cannabis framework authorizes the OCP to issue the following establishment licenses. Each category has its own application fee, annual license fee, and operational rules. Most businesses hold one primary license and may add endorsements or additional licenses as they grow.</p>
+  </section>
+
+  <section>
+    <h2>Maine cannabis license types and fees</h2>
+    <p>The table below reflects the fee schedule in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec207.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §207</a> and the OCP's published fee guidance. Cultivation fees are tiered by canopy size and differ for outdoor versus indoor (or mixed) operations. These are <strong>state</strong> fees only; municipalities may add local licensing fees and taxes.</p>
+    <table aria-label="Maine cannabis license types, application fees, and annual license fees">
+      <thead>
+        <tr><th>License Type</th><th>Application Fee</th><th>Annual License Fee</th><th>What It Authorizes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Tier 1 Cultivation</strong></td><td>$100</td><td>Plant-count-based: up to $9/mature plant (outdoor) / up to $17/mature plant (indoor). Plant-canopy-based: up to $250 (outdoor) / up to $500 (indoor) per §207 — note OCP's published FAQ table lists the Tier 1 plant-canopy fee as $500 outdoor with no indoor canopy tier; confirm the current figure with OCP.</td><td>Smallest canopy — up to 30 mature plants or up to 500 sq ft canopy</td></tr>
+        <tr><td><strong>Tier 2 Cultivation</strong></td><td>$500</td><td>$1,500 (outdoor) / $3,000 (indoor)</td><td>Mid-size cultivation canopy</td></tr>
+        <tr><td><strong>Tier 3 Cultivation</strong></td><td>$500</td><td>$5,000 (outdoor) / $10,000 (indoor)</td><td>Larger cultivation canopy</td></tr>
+        <tr><td><strong>Tier 4 Cultivation</strong></td><td>$500</td><td>$15,000 (outdoor) / $30,000 (indoor)</td><td>Largest cultivation canopy</td></tr>
+        <tr><td><strong>Nursery Cultivation</strong></td><td>$60</td><td>$350</td><td>Clones, seedlings, immature plants for sale to cultivators</td></tr>
+        <tr><td><strong>Products Manufacturing</strong></td><td>$250</td><td>$2,500</td><td>Edibles, concentrates, topicals, other manufactured products</td></tr>
+        <tr><td><strong>Cannabis Store (Retail)</strong></td><td>$250</td><td>up to $2,500</td><td>Adult-use retail sales to consumers 21+</td></tr>
+        <tr><td><strong>Testing Facility</strong></td><td>$250</td><td>$1,000</td><td>Independent compliance laboratory testing</td></tr>
+        <tr><td><strong>Sample Collector</strong></td><td>$100</td><td>$250</td><td>Collection of cannabis samples for testing</td></tr>
+      </tbody>
+    </table>
+    <p>For cultivation, §207 also provides for an additional fee when a licensee increases canopy size. The exact tier canopy limits and the plant-count versus plant-canopy election are defined in <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec301.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §301</a>; confirm the current canopy thresholds with OCP before selecting a tier.</p>
+    <Callout title="Fees are statutory maximums" type="info">
+      Several §207 figures are expressed as "not more than" amounts — they are statutory ceilings the OCP may set at or below. Always confirm the exact current fee on the OCP fee schedule before budgeting, as the agency publishes the operative amounts.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>How the licensing process works</h2>
+    <p class="answer-capsule">Maine cannabis licensing is a two-track process: you must secure municipal authorization from your host town AND obtain a state OCP license. The state license progresses from conditional (initial approval, 12 months, before your facility is built) to active (after your facility passes OCP's pre-operation inspection). End-to-end timelines commonly run 10–18 months, driven largely by municipal approval.</p>
+    <ol>
+      <li><strong>Form a Maine business entity</strong> with the Secretary of State and designate a registered agent.</li>
+      <li><strong>Secure municipal authorization</strong> — Maine is an opt-in system; your town must affirmatively allow cannabis businesses, and you need written local approval for your specific site.</li>
+      <li><strong>Submit the OCP application</strong> through the OCP portal with the application fee, ownership disclosures, source-of-funds documentation, facility plan, and security plan.</li>
+      <li><strong>Pass background checks</strong> on all qualifying principals and managing employees (OCP Form 4).</li>
+      <li><strong>Receive a conditional license</strong> after OCP's initial review (valid 12 months).</li>
+      <li><strong>Build out and pass the pre-operation inspection</strong>, then convert to an <strong>active license</strong> to begin operations.</li>
+    </ol>
+    <p>For the retail-specific walkthrough — application package, financial-viability proof, and inspection prep — see the <a href="/guides/maine-dispensary-license">Maine Dispensary License guide</a>. For the conditional-to-active progression in detail, see the <a href="/guides/maine-cannabis-conditional-license">Maine Cannabis Conditional License guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>License-type deep dives</h2>
+    <p>Each license category has its own operational rules, canopy or throughput limits, and compliance obligations. Use the dedicated guide for the license you are pursuing:</p>
+    <ul>
+      <li><strong>Cultivation:</strong> <a href="/blog/maine-cannabis-cultivation-license-2026">Maine Cannabis Cultivation License guide</a> — tiers, canopy limits, and OCP requirements.</li>
+      <li><strong>Microbusiness:</strong> <a href="/blog/maine-cannabis-microbusiness-license-2026">Maine Cannabis Microbusiness License guide</a> — small-scale combined cultivation and retail.</li>
+      <li><strong>Manufacturing / extraction:</strong> <a href="/guides/maine-cannabis-extraction-licensing">Cannabis Extraction Licensing guide</a> — solvent-based and solventless methods and compliance.</li>
+      <li><strong>Retail (dispensary):</strong> <a href="/guides/maine-dispensary-license">Maine Dispensary License guide</a> — the full retail application and launch path.</li>
+      <li><strong>Staffing / personnel:</strong> <a href="/guides/maine-cannabis-staffing-licensing">Maine Cannabis IIC & Staffing guide</a> — Individual Identification Cards, background checks, and training records.</li>
+      <li><strong>Costs & ROI:</strong> <a href="/guides/maine-dispensary-costs">How Much Does It Cost to Open a Dispensary in Maine?</a> and <a href="/blog/maine-dispensary-roi-what-to-expect-2026">Maine Dispensary ROI</a>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Medical versus adult-use licensing</h2>
+    <p>Maine operates two parallel cannabis programs: the adult-use market regulated under Title 28-B and a separate medical program. The OCP administers both. A retail business can serve both markets with the appropriate adult-use license and medical endorsement. Medical licensing, caregiver registration, and patient rules are governed separately — see the <a href="/guides/maine-cannabis-regulations">Maine Cannabis Regulations guide</a> for the current framework and the medical program rules.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <AutoRelated currentPath="/guides/maine-cannabis-license-types" currentTopics={topics} section="Licensing & Compliance" limit={6} />
+
+  <section class="disclaimer">
+    <p><em>This information is for informational purposes only and does not constitute legal advice. Maine's cannabis laws, license categories, and fees are subject to change. Confirm current fees and requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a> and consult a qualified Maine cannabis attorney before applying.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-29</strong> by <strong>Eliot Nash + Margaret Finch</strong> against 28-B M.R.S. §207, 28-B M.R.S. §301, and OCP published fee guidance. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+</article>
