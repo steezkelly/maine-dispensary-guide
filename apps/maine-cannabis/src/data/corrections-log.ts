@@ -65,6 +65,25 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "downeast-acadia-aroostook-cannabis-guide",
+    title: "Downeast/Acadia/Aroostook hub — aligned stale operator references with verified town-guide corrections",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "The regional hub still repeated claims that the town-guide corrections (PRs #265, #269, #270) had fixed: it placed The Meristem at '33 Main Street, Bar Harbor' (actually 11 Seal Cove Road, Southwest Harbor), listed Ellsworth as 'three medical dispensaries (Curaleaf MOT, Maine Organic Therapy, Main Street Medical)' treating Curaleaf and Maine Organic Therapy as separate stores (they are the same store — Curaleaf acquired MOT), and described Calais as '4 retail establishments (medical + adult-use)' (actually three in-town medical dispensaries plus Pine Island in Baring).",
+    what_is_correct:
+      "Mount Desert Island: 420 Mules (224 Main St, Bar Harbor) and The Meristem (11 Seal Cove Rd, Southwest Harbor), plus Snare Creek Farms in Trenton. Ellsworth: two medical dispensaries — Curaleaf (formerly Maine Organic Therapy, 3 Myrick Street) and Main Street Medical (71 Main Street). Calais: three in-town medical dispensaries (The Higher Class, Kannacopia, Smoke On The Water / Mt. Tom Therapeutics) plus Pine Island Cannabis in Baring.",
+    verified_via: [
+      { label: "Bar Harbor dispensary guide (Meristem relocated to Southwest Harbor)", url: "/guides/bar-harbor-dispensary-guide" },
+      { label: "Ellsworth dispensary guide (Curaleaf/MOT merged)", url: "/guides/ellsworth-dispensary-guide" },
+      { label: "Calais dispensary guide (three medical + Pine Island in Baring)", url: "/guides/calais-dispensary-guide" },
+    ],
+    published_in: [
+      { name: "Downeast, Acadia and Aroostook regional hub", href: "/guides/downeast-acadia-aroostook-cannabis-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "damariscotta-dispensary-guide",
     title: "Damariscotta guide — corrected Above and Beyond address/phone; reclassified Greenport as medical",
     severity: "material",
