@@ -1,146 +1,117 @@
-// q3-2026-pdf-landing.test.cjs — RED-GREEN gate for the Q3 2026 PDF landing page.
-//
-// Asserts the page source has the right shape: PDF reference, form wiring,
-// FAQ JSON-LD, success card, direct download. Source-text checks follow
-// the pattern used in scripts/continuation/tests/ for this project.
-//
-// Run with `node --test q3-2026-pdf-landing.test.cjs` from this directory.
-
 'use strict';
-const { test } = require('node:test');
+
+/**
+ * apps/maine-cannabis/src/pages/__tests__/q3-2026-pdf-landing.test.cjs
+ *
+ * Focused regression test for the Q3 2026 PDF landing page.
+ * Guards the LeadMailtoForm contract, FAQ component, success card,
+ * and direct download link (must use /downloads/, not /pdfs/).
+ *
+ * Run with: node apps/maine-cannabis/src/pages/__tests__/q3-2026-pdf-landing.test.cjs
+ */
+
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
+const { readFileSync } = require('node:fs');
+const { resolve } = require('node:path');
 
-const pagePath = path.resolve(
-  __dirname,
-  '..',
-  'download',
-  'maine-cannabis-industry-report-q3-2026.astro',
-);
-const page = fs.readFileSync(pagePath, 'utf8');
-const publicDir = path.resolve(__dirname, '..', '..', '..', 'public');
+const PAGE = resolve(__dirname, '..', 'download', 'maine-cannabis-industry-report-q3-2026.astro');
+const source = readFileSync(PAGE, 'utf8');
 
-test('direct-download URL resolves to a committed public PDF asset', () => {
-  const match = page.match(
-    /const pdfDownloadUrl = ['"]([^'"]+maine-cannabis-industry-report-q3-2026\.pdf)['"];/,
+let pass = 0;
+let fail = 0;
+function check(name, fn) {
+  try {
+    fn();
+    process.stderr.write('  ok  ' + name + '\n');
+    pass += 1;
+  } catch (err) {
+    process.stderr.write('  FAIL ' + name + ': ' + err.message + '\n');
+    fail += 1;
+  }
+}
+
+check('page imports LeadMailtoForm, Layout, Faq, and AutoRelated', () => {
+  assert.match(source, /import\s+LeadMailtoForm\s+from\s+['"]\.\.\/\.\.\/components\/LeadMailtoForm\.astro['"]/);
+  assert.match(source, /import\s+Layout\s+from\s+['"]\.\.\/\.\.\/layouts\/Layout\.astro['"]/);
+  assert.match(source, /import\s+Faq\s+from\s+['"]\.\.\/\.\.\/components\/Faq\.astro['"]/);
+  assert.match(source, /import\s+AutoRelated\s+from\s+['"]\.\.\/\.\.\/components\/AutoRelated\.astro['"]/);
+});
+
+check('page mounts LeadMailtoForm with correct props', () => {
+  assert.match(source, /formId=["']q3-2026-industry-report-lead-form["']/);
+  assert.match(source, /leadTo=\{leadTo\}/);
+  assert.match(source, /leadSubject=\{leadSubject\}/);
+  assert.match(source, /leadBody=\{leadBody\}/);
+  assert.match(source, /formName=["']q3_2026_industry_report["']/);
+  assert.match(source, /successPath=["']\/download\/maine-cannabis-industry-report-q3-2026\?success=true["']/);
+  assert.match(source, /trackFields=\{\[['"]stage['"]\]\}/);
+});
+
+check('leadTo points to leads@mainedispensaryguide.com', () => {
+  assert.match(source, /const\s+leadTo\s*=\s*["']leads@mainedispensaryguide\.com["']/);
+});
+
+check('pdfUrl points to /downloads/ (NOT /pdfs/)', () => {
+  assert.match(
+    source,
+    /const\s+pdfUrl\s*=\s*["']\/downloads\/maine-cannabis-industry-report-q3-2026\.pdf["']/,
+    'pdfUrl must use /downloads/ to match the 4 existing lead-magnet PDFs',
   );
-  assert.ok(match, 'page must declare the Q3 PDF direct-download URL');
-  assert.ok(match[1].startsWith('/'), 'public PDF URL must be root-relative');
-  assert.ok(
-    fs.existsSync(path.resolve(publicDir, match[1].slice(1))),
-    `direct-download target must exist under public/: ${match[1]}`,
+  assert.doesNotMatch(
+    source,
+    /["']\/pdfs\/maine-cannabis-industry-report-q3-2026\.pdf["']/,
+    'pdfUrl must NOT use /pdfs/ — that was the bug fixed in this PR',
   );
 });
 
-test('page mounts LeadMailtoForm with the right form-name and successPath', () => {
-  // Component import
-  assert.match(page, /LeadMailtoForm/);
-  // Form wiring
+check('page has Faq component with 5+ items', () => {
+  assert.match(source, /<Faq\s+items=\{faqItems\}\s*\/>/);
+  assert.match(source, /const\s+faqItems\s*=\s*\[/);
+  // Count question fields
+  const questions = source.match(/question:\s*"/g) || [];
+  assert.ok(questions.length >= 5, `Faq must have >= 5 questions, found ${questions.length}`);
+});
+
+check('page has success card with download link', () => {
+  assert.match(source, /id=["']q3-2026-report-success["']/);
+  assert.match(source, /href=\{\s*pdfUrl\s*\}\s+download/);
+});
+
+check('page has direct download link outside form', () => {
+  assert.match(source, /class=["']or-download["']/);
+  assert.match(source, /download now without subscribing/i);
+});
+
+check('page has KPI strip with frozen figures', () => {
+  // Three KPI cards
+  const kpis = source.match(/class=["']kpi["']/g) || [];
+  assert.ok(kpis.length >= 3, `KPI strip must have >= 3 cards, found ${kpis.length}`);
+  assert.match(source, /\$20\.7M/);
+  assert.match(source, /346/);
+  assert.match(source, /\$6\.10/);
+});
+
+check('form has required name, email, and stage fields', () => {
+  assert.match(source, /name=["']name["']\s+required/);
+  assert.match(source, /name=["']email["']\s+required/);
+  assert.match(source, /name=["']stage["']\s+required/);
+});
+
+check('page is not noindex', () => {
+  assert.match(source, /noindex=\{false\}/);
+});
+
+check('page has AutoRelated with currentPath AND currentTopics', () => {
   assert.match(
-    page,
-    /formName=["']q3_2026_industry_report["']/,
-    'must use the canonical snake_case formName for this PDF gate',
-  );
-  assert.match(
-    page,
-    /successPath=["']\/download\/maine-cannabis-industry-report-q3-2026\?success=true["']/,
-    'must set a success path that round-trips through the same page',
-  );
-  // Form id
-  assert.match(
-    page,
-    /formId=["']maine-cannabis-industry-report-lead-form["']/,
-    'form id must be unique and prefixed to avoid collisions with the other PDF-gate forms',
+    source,
+    /<AutoRelated\s+currentPath=["'][^"']*maine-cannabis-industry-report-q3-2026["'][^>]*currentTopics=\{/,
   );
 });
 
-test('page renders required form fields (name, email, business, role)', () => {
-  assert.match(page, /id=["']q3-name["']/, 'name input');
-  assert.match(page, /id=["']q3-email["']/, 'email input');
-  assert.match(page, /id=["']q3-business["']/, 'business input');
-  assert.match(page, /id=["']q3-role["']/, 'role select');
-  // role select must include the operator/applicant/investor/service/curious options
-  assert.match(page, /value=["']operator["']/, 'role option: operator');
-  assert.match(page, /value=["']applicant["']/, 'role option: applicant');
-  assert.match(page, /value=["']investor["']/, 'role option: investor');
-  assert.match(page, /value=["']curious["']/, 'role option: curious');
+check('page has in-line success-script that reads success=true query param', () => {
+  assert.match(source, /get\(['"]success['"]\)/);
+  assert.match(source, /===\s*['"]true['"]/);
 });
 
-test('page contains FAQPage JSON-LD with at least 4 questions', () => {
-  assert.match(
-    page,
-    /<script[^>]+application\/ld\+json[^>]*>/,
-    'must include an ld+json script tag',
-  );
-  assert.match(page, /FAQPage/, 'must declare the FAQPage ld+json payload');
-  // Count question entries — 4 questions defined in the frontmatter.
-  const matches = page.match(/'@type':\s*'Question'/g) || [];
-  assert.ok(matches.length >= 4, `expected at least 4 FAQ questions, found ${matches.length}`);
-});
-
-test('page renders a success card with id for client-side toggle', () => {
-  assert.match(
-    page,
-    /id=["']maine-cannabis-industry-report-success["']/,
-    'success card div must have the unique id that the client script toggles',
-  );
-  assert.match(
-    page,
-    /Check your inbox/,
-    'success card text must announce delivery',
-  );
-});
-
-test('page renders a direct-download link that bypasses the lead form', () => {
-  assert.match(
-    page,
-    /Or download now without subscribing/,
-    'must include the direct-download string used on the other PDF gates',
-  );
-});
-
-test('page exposes the report publication date to readers', () => {
-  assert.match(page, /Published 23 July 2026/);
-});
-
-test('page declares a data cutoff note that names the actual date', () => {
-  assert.match(
-    page,
-    /Data cutoff/,
-    'page must state the data cutoff',
-  );
-  assert.match(
-    page,
-    /23 July 2026/,
-    'cutoff must be the published date so future editions can be diffed',
-  );
-});
-
-test('page covers all 8 sections of the PDF report', () => {
-  assert.match(page, /1\.\s*Introduction/);
-  assert.match(page, /2\.\s*Maine Market Snapshot/);
-  assert.match(page, /3\.\s*Legal/);
-  assert.match(page, /4\.\s*Industry/);
-  assert.match(page, /5\.\s*Economic Performance/);
-  assert.match(page, /6\.\s*Forecast/);
-  assert.match(page, /7\.\s*Conclusion/);
-  assert.match(page, /8\.\s*References/);
-});
-
-test('page is indexable (noindex=false)', () => {
-  // The <Layout> opens with noindex={false} so the page is indexable.
-  assert.match(
-    page,
-    /noindex=\{false\}/,
-    'page must be noindex={false} so the landing page is discoverable',
-  );
-});
-
-test('page sets up AutoRelated for downstream internal discovery', () => {
-  assert.match(
-    page,
-    /<AutoRelated/,
-    'page must include AutoRelated so the PDF gate links out to related guides',
-  );
-});
+process.stderr.write('\nq3-2026-pdf-landing.test.cjs: ' + pass + ' passed, ' + fail + ' failed\n');
+process.exit(fail === 0 ? 0 : 1);

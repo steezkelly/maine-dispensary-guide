@@ -1,116 +1,91 @@
 ---
 import AutoRelated from '../../components/AutoRelated.astro';
-import LeadMailtoForm from '../../components/LeadMailtoForm.astro';
+import Faq from '../../components/Faq.astro';
 import Layout from '../../layouts/Layout.astro';
+import LeadMailtoForm from '../../components/LeadMailtoForm.astro';
 import PineTree from '@network/ui/PineTree';
 
-const pdfDownloadUrl = '/pdfs/maine-cannabis-industry-report-q3-2026.pdf';
-const leadTo = 'leads@mainedispensaryguide.com';
-const leadSubject = 'Maine Cannabis Industry Report — Q3 2026 request: {email}';
-const leadBody =
-  'Hi — please send me the Maine Cannabis Industry Report — Q3 2026 PDF.\n\n' +
-  'Name: {name}\nEmail: {email}\nBusiness: {business}\nRole: {role}\n' +
-  'Source page: /download/maine-cannabis-industry-report-q3-2026';
+const pdfUrl = "/downloads/maine-cannabis-industry-report-q3-2026.pdf";
+const leadTo = "leads@mainedispensaryguide.com";
+const leadSubject = "Q3 2026 Industry Report request: {email}";
+const leadBody = "Hi — please send me the Maine Cannabis Industry Report Q3 2026 PDF.\n\nName: {name}\nEmail: {email}\nBusiness: {business}\nStage: {stage}\nSource page: /download/maine-cannabis-industry-report-q3-2026";
 
-const pageTitle = 'Maine Cannabis Industry Report — Q3 2026 (Free PDF)';
-const pageDescription =
-  'Free 8-page professional industry report on the Maine cannabis market as of Q3 2026. Regulatory, market, industry, economic, and outlook coverage with verified figures and citations.';
-
-const faqPageJsonLd = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  'mainEntity': [
-    {
-      '@type': 'Question',
-      'name': 'What is included in the Maine Cannabis Industry Report — Q3 2026?',
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text':
-          'The report covers eight sections: introduction and methodology, Maine market snapshot with verified transaction and patient counts, legal and regulatory news including 2026 session outcomes, industry and technology developments, economic performance with 280E impact analysis, a Q4 forecast, a conclusion, and a references and methodology section with citations. Each figure cites its source document.',
-      },
-    },
-    {
-      '@type': 'Question',
-      'name': 'Is the Maine Cannabis Industry Report current with Q3 2026 data?',
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text':
-          'The report is published during Q3 2026 with a stated data cutoff. It does not present incomplete Q3 results as final quarter-end results. Where late-Q3 data is unavailable, the report marks the gap explicitly rather than extrapolating. Updated figures are versioned in the methodology section.',
-      },
-    },
-    {
-      '@type': 'Question',
-      'name': 'Who is the audience for this report?',
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text':
-          'The report is written for current and prospective Maine cannabis operators, investors evaluating the Maine market, and analysts tracking regulated US cannabis markets. It is a boardroom-quality reference, not a marketing deck.',
-      },
-    },
-    {
-      '@type': 'Question',
-      'name': 'How is the report sourced?',
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text':
-          'Each figure cites its source document. Primary sources include Maine OCP monthly reports, Maine Revenue Services tax filings, the Maine legislature bill tracker, and state and federal agency press releases. Charts and tables include a source-of-record note.',
-      },
-    },
-  ],
-});
+const faqItems = [
+  {
+    question: "What is the Maine Cannabis Industry Report Q3 2026?",
+    answer: "A data-driven snapshot of Maine's cannabis market as of Q3 2026, covering adult-use and medical sales, licensing trends, pricing, tax revenue, and federal regulatory developments. All figures are sourced from OCP dashboards, MRS tax filings, and federal records with a data cutoff of July 22, 2026."
+  },
+  {
+    question: "How current is the data in this report?",
+    answer: "The report uses the latest available data as of July 22, 2026: OCP operational dashboards through June 2026 (preliminary, unaudited) and MRS tax-filer data through May 2026 (filing-period-based, revisable). This is an in-quarter edition, not a final annual report."
+  },
+  {
+    question: "Is this report free?",
+    answer: "Yes. The Maine Cannabis Industry Report Q3 2026 is a free lead magnet from Maine Dispensary Guide. Enter your email to receive it, or download directly without subscribing."
+  },
+  {
+    question: "What is included in the report?",
+    answer: "Eight sections covering Maine market snapshot (June 2026 and YTD 2026 KPIs), legal/regulatory news, industry/tech/business context, economic performance and forecast, future outlook, conclusion, and references/methodology. Every figure includes its source URL, retrieval date, and status label (preliminary, unaudited, filing-period-based, revisable)."
+  },
+  {
+    question: "How is this report different from your market-stats page?",
+    answer: "The /market-stats page is a live, continuously-updated web surface. This Q3 2026 report is a fixed-snapshot PDF — the same frozen figures captured in a printable, lead-gated format suitable for sharing with investors, partners, or municipal stakeholders."
+  }
+];
 ---
 
 <Layout
-  title={pageTitle}
-  description={pageDescription}
+  title="Free Maine Cannabis Industry Report — Q3 2026"
+  description="Download the free Q3 2026 Maine Cannabis Industry Report. Adult-use sales, pricing trends, license counts, tax revenue, and federal regulatory updates — all sourced from OCP and MRS data."
   noindex={false}
 >
   <style>
     .download-page {
-      max-width: 880px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
+      padding: 3rem 2rem 6rem;
     }
+
     .doc-header {
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 3rem 2rem;
       background: var(--color-surface);
-      border-radius: 1rem;
-      margin-bottom: 2rem;
+      border-radius: 2rem;
+      border: 1px solid var(--color-border);
+      margin-bottom: 3rem;
     }
-    .doc-logo {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 0.5rem;
-    }
+
+    .doc-logo { margin-bottom: 1rem; }
+
     .doc-brand {
-      font-family: var(--font-serif);
-      font-size: 0.875rem;
-      letter-spacing: 0.05em;
-      color: var(--color-text-light);
+      font-size: 0.75rem;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-soft-green);
       margin-bottom: 1rem;
     }
+
     .doc-title {
       font-family: var(--font-serif);
-      font-size: 2.5rem;
-      line-height: 1.1;
+      font-size: 2.25rem;
+      line-height: 1.2;
       color: var(--color-text);
-      margin: 0 0 0.5rem;
+      margin: 0.5rem 0;
     }
+
     .doc-subtitle {
       font-size: 1.125rem;
       color: var(--color-text-light);
-      margin: 0 0 1rem;
-    }
-    .doc-meta {
-      font-size: 0.875rem;
-      color: var(--color-text-light);
-      margin-bottom: 1.5rem;
+      margin: 0.75rem 0 1.5rem;
     }
 
-    :global(.lead-mailto-form),
-    :global(.lead-intake-form) {
+    .doc-meta {
+      font-size: 0.8125rem;
+      color: var(--color-text-light);
+    }
+
+    :global(.lead-mailto-form) {
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -118,20 +93,24 @@ const faqPageJsonLd = JSON.stringify({
       margin: 1.5rem auto 0;
       text-align: left;
     }
+
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 0.375rem;
     }
+
     .form-group label {
       color: var(--color-text);
       font-size: 0.875rem;
       font-weight: 600;
     }
+
     .optional {
       color: var(--color-text-light);
       font-weight: 400;
     }
+
     .form-group input,
     .form-group select {
       padding: 0.875rem 1rem;
@@ -141,6 +120,7 @@ const faqPageJsonLd = JSON.stringify({
       color: var(--color-text);
       font: inherit;
     }
+
     .cta-button {
       display: flex;
       align-items: center;
@@ -155,6 +135,7 @@ const faqPageJsonLd = JSON.stringify({
       font-weight: 700;
       cursor: pointer;
     }
+
     .success-card {
       max-width: 480px;
       margin: 1.5rem auto 0;
@@ -163,78 +144,87 @@ const faqPageJsonLd = JSON.stringify({
       border-radius: 1rem;
       background: var(--color-background);
     }
+
     .success-card h2 {
       margin-top: 0;
     }
+
     .success-card a {
       color: var(--color-text);
       font-weight: 600;
     }
+
     .or-download {
       margin-top: 1.25rem;
       text-align: center;
     }
+
     .or-download a {
       color: var(--color-text-light);
       font-size: 0.875rem;
       text-decoration: underline;
     }
 
-    .domain-grid {
+    .report-highlights {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
     }
-    .domain-card {
+
+    .highlight-card {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 1rem;
       padding: 1.5rem;
     }
-    .domain-card h3 {
+
+    .highlight-card h3 {
       font-family: var(--font-serif);
       font-size: 1.125rem;
       color: var(--color-text);
       margin: 0 0 0.5rem;
     }
-    .check-count {
-      font-size: 0.75rem;
-      color: var(--color-text-light);
-      font-weight: 400;
-      margin-left: 0.5rem;
-    }
-    .domain-card p {
-      font-size: 0.875rem;
+
+    .highlight-card p {
+      font-size: 0.9375rem;
       color: var(--color-text-light);
       margin: 0;
-      line-height: 1.5;
     }
 
-    section h2 {
-      font-family: var(--font-serif);
-      font-size: 1.75rem;
-      color: var(--color-text);
-      margin-top: 2rem;
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
     }
 
-    .data-cutoff-note {
+    .kpi {
+      text-align: center;
+      padding: 1rem;
       background: var(--color-surface);
-      border-left: 4px solid var(--color-primary);
-      padding: 1rem 1.25rem;
-      border-radius: 0.5rem;
-      margin: 2rem 0;
-      font-size: 0.9375rem;
-      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+    }
+
+    .kpi .value {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .kpi .label {
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+      margin-top: 0.25rem;
     }
 
     @media (max-width: 768px) {
       .doc-title { font-size: 1.75rem; }
-      .domain-grid { grid-template-columns: 1fr; }
+      .report-highlights { grid-template-columns: 1fr; }
     }
   </style>
-
-  <script type="application/ld+json" set:html={faqPageJsonLd}></script>
 
   <article class="download-page">
     <div class="doc-header">
@@ -242,133 +232,113 @@ const faqPageJsonLd = JSON.stringify({
         <PineTree size={48} color="var(--color-primary)" />
       </div>
       <div class="doc-brand">Maine Dispensary Guide</div>
-      <h1 class="doc-title">Maine Cannabis<br />Industry Report</h1>
-      <p class="doc-subtitle">Q3 2026 edition — the Maine market snapshot every operator and analyst should read</p>
-      <div class="doc-meta">Version 2026.Q3 &bull; Published 23 July 2026 &bull; 8 pages &bull; Free download</div>
+      <h1 class="doc-title">Maine Cannabis<br/>Industry Report — Q3 2026</h1>
+      <p class="doc-subtitle">Data-driven market snapshot: sales, pricing, licenses, tax revenue &amp; federal regulatory updates</p>
+      <div class="doc-meta">In-quarter edition &bull; Data cutoff July 22, 2026 &bull; 14 pages &bull; Free Download</div>
 
-      <div class="success-card" id="maine-cannabis-industry-report-success" style="display: none;">
-        <h2>Check your inbox — the Maine Cannabis Industry Report is on its way.</h2>
-        <p>Or <a href={pdfDownloadUrl} download>download now without subscribing</a>.</p>
+      <div class="kpi-strip">
+        <div class="kpi">
+          <div class="value">$20.7M</div>
+          <div class="label">June 2026 adult-use sales</div>
+        </div>
+        <div class="kpi">
+          <div class="value">346</div>
+          <div class="label">Active adult-use licenses</div>
+        </div>
+        <div class="kpi">
+          <div class="value">$6.10</div>
+          <div class="label">YTD avg flower price/g</div>
+        </div>
       </div>
 
+      <div class="success-card" id="q3-2026-report-success" style="display: none;">
+        <h2>Check your inbox — the Q3 2026 Industry Report is on its way.</h2>
+        <p>Or <a href={pdfUrl} download>download now without subscribing</a>.</p>
+      </div>
       <LeadMailtoForm
-        formId="maine-cannabis-industry-report-lead-form"
+        formId="q3-2026-industry-report-lead-form"
         leadTo={leadTo}
         leadSubject={leadSubject}
         leadBody={leadBody}
         formName="q3_2026_industry_report"
         successPath="/download/maine-cannabis-industry-report-q3-2026?success=true"
-        trackFields={['role', 'business']}
+        trackFields={['stage']}
       >
         <div class="form-group">
-          <label for="q3-name">Your Name</label>
-          <input type="text" id="q3-name" name="name" required placeholder="Jane Smith" autocomplete="name" />
+          <label for="q3-report-name">Your Name</label>
+          <input type="text" id="q3-report-name" name="name" required placeholder="Jane Smith" autocomplete="name" />
         </div>
         <div class="form-group">
-          <label for="q3-email">Email Address</label>
-          <input type="email" id="q3-email" name="email" required placeholder="jane@example.com" autocomplete="email" />
+          <label for="q3-report-email">Email Address</label>
+          <input type="email" id="q3-report-email" name="email" required placeholder="jane@example.com" autocomplete="email" />
         </div>
         <div class="form-group">
-          <label for="q3-business">Business or Affiliation <span class="optional">(optional)</span></label>
-          <input type="text" id="q3-business" name="business" placeholder="Pine Tree Cannabis LLC" autocomplete="organization" />
+          <label for="q3-report-business">Business Name <span class="optional">(optional)</span></label>
+          <input type="text" id="q3-report-business" name="business" placeholder="Pine Tree Cannabis LLC" autocomplete="organization" />
         </div>
         <div class="form-group">
-          <label for="q3-role">Your Role</label>
-          <select id="q3-role" name="role" required>
+          <label for="q3-report-stage">What stage are you at?</label>
+          <select id="q3-report-stage" name="stage" required>
             <option value="">Select one...</option>
-            <option value="operator">Dispensary Operator</option>
-            <option value="applicant">License Applicant</option>
-            <option value="investor">Investor / Analyst</option>
-            <option value="service">Service Provider (legal / accounting / consulting)</option>
-            <option value="curious">Just Curious</option>
+            <option value="researching">Researching — just exploring</option>
+            <option value="applying">Applying — have my LLC, working on license</option>
+            <option value="operating">Already Operating — looking to grow</option>
           </select>
         </div>
-        <!-- analytics:cta-injected id=cta-inline-download--maine-cannabis-industry-report-q3-2026-01 -->
-        <button type="submit" class="cta-button" data-cta-id="cta-inline-download--maine-cannabis-industry-report-q3-2026-01">
+        <!-- analytics:cta-injected id=cta-inline-download--q3-2026-industry-report-01 -->
+        <button type="submit" class="cta-button" data-cta-id="cta-inline-download--q3-2026-industry-report-01">
           Download Free — Enter Your Email
         </button>
       </LeadMailtoForm>
-
       <div class="or-download">
-        <a href={pdfDownloadUrl} download>Or download now without subscribing</a>
+        <a href={pdfUrl} download>Or download now without subscribing</a>
       </div>
     </div>
 
-    <div class="data-cutoff-note">
-      <strong>Data cutoff:</strong> figures and charts reflect data available as of <strong>23 July 2026</strong>.
-      Late-Q3 data and 2026 session outcomes posted after the cutoff are not in this edition.
-      See Section 8 (References &amp; Methodology) for the per-figure source list.
-    </div>
-
     <section>
-      <h2>What This Report Covers</h2>
-      <p>
-        Eight sections, verified figures throughout, and a methodology appendix that names every primary source.
-        The full edition is an 8-page PDF plus supporting research linked inline. This landing page is a
-        free entry point — fill out the form above for the full PDF delivered to your inbox, or skip the
-        form and download immediately below the lead form.
-      </p>
+      <h2>What's Inside the Report</h2>
+      <p>The Q3 2026 edition covers eight sections, each grounded in primary-source data from Maine's Office of Cannabis Policy, Maine Revenue Services, and federal regulatory filings.</p>
 
-      <div class="domain-grid">
-        <div class="domain-card">
-          <h3>1. Introduction &amp; Methodology <span class="check-count">scope + cutoff</span></h3>
-          <p>Scope statement, data cutoff, source taxonomy, and the difference between verified figures and projection.</p>
+      <div class="report-highlights">
+        <div class="highlight-card">
+          <h3>Maine Market Snapshot</h3>
+          <p>June 2026 adult-use sales of $20.7M, YTD $119.9M across 2.44M transactions. Average flower price compressed to $6.10/g YTD.</p>
         </div>
-        <div class="domain-card">
-          <h3>2. Maine Market Snapshot <span class="check-count">8 figures</span></h3>
-          <p>Transaction counts, patient counts, registered operator and caregiver counts, regional distribution, and year-over-year deltas.</p>
+        <div class="highlight-card">
+          <h3>License Footprint</h3>
+          <p>346 active adult-use licenses (187 stores, 80 manufacturing, 76 cultivation, 3 testing) as of the June 1, 2026 OCP roster.</p>
         </div>
-        <div class="domain-card">
-          <h3>3. Legal &amp; Regulatory News <span class="check-count">2026 session</span></h3>
-          <p>2026 Maine legislative outcomes relevant to cannabis operators, plus federal scheduling and rescheduling context.</p>
+        <div class="highlight-card">
+          <h3>Tax Revenue</h3>
+          <p>May 2026 MRS data: $20.3M adult-use taxable sales, $2.7M sales-tax revenue, $1.1M excise revenue. Post-Jan 2026 rate reset analyzed.</p>
         </div>
-        <div class="domain-card">
-          <h3>4. Industry, Tech &amp; Business <span class="check-count">operational</span></h3>
-          <p>Inventory-tech adoption, METRC workflow updates, payment-processing constraints, and retail-format shifts.</p>
+        <div class="highlight-card">
+          <h3>Federal Regulatory Update</h3>
+          <p>Schedule III for medical effective April 22, 2026. Broader rescheduling NPRM in post-hearing-brief phase. Hemp definition change effective Nov 12, 2026.</p>
         </div>
-        <div class="domain-card">
-          <h3>5. Economic Performance <span class="check-count">280E + tax</span></h3>
-          <p>280E impact analysis, estimated annual licensing cost range, and the effective-tax stacking the report warns against.</p>
+        <div class="highlight-card">
+          <h3>Price Compression Trend</h3>
+          <p>Flower price per gram: $12.75 (2021) → $9.23 (2022) → $7.77 (2023) → $7.24 (2024) → $6.62 (2025) → $6.10 YTD 2026.</p>
         </div>
-        <div class="domain-card">
-          <h3>6. Forecast <span class="check-count">Q4 outlook</span></h3>
-          <p>Q4 2026 directional expectations, with the caveat that any projection cites its reference scenario explicitly.</p>
-        </div>
-        <div class="domain-card">
-          <h3>7. Conclusion <span class="check-count">operator lens</span></h3>
-          <p>Synthesis for operators and analysts — what the Q3 2026 data is and is not saying.</p>
-        </div>
-        <div class="domain-card">
-          <h3>8. References &amp; Methodology <span class="check-count">per-figure cites</span></h3>
-          <p>Primary-source document list for every figure, table, and chart, plus known gaps and the update cadence.</p>
+        <div class="highlight-card">
+          <h3>Methodology &amp; Sources</h3>
+          <p>Every figure traced to a primary source with retrieval date, status label, and revision caveats. CC BY 4.0 licensed.</p>
         </div>
       </div>
     </section>
 
-    <section>
-      <h2>How to Read This Report</h2>
-      <p>
-        Section 2 is where you'll spend the most time if you're an operator — it carries the Maine market
-        baseline. Section 5 is the highest-signal section if you're tracking the economics side of the
-        business, including the 280E stacking trap the report calls out. Section 8 is the audit trail:
-        the methodology appendix names every primary source so each figure can be traced back to a specific
-        document version.
-      </p>
-      <p>
-        The report is published during Q3 2026 with a stated data cutoff rather than after the quarter closes.
-        Where late-Q3 data is unavailable, the gap is marked explicitly. Updated figures are versioned in
-        the methodology section so future editions can be diffed against this one.
-      </p>
-    </section>
+    <Faq items={faqItems} />
 
-    <AutoRelated currentPath="/download/maine-cannabis-industry-report-q3-2026" currentTopics={['q3-2026', 'industry-report', 'maine-cannabis', 'regulation', 'market-data']} limit={6} />
+    <AutoRelated currentPath="/download/maine-cannabis-industry-report-q3-2026" currentTopics={['industry-report', 'q3-2026', 'ocp', 'mrs', 'cannabis']} />
   </article>
-</Layout>
 
-<script is:inline>
-  // success state is handled client-side (static build can't read query params)
-  if (window.location.search.includes('success=true')) {
-    var el = document.getElementById('maine-cannabis-industry-report-success');
-    if (el) el.style.display = 'block';
-  }
-</script>
+  <script is:inline>
+    if (new URLSearchParams(window.location.search).get('success') === 'true') {
+      var successEl = document.getElementById('q3-2026-report-success');
+      if (successEl) {
+        successEl.removeAttribute('hidden');
+        successEl.style.display = 'block';
+      }
+    }
+  </script>
+</Layout>
