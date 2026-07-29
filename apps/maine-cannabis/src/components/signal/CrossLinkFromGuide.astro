@@ -1,0 +1,78 @@
+---
+/**
+ * CrossLinkFromGuide.astro
+ *
+ * Renders the reciprocal cross-link from a per-city dispensary guide
+ * to the MDG Signal research surface for the same city. Self-contained
+ * aside; no client JS. Pure markup driven by buildCrossLinkFromGuide().
+ *
+ * Inserted near the end of each Signal-curated per-city dispensary
+ * guide, after the existing AutoRelated block.
+ *
+ * The link carries rel="nofollow" by default so the addition does not
+ * artificially push PageRank to the prototype /signal/ URLs (which
+ * the project keeps out of the public sitemap during the prototype
+ * phase).
+ */
+import { buildCrossLinkFromGuide } from './CrossLinkFromGuide';
+
+interface Props {
+  slug: string;
+  city: string;
+  nofollow?: boolean;
+}
+const { slug, city, nofollow = true } = Astro.props as Props;
+const link = buildCrossLinkFromGuide({ slug, city, nofollow });
+---
+<aside class="signal-cross-link" aria-label="MDG Signal research for {city}">
+  <p class="eyebrow">{link.eyebrow}</p>
+  <h2>{link.label}</h2>
+  <p class="lede">{link.blurb}</p>
+  <p>
+    <a
+      href={link.href}
+      rel={link.nofollow ? 'nofollow' : undefined}
+      data-signal-cross-link-kind="city"
+      data-signal-cross-link-slug={slug}
+    >Open the {city} research page →</a>
+  </p>
+</aside>
+
+<style>
+  .signal-cross-link {
+    margin-top: 28px;
+    padding: 18px 20px;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 25%, var(--color-border, rgba(15, 20, 25, 0.10)));
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-primary) 4%, transparent);
+    display: grid;
+    gap: 6px;
+  }
+  .signal-cross-link .eyebrow {
+    color: var(--color-accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .signal-cross-link h2 {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 0;
+  }
+  .signal-cross-link .lede {
+    color: var(--color-text-muted, #555);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .signal-cross-link p:last-of-type { margin-top: 4px; }
+  .signal-cross-link a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .signal-cross-link a:hover { color: color-mix(in srgb, var(--color-primary) 70%, var(--color-accent)); }
+</style>
