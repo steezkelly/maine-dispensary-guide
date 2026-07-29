@@ -65,6 +65,25 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "skowhegan-dispensary-guide",
+    title: "Skowhegan guide — corrected all three fabricated phones; ReMaine Humble Farms relocated to Winslow",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "All three Skowhegan listings had fabricated phones (207) 474-9999/474-0000/431-9100 and fabricated/misplaced addresses: 'Nuggie's Cannabis' (12 Madison Ave, 474-9999), 'ReMaine Humble Farms' (95 E Madison Rd, Skowhegan, 474-0000 — actually in Winslow), and 'Terp Valley Farms' (431-9100).",
+    what_is_correct:
+      "Nuggie's Cannabis — 3 Abk Dr, Skowhegan, (207) 474-2774, medical (established 2018). ReMaine Humble Farms — 746 Augusta Rd, WINSLOW (not Skowhegan; ~20 min via ME-104 S / US-201 S), (207) 509-0123, medical. Terp Valley Farms — medical delivery based in Cornville / Skowhegan, (207) 708-1776.",
+    verified_via: [
+      { label: "Nuggie's Cannabis — 3 Abk Dr, Skowhegan, 207-474-2774", url: "https://shopnuggies.com/contact" },
+      { label: "ReMaine Humble Farms — 746 Augusta Rd, Winslow, 207-509-0123", url: "https://www.remainehumblefarms.com/visit-us/" },
+      { label: "Terp Valley Farms — Cornville/Skowhegan delivery, 207-708-1776", url: "https://weedmaps.com/deliveries/terp-valley-farms" },
+    ],
+    published_in: [
+      { name: "Skowhegan dispensary guide", href: "/guides/skowhegan-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "machias-dispensary-guide",
     title: "Machias guide — corrected both fabricated addresses/phones; both are medical",
     severity: "material",
