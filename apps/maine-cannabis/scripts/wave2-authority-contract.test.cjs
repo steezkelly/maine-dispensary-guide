@@ -107,7 +107,7 @@ test('mushrooms page has at least 5 inbound links', () => {
 
 test('mushrooms page distinguishes psilocybin from cannabis law', () => {
   const src = stripComments(read('src/pages/blog/are-mushrooms-legal-in-maine.astro'));
-  assert.match(src, /Title 17-A|criminal code/i,
+  assert.match(src, /17-A M\.R\.S\.|Title 17-A|criminal code/i,
     'must reference Maine criminal code, not cannabis statutes');
   assert.doesNotMatch(src, /psilocybin is legal in Maine/i,
     'must not claim psilocybin is legal');
@@ -145,12 +145,16 @@ test('travel page links to edibles page', () => {
 // 4. Cross-page consistency
 // ---------------------------------------------------------------------------
 
-test('edibles and purchase-limit pages agree on 10mg/200mg', () => {
+test('edibles and purchase-limit pages agree on the combined limit', () => {
   const edibles = stripComments(read('src/pages/blog/are-edibles-legal-in-maine.astro'));
   const purchase = stripComments(read('src/pages/blog/how-much-weed-can-you-buy-in-maine.astro'));
-  // Both must state 10mg per serving
-  assert.match(edibles, /10\s*mg/i);
-  assert.match(purchase, /10\s*mg/i);
+  // Edibles page owns the per-serving/package THC cap
+  assert.match(edibles, /10\s*mg/i, 'edibles page must state 10mg per serving');
+  assert.match(edibles, /200\s*mg/i, 'edibles page must state 200mg per package');
+  // Purchase-limit page owns the combined transaction limit; must link to edibles
+  assert.match(purchase, /2\.5\s*ounces/i, 'purchase page must state 2.5oz combined limit');
+  assert.match(purchase, /are-edibles-legal-in-maine/,
+    'purchase page must link to edibles page for the per-serving cap');
 });
 
 test('first-time buyer page links to edibles page', () => {
