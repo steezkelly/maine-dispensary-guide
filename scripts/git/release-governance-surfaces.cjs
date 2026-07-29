@@ -33,7 +33,10 @@ const REQUIRED_GOVERNANCE_SURFACES = Object.freeze([
 ]);
 
 const GOVERNANCE_TRIGGER_FILES = Object.freeze([
-  ...REQUIRED_GOVERNANCE_SURFACES,
+  '.github/workflows/ci.yml',
+  '.githooks/pre-push',
+  'scripts/git/install-hooks.cjs',
+  'scripts/git/pre-push-verify.cjs',
   'scripts/git/release-governance-surfaces.cjs',
   'scripts/git/tests/pre-push-verify-governance.test.cjs',
 ]);

@@ -169,9 +169,11 @@ function testSharedGovernanceSurfaceInventory() {
   ];
   const sharedModuleIsCanonical = sharedInventory
     && required.size === mandatory.length
-    && triggers.size === required.size + 2
     && mandatory.every((relativePath) => required.has(relativePath))
-    && [...required].every((relativePath) => triggers.has(relativePath))
+    && triggers.has('.github/workflows/ci.yml')
+    && triggers.has('.githooks/pre-push')
+    && triggers.has('scripts/git/install-hooks.cjs')
+    && triggers.has('scripts/git/pre-push-verify.cjs')
     && triggers.has('scripts/git/release-governance-surfaces.cjs')
     && triggers.has('scripts/git/tests/pre-push-verify-governance.test.cjs')
     && /require\(['"]\.\/release-governance-surfaces\.cjs['"]\)/.test(verifier)
@@ -735,8 +737,8 @@ function testPublicVerifierSeesRenamedRequiredInputs() {
       args: ['--fast-only'],
     },
     {
-      source: 'AGENTS.md',
-      destination: 'AGENTS-retired.md',
+      source: '.githooks/pre-push',
+      destination: '.githooks/pre-push-retired',
       expectedStatus: 16,
       args: ['--fast-only', '--skip-autoRelated-freshness'],
     },
@@ -755,6 +757,7 @@ function testPublicVerifierSeesRenamedRequiredInputs() {
         'apps/maine-cannabis/scripts/image/check-hero-naming.cjs': "#!/usr/bin/env node\n'use strict';\nprocess.exit(0);\n",
         'apps/maine-cannabis/src/data/autoRelatedData.json': '{}\n',
         'AGENTS.md': '# governed fixture\n',
+        '.githooks/pre-push': '#!/bin/sh\nnode scripts/git/pre-push-verify.cjs "$@"\n',
         'package.json': '{"private":true,"workspaces":["apps/*"]}\n',
       };
       for (const [relativePath, content] of Object.entries(fixtureFiles)) {
@@ -1071,8 +1074,12 @@ function testCanonicalGatesRunGovernanceSuite() {
   const verifierUsesSharedTriggers = /require\(['"]\.\/release-governance-surfaces\.cjs['"]\)/.test(verifier)
     && /GOVERNANCE_TRIGGER_FILES\.includes\(normalizeRepoPath\(filePath\)\)/.test(verifier)
     && /files\.filter\(isGovernanceTrigger\)/.test(verifier);
-  const sharedTriggersCoverRequiredSurfaces = ACTIVE_GUIDANCE
-    .every((relativePath) => GOVERNANCE_TRIGGER_FILES.includes(relativePath));
+  const sharedTriggersCoverRequiredSurfaces = [
+    '.github/workflows/ci.yml',
+    '.githooks/pre-push',
+    'scripts/git/install-hooks.cjs',
+    'scripts/git/pre-push-verify.cjs',
+  ].every((relativePath) => GOVERNANCE_TRIGGER_FILES.includes(relativePath));
   const verifierRunsSuite = verifierRunsBlockingGovernanceFirst(verifier)
     && /pre-push-verify-governance\.test\.cjs/.test(verifier);
   const invalidMutations = [
