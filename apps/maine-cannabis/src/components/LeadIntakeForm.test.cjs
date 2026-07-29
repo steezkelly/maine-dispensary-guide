@@ -116,3 +116,59 @@ test('LeadIntakeForm: ts remains informational and is not the idempotency key', 
   assert.match(source, /ts:\s*new Date\(\)\.toISOString\(\)/);
   assert.match(source, /request_id:\s*requestId/);
 });
+
+// --- W13 incident containment: validated success contract ---
+
+test('LeadIntakeForm: defines isValidSuccessResponse contract validator', () => {
+  assert.match(source, /function isValidSuccessResponse/);
+  // Requires data.ok === true (strict).
+  assert.match(source, /data\.ok !== true/);
+  // Requires data.id to be a positive integer.
+  assert.match(source, /Number\.isInteger\(data\.id\)/);
+  assert.match(source, /data\.id <= 0/);
+});
+
+test('LeadIntakeForm: redirect is validated as a safe same-site path', () => {
+  // A redirect must begin with '/' and must not be protocol-relative or absolute.
+  assert.match(source, /data\.redirect\.charAt\(0\) !== '\/'/);
+  assert.match(source, /data\.redirect\.indexOf\('\/\/'\) === 0/);
+  assert.match(source, /data\.redirect\.indexOf\(':\/\/'\) !== -1/);
+  // WHATWG URL bypass vectors: backslash and control characters.
+  assert.match(source, /data\.redirect\.indexOf\('\\\\'\) !== -1/);
+  assert.match(source, /\[\\x00-\\x1f\\x7f\]/);
+});
+
+test('LeadIntakeForm: defines an accessible inline temporary-failure message', () => {
+  assert.match(source, /function showTemporaryFailure/);
+  assert.match(source, /role['"]?\s*,\s*['"]alert['"]/);
+  assert.match(source, /aria-live['"]?\s*,\s*['"]polite['"]/);
+  // Honest message that does not claim the lead was saved.
+  // The source uses the literal escape \u2019 (right single quote).
+  assert.match(source, /couldn\\u2019t confirm that your request was received/);
+  assert.doesNotMatch(source, /your request has been saved/i);
+  assert.doesNotMatch(source, /successfully submitted/i);
+});
+
+test('LeadIntakeForm: success path is gated behind isValidSuccessResponse', () => {
+  // The lead_capture ('server') event and redirect only fire inside the valid branch.
+  assert.match(source, /if \(isValidSuccessResponse\(data\)\)/);
+  // The invalid branch shows the temporary failure, not a redirect.
+  assert.match(source, /showTemporaryFailure\(\)/);
+});
+
+test('LeadIntakeForm: empty or malformed JSON body is NOT treated as success', () => {
+  // The old vulnerable pattern swallowed parse errors into {} — that must be gone.
+  assert.doesNotMatch(source, /response\.json\(\)\.catch\(function \(\) \{ return \{\}; \}\)/);
+  // Parse failure now resolves to null so the contract check fails.
+  assert.match(source, /response\.json\(\)\.catch\(function \(\) \{ return null; \}\)/);
+});
+
+test('LeadIntakeForm: non-2xx still throws to the mailto fallback', () => {
+  assert.match(source, /if \(!response\.ok\)/);
+  assert.match(source, /throw new Error\('non-2xx'\)/);
+});
+
+test('LeadIntakeForm: lead_form_start remains an intent event on the server path', () => {
+  // lead_form_start fires on intent, before the fetch resolves.
+  assert.match(source, /fireGA4\(form, formName, trackFields, 'lead_form_start'\)/);
+});
