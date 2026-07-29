@@ -65,6 +65,26 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "bar-harbor-dispensary-guide",
+    title: "Bar Harbor dispensary guide — The Meristem relocated to Southwest Harbor; corrected Snare Creek and 420 Mules contact details",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "The guide placed The Meristem at '33 Main St, Bar Harbor' with phone (207) 288-9400. The Meristem is actually in the town of Southwest Harbor (11 Seal Cove Road), not Bar Harbor. Snare Creek Farms was listed at '599 Bar Harbor Rd' with phone (207) 667-1300, and 420 Mules with phone (207) 288-4220 — both phone numbers and the Snare Creek address were incorrect.",
+    what_is_correct:
+      "The Meristem — 11 Seal Cove Road, Southwest Harbor, ME 04679, (207) 244-8789, Tue–Sat 10am–6pm (closed Sun–Mon), recreational + medical, cash only. It was the first adult-use retail shop in Hancock County. Snare Creek Farms — 211 Bar Harbor Rd, Suite 3, Trenton, (207) 412-0209. 420 Mules — 224 Main St, Bar Harbor, (207) 801-0839. Hours carry a 'confirm before visiting' note.",
+    verified_via: [
+      { label: "The Meristem — official site (11 Seal Cove Road, Southwest Harbor, 207-244-8789)", url: "https://themeristem.com/" },
+      { label: "Bar Harbor Chamber of Commerce — Meristem listing (Southwest Harbor)", url: "https://www.visitbarharbor.com/list/member/meristem-2551" },
+      { label: "Snare Creek Farms — 211 Bar Harbor Rd, Trenton, 207-412-0209", url: "https://cannapages.com/dispensaries/snare-creek-farms" },
+      { label: "420 Mules — Bar Harbor, 207-801-0839", url: "https://www.yelp.com/biz/420-mules-bar-harbor-2" },
+    ],
+    published_in: [
+      { name: "Bar Harbor dispensary guide", href: "/guides/bar-harbor-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "lincoln-dispensary-guide",
     title: "Lincoln dispensary guide — corrected fabricated addresses, phone numbers, hours, and medical/adult-use status",
     severity: "material",
