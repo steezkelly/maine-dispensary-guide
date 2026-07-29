@@ -65,6 +65,25 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "millinocket-dispensary-guide",
+    title: "Millinocket guide — corrected all three fabricated addresses/phones; all three are medical",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "All three Millinocket listings had fabricated addresses and a fake round phone pattern (207) 723-5000/1100/2200, and were wrongly labeled 'medical and adult-use': 'Magic City Med Shop' (113 Penobscot Ave, 723-5000), 'West Branch Wellness' (216 Penobscot Ave, 723-1100), and 'Outer Limits' (18 Spruce St, 723-2200).",
+    what_is_correct:
+      "Magic City Med Shop — 166 Central St, Millinocket, (207) 261-1004, medical (MMMP). West Branch Wellness — 256 Penobscot Ave, Millinocket, (207) 320-8464, medical (part of Vibes Cannabis Co.). Outer Limits Med Shop — 200 Iron Bridge Road, Millinocket, (207) 447-6870, medical. All three are medical dispensaries, not adult-use.",
+    verified_via: [
+      { label: "Magic City Med Shop — 166 Central St, 207-261-1004", url: "https://cannawayz.com/dispensaries/magic-city-med-shop" },
+      { label: "West Branch Wellness — 256 Penobscot Ave, 207-320-8464", url: "https://bestdispensaries.munchmakers.com/dispensary/west-branch-wellness-millinocket" },
+      { label: "Outer Limits Med Shop — 200 Iron Bridge Road, 207-447-6870", url: "https://cannabisshop.com/stores/outer-limits-med-shop" },
+    ],
+    published_in: [
+      { name: "Millinocket dispensary guide", href: "/guides/millinocket-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "newport-dispensary-guide",
     title: "Newport guide — corrected all three fabricated addresses/phones",
     severity: "material",
