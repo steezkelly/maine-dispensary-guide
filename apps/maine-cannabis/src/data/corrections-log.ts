@@ -65,6 +65,27 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "calais-dispensary-guide",
+    title: "Calais guide — corrected all four fabricated addresses/phones; Pine Island relocated to Baring",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "All four Calais listings had fabricated addresses and a fake sequential phone pattern (207) 454-0000/1111/2222/3300: 'The Higher Class' (207 Main St, 454-0000), 'Kannacopia' (282 Main St, 454-2222), 'Smoke On The Water' (99 North St, 454-1111), and 'Pine Island Cannabis' (176 Main St, 454-3300, wrongly placed in Calais).",
+    what_is_correct:
+      "The Higher Class — 479 Main St, Calais, (207) 952-9146, medical. Kannacopia — 38 North St, Calais, medical. Smoke On The Water / Mt. Tom Therapeutics — 376 North St, Calais, (207) 454-0444, medical + smoke shop. Pine Island Cannabis — 461 US-1, BARING (not Calais), (207) 454-0801, medical (card + ID required). Calais has three in-town dispensaries plus Pine Island just outside in Baring; the established stores are primarily medical.",
+    verified_via: [
+      { label: "The Higher Class — official site (479 Main St, 207-952-9146)", url: "https://thehigherclass420.com/" },
+      { label: "BBB — The Higher Class, 479 Main Street, Calais", url: "https://www.bbb.org/us/me/calais/category/cannabis" },
+      { label: "Kannacopia — 38 North St, Calais", url: "https://mindcbd.com/maine/calais/kannacopia" },
+      { label: "Smoke On The Water / Mt. Tom Therapeutics — 376 North St, 207-454-0444", url: "https://www.chamberofcommerce.com/business-directory/maine/calais/cannabis-store/2006361949-smoke-on-the-water-mt-tom-therapeutics" },
+      { label: "Pine Island Cannabis — 461 US-1, Baring, 207-454-0801", url: "https://www.yelp.com/biz/pine-island-cannabis-baring" },
+    ],
+    published_in: [
+      { name: "Calais dispensary guide", href: "/guides/calais-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "ellsworth-dispensary-guide",
     title: "Ellsworth guide — merged duplicate Curaleaf/Maine Organic Therapy listing; corrected all addresses, phones, and medical/adult-use status",
     severity: "material",
