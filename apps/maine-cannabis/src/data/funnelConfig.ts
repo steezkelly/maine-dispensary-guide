@@ -15,6 +15,9 @@ export const funnelConfig = {
   stripe: {
     basicPaymentLink: "", // e.g. "https://buy.stripe.com/xxxxxxxx"
     proPaymentLink: "",   // e.g. "https://buy.stripe.com/yyyyyyyy"
+    // When creating Payment Links in Stripe, set success_url to:
+    //   https://mainedispensaryguide.com/report/q3-2026-thanks?session_id={CHECKOUT_SESSION_ID}
+    // This routes buyers to the download + Pro upsell page.
   },
 
   // --- Meta Pixel (Meta Events Manager → Connect Data Sources → Web) ---
