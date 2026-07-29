@@ -65,6 +65,26 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "ellsworth-dispensary-guide",
+    title: "Ellsworth guide — merged duplicate Curaleaf/Maine Organic Therapy listing; corrected all addresses, phones, and medical/adult-use status",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "The guide listed three dispensaries at fabricated addresses/phones: 'Curaleaf' (180 High St, 664-0008), 'Maine Organic Therapy' (147 State St, 667-4400), and 'Main Street Medical' (199 Main St, 610-1100, claimed 'adult-use options'). In reality Curaleaf ACQUIRED Maine Organic Therapy and rebranded it — they are the SAME store at 3 Myrick Street, Suite B (OCP license DSP105, 'MAINE ORGANIC THERAPY; CURALEAF MAINE'). Main Street Medical Caregivers is at 71 Main Street and is medical-only. Ellsworth has two medical dispensaries, not three, and no adult-use storefront.",
+    what_is_correct:
+      "Curaleaf (formerly Maine Organic Therapy) — 3 Myrick Street, Suite B, Ellsworth, (207) 667-0510, medical (MMMP), DSP105. Main Street Medical Caregivers — 71 Main Street, Ellsworth, (207) 667-7703, medical (MMMP). Ellsworth permits adult-use retail but no adult-use storefront currently operates; recreational shoppers should use Bar Harbor (420 Mules) or the Bridgton/Fryeburg corridor.",
+    verified_via: [
+      { label: "Curaleaf Ellsworth — official store page (3 Myrick Street, DSP105)", url: "https://curaleaf.com/shop/maine/curaleaf-me-ellsworth" },
+      { label: "Ellsworth American — 'Maine Organic Therapy now Curaleaf in cosmetic rebrand'", url: "https://www.ellsworthamerican.com/news/politics/maine-organic-therapy-now-curaleaf-in-cosmetic-rebrand/article_d09bea06-7d35-5051-ae02-b3479c414476.html" },
+      { label: "OCP Medical Use Establishments roster — DSP105 'MAINE ORGANIC THERAPY; CURALEAF MAINE', Ellsworth", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Maine_Medical_Use_Establishments_2024_03_01.csv" },
+      { label: "Main Street Medical Caregivers — 71 Main Street, Ellsworth, 207-667-7703", url: "https://www.leafly.com/dispensary-info/main-street-medical-caregivers" },
+    ],
+    published_in: [
+      { name: "Ellsworth dispensary guide", href: "/guides/ellsworth-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "fryeburg-dispensary-guide",
     title: "Fryeburg guide — corrected stale Above All Greenery address in summary table",
     severity: "minor",
