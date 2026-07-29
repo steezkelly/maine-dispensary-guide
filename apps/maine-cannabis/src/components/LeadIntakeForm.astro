@@ -231,6 +231,47 @@ const {
       }
     }
 
+    // W13 incident containment: validate the server success contract. A
+    // submission is successful ONLY when: data.ok === true, data.id is a
+    // positive integer, and data.redirect (when supplied) is a safe
+    // same-site path beginning with '/'. Anything else is an invalid 2xx.
+    function isValidSuccessResponse(data) {
+      if (!data || typeof data !== 'object') return false;
+      if (data.ok !== true) return false;
+      if (typeof data.id !== 'number' || !Number.isInteger(data.id) || data.id <= 0) return false;
+      if (data.redirect !== undefined && data.redirect !== null) {
+        if (typeof data.redirect !== 'string' || data.redirect.length === 0) return false;
+        if (data.redirect.charAt(0) !== '/') return false;
+        if (data.redirect.indexOf('//') === 0) return false;
+        if (data.redirect.indexOf('://') !== -1) return false;
+        // WHATWG URL treats /\ as protocol-relative; browsers strip leading
+        // control chars (tab, newline). Reject backslashes and control chars.
+        if (data.redirect.indexOf('\\') !== -1) return false;
+        if (/[\x00-\x1f\x7f]/.test(data.redirect)) return false;
+      }
+      return true;
+    }
+
+    // W13 incident containment: show an accessible inline temporary-failure
+    // message. Does NOT fire analytics, does NOT redirect, does NOT open
+    // mailto. Form values are preserved (never cleared) and the submit
+    // button remains enabled (never disabled), so the user can retry.
+    function showTemporaryFailure() {
+      var msgId = form.id + '-submit-error';
+      var existing = document.getElementById(msgId);
+      if (existing) {
+        existing.hidden = false;
+        return;
+      }
+      var msg = document.createElement('div');
+      msg.id = msgId;
+      msg.setAttribute('role', 'alert');
+      msg.setAttribute('aria-live', 'polite');
+      msg.className = 'lead-intake-error';
+      msg.textContent = 'We couldn\u2019t confirm that your request was received. Please try again later or contact Maine Dispensary Guide directly.';
+      form.appendChild(msg);
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -278,22 +319,36 @@ const {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           }).then(function (response) {
-            if (response.ok) {
-              return response.json().catch(function () { return {}; });
+            if (!response.ok) {
+              throw new Error('non-2xx');
             }
-            throw new Error('non-2xx');
+            // Parse the body as JSON. An empty or malformed body is NOT a
+            // success — it resolves to null so the contract check below fails.
+            return response.json().catch(function () { return null; });
           }).then(function (data) {
-            // GA4 lead_capture fires AFTER server confirms success — attribution
-            // reflects actual conversions, not submissions that 404'd or 500'd.
-            fireGA4(form, formName, trackFields, 'server');
-            // Server may return { redirect: '/path' } or fall back to successPath.
-            if (data && typeof data.redirect === 'string' && data.redirect.length > 0) {
-              window.location.href = data.redirect;
+            // W13 incident containment: only a fully validated contract is a
+            // success. Invalid 2xx (empty body, malformed JSON, {}, ok:false,
+            // missing/invalid id, unsafe redirect) shows a temporary-failure
+            // message — no analytics, no redirect, no mailto.
+            if (isValidSuccessResponse(data)) {
+              // GA4 lead_capture fires AFTER the server confirms success with a
+              // valid contract — attribution reflects actual conversions.
+              fireGA4(form, formName, trackFields, 'server');
+              if (typeof data.redirect === 'string' && data.redirect.length > 0) {
+                window.location.href = data.redirect;
+              } else {
+                navigateToSuccess();
+              }
             } else {
-              navigateToSuccess();
+              showTemporaryFailure();
             }
           }).catch(function () {
             // Network error or non-2xx: fall back to mailto:.
+            // DOCUMENTED BEHAVIOR (W13 incident): this path is unchanged.
+            // A non-2xx response or network failure opens the user's mail
+            // client with a pre-filled message, then redirects to successPath
+            // after 800ms. This is the pre-existing fallback and is NOT the
+            // same as the invalid-2xx containment above (which stays on page).
             window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
             setTimeout(function () {
               if (successPath) { window.location.href = successPath; }
