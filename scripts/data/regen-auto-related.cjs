@@ -198,7 +198,6 @@ const URL_TOPIC_HINTS = [
     ['/blog/maine-medical-cannabis-pesticide', ['pesticide', 'compliance']],
     ['/blog/cannabis-terpenes-explained-maine', ['terpenes', 'consumer']],
     ['/blog/maine-dispensary-roi-what-to-expect', ['roi', 'finance', 'investor']],
-    ['/blog/maine-dispensary-how-to-open', ['how-to', 'startup']],
     ['/blog/best-maine-dispensaries-2026', ['best-of', 'consumer']],
     ['/guides/cannabis-coa-maine-how-to-read', ['consumer-guide', 'cannabis-science', 'lab-testing', 'dosing']],
     ['/guides/cannabis-tinctures-sublingual-maine', ['dosing', 'consumer-guide', 'consumption-methods']],

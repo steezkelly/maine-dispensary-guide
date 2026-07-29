@@ -17,7 +17,6 @@ const paths = {
   licenseMap: 'apps/maine-cannabis/src/pages/guides/maine-ocp-license-map.astro',
   finder: 'apps/maine-cannabis/src/pages/find-a-dispensary.astro',
   notFound: 'apps/maine-cannabis/src/pages/404.astro',
-  howToOpen: 'apps/maine-cannabis/src/pages/blog/maine-dispensary-how-to-open.astro',
   grayMarket: 'apps/maine-cannabis/src/pages/blog/maine-cannabis-gray-market-ocp-enforcement-2026.astro',
   roiBlog: 'apps/maine-cannabis/src/pages/blog/maine-dispensary-roi-what-to-expect-2026.astro',
   wholesale: 'apps/maine-cannabis/src/pages/guides/maine-cannabis-wholesale-guide.astro',
@@ -56,7 +55,6 @@ test('approved reader surfaces do not preserve the false annual-report 187 or un
   for (const relativePath of [
     paths.roi,
     paths.notFound,
-    paths.howToOpen,
     paths.grayMarket,
     paths.roiBlog,
     paths.wholesale,
