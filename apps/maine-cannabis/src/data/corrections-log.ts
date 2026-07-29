@@ -65,6 +65,25 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "newport-dispensary-guide",
+    title: "Newport guide — corrected all three fabricated addresses/phones",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "All three Newport listings had fabricated addresses and a fake round phone pattern (207) 368-2200/5900/1100: 'Gram's Five & Dime' (95 Moosehead Trail, 368-2200), 'Karma Cannabis' (2 Elm St, 368-5900), and 'Brothers Cannabis' (75 Main St, 368-1100).",
+    what_is_correct:
+      "Gram's Five & Dime — 36 Moosehead Trail, Newport, (207) 999-5000, recreational + medical (separate menus, same location). Karma Cannabis — 66 Main Street, Newport, (207) 368-6118, adult-use. Brothers Cannabis — 19 Moosehead Trail, Suite 2B, Newport, (207) 852-0575, adult-use (also Bangor/Brewer/Lincoln/Bath).",
+    verified_via: [
+      { label: "Gram's Five & Dime — official site (36 Moosehead Trail, 207-999-5000)", url: "https://grams5.com/dispensaries/newport-me/" },
+      { label: "Karma Cannabis — 66 Main Street, Newport, 207-368-6118", url: "https://cannabisshop.com/stores/karma-cannabis/" },
+      { label: "Brothers Cannabis Newport — 19 Moosehead Trail Suite 2B", url: "https://cannabisdirectory.co/places/brothers-cannabis-newport/" },
+    ],
+    published_in: [
+      { name: "Newport dispensary guide", href: "/guides/newport-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "calais-dispensary-guide",
     title: "Calais guide — corrected all four fabricated addresses/phones; Pine Island relocated to Baring",
     severity: "material",
