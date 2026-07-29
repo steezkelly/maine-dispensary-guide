@@ -4,7 +4,7 @@ import CityGuide from '../../components/CityGuide.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
-const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-07-21", section: "City Guides" };
+const article = { author: "Eliot Nash", authorId: "eliot-nash", authorTitle: "Market & Real Estate Analyst", publishDate: "2026-06-05", modifiedDate: "2026-07-29", section: "City Guides" };
 const topics = ["city", "market"];
 ---
 <CityGuide
@@ -15,6 +15,20 @@ const topics = ["city", "market"];
     <h1>Bar Harbor, ME Dispensary Guide</h1>
     <p class="subtitle">The Meristem, 420 Mules & the Mount Desert Island cannabis market</p>
   </div>
+
+  <p class="answer-capsule">Bar Harbor has two dispensaries on Mount Desert Island — <strong>420 Mules</strong> and <strong>The Meristem</strong>, both on Main Street — plus <strong>Snare Creek Farms</strong> just across the bridge in Trenton. All three serve adult-use customers 21 and older; 420 Mules and The Meristem also serve registered medical patients. Bring valid government-issued photo ID.</p>
+
+  <style>
+    .answer-capsule {
+      margin: 1.5rem 0 2rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 0.75rem 0.75rem 0;
+      background: color-mix(in oklab, var(--color-soft-green) 8%, transparent);
+      line-height: 1.65;
+      font-size: 1.03rem;
+    }
+  </style>
 
   <section class="fact-box">
     <h2>Bar Harbor Cannabis Quick Facts</h2>
