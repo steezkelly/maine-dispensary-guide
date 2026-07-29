@@ -65,6 +65,23 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "fryeburg-dispensary-guide",
+    title: "Fryeburg guide — corrected stale Above All Greenery address in summary table",
+    severity: "minor",
+    category: "operator-data",
+    what_was_wrong:
+      "The 'at a Glance' summary table listed Above All Greenery at '299 Main St' — an outdated address. The detailed listing, FAQ, and the operator's own site all correctly show the current location at 48 Fair St, Unit 4 (a new location). Internal inconsistency only; the body listing was already correct.",
+    what_is_correct:
+      "Above All Greenery North is at 48 Fair St, Unit 4, Fryeburg, ME 04037, (207) 256-3340. The summary table now matches the detailed listing and the operator's current site. All four Fryeburg store phone numbers were independently verified as accurate against operator websites and Leafly/Yelp.",
+    verified_via: [
+      { label: "Above All Greenery North — official site (48 Fair St, Unit 4, 207-256-3340)", url: "https://aboveallgreenery.net/aagn-fryeburg" },
+    ],
+    published_in: [
+      { name: "Fryeburg dispensary guide", href: "/guides/fryeburg-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "bar-harbor-dispensary-guide",
     title: "Bar Harbor dispensary guide — The Meristem relocated to Southwest Harbor; corrected Snare Creek and 420 Mules contact details",
     severity: "material",
