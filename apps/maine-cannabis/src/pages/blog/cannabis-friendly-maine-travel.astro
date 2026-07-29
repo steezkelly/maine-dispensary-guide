@@ -4,7 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 const article = {
   publishDate: '2026-06-05',
-  modifiedDate: '2026-07-22',
+  modifiedDate: '2026-07-29',
   section: 'Lifestyle & Travel',
 };
 const topics = ['travel', 'tourism', 'consumer law'];
@@ -29,6 +29,14 @@ const faqItems = [
   {
     question: 'Does an out-of-state medical credential work in Maine?',
     answer: 'Some do. OCP publishes an approved-jurisdiction list for visiting patients. The patient credential and photo identification must come from the same approved jurisdiction. Check OCP’s current visiting-patient guidance before relying on reciprocity.',
+  },
+  {
+    question: 'Can I smoke weed at a campground or state park in Maine?',
+    answer: 'No. Cannabis consumption is lawful only in a private residence or on private property where the owner has explicitly permitted it and that is not generally accessible to the public (28-B M.R.S. §1501). Maine state parks and Public Reserved Lands prohibit smoking and intoxicating beverages in developed and common areas, and national parks such as Acadia are federal land where cannabis is illegal. A public campsite is not a lawful place to consume.',
+  },
+  {
+    question: 'Are there 420-friendly campgrounds or rentals in Maine?',
+    answer: 'A privately owned campground, RV park, cabin, or rental may permit cannabis only if the owner explicitly allows it and the area is not generally open to the public. "420-friendly" is a marketing label, not a legal authorization — confirm the written policy, the exact permitted location, and any lease or local restrictions before you book. When in doubt, treat the property as cannabis-free.',
   },
 ];
 ---
@@ -115,6 +123,18 @@ const faqItems = [
         <li>whether the property is subject to federal, lease, condominium, or campground restrictions.</li>
       </ul>
       <p>Keep the permission in the booking message or another durable written record. If the policy is unclear, treat the property as cannabis-free.</p>
+    </section>
+
+    <section>
+      <h2>Camping, RVs, and "420-friendly" rentals</h2>
+      <p>There is no such thing as a legal public cannabis campground in Maine. Consumption is lawful only in a private residence or on private property where the owner has explicitly permitted it and that is not generally accessible to the public (28-B M.R.S. §1501). That rule controls every camping and rental scenario:</p>
+      <ul>
+        <li><strong>State parks and public lands.</strong> Maine's Bureau of Parks and Lands prohibits smoking tobacco or any other substance in, on, or within 20 feet of beaches, playgrounds, picnic shelters, and other developed areas, and bans intoxicating beverages in day-use and common campground areas. Public Reserved Lands rules prohibit conduct that impairs others' use. A campsite in a state park or on public land is not a lawful place to consume cannabis.</li>
+        <li><strong>National parks and federal land.</strong> Acadia National Park and other federal land are under federal jurisdiction, where cannabis remains illegal. Possession or use there is a federal matter regardless of Maine law.</li>
+        <li><strong>Private campgrounds and RV parks.</strong> A privately owned campground or RV park may permit cannabis only if the owner explicitly allows it and the area is not generally open to the public. Many do not. Confirm the written policy before you book, exactly as you would for a rental.</li>
+        <li><strong>"420-friendly" rentals and cabins.</strong> A listing labeled 420-friendly, cannabis-friendly, or smoking-allowed is a marketing claim, not a legal authorization. Verify in writing what is permitted, where, and whether the property is subject to lease, condominium, or local restrictions. "Smoking allowed" may mean tobacco only.</li>
+      </ul>
+      <p>The practical takeaway: a legal purchase does not create a legal place to camp and consume. The only reliably lawful option is private property where the owner has given you explicit, documented permission.</p>
     </section>
 
     <section>
