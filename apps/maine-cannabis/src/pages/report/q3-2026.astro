@@ -11,8 +11,8 @@ const leadBody = "Hi — please send me the free Q3 2026 Maine Cannabis Industry
 ---
 
 <Layout
-  title="Maine Cannabis Industry Report — Q3 2026 (Free Sample)"
-  description="Get the free Q3 2026 Maine cannabis market snapshot: adult-use sales, license counts, flower prices, and tax revenue from OCP and MRS primary data. Upgrade to the full report for $1."
+  title="Maine Cannabis Industry Report — Q3 2026"
+  description="The Q3 2026 Maine cannabis market, interpreted for decisions. What $6.10/g flower means for your margins, where the market is saturated, and what Schedule III does to your tax exposure. Primary-source data from OCP and MRS."
   noindex={false}
 >
   <MetaPixel pixelId={funnelConfig.metaPixelId} />
@@ -56,32 +56,51 @@ const leadBody = "Hi — please send me the free Q3 2026 Maine Cannabis Industry
       border: 1px solid var(--color-primary); border-radius: 1rem; background: var(--color-background);
     }
     .bridge {
-      margin-top: 3rem; padding: 2rem; text-align: center;
+      margin-top: 3rem; padding: 2.5rem; text-align: left;
       background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1.5rem;
     }
-    .bridge h2 { font-family: var(--font-serif); margin-top: 0; }
-    .bridge .cta-button { display: inline-block; text-decoration: none; margin-top: 1rem; }
+    .bridge h2 { font-family: var(--font-serif); margin-top: 0; text-align: center; }
+    .bridge p { color: var(--color-text-light); }
+    .decision-list { list-style: none; padding: 0; margin: 1.5rem 0; }
+    .decision-list li {
+      padding: 0.75rem 0; border-bottom: 1px solid var(--color-border);
+      font-size: 1rem; color: var(--color-text);
+    }
+    .decision-list li:last-child { border-bottom: none; }
+    .decision-list .free-tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--color-primary); background: rgba(31,61,46,0.08);
+      padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle;
+    }
+    .decision-list .locked { color: var(--color-text-light); }
+    .bridge .cta-button { display: block; text-align: center; text-decoration: none; margin-top: 1.5rem; }
+    .methodology {
+      margin-top: 2rem; padding: 1.5rem; font-size: 0.875rem;
+      color: var(--color-text-light); border: 1px solid var(--color-border);
+      border-radius: 1rem; background: var(--color-background);
+    }
+    .methodology strong { color: var(--color-text); }
     @media (max-width: 768px) { h1 { font-size: 1.75rem; } }
   </style>
 
   <article class="funnel">
     <div class="hero">
       <PineTree size={48} color="var(--color-primary)" />
-      <div class="brand">Maine Dispensary Guide</div>
-      <h1>Maine Cannabis Industry Report — Q3 2026</h1>
-      <p class="subtitle">The free market snapshot operators, advisors, and municipalities use to understand where Maine cannabis stands right now.</p>
+      <div class="brand">Maine Dispensary Guide Research</div>
+      <h1>The Maine Cannabis Market,<br/>Interpreted for Decisions</h1>
+      <p class="subtitle">Not another data dump. The Q3 2026 numbers from OCP and MRS, translated into what they mean for the next move you make.</p>
 
       <div class="kpi-strip">
-        <div class="kpi"><div class="value">$20.7M</div><div class="label">June 2026 adult-use sales</div></div>
+        <div class="kpi"><div class="value">$6.10/g</div><div class="label">Flower price, YTD 2026</div></div>
         <div class="kpi"><div class="value">346</div><div class="label">Active adult-use licenses</div></div>
-        <div class="kpi"><div class="value">$6.10</div><div class="label">YTD avg flower price/g</div></div>
+        <div class="kpi"><div class="value">$20.7M</div><div class="label">June 2026 adult-use sales</div></div>
       </div>
 
-      <span class="free-note">Free sample — no payment needed to get this</span>
+      <span class="free-note">The numbers below are free. What to do about them is the product.</span>
 
       <div class="success-card" id="report-success" style="display: none;">
-        <h2>Check your inbox — the free sample is on its way.</h2>
-        <p>Want the full 14-page report with every table and source? <a href="/report/q3-2026-offer">Get the complete edition from $1 →</a></p>
+        <h2>Check your inbox — the free sample decision is on its way.</h2>
+        <p>Ready for the full playbook? <a href="/report/q3-2026-offer">See all 8 decisions →</a></p>
       </div>
 
       <LeadMailtoForm
@@ -115,23 +134,38 @@ const leadBody = "Hi — please send me the free Q3 2026 Maine Cannabis Industry
           </select>
         </div>
         <button type="submit" class="cta-button" data-cta-id="cta-funnel-free-sample-01">
-          Send Me the Free Sample
+          Send Me the Free Decision
         </button>
       </LeadMailtoForm>
     </div>
 
     <section class="bridge">
-      <h2>Ready for the full picture?</h2>
-      <p>The free sample gives you the headline numbers. The complete Q3 2026 report adds all eight sections — every sales table, the full license roster, tax-revenue breakdowns, price-compression trend lines, and the methodology with source URLs for every figure.</p>
-      <a href="/report/q3-2026-offer" class="cta-button" data-cta-id="cta-funnel-to-offer-01">See the Full Report — from $1</a>
+      <h2>Numbers aren't decisions.</h2>
+      <p>Anyone can pull the OCP dashboard. The question isn't "what's the flower price?" — it's "what do I <em>do</em> about a $6.10/g market?" The Q3 2026 report answers eight of those questions, each grounded in primary-source data with every figure traced to its origin.</p>
+
+      <ul class="decision-list">
+        <li><strong>1. The margin math on $6.10/g flower</strong> — whether your store survives the compression, and which categories still hold margin <span class="free-tag">Free sample</span></li>
+        <li class="locked"><strong>2. The saturation map</strong> — which municipalities are over-licensed and which are still open before you sign a lease</li>
+        <li class="locked"><strong>3. Schedule III tax exposure</strong> — what the April 2026 effective date does to your 280E burden, modeled</li>
+        <li class="locked"><strong>4. License-tier selection</strong> — which tier fits your capital and canopy, with fee math</li>
+        <li class="locked"><strong>5. The hiring cost model</strong> — what a compliant team actually costs in your region</li>
+        <li class="locked"><strong>6. Category mix under compression</strong> — where margin is migrating as flower falls</li>
+        <li class="locked"><strong>7. The municipal landscape</strong> — opt-in status and what it means for siting</li>
+        <li class="locked"><strong>8. Exit and valuation timing</strong> — where the market is heading and what it means for your position</li>
+      </ul>
+
+      <a href="/report/q3-2026-offer" class="cta-button" data-cta-id="cta-funnel-to-offer-01">Get the Full Playbook — from $29</a>
     </section>
+
+    <div class="methodology">
+      <strong>How we work.</strong> Every figure in this report traces to a primary source — Maine Office of Cannabis Policy operational dashboards, Maine Revenue Services tax-filer data, and federal regulatory filings — with a retrieval date and a status label (preliminary, unaudited, filing-period-based, revisable). We don't aggregate other people's summaries. We go to the source, and we show you where. Data cutoff: July 22, 2026. This is an in-quarter edition — the best picture available <em>now</em>, for decisions you're making <em>now</em>.
+    </div>
   </article>
 
   <script is:inline>
     if (new URLSearchParams(window.location.search).get('success') === 'true') {
       var el = document.getElementById('report-success');
       if (el) { el.style.display = 'block'; }
-      // A lead just landed — fire the Meta Lead event if the pixel is present.
       if (window.fbq) { window.fbq('track', 'Lead'); }
     }
   </script>

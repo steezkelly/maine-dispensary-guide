@@ -22,9 +22,12 @@ export const funnelConfig = {
   metaPixelId: "", // e.g. "1234567890123456"
 
   // --- Pricing (display only; the actual charge is set in Stripe) ---
+  // Decisions-not-data ladder: $29 Report (anchor $97), $99 Pro (anchor $297).
+  // Round-ish numbers over x7 to avoid the "internet-marketer playbook" smell
+  // for a prestige B2B buyer. Subject to A/B test ($29 vs $27).
   pricing: {
-    basic: { anchor: "$19.99", offer: "$1", label: "Basic Report" },
-    pro: { anchor: "$49", offer: "$29", label: "Pro Report" },
+    basic: { anchor: "$97", offer: "$29", label: "The Report" },
+    pro: { anchor: "$297", offer: "$99", label: "Pro Intelligence Package" },
   },
 
   // --- Assets ---
