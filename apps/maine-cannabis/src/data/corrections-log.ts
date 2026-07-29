@@ -65,6 +65,25 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "damariscotta-dispensary-guide",
+    title: "Damariscotta guide — corrected Above and Beyond address/phone; reclassified Greenport as medical",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "Above and Beyond Cannabis was listed at a stale address (464 Main Street, 207-563-2100) and Greenport Cannabis was mislabeled as recreational. The quick-facts table claimed '2 rec + 1 med' when the actual structure is 1 rec + 2 med.",
+    what_is_correct:
+      "Above and Beyond Cannabis — 95 Biscay Road, Damariscotta, ME 04543, (207) 563-6886, medical (MMMP). Greenport Cannabis — 280 Main Street, Damariscotta, ME 04543, (207) 563-6928, medical caregiver storefront (license CGR26704 / Medical Retail 20-015), founded 2011 by Ryan Ellis. Cannabis Cured — 53A Chapman Street, (207) 682-0130, adult-use (unchanged, verified accurate). Market structure: 1 adult-use + 2 medical.",
+    verified_via: [
+      { label: "Above and Beyond Cannabis — 95 Biscay Road, 207-563-6886", url: "https://www.localdispensaryguide.com/maine/damariscotta/above-and-beyond-cannabis-llc-medical-marijuana-dispensary" },
+      { label: "Greenport Cannabis — medical caregiver, license CGR26704", url: "https://sativauniversity.com/dispensary/maine/damariscotta/greenport-cannabis-damariscotta-damariscotta-me/" },
+      { label: "Greenport Cannabis — 280 Main St, 207-563-6928, medical", url: "https://weedmaps.com/dispensaries/greenport-cannabis-damariscotta" },
+    ],
+    published_in: [
+      { name: "Damariscotta dispensary guide", href: "/guides/damariscotta-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "skowhegan-dispensary-guide",
     title: "Skowhegan guide — corrected all three fabricated phones; ReMaine Humble Farms relocated to Winslow",
     severity: "material",
