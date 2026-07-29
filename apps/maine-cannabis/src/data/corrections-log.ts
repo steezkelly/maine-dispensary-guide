@@ -65,6 +65,27 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "lincoln-dispensary-guide",
+    title: "Lincoln dispensary guide — corrected fabricated addresses, phone numbers, hours, and medical/adult-use status",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "The Lincoln dispensary guide listed all four stores with fabricated contact details. The addresses (75 Main St, 9 Transalpine Rd, 1 Penobscot Valley Ave, 62 Main St), the phone numbers (a uniform (207) 794-XXXX pattern), and the posted hours did not match the real businesses. The guide also labeled Experience Cannabis as 'Recreational and Medical' when it is medical-only, and stated Brothers Cannabis had 'a second location in Newport,' which is not a Brothers location.",
+    what_is_correct:
+      "Verified current details: Just Baked — 115 West Broadway, Unit 2B, (207) 403-9160, adult-use; Blazin' Trailz — 90 River Road, (207) 403-9151, adult-use; Brothers Cannabis — 222 West Broadway, Unit 2, (207) 403-9095, adult-use (Brothers also operates in Bangor, Brewer, and Bath); Experience Cannabis Co. — 100 River Road, (207) 403-9089, MEDICAL ONLY. Hours are listed with a 'confirm before visiting' note because they change. Lincoln has three adult-use stores and one medical-only store.",
+    verified_via: [
+      { label: "OCP Adult Use licensee search", url: "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" },
+      { label: "Just Baked — official listing (115 West Broadway, 207-403-9160)", url: "https://justbakedmaine.wm.store/about" },
+      { label: "Brothers Cannabis — Lincoln (REC) store page", url: "https://broscannabis.com/stores/brothers-cannabis-lincoln-rec" },
+      { label: "Experience Cannabis Co. (Medical Only) — 100 River Road", url: "https://cannabisshop.com/stores/experience-cannabis-co-medical-only/" },
+      { label: "Blazin' Trailz — 90 River Road, Lincoln", url: "https://cannabisshop.com/stores/blazin-trailz/" },
+    ],
+    published_in: [
+      { name: "Lincoln dispensary guide", href: "/guides/lincoln-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "maine-psilocybin-2026-guide",
     title: "Psychedelic pages — fabricated psilocybin commission and ibogaine voucher claim removed",
     severity: "critical",
