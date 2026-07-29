@@ -1,0 +1,55 @@
+---
+/**
+ * RelatedSignal.astro
+ *
+ * Renders the "Related MDG content" rail that links from a /signal/
+ * page back into the canonical Maine Dispensary Guide surfaces. Pure
+ * markup; no client JS. Built from RelatedSignal.ts so the link list
+ * is fully unit-tested.
+ */
+import { buildRelatedSignal } from './RelatedSignal';
+
+interface Props {
+  slug?: string | null;
+  city?: string | null;
+}
+const { slug = null, city = null } = Astro.props as Props;
+const rail = buildRelatedSignal({
+  siteName: 'Maine Dispensary Guide',
+  siteUrl: 'https://mainedispensaryguide.com',
+  slug,
+  city,
+});
+---
+<aside class="signal-related" aria-label="Related MDG content">
+  <p class="eyebrow">Related MDG content</p>
+  <h2>{rail.heading}</h2>
+  <p class="lede">{rail.blurb}</p>
+  <ul>
+    {rail.links.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          aria-label={link.ariaLabel}
+          data-signal-related-kind={link.kind}
+        >{link.label}</a>
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<style>
+  .signal-related {
+    margin-top: 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 8px;
+  }
+  .signal-related .eyebrow { color: var(--bronze); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0; }
+  .signal-related h2 { font-family: "Fraunces", Georgia, serif; font-size: 22px; line-height: 1.2; margin: 4px 0 6px; }
+  .signal-related .lede { color: var(--ink-soft); font-size: 14px; line-height: 1.55; margin: 0 0 10px; max-width: 64ch; }
+  .signal-related ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .signal-related li a { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--paper-strong) 80%, transparent); border: 1px solid var(--line); }
+  .signal-related li a:hover { border-color: var(--teal); }
+</style>

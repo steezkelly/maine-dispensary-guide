@@ -1,0 +1,183 @@
+---
+import SignalLayout from '../../layouts/SignalLayout.astro';
+import manifest from '../../data/signal/manifest';
+import { SIGNAL_PAGE_MODEL } from '../../data/generated/signal/current';
+import RelatedSignal from '../../components/signal/RelatedSignal.astro';
+
+const title = `MDG Signal — Maine cannabis research workspace`;
+const description = `Read-only research view of the current MDG-DATA release: license concentration per Maine municipality, ACS 2024 density, and source evidence.`;
+
+const datasets = manifest.datasets;
+const release = manifest.evidence;
+const all = SIGNAL_PAGE_MODEL.municipalities;
+const totalLicenses = all.reduce((sum, m) => sum + m.licenses, 0);
+// Scale the per-card density bar against the actual max in the set, not a
+// hardcoded literal (independent review finding F-8: a future MDG-DATA
+// release that changes Portland's count would silently mis-scale the bars).
+const maxLicenses = Math.max(...all.map((m) => m.licenses));
+const topByCount = [...all].sort((a, b) => b.licenses - a.licenses).slice(0, 5);
+const topByDensity = [...all].sort((a, b) => b.density - a.density).slice(0, 5);
+const partials = Object.entries(datasets).filter(([, ds]) => ds.state === 'partial' || ds.state === 'not_ready');
+---
+<SignalLayout title={title} description={description} city={null}>
+  <section>
+    <p class="eyebrow">MDG Signal · read-only vertical slice</p>
+    <h1>Research Maine cannabis license concentration from the current release.</h1>
+    <p class="lede">
+      {totalLicenses} active adult-use store licenses across {all.length} municipalities are
+      represented below. Data is sourced from the MDG-DATA release
+      <strong>{release.releaseId}</strong> (data as of {release.ocpDataAsOf}, ACS {release.acsVintage}).
+      Density is descriptive — not a demand or viability score.
+    </p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+      <span class="state-pill" data-state="current">Current release · {all.length} municipalities</span>
+      <span class="state-pill" data-state="partial">Opt-in coverage is partial</span>
+      <span class="state-pill" data-state="not_ready">Menu prices are not ready</span>
+      <span class="state-pill" data-state="proposed_paid">Watchlist & alerts are preview-only</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pick a subject municipality</h2>
+    <p class="lede">
+      Pick a subject municipality to open its research page. Each one shows the
+      current-release metric, three peer comparisons, and the evidence drawer.
+    </p>
+
+    <label
+      for="signalMunicipalitySearch"
+      style="display:block; margin: 14px 0 8px; font-size:13px; color:var(--ink-soft); letter-spacing:0.04em; text-transform:uppercase;"
+    >Search by city name or geoid</label>
+    <input
+      id="signalMunicipalitySearch"
+      type="search"
+      data-signal-municipality-search
+      placeholder="e.g. Portland, Bangor, 2300560545…"
+      aria-label="Search Signal-curated municipalities by name or GEOID"
+      aria-controls="signalMunicipalityList"
+      autocomplete="off"
+      style="width:100%; max-width:34rem; min-height:44px; padding:8px 12px; border-radius:6px; border:1px solid var(--line); font:inherit; color:var(--ink); background:var(--paper-strong);"
+    />
+    <p id="signalSearchStatus" role="status" aria-live="polite" style="margin:8px 0 0; min-height:1em; color:var(--ink-soft); font-size:13px;"></p>
+
+    <ul id="signalMunicipalityList" class="grid cards-3" style="list-style:none; padding:0; margin-top:14px;">
+      {all.map((m) => (
+        <li class="card" data-municipality-card data-search-haystack={`${m.city} ${m.geoid}`.toLowerCase()}>
+          <p class="eyebrow">geoid {m.geoid}</p>
+          <h2 style="margin:6px 0 4px;">
+            <a href={`/signal/${m.slug}`}>{m.city}, Maine</a>
+          </h2>
+          <p class="footnote" style="margin:0 0 10px;">
+            {m.licenses} active store licenses · {m.population.toLocaleString()} residents
+            (ACS {m.acsVintage}) · {m.density.toFixed(2)} per 10K
+          </p>
+          <div class="bar" aria-hidden="true">
+            <span style={`width:${Math.min(100, (m.licenses / maxLicenses) * 100).toFixed(1)}%`}></span>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p
+      id="signalNoMatch"
+      role="status"
+      data-signal-no-match
+      hidden
+      style="margin-top:18px; padding:14px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--paper-strong); color:var(--ink); font-size:14px;"
+    >
+      <strong>No municipality matches that search.</strong> The MDG Signal slice
+      ships with 11 curated Maine municipalities. The full-state ranking is not
+      part of this read-only research surface. Clear the search to see the
+      curated set, or open the
+      <a href="/find-a-dispensary">MDG dispensary directory</a> for the wider set.
+    </p>
+  </section>
+
+  <section style="margin-top:32px;">
+    <h2>What this slice is honest about</h2>
+    <div class="grid cards-3">
+      {partials.map(([key, ds]) => (
+        <article class="card">
+          <p class="eyebrow">dataset · {key}</p>
+          <span class="state-pill" data-state={ds.state}>{ds.state.replace('_', ' ')}</span>
+          <h2 style="margin:6px 0 6px;">{ds.label}</h2>
+          <p class="footnote" style="margin:0;">{ds.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section style="margin-top:32px;">
+    <h2>Top by raw count vs. top by density</h2>
+    <p class="lede">
+      Raw count and per-10K density answer different questions. Portland leads
+      on raw count; South Portland leads on density among the curated set.
+    </p>
+    <div class="grid cards-3">
+      <article class="card">
+        <p class="eyebrow">Top 5 by raw license count</p>
+        <table>
+          <thead><tr><th>City</th><th>Licenses</th></tr></thead>
+          <tbody>
+            {topByCount.map((m) => (
+              <tr><td><a href={`/signal/${m.slug}`}>{m.city}</a></td><td>{m.licenses}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Top 5 by licenses per 10K</p>
+        <table>
+          <thead><tr><th>City</th><th>Per 10K</th></tr></thead>
+          <tbody>
+            {topByDensity.map((m) => (
+              <tr><td><a href={`/signal/${m.slug}`}>{m.city}</a></td><td>{m.density.toFixed(2)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </section>
+
+  <footer class="evidence" aria-label="Source evidence">
+    <p class="eyebrow">Source evidence</p>
+    <p class="footnote">
+      Release <strong>{release.releaseId}</strong>, data as of {release.ocpDataAsOf},
+      ACS {release.acsVintage}, transform version {release.transformVersion}, fetched {release.fetchedAtUtc}.
+    </p>
+    <p class="footnote">Sources: {release.sourceIds.join(', ')}.</p>
+    <p class="footnote">
+      {manifest.prototypeBoundary}
+    </p>
+  </footer>
+
+  <RelatedSignal />
+</SignalLayout>
+
+<script is:inline>
+  (function () {
+    var input = document.getElementById('signalMunicipalitySearch');
+    var list = document.getElementById('signalMunicipalityList');
+    var noMatch = document.getElementById('signalNoMatch');
+    var status = document.getElementById('signalSearchStatus');
+    if (!input || !list || !noMatch) return;
+    var cards = Array.prototype.slice.call(list.querySelectorAll('[data-municipality-card]'));
+    function apply() {
+      var q = (input.value || '').trim().toLowerCase();
+      var visible = 0;
+      for (var i = 0; i < cards.length; i++) {
+        var match = !q || (cards[i].getAttribute('data-search-haystack') || '').indexOf(q) !== -1;
+        if (cards[i].style) cards[i].style.display = match ? '' : 'none';
+        if (match) visible++;
+      }
+      var empty = q && visible === 0;
+      noMatch.hidden = !empty;
+      if (status) status.textContent = q
+        ? (visible + ' of ' + cards.length + ' cities match “' + input.value + '”')
+        : '';
+    }
+    input.addEventListener('input', apply);
+    input.addEventListener('search', apply);
+    apply();
+  })();
+</script>

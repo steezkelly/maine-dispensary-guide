@@ -54,7 +54,10 @@
     "data:mdg:analytics:ingest": "node ./scripts/analytics/ga4-source-ingest.cjs",
     "data:mdg:analytics:baselines": "node ./scripts/analytics/ticket009-sufficiency-baselines.cjs",
     "data:mdg:analytics:derived": "node ./scripts/analytics/ticket010-derived-evidence-state-machine.cjs",
-    "data:mdg:analytics:opportunities": "node ./scripts/analytics/ticket011-opportunity-engine.cjs"
+    "data:mdg:analytics:opportunities": "node ./scripts/analytics/ticket011-opportunity-engine.cjs",
+    "signal:derive": "node ./scripts/derived/signal-page-model.cjs --emit ./src/data/generated/signal/current.ts",
+    "signal:test": "node --test ./scripts/derived/tests/signal-page-model.test.cjs ./scripts/derived/tests/signal-css-reachability.test.cjs ./src/lib/__tests__/json-ld-signal.test.cjs ./src/components/signal/__tests__/workspace.test.cjs ./src/components/signal/__tests__/theme-toggle.test.cjs ./src/components/signal/__tests__/RelatedSignal.test.cjs",
+    "signal:smoke": "node ./scripts/derived/tests/signal-smoke.test.cjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",

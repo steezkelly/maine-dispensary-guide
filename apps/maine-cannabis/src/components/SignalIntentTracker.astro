@@ -1,0 +1,98 @@
+---
+/**
+ * SignalIntentTracker.astro
+ *
+ * Emits the five MDG Signal intent events through the project's existing
+ * dataLayer / gtag pattern (AffiliateClickTracker.astro precedent).
+ *
+ * Events:
+ *   - municipality_select — user picked a primary municipality from the
+ *     selector on a /signal/[municipality]/ page.
+ *   - peer_add — user added a peer municipality to the comparison table.
+ *   - source_open — user opened the evidence drawer on any /signal/ page.
+ *   - watchlist_open — user opened the proposed-paid watchlist preview.
+ *   - alert_preview — user rendered the example alert anatomy.
+ *
+ * The events are pushed via dataLayer (GA4 picks them up automatically via
+ * gtag('event', name, payload)) and via a custom event fallback for
+ * environments without gtag. No event is treated as a conversion; see
+ * docs/analytics/MDG-SIGNAL-SLICE-MEASUREMENT-NOTE-2026-07-23.md.
+ *
+ * Pattern: capture-phase delegated click handler, try/catch-wrapped, ready
+ * on DOMContentLoaded. Matches AffiliateClickTracker.astro.
+ */
+---
+
+<script is:inline>
+  (function () {
+    try {
+      var ALLOWED = {
+        municipality_select: true,
+        peer_add: true,
+        source_open: true,
+        watchlist_open: true,
+        alert_preview: true,
+      };
+      function push(name, payload) {
+        if (!ALLOWED[name]) return;
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: name }, payload)); } catch (_) {}
+        try {
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', name, Object.assign({ page_path: window.location.pathname }, payload));
+          }
+        } catch (_) {}
+      }
+      function readClick(el) {
+        var node = el;
+        while (node && node !== document.body) {
+          if (node.dataset && node.dataset.signalEvent) {
+            return {
+              name: node.dataset.signalEvent,
+              payload: {
+                signal_label: node.dataset.signalLabel || null,
+                signal_section: node.dataset.signalSection || null,
+              },
+            };
+          }
+          node = node.parentNode;
+        }
+        return null;
+      }
+      function init() {
+        document.addEventListener('click', function (event) {
+          try {
+            var hit = readClick(event.target);
+            if (!hit) return;
+            push(hit.name, hit.payload);
+          } catch (_) {}
+        }, { capture: true });
+        // The drawer components toggle aria-hidden when opened; observe so we
+        // also catch keyboard / programmatic opens.
+        try {
+          var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+              var node = mutation.target;
+              if (!node || !node.id) return;
+              var drawer = node;
+              if (drawer.getAttribute('aria-hidden') !== 'false') return;
+              var name = drawer.getAttribute('data-signal-event');
+              if (!name) return;
+              push(name, {
+                signal_label: drawer.getAttribute('data-signal-label') || drawer.id,
+              });
+            });
+          });
+          document.querySelectorAll('[data-signal-drawer]').forEach(function (drawer) {
+            observer.observe(drawer, { attributes: true, attributeFilter: ['aria-hidden'] });
+          });
+        } catch (_) {}
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+      window.MDGSIGNAL_TRACK = push;
+    } catch (_) {}
+  })();
+</script>

@@ -1,0 +1,291 @@
+---
+/**
+ * SignalLayout.astro
+ *
+ * Self-contained layout for /signal/ pages. Pulls the global theme tokens
+ * from the project's main stylesheet but scopes its own block to a
+ * `.signal-scope` root so the page stays visually separate from the
+ * Maine Dispensary Guide chrome.
+ *
+ * Indexability policy (dark-spot #2 from 2026-07-23 self-critique):
+ *   - Default: noindex,nofollow until the operator flips the promotion
+ *     flag (set the `?promoted=true` URL parameter, or remove this
+ *     meta tag, after at least one external operator reaction is
+ *     recorded and the card t_8dc65ba5 reactions-loop threshold is met).
+ *   - The `noindex` meta tag is automatically picked up by the
+ *     sitemap-postprocess script (scripts/check/sitemap-postprocess.mjs
+ *     `isNoindexSource` regex), which means the pages also stay out of
+ *     the public sitemap.
+ *
+ * The Astro /signal/ pages include this layout instead of the main Layout
+ * because MDG Signal is a research product, not a guide. We do NOT carry
+ * the SiteHeader/SiteFooter because the prototype explicitly framed the
+ * surface as a focused research workspace.
+ */
+import SignalIntentTracker from '../components/SignalIntentTracker.astro';
+import manifest from '../data/signal/manifest';
+import { buildSignalJsonLd } from '../lib/json-ld-signal';
+
+interface Props {
+  title: string;
+  description: string;
+  selected?: string | null;
+  city?: import('../data/generated/signal/current').SignalPageModel['municipalities'][number] | null;
+}
+const { title, description, selected = null, city = null } = Astro.props as Props;
+const evidence = manifest.evidence;
+
+// Astro.url gives us the absolute page URL without needing a base href.
+// We use it for stable WebPage @id / url references in the JSON-LD graph.
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://mainedispensaryguide.com').toString();
+
+// Promotion flag: pages are noindex,nofollow by default.
+//
+// IMPORTANT (corrected 2026-07-24 after independent review, finding F-4):
+// the previous mechanism read `?promoted=true` from Astro.url.searchParams.
+// That CANNOT work on this site: astro.config.mjs sets `output: 'static'`,
+// so pages are rendered once at build time with no query string present —
+// every page was permanently noindex and the documented "set ?promoted=true"
+// path was dead code that misled the operator.
+//
+// The real promotion path is a BUILD-TIME env var. Set MDG_SIGNAL_PROMOTE=true
+// in the build environment (e.g. Vercel project env) and rebuild; Astro inlines
+// import.meta.env at build time, so the flag is baked into the static HTML.
+// To promote, flip the env var and redeploy. To demote, unset it and redeploy.
+const isPromoted = import.meta.env.MDG_SIGNAL_PROMOTE === 'true';
+const robotsContent = isPromoted ? 'index,follow' : 'noindex,nofollow';
+
+// JSON-LD: Organization + WebSite + Dataset + WebPage graph. Built at
+// SSR time so the page works without JavaScript and is fully testable
+// from a focused unit test (src/lib/__tests__/json-ld-signal.test.cjs).
+const orgConfig = {
+  siteName: 'Maine Dispensary Guide',
+  siteUrl: Astro.site?.toString().replace(/\/$/, '') ?? 'https://mainedispensaryguide.com',
+  socialLinks: ['https://mainedispensaryguide.com/about'],
+};
+const jsonLd = buildSignalJsonLd(
+  orgConfig,
+  evidence,
+  { pageUrl, city },
+);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content={robotsContent} />
+  <meta name="mdg-signal:release" content={evidence.releaseId} />
+  <meta name="mdg-signal:data-as-of" content={evidence.ocpDataAsOf} />
+  <meta name="mdg-signal:acs-vintage" content={String(evidence.acsVintage)} />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!--
+    is:global is REQUIRED here, not optional. Every selector below is
+    namespaced under the `.signal-scope` root (which only SignalLayout
+    renders), so global scope cannot leak into the rest of the site.
+
+    Why not default (scoped) Astro CSS: the municipality cards, grids,
+    state pills, tables, and links live in the PAGE components that slot
+    into this layout. Astro scoped CSS appends this layout's
+    data-astro-cid to each selector, but the slotted page elements carry
+    a different (or no) cid — so with default scoping NONE of these rules
+    matched and the cards rendered borderless with raw browser-blue
+    links. is:global keeps the selectors exactly as written
+    (`.signal-scope .card`, etc.) so they reach the slotted content.
+  -->
+  <style is:global>
+    .signal-scope {
+      --paper: #f5f0e5;
+      --paper-strong: #fffdf7;
+      --paper-soft: #ebe3d3;
+      --ink: #17251f;
+      --ink-soft: #5f6d65;
+      --spruce: #183f31;
+      --spruce-2: #245644;
+      --teal: #217b73;
+      --bronze: #9a633a;
+      --line: #d7cfbf;
+      --positive: #23734f;
+      --warning: #a56b3f;
+      --shadow: 0 20px 60px rgba(34, 48, 40, .11);
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 18px;
+      font-family: "Plus Jakarta Sans", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(23, 37, 31, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 37, 31, .025) 1px, transparent 1px),
+        var(--paper);
+      background-size: 32px 32px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .signal-scope *, .signal-scope *::before, .signal-scope *::after { box-sizing: border-box; }
+    .signal-scope a { color: var(--teal); text-underline-offset: 3px; }
+    .signal-scope button, .signal-scope input { font: inherit; }
+    .signal-scope button:focus-visible, .signal-scope input:focus-visible, .signal-scope a:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--teal) 68%, transparent);
+      outline-offset: 3px;
+    }
+    .signal-scope .button, .signal-scope .icon-button, .signal-scope .chip, .signal-scope .select-button, .signal-scope .step-button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--paper-strong);
+      font-weight: 600;
+    }
+    .signal-scope .button { padding: 0 16px; }
+    .signal-scope .button.primary { background: var(--spruce); border-color: var(--spruce); color: var(--paper-strong); }
+    /* Preview-only "proposed paid" buttons. Per spec, these previews do
+       not persist anything — they must not read as primary CTAs. Match
+       the .state-pill[data-state="proposed_paid"] treatment: outlined,
+       bronze-tinted, secondary weight. Dark mode uses the same rule. */
+    .signal-scope .button.preview {
+      background: color-mix(in srgb, var(--bronze) 10%, var(--paper-strong));
+      border-color: color-mix(in srgb, var(--bronze) 45%, var(--line));
+      color: var(--bronze);
+    }
+    .signal-scope .topbar {
+      display: flex; align-items: center; gap: 20px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--line);
+      /* Sticky topbar: must fully occlude the page content scrolling
+         beneath, or the text shows through (visible on the index
+         page at 1280px where the card grid's first card overlapped
+         the brand text). 94% opacity leaves 6% transparency — too
+         much. Solid background. */
+      background: var(--paper);
+      position: sticky; top: 0; z-index: 5;
+      flex-wrap: wrap;
+    }
+    .signal-scope .topbar > .release { flex: 1 1 100%; order: 3; }
+    @media (min-width: 720px) {
+      .signal-scope .topbar { flex-wrap: nowrap; }
+      .signal-scope .topbar > .release { flex: 0 1 auto; order: 0; margin-left: auto; }
+    }
+    .signal-scope .brand { display: flex; align-items: center; gap: 12px; }
+    .signal-scope .mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--spruce); color: var(--paper-strong); font-family: "Fraunces", Georgia, serif; font-weight: 700; }
+    .signal-scope .brand strong { display: block; font-family: "Fraunces", Georgia, serif; font-size: 19px; }
+    .signal-scope .brand span { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
+    .signal-scope .release { margin-left: auto; color: var(--ink-soft); font-size: 12px; }
+    .signal-scope .release strong { color: var(--ink); font-family: "Fraunces", Georgia, serif; font-weight: 600; }
+    .signal-scope main { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+    .signal-scope h1 { font-family: "Fraunces", Georgia, serif; font-size: 38px; line-height: 1.05; margin: 0 0 12px; }
+    .signal-scope h2 { font-family: "Fraunces", Georgia, serif; font-size: 24px; line-height: 1.2; margin: 32px 0 12px; }
+    .signal-scope .lede { color: var(--ink-soft); font-size: 15px; line-height: 1.55; max-width: 64ch; }
+    .signal-scope .eyebrow { color: var(--bronze); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .signal-scope .state-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--paper-strong);
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .signal-scope .state-pill[data-state="current"] { color: var(--positive); border-color: color-mix(in srgb, var(--positive) 35%, var(--line)); }
+    .signal-scope .state-pill[data-state="partial"] { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 35%, var(--line)); }
+    .signal-scope .state-pill[data-state="not_ready"] { color: var(--ink-soft); }
+    .signal-scope .state-pill[data-state="proposed_paid"] { color: var(--bronze); border-color: color-mix(in srgb, var(--bronze) 45%, var(--line)); background: color-mix(in srgb, var(--bronze) 10%, var(--paper-strong)); }
+    .signal-scope .grid { display: grid; gap: 18px; }
+    .signal-scope .grid.cards-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .signal-scope .card {
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .signal-scope table { width: 100%; border-collapse: collapse; }
+    .signal-scope th, .signal-scope td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .signal-scope th { color: var(--ink-soft); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    /* Wide tables (comparison grid, store-license list with long legal
+       names) overflow a 390px viewport. Make the table's container
+       scroll horizontally instead of pushing the page width out
+       (spec §7: no horizontal overflow at tested widths). */
+    .signal-scope .card { overflow-x: auto; }
+    .signal-scope table { min-width: 0; }
+    .signal-scope td, .signal-scope th { white-space: nowrap; }
+    .signal-scope td:last-child, .signal-scope th:last-child { white-space: normal; }
+    /* The comparison table has 5 columns; the 2 bar columns are the
+       overflow on a 390px viewport. Give the table a min-width so the
+       bar columns stay visible when the card scrolls horizontally,
+       and surface the scroll affordance with a gradient mask on the
+       right edge. */
+    .signal-scope #comparisonTable { min-width: 560px; }
+    .signal-scope #comparisonTable th:last-child, .signal-scope #comparisonTable td:last-child { white-space: nowrap; }
+    .signal-scope .card:has(> #comparisonTable) {
+      background-image: linear-gradient(to right, var(--paper-strong) 30%, rgba(255,253,247,0)),
+                        linear-gradient(to right, rgba(255,253,247,0), var(--paper-strong) 70%);
+      background-position: left center, right center;
+      background-repeat: no-repeat;
+      background-size: 24px 100%, 24px 100%;
+      background-attachment: local, local;
+    }
+    .signal-scope .bar { position: relative; height: 8px; background: var(--paper-soft); border-radius: 999px; overflow: hidden; }
+    .signal-scope .bar > span { display: block; height: 100%; background: var(--teal); border-radius: 999px; }
+    .signal-scope .drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw);
+      background: var(--paper-strong);
+      border-left: 1px solid var(--line);
+      box-shadow: -24px 0 60px rgba(23, 37, 31, .12);
+      transform: translateX(100%); transition: transform 180ms ease;
+      padding: 22px 22px 28px; overflow: auto; z-index: 30;
+    }
+    .signal-scope .drawer.open { transform: translateX(0); }
+    .signal-scope .drawer[aria-hidden="false"] { transform: translateX(0); }
+    .signal-scope .drawer header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .signal-scope .drawer h2 { margin: 0; }
+    .signal-scope .drawer .close { min-height: 44px; min-width: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper); }
+    .signal-scope .drawer .field { margin: 14px 0; }
+    .signal-scope .drawer .field strong { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+    .signal-scope .drawer .field span { font-family: "Fraunces", Georgia, serif; font-size: 17px; }
+    .signal-scope .drawer .preview-note { margin-top: 18px; padding: 12px 14px; background: color-mix(in srgb, var(--bronze) 12%, var(--paper-strong)); border: 1px solid color-mix(in srgb, var(--bronze) 45%, var(--line)); border-radius: var(--radius-sm); color: var(--ink); font-size: 13px; }
+    .signal-scope .footnote { color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
+    .signal-scope footer.evidence { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+    .signal-scope[data-theme="dark"] { --paper: #102019; --paper-strong: #182b22; --paper-soft: #23372e; --ink: #f5f0e5; --ink-soft: #b9c2bc; --spruce: #a8ceb8; --spruce-2: #c3ddcc; --teal: #7bcec2; --bronze: #dfa574; --line: #3b4e44; }
+    .signal-scope[data-theme="dark"] .topbar { background: color-mix(in srgb, var(--paper-strong) 94%, transparent); }
+    .signal-scope .theme-toggle { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-strong); color: var(--ink); font-weight: 600; }
+    .signal-scope .theme-toggle:hover { border-color: var(--teal); }
+    .signal-scope #toast[data-visible="true"] { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) {
+      .signal-scope .drawer { transition: none; }
+    }
+  </style>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline></script>
+</head>
+<body>
+  <div class="signal-scope">
+    <header class="topbar" role="banner">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">MDG</span>
+        <div>
+          <strong>MDG Signal</strong>
+          <span>Maine cannabis research workspace</span>
+        </div>
+      </div>
+      <div class="release" aria-label="Current MDG-DATA release">
+        <strong>Release {evidence.releaseId.slice(0, 7)}</strong> · data as of {evidence.ocpDataAsOf}
+      </div>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Toggle theme">Dark mode</button>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SignalIntentTracker />
+    <!--
+      Load the workspace controller once, here, so it is present on every
+      Signal page (the theme-toggle button lives in this layout, so its
+      handler must load on /signal/ too — not just the municipality page).
+      workspace-client.js is a defensive IIFE: each behavior no-ops when
+      its target element is absent, so loading it on the index page is safe.
+    -->
+    <script>
+      import '../components/signal/workspace-client.js';
+    </script>
+  </div>
+</body>
+</html>

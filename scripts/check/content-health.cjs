@@ -543,20 +543,28 @@ function checkRenderedCrawlBasics() {
     const route = routeForHtml(DIST, file);
     const text = fs.readFileSync(file, 'utf8');
 
+    // Strip <script>…</script> blocks before scanning for hrefs/images.
+    // Inlined JS (e.g. workspace-client.js's swapPeer string-concat that
+    // builds '<a href="/signal/…">' at runtime) would otherwise be matched
+    // by the naive href regex below and reported as a false-positive crawl
+    // issue (independent review finding F-6). Real anchors and image refs
+    // live in markup, never inside script bodies.
+    const markupOnly = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+
     const title = htmlDecode((text.match(/<title>(.*?)<\/title>/is)?.[1] || '').replace(/\s+/g, ' ').trim());
     if (title.length > 60) results.push(`${rel}: title too long (${title.length})`);
 
     const desc = metaContent(text, 'name', 'description');
     if (desc.length > 160) results.push(`${rel}: meta description too long (${desc.length})`);
 
-    for (const raw of extractRenderedImageRefs(text)) {
+    for (const raw of extractRenderedImageRefs(markupOnly)) {
       if (!raw || raw.startsWith('http') || raw.startsWith('data:')) continue;
       if (raw.startsWith('/') && !assetExists(raw)) results.push(`${rel}: broken rendered media → ${raw}`);
     }
 
     const hrefRe = /href=["']([^"']+)["']/gi;
     let hrefMatch;
-    while ((hrefMatch = hrefRe.exec(text)) !== null) {
+    while ((hrefMatch = hrefRe.exec(markupOnly)) !== null) {
       const raw = htmlDecode(hrefMatch[1]);
       if (!raw || raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:') || raw.startsWith('javascript:')) continue;
       let target = '';
