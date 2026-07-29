@@ -65,6 +65,24 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "machias-dispensary-guide",
+    title: "Machias guide — corrected both fabricated addresses/phones; both are medical",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "Both Machias listings had fabricated addresses and a fake round phone pattern (207) 255-3300/8100, and were wrongly labeled 'recreational and medical': 'Indian Trail Farms' (76 Main St, 255-3300) and 'Lake Smoke Farm' (10 Court St, 255-8100).",
+    what_is_correct:
+      "Indian Trail Farms — 241 Dublin Street, Machias, (207) 259-6223, medical (MMMP), license CGR27408. Lake Smoke Farm — 7 Water Street, Machias, (207) 255-4201, medical. Both are medical dispensaries, not adult-use.",
+    verified_via: [
+      { label: "Indian Trail Farms — 241 Dublin Street, 207-259-6223, medical", url: "https://weedmaps.com/dispensaries/indian-trail-farms" },
+      { label: "Lake Smoke Farm — 7 Water Street, Machias, 207-255-4201", url: "https://www.manta.com/c/mh16czg/lake-smoke-farm" },
+    ],
+    published_in: [
+      { name: "Machias dispensary guide", href: "/guides/machias-dispensary-guide" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "millinocket-dispensary-guide",
     title: "Millinocket guide — corrected all three fabricated addresses/phones; all three are medical",
     severity: "material",
