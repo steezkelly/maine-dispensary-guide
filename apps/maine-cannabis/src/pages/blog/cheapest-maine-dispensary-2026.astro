@@ -3,9 +3,6 @@ import AutoRelated from '../../components/AutoRelated.astro';
 import Layout from '../../layouts/Layout.astro';
 import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
-import authors from '../../data/authors.json';
-const editorialAuthor = authors.find(a => a.id === 'margaret-finch');
-const complianceReviewer = authors.find(a => a.id === 'eliot-nash');
 const article = {
   author: "Margaret Finch",
   authorId: "margaret-finch",
@@ -18,30 +15,17 @@ const topics = ["pricing", "best-deals", "consumer-guide"];
 
 const faqItems = [
   { question: "Where is the cheapest dispensary in Maine?", answer: "By per-gram flower price, Full Bloom in Presque Isle, Royal Leaf in Houlton, and HighNorth in Aroostook consistently post the lowest numbers in the state — typically $7-9 per gram on house flower and $80-100 ounces during their weekly specials. Cannabis Haven (Auburn) and Cannabis Cured (Bangor) are the cheapest operators in central and eastern Maine at the metro scale. The cheapest dispensary for any given buyer depends on drive time, taxes, and whether you can stack a first-time-patient discount on top of the rotation. Use the comparison table in this guide to model the actual cost at each store." },
-  { question: "How much is a gram of weed in Maine in 2026?", answer: "A gram of quality indoor flower in Maine in 2026 runs $12-18 before tax at most licensed dispensaries. Value-tier grams on house strains or rotation specials run $8-12. Premium top-shelf grams reach $20-25. Pre-tax retail prices in Maine are roughly 10-20% above mature West Coast markets due to vertical-integration requirements, 280E federal tax pressure, and lower wholesale volume. After Maine's 10% adult-use excise tax and 5.5% state sales tax, expect to add 15.5% to the menu price at the register." },
-  { question: "How much is an ounce in Maine in 2026?", answer: "An ounce of cannabis in Maine in 2026 runs $80-200 before tax, with most licensed dispensaries pricing mid-quality flower around $120-160 per ounce. Value ounces on rotating house strains are $80-110 at HighNorth, Full Bloom, Cannabis Haven, and Cannabis Cured. Premium ounces from top-tier cultivators (Theory Wellness, HIGHLY Cannaco, select Caregiver Reserve batches) reach $180-220. With Maine's 10% adult-use excise plus 5.5% sales tax, a $120 ounce rings up at roughly $139. Medical patients avoid the 10% excise and pay only the 5.5% sales tax." },
+  { question: "How much is a gram of weed in Maine in 2026?", answer: "A gram of quality indoor flower in Maine in 2026 runs $12-18 before tax at most licensed dispensaries. Value-tier grams on house strains or rotation specials run $8-12. Premium top-shelf grams reach $20-25. Pre-tax retail prices in Maine are roughly 10-20% above mature West Coast markets due to vertical-integration requirements, 280E federal tax pressure, and lower wholesale volume. Effective January 1, 2026, Maine applies a flat 14% sales tax to adult-use cannabis (36 M.R.S. §1811), so expect to add 14% to the menu price at the register. Medical patients pay the standard 5.5% state sales tax." },
+  { question: "How much is an ounce in Maine in 2026?", answer: "An ounce of cannabis in Maine in 2026 runs $80-280 before tax, with most licensed dispensaries pricing mid-quality flower around $120-180 per ounce. Value ounces on rotating house strains are $80-110 at HighNorth, Full Bloom, Cannabis Haven, and Cannabis Cured. Premium ounces from top-tier cultivators (Theory Wellness, HIGHLY Cannaco, select Caregiver Reserve batches) reach $200-280. With Maine's flat 14% adult-use sales tax (effective January 1, 2026), a $120 ounce rings up at about $137. Medical patients pay the standard 5.5% state sales tax instead, so the same ounce rings up at about $127." },
   { question: "Why are Maine dispensary prices so high?", answer: "Three structural factors keep Maine prices above mature West Coast markets. First, Maine's vertical-integration mandate requires every operator to cultivate, process, and retail their own product — that eliminates wholesale markets and the price compression that comes with them. Second, federal Section 280E prevents cannabis operators from deducting normal business expenses, which inflates effective tax rates by 30-50% and gets passed to consumers. Third, smaller production volumes than mature markets like Colorado or Oregon keep per-unit costs higher. The result: Maine is not the cheapest legal state, but it is cheaper than Massachusetts, Connecticut, and most of New York." },
-  { question: "Does Maine tax cannabis?", answer: "Yes. Adult-use cannabis in Maine is taxed at three levels: a 10% retail excise tax on the gross retail price (set by the state), a 5.5% state sales tax, and any applicable local sales tax (most municipalities do not add a local option tax on cannabis, but a handful do). Medical cannabis is taxed at 5.5% state sales tax only — there is no 10% retail excise on MMMP transactions. Combined tax burden on adult-use is roughly 15.5%. A $50 eighth at a Portland dispensary rings up at about $58 after tax. The tax structure and what it means for operators is covered in detail in our <a href=\"/guides/maine-cannabis-taxes-2026\">Maine cannabis taxes 2026 guide</a>." },
+  { question: "Does Maine tax cannabis?", answer: "Yes. Effective January 1, 2026, Maine applies a flat 14% state sales tax to adult-use cannabis and adult-use cannabis products under 36 M.R.S. §1811. This replaced the prior 10% rate. A separate cultivation-level excise tax (set by weight under Title 36 §4923) applies to growers, not directly to retail buyers. Medical cannabis is taxed at the standard 5.5% state sales tax only. A $50 eighth at a Portland dispensary rings up at about $57 after the 14% adult-use tax. The full tax structure and what it means for operators is covered in detail in our <a href=\"/guides/maine-cannabis-taxes-2026\">Maine cannabis taxes 2026 guide</a>." },
   { question: "How do I find the best dispensary deals in Maine?", answer: "Four strategies work consistently. First, follow the store's Instagram — Maine dispensaries post weekly deal rotations on social media before they hit the website. Second, sign up for the store's text or email list; first-time-patient discounts (typically 15-20% off) are usually the deepest single discount available. Third, ask about veteran, senior, and MMMP discounts at the register — most operators stack these on top of rotation specials. Fourth, check the deal rotation before driving more than 20 minutes; the cheapest store in your region rotates specials weekly, and a $25 eighth one week may be $40 the next." }
 ];
-
-const faqPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": f.answer.replace(/<[^>]+>/g, "")
-    }
-  }))
-};
 ---
 
 <Layout 
-  title="Cheapest Dispensary in Maine 2026: Where to Find the Best Ounce & Eighth Prices"
-  description="A buyer's guide to the cheapest legal dispensary prices in Maine in 2026 — ounces, eighths, and pre-rolls — with operator pricing context and tax structure."
+  title="Maine Dispensary Prices 2026: What an Ounce, Eighth & Gram Actually Cost"
+  description="How much does weed cost in Maine in 2026? Real dispensary prices for ounces ($80-280), eighths ($20-70), and grams ($8-25) — plus the 14% tax, regional differences, and the cheapest stores by area."
   heroImage="/images/heroes/cheapest-maine-dispensary-2026.jpg"
   article={article}
   topics={topics}
@@ -86,11 +70,11 @@ const faqPageSchema = {
 
 <article class="blog-post">
   <div class="article-header">
-    <h1>Cheapest Dispensary in Maine 2026: A Buyer's Guide to Dispensary Prices</h1>
-    <p class="subtitle">What Maine dispensaries actually charge in 2026, why some are cheaper than others, and the stores that consistently run sub-market specials.</p>
+    <h1>Maine Dispensary Prices 2026: What an Ounce, Eighth &amp; Gram Actually Cost</h1>
+    <p class="subtitle">In 2026, a pre-tax ounce of cannabis in Maine runs $80-280, an eighth $20-70, and a gram $8-25 — with a flat 14% adult-use sales tax at the register. Here's what each tier costs, why Maine prices run above the West Coast, and the stores that consistently beat the regional average.</p>
     <div class="byline">
       <p>By <a href="/about/authors#margaret-finch"><strong>Margaret Finch</strong></a>, Finance &amp; Taxation Analyst. <strong>Reviewed by <a href="/about/authors#eliot-nash">Eliot Nash</a>, Market &amp; Real Estate Analyst.</strong></p>
-      <p class="last-updated">Published June 5, 2026 · Last updated June 5, 2026</p>
+      <p class="last-updated">Published June 5, 2026 · Last updated July 29, 2026</p>
     </div>
   </div>
 
@@ -135,7 +119,7 @@ const faqPageSchema = {
       </tbody>
     </table>
 
-    <p>These are pre-tax prices. With Maine's 10% adult-use excise plus 5.5% state sales tax, expect to add 15.5% to any adult-use purchase. Medical patients pay 5.5% state sales tax only. After-tax math: a $50 mid-tier eighth rings up at $57.75 for an adult-use customer and $52.75 for an MMMP cardholder. The medical discount is real, and for high-volume buyers the MMMP card pays for itself in 2-3 visits.</p>
+    <p>These are pre-tax prices. Effective January 1, 2026, Maine applies a flat 14% state sales tax to adult-use cannabis (36 M.R.S. §1811), so expect to add 14% to any adult-use purchase. Medical patients pay the standard 5.5% state sales tax only. After-tax math: a $50 mid-tier eighth rings up at $57 for an adult-use customer and $52.75 for an MMMP cardholder. The medical discount is real, and for high-volume buyers the MMMP card pays for itself in 2-3 visits.</p>
   </section>
 
   <section>
@@ -264,7 +248,7 @@ const faqPageSchema = {
     <p>The bottom of the market is in Aroostook. HighNorth and Full Bloom are the only operators in Maine that consistently post $80-100 ounces, and they do it through the summer and into the fall. For buyers in central and southern Maine, Cannabis Haven (Auburn) and Cannabis Cured (Bangor) are the most reliable sub-$100 ounce sources within metro-range driving distance.</p>
 
     <Callout title="The Stack Test" type="info">
-      Before driving past three closer dispensaries for a deal, run the stack test: take the deal price, add the 15.5% adult-use tax (or 5.5% medical), subtract any loyalty or first-time discount, and divide by the drive cost. A $30 savings on a $99 ounce does not justify a 90-minute round trip and 1.5 hours of your time. Most deal rotations are designed to capture metro traffic, not long-distance buyers. The exception: HighNorth, where the gap is large enough to make the Aroostook drive worth it for volume buyers.
+      Before driving past three closer dispensaries for a deal, run the stack test: take the deal price, add the 14% adult-use tax (or 5.5% medical), subtract any loyalty or first-time discount, and divide by the drive cost. A $30 savings on a $99 ounce does not justify a 90-minute round trip and 1.5 hours of your time. Most deal rotations are designed to capture metro traffic, not long-distance buyers. The exception: HighNorth, where the gap is large enough to make the Aroostook drive worth it for volume buyers.
     </Callout>
   </section>
 
@@ -275,7 +259,7 @@ const faqPageSchema = {
     <ol>
       <li><strong>Follow the store's Instagram account.</strong> Maine dispensaries post their weekly deal rotation on Instagram before they update the website. Following 5-8 stores in your region gives you a real-time view of which operator has the lowest price on the product you want. The Big Island Buds and Maine Cannabis Community accounts also aggregate deals.</li>
       <li><strong>Sign up for the loyalty program before your first visit.</strong> First-time-patient discounts (typically 15-20% off) are the deepest single discount available. They usually apply to a single visit, not a single product, so maximize the visit by buying in volume. Some stores (Cannabis Cured, Cannabis Haven) layer a 20% loyalty signup on top of rotation specials, which compounds into a 30-35% effective discount on the first visit.</li>
-      <li><strong>Ask about veteran, senior, and MMMP discounts at the register.</strong> Most operators stack these on top of rotation specials. A 10% MMMP discount on a $99 ounce is a real $9.90 savings, and the medical sales-tax exemption (5.5% vs 15.5%) compounds the gap. For high-volume buyers, the MMMP card pays for itself in 2-3 visits.</li>
+      <li><strong>Ask about veteran, senior, and MMMP discounts at the register.</strong> Most operators stack these on top of rotation specials. A 10% MMMP discount on a $99 ounce is a real $9.90 savings, and the medical sales-tax rate (5.5% vs 14% adult-use) compounds the gap. For high-volume buyers, the MMMP card pays for itself in 2-3 visits.</li>
       <li><strong>Check the rotation before driving more than 30 minutes.</strong> The cheapest store in your region rotates specials weekly, and a $25 eighth one week may be $40 the next. The state dispensary finder at <a href="/find-a-dispensary">Maine dispensary finder</a> links directly to operator menus, and most update their rotation on Mondays.</li>
       <li><strong>Consider caregiver product for medical patients.</strong> The OCP caregiver program allows registered caregivers to grow for up to five medical patients each. Caregiver pricing runs 20-40% below dispensary retail for comparable flower quality, and the product is usually fresher because it is grown in smaller batches. The catch: you need an MMMP card, and the supply is limited to a small number of caregivers in each region.</li>
     </ol>
@@ -333,7 +317,7 @@ const faqPageSchema = {
   <section class="further-reading">
     <h2>Read More from Maine Dispensary Guide</h2>
     <ul>
-      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — the 10% excise, 5.5% sales tax, and what they mean for prices</li>
+      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026</a> — the 14% adult-use sales tax, cultivation excise rates, and what they mean for prices</li>
       <li><a href="/guides/maine-cannabis-taxes-2026">Maine 280E Guide</a> — federal tax pressure and operator impact</li>
       <li><a href="/guides/maine-cannabis-vertical-integration">Maine Vertical Integration</a> — why Maine has no wholesale market</li>
       <li><a href="/guides/maine-cannabis-market">Maine Cannabis Market</a> — sales data, license counts, regional patterns</li>
@@ -344,7 +328,7 @@ const faqPageSchema = {
   </section>
 
   <section class="disclaimer">
-    <p><em><strong>Disclaimer:</strong> Prices in this article reflect a Q1-Q2 2026 snapshot of operator menus and advertised specials. Cannabis retail pricing in Maine changes weekly. Always verify current pricing directly with the operator before visiting. Tax figures reflect the 10% adult-use excise and 5.5% state sales tax as of publication; local option taxes are not included and may apply in a small number of municipalities. Maine Dispensary Guide has no commercial relationship with any operator mentioned in this article. No payment, sponsorship, or promotional consideration was provided by any operator in exchange for inclusion. This article is for informational purposes only and does not constitute purchasing or tax advice. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent. Do not drive under the influence of cannabis.</em></p>
+    <p><em><strong>Disclaimer:</strong> Prices in this article reflect a Q1-Q2 2026 snapshot of operator menus and advertised specials. Cannabis retail pricing in Maine changes weekly. Always verify current pricing directly with the operator before visiting. Tax figures reflect the 14% adult-use sales tax and 5.5% medical sales tax effective January 1, 2026 (36 M.R.S. §1811); local option taxes are not included and may apply in a small number of municipalities. Maine Dispensary Guide has no commercial relationship with any operator mentioned in this article. No payment, sponsorship, or promotional consideration was provided by any operator in exchange for inclusion. This article is for informational purposes only and does not constitute purchasing or tax advice. State law prohibits public consumption of cannabis; consume only on private property with the property owner's consent. Do not drive under the influence of cannabis.</em></p>
   </section>
 
     <section class="content-verification">
