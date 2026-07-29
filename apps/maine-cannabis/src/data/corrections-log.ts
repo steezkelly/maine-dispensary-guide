@@ -64,6 +64,31 @@ export interface Correction {
 
 export const CORRECTIONS: Correction[] = [
   {
+    date: "2026-07-29",
+    slug: "maine-psilocybin-2026-guide",
+    title: "Psychedelic pages — fabricated psilocybin commission and ibogaine voucher claim removed",
+    severity: "critical",
+    category: "regulation",
+    what_was_wrong:
+      "Four psychedelic-policy pages claimed that Maine's LD 1034 (2025) 'established the Commission to Study Pathways for Creating a Psilocybin Services Program in Maine' with 'a report due November 4, 2026.' No such commission exists. The claim conflated two different bills from different sessions: the 'Commission to Study Pathways' language was a never-enacted committee amendment to LD 1914 (131st Legislature, 2023), not LD 1034 (132nd Legislature, 2025). The ibogaine page additionally and falsely stated that ibogaine received an FDA National Priority Voucher and that 'the other two have not been publicly specified.' Both claims could mislead readers about the current legal status of psilocybin and ibogaine.",
+    what_is_correct:
+      "LD 1034 (2025) was a narrow decriminalization bill (1 oz or less, adults 21+) that failed final enactment on June 10, 2025 (House 72-74, Senate 16-16) and created no commission, program, or framework. LD 1914 (2023), the 'Maine Psilocybin Health Access Act,' was amended into a study-commission resolve that also died when the 131st Legislature concluded on December 4, 2024; no commission was ever seated. On April 24, 2026, the FDA issued National Priority Vouchers to Compass Pathways (psilocybin/TRD), Usona Institute (psilocybin/MDD), and Transcend Therapeutics (methylone/PTSD); ibogaine was NOT a recipient — the FDA only permitted a noribogaine IND (DemeRx NB) to proceed. Psilocybin remains Schedule X under 17-A M.R.S. §1102 and a Class D crime under §1107-A.",
+    verified_via: [
+      { label: "Maine Legislature: LD 1034 final disposition (Enactment Failed, Jun 10 2025)", url: "https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1034&snum=132" },
+      { label: "Maine Legislature: LD 1914 status (Died Upon Conclusion of the 131st, Dec 4 2024)", url: "https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1914&snum=131" },
+      { label: "Maine Legislature: LD 1914 committee amendment (study commission, 13 members)", url: "https://legislature.maine.gov/legis/bills/getPDF.asp?paper=SP0774&item=2&snum=131" },
+      { label: "17-A M.R.S. §1102 (drug schedules)", url: "https://legislature.maine.gov/statutes/17-A/title17-Asec1102.html" },
+      { label: "17-A M.R.S. §1107-A (unlawful possession, Class D)", url: "https://legislature.maine.gov/statutes/17-A/title17-Asec1107-A.html" },
+    ],
+    published_in: [
+      { name: "Maine psilocybin 2026 guide", href: "/blog/maine-psilocybin-2026-guide" },
+      { name: "Are mushrooms legal in Maine?", href: "/blog/are-mushrooms-legal-in-maine" },
+      { name: "Trump psychedelic executive order — Maine implications", href: "/blog/trump-psychedelic-executive-order-maine-psilocybin-2026" },
+      { name: "Ibogaine in the federal executive order", href: "/blog/ibogaine-federal-executive-order-maine-2026" },
+      { name: "Maine cannabis regulations guide", href: "/guides/maine-cannabis-regulations" },
+    ],
+  },
+  {
     date: "2026-07-26",
     slug: "maine-cannabis-delivery-license-framework",
     title: "Maine delivery guides — nonexistent courier license and GPS mandate removed",
