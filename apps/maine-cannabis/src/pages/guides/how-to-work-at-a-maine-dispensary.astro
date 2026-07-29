@@ -1,0 +1,157 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+export const title = "How to Work at a Dispensary in Maine: IIC, Age & Requirements (2026)";
+
+const article = {
+  author: "Eliot Nash",
+  authorTitle: "Editorial",
+  authorId: "eliot-nash",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  publishDate: "2026-07-29",
+  modifiedDate: "2026-07-29",
+  section: "Hiring & Staffing",
+};
+
+const topics = ["careers", "compliance", "staffing"];
+
+const faqItems = [
+  { question: "Do you need a license or permit to work at a Maine dispensary?", answer: "Maine does not issue a generic 'worker permit.' Instead, most people who work in or for a licensed adult-use cannabis establishment need an Individual Identification Card (IIC) from the Office of Cannabis Policy (OCP). Whether you need one depends on your duties, system access, and authority — not your job title. Anyone who possesses, cultivates, manufactures, packages, tests, dispenses, transfers, serves, handles, transports, or delivers cannabis, or who can access or enter data in the inventory tracking or point-of-sale system, must hold a valid IIC. So do all principals (officers, directors, managers, general partners)." },
+  { question: "How old do you have to be to work at a dispensary in Maine?", answer: "You must be at least 21 years old to hold an employment Individual Identification Card (IIC) under 18-691 C.M.R. ch. 20. This applies to budtenders and other plant-touching or system-access roles. The 21+ threshold mirrors the adult-use purchase age." },
+  { question: "How do you get a Maine cannabis IIC?", answer: "Apply through OCP's online IIC application portal (InforME / licensing.web.maine.gov). You submit the IIC application and required information, pay the application fee, and complete a fingerprint-based criminal history check (typically scheduled through IdentoGO). OCP reviews the application; applications with outstanding requirements not completed within 90 days of submission are considered abandoned. Your employer (the licensee) sponsors the role, but the card is issued to you by OCP." },
+  { question: "What disqualifies you from getting a Maine cannabis IIC?", answer: "A 'disqualifying drug offense' can bar an IIC. This generally means a controlled-substance conviction punishable by one year or more in prison — unless the offense occurred more than five years ago or involved conduct that is now legal under Maine's cannabis laws. OCP evaluates applications individually; a past conviction does not automatically disqualify every applicant. Principals must submit to a fingerprint-based criminal history check every two years." },
+  { question: "How long is a Maine IIC valid?", answer: "An Individual Identification Card is valid for two years from the date of issue under 18-691 C.M.R. ch. 20. You must renew before it expires to keep working in a plant-touching or system-access role. Active IIC holders can request a replacement card through OCP's online portal if the card is lost." },
+  { question: "Do you need a medical card to work at a dispensary in Maine?", answer: "No. A medical cannabis patient registration is not required to work at a Maine dispensary. What most employees need is the employment Individual Identification Card (IIC), which is separate from any medical patient card. The medical program (registry identification cards under Title 22) governs patients and caregivers, not adult-use employment." },
+  { question: "Does Maine require a responsible-vendor training course for dispensary employees?", answer: "Maine's OCP licensing rules and IIC instructions do not impose a universal state-mandated 'responsible vendor' training course, annual certification, or manager endorsement for every cannabis employee. That said, the licensee still has a duty to train staff for their actual roles — age verification, inventory tracking, security, sanitation, and incident response where relevant. Requirements can change, so confirm current training expectations with your employer and OCP." },
+  { question: "What jobs are available at a Maine dispensary?", answer: "Common dispensary roles include budtender (sales and customer consultation), inventory and compliance staff, cultivation and processing roles (for vertically integrated operators), management, and security. Pay varies by role and region. For a detailed budtender career guide including 2026 pay ranges and the interview process, see the Maine Budtender Careers guide." },
+];
+---
+
+<Layout
+  title="How to Work at a Dispensary in Maine: IIC, Age & Requirements (2026)"
+  description="What you need to work at a Maine dispensary in 2026 — the Individual Identification Card (IIC), 21+ age requirement, fingerprinting, background checks, and disqualifying offenses. Employee-side guide from OCP rules. Updated 2026-07-29."
+  heroImage="/images/heroes/maine-compliance-hero.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+  section { margin-bottom: 2rem; }
+  section h2 { margin-top: 0; padding-top: 1rem; }
+  section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { background: var(--color-background); }
+  section.fact-box { background: linear-gradient(135deg, var(--color-background) 0%, #fff 100%); border-top: 3px solid var(--color-primary); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+  .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>How to Work at a Dispensary in Maine: IIC, Age & Requirements (2026)</h1>
+    <p class="subtitle">The employee-side guide to Maine cannabis jobs — what an Individual Identification Card is, who needs one, and how to get hired in 2026</p>
+  </div>
+
+  <section class="fact-box">
+    <h2>Working at a Maine Dispensary — At a Glance</h2>
+    <table aria-label="Maine dispensary employment key facts">
+      <tbody>
+        <tr><td><strong>Worker Credential</strong></td><td>Individual Identification Card (IIC) — issued by the OCP</td></tr>
+        <tr><td><strong>Minimum Age</strong></td><td>21 years old (for an employment IIC)</td></tr>
+        <tr><td><strong>Legal Basis</strong></td><td>28-B M.R.S. Chapter 1; 18-691 C.M.R. ch. 20 (IIC rules)</td></tr>
+        <tr><td><strong>Background Check</strong></td><td>Fingerprint-based criminal history check (IdentoGO)</td></tr>
+        <tr><td><strong>Card Term</strong></td><td>Two years from issue</td></tr>
+        <tr><td><strong>Medical Card Required?</strong></td><td>No — the IIC is separate from a medical patient card</td></tr>
+        <tr><td><strong>Apply Via</strong></td><td>OCP online IIC portal (licensing.web.maine.gov)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Do you need a permit to work at a Maine dispensary?</h2>
+    <p class="answer-capsule">Maine does not issue a generic "cannabis worker permit." Instead, most people who work in or for a licensed adult-use cannabis establishment need an <strong>Individual Identification Card (IIC)</strong> from the Office of Cannabis Policy (OCP). Whether you need one is based on your duties and system access — not your job title. You must also be at least 21 and pass a fingerprint-based background check.</p>
+    <p>People searching for a "Maine cannabis workers permit" or "cannabis worker card" are looking for the IIC. It is the credential that authorizes an individual to work in a licensed cannabis business. The IIC is issued to <em>you</em> by the OCP, but your employer (the licensee) sponsors the role.</p>
+  </section>
+
+  <section>
+    <h2>Who needs an IIC?</h2>
+    <p>Under <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch%2020%20Final.pdf" target="_blank" rel="noopener noreferrer">18-691 C.M.R. ch. 20</a>, a valid IIC is required for a person working in or for a licensed adult-use establishment who:</p>
+    <ul>
+      <li>Possesses, cultivates, manufactures, packages, tests, dispenses, transfers, serves, handles, transports, or delivers cannabis or cannabis products; <strong>or</strong></li>
+      <li>Has authority to access or enter data into the inventory tracking system (Metrc) or the establishment's point-of-sale system; <strong>or</strong></li>
+      <li>Is a principal of the establishment — including officers, directors, managers, or general partners.</li>
+    </ul>
+    <p>This is a <strong>duties test, not a job-title list</strong>. A budtender who rings up sales and handles product needs an IIC. So does an inventory clerk who logs into Metrc. A role with no plant contact and no system access may not require one — but most dispensary floor roles do. When in doubt, confirm with the employer and OCP.</p>
+    <Callout title="Medical program uses a different card" type="info">
+      The IIC governs the adult-use program. Maine's medical cannabis program (Title 22) uses separate registry identification cards for caregivers, caregiver assistants, and medical dispensary employees. If you work in the medical program, the registration requirement is different.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>How to get a Maine IIC — step by step</h2>
+    <ol>
+      <li><strong>Secure a role with a licensed establishment.</strong> The IIC is tied to your work for a licensee. Most applicants apply once they have a job offer or are onboarding with a licensed business.</li>
+      <li><strong>Submit the IIC application.</strong> Apply through OCP's online portal (InforME / licensing.web.maine.gov) and provide the information OCP requests.</li>
+      <li><strong>Pay the application fee.</strong> OCP reviews the application once the fee is received.</li>
+      <li><strong>Complete the fingerprint-based background check.</strong> Schedule fingerprinting (typically through IdentoGO) for the criminal history records check.</li>
+      <li><strong>Respond to any OCP requests.</strong> Applications with outstanding requirements not completed within 90 days of submission are considered abandoned.</li>
+      <li><strong>Receive your card.</strong> Once approved, OCP issues your IIC, valid for two years. Keep it current — you must renew before expiration to keep working in a covered role.</li>
+    </ol>
+    <p>For the full employer-side obligations — roster reporting, record-keeping, and the duties test in detail — see the <a href="/guides/maine-cannabis-staffing-licensing">Maine Cannabis IIC & Staffing Requirements guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Age, background checks, and disqualifying offenses</h2>
+    <h3>Minimum age</h3>
+    <p>You must be at least <strong>21 years old</strong> to hold an employment IIC under 18-691 C.M.R. ch. 20. This mirrors the adult-use purchase age.</p>
+    <h3>Background check</h3>
+    <p>IIC applicants complete a fingerprint-based criminal history check. Principals of licensed establishments must submit to a fingerprint-based criminal history check every two years.</p>
+    <h3>Disqualifying offenses</h3>
+    <p>A "disqualifying drug offense" can bar an IIC. This generally means a controlled-substance conviction punishable by one year or more in prison — <em>unless</em> the offense occurred more than five years ago or involved conduct that is now legal under Maine's cannabis laws. OCP evaluates applications individually; a past conviction does not automatically disqualify every applicant. If you have a record, check whether it falls within an exception before assuming you are ineligible.</p>
+  </section>
+
+  <section>
+    <h2>Training requirements — what's actually mandated</h2>
+    <p class="answer-capsule">Maine's OCP licensing rules and IIC instructions do <strong>not</strong> impose a universal state-mandated "responsible vendor" training course, annual certification, or manager endorsement for every cannabis employee. However, the licensee still has a duty to train staff for their actual roles — age verification, inventory tracking, security, sanitation, delivery, and incident response where relevant.</p>
+    <p>This is a common point of confusion. Some states mandate a specific responsible-vendor course; Maine's current rules do not impose a single universal course on every employee. That does not mean training is optional in practice — employers build role-specific training from the rules and approved plans that apply to each position. Confirm current expectations with your employer and OCP, as requirements can change.</p>
+  </section>
+
+  <section>
+    <h2>What dispensary jobs look like in Maine</h2>
+    <p>Common roles at a Maine dispensary include:</p>
+    <ul>
+      <li><strong>Budtender</strong> — customer consultation, product sales, compliance at the point of sale. The most common entry-level dispensary role.</li>
+      <li><strong>Inventory / compliance staff</strong> — Metrc tracking, reconciliation, record-keeping.</li>
+      <li><strong>Cultivation and processing</strong> — for vertically integrated operators that grow and manufacture in-house.</li>
+      <li><strong>Management</strong> — store managers, compliance managers (principals require an IIC).</li>
+      <li><strong>Security and operations</strong> — depending on the establishment.</li>
+    </ul>
+    <p>For 2026 pay ranges, the interview process, and where the jobs are by region, see the <a href="/blog/maine-cannabis-budtender-careers">Maine Budtender Careers guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <AutoRelated currentPath="/guides/how-to-work-at-a-maine-dispensary" currentTopics={topics} section="Careers & Staffing" limit={6} />
+
+  <section class="disclaimer">
+    <p><em>This information is for informational purposes only and does not constitute legal advice. Maine's cannabis employment rules are subject to change. Confirm current IIC requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a> and your employer before relying on any specific requirement.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-29</strong> by <strong>Eliot Nash + Margaret Finch</strong> against 28-B M.R.S. Chapter 1, 18-691 C.M.R. ch. 20, and OCP IIC instructions and FAQ. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+</article>
