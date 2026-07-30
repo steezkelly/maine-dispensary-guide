@@ -24,23 +24,24 @@ const verifierArgs = [
   '--skip-hero-image-naming',
   '--skip-autoRelated-freshness',
 ];
-const GIT_LOCAL_CONTEXT = [
-  'GIT_ALTERNATE_OBJECT_DIRECTORIES',
-  'GIT_COMMON_DIR',
-  'GIT_DIR',
-  'GIT_GRAFT_FILE',
-  'GIT_IMPLICIT_WORK_TREE',
-  'GIT_INDEX_FILE',
-  'GIT_INTERNAL_SUPER_PREFIX',
-  'GIT_NO_REPLACE_OBJECTS',
-  'GIT_OBJECT_DIRECTORY',
-  'GIT_PREFIX',
-  'GIT_REPLACE_REF_BASE',
-  'GIT_SHALLOW_FILE',
-  'GIT_WORK_TREE',
-];
+function localGitEnvironmentNames() {
+  return execFileSync('git', ['rev-parse', '--local-env-vars'], { cwd: ROOT, encoding: 'utf8' })
+    .trim()
+    .split(/\r?\n/)
+    .filter(Boolean);
+}
 
-for (const name of GIT_LOCAL_CONTEXT) delete process.env[name];
+const GIT_LOCAL_CONTEXT = new Set(localGitEnvironmentNames());
+
+function sanitizeGitEnvironment(environment) {
+  for (const name of GIT_LOCAL_CONTEXT) delete environment[name];
+  for (const name of Object.keys(environment)) {
+    if (/^GIT_CONFIG_(?:KEY|VALUE)_\d+$/.test(name)) delete environment[name];
+  }
+  return environment;
+}
+
+sanitizeGitEnvironment(process.env);
 
 function git(args, cwd = ROOT) {
   return execFileSync('git', args, { cwd, encoding: 'utf8' });
@@ -106,6 +107,40 @@ function configurePrivateOrigin(repo, remote) {
   assert.equal(git(['rev-parse', 'origin/main'], repo).trim(), git(['rev-parse', 'HEAD'], repo).trim(),
     'fixture origin/main must equal its controlled baseline');
 }
+
+test('fixture sanitizer isolates private repos from hook-local Git config', () => {
+  const declared = git(['rev-parse', '--local-env-vars']).trim().split(/\r?\n/).filter(Boolean).sort();
+  const privateRepo = path.join(os.tmpdir(), `mdg-verify-config-isolation-${suffix}`);
+  const injectedValue = `must-not-reach-fixture-${suffix}`;
+  const inherited = {
+    GIT_CONFIG: path.join(privateRepo, 'hook-local-config'),
+    GIT_CONFIG_COUNT: '1',
+    GIT_CONFIG_PARAMETERS: "'fixture.hookleak=from-parameters'",
+    GIT_CONFIG_KEY_0: 'fixture.hookleak',
+    GIT_CONFIG_VALUE_0: injectedValue,
+  };
+
+  assert.equal(typeof sanitizeGitEnvironment, 'function', 'fixture runner must expose a Git-context sanitizer');
+  assert.deepEqual([...GIT_LOCAL_CONTEXT].sort(), declared, 'fixture sanitizer must use Git\'s complete local-context set');
+
+  const isolated = sanitizeGitEnvironment({ ...inherited });
+  for (const name of Object.keys(inherited)) {
+    assert.equal(isolated[name], undefined, `fixture sanitizer left ${name} inherited`);
+  }
+
+  try {
+    writeVerifierFixture(privateRepo);
+    const probe = spawnSync('git', ['config', '--get', 'fixture.hookleak'], {
+      cwd: privateRepo,
+      env: { ...process.env, ...isolated },
+      encoding: 'utf8',
+    });
+    assert.equal(probe.status, 1, combinedOutput(probe));
+    assert.notEqual(probe.stdout.trim(), injectedValue, 'hook-local config reached the private fixture');
+  } finally {
+    cleanup(privateRepo);
+  }
+});
 
 test('default verifier checks both committed branch delta and live worktree changes', () => {
   const sourceBefore = rootSnapshot();
