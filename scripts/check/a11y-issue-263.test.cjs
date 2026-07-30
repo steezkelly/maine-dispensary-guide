@@ -20,6 +20,11 @@ test('dark theme article links have an explicit dark-mode cascade rule', () => {
     'dark-mode article/guide links must explicitly resolve to the dark link token',
   );
   assert.match(theme, /html\[data-theme="dark"\][^{]+\{[^}]*color:\s*var\(--color-link\)\s*!important/s);
+  assert.match(
+    theme,
+    /html\[data-theme="dark"\][^{]+:hover[^ {]*[^}]*color:\s*var\(--color-link-hover\)\s*!important/s,
+    'dark-mode prose-link hover must resolve to the dark hover token',
+  );
   assert.doesNotMatch(theme, /transition:\s*color\s+\.18s/);
 });
 
@@ -28,6 +33,7 @@ test('focused skip link leaves the sr-only clipping state', () => {
   assert.match(focusRule, /position:\s*fixed/);
   assert.match(focusRule, /width:\s*auto/);
   assert.match(focusRule, /height:\s*auto/);
+  assert.match(focusRule, /padding:\s*1rem/);
   assert.match(focusRule, /clip:\s*auto/);
   assert.match(focusRule, /overflow:\s*visible/);
 });
