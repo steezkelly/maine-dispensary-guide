@@ -20,6 +20,19 @@ function copyCleanWorkspace(destination) {
   });
 }
 
+test('root and app manifests both declare googleapis as development tooling', () => {
+  const rootPackage = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+  const appPackage = JSON.parse(fs.readFileSync(
+    path.join(repoRoot, 'apps/maine-cannabis/package.json'),
+    'utf8',
+  ));
+
+  assert.equal(rootPackage.devDependencies.googleapis, '^173.0.0');
+  assert.equal(appPackage.devDependencies.googleapis, '^173.0.0');
+  assert.equal(rootPackage.dependencies?.googleapis, undefined);
+  assert.equal(appPackage.dependencies?.googleapis, undefined);
+});
+
 test('offline GSC tooling resolves after a clean app-workspace development install', () => {
   const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-production-dependency-audit-'));
   const cache = path.join(sandbox, 'npm-cache');
