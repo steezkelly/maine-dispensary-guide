@@ -71,6 +71,11 @@ const {
 
 const canonicalHref = canonicalOverride ?? canonicalUrl;
 
+const heroImageAvif = heroImage?.replace(/\.jpg$/i, '.avif');
+const heroImageMobileAvif = heroImage?.replace(/\.jpg$/i, '-640w.avif');
+const heroImageAvifSrcset = `${heroImageMobileAvif} 640w, ${heroImageAvif} ${heroImageDims.w}w`;
+const heroImageSizes = '(max-width: 640px) 640px, 1280px';
+
 // Mirror Layout.astro's `isGuide` derivation so the heroImage preload can be
 // gated on it. (Layout computes this in its own frontmatter and passes
 // nothing to BaseHead because, before Sprint 81, BaseHead only needed URL-
@@ -106,18 +111,15 @@ const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname 
 <noscript><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Source+Sans+3:wght@300;400;500;600;700&display=optional" rel="stylesheet" /></noscript>
 
 {/*
-  Sprint 81 (2026-07-11) cleanup: only preload heroImage when the page
-  actually renders it in the body. Previously every page with a heroImage
-  frontmatter prop preloaded it, but the body renderer in Layout.astro:473
-  only shows the hero image for `isGuide` pages. On non-guide pages
-  (homepage, blog index, etc.), the preload fetched 74 KiB of JPG on every
-  load and never used it. The browser logs a console warning about the
-  unused preload within a few seconds of page load.
+  Guide hero images are the LCP candidates. Preload the responsive AVIF set
+  consumed by Layout's <picture> instead of a separate full-size JPEG. Matching
+  URL, format, srcset, sizes, and request mode lets the browser reuse the preload
+  rather than downloading both the JPEG and the selected AVIF candidate.
 
-  Same isGuide rule as Layout.astro:118 — pathname starts with /guides/ but
-  isn't /guides itself.
+  Keep the isGuide gate: non-guide pages use heroImage only for social metadata
+  and do not render this image in the body.
 */}
-{heroImage && isGuide && <link rel="preload" as="image" href={heroImage} fetchpriority="high" crossorigin="anonymous" />}
+{heroImageAvif && isGuide && <link rel="preload" as="image" href={heroImageAvif} imagesrcset={heroImageAvifSrcset} imagesizes={heroImageSizes} type="image/avif" fetchpriority="high" />}
 
 <link rel="canonical" href={canonicalHref} />
 <link rel="alternate" hreflang="en-US" href={canonicalHref} />
