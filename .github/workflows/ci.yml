@@ -167,6 +167,7 @@ jobs:
           node --test scripts/check/ocp-testing-legal-content.test.cjs
           node --test apps/maine-cannabis/scripts/content/ymyl-eeat-guard.test.cjs
           node --test scripts/check/ocp-annual-report-reconciliation.test.cjs
+          node --test scripts/check/mdg-market-intelligence-source-inventory.test.cjs
           npm run test:home-grow-legal-content
 
       - name: Test pre-push governance and diagnostic contracts

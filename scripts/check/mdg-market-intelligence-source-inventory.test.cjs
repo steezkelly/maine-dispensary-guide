@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 
 const repo = path.resolve(__dirname, '..', '..');
 const memoPath = path.join(repo, 'docs/research/2026-07-30-mdg-market-intelligence-source-inventory.md');
+const ciPath = path.join(repo, '.github/workflows/ci.yml');
 
 test('market-intelligence memo exists as a bounded canonical-pipeline plan', () => {
   assert.ok(fs.existsSync(memoPath), `missing ${memoPath}`);
@@ -36,6 +37,12 @@ test('market-intelligence memo exists as a bounded canonical-pipeline plan', () 
   assert.match(memo, /ocp_csv_enumeration\+findall/);
   assert.match(memo, /ocp_licenses_normalized/);
   assert.match(memo, /ocp_licenses_normalized.*retail-optin-gap.*dispensary-directory/i);
+  assert.match(memo, /reobserved.*prior disappearance history/i);
+});
+
+test('memo regression contract is wired into pull-request CI', () => {
+  const ci = fs.readFileSync(ciPath, 'utf8');
+  assert.match(ci, /node --test scripts\/check\/mdg-market-intelligence-source-inventory\.test\.cjs/);
 });
 
 test('memo names bounded first implementation work and keeps unsupported inferences out', () => {

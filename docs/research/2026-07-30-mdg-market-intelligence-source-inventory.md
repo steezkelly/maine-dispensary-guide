@@ -85,7 +85,7 @@ Ranking combines reader value, primary-source feasibility, and whether the produ
 
 1. Archive two OCP adult-use roster source snapshots with source URL, retrieval date, published “last updated” date, SHA-256, and source-file name.
 2. Normalize unique identity by license number; preserve rows whose identity cannot be resolved without silently merging them.
-3. Emit lifecycle classifications that mean only what the two observations establish: `reobserved`, `newly_observed`, `status_changed`, `type_changed`, `municipality_changed`, and `not_observed_in_latest`.
+3. Emit lifecycle classifications that mean only what two snapshots and any retained history establish: `newly_observed`, `status_changed`, `type_changed`, `municipality_changed`, and `not_observed_in_latest`. Emit `reobserved` only when retained prior disappearance history establishes a prior present-to-absent event; otherwise an identity absent from the earlier snapshot and present in the latest is `newly_observed`.
 4. Explicitly prohibit rendering `not_observed_in_latest` as “closed,” “opened,” or “operating.”
 5. Require metadata for source URL, source type, retrieval date, reporting period, definition, status, and limitations.
 
