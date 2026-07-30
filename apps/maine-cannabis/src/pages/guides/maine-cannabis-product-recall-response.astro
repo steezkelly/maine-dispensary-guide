@@ -7,6 +7,7 @@ import AutoRelated from '../../components/AutoRelated.astro';
 const article = {
   author: 'Calvin Waters',
   authorId: 'calvin-waters',
+  authorTitle: 'Licensing & Compliance Analyst',
   publishDate: '2026-07-30',
   modifiedDate: '2026-07-30',
   section: 'Operations & Technology'
@@ -68,7 +69,7 @@ const faqs = [
     .source-notes { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; }
     .source-notes h2 { padding-top: 0; }
     .source-notes li { overflow-wrap: anywhere; }
-    .status-label { font-weight: 700; white-space: nowrap; }
+    .status-label { font-weight: 700; }
   </style>
 
   <article>
@@ -81,10 +82,10 @@ const faqs = [
       <h2>Start Here: The Four Questions</h2>
       <table aria-label="Maine cannabis recall and failed-test response questions">
         <tbody>
-          <tr><td><strong>What happened?</strong></td><td>Initial failed test, customer complaint, suspected contamination, voluntary stop-sale, OCP administrative hold, or OCP-issued recall?</td></tr>
-          <tr><td><strong>What is the scope?</strong></td><td>Licensee, product, batch, package, sale window, destination store, and any product already returned or destroyed.</td></tr>
-          <tr><td><strong>What is blocked?</strong></td><td>Keep the affected scope out of sale and transfer while you follow the applicable notice, current testing rule, and OCP instructions.</td></tr>
-          <tr><td><strong>What must be preserved?</strong></td><td>COAs, testing communications, batch and package identifiers, tracking records, manifests, point-of-sale records, and the incident timeline.</td></tr>
+          <tr><th scope="row"><strong>What happened?</strong></th><td>Initial failed test, customer complaint, suspected contamination, voluntary stop-sale, OCP administrative hold, or OCP-issued recall?</td></tr>
+          <tr><th scope="row"><strong>What is the scope?</strong></th><td>Licensee, product, batch, package, sale window, destination store, and any product already returned or destroyed.</td></tr>
+          <tr><th scope="row"><strong>What is blocked?</strong></th><td>Keep the affected scope out of sale and transfer while you follow the applicable notice, current testing rule, and OCP instructions.</td></tr>
+          <tr><th scope="row"><strong>What must be preserved?</strong></th><td>COAs, testing communications, batch and package identifiers, tracking records, manifests, point-of-sale records, and the incident timeline.</td></tr>
         </tbody>
       </table>
     </section>
@@ -139,7 +140,7 @@ const faqs = [
       </ol>
 
       <Callout title="Do not use the 2026 draft Chapter 40 as current law" type="info">
-        OCP has published testing-rule materials that identify some 2026 language as a draft subject to review and further revision. Use the current <a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" target="_blank" rel="noopener noreferrer">OCP rules and statutes landing page</a>, current testing-facility instructions, and any OCP notice or order. Label proposed language as proposed everywhere it appears.
+        OCP has published testing-rule materials that identify some 2026 language as a draft subject to review and further revision. For the proposed Chapter 40 text, see the <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch.%2040%20for%20Public%20Comment%202026.pdf" target="_blank" rel="noopener noreferrer">public-comment PDF</a>; it is proposed, subject to review, and not effective. Use the current <a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" target="_blank" rel="noopener noreferrer">OCP rules and statutes landing page</a>, current testing-facility instructions, and any OCP notice or order. Label proposed language as proposed everywhere it appears.
       </Callout>
     </section>
 
@@ -155,7 +156,7 @@ const faqs = [
         <li>Physically segregate held items from other inventory and restrict access.</li>
         <li>Do not sell, give away, transfer, transport, dispose of, or destroy held items unless the applicable authority authorizes the action.</li>
         <li>Continue required security, premises, and tracking controls for the licensed operation.</li>
-        <li>Record OCP communications and the written notice of termination if the hold ends.</li>
+        <li>Record OCP communications and any communication about termination, if provided.</li>
       </ul>
     </section>
 
@@ -229,6 +230,7 @@ const faqs = [
         <li><a href="https://www.maine.gov/dafs/ocp/news-events/news/maine-office-cannabis-policy-issues-health-and-safety-recall-adult-use-flower-0" target="_blank" rel="noopener noreferrer">OCP Green Trap adult-use recall notice</a></li>
         <li><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/testing-data" target="_blank" rel="noopener noreferrer">OCP Adult Use Testing Data</a></li>
         <li><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/compliance-data" target="_blank" rel="noopener noreferrer">OCP Adult Use Compliance Data</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch.%2040%20for%20Public%20Comment%202026.pdf" target="_blank" rel="noopener noreferrer">2026 Chapter 40 public-comment PDF (proposed, not effective)</a></li>
         <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec105.html" target="_blank" rel="noopener noreferrer">Maine Title 28-B, section 105: Tracking system</a></li>
         <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec803-A.html" target="_blank" rel="noopener noreferrer">Maine Title 28-B, section 803-A: Administrative holds</a></li>
         <li><a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" target="_blank" rel="noopener noreferrer">OCP Adult Use Rules and Statutes</a></li>
@@ -246,7 +248,7 @@ const faqs = [
 
     <section class="content-verification">
       <div class="verification-badge">
-        <span class="verification-icon">◆</span>
+        <span class="verification-icon" aria-hidden="true">◆</span>
         <span class="verification-text"> Last reviewed <strong>2026-07-30</strong> against the OCP and Maine Legislature sources cited on this page. Publisher editorial review on file; methodology and author disclosures at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
       </div>
     </section>

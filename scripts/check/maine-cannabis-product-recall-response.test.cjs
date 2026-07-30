@@ -33,9 +33,16 @@ assert.match(page, /Title 28-B section 105/i);
 assert.match(page, /draft Chapter 40 as current law/i);
 assert.match(page, /Last reviewed <strong>2026-07-30<\/strong>/);
 assert.doesNotMatch(page, /margaret-finch|Margaret Finch/);
+assert.match(page, /authorTitle: 'Licensing & Compliance Analyst'/);
+assert.match(page, /OCP communications and any communication about termination, if provided/);
+assert.doesNotMatch(page, /written notice of termination/i);
+assert.match(page, /<th scope="row"><strong>What happened\?<\/strong><\/th>/);
+assert.match(page, /verification-icon" aria-hidden="true"/);
+assert.doesNotMatch(page, /\.status-label \{ font-weight: 700; white-space: nowrap; \}/);
 
 for (const url of [
   'https://www.maine.gov/dafs/ocp/resources/recalls',
+  'https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch.%2040%20for%20Public%20Comment%202026.pdf',
   'https://www.maine.gov/dafs/ocp/open-data/adult-use/testing-data',
   'https://www.maine.gov/dafs/ocp/open-data/adult-use/compliance-data',
   'https://legislature.maine.gov/statutes/28-B/title28-Bsec105.html',
