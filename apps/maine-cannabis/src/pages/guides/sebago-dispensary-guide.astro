@@ -14,6 +14,8 @@ const article = {
 
 const topics = ["city", "market"];
 
+
+const faqSchema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there cannabis dispensaries in Sebago, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "No. As of 2026, Sebago does not have a dedicated dispensary. The nearest options are in Casco (8 miles), Raymond (10 miles), and Windham (15 miles)."}}, {"@type": "Question", "name": "Can medical cannabis be delivered to Sebago?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Licensed delivery services can deliver to any Maine municipality, regardless of opt-in status. Services like Trichome Traders deliver to the Lakes Region, and Sebago is within reasonable delivery range from several operators."}}, {"@type": "Question", "name": "Where is the nearest dispensary to Sebago?", "acceptedAnswer": {"@type": "Answer", "text": "Blue Lobster Cannabis and Landrace Cannabis Co. in Casco are approximately 8 miles from Sebago, both located on Route 302 (Roosevelt Trail)."}}, {"@type": "Question", "name": "Can out-of-state medical patients buy near Sebago?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Maine has reciprocity with 27+ states. Medical dispensaries in nearby Casco and Windham accept valid medical credentials from approved states, including Massachusetts, New Hampshire, New York, and Connecticut."}}]};
 ---
 <CityGuide title="Sebago, Maine Cannabis Dispensary Guide (2026)" description="Sebago, Maine cannabis guide — nearest dispensaries, delivery services, and market access for one of Maine's Lakes Region towns without its own dispensary." heroImage="/images/heroes/sebago-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -28,6 +30,8 @@ const topics = ["city", "market"];
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
 
   <div class="article-header">
     <h1>Sebago Dispensary Guide</h1>

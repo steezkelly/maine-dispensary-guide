@@ -14,6 +14,8 @@ const article = {
 
 const topics = ["city", "market"];
 
+
+const faqSchema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many dispensaries are in Windham, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Windham has 4-5 active dispensaries serving medical and adult-use markets, including Maine's Alternative Caring, JAR Cannabis Co. (medical and recreational), and Alternative Essence. The Route 302 corridor is known locally as 'The Green Mile.'"}}, {"@type": "Question", "name": "Is Windham oversaturated with dispensaries?", "acceptedAnswer": {"@type": "Answer", "text": "Windham has a moderate-to-high concentration for its population, but the town serves as a Lakes Region gateway with a service area of 60,000+. New entrants need clear differentiation to compete with well-established operators."}}, {"@type": "Question", "name": "What are the licensing requirements?", "acceptedAnswer": {"@type": "Answer", "text": "Both OCP state licensing ($250 application, $500-$1,500 annual) and Windham municipal authorization (estimated $2,000-2,500 annually) are required. First-year total licensing costs approximately $3,000-4,000."}}, {"@type": "Question", "name": "Can I deliver to Lakes Region towns from Windham?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Maine law allows delivery to any municipality regardless of opt-in status. A Windham-based operator can serve Naples, Sebago, Harrison, Fryeburg, and dozens of other communities without dispensaries of their own."}}]};
 ---
 <CityGuide
   title="How to Open a Dispensary in Windham, Maine: License, Costs & 2026 Plan"
@@ -30,6 +32,8 @@ const topics = ["city", "market"];
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
 
   <div class="article-header">
     <h1>Windham Dispensary Guide</h1>
