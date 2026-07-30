@@ -1,0 +1,172 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MetaPixel from '../../components/MetaPixel.astro';
+import Faq from '../../components/Faq.astro';
+import PineTree from '@network/ui/PineTree';
+import { funnelConfig } from '../../data/funnelConfig';
+
+const { basic, pro } = funnelConfig.pricing;
+const hasBasic = funnelConfig.stripe.basicPaymentLink.length > 0;
+const hasPro = funnelConfig.stripe.proPaymentLink.length > 0;
+
+const faqItems = [
+  {
+    question: "What's the difference between the Report and the Pro Intelligence Package?",
+    answer: "The Report ($29) is our thinking, finished: eight decisions, every source, every caveat, ready to read and act on. The Pro Package ($99) is our toolkit, handed to you: the raw data tables as CSV/Excel, the full source matrix with retrieval dates, the saturation and margin models, and priority access to the Q4 edition. The Report is the output. Pro is the engine that produces it — so you can build your own analysis on the same foundation."
+  },
+  {
+    question: "Is this a subscription?",
+    answer: "No. Both are one-time purchases. You pay once, you own the files. No recurring charges, no account required. The Q4 priority access in Pro means you're first in line when the next edition publishes — but you're never auto-charged."
+  },
+  {
+    question: "The data is labeled 'preliminary' and 'revisable.' Why buy it now?",
+    answer: "Because your decisions aren't waiting for the state's final numbers. The lease you sign this quarter, the license tier you pick, the margin call you make on flower — those happen now, with the best data available now. The state publishes final figures in months. By then the decisions are made. This report tells you what to do in the meantime, and every figure is labeled so you know exactly how firm the ground is."
+  },
+  {
+    question: "Who is Maine Dispensary Guide Research?",
+    answer: "We're a research team that does one thing: go to the primary sources — OCP dashboards, MRS tax filings, federal regulatory records — and translate them into decisions for people operating in Maine cannabis. We don't aggregate other people's summaries. We show you the source for every figure so you can check our work. That's the whole credential: you can verify everything."
+  },
+  {
+    question: "Can I share the report?",
+    answer: "The Report is licensed CC BY 4.0 — share it freely with attribution to Maine Dispensary Guide. The Pro data tables and models are licensed for internal use by your organization."
+  },
+];
+---
+
+<Layout
+  title="Get the Q3 2026 Maine Cannabis Industry Report — from $29"
+  description="Eight decisions, every source, every caveat. Report $29 (was $97). Pro Intelligence Package $99 (was $297) — the raw data, models, and source matrix behind the analysis. One-time purchase, instant delivery."
+  noindex={false}
+>
+  <MetaPixel pixelId={funnelConfig.metaPixelId} />
+
+  <style>
+    .offer-page { max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    .offer-header { text-align: center; margin-bottom: 2rem; }
+    .brand {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.15em; color: var(--color-soft-green); margin: 1rem 0;
+    }
+    h1 { font-family: var(--font-serif); font-size: 2rem; line-height: 1.25; margin: 0.5rem 0; }
+    .offer-subtitle { font-size: 1.125rem; color: var(--color-text-light); margin: 0.75rem 0; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2.5rem 0; }
+    .tier {
+      position: relative; padding: 2rem; border-radius: 1.5rem;
+      border: 2px solid var(--color-border); background: var(--color-surface);
+      display: flex; flex-direction: column;
+    }
+    .tier.featured { border-color: var(--color-primary); box-shadow: 0 8px 32px rgba(31,61,46,0.10); }
+    .tier-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      padding: 0.25rem 1rem; border-radius: 999px; background: var(--color-primary);
+      color: var(--color-on-primary); font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+    }
+    .tier h2 { font-family: var(--font-serif); font-size: 1.35rem; margin: 0.5rem 0 0.25rem; }
+    .tier .tagline { font-size: 0.875rem; color: var(--color-text-light); font-style: italic; margin-bottom: 0.5rem; }
+    .price-row { display: flex; align-items: baseline; gap: 0.75rem; margin: 0.75rem 0; }
+    .price-anchor { font-size: 1.1rem; color: var(--color-text-light); text-decoration: line-through; }
+    .price-offer { font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; color: var(--color-primary); }
+    .price-note { font-size: 0.8125rem; color: var(--color-text-light); }
+    .tier ul { list-style: none; padding: 0; margin: 1rem 0 1.5rem; flex: 1; }
+    .tier li { padding: 0.4rem 0; font-size: 0.9375rem; color: var(--color-text); }
+    .tier li::before { content: "✓ "; color: var(--color-primary); font-weight: 700; }
+    .buy-button {
+      display: block; text-align: center; padding: 1rem 1.5rem; border-radius: 0.75rem;
+      background: var(--color-primary); color: var(--color-on-primary);
+      font-weight: 700; font-size: 1rem; text-decoration: none; border: none; cursor: pointer;
+    }
+    .buy-button:hover { opacity: 0.92; }
+    .buy-button.disabled { background: var(--color-border); color: var(--color-text-light); pointer-events: none; cursor: default; }
+    .coming-soon { font-size: 0.8125rem; color: var(--color-text-light); text-align: center; margin-top: 0.5rem; }
+    .guarantee {
+      text-align: center; margin: 2rem 0; padding: 1.5rem;
+      border: 1px solid var(--color-border); border-radius: 1rem;
+      font-size: 0.9375rem; color: var(--color-text-light);
+    }
+    .guarantee strong { color: var(--color-text); }
+    @media (max-width: 768px) { h1 { font-size: 1.5rem; } .tiers { grid-template-columns: 1fr; } }
+  </style>
+
+  <article class="offer-page">
+    <div class="offer-header">
+      <PineTree size={40} color="var(--color-primary)" />
+      <div class="brand">Maine Dispensary Guide Research</div>
+      <h1>Stop reading the market.<br/>Start deciding from it.</h1>
+      <p class="offer-subtitle">The Q3 2026 numbers are free. What they mean for your next move is what you're buying here.</p>
+    </div>
+
+    <div class="tiers">
+      <!-- REPORT TIER -->
+      <div class="tier">
+        <h2>The Report</h2>
+        <p class="tagline">Our thinking, finished — ready to act on.</p>
+        <div class="price-row">
+          <span class="price-anchor">{basic.anchor}</span>
+          <span class="price-offer">{basic.offer}</span>
+        </div>
+        <span class="price-note">One-time purchase &bull; Instant PDF delivery</span>
+        <ul>
+          <li>All 8 decisions: margins, saturation, tax exposure, licensing, hiring, category mix, municipal landscape, exit timing</li>
+          <li>Every figure traced to a primary source with retrieval date</li>
+          <li>Status labels on every number — you know how firm the ground is</li>
+          <li>Decision-timing framing: what to do this quarter, not someday</li>
+          <li>CC BY 4.0 — share freely with attribution</li>
+        </ul>
+        {hasBasic ? (
+          <a href={funnelConfig.stripe.basicPaymentLink} class="buy-button" data-cta-id="cta-buy-basic-q3-2026" target="_blank" rel="noopener">
+            Get the Report — {basic.offer}
+          </a>
+        ) : (
+          <span class="buy-button disabled">Checkout Coming Soon</span>
+        )}
+        {!hasBasic && <p class="coming-soon">Stripe checkout is being set up. Check back shortly.</p>}
+      </div>
+
+      <!-- PRO TIER -->
+      <div class="tier featured">
+        <span class="tier-badge">Inside the Engine</span>
+        <h2>Pro Intelligence Package</h2>
+        <p class="tagline">Our toolkit, handed to you — build your own analysis.</p>
+        <div class="price-row">
+          <span class="price-anchor">{pro.anchor}</span>
+          <span class="price-offer">{pro.offer}</span>
+        </div>
+        <span class="price-note">One-time purchase &bull; Instant delivery</span>
+        <ul>
+          <li>Everything in the Report</li>
+          <li>Raw data tables as CSV/Excel — sales, licenses, tax, pricing</li>
+          <li>The saturation and margin models, not just their conclusions</li>
+          <li>Full source matrix with retrieval dates + status labels</li>
+          <li>Priority access to the Q4 2026 edition at publication</li>
+          <li>Internal-use license for your organization</li>
+        </ul>
+        {hasPro ? (
+          <a href={funnelConfig.stripe.proPaymentLink} class="buy-button" data-cta-id="cta-buy-pro-q3-2026" target="_blank" rel="noopener">
+            Get Pro — {pro.offer}
+          </a>
+        ) : (
+          <span class="buy-button disabled">Checkout Coming Soon</span>
+        )}
+        {!hasPro && <p class="coming-soon">Stripe checkout is being set up. Check back shortly.</p>}
+      </div>
+    </div>
+
+    <div class="guarantee">
+      <strong>30 days, full refund, no reason needed.</strong> If it doesn't change a decision you make, email us and we'll refund you — and yes, keep the files. We'd rather you trust us enough to come back for Q4.
+    </div>
+
+    <Faq items={faqItems} />
+  </article>
+
+  <script is:inline>
+    document.querySelectorAll('[data-cta-id^="cta-buy-"]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!window.fbq) return;
+        var tier = btn.getAttribute('data-cta-id').indexOf('pro') !== -1 ? 'pro' : 'basic';
+        var val = tier === 'pro' ? 99.0 : 29.0;
+        window.fbq('track', 'InitiateCheckout', { content_name: 'q3_2026_' + tier, value: val, currency: 'USD' });
+      });
+    });
+  </script>
+</Layout>

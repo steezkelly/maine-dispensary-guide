@@ -1,0 +1,161 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MetaPixel from '../../components/MetaPixel.astro';
+import PineTree from '@network/ui/PineTree';
+import { funnelConfig } from '../../data/funnelConfig';
+
+const { pro } = funnelConfig.pricing;
+const hasPro = funnelConfig.stripe.proPaymentLink.length > 0;
+const reportPdf = funnelConfig.freeSamplePdf;
+---
+
+<Layout
+  title="Your Q3 2026 Report is Ready"
+  description="Download your Q3 2026 Maine Cannabis Industry Report and see what's inside the Pro Intelligence Package."
+  noindex={true}
+>
+  <MetaPixel pixelId={funnelConfig.metaPixelId} />
+
+  <style>
+    .thanks-page { max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem; text-align: center; }
+    .brand {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.15em; color: var(--color-soft-green); margin: 1rem 0;
+    }
+    h1 { font-family: var(--font-serif); font-size: 2rem; margin: 0.5rem 0; }
+    .subtitle { color: var(--color-text-light); font-size: 1.125rem; margin: 0.75rem 0 2rem; }
+    .download-card {
+      padding: 2rem; background: var(--color-surface); border: 2px solid var(--color-primary);
+      border-radius: 1.5rem; margin-bottom: 3rem;
+    }
+    .download-card h2 { font-family: var(--font-serif); margin-top: 0; }
+    .download-button {
+      display: inline-block; padding: 1rem 2rem; border-radius: 0.75rem;
+      background: var(--color-primary); color: var(--color-on-primary);
+      font-weight: 700; font-size: 1.1rem; text-decoration: none; margin-top: 1rem;
+    }
+    .download-button:hover { opacity: 0.92; }
+    .upsell {
+      padding: 2.5rem; background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: 1.5rem; text-align: left; margin-bottom: 2rem;
+    }
+    .upsell h2 { font-family: var(--font-serif); text-align: center; margin-top: 0; }
+    .upsell .tagline { text-align: center; color: var(--color-text-light); font-style: italic; margin-bottom: 1.5rem; }
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .preview-card {
+      padding: 1.25rem; background: var(--color-background); border: 1px solid var(--color-border);
+      border-radius: 0.75rem; font-size: 0.875rem;
+    }
+    .preview-card h3 { font-size: 0.9375rem; margin: 0 0 0.5rem; color: var(--color-primary); }
+    .preview-card p { margin: 0; color: var(--color-text-light); }
+    .preview-card code {
+      display: block; margin-top: 0.5rem; padding: 0.5rem; background: var(--color-code-bg, #f1ede1);
+      border-radius: 4px; font-size: 0.75rem; font-family: "JetBrains Mono", monospace;
+      white-space: pre; overflow-x: auto; color: var(--color-text);
+    }
+    .price-row { display: flex; align-items: baseline; justify-content: center; gap: 0.75rem; margin: 1rem 0; }
+    .price-anchor { font-size: 1.1rem; color: var(--color-text-light); text-decoration: line-through; }
+    .price-offer { font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; color: var(--color-primary); }
+    .buy-button {
+      display: block; text-align: center; padding: 1rem 1.5rem; border-radius: 0.75rem;
+      background: var(--color-primary); color: var(--color-on-primary);
+      font-weight: 700; font-size: 1rem; text-decoration: none; margin-top: 1rem;
+    }
+    .buy-button:hover { opacity: 0.92; }
+    .buy-button.disabled { background: var(--color-border); color: var(--color-text-light); pointer-events: none; }
+    .coming-soon { font-size: 0.8125rem; color: var(--color-text-light); text-align: center; margin-top: 0.5rem; }
+    .next-steps { text-align: left; margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 1rem; }
+    .next-steps h3 { font-family: var(--font-serif); margin-top: 0; }
+    .next-steps ol { padding-left: 1.25rem; }
+    .next-steps li { margin: 0.5rem 0; color: var(--color-text-light); }
+    .next-steps li strong { color: var(--color-text); }
+  </style>
+
+  <article class="thanks-page">
+    <PineTree size={40} color="var(--color-primary)" />
+    <div class="brand">Maine Dispensary Guide Research</div>
+    <h1>Your report is ready.</h1>
+    <p class="subtitle">You just made a decision most operators won't: you looked at the data before making the move.</p>
+
+    <div class="download-card">
+      <h2>Q3 2026 Maine Cannabis Industry Report</h2>
+      <p>14 pages. 8 decisions. Every figure sourced.</p>
+      <a href={reportPdf} download class="download-button" data-cta-id="cta-download-report">
+        Download the Report (PDF)
+      </a>
+    </div>
+
+    <div class="upsell">
+      <h2>You've got our answers.<br/>Want the engine?</h2>
+      <p class="tagline">The Report tells you what we found. Pro gives you the tools to find it yourself.</p>
+
+      <div class="preview-grid">
+        <div class="preview-card">
+          <h3>Raw Data Tables</h3>
+          <p>Every figure as CSV/Excel. Run your own cuts.</p>
+          <code>month, category, sales_usd, transactions
+2026-06, flower, 12483201, 1847293
+2026-06, edibles, 4219877, 412038
+2026-06, concentrates, 2891445, 198221</code>
+        </div>
+        <div class="preview-card">
+          <h3>Saturation Model</h3>
+          <p>Licenses per capita by municipality. See where the market is full and where it's open.</p>
+          <code>municipality, licenses, pop, per_10k
+Portland, 34, 68408, 4.97
+Biddeford, 11, 22552, 4.88
+Augusta, 7, 18899, 3.70
+Presque Isle, 2, 8797, 2.27</code>
+        </div>
+        <div class="preview-card">
+          <h3>Source Matrix</h3>
+          <p>Every figure traced: source URL, retrieval date, status label.</p>
+          <code>figure: june_2026_adult_use_sales
+source: OCP Monthly Dashboard
+url: maine.gov/dafs/ocp/...
+retrieved: 2026-07-22
+status: preliminary, unaudited</code>
+        </div>
+      </div>
+
+      <div class="price-row">
+        <span class="price-anchor">{pro.anchor}</span>
+        <span class="price-offer">{pro.offer}</span>
+      </div>
+
+      {hasPro ? (
+        <a href={funnelConfig.stripe.proPaymentLink} class="buy-button" data-cta-id="cta-upsell-pro-q3-2026" target="_blank" rel="noopener">
+          Get the Pro Intelligence Package — {pro.offer}
+        </a>
+      ) : (
+        <span class="buy-button disabled">Pro Checkout Coming Soon</span>
+      )}
+      {!hasPro && <p class="coming-soon">Stripe checkout is being set up. Check back shortly.</p>}
+    </div>
+
+    <div class="next-steps">
+      <h3>What to do with the Report right now</h3>
+      <ol>
+        <li><strong>Read Decision #2 first</strong> — the saturation map. If you're evaluating a location, this is the one that saves you from a bad lease.</li>
+        <li><strong>Share it with your team.</strong> It's CC BY 4.0 — forward it, print it, put it on the conference table.</li>
+        <li><strong>Watch for the Q4 email.</strong> The next edition publishes when Q4 data lands. Pro buyers get it first.</li>
+      </ol>
+    </div>
+  </article>
+
+  <script is:inline>
+    // Fire Purchase event for the Report ($29) on page load.
+    if (window.fbq) {
+      window.fbq('track', 'Purchase', { value: 29.0, currency: 'USD', content_name: 'q3_2026_report' });
+    }
+    // Fire upsell click event.
+    var upsellBtn = document.querySelector('[data-cta-id="cta-upsell-pro-q3-2026"]');
+    if (upsellBtn) {
+      upsellBtn.addEventListener('click', function() {
+        if (window.fbq) {
+          window.fbq('track', 'InitiateCheckout', { value: 99.0, currency: 'USD', content_name: 'q3_2026_pro_upsell' });
+        }
+      });
+    }
+  </script>
+</Layout>
