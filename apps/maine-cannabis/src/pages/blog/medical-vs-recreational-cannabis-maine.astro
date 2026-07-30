@@ -1,0 +1,235 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-07-29",
+  modifiedDate: "2026-07-29",
+  section: "Learn"
+};
+const topics = ["medical-cannabis", "consumer-guide", "policy", "legislation"];
+
+const faqItems = [
+  { question: "Do I need a medical card to buy cannabis in Maine?", answer: "No. Adults 21 and older can buy adult-use (recreational) cannabis at a licensed Maine dispensary with only a valid government-issued photo ID. No card, certification, or Maine residency is required. A medical route exists separately for qualifying patients who want lower taxes, higher-dose products, or who are under 21." },
+  { question: "What is the tax difference between medical and recreational cannabis in Maine?", answer: "Adult-use cannabis is taxed at a 14% state sales-tax rate effective January 1, 2026 (36 M.R.S. §1811, up from 10% under P.L. 2025, ch. 388). Medical cannabis sold through the registered medical program is taxed at Maine's reduced 5.5% state sales-tax rate. For a frequent buyer, that rate gap is the single largest practical difference between the two programs." },
+  { question: "Is the medical cannabis program cheaper than buying recreational?", answer: "Usually, on a per-gram tax basis, yes — the 5.5% medical rate is less than half the 14% adult-use rate. But the medical route adds an upfront cost: you must obtain a written certification from a Maine-licensed physician, nurse practitioner, or physician assistant, and providers set their own fees. Occasional buyers may find the certification cost outweighs the tax savings; regular patients usually come out ahead." },
+  { question: "Can someone under 21 buy cannabis in Maine?", answer: "Not adult-use cannabis — the adult-use program is strictly 21 and older. A minor may qualify as a medical patient, but only with a provider's written certification and a parent, legal guardian, or person with legal custody serving as the primary caregiver (22 M.R.S. §2425 and §2423-A). Medical cannabis for a minor must be administered in a non-smokeable form." },
+  { question: "Does Maine issue a medical marijuana card?", answer: "Not in the ordinary sense. Maine qualifying patients generally use the written certification issued by their medical provider together with government-issued photo ID. The Office of Cannabis Policy states it does not maintain an ordinary patient registry. The Individual Identification Card (IIC) people sometimes call a 'card' is actually an adult-use worker credential, not a patient credential." },
+  { question: "Can I use an out-of-state medical card in Maine?", answer: "Sometimes. Maine recognizes patient credentials from jurisdictions on the OCP-approved visiting-patients list — 28 states plus Washington DC as of mid-2026. A visiting patient must carry the home-state credential and photo ID from that same state. Adult-use purchases need no card at all: any adult 21+ with valid photo ID may buy." },
+  { question: "Do medical patients get higher possession or grow limits?", answer: "A Maine medical patient's personal cultivation cap is the same numeric limit as adult use — six mature plants, 12 immature plants, and unlimited seedlings (22 M.R.S. §2423-A). The medical advantage is access: a patient may designate a registered caregiver, who may cultivate up to 30 mature plants (or 500 square feet of canopy) on the patient's behalf. Medical dispensaries may also carry higher-dose products than the 200 mg-per-package adult-use edible ceiling." },
+  { question: "Can I switch between medical and recreational?", answer: "Yes. The two programs are separate, and nothing stops a qualifying patient from also shopping adult-use stores, or an adult-use buyer from later obtaining a medical certification. Many Maine residents use adult-use stores for convenience and the medical program for the lower tax rate and higher-dose products." }
+];
+---
+
+<Layout
+  title="Medical vs. Recreational Cannabis in Maine: 2026 Differences"
+  description="Medical vs recreational cannabis in Maine compared: 14% vs 5.5% tax, age rules, possession and grow limits, edibles potency, and which route fits you. Cited 2026 sources."
+  heroImage="/images/heroes/maine-medical-marijuana-patient-guide.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { background: var(--color-background); font-weight: 700; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+  .decision-card { border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.25rem 1.5rem; background: color-mix(in oklab, var(--color-soft-green) 4%, transparent); }
+  .decision-card h3 { margin-top: 0; color: var(--color-primary); font-size: 1.15rem; }
+  .decision-card ul { padding-left: 1.2rem; margin-bottom: 0; }
+  @media (max-width: 640px) { .decision-grid { grid-template-columns: 1fr; } }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .source-note { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem 1.25rem; font-size: 0.9rem; margin: 2rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+  .cta-box { --cta-foreground: var(--color-background); background: var(--color-primary); color: var(--cta-foreground); border-radius: 0.5rem; padding: 1.25rem 1.5rem; margin: 2rem 0; text-align: center; }
+  .cta-box a { color: inherit; font-weight: 700; text-decoration: underline; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Medical vs. Recreational Cannabis in Maine</h1>
+    <p class="subtitle">Two legal programs, two tax rates, two sets of rules. Here is exactly how they differ — and which one fits you.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst. <strong>Reviewed by <a href="/about/authors#margaret-finch">Margaret Finch</a>, Finance &amp; Taxation Analyst.</strong></p>
+      <p class="last-updated">Published July 29, 2026</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule"><strong>Maine runs two separate legal cannabis programs.</strong> The adult-use (recreational) program lets any adult 21 or older buy with just a photo ID, taxed at 14%. The medical program serves qualifying patients of any age through a provider's written certification, taxed at the reduced 5.5% rate, with access to higher-dose products and caregiver cultivation. You do not need a medical card to buy cannabis in Maine — but if you qualify, the medical route is cheaper per gram and broader in what it allows. This guide compares the two point by point, with the controlling statutes cited throughout.</p>
+
+  <section>
+    <h2>The Short Answer: You Have a Choice</h2>
+    <p>Since 2016, Maine has legalized cannabis through two distinct tracks that operate under different titles of state law and serve different people:</p>
+    <ul>
+      <li><strong>Adult-use (recreational)</strong> — governed by <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html" target="_blank" rel="noopener noreferrer">Title 28-B of the Maine Revised Statutes</a>, regulated by the Maine Office of Cannabis Policy (OCP). Open to any adult 21+ with valid government-issued photo ID. No card, no certification, no residency requirement. Licensed retail sales began in October 2020.</li>
+      <li><strong>Medical</strong> — governed by <a href="https://legislature.maine.gov/statutes/22/title22ch558-C.html" target="_blank" rel="noopener noreferrer">Title 22, chapter 558-C</a> (the Maine Medical Use of Marijuana Act, in place since 1999). Open to qualifying patients who hold a provider's written certification, including minors with a caregiver. Served through registered medical dispensaries and registered caregivers.</li>
+    </ul>
+    <p>The two programs share the same regulator and many of the same product types, but they differ on tax rate, eligibility, age, product potency, and how much you can grow or buy. The rest of this guide walks through each difference, then helps you decide which route makes sense for your situation.</p>
+  </section>
+
+  <section>
+    <h2>Side-by-Side: Medical vs. Recreational at a Glance</h2>
+    <table>
+      <thead>
+        <tr><th>Factor</th><th>Adult-Use (Recreational)</th><th>Medical</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Governing law</td><td>Title 28-B M.R.S.</td><td>Title 22, ch. 558-C</td></tr>
+        <tr><td>Minimum age</td><td>21+</td><td>No fixed floor; minors qualify with a caregiver</td></tr>
+        <tr><td>Credential needed</td><td>Government-issued photo ID only</td><td>Provider's written certification + photo ID</td></tr>
+        <tr><td>State sales tax</td><td>14% (effective Jan 1, 2026)</td><td>5.5% (reduced state rate)</td></tr>
+        <tr><td>Where you buy</td><td>Licensed adult-use stores</td><td>Registered medical dispensaries &amp; caregivers</td></tr>
+        <tr><td>Possession</td><td>2.5 oz total, ≤10 g concentrate</td><td>Up to 2.5 oz per 15-day period</td></tr>
+        <tr><td>Personal grow cap</td><td>6 mature / 12 immature / unlimited seedlings</td><td>6 mature / 12 immature (combined patient + caregiver)</td></tr>
+        <tr><td>Caregiver grow access</td><td>Not available</td><td>Up to 30 mature plants / 500 sq ft canopy</td></tr>
+        <tr><td>Edible potency ceiling</td><td>10 mg/serving, 200 mg/package</td><td>Higher-dose products may be available</td></tr>
+        <tr><td>Out-of-state access</td><td>Any adult 21+ with photo ID</td><td>Visiting patients from 28 approved states + DC</td></tr>
+        <tr><td>Upfront cost</td><td>None (ID only)</td><td>Provider certification visit (fee set by provider)</td></tr>
+      </tbody>
+    </table>
+    <p>Every figure below is drawn from the cited Maine statutes and OCP guidance. Where a number can change — tax rates, the visiting-patient state list, store counts — we flag it and point you to the primary source.</p>
+  </section>
+
+  <section>
+    <h2>Tax: The 14% vs. 5.5% Difference</h2>
+    <p>For most buyers, tax is the single biggest practical gap between the two programs. Adult-use cannabis is taxed at a <strong>14% state sales-tax rate</strong> for retail sales on or after January 1, 2026, under <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">36 M.R.S. §1811</a>. That rate rose from 10% under P.L. 2025, ch. 388, and it applies to flower, concentrates, edibles, tinctures, and topicals sold as adult-use products. Maine Revenue Services confirms in Instructional Bulletin 61 that this is the applicable state sales-tax rate for adult-use cannabis — not a surcharge stacked on top of the general rate.</p>
+    <p>Medical cannabis sold through the registered medical program is taxed at Maine's reduced <strong>5.5% state sales-tax rate</strong>. That is less than half the adult-use rate. On a $100 purchase, the difference is roughly $8.50 in state sales tax — small on a single visit, substantial over a year of regular purchases.</p>
+    <div class="stat-block">
+      <h3>What the tax gap means in practice</h3>
+      <ul>
+        <li><strong>Adult-use:</strong> 14% state sales tax on every retail purchase (effective Jan 1, 2026).</li>
+        <li><strong>Medical:</strong> 5.5% state sales tax — about 60% lower than the adult-use rate.</li>
+        <li><strong>The trade-off:</strong> the medical route requires a paid provider certification first. Providers set their own fees, so the tax savings only outweigh that upfront cost for buyers who purchase regularly.</li>
+      </ul>
+    </div>
+    <p>A separate cultivation-level excise tax also applies to adult-use licensees under 36 M.R.S. §4923, but that is a wholesale-level tax on cultivators, not an additional percentage charged to you at the register. For the full breakdown, see our <a href="/guides/maine-cannabis-taxes-2026">Maine cannabis tax guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Eligibility and Age: Who Can Buy What</h2>
+    <p>The adult-use program draws a hard line at age 21. Any adult 21 or older with a valid government-issued photo ID — a driver's license or passport — may purchase at a licensed adult-use store. Maine imposes no residency requirement: tourists and out-of-state visitors have the same purchasing rights as residents, and the same limits and bans apply to them.</p>
+    <p>The medical program is built around a clinical relationship rather than an age threshold. A Maine resident becomes a qualifying patient by receiving a <strong>written certification</strong> from a Maine-licensed physician, certified nurse practitioner, or physician assistant, issued after a full medical-history assessment within a bona fide provider-patient relationship (22 M.R.S. §2423-B). The provider uses professional judgment and may decline to certify. Maine law focuses on the provider's assessment of therapeutic or palliative benefit rather than a fixed list of qualifying conditions.</p>
+    <p>Critically, the medical program can serve patients <strong>under 21</strong>. A minor may qualify, but only with a provider's written certification and with a parent, legal guardian, or person having legal custody serving as the primary caregiver (22 M.R.S. §2425 and §2423-A). Cannabis for a minor patient must be administered in a non-smokeable form. The adult-use program has no equivalent pathway — it is strictly 21 and older.</p>
+    <Callout title="The 'Medical Card' Misconception" type="info">
+      Maine does not issue an ordinary medical marijuana "card" to patients. Qualifying patients generally use the provider's written certification together with government-issued photo ID, and the Office of Cannabis Policy states it does not maintain an ordinary patient registry. The <em>Individual Identification Card (IIC)</em> you may have heard about is an <strong>adult-use worker credential</strong>, not a patient credential. Don't apply for an IIC expecting patient status — see our <a href="/blog/maine-medical-marijuana-patient-guide">Maine medical marijuana patient guide</a> for the correct process.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>How You Get Certified (Medical Route)</h2>
+    <p>If you decide the medical route is right for you, the process is straightforward but clinical:</p>
+    <ol>
+      <li><strong>Choose an eligible Maine provider</strong> — a physician, certified nurse practitioner, or physician assistant licensed to prescribe drugs in Maine.</li>
+      <li><strong>Complete a real medical assessment.</strong> The provider reviews your full medical history in a bona fide provider-patient relationship. Certification is not automatic.</li>
+      <li><strong>Receive the written certification</strong> on tamper-resistant paper if the provider believes you may receive therapeutic or palliative benefit. The form does not require the provider to state your specific diagnosis.</li>
+      <li><strong>Use it with photo ID.</strong> Keep the current certification and your government-issued photo ID available when accessing the medical program.</li>
+      <li><strong>Renew before it expires.</strong> A written certification is valid for the term the provider sets, up to one year. Renewal requires another qualifying provider encounter.</li>
+    </ol>
+    <p>Maine law allows the assessment to happen by telehealth under specific conditions: the provider must conduct a synchronous (live, two-way) encounter before issuing or renewing the certification. If the certifying provider is not your primary care provider and you do not supply that provider's contact information, an in-person consultation is required first. Full details are in our <a href="/blog/maine-medical-marijuana-patient-guide">medical patient guide</a>.</p>
+  </section>
+
+  <section>
+    <h2>Possession, Purchase, and Grow Limits</h2>
+    <p>Both programs cap how much cannabis you can possess, but they frame the limits differently.</p>
+    <p><strong>Adult-use:</strong> an adult 21+ may possess up to <strong>2.5 ounces</strong> of cannabis total, including no more than <strong>10 grams of concentrate</strong> within that combined amount (<a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §1501</a>). A store may not sell more than the personal limits in a single transaction, and visiting multiple stores does not authorize carrying more than the legal total. For the full purchase math, including mixed-cart examples, see our <a href="/blog/how-much-weed-can-you-buy-in-maine">Maine purchase-limit guide</a>.</p>
+    <p><strong>Medical:</strong> a qualifying patient may purchase up to <strong>2.5 ounces of a combination of medical cannabis and cannabis products every 15 days</strong> — the same per-15-day limit that applies to visiting patients under Title 22 §2425. The headline possession number is similar, but the medical program structures it as a rolling purchase window rather than a single-transaction cap.</p>
+    <p><strong>Home growing</strong> is where the comparison gets nuanced. A Maine medical patient's personal cultivation cap is the <em>same numeric limit</em> as adult use: six mature plants, 12 immature plants, and unlimited seedlings, and a patient and caregiver cannot each claim a separate allocation for the same patient (22 M.R.S. §2423-A). The real medical advantage is <strong>caregiver access</strong>: a patient may designate a registered caregiver, who may cultivate up to <strong>30 mature plants (or 500 square feet of canopy)</strong> on the patient's behalf. Adult-use buyers have no caregiver pathway. Our <a href="/blog/maine-home-grow-cannabis-guide-2026">Maine home grow guide</a> and <a href="/guides/maine-cannabis-caregiver-guide">caregiver program guide</a> cover the cultivation rules in full.</p>
+  </section>
+
+  <section>
+    <h2>Product Potency: Edibles and Higher-Dose Access</h2>
+    <p>Adult-use edibles are potency-capped. Maine limits a single adult-use edible serving to <strong>10 mg of THC</strong> and a single package to <strong>200 mg of THC</strong>, subject to a 10% allowable variance, under <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §703</a>. These ceilings apply to every adult-use edible on the shelf.</p>
+    <p>Medical dispensaries are not bound by the adult-use package ceiling and may carry <strong>higher-dose products</strong> suited to patients with greater tolerance or specific therapeutic needs. If you regularly need doses above what a 10 mg-per-serving adult-use product provides, the medical program is the route that can serve you legally. For the complete edible rules, see <a href="/blog/are-edibles-legal-in-maine">Are Edibles Legal in Maine?</a></p>
+  </section>
+
+  <section>
+    <h2>Visiting Maine? Out-of-State Access</h2>
+    <p>If you are visiting Maine, the adult-use program is the simplest path: any adult 21+ with a valid government-issued photo ID may buy at a licensed adult-use store, regardless of where you live. No paperwork, no registration.</p>
+    <p>The medical program offers a parallel path for visiting patients. Maine recognizes patient credentials from jurisdictions on the OCP-approved visiting-patients list — <strong>28 states plus Washington DC as of mid-2026</strong>. A visiting patient must carry the credential issued under their home jurisdiction's law and photo ID from that same jurisdiction; a card from one state paired with ID from another does not satisfy the rule. The approved list can change, so verify it on the <a href="https://www.maine.gov/dafs/ocp/medical-use/visiting-patients" target="_blank" rel="noopener noreferrer">OCP visiting-patient page</a> before you travel. Our <a href="/guides/maine-out-of-state-patient-reciprocity">out-of-state patient reciprocity guide</a> has the full state list and documentation rules.</p>
+    <Callout title="Cannabis Cannot Cross State Lines" type="warning">
+      Whichever program you use, transporting cannabis across state lines — or across the international border — is a federal offense under the Controlled Substances Act, even between two states where it is legal. The same is true of air travel: cannabis is illegal in airports and on aircraft. Consume or dispose of any cannabis before leaving Maine.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>Which Route Is Right for You?</h2>
+    <p>There is no single correct answer — it depends on your age, how often you buy, and what products you need. Use these two profiles as a starting point:</p>
+    <div class="decision-grid">
+      <div class="decision-card">
+        <h3>Adult-use is probably right if you…</h3>
+        <ul>
+          <li>Are 21 or older and want to buy with zero paperwork</li>
+          <li>Buy only occasionally, so a certification fee wouldn't pay off</li>
+          <li>Are visiting Maine and just need a photo ID</li>
+          <li>Are comfortable with the 10 mg/serving, 200 mg/package edible ceiling</li>
+          <li>Don't need caregiver cultivation or higher-dose products</li>
+        </ul>
+      </div>
+      <div class="decision-card">
+        <h3>Medical is probably right if you…</h3>
+        <ul>
+          <li>Buy regularly and want the 5.5% tax rate instead of 14%</li>
+          <li>Need higher-dose products beyond the adult-use edible caps</li>
+          <li>Are under 21 and qualify with a caregiver</li>
+          <li>Want caregiver cultivation access (up to 30 mature plants)</li>
+          <li>Hold an out-of-state medical card from an approved reciprocity state</li>
+        </ul>
+      </div>
+    </div>
+    <p>Nothing locks you into one track. A qualifying patient may also shop adult-use stores for convenience, and an adult-use buyer may later obtain a medical certification. Many Maine residents use both — adult-use for quick, no-paperwork purchases and the medical program for the lower tax rate and broader product access.</p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <aside class="source-note">
+    <strong>Primary sources:</strong> Adult-use rules are in <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1501.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §1501</a> (possession), <a href="https://legislature.maine.gov/statutes/28-b/title28-Bsec1502.html" target="_blank" rel="noopener noreferrer">§1502</a> (cultivation), and <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec703.html" target="_blank" rel="noopener noreferrer">§703</a> (edibles). Medical rules are in <a href="https://legislature.maine.gov/statutes/22/title22ch558-C.html" target="_blank" rel="noopener noreferrer">Title 22, ch. 558-C</a>, including §2423-A (patient/caregiver conduct), §2423-B (certification), and §2425 (registration). Tax rates are in <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">36 M.R.S. §1811</a> and Maine Revenue Services Instructional Bulletin 61. The <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> maintains current program guidance. Statutes and agency guidance can change; verify before relying on a figure.
+  </aside>
+
+  <div class="cta-box">
+    <p style="margin:0 0 0.5rem; font-size: 1.1rem;"><strong>Ready to find your route?</strong></p>
+    <p style="margin:0;"><a href="/find-a-dispensary" data-cta-id="cta-inline-blog--medical-vs-recreational-maine-01" data-action-id="med-vs-rec-finder" data-action-family="cta_navigate" data-placement-id="med_vs_rec_end" data-destination-family="internal_route">Find a licensed Maine dispensary near you →</a></p>
+  </div>
+
+  <section class="disclaimer">
+    <p><em>This article is for informational purposes only and does not constitute legal or medical advice. Cannabis regulations change frequently. Verify current requirements with the <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a> and discuss medical decisions with a qualified clinician before acting.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-07-29</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the Maine Legislature, the Maine Office of Cannabis Policy, Maine Revenue Services, and the primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+
+  <div class="further-reading">
+    <AutoRelated currentPath="/blog/medical-vs-recreational-cannabis-maine" currentTopics={topics} section="Learn" limit={6} />
+  </div>
+
+  <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+</article>
+</Layout>
