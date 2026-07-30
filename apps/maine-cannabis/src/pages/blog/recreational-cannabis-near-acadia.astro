@@ -12,7 +12,7 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-06-05",
-  modifiedDate: "2026-07-08",
+  modifiedDate: "2026-07-29",
   section: "Consumer Guide"
 };
 const topics = ["acadia", "tourism", "bar-harbor"];
@@ -25,8 +25,8 @@ const topics = ["acadia", "tourism", "bar-harbor"];
 // the cannabis-tourist query set without cannibalizing each other.
 const faqItems = [
   { question: "Is cannabis allowed inside Acadia National Park?", answer: "No. Acadia is a National Park Service unit, and federal law prohibits cannabis possession on NPS property regardless of Maine state law. That includes the Park Loop Road, Sand Beach, Jordan Pond, Cadillac Mountain, every trailhead, parking lot, and campground. NPS rangers enforce this; a citation is a federal-misdemeanor-level violation, not a state citation. The Hulls Cove visitor center, Blackwoods Campground, and Seawall Campground are all federal land under the same prohibition." },
-  { question: "What dispensaries are on Mount Desert Island?", answer: "Two adult-use dispensaries operate on MDI as of 2026: 420 Mules (224 Main St, Bar Harbor) and The Meristem (33 Main St, Bar Harbor). Both are within a 10-minute drive of the Hulls Cove visitor center and walking distance of most Bar Harbor hotels. The Meristem is medical-friendly with a consultative sales floor and a focus on tinctures, topicals, and capsules; 420 Mules has the broader menu, longer hours (9am-9pm daily in summer), and a stronger first-time-visitor staff." },
-  { question: "Where is the closest dispensary to Acadia off the island?", answer: "Snare Creek Farms (599 Bar Harbor Rd, Trenton) is the closest mainland dispensary, about 15 minutes from Hulls Cove across the Trenton Bridge. It is a vertically integrated cultivator-retailer and the only farm-direct option serving the immediate Acadia market. Curaleaf Ellsworth (180 High St) is the next-closest, about 25 minutes west on US-1, with a 100+ SKU menu and pricing typically 10-15% below the Bar Harbor stores." },
+  { question: "What dispensaries are on Mount Desert Island?", answer: "Two dispensaries operate on MDI as of 2026: 420 Mules (224 Main St, Bar Harbor), the adult-use storefront closest to the Hulls Cove visitor center and most Bar Harbor hotels, and The Meristem (11 Seal Cove Rd, Southwest Harbor), a medical-friendly store at the quieter western end of the island with a consultative sales floor and a focus on tinctures, topicals, and capsules. 420 Mules has the broader menu, longer hours (9am-9pm daily in summer), and a stronger first-time-visitor staff." },
+  { question: "Where is the closest dispensary to Acadia off the island?", answer: "Snare Creek Farms (211 Bar Harbor Rd, Suite 3, Trenton) is the closest mainland dispensary, about 15 minutes from Hulls Cove across the Trenton Bridge. It is a medical cannabis dispensary (valid Medical ID and State ID required) and a vertically integrated cultivator-retailer — the only farm-direct option serving the immediate Acadia market. Curaleaf Ellsworth (3 Myrick Street) is the next-closest, about 25 minutes west on US-1, with a broad menu and pricing typically 10-15% below the Bar Harbor stores." },
   { question: "Can I keep cannabis in my car while driving through Acadia?", answer: "Maine state law allows cannabis in a sealed container in the trunk or a locked cargo area, and that is fine on the mainland. Inside the park, federal NPS rules apply: any cannabis in a vehicle on a road, parking lot, or trailhead is possession on federal land and a federal violation. The safe practice is to leave cannabis at your rental or hotel before entering the park, even for a drive-through. The Park Loop Road is patrolled and the Hulls Cove parking lot is within sight of the visitor center." },
   { question: "Where can I legally consume cannabis near Acadia?", answer: "On private property with the property owner's consent, outside the park boundary. Maine has no licensed consumption lounges, and federal land (every road, trail, beach, and parking lot in Acadia) is closed. Most Bar Harbor and Trenton short-term rentals permit indoor or outdoor cannabis use unless the host has posted a no-smoking rule; confirm the policy in writing before booking. For a cannabis-friendly dedicated rental, High'D Away in Trenton and Camp Laughing Grass in Harrison (about 2.5 hours west) are the two Maine properties that market specifically to cannabis travelers." },
   { question: "Can I take the Bar Harbor ferry to Nova Scotia with cannabis?", answer: "No. The CAT ferry from Bar Harbor to Yarmouth, Nova Scotia is federal maritime jurisdiction for the entire crossing. U.S. Customs and Border Protection boards on the U.S. side and the Canada Border Services Agency boards on the Canadian side. Cannabis in any form — purchased legally in Maine or otherwise — is prohibited on the vessel, and a border violation can result in seizure, federal citation, and a long-term entry ban. Leave cannabis at your accommodation before boarding." }
@@ -120,14 +120,14 @@ const faqPageSchema = {
         <span><strong>Hours:</strong> Daily 9am–9pm (extended in summer)</span>
         <span><strong>License:</strong> Adult-use &amp; medical</span>
       </div>
-      <p>The larger and more central of the two Bar Harbor dispensaries. Menu runs 40-60 SKUs with rotating Maine-grown flower, a strong edible program, and curated cartridges. Staff is accustomed to first-time out-of-state visitors and runs short consults. Pricing runs 10-15% above the statewide average — the Bar Harbor tourism premium. Medical cardholders can stack the 5.5% state sales-tax exemption on rotation specials.</p>
+      <p>The larger and more central of the two Mount Desert Island dispensaries. Menu runs 40-60 SKUs with rotating Maine-grown flower, a strong edible program, and curated cartridges. Staff is accustomed to first-time out-of-state visitors and runs short consults. Pricing runs 10-15% above the statewide average — the Bar Harbor tourism premium. Medical cardholders can stack the 5.5% state sales-tax exemption on rotation specials.</p>
     </div>
 
-    <h3>The Meristem — 33 Main St, Bar Harbor</h3>
+    <h3>The Meristem — 11 Seal Cove Rd, Southwest Harbor</h3>
     <div class="dispensary-card">
       <div class="meta">
-        <span><strong>Address:</strong> 33 Main St</span>
-        <span><strong>From Hulls Cove:</strong> ~10 min</span>
+        <span><strong>Address:</strong> 11 Seal Cove Rd, Southwest Harbor</span>
+        <span><strong>From Hulls Cove:</strong> ~25 min</span>
         <span><strong>Hours:</strong> Daily 10am–8pm</span>
         <span><strong>License:</strong> Adult-use &amp; medical</span>
       </div>
@@ -139,13 +139,13 @@ const faqPageSchema = {
     <h2>Trenton (Mainland, Just Off MDI)</h2>
     <p>Trenton is the first mainland town on the way into Bar Harbor, just across the bridge from MDI. About 15 minutes from Hulls Cove — shorter than Ellsworth, and worth considering for visitors who want a quick detour off the island or a stop on the way in from Bangor.</p>
 
-    <h3>Snare Creek Farms — 599 Bar Harbor Rd, Trenton</h3>
+    <h3>Snare Creek Farms — 211 Bar Harbor Rd, Trenton</h3>
     <div class="dispensary-card">
       <div class="meta">
-        <span><strong>Address:</strong> 599 Bar Harbor Rd</span>
+        <span><strong>Address:</strong> 211 Bar Harbor Rd, Suite 3</span>
         <span><strong>From Hulls Cove:</strong> ~15 min (across bridge)</span>
-        <span><strong>Hours:</strong> Daily 9am–8pm</span>
-        <span><strong>License:</strong> Adult-use &amp; medical</span>
+        <span><strong>Hours:</strong> Daily 10am–6pm, Sun 10am–4pm</span>
+        <span><strong>License:</strong> Medical (Medical ID + State ID required)</span>
       </div>
       <p>Vertically integrated cultivator-retailer on the Bar Harbor Road, just before the bridge to MDI. Carries in-house flower grown in Hancock County plus a curated third-party selection. Pricing runs 5-10% below the Bar Harbor stores; farm-direct supply means fresh inventory, typically harvested within 4-6 weeks. Most convenient for visitors arriving from Bangor or Ellsworth before crossing to MDI.</p>
     </div>
@@ -153,17 +153,17 @@ const faqPageSchema = {
 
   <section>
     <h2>Ellsworth (Mainland, 25 Minutes West)</h2>
-    <p>Ellsworth is the regional retail hub for the entire Downeast region and the only city with a multi-store adult-use market near Acadia. About 25 minutes from Hulls Cove on US-1, and the natural stop for groceries, gas, and a cheaper dispensary run.</p>
+    <p>Ellsworth is the regional retail hub for the entire Downeast region and the closest multi-store market to Acadia. About 25 minutes from Hulls Cove on US-1, and the natural stop for groceries, gas, and a cheaper dispensary run. Its storefronts are medical (Curaleaf, formerly Maine Organic Therapy, and Main Street Medical).</p>
 
-    <h3>Curaleaf — 180 High St, Ellsworth</h3>
+    <h3>Curaleaf — 3 Myrick Street, Ellsworth</h3>
     <div class="dispensary-card">
       <div class="meta">
-        <span><strong>Address:</strong> 180 High St</span>
+        <span><strong>Address:</strong> 3 Myrick Street</span>
         <span><strong>From Hulls Cove:</strong> ~25 min</span>
         <span><strong>Hours:</strong> Mon–Sat 9am–8pm, Sun 10am–6pm</span>
-        <span><strong>License:</strong> Adult-use &amp; medical</span>
+        <span><strong>License:</strong> Medical</span>
       </div>
-      <p>The multi-state operator presence in Ellsworth. Menu runs 100+ SKUs with strong category coverage, and the national brand portfolio (Select cartridges, Grassroots flower) is consistently available. Pricing is 10-15% below the Bar Harbor stores. The full <a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> covers all licensed stores in the city, including the medical-only options (Maine Organic Therapy, Main Street Medical) for MMMP cardholders from states with reciprocity.</p>
+      <p>The multi-state operator presence in Ellsworth (formerly Maine Organic Therapy). Menu runs 100+ SKUs with strong category coverage, and the national brand portfolio (Select cartridges, Grassroots flower) is consistently available. Pricing is 10-15% below the Bar Harbor stores. The full <a href="/guides/ellsworth-dispensary-guide">Ellsworth dispensary guide</a> covers all licensed stores in the city, including Main Street Medical for MMMP cardholders from states with reciprocity.</p>
     </div>
   </section>
 
