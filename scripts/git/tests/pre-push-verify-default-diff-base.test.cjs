@@ -7,7 +7,8 @@ const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const suffix = `${process.pid}-${Date.now()}`;
-const fixtureWorktree = path.join(os.tmpdir(), `mdg-verify-default-diff-${suffix}`);
+const fixtureRepo = path.join(os.tmpdir(), `mdg-verify-default-diff-${suffix}`);
+const fixtureRemote = path.join(os.tmpdir(), `mdg-verify-default-diff-origin-${suffix}.git`);
 const noOriginRepo = path.join(os.tmpdir(), `mdg-verify-no-origin-${suffix}`);
 const fixtureBranch = `test/verify-default-diff-${suffix}`;
 const committedFixture = `scripts/__verify-default-committed-${suffix}.mjs`;
@@ -15,7 +16,6 @@ const uncommittedFixture = `scripts/__verify-default-uncommitted-${suffix}.mjs`;
 const verifierSource = path.join(ROOT, 'scripts', 'git', 'pre-push-verify.cjs');
 const releaseSurfacesSource = path.join(ROOT, 'scripts', 'git', 'release-governance-surfaces.cjs');
 const dataOnlyAssertSource = path.join(ROOT, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs');
-const fixtureVerifier = path.join(fixtureWorktree, 'scripts', 'git', 'pre-push-verify.cjs');
 const verifierArgs = [
   'scripts/git/pre-push-verify.cjs',
   '--skip-sitemap-postprocess',
@@ -24,71 +24,149 @@ const verifierArgs = [
   '--skip-hero-image-naming',
   '--skip-autoRelated-freshness',
 ];
+const GIT_LOCAL_CONTEXT = [
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+  'GIT_COMMON_DIR',
+  'GIT_DIR',
+  'GIT_GRAFT_FILE',
+  'GIT_IMPLICIT_WORK_TREE',
+  'GIT_INDEX_FILE',
+  'GIT_INTERNAL_SUPER_PREFIX',
+  'GIT_NO_REPLACE_OBJECTS',
+  'GIT_OBJECT_DIRECTORY',
+  'GIT_PREFIX',
+  'GIT_REPLACE_REF_BASE',
+  'GIT_SHALLOW_FILE',
+  'GIT_WORK_TREE',
+];
+
+for (const name of GIT_LOCAL_CONTEXT) delete process.env[name];
 
 function git(args, cwd = ROOT) {
   return execFileSync('git', args, { cwd, encoding: 'utf8' });
 }
 
 function runVerifier(cwd) {
-  return spawnSync('node', verifierArgs, { cwd, encoding: 'utf8' });
+  return spawnSync('node', verifierArgs, { cwd, encoding: 'utf8', timeout: 120_000 });
+}
+
+function combinedOutput(result) {
+  return (result.stdout || '') + (result.stderr || '');
+}
+
+function withReplacement(filePath, replacement, run) {
+  const original = fs.readFileSync(filePath, 'utf8');
+  fs.writeFileSync(filePath, replacement);
+  try {
+    return run();
+  } finally {
+    fs.writeFileSync(filePath, original);
+  }
+}
+
+function cleanup(pathname) {
+  fs.rmSync(pathname, { recursive: true, force: true });
+  assert.equal(fs.existsSync(pathname), false, `fixture cleanup left ${pathname}`);
+}
+
+function rootSnapshot() {
+  return {
+    head: git(['rev-parse', 'HEAD']).trim(),
+    status: git(['status', '--porcelain=v1']).trim(),
+    fixtureRefs: git(['for-each-ref', '--format=%(refname):%(objectname)', 'refs/heads/test/verify-default-diff-']).trim(),
+  };
+}
+
+function writeVerifierFixture(repo, { defaultDiffSuiteSource = null } = {}) {
+  fs.mkdirSync(path.join(repo, 'scripts', 'git', 'tests'), { recursive: true });
+  fs.mkdirSync(path.join(repo, 'apps', 'maine-cannabis', 'scripts', 'analytics'), { recursive: true });
+  fs.copyFileSync(verifierSource, path.join(repo, 'scripts', 'git', 'pre-push-verify.cjs'));
+  fs.copyFileSync(releaseSurfacesSource, path.join(repo, 'scripts', 'git', 'release-governance-surfaces.cjs'));
+  fs.copyFileSync(dataOnlyAssertSource, path.join(repo, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs'));
+  if (defaultDiffSuiteSource !== null) {
+    fs.writeFileSync(path.join(repo, 'scripts', 'git', 'tests', 'pre-push-verify-default-diff-base.test.cjs'), defaultDiffSuiteSource);
+  }
+  fs.writeFileSync(path.join(repo, 'package.json'), JSON.stringify({ workspaces: [] }));
+  fs.writeFileSync(path.join(repo, 'scripts', 'fixture.mjs'), 'export const baseline = true;\n');
+  git(['init', '--initial-branch=main'], repo);
+  git(['config', 'user.name', 'MDG verifier fixture'], repo);
+  git(['config', 'user.email', 'fixture@example.invalid'], repo);
+  git(['add', '.'], repo);
+  git(['commit', '-m', 'test: fixture baseline'], repo);
+}
+
+function configurePrivateOrigin(repo, remote) {
+  git(['init', '--bare', remote]);
+  git(['remote', 'add', 'origin', remote], repo);
+  git(['push', '--set-upstream', 'origin', 'main'], repo);
+  git(['fetch', 'origin', 'main:refs/remotes/origin/main'], repo);
+  assert.equal(git(['rev-parse', 'origin/main'], repo).trim(), git(['rev-parse', 'HEAD'], repo).trim(),
+    'fixture origin/main must equal its controlled baseline');
 }
 
 test('default verifier checks both committed branch delta and live worktree changes', () => {
+  const sourceBefore = rootSnapshot();
   try {
-    git(['worktree', 'add', '-b', fixtureBranch, fixtureWorktree, 'origin/main']);
-    fs.copyFileSync(verifierSource, fixtureVerifier);
-    git(['config', 'user.name', 'MDG verifier fixture'], fixtureWorktree);
-    git(['config', 'user.email', 'fixture@example.invalid'], fixtureWorktree);
+    writeVerifierFixture(fixtureRepo);
+    configurePrivateOrigin(fixtureRepo, fixtureRemote);
+    git(['checkout', '-b', fixtureBranch], fixtureRepo);
 
-    fs.writeFileSync(path.join(fixtureWorktree, committedFixture), 'export const committedFixture = true;\n');
-    git(['add', committedFixture], fixtureWorktree);
-    git(['commit', '-m', 'test: committed verifier fixture'], fixtureWorktree);
+    fs.writeFileSync(path.join(fixtureRepo, committedFixture), 'export const committedFixture = true;\n');
+    git(['add', committedFixture], fixtureRepo);
+    git(['commit', '-m', 'test: committed verifier fixture'], fixtureRepo);
 
-    const committedOnly = runVerifier(fixtureWorktree);
-    const committedOutput = (committedOnly.stdout || '') + (committedOnly.stderr || '');
+    const committedOnly = runVerifier(fixtureRepo);
+    const committedOutput = combinedOutput(committedOnly);
     assert.equal(committedOnly.status, 0, committedOutput);
     assert.match(committedOutput, /auto-detected default diff base/);
     assert.match(committedOutput, new RegExp(committedFixture.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
-    fs.writeFileSync(path.join(fixtureWorktree, uncommittedFixture), 'export const = ;\n');
-    const liveWorktree = runVerifier(fixtureWorktree);
-    const liveOutput = (liveWorktree.stdout || '') + (liveWorktree.stderr || '');
+    fs.writeFileSync(path.join(fixtureRepo, uncommittedFixture), 'export const = ;\n');
+    const liveWorktree = runVerifier(fixtureRepo);
+    const liveOutput = combinedOutput(liveWorktree);
     assert.equal(liveWorktree.status, 10, liveOutput);
     assert.match(liveOutput, new RegExp(uncommittedFixture.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   } finally {
-    try { git(['worktree', 'remove', '--force', fixtureWorktree]); } catch {}
-    try { git(['branch', '-D', fixtureBranch]); } catch {}
+    cleanup(fixtureRepo);
+    cleanup(fixtureRemote);
+    assert.deepEqual(rootSnapshot(), sourceBefore, 'private fixture must not mutate the source worktree or refs');
   }
 });
 
 test('default verifier blocks a clean committed branch when origin/main is unavailable', () => {
   try {
-    fs.mkdirSync(path.join(noOriginRepo, 'scripts', 'git'), { recursive: true });
-    fs.mkdirSync(path.join(noOriginRepo, 'apps', 'maine-cannabis', 'scripts', 'analytics'), { recursive: true });
-    fs.writeFileSync(path.join(noOriginRepo, 'package.json'), JSON.stringify({ workspaces: [] }));
-    fs.copyFileSync(verifierSource, path.join(noOriginRepo, 'scripts', 'git', 'pre-push-verify.cjs'));
-    fs.copyFileSync(releaseSurfacesSource, path.join(noOriginRepo, 'scripts', 'git', 'release-governance-surfaces.cjs'));
-    fs.copyFileSync(dataOnlyAssertSource, path.join(noOriginRepo, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs'));
-    fs.writeFileSync(path.join(noOriginRepo, 'scripts', 'fixture.mjs'), 'export const baseline = true;\n');
-    git(['init', '--initial-branch=main'], noOriginRepo);
-    git(['config', 'user.name', 'MDG verifier fixture'], noOriginRepo);
-    git(['config', 'user.email', 'fixture@example.invalid'], noOriginRepo);
-    git(['add', '.'], noOriginRepo);
-    git(['commit', '-m', 'test: fixture baseline'], noOriginRepo);
+    writeVerifierFixture(noOriginRepo);
     fs.writeFileSync(path.join(noOriginRepo, 'scripts', 'fixture.mjs'), 'export const committedWithoutOrigin = true;\n');
     git(['add', 'scripts/fixture.mjs'], noOriginRepo);
     git(['commit', '-m', 'test: committed fixture delta'], noOriginRepo);
 
     const result = runVerifier(noOriginRepo);
-    const output = (result.stdout || '') + (result.stderr || '');
+    const output = combinedOutput(result);
     assert.equal(result.status, 3, output);
     assert.match(output, /origin\/main merge base/);
   } finally {
-    fs.rmSync(noOriginRepo, { recursive: true, force: true });
+    cleanup(noOriginRepo);
   }
 });
 
 test('SCRIPTS.md does not instruct users to bypass the pre-push verifier', () => {
   const scriptsGuide = fs.readFileSync(path.join(ROOT, 'SCRIPTS.md'), 'utf8');
   assert.doesNotMatch(scriptsGuide, /git push --no-verify/);
+});
+
+test('CI runs the default-diff regression suite', () => {
+  const ciWorkflow = fs.readFileSync(path.join(ROOT, '.github', 'workflows', 'ci.yml'), 'utf8');
+  assert.match(ciWorkflow, /node scripts\/git\/tests\/pre-push-verify-default-diff-base\.test\.cjs/);
+});
+
+test('default-diff regression suite blocks verifier changes when it fails', () => {
+  const canary = `default-diff-suite-canary-${suffix}`;
+  const result = withReplacement(
+    __filename,
+    `throw new Error(${JSON.stringify(canary)});\n`,
+    () => runVerifier(ROOT),
+  );
+  const output = combinedOutput(result);
+  assert.equal(result.status, 16, output);
+  assert.match(output, new RegExp(canary));
 });

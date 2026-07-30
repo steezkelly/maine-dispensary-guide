@@ -182,10 +182,11 @@ jobs:
           node --test scripts/check/mdg-market-intelligence-source-inventory.test.cjs
           npm run test:home-grow-legal-content
 
-      - name: Test pre-push governance and diagnostic contracts
+      - name: Test pre-push verifier contracts
         run: |
           node scripts/git/tests/pre-push-verify-governance.test.cjs
           node scripts/git/tests/pre-push-verify-diagnostics.test.cjs
+          node scripts/git/tests/pre-push-verify-default-diff-base.test.cjs
 
       - name: Check build warnings (post-build CSS/HTML warnings)
         run: |

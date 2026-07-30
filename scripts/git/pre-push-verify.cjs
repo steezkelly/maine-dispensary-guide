@@ -544,33 +544,67 @@ function nodeSyntaxCheck(files) {
 }
 
 function governanceCheck(files) {
-    const triggers = files.filter(isGovernanceTrigger);
-    if (triggers.length === 0) {
+    const governanceTriggers = files.filter(isGovernanceTrigger);
+    const defaultDiffBaseTest = 'scripts/git/tests/pre-push-verify-default-diff-base.test.cjs';
+    const defaultDiffBaseTriggers = files.filter(file => {
+        const normalized = normalizeRepoPath(file);
+        return normalized === 'scripts/git/pre-push-verify.cjs' || normalized === defaultDiffBaseTest;
+    });
+    let testPath;
+    if (governanceTriggers.length > 0) {
+        testPath = path.join(REPO_ROOT, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs');
+        if (!fs.existsSync(testPath)) {
+            log('err', `release-governance suite missing at ${testPath} — push blocked`);
+            return { ok: false };
+        }
+    }
+    let defaultDiffBaseTestPath;
+    if (defaultDiffBaseTriggers.length > 0) {
+        defaultDiffBaseTestPath = path.join(REPO_ROOT, defaultDiffBaseTest);
+        if (!fs.existsSync(defaultDiffBaseTestPath)) {
+            log('err', `default-diff-base regression suite missing at ${defaultDiffBaseTestPath} — push blocked`);
+            return { ok: false };
+        }
+    }
+
+    const suites = [];
+    if (governanceTriggers.length > 0) {
+        suites.push({
+            label: 'release-governance',
+            triggerCount: governanceTriggers.length,
+            path: testPath,
+        });
+    }
+    if (defaultDiffBaseTriggers.length > 0) {
+        suites.push({
+            label: 'default-diff-base regression',
+            triggerCount: defaultDiffBaseTriggers.length,
+            path: defaultDiffBaseTestPath,
+        });
+    }
+    if (suites.length === 0) {
         log('info', 'release-governance suite skipped (no governed files changed)');
         return { ok: true };
     }
 
-    const testPath = path.join(REPO_ROOT, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs');
-    if (!fs.existsSync(testPath)) {
-        log('err', `release-governance suite missing at ${testPath} — push blocked`);
+    for (const suite of suites) {
+        log('info', `${suite.label} suite (${suite.triggerCount} governed file(s) changed)…`);
+        const res = spawnSync('node', [suite.path], {
+            encoding: 'utf8',
+            cwd: REPO_ROOT,
+            timeout: 120_000,
+        });
+        const output = ((res.stdout || '') + (res.stderr || '')).trim();
+        if (res.status === 0) {
+            if (output) console.log(output);
+            log('ok', `${suite.label} suite passed`);
+            continue;
+        }
+        if (output) console.log(output.split('\n').slice(0, 120).join('\n'));
+        log('err', `${suite.label} suite failed — push blocked`);
         return { ok: false };
     }
-
-    log('info', `release-governance suite (${triggers.length} governed file(s) changed)…`);
-    const res = spawnSync('node', [testPath], {
-        encoding: 'utf8',
-        cwd: REPO_ROOT,
-        timeout: 120_000,
-    });
-    const output = ((res.stdout || '') + (res.stderr || '')).trim();
-    if (res.status === 0) {
-        if (output) console.log(output);
-        log('ok', 'release-governance suite passed');
-        return { ok: true };
-    }
-    if (output) console.log(output.split('\n').slice(0, 120).join('\n'));
-    log('err', 'release-governance suite failed — push blocked');
-    return { ok: false };
+    return { ok: true };
 }
 
 /**
