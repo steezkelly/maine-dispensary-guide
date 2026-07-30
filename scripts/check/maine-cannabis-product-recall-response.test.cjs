@@ -13,7 +13,12 @@ const jsonLdPath = path.join(repo, 'apps/maine-cannabis/src/lib/json-ld.ts');
 const layoutPath = path.join(repo, 'apps/maine-cannabis/src/layouts/Layout.astro');
 const rootPackagePath = path.join(repo, 'package.json');
 const workflowPath = path.join(repo, '.github/workflows/ci.yml');
-const builtPagePath = path.join(repo, 'apps/maine-cannabis/dist/guides/maine-cannabis-product-recall-response/index.html');
+// Build output is copied to the repo-root dist/ by vercel-build.sh after
+// astro build writes to .vercel/output/static/. The Vercel deployment reads
+// from .vercel/output/static/ directly; the root dist/ copy exists so CI
+// (which runs outside the app workspace) can inspect rendered HTML without
+// reaching into a hidden Vercel directory.
+const builtPagePath = path.join(repo, 'dist', 'guides', 'maine-cannabis-product-recall-response', 'index.html');
 
 for (const file of [pagePath, sourcePackPath, designPath, jsonLdPath, layoutPath, rootPackagePath, workflowPath]) {
   assert.ok(fs.existsSync(file), `expected artifact: ${file}`);
@@ -52,6 +57,19 @@ assert.match(page, /authorSchemaType: 'Organization'/);
 assert.doesNotMatch(page, /with reviewer attribution/i);
 assert.doesNotMatch(page, /Keep the affected batch out of sale and transfer/i);
 assert.match(page, /<strong>Hold the batch from sale\.<\/strong>/);
+
+// Topic taxonomy guard: the page must use only topics in the canonical
+// AGENTS.md list. A typo like "testing" was caught by Codex review on
+// 2026-07-30 — a related-content scorer only matches exact topic strings,
+// so a value outside the canonical set never contributes to a relationship
+// and silently pollutes the taxonomy.
+const SUPPORTED_TOPICS = ['city', 'market', 'licensing', 'finance', 'real-estate', 'operations', 'compliance', 'marketing', 'business'];
+const topicsMatch = page.match(/const topics = \[([^\]]+)\];/);
+assert.ok(topicsMatch, 'page must declare a topics array literal');
+const pageTopics = topicsMatch[1].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, ''));
+for (const t of pageTopics) {
+  assert.ok(SUPPORTED_TOPICS.includes(t), `unsupported topic "${t}" — only ${SUPPORTED_TOPICS.join(', ')} are canonical`);
+}
 assert.match(jsonLd, /: \{ '@id': orgId \}/);
 assert.match(layout, /authorSchemaType\?: 'Person' \| 'Organization'/);
 assert.match(layout, /author: article\.authorSchemaType === 'Organization' \? undefined : article\.author/);
