@@ -122,7 +122,7 @@ npx astro check src/pages/guides/example.astro   # Type check single file
 project-1/
 ├── src/
 │   ├── layouts/Layout.astro      # Main layout, ALL global CSS, JSON-LD, nav, footer
-│   ├── components/               # 31 reusable components (see below)
+│   ├── components/               # 32 reusable components (see below)
 │   └── pages/                    # Routes
 │       ├── index.astro           # Homepage
 │       ├── guides/               # 109 city guides + 77 technical/operator guides + index
@@ -140,7 +140,7 @@ project-1/
 └── BOT_COLLABORATION_HUB.md      # Historical multi-agent chronology/evidence
 ```
 
-**Components** (31, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `ChartBar`, `ChartStackedBar`, `ChartTierList`, `CiteThis`, `CityCard`, `CityGrid`, `CityGuide`, `CookieConsent`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadIntakeForm`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `NextStep`, `OnThisPage`, `OperatorSoftwarePage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SignalIntentTracker`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`, `SiteTour`.
+**Components** (32, `apps/maine-cannabis/src/components/`): `AffiliateClickTracker`, `AutoRelated`, `Breadcrumbs`, `Callout`, `ChartBar`, `ChartStackedBar`, `ChartTierList`, `CiteThis`, `CityCard`, `CityGrid`, `CityGuide`, `CookieConsent`, `Faq`, `GuideSidebar`, `LeadCaptureBox`, `LeadFormTracker`, `LeadIntakeForm`, `LeadMailtoForm`, `LegacyLeadCapture`, `MenuBlock`, `MetaPixel`, `NextStep`, `OnThisPage`, `OperatorSoftwarePage`, `RegionHubShell`, `RelatedArticles`, `Search`, `SignalIntentTracker`, `SiteFooter`, `SiteHeader`, `SiteHealthStrip`, `SiteTour`.
 
 ---
 
