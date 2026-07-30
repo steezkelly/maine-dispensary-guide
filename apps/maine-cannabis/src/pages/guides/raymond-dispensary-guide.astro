@@ -14,6 +14,8 @@ const article = {
 
 const topics = ["city", "market"];
 
+
+const faqSchema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are there dispensaries in Raymond, Maine?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Eclipse Cannabis Company operates at 1259 Roosevelt Trail with a 4.6-star rating. Windham's dispensaries are also within minutes of Raymond."}}, {"@type": "Question", "name": "Does Raymond allow cannabis retail?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Raymond has opted in to permit cannabis retail establishments. Eclipse Cannabis Company is already operating in town."}}, {"@type": "Question", "name": "How does Raymond compare to nearby markets?", "acceptedAnswer": {"@type": "Answer", "text": "Raymond has lower competition (1 dedicated dispensary) and lower commercial rents ($10-16/sq ft) than Portland-area markets. But seasonal variation is significant — summer tourism surges while winter months are quieter."}}, {"@type": "Question", "name": "Can I deliver to opt-out towns from a Raymond base?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Maine law allows licensed delivery operators to serve any municipality regardless of opt-in status. This includes smaller lakeside towns that do not have dispensaries of their own."}}]};
 ---
 <CityGuide
   title="Raymond, ME Dispensaries: 3 Stores, Rec & Medical (2026)"
@@ -29,6 +31,8 @@ const topics = ["city", "market"];
   summary { font-weight: 600; cursor: pointer; }
   details p { margin-top: 0.5rem; }
 </style>
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
 
   <div class="article-header">
     <h1>Raymond Maine Dispensaries</h1>

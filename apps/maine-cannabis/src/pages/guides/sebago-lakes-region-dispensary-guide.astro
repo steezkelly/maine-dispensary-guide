@@ -14,6 +14,8 @@ const article = {
 
 const topics = ["city", "market"];
 
+
+const faqSchema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many dispensaries serve the Sebago Lakes Region?", "acceptedAnswer": {"@type": "Answer", "text": "Approximately 10-12 active dispensaries across five towns (Windham, Bridgton, Casco, Raymond, Standish) serving a year-round region of 60,000-70,000 residents plus seasonal visitors."}}, {"@type": "Question", "name": "Which towns in the Lakes Region have no dispensaries?", "acceptedAnswer": {"@type": "Answer", "text": "Naples, Sebago, Harrison, Fryeburg, Lovell, Denmark, Brownfield, and several smaller communities have no dispensary coverage. All represent opportunities for delivery services or first-mover retail operators."}}, {"@type": "Question", "name": "Is the market seasonal?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Lakes Region sees a 30-50% population increase June through September from seasonal residents and tourists. Operators should plan inventory, staffing, and promotions around this cycle while maintaining year-round revenue from the resident population."}}, {"@type": "Question", "name": "Can out-of-state medical patients buy in the Lakes Region?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Maine has reciprocity with 27+ approved states. Out-of-state patients with valid medical credentials and a matching state ID can purchase at licensed medical dispensaries. This is particularly relevant during the summer season when seasonal residents from Massachusetts and other states arrive."}}, {"@type": "Question", "name": "What is the best way to enter the Lakes Region cannabis market?", "acceptedAnswer": {"@type": "Answer", "text": "Three approaches: (1) a storefront in an unserved town like Naples for first-mover advantage, (2) a delivery operation based in a lower-rent location serving the entire region, or (3) a differentiated premium retailer in an established market. Each has different capital requirements and risk levels."}}]};
 ---
 <CityGuide title="Sebago Lakes Region Cannabis Dispensary Guide (2026)" description="Complete guide to cannabis dispensaries across Maine's Sebago Lakes Region — Bridgton, Casco, Raymond, Standish, Windham, Naples, and the broader Lakes Region market for 2026." heroImage="/images/heroes/sebago-lakes-region-dispensary-guide.jpg" article={article} topics={topics} >
 <style>
@@ -32,6 +34,8 @@ const topics = ["city", "market"];
   .town-card h3 { margin-top: 0; font-size: 1rem; }
   .town-card p { margin: 0; font-size: 0.9rem; }
 </style>
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
 
   <div class="article-header">
     <h1>Sebago Lakes Region Dispensary Guide</h1>
