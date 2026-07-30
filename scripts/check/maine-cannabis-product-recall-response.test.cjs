@@ -9,14 +9,23 @@ const repo = path.resolve(__dirname, '..', '..');
 const pagePath = path.join(repo, 'apps/maine-cannabis/src/pages/guides/maine-cannabis-product-recall-response.astro');
 const sourcePackPath = path.join(repo, 'docs/research/2026-07-30-maine-cannabis-product-recall-response-source-pack.md');
 const designPath = path.join(repo, 'docs/superpowers/specs/2026-07-30-maine-cannabis-product-recall-response-design.md');
+const jsonLdPath = path.join(repo, 'apps/maine-cannabis/src/lib/json-ld.ts');
+const layoutPath = path.join(repo, 'apps/maine-cannabis/src/layouts/Layout.astro');
+const rootPackagePath = path.join(repo, 'package.json');
+const workflowPath = path.join(repo, '.github/workflows/ci.yml');
+const builtPagePath = path.join(repo, 'apps/maine-cannabis/dist/guides/maine-cannabis-product-recall-response/index.html');
 
-for (const file of [pagePath, sourcePackPath, designPath]) {
+for (const file of [pagePath, sourcePackPath, designPath, jsonLdPath, layoutPath, rootPackagePath, workflowPath]) {
   assert.ok(fs.existsSync(file), `expected artifact: ${file}`);
 }
 
 const page = fs.readFileSync(pagePath, 'utf8');
 const sourcePack = fs.readFileSync(sourcePackPath, 'utf8');
 const design = fs.readFileSync(designPath, 'utf8');
+const jsonLd = fs.readFileSync(jsonLdPath, 'utf8');
+const layout = fs.readFileSync(layoutPath, 'utf8');
+const rootPackage = JSON.parse(fs.readFileSync(rootPackagePath, 'utf8'));
+const workflow = fs.readFileSync(workflowPath, 'utf8');
 
 assert.match(page, /title="Maine Cannabis Product Recall & Failed-Test Response Guide \(2026\)"/);
 assert.match(page, /<h1>Maine Cannabis Product Recall &amp; Failed-Test Response Guide \(2026\)<\/h1>/);
@@ -39,6 +48,19 @@ assert.doesNotMatch(page, /written notice of termination/i);
 assert.match(page, /<th scope="row"><strong>What happened\?<\/strong><\/th>/);
 assert.match(page, /verification-icon" aria-hidden="true"/);
 assert.doesNotMatch(page, /\.status-label \{ font-weight: 700; white-space: nowrap; \}/);
+assert.match(page, /authorSchemaType: 'Organization'/);
+assert.doesNotMatch(page, /with reviewer attribution/i);
+assert.doesNotMatch(page, /Keep the affected batch out of sale and transfer/i);
+assert.match(page, /<strong>Hold the batch from sale\.<\/strong>/);
+assert.match(jsonLd, /: \{ '@id': orgId \}/);
+assert.match(layout, /authorSchemaType\?: 'Person' \| 'Organization'/);
+assert.match(layout, /author: article\.authorSchemaType === 'Organization' \? undefined : article\.author/);
+assert.equal(
+  rootPackage.scripts['test:maine-cannabis-product-recall-response'],
+  'node scripts/check/maine-cannabis-product-recall-response.test.cjs',
+  'root package must expose the focused recall-response test',
+);
+assert.match(workflow, /node scripts\/check\/maine-cannabis-product-recall-response\.test\.cjs/);
 
 for (const url of [
   'https://www.maine.gov/dafs/ocp/resources/recalls',
@@ -74,5 +96,16 @@ for (const forbidden of [
 assert.match(sourcePack, /No claim that every failed batch must immediately be destroyed/);
 assert.match(sourcePack, /No medical diagnosis/);
 assert.match(design, /No claim that a recall response eliminates penalties/);
+
+if (fs.existsSync(builtPagePath)) {
+  const builtPage = fs.readFileSync(builtPagePath, 'utf8');
+  const jsonLdScripts = [...builtPage.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map((match) => JSON.parse(match[1]));
+  const graph = jsonLdScripts.flatMap((script) => script['@graph'] || []);
+  const articleNode = graph.find((node) => node['@type'] === 'Article');
+  assert.ok(articleNode, 'built route must emit an Article JSON-LD node');
+  assert.equal(articleNode.author?.['@type'], undefined, 'publisher-managed byline must not emit a Person author type');
+  assert.match(articleNode.author?.['@id'] || '', /#organization$/);
+}
 
 console.log('maine-cannabis-product-recall-response: PASS');

@@ -8,6 +8,7 @@ const article = {
   author: 'Calvin Waters',
   authorId: 'calvin-waters',
   authorTitle: 'Licensing & Compliance Analyst',
+  authorSchemaType: 'Organization' as const,
   publishDate: '2026-07-30',
   modifiedDate: '2026-07-30',
   section: 'Operations & Technology'
@@ -26,7 +27,7 @@ const faqs = [
   },
   {
     question: 'What should I do first after receiving an initial failed test result?',
-    answer: 'Keep the affected batch out of sale and transfer, identify the batch and every package or location connected to it, preserve the COA and tracking records, and review the current OCP testing rules with your compliance lead and advisers. The allowed next step can depend on the failed analyte and may involve retesting, permitted remediation, or destruction. Do not use a proposed rule as if it were current.'
+    answer: 'Keep the affected batch out of sale, identify the batch and every package or location connected to it, preserve the COA and tracking records, and review the current OCP testing rules with your compliance lead and advisers. The allowed next step can depend on the failed analyte and may involve retesting, permitted remediation, destruction, or a transfer pathway allowed by current rules. Do not use a proposed rule as if it were current.'
   },
   {
     question: 'What records should a Maine operator preserve during a recall response?',
@@ -133,7 +134,7 @@ const faqs = [
 
       <h3>Failed-test response sequence</h3>
       <ol>
-        <li><strong>Hold the batch from sale and transfer.</strong> Mark the affected scope in the operator’s internal controls and tracking workflow while the disposition is evaluated.</li>
+        <li><strong>Hold the batch from sale.</strong> Mark the affected scope in the operator’s internal controls and tracking workflow while the disposition and any permitted transfer pathway are evaluated under current rules.</li>
         <li><strong>Review the COA.</strong> Confirm the batch, sample, analyte category, result, testing facility, and any comments. Do not treat a public aggregate table as a substitute for the batch-specific COA.</li>
         <li><strong>Ask what current pathway applies.</strong> Determine whether the applicable current rules allow retesting, permitted remediation followed by testing, or destruction. A proposed rule or old memo should not be presented as current without a status check.</li>
         <li><strong>Record the decision.</strong> Keep the date, decision-maker, supporting rule or OCP instruction, tracking entry, testing-facility communication, and final disposition.</li>
@@ -254,7 +255,7 @@ const faqs = [
     </section>
 
     <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
-    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
+    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a>. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
 
     <AutoRelated currentPath="/guides/maine-cannabis-product-recall-response" currentTopics={['compliance', 'operations', 'testing']} section="Operations & Technology" limit={6} />
   </article>
