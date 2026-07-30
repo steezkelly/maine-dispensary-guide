@@ -54,10 +54,12 @@ test('mobile menu trigger exposes and synchronizes expanded state', () => {
   assert.match(header, /navToggle\.click\(\)/);
 });
 
-test('mobile drawer is hidden and inert when collapsed and restores focus on close', () => {
+test('mobile drawer state is responsive and restores focus on close', () => {
   const drawer = header.match(/<div\s+class="nav-links"\s+id="navigation-menu"[^>]*>/)?.[0] || '';
-  assert.match(drawer, /aria-hidden="true"/);
-  assert.match(drawer, /\binert\b/);
+  assert.doesNotMatch(drawer, /aria-hidden="true"/);
+  assert.doesNotMatch(drawer, /\binert\b/);
+  assert.match(header, /window\.matchMedia\(['"]\(max-width: 768px\)['"]\)/);
+  assert.match(header, /mobileViewport\.addEventListener\(['"]change['"]/);
   assert.match(header, /navigationMenu\.setAttribute\(['"]aria-hidden['"]/);
   assert.match(header, /navigationMenu\.inert\s*=/);
   assert.match(header, /navigationMenu\.contains\(document\.activeElement\)/);
