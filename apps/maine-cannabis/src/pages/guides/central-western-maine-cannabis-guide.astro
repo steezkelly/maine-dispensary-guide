@@ -24,6 +24,7 @@ const article = { author: 'Eliot Nash', authorId: 'eliot-nash', publishDate: '20
   title={cluster.display_name + ' Cannabis Guide — Regional Hub (2026)'}
   description={cluster.lede + ' Stage 1 foundation: directory of ' + cluster.guide_count + ' town guides and operator profiles across ' + cluster.counties.join(', ') + '.'}
   heroImage="/images/heroes/maine-portland-harbor-hero.jpg"
+  noindex={true}
   article={article}
   topics={['region', 'hub', 'market']}
   breadcrumbs={[{ label: 'Guides', href: '/guides' }, { label: cluster.display_name, href: Astro.url.pathname }]}
