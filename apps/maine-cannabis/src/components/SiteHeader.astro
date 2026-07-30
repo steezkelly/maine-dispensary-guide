@@ -59,14 +59,20 @@ const siteName = siteConfig.siteName;
          opened). The checkbox itself is display:none; the label above
          is the visible toggle and drives it via for="nav-toggle". -->
     <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle mobile menu" aria-controls="navigation-menu" />
-    <div class="nav-links" id="navigation-menu">
+    <div class="nav-links" id="navigation-menu" aria-hidden="true" inert>
       <!-- analytics:cta-injected id=cta-inline-SiteHeader-02 -->
 <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn" data-cta-id="cta-inline-SiteHeader-02"></button>
       <script is:inline>
         const navToggle = document.getElementById('nav-toggle');
         const mobileMenuTrigger = document.getElementById('mobile-menu-trigger');
+        const navigationMenu = document.getElementById('navigation-menu');
         const syncMobileMenuState = () => {
-          mobileMenuTrigger.setAttribute('aria-expanded', navToggle.checked ? 'true' : 'false');
+          const isOpen = navToggle.checked;
+          const restoreFocus = !isOpen && navigationMenu.contains(document.activeElement);
+          mobileMenuTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          navigationMenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+          navigationMenu.inert = !isOpen;
+          if (restoreFocus) mobileMenuTrigger.focus();
         };
         navToggle.addEventListener('change', syncMobileMenuState);
         mobileMenuTrigger.addEventListener('keydown', (event) => {

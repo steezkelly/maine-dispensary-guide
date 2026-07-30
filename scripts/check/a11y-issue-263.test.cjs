@@ -53,3 +53,13 @@ test('mobile menu trigger exposes and synchronizes expanded state', () => {
   assert.match(header, /setAttribute\(['"]aria-expanded['"]/);
   assert.match(header, /navToggle\.click\(\)/);
 });
+
+test('mobile drawer is hidden and inert when collapsed and restores focus on close', () => {
+  const drawer = header.match(/<div\s+class="nav-links"\s+id="navigation-menu"[^>]*>/)?.[0] || '';
+  assert.match(drawer, /aria-hidden="true"/);
+  assert.match(drawer, /\binert\b/);
+  assert.match(header, /navigationMenu\.setAttribute\(['"]aria-hidden['"]/);
+  assert.match(header, /navigationMenu\.inert\s*=/);
+  assert.match(header, /navigationMenu\.contains\(document\.activeElement\)/);
+  assert.match(header, /mobileMenuTrigger\.focus\(\)/);
+});
