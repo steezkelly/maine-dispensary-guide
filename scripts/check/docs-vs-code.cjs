@@ -58,8 +58,8 @@ const CANONICAL_CHECKS = [
   // astro check is the typecheck step in package.json; not a separate
   // npm script but the CI step that runs it
   { name: 'astro check', label: 'astro check / typecheck' },
-  // smoke tests are referenced as Playwright in some docs; the
-  // actual CI step is "smoke-test-production" which runs npx playwright test
+  // Preview smoke is the CI-owned Playwright surface. Production smoke runs
+  // after deployment through the explicit verify:post-deploy release command.
   { name: 'playwright', label: 'Playwright smoke tests' },
 ];
 
