@@ -38,6 +38,8 @@ test('market-intelligence memo exists as a bounded canonical-pipeline plan', () 
   assert.match(memo, /ocp_licenses_normalized/);
   assert.match(memo, /ocp_licenses_normalized.*retail-optin-gap.*dispensary-directory/i);
   assert.match(memo, /reobserved.*prior disappearance history/i);
+  assert.match(memo, /`same_identity`, `identity_attribute_changed`, `identity_conflict`, `newly_observed`, `no_longer_observed`, `reobserved`, and `blocked_identity_review`/);
+  assert.doesNotMatch(memo, /`status_changed`, `type_changed`, `municipality_changed`, and `not_observed_in_latest`/);
 });
 
 test('memo regression contract is wired into pull-request CI', () => {

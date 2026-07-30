@@ -85,8 +85,8 @@ Ranking combines reader value, primary-source feasibility, and whether the produ
 
 1. Archive two OCP adult-use roster source snapshots with source URL, retrieval date, published “last updated” date, SHA-256, and source-file name.
 2. Normalize unique identity by license number; preserve rows whose identity cannot be resolved without silently merging them.
-3. Emit lifecycle classifications that mean only what two snapshots and any retained history establish: `newly_observed`, `status_changed`, `type_changed`, `municipality_changed`, and `not_observed_in_latest`. Emit `reobserved` only when retained prior disappearance history establishes a prior present-to-absent event; otherwise an identity absent from the earlier snapshot and present in the latest is `newly_observed`.
-4. Explicitly prohibit rendering `not_observed_in_latest` as “closed,” “opened,” or “operating.”
+3. Emit the existing cross-snapshot validator vocabulary: `same_identity`, `identity_attribute_changed`, `identity_conflict`, `newly_observed`, `no_longer_observed`, `reobserved`, and `blocked_identity_review`. Preserve changed/conflict attributes so readers can distinguish an attribute change from an identity conflict. Emit `reobserved` only when retained prior disappearance history establishes a prior present-to-absent event; otherwise an identity absent from the earlier snapshot and present in the latest is `newly_observed`.
+4. Explicitly prohibit rendering `no_longer_observed` as “closed,” “opened,” or “operating,” and do not treat `identity_conflict` as a lifecycle conclusion.
 5. Require metadata for source URL, source type, retrieval date, reporting period, definition, status, and limitations.
 
 **Why first:** the engine already has OCP-license normalization and a cross-snapshot validator; this card adds release-grade provenance and an actual second-snapshot exercise before a public lifecycle product is contemplated.
