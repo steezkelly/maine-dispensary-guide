@@ -273,9 +273,45 @@ function validateExactTarget({ targetArg, targetExplicit }) {
     }
 }
 
+function resolveDefaultIterationBase(refArg) {
+    if (refArg !== null) return refArg;
+
+    let head;
+    try {
+        head = gitExec(['rev-parse', '--verify', 'HEAD^{commit}']);
+    } catch (error) {
+        const baseError = new Error(`default verification cannot resolve HEAD: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+
+    try {
+        // Resolve the local tracking ref only. Reaching the network here would
+        // make iterative verification nondeterministic and unexpectedly slow.
+        gitExec(['rev-parse', '--verify', 'origin/main^{commit}']);
+        const base = gitExec(['merge-base', 'HEAD', 'origin/main']);
+        if (base === head) return null;
+        log('info', `auto-detected default diff base: ${base}..${head} (plus live worktree changes)`);
+        return base;
+    } catch (error) {
+        let dirty = '';
+        try {
+            dirty = gitExec(['status', '--porcelain', '--untracked-files=all']);
+        } catch {}
+        if (dirty) {
+            log('warn', 'origin/main is unavailable; checking live worktree changes only. Committed branch history remains unverified — fetch origin before release verification.');
+            return null;
+        }
+        const baseError = new Error(`default verification requires a resolvable origin/main merge base for a clean committed branch; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+}
+
 function changedFiles(refArg, targetArg = 'HEAD') {
-    // Exact-range calls compare <base>..<candidate>. Working-tree iteration
-    // has no --ref and combines staged, unstaged, and untracked trigger files.
+    // Exact-range calls compare <base>..<candidate>. Default iteration on an
+    // ahead branch uses its merge-base range and combines staged, unstaged,
+    // and untracked trigger files so work in progress cannot be hidden.
     const all = new Set();
     if (refArg) {
         const range = `${refArg}..${targetArg}`;
@@ -975,9 +1011,11 @@ function main() {
     }
 
     let files;
+    let effectiveRefArg;
     try {
         validateExactTarget(options);
-        files = changedFiles(refArg, targetArg);
+        effectiveRefArg = resolveDefaultIterationBase(refArg);
+        files = changedFiles(effectiveRefArg, targetArg);
     } catch (error) {
         log('err', `${error.message} — exact-range verification cannot continue.`);
         process.exit(error.code === 'INVALID_REF' ? 2 : 3);
@@ -1034,7 +1072,7 @@ function main() {
         log('ok', 'fast pass clean');
 
         if (dataOnly) {
-            const verdict = assertAllDiffsAreDataAttributes(files, refArg, targetArg);
+            const verdict = assertAllDiffsAreDataAttributes(files, effectiveRefArg, targetArg);
             if (!verdict.ok) {
                 log('err', '--data-only failed: at least one file changed non-data-attribute content:');
                 for (const line of verdict.violations.slice(0, 5)) console.log(`  ${line}`);
