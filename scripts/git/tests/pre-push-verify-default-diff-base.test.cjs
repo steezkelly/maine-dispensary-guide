@@ -77,7 +77,7 @@ function rootSnapshot() {
   };
 }
 
-function writeVerifierFixture(repo, { defaultDiffSuiteSource = null } = {}) {
+function writeVerifierFixture(repo, { defaultDiffSuiteSource = null, governanceSuiteSource = null } = {}) {
   fs.mkdirSync(path.join(repo, 'scripts', 'git', 'tests'), { recursive: true });
   fs.mkdirSync(path.join(repo, 'apps', 'maine-cannabis', 'scripts', 'analytics'), { recursive: true });
   fs.copyFileSync(verifierSource, path.join(repo, 'scripts', 'git', 'pre-push-verify.cjs'));
@@ -85,6 +85,9 @@ function writeVerifierFixture(repo, { defaultDiffSuiteSource = null } = {}) {
   fs.copyFileSync(dataOnlyAssertSource, path.join(repo, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs'));
   if (defaultDiffSuiteSource !== null) {
     fs.writeFileSync(path.join(repo, 'scripts', 'git', 'tests', 'pre-push-verify-default-diff-base.test.cjs'), defaultDiffSuiteSource);
+  }
+  if (governanceSuiteSource !== null) {
+    fs.writeFileSync(path.join(repo, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs'), governanceSuiteSource);
   }
   fs.writeFileSync(path.join(repo, 'package.json'), JSON.stringify({ workspaces: [] }));
   fs.writeFileSync(path.join(repo, 'scripts', 'fixture.mjs'), 'export const baseline = true;\n');
@@ -159,14 +162,50 @@ test('CI runs the default-diff regression suite', () => {
   assert.match(ciWorkflow, /node scripts\/git\/tests\/pre-push-verify-default-diff-base\.test\.cjs/);
 });
 
-test('default-diff regression suite blocks verifier changes when it fails', () => {
-  const canary = `default-diff-suite-canary-${suffix}`;
-  const result = withReplacement(
-    __filename,
-    `throw new Error(${JSON.stringify(canary)});\n`,
-    () => runVerifier(ROOT),
-  );
-  const output = combinedOutput(result);
-  assert.equal(result.status, 16, output);
-  assert.match(output, new RegExp(canary));
+test('default-diff regression suite blocks verifier source changes when it fails', () => {
+  const canary = `default-diff-source-canary-${suffix}`;
+  const canaryRepo = path.join(os.tmpdir(), `mdg-verify-source-canary-${suffix}`);
+  const canaryRemote = path.join(os.tmpdir(), `mdg-verify-source-canary-origin-${suffix}.git`);
+  try {
+    writeVerifierFixture(canaryRepo, {
+      defaultDiffSuiteSource: `throw new Error(${JSON.stringify(canary)});\n`,
+      governanceSuiteSource: 'process.exit(0);\n',
+    });
+    configurePrivateOrigin(canaryRepo, canaryRemote);
+    git(['checkout', '-b', `test/verify-source-canary-${suffix}`], canaryRepo);
+    fs.appendFileSync(path.join(canaryRepo, 'scripts', 'git', 'pre-push-verify.cjs'), '\n// source-canary trigger\n');
+    git(['add', 'scripts/git/pre-push-verify.cjs'], canaryRepo);
+    git(['commit', '-m', 'test: trigger default suite from verifier source'], canaryRepo);
+
+    const result = runVerifier(canaryRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 16, output);
+    assert.match(output, new RegExp(canary));
+  } finally {
+    cleanup(canaryRepo);
+    cleanup(canaryRemote);
+  }
+});
+
+test('default-diff regression suite blocks changes to the suite itself when it fails', () => {
+  const canary = `default-diff-test-canary-${suffix}`;
+  const canaryRepo = path.join(os.tmpdir(), `mdg-verify-test-canary-${suffix}`);
+  const canaryRemote = path.join(os.tmpdir(), `mdg-verify-test-canary-origin-${suffix}.git`);
+  const suitePath = path.join(canaryRepo, 'scripts', 'git', 'tests', 'pre-push-verify-default-diff-base.test.cjs');
+  try {
+    writeVerifierFixture(canaryRepo, { defaultDiffSuiteSource: 'process.exit(0);\n' });
+    configurePrivateOrigin(canaryRepo, canaryRemote);
+    git(['checkout', '-b', `test/verify-test-canary-${suffix}`], canaryRepo);
+    fs.writeFileSync(suitePath, `throw new Error(${JSON.stringify(canary)});\n`);
+    git(['add', 'scripts/git/tests/pre-push-verify-default-diff-base.test.cjs'], canaryRepo);
+    git(['commit', '-m', 'test: trigger default suite from suite change'], canaryRepo);
+
+    const result = runVerifier(canaryRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 16, output);
+    assert.match(output, new RegExp(canary));
+  } finally {
+    cleanup(canaryRepo);
+    cleanup(canaryRemote);
+  }
 });
