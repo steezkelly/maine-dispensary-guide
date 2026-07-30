@@ -66,6 +66,7 @@ interface ArticleData {
   author?: string;
   authorTitle?: string;
   authorId?: string;
+  authorSchemaType?: 'Person' | 'Organization';
   publishDate?: string;
   modifiedDate?: string;
   section?: string;
@@ -178,7 +179,7 @@ const jsonLdGraph = noindex ? null : buildJsonLdGraph(
     ? {
         title,
         description,
-        author: article.author,
+        author: article.authorSchemaType === 'Organization' ? undefined : article.author,
         authorTitle: article.authorTitle,
         authorId: article.authorId,
         authorDescription: authorBio,

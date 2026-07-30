@@ -1,0 +1,262 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import Callout from '../../components/Callout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+const article = {
+  author: 'Calvin Waters',
+  authorId: 'calvin-waters',
+  authorTitle: 'Licensing & Compliance Analyst',
+  authorSchemaType: 'Organization' as const,
+  publishDate: '2026-07-30',
+  modifiedDate: '2026-07-30',
+  section: 'Operations & Technology'
+};
+
+const topics = ['compliance', 'operations'];
+
+const faqs = [
+  {
+    question: 'Does a failed cannabis test automatically mean there is an OCP recall?',
+    answer: 'No. A failed mandatory test, a voluntary stop-sale or quarantine, an OCP administrative hold, and an OCP-issued recall are different events. A failed test requires the operator to keep the affected batch out of sale while the operator follows the applicable current testing rules and instructions. An OCP recall is a separate public-health action with notice-specific scope and instructions.'
+  },
+  {
+    question: 'Can I destroy product that is subject to an OCP administrative hold?',
+    answer: 'Do not assume that you can. Maine Title 28-B section 803-A says that, during an administrative hold, affected cannabis, cannabis products, and plants must be physically segregated and may not be sold, given away, transferred, transported, disposed of, or destroyed. Follow the hold notice and current OCP instructions before moving or destroying held product.'
+  },
+  {
+    question: 'What should I do first after receiving an initial failed test result?',
+    answer: 'Keep the affected batch out of sale, identify the batch and every package or location connected to it, preserve the COA and tracking records, and review the current OCP testing rules with your compliance lead and advisers. The allowed next step can depend on the failed analyte and may involve retesting, permitted remediation, destruction, or a transfer pathway allowed by current rules. Do not use a proposed rule as if it were current.'
+  },
+  {
+    question: 'What records should a Maine operator preserve during a recall response?',
+    answer: 'Preserve the COA and testing communications, batch and package identifiers, tracking and point-of-sale records, manifests, locations that received the product, customer-return or disposal records, communications with OCP and the testing facility, and any remediation, retest, destruction, or corrective-action records. Title 28-B section 105 ties the tracking system to records from cultivation through sale, return, disposal, or destruction and recall traceability.'
+  },
+  {
+    question: 'Where can I check whether OCP has issued a Maine cannabis recall?',
+    answer: 'Start with OCP’s Cannabis Recalls & Advisories page, then open the individual notice. The index includes both adult-use recalls and medical patient advisories, so confirm the program type. The individual notice controls the affected product, batch numbers, sale dates, locations, and consumer or licensee actions.'
+  },
+  {
+    question: 'Does OCP’s public testing data show every retest and remediation?',
+    answer: 'No. OCP says its public testing tables represent initial mandatory testing only and do not include non-mandatory research and development samples or retest samples. Use the public table for program context, not as a complete operator incident history or as a substitute for the business’s own COAs and records.'
+  }
+];
+---
+
+<Layout
+  title="Maine Cannabis Product Recall & Failed-Test Response Guide (2026)"
+  description="A Maine adult-use operator checklist for failed cannabis tests, stop-sales, administrative holds, consumer complaints, and OCP recalls."
+  heroImage="/images/heroes/maine-cannabis-product-testing-guide.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    article { max-width: 720px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+    section { margin-bottom: 2rem; }
+    section h2 { margin-top: 0; padding-top: 1rem; }
+    section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: 0.75rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); }
+    th { background: var(--color-background); }
+    .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin: 1.5rem 0 2rem; }
+    .fact-box h2 { padding-top: 0; margin-top: 0; font-size: 1.25rem; }
+    .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1rem 0; font-weight: 500; }
+    .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+    .source-notes { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; }
+    .source-notes h2 { padding-top: 0; }
+    .source-notes li { overflow-wrap: anywhere; }
+    .status-label { font-weight: 700; }
+  </style>
+
+  <article>
+    <div class="article-header">
+      <h1>Maine Cannabis Product Recall &amp; Failed-Test Response Guide (2026)</h1>
+      <p class="subtitle">A practical first-response checklist for adult-use operators when a batch fails testing, a customer reports a concern, or OCP issues a recall.</p>
+    </div>
+
+    <section class="fact-box">
+      <h2>Start Here: The Four Questions</h2>
+      <table aria-label="Maine cannabis recall and failed-test response questions">
+        <tbody>
+          <tr><th scope="row"><strong>What happened?</strong></th><td>Initial failed test, customer complaint, suspected contamination, voluntary stop-sale, OCP administrative hold, or OCP-issued recall?</td></tr>
+          <tr><th scope="row"><strong>What is the scope?</strong></th><td>Licensee, product, batch, package, sale window, destination store, and any product already returned or destroyed.</td></tr>
+          <tr><th scope="row"><strong>What is blocked?</strong></th><td>Keep the affected scope out of sale and transfer while you follow the applicable notice, current testing rule, and OCP instructions.</td></tr>
+          <tr><th scope="row"><strong>What must be preserved?</strong></th><td>COAs, testing communications, batch and package identifiers, tracking records, manifests, point-of-sale records, and the incident timeline.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="answer-capsule">A failed test is not automatically the same event as an OCP recall. Treat the affected product as a controlled incident: stop the relevant sale or transfer activity, identify the exact scope, preserve the records, and determine whether the current rules allow retesting, remediation, or destruction. If OCP sends a hold or recall notice, follow that notice first.</p>
+
+    <Callout title="This page is an incident-response orientation, not a legal or medical instruction" type="warning">
+      Maine’s response can depend on the failed analyte, product status, current rules, OCP notices, and the facts of the incident. A licensed operator should involve its compliance lead and obtain current advice from qualified legal, regulatory, and medical professionals as appropriate. Do not treat this checklist as permission to move, destroy, sell, or return a specific batch.
+    </Callout>
+
+    <section>
+      <h2>First, Separate the Incident Types</h2>
+      <p>The first mistake in a recall response is using one label for several different events. The action that follows an initial failed test is not necessarily the same action that follows an OCP administrative hold or an OCP-issued public recall.</p>
+      <table aria-label="Maine adult-use cannabis incident types">
+        <thead>
+          <tr><th scope="col">Event</th><th scope="col">What it means for the first response</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="status-label">Initial failed test</td><td>The submitted sample did not pass a required analyte category. Keep the affected batch out of sale and follow the current testing rules for any permitted retest, remediation, or destruction pathway.</td></tr>
+          <tr><td class="status-label">Consumer complaint</td><td>A report that may require product identification, preservation of the product and records, customer-safety escalation, and communication with OCP or other professionals. A complaint alone is not proof of a manufacturing defect or contamination.</td></tr>
+          <tr><td class="status-label">Voluntary stop-sale or quarantine</td><td>An operator control used to prevent further sale or movement while facts are evaluated. Document its scope and do not describe it as an OCP order unless OCP issued one.</td></tr>
+          <tr><td class="status-label">OCP administrative hold</td><td>A statutory hold imposed by OCP after the grounds described in Title 28-B section 803-A. The notice identifies the basis, affected items, restrictions, and required actions.</td></tr>
+          <tr><td class="status-label">OCP recall</td><td>A public-health action with notice-specific product, batch, sale-window, location, and consumer or licensee instructions. Open the individual OCP notice rather than relying on a headline or index row.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>The Practical First-Hour Checklist</h2>
+      <p>This is a sequence for organizing the response, not a universal legal deadline.</p>
+      <ol>
+        <li><strong>Pause the relevant movement.</strong> Stop sale and transfer of the suspected scope while you identify whether the issue is a failed test, complaint, voluntary hold, OCP hold, or recall. Do not extend the hold beyond the supported scope without documenting why.</li>
+        <li><strong>Write down the trigger.</strong> Record when the COA, complaint, OCP notice, or internal finding arrived; who received it; what product and batch were named; and what decision was made.</li>
+        <li><strong>Identify the batch trail.</strong> Capture the licensee, product type, strain or flavor where applicable, batch number, package identifiers, production date, testing facility, sale window, and every location that received the product.</li>
+        <li><strong>Protect people and evidence.</strong> Direct urgent medical concerns to qualified healthcare or emergency professionals. Preserve the product, labels, packaging, images, COA, and communications without altering the evidence or making unsupported medical claims.</li>
+        <li><strong>Reconcile systems.</strong> Compare the physical inventory with tracking records, manifests, point-of-sale records, transfers, returns, and any product already disposed of or destroyed.</li>
+        <li><strong>Escalate through the correct channel.</strong> Follow the current testing-facility instructions and any OCP notice or order. Ask counsel or the operator’s regulatory adviser before making a disposition decision that is not clearly supported by current authority.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What to Do After an Initial Failed Test</h2>
+      <p>Maine OCP says adult-use cannabis and cannabis products may not be sold or distributed to a consumer unless mandatory testing demonstrates that the item is within the applicable pass/fail thresholds. OCP’s testing page lists categories including residual solvents, harmful chemicals or metals, yeast and mold, harmful microbes, pesticides, potency, homogeneity, and cannabinoid profiles.</p>
+      <p>The next step is not a one-size-fits-all destruction instruction. OCP describes retesting as available only in limited circumstances. It says remediation is not permitted for pesticides and metals, while retesting may be available, and that remediation is permitted for some other categories such as yeast, mold, microbes, or residual solvents. The current rules and the facts of the batch control.</p>
+
+      <h3>Failed-test response sequence</h3>
+      <ol>
+        <li><strong>Hold the batch from sale.</strong> Mark the affected scope in the operator’s internal controls and tracking workflow while the disposition and any permitted transfer pathway are evaluated under current rules.</li>
+        <li><strong>Review the COA.</strong> Confirm the batch, sample, analyte category, result, testing facility, and any comments. Do not treat a public aggregate table as a substitute for the batch-specific COA.</li>
+        <li><strong>Ask what current pathway applies.</strong> Determine whether the applicable current rules allow retesting, permitted remediation followed by testing, or destruction. A proposed rule or old memo should not be presented as current without a status check.</li>
+        <li><strong>Record the decision.</strong> Keep the date, decision-maker, supporting rule or OCP instruction, tracking entry, testing-facility communication, and final disposition.</li>
+      </ol>
+
+      <Callout title="Do not use the 2026 draft Chapter 40 as current law" type="info">
+        OCP has published testing-rule materials that identify some 2026 language as a draft subject to review and further revision. For the proposed Chapter 40 text, see the <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch.%2040%20for%20Public%20Comment%202026.pdf" target="_blank" rel="noopener noreferrer">public-comment PDF</a>; it is proposed, subject to review, and not effective. Use the current <a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" target="_blank" rel="noopener noreferrer">OCP rules and statutes landing page</a>, current testing-facility instructions, and any OCP notice or order. Label proposed language as proposed everywhere it appears.
+      </Callout>
+    </section>
+
+    <section>
+      <h2>When OCP Places an Administrative Hold</h2>
+      <p><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec803-A.html" target="_blank" rel="noopener noreferrer">Title 28-B section 803-A</a> says OCP may impose an administrative hold when it has reasonable grounds related to issues such as labeling or packaging, testing results, contamination, or tracking compliance. The hold notice must state the basis, identify the affected cannabis, products, or plants, describe operational restrictions, and indicate actions the licensee must take.</p>
+      <p>During an administrative hold, the statute requires physical segregation of the affected items. It also says the licensee may not sell, give away, transfer, transport, dispose of, or destroy items subject to the hold. That is different from a voluntary internal quarantine: do not call an operator decision an OCP hold, and do not assume a voluntary quarantine carries the same notice or duration rules.</p>
+
+      <h3>Hold-response checklist</h3>
+      <ul>
+        <li>Save the notice in the incident file and record when it was received.</li>
+        <li>List every affected plant, batch, package, product, and location named in the notice.</li>
+        <li>Physically segregate held items from other inventory and restrict access.</li>
+        <li>Do not sell, give away, transfer, transport, dispose of, or destroy held items unless the applicable authority authorizes the action.</li>
+        <li>Continue required security, premises, and tracking controls for the licensed operation.</li>
+        <li>Record OCP communications and any communication about termination, if provided.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>When OCP Issues a Public Recall</h2>
+      <p>Start at OCP’s <a href="https://www.maine.gov/dafs/ocp/resources/recalls" target="_blank" rel="noopener noreferrer">Cannabis Recalls &amp; Advisories index</a>, then open the individual incident notice. The index includes both adult-use recalls and medical cannabis patient advisories, so confirm the program type before applying the instructions to an adult-use operation.</p>
+      <p>OCP’s Green Trap adult-use recall notice shows why the individual notice matters. It identifies the producer, strain, product sizes, batch numbers, sale dates, and retail locations. It also gives consumer-facing directions. That level of detail is the model for the operator’s internal scope reconciliation—not proof that every recall will use the same fields or consumer instructions.</p>
+
+      <h3>Recall reconciliation list</h3>
+      <ul>
+        <li><strong>Product identity:</strong> name, type, size, strain or flavor, label, batch, and package identifiers.</li>
+        <li><strong>Time window:</strong> production, testing, transfer, sale, return, and discovery dates.</li>
+        <li><strong>Distribution:</strong> originating licensee, testing facility, transfer manifests, destination licensees, and store locations.</li>
+        <li><strong>Inventory:</strong> on-hand packages, quarantined stock, sold units, returned units, and any recorded disposal or destruction.</li>
+        <li><strong>Communications:</strong> OCP notice, internal decision log, testing-facility messages, retailer notices, and customer-facing copy.</li>
+        <li><strong>Closeout:</strong> notice-specific return, hold, destruction, documentation, and corrective-action instructions.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Records That Make the Response Traceable</h2>
+      <p><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec105.html" target="_blank" rel="noopener noreferrer">Title 28-B section 105</a> describes a tracking system that follows cannabis and cannabis products through retail sale, return, disposal, or destruction. It also requires record-keeping rules necessary for OCP’s ability to implement a health-and-safety recall. In practice, the incident file should let a reviewer answer: what was affected, where did it go, what happened to each unit, and which source supported each decision?</p>
+      <table aria-label="Maine cannabis incident response records">
+        <thead><tr><th scope="col">Record group</th><th scope="col">Examples to preserve</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Testing</strong></td><td>COA, sample and batch identifiers, testing-facility communications, EDD or reporting records, failed analyte, retest result, and remediation record where applicable.</td></tr>
+          <tr><td><strong>Tracking</strong></td><td>Plant, batch, package, transfer, manifest, inventory, return, disposal, and destruction records.</td></tr>
+          <tr><td><strong>Sales</strong></td><td>Point-of-sale exports, dates sold, stores, customer-return records, and the process used to identify affected transactions.</td></tr>
+          <tr><td><strong>Authority</strong></td><td>OCP recall, hold, order, email, phone-call notes, inspection materials, and the current rule or statute relied on.</td></tr>
+          <tr><td><strong>Corrective action</strong></td><td>Root-cause notes, staff training, supplier or testing-facility follow-up, SOP changes, and management sign-off.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Using OCP’s Public Data Without Misreading It</h2>
+      <p>OCP’s <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/testing-data" target="_blank" rel="noopener noreferrer">Adult Use Testing Data</a> page says its public results are derived from electronic data deliverables and represent initial mandatory testing only. The tables exclude research-and-development samples and retests. That limitation matters: a public failure rate is not a complete record of every retest, remediation, destruction, or operator-specific incident.</p>
+      <p>OCP’s <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/compliance-data" target="_blank" rel="noopener noreferrer">Adult Use Compliance Data</a> page is also a specific dataset, not a guarantee that no other inquiry exists. OCP explains that the table focuses on final agency action and may differ from annual reports. Use it as one diligence source alongside the licensee’s own notices, settlement agreements, corrective-action records, and current OCP communications.</p>
+    </section>
+
+    <section>
+      <h2>Customer-Facing Communication</h2>
+      <p>Keep public language tied to the confirmed notice and the exact product scope. Identify the product and batch the notice identifies, state the action customers should take, and provide the official OCP source. Do not speculate about cause, blame, exposure, or health outcomes.</p>
+      <p>For a health concern, direct the person to an appropriate healthcare professional or emergency services based on the facts and the official notice. An operator checklist should not diagnose symptoms or recommend treatment. When a notice gives consumer language, preserve its meaning rather than rewriting it into a broader medical claim.</p>
+    </section>
+
+    <section>
+      <h2>Post-Incident Review</h2>
+      <p>After the immediate product decision is complete, review the system that allowed the incident to reach discovery or distribution. Separate confirmed facts from hypotheses, and retain the evidence that supports both.</p>
+      <ul>
+        <li>Was the affected scope identified consistently across labels, tracking, manifests, and point-of-sale records?</li>
+        <li>Did the COA and internal inventory show the same batch and package identifiers?</li>
+        <li>Did the operator record the disposition allowed by the current rule or notice?</li>
+        <li>Were any returned, disposed-of, or destroyed units reconciled?</li>
+        <li>Were OCP and testing-facility communications preserved?</li>
+        <li>Does the corrective action have an owner, date, and evidence of completion?</li>
+        <li>Should counsel, a regulatory adviser, a CPA, an insurer, or a qualified healthcare professional review the incident?</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <Faq faqs={faqs} />
+    </section>
+
+    <section class="source-notes">
+      <h2>Primary Sources and Review Notes</h2>
+      <p>Reviewed 2026-07-30 against the following public authorities. The OCP pages and recall index are live resources; open the current incident notice before acting.</p>
+      <ul>
+        <li><a href="https://www.maine.gov/dafs/ocp/resources/recalls" target="_blank" rel="noopener noreferrer">OCP Cannabis Recalls &amp; Advisories</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/news-events/news/maine-office-cannabis-policy-issues-health-and-safety-recall-adult-use-flower-0" target="_blank" rel="noopener noreferrer">OCP Green Trap adult-use recall notice</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/testing-data" target="_blank" rel="noopener noreferrer">OCP Adult Use Testing Data</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/compliance-data" target="_blank" rel="noopener noreferrer">OCP Adult Use Compliance Data</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch.%2040%20for%20Public%20Comment%202026.pdf" target="_blank" rel="noopener noreferrer">2026 Chapter 40 public-comment PDF (proposed, not effective)</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec105.html" target="_blank" rel="noopener noreferrer">Maine Title 28-B, section 105: Tracking system</a></li>
+        <li><a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec803-A.html" target="_blank" rel="noopener noreferrer">Maine Title 28-B, section 803-A: Administrative holds</a></li>
+        <li><a href="https://www.maine.gov/dafs/ocp/adult-use/rules-statutes" target="_blank" rel="noopener noreferrer">OCP Adult Use Rules and Statutes</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Related Guides</h2>
+      <p>For the testing and COA basics, see our <a href="/guides/maine-cannabis-product-testing-guide">Maine cannabis product testing guide</a>. For inventory and tracking context, see <a href="/guides/maine-cannabis-inventory-management">Maine cannabis inventory management</a> and the <a href="/guides/maine-metrc-compliance-guide">Maine Metrc compliance guide</a>. For a different regulatory issue, see our <a href="/guides/maine-cannabis-business-transfer">Maine cannabis business transfer guide</a>.</p>
+    </section>
+
+    <section class="disclaimer">
+      <p><em>This guide is for general informational purposes only. It does not constitute legal, medical, regulatory, accounting, or compliance advice, and it does not replace a current OCP notice, order, rule, statute, or professional review. Maine cannabis requirements and public notices can change. Adult-use operators should consult the current <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a> materials and qualified advisers before acting on a specific incident.</em></p>
+    </section>
+
+    <section class="content-verification">
+      <div class="verification-badge">
+        <span class="verification-icon" aria-hidden="true">◆</span>
+        <span class="verification-text"> Last reviewed <strong>2026-07-30</strong> against the OCP and Maine Legislature sources cited on this page. Publisher editorial review on file; methodology and author disclosures at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+      </div>
+    </section>
+
+    <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a>. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
+
+    <AutoRelated currentPath="/guides/maine-cannabis-product-recall-response" currentTopics={['compliance', 'operations', 'testing']} section="Operations & Technology" limit={6} />
+  </article>
+</Layout>
