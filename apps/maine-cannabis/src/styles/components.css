@@ -342,7 +342,7 @@
     font-size: 1rem;
     opacity: 0.8;
   }
-  .nav-toggle:checked ~ .nav-links { transform: translateX(0); }
+  .nav-toggle:checked ~ .nav-links { transform: translateX(0); visibility: visible; }
 
   .mobile-close-btn {
     display: none;
@@ -367,7 +367,7 @@
     text-align: center;
   }
   .nav-toggle:checked ~ .nav-links .mobile-close-btn { display: block; }
-  .nav-toggle:not(:checked) ~ .nav-links { transform: translateX(100%); }
+  .nav-toggle:not(:checked) ~ .nav-links { transform: translateX(100%); visibility: hidden; }
 
   .nav-links a, .nav-dropdown .dropbtn {
     opacity: 0;

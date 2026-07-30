@@ -91,7 +91,7 @@ const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => (
   article={{ author: 'Eliot Nash', authorTitle: 'Editorial', authorId: 'eliot-nash', publishDate: '2026-01-01', modifiedDate: '2026-07-18', section: 'Home' }}
   isHub={true}
 >
-  <main class="homepage-editorial">
+  <div class="homepage-editorial">
     <section id="authority-hero" class="homepage-editorial__section homepage-editorial__section--hero">
       <h1>Maine cannabis intelligence for decisions that need evidence.</h1>
       <AuthorityHero eyebrow="Maine Dispensary Guide" title="Maine cannabis intelligence for decisions that need evidence." lede="Licensing, local market, and operating research organized around the questions operators must answer before they commit capital." primaryCtaId="cta-inline-index-04" secondaryCtaId="cta-inline-index-02" renderTitle={false} sectionId="authority-hero-content" />
@@ -110,7 +110,7 @@ const intelligence = buildLatestIntelligence(blogIndex.items, 8).map((post) => (
     <section id="latest-intelligence" class="homepage-editorial__section"><LatestIntelligence items={intelligence} /></section>
     <section id="newsletter-invitation" class="homepage-editorial__section"><NewsletterInvitation submitCtaId="cta-inline-index-10" /></section>
     <section id="trust-layer" class="homepage-editorial__section"><TrustLayer sourceLinks={[{ label: 'Methodology and corrections', href: '/about/corrections' }, { label: 'Editorial review process', href: '/about/editorial-policy' }, { label: 'Meet the editorial team', href: '/about/our-team' }]} /></section>
-  </main>
+  </div>
 </Layout>
 
 <style>
