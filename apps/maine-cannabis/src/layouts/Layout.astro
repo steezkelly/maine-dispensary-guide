@@ -131,6 +131,10 @@ const heroImageAvif = heroImage?.replace(/\.jpg$/i, '.avif');
 const heroImageMobile = heroImage?.replace(/\.jpg$/i, '-640w.jpg');
 const heroImageMobileWebp = heroImage?.replace(/\.jpg$/i, '-640w.webp');
 const heroImageMobileAvif = heroImage?.replace(/\.jpg$/i, '-640w.avif');
+const heroImageSizes = '(max-width: 640px) 640px, 1280px';
+const heroImageAvifSrcset = `${heroImageMobileAvif} 640w, ${heroImageAvif} ${heroImageDims.w}w`;
+const heroImageWebpSrcset = `${heroImageMobileWebp} 640w, ${heroImageWebp} ${heroImageDims.w}w`;
+const heroImageJpegSrcset = `${heroImageMobile} 640w, ${heroImage} ${heroImageDims.w}w`;
 const isGuide = Astro.url.pathname.startsWith('/guides/') && Astro.url.pathname !== '/guides';
 const isContent = isGuide || Astro.url.pathname.startsWith('/founders/') || Astro.url.pathname.startsWith('/blog/');
 
@@ -688,7 +692,24 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       {isGuide ? (
         <div class="guide-layout">
           <div class="guide-content">
-            {heroImage && <div class="guide-hero"><picture><source type="image/avif" srcset={`${heroImageMobileAvif} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><source type="image/webp" srcset={`${heroImageMobileWebp} 640w`} sizes="(max-width: 640px) 640px, 1280px" /><img src={heroImage} srcset={`${heroImageMobile} 640w`} sizes="(max-width: 640px) 640px, 1280px" alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`} width={heroImageDims.w} height={heroImageDims.h} loading="eager" /></picture></div>}
+            {heroImage && (
+              <div class="guide-hero">
+                <picture>
+                  <source type="image/avif" srcset={heroImageAvifSrcset} sizes={heroImageSizes} />
+                  <source type="image/webp" srcset={heroImageWebpSrcset} sizes={heroImageSizes} />
+                  <img
+                    src={heroImage}
+                    srcset={heroImageJpegSrcset}
+                    sizes={heroImageSizes}
+                    alt={`${stateName} cannabis ${article?.section?.toLowerCase() || 'guide'}: ${title}`}
+                    width={heroImageDims.w}
+                    height={heroImageDims.h}
+                    loading="eager"
+                    fetchpriority="high"
+                  />
+                </picture>
+              </div>
+            )}
             <slot />
             {article && (
               <div class="article-meta">
