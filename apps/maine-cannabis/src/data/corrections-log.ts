@@ -72,7 +72,7 @@ export const CORRECTIONS: Correction[] = [
     what_was_wrong:
       "The cultivation license guide contained fabricated fee figures on every tier row. Tier 1 showed $500 app / $1,000 annual (actual: $100 app / up to $250–$500 annual). Tier 2 showed $2,000 app / $2,500 annual (actual: $500 app / up to $1,500–$3,000 annual). Tier 3 showed $5,000 app / $5,000 annual (actual: $500 app / up to $5,000–$10,000 annual). Tier 4 showed $10,000 app / $10,000 annual (actual: $500 app / up to $15,000–$30,000 annual). Tier 3 canopy was listed as 5,000 sq ft (actual: 7,000 sq ft). The title incorrectly framed the page as 'Medical Marijuana' cultivation when the content covers the OCP adult-use tier system under 28-B M.R.S. §207 and §301.",
     what_is_correct:
-      "All fee figures corrected to statutory maximums from 28-B M.R.S. §207: Tier 1 = $100 app / up to $250 (outdoor) or $500 (indoor) annual; Tier 2 = $500 app / up to $1,500 (outdoor) or $3,000 (indoor) annual; Tier 3 = $500 app / up to $5,000 (outdoor) or $10,000 (indoor) annual; Tier 4 = $500 app / up to $15,000 (outdoor) or $30,000 (indoor) annual. Tier 3 canopy corrected to 7,000 sq ft per §301. Title broadened to 'Maine Cannabis Cultivation License' to accurately reflect coverage of both adult-use and medical cultivation pathways.",
+      "All fee figures corrected to the operative amounts published in the OCP fee schedule (maine.gov/dafs/ocp/resources/faq), which sets amounts at the statutory ceilings in 28-B M.R.S. §207: Tier 1 plant-count = $100 app / $9 per mature plant (outdoor) or $17 (indoor); Tier 1 plant-canopy = $100 app / $500 (outdoor only); Tier 2 = $500 app / $1,500 (outdoor) or $3,000 (indoor); Tier 3 = $500 app / $5,000 (outdoor) or $10,000 (indoor); Tier 4 = $500 app / $15,000 (outdoor) or $30,000 (indoor). Tier 3 canopy corrected to 7,000 sq ft per §301. Title broadened to 'Maine Cannabis Cultivation License' to accurately reflect coverage of the adult-use OCP tier system. Subtitle/description scoped to adult-use cultivators. Removed an unsourced '400+ active cultivation licenses' market-snapshot claim (OCP data shows far fewer).",
     verified_via: [
       {
         label: "28-B M.R.S. §207 — Application fees; license fees",
@@ -81,6 +81,10 @@ export const CORRECTIONS: Correction[] = [
       {
         label: "28-B M.R.S. §301 — Cultivation facility license types",
         url: "https://legislature.maine.gov/statutes/28-b/title28-Bsec301.html"
+      },
+      {
+        label: "OCP FAQ — Adult Use Cultivation Facility Application and License Fees",
+        url: "https://www.maine.gov/dafs/ocp/resources/faq"
       }
     ],
     published_in: [
