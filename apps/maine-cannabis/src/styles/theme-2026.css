@@ -185,7 +185,7 @@ html[data-theme] section a:not(.btn):not(.button):not(.tour-slide-cta):not(.hero
   text-decoration-color: color-mix(in oklab, var(--color-link) 35%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  transition: color .18s, text-decoration-color .18s;
+  transition: text-decoration-color .18s;
 }
 html[data-theme] main a:hover:not(.btn):not(.button):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link),
 html[data-theme] section a:hover:not(.btn):not(.button):not(.home-link):not(.btn-main):not(.btn-secondary):not(.btn-affiliate):not(.guide-card):not(.quick-link-card):not(.link-card):not(.author-link-card):not(.latest-intelligence__link):not(.municipality-explorer__link):not(.nav-link) {
@@ -193,6 +193,17 @@ html[data-theme] section a:hover:not(.btn):not(.button):not(.home-link):not(.btn
   text-decoration-color: currentColor;
   text-decoration-thickness: 2px;
 }
+
+/* Keep the dark-mode article-link contract explicit. The broad theme rule
+   above covers both themes, while this higher-specificity selector prevents
+   component/page rules from falling back to the light-mode primary token in
+   the guide reading column. Unclassed anchors are the prose-link surface;
+   CTA/card classes keep their existing component-specific treatment. */
+html[data-theme="dark"] main .article-content a:not([class]),
+html[data-theme="dark"] main .guide-content a:not([class]) {
+  color: var(--color-link) !important;
+}
+
 html[data-theme] a[target="_blank"]::after {
   content: " ↗";
   font-size: .8em;

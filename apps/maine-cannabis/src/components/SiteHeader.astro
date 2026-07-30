@@ -49,7 +49,7 @@ const siteName = siteConfig.siteName;
           </span>
         </span>
       </button>
-      <label for="nav-toggle" class="nav-toggle-label" id="mobile-menu-trigger"><span></span></label>
+      <label for="nav-toggle" class="nav-toggle-label" id="mobile-menu-trigger" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-controls="navigation-menu" aria-expanded="false"><span></span></label>
     </div>
 
     <!-- The checkbox must be a direct sibling of .nav-links for the
@@ -63,14 +63,21 @@ const siteName = siteConfig.siteName;
       <!-- analytics:cta-injected id=cta-inline-SiteHeader-02 -->
 <button class="mobile-close-btn" aria-label="Close menu" id="mobile-close-btn" data-cta-id="cta-inline-SiteHeader-02"></button>
       <script is:inline>
-        document.getElementById('mobile-close-btn').addEventListener('click', () => {
-          document.getElementById('nav-toggle').checked = false;
-        });
-        document.getElementById('mobile-close-btn').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            document.getElementById('nav-toggle').checked = false;
+        const navToggle = document.getElementById('nav-toggle');
+        const mobileMenuTrigger = document.getElementById('mobile-menu-trigger');
+        const syncMobileMenuState = () => {
+          mobileMenuTrigger.setAttribute('aria-expanded', navToggle.checked ? 'true' : 'false');
+        };
+        navToggle.addEventListener('change', syncMobileMenuState);
+        mobileMenuTrigger.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            navToggle.click();
           }
+        });
+        syncMobileMenuState();
+        document.getElementById('mobile-close-btn').addEventListener('click', () => {
+          if (navToggle.checked) navToggle.click();
         });
       </script>
       <div class="nav-search-mobile"><Search withData={false} /></div>
@@ -237,7 +244,7 @@ const siteName = siteConfig.siteName;
       if (e.key === 'Escape') {
         const navToggle = document.getElementById('nav-toggle');
         if (navToggle && navToggle.checked) {
-          navToggle.checked = false;
+          navToggle.click();
         }
       }
     });

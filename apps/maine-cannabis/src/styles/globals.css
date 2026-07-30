@@ -40,7 +40,18 @@ body {
   z-index: 9999;
   transition: top 0.3s;
 }
-.skip-link:focus { top: 0; }
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+}
 
 /* === Grain overlay (subtle paper texture) ===
    Self-hosted AVIF/WebP/PNG served from /textures/natural-paper.* — saves a
