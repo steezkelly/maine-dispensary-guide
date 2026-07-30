@@ -65,6 +65,26 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-30",
+    slug: "biddeford-dispensary-guide",
+    title: "Biddeford guide — restored source-backed FAQ, corrected OCP roster count and state retail fee",
+    severity: "critical",
+    category: "regulation",
+    what_was_wrong:
+      "The Biddeford guide stated an incorrect $500–$1,500 state application-fee range for an adult-use cannabis store and presented unsupported local-fee amounts as current Biddeford requirements. It also used an undated '2–3' dispensary/opportunity framing without identifying its source or license status.",
+    what_is_correct:
+      "Under 28-B M.R.S. §207(2), the cannabis-store application fee is $250 and the state license fee may not exceed $2,500; current Biddeford municipal fees and requirements must be confirmed with the City. The OCP adult-use roster, last updated July 8, 2026, lists three active Store licenses with LICENSE_CITY=Biddeford: Stoner & Co. (419 Hill St.), Pine Tree Maine 2 / Landrace (588 Elm St.), and Coastal Roots - Biddeford (4 Wellspring Rd.). This is a dated licensing snapshot, not a claim about open storefronts or market capacity.",
+    verified_via: [
+      { label: "OCP adult-use licensee search and downloadable roster (updated July 8, 2026)", url: "https://www.maine.gov/dafs/ocp/open-data/adult-use/licensee-search" },
+      { label: "28-B M.R.S. §207(2) — Application fees; license fees", url: "https://legislature.maine.gov/statutes/28-b/title28-Bsec207.html" },
+      { label: "OCP adult-use application process", url: "https://www.maine.gov/dafs/ocp/adult-use/applications" },
+      { label: "Biddeford current land-development code", url: "https://ecode360.com/BI1767" }
+    ],
+    published_in: [
+      { name: "Biddeford dispensary guide", href: "/guides/biddeford-dispensary-guide" }
+    ]
+  },
+  {
+    date: "2026-07-30",
     slug: "maine-cannabis-cultivation-license-2026",
     title: "Cultivation license guide — corrected fabricated statutory fees and canopy limits",
     severity: "critical",
