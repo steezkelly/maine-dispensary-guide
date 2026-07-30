@@ -167,6 +167,7 @@ jobs:
           node --test scripts/check/ocp-testing-legal-content.test.cjs
           node --test apps/maine-cannabis/scripts/content/ymyl-eeat-guard.test.cjs
           node --test scripts/check/ocp-annual-report-reconciliation.test.cjs
+          node --test scripts/check/mdg-market-intelligence-source-inventory.test.cjs
           npm run test:home-grow-legal-content
 
       - name: Test pre-push governance and diagnostic contracts
@@ -346,78 +347,3 @@ jobs:
       - name: Run smoke tests against preview
         if: env.SKIP_PREVIEW_SMOKE != 'true'
         run: npx playwright test
-
-  deploy-production:
-    name: Deploy Production
-    needs: smoke-test-production
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Skip duplicate Vercel CLI production deploy
-        if: env.VERCEL_TOKEN == ''
-        run: |
-          echo "VERCEL_TOKEN is not configured; skipping duplicate Vercel CLI production deploy."
-          echo "The Vercel GitHub App deployment/check handles production deployments for this repo."
-
-      - name: Install Vercel CLI
-        if: env.VERCEL_TOKEN != ''
-        run: npm install -g vercel
-
-      - name: Pull Vercel project settings
-        if: env.VERCEL_TOKEN != ''
-        run: vercel pull --environment=production --yes
-
-      - name: Build project artifacts
-        if: env.VERCEL_TOKEN != ''
-        run: vercel build --environment=production
-
-      - name: Validate sitemap XML encoding (Vercel build output)
-        if: env.VERCEL_TOKEN != ''
-        run: |
-          node ./scripts/check/sitemap-xml.cjs .vercel/output/static/sitemap-0.xml
-
-      - name: Deploy to Vercel (Production)
-        if: env.VERCEL_TOKEN != ''
-        run: vercel deploy --prebuilt --environment=production --yes --prod
-
-  smoke-test-production:
-    name: Smoke Tests (Production)
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install chromium --with-deps
-
-      - name: Run smoke tests against production
-        run: npx playwright test
-        env:
-          PREVIEW_URL: https://mainedispensaryguide.com
