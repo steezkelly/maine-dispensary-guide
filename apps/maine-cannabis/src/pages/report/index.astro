@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const reports = [
+  {
+    title: 'Q3 2026 Maine Cannabis Industry Report',
+    description: 'The Q3 2026 Maine cannabis market, interpreted for decisions. What $6.10/g flower means for your margins, where the market is saturated, and what Schedule III does to your tax exposure. Primary-source data from OCP and MRS.',
+    href: '/report/q3-2026',
+    status: 'Available now',
+  },
+  {
+    title: 'Q3 2026 — Full Playbook (paid)',
+    description: 'Stop reading the market. Start deciding from it. The full 8-decision playbook: margins, saturation, tax exposure, licensing, hiring, category mix, municipal landscape, exit timing. From $29.',
+    href: '/report/q3-2026-offer',
+    status: 'Available now',
+  },
+];
+---
+<Layout
+  title="Maine Cannabis Industry Reports"
+  description="Quarterly Maine cannabis industry reports from Maine Dispensary Guide Research. Each edition translates primary-source OCP and MRS data into the decisions operators are making this quarter."
+>
+  <style>
+    .reports-index { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    .reports-index h1 { font-family: var(--font-serif); font-size: 2.25rem; line-height: 1.2; margin: 0.5rem 0 1rem; }
+    .reports-index .lede { font-size: 1.125rem; color: var(--color-text-light); margin-bottom: 2rem; }
+    .report-card {
+      display: block; padding: 1.5rem; margin: 1rem 0;
+      border: 1px solid var(--color-border); border-radius: 1rem;
+      background: var(--color-surface); color: var(--color-text);
+      text-decoration: none;
+    }
+    .report-card:hover { border-color: var(--color-primary); }
+    .report-card h2 { margin: 0 0 0.5rem; font-family: var(--font-serif); font-size: 1.25rem; }
+    .report-card p { margin: 0 0 0.5rem; color: var(--color-text-light); }
+    .report-card .status {
+      display: inline-block; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-primary); margin-top: 0.5rem;
+    }
+  </style>
+
+  <main id="main-content" role="main" tabindex="-1">
+    <article class="reports-index">
+      <h1>Maine Cannabis Industry Reports</h1>
+      <p class="lede">
+        Quarterly research from Maine Dispensary Guide. Every figure traces to a primary source — Maine Office of Cannabis Policy operational dashboards, Maine Revenue Services tax-filer data, and federal regulatory filings — with a retrieval date and a status label.
+      </p>
+
+      {reports.map((r) => (
+        <a class="report-card" href={r.href}>
+          <h2>{r.title}</h2>
+          <p>{r.description}</p>
+          <span class="status">{r.status}</span>
+        </a>
+      ))}
+    </article>
+  </main>
+</Layout>
