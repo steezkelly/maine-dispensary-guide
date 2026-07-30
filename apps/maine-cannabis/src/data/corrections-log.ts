@@ -65,6 +65,26 @@ export interface Correction {
 export const CORRECTIONS: Correction[] = [
   {
     date: "2026-07-29",
+    slug: "recreational-cannabis-near-acadia",
+    title: "Acadia-area blog posts — aligned dispensary cards with verified town-guide corrections",
+    severity: "material",
+    category: "operator-data",
+    what_was_wrong:
+      "Two Acadia-area blog posts (recreational-cannabis-near-acadia and best-maine-dispensaries-2026) still cited stale dispensary data that the town-guide corrections (PRs #265, #269) had fixed: The Meristem at '33 Main St, Bar Harbor' (actually 11 Seal Cove Rd, Southwest Harbor), Snare Creek Farms at '599 Bar Harbor Rd' (actually 211 Bar Harbor Rd, Suite 3, Trenton, and medical-only), and Curaleaf Ellsworth at '180 High St' labeled adult-use (actually 3 Myrick Street, medical, formerly Maine Organic Therapy).",
+    what_is_correct:
+      "The Meristem — 11 Seal Cove Rd, Southwest Harbor. Snare Creek Farms — 211 Bar Harbor Rd, Suite 3, Trenton, (207) 412-0209, medical (Medical ID + State ID required). Curaleaf Ellsworth — 3 Myrick Street, medical (formerly Maine Organic Therapy). Mount Desert Island has two dispensaries: 420 Mules (Bar Harbor) and The Meristem (Southwest Harbor).",
+    verified_via: [
+      { label: "Bar Harbor dispensary guide (Meristem relocated to Southwest Harbor)", url: "/guides/bar-harbor-dispensary-guide" },
+      { label: "Snare Creek Farms — 211 Bar Harbor Rd, Trenton, medical", url: "https://www.snarecreekcannabis.com/" },
+      { label: "Ellsworth dispensary guide (Curaleaf/MOT merged, 3 Myrick Street)", url: "/guides/ellsworth-dispensary-guide" },
+    ],
+    published_in: [
+      { name: "Recreational cannabis near Acadia", href: "/blog/recreational-cannabis-near-acadia" },
+      { name: "Best Maine dispensaries 2026", href: "/blog/best-maine-dispensaries-2026" },
+    ],
+  },
+  {
+    date: "2026-07-29",
     slug: "downeast-acadia-aroostook-cannabis-guide",
     title: "Downeast/Acadia/Aroostook hub — aligned stale operator references with verified town-guide corrections",
     severity: "material",
