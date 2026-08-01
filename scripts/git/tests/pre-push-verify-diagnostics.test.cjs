@@ -24,11 +24,12 @@ function withFixture(filePath, content, run) {
   }
 }
 
-function runPrePush(env = {}) {
+function runPrePush(env = {}, extraArgs = []) {
   return spawnSync(
     'node',
     [
       'scripts/git/pre-push-verify.cjs',
+      ...extraArgs,
       '--skip-sitemap-postprocess',
       '--skip-docs-vs-code',
       '--skip-compressed-frontmatter',
@@ -59,7 +60,7 @@ try {
 
   const tsFixture = path.join(ROOT, 'apps/maine-cannabis/src/lib', `__pre-push-ts-consumer-fixture-${fixtureSuffix}.ts`);
   withFixture(tsFixture, 'export const prePushFixture = true;\n', () => {
-    const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` });
+    const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` }, ['--ref=HEAD']);
     const output = (result.stdout || '') + (result.stderr || '');
     assert.equal(result.status, 2, output);
     assert.match(output, /changed app source TS files may affect Astro consumers/);
@@ -74,7 +75,7 @@ try {
   );
   const astroFixture = path.join(ROOT, 'apps/maine-cannabis/src/pages/blog/index.astro');
   withFixture(astroFixture, '---\nconst title = \'Fixture\';\n---\n<h1>{title}</h1>\n', () => {
-    const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` });
+    const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` }, ['--ref=HEAD']);
     const output = (result.stdout || '') + (result.stderr || '');
     assert.equal(result.status, 0, output);
     assert.match(output, /pre-existing baseline/);
@@ -82,7 +83,7 @@ try {
 
   const mjsFixture = path.join(ROOT, 'scripts', `__pre-push-node-syntax-fixture-${fixtureSuffix}.mjs`);
   withFixture(mjsFixture, 'export const = ;\n', () => {
-    const result = runPrePush();
+    const result = runPrePush({}, ['--ref=HEAD']);
     const output = (result.stdout || '') + (result.stderr || '');
     assert.equal(result.status, 10, output);
     assert.match(output, /node --check failed/);

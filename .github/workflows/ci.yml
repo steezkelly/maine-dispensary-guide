@@ -186,6 +186,7 @@ jobs:
         run: |
           node scripts/git/tests/pre-push-verify-governance.test.cjs
           node scripts/git/tests/pre-push-verify-diagnostics.test.cjs
+          node scripts/git/tests/pre-push-verify-default-diff-base.test.cjs
 
       - name: Check build warnings (post-build CSS/HTML warnings)
         run: |

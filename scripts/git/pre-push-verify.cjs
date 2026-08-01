@@ -273,9 +273,58 @@ function validateExactTarget({ targetArg, targetExplicit }) {
     }
 }
 
+function resolveDefaultIterationBase(refArg) {
+    if (refArg !== null) return refArg;
+
+    let head;
+    try {
+        head = gitExec(['rev-parse', '--verify', 'HEAD^{commit}']);
+    } catch (error) {
+        const baseError = new Error(`default verification cannot resolve HEAD: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+
+    let originMain;
+    try {
+        // Resolve the local tracking ref only. Reaching the network here would
+        // make iterative verification nondeterministic and unexpectedly slow.
+        originMain = gitExec(['rev-parse', '--verify', 'origin/main^{commit}']);
+    } catch (error) {
+        let hasCommittedHistoryBeyondInitial = false;
+        let isShallowRepository = false;
+        try {
+            gitExec(['rev-parse', '--verify', 'HEAD^']);
+            hasCommittedHistoryBeyondInitial = true;
+        } catch {}
+        try {
+            isShallowRepository = gitExec(['rev-parse', '--is-shallow-repository']) === 'true';
+        } catch {}
+        if (!hasCommittedHistoryBeyondInitial && !isShallowRepository) {
+            log('warn', 'origin/main is unavailable in an initial repository; checking live worktree changes only. Fetch origin before verifying committed branch history.');
+            return null;
+        }
+        const baseError = new Error(`default verification requires a resolvable origin/main merge base to verify committed branch history and live worktree changes; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+
+    try {
+        const base = gitExec(['merge-base', 'HEAD', originMain]);
+        if (base === head) return null;
+        log('info', `auto-detected default diff base: ${base}..${head} (plus live worktree changes)`);
+        return base;
+    } catch (error) {
+        const baseError = new Error(`default verification requires a resolvable origin/main merge base to verify committed branch history and live worktree changes; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+}
+
 function changedFiles(refArg, targetArg = 'HEAD') {
-    // Exact-range calls compare <base>..<candidate>. Working-tree iteration
-    // has no --ref and combines staged, unstaged, and untracked trigger files.
+    // Exact-range calls compare <base>..<candidate>. Default iteration on an
+    // ahead branch uses its merge-base range and combines staged, unstaged,
+    // and untracked trigger files so work in progress cannot be hidden.
     const all = new Set();
     if (refArg) {
         const range = `${refArg}..${targetArg}`;
@@ -310,6 +359,29 @@ function changedFiles(refArg, targetArg = 'HEAD') {
 
     return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)
         || isGovernanceTrigger(f) || isRequiredVerifierInput(f));
+}
+
+function rejectDirtyRangeOverlap(refArg, targetArg = 'HEAD') {
+    // A default HEAD verification reads live files. If an uncommitted edit overlays
+    // a path in the committed candidate range, it can mask the object being pushed.
+    if (!refArg || targetArg !== 'HEAD') return;
+    let committed;
+    try {
+        committed = new Set(git(`git diff --no-renames --name-only ${refArg}..HEAD`).split('\n').filter(Boolean));
+    } catch (error) {
+        const refError = new Error(`could not diff exact range ${refArg}..HEAD: ${error.message.split('\n')[0]}`);
+        refError.code = 'INVALID_REF';
+        throw refError;
+    }
+    const dirty = new Set();
+    for (const cmd of ['git diff --no-renames --name-only --cached', 'git diff --no-renames --name-only']) {
+        git(cmd).split('\n').filter(Boolean).forEach(file => dirty.add(file));
+    }
+    const overlap = [...committed].filter(file => dirty.has(file));
+    if (overlap.length === 0) return;
+    const overlapError = new Error(`default verification refuses a dirty worktree that overlaps committed candidate paths: ${overlap.join(', ')}. Commit, stash, or explicitly verify an immutable --target SHA.`);
+    overlapError.code = 'DIRTY_RANGE_OVERLAP';
+    throw overlapError;
 }
 
 function normalizeRepoPath(filePath) {
@@ -508,33 +580,67 @@ function nodeSyntaxCheck(files) {
 }
 
 function governanceCheck(files) {
-    const triggers = files.filter(isGovernanceTrigger);
-    if (triggers.length === 0) {
+    const governanceTriggers = files.filter(isGovernanceTrigger);
+    const defaultDiffBaseTest = 'scripts/git/tests/pre-push-verify-default-diff-base.test.cjs';
+    const defaultDiffBaseTriggers = files.filter(file => {
+        const normalized = normalizeRepoPath(file);
+        return normalized === 'scripts/git/pre-push-verify.cjs' || normalized === defaultDiffBaseTest;
+    });
+    let testPath;
+    if (governanceTriggers.length > 0) {
+        testPath = path.join(REPO_ROOT, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs');
+        if (!fs.existsSync(testPath)) {
+            log('err', `release-governance suite missing at ${testPath} — push blocked`);
+            return { ok: false };
+        }
+    }
+    let defaultDiffBaseTestPath;
+    if (defaultDiffBaseTriggers.length > 0) {
+        defaultDiffBaseTestPath = path.join(REPO_ROOT, defaultDiffBaseTest);
+        if (!fs.existsSync(defaultDiffBaseTestPath)) {
+            log('err', `default-diff-base regression suite missing at ${defaultDiffBaseTestPath} — push blocked`);
+            return { ok: false };
+        }
+    }
+
+    const suites = [];
+    if (governanceTriggers.length > 0) {
+        suites.push({
+            label: 'release-governance',
+            triggerCount: governanceTriggers.length,
+            path: testPath,
+        });
+    }
+    if (defaultDiffBaseTriggers.length > 0) {
+        suites.push({
+            label: 'default-diff-base regression',
+            triggerCount: defaultDiffBaseTriggers.length,
+            path: defaultDiffBaseTestPath,
+        });
+    }
+    if (suites.length === 0) {
         log('info', 'release-governance suite skipped (no governed files changed)');
         return { ok: true };
     }
 
-    const testPath = path.join(REPO_ROOT, 'scripts', 'git', 'tests', 'pre-push-verify-governance.test.cjs');
-    if (!fs.existsSync(testPath)) {
-        log('err', `release-governance suite missing at ${testPath} — push blocked`);
+    for (const suite of suites) {
+        log('info', `${suite.label} suite (${suite.triggerCount} governed file(s) changed)…`);
+        const res = spawnSync('node', [suite.path], {
+            encoding: 'utf8',
+            cwd: REPO_ROOT,
+            timeout: 120_000,
+        });
+        const output = ((res.stdout || '') + (res.stderr || '')).trim();
+        if (res.status === 0) {
+            if (output) console.log(output);
+            log('ok', `${suite.label} suite passed`);
+            continue;
+        }
+        if (output) console.log(output.split('\n').slice(0, 120).join('\n'));
+        log('err', `${suite.label} suite failed — push blocked`);
         return { ok: false };
     }
-
-    log('info', `release-governance suite (${triggers.length} governed file(s) changed)…`);
-    const res = spawnSync('node', [testPath], {
-        encoding: 'utf8',
-        cwd: REPO_ROOT,
-        timeout: 120_000,
-    });
-    const output = ((res.stdout || '') + (res.stderr || '')).trim();
-    if (res.status === 0) {
-        if (output) console.log(output);
-        log('ok', 'release-governance suite passed');
-        return { ok: true };
-    }
-    if (output) console.log(output.split('\n').slice(0, 120).join('\n'));
-    log('err', 'release-governance suite failed — push blocked');
-    return { ok: false };
+    return { ok: true };
 }
 
 /**
@@ -975,9 +1081,12 @@ function main() {
     }
 
     let files;
+    let effectiveRefArg;
     try {
         validateExactTarget(options);
-        files = changedFiles(refArg, targetArg);
+        effectiveRefArg = resolveDefaultIterationBase(refArg);
+        rejectDirtyRangeOverlap(effectiveRefArg, targetArg);
+        files = changedFiles(effectiveRefArg, targetArg);
     } catch (error) {
         log('err', `${error.message} — exact-range verification cannot continue.`);
         process.exit(error.code === 'INVALID_REF' ? 2 : 3);
@@ -1034,7 +1143,7 @@ function main() {
         log('ok', 'fast pass clean');
 
         if (dataOnly) {
-            const verdict = assertAllDiffsAreDataAttributes(files, refArg, targetArg);
+            const verdict = assertAllDiffsAreDataAttributes(files, effectiveRefArg, targetArg);
             if (!verdict.ok) {
                 log('err', '--data-only failed: at least one file changed non-data-attribute content:');
                 for (const line of verdict.violations.slice(0, 5)) console.log(`  ${line}`);
